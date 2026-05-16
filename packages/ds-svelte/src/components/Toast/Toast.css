@@ -1,0 +1,61 @@
+/* @generated:start styles */
+.toast {
+  border-radius: var(--core-shape-radius-medium, 8px);
+  box-shadow: var(--semantic-elevation-surface-raised, none);
+  padding: var(--core-spacing-size-05, 12px);
+  gap: var(--core-spacing-size-04, 8px);
+  /* --semantic-color-background-secondary: #efefef; */
+  /* --semantic-color-border-subtle: #cecece; */
+  /* --semantic-color-foreground-primary: #141414; */
+  /* --semantic-color-foreground-success: #487e1e; */
+  /* --semantic-color-foreground-warning: #ac5c00; */
+  /* --semantic-color-foreground-danger: #d9292b; */
+  /* --semantic-color-status-info: #0a65fe; */
+  /* --semantic-color-status-success: #487e1e; */
+  /* --semantic-color-status-warning: #ac5c00; */
+  /* --semantic-color-status-danger: #d9292b; */
+  /* --toast-size-maxWidth: ; */
+  /* --core-motion-duration-short: 150ms; */
+  /* --core-motion-duration-short: 150ms; */
+}
+
+.toast--info {}
+
+.toast--success {}
+
+.toast--warning {}
+
+.toast--error {}
+
+.toast--polite {}
+
+.toast--assertive {}
+
+.toast:hover {}
+
+.toast:focus-visible {}
+
+.toast--entering {}
+
+.toast--visible {}
+
+.toast--leaving {}
+
+.toast__viewport {}
+
+.toast__item {}
+
+.toast__title {}
+
+.toast__description {}
+
+.toast__row {}
+
+.toast__action {}
+
+.toast__close {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

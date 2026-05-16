@@ -1,0 +1,28 @@
+/* @generated:start styles */
+.blockquote {
+  color: var(--semantic-color-foreground-secondary, #555555);
+  background-color: var(--semantic-color-background-secondary, #efefef);
+  border-color: var(--semantic-color-border-accent, #d9292b);
+  padding: var(--core-spacing-size-05, 12px);
+  border-radius: var(--core-shape-radius-medium, 8px);
+  /* --semantic-typography-font-style-italic: italic; */
+  /* --semantic-typography-font-weight-medium: 500; */
+  /* --core-shape-border-width-thick: 2px; */
+}
+
+.blockquote--default {}
+
+.blockquote--bordered {}
+
+.blockquote--highlighted {}
+
+.blockquote--sm {}
+
+.blockquote--md {}
+
+.blockquote--lg {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

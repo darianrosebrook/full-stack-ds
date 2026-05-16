@@ -1,0 +1,24 @@
+/* @generated:start styles */
+.truncate {
+  color: var(--semantic-color-foreground-link, #d9292b);
+  background-color: var(--semantic-color-background-primary, #ffffff);
+  /* --semantic-typography-font-weight-medium: 500; */
+  /* --core-spacing-size-02: 2px; */
+}
+
+.truncate:hover {
+  color: var(--semantic-color-foreground-link-hover, #ae0001);
+}
+
+.truncate:focus-visible {}
+
+.truncate[aria-expanded="true"] {}
+
+.truncate__content {}
+
+.truncate__toggle {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -1,0 +1,30 @@
+/* @generated:start styles */
+.text-field {
+  gap: var(--core-spacing-size-04, 8px);
+  border-width: var(--core-shape-border-width-hairline, 1px);
+  border-radius: var(--core-shape-radius-medium, 8px);
+  color: var(--semantic-color-foreground-primary, #141414);
+  /* --semantic-color-foreground-tertiary: #717171; */
+}
+
+.text-field:focus-visible {}
+
+.text-field:disabled {}
+
+.text-field--invalid {
+  border-color: var(--semantic-color-status-danger, #d9292b);
+  color: var(--semantic-color-foreground-danger, #d9292b);
+}
+
+.text-field__label {}
+
+.text-field__field {}
+
+.text-field__description {}
+
+.text-field__error {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

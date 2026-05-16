@@ -1,0 +1,30 @@
+/* @generated:start styles */
+.animated-card {
+  transition-duration: var(--core-motion-duration-medium, 250ms);
+  transition-timing-function: var(--core-motion-easing-emphasizedOut, cubic-bezier(0.0, 0.0, 0.2, 1));
+}
+
+.animated-card--article {}
+
+.animated-card--div {}
+
+.animated-card--li {}
+
+.animated-card--a {}
+
+.animated-card:hover {}
+
+.animated-card:focus-visible {}
+
+.animated-card__imageWrapper {}
+
+.animated-card__image {}
+
+.animated-card__title {}
+
+.animated-card__overlay {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -1,0 +1,63 @@
+/* @generated:start styles */
+.dialog {
+  background-color: var(--semantic-color-overlay-scrim, #00000066);
+  color: var(--semantic-color-foreground-secondary, #555555);
+  border-color: var(--semantic-color-border-subtle, #cecece);
+  border-radius: var(--core-shape-radius-large, 16px);
+  padding: var(--core-spacing-size-07, 24px);
+  gap: var(--core-spacing-size-03, 4px);
+  line-height: var(--semantic-typography-line-height-heading, 1);
+  /* --dialog-size-sm-width: ; */
+  /* --dialog-size-sm-maxWidth: ; */
+  /* --dialog-size-md-width: ; */
+  /* --dialog-size-md-maxWidth: ; */
+  /* --dialog-size-lg-width: ; */
+  /* --dialog-size-lg-maxWidth: ; */
+  /* --dialog-size-xl-width: ; */
+  /* --dialog-size-xl-maxWidth: ; */
+  /* --dialog-size-full-width: ; */
+  /* --dialog-size-full-height: ; */
+  /* --core-spacing-size-08: 32px; */
+  /* --semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
+  /* --semantic-typography-heading-04: 18px; */
+  /* --semantic-typography-font-weight-bold: 700; */
+}
+
+.dialog--sm {}
+
+.dialog--md {}
+
+.dialog--lg {}
+
+.dialog--xl {}
+
+.dialog--full {}
+
+.dialog:hover {
+  background-color: var(--semantic-color-background-hover, #cecece);
+}
+
+.dialog:focus-visible {}
+
+.dialog:active {}
+
+.dialog--leaving {}
+
+.dialog__backdrop {}
+
+.dialog__modal {}
+
+.dialog__header {}
+
+.dialog__title {}
+
+.dialog__body {}
+
+.dialog__footer {}
+
+.dialog__closeButton {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

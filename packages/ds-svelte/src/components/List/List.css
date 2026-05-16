@@ -1,0 +1,50 @@
+/* @generated:start styles */
+.list {
+  color: var(--semantic-color-foreground-primary, #141414);
+  border-color: var(--semantic-color-border-subtle, #cecece);
+  padding: var(--core-spacing-size-06, 16px);
+  /* --core-spacing-size-03: 4px; */
+  /* --core-spacing-size-05: 12px; */
+  /* --core-spacing-size-06: 16px; */
+}
+
+.list--ul {}
+
+.list--ol {}
+
+.list--dl {}
+
+.list--default {}
+
+.list--unstyled {}
+
+.list--inline {}
+
+.list--divided {}
+
+.list--spaced {}
+
+.list--none {}
+
+.list--disc {}
+
+.list--circle {}
+
+.list--square {}
+
+.list--decimal {}
+
+.list--alpha {}
+
+.list--roman {}
+
+.list--sm {}
+
+.list--md {}
+
+.list--lg {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -1,0 +1,41 @@
+/* @generated:start styles */
+.spinner {
+  gap: var(--core-spacing-size-04, 8px);
+  /* --spinner-size-xs: ; */
+  /* --spinner-size-sm: ; */
+  /* --spinner-size-md: ; */
+  /* --spinner-size-lg: ; */
+  /* --spinner-thickness-hairline: ; */
+  /* --spinner-thickness-regular: ; */
+  /* --spinner-thickness-bold: ; */
+  /* --semantic-color-background-accent: #d9292b; */
+  /* --semantic-color-border-subtle: #cecece; */
+  /* --spinner-anim-duration: ; */
+}
+
+.spinner--xs {}
+
+.spinner--sm {}
+
+.spinner--md {}
+
+.spinner--lg {}
+
+.spinner--ring {}
+
+.spinner--dots {}
+
+.spinner--bars {}
+
+.spinner--hairline {}
+
+.spinner--regular {}
+
+.spinner--bold {}
+
+.spinner__visual {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

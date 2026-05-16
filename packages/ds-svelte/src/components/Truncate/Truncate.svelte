@@ -1,0 +1,56 @@
+<script lang="ts">
+// @generated:start imports
+import { useTruncate } from "./useTruncate.svelte.js";
+// @generated:end
+
+// @custom:start imports
+
+// @custom:end
+
+// @generated:start props
+interface Props {
+  lines?: number;
+  expandable?: boolean;
+  expanded?: boolean;
+  defaultExpanded?: boolean;
+  onExpandedChange?: (expanded: boolean) => void;
+  expandText?: string;
+  collapseText?: string;
+  class?: string;
+  children?: import('svelte').Snippet;
+}
+
+let { lines, expandable, expanded, defaultExpanded, onExpandedChange, expandText = "Show more", collapseText = "Show less", class: className, children }: Props = $props();
+// @generated:end
+
+// @generated:start hook
+const behavior = useTruncate({
+  expanded: () => expanded,
+  defaultExpanded: () => defaultExpanded,
+  onExpandedChange: () => onExpandedChange,
+});
+// @generated:end
+
+// @generated:start classes
+const classes = $derived(
+  [
+    "truncate",
+    behavior.expanded ? "truncate--expanded" : null,
+    className,
+  ].filter(Boolean).join(" ")
+);
+// @generated:end
+
+// @custom:start trailing
+
+// @custom:end
+</script>
+
+<div class={classes}>
+  <span class={'truncate__content'}>
+    {@render children?.()}
+  </span>
+  {#if expandable}
+  <button class={'truncate__toggle'} type="button" aria-expanded={behavior.expanded}></button>
+  {/if}
+</div>
