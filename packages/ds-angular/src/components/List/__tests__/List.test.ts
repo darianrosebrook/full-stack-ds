@@ -1,0 +1,169 @@
+// @generated:start imports
+import { describe, expect, it, beforeEach, jest } from "@jest/globals";
+import { TestBed } from "@angular/core/testing";
+import { ListComponent } from "../List.component";
+// @generated:end
+
+// @generated:start tests
+describe("List — unit", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [ListComponent] });
+  });
+
+  it("creates the component", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    expect(fixture.componentInstance).toBeInstanceOf(ListComponent);
+  });
+
+  it("applies the base CSS class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    expect(classTokens(fixture.componentInstance)).toContain("list");
+  });
+
+  it("applies as=ul variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.as = "ul";
+    expect(classTokens(fixture.componentInstance)).toContain("list--ul");
+  });
+
+  it("applies as=ol variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.as = "ol";
+    expect(classTokens(fixture.componentInstance)).toContain("list--ol");
+  });
+
+  it("applies as=dl variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.as = "dl";
+    expect(classTokens(fixture.componentInstance)).toContain("list--dl");
+  });
+
+  it("applies variant=default variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.variant = "default";
+    expect(classTokens(fixture.componentInstance)).toContain("list--default");
+  });
+
+  it("applies variant=unstyled variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.variant = "unstyled";
+    expect(classTokens(fixture.componentInstance)).toContain("list--unstyled");
+  });
+
+  it("applies variant=inline variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.variant = "inline";
+    expect(classTokens(fixture.componentInstance)).toContain("list--inline");
+  });
+
+  it("applies variant=divided variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.variant = "divided";
+    expect(classTokens(fixture.componentInstance)).toContain("list--divided");
+  });
+
+  it("applies variant=spaced variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.variant = "spaced";
+    expect(classTokens(fixture.componentInstance)).toContain("list--spaced");
+  });
+
+  it("applies marker=default variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "default";
+    expect(classTokens(fixture.componentInstance)).toContain("list--default");
+  });
+
+  it("applies marker=none variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "none";
+    expect(classTokens(fixture.componentInstance)).toContain("list--none");
+  });
+
+  it("applies marker=disc variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "disc";
+    expect(classTokens(fixture.componentInstance)).toContain("list--disc");
+  });
+
+  it("applies marker=circle variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "circle";
+    expect(classTokens(fixture.componentInstance)).toContain("list--circle");
+  });
+
+  it("applies marker=square variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "square";
+    expect(classTokens(fixture.componentInstance)).toContain("list--square");
+  });
+
+  it("applies marker=decimal variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "decimal";
+    expect(classTokens(fixture.componentInstance)).toContain("list--decimal");
+  });
+
+  it("applies marker=alpha variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "alpha";
+    expect(classTokens(fixture.componentInstance)).toContain("list--alpha");
+  });
+
+  it("applies marker=roman variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.marker = "roman";
+    expect(classTokens(fixture.componentInstance)).toContain("list--roman");
+  });
+
+  it("applies spacing=none variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.spacing = "none";
+    expect(classTokens(fixture.componentInstance)).toContain("list--none");
+  });
+
+  it("applies spacing=sm variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.spacing = "sm";
+    expect(classTokens(fixture.componentInstance)).toContain("list--sm");
+  });
+
+  it("applies spacing=md variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.spacing = "md";
+    expect(classTokens(fixture.componentInstance)).toContain("list--md");
+  });
+
+  it("applies spacing=lg variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.spacing = "lg";
+    expect(classTokens(fixture.componentInstance)).toContain("list--lg");
+  });
+
+  it("applies size=sm variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.size = "sm";
+    expect(classTokens(fixture.componentInstance)).toContain("list--sm");
+  });
+
+  it("applies size=md variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.size = "md";
+    expect(classTokens(fixture.componentInstance)).toContain("list--md");
+  });
+
+  it("applies size=lg variant class", () => {
+    const fixture = TestBed.createComponent(ListComponent);
+    fixture.componentInstance.size = "lg";
+    expect(classTokens(fixture.componentInstance)).toContain("list--lg");
+  });
+});
+
+function classTokens(component: { classes: () => string }): string[] {
+  return component.classes().split(/\s+/).filter(Boolean);
+}
+// @generated:end
+
+// @custom:start tests
+
+// @custom:end

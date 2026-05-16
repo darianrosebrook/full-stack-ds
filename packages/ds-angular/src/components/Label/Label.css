@@ -1,0 +1,11 @@
+/* @generated:start styles */
+.label {
+  color: var(--semantic-color-foreground-primary, #141414);
+  line-height: var(--semantic-typography-line-height-tight, 1.2);
+  /* --semantic-typography-font-weight-medium: 500; */
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

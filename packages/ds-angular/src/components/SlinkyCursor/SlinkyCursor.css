@@ -1,0 +1,16 @@
+/* @generated:start styles */
+.slinky-cursor {
+  border-color: var(--semantic-color-border-primary, #f29495);
+  border-radius: var(--core-shape-radius-full, 9999px);
+}
+
+.slinky-cursor:active {
+  border-color: var(--semantic-color-border-hover, #f29495);
+}
+
+.slinky-cursor__pest {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

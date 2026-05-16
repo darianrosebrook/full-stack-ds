@@ -1,0 +1,55 @@
+/* @generated:start styles */
+.details {
+  padding: var(--core-spacing-size-06, 16px);
+  border-radius: var(--semantic-shape-control-radius-default, 8px);
+  background-color: var(--semantic-color-background-primary, #ffffff);
+  color: var(--semantic-color-foreground-secondary, #555555);
+  border-color: var(--semantic-color-border-accent, #d9292b);
+  gap: var(--core-spacing-size-02, 2px);
+  line-height: var(--semantic-typography-line-height-body, 1.5);
+  /* --core-spacing-size-05: 12px; */
+  /* --core-shape-border-width-thick: 2px; */
+  /* --semantic-color-border-accent: #d9292b; */
+  /* --core-spacing-size-02: 2px; */
+  /* --semantic-typography-font-weight-medium: 500; */
+}
+
+.details--default {}
+
+.details--inline {}
+
+.details--compact {}
+
+.details--left {}
+
+.details--right {}
+
+.details--none {}
+
+.details:hover {
+  background-color: var(--semantic-color-background-hover, #cecece);
+  border-color: var(--semantic-color-border-bold, #8f8f8f);
+}
+
+.details:focus-visible {}
+
+.details:disabled {}
+
+.details--open {}
+
+.details--closed {}
+
+.details__summary {}
+
+.details__summaryContent {}
+
+.details__icon {}
+
+.details__summaryText {}
+
+.details__content {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -1,0 +1,36 @@
+/* @generated:start styles */
+.avatar {
+  border-radius: var(--core-shape-radius-small, 4px);
+  background-color: var(--semantic-color-background-inverse, #141414);
+  color: var(--semantic-color-foreground-primary, #141414);
+  border-color: var(--semantic-color-border-light, #fceaea);
+  /* --core-spacing-size-05: 12px; */
+  /* --core-spacing-size-06: 16px; */
+  /* --core-spacing-size-08: 32px; */
+  /* --core-spacing-size-10: 64px; */
+  /* --core-spacing-size-03: 4px; */
+  /* --core-shape-border-width-hairline: 1px; */
+  /* --core-typography-weight-medium: 500; */
+  /* --core-typography-font-family-sans: "Inter", sans-serif; */
+}
+
+.avatar--small {}
+
+.avatar--medium {}
+
+.avatar--large {}
+
+.avatar--extra-large {}
+
+.avatar:focus-visible {}
+
+.avatar__image {}
+
+.avatar__initials {}
+
+.avatar__status {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

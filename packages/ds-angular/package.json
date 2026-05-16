@@ -1,0 +1,43 @@
+{
+  "name": "@full-stack-ds/angular",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Angular implementation of Full Stack DS (Stack primitive + generated components)",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "jest --config jest.config.cjs",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0"
+  },
+  "devDependencies": {
+    "@angular/common": "^19.2.21",
+    "@angular/compiler": "^19.2.21",
+    "@angular/compiler-cli": "^19.2.21",
+    "@angular/core": "^19.2.21",
+    "@angular/platform-browser": "^19.2.21",
+    "@angular/platform-browser-dynamic": "^19.2.21",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "jest-preset-angular": "^16.1.4",
+    "rxjs": "^7.8.0",
+    "typescript": "^6.0.2",
+    "zone.js": "^0.15.0"
+  }
+}

@@ -1,0 +1,29 @@
+/* @generated:start styles */
+.otp {
+  background-color: var(--semantic-color-background-secondary, #efefef);
+  color: var(--semantic-color-foreground-secondary, #555555);
+  border-color: var(--semantic-color-border-light, #fceaea);
+  padding: var(--core-spacing-size-07, 24px);
+  border-radius: var(--core-shape-radius-medium, 8px);
+}
+
+.otp--numeric {}
+
+.otp--alphanumeric {}
+
+.otp:focus-visible {
+  border-color: var(--semantic-color-border-accent, #d9292b);
+}
+
+.otp:disabled {}
+
+.otp__group {}
+
+.otp__field {}
+
+.otp__separator {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -1,0 +1,90 @@
+// @generated:start imports
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { NgClass, NgIf } from "@angular/common";
+import { StackComponent } from "../../primitives/index.js";
+// @generated:end
+
+// @custom:start imports
+
+// @custom:end
+
+// @generated:start types
+export type TextElement = "p" | "span" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+export type TextVariant = "display" | "headline" | "title" | "body" | "caption" | "overline" | "code";
+export type TextSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+export type TextWeight = "light" | "normal" | "medium" | "semibold" | "bold";
+export type TextAlign = "left" | "center" | "right" | "justify";
+export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
+// @generated:end
+
+// @custom:start types
+
+// @custom:end
+
+// @generated:start component
+@Component({
+  selector: "fsds-text",
+  standalone: true,
+  imports: [NgClass, NgIf],
+  template: `<p [ngClass]="classes()"></p>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TextComponent {
+  @Input() as?: TextElement;
+  @Input() variant?: TextVariant;
+  @Input() size?: TextSize;
+  @Input() weight?: TextWeight;
+  @Input() align?: TextAlign;
+  @Input() transform?: TextTransform;
+  @Input() truncate?: boolean;
+  @Input() class?: string;
+
+  classes(): string {
+    return [
+      "text",
+      this.variant ? `text--${this.variant}` : null,
+      this.size ? `text--${this.size}` : null,
+      this.weight ? `text--${this.weight}` : null,
+      this.align ? `text--${this.align}` : null,
+      this.transform ? `text--${this.transform}` : null,
+      this.class,
+    ].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-text-title",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack as="h3" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TextTitleComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["text__title", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "fsds-text-body",
+  standalone: true,
+  imports: [NgClass, StackComponent],
+  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TextBodyComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["text__body", this.class].filter(Boolean).join(" ");
+  }
+}
+// @generated:end
+
+// @custom:start trailing
+
+// @custom:end
