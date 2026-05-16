@@ -1,0 +1,49 @@
+/* @generated:start styles */
+.field {
+  gap: var(--core-spacing-size-03, 4px);
+  border-radius: var(--semantic-shape-control-radius-default, 8px);
+  border-color: var(--semantic-color-border-bold, #8f8f8f);
+  /* --semantic-spacing-density-compact-md: 12px; */
+  /* --semantic-spacing-density-compact-sm: 8px; */
+  /* --semantic-color-background-elevated: #ffffff; */
+  /* --semantic-color-foreground-primary: #141414; */
+  /* --semantic-color-border-focus: #d9292b; */
+  /* --semantic-color-border-danger: #ae0001; */
+  /* --semantic-color-foreground-danger: #d9292b; */
+  /* --semantic-color-feedback-border-success: #336006; */
+  /* --core-spacing-size-03: 4px; */
+}
+
+.field--idle {}
+
+.field--validating {}
+
+.field--valid {}
+
+.field--invalid {}
+
+.field:focus-visible {}
+
+.field:disabled {}
+
+.field__label {
+  /* --semantic-typography-body-small-font-size: 14px; */
+  /* --semantic-color-foreground-secondary: #555555; */
+}
+
+.field__header {}
+
+.field__control {}
+
+.field__help {}
+
+.field__error {}
+
+.field__meta {}
+
+.field__validatingIndicator {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

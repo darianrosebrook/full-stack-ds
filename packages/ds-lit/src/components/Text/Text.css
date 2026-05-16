@@ -1,0 +1,88 @@
+/* @generated:start styles */
+.text {
+  color: var(--semantic-color-foreground-secondary, #555555);
+  line-height: var(--semantic-typography-line-height-body, 1.5);
+  /* --semantic-typography-font-weight-light: 300; */
+  /* --semantic-typography-font-weight-regular: 400; */
+  /* --semantic-typography-font-weight-medium: 500; */
+  /* --semantic-typography-font-weight-bold: 700; */
+}
+
+.text--display {}
+
+.text--headline {}
+
+.text--title {}
+
+.text--body {}
+
+.text--caption {}
+
+.text--overline {}
+
+.text--code {}
+
+.text--xs {}
+
+.text--sm {}
+
+.text--md {}
+
+.text--lg {}
+
+.text--xl {}
+
+.text--2xl {}
+
+.text--3xl {}
+
+.text--light {}
+
+.text--normal {}
+
+.text--medium {}
+
+.text--semibold {}
+
+.text--bold {}
+
+.text--left {}
+
+.text--center {}
+
+.text--right {}
+
+.text--justify {}
+
+.text--none {}
+
+.text--uppercase {}
+
+.text--lowercase {}
+
+.text--capitalize {}
+
+.text--error {
+  color: var(--semantic-color-foreground-danger, #d9292b);
+}
+
+.text--success {
+  color: var(--semantic-color-foreground-success, #487e1e);
+}
+
+.text__headline {}
+
+.text__title {}
+
+.text__body {}
+
+.text__caption {}
+
+.text__overline {}
+
+.text__code {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

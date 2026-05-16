@@ -1,0 +1,31 @@
+/* @generated:start styles */
+.breadcrumbs {
+  color: var(--semantic-color-foreground-tertiary, #717171);
+  background-color: var(--semantic-color-background-elevated, #ffffff);
+  border-color: var(--semantic-color-border-subtle, #cecece);
+  line-height: var(--semantic-typography-line-height-collapse, 1);
+  border-radius: var(--core-shape-radius-small, 4px);
+  gap: var(--core-spacing-size-03, 4px);
+  padding: var(--core-spacing-size-03, 4px);
+}
+
+.breadcrumbs:hover {}
+
+.breadcrumbs:focus-visible {
+  outline-color: var(--semantic-color-border-accent, #d9292b);
+}
+
+.breadcrumbs__list {}
+
+.breadcrumbs__link {}
+
+.breadcrumbs__current {}
+
+.breadcrumbs__separator {}
+
+.breadcrumbs__overflow {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

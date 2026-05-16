@@ -1,0 +1,43 @@
+{
+  "name": "@full-stack-ds/lit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lit implementation of Full Stack DS (Stack element + generated components)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./primitives": {
+      "types": "./dist/primitives/index.d.ts",
+      "import": "./dist/primitives/index.js",
+      "require": "./dist/primitives/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run -c vitest.config.ts",
+    "test:watch": "vitest -c vitest.config.ts"
+  },
+  "peerDependencies": {
+    "lit": "^3.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "^27.0.1",
+    "lit": "^3.2.0",
+    "tsup": "^8.3.0",
+    "typescript": "^6.0.2",
+    "vitest": "^3.2.4",
+    "vitest-axe": "^0.1.0"
+  }
+}
