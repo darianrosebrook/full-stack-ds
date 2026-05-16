@@ -1,6 +1,7 @@
 # Build output
 dist/
 *.tsbuildinfo
+.svelte-kit/
 
 # Dependencies
 node_modules/
