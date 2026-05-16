@@ -1,0 +1,178 @@
+import { useMemo, useState } from "react";
+import type { ComponentBundle, Framework } from "../types/data";
+import type { Route } from "../router";
+import { buildHref } from "../router";
+import { FrameworkPreview } from "../runtime/FrameworkPreview";
+import { CodeViewer } from "../components/CodeViewer";
+import { buildTraceIndex } from "../trace/buildTraceIndex";
+import { buildDemo } from "../runtime/demos";
+import type { TraceSelection } from "../trace/types";
+
+interface DeveloperViewProps {
+  component: ComponentBundle;
+  route: Route;
+  trace: TraceSelection | null;
+  onTrace: (selection: TraceSelection | null) => void;
+}
+
+const FRAMEWORK_TABS: { key: Framework; label: string; dot: string }[] = [
+  { key: "react", label: "React", dot: "lang-react" },
+  { key: "vue", label: "Vue", dot: "lang-vue" },
+  { key: "svelte", label: "Svelte", dot: "lang-svelte" },
+  { key: "angular", label: "Angular", dot: "lang-angular" },
+  { key: "lit", label: "Lit", dot: "lang-lit" },
+];
+
+export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps) {
+  const availableFrameworks = useMemo<Framework[]>(
+    () => FRAMEWORK_TABS.filter((t) => component.sources[t.key]?.component).map((t) => t.key),
+    [component],
+  );
+  const [framework, setFramework] = useState<Framework>(availableFrameworks[0] ?? "react");
+
+  const source = component.sources[framework];
+  const componentFile = source?.component;
+  const cssFile = source?.css;
+  const hookFile = source?.hook;
+
+  const traceIndex = useMemo(() => {
+    if (!componentFile) return { framework, componentName: component.name, hits: [] };
+    return buildTraceIndex(framework, component.name, componentFile.code, component.contract);
+  }, [framework, componentFile, component]);
+
+  const demo = useMemo(() => buildDemo(framework, component), [framework, component]);
+
+  const handleHitClick = (hit: import("../trace/types").TraceHit) => {
+    onTrace({ hit, framework, componentName: component.name });
+  };
+
+  return (
+    <div className="page">
+      <p className="page-eyebrow">{(component.contract.layer ?? "component").toUpperCase()}</p>
+      <h1 className="page-title">{component.name}</h1>
+      <p className="page-lede">
+        Inspect the source for {component.name} across every emitted framework.
+        Highlighted tokens map back to the contract field that produced them —
+        click any to see the contract path in the panel on the right.
+      </p>
+
+      <div className="tabs">
+        <a
+          className="tab"
+          href={buildHref({ kind: "component", name: component.name, tab: "design" })}
+        >
+          Design
+        </a>
+        <a
+          className="tab tab--active"
+          href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
+        >
+          Developer
+        </a>
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "var(--space-7) 0 var(--space-5)" }}>
+        <div className="fw-tabs" role="tablist" aria-label="Target framework">
+          {FRAMEWORK_TABS.map((t) => {
+            const available = availableFrameworks.includes(t.key);
+            return (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                aria-selected={framework === t.key}
+                disabled={!available}
+                className={`fw-tab${framework === t.key ? " fw-tab--active" : ""}`}
+                onClick={() => {
+                  setFramework(t.key);
+                  onTrace(null);
+                }}
+                style={{ opacity: available ? 1 : 0.4 }}
+                title={available ? t.label : `No ${t.label} source generated`}
+              >
+                <span className={`lang-dot ${t.dot}`} />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+        <span className="muted" style={{ fontSize: "var(--fs-200)" }}>
+          {traceIndex.hits.length} traced region{traceIndex.hits.length === 1 ? "" : "s"}
+        </span>
+      </div>
+
+      {!componentFile ? (
+        <div className="card card--inset muted">No source available for {framework}.</div>
+      ) : (
+        <>
+          <section className="section" style={{ marginTop: 0 }}>
+            <header className="section-header">
+              <h2 className="section-title">Live preview</h2>
+              <span className="section-meta">in-iframe {framework}</span>
+            </header>
+            <div className="card">
+              <div className="card-toolbar">
+                <span>{framework}</span>
+                <span className="subtle">demo harness</span>
+              </div>
+              <div className="preview-frame">
+                <FrameworkPreview
+                  key={`${framework}-${component.name}`}
+                  framework={framework}
+                  componentName={component.name}
+                  componentSource={componentFile}
+                  css={cssFile}
+                  demo={demo}
+                  height={280}
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="section">
+            <header className="section-header">
+              <h2 className="section-title">Component source</h2>
+              <span className="section-meta">{componentFile.filename}</span>
+            </header>
+            <CodeViewer
+              code={componentFile.code}
+              filename={componentFile.filename}
+              hits={traceIndex.hits}
+              onHitClick={handleHitClick}
+              selectedHitIndex={
+                trace && trace.framework === framework
+                  ? traceIndex.hits.findIndex(
+                      (h) =>
+                        h.start.line === trace.hit.start.line &&
+                        h.start.column === trace.hit.start.column &&
+                        h.contractPath === trace.hit.contractPath,
+                    )
+                  : null
+              }
+            />
+          </section>
+
+          {hookFile && (
+            <section className="section">
+              <header className="section-header">
+                <h2 className="section-title">Hook / behavior</h2>
+                <span className="section-meta">{hookFile.filename}</span>
+              </header>
+              <CodeViewer code={hookFile.code} filename={hookFile.filename} />
+            </section>
+          )}
+
+          {cssFile && (
+            <section className="section">
+              <header className="section-header">
+                <h2 className="section-title">Styles</h2>
+                <span className="section-meta">{cssFile.filename}</span>
+              </header>
+              <CodeViewer code={cssFile.code} filename={cssFile.filename} />
+            </section>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
