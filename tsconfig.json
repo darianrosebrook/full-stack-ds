@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@full-stack-ds/react": ["./packages/ds-react/src/index.ts"],
+      "@full-stack-ds/react/*": ["./packages/ds-react/src/*"]
+    },
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*", "packages/ds-react/src/**/*", "packages/ds-contracts-fsds/a2ui/**/*"],
+  "exclude": ["node_modules", "dist", "**/__tests__/**", "**/*.test.*"]
+}

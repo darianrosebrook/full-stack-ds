@@ -1,0 +1,63 @@
+# Build output
+dist/
+*.tsbuildinfo
+
+# Dependencies
+node_modules/
+
+# This project uses pnpm — block stray npm/yarn lockfiles
+package-lock.json
+yarn.lock
+
+# Caches
+.vite/
+.vitest-cache/
+.cache/
+__pycache__/
+*.pyc
+
+# Test / coverage
+coverage/
+*.lcov
+
+# Playwright
+playwright-report/
+test-results/
+.playwright/
+
+# Source maps
+*.map
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Scratch
+tmp/
+
+# Claude runtime state — hooks/ and settings.json are tracked,
+# everything else under .claude/ is per-machine.
+CLAUDE.md
+.claude/logs/
+.claude/sessions/
+.claude/plans/
+.claude/worktrees/
+.claude/transcripts/
+.claude/cache/
+
+# CAWS runtime state — specs and waivers are tracked,
+# state/cache/event logs are per-machine.
+**/.caws/state/
+**/.caws/cache/
+**/.caws/events.jsonl
