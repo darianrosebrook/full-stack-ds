@@ -33,10 +33,6 @@ export class AccordionElement extends LitElement {
     onValueChange: (v) => this.onValueChange?.(v),
   });
 
-  private handleOpennessChange(event: Event): void {
-    this.behavior.setOpenness((event.target as HTMLInputElement).value);
-  }
-
   private computeClasses(): string {
     return [
       "accordion",

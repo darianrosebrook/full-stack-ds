@@ -36,10 +36,6 @@ export class TabsElement extends LitElement {
     onValueChange: (v) => this.onValueChange?.(v),
   });
 
-  private handleActiveTabChange(event: Event): void {
-    this.behavior.setActiveTab((event.target as HTMLInputElement).value);
-  }
-
   private computeClasses(): string {
     return [
       "tabs",

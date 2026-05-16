@@ -39,10 +39,6 @@ export class PopoverElement extends LitElement {
     closeOnOutsideClick: this.closeOnOutsideClick,
   });
 
-  private handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
-
   private computeClasses(): string {
     return [
       "popover",

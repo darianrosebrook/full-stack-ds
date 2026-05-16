@@ -35,10 +35,6 @@ export class OTPElement extends LitElement {
     onChange: (v) => this.onChange?.(v),
   });
 
-  private handleValueChange(event: Event): void {
-    this.behavior.setValue((event.target as HTMLInputElement).value);
-  }
-
   private computeClasses(): string {
     return [
       "otp",

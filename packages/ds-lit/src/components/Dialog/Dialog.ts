@@ -39,10 +39,6 @@ export class DialogElement extends LitElement {
     closeOnBackdropClick: this.closeOnBackdropClick,
   });
 
-  private handleOpennessChange(event: Event): void {
-    this.behavior.setOpenness((event.target as HTMLInputElement).checked);
-  }
-
   private _handleOverlayClick = (): void => {
     if (this.closeOnBackdropClick !== false) {
       this.behavior.setOpenness(false);

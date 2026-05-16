@@ -32,10 +32,6 @@ export class SheetElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
-  private handleOpennessChange(event: Event): void {
-    this.behavior.setOpenness((event.target as HTMLInputElement).checked);
-  }
-
   private _handleOverlayClick = (): void => {
     this.behavior.setOpenness(false);
   };

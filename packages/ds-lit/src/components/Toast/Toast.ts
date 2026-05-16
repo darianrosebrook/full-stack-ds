@@ -32,10 +32,6 @@ export class ToastElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
-  private handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
-
   private computeClasses(): string {
     return [
       "toast",

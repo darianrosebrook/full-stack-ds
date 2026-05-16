@@ -38,10 +38,6 @@ export class WalkthroughElement extends LitElement {
     closeOnOutsideClick: this.closeOnOutsideClick,
   });
 
-  private handleStepChange(event: Event): void {
-    this.behavior.setStep(Number((event.target as HTMLInputElement).value));
-  }
-
   private computeClasses(): string {
     return [
       "walkthrough",

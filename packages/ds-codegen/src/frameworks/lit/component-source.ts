@@ -559,15 +559,35 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
 
   // Event handler methods (Lit templates can host arrow fns inline, but
   // splitting them out makes the html template cleaner and easier to test).
+  //
+  // The handler reads the new value off the native DOM event. Type extraction:
+  //   boolean → input.checked
+  //   number  → Number(input.value)
+  //   string  → input.value
+  //   Date    → input.valueAsDate  (input[type=date|datetime-local|month|week])
+  //
+  // For value types that can't be read from a DOM input (Date[], custom shapes,
+  // event-shaped channels), skip the handler emission entirely. The template
+  // won't reference the handler, and consumers wire the state via
+  // `el.behavior.set<Name>(...)` directly.
   for (const ch of channels) {
     const handlerName = `handle${capitalizeLit(ch.name)}Change`;
     const setter = `set${capitalizeLit(ch.name)}`;
-    const valueExpr =
-      ch.valueType === "boolean"
-        ? `(event.target as HTMLInputElement).checked`
-        : ch.valueType === "number"
-          ? `Number((event.target as HTMLInputElement).value)`
-          : `(event.target as HTMLInputElement).value`;
+    const handlerRef = `this.${handlerName}(e)`;
+    if (!template.includes(handlerRef)) {
+      // Handler is unreachable — skip to avoid emitting code that mistypes
+      // the channel value (e.g. reading a string into a Date setter).
+      continue;
+    }
+    const valueExpr = litChannelValueExtraction(ch.valueType ?? "unknown");
+    if (valueExpr === null) {
+      // Type isn't DOM-extractable; the template shouldn't have referenced
+      // the handler in the first place. Surface the contradiction instead
+      // of silently generating broken code.
+      throw new Error(
+        `Lit codegen: ${ir.name}.${ch.name} channel has valueType "${ch.valueType}" which can't be read from a DOM input, but the rendered template references handle${capitalizeLit(ch.name)}Change. Either change the contract's valueType to a DOM-extractable scalar (boolean/number/string/Date), or remove the @change binding from the contract.`,
+      );
+    }
     lines.push(``);
     lines.push(`  private ${handlerName}(event: Event): void {`);
     lines.push(`    this.behavior.${setter}(${valueExpr});`);
@@ -891,6 +911,37 @@ function formatLitAttrs(attrs: string[]): string {
 
 function capitalizeLit(s: string): string {
   return s[0].toUpperCase() + s.slice(1);
+}
+
+/**
+ * Map a channel's TypeScript value type to the DOM expression that reads the
+ * post-change value off a native input element. Returns `null` when the type
+ * isn't DOM-extractable from a single `<input>` (e.g. `Date[]` ranges,
+ * complex object shapes) — the caller decides whether to skip emission or
+ * surface an error.
+ *
+ * Supports:
+ *   boolean        → input.checked      (checkbox-style)
+ *   number         → Number(input.value)
+ *   string         → input.value
+ *   Date           → input.valueAsDate  (input[type=date|datetime-local|month|week])
+ *   Date | null    → input.valueAsDate
+ */
+function litChannelValueExtraction(valueType: string): string | null {
+  if (valueType === "boolean") {
+    return `(event.target as HTMLInputElement).checked`;
+  }
+  if (valueType === "number") {
+    return `Number((event.target as HTMLInputElement).value)`;
+  }
+  if (valueType === "string") {
+    return `(event.target as HTMLInputElement).value`;
+  }
+  // Date or `Date | null` (but not `Date[]` or `Date | Date[] | null`).
+  if (/^Date(\s*\|\s*null)?$/.test(valueType.trim())) {
+    return `(event.target as HTMLInputElement).valueAsDate`;
+  }
+  return null;
 }
 
 const LIT_DOM_SKIP_PROPS = new Set([

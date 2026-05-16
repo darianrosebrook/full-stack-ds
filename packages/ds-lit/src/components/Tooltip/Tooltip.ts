@@ -40,10 +40,6 @@ export class TooltipElement extends LitElement {
     closeOnBlur: this.closeOnBlur,
   });
 
-  private handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
-
   private computeClasses(): string {
     return [
       "tooltip",

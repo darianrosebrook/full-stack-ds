@@ -34,10 +34,6 @@ export class TruncateElement extends LitElement {
     onExpandedChange: (v) => this.onExpandedChange?.(v),
   });
 
-  private handleExpandedChange(event: Event): void {
-    this.behavior.setExpanded((event.target as HTMLInputElement).checked);
-  }
-
   private computeClasses(): string {
     return [
       "truncate",

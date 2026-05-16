@@ -41,10 +41,6 @@ export class CommandElement extends LitElement {
     onSearchChange: (v) => this.onSearchChange?.(v),
   });
 
-  private handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
-
   private handleSearchChange(event: Event): void {
     this.behavior.setSearch((event.target as HTMLInputElement).value);
   }
