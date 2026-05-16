@@ -39,7 +39,8 @@
                     "type": "search",
                     "role": "combobox",
                     "aria-autocomplete": "list",
-                    "aria-expanded": "true"
+                    "aria-expanded": "true",
+                    "aria-controls": "fsds-command-listbox"
                   },
                   "bindings": {
                     "placeholder": "prop:placeholder",
@@ -52,7 +53,7 @@
             {
               "tag": "div",
               "part": "list",
-              "attrs": { "role": "listbox" },
+              "attrs": { "role": "listbox", "id": "fsds-command-listbox" },
               "children": [
                 { "tag": "div", "part": "empty" },
                 {

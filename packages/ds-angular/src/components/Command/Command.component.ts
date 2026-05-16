@@ -30,9 +30,9 @@ import { useCommand } from "./useCommand.js";
     <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="label">
       <div [ngClass]="'command__inputWrapper'">
         <span [ngClass]="'command__searchIcon'" aria-hidden="true"></span>
-        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" [placeholder]="placeholder" [value]="behavior.search()" (change)="handleSearchChange($event)" />
+        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="fsds-command-listbox" [placeholder]="placeholder" [value]="behavior.search()" (change)="handleSearchChange($event)" />
       </div>
-      <div [ngClass]="'command__list'" role="listbox">
+      <div [ngClass]="'command__list'" role="listbox" id="fsds-command-listbox">
         <div [ngClass]="'command__empty'"></div>
         <div [ngClass]="'command__group'">
           <div [ngClass]="'command__groupHeading'"></div>

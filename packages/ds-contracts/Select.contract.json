@@ -10,7 +10,8 @@
       "part": "root",
       "attrs": {
         "role": "combobox",
-        "aria-haspopup": "listbox"
+        "aria-haspopup": "listbox",
+        "aria-controls": "fsds-select-listbox"
       },
       "bindings": {
         "aria-expanded": "channel:open.value",
@@ -38,7 +39,8 @@
           "part": "content",
           "if": "open",
           "attrs": {
-            "role": "listbox"
+            "role": "listbox",
+            "id": "fsds-select-listbox"
           },
           "children": [
             {

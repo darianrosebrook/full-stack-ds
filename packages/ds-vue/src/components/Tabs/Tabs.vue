@@ -63,7 +63,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="tablist" :data-testid="props['data-testid']">
+  <div :class="classNames" :data-testid="props['data-testid']">
     <div :class="'tabs__list'" role="tablist">
       <button :class="'tabs__tab'" role="tab" type="button" :aria-selected="behavior.activeTab.value === undefined ? undefined : Boolean(behavior.activeTab.value)"></button>
       <span :class="'tabs__indicator'" aria-hidden="true"></span>

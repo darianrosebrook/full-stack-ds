@@ -140,9 +140,9 @@ export function Command({
       <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label} aria-labelledby={ariaLabelledBy}>
         <div className="command__inputWrapper">
           <span className="command__searchIcon" aria-hidden="true" />
-          <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" placeholder={placeholder} value={search} onChange={(e) => setSearch(e.target.value)} />
+          <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="fsds-command-listbox" placeholder={placeholder} value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <div className="command__list" role="listbox">
+        <div className="command__list" role="listbox" id="fsds-command-listbox">
           <div className="command__empty" />
           <div className="command__group">
             <div className="command__groupHeading" />

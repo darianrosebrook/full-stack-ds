@@ -23,12 +23,12 @@ export type SelectSize = "sm" | "md" | "lg";
   selector: "fsds-select",
   standalone: true,
   imports: [NgClass, NgIf],
-  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
+  template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
   <button [ngClass]="'select__trigger'" type="button" [disabled]="disabled">
     <span [ngClass]="'select__text'"></span>
   </button>
   <ng-container *ngIf="behavior.open()">
-    <div [ngClass]="'select__content'" role="listbox">
+    <div [ngClass]="'select__content'" role="listbox" id="fsds-select-listbox">
       <ng-container *ngIf="searchable">
         <div [ngClass]="'select__search'">
           <input type="text" />

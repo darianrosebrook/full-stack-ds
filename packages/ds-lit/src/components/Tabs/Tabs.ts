@@ -45,7 +45,7 @@ export class TabsElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="tablist">
+    return html`<div class="${this.computeClasses()}">
   <div class=${'tabs__list'} role="tablist">
     <button class=${'tabs__tab'} role="tab" type="button" aria-selected=${this.behavior.activeTab}></button>
     <span class=${'tabs__indicator'} aria-hidden="true"></span>

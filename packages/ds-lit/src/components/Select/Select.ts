@@ -56,12 +56,12 @@ export class SelectElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${this.disabled}>
+    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${this.disabled}>
   <button class=${'select__trigger'} type="button" ?disabled=${this.disabled}>
     <span class=${'select__text'}></span>
   </button>
   ${this.behavior.open ? html`
-  <div class=${'select__content'} role="listbox">
+  <div class=${'select__content'} role="listbox" id="fsds-select-listbox">
     ${this.searchable ? html`
     <div class=${'select__search'}>
       <input type="text" />

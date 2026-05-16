@@ -57,7 +57,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="tablist">
+<div class={classes}>
   <div class={'tabs__list'} role="tablist">
     <button class={'tabs__tab'} role="tab" type="button" aria-selected={behavior.activeTab}></button>
     <span class={'tabs__indicator'} aria-hidden="true"></span>

@@ -125,7 +125,7 @@ export function Tabs({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="tablist" data-testid={testId} {...rest}>
+  <div className={`${classNames}`} data-testid={testId} {...rest}>
     <div className="tabs__list" role="tablist">
       <button className="tabs__tab" role="tab" type="button" aria-selected={activeTab !== undefined ? (String(activeTab) as "true" | "false") : undefined} />
       <span className="tabs__indicator" aria-hidden="true" />

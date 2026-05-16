@@ -54,7 +54,6 @@
   },
   "states": ["default", "hover", "focus"],
   "a11y": {
-    "role": "tablist",
     "labeling": ["aria-label", "aria-labelledby"],
     "keyboard": [
       {

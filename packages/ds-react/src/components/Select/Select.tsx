@@ -140,12 +140,12 @@ export function Select({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
+  <div className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
     <button className="select__trigger" type="button" disabled={disabled}>
       <span className="select__text" />
     </button>
     {open && (
-      <div className="select__content" role="listbox">
+      <div className="select__content" role="listbox" id="fsds-select-listbox">
         {searchable && (
           <div className="select__search">
             <input type="text" />

@@ -72,11 +72,11 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="combobox" aria-haspopup="listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']">
+  <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']">
     <button :class="'select__trigger'" type="button" :disabled="props.disabled">
       <span :class="'select__text'"></span>
     </button>
-    <div v-if="behavior.open.value" :class="'select__content'" role="listbox">
+    <div v-if="behavior.open.value" :class="'select__content'" role="listbox" id="fsds-select-listbox">
       <div v-if="props.searchable" :class="'select__search'">
         <input type="text" />
       </div>
