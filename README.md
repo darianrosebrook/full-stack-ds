@@ -4,19 +4,21 @@ A design system that generates React, Vue, Svelte, Angular, and Lit packages fro
 
 ## The architectural claim
 
-This repository is not, primarily, a design system. It is a falsifiable claim about compositional systems, with a design system as the existence proof. The constraint of "42 components, 1 primitive, 5 frameworks" exists because five structurally opposed framework paradigms — React hooks, Vue composables, Svelte runes, Angular signals, Lit controllers — are the falsification surface: if the same contract can drive all of them idiomatically without leaking implementation detail into any of them, the contract is at the right level of abstraction. If it cannot, the wrongness shows up as friction in exactly one output. The full claim, seven properties of compositional systems in normal form, and the falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md).
+This repository is not, primarily, a design system. It is a falsifiable claim about compositional systems, with a design system as the existence proof. The constraint of "53 components, 1 primitive, 5 frameworks" exists because five structurally opposed framework paradigms — React hooks, Vue composables, Svelte runes, Angular signals, Lit controllers — are the falsification surface: if the same contract can drive all of them idiomatically without leaking implementation detail into any of them, the contract is at the right level of abstraction. If it cannot, the wrongness shows up as friction in exactly one output. The full claim, seven properties of compositional systems in normal form, and the falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md).
 
 ## What this is
 
 This project is a **contract testing ground**. Every component is defined by a JSON contract that describes its anatomy, props, variants, states, styles, tokens, accessibility, types, and behavior. From that one contract, the codegen emits framework-idiomatic component sources, behavior primitives, tests, and barrels for five frameworks at once.
 
-| | Components | Tests |
-|---|---:|---:|
-| **`@full-stack-ds/react`** | 42 | 372 |
-| **`@full-stack-ds/vue`** | 42 | 259 |
-| **`@full-stack-ds/svelte`** | 42 | 253 |
-| **`@full-stack-ds/lit`** | 42 | 161 |
-| **`@full-stack-ds/angular`** | 42 | 155 |
+| Package | Components |
+|---|---:|
+| **`@full-stack-ds/react`** | 53 |
+| **`@full-stack-ds/vue`** | 53 |
+| **`@full-stack-ds/svelte`** | 53 |
+| **`@full-stack-ds/lit`** | 53 |
+| **`@full-stack-ds/angular`** | 53 |
+
+Test counts vary as the suites evolve; run `pnpm run test:all` for the current numbers.
 
 Contracts live under [`packages/ds-contracts/`](packages/ds-contracts/) (`*.contract.json`), validated against [`packages/ds-contracts/component.contract.schema.json`](packages/ds-contracts/component.contract.schema.json).
 
@@ -24,7 +26,7 @@ The layout primitive is defined separately as a **primitive contract**: [`packag
 
 ## Why one primitive
 
-Every component — from `Button` to `Modal` to `DatePicker` — is composed entirely of `<Stack>`, a polymorphic layout primitive that renders as any HTML element:
+Every component — from `Button` to `Dialog` to `Calendar` — is composed entirely of `<Stack>`, a polymorphic layout primitive that renders as any HTML element:
 
 ```tsx
 <Stack as="button" variant="horizontal" className="btn">
@@ -32,7 +34,7 @@ Every component — from `Button` to `Modal` to `DatePicker` — is composed ent
 <Stack as="input" type="email" />
 ```
 
-This constraint exists to prove the contract carries enough information to fully describe a component. If 42 components with full interactivity, accessibility, and styling can be built from one primitive across five frameworks, then the contract is sufficient for:
+This constraint exists to prove the contract carries enough information to fully describe a component. If 53 components with full interactivity, accessibility, and styling can be built from one primitive across five frameworks, then the contract is sufficient for:
 
 - **Code generation** — scaffold framework-specific sources from contracts
 - **Cross-framework portability** — the contract is framework-agnostic; React/Vue/Svelte/Angular/Lit are all render targets
@@ -46,7 +48,7 @@ This constraint exists to prove the contract carries enough information to fully
 packages/
   ds-contracts/                # Component + schema JSON (source of truth)
     component.contract.schema.json
-    *.contract.json             # 42 component contracts
+    *.contract.json             # 53 component contracts
     primitives/
       primitive.contract.schema.json
       Stack.primitive.json      # Canonical Stack API + per-target import paths
@@ -87,7 +89,7 @@ npm run generate                                # React only (default)
 npm run generate -- --target=all                # All five frameworks
 npm run generate -- --target=vue,svelte         # A subset
 npm run generate -- Switch                      # Single component
-npm run generate -- --target=all Switch Modal   # Subset of components × all frameworks
+npm run generate -- --target=all Switch Dialog   # Subset of components × all frameworks
 npm run generate:watch                          # Re-emit on contract changes
 npm run generate:validate                       # Validate primitive + component contracts
 npm run generate:dry-run                        # Preview output paths without writing
@@ -179,7 +181,86 @@ Generated files use `@generated:start`/`@generated:end` and `@custom:start`/`@cu
 }
 ```
 
-The full schema is [`packages/ds-contracts/component.contract.schema.json`](packages/ds-contracts/component.contract.schema.json). Compound components (Modal, Card, Banner) declare additional `compoundParts` that emit sibling components — `ModalHeader`, `ModalBody`, `ModalFooter`.
+The full schema is [`packages/ds-contracts/component.contract.schema.json`](packages/ds-contracts/component.contract.schema.json). Compound components (e.g. Dialog, Card, Sheet) declare additional `compoundParts` that emit sibling components — `DialogHeader`, `DialogBody`, `DialogFooter`.
+
+## Making edits
+
+The repo is contract-driven, so the editing path depends on **what** you're changing.
+
+### Editing an existing component
+
+1. Edit `packages/ds-contracts/<Name>.contract.json`.
+2. Validate: `pnpm run generate:validate`.
+3. Regenerate that component for every framework:
+   ```bash
+   pnpm run generate -- --target=all <Name>
+   ```
+4. Run the relevant tests: `pnpm test` (root + React + codegen) and `pnpm run test:frameworks` for the others.
+
+Do **not** hand-edit `packages/ds-{framework}/src/components/<Name>/*` files. They will be overwritten on the next `generate` run unless they're inside a `@custom:start` / `@custom:end` block (see below).
+
+### Adding a new component
+
+1. Create `packages/ds-contracts/<Name>.contract.json` following the [contract format](#contract-format) and the schema in `component.contract.schema.json`.
+2. `pnpm run generate:validate` — catches structural issues before codegen runs.
+3. `pnpm run generate -- --target=all <Name>` — emits sources, tests, and barrel entries for all five frameworks.
+4. Add the component to the showcase in `src/app.tsx` if you want it rendered in the dev server (`pnpm run dev`).
+5. Update the component list in this README (or trust the disclaimer that the contracts directory is authoritative).
+
+Compound components declare `compoundParts` in the contract; the codegen emits sibling components automatically — no extra contracts needed.
+
+### Editing generated code directly
+
+Generated files use markers:
+
+```tsx
+// @generated:start(imports)
+// …regenerated every run; edits here are lost
+// @generated:end(imports)
+
+// @custom:start(extras)
+// …preserved across regenerations
+// @custom:end(extras)
+```
+
+Use `@custom` blocks for hand-authored additions (extra tests, app-specific logic). Anything outside a `@custom` block in a generated file is fair game for the next `generate` run.
+
+Two exceptions to "don't hand-edit generated files":
+
+- **CSS and pure scaffolding** are always regenerated, regardless of markers.
+- **Interactive TSX with custom logic** is preserved on regeneration by default. Pass `--force` to overwrite it.
+
+Historically, React's `Switch.tsx` and `Modal.tsx` (now `Dialog.tsx`) were hand-authored as the canonical reference behavior while the non-React frameworks were brought up to parity through generated code. All five frameworks now share the same generated path; see [`docs/hook-wiring-design.md`](docs/hook-wiring-design.md) for the rationale that drove the parity work.
+
+### Changing the contract schema or IR
+
+The IR (`packages/ds-codegen/src/ir.ts`) is the contract between contracts and emitters. If you add or rename a contract field:
+
+1. Update `packages/ds-contracts/component.contract.schema.json`.
+2. Update `ir.ts` so the new field is reflected in the framework-neutral IR.
+3. Update each affected framework emitter under `packages/ds-codegen/src/frameworks/<framework>/`.
+4. `pnpm run generate -- --target=all` and verify diffs across all five framework packages.
+5. `pnpm test` + `pnpm run test:frameworks`.
+
+Emitters should never re-parse raw contract fields — if you find yourself doing that, push the logic into the IR instead.
+
+### Adding a new framework target
+
+1. Implement `createXxxEmitter` under `packages/ds-codegen/src/frameworks/<xxx>/` with the same surface as the existing four: `factory.ts`, `component-source.ts`, `hook-source.ts`, `tests.ts`.
+2. Register it in `createDefaultRegistry` (`packages/ds-codegen/src/registry.ts`) and point it at a workspace output root.
+3. Create the corresponding `packages/ds-<xxx>/` workspace package and the matching behavior primitives.
+4. Add a `targets.<xxx>.relativeFromComponents` entry to `packages/ds-contracts/primitives/Stack.primitive.json`.
+5. `--target=<xxx>` becomes available automatically.
+
+### Commit conventions
+
+Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `test:`, `perf:`. Commit after each logical unit of work — a contract change + its regenerated output is one commit; a codegen change spanning multiple frameworks is another.
+
+## Consuming the packages
+
+The `@full-stack-ds/*` packages are **workspace-only** today — they are not yet published to npm. The `package.json` references them via `workspace:*`. To consume them outside this monorepo you would need to publish (or link) them yourself, or vendor the generated output into your own project.
+
+Inside the monorepo, the showcase app (`src/app.tsx`) imports from `@full-stack-ds/react` directly via the pnpm workspace.
 
 ## Downstream consumers
 
@@ -224,6 +305,8 @@ npm run typecheck:lit        # tsc -p
 npm run typecheck:all        # All five
 ```
 
-## 42 components
+## 53 components
 
-Accordion, ActionFooter, Banner, BreakpointSwitch, Button, ButtonGroup, Card, Checkbox, ColorPicker, Combobox, ConfigPane, DatePicker, Dropdown, FilePicker, FilterAnchor, FormField, Icon, IconButton, Indicator, InlineInput, Input, InputGroup, Label, Link, ListItem, LoadingSpinner, LogicEditor, Menu, Modal, NumberStepper, Pagination, Popover, QuickSearch, Radio, SearchInput, SelectMenu, SidebarNav, Slider, Switch, Table, Tabs, Tooltip
+Accordion, Alert, AlertNotice, AnimatedCard, AnimatedSection, AnimatedText, AspectRatio, Avatar, Badge, Blockquote, BrandSwitcher, Breadcrumbs, Button, Calendar, Card, Checkbox, Chip, Command, Details, Dialog, Divider, Field, Icon, Image, Input, Label, Links, List, OTP, PageTransition, Popover, Postcard, ProfileFlag, Progress, Select, Sheet, ShowMore, Shuttle, Skeleton, SlinkyCursor, Spinner, Status, Switch, Table, Tabs, Text, TextField, Toast, ToggleSwitch, Tooltip, Truncate, VisuallyHidden, Walkthrough
+
+The authoritative list is whatever `*.contract.json` files exist under [`packages/ds-contracts/`](packages/ds-contracts/); this README list is regenerated by hand and may briefly lag.

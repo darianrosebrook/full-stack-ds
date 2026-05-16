@@ -24,7 +24,7 @@ The claim, stated plainly:
 
 > Compositional systems — systems where higher-order artifacts are assembled from lower-order ones under shared constraints — converge on a single architectural shape. That shape can be written down. Systems that conform to it compose cleanly across heterogeneous targets, regenerate safely, and survive transfer to new substrates. Systems that resist it accumulate a predictable family of symptoms — shadow files, stubbed-out implementations, force-pushes around quality gates, runtime drift between layers, irreproducible builds — that no amount of after-the-fact tooling fully fixes.
 
-The constraint of "42 components, 1 primitive, 5 frameworks" exists to test this claim. Five frameworks is not a feature; it is the falsification surface. If the same contract can drive React (function components with hooks), Vue (reactive composables), Svelte (compiler-driven runes), Angular (signals with dependency injection), and Lit (web components with reactive controllers) without leaking implementation detail into any of them — and without the contract growing per-framework escape hatches — then the contract is at the right level of abstraction. If it cannot, the contract is wrong, and the wrongness will be visible as friction in exactly one of those five outputs.
+The constraint of "53 components, 1 primitive, 5 frameworks" exists to test this claim. Five frameworks is not a feature; it is the falsification surface. If the same contract can drive React (function components with hooks), Vue (reactive composables), Svelte (compiler-driven runes), Angular (signals with dependency injection), and Lit (web components with reactive controllers) without leaking implementation detail into any of them — and without the contract growing per-framework escape hatches — then the contract is at the right level of abstraction. If it cannot, the contract is wrong, and the wrongness will be visible as friction in exactly one of those five outputs.
 
 This document names the architectural shape, identifies the load-bearing pieces of this codebase that encode it, and states the falsification conditions. It is intended for readers who want to evaluate the architecture as a claim, not just use the codegen.
 
@@ -32,7 +32,7 @@ This document names the architectural shape, identifies the load-bearing pieces 
 
 This document argues from one concrete codebase. The current evidence is:
 
-- 42 component contracts generated through one primitive.
+- 53 component contracts generated through one primitive.
 - Five framework emitters consuming a shared IR.
 - Boundary checks in the IR that fail on unresolved contract references.
 - Regeneration semantics that preserve custom regions while rewriting generated regions.
@@ -58,7 +58,7 @@ The seven properties are the outcome of a recurring methodological move. Naming 
 4. **Lower the primitive while raising the governance.** Push the new capability down into a primitive or a contract field that all consumers can use, not up into a new component or escape hatch. Simultaneously raise the governance to cover the new composition, so the lowering does not create a new ungoverned surface.
 5. **Validate that governance survives the composition.** The test of the move is not "does the new thing work." It is "does the existing governance still apply to the new composition." If governance has to be relaxed to make the composition work, the move was wrong; the abstraction is still in the wrong place.
 
-This is the move that, applied consistently, produces the constraint of "one primitive, many components" in this codebase. Each time a surface request for a new primitive was refused, the contract grew the fields that made the new primitive unnecessary instead. The result is a corpus where the primitive count has stayed at one across 42 components; it is not a proof that the primitive count would stay at one indefinitely.
+This is the move that, applied consistently, produces the constraint of "one primitive, many components" in this codebase. Each time a surface request for a new primitive was refused, the contract grew the fields that made the new primitive unnecessary instead. The result is a corpus where the primitive count has stayed at one across 53 components; it is not a proof that the primitive count would stay at one indefinitely.
 
 The seven properties below are what falls out of running this move consistently. Read them as the residue of the methodology, not as a checklist that produces the methodology.
 
@@ -82,9 +82,9 @@ The projection from contract to IR is deterministic: a pure function, no I/O, no
 
 ### 3. One small set of typed primitives that compose into all higher-order constructs
 
-Every component in this repo is composed of one primitive: `Stack`, defined in `packages/ds-contracts/primitives/Stack.primitive.json`. There is no `Button` primitive, no `Input` primitive, no `Modal` primitive. `Button` is `<Stack as="button">` with a contract that constrains its props. `Modal` is `<Stack as="div" role="dialog">` plus compound parts, also stacks.
+Every component in this repo is composed of one primitive: `Stack`, defined in `packages/ds-contracts/primitives/Stack.primitive.json`. There is no `Button` primitive, no `Input` primitive, no `Dialog` primitive. `Button` is `<Stack as="button">` with a contract that constrains its props. `Dialog` is `<Stack as="div" role="dialog">` plus compound parts, also stacks.
 
-This is the constraint that pins the contract at the right level of abstraction. If a contract needs to escape into a new primitive to express something, the contract is missing a field. The intent is that every new behavior must be expressible *in the contract*, not in a new primitive. Across the current 42 components, no second primitive has been required; whether that continues under broader component pressure is open.
+This is the constraint that pins the contract at the right level of abstraction. If a contract needs to escape into a new primitive to express something, the contract is missing a field. The intent is that every new behavior must be expressible *in the contract*, not in a new primitive. Across the current 53 components, no second primitive has been required; whether that continues under broader component pressure is open.
 
 The number of primitives is part of the claim. One is not a magic number — two or three might also be in normal form for a different problem — but the claim is that the set is small, fixed, and chosen at the highest level of abstraction the domain permits. Systems that have a sprawling primitive catalog have not yet found the right abstraction.
 
@@ -164,7 +164,7 @@ The contract currently drives all five idiomatically, with hundreds of passing t
 
 This document does not claim that this codebase is the only well-designed compositional system. It claims that compositional systems that work well exhibit these seven properties, and that the codebase is one demonstration that the properties are achievable in practice for a non-trivial domain.
 
-It does not claim that the codebase is feature-complete or production-grade beyond its own scope. The 42 components were chosen to exercise the contract; they are not optimized for adoption.
+It does not claim that the codebase is feature-complete or production-grade beyond its own scope. The 53 components were chosen to exercise the contract; they are not optimized for adoption.
 
 It does not claim that this is the only architectural shape compositional systems converge on. It claims this is *one* shape, written down, and offered for comparison against others.
 
@@ -182,6 +182,6 @@ The seven properties are stated at the level of generality where they are meant 
 
 ## What this codebase demonstrates, and does not
 
-It demonstrates that, for the 42 components built so far, a single typed contract drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive, with fail-closed boundary checks and preserved custom regions across regenerations. The IR is one file; the contract schema is one file; the emitters are five small directories. A reader can clone the repo, regenerate, inspect the IR and one or two contracts, and form a view in under an hour.
+It demonstrates that, for the 53 components built so far, a single typed contract drives idiomatic source across React, Vue, Svelte, Angular, and Lit through one shared IR and one primitive, with fail-closed boundary checks and preserved custom regions across regenerations. The IR is one file; the contract schema is one file; the emitters are five small directories. A reader can clone the repo, regenerate, inspect the IR and one or two contracts, and form a view in under an hour.
 
 It does not demonstrate that every compositional system must take this shape, that the contract will continue to hold past 100 components, or that the architecture transfers to substrates outside UI engineering. Those are open questions, named here so the reader does not have to infer them.
