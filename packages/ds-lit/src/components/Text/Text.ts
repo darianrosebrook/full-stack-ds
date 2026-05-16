@@ -8,7 +8,7 @@ import { property } from 'lit/decorators.js';
 // @custom:end
 
 // @generated:start types
-export type TextElement = "p" | "span" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+export type TextAs = "p" | "span" | "div" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 export type TextVariant = "display" | "headline" | "title" | "body" | "caption" | "overline" | "code";
 export type TextSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 export type TextWeight = "light" | "normal" | "medium" | "semibold" | "bold";
@@ -24,7 +24,7 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
 export class TextElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() as?: TextElement;
+  @property() as?: TextAs;
   @property() variant?: TextVariant;
   @property() size?: TextSize;
   @property() weight?: TextWeight;

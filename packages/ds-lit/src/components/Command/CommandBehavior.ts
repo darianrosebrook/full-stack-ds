@@ -50,6 +50,9 @@ export class CommandBehavior {
 
   get open(): boolean { return this.anchorToggle.open; }
   setOpen(value: boolean) { this.anchorToggle.setOpen(value); }
+
+  get search(): string { return this.searchState.value; }
+  setSearch(value: string) { this.searchState.set(value); }
 }
 // @generated:end
 

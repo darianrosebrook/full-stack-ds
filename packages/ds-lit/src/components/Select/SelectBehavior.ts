@@ -50,6 +50,9 @@ export class SelectBehavior {
 
   get open(): boolean { return this.anchorToggle.open; }
   setOpen(value: boolean) { this.anchorToggle.setOpen(value); }
+
+  get selection(): string | string[] { return this.selectionState.value; }
+  setSelection(value: string | string[]) { this.selectionState.set(value); }
 }
 // @generated:end
 

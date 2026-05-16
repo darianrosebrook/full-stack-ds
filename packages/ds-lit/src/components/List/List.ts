@@ -8,7 +8,7 @@ import { property } from 'lit/decorators.js';
 // @custom:end
 
 // @generated:start types
-export type ListElement = "ul" | "ol" | "dl";
+export type ListAs = "ul" | "ol" | "dl";
 export type ListVariant = "default" | "unstyled" | "inline" | "divided" | "spaced";
 export type ListMarker = "default" | "none" | "disc" | "circle" | "square" | "decimal" | "alpha" | "roman";
 export type ListSpacing = "none" | "sm" | "md" | "lg";
@@ -23,7 +23,7 @@ export type ListSize = "sm" | "md" | "lg";
 export class ListElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() as?: ListElement;
+  @property() as?: ListAs;
   @property() variant?: ListVariant;
   @property() marker?: ListMarker;
   @property() spacing?: ListSpacing;

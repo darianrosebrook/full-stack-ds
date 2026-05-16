@@ -25,7 +25,7 @@ export class SkeletonElement extends LitElement {
 
   @property() variant?: SkeletonVariant = "block";
   @property({ attribute: 'animate' })
-  _animate: string | null = null;
+  _animate?: SkeletonAnimate = "shimmer";
   @property() density?: SkeletonDensity = "regular";
   @property() aspectRatio?: string;
   @property() lines?: SkeletonLines;
@@ -38,7 +38,7 @@ export class SkeletonElement extends LitElement {
     return [
       "skeleton",
       this.variant ? `skeleton--${this.variant}` : null,
-      this.animate ? `skeleton--${this.animate}` : null,
+      this._animate ? `skeleton--${this._animate}` : null,
       this.density ? `skeleton--${this.density}` : null,
     ].filter(Boolean).join(" ");
   }

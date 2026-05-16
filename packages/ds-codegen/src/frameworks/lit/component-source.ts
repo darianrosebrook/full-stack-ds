@@ -46,6 +46,19 @@ function litType(typeStr: string): string {
   return translateNonReactType(typeStr);
 }
 
+/**
+ * Apply a Lit-only type alias rename to a TypeScript type expression so that
+ * property declarations reference the renamed alias. Word-boundary match
+ * avoids touching substrings.
+ */
+function applyLitTypeRename(
+  typeStr: string,
+  rename: { from: string; to: string } | null,
+): string {
+  if (!rename) return typeStr;
+  return typeStr.replace(new RegExp(`\\b${rename.from}\\b`, "g"), rename.to);
+}
+
 // Use the shared toKebab from contract.ts so Lit component-source kebabbing
 // matches everywhere else (in particular the Lit test generator, which uses
 // the same shared util via test-plan.ts). The previous local `toKebabCase`
@@ -55,8 +68,17 @@ function toKebabCase(name: string): string {
   return toKebab(name);
 }
 
+/**
+ * Build a Lit-template-safe accessor expression for an internal field bound
+ * to a contract prop. Three rules:
+ *   - Kebab-case prop → bracket access (`this["data-foo"]`).
+ *   - Method-name collision (animate, scrollTo…) → renamed `_${name}` field
+ *     emitted earlier to avoid shadowing the inherited Element method.
+ *   - Normal camelCase → dot access (`this.foo`).
+ */
 function propAccessor(propName: string): string {
   if (propName.includes("-")) return `this["${propName}"]`;
+  if (LIT_ELEMENT_METHOD_NAMES.has(propName)) return `this._${propName}`;
   return `this.${propName}`;
 }
 
@@ -99,8 +121,39 @@ function generateImports(ir: ComponentIR): string {
 // Type aliases
 // ---------------------------------------------------------------------------
 
+/**
+ * Lit element classes are named `${ir.name}Element`. Some contracts declare
+ * a `definedTypes` alias with the same name (e.g. `ListElement` for the `as`
+ * prop's union of "ul"/"ol"/"dl") — TypeScript then sees both the type alias
+ * and the class in the same module and raises TS2300 duplicate identifier.
+ *
+ * For Lit only, the colliding alias is renamed `${ir.name}As` everywhere it
+ * appears: in the alias declaration line itself, and in every `litType()`
+ * lookup for prop types that reference it. The change is purely lexical
+ * within the generated module — the contract is untouched, and other
+ * framework emitters (Vue/Angular/Svelte) continue to use the original name.
+ */
+function litAliasRename(ir: ComponentIR): { from: string; to: string } | null {
+  const collidingName = `${ir.name}Element`;
+  if (ir.definedTypes[collidingName]) {
+    return { from: collidingName, to: `${ir.name}As` };
+  }
+  return null;
+}
+
+function applyLitAliasRename(
+  source: string,
+  rename: { from: string; to: string } | null,
+): string {
+  if (!rename) return source;
+  // Word-boundary replace to avoid mangling unrelated identifiers.
+  const re = new RegExp(`\\b${rename.from}\\b`, "g");
+  return source.replace(re, rename.to);
+}
+
 function generateTypes(ir: ComponentIR): string {
-  return emitNonReactTypeAliases(ir).join("\n");
+  const aliases = emitNonReactTypeAliases(ir).join("\n");
+  return applyLitAliasRename(aliases, litAliasRename(ir));
 }
 
 // ---------------------------------------------------------------------------
@@ -239,6 +292,7 @@ function litPropertyType(rawType: string): string | null {
 function generatePropertyDeclarations(ir: ComponentIR): string[] {
   const lines: string[] = [];
   const declared = new Set<string>();
+  const rename = litAliasRename(ir);
 
   for (const p of ir.styledProps) {
     if (LIT_SKIP_PROPS.has(p.name)) continue;
@@ -252,15 +306,21 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
     }
     if (LIT_ELEMENT_METHOD_NAMES.has(p.name)) {
       // Rename the public field to `_<name>` and bind the kebab attribute
-      // to it so it doesn't shadow the inherited Element method.
+      // to it so it doesn't shadow the inherited Element method (animate,
+      // scrollTo, etc.). Preserve the contract's type and default — the
+      // field still drives BEM class output, and consumers set the attribute
+      // by its kebab name, not via the JS field directly.
+      const t = applyLitTypeRename(litType(p.type), rename);
+      const defaultPart =
+        p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
       lines.push(`  @property({ attribute: '${toKebab(p.name)}' })`);
-      lines.push(`  _${p.name}: string | null = null;`);
+      lines.push(`  _${p.name}?: ${t}${defaultPart};`);
       declared.add(p.name);
       continue;
     }
     const litPropType = litPropertyType(p.type);
     if (litPropType === null) continue;
-    const t = litType(p.type);
+    const t = applyLitTypeRename(litType(p.type), rename);
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     const defaultPart =
       p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
@@ -487,9 +547,10 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
 
   // Property declarations for every styled prop
   const declared = new Set<string>();
+  const rename = litAliasRename(ir);
   for (const p of ir.styledProps) {
     if (LIT_DOM_SKIP_PROPS.has(p.name)) continue;
-    const decl = generateLitDomTreePropertyDecl(p);
+    const decl = generateLitDomTreePropertyDecl(p, rename);
     if (decl) {
       lines.push(decl);
       declared.add(p.name);
@@ -497,7 +558,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   }
   for (const ch of channels) {
     if (declared.has(ch.changeHandlerProp)) continue;
-    const t = ch.valueType ?? "unknown";
+    const t = applyLitTypeRename(ch.valueType ?? "unknown", rename);
     lines.push(
       `  @property({ attribute: false }) ${ch.changeHandlerProp}?: (value: ${t}) => void;`,
     );
@@ -630,8 +691,9 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   lines.push(`    return [`);
   lines.push(`      "${ir.classRecipe.base}",`);
   for (const mod of ir.classRecipe.valueModifiers) {
+    const acc = propAccessor(mod.propName);
     lines.push(
-      `      this.${mod.propName} ? \`${ir.classRecipe.base}--\${this.${mod.propName}}\` : null,`,
+      `      ${acc} ? \`${ir.classRecipe.base}--\${${acc}}\` : null,`,
     );
   }
   for (const mod of ir.classRecipe.booleanModifiers) {
@@ -644,7 +706,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       );
     } else {
       lines.push(
-        `      this.${mod.safeName} ? "${ir.classRecipe.base}--${mod.safeName}" : null,`,
+        `      ${propAccessor(mod.safeName)} ? "${ir.classRecipe.base}--${mod.safeName}" : null,`,
       );
     }
   }
@@ -661,12 +723,15 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-function generateLitDomTreePropertyDecl(p: {
-  name: string;
-  type: string;
-  defaultExpr?: string;
-  required: boolean;
-}): string | null {
+function generateLitDomTreePropertyDecl(
+  p: {
+    name: string;
+    type: string;
+    defaultExpr?: string;
+    required: boolean;
+  },
+  rename: { from: string; to: string } | null = null,
+): string | null {
   const skipEventHandler = /=>\s*(void|never)|EventHandler/.test(p.type);
   if (skipEventHandler) return null;
   if (ARIA_MIXIN_NAMES.has(p.name)) {
@@ -676,12 +741,14 @@ function generateLitDomTreePropertyDecl(p: {
     ].join("\n");
   }
   if (LIT_ELEMENT_METHOD_NAMES.has(p.name)) {
+    const propType = applyLitTypeRename(litType(p.type), rename);
+    const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
     return [
       `  @property({ attribute: '${toKebab(p.name)}' })`,
-      `  _${p.name}: string | null = null;`,
+      `  _${p.name}?: ${propType}${defaultPart};`,
     ].join("\n");
   }
-  const propType = litType(p.type);
+  const propType = applyLitTypeRename(litType(p.type), rename);
   const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
   const decoratorArgs: string[] = [];
   if (/\bboolean\b/.test(propType)) {
@@ -821,6 +888,7 @@ function renderLitBinding(
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
       const isBoolean = prop ? /\bboolean\b/.test(prop.type) : false;
+      const acc = propAccessor(expr.prop);
       // ARIA attributes are always string-valued at the DOM level even when
       // the contract types them as boolean (e.g. `aria-pressed`). Emit a
       // plain `attr=` binding that lets the value coerce to "true"/"false"
@@ -828,21 +896,21 @@ function renderLitBinding(
       // structurally wrong for ARIA semantics ("aria-pressed=false" is
       // meaningful, while `?aria-pressed=${false}` removes the attribute).
       if (attr.startsWith("aria-")) {
-        return `${attr}=\${this.${expr.prop}}`;
+        return `${attr}=\${${acc}}`;
       }
       if (isBoolean) {
         // Boolean attrs → `?attr=` (Lit boolean attribute binding).
-        return `?${attr}=\${this.${expr.prop}}`;
+        return `?${attr}=\${${acc}}`;
       }
       if (isAttributeOnlyBinding(attr)) {
         // Plain attribute binding: data-*/aria-* aren't real DOM properties,
         // and a handful of native attributes (HTMLLabelElement.form,
         // HTMLInputElement.list) are read-only IDL properties on their
         // host element — Lit's `.prop=` syntax tries to assign and throws.
-        return `${attr}=\${this.${expr.prop}}`;
+        return `${attr}=\${${acc}}`;
       }
       // Default → property binding so the value flows through the DOM IDL.
-      return `.${attr}=\${this.${expr.prop}}`;
+      return `.${attr}=\${${acc}}`;
     }
     case "literal":
       return `${attr}="${expr.value.replace(/"/g, "&quot;")}"`;

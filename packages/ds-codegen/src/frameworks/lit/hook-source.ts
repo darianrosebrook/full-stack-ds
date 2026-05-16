@@ -299,18 +299,31 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
 
   lines.push(`  }`);
 
-  // Convenience getters/setters
-  if (bindings.useAnchorToggle && openChannel) {
+  // Convenience getters/setters.
+  //
+  // Anchor-toggle channels delegate to `this.anchorToggle.open` / `setOpen`,
+  // since the AnchorToggleController owns that state. All other controllable
+  // state channels delegate to their per-channel `${name}State` controller.
+  // Previously the two cases were mutually exclusive — the if-else branched
+  // the entire emission, so components with both an anchor channel and an
+  // additional controllable channel (Command's `search`, Select's `selection`)
+  // got accessors only for the anchor channel. Restructure so the anchor
+  // accessor emits alongside the per-channel accessors for everything else.
+  const anchorEmitsOpen = bindings.useAnchorToggle && !!openChannel;
+  if (anchorEmitsOpen && openChannel) {
     lines.push(``);
     lines.push(`  get ${openChannel.name}(): boolean { return this.anchorToggle.open; }`);
     lines.push(`  set${capitalize(openChannel.name)}(value: boolean) { this.anchorToggle.setOpen(value); }`);
-  } else {
-    for (const ch of bindings.useControllableState) {
-      const t = ch.valueType ?? "unknown";
-      lines.push(``);
-      lines.push(`  get ${ch.name}(): ${t} { return this.${ch.name}State.value; }`);
-      lines.push(`  set${capitalize(ch.name)}(value: ${t}) { this.${ch.name}State.set(value); }`);
-    }
+  }
+  for (const ch of bindings.useControllableState) {
+    // Skip the open channel only when AnchorToggle has already emitted its
+    // accessor pair above. When AnchorToggle isn't in use, the channel state
+    // still lives in `${ch.name}State` and needs its own accessors.
+    if (anchorEmitsOpen && ch === openChannel) continue;
+    const t = ch.valueType ?? "unknown";
+    lines.push(``);
+    lines.push(`  get ${ch.name}(): ${t} { return this.${ch.name}State.value; }`);
+    lines.push(`  set${capitalize(ch.name)}(value: ${t}) { this.${ch.name}State.set(value); }`);
   }
 
   lines.push(`}`);
