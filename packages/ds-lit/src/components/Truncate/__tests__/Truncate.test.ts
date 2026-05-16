@@ -16,6 +16,17 @@ describe("Truncate — unit", () => {
     const root = element.shadowRoot?.firstElementChild ?? element;
     expect(classTokens(root)).toContain("truncate");
   });
+
+  it("reflects expanded=true after behavior.setExpanded(true)", async () => {
+    const { element } = await renderElement("fsds-truncate");
+    const el = element as LitTestElement & {
+      behavior?: { setExpanded?: (v: boolean) => void; expanded?: boolean };
+    };
+    el.behavior?.setExpanded?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.expanded).toBe(true);
+  });
 });
 
 describe("Truncate — accessibility", () => {
@@ -26,17 +37,12 @@ describe("Truncate — accessibility", () => {
       "aria-dialog-name",
       "aria-input-field-name",
       "aria-progressbar-name",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
       "aria-toggle-field-name",
       "aria-tooltip-name",
-      "aria-prohibited-attr",
       "button-name",
       "empty-heading",
       "label",
       "link-name",
-      "list",
       "region",
       "summary-name",
     ]);

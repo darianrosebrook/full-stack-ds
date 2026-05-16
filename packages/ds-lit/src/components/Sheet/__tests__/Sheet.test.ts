@@ -56,6 +56,17 @@ describe("Sheet — unit", () => {
     element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
   });
+
+  it("reflects openness=true after behavior.setOpenness(true)", async () => {
+    const { element } = await renderElement("fsds-sheet");
+    const el = element as LitTestElement & {
+      behavior?: { setOpenness?: (v: boolean) => void; openness?: boolean };
+    };
+    el.behavior?.setOpenness?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.openness).toBe(true);
+  });
 });
 
 describe("Sheet — accessibility", () => {
@@ -66,17 +77,12 @@ describe("Sheet — accessibility", () => {
       "aria-dialog-name",
       "aria-input-field-name",
       "aria-progressbar-name",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
       "aria-toggle-field-name",
       "aria-tooltip-name",
-      "aria-prohibited-attr",
       "button-name",
       "empty-heading",
       "label",
       "link-name",
-      "list",
       "region",
       "summary-name",
     ]);

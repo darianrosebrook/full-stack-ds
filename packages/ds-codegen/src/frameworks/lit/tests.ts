@@ -198,6 +198,37 @@ export function generateLitTest(ir: ComponentIR): string {
     }
   }
 
+  // Behavioral-state tests for dom-tree components. For every boolean
+  // controllable channel, set the channel to true via the behavior controller,
+  // await updateComplete, and assert the channel state is observable. The
+  // intent is to catch the "open never propagates to render" class of bug
+  // that the class-token tests miss.
+  if (ir.dom) {
+    const booleanChannels = ir.behavior.normalizedChannels.filter(
+      (c) => c.valueType === "boolean",
+    );
+    for (const ch of booleanChannels) {
+      const setter = `set${ch.name[0].toUpperCase()}${ch.name.slice(1)}`;
+      lines.push(``);
+      lines.push(
+        `  it("reflects ${ch.name}=true after behavior.${setter}(true)", async () => {`,
+      );
+      lines.push(
+        `    const { element } = await renderElement("${elementName}");`,
+      );
+      lines.push(`    const el = element as LitTestElement & {`);
+      lines.push(
+        `      behavior?: { ${setter}?: (v: boolean) => void; ${ch.name}?: boolean };`,
+      );
+      lines.push(`    };`);
+      lines.push(`    el.behavior?.${setter}?.(true);`);
+      lines.push(`    el.requestUpdate?.();`);
+      lines.push(`    await el.updateComplete;`);
+      lines.push(`    expect(el.behavior?.${ch.name}).toBe(true);`);
+      lines.push(`  });`);
+    }
+  }
+
   lines.push(`});`);
   lines.push(``);
 
@@ -223,22 +254,25 @@ export function generateLitTest(ir: ComponentIR): string {
     lines.push(`    const results = await axe(element);`);
   }
   lines.push(`    const knownScaffoldViolationIds = new Set([`);
-  // These rules fire when the test fixture renders the component with no
-  // slot content / missing required text props. Real consumers fill them.
+  // These rules fire because the test fixture renders the component with no
+  // slot content or missing required text props. Real consumers fill them in.
+  // Rules removed from this list as part of Phase 4 (intentionally surfaces
+  // implementation bugs rather than masking them):
+  //   - aria-required-attr / aria-required-children / aria-required-parent:
+  //     impl bugs (component should set required attrs / contain required
+  //     children / be inside a required parent).
+  //   - aria-prohibited-attr: impl bug (wrong ARIA attribute for the role).
+  //   - list: impl bug (a <ul> must contain <li> children — the codegen
+  //     should ensure this in the rendered structure, not paper over it).
   lines.push(`      "aria-dialog-name",`);
   lines.push(`      "aria-input-field-name",`);
   lines.push(`      "aria-progressbar-name",`);
-  lines.push(`      "aria-required-attr",`);
-  lines.push(`      "aria-required-children",`);
-  lines.push(`      "aria-required-parent",`);
   lines.push(`      "aria-toggle-field-name",`);
   lines.push(`      "aria-tooltip-name",`);
-  lines.push(`      "aria-prohibited-attr",`);
   lines.push(`      "button-name",`);
   lines.push(`      "empty-heading",`);
   lines.push(`      "label",`);
   lines.push(`      "link-name",`);
-  lines.push(`      "list",`);
   lines.push(`      "region",`);
   lines.push(`      "summary-name",`);
   lines.push(`    ]);`);

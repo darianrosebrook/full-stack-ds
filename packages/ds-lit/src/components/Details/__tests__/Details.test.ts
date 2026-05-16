@@ -52,6 +52,17 @@ describe("Details — unit", () => {
     const root = element.shadowRoot?.firstElementChild ?? element;
     expect(classTokens(root)).toContain("details--none");
   });
+
+  it("reflects open=true after behavior.setOpen(true)", async () => {
+    const { element } = await renderElement("fsds-details");
+    const el = element as LitTestElement & {
+      behavior?: { setOpen?: (v: boolean) => void; open?: boolean };
+    };
+    el.behavior?.setOpen?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.open).toBe(true);
+  });
 });
 
 describe("Details — accessibility", () => {
@@ -62,17 +73,12 @@ describe("Details — accessibility", () => {
       "aria-dialog-name",
       "aria-input-field-name",
       "aria-progressbar-name",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
       "aria-toggle-field-name",
       "aria-tooltip-name",
-      "aria-prohibited-attr",
       "button-name",
       "empty-heading",
       "label",
       "link-name",
-      "list",
       "region",
       "summary-name",
     ]);

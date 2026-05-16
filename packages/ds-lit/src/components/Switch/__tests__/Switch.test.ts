@@ -34,6 +34,17 @@ describe("Switch — unit", () => {
     const root = element.shadowRoot?.firstElementChild ?? element;
     expect(classTokens(root)).toContain("switch--lg");
   });
+
+  it("reflects checked=true after behavior.setChecked(true)", async () => {
+    const { element } = await renderElement("fsds-switch");
+    const el = element as LitTestElement & {
+      behavior?: { setChecked?: (v: boolean) => void; checked?: boolean };
+    };
+    el.behavior?.setChecked?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.checked).toBe(true);
+  });
 });
 
 describe("Switch — accessibility", () => {
@@ -44,17 +55,12 @@ describe("Switch — accessibility", () => {
       "aria-dialog-name",
       "aria-input-field-name",
       "aria-progressbar-name",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
       "aria-toggle-field-name",
       "aria-tooltip-name",
-      "aria-prohibited-attr",
       "button-name",
       "empty-heading",
       "label",
       "link-name",
-      "list",
       "region",
       "summary-name",
     ]);
