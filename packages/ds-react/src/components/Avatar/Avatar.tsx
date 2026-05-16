@@ -1,0 +1,59 @@
+// @generated:start imports
+import { type ReactNode } from "react";
+import "./Avatar.css";
+// @generated:end
+
+// @custom:start imports
+
+// @custom:end
+
+// @generated:start types
+
+// @generated:end
+
+// @custom:start types
+
+// @custom:end
+
+// @generated:start props
+export interface AvatarProps {
+  src?: string;
+  name: string;
+  priority?: boolean;
+  size?: string;
+  className?: string;
+  "data-testid"?: string;
+}
+// @generated:end
+
+// @generated:start subcomponents
+
+// @generated:end
+
+// @generated:start component
+export function Avatar({
+  size,
+  className,
+  "data-testid": testId,
+  src,
+  name,
+  priority,
+  ...rest
+}: AvatarProps) {
+  const classNames = [
+    "avatar",
+    size && `avatar--${size}`,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+  <div className={`${classNames}`} data-testid={testId} {...rest} />
+  );
+}
+// @generated:end
+
+// @custom:start trailing
+
+// @custom:end

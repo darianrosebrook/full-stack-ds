@@ -1,0 +1,12 @@
+.stack {
+  display: flex;
+  box-sizing: border-box;
+}
+
+.stack--vertical {
+  flex-direction: column;
+}
+
+.stack--horizontal {
+  flex-direction: row;
+}

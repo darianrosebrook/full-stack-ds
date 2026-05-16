@@ -1,0 +1,169 @@
+// @generated:start imports
+import { type ReactNode } from "react";
+import { Stack } from "../../primitives";
+import { useSelect } from "./useSelect";
+import "./Select.css";
+// @generated:end
+
+// @custom:start imports
+
+// @custom:end
+
+// @generated:start types
+export type SelectSize = "sm" | "md" | "lg";
+
+export type SelectOption = { value: string; label: string; disabled?: boolean };
+// @generated:end
+
+// @custom:start types
+
+// @custom:end
+
+// @generated:start props
+export interface SelectProps {
+  options: SelectOption[];
+  value?: string | string[];
+  defaultValue?: string | string[];
+  onChange?: (value: string | string[]) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  multiple?: boolean;
+  disabled?: boolean;
+  size?: SelectSize;
+  filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  searchable?: boolean;
+  empty?: boolean;
+  position?: string;
+  className?: string;
+  "data-testid"?: string;
+}
+// @generated:end
+
+// @generated:start subcomponents
+export interface SelectTriggerProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function SelectTrigger({
+  children,
+  className,
+  "data-testid": testId,
+}: SelectTriggerProps) {
+  const classNames = ["select__trigger", className].filter(Boolean).join(" ");
+  return (
+    <Stack as="button" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface SelectContentProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function SelectContent({
+  children,
+  className,
+  "data-testid": testId,
+}: SelectContentProps) {
+  const classNames = ["select__content", className].filter(Boolean).join(" ");
+  return (
+    <Stack className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+
+export interface SelectOptionProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function SelectOption({
+  children,
+  className,
+  "data-testid": testId,
+}: SelectOptionProps) {
+  const classNames = ["select__option", className].filter(Boolean).join(" ");
+  return (
+    <Stack as="li" className={classNames} data-testid={testId}>
+      {children}
+    </Stack>
+  );
+}
+// @generated:end
+
+// @generated:start component
+export function Select({
+  value: controlledValue,
+  defaultValue,
+  onChange,
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  size = "md",
+  position,
+  disabled,
+  className,
+  "data-testid": testId,
+  options,
+  multiple,
+  filterFn,
+  searchable,
+  empty,
+  ...rest
+}: SelectProps) {
+  const { selection, setSelection, open, setOpen } = useSelect({
+    value: controlledValue,
+    defaultValue,
+    onChange,
+    open: controlledOpen,
+    defaultOpen,
+    onOpenChange,
+  });
+
+  const classNames = [
+    "select",
+    size && `select--${size}`,
+    position && `select--${position}`,
+    open && "select--open",
+    disabled && "select--disabled",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+  <div className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
+    <button className="select__trigger" type="button" disabled={disabled}>
+      <span className="select__text" />
+    </button>
+    {open && (
+      <div className="select__content" role="listbox">
+        {searchable && (
+          <div className="select__search">
+            <input type="text" />
+          </div>
+        )}
+        <div className="select__options">
+          <div className="select__option" role="option" />
+        </div>
+        {empty && (
+          <div className="select__emptyState" />
+        )}
+      </div>
+    )}
+  </div>
+  );
+}
+// @generated:end
+
+// @custom:start trailing
+
+// @custom:end

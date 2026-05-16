@@ -1,0 +1,34 @@
+/* @generated:start styles */
+.popover {
+  padding: var(--core-spacing-size-06, 16px);
+  border-radius: var(--semantic-shape-control-radius-default, 8px);
+  gap: var(--core-spacing-size-04, 8px);
+  background-color: var(--semantic-color-background-secondary, #efefef);
+  border-color: var(--semantic-color-border-accent, #d9292b);
+  /* --semantic-elevation-default: none; */
+}
+
+.popover--top {}
+
+.popover--bottom {}
+
+.popover--left {}
+
+.popover--right {}
+
+.popover--auto {}
+
+.popover:hover {}
+
+.popover:focus-visible {}
+
+.popover--leaving {}
+
+.popover__trigger {}
+
+.popover__content {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

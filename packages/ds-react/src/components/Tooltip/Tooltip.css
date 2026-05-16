@@ -1,0 +1,31 @@
+/* @generated:start styles */
+.tooltip {
+  background-color: var(--semantic-color-background-inverse, #141414);
+  color: var(--semantic-color-foreground-inverse, #fafafa);
+  border-color: var(--semantic-color-border-subtle, #cecece);
+  padding: var(--core-spacing-size-04, 8px);
+  border-radius: var(--core-shape-radius-small, 4px);
+  font-size: var(--semantic-typography-caption-01, 14px);
+  /* --tooltip-size-maxWidth: ; */
+}
+
+.tooltip--top {}
+
+.tooltip--bottom {}
+
+.tooltip--left {}
+
+.tooltip--right {}
+
+.tooltip--auto {}
+
+.tooltip:hover {}
+
+.tooltip--entering {}
+
+.tooltip--leaving {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

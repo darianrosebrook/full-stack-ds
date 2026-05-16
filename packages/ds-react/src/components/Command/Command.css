@@ -1,0 +1,61 @@
+/* @generated:start styles */
+.command {
+  background-color: var(--semantic-color-background-primary, #ffffff);
+  border-color: var(--semantic-color-border-subtle, #cecece);
+  color: var(--semantic-color-foreground-tertiary, #717171);
+  border-width: var(--core-shape-border-width-hairline, 1px);
+  border-radius: var(--core-shape-radius-medium, 8px);
+  padding: var(--core-spacing-size-04, 8px);
+  font-size: var(--semantic-typography-body-04, 12px);
+  box-shadow: var(--semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+  opacity: var(--semantic-interaction-disabled-opacity, 0.5);
+  /* --semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
+  /* --command-size-maxWidth: ; */
+  /* --command-size-maxHeight: ; */
+  /* --core-spacing-size-04: 8px; */
+}
+
+.command:hover {
+  background-color: var(--semantic-interaction-background-hover, #efefef);
+}
+
+.command:disabled {}
+
+.command[aria-selected="true"] {}
+
+.command__overlay {}
+
+.command__dialog {}
+
+.command__inputWrapper {}
+
+.command__searchIcon {}
+
+.command__input {}
+
+.command__list {}
+
+.command__group {}
+
+.command__groupHeading {}
+
+.command__groupItems {}
+
+.command__item {}
+
+.command__itemIcon {}
+
+.command__itemContent {}
+
+.command__itemLabel {}
+
+.command__itemDescription {}
+
+.command__separator {}
+
+.command__empty {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

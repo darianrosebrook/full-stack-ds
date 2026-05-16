@@ -1,0 +1,74 @@
+// @generated:start imports
+import { type ReactNode } from "react";
+import { useToggleSwitch } from "./useToggleSwitch";
+import "./ToggleSwitch.css";
+// @generated:end
+
+// @custom:start imports
+
+// @custom:end
+
+// @generated:start types
+export type ToggleSwitchSize = "small" | "medium" | "large";
+// @generated:end
+
+// @custom:start types
+
+// @custom:end
+
+// @generated:start props
+export interface ToggleSwitchProps {
+  checked?: boolean;
+  defaultChecked?: boolean;
+  onChange?: (checked: boolean) => void;
+  size?: ToggleSwitchSize;
+  disabled?: boolean;
+  ariaLabel?: string;
+  ariaDescribedby?: string;
+  className?: string;
+  "data-testid"?: string;
+}
+// @generated:end
+
+// @generated:start subcomponents
+
+// @generated:end
+
+// @generated:start component
+export function ToggleSwitch({
+  checked: controlledChecked,
+  defaultChecked,
+  onChange,
+  size = "medium",
+  disabled,
+  className,
+  "data-testid": testId,
+  ariaLabel,
+  ariaDescribedby,
+  ...rest
+}: ToggleSwitchProps) {
+  const { checked, setChecked } = useToggleSwitch({
+    checked: controlledChecked,
+    defaultChecked,
+    onChange,
+  });
+
+  const classNames = [
+    "toggle-switch",
+    size && `toggle-switch--${size}`,
+    checked && "toggle-switch--checked",
+    disabled && "toggle-switch--disabled",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+  <button className={`${classNames}`} type="button" aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} onClick={() => setChecked(!checked)} role="switch" data-testid={testId} {...rest} />
+  );
+}
+// @generated:end
+
+// @custom:start trailing
+
+// @custom:end
