@@ -39,10 +39,10 @@
                     "type": "search",
                     "role": "combobox",
                     "aria-autocomplete": "list",
-                    "aria-expanded": "true",
                     "aria-controls": "fsds-command-listbox"
                   },
                   "bindings": {
+                    "aria-expanded": "channel:open.value",
                     "placeholder": "prop:placeholder",
                     "value": "channel:search.value",
                     "onChange": "channel:search.onChange"

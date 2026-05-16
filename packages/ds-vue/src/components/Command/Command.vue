@@ -74,7 +74,7 @@ const classNames = computed(() => [
     <div v-if="behavior.open.value" :class="'command__dialog'" role="dialog" aria-modal="true" :aria-label="props.label">
       <div :class="'command__inputWrapper'">
         <span :class="'command__searchIcon'" aria-hidden="true"></span>
-        <input :class="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="fsds-command-listbox" :placeholder="props.placeholder" :value="behavior.search.value" @change="(e) => behavior.setSearch((e.target as HTMLInputElement).value)" />
+        <input :class="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" :aria-expanded="behavior.open.value" :placeholder="props.placeholder" :value="behavior.search.value" @change="(e) => behavior.setSearch((e.target as HTMLInputElement).value)" />
       </div>
       <div :class="'command__list'" role="listbox" id="fsds-command-listbox">
         <div :class="'command__empty'"></div>

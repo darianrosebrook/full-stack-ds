@@ -59,7 +59,7 @@ const classes = $derived(
   <div class={'command__dialog'} role="dialog" aria-modal="true" aria-label={label}>
     <div class={'command__inputWrapper'}>
       <span class={'command__searchIcon'} aria-hidden="true"></span>
-      <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="fsds-command-listbox" placeholder={placeholder} value={behavior.search} onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} />
+      <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" aria-expanded={behavior.open} placeholder={placeholder} value={behavior.search} onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} />
     </div>
     <div class={'command__list'} role="listbox" id="fsds-command-listbox">
       <div class={'command__empty'}></div>
