@@ -1,0 +1,20 @@
+:root {
+  /* Interactive Variables */
+  --cursor-x: 0; /* Horizontal mouse position */
+  --cursor-y: 0; /* Vertical mouse position */
+  --mouse-x: 0;
+  --mouse-y: 0;
+  --mouse-prev-x: 0;
+  --mouse-prev-y: 0;
+  --mouse-delta-x: 1;
+  --mouse-delta-y: 1;
+  --view-percent: 0; /* Percentage of the box in viewport */
+
+  /* Animation Variables */
+  --angle: -15deg;
+  --trans-content: -20vh;
+
+  /* Font Variables (mapped to Next.js font loading) */
+  --semantic-font-inter: var(--font-inter);
+  --semantic-font-nohemi: var(--font-nohemi);
+}

@@ -1,0 +1,269 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Accordion",
+  "description": "Vertically stacked sections that expand/collapse to reveal content. Supports single or multi-panel open modes.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "item", "trigger", "header", "chevron", "content", "contentInner"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "item",
+          "children": [
+            {
+              "tag": "h3",
+              "part": "header",
+              "children": [
+                {
+                  "tag": "button",
+                  "part": "trigger",
+                  "attrs": {
+                    "type": "button"
+                  },
+                  "bindings": {
+                    "aria-expanded": "channel:openness.value"
+                  },
+                  "children": [
+                    { "tag": "children" },
+                    { "tag": "span", "part": "chevron" }
+                  ]
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "part": "content",
+              "children": [
+                { "tag": "div", "part": "contentInner", "children": [{ "tag": "children" }] }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "variants": {
+    "type": ["single", "multiple"]
+  },
+  "states": ["default", "hover", "focus", "disabled", "open", "closed"],
+  "a11y": {
+    "labeling": [],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Toggle the focused accordion item open or closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last accordion trigger.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "channels": {
+    "openness": {
+      "description": "Which panel(s) are expanded. String in single mode, string[] in multiple mode.",
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onValueChange",
+      "valueType": "string | string[]"
+    }
+  },
+  "portal": {
+    "enabled": false
+  },
+  "dismissal": {
+    "triggers": []
+  },
+  "tokens": {
+    "root": {
+      "accordion.color.background.hover": {
+        "resolvesTo": "semantic.interaction.background.hover",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "accordion.color.text": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "accordion.color.textSecondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "accordion.color.icon": {
+        "resolvesTo": "semantic.color.foreground.tertiary",
+        "fallback": "#717171",
+        "layer": "semantic"
+      },
+      "accordion.border.width": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "property": "border-width",
+        "layer": "core"
+      },
+      "accordion.border.color": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "accordion.border.radius": {
+        "resolvesTo": "core.shape.radius.small",
+        "fallback": "4px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "accordion.spacing.gap": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "accordion.spacing.paddingX": {
+        "resolvesTo": "core.spacing.size.00",
+        "fallback": "0px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "accordion.spacing.paddingY": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "accordion.text.weight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "property": "font-weight",
+        "layer": "semantic"
+      },
+      "accordion.text.size": {
+        "resolvesTo": "semantic.typography.body.02",
+        "fallback": "16px",
+        "property": "font-size",
+        "layer": "semantic"
+      },
+      "accordion.text.lineHeight": {
+        "resolvesTo": "semantic.typography.line.height.normal",
+        "fallback": "1.5",
+        "property": "line-height",
+        "layer": "semantic"
+      },
+      "accordion.text.sizeContent": {
+        "resolvesTo": "semantic.typography.body.03",
+        "fallback": "14px",
+        "property": "font-size",
+        "layer": "semantic"
+      },
+      "accordion.text.lineHeightContent": {
+        "resolvesTo": "semantic.typography.line.height.loose",
+        "fallback": "1.8",
+        "property": "line-height",
+        "layer": "semantic"
+      },
+      "accordion.icon.size": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "layer": "core"
+      },
+      "accordion.focus.width": {
+        "resolvesTo": "core.shape.border.width.thick",
+        "fallback": "2px",
+        "layer": "core"
+      },
+      "accordion.focus.color": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "accordion.focus.offset": {
+        "resolvesTo": "core.spacing.size.01",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "accordion.opacity.disabled": {
+        "resolvesTo": "semantic.interaction.disabled.opacity",
+        "fallback": "0.5",
+        "property": "opacity",
+        "layer": "semantic"
+      }
+    },
+    "hover": {
+      "accordion.color.textHover": {
+        "resolvesTo": "semantic.interaction.text.hover",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Accordion> component.",
+      "members": [
+        {
+          "name": "type",
+          "type": "AccordionType",
+          "description": "Whether only one panel can be open at a time (single) or multiple may be open simultaneously (multiple).",
+          "default": "single"
+        },
+        {
+          "name": "value",
+          "type": "string | string[]",
+          "description": "Controlled value. String in single mode; string array in multiple mode."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string | string[]",
+          "description": "Uncontrolled initial open value."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string | string[]) => void",
+          "description": "Called when the open panel(s) change."
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "description": "When true in single mode, the open panel may be collapsed by clicking its trigger again.",
+          "default": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables all accordion items."
+        }
+      ]
+    }
+  },
+  "types": {
+    "AccordionType": {
+      "kind": "union",
+      "values": ["single", "multiple"]
+    }
+  }
+}

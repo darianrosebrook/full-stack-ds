@@ -1,0 +1,190 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "TextField",
+  "description": "Full-featured form field composing a label, input, optional description, and error message with ARIA wiring.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "label", "field", "description", "error"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "label",
+          "part": "label",
+          "if": "label",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "input",
+          "part": "field",
+          "bindings": {
+            "type": "prop:type",
+            "value": "channel:value.value",
+            "onChange": "channel:value.onChange",
+            "disabled": "prop:disabled",
+            "name": "prop:name",
+            "required": "prop:required",
+            "aria-invalid": "prop:invalid",
+            "aria-describedby": "prop:ariaDescribedby"
+          }
+        },
+        {
+          "tag": "span",
+          "part": "description",
+          "if": "description",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "span",
+          "part": "error",
+          "if": "error",
+          "attrs": {
+            "role": "alert"
+          },
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "states": ["default", "focus", "disabled", "invalid"],
+  "a11y": {
+    "labeling": ["aria-label", "aria-labelledby", "aria-describedby"],
+    "keyboard": []
+  },
+  "channels": {
+    "value": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "string",
+      "description": "The text value of the underlying input element."
+    }
+  },
+  "tokens": {
+    "root": {
+      "textfield.spacing.gap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "textfield.border.width": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "property": "border-width",
+        "layer": "core"
+      },
+      "textfield.border.radius": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "textfield.color.input.text": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "textfield.color.input.placeholder": {
+        "resolvesTo": "semantic.color.foreground.tertiary",
+        "fallback": "#717171",
+        "layer": "semantic"
+      }
+    },
+    "invalid": {
+      "textfield.color.input.borderError": {
+        "resolvesTo": "semantic.color.status.danger",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "textfield.color.error": {
+        "resolvesTo": "semantic.color.foreground.danger",
+        "fallback": "#d9292b",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <TextField> component.",
+      "members": [
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Visible label rendered above the input."
+        },
+        {
+          "name": "description",
+          "type": "ReactNode",
+          "description": "Helper text rendered below the input."
+        },
+        {
+          "name": "error",
+          "type": "ReactNode",
+          "description": "Error message rendered below the input. Setting this also flips the field into invalid state."
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "description": "HTML input type."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Controlled value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "description": "Called when value changes."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Applies error styling and sets aria-invalid."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Marks the input as required."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form name for native submission."
+        },
+        {
+          "name": "ariaDescribedby",
+          "type": "string",
+          "description": "External description element id appended to aria-describedby."
+        }
+      ]
+    }
+  }
+}

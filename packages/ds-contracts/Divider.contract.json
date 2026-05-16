@@ -1,0 +1,82 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Divider",
+  "description": "Visual separator between content sections. Renders as an hr or div depending on orientation.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root"],
+    "dom": {
+      "tag": "hr",
+      "part": "root"
+    }
+  },
+  "variants": {
+    "orientation": ["horizontal", "vertical"]
+  },
+  "states": ["default"],
+  "a11y": {
+    "labeling": ["aria-orientation"],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "divider.color.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "layer": "semantic"
+      },
+      "divider.color.subtle": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "layer": "semantic"
+      },
+      "divider.color.muted": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "layer": "semantic"
+      },
+      "divider.size.thickness": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "divider.size.thicknessThick": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "divider.spacing.margin": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Divider> component.",
+      "members": [
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Visual orientation of the divider"
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "description": "Semantic role - separator (default) or presentation for purely decorative"
+        },
+        {
+          "name": "thickness",
+          "type": "string",
+          "description": "Custom thickness/size"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title attribute on the underlying hr element."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Truncate",
+  "description": "Clamps multi-line text to a fixed number of lines with an optional expand/collapse toggle.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root", "content", "toggle"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "span",
+          "part": "content",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "button",
+          "part": "toggle",
+          "if": "expandable",
+          "attrs": {
+            "type": "button"
+          },
+          "bindings": {
+            "aria-expanded": "channel:expanded.value"
+          }
+        }
+      ]
+    }
+  },
+  "states": ["default", "hover", "focus", "expanded"],
+  "a11y": {
+    "labeling": [],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "when": "toggle",
+        "action": "Toggle the expanded/collapsed state."
+      }
+    ]
+  },
+  "channels": {
+    "expanded": {
+      "value": "expanded",
+      "defaultValue": "defaultExpanded",
+      "onChange": "onExpandedChange",
+      "valueType": "boolean",
+      "description": "Whether the truncated content is fully visible."
+    }
+  },
+  "tokens": {
+    "root": {
+      "truncate.color.foreground.link": {
+        "resolvesTo": "semantic.color.foreground.link",
+        "fallback": "#d9292b",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "truncate.color.background.primary": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "truncate.typography.fontWeight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "layer": "semantic"
+      },
+      "truncate.spacing.toggle": {
+        "resolvesTo": "core.spacing.size.02",
+        "fallback": "2px",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "truncate.color.foreground.linkHover": {
+        "resolvesTo": "semantic.color.foreground.link.hover",
+        "fallback": "#ae0001",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Truncate> component.",
+      "members": [
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Maximum number of visible lines before truncation."
+        },
+        {
+          "name": "expandable",
+          "type": "boolean",
+          "description": "Whether to render an expand/collapse toggle button."
+        },
+        {
+          "name": "expanded",
+          "type": "boolean",
+          "description": "Controlled expanded state."
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "description": "Initial expanded state for uncontrolled mode."
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "(expanded: boolean) => void",
+          "description": "Called when expanded changes."
+        },
+        {
+          "name": "expandText",
+          "type": "string",
+          "description": "Custom expand button label.",
+          "default": "Show more"
+        },
+        {
+          "name": "collapseText",
+          "type": "string",
+          "description": "Custom collapse button label.",
+          "default": "Show less"
+        }
+      ]
+    }
+  }
+}

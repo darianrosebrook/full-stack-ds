@@ -1,0 +1,300 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Dialog",
+  "description": "Modal overlay requiring user attention before returning to the page. Traps focus until dismissed.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "backdrop", "modal", "header", "title", "body", "footer", "closeButton"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "backdrop",
+          "if": "open",
+          "attrs": { "aria-hidden": "true" }
+        },
+        {
+          "tag": "div",
+          "part": "modal",
+          "if": "open",
+          "attrs": {
+            "role": "dialog",
+            "aria-modal": "true"
+          },
+          "bindings": {
+            "aria-labelledby": "literal:dialog-title-id",
+            "aria-describedby": "literal:dialog-body-id"
+          },
+          "children": [
+            {
+              "tag": "div",
+              "part": "header",
+              "children": [
+                {
+                  "tag": "h2",
+                  "part": "title",
+                  "children": [{ "tag": "slot", "name": "title" }]
+                },
+                { "tag": "button", "part": "closeButton", "attrs": { "type": "button", "aria-label": "Close dialog" } }
+              ]
+            },
+            { "tag": "div", "part": "body", "children": [{ "tag": "children" }] },
+            { "tag": "div", "part": "footer" }
+          ]
+        }
+      ]
+    }
+  },
+  "variants": {
+    "size": ["sm", "md", "lg", "xl", "full"]
+  },
+  "states": ["default", "hover", "focus", "active", "leaving"],
+  "a11y": {
+    "role": "dialog",
+    "labeling": ["aria-label", "aria-labelledby", "aria-describedby"],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Close the dialog and return focus to the trigger element.",
+        "when": "open"
+      },
+      {
+        "key": "Tab",
+        "action": "Cycle focus forward through interactive elements within the dialog.",
+        "when": "open"
+      },
+      {
+        "key": "Shift+Tab",
+        "action": "Cycle focus backward through interactive elements within the dialog.",
+        "when": "open"
+      }
+    ]
+  },
+  "channels": {
+    "openness": {
+      "description": "Whether the dialog is open.",
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean"
+    }
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "centered",
+    "layering": "modal",
+    "backdrop": true
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape",
+        "enabledBy": "closeOnEscape"
+      },
+      {
+        "event": "overlayClick",
+        "enabledBy": "closeOnBackdropClick"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "trap",
+    "initialFocus": "prop:initialFocus",
+    "returnFocus": "trigger",
+    "scrollLock": true,
+    "wrap": true
+  },
+  "tokens": {
+    "root": {
+      "dialog.color.background.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "dialog.color.background.backdrop": {
+        "resolvesTo": "semantic.color.overlay.scrim",
+        "fallback": "#00000066",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "dialog.color.foreground.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "dialog.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "dialog.color.border.default": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "dialog.size.radius.default": {
+        "resolvesTo": "core.shape.radius.large",
+        "fallback": "16px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "dialog.size.sm.width": {
+        "literal": "400px"
+      },
+      "dialog.size.sm.maxWidth": {
+        "literal": "90vw"
+      },
+      "dialog.size.md.width": {
+        "literal": "500px"
+      },
+      "dialog.size.md.maxWidth": {
+        "literal": "90vw"
+      },
+      "dialog.size.lg.width": {
+        "literal": "700px"
+      },
+      "dialog.size.lg.maxWidth": {
+        "literal": "90vw"
+      },
+      "dialog.size.xl.width": {
+        "literal": "900px"
+      },
+      "dialog.size.xl.maxWidth": {
+        "literal": "95vw"
+      },
+      "dialog.size.full.width": {
+        "literal": "100vw"
+      },
+      "dialog.size.full.height": {
+        "literal": "100vh"
+      },
+      "dialog.size.closeButton.size": {
+        "resolvesTo": "core.spacing.size.08",
+        "fallback": "32px",
+        "layer": "core"
+      },
+      "dialog.elevation.default": {
+        "resolvesTo": "semantic.elevation.surface.floating",
+        "fallback": "0 8px 32px rgba(0,0,0,0.16)",
+        "layer": "semantic"
+      },
+      "dialog.spacing.header.paddingTop": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "dialog.spacing.body.paddingRight": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "dialog.spacing.footer.gap": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "dialog.typography.title.fontSize": {
+        "resolvesTo": "semantic.typography.heading.04",
+        "fallback": "18px",
+        "layer": "semantic"
+      },
+      "dialog.typography.title.fontWeight": {
+        "resolvesTo": "semantic.typography.font.weight.bold",
+        "fallback": "700",
+        "layer": "semantic"
+      },
+      "dialog.typography.title.lineHeight": {
+        "resolvesTo": "semantic.typography.line.height.heading",
+        "fallback": "1",
+        "property": "line-height",
+        "layer": "semantic"
+      }
+    },
+    "hover": {
+      "dialog.color.background.hover": {
+        "resolvesTo": "semantic.color.background.hover",
+        "fallback": "#cecece",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Dialog> component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Uncontrolled initial open state."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when the open state changes."
+        },
+        {
+          "name": "modal",
+          "type": "boolean",
+          "description": "When true, renders a modal dialog with backdrop and focus trap.",
+          "default": true
+        },
+        {
+          "name": "size",
+          "type": "DialogSize",
+          "description": "Controls the maximum width of the dialog content panel.",
+          "default": "md"
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "description": "When false, removes the close button and disables backdrop-click dismissal.",
+          "default": true
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "When false, pressing Escape does not close the dialog.",
+          "default": true
+        },
+        {
+          "name": "closeOnBackdropClick",
+          "type": "boolean",
+          "description": "When false, clicking the backdrop overlay does not close the dialog.",
+          "default": true
+        },
+        {
+          "name": "initialFocus",
+          "type": "string",
+          "description": "CSS selector or element ID to receive initial focus when the dialog opens."
+        },
+        {
+          "name": "returnFocus",
+          "type": "string",
+          "description": "CSS selector or element ID to return focus to on close."
+        }
+      ]
+    }
+  },
+  "types": {
+    "DialogSize": {
+      "kind": "union",
+      "values": ["sm", "md", "lg", "xl", "full"]
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "./primitive.contract.schema.json",
+  "name": "Stack",
+  "description": "Polymorphic layout shell; generated components compose Stack as the sole layout primitive.",
+  "props": [
+    {
+      "name": "as",
+      "kind": "elementType",
+      "default": "div",
+      "notes": "Underlying HTML element or intrinsic tag."
+    },
+    {
+      "name": "variant",
+      "kind": "layoutVariant",
+      "default": "vertical",
+      "notes": "Maps to stack--vertical | stack--horizontal layout classes."
+    },
+    {
+      "name": "className",
+      "kind": "string",
+      "notes": "Merged with stack layout classes."
+    },
+    {
+      "name": "children",
+      "kind": "children"
+    }
+  ],
+  "implementation": {
+    "targets": {
+      "react": {
+        "module": "@full-stack-ds/react/primitives",
+        "export": "Stack",
+        "relativeFromComponents": "../../primitives"
+      },
+      "vue": {
+        "module": "@full-stack-ds/vue/primitives",
+        "export": "Stack",
+        "relativeFromComponents": "../../primitives"
+      },
+      "angular": {
+        "module": "@full-stack-ds/angular/primitives",
+        "export": "StackComponent",
+        "relativeFromComponents": "../../primitives"
+      },
+      "lit": {
+        "module": "@full-stack-ds/lit/primitives",
+        "export": "StackElement",
+        "relativeFromComponents": "../../primitives"
+      },
+      "svelte": {
+        "module": "@full-stack-ds/svelte/primitives",
+        "export": "Stack",
+        "relativeFromComponents": "../../primitives"
+      }
+    }
+  }
+}

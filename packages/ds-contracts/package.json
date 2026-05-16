@@ -1,0 +1,7 @@
+{
+  "name": "@full-stack-ds/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Component and primitive JSON contracts (source of truth for codegen)",
+  "files": ["*.json", "*.contract.json", "primitives/*.json"]
+}

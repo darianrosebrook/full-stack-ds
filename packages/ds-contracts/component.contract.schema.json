@@ -1,0 +1,937 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "component.contract.schema.json",
+  "title": "Full-Stack DS Component Contract",
+  "description": "Defines the contract for a component: anatomy, props, tokens, a11y, behavior, and usage. Implementation-language-agnostic — any target that can read these fields can reconstruct the component.",
+  "type": "object",
+  "required": ["name", "layer"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path to this JSON Schema file for editor validation."
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Contract schema version. Absent or \"1\" indicates the current iteration."
+    },
+    "codegen": {
+      "type": "object",
+      "description": "Codegen behavior overrides for this contract. All fields optional; unset uses defaults.",
+      "additionalProperties": false,
+      "properties": {
+        "tests": {
+          "type": "boolean",
+          "description": "Whether to emit a test file. Default true. Set false for components with hand-authored tests that codegen should not overwrite."
+        }
+      }
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Z][a-zA-Z0-9]+$",
+      "description": "PascalCase component name (e.g. \"Button\", \"ListItem\")."
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief human-readable summary of the component's purpose."
+    },
+    "layer": {
+      "type": "string",
+      "enum": ["primitive", "styled", "composite"],
+      "description": "Architecture layer: primitive (leaf), styled (themed primitive), composite (multiple primitives)."
+    },
+    "cssPrefix": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "BEM block name override. Defaults to kebab-cased component name."
+    },
+    "anatomy": {
+      "description": "Named sub-parts that make up the component. Legacy forms (string array or {parts, description}) remain valid; prefer the detailed form which attaches roles and metadata to each part.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Simple list of anatomy part names (legacy)."
+        },
+        {
+          "type": "object",
+          "required": ["parts"],
+          "additionalProperties": false,
+          "properties": {
+            "parts": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Ordered canonical list of anatomy part names."
+            },
+            "description": {
+              "type": "string",
+              "description": "Prose explaining how the parts relate to each other."
+            },
+            "details": {
+              "type": "object",
+              "description": "Per-part metadata keyed by part name. Keys should appear in `parts`.",
+              "additionalProperties": { "$ref": "#/$defs/partDetails" }
+            },
+            "dom": {
+              "$ref": "#/$defs/domNode",
+              "description": "Optional DOM tree describing how parts compose into rendered elements with attribute and event bindings. Framework emitters walk this tree when present; otherwise they fall back to single-root output."
+            }
+          }
+        }
+      ]
+    },
+    "props": {
+      "type": "object",
+      "description": "Prop groups keyed by surface name (e.g. \"styled\", \"hook\").",
+      "additionalProperties": {
+        "$ref": "#/$defs/propGroup"
+      }
+    },
+    "channels": {
+      "type": "object",
+      "description": "Controlled/uncontrolled prop pairings. Each channel groups the props that together drive one piece of externally observable state.",
+      "additionalProperties": { "$ref": "#/$defs/controlledChannel" }
+    },
+    "types": {
+      "type": "object",
+      "description": "Named type definitions referenced by prop members.",
+      "additionalProperties": {
+        "$ref": "#/$defs/typeDef"
+      }
+    },
+    "dataModel": {
+      "description": "Shapes of domain objects the component consumes (e.g. option records, tree nodes). Use when props reference array/object types that need structural definition for non-TS implementers.",
+      "$ref": "#/$defs/dataModel"
+    },
+    "variants": {
+      "type": "object",
+      "description": "Variant dimensions keyed by prop name, each listing allowed values.",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      }
+    },
+    "states": {
+      "description": "Interaction/visual states. Prefer the dimensional form when states span multiple orthogonal axes (e.g. interaction vs selection vs validity).",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Flat list of states (legacy)."
+        },
+        {
+          "type": "object",
+          "required": ["dimensions"],
+          "additionalProperties": false,
+          "properties": {
+            "dimensions": {
+              "type": "object",
+              "description": "Orthogonal state axes keyed by dimension name. By default each dimension is mutually exclusive (one active value at a time).",
+              "additionalProperties": { "$ref": "#/$defs/stateDimension" }
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "tokens": {
+      "type": "object",
+      "description": "Design tokens keyed by anatomy part. Values are either a flat string array or a nested object whose leaves are string arrays (for variant-specific tokens).",
+      "additionalProperties": {
+        "$ref": "#/$defs/tokenValue"
+      }
+    },
+    "styles": {
+      "type": "object",
+      "description": "CSS declarations keyed by selector. Keys are anatomy parts (root, header, etc.), variant modifiers (--primary, --disabled), state pseudo-classes (:hover, :focus-visible), or compound selectors. Values are objects of CSS property: value pairs.",
+      "additionalProperties": {
+        "$ref": "#/$defs/styleBlock"
+      }
+    },
+    "keyframes": {
+      "type": "object",
+      "description": "CSS @keyframes definitions. Keys are animation names, values are objects mapping keyframe selectors (from, to, 50%, etc.) to CSS property-value pairs.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/$defs/styleBlock"
+        }
+      }
+    },
+    "events": {
+      "type": "object",
+      "description": "Structured signatures for user-facing callbacks (onChange, onOpen, onClose, etc.). Keys are event names — not prop names — and may be emitted through one or more props listed in `emittedVia`.",
+      "additionalProperties": { "$ref": "#/$defs/eventSignature" }
+    },
+    "stateMachine": {
+      "$ref": "#/$defs/stateMachine"
+    },
+    "form": { "$ref": "#/$defs/formContract" },
+    "motion": { "$ref": "#/$defs/motionContract" },
+    "focus": { "$ref": "#/$defs/focusContract" },
+    "portal": { "$ref": "#/$defs/portalContract" },
+    "dismissal": { "$ref": "#/$defs/dismissalContract" },
+    "relationships": {
+      "type": "array",
+      "description": "Cross-part wiring (ID references) that implementers must maintain so assistive tech works.",
+      "items": { "$ref": "#/$defs/relationship" }
+    },
+    "a11y": {
+      "$ref": "#/$defs/a11y"
+    },
+    "usage": {
+      "$ref": "#/$defs/usage"
+    },
+    "a2ui": {
+      "$ref": "#/$defs/a2uiContract",
+      "description": "Agent-facing authoring metadata. Keep lean — the runtime deriver pulls props, enum, default, events, form from the existing contract blocks."
+    }
+  },
+  "$defs": {
+    "domNode": {
+      "type": "object",
+      "required": ["tag"],
+      "additionalProperties": false,
+      "description": "Single DOM node in a component's render tree. Framework emitters map this into idiomatic JSX/SFC/template/html output.",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "description": "HTML tag name (e.g. \"label\", \"input\"), or special placeholder \"slot\" / \"children\" where consumer-provided content renders."
+        },
+        "name": {
+          "type": "string",
+          "description": "Named-slot identifier — only meaningful when `tag === \"slot\"`. Maps to framework idioms: React `slots.<name>`, Vue/Lit `<slot name=\"<name>\">`, Svelte `{@render <name>?.()}`, Angular `<ng-content select=\"[slot=<name>]\">`. When absent, the slot is the default/unnamed slot.",
+          "pattern": "^[a-z][a-zA-Z0-9]*$"
+        },
+        "part": {
+          "type": "string",
+          "description": "Optional reference to an `anatomy.parts` entry. The emitter derives a BEM `__part` class from this."
+        },
+        "attrs": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Static attribute values rendered verbatim (e.g. {\"type\": \"checkbox\", \"role\": \"switch\"})."
+        },
+        "bindings": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Dynamic bindings keyed by attribute or event name. Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\"."
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/domNode" },
+          "description": "Child nodes. Empty/absent for leaf elements."
+        },
+        "if": {
+          "type": "string",
+          "description": "Truthy-prop guard. Special value \"children\" renders only when consumer-provided children exist."
+        }
+      }
+    },
+    "propMember": {
+      "type": "object",
+      "description": "A single prop exposed by the component.",
+      "required": ["name", "type", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Prop name as it appears in the component API."
+        },
+        "type": {
+          "type": "string",
+          "description": "TypeScript type expression (e.g. \"string\", \"ReactElement\", \"TooltipPlacement\")."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether the prop must be supplied by the consumer."
+        },
+        "default": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ],
+          "description": "Default value when the prop is omitted."
+        },
+        "description": {
+          "type": "string",
+          "description": "What this prop controls."
+        },
+        "nodeKind": {
+          "type": "string",
+          "enum": ["node-ref", "icon-ref"],
+          "description": "A2UI disambiguation hint for props whose TS type can't distinguish a nested component from a registered icon (`ReactNode`, `ReactElement`). When present, the A2UI deriver uses this as the prop's `accepts` value instead of guessing. Leave unset for non-node props."
+        }
+      }
+    },
+    "propGroup": {
+      "type": "object",
+      "description": "A named group of related props (e.g. styled component props, hook options).",
+      "required": ["members"],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "What this group of props is for."
+        },
+        "members": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/propMember" },
+          "description": "The props in this group."
+        }
+      }
+    },
+    "controlledChannel": {
+      "type": "object",
+      "description": "Declares a controlled/uncontrolled pairing. References existing prop names inside `props.*.members`; does not redefine them.",
+      "required": ["value", "onChange"],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "What external state this channel represents (e.g. \"selected value\", \"open state\", \"search query\")."
+        },
+        "value": {
+          "type": "string",
+          "description": "Name of the controlled value prop."
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "Name of the uncontrolled default-value prop, if one exists."
+        },
+        "onChange": {
+          "type": "string",
+          "description": "Name of the change handler prop."
+        },
+        "enabledBy": {
+          "type": "string",
+          "description": "Name of a sibling prop that must be truthy for this channel to be active (e.g. a search channel enabled by `isSearchable`)."
+        },
+        "valueType": {
+          "type": "string",
+          "description": "Short type hint for the channel's value (e.g. \"number\", \"string | string[]\"). Use when the prop's TS type alone is not descriptive cross-language."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Free-form notes about semantics (e.g. \"in multi mode the value is an array\")."
+        }
+      }
+    },
+    "typeDef": {
+      "type": "object",
+      "description": "A named type used by one or more props.",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["union", "enum", "alias"],
+          "description": "What flavor of type this is."
+        },
+        "values": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Allowed values (required for union and enum kinds)."
+        },
+        "alias": {
+          "type": "string",
+          "description": "The type expression this aliases (required for alias kind)."
+        }
+      }
+    },
+    "dataModel": {
+      "type": "object",
+      "description": "Domain entity shapes consumed by the component. Entity fields use simple type expressions; suffix `?` marks optional.",
+      "additionalProperties": false,
+      "properties": {
+        "entities": {
+          "type": "object",
+          "description": "Named entities keyed by entity name.",
+          "additionalProperties": { "$ref": "#/$defs/entityDef" }
+        },
+        "semantics": {
+          "type": "object",
+          "description": "Prose notes about semantic behaviors over the data model (selection, filtering, ordering, identity).",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "entityDef": {
+      "type": "object",
+      "required": ["fields"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "fields": {
+          "type": "object",
+          "description": "Field name → type expression. Append \"?\" to the name for optional fields (e.g. \"disabled?\").",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "tokenResolution": {
+      "type": "object",
+      "description": "Structured resolution for a single token: the semantic token it resolves to, the hardcoded fallback, the CSS property it drives, and the optional cascade layer.",
+      "required": ["resolvesTo", "fallback"],
+      "additionalProperties": false,
+      "properties": {
+        "resolvesTo": {
+          "type": "string",
+          "description": "Semantic-token name referenced by var(--<tokenName>, ...) in the component's .tokens.css, without the -- prefix."
+        },
+        "fallback": {
+          "type": "string",
+          "description": "Hardcoded fallback value — the second argument passed to var() in .tokens.css. Brand-agnostic default and safety net when the semantic token is missing."
+        },
+        "property": {
+          "type": "string",
+          "description": "CSS property this token drives (e.g. \"background-color\", \"border-radius\"). Optional but strongly encouraged for non-CSS implementers."
+        },
+        "layer": {
+          "type": "string",
+          "enum": ["core", "semantic", "brand", "density"],
+          "description": "Expected resolution layer for resolvesTo. Defaults to \"semantic\".",
+          "default": "semantic"
+        }
+      }
+    },
+    "tokenValue": {
+      "description": "Token value in one of three forms: (1) legacy flat string array of token names, (2) structured resolution map whose keys are token names and values are tokenResolution objects (or strings for unresolved entries), (3) nested object whose values are tokenValue (for variant-scoped tokens). Uses anyOf because a TokenResolution object's structure overlaps with the structured-map shape; ambiguous matches are not a validation error.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Legacy form: flat list of token names."
+        },
+        {
+          "type": "object",
+          "description": "Structured resolution map: each key is a token name and each value declares the full var() resolution. String values are legacy entries (still rendered as comment shims) — useful for mixed maps where some tokens are resolved and others remain to be migrated.",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              { "$ref": "#/$defs/tokenResolution" },
+              { "type": "string" }
+            ]
+          }
+        },
+        {
+          "type": "object",
+          "description": "Variant-scoped nesting: keys are variant names or anatomy sub-parts; values recurse as tokenValue.",
+          "additionalProperties": {
+            "$ref": "#/$defs/tokenValue"
+          }
+        }
+      ]
+    },
+    "styleBlock": {
+      "type": "object",
+      "description": "CSS property-value pairs for a single selector.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "partDetails": {
+      "type": "object",
+      "description": "Metadata about a single anatomy part: what role it plays, whether it's focusable, whether it renders many times, etc.",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "role": {
+          "type": "string",
+          "description": "Conceptual role this part plays in the component's interaction model.",
+          "enum": [
+            "root",
+            "trigger",
+            "content",
+            "overlay",
+            "item",
+            "group",
+            "label",
+            "decoration",
+            "region",
+            "context"
+          ]
+        },
+        "multiple": {
+          "type": "boolean",
+          "description": "True if this part is rendered many times (e.g. Tabs.tab, Dropdown.option)."
+        },
+        "focusable": {
+          "oneOf": [
+            { "type": "boolean" },
+            { "type": "string", "enum": ["roving"] }
+          ],
+          "description": "Whether this part receives DOM focus. \"roving\" means it participates in a roving-tabindex group."
+        },
+        "interactive": {
+          "type": "boolean",
+          "description": "Whether this part handles user events directly (click, key, hover)."
+        },
+        "portalTarget": {
+          "type": "boolean",
+          "description": "Whether this part renders into a portal rather than inline."
+        },
+        "aria": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Static ARIA contract for this part.",
+          "properties": {
+            "role": { "type": "string" },
+            "attributes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "ARIA attributes the implementation must set on this part (e.g. \"aria-expanded\", \"aria-selected\")."
+            }
+          }
+        }
+      }
+    },
+    "stateDimension": {
+      "type": "object",
+      "required": ["values"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "values": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Allowed values on this dimension."
+        },
+        "initial": {
+          "type": "string",
+          "description": "Default value when the component first renders."
+        },
+        "exclusive": {
+          "type": "boolean",
+          "description": "Whether values on this dimension are mutually exclusive. Defaults to true.",
+          "default": true
+        }
+      }
+    },
+    "formContract": {
+      "type": "object",
+      "description": "Declares how this component participates in HTML forms. Omit for non-form components; set `participates: false` to explicitly record that a component with form-like props does not serialize.",
+      "required": ["participates"],
+      "additionalProperties": false,
+      "properties": {
+        "participates": {
+          "type": "boolean",
+          "description": "Whether this component contributes to a native <form>'s FormData on submit."
+        },
+        "inputType": {
+          "type": "string",
+          "enum": ["text", "number", "email", "password", "search", "tel", "url", "date", "time", "datetime-local", "month", "week", "color", "file", "checkbox", "radio", "select", "hidden", "combobox", "custom"],
+          "description": "Platform input type that backs this control."
+        },
+        "name": { "$ref": "#/$defs/formPropRef", "description": "Prop driving the `name` attribute used as the FormData key." },
+        "formProp": { "$ref": "#/$defs/formPropRef", "description": "Prop that overrides the owning <form> id." },
+        "required": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["prop"],
+          "properties": {
+            "prop": { "type": "string", "description": "Prop that marks the field as required." },
+            "constraintValidation": {
+              "type": "boolean",
+              "description": "True if the component participates in HTML5 native validation."
+            }
+          }
+        },
+        "serialization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["valueType", "valueSource"],
+          "properties": {
+            "valueType": {
+              "type": "string",
+              "description": "Type of the serialized value (e.g. \"string\", \"number\", \"File\", \"string[]\")."
+            },
+            "valueSource": {
+              "type": "string",
+              "description": "Where the form value originates. Use \"channel:<name>\" to reference a controlled/uncontrolled pair; \"prop:<name>\" for a single prop; \"static:<literal>\" for a fixed value."
+            },
+            "omitWhen": {
+              "type": "string",
+              "enum": ["unchecked", "empty", "disabled", "never"],
+              "description": "Condition under which the control contributes no entry to FormData."
+            },
+            "multiple": {
+              "type": "boolean",
+              "description": "True for controls that contribute multiple entries (multi-select, multi-file)."
+            }
+          }
+        },
+        "validity": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "model": {
+              "type": "string",
+              "enum": ["native", "props", "hybrid"],
+              "description": "\"native\": uses platform validationMessage/setCustomValidity. \"props\": validity driven purely by props. \"hybrid\": both, with props taking precedence when set."
+            },
+            "invalidProp": { "type": "string", "description": "Prop that forces an invalid visual/AT state." },
+            "errorMessageProp": { "type": "string", "description": "Prop that carries the error text shown to users and AT." },
+            "errorSurface": {
+              "type": "string",
+              "enum": ["aria-describedby", "aria-errormessage", "live-region", "none"],
+              "description": "How the error text is exposed to assistive tech."
+            },
+            "ariaAttributes": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "ARIA attributes the implementation must set on the focusable part to reflect validity."
+            }
+          }
+        },
+        "labeling": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["associated-label", "self-labeling", "wrapped-label"]
+            },
+            "required": { "type": "boolean" },
+            "via": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "autofill": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "autocomplete": { "type": "string" },
+            "hints": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "formPropRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prop"],
+      "properties": {
+        "prop": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "motionContract": {
+      "type": "object",
+      "description": "Motion/animation contract. Durations and easings are authored as token references so they resolve through the cascade and honor brand overrides.",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "transitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/motionTransition" },
+          "description": "Named animated transitions this component performs."
+        },
+        "reducedMotion": {
+          "type": "string",
+          "enum": ["respect", "disable", "reduce", "ignore"],
+          "description": "\"respect\": honor `prefers-reduced-motion`. \"disable\": always skip. \"reduce\": shorter variants. \"ignore\": do not adapt (strongly discouraged)."
+        },
+        "reducedMotionStrategy": {
+          "type": "string",
+          "description": "How the reduced-motion adaptation is applied. Free-form."
+        }
+      }
+    },
+    "motionTransition": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "trigger": {
+          "type": "string",
+          "description": "Event or state transition that starts this animation."
+        },
+        "properties": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "CSS properties animated (e.g. \"opacity\", \"transform\", \"height\")."
+        },
+        "duration": {
+          "type": "string",
+          "description": "Token reference driving the duration."
+        },
+        "easing": {
+          "type": "string",
+          "description": "Token reference driving the easing."
+        },
+        "phase": {
+          "type": "string",
+          "enum": ["enter", "exit", "move", "attention"],
+          "description": "Semantic phase — useful for reduced-motion heuristics."
+        }
+      }
+    },
+    "focusContract": {
+      "type": "object",
+      "description": "How focus is managed inside and around the component.",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "strategy": {
+          "type": "string",
+          "enum": ["trap", "roving", "auto", "manual", "none"],
+          "description": "\"trap\": contain focus inside (dialogs). \"roving\": tabindex moves through siblings. \"auto\": component sets initial focus on mount/open. \"manual\": caller controls. \"none\": no managed focus."
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["horizontal", "vertical", "both"]
+        },
+        "initialFocus": {
+          "type": "string",
+          "description": "Anatomy part name or prop name (prefix prop names with \"prop:\") that receives focus when first established."
+        },
+        "returnFocus": {
+          "type": "string",
+          "description": "Where focus returns when the component closes/unmounts."
+        },
+        "wrap": {
+          "type": "boolean",
+          "description": "For roving focus, whether arrow navigation wraps at the ends."
+        },
+        "scrollLock": {
+          "type": "boolean",
+          "description": "Whether body scroll is locked while focus is managed here (modals)."
+        }
+      }
+    },
+    "portalContract": {
+      "type": "object",
+      "description": "Whether and how the component escapes its parent DOM container.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "defaultTarget": { "type": "string" },
+        "targetProp": { "type": "string" },
+        "positioning": {
+          "type": "string",
+          "enum": ["anchored", "centered", "fixed", "none"]
+        },
+        "layering": {
+          "type": "string",
+          "enum": ["modal", "popover", "tooltip", "menu", "toast", "none"]
+        },
+        "backdrop": { "type": "boolean" },
+        "collision": {
+          "type": "string",
+          "enum": ["flip", "shift", "flip-shift", "none"]
+        }
+      }
+    },
+    "dismissalContract": {
+      "type": "object",
+      "description": "How a dismissable component can be closed.",
+      "additionalProperties": false,
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/dismissalTrigger" }
+        }
+      }
+    },
+    "dismissalTrigger": {
+      "type": "object",
+      "required": ["event"],
+      "additionalProperties": false,
+      "properties": {
+        "event": {
+          "type": "string",
+          "enum": ["escape", "overlayClick", "outsideClick", "blur", "routeChange", "triggerReclick", "userDismiss", "selection"]
+        },
+        "enabledBy": { "type": "string" },
+        "defaultEnabled": { "type": "boolean" },
+        "description": { "type": "string" }
+      }
+    },
+    "eventSignature": {
+      "type": "object",
+      "description": "Describes the payload of a callback.",
+      "required": ["description"],
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "emittedVia": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "payload": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/eventPayloadField" }
+        },
+        "returns": { "type": "string" },
+        "cancelable": { "type": "boolean" },
+        "triggeredBy": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "eventPayloadField": {
+      "type": "object",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "optional": { "type": "boolean" }
+      }
+    },
+    "stateMachine": {
+      "type": "object",
+      "description": "Declarative state-transition model. References dimension values from `states.dimensions` using \"<dimension>=<value>\" syntax.",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "transitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stateTransition" }
+        }
+      }
+    },
+    "stateTransition": {
+      "type": "object",
+      "required": ["event", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "event": { "type": "string" },
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "guard": { "type": "string" },
+        "effect": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "description": "An ID-reference link between two anatomy parts, expressed so implementers know which ARIA attributes to wire.",
+      "required": ["from", "to", "attribute"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "attribute": { "type": "string" },
+        "when": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "keyboardEntry": {
+      "description": "A keyboard interaction. Bare strings remain valid (legacy); prefer the structured form with `when` and `mode` qualifiers.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["key", "action"],
+          "additionalProperties": false,
+          "properties": {
+            "key": {
+              "type": "string",
+              "description": "Key or key combo (e.g. \"Escape\", \"Tab\", \"ArrowDown\", \"Shift+Tab\")."
+            },
+            "action": {
+              "type": "string",
+              "description": "What happens when the key is pressed."
+            },
+            "when": {
+              "type": "string",
+              "description": "Anatomy part that must hold focus for this binding to apply."
+            },
+            "mode": {
+              "type": "string",
+              "description": "State condition required for this binding (e.g. \"openness=expanded\")."
+            }
+          }
+        }
+      ]
+    },
+    "a11y": {
+      "type": "object",
+      "description": "Accessibility contract for the component.",
+      "additionalProperties": false,
+      "properties": {
+        "role": { "type": "string" },
+        "labeling": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "keyboard": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/keyboardEntry" }
+        },
+        "screenReader": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "description": "Code examples showing how to consume the component.",
+      "additionalProperties": false,
+      "properties": {
+        "example": { "type": "string" },
+        "hookExample": { "type": "string" }
+      }
+    },
+    "a2uiContract": {
+      "type": "object",
+      "description": "Slim, agent-facing authoring block. Only fields that can't be derived from other contract blocks live here.",
+      "required": ["category"],
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "form-field",
+            "action",
+            "display",
+            "container",
+            "feedback",
+            "navigation",
+            "overlay",
+            "media"
+          ],
+          "description": "Broad agent-facing grouping."
+        },
+        "usageHints": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Short imperative notes that improve agent selection and prop-filling."
+        },
+        "children": {
+          "type": "object",
+          "description": "Whether and how this component accepts child nodes in the A2UI adjacency list.",
+          "additionalProperties": false,
+          "properties": {
+            "allowed": { "type": "boolean" },
+            "slot": { "type": "string" },
+            "accepts": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "min": { "type": "integer", "minimum": 0 },
+            "max": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    }
+  }
+}

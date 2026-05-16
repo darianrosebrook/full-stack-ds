@@ -1,0 +1,99 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "AnimatedText",
+  "description": "Text that animates character-by-character or word-by-word into view on scroll.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root", "word"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "bindings": {
+        "data-text": "prop:text"
+      }
+    }
+  },
+  "variants": {
+    "as": ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span", "div"],
+    "variant": ["blur-in", "fade-up", "slide-in"]
+  },
+  "states": ["default"],
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "animatedText.motion.duration.enter": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "property": "transition-duration",
+        "layer": "core"
+      },
+      "animatedText.motion.easing.enter": {
+        "resolvesTo": "core.motion.easing.emphasizedOut",
+        "fallback": "cubic-bezier(0.0, 0.0, 0.2, 1)",
+        "property": "transition-timing-function",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <AnimatedText> component.",
+      "members": [
+        {
+          "name": "text",
+          "type": "string",
+          "description": "The text content to animate.",
+          "required": true
+        },
+        {
+          "name": "as",
+          "type": "AnimatedTextAs",
+          "description": "Element type to render."
+        },
+        {
+          "name": "variant",
+          "type": "AnimatedTextVariant",
+          "description": "Animation variant."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration of each word animation in seconds."
+        },
+        {
+          "name": "stagger",
+          "type": "number",
+          "description": "Stagger delay between words in seconds."
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Delay before animation starts in seconds."
+        },
+        {
+          "name": "triggerOnScroll",
+          "type": "boolean",
+          "description": "Whether to trigger the animation on scroll into view."
+        },
+        {
+          "name": "scrollStart",
+          "type": "string",
+          "description": "ScrollTrigger start position string."
+        }
+      ]
+    }
+  },
+  "types": {
+    "AnimatedTextAs": {
+      "kind": "union",
+      "values": ["h1", "h2", "h3", "h4", "h5", "h6", "p", "span", "div"]
+    },
+    "AnimatedTextVariant": {
+      "kind": "union",
+      "values": ["blur-in", "fade-up", "slide-in"]
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Breadcrumbs",
+  "description": "Navigation landmark showing the current page location within a site hierarchy.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root", "list", "link", "current", "separator", "overflow"],
+    "dom": {
+      "tag": "nav",
+      "part": "root",
+      "bindings": {
+        "aria-label": "prop:ariaLabel"
+      },
+      "children": [
+        {
+          "tag": "ol",
+          "part": "list",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "variants": {},
+  "states": ["default", "hover", "focus"],
+  "a11y": {
+    "role": "navigation",
+    "labeling": ["aria-label"],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "breadcrumbs.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "breadcrumbs.color.foreground.link": {
+        "resolvesTo": "semantic.color.foreground.link",
+        "fallback": "#d9292b",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "breadcrumbs.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "breadcrumbs.color.foreground.tertiary": {
+        "resolvesTo": "semantic.color.foreground.tertiary",
+        "fallback": "#717171",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "breadcrumbs.color.background.elevated": {
+        "resolvesTo": "semantic.color.background.elevated",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "breadcrumbs.color.border.subtle": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "breadcrumbs.typography.lineHeight.collapse": {
+        "resolvesTo": "semantic.typography.line.height.collapse",
+        "fallback": "1",
+        "property": "line-height",
+        "layer": "semantic"
+      },
+      "breadcrumbs.shape.radius.medium": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "breadcrumbs.shape.radius.small": {
+        "resolvesTo": "core.shape.radius.small",
+        "fallback": "4px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "breadcrumbs.spacing.gap.default": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "breadcrumbs.spacing.gap.small": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "breadcrumbs.spacing.padding.default": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "breadcrumbs.spacing.padding.small": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "property": "padding",
+        "layer": "core"
+      }
+    },
+    "focus": {
+      "breadcrumbs.color.focus": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "outline-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Breadcrumbs> component.",
+      "members": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the nav landmark. Defaults to \"Breadcrumb\".",
+          "default": "Breadcrumb"
+        },
+        {
+          "name": "separator",
+          "type": "string",
+          "description": "Separator character or string rendered between items."
+        }
+      ]
+    }
+  }
+}

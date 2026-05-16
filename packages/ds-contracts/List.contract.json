@@ -1,0 +1,117 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "List",
+  "description": "Semantic list element (ul, ol, or dl) with consistent spacing and marker styles.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root"],
+    "dom": {
+      "tag": "ul",
+      "part": "root",
+      "children": [{ "tag": "children" }]
+    }
+  },
+  "variants": {
+    "as": ["ul", "ol", "dl"],
+    "variant": ["default", "unstyled", "inline", "divided", "spaced"],
+    "marker": ["default", "none", "disc", "circle", "square", "decimal", "alpha", "roman"],
+    "spacing": ["none", "sm", "md", "lg"],
+    "size": ["sm", "md", "lg"]
+  },
+  "states": ["default"],
+  "a11y": {
+    "labeling": ["aria-label", "aria-labelledby"],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "list.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "list.color.border.default": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "list.size.padding.default": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "list.spacing.sm": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "layer": "core"
+      },
+      "list.spacing.md": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "layer": "core"
+      },
+      "list.spacing.lg": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <List> component.",
+      "members": [
+        {
+          "name": "as",
+          "type": "ListElement",
+          "description": "Underlying list element."
+        },
+        {
+          "name": "variant",
+          "type": "ListVariant",
+          "description": "Visual variant"
+        },
+        {
+          "name": "marker",
+          "type": "ListMarker",
+          "description": "Marker style for ordered/unordered lists"
+        },
+        {
+          "name": "spacing",
+          "type": "ListSpacing",
+          "description": "Spacing between items"
+        },
+        {
+          "name": "size",
+          "type": "ListSize",
+          "description": "Type-scale size token"
+        }
+      ]
+    }
+  },
+  "types": {
+    "ListElement": {
+      "kind": "union",
+      "values": ["ul", "ol", "dl"]
+    },
+    "ListVariant": {
+      "kind": "union",
+      "values": ["default", "unstyled", "inline", "divided", "spaced"]
+    },
+    "ListMarker": {
+      "kind": "union",
+      "values": ["default", "none", "disc", "circle", "square", "decimal", "alpha", "roman"]
+    },
+    "ListSpacing": {
+      "kind": "union",
+      "values": ["none", "sm", "md", "lg"]
+    },
+    "ListSize": {
+      "kind": "union",
+      "values": ["sm", "md", "lg"]
+    }
+  }
+}

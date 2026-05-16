@@ -1,0 +1,68 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Icon",
+  "description": "Renders a named SVG icon from the design system icon set.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root"],
+    "dom": {
+      "tag": "span",
+      "part": "root",
+      "attrs": {
+        "aria-hidden": "true"
+      }
+    }
+  },
+  "states": ["default"],
+  "a11y": {
+    "labeling": ["aria-label", "aria-hidden"],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "icon.color.foreground.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "icon.size.padding.default": {
+        "resolvesTo": "core.spacing.size.01",
+        "fallback": "1px",
+        "property": "padding",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Icon> component.",
+      "members": [
+        {
+          "name": "icon",
+          "type": "IconDefinition",
+          "description": "Icon definition object (name + glyph data).",
+          "required": true
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "description": "Pixel width of the rendered glyph.",
+          "default": 20
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "description": "Pixel height of the rendered glyph.",
+          "default": 20
+        }
+      ]
+    }
+  },
+  "types": {
+    "IconDefinition": {
+      "kind": "alias",
+      "alias": "{ iconName: string; prefix?: string; icon?: unknown }"
+    }
+  }
+}

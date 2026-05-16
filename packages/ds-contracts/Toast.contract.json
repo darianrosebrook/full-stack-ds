@@ -1,0 +1,248 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Toast",
+  "description": "Transient notification message appearing briefly at the edge of the viewport.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "viewport", "item", "title", "description", "row", "action", "close"],
+    "dom": {
+      "tag": "div",
+      "part": "viewport",
+      "attrs": {
+        "aria-live": "polite",
+        "aria-label": "Notifications"
+      },
+      "children": [
+        {
+          "tag": "div",
+          "part": "item",
+          "attrs": {
+            "role": "status"
+          },
+          "if": "open",
+          "children": [
+            {
+              "tag": "div",
+              "part": "row",
+              "children": [
+                {
+                  "tag": "div",
+                  "part": "title",
+                  "if": "title"
+                },
+                {
+                  "tag": "div",
+                  "part": "description",
+                  "children": [
+                    {
+                      "tag": "children"
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "part": "action",
+                  "if": "action"
+                },
+                {
+                  "tag": "button",
+                  "part": "close",
+                  "attrs": {
+                    "type": "button",
+                    "aria-label": "Dismiss"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "variants": {
+    "variant": ["info", "success", "warning", "error"],
+    "politeness": ["polite", "assertive"]
+  },
+  "states": ["default", "hover", "focus", "entering", "visible", "leaving"],
+  "a11y": {
+    "role": "alert",
+    "labeling": ["aria-label", "aria-live", "aria-labelledby"],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Dismiss the focused toast.",
+        "when": "item"
+      }
+    ]
+  },
+  "channels": {
+    "open": {
+      "value": "open",
+      "onChange": "onOpenChange",
+      "valueType": "boolean",
+      "description": "Per-toast visibility managed by ToastProvider."
+    }
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "fixed",
+    "layering": "popover"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape"
+      },
+      {
+        "event": "userDismiss"
+      }
+    ]
+  },
+  "tokens": {
+    "root": {
+      "toast.surface.bg": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "layer": "semantic"
+      },
+      "toast.surface.border": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "layer": "semantic"
+      },
+      "toast.surface.radius": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "toast.surface.shadow": {
+        "resolvesTo": "semantic.elevation.surface.raised",
+        "fallback": "none",
+        "property": "box-shadow",
+        "layer": "semantic"
+      },
+      "toast.color.info": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      },
+      "toast.color.success": {
+        "resolvesTo": "semantic.color.foreground.success",
+        "fallback": "#487e1e",
+        "layer": "semantic"
+      },
+      "toast.color.warning": {
+        "resolvesTo": "semantic.color.foreground.warning",
+        "fallback": "#ac5c00",
+        "layer": "semantic"
+      },
+      "toast.color.error": {
+        "resolvesTo": "semantic.color.foreground.danger",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "toast.accent.info": {
+        "resolvesTo": "semantic.color.status.info",
+        "fallback": "#0a65fe",
+        "layer": "semantic"
+      },
+      "toast.accent.success": {
+        "resolvesTo": "semantic.color.status.success",
+        "fallback": "#487e1e",
+        "layer": "semantic"
+      },
+      "toast.accent.warning": {
+        "resolvesTo": "semantic.color.status.warning",
+        "fallback": "#ac5c00",
+        "layer": "semantic"
+      },
+      "toast.accent.error": {
+        "resolvesTo": "semantic.color.status.danger",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "toast.spacing.padding": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "toast.spacing.gap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "toast.spacing.stackGap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "toast.size.maxWidth": {
+        "literal": "400px"
+      },
+      "toast.motion.enter": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "layer": "core"
+      },
+      "toast.motion.leave": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Toast> notification component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether this toast is visible."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when the toast is dismissed."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Toast title text."
+        },
+        {
+          "name": "variant",
+          "type": "ToastVariant",
+          "description": "Visual style indicating intent.",
+          "default": "info"
+        },
+        {
+          "name": "politeness",
+          "type": "ToastPoliteness",
+          "description": "ARIA live region politeness level.",
+          "default": "polite"
+        },
+        {
+          "name": "action",
+          "type": "ReactNode",
+          "description": "Optional action slot rendered next to the toast description (e.g. an undo button)."
+        }
+      ]
+    }
+  },
+  "types": {
+    "ToastVariant": {
+      "kind": "union",
+      "values": ["info", "success", "warning", "error"]
+    },
+    "ToastPoliteness": {
+      "kind": "union",
+      "values": ["polite", "assertive"]
+    }
+  }
+}

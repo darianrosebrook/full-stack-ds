@@ -1,0 +1,129 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "PageTransition",
+  "description": "Wraps page content to apply route-change fade/slide animations between pages.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
+    }
+  },
+  "variants": {},
+  "states": ["default", "loading"],
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "pageTransition.duration.fast": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "property": "transition-duration",
+        "layer": "core"
+      },
+      "pageTransition.duration.normal": {
+        "resolvesTo": "core.motion.duration.medium",
+        "fallback": "250ms",
+        "property": "transition-duration",
+        "layer": "core"
+      },
+      "pageTransition.duration.slow": {
+        "resolvesTo": "core.motion.duration.long",
+        "fallback": "400ms",
+        "property": "transition-duration",
+        "layer": "core"
+      },
+      "pageTransition.easing.standard": {
+        "resolvesTo": "core.motion.easing.standard",
+        "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "property": "transition-timing-function",
+        "layer": "core"
+      },
+      "pageTransition.easing.decelerate": {
+        "resolvesTo": "core.motion.easing.emphasized.out",
+        "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "property": "transition-timing-function",
+        "layer": "core"
+      },
+      "pageTransition.easing.accelerate": {
+        "resolvesTo": "core.motion.easing.emphasized.in",
+        "fallback": "cubic-bezier(0.2, 0, 0, 1)",
+        "property": "transition-timing-function",
+        "layer": "core"
+      },
+      "pageTransition.color.background.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "pageTransition.color.foreground.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "pageTransition.color.background.overlay": {
+        "resolvesTo": "semantic.color.background.image.overlay",
+        "fallback": "rgba(0, 0, 0, 0.5)",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "pageTransition.opacity.overlay.default": {
+        "resolvesTo": "core.opacity.800",
+        "fallback": "0.8",
+        "property": "opacity",
+        "layer": "core"
+      },
+      "pageTransition.opacity.content.default": {
+        "resolvesTo": "semantic.motion.opacity.content.default",
+        "fallback": "1",
+        "property": "opacity",
+        "layer": "semantic"
+      },
+      "pageTransition.zIndex.overlay": {
+        "resolvesTo": "core.layer.dropdown",
+        "fallback": "1000",
+        "property": "z-index",
+        "layer": "core"
+      },
+      "pageTransition.zIndex.max": {
+        "resolvesTo": "core.layer.max",
+        "fallback": "9999",
+        "property": "z-index",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <PageTransition> component.",
+      "members": [
+        {
+          "name": "transitionName",
+          "type": "string",
+          "description": "Unique identifier for the page/route to enable smooth transitions."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "description": "Duration of the transition in milliseconds."
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "description": "Enable or disable transitions (useful for reduced motion preferences).",
+          "default": true
+        }
+      ]
+    }
+  }
+}

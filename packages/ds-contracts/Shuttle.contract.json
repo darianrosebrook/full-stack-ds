@@ -1,0 +1,86 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Shuttle",
+  "description": "Dual-listbox transfer widget for moving items between two ordered collections.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "item"]
+  },
+  "variants": {},
+  "states": ["default"],
+  "a11y": {
+    "labeling": ["aria-label", "aria-labelledby"],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Select or deselect the focused item"
+      },
+      {
+        "key": "ArrowUp|ArrowDown",
+        "action": "Navigate between items in a listbox"
+      },
+      {
+        "key": "Enter",
+        "action": "Transfer the selected items to the other listbox"
+      }
+    ]
+  },
+  "tokens": {
+    "root": {
+      "shuttle.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "shuttle.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "shuttle.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "shuttle.color.border.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "shuttle.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "shuttle.size.padding.default": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "shuttle.size.radius.default": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Shuttle> component.",
+      "members": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the shuttle widget"
+        }
+      ]
+    }
+  }
+}

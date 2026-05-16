@@ -1,0 +1,153 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "ShowMore",
+  "description": "Expandable container that truncates long content with a 'show more' affordance.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "content", "trigger"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "content",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "button",
+          "part": "trigger",
+          "attrs": {
+            "type": "button"
+          },
+          "bindings": {
+            "aria-expanded": "channel:expanded.value",
+            "onClick": "channel:expanded.onChange",
+            "textContent": "prop:showMoreLabel"
+          }
+        }
+      ]
+    }
+  },
+  "variants": {},
+  "states": ["default", "expanded", "collapsed"],
+  "a11y": {
+    "labeling": ["aria-expanded"],
+    "keyboard": [
+      {
+        "key": "Enter",
+        "action": "Toggle expanded state.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle expanded state.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "channels": {
+    "expanded": {
+      "value": "expanded",
+      "defaultValue": "defaultExpanded",
+      "onChange": "onExpandedChange",
+      "valueType": "boolean",
+      "description": "Whether the full content is revealed."
+    }
+  },
+  "tokens": {
+    "root": {
+      "showmore.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "showmore.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "showmore.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "showmore.color.border.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "showmore.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "showmore.size.padding.default": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "showmore.size.radius.default": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "showmore.overlay.imageOverlay": {
+        "resolvesTo": "semantic.color.background.image.overlay",
+        "fallback": "rgba(0, 0, 0, 0.5)",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <ShowMore> expandable content component.",
+      "members": [
+        {
+          "name": "expanded",
+          "type": "boolean",
+          "description": "Controlled expanded state."
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "description": "Default expanded state for uncontrolled usage."
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "(expanded: boolean) => void",
+          "description": "Called when expanded state changes."
+        },
+        {
+          "name": "maxLines",
+          "type": "number",
+          "description": "Number of lines to show before truncation.",
+          "default": 3
+        },
+        {
+          "name": "showMoreLabel",
+          "type": "string",
+          "description": "Label for the expand trigger button.",
+          "default": "Show more"
+        },
+        {
+          "name": "showLessLabel",
+          "type": "string",
+          "description": "Label for the collapse trigger button.",
+          "default": "Show less"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Tabs",
+  "description": "Tabbed navigation for switching between related content panels within the same page context.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "list", "tab", "indicator", "panel"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "list",
+          "attrs": {
+            "role": "tablist"
+          },
+          "children": [
+            {
+              "tag": "button",
+              "part": "tab",
+              "attrs": {
+                "role": "tab",
+                "type": "button"
+              },
+              "bindings": {
+                "aria-selected": "channel:activeTab.value"
+              }
+            },
+            {
+              "tag": "span",
+              "part": "indicator",
+              "attrs": {
+                "aria-hidden": "true"
+              }
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "part": "panel",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "variants": {
+    "orientation": ["horizontal", "vertical"],
+    "activationMode": ["automatic", "manual"]
+  },
+  "states": ["default", "hover", "focus"],
+  "a11y": {
+    "role": "tablist",
+    "labeling": ["aria-label", "aria-labelledby"],
+    "keyboard": [
+      {
+        "key": "ArrowLeft",
+        "action": "Move focus to the previous tab (horizontal orientation).",
+        "when": "tab"
+      },
+      {
+        "key": "ArrowRight",
+        "action": "Move focus to the next tab (horizontal orientation).",
+        "when": "tab"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous tab (vertical orientation).",
+        "when": "tab",
+        "mode": "vertical"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next tab (vertical orientation).",
+        "when": "tab",
+        "mode": "vertical"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first tab.",
+        "when": "tab"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last tab.",
+        "when": "tab"
+      },
+      {
+        "key": "Enter",
+        "action": "Activate the focused tab (when activationMode is manual).",
+        "when": "tab"
+      },
+      {
+        "key": "Space",
+        "action": "Activate the focused tab (when activationMode is manual).",
+        "when": "tab"
+      },
+      {
+        "key": "Tab",
+        "action": "Move focus to the active tab panel content.",
+        "when": "list"
+      }
+    ]
+  },
+  "channels": {
+    "activeTab": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onValueChange",
+      "valueType": "string",
+      "description": "The value of the currently active tab."
+    }
+  },
+  "tokens": {
+    "root": {
+      "tabs.spacing.gap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "tabs.spacing.padding": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "tabs.spacing.panelGap": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "tabs.color.fg": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      },
+      "tabs.color.disabled-fg": {
+        "resolvesTo": "semantic.color.foreground.disabled",
+        "fallback": "#aeaeae",
+        "layer": "semantic"
+      },
+      "tabs.color.indicator": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "tabs.shape.radius": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "tabs.motion.indicator": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "tabs.color.hover.bg": {
+        "resolvesTo": "semantic.color.background.hover",
+        "fallback": "#cecece",
+        "layer": "semantic"
+      },
+      "tabs.color.hover.fg": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      }
+    },
+    "active": {
+      "tabs.color.active-fg": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      },
+      "tabs.color.active-bg": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "layer": "semantic"
+      }
+    },
+    "focus": {
+      "tabs.color.focus": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Tabs> component.",
+      "members": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Controlled value of the active tab."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value for uncontrolled usage."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "description": "Called when the active tab changes."
+        },
+        {
+          "name": "orientation",
+          "type": "TabsOrientation",
+          "description": "Layout direction of the tab list.",
+          "default": "horizontal"
+        },
+        {
+          "name": "activationMode",
+          "type": "TabsActivationMode",
+          "description": "Whether tabs activate on focus or require Enter/Space.",
+          "default": "automatic"
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "description": "Whether arrow-key navigation wraps around.",
+          "default": true
+        },
+        {
+          "name": "unmountInactive",
+          "type": "boolean",
+          "description": "Whether inactive panels are unmounted from the DOM."
+        },
+        {
+          "name": "idBase",
+          "type": "string",
+          "description": "Base string for generating tab and panel IDs."
+        }
+      ]
+    }
+  },
+  "types": {
+    "TabsOrientation": {
+      "kind": "union",
+      "values": ["horizontal", "vertical"]
+    },
+    "TabsActivationMode": {
+      "kind": "union",
+      "values": ["automatic", "manual"]
+    }
+  }
+}

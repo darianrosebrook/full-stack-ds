@@ -1,0 +1,61 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Label",
+  "description": "Accessible form label associated with a control via htmlFor.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root"],
+    "dom": {
+      "tag": "label",
+      "part": "root",
+      "bindings": {
+        "htmlFor": "prop:htmlFor",
+        "form": "prop:form"
+      },
+      "children": [{ "tag": "children" }]
+    }
+  },
+  "states": ["default"],
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "tokens": {
+    "root": {
+      "label.color.text.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "label.typo.weight.default": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "layer": "semantic"
+      },
+      "label.typo.lineHeight.default": {
+        "resolvesTo": "semantic.typography.line.height.tight",
+        "fallback": "1.2",
+        "property": "line-height",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Label> component.",
+      "members": [
+        {
+          "name": "htmlFor",
+          "type": "string",
+          "description": "ID of the form control this label is associated with."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "ID of the form this label belongs to."
+        }
+      ]
+    }
+  }
+}

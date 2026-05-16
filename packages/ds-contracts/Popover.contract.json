@@ -1,0 +1,200 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Popover",
+  "description": "Non-modal floating panel anchored to a trigger element. Does not trap focus.",
+  "layer": "composite",
+  "anatomy": {
+    "parts": ["root", "trigger", "content"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "button",
+          "part": "trigger",
+          "attrs": {
+            "type": "button",
+            "aria-haspopup": "true"
+          },
+          "bindings": {
+            "aria-expanded": "channel:open.value",
+            "aria-controls": "literal:popover-content"
+          },
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "part": "content",
+          "if": "open",
+          "attrs": {
+            "id": "popover-content"
+          },
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "variants": {
+    "placement": ["top", "bottom", "left", "right", "auto"]
+  },
+  "states": ["default", "hover", "focus", "leaving"],
+  "a11y": {
+    "labeling": ["aria-haspopup", "aria-expanded", "aria-controls"],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Close the popover and return focus to the trigger."
+      },
+      {
+        "key": "Enter",
+        "action": "Toggle the popover open or closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle the popover open or closed.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "channels": {
+    "open": {
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean",
+      "description": "Whether the popover content is visible."
+    }
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "anchored",
+    "layering": "popover",
+    "collision": "flip-shift"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape",
+        "enabledBy": "closeOnEscape"
+      },
+      {
+        "event": "outsideClick",
+        "enabledBy": "closeOnOutsideClick"
+      }
+    ]
+  },
+  "tokens": {
+    "root": {
+      "popover.size.padding.default": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "popover.size.radius.default": {
+        "resolvesTo": "semantic.shape.control.radius.default",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "semantic"
+      },
+      "popover.size.gap.default": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "popover.color.background.content": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "popover.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "popover.elevation.default": {
+        "resolvesTo": "semantic.elevation.default",
+        "fallback": "none",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Popover> floating panel component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Initial open state for uncontrolled usage."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when open state changes."
+        },
+        {
+          "name": "placement",
+          "type": "PopoverPlacement",
+          "description": "Preferred placement relative to the trigger.",
+          "default": "auto"
+        },
+        {
+          "name": "triggerStrategy",
+          "type": "PopoverTriggerStrategy",
+          "description": "Interaction mode that opens the popover.",
+          "default": "click"
+        },
+        {
+          "name": "offset",
+          "type": "number",
+          "description": "Distance in pixels between the trigger and the floating panel.",
+          "default": 8
+        },
+        {
+          "name": "closeOnOutsideClick",
+          "type": "boolean",
+          "description": "Close when clicking outside the popover content."
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "Close when pressing Escape."
+        },
+        {
+          "name": "anchor",
+          "type": "HTMLElement | null",
+          "description": "External anchor element to position against (bypasses internal trigger)."
+        }
+      ]
+    }
+  },
+  "types": {
+    "PopoverPlacement": {
+      "kind": "union",
+      "values": ["top", "bottom", "left", "right", "auto"]
+    },
+    "PopoverTriggerStrategy": {
+      "kind": "union",
+      "values": ["click", "hover"]
+    }
+  }
+}

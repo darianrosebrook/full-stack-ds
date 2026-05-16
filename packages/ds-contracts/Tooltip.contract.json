@@ -1,0 +1,185 @@
+{
+  "$schema": "./component.contract.schema.json",
+  "name": "Tooltip",
+  "description": "Floating label providing supplemental information about a trigger element on hover or focus.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": ["root"],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "attrs": {
+        "role": "tooltip"
+      },
+      "if": "open",
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
+    }
+  },
+  "variants": {
+    "placement": ["top", "bottom", "left", "right", "auto"]
+  },
+  "states": ["default", "hover", "entering", "leaving"],
+  "a11y": {
+    "role": "tooltip",
+    "labeling": ["aria-describedby"],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Dismiss the tooltip without moving focus from the trigger (WCAG 2.1 SC 1.4.13)."
+      }
+    ]
+  },
+  "channels": {
+    "open": {
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean",
+      "description": "Whether the tooltip is visible."
+    }
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "anchored",
+    "layering": "tooltip",
+    "collision": "flip-shift"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape",
+        "enabledBy": "closeOnEscape"
+      },
+      {
+        "event": "blur",
+        "enabledBy": "closeOnBlur"
+      }
+    ]
+  },
+  "tokens": {
+    "root": {
+      "tooltip.color.background.default": {
+        "resolvesTo": "semantic.color.background.inverse",
+        "fallback": "#141414",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "tooltip.color.foreground.default": {
+        "resolvesTo": "semantic.color.foreground.inverse",
+        "fallback": "#fafafa",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "tooltip.color.border.default": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "tooltip.size.padding.y": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "tooltip.size.padding.x": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "tooltip.size.radius.default": {
+        "resolvesTo": "core.shape.radius.small",
+        "fallback": "4px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "tooltip.size.maxWidth": {
+        "literal": "200px",
+        "property": "max-width"
+      },
+      "tooltip.typography.fontSize": {
+        "resolvesTo": "semantic.typography.caption.01",
+        "fallback": "14px",
+        "property": "font-size",
+        "layer": "semantic"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Tooltip> component.",
+      "members": [
+        {
+          "name": "content",
+          "type": "ReactNode",
+          "description": "Tooltip text or rich content shown in the floating panel.",
+          "required": true
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled visibility."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Uncontrolled initial visibility."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when visibility changes."
+        },
+        {
+          "name": "placement",
+          "type": "TooltipPlacement",
+          "description": "Preferred placement. May be overridden by collision detection."
+        },
+        {
+          "name": "trigger",
+          "type": "TooltipTrigger",
+          "description": "Interaction that activates the tooltip.",
+          "default": "hover"
+        },
+        {
+          "name": "delay",
+          "type": "number",
+          "description": "Milliseconds to wait before showing on hover."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Suppresses the tooltip entirely."
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "When true, Escape closes the tooltip.",
+          "default": true
+        },
+        {
+          "name": "closeOnBlur",
+          "type": "boolean",
+          "description": "When true, blur on the trigger closes the tooltip.",
+          "default": true
+        }
+      ]
+    }
+  },
+  "types": {
+    "TooltipPlacement": {
+      "kind": "union",
+      "values": ["top", "bottom", "left", "right", "auto"]
+    },
+    "TooltipTrigger": {
+      "kind": "union",
+      "values": ["hover", "focus", "manual"]
+    }
+  }
+}
