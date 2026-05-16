@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gate:
+    name: Validate, lint, typecheck, test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate contracts
+        run: pnpm run generate:validate
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck (root + codegen)
+        run: pnpm run typecheck
+
+      - name: Typecheck (Vue)
+        run: pnpm run typecheck:vue
+
+      - name: Test (root)
+        run: pnpm test
+
+      - name: Test (Vue)
+        run: pnpm run test:vue
+
+      - name: Codegen idempotence
+        # Regenerate React + Vue from contracts and assert no changes.
+        # If this fails, regenerated output drifted from what's committed —
+        # either a contract changed without regeneration, or the emitter
+        # changed without regeneration. Run `pnpm run generate -- --target=react,vue`
+        # locally and commit the diff.
+        run: |
+          pnpm --filter @full-stack-ds/codegen run build
+          node packages/ds-codegen/dist/cli.js --target=react,vue
+          git diff --exit-code -- packages/ds-react packages/ds-vue
