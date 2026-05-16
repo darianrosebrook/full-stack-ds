@@ -1,0 +1,23 @@
+{
+  "name": "@full-stack-ds/codegen",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Contract-to-source codegen for Full Stack DS packages",
+  "bin": {
+    "ds-codegen": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "generate": "node dist/cli.js"
+  },
+  "dependencies": {
+    "ajv": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "typescript": "^6.0.2"
+  }
+}

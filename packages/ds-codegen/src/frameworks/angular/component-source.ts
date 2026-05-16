@@ -1,0 +1,794 @@
+/**
+ * Angular standalone component emission, IR-driven.
+ *
+ * Output shape (inline-template Angular 17+ standalone component):
+ *
+ *   // @generated:start imports
+ *   import { Component, Input, computed, ChangeDetectionStrategy } from '@angular/core';
+ *   import { NgClass } from '@angular/common';
+ *   import { StackComponent } from '@full-stack-ds/angular/primitives';
+ *   // @generated:end
+ *   // @custom:start imports
+ *   // @custom:end
+ *
+ *   // @generated:start types
+ *   export type ButtonSize = 'small' | 'medium' | 'large';
+ *   // @generated:end
+ *   // @custom:start types
+ *   // @custom:end
+ *
+ *   // @generated:start component
+ *   @Component({ ... })
+ *   export class ButtonComponent {
+ *     @Input() size?: ButtonSize = 'medium';
+ *     classes = computed(() => { ... });
+ *   }
+ *   // @generated:end
+ *   // @custom:start trailing
+ *   // @custom:end
+ */
+import type {
+  BindingExpression,
+  ComponentIR,
+  DomNodeIR,
+  NormalizedChannelIR,
+  ResolvedPropIR,
+} from "../../ir.js";
+import {
+  emitNonReactTypeAliases,
+  translateNonReactType,
+} from "../../non-react-types.js";
+import { renderSections, type Section } from "../../preserve.js";
+import { toKebab as sharedToKebab } from "../../contract.js";
+
+// Props we don't emit as @Input() — either Angular handles them natively
+// (class/style) or they are React idioms with no Angular equivalent
+// (children → ng-content, className → host binding via classRecipe).
+const ANGULAR_RESERVED = new Set(["class", "style", "children", "className"]);
+
+// ---------------------------------------------------------------------------
+// Public entry point
+// ---------------------------------------------------------------------------
+
+/**
+ * Emit an Angular 17+ standalone component source file for a `ComponentIR`.
+ *
+ * Sections use the same ids as React/Vue so preservation round-trips
+ * cleanly if a user has already edited a Vue version and copies the
+ * custom regions over.
+ */
+export function generateAngularComponentSource(ir: ComponentIR): string {
+  const importsBody = ir.dom ? generateDomTreeImports(ir) : generateImports(ir);
+  const typesBody = generateTypes(ir);
+  const compoundClasses = ir.compoundParts
+    .map((part) => generateCompoundPartComponent(ir, part))
+    .join("\n\n");
+  const componentBody =
+    (ir.dom ? generateDomTreeComponent(ir) : generateComponent(ir)) +
+    (compoundClasses ? "\n\n" + compoundClasses : "");
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const sections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: typesBody },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "component", body: componentBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+    blank(),
+  ];
+
+  return renderSections(sections, "line");
+}
+
+/**
+ * Emit an additional @Component class for a compound part (e.g.
+ * ModalHeader, ModalBody). Stateless wrapper: one BEM block class plus
+ * the part's semantic element where applicable.
+ */
+function generateCompoundPartComponent(
+  ir: ComponentIR,
+  part: { name: string; semanticElement?: string; layoutVariant?: string },
+): string {
+  const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
+  const className = `${subName}Component`;
+  const cssClass = `${ir.cssPrefix}__${part.name}`;
+  const selector = toKebab(subName);
+  const asAttr =
+    part.semanticElement && part.semanticElement !== "div"
+      ? ` as="${part.semanticElement}"`
+      : "";
+  const variantAttr =
+    part.layoutVariant === "horizontal" ? ` variant="horizontal"` : "";
+  const template = `<fsds-stack${asAttr}${variantAttr} [ngClass]="classes()"><ng-content /></fsds-stack>`;
+
+  return [
+    `@Component({`,
+    `  selector: "fsds-${selector}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass, StackComponent],`,
+    `  template: \`${template}\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${className} {`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    // Plain getter (not computed signal): the class list only references
+    // @Input properties, which aren't signals. A computed() would cache
+    // the initial value forever.
+    `  classes(): string {`,
+    `    return ["${cssClass}", this.class].filter(Boolean).join(" ");`,
+    `  }`,
+    `}`,
+  ].join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Imports
+// ---------------------------------------------------------------------------
+
+function generateImports(ir: ComponentIR): string {
+  const coreNames = ["Component", "Input", "ChangeDetectionStrategy"];
+
+  // `computed` is only used when the component has behavior channels (and
+  // therefore signal-backed reads in the classes computation). Stack-only
+  // and compound-part components emit a plain getter and don't need it.
+  if (ir.behavior.normalizedChannels.length > 0) {
+    coreNames.push("computed");
+  }
+
+  // HostBinding is needed when the root element is not the default host
+  if (ir.root.element !== "div") {
+    coreNames.push("HostBinding");
+  }
+
+  const lines: string[] = [
+    `import { ${coreNames.join(", ")} } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { StackComponent } from "../../primitives/index.js";`,
+  ];
+
+  return lines.join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Type aliases
+// ---------------------------------------------------------------------------
+
+function generateTypes(ir: ComponentIR): string {
+  return emitNonReactTypeAliases(ir).join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Component class
+// ---------------------------------------------------------------------------
+
+function generateComponent(ir: ComponentIR): string {
+  const selector = toKebab(ir.name);
+  const className = `${ir.name}Component`;
+  const template = generateTemplate(ir);
+
+  const lines: string[] = [
+    `@Component({`,
+    `  selector: "fsds-${selector}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass, StackComponent],`,
+    `  template: \`${template}\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${className} {`,
+  ];
+
+  // @Input() decorators (event handlers excluded — use @Output EventEmitter instead)
+  const declaredProps = new Set<string>();
+  for (const p of ir.styledProps) {
+    if (ANGULAR_RESERVED.has(p.name)) continue;
+    const propLine = generateInputProp(p);
+    if (propLine) {
+      lines.push(propLine);
+      declaredProps.add(p.name);
+    }
+  }
+
+  // Variant dimensions referenced in classes computed but not present as
+  // styled props need their own @Input declarations so `this.<dim>` resolves.
+  for (const dim of Object.keys(ir.variants)) {
+    if (declaredProps.has(dim) || ANGULAR_RESERVED.has(dim)) continue;
+    lines.push(`  @Input() ${dim}?: string;`);
+    declaredProps.add(dim);
+  }
+
+  // classes = computed(() => ...)
+  lines.push(``);
+  lines.push(...generateClassesComputed(ir));
+
+  lines.push(`}`);
+  return lines.join("\n");
+}
+
+function isEventHandler(rawType: string): boolean {
+  return (
+    rawType.includes("EventHandler") ||
+    rawType.includes("=> void") ||
+    rawType.includes("=> never")
+  );
+}
+
+function generateInputProp(p: ResolvedPropIR): string | null {
+  if (isEventHandler(p.type)) {
+    // Angular uses @Output() EventEmitter for events, not @Input().
+    // Omit event-handler props from the generated scaffold; authors add them
+    // in the @custom:trailing region.
+    return null;
+  }
+  const type = angularType(p.type);
+  const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
+  // Required props with no default need a definite-assignment assertion to
+  // satisfy strictPropertyInitialization; optional props use `?:`.
+  let modifier: string;
+  if (p.required) {
+    modifier = defaultPart ? ":" : "!:";
+  } else {
+    modifier = "?:";
+  }
+  return `  @Input() ${p.safeName}${modifier} ${type}${defaultPart};`;
+}
+
+function generateClassesComputed(ir: ComponentIR): string[] {
+  const { classRecipe } = ir;
+  // Stack-only components read only @Input properties (plain JS, not
+  // signals). A computed() would cache the initial value forever; emit a
+  // plain method that re-evaluates on every call instead.
+  const lines: string[] = [
+    `  classes(): string {`,
+    `    const parts: Array<string | null | undefined> = ["${classRecipe.base}"];`,
+  ];
+
+  for (const mod of classRecipe.valueModifiers) {
+    lines.push(
+      `    if (this.${mod.safeName}) parts.push(\`${classRecipe.base}--\${this.${mod.safeName}}\`);`,
+    );
+  }
+
+  for (const mod of classRecipe.booleanModifiers) {
+    lines.push(
+      `    if (this.${mod.safeName}) parts.push("${classRecipe.base}--${mod.safeName}");`,
+    );
+  }
+
+  lines.push(`    return parts.filter(Boolean).join(" ");`);
+  lines.push(`  }`);
+  return lines;
+}
+
+// ---------------------------------------------------------------------------
+// Template
+// ---------------------------------------------------------------------------
+
+function generateTemplate(ir: ComponentIR): string {
+  const { root } = ir;
+  const asAttr = root.element !== "div" ? ` as="${root.element}"` : "";
+  const roleAttr = root.effectiveRole ? ` role="${root.effectiveRole}"` : "";
+  return `<fsds-stack${asAttr}${roleAttr} [ngClass]="classes()"><ng-content /></fsds-stack>`;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+// Use the shared toKebab from contract.ts so Angular selectors match other
+// codegen outputs. The previous local implementation inserted a hyphen before
+// *every* capital letter and produced names like `fsds-o-t-p` that didn't
+// match consumers (e.g., Lit test files use plan.testId via the shared util).
+function toKebab(name: string): string {
+  return sharedToKebab(name);
+}
+
+/**
+ * Map React-convention type strings to Angular-safe equivalents via the
+ * shared non-React translator (same logic as Vue / Lit / Svelte).
+ */
+function angularType(typeStr: string): string {
+  return translateNonReactType(typeStr);
+}
+
+// ---------------------------------------------------------------------------
+// DOM-tree-driven component (B.2c)
+// ---------------------------------------------------------------------------
+
+/** Walk a DomNodeIR tree and return true if any node has ifProp === "children". */
+function treeHasChildrenGuard(node: DomNodeIR): boolean {
+  if (node.ifProp === "children") return true;
+  return node.children.some(treeHasChildrenGuard);
+}
+
+function generateDomTreeImports(ir: ComponentIR): string {
+  const coreNames = [
+    "Component",
+    "Input",
+    "computed",
+    "DestroyRef",
+    "inject",
+    "ChangeDetectionStrategy",
+  ];
+  // When any dom node uses `if: "children"`, the component needs AfterContentInit
+  // and ElementRef to detect content projection at runtime.
+  if (ir.dom && treeHasChildrenGuard(ir.dom)) {
+    coreNames.push("AfterContentInit", "ElementRef");
+  }
+  const lines: string[] = [
+    `import { ${coreNames.join(", ")} } from "@angular/core";`,
+    `import { NgClass, NgIf } from "@angular/common";`,
+  ];
+  if (ir.compoundParts.length > 0) {
+    lines.push(`import { StackComponent } from "../../primitives/index.js";`);
+  }
+  if (ir.behavior.normalizedChannels.length > 0) {
+    lines.push(`import { use${ir.name} } from "./use${ir.name}.js";`);
+  }
+  return lines.join("\n");
+}
+
+function generateDomTreeComponent(ir: ComponentIR): string {
+  if (!ir.dom) throw new Error("generateDomTreeComponent requires ir.dom");
+
+  const selector = toKebab(ir.name);
+  const className = `${ir.name}Component`;
+  const channels = ir.behavior.normalizedChannels;
+  const channelByName = new Map(channels.map((c) => [c.name, c]));
+  const hasHook = channels.length > 0;
+
+  const overlayClickTrigger = ir.behavior.normalizedDismissalTriggers.find(
+    (t) => t.event === "overlayClick",
+  );
+  const booleanChannel = channels.find((c) => c.valueType === "boolean");
+  const ctx: AngularRenderContext = {
+    classRecipe: ir.classRecipe.base,
+    channelByName,
+    isRoot: true,
+    ...(overlayClickTrigger && booleanChannel
+      ? {
+          overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
+          overlayClickEnabledProp: overlayClickTrigger.enabledByProp,
+        }
+      : {}),
+  };
+  const template = renderAngularDomNode(ir.dom, ctx, 0);
+  const hasChildrenGuard = treeHasChildrenGuard(ir.dom);
+
+  const lines: string[] = [];
+  lines.push(`@Component({`);
+  lines.push(`  selector: "fsds-${selector}",`);
+  lines.push(`  standalone: true,`);
+  lines.push(`  imports: [NgClass, NgIf],`);
+  lines.push(`  template: \`${template}\`,`);
+  lines.push(`  changeDetection: ChangeDetectionStrategy.OnPush,`);
+  lines.push(`})`);
+  // When the dom tree has a children guard, the class implements AfterContentInit
+  // so it can detect content projection and toggle `hasContent` for *ngIf.
+  if (hasChildrenGuard) {
+    lines.push(`export class ${className} implements AfterContentInit {`);
+  } else {
+    lines.push(`export class ${className} {`);
+  }
+
+  // @Input declarations for all styled props (skipping reserved + event handlers)
+  const declaredProps = new Set<string>();
+  for (const p of ir.styledProps) {
+    if (ANGULAR_RESERVED.has(p.name)) continue;
+    const propLine = generateInputProp(p);
+    if (propLine) {
+      lines.push(propLine);
+      declaredProps.add(p.name);
+    }
+  }
+  // The dom-tree path's classes computed references `this.class` (the user's
+  // arbitrary className passthrough). Declare it explicitly here since the
+  // reserved set excludes it from the loop above.
+  lines.push(`  @Input() class?: string;`);
+  // Event handlers (channel onChange) — emit as @Input callbacks. Angular
+  // typically uses @Output for events, but for design-system parity (the
+  // contract says onChange is a callback), we keep @Input.
+  for (const ch of channels) {
+    if (declaredProps.has(ch.changeHandlerProp)) continue;
+    const valueType = ch.valueType ?? "unknown";
+    lines.push(
+      `  @Input() ${ch.changeHandlerProp}?: (value: ${valueType}) => void;`,
+    );
+    declaredProps.add(ch.changeHandlerProp);
+  }
+  for (const dim of Object.keys(ir.variants)) {
+    if (declaredProps.has(dim) || ANGULAR_RESERVED.has(dim)) continue;
+    lines.push(`  @Input() ${dim}?: string;`);
+    declaredProps.add(dim);
+  }
+
+  if (hasHook) {
+    lines.push(``);
+    lines.push(`  private destroyRef = inject(DestroyRef);`);
+    // Build the hook call
+    lines.push(`  protected behavior = use${ir.name}({`);
+    for (const ch of channels) {
+      lines.push(`    ${ch.valueProp}: () => this.${ch.valueProp},`);
+      if (ch.defaultValueProp) {
+        lines.push(`    ${ch.defaultValueProp}: this.${ch.defaultValueProp},`);
+      }
+      lines.push(
+        `    ${ch.changeHandlerProp}: (v) => this.${ch.changeHandlerProp}?.(v),`,
+      );
+    }
+    // Forward dismissal-trigger enabledBy props.
+    for (const trigger of ir.behavior.normalizedDismissalTriggers) {
+      if (!trigger.enabledByProp) continue;
+      lines.push(
+        `    ${trigger.enabledByProp}: this.${trigger.enabledByProp},`,
+      );
+    }
+    lines.push(`    destroyRef: this.destroyRef,`);
+    lines.push(`  });`);
+  }
+
+  // classes computed
+  lines.push(``);
+  lines.push(...generateDomTreeClassesComputed(ir));
+
+  // Helper handler methods. Named `handle<Name>Change` (NOT `on<Name>Change`)
+  // to avoid colliding with the @Input() change-handler prop of the same
+  // shape (the contract's onChange/onOpenChange/etc).
+  //
+  // Only emit handlers for primitive value types (string/number/boolean)
+  // that map directly to `<input>` event semantics. Complex types like
+  // Date or Date[] (Calendar) need consumer-side conversion — emitting a
+  // string-to-Date setter call here produces a TS error under strict mode.
+  // Templates currently don't bind these handlers anyway; consumers wire
+  // their own when they need custom input handling.
+  const PRIMITIVE_VALUE_TYPES = new Set(["string", "number", "boolean"]);
+  for (const ch of channels) {
+    if (!PRIMITIVE_VALUE_TYPES.has(ch.valueType ?? "")) continue;
+    const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
+    const setter = `set${capitalizeAngular(ch.name)}`;
+    const valueExpr =
+      ch.valueType === "boolean"
+        ? `(event.target as HTMLInputElement).checked`
+        : ch.valueType === "number"
+          ? `Number((event.target as HTMLInputElement).value)`
+          : `(event.target as HTMLInputElement).value`;
+    lines.push(``);
+    lines.push(`  protected ${handlerName}(event: Event): void {`);
+    lines.push(`    this.behavior.${setter}(${valueExpr});`);
+    lines.push(`  }`);
+  }
+
+  // Inject content-projection detection when the dom tree has an `if: "children"` node.
+  // Mirrors Vue's `v-if="$slots.default"` / Svelte's `{#if children}`.
+  if (hasChildrenGuard) {
+    lines.push(``);
+    lines.push(
+      `  // Tracks whether any content has been projected — used by *ngIf="hasContent".`,
+    );
+    lines.push(`  protected hasContent = false;`);
+    lines.push(`  private _el = inject(ElementRef<HTMLElement>);`);
+    lines.push(``);
+    lines.push(`  ngAfterContentInit(): void {`);
+    lines.push(
+      `    // Check for any non-whitespace child nodes projected into this component.`,
+    );
+    lines.push(
+      `    const nodes = Array.from((this._el.nativeElement as HTMLElement).childNodes);`,
+    );
+    lines.push(`    this.hasContent = nodes.some((n) =>`);
+    lines.push(`      n.nodeType === Node.ELEMENT_NODE ||`);
+    lines.push(
+      `      (n.nodeType === Node.TEXT_NODE && n.textContent?.trim() !== ""),`,
+    );
+    lines.push(`    );`);
+    lines.push(`  }`);
+  }
+
+  lines.push(`}`);
+  return lines.join("\n");
+}
+
+function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
+  const { classRecipe } = ir;
+  const channels = ir.behavior.normalizedChannels;
+  const channelValueProps = new Set(channels.map((c) => c.valueProp));
+  const channelNames = new Set(channels.map((c) => c.name));
+  // Angular's computed() only re-runs when tracked signal dependencies
+  // change. Components with no behavior channels (e.g. AnimatedCard) read
+  // only plain @Input properties — non-signals — so the computation would
+  // cache the initial value forever. Emit a getter method instead so each
+  // call reflects current @Input values.
+  const hasSignalDeps = channels.length > 0;
+  const lines: string[] = hasSignalDeps
+    ? [
+        `  classes = computed(() =>`,
+        `    [`,
+        `      "${classRecipe.base}",`,
+      ]
+    : [
+        `  classes(): string {`,
+        `    return [`,
+        `      "${classRecipe.base}",`,
+      ];
+  for (const mod of classRecipe.valueModifiers) {
+    lines.push(
+      `      this.${mod.propName} ? \`${classRecipe.base}--\${this.${mod.propName}}\` : null,`,
+    );
+  }
+  for (const mod of classRecipe.booleanModifiers) {
+    // Resolve the modifier's display value:
+    // - When name matches channel valueProp (e.g. checked), use behavior.<channelName>()
+    // - When name matches channel name (e.g. open with valueProp isOpen), use behavior.<name>()
+    // - Otherwise reference the @Input prop directly
+    if (channelValueProps.has(mod.propName)) {
+      const ch = channels.find((c) => c.valueProp === mod.propName)!;
+      lines.push(
+        `      this.behavior.${ch.name}() ? "${classRecipe.base}--${mod.safeName}" : null,`,
+      );
+    } else if (channelNames.has(mod.propName)) {
+      lines.push(
+        `      this.behavior.${mod.propName}() ? "${classRecipe.base}--${mod.safeName}" : null,`,
+      );
+    } else {
+      lines.push(
+        `      this.${mod.safeName} ? "${classRecipe.base}--${mod.safeName}" : null,`,
+      );
+    }
+  }
+  lines.push(`      this.class,`);
+  if (hasSignalDeps) {
+    lines.push(`    ].filter(Boolean).join(" "),`);
+    lines.push(`  );`);
+  } else {
+    lines.push(`    ].filter(Boolean).join(" ");`);
+    lines.push(`  }`);
+  }
+  return lines;
+}
+
+interface AngularRenderContext {
+  classRecipe: string;
+  channelByName: Map<string, NormalizedChannelIR>;
+  isRoot: boolean;
+  overlayClickSetter?: string;
+  overlayClickEnabledProp?: string;
+}
+
+function renderAngularDomNode(
+  node: DomNodeIR,
+  ctx: AngularRenderContext,
+  indent: number,
+): string {
+  const pad = " ".repeat(indent);
+
+  if (node.tag === "slot" || node.tag === "children") {
+    if (node.slotName) {
+      return `${pad}<ng-content select="[slot=${node.slotName}]" />`;
+    }
+    return `${pad}<ng-content />`;
+  }
+
+  const attrs: string[] = [];
+  const classParts: string[] = [];
+  if (node.part) classParts.push(`'${ctx.classRecipe}__${node.part}'`);
+
+  for (const [key, value] of Object.entries(node.attrs)) {
+    if (key === "class" || key === "className") {
+      classParts.push(`'${value}'`);
+      continue;
+    }
+    attrs.push(`${key}="${escapeAngularAttr(value)}"`);
+  }
+
+  for (const [key, expr] of Object.entries(node.bindings)) {
+    const rendered = renderAngularBinding(key, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
+  if (ctx.isRoot) {
+    attrs.unshift(`[ngClass]="classes()"`);
+  } else if (
+    ctx.overlayClickSetter &&
+    (node.part === "overlay" || node.part === "backdrop")
+  ) {
+    // The overlay child node owns the dismissal click and the
+    // `role="presentation"` hook the generated test queries by. Putting the
+    // handler here (instead of on the root) means inner content clicks
+    // don't bubble through a target===currentTarget guard, which never
+    // matches when the test clicks the overlay child directly.
+    const guardExpr = ctx.overlayClickEnabledProp
+      ? `${ctx.overlayClickEnabledProp} !== false && behavior.${ctx.overlayClickSetter}(false)`
+      : `behavior.${ctx.overlayClickSetter}(false)`;
+    attrs.push(`role="presentation"`);
+    attrs.push(`(click)="${guardExpr}"`);
+    if (classParts.length > 0) {
+      if (classParts.length === 1) {
+        attrs.unshift(`[ngClass]="${classParts[0]}"`);
+      } else {
+        attrs.unshift(`[ngClass]="[${classParts.join(", ")}]"`);
+      }
+    }
+  } else if (classParts.length > 0) {
+    if (classParts.length === 1) {
+      attrs.unshift(`[ngClass]="${classParts[0]}"`);
+    } else {
+      attrs.unshift(`[ngClass]="[${classParts.join(", ")}]"`);
+    }
+  }
+
+  let ifWrap = "";
+  if (node.ifProp) {
+    // Angular's *ngIf belongs to the structural directive system. Wrap the
+    // element in <ng-container *ngIf="..."> to avoid placing *ngIf on the
+    // root element which complicates class binding.
+    ifWrap = node.ifProp; // handled below
+  }
+
+  const childCtx: AngularRenderContext = { ...ctx, isRoot: false };
+  const renderedChildren = node.children.map((c) =>
+    renderAngularDomNode(c, childCtx, indent + 2),
+  );
+
+  const tag = node.tag;
+  const isVoidEl = VOID_HTML_ELEMENTS_ANGULAR.has(tag);
+
+  let body: string;
+  if (renderedChildren.length === 0 && isVoidEl) {
+    body = `${pad}<${tag}${formatAngularAttrs(attrs)} />`;
+  } else if (renderedChildren.length === 0) {
+    body = `${pad}<${tag}${formatAngularAttrs(attrs)}></${tag}>`;
+  } else {
+    body = [
+      `${pad}<${tag}${formatAngularAttrs(attrs)}>`,
+      ...renderedChildren,
+      `${pad}</${tag}>`,
+    ].join("\n");
+  }
+
+  if (ifWrap) {
+    if (ifWrap === "children") {
+      // Guard the label wrapper on content-projection presence, mirroring
+      // Vue's `v-if="$slots.default"` and Svelte's `{#if children}`.
+      // Angular doesn't expose a synchronous "was anything projected?" API
+      // without querying the DOM. We emit `*ngIf="hasContent"` and let the
+      // class body generator inject `hasContent` + an `ngAfterContentInit` hook
+      // that reads the host element's text/child nodes to determine presence.
+      return [
+        `${pad}<ng-container *ngIf="hasContent">`,
+        body.replace(/^/gm, "  "),
+        `${pad}</ng-container>`,
+      ].join("\n");
+    }
+    const matchingChannel = [...ctx.channelByName.values()].find(
+      (c) => c.valueProp === ifWrap || c.name === ifWrap,
+    );
+    const expr = matchingChannel
+      ? `behavior.${matchingChannel.name}()`
+      : ifWrap;
+    return [
+      `${pad}<ng-container *ngIf="${expr}">`,
+      body.replace(/^/gm, "  "),
+      `${pad}</ng-container>`,
+    ].join("\n");
+  }
+
+  return body;
+}
+
+// Angular's `[prop]="expr"` binds a DOM *property* — fine for things like
+// `[disabled]`, `[hidden]`, etc., but invalid for arbitrary attributes like
+// `data-*` and `aria-*`. Those need the `[attr.name]="expr"` form, which
+// binds an HTML attribute. Additionally, `as` is reserved in Angular
+// templates (microsyntax for *ngFor), so any expression that evaluates to a
+// bare `as` parses as a keyword — using `[attr.X]` form sidesteps that.
+function angularAttrBinding(attr: string): string {
+  if (attr.startsWith("data-") || attr.startsWith("aria-")) {
+    return `[attr.${attr}]`;
+  }
+  return `[${attr}]`;
+}
+
+// Angular templates reserve certain identifiers as microsyntax keywords:
+// `as` (used by *ngIf/*ngFor for aliasing), `let`, `of`, etc. Any prop
+// whose name matches one of those parses as a keyword when emitted as a
+// bare expression. Prefixing with `this.` disambiguates without changing
+// semantics — Angular accepts both `foo` and `this.foo` for component
+// properties.
+const ANGULAR_TEMPLATE_KEYWORDS = new Set([
+  "as",
+  "let",
+  "of",
+  "in",
+  "trackBy",
+  "true",
+  "false",
+  "null",
+  "undefined",
+]);
+
+function safePropertyExpr(prop: string): string {
+  return ANGULAR_TEMPLATE_KEYWORDS.has(prop) ? `this.${prop}` : prop;
+}
+
+function renderAngularBinding(
+  attr: string,
+  expr: BindingExpression,
+  ctx: AngularRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `${angularAttrBinding(attr)}="${safePropertyExpr(expr.prop)}"`;
+    case "literal":
+      return `${attr}="${escapeAngularAttr(expr.value)}"`;
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") {
+        return `${angularAttrBinding(attr)}="behavior.${ch.name}()"`;
+      }
+      if (expr.field === "defaultValue") {
+        if (!ch.defaultValueProp) return null;
+        return `${angularAttrBinding(attr)}="${safePropertyExpr(ch.defaultValueProp)}"`;
+      }
+      // onChange synthesis — bind to a method on the component.
+      // Event-shaped channels pass the raw event to the consumer's
+      // @Input handler; consumer drives state externally.
+      const eventName = mapJsxEventToAngular(attr);
+      if (ch.callbackKind === "event") {
+        return `(${eventName})="${ch.changeHandlerProp}?.($event)"`;
+      }
+      const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
+      return `(${eventName})="${handlerName}($event)"`;
+    }
+  }
+}
+
+function mapJsxEventToAngular(attr: string): string {
+  if (attr === "onChange") return "change";
+  if (attr === "onClick") return "click";
+  if (attr === "onInput") return "input";
+  if (attr === "onKeyDown") return "keydown";
+  if (attr === "onFocus") return "focus";
+  if (attr === "onBlur") return "blur";
+  if (attr.startsWith("on") && attr.length > 2) {
+    return attr.slice(2).toLowerCase();
+  }
+  return attr;
+}
+
+function escapeAngularAttr(s: string): string {
+  return s.replace(/"/g, "&quot;");
+}
+
+function formatAngularAttrs(attrs: string[]): string {
+  if (attrs.length === 0) return "";
+  return " " + attrs.join(" ");
+}
+
+function capitalizeAngular(s: string): string {
+  return s[0].toUpperCase() + s.slice(1);
+}
+
+const VOID_HTML_ELEMENTS_ANGULAR = new Set([
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "source",
+  "track",
+  "wbr",
+]);
