@@ -808,6 +808,20 @@ function renderLitDomNode(
     attrs.push(rendered);
   }
 
+  // Tag channel-guarded subtrees with `data-fsds-channel-renders="${name}"`
+  // so behavioral tests can assert that the channel state is reflected in
+  // the rendered DOM, not just in the behavior controller. The attribute is
+  // only emitted for channel-driven guards (not `children` slot guards or
+  // arbitrary-prop guards), since those have different test semantics.
+  if (node.ifProp && node.ifProp !== "children") {
+    const matchingChannel = [...ctx.channelByName.values()].find(
+      (c) => c.valueProp === node.ifProp || c.name === node.ifProp,
+    );
+    if (matchingChannel) {
+      attrs.push(`data-fsds-channel-renders="${matchingChannel.name}"`);
+    }
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`class="\${this.computeClasses()}"`);
   } else if (classParts.length > 0) {

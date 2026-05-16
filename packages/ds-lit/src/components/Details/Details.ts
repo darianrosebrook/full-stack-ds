@@ -54,7 +54,7 @@ export class DetailsElement extends LitElement {
     </span>
   </summary>
   ${this.behavior.open ? html`
-  <div class=${'details__content'}>
+  <div class=${'details__content'} data-fsds-channel-renders="open">
     <slot></slot>
   </div>
   ` : nothing}

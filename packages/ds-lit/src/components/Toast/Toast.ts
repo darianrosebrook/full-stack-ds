@@ -43,7 +43,7 @@ export class ToastElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" aria-live="polite" aria-label="Notifications" role="alert">
   ${this.behavior.open ? html`
-  <div class=${'toast__item'} role="status">
+  <div class=${'toast__item'} role="status" data-fsds-channel-renders="open">
     <div class=${'toast__row'}>
       ${this.title ? html`
       <div class=${'toast__title'}></div>

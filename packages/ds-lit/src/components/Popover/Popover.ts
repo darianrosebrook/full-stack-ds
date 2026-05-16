@@ -52,7 +52,7 @@ export class PopoverElement extends LitElement {
     <slot></slot>
   </button>
   ${this.behavior.open ? html`
-  <div class=${'popover__content'} id="popover-content">
+  <div class=${'popover__content'} id="popover-content" data-fsds-channel-renders="open">
     <slot></slot>
   </div>
   ` : nothing}

@@ -68,10 +68,10 @@ export class CommandElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="dialog">
   ${this.behavior.open ? html`
-  <div class=${'command__overlay'} aria-hidden="true"></div>
+  <div class=${'command__overlay'} aria-hidden="true" data-fsds-channel-renders="open"></div>
   ` : nothing}
   ${this.behavior.open ? html`
-  <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${this.label} @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${this.label} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'command__inputWrapper'}>
       <span class=${'command__searchIcon'} aria-hidden="true"></span>
       <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} .placeholder=${this.placeholder} .value=${this.behavior.search} @change=${(e: Event) => this.handleSearchChange(e)} />

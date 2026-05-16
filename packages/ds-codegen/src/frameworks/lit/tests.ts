@@ -5,9 +5,97 @@
  * not on ir.dom or litBehaviorRequired — those control template shape, not
  * whether behavioral props exist on the element.
  */
-import type { ComponentIR } from "../../ir.js";
+import type { ComponentIR, DomNodeIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
+
+/**
+ * Scan a component IR's DOM tree for the rendered signals a channel
+ * produces, so the behavioral test can assert the rendered DOM (not just
+ * the controller) reflects the channel's value.
+ *
+ * Two kinds of signal:
+ *   - hasGuard: at least one node's `ifProp` matches this channel. The
+ *     codegen emits `data-fsds-channel-renders="${name}"` on that node, so
+ *     the test selects on the data attribute to verify presence/absence.
+ *   - ariaAttrs: ARIA attributes bound to `channel:${name}.value` on any
+ *     node. Each attribute serializes as `"true"` / `"false"` strings, so
+ *     the test selects on the attribute value.
+ */
+/**
+ * Per-ARIA-attribute metadata so the test can select on the correct DOM
+ * location. `insideGuard` means the ARIA attribute lives on a node that's
+ * inside the channel's guarded subtree — when the channel flips false, the
+ * node is unmounted entirely (so no "value=false" assertion is possible).
+ * `insideGuard: false` means the ARIA attribute is on an always-rendered
+ * node (typically the root) and its value flips between "true" and "false"
+ * in place.
+ */
+interface AriaAttrInfo {
+  attr: string;
+  insideGuard: boolean;
+}
+
+function findChannelDomMarkers(
+  ir: ComponentIR,
+  channel: { name: string; valueProp: string },
+): {
+  hasGuard: boolean;
+  ariaAttrs: AriaAttrInfo[];
+  requiredProps: string[];
+} {
+  let hasGuard = false;
+  const ariaAttrs = new Map<string, AriaAttrInfo>();
+  const requiredProps = new Set<string>();
+  // Channel/prop names whose presence we recognize on a path.
+  const channelNames = new Set(
+    ir.behavior.normalizedChannels.flatMap((c) => [c.name, c.valueProp]),
+  );
+  const visit = (
+    node: DomNodeIR,
+    ancestorProps: string[],
+    insideChannelGuard: boolean,
+  ): void => {
+    let nextAncestors = ancestorProps;
+    let nextInsideGuard = insideChannelGuard;
+    if (node.ifProp && node.ifProp !== "children") {
+      if (node.ifProp === channel.name || node.ifProp === channel.valueProp) {
+        hasGuard = true;
+        nextInsideGuard = true;
+      } else if (!channelNames.has(node.ifProp)) {
+        // It's a plain prop guard (not another channel). Record it so the
+        // test can pass `${prop}: true` when mounting, ensuring the
+        // ARIA-bearing subtree is actually rendered.
+        nextAncestors = [...ancestorProps, node.ifProp];
+      }
+    }
+    for (const [attr, expr] of Object.entries(node.bindings)) {
+      if (
+        attr.startsWith("aria-") &&
+        expr.kind === "channel" &&
+        expr.channel === channel.name &&
+        expr.field === "value"
+      ) {
+        // Earlier finds take precedence; if the same attr appears on
+        // multiple nodes, the first-encountered (outermost) wins.
+        if (!ariaAttrs.has(attr)) {
+          ariaAttrs.set(attr, { attr, insideGuard: nextInsideGuard });
+        }
+        for (const p of nextAncestors) requiredProps.add(p);
+      }
+    }
+    for (const child of node.children)
+      visit(child, nextAncestors, nextInsideGuard);
+  };
+  if (ir.dom) visit(ir.dom, [], false);
+  return {
+    hasGuard,
+    ariaAttrs: [...ariaAttrs.values()].sort((a, b) =>
+      a.attr.localeCompare(b.attr),
+    ),
+    requiredProps: [...requiredProps].sort(),
+  };
+}
 
 export function generateLitTest(ir: ComponentIR): string {
   const plan = buildComponentTestPlan(ir);
@@ -200,21 +288,39 @@ export function generateLitTest(ir: ComponentIR): string {
 
   // Behavioral-state tests for dom-tree components. For every boolean
   // controllable channel, set the channel to true via the behavior controller,
-  // await updateComplete, and assert the channel state is observable. The
-  // intent is to catch the "open never propagates to render" class of bug
-  // that the class-token tests miss.
+  // await updateComplete, and assert the rendered DOM reflects the new state.
+  //
+  // Three layers of assertion:
+  //   1. Controller state: `el.behavior.${ch.name}` flipped.
+  //   2. Guarded subtree: any node whose `ifProp` matches the channel gets a
+  //      `data-fsds-channel-renders` attribute. Presence/absence verifies the
+  //      render() actually re-fired with the new state. Components without
+  //      a guarded subtree (the channel doesn't conditionally render anything)
+  //      skip this assertion.
+  //   3. ARIA attributes: any aria-* binding pointing at this channel
+  //      serializes to "true"/"false" strings. The test asserts both polarities.
   if (ir.dom) {
     const booleanChannels = ir.behavior.normalizedChannels.filter(
       (c) => c.valueType === "boolean",
     );
     for (const ch of booleanChannels) {
       const setter = `set${ch.name[0].toUpperCase()}${ch.name.slice(1)}`;
+      const markers = findChannelDomMarkers(ir, ch);
+      // Build the renderElement second-arg with any prop-guards on the path
+      // to the ARIA-bearing node — without these, the node is unmounted and
+      // the test would assert against missing markup.
+      const renderProps: Record<string, boolean> = {};
+      for (const prop of markers.requiredProps) renderProps[prop] = true;
+      const renderArg =
+        Object.keys(renderProps).length > 0
+          ? `, ${JSON.stringify(renderProps)}`
+          : "";
       lines.push(``);
       lines.push(
         `  it("reflects ${ch.name}=true after behavior.${setter}(true)", async () => {`,
       );
       lines.push(
-        `    const { element } = await renderElement("${elementName}");`,
+        `    const { element } = await renderElement("${elementName}"${renderArg});`,
       );
       lines.push(`    const el = element as LitTestElement & {`);
       lines.push(
@@ -225,7 +331,83 @@ export function generateLitTest(ir: ComponentIR): string {
       lines.push(`    el.requestUpdate?.();`);
       lines.push(`    await el.updateComplete;`);
       lines.push(`    expect(el.behavior?.${ch.name}).toBe(true);`);
+      if (markers.hasGuard) {
+        lines.push(
+          `    // Guarded subtree should now be rendered (codegen marker).`,
+        );
+        lines.push(
+          `    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="${ch.name}"]')).not.toBeNull();`,
+        );
+      }
+      // Per-attribute: when the ARIA attr is on a node INSIDE the guarded
+      // subtree, the attribute simply doesn't exist when the guard is closed,
+      // so the selector must scope into the guard. When it's on an
+      // always-rendered node (typically the root), the attribute is always
+      // present and its value flips between "true" and "false".
+      for (const info of markers.ariaAttrs) {
+        const selector = info.insideGuard
+          ? `[data-fsds-channel-renders="${ch.name}"] [${info.attr}], [data-fsds-channel-renders="${ch.name}"][${info.attr}]`
+          : `[${info.attr}]`;
+        const varName = `trueNode_${info.attr.replace(/-/g, "_")}`;
+        lines.push(
+          `    const ${varName} = element.shadowRoot?.querySelector('${selector}');`,
+        );
+        lines.push(
+          `    expect(${varName}?.getAttribute('${info.attr}')).toBe("true");`,
+        );
+      }
       lines.push(`  });`);
+
+      // Also test the false side — proves render() responds in both directions.
+      // When the guarded subtree contains the ARIA-bearing node, the node
+      // simply isn't in the DOM after the channel flips false; we only assert
+      // the guard marker is gone. When the ARIA attribute is on an unguarded
+      // node, we additionally assert the attribute value flipped to "false".
+      if (markers.hasGuard || markers.ariaAttrs.length > 0) {
+        lines.push(``);
+        lines.push(
+          `  it("reflects ${ch.name}=false after behavior.${setter}(false)", async () => {`,
+        );
+        lines.push(
+          `    const { element } = await renderElement("${elementName}"${renderArg});`,
+        );
+        lines.push(`    const el = element as LitTestElement & {`);
+        lines.push(
+          `      behavior?: { ${setter}?: (v: boolean) => void; ${ch.name}?: boolean };`,
+        );
+        lines.push(`    };`);
+        // Set to true first, then to false — proves the transition works,
+        // not just the initial render.
+        lines.push(`    el.behavior?.${setter}?.(true);`);
+        lines.push(`    el.requestUpdate?.();`);
+        lines.push(`    await el.updateComplete;`);
+        lines.push(`    el.behavior?.${setter}?.(false);`);
+        lines.push(`    el.requestUpdate?.();`);
+        lines.push(`    await el.updateComplete;`);
+        lines.push(`    expect(el.behavior?.${ch.name}).toBe(false);`);
+        if (markers.hasGuard) {
+          lines.push(
+            `    // Guarded subtree should be torn down after the channel flips false.`,
+          );
+          lines.push(
+            `    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="${ch.name}"]')).toBeNull();`,
+          );
+        }
+        // ARIA attribute on an always-rendered node — assert value flipped to "false".
+        // Attributes inside the guarded subtree are gone with the subtree, so
+        // there's nothing to assert against.
+        for (const info of markers.ariaAttrs) {
+          if (info.insideGuard) continue;
+          const varName = `falseNode_${info.attr.replace(/-/g, "_")}`;
+          lines.push(
+            `    const ${varName} = element.shadowRoot?.querySelector('[${info.attr}]');`,
+          );
+          lines.push(
+            `    expect(${varName}?.getAttribute('${info.attr}')).toBe("false");`,
+          );
+        }
+        lines.push(`  });`);
+      }
     }
   }
 

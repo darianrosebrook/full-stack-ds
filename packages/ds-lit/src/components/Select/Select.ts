@@ -61,7 +61,7 @@ export class SelectElement extends LitElement {
     <span class=${'select__text'}></span>
   </button>
   ${this.behavior.open ? html`
-  <div class=${'select__content'} role="listbox" id="fsds-select-listbox">
+  <div class=${'select__content'} role="listbox" id="fsds-select-listbox" data-fsds-channel-renders="open">
     ${this.searchable ? html`
     <div class=${'select__search'}>
       <input type="text" />

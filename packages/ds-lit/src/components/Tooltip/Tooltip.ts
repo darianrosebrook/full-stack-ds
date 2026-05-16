@@ -50,7 +50,7 @@ export class TooltipElement extends LitElement {
 
   override render() {
     return html`${this.behavior.open ? html`
-<div class="${this.computeClasses()}" role="tooltip">
+<div class="${this.computeClasses()}" role="tooltip" data-fsds-channel-renders="open">
   <slot></slot>
 </div>
 ` : nothing}`;

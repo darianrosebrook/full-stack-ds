@@ -65,10 +65,10 @@ export class DialogElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="dialog">
   ${this.behavior.openness ? html`
-  <div class=${'dialog__backdrop'} aria-hidden="true"></div>
+  <div class=${'dialog__backdrop'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'dialog__modal'} role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'dialog__modal'} role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id" data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'dialog__header'}>
       <h2 class=${'dialog__title'}>
         <slot name="title"></slot>

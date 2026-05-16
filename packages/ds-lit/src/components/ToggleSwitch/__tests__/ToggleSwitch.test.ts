@@ -44,6 +44,24 @@ describe("ToggleSwitch — unit", () => {
     el.requestUpdate?.();
     await el.updateComplete;
     expect(el.behavior?.checked).toBe(true);
+    const trueNode_aria_checked = element.shadowRoot?.querySelector('[aria-checked]');
+    expect(trueNode_aria_checked?.getAttribute('aria-checked')).toBe("true");
+  });
+
+  it("reflects checked=false after behavior.setChecked(false)", async () => {
+    const { element } = await renderElement("fsds-toggle-switch");
+    const el = element as LitTestElement & {
+      behavior?: { setChecked?: (v: boolean) => void; checked?: boolean };
+    };
+    el.behavior?.setChecked?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    el.behavior?.setChecked?.(false);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.checked).toBe(false);
+    const falseNode_aria_checked = element.shadowRoot?.querySelector('[aria-checked]');
+    expect(falseNode_aria_checked?.getAttribute('aria-checked')).toBe("false");
   });
 });
 

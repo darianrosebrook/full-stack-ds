@@ -70,6 +70,24 @@ describe("Toast — unit", () => {
     el.requestUpdate?.();
     await el.updateComplete;
     expect(el.behavior?.open).toBe(true);
+    // Guarded subtree should now be rendered (codegen marker).
+    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="open"]')).not.toBeNull();
+  });
+
+  it("reflects open=false after behavior.setOpen(false)", async () => {
+    const { element } = await renderElement("fsds-toast");
+    const el = element as LitTestElement & {
+      behavior?: { setOpen?: (v: boolean) => void; open?: boolean };
+    };
+    el.behavior?.setOpen?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    el.behavior?.setOpen?.(false);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.open).toBe(false);
+    // Guarded subtree should be torn down after the channel flips false.
+    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="open"]')).toBeNull();
   });
 });
 

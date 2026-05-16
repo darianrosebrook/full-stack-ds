@@ -64,6 +64,28 @@ describe("Popover — unit", () => {
     el.requestUpdate?.();
     await el.updateComplete;
     expect(el.behavior?.open).toBe(true);
+    // Guarded subtree should now be rendered (codegen marker).
+    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="open"]')).not.toBeNull();
+    const trueNode_aria_expanded = element.shadowRoot?.querySelector('[aria-expanded]');
+    expect(trueNode_aria_expanded?.getAttribute('aria-expanded')).toBe("true");
+  });
+
+  it("reflects open=false after behavior.setOpen(false)", async () => {
+    const { element } = await renderElement("fsds-popover");
+    const el = element as LitTestElement & {
+      behavior?: { setOpen?: (v: boolean) => void; open?: boolean };
+    };
+    el.behavior?.setOpen?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    el.behavior?.setOpen?.(false);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.open).toBe(false);
+    // Guarded subtree should be torn down after the channel flips false.
+    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="open"]')).toBeNull();
+    const falseNode_aria_expanded = element.shadowRoot?.querySelector('[aria-expanded]');
+    expect(falseNode_aria_expanded?.getAttribute('aria-expanded')).toBe("false");
   });
 });
 

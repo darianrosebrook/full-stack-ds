@@ -72,6 +72,24 @@ describe("Dialog — unit", () => {
     el.requestUpdate?.();
     await el.updateComplete;
     expect(el.behavior?.openness).toBe(true);
+    // Guarded subtree should now be rendered (codegen marker).
+    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="openness"]')).not.toBeNull();
+  });
+
+  it("reflects openness=false after behavior.setOpenness(false)", async () => {
+    const { element } = await renderElement("fsds-dialog");
+    const el = element as LitTestElement & {
+      behavior?: { setOpenness?: (v: boolean) => void; openness?: boolean };
+    };
+    el.behavior?.setOpenness?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    el.behavior?.setOpenness?.(false);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.openness).toBe(false);
+    // Guarded subtree should be torn down after the channel flips false.
+    expect(element.shadowRoot?.querySelector('[data-fsds-channel-renders="openness"]')).toBeNull();
   });
 });
 

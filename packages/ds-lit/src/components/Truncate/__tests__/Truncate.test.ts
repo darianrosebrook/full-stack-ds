@@ -18,7 +18,7 @@ describe("Truncate — unit", () => {
   });
 
   it("reflects expanded=true after behavior.setExpanded(true)", async () => {
-    const { element } = await renderElement("fsds-truncate");
+    const { element } = await renderElement("fsds-truncate", {"expandable":true});
     const el = element as LitTestElement & {
       behavior?: { setExpanded?: (v: boolean) => void; expanded?: boolean };
     };
@@ -26,6 +26,24 @@ describe("Truncate — unit", () => {
     el.requestUpdate?.();
     await el.updateComplete;
     expect(el.behavior?.expanded).toBe(true);
+    const trueNode_aria_expanded = element.shadowRoot?.querySelector('[aria-expanded]');
+    expect(trueNode_aria_expanded?.getAttribute('aria-expanded')).toBe("true");
+  });
+
+  it("reflects expanded=false after behavior.setExpanded(false)", async () => {
+    const { element } = await renderElement("fsds-truncate", {"expandable":true});
+    const el = element as LitTestElement & {
+      behavior?: { setExpanded?: (v: boolean) => void; expanded?: boolean };
+    };
+    el.behavior?.setExpanded?.(true);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    el.behavior?.setExpanded?.(false);
+    el.requestUpdate?.();
+    await el.updateComplete;
+    expect(el.behavior?.expanded).toBe(false);
+    const falseNode_aria_expanded = element.shadowRoot?.querySelector('[aria-expanded]');
+    expect(falseNode_aria_expanded?.getAttribute('aria-expanded')).toBe("false");
   });
 });
 

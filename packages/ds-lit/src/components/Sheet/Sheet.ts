@@ -57,10 +57,10 @@ export class SheetElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="dialog">
   ${this.behavior.openness ? html`
-  <div class=${'sheet__overlay'} aria-hidden="true"></div>
+  <div class=${'sheet__overlay'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'sheet__content'} role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" data-side=${this.side} @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'sheet__content'} role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" data-side=${this.side} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'sheet__header'}>
       <h2 class=${'sheet__title'}>
         <slot name="title"></slot>
