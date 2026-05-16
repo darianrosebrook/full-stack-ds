@@ -1,0 +1,39 @@
+/* @generated:start styles */
+.toggle-switch {
+  background-color: var(--semantic-color-background-secondary, #efefef);
+  color: var(--semantic-color-foreground-primary, #141414);
+  border-color: var(--semantic-color-border-light, #fceaea);
+  border-radius: var(--core-shape-radius-full, 9999px);
+  transition-duration: var(--core-motion-duration-short, 150ms);
+}
+
+.toggle-switch--small {}
+
+.toggle-switch--medium {}
+
+.toggle-switch--large {}
+
+.toggle-switch:hover {
+  background-color: var(--semantic-interaction-background-hover, #efefef);
+}
+
+.toggle-switch:focus-visible {}
+
+.toggle-switch:active {}
+
+.toggle-switch:disabled {
+  background-color: var(--semantic-color-background-disabled, #cecece);
+}
+
+.toggle-switch:checked {
+  background-color: var(--semantic-color-action-background-primary-default, #d9292b);
+}
+
+.toggle-switch__label {}
+
+.toggle-switch__input {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

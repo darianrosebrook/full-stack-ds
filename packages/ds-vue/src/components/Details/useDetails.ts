@@ -1,0 +1,44 @@
+// @generated:start imports
+import { type Ref } from "vue";
+import { useControllableState } from "../../primitives/index.js";
+// @generated:end
+
+// @custom:start imports
+
+// @custom:end
+
+// @generated:start types
+export interface UseDetailsOptions {
+  open?: () => boolean | undefined;
+  defaultOpen?: boolean;
+  onOpenChange?: (value: boolean) => void;
+}
+
+export interface UseDetailsResult {
+  open: Ref<boolean>;
+  setOpen: (next: boolean) => void;
+}
+// @generated:end
+
+// @custom:start types
+
+// @custom:end
+
+// @generated:start hook
+export function useDetails(options: UseDetailsOptions = {}): UseDetailsResult {
+  const { value: open, set: setOpen } = useControllableState<boolean>({
+    controlled: options.open,
+    defaultValue: options.defaultOpen ?? false,
+    onChange: options.onOpenChange,
+  });
+
+  return {
+    open,
+    setOpen,
+  };
+}
+// @generated:end
+
+// @custom:start trailing
+
+// @custom:end

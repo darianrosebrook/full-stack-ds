@@ -1,0 +1,39 @@
+/* @generated:start styles */
+.image {
+  background-color: var(--semantic-color-background-secondary, #efefef);
+  color: var(--semantic-color-foreground-primary, #141414);
+  /* --core-spacing-size-08: 32px; */
+  /* --semantic-typography-body-04: 12px; */
+}
+
+.image--xs {}
+
+.image--sm {}
+
+.image--md {}
+
+.image--lg {}
+
+.image--xl {}
+
+.image--full {}
+
+.image--none {}
+
+.image--loading {}
+
+.image--error {
+  background-color: var(--semantic-color-background-danger-subtle, #fceaea);
+  color: var(--semantic-color-foreground-danger, #d9292b);
+}
+
+.image__img {}
+
+.image__placeholder {}
+
+.image__errorState {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

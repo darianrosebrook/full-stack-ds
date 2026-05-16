@@ -1,0 +1,60 @@
+/* @generated:start styles */
+.postcard {
+  background-color: var(--semantic-color-background-primary, #ffffff);
+  border-color: var(--semantic-color-border-accent, #d9292b);
+  color: var(--semantic-color-foreground-secondary, #555555);
+  padding: var(--core-spacing-size-06, 16px);
+  border-radius: var(--core-shape-radius-full, 9999px);
+  gap: var(--core-spacing-size-03, 4px);
+  line-height: var(--semantic-typography-line-height-body, 1.5);
+  /* --core-shape-border-width-hairline: 1px; */
+  /* --semantic-typography-body-02: 16px; */
+  /* --semantic-typography-font-weight-medium: 500; */
+  /* --semantic-typography-body-03: 14px; */
+  /* --semantic-typography-body-02: 16px; */
+  /* --semantic-typography-body-03: 14px; */
+}
+
+.postcard--image {}
+
+.postcard--video {}
+
+.postcard--audio {}
+
+.postcard:hover {
+  background-color: var(--semantic-color-background-secondary, #efefef);
+  border-color: var(--semantic-color-border-bold, #8f8f8f);
+}
+
+.postcard__header {}
+
+.postcard__userInfo {}
+
+.postcard__displayName {
+  /* --semantic-typography-body-02: 16px; */
+  /* --semantic-typography-font-weight-medium: 500; */
+}
+
+.postcard__handle {
+  /* --semantic-typography-body-03: 14px; */
+}
+
+.postcard__timestamp {}
+
+.postcard__content {
+  line-height: var(--semantic-typography-line-height-body, 1.5);
+  /* --semantic-typography-body-02: 16px; */
+}
+
+.postcard__footer {
+  /* --semantic-typography-body-03: 14px; */
+}
+
+.postcard__stats {}
+
+.postcard__stat {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

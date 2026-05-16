@@ -1,0 +1,37 @@
+/* @generated:start styles */
+.switch {
+  background-color: var(--semantic-color-background-primary, #ffffff);
+  width: var(--core-spacing-size-09, 48px);
+  height: var(--core-spacing-size-07, 24px);
+  border-radius: var(--core-shape-radius-full, 9999px);
+  transition-duration: var(--semantic-motion-interaction-press-duration, 100ms);
+}
+
+.switch--sm {}
+
+.switch--md {}
+
+.switch--lg {}
+
+.switch:hover {}
+
+.switch:focus-visible {}
+
+.switch:disabled {
+  background-color: var(--semantic-color-background-disabled, #cecece);
+}
+
+.switch:checked {
+  background-color: var(--semantic-color-foreground-on-brand, #ffffff);
+}
+
+.switch__track {}
+
+.switch__thumb {}
+
+.switch__input {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

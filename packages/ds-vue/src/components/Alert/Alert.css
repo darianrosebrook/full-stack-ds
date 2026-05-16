@@ -1,0 +1,44 @@
+/* @generated:start styles */
+.alert {
+  background-color: var(--semantic-color-background-danger-subtle, #fceaea);
+  color: var(--semantic-color-foreground-on-danger-subtle, #7b0000);
+  border-color: var(--semantic-color-border-danger, #ae0001);
+  padding: var(--core-spacing-size-06, 16px);
+  border-radius: var(--semantic-shape-control-radius-default, 8px);
+  gap: var(--semantic-spacing-gap-grid-small, 8px);
+  font-size: var(--semantic-typography-body-03, 14px);
+  font-weight: var(--semantic-typography-font-weight-regular, 400);
+  /* --core-spacing-size-06: 16px; */
+}
+
+.alert--info {}
+
+.alert--success {}
+
+.alert--warning {}
+
+.alert--danger {}
+
+.alert--inline {}
+
+.alert--section {}
+
+.alert--page {}
+
+.alert:hover {}
+
+.alert__icon {}
+
+.alert__body {}
+
+.alert__title {
+  font-weight: var(--semantic-typography-font-weight-bold, 700);
+  font-size: var(--semantic-typography-body-02, 16px);
+}
+
+.alert__dismiss {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

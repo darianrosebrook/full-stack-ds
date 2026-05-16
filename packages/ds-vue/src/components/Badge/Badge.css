@@ -1,0 +1,40 @@
+/* @generated:start styles */
+.badge {
+  background-color: var(--semantic-color-background-danger-subtle, #fceaea);
+  color: var(--semantic-color-foreground-primary, #141414);
+  border-color: var(--semantic-color-border-light, #fceaea);
+  gap: var(--core-spacing-size-02, 2px);
+}
+
+.badge--default {}
+
+.badge--status {}
+
+.badge--counter {}
+
+.badge--tag {}
+
+.badge--info {}
+
+.badge--success {}
+
+.badge--warning {}
+
+.badge--danger {}
+
+.badge--sm {}
+
+.badge--md {}
+
+.badge--lg {}
+
+.badge:hover {}
+
+.badge__icon {}
+
+.badge__content {}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */
