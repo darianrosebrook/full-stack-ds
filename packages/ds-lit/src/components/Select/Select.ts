@@ -64,7 +64,7 @@ export class SelectElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" ?aria-expanded=${this.behavior.open} ?aria-disabled=${this.disabled}>
+    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${this.disabled}>
   <button class=${'select__trigger'} type="button" ?disabled=${this.disabled}>
     <span class=${'select__text'}></span>
   </button>

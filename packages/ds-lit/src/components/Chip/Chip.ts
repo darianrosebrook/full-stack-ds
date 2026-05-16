@@ -26,9 +26,12 @@ export class ChipElement extends LitElement {
   @property() size?: ChipSize;
   @property({ type: Boolean }) disabled?: boolean;
   @property() icon?: unknown;
-  @property() ariaLabel?: string;
-  @property({ type: Boolean }) ariaExpanded?: boolean;
-  @property({ type: Boolean }) ariaPressed?: boolean;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
+  @property({ attribute: 'aria-expanded', reflect: true })
+  override ariaExpanded: string | null = null;
+  @property({ attribute: 'aria-pressed', reflect: true })
+  override ariaPressed: string | null = null;
 
   private computeClasses(): string {
     return [
@@ -40,7 +43,7 @@ export class ChipElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" .type=${this.type} ?disabled=${this.disabled} aria-label=${this.ariaLabel} ?aria-expanded=${this.ariaExpanded} ?aria-pressed=${this.ariaPressed}>
+    return html`<button class="${this.computeClasses()}" .type=${this.type} ?disabled=${this.disabled} aria-label=${this.ariaLabel} aria-expanded=${this.ariaExpanded} aria-pressed=${this.ariaPressed}>
   ${this.icon ? html`
   <span class=${'chip__icon'} aria-hidden="true"></span>
   ` : nothing}

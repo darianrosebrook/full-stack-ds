@@ -51,7 +51,7 @@ export class TruncateElement extends LitElement {
     <slot></slot>
   </span>
   ${this.expandable ? html`
-  <button class=${'truncate__toggle'} type="button" ?aria-expanded=${this.behavior.expanded}></button>
+  <button class=${'truncate__toggle'} type="button" aria-expanded=${this.behavior.expanded ? 'true' : 'false'}></button>
   ` : nothing}
 </div>`;
   }

@@ -59,7 +59,7 @@ export class SheetElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}">
+    return html`<div class="${this.computeClasses()}" role="dialog">
   ${this.behavior.openness ? html`
   <div class=${'sheet__overlay'} aria-hidden="true"></div>
   ` : nothing}

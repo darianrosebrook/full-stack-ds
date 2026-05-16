@@ -52,7 +52,7 @@ export class PopoverElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  <button class=${'popover__trigger'} type="button" aria-haspopup="true" ?aria-expanded=${this.behavior.open} aria-controls="popover-content">
+  <button class=${'popover__trigger'} type="button" aria-haspopup="true" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-controls="popover-content">
     <slot></slot>
   </button>
   ${this.behavior.open ? html`

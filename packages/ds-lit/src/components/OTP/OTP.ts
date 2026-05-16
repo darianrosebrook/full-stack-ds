@@ -50,7 +50,7 @@ export class OTPElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="group" aria-label=${this.label} aria-describedby="otp-error-id">
   <div class=${'otp__group'}>
-    <input class=${'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" ?disabled=${this.disabled} ?aria-readonly=${this.readOnly} />
+    <input class=${'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" ?disabled=${this.disabled} aria-readonly=${this.readOnly} />
   </div>
 </div>`;
   }

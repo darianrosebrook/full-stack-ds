@@ -22,8 +22,8 @@ export class TableElement extends LitElement {
 
   @property({ type: Boolean })
   responsive?: boolean;
-  @property({ type: String })
-  ariaLabel?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
 
   override render() {
     return html`<fsds-stack class="table"><slot></slot></fsds-stack>`;

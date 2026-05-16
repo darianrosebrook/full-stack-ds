@@ -49,7 +49,7 @@ export class InputElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled} ?aria-invalid=${this.invalid} .type=${this.type} />`;
+    return html`<input class="${this.computeClasses()}" role="textbox" .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled} aria-invalid=${this.invalid} .type=${this.type} />`;
   }
 }
 

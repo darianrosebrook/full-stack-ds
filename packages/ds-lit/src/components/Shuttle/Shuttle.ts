@@ -20,8 +20,8 @@ import { StackElement as _Stack } from '../../primitives/index.js';
 export class ShuttleElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property({ type: String })
-  ariaLabel?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
 
   override render() {
     return html`<fsds-stack class="shuttle"><slot></slot></fsds-stack>`;

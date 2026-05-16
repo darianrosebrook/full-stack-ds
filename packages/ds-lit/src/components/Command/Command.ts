@@ -70,7 +70,7 @@ export class CommandElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}">
+    return html`<div class="${this.computeClasses()}" role="dialog">
   ${this.behavior.open ? html`
   <div class=${'command__overlay'} aria-hidden="true"></div>
   ` : nothing}

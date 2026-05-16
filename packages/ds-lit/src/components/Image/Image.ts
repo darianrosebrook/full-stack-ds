@@ -45,7 +45,7 @@ export class ImageElement extends LitElement {
   }
 
   override render() {
-    return html`<img class="${this.computeClasses()}" .src=${this.src} .alt=${this.alt} .width=${this.width} .height=${this.height} .loading=${this.loading} .sizes=${this.sizes} />`;
+    return html`<img class="${this.computeClasses()}" role="img" .src=${this.src} .alt=${this.alt} .width=${this.width} .height=${this.height} .loading=${this.loading} .sizes=${this.sizes} />`;
   }
 }
 

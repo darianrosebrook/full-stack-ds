@@ -40,7 +40,7 @@ export class FieldElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}">
+    return html`<div class="${this.computeClasses()}" role="group">
   <div class=${'field__header'}>
     ${this.label ? html`
     <label class=${'field__label'}>

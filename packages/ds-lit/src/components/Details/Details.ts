@@ -50,7 +50,7 @@ export class DetailsElement extends LitElement {
   }
 
   override render() {
-    return html`<details class="${this.computeClasses()}" ?open=${this.behavior.open}>
+    return html`<details class="${this.computeClasses()}" role="group" ?open=${this.behavior.open}>
   <summary class=${'details__summary'}>
     <span class=${'details__summaryContent'}>
       <span class=${'details__icon'}></span>

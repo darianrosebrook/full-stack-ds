@@ -49,7 +49,7 @@ export class ShowMoreElement extends LitElement {
   <div class=${'show-more__content'}>
     <slot></slot>
   </div>
-  <button class=${'show-more__trigger'} type="button" ?aria-expanded=${this.behavior.expanded} @click=${(e: Event) => this.handleExpandedChange(e)} .textContent=${this.showMoreLabel}></button>
+  <button class=${'show-more__trigger'} type="button" aria-expanded=${this.behavior.expanded ? 'true' : 'false'} @click=${(e: Event) => this.handleExpandedChange(e)} .textContent=${this.showMoreLabel}></button>
 </div>`;
   }
 }

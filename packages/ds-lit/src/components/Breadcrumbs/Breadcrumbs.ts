@@ -19,7 +19,8 @@ import { property } from 'lit/decorators.js';
 export class BreadcrumbsElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() ariaLabel?: string = "Breadcrumb";
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
   @property() separator?: string;
 
   private computeClasses(): string {

@@ -26,9 +26,12 @@ export class ButtonElement extends LitElement {
   @property() type?: ButtonType = "button";
   @property({ type: Boolean }) loading?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
-  @property() ariaLabel?: string;
-  @property({ type: Boolean }) ariaExpanded?: boolean;
-  @property({ type: Boolean }) ariaPressed?: boolean;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
+  @property({ attribute: 'aria-expanded', reflect: true })
+  override ariaExpanded: string | null = null;
+  @property({ attribute: 'aria-pressed', reflect: true })
+  override ariaPressed: string | null = null;
 
   private computeClasses(): string {
     return [
@@ -40,7 +43,7 @@ export class ButtonElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" .type=${this.type} ?disabled=${this.disabled} aria-label=${this.ariaLabel} ?aria-expanded=${this.ariaExpanded} ?aria-pressed=${this.ariaPressed} ?aria-busy=${this.loading}>
+    return html`<button class="${this.computeClasses()}" .type=${this.type} ?disabled=${this.disabled} aria-label=${this.ariaLabel} aria-expanded=${this.ariaExpanded} aria-pressed=${this.ariaPressed} aria-busy=${this.loading}>
   <slot></slot>
 </button>`;
   }

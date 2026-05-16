@@ -58,7 +58,7 @@ export class TextFieldElement extends LitElement {
     <slot></slot>
   </label>
   ` : nothing}
-  <input class=${'text-field__field'} .type=${this.type} .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled} .name=${this.name} ?required=${this.required} ?aria-invalid=${this.invalid} aria-describedby=${this.ariaDescribedby} />
+  <input class=${'text-field__field'} .type=${this.type} .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled} .name=${this.name} ?required=${this.required} aria-invalid=${this.invalid} aria-describedby=${this.ariaDescribedby} />
   ${this.description ? html`
   <span class=${'text-field__description'}>
     <slot></slot>

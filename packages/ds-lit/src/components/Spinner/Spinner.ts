@@ -24,7 +24,8 @@ export class SpinnerElement extends LitElement {
   @property() size?: SpinnerSize;
   @property() variant?: SpinnerVariant;
   @property() thickness?: SpinnerThickness;
-  @property({ type: Boolean }) ariaHidden?: boolean;
+  @property({ attribute: 'aria-hidden', reflect: true })
+  override ariaHidden: string | null = null;
   @property() label?: string;
   @property({ type: Boolean }) inline?: boolean;
   @property({ type: Number }) showAfterMs?: number;
@@ -39,7 +40,7 @@ export class SpinnerElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}">
+    return html`<div class="${this.computeClasses()}" role="status">
   <span class=${'spinner__visual'} aria-hidden="true"></span>
 </div>`;
   }

@@ -127,6 +127,100 @@ const LIT_SKIP_PROPS = new Set([
   "role",
 ]);
 
+// `LitElement` inherits the `ARIAMixin` interface via `HTMLElement`. Every
+// `aria-*` attribute has a corresponding camelCase IDL accessor typed
+// `string | null` (NOT `string | undefined`, and NOT `boolean` — even
+// boolean-shaped ARIA attrs like `aria-pressed` accept `"true"`/`"false"`/
+// `"mixed"` strings at the DOM level). Declaring `@property() ariaLabel?:
+// string` produces TS2416 because `string | undefined` isn't assignable to
+// `string | null`. Emit ARIA props through the `override` path with
+// `string | null` and `reflect: true` so the attribute round-trips to the
+// DOM for assistive tech.
+const ARIA_MIXIN_NAMES = new Set([
+  "ariaActiveDescendant",
+  "ariaAtomic",
+  "ariaAutoComplete",
+  "ariaBrailleLabel",
+  "ariaBrailleRoleDescription",
+  "ariaBusy",
+  "ariaChecked",
+  "ariaColCount",
+  "ariaColIndex",
+  "ariaColIndexText",
+  "ariaColSpan",
+  "ariaCurrent",
+  "ariaDescription",
+  "ariaDisabled",
+  "ariaExpanded",
+  "ariaHasPopup",
+  "ariaHidden",
+  "ariaInvalid",
+  "ariaKeyShortcuts",
+  "ariaLabel",
+  "ariaLevel",
+  "ariaLive",
+  "ariaModal",
+  "ariaMultiLine",
+  "ariaMultiSelectable",
+  "ariaOrientation",
+  "ariaPlaceholder",
+  "ariaPosInSet",
+  "ariaPressed",
+  "ariaReadOnly",
+  "ariaRelevant",
+  "ariaRequired",
+  "ariaRoleDescription",
+  "ariaRowCount",
+  "ariaRowIndex",
+  "ariaRowIndexText",
+  "ariaRowSpan",
+  "ariaSelected",
+  "ariaSetSize",
+  "ariaSort",
+  "ariaValueMax",
+  "ariaValueMin",
+  "ariaValueNow",
+  "ariaValueText",
+]);
+
+// `LitElement` (via `HTMLElement` / `Element`) exposes a handful of bare-name
+// methods/accessors that contracts have historically used as prop names
+// (`animate` on Skeleton). Declaring an `@property() animate?: string` shadows
+// `Element.animate()` and breaks TypeScript subtyping. Treat the same way as
+// ARIA props: emit through a kebab-attribute string property under a
+// non-colliding internal field name (`_animate`).
+const LIT_ELEMENT_METHOD_NAMES = new Set([
+  "animate",
+  "scroll",
+  "scrollTo",
+  "scrollBy",
+  "scrollIntoView",
+  "focus",
+  "blur",
+  "click",
+]);
+
+/**
+ * Translate a camelCase ARIA prop name to its kebab-case HTML attribute name.
+ * Single special-case: `ariaLabelledBy` → `aria-labelledby` (not `-labelled-by`).
+ */
+function ariaCamelToKebab(name: string): string {
+  // Strip "aria" prefix, lowercase the rest with kebab insertion.
+  const rest = name.slice(4);
+  let out = "aria";
+  for (let i = 0; i < rest.length; i++) {
+    const ch = rest[i];
+    if (i === 0) {
+      out += "-" + ch.toLowerCase();
+    } else if (/[A-Z]/.test(ch)) {
+      out += ch.toLowerCase();
+    } else {
+      out += ch;
+    }
+  }
+  return out;
+}
+
 function litPropertyType(rawType: string): string | null {
   // Event handlers are not declarative Lit properties — skip them.
   if (
@@ -148,6 +242,22 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
 
   for (const p of ir.styledProps) {
     if (LIT_SKIP_PROPS.has(p.name)) continue;
+    if (ARIA_MIXIN_NAMES.has(p.name)) {
+      lines.push(
+        `  @property({ attribute: '${ariaCamelToKebab(p.name)}', reflect: true })`,
+      );
+      lines.push(`  override ${p.name}: string | null = null;`);
+      declared.add(p.name);
+      continue;
+    }
+    if (LIT_ELEMENT_METHOD_NAMES.has(p.name)) {
+      // Rename the public field to `_<name>` and bind the kebab attribute
+      // to it so it doesn't shadow the inherited Element method.
+      lines.push(`  @property({ attribute: '${toKebab(p.name)}' })`);
+      lines.push(`  _${p.name}: string | null = null;`);
+      declared.add(p.name);
+      continue;
+    }
     const litPropType = litPropertyType(p.type);
     if (litPropType === null) continue;
     const t = litType(p.type);
@@ -355,7 +465,19 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     isRoot: true,
     hasOverlayClick,
   };
-  const template = renderLitDomNode(ir.dom, ctx, 0);
+  // Inject the contract's effective ARIA role onto the root node if the
+  // contract didn't already pin one in `attrs.role`. Without this, components
+  // that declare `a11y.role: "switch"` (ToggleSwitch) keep the implicit
+  // `<button>` role, which makes `aria-checked` an axe-illegal attribute.
+  // Mirrors how React's emitter spreads `role="switch"` onto the element.
+  const rootForRender: DomNodeIR =
+    ir.root.effectiveRole && !ir.dom.attrs["role"]
+      ? {
+          ...ir.dom,
+          attrs: { ...ir.dom.attrs, role: ir.root.effectiveRole },
+        }
+      : ir.dom;
+  const template = renderLitDomNode(rootForRender, ctx, 0);
   const hasChildrenGuard = treeHasChildrenGuard(ir.dom);
 
   const lines: string[] = [];
@@ -527,6 +649,18 @@ function generateLitDomTreePropertyDecl(p: {
 }): string | null {
   const skipEventHandler = /=>\s*(void|never)|EventHandler/.test(p.type);
   if (skipEventHandler) return null;
+  if (ARIA_MIXIN_NAMES.has(p.name)) {
+    return [
+      `  @property({ attribute: '${ariaCamelToKebab(p.name)}', reflect: true })`,
+      `  override ${p.name}: string | null = null;`,
+    ].join("\n");
+  }
+  if (LIT_ELEMENT_METHOD_NAMES.has(p.name)) {
+    return [
+      `  @property({ attribute: '${toKebab(p.name)}' })`,
+      `  _${p.name}: string | null = null;`,
+    ].join("\n");
+  }
   const propType = litType(p.type);
   const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
   const decoratorArgs: string[] = [];
@@ -667,6 +801,15 @@ function renderLitBinding(
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
       const isBoolean = prop ? /\bboolean\b/.test(prop.type) : false;
+      // ARIA attributes are always string-valued at the DOM level even when
+      // the contract types them as boolean (e.g. `aria-pressed`). Emit a
+      // plain `attr=` binding that lets the value coerce to "true"/"false"
+      // rather than `?attr=` boolean-attribute presence/absence, which is
+      // structurally wrong for ARIA semantics ("aria-pressed=false" is
+      // meaningful, while `?aria-pressed=${false}` removes the attribute).
+      if (attr.startsWith("aria-")) {
+        return `${attr}=\${this.${expr.prop}}`;
+      }
       if (isBoolean) {
         // Boolean attrs → `?attr=` (Lit boolean attribute binding).
         return `?${attr}=\${this.${expr.prop}}`;
@@ -687,6 +830,19 @@ function renderLitBinding(
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
+        // ARIA attrs are always string-typed at the DOM. For boolean channels
+        // (`aria-checked`, `aria-pressed`, `aria-selected`), serialize the
+        // value as the explicit `"true"`/`"false"` string the ARIA spec
+        // expects — `?aria-checked=` would collapse to attribute-presence
+        // ("aria-checked=\"\"") which is structurally invalid, and plain
+        // `aria-checked=${false}` would serialize as `aria-checked="false"`
+        // (valid but axe correctly flags it when the role doesn't permit it).
+        if (attr.startsWith("aria-")) {
+          if (ch.valueType === "boolean") {
+            return `${attr}=\${this.behavior.${ch.name} ? 'true' : 'false'}`;
+          }
+          return `${attr}=\${this.behavior.${ch.name}}`;
+        }
         if (ch.valueType === "boolean") {
           return `?${attr}=\${this.behavior.${ch.name}}`;
         }

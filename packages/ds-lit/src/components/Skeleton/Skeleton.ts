@@ -24,13 +24,15 @@ export class SkeletonElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
   @property() variant?: SkeletonVariant = "block";
-  @property() animate?: SkeletonAnimate = "shimmer";
+  @property({ attribute: 'animate' })
+  _animate: string | null = null;
   @property() density?: SkeletonDensity = "regular";
   @property() aspectRatio?: string;
   @property() lines?: SkeletonLines;
   @property() radius?: SkeletonRadius;
   @property({ type: Boolean }) decorative?: boolean = true;
-  @property() ariaLabel?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
 
   private computeClasses(): string {
     return [
@@ -42,7 +44,7 @@ export class SkeletonElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-busy="true" aria-label=${this.ariaLabel}></div>`;
+    return html`<div class="${this.computeClasses()}" aria-busy="true" role="status" aria-label=${this.ariaLabel}></div>`;
   }
 }
 

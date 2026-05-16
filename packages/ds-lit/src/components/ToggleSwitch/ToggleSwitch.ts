@@ -24,7 +24,8 @@ export class ToggleSwitchElement extends LitElement {
   @property({ type: Boolean }) defaultChecked?: boolean;
   @property() size?: ToggleSwitchSize = "medium";
   @property({ type: Boolean }) disabled?: boolean;
-  @property() ariaLabel?: string;
+  @property({ attribute: 'aria-label', reflect: true })
+  override ariaLabel: string | null = null;
   @property() ariaDescribedby?: string;
   @property({ attribute: false }) onChange?: (value: boolean) => void;
 
@@ -48,7 +49,7 @@ export class ToggleSwitchElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" type="button" ?aria-checked=${this.behavior.checked} aria-label=${this.ariaLabel} aria-describedby=${this.ariaDescribedby} ?disabled=${this.disabled} @click=${(e: Event) => this.handleCheckedChange(e)}></button>`;
+    return html`<button class="${this.computeClasses()}" type="button" role="switch" aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${this.ariaLabel} aria-describedby=${this.ariaDescribedby} ?disabled=${this.disabled} @click=${(e: Event) => this.handleCheckedChange(e)}></button>`;
   }
 }
 
