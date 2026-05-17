@@ -24,10 +24,12 @@ import type { ComponentIR } from "../../ir.js";
 import {
   generateSvelteComponentSource,
   generateSvelteCompoundPartSource,
+  generateSvelteCompoundStateParts,
 } from "./component-source.js";
 import { generateSvelteHookSource } from "./hook-source.js";
 import { generateSvelteBarrel } from "./barrel.js";
 import { generateSvelteTest } from "./tests.js";
+import { isCompoundStateContainer } from "../react/hook-source.js";
 
 export function createSvelteEmitter(): FrameworkEmitter {
   return {
@@ -48,15 +50,27 @@ export function createSvelteEmitter(): FrameworkEmitter {
           preservable: true,
         },
       ];
-      // Compound parts — one .svelte per part (Svelte components are 1:1
-      // with files).
-      for (const part of ir.compoundParts) {
-        const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
-        files.push({
-          relativePath: `${ir.name}/${subName}.svelte`,
-          contents: generateSvelteCompoundPartSource(ir.cssPrefix, part),
-          preservable: true,
-        });
+      if (isCompoundStateContainer(ir)) {
+        // Compound-state-container: emit sub-component SFCs (List, Tab, Panel)
+        // that are wired via setContext/getContext context.
+        for (const part of generateSvelteCompoundStateParts(ir)) {
+          files.push({
+            relativePath: `${ir.name}/${part.name}.svelte`,
+            contents: part.content,
+            preservable: true,
+          });
+        }
+      } else {
+        // Legacy compound parts (e.g. ModalHeader, ModalBody) — each becomes
+        // its own .svelte file because Svelte components are 1:1 with files.
+        for (const part of ir.compoundParts) {
+          const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
+          files.push({
+            relativePath: `${ir.name}/${subName}.svelte`,
+            contents: generateSvelteCompoundPartSource(ir.cssPrefix, part),
+            preservable: true,
+          });
+        }
       }
       return files;
     },

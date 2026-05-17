@@ -27,6 +27,12 @@ import type {
 import { hasChildrenPlaceholder } from "../../ir.js";
 import { translateNonReactType } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import {
+  isCompoundStateContainer,
+  getInteractiveItemPart,
+  getRegionPart,
+  getGroupHostPart,
+} from "../react/hook-source.js";
 
 // Props the Svelte emitter handles natively: `class` via `class: className`
 // destructuring, `children` via `import('svelte').Snippet`, `style` passthrough.
@@ -39,6 +45,9 @@ const SVELTE_SKIP_PROPS = new Set(["class", "style", "className", "children"]);
  * (imports/types/props/classes/trailing); template is a simple block.
  */
 export function generateSvelteComponentSource(ir: ComponentIR): string {
+  if (isCompoundStateContainer(ir)) {
+    return generateSvelteCompoundStateRootSource(ir);
+  }
   if (ir.dom) {
     return generateSvelteDomTreeComponentSource(ir);
   }
@@ -243,6 +252,457 @@ function generateClassesDerived(ir: ComponentIR): string {
  */
 export function jsAccessorFor(propName: string): string {
   return propName.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+}
+
+// ---------------------------------------------------------------------------
+// Compound-state-container SFC emission (Tabs-shaped)
+// ---------------------------------------------------------------------------
+
+function sveltePascalCapitalize(s: string): string {
+  return s[0].toUpperCase() + s.slice(1);
+}
+
+/**
+ * Emit the root provider SFC (e.g. Tabs.svelte) for a compound-state-container IR.
+ * This component calls `useTabs`, provides context via `provideTabsContext`, and
+ * renders a plain `<div>` wrapper that accepts children.
+ */
+function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
+  const { name, cssPrefix } = ir;
+
+  const importsBody = [
+    `import { use${name}, provide${name}Context } from "./use${name}.svelte.js";`,
+  ].join("\n");
+
+  // Type aliases for variant props
+  const typeLines: string[] = [];
+  const emittedTypes = new Set<string>();
+  for (const p of ir.styledProps) {
+    if (SVELTE_SKIP_PROPS.has(p.name)) continue;
+    for (const ref of p.typeRefs) {
+      if (emittedTypes.has(ref)) continue;
+      const def = ir.definedTypes[ref];
+      if (!def) continue;
+      if (def.kind === "union" && def.values) {
+        typeLines.push(`type ${ref} = ${def.values.map((v) => `"${v}"`).join(" | ")};`);
+        emittedTypes.add(ref);
+      } else if (def.kind === "alias" && def.alias) {
+        typeLines.push(`type ${ref} = ${svelteType(def.alias)};`);
+        emittedTypes.add(ref);
+      }
+    }
+  }
+  const typesBody = typeLines.join("\n");
+
+  // Props interface — styledProps already include value/defaultValue/onValueChange/idBase
+  // for Tabs, so we just iterate them. Then add class, data-testid, children.
+  const styledPropNames = new Set(ir.styledProps.map((p) => p.name));
+  const channel = ir.behavior.normalizedChannels[0];
+
+  const propsLines: string[] = [`interface Props {`];
+  for (const p of ir.styledProps) {
+    if (SVELTE_SKIP_PROPS.has(p.name)) continue;
+    const optional = p.required ? "" : "?";
+    const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
+    propsLines.push(`  ${propName}${optional}: ${svelteType(p.type)};`);
+  }
+  propsLines.push(`  class?: string;`);
+  propsLines.push(`  "data-testid"?: string;`);
+  propsLines.push(`  children?: import('svelte').Snippet;`);
+  propsLines.push(`}`);
+
+  // Destructure — alias `idBase` to `idBaseProp` so we can pass it as a getter
+  // to useTabs without Svelte warning about "references only capture initial value".
+  const destructParts: string[] = [];
+  for (const p of ir.styledProps) {
+    if (SVELTE_SKIP_PROPS.has(p.name)) continue;
+    const key = p.name.includes("-") ? `"${p.name}": ${p.safeName}` : p.safeName;
+    if (p.name === "idBase") {
+      destructParts.push(`idBase: idBaseProp`);
+    } else if (p.defaultExpr !== undefined) {
+      destructParts.push(`${key} = ${p.defaultExpr}`);
+    } else {
+      destructParts.push(key);
+    }
+  }
+  destructParts.push(`class: className`);
+  destructParts.push(`"data-testid": dataTestid`);
+  destructParts.push(`children`);
+
+  const propsBody = [
+    propsLines.join("\n"),
+    ``,
+    `let {`,
+    `  ${destructParts.join(",\n  ")},`,
+    `}: Props = $props();`,
+  ].join("\n");
+
+  // Hook call — forward channel props as getters for reactivity
+  const hookLines: string[] = [`const behavior = use${name}({`];
+  if (channel) {
+    const vAccessor = jsAccessorFor(channel.valueProp);
+    hookLines.push(`  ${channel.valueProp}: () => ${vAccessor},`);
+    if (channel.defaultValueProp) {
+      const dvAccessor = jsAccessorFor(channel.defaultValueProp);
+      hookLines.push(`  ${channel.defaultValueProp}: () => ${dvAccessor},`);
+    }
+    const cbAccessor = jsAccessorFor(channel.changeHandlerProp);
+    hookLines.push(`  ${channel.changeHandlerProp}: () => ${cbAccessor},`);
+  }
+  // idBase: pass as getter so Svelte doesn't warn about capturing initial value.
+  // idBaseProp is the destructured alias for the `idBase` styled prop.
+  if (styledPropNames.has("idBase")) {
+    hookLines.push(`  // idBase is stable after mount — use getter to avoid Svelte lint warning.`);
+    hookLines.push(`  get idBase() { return idBaseProp; },`);
+  }
+  hookLines.push(`});`);
+  hookLines.push(``);
+  hookLines.push(`provide${name}Context({`);
+  if (channel) {
+    const channelName = channel.name;
+    const setter = `set${sveltePascalCapitalize(channelName)}`;
+    hookLines.push(`  get ${channelName}() { return behavior.${channelName}; },`);
+    hookLines.push(`  ${setter}(v) { behavior.${setter}(v); },`);
+  }
+  hookLines.push(`  get registeredTabs() { return behavior.registeredTabs; },`);
+  hookLines.push(`  registerTab(v) { behavior.registerTab(v); },`);
+  hookLines.push(`  unregisterTab(v) { behavior.unregisterTab(v); },`);
+  hookLines.push(`  idBase: behavior.idBase,`);
+
+  // Forward orientation, activationMode, loop, unmountInactive via getters
+  const styledNames = new Set(ir.styledProps.map((p) => p.name));
+  if (styledNames.has("orientation")) {
+    hookLines.push(`  get orientation() { return orientation ?? "horizontal"; },`);
+  }
+  if (styledNames.has("activationMode")) {
+    hookLines.push(`  get activationMode() { return activationMode ?? "automatic"; },`);
+  }
+  if (styledNames.has("loop")) {
+    hookLines.push(`  get loop() { return loop ?? true; },`);
+  }
+  if (styledNames.has("unmountInactive")) {
+    hookLines.push(`  get unmountInactive() { return unmountInactive ?? true; },`);
+  }
+  hookLines.push(`});`);
+  const hookBody = hookLines.join("\n");
+
+  // Classes derived
+  const classExprs: string[] = [`"${cssPrefix}"`];
+  for (const mod of ir.classRecipe.valueModifiers) {
+    classExprs.push(`${jsAccessorFor(mod.propName)} ? \`${cssPrefix}--\${${jsAccessorFor(mod.propName)}}\` : null`);
+  }
+  classExprs.push("className");
+  const classesBody = [
+    `const classes = $derived(`,
+    `  [`,
+    ...classExprs.map((e) => `    ${e},`),
+    `  ].filter(Boolean).join(" ")`,
+    `);`,
+  ].join("\n");
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const scriptSections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    ...(typesBody
+      ? [
+          { kind: "generated" as const, id: "types", body: typesBody },
+          blank(),
+          { kind: "custom" as const, id: "types", body: "" },
+          blank(),
+        ]
+      : []),
+    { kind: "generated", id: "props", body: propsBody },
+    blank(),
+    { kind: "generated", id: "hook", body: hookBody },
+    blank(),
+    { kind: "generated", id: "classes", body: classesBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+  ];
+
+  return [
+    `<script lang="ts">`,
+    renderSections(scriptSections, "line"),
+    `</script>`,
+    ``,
+    `<div class={classes} data-testid={dataTestid}>`,
+    `  {@render children?.()}`,
+    `</div>`,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Returns the sub-component SFC sources (List, Tab, Panel) for a
+ * compound-state-container IR. Each sub-component is wired via
+ * setContext/getContext using the provider emitted in the root.
+ *
+ * Returns an array of `{ name, content }` matching the Vue emitter's shape
+ * so `factory.ts` can emit them uniformly.
+ */
+export function generateSvelteCompoundStateParts(
+  ir: ComponentIR,
+): Array<{ name: string; content: string }> {
+  if (!isCompoundStateContainer(ir)) return [];
+
+  const { name, cssPrefix } = ir;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const groupPart = getGroupHostPart(ir);
+
+  if (!itemPart || !regionPart) return [];
+
+  const listName = `${name}${sveltePascalCapitalize(groupPart?.name ?? "List")}`;
+  const tabName = `${name}${sveltePascalCapitalize(itemPart.name)}`;
+  const panelName = `${name}${sveltePascalCapitalize(regionPart.name)}`;
+
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const setter = `set${sveltePascalCapitalize(channelName)}`;
+  const listCssClass = `${cssPrefix}__${groupPart?.name ?? "list"}`;
+  const tabCssClass = `${cssPrefix}__${itemPart.name}`;
+  const panelCssClass = `${cssPrefix}__${regionPart.name}`;
+
+  // -------------------------------------------------------------------------
+  // TabsList.svelte
+  // -------------------------------------------------------------------------
+  const listSource = [
+    `<script lang="ts">`,
+    `// @generated:start imports`,
+    `import { use${name}Context } from "./use${name}.svelte.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `  children?: import('svelte').Snippet;`,
+    `}`,
+    ``,
+    `let { class: className, "data-testid": dataTestid, children }: Props = $props();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const classes = $derived(["${listCssClass}", className].filter(Boolean).join(" "));`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start trailing`,
+    `let listRef: HTMLElement | null = $state(null);`,
+    ``,
+    `function handleKeyDown(e: KeyboardEvent): void {`,
+    `  const tabs = ctx.registeredTabs;`,
+    `  if (tabs.length === 0) return;`,
+    `  const currentIndex = tabs.indexOf(ctx.${channelName});`,
+    `  const isHorizontal = ctx.orientation !== "vertical";`,
+    `  let nextIndex = currentIndex;`,
+    ``,
+    `  if (`,
+    `    (isHorizontal && e.key === "ArrowRight") ||`,
+    `    (!isHorizontal && e.key === "ArrowDown")`,
+    `  ) {`,
+    `    e.preventDefault();`,
+    `    nextIndex = ctx.loop`,
+    `      ? (currentIndex + 1) % tabs.length`,
+    `      : Math.min(currentIndex + 1, tabs.length - 1);`,
+    `  } else if (`,
+    `    (isHorizontal && e.key === "ArrowLeft") ||`,
+    `    (!isHorizontal && e.key === "ArrowUp")`,
+    `  ) {`,
+    `    e.preventDefault();`,
+    `    nextIndex = ctx.loop`,
+    `      ? (currentIndex - 1 + tabs.length) % tabs.length`,
+    `      : Math.max(currentIndex - 1, 0);`,
+    `  } else if (e.key === "Home") {`,
+    `    e.preventDefault();`,
+    `    nextIndex = 0;`,
+    `  } else if (e.key === "End") {`,
+    `    e.preventDefault();`,
+    `    nextIndex = tabs.length - 1;`,
+    `  } else if (e.key === "Enter" || e.key === " ") {`,
+    `    if (ctx.activationMode === "manual") {`,
+    `      e.preventDefault();`,
+    `      const focusedBtn = listRef?.querySelector<HTMLButtonElement>('[role="tab"]:focus');`,
+    `      if (focusedBtn) {`,
+    `        const val = focusedBtn.getAttribute("data-value");`,
+    `        if (val) ctx.${setter}(val);`,
+    `      }`,
+    `    }`,
+    `    return;`,
+    `  } else {`,
+    `    return;`,
+    `  }`,
+    ``,
+    `  const targetValue = tabs[nextIndex];`,
+    `  if (ctx.activationMode === "automatic") {`,
+    `    ctx.${setter}(targetValue);`,
+    `  }`,
+    `  const btn = listRef?.querySelector<HTMLButtonElement>(`,
+    `    \`[role="tab"][data-value="\${targetValue}"]\`,`,
+    `  );`,
+    `  btn?.focus();`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<div`,
+    `  bind:this={listRef}`,
+    `  role="tablist"`,
+    `  class={classes}`,
+    `  data-testid={dataTestid}`,
+    `  aria-orientation={ctx.orientation}`,
+    `  onkeydown={handleKeyDown}`,
+    `>`,
+    `  {@render children?.()}`,
+    `</div>`,
+    ``,
+  ].join("\n");
+
+  // -------------------------------------------------------------------------
+  // TabsTab.svelte
+  // -------------------------------------------------------------------------
+  const tabSource = [
+    `<script lang="ts">`,
+    `// @generated:start imports`,
+    `import { onMount, onDestroy } from "svelte";`,
+    `import { use${name}Context } from "./use${name}.svelte.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  disabled?: boolean;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `  children?: import('svelte').Snippet;`,
+    `}`,
+    ``,
+    `let { value, disabled, class: className, "data-testid": dataTestid, children }: Props = $props();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isActive = $derived(ctx.${channelName} === value);`,
+    ``,
+    `const classes = $derived(`,
+    `  [`,
+    `    "${tabCssClass}",`,
+    `    isActive && "${tabCssClass}--active",`,
+    `    className,`,
+    `  ]`,
+    `    .filter(Boolean)`,
+    `    .join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start trailing`,
+    `onMount(() => {`,
+    `  ctx.registerTab(value);`,
+    `});`,
+    ``,
+    `onDestroy(() => {`,
+    `  ctx.unregisterTab(value);`,
+    `});`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<button`,
+    `  role="tab"`,
+    `  type="button"`,
+    `  class={classes}`,
+    `  data-value={value}`,
+    `  data-testid={dataTestid}`,
+    `  id="{ctx.idBase}-tab-{value}"`,
+    `  aria-controls="{ctx.idBase}-panel-{value}"`,
+    `  aria-selected={isActive}`,
+    `  tabindex={isActive ? 0 : -1}`,
+    `  {disabled}`,
+    `  onclick={() => ctx.${setter}(value)}`,
+    `>`,
+    `  {@render children?.()}`,
+    `</button>`,
+    ``,
+  ].join("\n");
+
+  // -------------------------------------------------------------------------
+  // TabsPanel.svelte
+  // -------------------------------------------------------------------------
+  const panelSource = [
+    `<script lang="ts">`,
+    `// @generated:start imports`,
+    `import { use${name}Context } from "./use${name}.svelte.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `  children?: import('svelte').Snippet;`,
+    `}`,
+    ``,
+    `let { value, class: className, "data-testid": dataTestid, children }: Props = $props();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isActive = $derived(ctx.${channelName} === value);`,
+    ``,
+    `const classes = $derived(["${panelCssClass}", className].filter(Boolean).join(" "));`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `{#if !ctx.unmountInactive || isActive}`,
+    `<div`,
+    `  role="tabpanel"`,
+    `  class={classes}`,
+    `  id="{ctx.idBase}-panel-{value}"`,
+    `  aria-labelledby="{ctx.idBase}-tab-{value}"`,
+    `  tabindex={0}`,
+    `  data-testid={dataTestid}`,
+    `  hidden={!isActive ? true : undefined}`,
+    `>`,
+    `  {@render children?.()}`,
+    `</div>`,
+    `{/if}`,
+    ``,
+  ].join("\n");
+
+  return [
+    { name: listName, content: listSource },
+    { name: tabName, content: tabSource },
+    { name: panelName, content: panelSource },
+  ];
 }
 
 // ---------------------------------------------------------------------------

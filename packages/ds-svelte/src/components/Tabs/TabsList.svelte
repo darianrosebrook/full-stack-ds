@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+import { useTabsContext } from "./useTabs.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -18,7 +18,66 @@ let { class: className, "data-testid": dataTestid, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
+const ctx = useTabsContext();
+
 const classes = $derived(["tabs__list", className].filter(Boolean).join(" "));
+// @generated:end
+
+// @generated:start trailing
+let listRef: HTMLElement | null = $state(null);
+
+function handleKeyDown(e: KeyboardEvent): void {
+  const tabs = ctx.registeredTabs;
+  if (tabs.length === 0) return;
+  const currentIndex = tabs.indexOf(ctx.activeTab);
+  const isHorizontal = ctx.orientation !== "vertical";
+  let nextIndex = currentIndex;
+
+  if (
+    (isHorizontal && e.key === "ArrowRight") ||
+    (!isHorizontal && e.key === "ArrowDown")
+  ) {
+    e.preventDefault();
+    nextIndex = ctx.loop
+      ? (currentIndex + 1) % tabs.length
+      : Math.min(currentIndex + 1, tabs.length - 1);
+  } else if (
+    (isHorizontal && e.key === "ArrowLeft") ||
+    (!isHorizontal && e.key === "ArrowUp")
+  ) {
+    e.preventDefault();
+    nextIndex = ctx.loop
+      ? (currentIndex - 1 + tabs.length) % tabs.length
+      : Math.max(currentIndex - 1, 0);
+  } else if (e.key === "Home") {
+    e.preventDefault();
+    nextIndex = 0;
+  } else if (e.key === "End") {
+    e.preventDefault();
+    nextIndex = tabs.length - 1;
+  } else if (e.key === "Enter" || e.key === " ") {
+    if (ctx.activationMode === "manual") {
+      e.preventDefault();
+      const focusedBtn = listRef?.querySelector<HTMLButtonElement>('[role="tab"]:focus');
+      if (focusedBtn) {
+        const val = focusedBtn.getAttribute("data-value");
+        if (val) ctx.setActiveTab(val);
+      }
+    }
+    return;
+  } else {
+    return;
+  }
+
+  const targetValue = tabs[nextIndex];
+  if (ctx.activationMode === "automatic") {
+    ctx.setActiveTab(targetValue);
+  }
+  const btn = listRef?.querySelector<HTMLButtonElement>(
+    `[role="tab"][data-value="${targetValue}"]`,
+  );
+  btn?.focus();
+}
 // @generated:end
 
 // @custom:start trailing
@@ -26,6 +85,13 @@ const classes = $derived(["tabs__list", className].filter(Boolean).join(" "));
 // @custom:end
 </script>
 
-<Stack as="ul" variant="horizontal" class={classes} data-testid={dataTestid}>
+<div
+  bind:this={listRef}
+  role="tablist"
+  class={classes}
+  data-testid={dataTestid}
+  aria-orientation={ctx.orientation}
+  onkeydown={handleKeyDown}
+>
   {@render children?.()}
-</Stack>
+</div>

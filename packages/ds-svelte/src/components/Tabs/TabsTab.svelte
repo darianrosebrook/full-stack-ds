@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+import { onMount, onDestroy } from "svelte";
+import { useTabsContext } from "./useTabs.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -9,16 +10,40 @@ import { Stack } from "../../primitives/index.js";
 
 // @generated:start props
 interface Props {
+  value: string;
+  disabled?: boolean;
   class?: string;
   "data-testid"?: string;
   children?: import('svelte').Snippet;
 }
 
-let { class: className, "data-testid": dataTestid, children }: Props = $props();
+let { value, disabled, class: className, "data-testid": dataTestid, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
-const classes = $derived(["tabs__tab", className].filter(Boolean).join(" "));
+const ctx = useTabsContext();
+
+const isActive = $derived(ctx.activeTab === value);
+
+const classes = $derived(
+  [
+    "tabs__tab",
+    isActive && "tabs__tab--active",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" "),
+);
+// @generated:end
+
+// @generated:start trailing
+onMount(() => {
+  ctx.registerTab(value);
+});
+
+onDestroy(() => {
+  ctx.unregisterTab(value);
+});
 // @generated:end
 
 // @custom:start trailing
@@ -26,6 +51,18 @@ const classes = $derived(["tabs__tab", className].filter(Boolean).join(" "));
 // @custom:end
 </script>
 
-<Stack class={classes} data-testid={dataTestid}>
+<button
+  role="tab"
+  type="button"
+  class={classes}
+  data-value={value}
+  data-testid={dataTestid}
+  id="{ctx.idBase}-tab-{value}"
+  aria-controls="{ctx.idBase}-panel-{value}"
+  aria-selected={isActive}
+  tabindex={isActive ? 0 : -1}
+  {disabled}
+  onclick={() => ctx.setActiveTab(value)}
+>
   {@render children?.()}
-</Stack>
+</button>

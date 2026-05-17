@@ -12,6 +12,7 @@
  */
 import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { isCompoundStateContainer } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -23,6 +24,8 @@ interface PrimitiveBindings {
   useDismissal: boolean;
   /** Prop name that gates Escape dismissal (e.g. closeOnEscape). */
   escapeEnabledByProp: string | undefined;
+  /** True when the IR matches the compound-state-container (Tabs-shaped) pattern. */
+  isCompoundStateContainer: boolean;
 }
 
 /**
@@ -54,6 +57,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Standalone dismissal for trap-focus components: outside-click is handled
   // template-side (overlay onClick), so only Escape needs a document listener.
   const useDismissal = !useAnchor && hasEscape;
+  const compoundContainer = isCompoundStateContainer(ir);
 
   if (
     channels.length === 0 &&
@@ -61,7 +65,8 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     !hasScrollLock &&
     !hasPortal &&
     !useAnchor &&
-    !useDismissal
+    !useDismissal &&
+    !compoundContainer
   ) {
     return null;
   }
@@ -74,6 +79,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     useAnchorToggle: useAnchor,
     useDismissal,
     escapeEnabledByProp: escapeTrigger?.enabledByProp,
+    isCompoundStateContainer: compoundContainer,
   };
 }
 
@@ -86,6 +92,7 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.usePortal) primitives.push("createPortal");
   if (bindings.useAnchorToggle) primitives.push("createAnchorToggle");
   if (bindings.useDismissal) primitives.push("createDismissal");
+  if (bindings.isCompoundStateContainer) primitives.push("createCompoundContext");
 
   if (primitives.length === 0) return "";
   return `import { ${primitives.sort().join(", ")} } from "../../primitives/index.js";`;
@@ -145,6 +152,11 @@ function generateOptionsInterface(
     if (targetProp) lines.push(`  ${targetProp}?: Element | string;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** Base string for generating tab and panel IDs. Defaults to a generated id. */`);
+    lines.push(`  idBase?: string | (() => string | undefined);`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -178,8 +190,55 @@ function generateResultInterface(
     lines.push(`  readonly portalTarget: Element | null;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** DOM-order list of registered tab values. */`);
+    lines.push(`  readonly registeredTabs: string[];`);
+    lines.push(`  registerTab: (value: string) => void;`);
+    lines.push(`  unregisterTab: (value: string) => void;`);
+    lines.push(`  /** Base string for generating tab and panel IDs. */`);
+    lines.push(`  idBase: string;`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
+}
+
+/**
+ * Generate the `${Name}ContextValue` interface + `provide${Name}Context` /
+ * `use${Name}Context` pair for compound-state-container IRs.
+ * These live in the hook source file so all sub-SFCs import from one leaf.
+ */
+function generateCompoundContextTypes(ir: ComponentIR): string {
+  const name = ir.name;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const channelType = channel?.valueType ?? "string";
+  const setterName = `set${capitalize(channelName)}`;
+
+  return [
+    `export interface ${name}ContextValue {`,
+    `  readonly ${channelName}: ${channelType};`,
+    `  ${setterName}: (value: ${channelType}) => void;`,
+    `  registerTab: (value: string) => void;`,
+    `  unregisterTab: (value: string) => void;`,
+    `  readonly registeredTabs: string[];`,
+    `  idBase: string;`,
+    `  orientation: "horizontal" | "vertical";`,
+    `  activationMode: "automatic" | "manual";`,
+    `  loop: boolean;`,
+    `  unmountInactive: boolean;`,
+    `}`,
+    ``,
+    `const _${name.toLowerCase()}Context = createCompoundContext<${name}ContextValue>("${name}");`,
+    ``,
+    `export function provide${name}Context(value: ${name}ContextValue): void {`,
+    `  _${name.toLowerCase()}Context.provide(value);`,
+    `}`,
+    ``,
+    `export function use${name}Context(): ${name}ContextValue {`,
+    `  return _${name.toLowerCase()}Context.consume();`,
+    `}`,
+  ].join("\n");
 }
 
 function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
@@ -295,6 +354,25 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(``);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    const lowerName = ir.name.toLowerCase();
+    lines.push(`  let _registeredTabs = $state<string[]>([]);`);
+    lines.push(``);
+    lines.push(`  const rawIdBase = typeof opts.idBase === "function" ? opts.idBase() : opts.idBase;`);
+    lines.push(`  const resolvedIdBase = rawIdBase ?? \`${lowerName}-\${++_${lowerName}IdCounter}\`;`);
+    lines.push(``);
+    lines.push(`  function registerTab(value: string): void {`);
+    lines.push(`    if (!_registeredTabs.includes(value)) {`);
+    lines.push(`      _registeredTabs = [..._registeredTabs, value];`);
+    lines.push(`    }`);
+    lines.push(`  }`);
+    lines.push(``);
+    lines.push(`  function unregisterTab(value: string): void {`);
+    lines.push(`    _registeredTabs = _registeredTabs.filter((v) => v !== value);`);
+    lines.push(`  }`);
+    lines.push(``);
+  }
+
   // Build return object
   lines.push(`  return {`);
   for (const ch of bindings.useControllableState) {
@@ -323,6 +401,12 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   if (bindings.usePortal) {
     lines.push(`    get portalTarget() { return portal.target; },`);
   }
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`    get registeredTabs() { return _registeredTabs; },`);
+    lines.push(`    registerTab,`);
+    lines.push(`    unregisterTab,`);
+    lines.push(`    idBase: resolvedIdBase,`);
+  }
   lines.push(`  };`);
   lines.push(`}`);
   return lines.join("\n");
@@ -350,11 +434,24 @@ export function generateSvelteHookSource(ir: ComponentIR): string | null {
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
+
+  // For compound-state-container IRs, also emit the context type + helpers.
+  const compoundContextBody = bindings.isCompoundStateContainer
+    ? generateCompoundContextTypes(ir)
+    : "";
+
   const hookBody = generateBody(ir, bindings);
 
-  const typesBody = [inlineTypesBody, optionsBody, resultBody]
-    .filter((s) => s.length > 0)
-    .join("\n\n");
+  // Module-level counter for stable idBase generation per compound instance.
+  // Emitted as part of the hook block so it stays in the @generated:hook region.
+  const counterLine = bindings.isCompoundStateContainer
+    ? `let _${ir.name.toLowerCase()}IdCounter = 0;\n\n`
+    : "";
+  const fullHookBody = counterLine + hookBody;
+
+  const typesBodyParts = [inlineTypesBody, optionsBody, resultBody, compoundContextBody]
+    .filter((s) => s.length > 0);
+  const typesBody = typesBodyParts.join("\n\n");
 
   const blank = (): Section => ({ kind: "between", body: "" });
   const sections: Section[] = [
@@ -366,7 +463,7 @@ export function generateSvelteHookSource(ir: ComponentIR): string | null {
     blank(),
     { kind: "custom", id: "types", body: "" },
     blank(),
-    { kind: "generated", id: "hook", body: hookBody },
+    { kind: "generated", id: "hook", body: fullHookBody },
     blank(),
     { kind: "custom", id: "trailing", body: "" },
     blank(),

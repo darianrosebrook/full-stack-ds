@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { useTabs } from "./useTabs.svelte.js";
+import { useTabs, provideTabsContext } from "./useTabs.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -27,10 +27,23 @@ interface Props {
   unmountInactive?: boolean;
   idBase?: string;
   class?: string;
+  "data-testid"?: string;
   children?: import('svelte').Snippet;
 }
 
-let { value, defaultValue, onValueChange, orientation = "horizontal", activationMode = "automatic", loop = true, unmountInactive, idBase, class: className, children }: Props = $props();
+let {
+  value,
+  defaultValue,
+  onValueChange,
+  orientation = "horizontal",
+  activationMode = "automatic",
+  loop = true,
+  unmountInactive,
+  idBase: idBaseProp,
+  class: className,
+  "data-testid": dataTestid,
+  children,
+}: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -38,6 +51,21 @@ const behavior = useTabs({
   value: () => value,
   defaultValue: () => defaultValue,
   onValueChange: () => onValueChange,
+  // idBase is stable after mount — use getter to avoid Svelte lint warning.
+  get idBase() { return idBaseProp; },
+});
+
+provideTabsContext({
+  get activeTab() { return behavior.activeTab; },
+  setActiveTab(v) { behavior.setActiveTab(v); },
+  get registeredTabs() { return behavior.registeredTabs; },
+  registerTab(v) { behavior.registerTab(v); },
+  unregisterTab(v) { behavior.unregisterTab(v); },
+  idBase: behavior.idBase,
+  get orientation() { return orientation ?? "horizontal"; },
+  get activationMode() { return activationMode ?? "automatic"; },
+  get loop() { return loop ?? true; },
+  get unmountInactive() { return unmountInactive ?? true; },
 });
 // @generated:end
 
@@ -57,12 +85,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}>
-  <div class={'tabs__list'} role="tablist">
-    <button class={'tabs__tab'} role="tab" type="button" aria-selected={behavior.activeTab}></button>
-    <span class={'tabs__indicator'} aria-hidden="true"></span>
-  </div>
-  <div class={'tabs__panel'}>
-    {@render children?.()}
-  </div>
+<div class={classes} data-testid={dataTestid}>
+  {@render children?.()}
 </div>
