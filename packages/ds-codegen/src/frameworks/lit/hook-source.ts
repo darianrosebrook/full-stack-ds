@@ -7,9 +7,17 @@
  * Vue, proving the IR is framework-neutral. The output shape uses Lit's
  * ReactiveController pattern: a plain class that wires controllers in its
  * constructor and exposes typed getters/setters.
+ *
+ * For compound-state-container components (Tabs-shaped), the behavior class
+ * gains `registeredTabs: string[]`, `registerTab(value)`, and
+ * `unregisterTab(value)` — the equivalent of React's useState-based
+ * registeredTabs in useTabs.
  */
 import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import {
+  isCompoundStateContainer,
+} from "../react/hook-source.js";
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -21,6 +29,8 @@ interface PrimitiveBindings {
   useDismissal: boolean;
   /** Prop name that gates Escape dismissal (e.g. closeOnEscape). */
   escapeEnabledByProp: string | undefined;
+  /** True when the IR matches the compound-state-container (Tabs-shaped) pattern. */
+  isCompoundStateContainer: boolean;
 }
 
 /**
@@ -55,13 +65,16 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // template-side (overlay onClick), so only Escape needs a document listener.
   const useDismissal = !useAnchor && hasEscape;
 
+  const compoundContainer = isCompoundStateContainer(ir);
+
   if (
     channels.length === 0 &&
     !hasFocusTrap &&
     !hasScrollLock &&
     !hasPortal &&
     !useAnchor &&
-    !useDismissal
+    !useDismissal &&
+    !compoundContainer
   ) {
     return null;
   }
@@ -74,6 +87,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     useAnchorToggle: useAnchor,
     useDismissal,
     escapeEnabledByProp: escapeTrigger?.enabledByProp,
+    isCompoundStateContainer: compoundContainer,
   };
 }
 
@@ -163,6 +177,12 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
 
   lines.push(`export class ${className} {`);
 
+  // When compound-state-container, we need to store the host ref so the
+  // register/unregisterTab methods can call host.requestUpdate().
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  private _host: ReactiveControllerHost;`);
+  }
+
   // Field declarations.
   //
   // `openChannel` is the controllable-state binding that the AnchorToggle
@@ -207,6 +227,9 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
   lines.push(
     `  constructor(host: ReactiveControllerHost, private opts: ${className}Options = {}) {`,
   );
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`    this._host = host;`);
+  }
 
   for (const ch of bindings.useControllableState) {
     if (anchorOwnsChannel && ch === openChannel) continue;
@@ -324,6 +347,28 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
     lines.push(``);
     lines.push(`  get ${ch.name}(): ${t} { return this.${ch.name}State.value; }`);
     lines.push(`  set${capitalize(ch.name)}(value: ${t}) { this.${ch.name}State.set(value); }`);
+  }
+
+  // Compound-state-container (Tabs-shaped): add registeredTabs list and
+  // register/unregister methods. Lit controllers don't have @state, so we
+  // store it as a plain field and call host.requestUpdate() after mutations.
+  if (bindings.isCompoundStateContainer) {
+    lines.push(``);
+    lines.push(`  /** DOM-order list of registered tab values. */`);
+    lines.push(`  registeredTabs: string[] = [];`);
+    lines.push(``);
+    lines.push(`  registerTab(value: string): void {`);
+    lines.push(`    if (this.registeredTabs.includes(value)) return;`);
+    lines.push(`    this.registeredTabs = [...this.registeredTabs, value];`);
+    lines.push(`    this._host.requestUpdate();`);
+    lines.push(`  }`);
+    lines.push(``);
+    lines.push(`  unregisterTab(value: string): void {`);
+    lines.push(`    const next = this.registeredTabs.filter((v) => v !== value);`);
+    lines.push(`    if (next.length === this.registeredTabs.length) return;`);
+    lines.push(`    this.registeredTabs = next;`);
+    lines.push(`    this._host.requestUpdate();`);
+    lines.push(`  }`);
   }
 
   lines.push(`}`);

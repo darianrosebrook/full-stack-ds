@@ -5,7 +5,7 @@ export type { DismissalOptions } from './DismissalController.js';
 export { FocusTrapController } from './FocusTrapController.js';
 export { ScrollLockController } from './ScrollLockController.js';
 export { PortalController } from './PortalController.js';
-export { createCompoundContext, provideContext } from './CompoundContext.js';
+export { createCompoundContext, provideContext, ContextConsumerController, FSDS_CONTEXT_CHANGED } from './CompoundContext.js';
 export type { ControllableStateOptions } from './ControllableStateController.js';
 export type { AnchorToggleOptions } from './AnchorToggleController.js';
 export type { FocusTrapOptions } from './FocusTrapController.js';

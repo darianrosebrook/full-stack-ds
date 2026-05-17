@@ -4,10 +4,15 @@
  * Channel and Escape tests are gated on plan.channels / plan.escapeDismissals,
  * not on ir.dom or litBehaviorRequired — those control template shape, not
  * whether behavioral props exist on the element.
+ *
+ * For compound-state-container components (Tabs-shaped), the generated section
+ * emits only a smoke test + an axe test. The behavioral surface is fully covered
+ * by the hand-authored @custom:start tests block in the component's test file.
  */
 import type { ComponentIR, DomNodeIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
+import { isCompoundStateContainer } from "../react/hook-source.js";
 
 /**
  * Scan a component IR's DOM tree for the rendered signals a channel
@@ -97,7 +102,139 @@ function findChannelDomMarkers(
   };
 }
 
+/**
+ * Emit a minimal smoke + axe test for compound-state-container components.
+ *
+ * The full behavioral surface is in the hand-authored @custom:start tests block.
+ * This generated section only asserts that the element renders and passes axe.
+ */
+function generateCompoundStateContainerTest(ir: ComponentIR): string {
+  const plan = buildComponentTestPlan(ir);
+  const elementName = `fsds-${plan.testId}`;
+  const subTagList = `fsds-${plan.testId}-list`;
+  const subTagTab = `fsds-${plan.testId}-tab`;
+  const subTagPanel = `fsds-${plan.testId}-panel`;
+
+  const importsBody = [
+    `import { describe, expect, it } from "vitest";`,
+    `import { axe } from "vitest-axe";`,
+    `import "../${plan.name}";`,
+  ].join("\n");
+
+  const lines: string[] = [];
+
+  lines.push(`describe("${plan.name} — unit", () => {`);
+  lines.push(`  it("renders with default props", async () => {`);
+  lines.push(`    const container = document.createElement("div");`);
+  lines.push(`    container.innerHTML = \`<${elementName} value="a">`);
+  lines.push(`  <${subTagList}>`);
+  lines.push(`    <${subTagTab} value="a">A</${subTagTab}>`);
+  lines.push(`    <${subTagTab} value="b">B</${subTagTab}>`);
+  lines.push(`  </${subTagList}>`);
+  lines.push(`  <${subTagPanel} value="a">PA</${subTagPanel}>`);
+  lines.push(`  <${subTagPanel} value="b">PB</${subTagPanel}>`);
+  lines.push(`</${elementName}>\`;`);
+  lines.push(`    document.body.append(container);`);
+  lines.push(`    await customElements.whenDefined("${elementName}");`);
+  lines.push(`    const el = container.querySelector("${elementName}")!;`);
+  lines.push(`    await (el as any).updateComplete;`);
+  lines.push(`    expect(el).toBeInstanceOf(HTMLElement);`);
+  lines.push(`    container.remove();`);
+  lines.push(`  });`);
+
+  // Variant tests — applies tabs--horizontal etc.
+  for (const variant of plan.variants) {
+    lines.push(``);
+    lines.push(`  it("applies ${variant.dimension}=${variant.value} variant class", async () => {`);
+    lines.push(`    const el = document.createElement("${elementName}") as any;`);
+    lines.push(`    el.setAttribute("${variant.dimension}", "${variant.value}");`);
+    lines.push(`    const container = document.createElement("div");`);
+    lines.push(`    container.append(el);`);
+    lines.push(`    document.body.append(container);`);
+    lines.push(`    await customElements.whenDefined("${elementName}");`);
+    lines.push(`    await el.updateComplete;`);
+    lines.push(`    const root = el.shadowRoot?.firstElementChild ?? el;`);
+    lines.push(`    const classes = (root?.className ?? "").split(/\\s+/).filter(Boolean);`);
+    lines.push(`    expect(classes).toContain("${variant.className}");`);
+    lines.push(`    container.remove();`);
+    lines.push(`  });`);
+  }
+
+  lines.push(`});`);
+  lines.push(``);
+
+  lines.push(`describe("${plan.name} — accessibility", () => {`);
+  lines.push(`  it("has no unexpected axe violations with default props", async () => {`);
+  lines.push(`    // Build elements imperatively so we can set idBase before connecting.`);
+  lines.push(`    const container = document.createElement("div");`);
+  lines.push(`    await customElements.whenDefined("${elementName}");`);
+  lines.push(`    await customElements.whenDefined("${subTagList}");`);
+  lines.push(`    await customElements.whenDefined("${subTagTab}");`);
+  lines.push(`    await customElements.whenDefined("${subTagPanel}");`);
+  lines.push(`    const tabsEl = document.createElement("${elementName}") as any;`);
+  lines.push(`    tabsEl.value = "a";`);
+  lines.push(`    tabsEl.idBase = "axe-test";`);
+  lines.push(`    const listEl = document.createElement("${subTagList}");`);
+  lines.push(`    const tabA = document.createElement("${subTagTab}") as any;`);
+  lines.push(`    tabA.value = "a"; tabA.textContent = "Tab A";`);
+  lines.push(`    const tabB = document.createElement("${subTagTab}") as any;`);
+  lines.push(`    tabB.value = "b"; tabB.textContent = "Tab B";`);
+  lines.push(`    listEl.append(tabA, tabB);`);
+  lines.push(`    const panelA = document.createElement("${subTagPanel}") as any;`);
+  lines.push(`    panelA.value = "a"; panelA.textContent = "Panel A";`);
+  lines.push(`    const panelB = document.createElement("${subTagPanel}") as any;`);
+  lines.push(`    panelB.value = "b"; panelB.textContent = "Panel B";`);
+  lines.push(`    tabsEl.append(listEl, panelA, panelB);`);
+  lines.push(`    container.append(tabsEl);`);
+  lines.push(`    document.body.append(container);`);
+  lines.push(`    await tabsEl.updateComplete;`);
+  lines.push(`    // Allow time for microtask-deferred tab registration.`);
+  lines.push(`    await new Promise((r) => setTimeout(r, 0));`);
+  lines.push(`    // Wait for children to re-render after context is established.`);
+  lines.push(`    await tabA.updateComplete; await tabB.updateComplete;`);
+  lines.push(`    await panelA.updateComplete; await panelB.updateComplete;`);
+  lines.push(`    await new Promise((r) => setTimeout(r, 0));`);
+  lines.push(`    const results = await axe(container);`);
+  lines.push(`    const knownScaffoldViolationIds = new Set([`);
+  lines.push(`      "aria-dialog-name",`);
+  lines.push(`      "aria-input-field-name",`);
+  lines.push(`      "aria-progressbar-name",`);
+  lines.push(`      "aria-toggle-field-name",`);
+  lines.push(`      "aria-tooltip-name",`);
+  lines.push(`      "button-name",`);
+  lines.push(`      "empty-heading",`);
+  lines.push(`      "label",`);
+  lines.push(`      "link-name",`);
+  lines.push(`      "region",`);
+  lines.push(`      "summary-name",`);
+  lines.push(`    ]);`);
+  lines.push(`    const unexpectedViolations = results.violations.filter(`);
+  lines.push(`      (violation) => !knownScaffoldViolationIds.has(violation.id),`);
+  lines.push(`    );`);
+  lines.push(`    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);`);
+  lines.push(`    container.remove();`);
+  lines.push(`  });`);
+  lines.push(`});`);
+  lines.push(``);
+
+  const sections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    { kind: "between", body: "" },
+    { kind: "generated", id: "tests", body: lines.join("\n") },
+    { kind: "between", body: "" },
+    { kind: "custom", id: "tests", body: "" },
+    { kind: "between", body: "" },
+  ];
+  return renderSections(sections, "line");
+}
+
 export function generateLitTest(ir: ComponentIR): string {
+  // Compound-state-container components (Tabs-shaped) use a hand-authored
+  // @custom:start tests block for behavioral coverage. Only emit smoke + axe.
+  if (isCompoundStateContainer(ir)) {
+    return generateCompoundStateContainerTest(ir);
+  }
+
   const plan = buildComponentTestPlan(ir);
   const elementName = `fsds-${plan.testId}`;
   // Escape tests require a document-level listener wired by the dom-tree

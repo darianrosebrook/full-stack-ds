@@ -36,6 +36,9 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { toKebab } from "../../contract.js";
+import {
+  isCompoundStateContainer,
+} from "../react/hook-source.js";
 
 /**
  * Map a TypeScript type string from React conventions to Lit-safe types via
@@ -437,6 +440,376 @@ function generateClassBody(ir: ComponentIR): string {
 }
 
 // ---------------------------------------------------------------------------
+// Compound-state-container component emitter (Tabs-shaped)
+// ---------------------------------------------------------------------------
+
+/**
+ * Generate the Lit component source for a compound-state-container (Tabs).
+ *
+ * This emits four LitElement classes:
+ *   - `<Name>Element` — root provider: holds the behavior, calls provideContext
+ *   - `<Name>ListElement` — tablist host + keyboard handler
+ *   - `<Name>TabElement` — single tab button, reads context, registers/unregisters
+ *   - `<Name>PanelElement` — content panel, gated by activeTab
+ */
+function generateCompoundStateImports(ir: ComponentIR): string {
+  const lines: string[] = [
+    `import { LitElement, html, css } from 'lit';`,
+    `import { property } from 'lit/decorators.js';`,
+    `import { ${ir.name}Behavior } from './${ir.name}Behavior.js';`,
+    `import {`,
+    `  createCompoundContext,`,
+    `  provideContext,`,
+    `  ContextConsumerController,`,
+    `} from '../../primitives/index.js';`,
+  ];
+  return lines.join("\n");
+}
+
+function generateCompoundStateTypes(ir: ComponentIR): string {
+  const lines: string[] = [];
+  // Re-emit the orientation + activationMode type aliases.
+  const aliases = emitNonReactTypeAliases(ir);
+  if (aliases.length > 0) lines.push(aliases.join("\n"));
+
+  // Context value interface.
+  lines.push(``);
+  lines.push(`export interface ${ir.name}ContextValue {`);
+  lines.push(`  activeTab: string;`);
+  lines.push(`  setActiveTab: (value: string) => void;`);
+  lines.push(`  registerTab: (value: string) => void;`);
+  lines.push(`  unregisterTab: (value: string) => void;`);
+  lines.push(`  registeredTabs: string[];`);
+  lines.push(`  idBase: string;`);
+  lines.push(`  orientation: "horizontal" | "vertical";`);
+  lines.push(`  activationMode: "automatic" | "manual";`);
+  lines.push(`  loop: boolean;`);
+  lines.push(`  unmountInactive: boolean;`);
+  lines.push(`}`);
+
+  // Context token (exported so sub-elements can import it).
+  lines.push(``);
+  lines.push(`const TABS_CTX = createCompoundContext<${ir.name}ContextValue>("${ir.name}");`);
+  lines.push(`export { TABS_CTX };`);
+
+  return lines.join("\n");
+}
+
+function generateCompoundStateRootClass(ir: ComponentIR): string {
+  const className = `${ir.name}Element`;
+  const elementName = `fsds-${toKebabCase(ir.name)}`;
+  const cssBase = ir.classRecipe.base;
+
+  const lines: string[] = [];
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(`  static override styles = css\`:host { display: contents; }\`;`);
+  lines.push(``);
+  lines.push(`  @property() value?: string;`);
+  lines.push(`  @property() defaultValue?: string;`);
+  lines.push(`  @property() orientation?: "horizontal" | "vertical" = "horizontal";`);
+  lines.push(`  @property() activationMode?: "automatic" | "manual" = "automatic";`);
+  lines.push(`  @property({ type: Boolean }) loop?: boolean = true;`);
+  lines.push(`  @property({ type: Boolean }) unmountInactive?: boolean;`);
+  lines.push(`  @property() idBase?: string;`);
+  lines.push(`  @property({ attribute: false }) onValueChange?: (value: string) => void;`);
+  lines.push(``);
+  lines.push(`  private behavior = new ${ir.name}Behavior(this, {`);
+  lines.push(`    value: () => this.value,`);
+  lines.push(`    defaultValue: this.defaultValue,`);
+  lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
+  lines.push(`  });`);
+  lines.push(``);
+  // idBase: use attribute if supplied, otherwise use a stable element id (set lazily).
+  lines.push(`  private _generatedIdBase: string | null = null;`);
+  lines.push(``);
+  lines.push(`  private get resolvedIdBase(): string {`);
+  lines.push(`    if (this.idBase) return this.idBase;`);
+  lines.push(`    if (!this._generatedIdBase) {`);
+  lines.push(`      this._generatedIdBase = "fsds-tabs-" + Math.random().toString(36).slice(2, 8);`);
+  lines.push(`    }`);
+  lines.push(`    return this._generatedIdBase;`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override connectedCallback(): void {`);
+  lines.push(`    super.connectedCallback();`);
+  lines.push(`    // Sync the behavior's internal state from defaultValue if no controlled`);
+  lines.push(`    // value was set. This handles the case where defaultValue is set after`);
+  lines.push(`    // element construction (property set order issue with class fields).`);
+  lines.push(`    if (this.value === undefined && this.defaultValue !== undefined) {`);
+  lines.push(`      this.behavior.activeTabState["_internal"] = this.defaultValue;`);
+  lines.push(`    }`);
+  lines.push(`    this._provideCtx();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override updated(): void {`);
+  lines.push(`    this._provideCtx();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  private _provideCtx(): void {`);
+  lines.push(`    if (!this.isConnected) return;`);
+  lines.push(`    provideContext(this, TABS_CTX.key, {`);
+  lines.push(`      activeTab: this.behavior.activeTab,`);
+  lines.push(`      setActiveTab: (v: string) => { this.behavior.setActiveTab(v); this._provideCtx(); },`);
+  lines.push(`      registerTab: (v: string) => { this.behavior.registerTab(v); this._provideCtx(); },`);
+  lines.push(`      unregisterTab: (v: string) => { this.behavior.unregisterTab(v); this._provideCtx(); },`);
+  lines.push(`      registeredTabs: this.behavior.registeredTabs,`);
+  lines.push(`      idBase: this.resolvedIdBase,`);
+  lines.push(`      orientation: this.orientation ?? "horizontal",`);
+  lines.push(`      activationMode: this.activationMode ?? "automatic",`);
+  lines.push(`      loop: this.loop ?? true,`);
+  lines.push(`      unmountInactive: this.unmountInactive ?? true,`);
+  lines.push(`    });`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  lines.push(`    const cssBase = "${cssBase}";`);
+  lines.push(`    const orientation = this.orientation ?? "horizontal";`);
+  lines.push(`    const activationMode = this.activationMode ?? "automatic";`);
+  lines.push(`    const classes = [cssBase, \`\${cssBase}--\${orientation}\`, \`\${cssBase}--\${activationMode}\`].join(" ");`);
+  lines.push(`    return html\`<div class="\${classes}"><slot></slot></div>\`;`);
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+
+  return lines.join("\n");
+}
+
+function generateTabsListClass(ir: ComponentIR): string {
+  const subName = `${ir.name}List`;
+  const className = `${subName}Element`;
+  const elementName = `fsds-${toKebabCase(subName)}`;
+  const cssClass = `${ir.classRecipe.base}__list`;
+
+  const lines: string[] = [];
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(`  static override styles = css\`:host { display: contents; }\`;`);
+  lines.push(``);
+  lines.push(`  private _ctx = new ContextConsumerController(this, TABS_CTX);`);
+  lines.push(``);
+  lines.push(`  private _handleKeyDown = (e: KeyboardEvent): void => {`);
+  lines.push(`    let ctx: ${ir.name}ContextValue;`);
+  lines.push(`    try { ctx = this._ctx.value; } catch { return; }`);
+  lines.push(`    const tabs = ctx.registeredTabs;`);
+  lines.push(`    if (tabs.length === 0) return;`);
+  lines.push(`    const currentIndex = tabs.indexOf(ctx.activeTab);`);
+  lines.push(`    const isHorizontal = ctx.orientation !== "vertical";`);
+  lines.push(`    let nextIndex = currentIndex;`);
+  lines.push(`    if ((isHorizontal && e.key === "ArrowRight") || (!isHorizontal && e.key === "ArrowDown")) {`);
+  lines.push(`      e.preventDefault();`);
+  lines.push(`      nextIndex = ctx.loop ? (currentIndex + 1) % tabs.length : Math.min(currentIndex + 1, tabs.length - 1);`);
+  lines.push(`    } else if ((isHorizontal && e.key === "ArrowLeft") || (!isHorizontal && e.key === "ArrowUp")) {`);
+  lines.push(`      e.preventDefault();`);
+  lines.push(`      nextIndex = ctx.loop ? (currentIndex - 1 + tabs.length) % tabs.length : Math.max(currentIndex - 1, 0);`);
+  lines.push(`    } else if (e.key === "Home") {`);
+  lines.push(`      e.preventDefault();`);
+  lines.push(`      nextIndex = 0;`);
+  lines.push(`    } else if (e.key === "End") {`);
+  lines.push(`      e.preventDefault();`);
+  lines.push(`      nextIndex = tabs.length - 1;`);
+  lines.push(`    } else if (e.key === "Enter" || e.key === " ") {`);
+  lines.push(`      if (ctx.activationMode === "manual") {`);
+  lines.push(`        e.preventDefault();`);
+  lines.push(`        // Find the currently focused tab host (it has data-value and role="tab").`);
+  lines.push(`        const focusedTab = this.querySelector("[role=\\"tab\\"]:focus") as HTMLElement | null;`);
+  lines.push(`        const val = focusedTab?.getAttribute("data-value");`);
+  lines.push(`        if (val) ctx.setActiveTab(val);`);
+  lines.push(`      }`);
+  lines.push(`      return;`);
+  lines.push(`    } else {`);
+  lines.push(`      return;`);
+  lines.push(`    }`);
+  lines.push(`    const targetValue = tabs[nextIndex];`);
+  lines.push(`    if (ctx.activationMode === "automatic") {`);
+  lines.push(`      ctx.setActiveTab(targetValue);`);
+  lines.push(`    }`);
+  lines.push(`    // Focus the target tab host element (which now has role="tab" on the host).`);
+  lines.push(`    const targetTabHost = this.querySelector(\`[data-value="\${targetValue}"]\`) as HTMLElement | null;`);
+  lines.push(`    targetTabHost?.focus();`);
+  lines.push(`  };`);
+  lines.push(``);
+  lines.push(`  override connectedCallback(): void {`);
+  lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.addEventListener("keydown", this._handleKeyDown);`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override disconnectedCallback(): void {`);
+  lines.push(`    this.removeEventListener("keydown", this._handleKeyDown);`);
+  lines.push(`    super.disconnectedCallback();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  lines.push(`    let orientation = "horizontal";`);
+  lines.push(`    try { orientation = this._ctx.value.orientation; } catch { /* no context yet */ }`);
+  lines.push(`    return html\`<div class="${cssClass}" role="tablist" aria-orientation="\${orientation}"><slot></slot></div>\`;`);
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+
+  return lines.join("\n");
+}
+
+function generateTabsTabClass(ir: ComponentIR): string {
+  const subName = `${ir.name}Tab`;
+  const className = `${subName}Element`;
+  const elementName = `fsds-${toKebabCase(subName)}`;
+  const cssClass = `${ir.classRecipe.base}__tab`;
+
+  const lines: string[] = [];
+  // The host element itself acts as the interactive tab: role, id, aria-* and
+  // tabindex are set on the host so that aria-controls can reference the panel
+  // id across the light DOM. Shadow DOM IDs are not visible to aria-controls.
+  // The host renders only a <slot> — no nested interactive element.
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(`  // Host element IS the tab — ARIA attrs on the host, slot-only shadow.`);
+  lines.push(`  static override styles = css\``);
+  lines.push(`    :host { display: inline-flex; cursor: pointer; }`);
+  lines.push(`    :host([disabled]), :host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }`);
+  lines.push(`  \`;`);
+  lines.push(``);
+  lines.push(`  @property() value = "";`);
+  lines.push(`  @property({ type: Boolean }) disabled?: boolean;`);
+  lines.push(``);
+  lines.push(`  private _ctx = new ContextConsumerController(this, TABS_CTX);`);
+  lines.push(``);
+  lines.push(`  private _onClick = (): void => { if (!this.disabled) { try { this._ctx.value.setActiveTab(this.value); } catch { /* no context */ } } };`);
+  lines.push(``);
+  lines.push(`  override connectedCallback(): void {`);
+  lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.addEventListener("click", this._onClick);`);
+  lines.push(`    // Register after the context is available (provider fires provideContext in connectedCallback).`);
+  lines.push(`    // Use a microtask so the provider has connected first.`);
+  lines.push(`    Promise.resolve().then(() => {`);
+  lines.push(`      if (!this.isConnected) return;`);
+  lines.push(`      try { this._ctx.value.registerTab(this.value); } catch { /* no context */ }`);
+  lines.push(`    });`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override disconnectedCallback(): void {`);
+  lines.push(`    this.removeEventListener("click", this._onClick);`);
+  lines.push(`    try { this._ctx.value.unregisterTab(this.value); } catch { /* no context */ }`);
+  lines.push(`    super.disconnectedCallback();`);
+  lines.push(`  }`);
+  lines.push(``);
+  // Reflect ARIA and identity attrs onto the host element so aria-controls
+  // can resolve the panel id across the light DOM boundary.
+  // The HOST is the tab interactive element; shadow DOM renders only the slot.
+  lines.push(`  private _updateHostAttrs(isActive: boolean, idBase: string): void {`);
+  lines.push(`    this.setAttribute("role", "tab");`);
+  lines.push(`    this.setAttribute("id", \`\${idBase}-tab-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("aria-controls", \`\${idBase}-panel-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("aria-selected", isActive ? "true" : "false");`);
+  lines.push(`    this.setAttribute("tabindex", isActive ? "0" : "-1");`);
+  lines.push(`    this.setAttribute("data-value", this.value);`);
+  lines.push(`    if (this.disabled) this.setAttribute("aria-disabled", "true");`);
+  lines.push(`    else this.removeAttribute("aria-disabled");`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  lines.push(`    let isActive = false;`);
+  lines.push(`    let idBase = "";`);
+  lines.push(`    try {`);
+  lines.push(`      const ctx = this._ctx.value;`);
+  lines.push(`      isActive = ctx.activeTab === this.value;`);
+  lines.push(`      idBase = ctx.idBase;`);
+  lines.push(`    } catch { /* no context yet */ }`);
+  lines.push(`    this._updateHostAttrs(isActive, idBase);`);
+  lines.push(`    // Render slot only — host IS the interactive element, no nested button needed.`);
+  lines.push(`    const cssClasses = [\`${cssClass}\`, isActive ? \`${cssClass}--active\` : ""].filter(Boolean).join(" ");`);
+  lines.push(`    this.className = cssClasses;`);
+  lines.push(`    return html\`<slot></slot>\`;`);
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+
+  return lines.join("\n");
+}
+
+function generateTabsPanelClass(ir: ComponentIR): string {
+  const subName = `${ir.name}Panel`;
+  const className = `${subName}Element`;
+  const elementName = `fsds-${toKebabCase(subName)}`;
+  const cssClass = `${ir.classRecipe.base}__panel`;
+
+  const lines: string[] = [];
+  // Like TabsTab, put role/id/aria-labelledby/tabindex on the HOST element so
+  // aria-labelledby can resolve the tab id across the light DOM boundary.
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(`  static override styles = css\`:host { display: block; } :host([hidden]) { display: none !important; }\`;`);
+  lines.push(``);
+  lines.push(`  @property() value = "";`);
+  lines.push(``);
+  lines.push(`  private _ctx = new ContextConsumerController(this, TABS_CTX);`);
+  lines.push(``);
+  lines.push(`  private _updateHostAttrs(isActive: boolean, unmountInactive: boolean, idBase: string): void {`);
+  lines.push(`    this.setAttribute("role", "tabpanel");`);
+  lines.push(`    this.setAttribute("id", \`\${idBase}-panel-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("aria-labelledby", \`\${idBase}-tab-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("tabindex", "0");`);
+  lines.push(`    if (!unmountInactive) {`);
+  lines.push(`      // Keep all panels in the DOM; toggle hidden attribute.`);
+  lines.push(`      if (isActive) this.removeAttribute("hidden");`);
+  lines.push(`      else this.setAttribute("hidden", "");`);
+  lines.push(`    } else {`);
+  lines.push(`      this.removeAttribute("hidden");`);
+  lines.push(`    }`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  lines.push(`    let isActive = false;`);
+  lines.push(`    let unmountInactive = true;`);
+  lines.push(`    let idBase = "";`);
+  lines.push(`    try {`);
+  lines.push(`      const ctx = this._ctx.value;`);
+  lines.push(`      isActive = ctx.activeTab === this.value;`);
+  lines.push(`      unmountInactive = ctx.unmountInactive;`);
+  lines.push(`      idBase = ctx.idBase;`);
+  lines.push(`    } catch { /* no context yet */ }`);
+  lines.push(`    this._updateHostAttrs(isActive, unmountInactive, idBase);`);
+  lines.push(`    if (unmountInactive && !isActive) return html\`\`;`);
+  lines.push(`    return html\`<div class="${cssClass}"><slot></slot></div>\`;`);
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+
+  return lines.join("\n");
+}
+
+function generateCompoundStateSource(ir: ComponentIR): string {
+  const importsBody = generateCompoundStateImports(ir);
+  const typesBody = generateCompoundStateTypes(ir);
+  const componentBody = [
+    generateCompoundStateRootClass(ir),
+    "",
+    generateTabsListClass(ir),
+    "",
+    generateTabsTabClass(ir),
+    "",
+    generateTabsPanelClass(ir),
+  ].join("\n");
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const sections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: typesBody },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "component", body: componentBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+  ];
+
+  return renderSections(sections, "line");
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 
@@ -446,6 +819,12 @@ function generateClassBody(ir: ComponentIR): string {
  * regeneration.
  */
 export function generateLitComponentSource(ir: ComponentIR): string {
+  // Compound-state-container components (Tabs-shaped) get a bespoke emitter
+  // that produces four LitElement classes instead of the generic wrapper.
+  if (isCompoundStateContainer(ir)) {
+    return generateCompoundStateSource(ir);
+  }
+
   const importsBody = ir.dom ? generateDomTreeImports(ir) : generateImports(ir);
   const typesBody = generateTypes(ir);
   const compoundClasses = ir.compoundParts

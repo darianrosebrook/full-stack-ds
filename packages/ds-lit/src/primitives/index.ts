@@ -8,6 +8,8 @@ export {
   PortalController,
   createCompoundContext,
   provideContext,
+  ContextConsumerController,
+  FSDS_CONTEXT_CHANGED,
 } from './controllers/index.js';
 export type {
   ControllableStateOptions,
