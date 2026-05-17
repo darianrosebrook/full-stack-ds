@@ -25,10 +25,12 @@ import type { ComponentIR } from "../../ir.js";
 import {
   generateVueComponentSource,
   generateVueCompoundPartSource,
+  generateVueCompoundStateParts,
 } from "./component-source.js";
 import { generateVueHookSource } from "./hook-source.js";
 import { generateVueBarrel } from "./barrel.js";
 import { generateVueTest } from "./tests.js";
+import { isCompoundStateContainer } from "../react/hook-source.js";
 
 export function createVueEmitter(): FrameworkEmitter {
   return {
@@ -49,15 +51,28 @@ export function createVueEmitter(): FrameworkEmitter {
           preservable: true,
         },
       ];
-      // Compound parts (e.g. ModalHeader, ModalBody) — each becomes its
-      // own .vue file because SFCs only export their default component.
-      for (const part of ir.compoundParts) {
-        const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
-        files.push({
-          relativePath: `${ir.name}/${subName}.vue`,
-          contents: generateVueCompoundPartSource(ir.cssPrefix, part),
-          preservable: true,
-        });
+
+      if (isCompoundStateContainer(ir)) {
+        // Compound-state-container: emit sub-component SFCs (List, Tab, Panel)
+        // that are wired via provide/inject context.
+        for (const part of generateVueCompoundStateParts(ir)) {
+          files.push({
+            relativePath: `${ir.name}/${part.name}.vue`,
+            contents: part.content,
+            preservable: true,
+          });
+        }
+      } else {
+        // Legacy compound parts (e.g. ModalHeader, ModalBody) — each becomes
+        // its own .vue file because SFCs only export their default component.
+        for (const part of ir.compoundParts) {
+          const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
+          files.push({
+            relativePath: `${ir.name}/${subName}.vue`,
+            contents: generateVueCompoundPartSource(ir.cssPrefix, part),
+            preservable: true,
+          });
+        }
       }
       return files;
     },

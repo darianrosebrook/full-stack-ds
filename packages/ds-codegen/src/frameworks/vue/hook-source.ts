@@ -7,9 +7,17 @@
  * proving the IR is framework-neutral. The output shape uses Vue's
  * Composition API: `Ref<T>` for state, `computed`-style getters
  * exposed through plain functions, refs returned as `Ref<HTMLElement | null>`.
+ *
+ * For compound-state-container IRs (Tabs-shaped), the emitter also
+ * generates the `TabsContextValue` interface and the shared
+ * `[provideTabsContext, useTabsContext]` pair so all sub-component SFCs
+ * can import from the same module (matching the idBase counter pattern).
  */
 import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import {
+  isCompoundStateContainer,
+} from "../react/hook-source.js";
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -21,6 +29,8 @@ interface PrimitiveBindings {
   useDismissal: boolean;
   /** Prop name that gates Escape dismissal (e.g. closeOnEscape). */
   escapeEnabledByProp: string | undefined;
+  /** True when the IR matches the compound-state-container (Tabs-shaped) pattern. */
+  isCompoundStateContainer: boolean;
 }
 
 function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
@@ -49,6 +59,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Outside-click for trap-focus components is handled at the template layer
   // (overlay onClick), not document-level, so we only wire Escape here.
   const useDismissal = !useAnchor && hasEscape;
+  const compoundContainer = isCompoundStateContainer(ir);
 
   if (
     channels.length === 0 &&
@@ -56,7 +67,8 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     !hasScrollLock &&
     !hasPortal &&
     !useAnchor &&
-    !useDismissal
+    !useDismissal &&
+    !compoundContainer
   ) {
     return null;
   }
@@ -69,6 +81,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     useAnchorToggle: useAnchor,
     useDismissal,
     escapeEnabledByProp: escapeTrigger?.enabledByProp,
+    isCompoundStateContainer: compoundContainer,
   };
 }
 
@@ -89,6 +102,10 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.useControllableState.length > 0) {
     vueNamed.add("type Ref");
   }
+  if (bindings.isCompoundStateContainer) {
+    vueNamed.add("ref");
+    vueNamed.add("type Ref");
+  }
 
   const primitives: string[] = [];
   if (bindings.useControllableState.length > 0)
@@ -98,6 +115,7 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.usePortal) primitives.push("usePortal");
   if (bindings.useAnchorToggle) primitives.push("useAnchorToggle");
   if (bindings.useDismissal) primitives.push("useDismissal");
+  if (bindings.isCompoundStateContainer) primitives.push("createCompoundContext");
 
   const lines: string[] = [];
   if (vueNamed.size > 0) {
@@ -161,6 +179,11 @@ function generateOptionsInterface(
     if (targetProp) lines.push(`  ${targetProp}?: Element | string;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** Base string for generating tab and panel IDs. Defaults to a generated id. */`);
+    lines.push(`  idBase?: string;`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -193,6 +216,15 @@ function generateResultInterface(
     lines.push(`  portalTarget: Ref<Element | null>;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** DOM-order list of registered tab values. */`);
+    lines.push(`  registeredTabs: Ref<string[]>;`);
+    lines.push(`  registerTab: (value: string) => void;`);
+    lines.push(`  unregisterTab: (value: string) => void;`);
+    lines.push(`  /** Base string for generating tab and panel IDs. */`);
+    lines.push(`  idBase: string;`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -216,6 +248,13 @@ function pickOpenChannel(
 
 function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   const lines: string[] = [];
+
+  // Module-level counter for stable idBase generation
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`let _${ir.name.toLowerCase()}IdCounter = 0;`);
+    lines.push(``);
+  }
+
   lines.push(
     `export function use${ir.name}(options: Use${ir.name}Options = {}): Use${ir.name}Result {`,
   );
@@ -310,6 +349,24 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(`  });`, ``);
   }
 
+  // Compound-state-container (Tabs-shaped) wiring
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  const registeredTabs = ref<string[]>([]);`);
+    lines.push(``);
+    lines.push(`  const resolvedIdBase = options.idBase ?? \`${ir.name.toLowerCase()}-\${++_${ir.name.toLowerCase()}IdCounter}\`;`);
+    lines.push(``);
+    lines.push(`  function registerTab(value: string): void {`);
+    lines.push(`    if (!registeredTabs.value.includes(value)) {`);
+    lines.push(`      registeredTabs.value = [...registeredTabs.value, value];`);
+    lines.push(`    }`);
+    lines.push(`  }`);
+    lines.push(``);
+    lines.push(`  function unregisterTab(value: string): void {`);
+    lines.push(`    registeredTabs.value = registeredTabs.value.filter((v) => v !== value);`);
+    lines.push(`  }`);
+    lines.push(``);
+  }
+
   // Build return object
   lines.push(`  return {`);
   for (const ch of bindings.useControllableState) {
@@ -335,6 +392,12 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   if (bindings.usePortal) {
     lines.push(`    portalTarget,`);
   }
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`    registeredTabs,`);
+    lines.push(`    registerTab,`);
+    lines.push(`    unregisterTab,`);
+    lines.push(`    idBase: resolvedIdBase,`);
+  }
   lines.push(`  };`);
   lines.push(`}`);
   return lines.join("\n");
@@ -351,6 +414,41 @@ function capitalize(s: string): string {
   return s[0].toUpperCase() + s.slice(1);
 }
 
+/**
+ * Generate the TabsContextValue interface and shared provide/inject pair
+ * that all sub-component SFCs import from the same module.
+ *
+ * Must be in the same file as useTabs so all sub-components share one
+ * symbol instance (a per-file createCompoundContext call would produce a
+ * distinct symbol that doesn't match the provided value).
+ */
+function generateCompoundContextTypes(ir: ComponentIR): string {
+  const { name } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const setterName = `set${capitalize(channelName)}`;
+
+  const lines: string[] = [];
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  ${channelName}: Ref<string>;`);
+  lines.push(`  ${setterName}: (value: string) => void;`);
+  lines.push(`  registerTab: (value: string) => void;`);
+  lines.push(`  unregisterTab: (value: string) => void;`);
+  lines.push(`  registeredTabs: Ref<string[]>;`);
+  lines.push(`  idBase: string;`);
+  lines.push(`  orientation: "horizontal" | "vertical";`);
+  lines.push(`  activationMode: "automatic" | "manual";`);
+  lines.push(`  loop: boolean;`);
+  lines.push(`  unmountInactive: boolean;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `export const [provide${name}Context, use${name}Context] =`,
+  );
+  lines.push(`  createCompoundContext<${name}ContextValue>("${name}");`);
+  return lines.join("\n");
+}
+
 export function generateVueHookSource(ir: ComponentIR): string | null {
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
@@ -359,9 +457,12 @@ export function generateVueHookSource(ir: ComponentIR): string | null {
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
+  const contextTypesBody = bindings.isCompoundStateContainer
+    ? generateCompoundContextTypes(ir)
+    : "";
   const hookBody = generateBody(ir, bindings);
 
-  const typesBody = [inlineTypesBody, optionsBody, resultBody]
+  const typesBody = [inlineTypesBody, optionsBody, resultBody, contextTypesBody]
     .filter((s) => s.length > 0)
     .join("\n\n");
 

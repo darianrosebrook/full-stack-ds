@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { useTabs } from "./useTabs.js";
+import { useTabs, provideTabsContext } from "./useTabs.js";
 // @generated:end
 
 // @custom:start imports
@@ -37,14 +37,29 @@ const props = withDefaults(defineProps<Props>(), {
   orientation: "horizontal",
   activationMode: "automatic",
   loop: true,
+  unmountInactive: true,
 });
 // @generated:end
 
 // @generated:start hook
-const behavior = useTabs({
+const { activeTab, setActiveTab, registeredTabs, registerTab, unregisterTab, idBase } = useTabs({
   value: () => props.value,
   defaultValue: props.defaultValue,
   onValueChange: props.onValueChange,
+  idBase: props.idBase,
+});
+
+provideTabsContext({
+  activeTab,
+  setActiveTab,
+  registeredTabs,
+  registerTab,
+  unregisterTab,
+  idBase,
+  get orientation() { return props.orientation ?? "horizontal"; },
+  get activationMode() { return props.activationMode ?? "automatic"; },
+  get loop() { return props.loop ?? true; },
+  get unmountInactive() { return props.unmountInactive ?? true; },
 });
 // @generated:end
 
@@ -64,12 +79,6 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" :data-testid="props['data-testid']">
-    <div :class="'tabs__list'" role="tablist">
-      <button :class="'tabs__tab'" role="tab" type="button" :aria-selected="behavior.activeTab.value === undefined ? undefined : Boolean(behavior.activeTab.value)"></button>
-      <span :class="'tabs__indicator'" aria-hidden="true"></span>
-    </div>
-    <div :class="'tabs__panel'">
-      <slot />
-    </div>
+    <slot />
   </div>
 </template>

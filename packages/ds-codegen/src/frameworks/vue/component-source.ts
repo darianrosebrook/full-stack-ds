@@ -29,6 +29,12 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import {
+  getGroupHostPart,
+  getInteractiveItemPart,
+  getRegionPart,
+  isCompoundStateContainer,
+} from "../react/hook-source.js";
 
 // Props handled natively by Vue: class via :class binding, style passthrough,
 // children via <slot />, className is the React convention for class (skip it).
@@ -42,6 +48,9 @@ const VUE_SKIP_PROPS = new Set(["class", "style", "children", "className"]);
  * users override entire SFCs rather than splice template fragments).
  */
 export function generateVueComponentSource(ir: ComponentIR): string {
+  if (isCompoundStateContainer(ir)) {
+    return generateVueCompoundStateRootSource(ir);
+  }
   if (ir.dom) {
     return generateVueDomTreeComponentSource(ir);
   }
@@ -338,6 +347,424 @@ export function generateVueCompoundPartSource(
     `</template>`,
     ``,
   ].join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Compound-state-container (Tabs-shaped) SFC generation
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns the root SFC source (Tabs.vue) for a compound-state-container IR.
+ * This is the component that:
+ *   - Calls useTabs() to get reactive state
+ *   - Calls provideTabsContext() to share state with all sub-components
+ *   - Renders a plain <div> wrapper with BEM classes
+ */
+function generateVueCompoundStateRootSource(ir: ComponentIR): string {
+  const { name, classRecipe } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+
+  const importsBody = [
+    `import { computed } from "vue";`,
+    `import { ${name === "Tabs" ? "useTabs, provideTabsContext" : `use${name}, provide${name}Context`} } from "./use${name}.js";`,
+  ].join("\n");
+
+  const typesBody = emitNonReactTypeAliases(ir).join("\n");
+
+  // Build Props interface — same as the standard path but without class logic
+  const propNames = new Set(ir.styledProps.map((p) => p.name));
+  const propsLines: string[] = [`interface Props {`];
+  for (const p of ir.styledProps) {
+    if (VUE_SKIP_PROPS.has(p.name)) continue;
+    const optional = p.required ? "" : "?";
+    const propKey = p.name.includes("-") ? `"${p.name}"` : p.name;
+    propsLines.push(`  ${propKey}${optional}: ${vueType(p.type)};`);
+  }
+  for (const dim of Object.keys(ir.variants)) {
+    if (!propNames.has(dim)) propsLines.push(`  ${dim}?: string;`);
+  }
+  // idBase and other compound-specific props not in styledProps
+  if (!propNames.has("idBase")) propsLines.push(`  idBase?: string;`);
+  if (!propNames.has("unmountInactive")) propsLines.push(`  unmountInactive?: boolean;`);
+  if (!propNames.has("class")) propsLines.push(`  class?: string;`);
+  if (!propNames.has("data-testid")) propsLines.push(`  "data-testid"?: string;`);
+  propsLines.push(`}`);
+  const propsInterfaceBody = propsLines.join("\n");
+
+  // Collect defaults
+  const defaults: Array<[string, string]> = [];
+  for (const p of ir.styledProps) {
+    if (p.defaultExpr === undefined) continue;
+    if (VUE_SKIP_PROPS.has(p.name)) continue;
+    defaults.push([p.name, p.defaultExpr]);
+  }
+  // Standard defaults for Tabs-specific props
+  if (!ir.styledProps.find(p => p.name === "unmountInactive" && p.defaultExpr)) {
+    defaults.push(["unmountInactive", "true"]);
+  }
+  const definePropsBody =
+    defaults.length === 0
+      ? `const props = defineProps<Props>();`
+      : [
+          `const props = withDefaults(defineProps<Props>(), {`,
+          ...defaults.map(([k, v]) => `  ${k.includes("-") ? `"${k}"` : k}: ${v},`),
+          `});`,
+        ].join("\n");
+
+  // Hook call
+  const hookLines: string[] = [];
+  hookLines.push(`const { ${channelName}, set${capitalize(channelName)}, registeredTabs, registerTab, unregisterTab, idBase } = use${name}({`);
+  if (channel) {
+    hookLines.push(`  ${channel.valueProp}: () => props.${propAccess(channel.valueProp)},`);
+    if (channel.defaultValueProp) {
+      hookLines.push(`  ${channel.defaultValueProp}: props.${propAccess(channel.defaultValueProp)},`);
+    }
+    hookLines.push(`  ${channel.changeHandlerProp}: props.${propAccess(channel.changeHandlerProp)},`);
+  }
+  hookLines.push(`  idBase: props.idBase,`);
+  hookLines.push(`});`);
+  hookLines.push(``);
+  hookLines.push(`provide${name}Context({`);
+  hookLines.push(`  ${channelName},`);
+  hookLines.push(`  set${capitalize(channelName)},`);
+  hookLines.push(`  registeredTabs,`);
+  hookLines.push(`  registerTab,`);
+  hookLines.push(`  unregisterTab,`);
+  hookLines.push(`  idBase,`);
+  hookLines.push(`  get orientation() { return props.orientation ?? "horizontal"; },`);
+  hookLines.push(`  get activationMode() { return props.activationMode ?? "automatic"; },`);
+  hookLines.push(`  get loop() { return props.loop ?? true; },`);
+  hookLines.push(`  get unmountInactive() { return props.unmountInactive ?? true; },`);
+  hookLines.push(`});`);
+  const hookBody = hookLines.join("\n");
+
+  // Class recipe
+  const classExprs: string[] = [`"${classRecipe.base}"`];
+  for (const mod of classRecipe.valueModifiers) {
+    classExprs.push(`props.${mod.propName} ? \`${classRecipe.base}--\${props.${mod.propName}}\` : null`);
+  }
+  classExprs.push(`props.class`);
+  const classesBody = [
+    `const classNames = computed(() => [`,
+    ...classExprs.map(e => `  ${e},`),
+    `].filter(Boolean).join(" "));`,
+  ].join("\n");
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const scriptSections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: typesBody },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "props", body: propsInterfaceBody },
+    blank(),
+    { kind: "generated", id: "defineProps", body: definePropsBody },
+    blank(),
+    { kind: "generated", id: "hook", body: hookBody },
+    blank(),
+    { kind: "generated", id: "classes", body: classesBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+  ];
+
+  const templateBody = [
+    `<template>`,
+    `  <div :class="classNames" :data-testid="props['data-testid']">`,
+    `    <slot />`,
+    `  </div>`,
+    `</template>`,
+  ].join("\n");
+
+  return [
+    `<script setup lang="ts">`,
+    renderSections(scriptSections, "line"),
+    `</script>`,
+    ``,
+    templateBody,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Returns a map of { relativePath: content } for the four SFC files
+ * emitted for a compound-state-container component (Tabs.vue, TabsList.vue,
+ * TabsTab.vue, TabsPanel.vue).
+ *
+ * The main Tabs.vue is handled by generateVueComponentSource; this function
+ * returns the sub-component files.
+ */
+export function generateVueCompoundStateParts(
+  ir: ComponentIR,
+): Array<{ name: string; content: string }> {
+  if (!isCompoundStateContainer(ir)) return [];
+
+  const { name, cssPrefix } = ir;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const groupPart = getGroupHostPart(ir);
+
+  if (!itemPart || !regionPart) return [];
+
+  const listName = `${name}${capitalize(groupPart?.name ?? "List")}`;
+  const tabName = `${name}${capitalize(itemPart.name)}`;
+  const panelName = `${name}${capitalize(regionPart.name)}`;
+
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const listCssClass = `${cssPrefix}__${groupPart?.name ?? "list"}`;
+  const tabCssClass = `${cssPrefix}__${itemPart.name}`;
+  const panelCssClass = `${cssPrefix}__${regionPart.name}`;
+
+  // ---------------------------------------------------------------------------
+  // TabsList.vue
+  // ---------------------------------------------------------------------------
+  const listSource = [
+    `<script setup lang="ts">`,
+    `// @generated:start imports`,
+    `import { ref, computed } from "vue";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `}`,
+    ``,
+    `const props = defineProps<Props>();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const classNames = computed(() =>`,
+    `  ["${listCssClass}", props.class].filter(Boolean).join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start trailing`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const listRef = ref<HTMLElement | null>(null);`,
+    ``,
+    `function handleKeyDown(e: KeyboardEvent): void {`,
+    `  const tabs = ctx.registeredTabs.value;`,
+    `  if (tabs.length === 0) return;`,
+    `  const currentIndex = tabs.indexOf(ctx.${channelName}.value);`,
+    `  const isHorizontal = ctx.orientation !== "vertical";`,
+    `  let nextIndex = currentIndex;`,
+    ``,
+    `  if (`,
+    `    (isHorizontal && e.key === "ArrowRight") ||`,
+    `    (!isHorizontal && e.key === "ArrowDown")`,
+    `  ) {`,
+    `    e.preventDefault();`,
+    `    nextIndex = ctx.loop`,
+    `      ? (currentIndex + 1) % tabs.length`,
+    `      : Math.min(currentIndex + 1, tabs.length - 1);`,
+    `  } else if (`,
+    `    (isHorizontal && e.key === "ArrowLeft") ||`,
+    `    (!isHorizontal && e.key === "ArrowUp")`,
+    `  ) {`,
+    `    e.preventDefault();`,
+    `    nextIndex = ctx.loop`,
+    `      ? (currentIndex - 1 + tabs.length) % tabs.length`,
+    `      : Math.max(currentIndex - 1, 0);`,
+    `  } else if (e.key === "Home") {`,
+    `    e.preventDefault();`,
+    `    nextIndex = 0;`,
+    `  } else if (e.key === "End") {`,
+    `    e.preventDefault();`,
+    `    nextIndex = tabs.length - 1;`,
+    `  } else if (e.key === "Enter" || e.key === " ") {`,
+    `    if (ctx.activationMode === "manual") {`,
+    `      e.preventDefault();`,
+    `      const focusedBtn = listRef.value?.querySelector<HTMLButtonElement>("[role=\\"tab\\"]:focus");`,
+    `      if (focusedBtn) {`,
+    `        const val = focusedBtn.getAttribute("data-value");`,
+    `        if (val) ctx.set${capitalize(channelName)}(val);`,
+    `      }`,
+    `    }`,
+    `    return;`,
+    `  } else {`,
+    `    return;`,
+    `  }`,
+    ``,
+    `  const targetValue = tabs[nextIndex];`,
+    `  if (ctx.activationMode === "automatic") {`,
+    `    ctx.set${capitalize(channelName)}(targetValue);`,
+    `  }`,
+    `  const btn = listRef.value?.querySelector<HTMLButtonElement>(`,
+    `    \`[role="tab"][data-value="\${targetValue}"]\`,`,
+    `  );`,
+    `  btn?.focus();`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <div`,
+    `    ref="listRef"`,
+    `    role="tablist"`,
+    `    :class="classNames"`,
+    `    :data-testid="props['data-testid']"`,
+    `    :aria-orientation="ctx.orientation"`,
+    `    @keydown="handleKeyDown"`,
+    `  >`,
+    `    <slot />`,
+    `  </div>`,
+    `</template>`,
+    ``,
+  ].join("\n");
+
+  // ---------------------------------------------------------------------------
+  // TabsTab.vue
+  // ---------------------------------------------------------------------------
+  const tabSource = [
+    `<script setup lang="ts">`,
+    `// @generated:start imports`,
+    `import { computed, onMounted, onUnmounted } from "vue";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  disabled?: boolean;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `}`,
+    ``,
+    `const props = defineProps<Props>();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isActive = computed(() => ctx.${channelName}.value === props.value);`,
+    ``,
+    `const classNames = computed(() =>`,
+    `  [`,
+    `    "${tabCssClass}",`,
+    `    isActive.value && "${tabCssClass}--active",`,
+    `    props.class,`,
+    `  ]`,
+    `    .filter(Boolean)`,
+    `    .join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start trailing`,
+    `onMounted(() => {`,
+    `  ctx.registerTab(props.value);`,
+    `});`,
+    ``,
+    `onUnmounted(() => {`,
+    `  ctx.unregisterTab(props.value);`,
+    `});`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <button`,
+    `    role="tab"`,
+    `    type="button"`,
+    `    :class="classNames"`,
+    `    :data-value="props.value"`,
+    `    :data-testid="props['data-testid']"`,
+    `    :id="\`\${ctx.idBase}-tab-\${props.value}\`"`,
+    `    :aria-controls="\`\${ctx.idBase}-panel-\${props.value}\`"`,
+    `    :aria-selected="isActive"`,
+    `    :tabindex="isActive ? 0 : -1"`,
+    `    :disabled="props.disabled"`,
+    `    @click="ctx.set${capitalize(channelName)}(props.value)"`,
+    `  >`,
+    `    <slot />`,
+    `  </button>`,
+    `</template>`,
+    ``,
+  ].join("\n");
+
+  // ---------------------------------------------------------------------------
+  // TabsPanel.vue
+  // ---------------------------------------------------------------------------
+  const panelSource = [
+    `<script setup lang="ts">`,
+    `// @generated:start imports`,
+    `import { computed } from "vue";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `}`,
+    ``,
+    `const props = defineProps<Props>();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isActive = computed(() => ctx.${channelName}.value === props.value);`,
+    ``,
+    `const classNames = computed(() =>`,
+    `  ["${panelCssClass}", props.class].filter(Boolean).join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <div`,
+    `    v-if="!ctx.unmountInactive || isActive"`,
+    `    role="tabpanel"`,
+    `    :class="classNames"`,
+    `    :id="\`\${ctx.idBase}-panel-\${props.value}\`"`,
+    `    :aria-labelledby="\`\${ctx.idBase}-tab-\${props.value}\`"`,
+    `    :tabindex="0"`,
+    `    :data-testid="props['data-testid']"`,
+    `    :hidden="!isActive ? true : undefined"`,
+    `  >`,
+    `    <slot />`,
+    `  </div>`,
+    `</template>`,
+    ``,
+  ].join("\n");
+
+  return [
+    { name: listName, content: listSource },
+    { name: tabName, content: tabSource },
+    { name: panelName, content: panelSource },
+  ];
 }
 
 // ---------------------------------------------------------------------------

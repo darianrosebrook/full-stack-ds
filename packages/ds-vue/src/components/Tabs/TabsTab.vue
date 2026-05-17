@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
+import { computed, onMounted, onUnmounted } from "vue";
+import { useTabsContext } from "./useTabs.js";
 // @generated:end
 
 // @custom:start imports
@@ -10,6 +10,8 @@ import { Stack } from "../../primitives/index.js";
 
 // @generated:start props
 interface Props {
+  value: string;
+  disabled?: boolean;
   class?: string;
   "data-testid"?: string;
 }
@@ -18,9 +20,29 @@ const props = defineProps<Props>();
 // @generated:end
 
 // @generated:start classes
+const ctx = useTabsContext();
+
+const isActive = computed(() => ctx.activeTab.value === props.value);
+
 const classNames = computed(() =>
-  ["tabs__tab", props.class].filter(Boolean).join(" "),
+  [
+    "tabs__tab",
+    isActive.value && "tabs__tab--active",
+    props.class,
+  ]
+    .filter(Boolean)
+    .join(" "),
 );
+// @generated:end
+
+// @generated:start trailing
+onMounted(() => {
+  ctx.registerTab(props.value);
+});
+
+onUnmounted(() => {
+  ctx.unregisterTab(props.value);
+});
 // @generated:end
 
 // @custom:start trailing
@@ -29,7 +51,19 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <Stack :class="classNames" :data-testid="props['data-testid']">
+  <button
+    role="tab"
+    type="button"
+    :class="classNames"
+    :data-value="props.value"
+    :data-testid="props['data-testid']"
+    :id="`${ctx.idBase}-tab-${props.value}`"
+    :aria-controls="`${ctx.idBase}-panel-${props.value}`"
+    :aria-selected="isActive"
+    :tabindex="isActive ? 0 : -1"
+    :disabled="props.disabled"
+    @click="ctx.setActiveTab(props.value)"
+  >
     <slot />
-  </Stack>
+  </button>
 </template>

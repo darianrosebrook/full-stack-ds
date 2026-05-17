@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
+import { useTabsContext } from "./useTabs.js";
 // @generated:end
 
 // @custom:start imports
@@ -10,6 +10,7 @@ import { Stack } from "../../primitives/index.js";
 
 // @generated:start props
 interface Props {
+  value: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -18,6 +19,10 @@ const props = defineProps<Props>();
 // @generated:end
 
 // @generated:start classes
+const ctx = useTabsContext();
+
+const isActive = computed(() => ctx.activeTab.value === props.value);
+
 const classNames = computed(() =>
   ["tabs__panel", props.class].filter(Boolean).join(" "),
 );
@@ -29,7 +34,16 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <Stack :class="classNames" :data-testid="props['data-testid']">
+  <div
+    v-if="!ctx.unmountInactive || isActive"
+    role="tabpanel"
+    :class="classNames"
+    :id="`${ctx.idBase}-panel-${props.value}`"
+    :aria-labelledby="`${ctx.idBase}-tab-${props.value}`"
+    :tabindex="0"
+    :data-testid="props['data-testid']"
+    :hidden="!isActive ? true : undefined"
+  >
     <slot />
-  </Stack>
+  </div>
 </template>
