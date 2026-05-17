@@ -23,10 +23,11 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
-import { generateAngularComponentSource } from "./component-source.js";
+import { generateAngularComponentSource, generateAngularCompoundStateParts } from "./component-source.js";
 import { generateAngularHookSource } from "./hook-source.js";
 import { generateAngularBarrel } from "./barrel.js";
 import { generateAngularTest } from "./tests.js";
+import { isCompoundStateContainer } from "../react/hook-source.js";
 
 export function createAngularEmitter(): FrameworkEmitter {
   return {
@@ -35,7 +36,7 @@ export function createAngularEmitter(): FrameworkEmitter {
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       const component = generateAngularComponentSource(ir);
       const css = emitCss(ir);
-      return [
+      const files: GeneratedFile[] = [
         {
           relativePath: `${ir.name}/${ir.name}.component.ts`,
           contents: component,
@@ -47,6 +48,18 @@ export function createAngularEmitter(): FrameworkEmitter {
           preservable: true,
         },
       ];
+      if (isCompoundStateContainer(ir)) {
+        // Compound-state-container: emit sub-component files (List, Tab, Panel)
+        // wired via Angular DI InjectionToken context.
+        for (const part of generateAngularCompoundStateParts(ir)) {
+          files.push({
+            relativePath: `${ir.name}/${part.name}.component.ts`,
+            contents: part.content,
+            preservable: true,
+          });
+        }
+      }
+      return files;
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {

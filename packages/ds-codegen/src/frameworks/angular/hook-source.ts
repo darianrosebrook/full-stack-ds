@@ -11,9 +11,14 @@
  * component passes in (injected with `inject(DestroyRef)` in the constructor
  * or field initializer). The generated function always accepts a `destroyRef`
  * on its options so primitives can self-clean.
+ *
+ * For compound-state-container IRs (Tabs-shaped), the emitter also generates
+ * the `TabsContextValue` interface and the shared token/useContext pair so all
+ * sub-components can import from the same module.
  */
 import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { isCompoundStateContainer } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -25,6 +30,8 @@ interface PrimitiveBindings {
   useDismissal: boolean;
   /** Prop name that gates Escape dismissal (e.g. closeOnEscape). */
   escapeEnabledByProp: string | undefined;
+  /** True when the IR matches the compound-state-container (Tabs-shaped) pattern. */
+  isCompoundStateContainer: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -57,6 +64,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Standalone dismissal for trap-focus components: outside-click is handled
   // template-side (overlay onClick), so only Escape needs a document listener.
   const useDismissal = !useAnchor && hasEscape;
+  const compoundContainer = isCompoundStateContainer(ir);
 
   if (
     channels.length === 0 &&
@@ -64,7 +72,8 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     !hasScrollLock &&
     !hasPortal &&
     !useAnchor &&
-    !useDismissal
+    !useDismissal &&
+    !compoundContainer
   ) {
     return null;
   }
@@ -77,6 +86,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     useAnchorToggle: useAnchor,
     useDismissal,
     escapeEnabledByProp: escapeTrigger?.enabledByProp,
+    isCompoundStateContainer: compoundContainer,
   };
 }
 
@@ -94,6 +104,10 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.useFocusTrap || bindings.useScrollLock || bindings.useAnchorToggle) {
     coreNamed.add("type Signal");
   }
+  if (bindings.isCompoundStateContainer) {
+    coreNamed.add("signal");
+    coreNamed.add("type WritableSignal");
+  }
 
   const primitives: string[] = [];
   if (bindings.useControllableState.length > 0) {
@@ -104,6 +118,7 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.usePortal) primitives.push("createPortal");
   if (bindings.useAnchorToggle) primitives.push("createAnchorToggle");
   if (bindings.useDismissal) primitives.push("createDismissal");
+  if (bindings.isCompoundStateContainer) primitives.push("createCompoundContext");
 
   const lines: string[] = [];
   lines.push(
@@ -176,6 +191,11 @@ function generateOptionsInterface(
     if (targetProp) lines.push(`  ${targetProp}?: Element | string;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** Base string for generating tab and panel IDs. Defaults to a generated id. */`);
+    lines.push(`  idBase?: string;`);
+  }
+
   // DestroyRef is always required — the consuming component injects it
   lines.push(`  destroyRef: DestroyRef;`);
 
@@ -211,6 +231,15 @@ function generateResultInterface(
     lines.push(`  portalTarget: Signal<Element | null>;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** DOM-order list of registered tab values. */`);
+    lines.push(`  registeredTabs: WritableSignal<string[]>;`);
+    lines.push(`  registerTab: (value: string) => void;`);
+    lines.push(`  unregisterTab: (value: string) => void;`);
+    lines.push(`  /** Base string for generating tab and panel IDs. */`);
+    lines.push(`  idBase: string;`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -221,6 +250,11 @@ function generateResultInterface(
 
 function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   const lines: string[] = [];
+  // Module-level counter for stable idBase generation per compound instance.
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`let _${ir.name.toLowerCase()}IdCounter = 0;`);
+    lines.push(``);
+  }
   // Options default: cast to any so the destroyRef is "required" only at runtime
   lines.push(
     `export function use${ir.name}(options: Use${ir.name}Options): Use${ir.name}Result {`,
@@ -326,6 +360,24 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(``);
   }
 
+  // Compound-state-container (Tabs-shaped) wiring
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  const registeredTabs = signal<string[]>([]);`);
+    lines.push(``);
+    lines.push(`  const resolvedIdBase = options.idBase ?? \`${ir.name.toLowerCase()}-\${++_${ir.name.toLowerCase()}IdCounter}\`;`);
+    lines.push(``);
+    lines.push(`  function registerTab(value: string): void {`);
+    lines.push(`    if (!registeredTabs().includes(value)) {`);
+    lines.push(`      registeredTabs.set([...registeredTabs(), value]);`);
+    lines.push(`    }`);
+    lines.push(`  }`);
+    lines.push(``);
+    lines.push(`  function unregisterTab(value: string): void {`);
+    lines.push(`    registeredTabs.set(registeredTabs().filter((v) => v !== value));`);
+    lines.push(`  }`);
+    lines.push(``);
+  }
+
   // Build return object
   lines.push(`  return {`);
   for (const ch of bindings.useControllableState) {
@@ -351,8 +403,55 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   if (bindings.usePortal) {
     lines.push(`    portalTarget,`);
   }
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`    registeredTabs,`);
+    lines.push(`    registerTab,`);
+    lines.push(`    unregisterTab,`);
+    lines.push(`    idBase: resolvedIdBase,`);
+  }
   lines.push(`  };`);
   lines.push(`}`);
+  return lines.join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Compound context types
+// ---------------------------------------------------------------------------
+
+/**
+ * Generate the `${Name}ContextValue` interface + InjectionToken + `use${Name}Context`
+ * helper that all sub-components import from the hook module.
+ *
+ * Angular uses `createCompoundContext<T>(name)` which returns `{ token, useContext }`.
+ * The token is provided on the root component; children inject via `useContext()`.
+ */
+function generateCompoundContextTypes(ir: ComponentIR): string {
+  const { name } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const setterName = `set${capitalize(channelName)}`;
+
+  const lines: string[] = [];
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  readonly ${channelName}: WritableSignal<string>;`);
+  lines.push(`  ${setterName}: (value: string) => void;`);
+  lines.push(`  registerTab: (value: string) => void;`);
+  lines.push(`  unregisterTab: (value: string) => void;`);
+  lines.push(`  registeredTabs: WritableSignal<string[]>;`);
+  lines.push(`  idBase: string;`);
+  lines.push(`  // Config signals — reactive so child components re-render on prop changes`);
+  lines.push(`  orientation: WritableSignal<"horizontal" | "vertical">;`);
+  lines.push(`  activationMode: WritableSignal<"automatic" | "manual">;`);
+  lines.push(`  loop: WritableSignal<boolean>;`);
+  lines.push(`  unmountInactive: WritableSignal<boolean>;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `const { token: ${name}ContextToken, useContext: use${name}Context } =`,
+  );
+  lines.push(`  createCompoundContext<${name}ContextValue>("${name}");`);
+  lines.push(``);
+  lines.push(`export { ${name}ContextToken, use${name}Context };`);
   return lines.join("\n");
 }
 
@@ -386,9 +485,12 @@ export function generateAngularHookSource(ir: ComponentIR): string | null {
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
+  const contextTypesBody = bindings.isCompoundStateContainer
+    ? generateCompoundContextTypes(ir)
+    : "";
   const hookBody = generateBody(ir, bindings);
 
-  const typesBody = [inlineTypesBody, optionsBody, resultBody]
+  const typesBody = [inlineTypesBody, optionsBody, resultBody, contextTypesBody]
     .filter((s) => s.length > 0)
     .join("\n\n");
 

@@ -40,6 +40,12 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { toKebab as sharedToKebab } from "../../contract.js";
+import {
+  isCompoundStateContainer,
+  getInteractiveItemPart,
+  getRegionPart,
+  getGroupHostPart,
+} from "../react/hook-source.js";
 
 // Props we don't emit as @Input() — either Angular handles them natively
 // (class/style) or they are React idioms with no Angular equivalent
@@ -58,6 +64,12 @@ const ANGULAR_RESERVED = new Set(["class", "style", "children", "className"]);
  * custom regions over.
  */
 export function generateAngularComponentSource(ir: ComponentIR): string {
+  // Compound-state-container (Tabs-shaped): emit a fully wired root component
+  // that provides the context token to its children.
+  if (isCompoundStateContainer(ir)) {
+    return generateAngularCompoundStateRootSource(ir);
+  }
+
   const importsBody = ir.dom ? generateDomTreeImports(ir) : generateImports(ir);
   const typesBody = generateTypes(ir);
   const compoundClasses = ir.compoundParts
@@ -84,6 +96,465 @@ export function generateAngularComponentSource(ir: ComponentIR): string {
   ];
 
   return renderSections(sections, "line");
+}
+
+// ---------------------------------------------------------------------------
+// Compound-state-container (Tabs-shaped) generation
+// ---------------------------------------------------------------------------
+
+/**
+ * Generate the root Angular component for a compound-state-container (Tabs).
+ * This component:
+ *   - Calls useTabs() to get signal-based state
+ *   - Provides the TabsContextToken via `providers` so child components can inject it
+ *   - Exposes orientation/activationMode/loop/unmountInactive as WritableSignals
+ *     so child components can track them reactively via Angular's signal system
+ *   - Renders a plain <div> wrapper with BEM classes and <ng-content />
+ */
+function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
+  const { name, classRecipe } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1);
+  const setterName = `set${capitalize(channelName)}`;
+
+  const importsBody = [
+    `import { Component, Input, OnChanges, SimpleChanges, computed, signal, forwardRef, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { use${name}, ${name}ContextToken } from "./use${name}.js";`,
+  ].join("\n");
+
+  const typesBody = emitNonReactTypeAliases(ir).join("\n");
+
+  // Build @Input declarations
+  const propLines: string[] = [];
+  const declaredProps = new Set<string>();
+  for (const p of ir.styledProps) {
+    if (ANGULAR_RESERVED.has(p.name)) continue;
+    const propLine = generateInputProp(p);
+    if (propLine) {
+      propLines.push(propLine);
+      declaredProps.add(p.name);
+    }
+  }
+  for (const dim of Object.keys(ir.variants)) {
+    if (declaredProps.has(dim) || ANGULAR_RESERVED.has(dim)) continue;
+    propLines.push(`  @Input() ${dim}?: string;`);
+    declaredProps.add(dim);
+  }
+  if (!declaredProps.has("idBase")) {
+    propLines.push(`  @Input() idBase?: string;`);
+    declaredProps.add("idBase");
+  }
+  if (!declaredProps.has("unmountInactive")) {
+    propLines.push(`  @Input() unmountInactive?: boolean = true;`);
+    declaredProps.add("unmountInactive");
+  }
+  if (!declaredProps.has("loop")) {
+    propLines.push(`  @Input() loop?: boolean = true;`);
+    declaredProps.add("loop");
+  }
+  if (!declaredProps.has("class")) {
+    propLines.push(`  @Input() class?: string;`);
+    declaredProps.add("class");
+  }
+  // onChange handler for the channel
+  if (channel && !declaredProps.has(channel.changeHandlerProp)) {
+    const valueType = channel.valueType ?? "unknown";
+    propLines.push(`  @Input() ${channel.changeHandlerProp}?: (value: ${valueType}) => void;`);
+  }
+
+  // Build class modifiers
+  const classModifierLines: string[] = [];
+  for (const mod of classRecipe.valueModifiers) {
+    classModifierLines.push(
+      `      this.${mod.propName} ? \`${classRecipe.base}--\${this.${mod.propName}}\` : null,`,
+    );
+  }
+  for (const mod of classRecipe.booleanModifiers) {
+    classModifierLines.push(
+      `      this.${mod.safeName} ? "${classRecipe.base}--${mod.safeName}" : null,`,
+    );
+  }
+
+  // Hook call options
+  const hookOptions: string[] = [];
+  if (channel) {
+    hookOptions.push(`    ${channel.valueProp}: () => this.${channel.valueProp},`);
+    if (channel.defaultValueProp) {
+      hookOptions.push(`    ${channel.defaultValueProp}: this.${channel.defaultValueProp},`);
+    }
+    hookOptions.push(`    ${channel.changeHandlerProp}: (v) => this.${channel.changeHandlerProp}?.(v),`);
+  }
+  hookOptions.push(`    idBase: this.idBase,`);
+  hookOptions.push(`    destroyRef: this.destroyRef,`);
+
+  // Build the contextValue object that is provided to child components.
+  // Config values (orientation, activationMode, loop, unmountInactive) are
+  // exposed as WritableSignals on the component so child components can
+  // reactively read them with Angular's signal system.
+  const contextValueLines: string[] = [
+    `    get ${channelName}() { return self.behavior.${channelName}; },`,
+    `    ${setterName}: (v) => self.behavior.${setterName}(v),`,
+    `    registerTab: (v) => self.behavior.registerTab(v),`,
+    `    unregisterTab: (v) => self.behavior.unregisterTab(v),`,
+    `    get registeredTabs() { return self.behavior.registeredTabs; },`,
+    `    get idBase() { return self.behavior.idBase; },`,
+    `    // Config signals — child components read these to stay reactive`,
+    `    get orientation() { return self._orientation; },`,
+    `    get activationMode() { return self._activationMode; },`,
+    `    get loop() { return self._loop; },`,
+    `    get unmountInactive() { return self._unmountInactive; },`,
+  ];
+
+  // Build the hook options — channel values use signal-based getters
+  // so createControllableState can track them reactively.
+  const hookOptionsSignal: string[] = [];
+  if (channel) {
+    // Pass controlled value as a getter reading from _controlledValue signal
+    // so createControllableState tracks it as a reactive dependency.
+    hookOptionsSignal.push(`    ${channel.valueProp}: () => this._controlledValue(),`);
+    if (channel.defaultValueProp) {
+      hookOptionsSignal.push(`    ${channel.defaultValueProp}: this.${channel.defaultValueProp},`);
+    }
+    hookOptionsSignal.push(`    ${channel.changeHandlerProp}: (v) => this.${channel.changeHandlerProp}?.(v),`);
+  }
+  hookOptionsSignal.push(`    idBase: this.idBase,`);
+  hookOptionsSignal.push(`    destroyRef: this.destroyRef,`);
+
+  const componentBody = [
+    `@Component({`,
+    `  selector: "fsds-${toKebab(name)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  providers: [`,
+    `    {`,
+    `      provide: ${name}ContextToken,`,
+    `      useFactory: () => {`,
+    `        // "self" is resolved at provide-time (same injector) so the token`,
+    `        // value is the component instance itself acting as context.`,
+    `        const self = inject(forwardRef(() => ${name}Component));`,
+    `        const ctx: import("./use${name}.js").${name}ContextValue = {`,
+    ...contextValueLines.map(l => `          ${l}`),
+    `        };`,
+    `        return ctx;`,
+    `      },`,
+    `      deps: [],`,
+    `    },`,
+    `  ],`,
+    `  template: \`<div [ngClass]="classes()"><ng-content /></div>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${name}Component implements OnChanges {`,
+    ...propLines,
+    ``,
+    `  // Signal mirrors of @Input values — reactive so computed() and child`,
+    `  // components can track them as signal dependencies.`,
+    `  // Controlled value: updated in ngOnChanges when the parent changes [value].`,
+    `  _controlledValue = signal<string | undefined>(undefined);`,
+    `  // Config signals — exposed to children via context getters.`,
+    `  _orientation = signal<"horizontal" | "vertical">("horizontal");`,
+    `  _activationMode = signal<"automatic" | "manual">("automatic");`,
+    `  _loop = signal<boolean>(true);`,
+    `  _unmountInactive = signal<boolean>(true);`,
+    ``,
+    `  ngOnChanges(changes: SimpleChanges): void {`,
+    ...(channel ? [
+      `    if (changes["${channel.valueProp}"]) this._controlledValue.set(this.${channel.valueProp});`,
+    ] : []),
+    `    if (changes["orientation"]) this._orientation.set(this.orientation ?? "horizontal");`,
+    `    if (changes["activationMode"]) this._activationMode.set(this.activationMode ?? "automatic");`,
+    `    if (changes["loop"]) this._loop.set(this.loop ?? true);`,
+    `    if (changes["unmountInactive"]) this._unmountInactive.set(this.unmountInactive ?? true);`,
+    `  }`,
+    ``,
+    `  private destroyRef = inject(DestroyRef);`,
+    `  protected behavior = use${name}({`,
+    ...hookOptionsSignal,
+    `  });`,
+    ``,
+    `  classes = computed(() =>`,
+    `    [`,
+    `      "${classRecipe.base}",`,
+    ...classModifierLines,
+    `      this.class,`,
+    `    ].filter(Boolean).join(" "),`,
+    `  );`,
+    `}`,
+  ].join("\n");
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const sections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: typesBody },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "component", body: componentBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+    blank(),
+  ];
+
+  return renderSections(sections, "line");
+}
+
+/**
+ * Returns an array of `{ name, content }` for the sub-component files emitted
+ * for a compound-state-container (e.g. TabsList, TabsTab, TabsPanel).
+ *
+ * These are separate @Component classes that inject the context token provided
+ * by the root component.
+ */
+export function generateAngularCompoundStateParts(
+  ir: ComponentIR,
+): Array<{ name: string; content: string }> {
+  if (!isCompoundStateContainer(ir)) return [];
+
+  const { name, cssPrefix } = ir;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const groupPart = getGroupHostPart(ir);
+
+  if (!itemPart || !regionPart) return [];
+
+  const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1);
+  const listName = `${name}${capitalize(groupPart?.name ?? "List")}`;
+  const tabName = `${name}${capitalize(itemPart.name)}`;
+  const panelName = `${name}${capitalize(regionPart.name)}`;
+
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const setterName = `set${capitalize(channelName)}`;
+  const listCssClass = `${cssPrefix}__${groupPart?.name ?? "list"}`;
+  const tabCssClass = `${cssPrefix}__${itemPart.name}`;
+  const panelCssClass = `${cssPrefix}__${regionPart.name}`;
+
+  // ---------------------------------------------------------------------------
+  // TabsList component
+  // ---------------------------------------------------------------------------
+  const listContent = [
+    `// @generated:start imports`,
+    `import { Component, Input, ElementRef, inject, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start component`,
+    `@Component({`,
+    `  selector: "fsds-${toKebab(listName)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  template: \`<div`,
+    `  #listEl`,
+    `  role="tablist"`,
+    `  [ngClass]="classes()"`,
+    `  [attr.aria-orientation]="ctx.orientation()"`,
+    `  (keydown)="handleKeyDown($event)"`,
+    `><ng-content /></div>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${listName}Component {`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    `  protected ctx = use${name}Context();`,
+    `  private elRef = inject(ElementRef<HTMLElement>);`,
+    ``,
+    `  classes(): string {`,
+    `    return ["${listCssClass}", this.class].filter(Boolean).join(" ");`,
+    `  }`,
+    ``,
+    `  handleKeyDown(e: KeyboardEvent): void {`,
+    `    const tabs = this.ctx.registeredTabs();`,
+    `    if (tabs.length === 0) return;`,
+    `    const currentIndex = tabs.indexOf(this.ctx.${channelName}());`,
+    `    const isHorizontal = this.ctx.orientation() !== "vertical";`,
+    `    let nextIndex = currentIndex;`,
+    ``,
+    `    if (`,
+    `      (isHorizontal && e.key === "ArrowRight") ||`,
+    `      (!isHorizontal && e.key === "ArrowDown")`,
+    `    ) {`,
+    `      e.preventDefault();`,
+    `      nextIndex = this.ctx.loop()`,
+    `        ? (currentIndex + 1) % tabs.length`,
+    `        : Math.min(currentIndex + 1, tabs.length - 1);`,
+    `    } else if (`,
+    `      (isHorizontal && e.key === "ArrowLeft") ||`,
+    `      (!isHorizontal && e.key === "ArrowUp")`,
+    `    ) {`,
+    `      e.preventDefault();`,
+    `      nextIndex = this.ctx.loop()`,
+    `        ? (currentIndex - 1 + tabs.length) % tabs.length`,
+    `        : Math.max(currentIndex - 1, 0);`,
+    `    } else if (e.key === "Home") {`,
+    `      e.preventDefault();`,
+    `      nextIndex = 0;`,
+    `    } else if (e.key === "End") {`,
+    `      e.preventDefault();`,
+    `      nextIndex = tabs.length - 1;`,
+    `    } else if (e.key === "Enter" || e.key === " ") {`,
+    `      if (this.ctx.activationMode() === "manual") {`,
+    `        e.preventDefault();`,
+    `        const host = this.elRef.nativeElement as HTMLElement;`,
+    `        const focusedBtn = host.querySelector<HTMLButtonElement>('[role="tab"]:focus');`,
+    `        if (focusedBtn) {`,
+    `          const val = focusedBtn.getAttribute("data-value");`,
+    `          if (val) this.ctx.${setterName}(val);`,
+    `        }`,
+    `      }`,
+    `      return;`,
+    `    } else {`,
+    `      return;`,
+    `    }`,
+    ``,
+    `    const targetValue = tabs[nextIndex];`,
+    `    if (this.ctx.activationMode() === "automatic") {`,
+    `      this.ctx.${setterName}(targetValue);`,
+    `    }`,
+    `    const host = this.elRef.nativeElement as HTMLElement;`,
+    `    const btn = host.querySelector<HTMLButtonElement>(`,
+    `      \`[role="tab"][data-value="\${targetValue}"]\`,`,
+    `    );`,
+    `    btn?.focus();`,
+    `  }`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+  ].join("\n");
+
+  // ---------------------------------------------------------------------------
+  // TabsTab component
+  // ---------------------------------------------------------------------------
+  const tabContent = [
+    `// @generated:start imports`,
+    `import { Component, Input, OnInit, OnDestroy, computed, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start component`,
+    `@Component({`,
+    `  selector: "fsds-${toKebab(tabName)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  template: \`<button`,
+    `  role="tab"`,
+    `  type="button"`,
+    `  [ngClass]="classes()"`,
+    `  [attr.data-value]="value"`,
+    `  [attr.id]="ctx.idBase + '-tab-' + value"`,
+    `  [attr.aria-controls]="ctx.idBase + '-panel-' + value"`,
+    `  [attr.aria-selected]="isActive()"`,
+    `  [attr.tabindex]="isActive() ? 0 : -1"`,
+    `  [disabled]="disabled"`,
+    `  (click)="ctx.${setterName}(value)"`,
+    `><ng-content /></button>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${tabName}Component implements OnInit, OnDestroy {`,
+    `  @Input({ required: true }) value!: string;`,
+    `  @Input() disabled?: boolean;`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    `  protected ctx = use${name}Context();`,
+    ``,
+    `  isActive = computed(() => this.ctx.${channelName}() === this.value);`,
+    ``,
+    `  classes = computed(() =>`,
+    `    [`,
+    `      "${tabCssClass}",`,
+    `      this.isActive() && "${tabCssClass}--active",`,
+    `      this.class,`,
+    `    ].filter(Boolean).join(" "),`,
+    `  );`,
+    ``,
+    `  ngOnInit(): void {`,
+    `    this.ctx.registerTab(this.value);`,
+    `  }`,
+    ``,
+    `  ngOnDestroy(): void {`,
+    `    this.ctx.unregisterTab(this.value);`,
+    `  }`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+  ].join("\n");
+
+  // ---------------------------------------------------------------------------
+  // TabsPanel component
+  // ---------------------------------------------------------------------------
+  const panelContent = [
+    `// @generated:start imports`,
+    `import { Component, Input, computed, inject, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass, NgIf } from "@angular/common";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start component`,
+    `@Component({`,
+    `  selector: "fsds-${toKebab(panelName)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass, NgIf],`,
+    `  template: \`<div`,
+    `  *ngIf="!ctx.unmountInactive() || isActive()"`,
+    `  role="tabpanel"`,
+    `  [ngClass]="classes()"`,
+    `  [attr.id]="ctx.idBase + '-panel-' + value"`,
+    `  [attr.aria-labelledby]="ctx.idBase + '-tab-' + value"`,
+    `  [attr.tabindex]="0"`,
+    `  [attr.hidden]="!isActive() ? true : null"`,
+    `><ng-content /></div>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${panelName}Component {`,
+    `  @Input({ required: true }) value!: string;`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    `  protected ctx = use${name}Context();`,
+    ``,
+    `  isActive = computed(() => this.ctx.${channelName}() === this.value);`,
+    ``,
+    `  classes = computed(() =>`,
+    `    ["${panelCssClass}", this.class].filter(Boolean).join(" "),`,
+    `  );`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+  ].join("\n");
+
+  return [
+    { name: listName, content: listContent },
+    { name: tabName, content: tabContent },
+    { name: panelName, content: panelContent },
+  ];
 }
 
 /**

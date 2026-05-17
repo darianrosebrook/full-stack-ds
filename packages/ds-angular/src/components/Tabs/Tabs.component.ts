@@ -1,8 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
-import { StackComponent } from "../../primitives/index.js";
-import { useTabs } from "./useTabs.js";
+import { Component, Input, OnChanges, SimpleChanges, computed, signal, forwardRef, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { useTabs, TabsContextToken } from "./useTabs.js";
 // @generated:end
 
 // @custom:start imports
@@ -22,19 +21,36 @@ export type TabsActivationMode = "automatic" | "manual";
 @Component({
   selector: "fsds-tabs",
   standalone: true,
-  imports: [NgClass, NgIf],
-  template: `<div [ngClass]="classes()">
-  <div [ngClass]="'tabs__list'" role="tablist">
-    <button [ngClass]="'tabs__tab'" role="tab" type="button" [attr.aria-selected]="behavior.activeTab()"></button>
-    <span [ngClass]="'tabs__indicator'" aria-hidden="true"></span>
-  </div>
-  <div [ngClass]="'tabs__panel'">
-    <ng-content />
-  </div>
-</div>`,
+  imports: [NgClass],
+  providers: [
+    {
+      provide: TabsContextToken,
+      useFactory: () => {
+        // "self" is resolved at provide-time (same injector) so the token
+        // value is the component instance itself acting as context.
+        const self = inject(forwardRef(() => TabsComponent));
+        const ctx: import("./useTabs.js").TabsContextValue = {
+              get activeTab() { return self.behavior.activeTab; },
+              setActiveTab: (v) => self.behavior.setActiveTab(v),
+              registerTab: (v) => self.behavior.registerTab(v),
+              unregisterTab: (v) => self.behavior.unregisterTab(v),
+              get registeredTabs() { return self.behavior.registeredTabs; },
+              get idBase() { return self.behavior.idBase; },
+              // Config signals — child components read these to stay reactive
+              get orientation() { return self._orientation; },
+              get activationMode() { return self._activationMode; },
+              get loop() { return self._loop; },
+              get unmountInactive() { return self._unmountInactive; },
+        };
+        return ctx;
+      },
+      deps: [],
+    },
+  ],
+  template: `<div [ngClass]="classes()"><ng-content /></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabsComponent {
+export class TabsComponent implements OnChanges {
   @Input() value?: string;
   @Input() defaultValue?: string;
   @Input() orientation?: TabsOrientation = "horizontal";
@@ -45,11 +61,30 @@ export class TabsComponent {
   @Input() class?: string;
   @Input() onValueChange?: (value: string) => void;
 
+  // Signal mirrors of @Input values — reactive so computed() and child
+  // components can track them as signal dependencies.
+  // Controlled value: updated in ngOnChanges when the parent changes [value].
+  _controlledValue = signal<string | undefined>(undefined);
+  // Config signals — exposed to children via context getters.
+  _orientation = signal<"horizontal" | "vertical">("horizontal");
+  _activationMode = signal<"automatic" | "manual">("automatic");
+  _loop = signal<boolean>(true);
+  _unmountInactive = signal<boolean>(true);
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["value"]) this._controlledValue.set(this.value);
+    if (changes["orientation"]) this._orientation.set(this.orientation ?? "horizontal");
+    if (changes["activationMode"]) this._activationMode.set(this.activationMode ?? "automatic");
+    if (changes["loop"]) this._loop.set(this.loop ?? true);
+    if (changes["unmountInactive"]) this._unmountInactive.set(this.unmountInactive ?? true);
+  }
+
   private destroyRef = inject(DestroyRef);
   protected behavior = useTabs({
-    value: () => this.value,
+    value: () => this._controlledValue(),
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
+    idBase: this.idBase,
     destroyRef: this.destroyRef,
   });
 
@@ -61,58 +96,6 @@ export class TabsComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleActiveTabChange(event: Event): void {
-    this.behavior.setActiveTab((event.target as HTMLInputElement).value);
-  }
-}
-
-@Component({
-  selector: "fsds-tabs-list",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="ul" variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TabsListComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["tabs__list", this.class].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-tabs-tab",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TabsTabComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["tabs__tab", this.class].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-tabs-panel",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TabsPanelComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["tabs__panel", this.class].filter(Boolean).join(" ");
-  }
 }
 // @generated:end
 
