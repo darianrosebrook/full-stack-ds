@@ -24,6 +24,7 @@ import type {
   ContractEventSignature,
   ContractFocus,
   ContractForm,
+  ContractPartDetails,
   ContractPortal,
   ContractTypeDef,
   StyledPropMember,
@@ -31,6 +32,7 @@ import type {
 } from "./contract.js";
 import {
   getCssPrefix,
+  getPartDetails,
   getParts,
   getStyledProps,
   normalizeStates,
@@ -57,6 +59,15 @@ export interface PartIR {
   isRootOnly: boolean;
   /** Optional layout hint used by emitters for horizontal vs vertical stacks. */
   layoutVariant?: "horizontal" | "vertical";
+  /**
+   * Per-part metadata copied verbatim from `contract.anatomy.details[name]`.
+   * Emitters read `details.role`, `details.interactive`, `details.focusable`,
+   * `details.aria` etc. to wire up compound-part behavior (e.g. Tabs's tab
+   * registers with a context, panel renders conditionally, list hosts the
+   * keyboard handler). Absent for components whose contract doesn't declare
+   * per-part metadata.
+   */
+  details?: ContractPartDetails;
 }
 
 /**
@@ -698,8 +709,10 @@ function buildEventsIR(
 // ---------------------------------------------------------------------------
 
 function buildParts(contract: ComponentContract): PartIR[] {
+  const allDetails = getPartDetails(contract.anatomy);
   return getParts(contract.anatomy).map((name) => {
     const semanticElement = SEMANTIC_ELEMENTS[name];
+    const details = allDetails[name];
     return {
       name,
       semanticElement,
@@ -707,6 +720,7 @@ function buildParts(contract: ComponentContract): PartIR[] {
       isRootOnly: ROOT_ONLY_PARTS.has(name),
       layoutVariant:
         name === "footer" || name === "list" ? "horizontal" : undefined,
+      details,
     };
   });
 }

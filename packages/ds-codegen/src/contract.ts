@@ -340,6 +340,13 @@ export function getParts(anatomy: ComponentContract["anatomy"]): string[] {
   return anatomy.parts || [];
 }
 
+export function getPartDetails(
+  anatomy: ComponentContract["anatomy"],
+): Record<string, ContractPartDetails> {
+  if (!anatomy || Array.isArray(anatomy)) return {};
+  return anatomy.details || {};
+}
+
 export function getStyledProps(contract: ComponentContract): StyledPropMember[] {
   return contract.props?.styled?.members || [];
 }

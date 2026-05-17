@@ -5,6 +5,33 @@
   "layer": "composite",
   "anatomy": {
     "parts": ["root", "list", "tab", "indicator", "panel"],
+    "details": {
+      "list": {
+        "description": "Container for tab buttons. Hosts keyboard navigation (arrow keys, Home/End).",
+        "role": "group",
+        "aria": { "role": "tablist" }
+      },
+      "tab": {
+        "description": "Single tab button. Auto-registers with the parent Tabs context.",
+        "role": "item",
+        "multiple": true,
+        "interactive": true,
+        "focusable": "roving",
+        "aria": {
+          "role": "tab",
+          "attributes": ["aria-selected", "aria-controls", "tabindex"]
+        }
+      },
+      "panel": {
+        "description": "Content panel associated with a tab.",
+        "role": "region",
+        "multiple": true,
+        "aria": {
+          "role": "tabpanel",
+          "attributes": ["aria-labelledby", "tabindex", "hidden"]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",
