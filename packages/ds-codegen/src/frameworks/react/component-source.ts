@@ -19,6 +19,12 @@ import type {
 } from "../../ir.js";
 import { hasChildrenPlaceholder } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import {
+  getGroupHostPart,
+  getInteractiveItemPart,
+  getRegionPart,
+  isCompoundStateContainer,
+} from "./hook-source.js";
 
 /**
  * Generate the full React TSX source for a component IR.
@@ -37,19 +43,35 @@ export function generateReactComponentSource(
   ir: ComponentIR,
   stackImportPath: string,
 ): string {
-  const reactImports = collectReactImports(ir);
+  const isCompound = isCompoundStateContainer(ir);
+  const reactTypeImports = collectReactImports(ir);
 
-  const importLines = [
-    `import { ${reactImports.join(", ")} } from "react";`,
-  ];
+  const importLines: string[] = [];
+  if (isCompound) {
+    // For compound-state-container, we need both type imports and runtime hooks.
+    // Also need KeyboardEvent type for the keyboard handler in TabsList.
+    const runtimeHooks = ["useCallback", "useEffect", "useRef"];
+    // Add KeyboardEvent type if not already in the list
+    const compoundTypeImports = reactTypeImports.includes("type KeyboardEvent")
+      ? reactTypeImports
+      : [...reactTypeImports, "type KeyboardEvent"];
+    const allReactImports = [...compoundTypeImports, ...runtimeHooks].sort();
+    importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
+  } else {
+    importLines.push(`import { ${reactTypeImports.join(", ")} } from "react";`);
+  }
   // Stack is needed for legacy single-root output AND for compound parts
   // (ModalHeader etc. still use <Stack as="header"> regardless of whether
-  // the parent has a dom tree).
-  if (!ir.dom || ir.compoundParts.length > 0) {
+  // the parent has a dom tree). Compound-state-container components use
+  // plain HTML elements (div, button) so Stack is not needed.
+  if (!isCompound && (!ir.dom || ir.compoundParts.length > 0)) {
     importLines.push(`import { Stack } from "${stackImportPath}";`);
   }
-  if (ir.dom && ir.behavior.normalizedChannels.length > 0) {
+  if (isCompound || (ir.dom && ir.behavior.normalizedChannels.length > 0)) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}";`);
+  }
+  if (isCompound) {
+    importLines.push(`import { createCompoundContext } from "../../primitives/hooks";`);
   }
   importLines.push(`import "./${ir.name}.css";`);
   const importsBody = importLines.join("\n");
@@ -57,15 +79,20 @@ export function generateReactComponentSource(
   const typesBody = generateTypes(ir).trimEnd();
   const propsBody = generatePropsInterface(ir);
 
-  const subcomponentsBody = ir.compoundParts
-    .map((part) =>
-      [
-        generateSubComponentProps(ir.name, part),
-        "",
-        generateSubComponent(ir.name, ir.cssPrefix, part),
-      ].join("\n"),
-    )
-    .join("\n\n");
+  let subcomponentsBody: string;
+  if (isCompound) {
+    subcomponentsBody = generateCompoundStateSubcomponents(ir);
+  } else {
+    subcomponentsBody = ir.compoundParts
+      .map((part) =>
+        [
+          generateSubComponentProps(ir.name, part),
+          "",
+          generateSubComponent(ir.name, ir.cssPrefix, part),
+        ].join("\n"),
+      )
+      .join("\n\n");
+  }
 
   const componentBody = generateRootComponent(ir);
 
@@ -343,7 +370,361 @@ function generateSubComponent(
   ].join("\n");
 }
 
+// ---------------------------------------------------------------------------
+// Compound-state-container (Tabs-shaped) sub-component generation
+// ---------------------------------------------------------------------------
+
+/**
+ * Generates context type, context creation, and the three sub-components
+ * (List, Tab, Panel) for a compound-state-container component like Tabs.
+ *
+ * The context is created at module level so all sub-components can share it
+ * without re-creating on each render.
+ */
+function generateCompoundStateSubcomponents(ir: ComponentIR): string {
+  const name = ir.name;
+  const prefix = ir.cssPrefix;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const groupPart = getGroupHostPart(ir);
+
+  if (!itemPart || !regionPart) return "";
+
+  // Derive sub-component names
+  const listName = `${name}${capitalize(groupPart?.name ?? "List")}`;
+  const tabName = `${name}${capitalize(itemPart.name)}`;
+  const panelName = `${name}${capitalize(regionPart.name)}`;
+
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const setterName = `set${capitalize(channelName)}`;
+
+  // Focus strategy from the contract
+  const orientation = "orientation";
+
+  const lines: string[] = [];
+
+  // ---------------------------------------------------------------------------
+  // Context type and creation
+  // ---------------------------------------------------------------------------
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  ${channelName}: string;`);
+  lines.push(`  ${setterName}: (value: string) => void;`);
+  lines.push(`  registerTab: (value: string) => void;`);
+  lines.push(`  unregisterTab: (value: string) => void;`);
+  lines.push(`  registeredTabs: string[];`);
+  lines.push(`  idBase: string;`);
+  lines.push(`  ${orientation}: "horizontal" | "vertical";`);
+  lines.push(`  activationMode: "automatic" | "manual";`);
+  lines.push(`  loop: boolean;`);
+  lines.push(`  unmountInactive: boolean;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `const [${name}ContextProvider, use${name}Context] = createCompoundContext<${name}ContextValue>("${name}");`,
+  );
+  lines.push(`export { use${name}Context };`);
+  lines.push(``);
+
+  // ---------------------------------------------------------------------------
+  // List sub-component (keyboard host)
+  // ---------------------------------------------------------------------------
+  lines.push(`export interface ${listName}Props {`);
+  lines.push(`  children?: type ReactNode;`.replace("type ReactNode", "ReactNode"));
+  lines.push(`  className?: string;`);
+  lines.push(`  "data-testid"?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${listName}({`);
+  lines.push(`  children,`);
+  lines.push(`  className,`);
+  lines.push(`  "data-testid": testId,`);
+  lines.push(`}: ${listName}Props) {`);
+  lines.push(`  const ctx = use${name}Context();`);
+  lines.push(`  const listRef = useRef<HTMLDivElement>(null);`);
+  lines.push(`  const classNames = ["${prefix}__${groupPart?.name ?? "list"}", className].filter(Boolean).join(" ");`);
+  lines.push(``);
+  lines.push(`  const handleKeyDown = useCallback(`);
+  lines.push(`    (e: KeyboardEvent<HTMLDivElement>) => {`);
+  lines.push(`      const tabs = ctx.registeredTabs;`);
+  lines.push(`      if (tabs.length === 0) return;`);
+  lines.push(`      const currentIndex = tabs.indexOf(ctx.${channelName});`);
+  lines.push(`      const isHorizontal = ctx.${orientation} !== "vertical";`);
+  lines.push(`      let nextIndex = currentIndex;`);
+  lines.push(`      if (`);
+  lines.push(`        (isHorizontal && e.key === "ArrowRight") ||`);
+  lines.push(`        (!isHorizontal && e.key === "ArrowDown")`);
+  lines.push(`      ) {`);
+  lines.push(`        e.preventDefault();`);
+  lines.push(`        nextIndex = ctx.loop`);
+  lines.push(`          ? (currentIndex + 1) % tabs.length`);
+  lines.push(`          : Math.min(currentIndex + 1, tabs.length - 1);`);
+  lines.push(`      } else if (`);
+  lines.push(`        (isHorizontal && e.key === "ArrowLeft") ||`);
+  lines.push(`        (!isHorizontal && e.key === "ArrowUp")`);
+  lines.push(`      ) {`);
+  lines.push(`        e.preventDefault();`);
+  lines.push(`        nextIndex = ctx.loop`);
+  lines.push(`          ? (currentIndex - 1 + tabs.length) % tabs.length`);
+  lines.push(`          : Math.max(currentIndex - 1, 0);`);
+  lines.push(`      } else if (e.key === "Home") {`);
+  lines.push(`        e.preventDefault();`);
+  lines.push(`        nextIndex = 0;`);
+  lines.push(`      } else if (e.key === "End") {`);
+  lines.push(`        e.preventDefault();`);
+  lines.push(`        nextIndex = tabs.length - 1;`);
+  lines.push(`      } else if (e.key === "Enter" || e.key === " ") {`);
+  lines.push(`        if (ctx.activationMode === "manual") {`);
+  lines.push(`          e.preventDefault();`);
+  lines.push(`          const focusedBtn = listRef.current?.querySelector<HTMLButtonElement>("[role=\\"tab\\"]:focus");`);
+  lines.push(`          if (focusedBtn) {`);
+  lines.push(`            const val = focusedBtn.getAttribute("data-value");`);
+  lines.push(`            if (val) ctx.${setterName}(val);`);
+  lines.push(`          }`);
+  lines.push(`        }`);
+  lines.push(`        return;`);
+  lines.push(`      } else {`);
+  lines.push(`        return;`);
+  lines.push(`      }`);
+  lines.push(`      const targetValue = tabs[nextIndex];`);
+  lines.push(`      if (ctx.activationMode === "automatic") {`);
+  lines.push(`        ctx.${setterName}(targetValue);`);
+  lines.push(`      }`);
+  lines.push(`      // Move focus to the target tab button`);
+  lines.push(`      const btn = listRef.current?.querySelector<HTMLButtonElement>(`);
+  lines.push(`        \`[role="tab"][data-value="\${targetValue}"]\`,`);
+  lines.push(`      );`);
+  lines.push(`      btn?.focus();`);
+  lines.push(`    },`);
+  lines.push(`    [ctx],`);
+  lines.push(`  );`);
+  lines.push(``);
+  lines.push(`  return (`);
+  lines.push(`    <div`);
+  lines.push(`      ref={listRef}`);
+  lines.push(`      role="tablist"`);
+  lines.push(`      className={classNames}`);
+  lines.push(`      data-testid={testId}`);
+  lines.push(`      onKeyDown={handleKeyDown}`);
+  lines.push(`      aria-orientation={ctx.${orientation}}`);
+  lines.push(`    >`);
+  lines.push(`      {children}`);
+  lines.push(`    </div>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+  lines.push(``);
+
+  // ---------------------------------------------------------------------------
+  // Tab sub-component (interactive item)
+  // ---------------------------------------------------------------------------
+  lines.push(`export interface ${tabName}Props {`);
+  lines.push(`  value: string;`);
+  lines.push(`  disabled?: boolean;`);
+  lines.push(`  children?: ReactNode;`);
+  lines.push(`  className?: string;`);
+  lines.push(`  "data-testid"?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${tabName}({`);
+  lines.push(`  value,`);
+  lines.push(`  disabled,`);
+  lines.push(`  children,`);
+  lines.push(`  className,`);
+  lines.push(`  "data-testid": testId,`);
+  lines.push(`}: ${tabName}Props) {`);
+  lines.push(`  const ctx = use${name}Context();`);
+  lines.push(`  const isActive = ctx.${channelName} === value;`);
+  lines.push(`  const classNames = [`);
+  lines.push(`    "${prefix}__${itemPart.name}",`);
+  lines.push(`    isActive && "${prefix}__${itemPart.name}--active",`);
+  lines.push(`    className,`);
+  lines.push(`  ].filter(Boolean).join(" ");`);
+  lines.push(``);
+  lines.push(`  // Self-register on mount, unregister on unmount`);
+  lines.push(`  const { registerTab, unregisterTab } = ctx;`);
+  lines.push(`  // Use a ref so the cleanup closure always references the current value`);
+  lines.push(`  const valueRef = useRef(value);`);
+  lines.push(`  valueRef.current = value;`);
+  lines.push(`  useEffect(() => {`);
+  lines.push(`    registerTab(valueRef.current);`);
+  lines.push(`    return () => unregisterTab(valueRef.current);`);
+  lines.push(`  }, [registerTab, unregisterTab]);`);
+  lines.push(``);
+  lines.push(`  return (`);
+  lines.push(`    <button`);
+  lines.push(`      role="tab"`);
+  lines.push(`      type="button"`);
+  lines.push(`      className={classNames}`);
+  lines.push(`      data-value={value}`);
+  lines.push(`      data-testid={testId}`);
+  lines.push(`      id={\`\${ctx.idBase}-tab-\${value}\`}`);
+  lines.push(`      aria-controls={\`\${ctx.idBase}-panel-\${value}\`}`);
+  lines.push(`      aria-selected={isActive}`);
+  lines.push(`      tabIndex={isActive ? 0 : -1}`);
+  lines.push(`      disabled={disabled}`);
+  lines.push(`      onClick={() => ctx.${setterName}(value)}`);
+  lines.push(`    >`);
+  lines.push(`      {children}`);
+  lines.push(`    </button>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+  lines.push(``);
+
+  // ---------------------------------------------------------------------------
+  // Panel sub-component (region)
+  // ---------------------------------------------------------------------------
+  lines.push(`export interface ${panelName}Props {`);
+  lines.push(`  value: string;`);
+  lines.push(`  children?: ReactNode;`);
+  lines.push(`  className?: string;`);
+  lines.push(`  "data-testid"?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${panelName}({`);
+  lines.push(`  value,`);
+  lines.push(`  children,`);
+  lines.push(`  className,`);
+  lines.push(`  "data-testid": testId,`);
+  lines.push(`}: ${panelName}Props) {`);
+  lines.push(`  const ctx = use${name}Context();`);
+  lines.push(`  const isActive = ctx.${channelName} === value;`);
+  lines.push(`  const classNames = ["${prefix}__${regionPart.name}", className].filter(Boolean).join(" ");`);
+  lines.push(``);
+  lines.push(`  if (ctx.unmountInactive && !isActive) return null;`);
+  lines.push(``);
+  lines.push(`  return (`);
+  lines.push(`    <div`);
+  lines.push(`      role="tabpanel"`);
+  lines.push(`      className={classNames}`);
+  lines.push(`      id={\`\${ctx.idBase}-panel-\${value}\`}`);
+  lines.push(`      aria-labelledby={\`\${ctx.idBase}-tab-\${value}\`}`);
+  lines.push(`      tabIndex={0}`);
+  lines.push(`      data-testid={testId}`);
+  lines.push(`      hidden={!isActive ? true : undefined}`);
+  lines.push(`    >`);
+  lines.push(`      {children}`);
+  lines.push(`    </div>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+
+  return lines.join("\n");
+}
+
+/**
+ * Generate the root component for a compound-state-container (Tabs-shaped)
+ * component. Wraps children in the compound context provider, wires the hook,
+ * and handles variant CSS classes.
+ */
+function generateCompoundStateRootComponent(ir: ComponentIR): string {
+  const { name, classRecipe } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "activeTab";
+  const setterName = `set${capitalize(channelName)}`;
+
+  // Build the destructured props list with defaults
+  const propByName = new Map(ir.styledProps.map((p) => [p.name, p]));
+  const destructured: string[] = [];
+  const handled = new Set<string>();
+  const classExprs: string[] = [`"${classRecipe.base}"`];
+
+  // Channel props first
+  if (channel) {
+    destructured.push(`${channel.valueProp}: controlled${capitalize(channel.valueProp)}`);
+    handled.add(channel.valueProp);
+    if (channel.defaultValueProp) {
+      destructured.push(channel.defaultValueProp);
+      handled.add(channel.defaultValueProp);
+    }
+    destructured.push(channel.changeHandlerProp);
+    handled.add(channel.changeHandlerProp);
+  }
+
+  // Variant modifier props with defaults
+  for (const mod of classRecipe.valueModifiers) {
+    if (handled.has(mod.propName)) continue;
+    const resolved = propByName.get(mod.propName);
+    const def = resolved?.defaultExpr ?? mod.defaultExpr;
+    const aliased = mod.propName;
+    destructured.push(def ? `${aliased} = ${def}` : aliased);
+    classExprs.push(`${mod.safeName} && \`${classRecipe.base}--\${${mod.safeName}}\``);
+    handled.add(mod.propName);
+  }
+
+  // Remaining props
+  const remainingProps = ["loop", "unmountInactive", "idBase"];
+  for (const pname of remainingProps) {
+    if (handled.has(pname)) continue;
+    const p = propByName.get(pname);
+    if (!p) continue;
+    const def = p.defaultExpr;
+    destructured.push(def ? `${pname} = ${def}` : pname);
+    handled.add(pname);
+  }
+
+  if (!handled.has("className")) {
+    destructured.push("className");
+    handled.add("className");
+  }
+  destructured.push('"data-testid": testId');
+  destructured.push("children");
+  destructured.push("...rest");
+
+  classExprs.push("className");
+
+  const hookResultParts = [channelName, setterName, "registeredTabs", "registerTab", "unregisterTab", "idBase: resolvedIdBase"];
+  const controlledAlias = `controlled${capitalize(channel?.valueProp ?? "value")}`;
+
+  const lines: string[] = [];
+  lines.push(`export function ${name}({`);
+  lines.push(`  ${destructured.join(",\n  ")}`);
+  lines.push(`}: ${name}Props) {`);
+  lines.push(`  const { ${hookResultParts.join(", ")} } = use${name}({`);
+  if (channel) {
+    lines.push(`    ${channel.valueProp}: ${controlledAlias},`);
+    if (channel.defaultValueProp) lines.push(`    ${channel.defaultValueProp},`);
+    lines.push(`    ${channel.changeHandlerProp},`);
+  }
+  lines.push(`    idBase,`);
+  lines.push(`  });`);
+  lines.push(``);
+  lines.push(`  const classNames = [`);
+  for (const expr of classExprs) lines.push(`    ${expr},`);
+  lines.push(`  ]`);
+  lines.push(`    .filter(Boolean)`);
+  lines.push(`    .join(" ");`);
+  lines.push(``);
+  lines.push(`  return (`);
+  lines.push(`    <${name}ContextProvider`);
+  lines.push(`      value={{`);
+  lines.push(`        ${channelName},`);
+  lines.push(`        ${setterName},`);
+  lines.push(`        registeredTabs,`);
+  lines.push(`        registerTab,`);
+  lines.push(`        unregisterTab,`);
+  lines.push(`        idBase: resolvedIdBase,`);
+  lines.push(`        orientation: orientation ?? "horizontal",`);
+  lines.push(`        activationMode: activationMode ?? "automatic",`);
+  lines.push(`        loop: loop ?? true,`);
+  lines.push(`        unmountInactive: unmountInactive ?? true,`);
+  lines.push(`      }}`);
+  lines.push(`    >`);
+  lines.push(`      <div`);
+  lines.push(`        className={classNames}`);
+  lines.push(`        data-testid={testId}`);
+  lines.push(`        {...rest}`);
+  lines.push(`      >`);
+  lines.push(`        {children}`);
+  lines.push(`      </div>`);
+  lines.push(`    </${name}ContextProvider>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+  return lines.join("\n");
+}
+
 function generateRootComponent(ir: ComponentIR): string {
+  if (isCompoundStateContainer(ir)) {
+    return generateCompoundStateRootComponent(ir);
+  }
   if (ir.dom) {
     return generateDomTreeRootComponent(ir);
   }

@@ -1,7 +1,7 @@
 // @generated:start imports
-import { type ReactNode } from "react";
-import { Stack } from "../../primitives";
+import { type KeyboardEvent, type ReactNode, useCallback, useEffect, useRef } from "react";
 import { useTabs } from "./useTabs";
+import { createCompoundContext } from "../../primitives/hooks";
 import "./Tabs.css";
 // @generated:end
 
@@ -36,6 +36,22 @@ export interface TabsProps {
 // @generated:end
 
 // @generated:start subcomponents
+export interface TabsContextValue {
+  activeTab: string;
+  setActiveTab: (value: string) => void;
+  registerTab: (value: string) => void;
+  unregisterTab: (value: string) => void;
+  registeredTabs: string[];
+  idBase: string;
+  orientation: "horizontal" | "vertical";
+  activationMode: "automatic" | "manual";
+  loop: boolean;
+  unmountInactive: boolean;
+}
+
+const [TabsContextProvider, useTabsContext] = createCompoundContext<TabsContextValue>("Tabs");
+export { useTabsContext };
+
 export interface TabsListProps {
   children?: ReactNode;
   className?: string;
@@ -47,49 +63,162 @@ export function TabsList({
   className,
   "data-testid": testId,
 }: TabsListProps) {
+  const ctx = useTabsContext();
+  const listRef = useRef<HTMLDivElement>(null);
   const classNames = ["tabs__list", className].filter(Boolean).join(" ");
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      const tabs = ctx.registeredTabs;
+      if (tabs.length === 0) return;
+      const currentIndex = tabs.indexOf(ctx.activeTab);
+      const isHorizontal = ctx.orientation !== "vertical";
+      let nextIndex = currentIndex;
+      if (
+        (isHorizontal && e.key === "ArrowRight") ||
+        (!isHorizontal && e.key === "ArrowDown")
+      ) {
+        e.preventDefault();
+        nextIndex = ctx.loop
+          ? (currentIndex + 1) % tabs.length
+          : Math.min(currentIndex + 1, tabs.length - 1);
+      } else if (
+        (isHorizontal && e.key === "ArrowLeft") ||
+        (!isHorizontal && e.key === "ArrowUp")
+      ) {
+        e.preventDefault();
+        nextIndex = ctx.loop
+          ? (currentIndex - 1 + tabs.length) % tabs.length
+          : Math.max(currentIndex - 1, 0);
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        nextIndex = 0;
+      } else if (e.key === "End") {
+        e.preventDefault();
+        nextIndex = tabs.length - 1;
+      } else if (e.key === "Enter" || e.key === " ") {
+        if (ctx.activationMode === "manual") {
+          e.preventDefault();
+          const focusedBtn = listRef.current?.querySelector<HTMLButtonElement>("[role=\"tab\"]:focus");
+          if (focusedBtn) {
+            const val = focusedBtn.getAttribute("data-value");
+            if (val) ctx.setActiveTab(val);
+          }
+        }
+        return;
+      } else {
+        return;
+      }
+      const targetValue = tabs[nextIndex];
+      if (ctx.activationMode === "automatic") {
+        ctx.setActiveTab(targetValue);
+      }
+      // Move focus to the target tab button
+      const btn = listRef.current?.querySelector<HTMLButtonElement>(
+        `[role="tab"][data-value="${targetValue}"]`,
+      );
+      btn?.focus();
+    },
+    [ctx],
+  );
+
   return (
-    <Stack as="ul" variant="horizontal" className={classNames} data-testid={testId}>
+    <div
+      ref={listRef}
+      role="tablist"
+      className={classNames}
+      data-testid={testId}
+      onKeyDown={handleKeyDown}
+      aria-orientation={ctx.orientation}
+    >
       {children}
-    </Stack>
+    </div>
   );
 }
 
 export interface TabsTabProps {
+  value: string;
+  disabled?: boolean;
   children?: ReactNode;
   className?: string;
   "data-testid"?: string;
 }
 
 export function TabsTab({
+  value,
+  disabled,
   children,
   className,
   "data-testid": testId,
 }: TabsTabProps) {
-  const classNames = ["tabs__tab", className].filter(Boolean).join(" ");
+  const ctx = useTabsContext();
+  const isActive = ctx.activeTab === value;
+  const classNames = [
+    "tabs__tab",
+    isActive && "tabs__tab--active",
+    className,
+  ].filter(Boolean).join(" ");
+
+  // Self-register on mount, unregister on unmount
+  const { registerTab, unregisterTab } = ctx;
+  // Use a ref so the cleanup closure always references the current value
+  const valueRef = useRef(value);
+  valueRef.current = value;
+  useEffect(() => {
+    registerTab(valueRef.current);
+    return () => unregisterTab(valueRef.current);
+  }, [registerTab, unregisterTab]);
+
   return (
-    <Stack className={classNames} data-testid={testId}>
+    <button
+      role="tab"
+      type="button"
+      className={classNames}
+      data-value={value}
+      data-testid={testId}
+      id={`${ctx.idBase}-tab-${value}`}
+      aria-controls={`${ctx.idBase}-panel-${value}`}
+      aria-selected={isActive}
+      tabIndex={isActive ? 0 : -1}
+      disabled={disabled}
+      onClick={() => ctx.setActiveTab(value)}
+    >
       {children}
-    </Stack>
+    </button>
   );
 }
 
 export interface TabsPanelProps {
+  value: string;
   children?: ReactNode;
   className?: string;
   "data-testid"?: string;
 }
 
 export function TabsPanel({
+  value,
   children,
   className,
   "data-testid": testId,
 }: TabsPanelProps) {
+  const ctx = useTabsContext();
+  const isActive = ctx.activeTab === value;
   const classNames = ["tabs__panel", className].filter(Boolean).join(" ");
+
+  if (ctx.unmountInactive && !isActive) return null;
+
   return (
-    <Stack className={classNames} data-testid={testId}>
+    <div
+      role="tabpanel"
+      className={classNames}
+      id={`${ctx.idBase}-panel-${value}`}
+      aria-labelledby={`${ctx.idBase}-tab-${value}`}
+      tabIndex={0}
+      data-testid={testId}
+      hidden={!isActive ? true : undefined}
+    >
       {children}
-    </Stack>
+    </div>
   );
 }
 // @generated:end
@@ -101,18 +230,19 @@ export function Tabs({
   onValueChange,
   orientation = "horizontal",
   activationMode = "automatic",
-  className,
-  "data-testid": testId,
-  children,
   loop = true,
   unmountInactive,
   idBase,
+  className,
+  "data-testid": testId,
+  children,
   ...rest
 }: TabsProps) {
-  const { activeTab, setActiveTab } = useTabs({
+  const { activeTab, setActiveTab, registeredTabs, registerTab, unregisterTab, idBase: resolvedIdBase } = useTabs({
     value: controlledValue,
     defaultValue,
     onValueChange,
+    idBase,
   });
 
   const classNames = [
@@ -125,15 +255,28 @@ export function Tabs({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
-    <div className="tabs__list" role="tablist">
-      <button className="tabs__tab" role="tab" type="button" aria-selected={activeTab !== undefined ? (String(activeTab) as "true" | "false") : undefined} />
-      <span className="tabs__indicator" aria-hidden="true" />
-    </div>
-    <div className="tabs__panel">
-      {children}
-    </div>
-  </div>
+    <TabsContextProvider
+      value={{
+        activeTab,
+        setActiveTab,
+        registeredTabs,
+        registerTab,
+        unregisterTab,
+        idBase: resolvedIdBase,
+        orientation: orientation ?? "horizontal",
+        activationMode: activationMode ?? "automatic",
+        loop: loop ?? true,
+        unmountInactive: unmountInactive ?? true,
+      }}
+    >
+      <div
+        className={classNames}
+        data-testid={testId}
+        {...rest}
+      >
+        {children}
+      </div>
+    </TabsContextProvider>
   );
 }
 // @generated:end

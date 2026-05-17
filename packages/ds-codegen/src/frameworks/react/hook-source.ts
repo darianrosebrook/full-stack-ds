@@ -14,6 +14,7 @@
  *                                                focus trap; otherwise the
  *                                                trap + Escape listener pair
  *                                                handles dismissal)
+ *   - compound-state-container pattern         → register/unregister/registeredTabs + idBase
  *
  * Returns `null` when no behavior field is populated; the CLI uses that
  * signal to skip emission.
@@ -21,9 +22,48 @@
 import type {
   ComponentIR,
   NormalizedChannelIR,
+  PartIR,
   ResolvedPropIR,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+
+// ---------------------------------------------------------------------------
+// Compound-state-container pattern detection
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns true when the IR matches the "compound-state-container" (Tabs-shaped)
+ * pattern:
+ *   - has a part with `details.multiple === true && details.interactive === true`
+ *     (the repeatable interactive item, e.g. tab)
+ *   - AND has a part with `details.role === "region"` (the content panel)
+ *
+ * This is the detection gate for compound-tabs wiring (register/unregister,
+ * context, keyboard nav). Generalises to Accordion/RadioGroup later.
+ */
+export function isCompoundStateContainer(ir: ComponentIR): boolean {
+  return !!getInteractiveItemPart(ir) && !!getRegionPart(ir);
+}
+
+/** Returns the first part that is a repeatable interactive item (e.g. tab). */
+export function getInteractiveItemPart(ir: ComponentIR): PartIR | undefined {
+  return ir.parts.find(
+    (p) => p.details?.multiple === true && p.details?.interactive === true,
+  );
+}
+
+/** Returns the first part with role="region" (e.g. panel). */
+export function getRegionPart(ir: ComponentIR): PartIR | undefined {
+  return ir.parts.find((p) => p.details?.role === "region");
+}
+
+/**
+ * Returns the "group host" part — the container that holds the interactive
+ * items and should receive the keyboard handler (e.g. "list").
+ */
+export function getGroupHostPart(ir: ComponentIR): PartIR | undefined {
+  return ir.parts.find((p) => p.details?.role === "group");
+}
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -34,6 +74,8 @@ interface PrimitiveBindings {
   useDismissal: boolean;
   hasEscapeTrigger: boolean;
   hasOutsideClickTrigger: boolean;
+  /** True when the IR matches the compound-state-container (Tabs-shaped) pattern. */
+  isCompoundStateContainer: boolean;
 }
 
 /**
@@ -72,12 +114,15 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     (hasFocusTrap && hasEscapeTrigger) ||
     (!useAnchor && hasEscapeTrigger);
 
+  const compoundContainer = isCompoundStateContainer(ir);
+
   if (
     channels.length === 0 &&
     !hasFocusTrap &&
     !hasScrollLock &&
     !hasPortal &&
-    !useAnchor
+    !useAnchor &&
+    !compoundContainer
   ) {
     return null;
   }
@@ -91,6 +136,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     useDismissal: useDismissalHook,
     hasEscapeTrigger,
     hasOutsideClickTrigger,
+    isCompoundStateContainer: compoundContainer,
   };
 }
 
@@ -164,6 +210,11 @@ function generateOptionsInterface(
     }
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** Base string for generating tab and panel IDs. Defaults to a generated id. */`);
+    lines.push(`  idBase?: string;`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -195,6 +246,15 @@ function generateResultInterface(
     lines.push(`  renderInPortal: (node: ReactNode) => ReactNode;`);
   }
 
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  /** DOM-order list of registered tab values. */`);
+    lines.push(`  registeredTabs: string[];`);
+    lines.push(`  registerTab: (value: string) => void;`);
+    lines.push(`  unregisterTab: (value: string) => void;`);
+    lines.push(`  /** Base string for generating tab and panel IDs. */`);
+    lines.push(`  idBase: string;`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -207,6 +267,11 @@ function generateImports(bindings: PrimitiveBindings): string {
     reactTypes.push("type RefObject");
   }
   if (bindings.usePortal) reactTypes.push("type ReactNode");
+  if (bindings.isCompoundStateContainer) {
+    reactNamed.push("useCallback");
+    reactNamed.push("useId");
+    reactNamed.push("useState");
+  }
 
   const primitives: string[] = [];
   if (bindings.useControllableState.length > 0)
@@ -427,6 +492,25 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
     lines.push(`  });`, ``);
   }
 
+  // Compound-state-container (Tabs-shaped) wiring
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`  const [registeredTabs, setRegisteredTabs] = useState<string[]>([]);`);
+    lines.push(``);
+    lines.push(`  const generatedId = useId();`);
+    lines.push(`  const resolvedIdBase = options.idBase ?? generatedId;`);
+    lines.push(``);
+    lines.push(`  const registerTab = useCallback((value: string) => {`);
+    lines.push(`    setRegisteredTabs((prev) =>`);
+    lines.push(`      prev.includes(value) ? prev : [...prev, value],`);
+    lines.push(`    );`);
+    lines.push(`  }, []);`);
+    lines.push(``);
+    lines.push(`  const unregisterTab = useCallback((value: string) => {`);
+    lines.push(`    setRegisteredTabs((prev) => prev.filter((v) => v !== value));`);
+    lines.push(`  }, []);`);
+    lines.push(``);
+  }
+
   // Build return object
   lines.push(`  return {`);
   for (const ch of bindings.useControllableState) {
@@ -447,6 +531,12 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   }
   if (bindings.usePortal) {
     lines.push(`    renderInPortal: portal.render,`);
+  }
+  if (bindings.isCompoundStateContainer) {
+    lines.push(`    registeredTabs,`);
+    lines.push(`    registerTab,`);
+    lines.push(`    unregisterTab,`);
+    lines.push(`    idBase: resolvedIdBase,`);
   }
   lines.push(`  };`);
   lines.push(`}`);

@@ -86,5 +86,287 @@ describe("Tabs — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import userEvent from "@testing-library/user-event";
 
+/**
+ * Helper to render a standard two-tab fixture.
+ * defaultValue controls which tab starts active.
+ */
+function renderTabs(opts: {
+  defaultValue?: string;
+  value?: string;
+  onValueChange?: (v: string) => void;
+  activationMode?: "automatic" | "manual";
+  loop?: boolean;
+  unmountInactive?: boolean;
+} = {}) {
+  return render(
+    <Tabs
+      defaultValue={opts.defaultValue ?? "a"}
+      value={opts.value}
+      onValueChange={opts.onValueChange}
+      activationMode={opts.activationMode}
+      loop={opts.loop}
+      unmountInactive={opts.unmountInactive}
+      data-testid="tabs-root"
+    >
+      <TabsList data-testid="tabs-list">
+        <TabsTab value="a" data-testid="tab-a">Tab A</TabsTab>
+        <TabsTab value="b" data-testid="tab-b">Tab B</TabsTab>
+      </TabsList>
+      <TabsPanel value="a" data-testid="panel-a">Panel A content</TabsPanel>
+      <TabsPanel value="b" data-testid="panel-b">Panel B content</TabsPanel>
+    </Tabs>,
+  );
+}
+
+describe("Tabs — behavioral", () => {
+  it("renders the active panel and hides the inactive panel by default", async () => {
+    renderTabs({ defaultValue: "a" });
+    // Active panel content is visible
+    expect(screen.getByTestId("panel-a")).toBeInTheDocument();
+    // Inactive panel is unmounted (unmountInactive defaults to true)
+    expect(screen.queryByTestId("panel-b")).toBeNull();
+  });
+
+  it("clicking a tab activates it and swaps panels", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "a" });
+
+    // Initially tab A is active
+    expect(screen.getByTestId("panel-a")).toBeInTheDocument();
+    expect(screen.queryByTestId("panel-b")).toBeNull();
+
+    // Click tab B
+    await user.click(screen.getByTestId("tab-b"));
+
+    // Panel B should now be rendered, panel A gone
+    expect(screen.getByTestId("panel-b")).toBeInTheDocument();
+    expect(screen.queryByTestId("panel-a")).toBeNull();
+  });
+
+  it("calls onValueChange when a tab is clicked", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    renderTabs({ defaultValue: "a", onValueChange });
+
+    await user.click(screen.getByTestId("tab-b"));
+    expect(onValueChange).toHaveBeenCalledWith("b");
+  });
+
+  it("aria-selected is true for active tab, false for inactive", async () => {
+    renderTabs({ defaultValue: "a" });
+    const tabA = screen.getByTestId("tab-a");
+    const tabB = screen.getByTestId("tab-b");
+    expect(tabA).toHaveAttribute("aria-selected", "true");
+    expect(tabB).toHaveAttribute("aria-selected", "false");
+  });
+
+  it("flips aria-selected when tab is clicked", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "a" });
+
+    await user.click(screen.getByTestId("tab-b"));
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("aria-selected", "false");
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("roving tabindex: active tab has tabindex=0, inactive has tabindex=-1", async () => {
+    renderTabs({ defaultValue: "a" });
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("tabindex", "0");
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("roving tabindex updates when active tab changes", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "a" });
+
+    await user.click(screen.getByTestId("tab-b"));
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("tabindex", "-1");
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("tabindex", "0");
+  });
+
+  it("tabs have role=tab, panels have role=tabpanel", async () => {
+    renderTabs({ defaultValue: "a" });
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("role", "tab");
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("role", "tab");
+    // Panel A is active and visible
+    expect(screen.getByTestId("panel-a")).toHaveAttribute("role", "tabpanel");
+  });
+
+  it("tab has aria-controls matching panel id, panel has aria-labelledby matching tab id", async () => {
+    renderTabs({ defaultValue: "a" });
+    const tabA = screen.getByTestId("tab-a");
+    const panelA = screen.getByTestId("panel-a");
+    const tabId = tabA.id;
+    const panelId = panelA.id;
+
+    // tab's id should match panel's aria-labelledby
+    expect(panelA).toHaveAttribute("aria-labelledby", tabId);
+    // tab's aria-controls should match panel's id
+    expect(tabA).toHaveAttribute("aria-controls", panelId);
+  });
+
+  it("keyboard ArrowRight moves focus to next tab (automatic mode activates it)", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "a" });
+
+    // Focus tab A then press ArrowRight
+    const tabA = screen.getByTestId("tab-a");
+    await user.click(tabA); // gives focus
+    await user.keyboard("{ArrowRight}");
+
+    // Tab B should now be active (automatic activation)
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("keyboard ArrowLeft moves focus to previous tab", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "b" });
+
+    // Focus tab B then press ArrowLeft
+    const tabB = screen.getByTestId("tab-b");
+    await user.click(tabB);
+    await user.keyboard("{ArrowLeft}");
+
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("keyboard Home moves focus to first tab", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "b" });
+
+    const tabB = screen.getByTestId("tab-b");
+    await user.click(tabB);
+    await user.keyboard("{Home}");
+
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("keyboard End moves focus to last tab", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "a" });
+
+    const tabA = screen.getByTestId("tab-a");
+    await user.click(tabA);
+    await user.keyboard("{End}");
+
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("keyboard loop: ArrowRight from last tab wraps to first", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "b", loop: true });
+
+    const tabB = screen.getByTestId("tab-b");
+    await user.click(tabB);
+    await user.keyboard("{ArrowRight}");
+
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("manual activation mode: ArrowRight moves focus but does NOT activate tab", async () => {
+    const user = userEvent.setup();
+    renderTabs({ defaultValue: "a", activationMode: "manual" });
+
+    const tabA = screen.getByTestId("tab-a");
+    await user.click(tabA);
+    await user.keyboard("{ArrowRight}");
+
+    // Tab A is still active — ArrowRight only moved focus
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("aria-selected", "false");
+  });
+
+  it("unmountInactive=false: inactive panels render with hidden attribute", async () => {
+    renderTabs({ defaultValue: "a", unmountInactive: false });
+
+    const panelA = screen.getByTestId("panel-a");
+    const panelB = screen.getByTestId("panel-b");
+
+    // Both panels are in DOM
+    expect(panelA).toBeInTheDocument();
+    expect(panelB).toBeInTheDocument();
+
+    // Inactive panel B has hidden attribute
+    expect(panelB).toHaveAttribute("hidden");
+    // Active panel A does not have hidden
+    expect(panelA).not.toHaveAttribute("hidden");
+  });
+
+  it("controlled mode: value prop controls the active tab", async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    const { rerender } = render(
+      <Tabs value="a" onValueChange={onValueChange} data-testid="tabs-root">
+        <TabsList>
+          <TabsTab value="a" data-testid="tab-a">A</TabsTab>
+          <TabsTab value="b" data-testid="tab-b">B</TabsTab>
+        </TabsList>
+        <TabsPanel value="a" data-testid="panel-a">A</TabsPanel>
+        <TabsPanel value="b" data-testid="panel-b">B</TabsPanel>
+      </Tabs>,
+    );
+
+    expect(screen.getByTestId("tab-a")).toHaveAttribute("aria-selected", "true");
+
+    // Click B — calls handler but doesn't update (controlled)
+    await user.click(screen.getByTestId("tab-b"));
+    expect(onValueChange).toHaveBeenCalledWith("b");
+
+    // Rerender with new value
+    rerender(
+      <Tabs value="b" onValueChange={onValueChange} data-testid="tabs-root">
+        <TabsList>
+          <TabsTab value="a" data-testid="tab-a">A</TabsTab>
+          <TabsTab value="b" data-testid="tab-b">B</TabsTab>
+        </TabsList>
+        <TabsPanel value="a" data-testid="panel-a">A</TabsPanel>
+        <TabsPanel value="b" data-testid="panel-b">B</TabsPanel>
+      </Tabs>,
+    );
+    expect(screen.getByTestId("tab-b")).toHaveAttribute("aria-selected", "true");
+  });
+});
+
+describe("Tabs — accessibility (full fixture)", () => {
+  it("fully-composed Tabs has no unexpected axe violations", async () => {
+    const { container } = render(
+      <>
+        <Tabs defaultValue="a" aria-label="Feature tabs">
+          <TabsList>
+            <TabsTab value="a">Tab A</TabsTab>
+            <TabsTab value="b">Tab B</TabsTab>
+          </TabsList>
+          <TabsPanel value="a">Content A</TabsPanel>
+          <TabsPanel value="b">Content B</TabsPanel>
+        </Tabs>
+      </>,
+    );
+    const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
+    const knownScaffoldViolationIds = new Set([
+      "aria-dialog-name",
+      "aria-input-field-name",
+      "aria-progressbar-name",
+      "aria-prohibited-attr",
+      "aria-required-attr",
+      "aria-required-children",
+      "aria-required-parent",
+      "aria-toggle-field-name",
+      "aria-tooltip-name",
+      "button-name",
+      "empty-heading",
+      "image-alt",
+      "label",
+      "link-name",
+      "list",
+      "region",
+      "summary-name",
+    ]);
+    const unexpectedViolations = results.violations.filter(
+      (v) => !knownScaffoldViolationIds.has(v.id),
+    );
+    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+  });
+});
 // @custom:end
