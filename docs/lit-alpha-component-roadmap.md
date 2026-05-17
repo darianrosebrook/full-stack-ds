@@ -4,7 +4,7 @@ authority: roadmap
 status: draft
 title: Lit alpha-component roadmap — Tabs and Tooltip
 owner: "@darianrosebrook"
-updated: 2026-05-16
+updated: 2026-05-17
 caws_specs: []
 # No CAWS specs yet — this project doesn't have .caws/ scaffolding. When CAWS
 # is adopted here, replace this list with the spec IDs that track each
@@ -13,18 +13,38 @@ caws_specs: []
 
 # Lit alpha-component roadmap: Tabs (Gap 3) and Tooltip (Gap 4)
 
-This doc scopes the work needed to bring two component families to functional completeness across the design system. They're called out because their current generated output compiles cleanly but isn't behaviorally complete:
+This doc scopes the work needed to bring two component families to functional completeness across the design system.
+
+**Status as of 2026-05-17**:
+
+- **Gap 3 (Tabs): CLOSED.** Implemented across all 5 frameworks via the `compound-state-container` codegen path (see Phase A through Phase D commits below). The pattern is detected from contract `anatomy.details` and emits compound parts that wire `activeTab` reactively, register tabs in DOM order, host keyboard navigation, and surface ARIA correctly. 118 new behavioral tests added across the 5 frameworks. The pattern generalizes to Accordion / RadioGroup / Menu (future).
+- **Gap 4 (Tooltip): OPEN.** Outline below remains valid; floating-component infrastructure is the next priority.
+
+The original problem statements (preserved for context):
 
 - **Tabs**: renders exactly one `<button role="tab">` regardless of how many tabs the consumer wants — the contract has no iteration primitive, and the compound parts (`TabsList`, `TabsTab`, `TabsPanel`) are stateless wrappers that don't read or write `activeTab`.
 - **Tooltip**: only opens when the consumer calls `el.behavior.setOpen(true)` programmatically. The `behavior.trigger: "hover"` declaration in the contract has no codegen translation — there are no `mouseenter`/`focusin` listeners, no positioning math, no delay handling.
 
-Both are cross-framework gaps (React, Vue, Svelte, Angular, Lit all share the missing wiring). Fixing them in just Lit would diverge the system; the work needs to land for all five.
+## Gap 3 closure — commit trail
+
+| Phase | Commit | Scope |
+|---|---|---|
+| A | `7369621` | Plumb `anatomy.details` through `PartIR`; populate Tabs contract `details` block |
+| B | `c948063` | React reference: `createCompoundContext` wiring + 18 behavioral tests |
+| C-Lit | `7ed962c` | Lit Tabs + DOM-event-based reactivity fix to `CompoundContext` primitive; 26 tests (incl. controller isolation) |
+| C-Vue | `faea8b5` | Vue Tabs via `provide`/`inject` + getter-accessor reactivity; 18 tests |
+| C-Svelte | `a10478e` | Svelte 5 Tabs via `setContext`/`getContext` + `$state` runes; 18 tests |
+| C-Angular | `f61a74d` | Angular Tabs via `InjectionToken` + `WritableSignal`; 38 tests |
+
+The codegen seam (`isCompoundStateContainer`, `getInteractiveItemPart`, `getRegionPart`, `getGroupHostPart`) is defined once in `react/hook-source.ts` and imported by the other four framework emitters. Adding Accordion or RadioGroup will require adding their contracts with the same `anatomy.details` shape (interactive `multiple` item + `region` panel) — no further codegen changes.
 
 ---
 
-## Gap 3: Tabs iteration (compound-part wiring)
+---
 
-### Current state
+## Gap 3: Tabs iteration (compound-part wiring) — CLOSED
+
+### Original state (preserved for context)
 
 `packages/ds-react/src/components/Tabs/Tabs.tsx` already emits the compound parts as separate exports:
 
