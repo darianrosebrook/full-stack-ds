@@ -1,57 +1,37 @@
 {
   "$schema": "./component.contract.schema.json",
   "name": "Popover",
-  "description": "Non-modal floating panel anchored to a trigger element. Does not trap focus.",
-  "layer": "composite",
+  "description": "Anchored persistent presence surface that exposes interactive content adjacent to a trigger element on click. Composes as <Popover><Popover.Trigger>...</Popover.Trigger><Popover.Content>...</Popover.Content></Popover>; the substrate wires aria-controls/aria-expanded, click toggling, and escape/outside-click/boundary-blur dismissal. Non-modal: does NOT trap focus or render an overlay scrim.",
+  "layer": "primitive",
   "anatomy": {
     "parts": ["root", "trigger", "content"],
-    "dom": {
-      "tag": "div",
-      "part": "root",
-      "children": [
-        {
-          "tag": "button",
-          "part": "trigger",
-          "attrs": {
-            "type": "button",
-            "aria-haspopup": "true"
-          },
-          "bindings": {
-            "aria-expanded": "channel:open.value",
-            "aria-controls": "literal:popover-content"
-          },
-          "children": [
-            {
-              "tag": "children"
-            }
-          ]
-        },
-        {
-          "tag": "div",
-          "part": "content",
-          "if": "open",
-          "attrs": {
-            "id": "popover-content"
-          },
-          "children": [
-            {
-              "tag": "children"
-            }
-          ]
-        }
-      ]
+    "details": {
+      "root": {
+        "role": "group"
+      },
+      "trigger": {
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "content": {
+        "role": "content",
+        "interactive": true,
+        "focusable": true
+      }
     }
   },
   "variants": {
     "placement": ["top", "bottom", "left", "right", "auto"]
   },
-  "states": ["default", "hover", "focus", "leaving"],
+  "states": ["default", "open", "focus", "entering", "leaving"],
   "a11y": {
-    "labeling": ["aria-haspopup", "aria-expanded", "aria-controls"],
+    "role": "group",
+    "labeling": ["aria-controls", "aria-expanded"],
     "keyboard": [
       {
         "key": "Escape",
-        "action": "Close the popover and return focus to the trigger."
+        "action": "Close the popover and return focus to the trigger (WCAG 2.1 SC 2.1.1)."
       },
       {
         "key": "Enter",
@@ -74,6 +54,26 @@
       "description": "Whether the popover content is visible."
     }
   },
+  "surface": {
+    "kind": "popover",
+    "presence": "persistent",
+    "modality": "non-blocking",
+    "anchor": {
+      "part": "trigger",
+      "relation": "controls-expanded"
+    },
+    "content": {
+      "part": "content",
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": ["escape", "outside-click", "blur"],
+    "openTriggers": ["click"]
+  },
   "portal": {
     "enabled": true,
     "defaultTarget": "body",
@@ -90,6 +90,10 @@
       {
         "event": "outsideClick",
         "enabledBy": "closeOnOutsideClick"
+      },
+      {
+        "event": "blur",
+        "enabledBy": "closeOnBlur"
       }
     ]
   },
@@ -134,7 +138,7 @@
   },
   "props": {
     "styled": {
-      "description": "Props for the <Popover> floating panel component.",
+      "description": "Props for the <Popover> root component.",
       "members": [
         {
           "name": "open",
@@ -144,7 +148,7 @@
         {
           "name": "defaultOpen",
           "type": "boolean",
-          "description": "Initial open state for uncontrolled usage."
+          "description": "Uncontrolled initial open state."
         },
         {
           "name": "onOpenChange",
@@ -154,35 +158,30 @@
         {
           "name": "placement",
           "type": "PopoverPlacement",
-          "description": "Preferred placement relative to the trigger.",
-          "default": "auto"
+          "description": "Preferred placement relative to the trigger. May be overridden by collision detection."
         },
         {
-          "name": "triggerStrategy",
-          "type": "PopoverTriggerStrategy",
-          "description": "Interaction mode that opens the popover.",
-          "default": "click"
-        },
-        {
-          "name": "offset",
-          "type": "number",
-          "description": "Distance in pixels between the trigger and the floating panel.",
-          "default": 8
-        },
-        {
-          "name": "closeOnOutsideClick",
+          "name": "disabled",
           "type": "boolean",
-          "description": "Close when clicking outside the popover content."
+          "description": "Suppresses the popover entirely; the trigger renders but never opens."
         },
         {
           "name": "closeOnEscape",
           "type": "boolean",
-          "description": "Close when pressing Escape."
+          "description": "When true, Escape closes the popover and returns focus to the trigger.",
+          "default": true
         },
         {
-          "name": "anchor",
-          "type": "HTMLElement | null",
-          "description": "External anchor element to position against (bypasses internal trigger)."
+          "name": "closeOnOutsideClick",
+          "type": "boolean",
+          "description": "When true, a click outside the anchor ∪ content surface closes the popover.",
+          "default": true
+        },
+        {
+          "name": "closeOnBlur",
+          "type": "boolean",
+          "description": "When true, focus leaving the anchor ∪ content surface boundary closes the popover.",
+          "default": true
         }
       ]
     }
@@ -191,10 +190,6 @@
     "PopoverPlacement": {
       "kind": "union",
       "values": ["top", "bottom", "left", "right", "auto"]
-    },
-    "PopoverTriggerStrategy": {
-      "kind": "union",
-      "values": ["click", "hover"]
     }
   }
 }

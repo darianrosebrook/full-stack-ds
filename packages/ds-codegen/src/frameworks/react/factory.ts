@@ -19,6 +19,7 @@ import type { ComponentIR } from "../../ir.js";
 import { generateReactComponentSource } from "./component-source.js";
 import { generateReactHookSource } from "./hook-source.js";
 import { generateBarrel, generateReactTest } from "./tests.js";
+import { isSurfaceComponent } from "./surface-emit.js";
 
 export interface ReactEmitterOptions {
   /**
@@ -64,6 +65,11 @@ export function createReactEmitter(
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      // Surface-family components import substrate hooks
+      // (useAnchoredSurface) directly from the primitives package
+      // and do NOT emit a per-component useX hook. The compound
+      // source owns its own state plumbing.
+      if (isSurfaceComponent(ir)) return [];
       const source = generateReactHookSource(ir);
       if (!source) return [];
       return [

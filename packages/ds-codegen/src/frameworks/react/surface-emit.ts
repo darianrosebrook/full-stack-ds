@@ -1,18 +1,25 @@
 /**
  * React emitter — Anchored Presence Surface path.
  *
- * Activated when `ir.surface?.kind === "tooltip"` (and, after F-3, other
- * anchored kinds). Emits the compound API:
+ * Activated for any `ir.surface` whose `kind` is in
+ * `SUPPORTED_ANCHORED_KINDS`. Emits the compound API:
  *
- *   <Tooltip>
- *     <Tooltip.Trigger>...</Tooltip.Trigger>
- *     <Tooltip.Content>...</Tooltip.Content>
- *   </Tooltip>
+ *   <Surface>
+ *     <Surface.Trigger>...</Surface.Trigger>
+ *     <Surface.Content>...</Surface.Content>
+ *   </Surface>
+ *
+ * The emitter is data-driven on `surface.dismissal` and
+ * `surface.openTriggers` — Tooltip and Popover share the same code
+ * path; only the contract differs (dismissal modes, anchor relation,
+ * content role).
  *
  * Bypasses the legacy `ir.dom` and compound-state-container paths
  * entirely — this is forward-facing replacement, not augmentation.
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
+
+const SUPPORTED_ANCHORED_KINDS = new Set(["tooltip", "popover"] as const);
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
   return ir.surface !== undefined;
@@ -25,15 +32,33 @@ export function generateReactSurfaceComponentSource(ir: ComponentIR): string {
       `generateReactSurfaceComponentSource called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
+  if (!SUPPORTED_ANCHORED_KINDS.has(surface.kind as "tooltip" | "popover")) {
     throw new Error(
-      `React surface emitter only supports kind "tooltip" in F-2A (got "${surface.kind}").`,
+      `React surface emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_ANCHORED_KINDS].join(", ")}.`,
     );
   }
-  return emitTooltipSource(ir, surface);
+  return emitAnchoredSurfaceSource(ir, surface);
 }
 
-function emitTooltipSource(ir: ComponentIR, surface: SurfaceIR): string {
+/**
+ * Map from a contract dismissal mode to its consumer-facing prop
+ * shape. `null` means "no public prop knob — substrate-internal
+ * only" (e.g. pointer-leave is a Tooltip grace path with no toggle).
+ */
+interface DismissalPropSpec {
+  /** Public prop name (e.g. "closeOnEscape"); null for internal-only. */
+  prop: string | null;
+  /** TS prop type (always boolean when prop is set). */
+  default: boolean;
+}
+const DISMISSAL_PROP_SPECS: Record<string, DismissalPropSpec> = {
+  escape: { prop: "closeOnEscape", default: true },
+  blur: { prop: "closeOnBlur", default: true },
+  "outside-click": { prop: "closeOnOutsideClick", default: true },
+  "pointer-leave": { prop: null, default: true },
+};
+
+function emitAnchoredSurfaceSource(ir: ComponentIR, surface: SurfaceIR): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const placementValues: string[] | undefined = ir.variants["placement"];
@@ -73,20 +98,33 @@ function emitTooltipSource(ir: ComponentIR, surface: SurfaceIR): string {
     `import "./${name}.css";`,
   ].join("\n");
 
-  const contentRole = surface.content?.part.details?.aria?.role ?? "tooltip";
+  // Default content role: tooltip kind defaults to "tooltip"; other
+  // anchored kinds (popover) emit no role unless the contract part
+  // explicitly declares one in anatomy.details.<part>.aria.role.
+  const contentRole =
+    surface.content?.part.details?.aria?.role ??
+    (surface.kind === "tooltip" ? "tooltip" : null);
+
+  // Data-driven dismissal props: one closeOnX boolean per public
+  // dismissal mode declared by the surface.
+  const dismissalProps = surface.dismissal
+    .map((mode) => DISMISSAL_PROP_SPECS[mode])
+    .filter((spec): spec is DismissalPropSpec => spec !== undefined && spec.prop !== null);
 
   // Stable types
   const typesBody = placementTypeAlias.trimEnd();
 
   // Compound props
+  const closeOnPropLines = dismissalProps
+    .map((spec) => `  ${spec.prop}?: boolean;`)
+    .join("\n");
   const propsBody = `export interface ${name}Props {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   placement?: ${placementType};
   disabled?: boolean;
-  closeOnEscape?: boolean;
-  closeOnBlur?: boolean;
+${closeOnPropLines}
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -133,6 +171,22 @@ function use${name}Context(): ${name}ContextValue {
 }`;
 
   // Root component
+  const destructuredCloseProps = dismissalProps
+    .map((spec) => `  ${spec.prop} = ${spec.default},`)
+    .join("\n");
+
+  // Build the runtime dismissal array literal. Each declared
+  // dismissal mode contributes one entry: gated by its closeOn* prop
+  // if it has one, otherwise inlined as a string literal.
+  const dismissalEntries = surface.dismissal
+    .map((mode) => {
+      const spec = DISMISSAL_PROP_SPECS[mode];
+      if (!spec) return null;
+      return spec.prop ? `${spec.prop} && "${mode}"` : `"${mode}"`;
+    })
+    .filter((s): s is string => s !== null);
+  const dismissalTypeUnion = surface.dismissal.map((m) => `"${m}"`).join(" | ");
+
   const rootBody = `export function ${name}({
   open,
   defaultOpen,
@@ -140,16 +194,13 @@ function use${name}Context(): ${name}ContextValue {
   placement,
   disabled,
   className,
-  closeOnEscape = true,
-  closeOnBlur = true,
+${destructuredCloseProps}
   "data-testid": testId,
   children,
 }: ${name}Props) {
   const dismissal = [
-    ${surface.dismissal.includes("escape") ? `closeOnEscape && "escape"` : `null`},
-    ${surface.dismissal.includes("blur") ? `closeOnBlur && "blur"` : `null`},
-    ${surface.dismissal.includes("pointer-leave") ? `"pointer-leave"` : `null`},
-  ].filter(Boolean) as readonly ("escape" | "blur" | "pointer-leave")[];
+    ${dismissalEntries.join(",\n    ")},
+  ].filter(Boolean) as readonly (${dismissalTypeUnion})[];
 
   const surface = useAnchoredSurface({
     open,
@@ -318,7 +369,16 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   });
 }`;
 
-  // Content subcomponent (default host: <div role="${contentRole}">)
+  // Content subcomponent. For surfaces that declare a content role
+  // (Tooltip emits role="tooltip"), the role is emitted as an
+  // attribute. Popover-family surfaces omit the role — the contract
+  // anchor.relation already supplies the semantic relationship via
+  // aria-controls/aria-expanded on the trigger, and forcing a
+  // role="dialog" would imply modal semantics that Popover does not
+  // satisfy. Consumers wanting an explicit role can pass one via
+  // `...rest`.
+  const contentRoleAttr =
+    contentRole !== null ? `\n      role="${contentRole}"` : "";
   const contentBody = `${name}.Content = function ${name}Content({
   children,
   ...rest
@@ -328,8 +388,7 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   return (
     <div
       ref={(node) => ctx.registerContent(node)}
-      id={ctx.contentId}
-      role="${contentRole}"
+      id={ctx.contentId}${contentRoleAttr}
       data-${cssPrefix}-content=""
       {...rest}
     >

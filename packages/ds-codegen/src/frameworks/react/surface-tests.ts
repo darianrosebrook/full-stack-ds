@@ -14,6 +14,8 @@
  */
 import type { ComponentIR } from "../../ir.js";
 
+const SUPPORTED_TEST_KINDS = new Set(["tooltip", "popover"] as const);
+
 export function generateReactSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
   if (!surface) {
@@ -21,12 +23,248 @@ export function generateReactSurfaceTest(ir: ComponentIR): string {
       `generateReactSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
+  if (!SUPPORTED_TEST_KINDS.has(surface.kind as "tooltip" | "popover")) {
     throw new Error(
-      `React surface test emitter only supports kind "tooltip" in F-2A (got "${surface.kind}").`,
+      `React surface test emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_TEST_KINDS].join(", ")}.`,
     );
   }
+  if (surface.kind === "popover") {
+    return emitPopoverScaffoldTests(ir);
+  }
   return emitTooltipTests(ir);
+}
+
+/**
+ * Minimal Popover test scaffold emitted by atom B. Asserts the
+ * Popover-specific contract shape (click toggles, aria-controls +
+ * aria-expanded, asChild adoption, accessibility) without the full
+ * behavioral coverage matrix. Atom C extends this with the deep
+ * behavioral suite (focus boundary, outside-click, controlled
+ * override, disabled, etc.) inside the @custom block.
+ */
+function emitPopoverScaffoldTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const importsBody = [
+    `import { createRef } from "react";`,
+    `import { describe, it, expect, vi } from "vitest";`,
+    `import { render, screen, fireEvent, act } from "@testing-library/react";`,
+    `import { axe } from "vitest-axe";`,
+    `import { ${name} } from "../${name}";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+  ].join("\n");
+
+  const testsBody = `function renderPopover(props: Partial<React.ComponentProps<typeof ${name}>> = {}) {
+  return render(
+    <${name} {...props}>
+      <${name}.Trigger data-testid="trigger">Open</${name}.Trigger>
+      <${name}.Content data-testid="content">
+        <button data-testid="content-button">action</button>
+      </${name}.Content>
+    </${name}>,
+  );
+}
+
+describe("${name} — compound API surface", () => {
+  it("renders the trigger but not the content when closed", () => {
+    renderPopover();
+    expect(screen.getByTestId("trigger")).toBeInTheDocument();
+    expect(screen.queryByTestId("content")).toBeNull();
+  });
+
+  it("renders the content when defaultOpen={true}", () => {
+    renderPopover({ defaultOpen: true });
+    expect(screen.getByTestId("content")).toBeInTheDocument();
+  });
+
+  it("opens on click of the trigger", () => {
+    renderPopover();
+    const trigger = screen.getByTestId("trigger");
+    act(() => {
+      fireEvent.click(trigger);
+    });
+    expect(screen.getByTestId("content")).toBeInTheDocument();
+  });
+
+  it("toggles closed on a second click of the trigger", () => {
+    renderPopover({ defaultOpen: true });
+    const trigger = screen.getByTestId("trigger");
+    act(() => {
+      fireEvent.click(trigger);
+    });
+    expect(screen.queryByTestId("content")).toBeNull();
+  });
+
+  it("closes on Escape", () => {
+    renderPopover({ defaultOpen: true });
+    act(() => {
+      fireEvent.keyDown(document, { key: "Escape" });
+    });
+    expect(screen.queryByTestId("content")).toBeNull();
+  });
+
+  it("wires aria-controls + aria-expanded on the trigger", () => {
+    renderPopover({ defaultOpen: true });
+    const trigger = screen.getByTestId("trigger");
+    const content = screen.getByTestId("content");
+    const id = content.getAttribute("id");
+    expect(id).toBeTruthy();
+    expect(trigger).toHaveAttribute("aria-controls", id);
+    expect(trigger).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("aria-expanded reflects closed state", () => {
+    renderPopover();
+    const trigger = screen.getByTestId("trigger");
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("fires onOpenChange on uncontrolled open", () => {
+    const spy = vi.fn();
+    renderPopover({ onOpenChange: spy });
+    act(() => {
+      fireEvent.click(screen.getByTestId("trigger"));
+    });
+    expect(spy).toHaveBeenCalledWith(true);
+  });
+
+  it("respects disabled — click does not open", () => {
+    renderPopover({ disabled: true });
+    act(() => {
+      fireEvent.click(screen.getByTestId("trigger"));
+    });
+    expect(screen.queryByTestId("content")).toBeNull();
+  });
+
+  it("unmount removes document-level listeners (no setOpen after unmount)", () => {
+    const spy = vi.fn();
+    const { unmount } = renderPopover({ defaultOpen: true, onOpenChange: spy });
+    unmount();
+    act(() => {
+      fireEvent.keyDown(document, { key: "Escape" });
+    });
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("${name} — asChild adoption", () => {
+  it("renders the adopted child as the actual host (no nested button)", () => {
+    render(
+      <${name}>
+        <${name}.Trigger asChild>
+          <a href="#open" data-testid="trigger">Open</a>
+        </${name}.Trigger>
+        <${name}.Content data-testid="content">Body</${name}.Content>
+      </${name}>,
+    );
+    const trigger = screen.getByTestId("trigger");
+    expect(trigger.tagName).toBe("A");
+    expect(trigger.parentElement?.querySelector("button")).toBeNull();
+  });
+
+  it("default-host behavior is unchanged when asChild is absent", () => {
+    renderPopover();
+    expect(screen.getByTestId("trigger").tagName).toBe("BUTTON");
+  });
+
+  it("asChild opens on click over the adopted child", () => {
+    render(
+      <${name}>
+        <${name}.Trigger asChild>
+          <a href="#open" data-testid="trigger">Open</a>
+        </${name}.Trigger>
+        <${name}.Content data-testid="content">Body</${name}.Content>
+      </${name}>,
+    );
+    act(() => {
+      fireEvent.click(screen.getByTestId("trigger"));
+    });
+    expect(screen.getByTestId("content")).toBeInTheDocument();
+  });
+
+  it("asChild — consumer event.preventDefault() suppresses the surface handler", () => {
+    const surfaceSpy = vi.fn();
+    render(
+      <${name} onOpenChange={surfaceSpy}>
+        <${name}.Trigger asChild>
+          <a
+            href="#open"
+            data-testid="trigger"
+            onClick={(e) => e.preventDefault()}
+          >
+            Open
+          </a>
+        </${name}.Trigger>
+        <${name}.Content data-testid="content">Body</${name}.Content>
+      </${name}>,
+    );
+    act(() => {
+      fireEvent.click(screen.getByTestId("trigger"));
+    });
+    expect(surfaceSpy).not.toHaveBeenCalled();
+    expect(screen.queryByTestId("content")).toBeNull();
+  });
+
+  it("asChild forwards the consumer's ref to the adopted DOM node", () => {
+    const consumerRef = createRef<HTMLAnchorElement>();
+    render(
+      <${name}>
+        <${name}.Trigger asChild>
+          <a href="#open" data-testid="trigger" ref={consumerRef}>Open</a>
+        </${name}.Trigger>
+        <${name}.Content data-testid="content">Body</${name}.Content>
+      </${name}>,
+    );
+    expect(consumerRef.current).not.toBeNull();
+    expect(consumerRef.current?.tagName).toBe("A");
+  });
+
+  it("asChild applies the data-${cssPrefix}-trigger marker to the adopted host", () => {
+    render(
+      <${name}>
+        <${name}.Trigger asChild>
+          <a href="#open" data-testid="trigger">Open</a>
+        </${name}.Trigger>
+        <${name}.Content data-testid="content">Body</${name}.Content>
+      </${name}>,
+    );
+    expect(screen.getByTestId("trigger")).toHaveAttribute("data-${cssPrefix}-trigger");
+  });
+});
+
+describe("${name} — accessibility", () => {
+  it("has no unexpected axe violations when closed", async () => {
+    const { container } = renderPopover();
+    const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+
+  it("has no unexpected axe violations when open", async () => {
+    const { container } = renderPopover({ defaultOpen: true });
+    const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});`;
+
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
 }
 
 function emitTooltipTests(ir: ComponentIR): string {
