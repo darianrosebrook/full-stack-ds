@@ -22,15 +22,28 @@ import { generateLitComponentSource } from "./component-source.js";
 import { generateLitHookSource } from "./hook-source.js";
 import { generateLitBarrel } from "./barrel.js";
 import { generateLitTest } from "./tests.js";
+import {
+  generateLitSurfaceFiles,
+  isSurfaceComponent,
+} from "./surface-emit.js";
+import { generateLitSurfaceTest } from "./surface-tests.js";
 
 export function createLitEmitter(): FrameworkEmitter {
   return {
     id: "lit",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      // F-2A: Lit does not yet handle presence-surface contracts. Skip
-      // emission so the on-disk Lit Tooltip remains untouched until F-2C.
-      if (ir.surface) return [];
+      // F-2C-3: Presence-surface family — emits a single component
+      // file containing three LitElement classes (root, Trigger,
+      // Content) plus customElements.define calls.
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateLitSurfaceFiles(ir);
+        const css = emitCss(ir);
+        return [
+          { relativePath: `${ir.name}/${ir.name}.ts`, contents: surfaceFiles.componentFile, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+        ];
+      }
       const source = generateLitComponentSource(ir);
       const css = emitCss(ir);
       return [
@@ -48,7 +61,15 @@ export function createLitEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        return [
+          {
+            relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
+            contents: generateLitSurfaceTest(ir),
+            preservable: true,
+          },
+        ];
+      }
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -59,7 +80,16 @@ export function createLitEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateLitSurfaceFiles(ir);
+        return [
+          {
+            relativePath: `${ir.name}/${ir.name}Behavior.ts`,
+            contents: surfaceFiles.behaviorFile,
+            preservable: true,
+          },
+        ];
+      }
       const source = generateLitHookSource(ir);
       if (!source) return [];
       return [

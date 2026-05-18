@@ -1,28 +1,65 @@
-// @generated:start imports
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { axe } from "vitest-axe";
-import "../Tooltip.js";
-
-declare module "vitest" {
-  interface Assertion<T> {
-    toHaveNoViolations(): void;
-  }
-}
-
 /**
- * Settle Lit updates and microtasks. Custom elements queue work
- * through Promise.resolve().then(...) for context propagation,
- * so awaiting updateComplete alone is not enough.
+ * Lit behavioral tests for the Anchored Presence Surface family.
+ *
+ * Parity with React (499ed17), Vue (38454fe), and Svelte (43863a0,
+ * 29f3fb4). Tests cover the same semantic surface: hover/focus open,
+ * pointer-leave/blur/escape close, aria-describedby wiring on the
+ * adopted anchor, disabled suppression, controlled/uncontrolled
+ * state, default-host vs slot-adoption modes, and unmount listener
+ * cleanup.
  */
-async function settle(el: Element): Promise<void> {
-  await (el as Element & { updateComplete?: Promise<unknown> }).updateComplete;
-  await Promise.resolve();
-  await Promise.resolve();
-}
-// @generated:end
+import type { ComponentIR } from "../../ir.js";
 
-// @generated:start tests
-interface MountOptions {
+export function generateLitSurfaceTest(ir: ComponentIR): string {
+  const surface = ir.surface;
+  if (!surface) {
+    throw new Error(
+      `generateLitSurfaceTest called on ${ir.name} without ir.surface`,
+    );
+  }
+  if (surface.kind !== "tooltip") {
+    throw new Error(
+      `Lit surface test emitter only supports kind "tooltip" in F-2C-3 (got "${surface.kind}").`,
+    );
+  }
+  return emitTooltipTests(ir);
+}
+
+function tagFor(name: string): string {
+  return `fsds-${name.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, "")}`;
+}
+
+function emitTooltipTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const rootTag = tagFor(name);
+  const triggerTag = `${rootTag}-trigger`;
+  const contentTag = `${rootTag}-content`;
+
+  const importsBody = [
+    `import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";`,
+    `import { axe } from "vitest-axe";`,
+    `import "../${name}.js";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+    ``,
+    `/**`,
+    ` * Settle Lit updates and microtasks. Custom elements queue work`,
+    ` * through Promise.resolve().then(...) for context propagation,`,
+    ` * so awaiting updateComplete alone is not enough.`,
+    ` */`,
+    `async function settle(el: Element): Promise<void> {`,
+    `  await (el as Element & { updateComplete?: Promise<unknown> }).updateComplete;`,
+    `  await Promise.resolve();`,
+    `  await Promise.resolve();`,
+    `}`,
+  ].join("\n");
+
+  const helpersBody = `interface MountOptions {
   defaultOpen?: boolean;
   open?: boolean;
   disabled?: boolean;
@@ -36,11 +73,11 @@ interface MountOptions {
 
 async function mountTooltip(opts: MountOptions = {}): Promise<HTMLElement> {
   await Promise.all([
-    customElements.whenDefined("fsds-tooltip"),
-    customElements.whenDefined("fsds-tooltip-trigger"),
-    customElements.whenDefined("fsds-tooltip-content"),
+    customElements.whenDefined("${rootTag}"),
+    customElements.whenDefined("${triggerTag}"),
+    customElements.whenDefined("${contentTag}"),
   ]);
-  const root = document.createElement("fsds-tooltip") as HTMLElement;
+  const root = document.createElement("${rootTag}") as HTMLElement;
   const props = root as unknown as Record<string, unknown>;
   if (opts.defaultOpen !== undefined) props.defaultOpen = opts.defaultOpen;
   if (opts.open !== undefined) props.open = opts.open;
@@ -49,7 +86,7 @@ async function mountTooltip(opts: MountOptions = {}): Promise<HTMLElement> {
   if (opts.closeOnBlur !== undefined) props.closeOnBlur = opts.closeOnBlur;
   if (opts.onOpenChange) props.onOpenChange = opts.onOpenChange;
 
-  const trigger = document.createElement("fsds-tooltip-trigger") as HTMLElement;
+  const trigger = document.createElement("${triggerTag}") as HTMLElement;
   trigger.setAttribute("data-testid", "trigger-wrapper");
   if (opts.withSlottedHost) {
     const a = document.createElement("a");
@@ -59,7 +96,7 @@ async function mountTooltip(opts: MountOptions = {}): Promise<HTMLElement> {
     trigger.appendChild(a);
   }
 
-  const content = document.createElement("fsds-tooltip-content") as HTMLElement;
+  const content = document.createElement("${contentTag}") as HTMLElement;
   content.setAttribute("data-testid", "content");
   content.textContent = "Help text";
 
@@ -77,23 +114,23 @@ function getAnchor(root: HTMLElement, withSlottedHost: boolean): HTMLElement {
   if (withSlottedHost) {
     return root.querySelector("[data-testid='slotted-host']") as HTMLElement;
   }
-  const trigger = root.querySelector("fsds-tooltip-trigger") as HTMLElement;
+  const trigger = root.querySelector("${triggerTag}") as HTMLElement;
   return trigger.shadowRoot!.querySelector("button") as HTMLElement;
 }
 
 function getContentEl(root: HTMLElement): HTMLElement | null {
   // The content host element reflects open state by setting/removing
-  // its own [data-tooltip-content] attribute (and id/role). When
+  // its own [data-${cssPrefix}-content] attribute (and id/role). When
   // closed the attribute is absent and the host renders nothing.
-  const host = root.querySelector("fsds-tooltip-content") as HTMLElement;
-  return host.hasAttribute("data-tooltip-content") ? host : null;
+  const host = root.querySelector("${contentTag}") as HTMLElement;
+  return host.hasAttribute("data-${cssPrefix}-content") ? host : null;
 }
 
 afterEach(() => {
   document.body.innerHTML = "";
-});
+});`;
 
-describe("Tooltip — compound API surface (default-host)", () => {
+  const testsBody = `describe("${name} — compound API surface (default-host)", () => {
   it("renders the trigger but not the content when closed", async () => {
     const root = await mountTooltip();
     expect(getAnchor(root, false)).toBeTruthy();
@@ -231,12 +268,12 @@ describe("Tooltip — compound API surface (default-host)", () => {
   });
 });
 
-describe("Tooltip — slot-based host adoption", () => {
+describe("${name} — slot-based host adoption", () => {
   it("uses the slotted <a> as the trigger host (no nested default button is the anchor)", async () => {
     const root = await mountTooltip({ withSlottedHost: true });
     const anchor = getAnchor(root, true);
     expect(anchor.tagName).toBe("A");
-    expect(anchor.hasAttribute("data-tooltip-trigger")).toBe(true);
+    expect(anchor.hasAttribute("data-${cssPrefix}-trigger")).toBe(true);
   });
 
   it("slotted host opens on pointerenter", async () => {
@@ -276,16 +313,16 @@ describe("Tooltip — slot-based host adoption", () => {
   it("removing the slotted host clears its ARIA + data marker", async () => {
     const root = await mountTooltip({ withSlottedHost: true, defaultOpen: true });
     const anchor = getAnchor(root, true);
-    expect(anchor.hasAttribute("data-tooltip-trigger")).toBe(true);
+    expect(anchor.hasAttribute("data-${cssPrefix}-trigger")).toBe(true);
     anchor.remove();
     await settle(root);
     // After removal, the previous anchor's marker was cleared by
     // TooltipTriggerElement's _updateAnchor before disconnecting it.
-    expect(anchor.hasAttribute("data-tooltip-trigger")).toBe(false);
+    expect(anchor.hasAttribute("data-${cssPrefix}-trigger")).toBe(false);
   });
 });
 
-describe("Tooltip — accessibility", () => {
+describe("${name} — accessibility", () => {
   it("has no unexpected axe violations when closed", async () => {
     const root = await mountTooltip({ withSlottedHost: true });
     const results = (await axe(root)) as unknown as { violations: Array<{ id: string }> };
@@ -297,9 +334,22 @@ describe("Tooltip — accessibility", () => {
     const results = (await axe(root)) as unknown as { violations: Array<{ id: string }> };
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });
-});
-// @generated:end
+});`;
 
-// @custom:start tests
-
-// @custom:end
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    helpersBody,
+    ``,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}

@@ -47,7 +47,7 @@ export { TextElement, TextBodyElement, TextTitleElement } from "./Text/Text.js";
 export { TextFieldElement, TextFieldDescriptionElement } from "./TextField/TextField.js";
 export { ToastElement, ToastDescriptionElement, ToastItemElement, ToastTitleElement } from "./Toast/Toast.js";
 export { ToggleSwitchElement } from "./ToggleSwitch/ToggleSwitch.js";
-export { TooltipElement } from "./Tooltip/Tooltip.js";
+export { TooltipElement, TooltipContentElement, TooltipTriggerElement } from "./Tooltip/Tooltip.js";
 export { TruncateElement, TruncateContentElement } from "./Truncate/Truncate.js";
 export { VisuallyHiddenElement } from "./VisuallyHidden/VisuallyHidden.js";
 export { WalkthroughElement, WalkthroughContentElement, WalkthroughDescriptionElement, WalkthroughTitleElement } from "./Walkthrough/Walkthrough.js";
