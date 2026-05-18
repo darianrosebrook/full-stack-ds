@@ -30,7 +30,7 @@ describe("TextField — unit", () => {
 
   it("calls onChange when value changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<TextField data-testid="text-field" value={false} onChange={onChangeSpy}>content</TextField>)).not.toThrow();
+    expect(() => render(<TextField data-testid="text-field" value={""} onChange={onChangeSpy}>content</TextField>)).not.toThrow();
   });
 });
 

@@ -9,6 +9,42 @@ import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
 import { generateReactSurfaceTest } from "./surface-tests.js";
 
+/**
+ * Map a channel `valueType` to a placeholder JS literal for use in
+ * generated render-only test JSX. The emitter previously hardcoded
+ * `{false}` for every controlled channel, which produced TS2322
+ * errors when the channel type was actually string, number, union,
+ * or Date.
+ *
+ * Coverage across the 53 component contracts (verified by
+ * `grep -h "\"valueType\":" packages/ds-contracts/*.contract.json`):
+ *   - boolean
+ *   - string
+ *   - string | string[]
+ *   - number
+ *   - Date | Date[] | null
+ *
+ * The placeholder is used in render-only assertions (`expect(() =>
+ * render(...)).not.toThrow()`) — the actual value doesn't matter
+ * semantically; it just has to be type-assignable so the emitted
+ * JSX passes tsc.
+ */
+function channelValuePlaceholder(valueType: string | undefined): string {
+  if (valueType === "boolean") return "false";
+  if (valueType === "number") return "0";
+  if (valueType === "string") return '""';
+  if (valueType === "string | string[]") return '""';
+  if (valueType === "Date | Date[] | null") return "null";
+  // Unknown / unspecified valueType. Default to `false` to match the
+  // pre-fix behavior for boolean channels (which is the common case)
+  // and avoid surfacing the unknown placeholder as a regression. New
+  // valueTypes added later should extend the switch above explicitly;
+  // this fallback is intentionally not `null as never` because it
+  // would surface as a test-side TS-error for any channel whose
+  // contract author forgot to set valueType.
+  return "false";
+}
+
 export function generateReactTest(ir: ComponentIR): string {
   // Presence-surface family: behavioral test plan replaces the legacy
   // class-token-only plan.
@@ -117,12 +153,17 @@ export function generateReactTest(ir: ComponentIR): string {
       // not toggle the channel — verify the handler prop is accepted without throwing.
       // Suppress `renderProps` when the channel's valueProp matches
       // plan.renderOpenProp; otherwise the emitted JSX has both
-      // `${valueProp}={false}` and `${renderOpenProp}={true}` on the same
+      // `${valueProp}=...` and `${renderOpenProp}={true}` on the same
       // element (TS17001 / React duplicate-attr).
       const renderPropsForChannel =
         plan.renderOpenProp === channel.valueProp ? "" : renderProps;
+      // Placeholder typed by channel.valueType. Previously hardcoded
+      // `{false}`, which produced TS2322 for string/number/union/Date
+      // channels (Calendar, Accordion, Command, OTP, Select, Tabs,
+      // TextField, Walkthrough).
+      const placeholder = channelValuePlaceholder(channel.valueType);
       lines.push(
-        `    expect(() => render(<${plan.name} data-testid="${plan.testId}" ${channel.valueProp}={false} ${channel.changeHandlerProp}={${spyName}}${renderPropsForChannel}${closer})).not.toThrow();`,
+        `    expect(() => render(<${plan.name} data-testid="${plan.testId}" ${channel.valueProp}={${placeholder}} ${channel.changeHandlerProp}={${spyName}}${renderPropsForChannel}${closer})).not.toThrow();`,
       );
     } else {
       // Non-boolean channel: fire a synthetic change event with target.value

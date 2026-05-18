@@ -55,7 +55,7 @@ describe("Walkthrough — unit", () => {
 
   it("calls onStepChange when step changes", async () => {
     const onStepChangeSpy = vi.fn();
-    expect(() => render(<Walkthrough data-testid="walkthrough" index={false} onStepChange={onStepChangeSpy} />)).not.toThrow();
+    expect(() => render(<Walkthrough data-testid="walkthrough" index={0} onStepChange={onStepChangeSpy} />)).not.toThrow();
   });
 });
 

@@ -50,7 +50,7 @@ describe("Tabs — unit", () => {
 
   it("calls onValueChange when activeTab changes", async () => {
     const onValueChangeSpy = vi.fn();
-    expect(() => render(<Tabs data-testid="tabs" value={false} onValueChange={onValueChangeSpy}>content</Tabs>)).not.toThrow();
+    expect(() => render(<Tabs data-testid="tabs" value={""} onValueChange={onValueChangeSpy}>content</Tabs>)).not.toThrow();
   });
 });
 

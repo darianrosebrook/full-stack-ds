@@ -40,7 +40,7 @@ describe("OTP — unit", () => {
 
   it("calls onChange when value changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<OTP data-testid="otp" value={false} onChange={onChangeSpy} />)).not.toThrow();
+    expect(() => render(<OTP data-testid="otp" value={""} onChange={onChangeSpy} />)).not.toThrow();
   });
 });
 

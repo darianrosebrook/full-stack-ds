@@ -40,7 +40,7 @@ describe("Calendar — unit", () => {
 
   it("calls onChange when value changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<Calendar data-testid="calendar" value={false} onChange={onChangeSpy} />)).not.toThrow();
+    expect(() => render(<Calendar data-testid="calendar" value={null} onChange={onChangeSpy} />)).not.toThrow();
   });
 });
 

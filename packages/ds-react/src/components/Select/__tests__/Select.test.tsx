@@ -60,7 +60,7 @@ describe("Select — unit", () => {
 
   it("calls onChange when selection changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<Select data-testid="select" value={false} onChange={onChangeSpy} open={true} />)).not.toThrow();
+    expect(() => render(<Select data-testid="select" value={""} onChange={onChangeSpy} open={true} />)).not.toThrow();
   });
 
   it("calls onOpenChange when open changes", async () => {

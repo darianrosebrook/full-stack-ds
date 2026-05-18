@@ -35,7 +35,7 @@ describe("Command — unit", () => {
 
   it("calls onSearchChange when search changes", async () => {
     const onSearchChangeSpy = vi.fn();
-    expect(() => render(<Command data-testid="command" search={false} onSearchChange={onSearchChangeSpy} open={true} />)).not.toThrow();
+    expect(() => render(<Command data-testid="command" search={""} onSearchChange={onSearchChangeSpy} open={true} />)).not.toThrow();
   });
 
   it("closes on Escape key", () => {

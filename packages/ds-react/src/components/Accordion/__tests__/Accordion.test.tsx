@@ -40,7 +40,7 @@ describe("Accordion — unit", () => {
 
   it("calls onValueChange when openness changes", async () => {
     const onValueChangeSpy = vi.fn();
-    expect(() => render(<Accordion data-testid="accordion" value={false} onValueChange={onValueChangeSpy}>content</Accordion>)).not.toThrow();
+    expect(() => render(<Accordion data-testid="accordion" value={""} onValueChange={onValueChangeSpy}>content</Accordion>)).not.toThrow();
   });
 });
 
