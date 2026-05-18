@@ -1,6 +1,7 @@
 // @generated:start imports
-import { ref, type Ref } from "vue";
-import { useAnchorToggle, useControllableState, usePortal } from "../../primitives/index.js";
+import type { ComputedRef } from "vue";
+import { createCompoundContext } from "../../primitives/index.js";
+import { useAnchoredSurface, type SurfaceRefCallback, type SurfaceTriggerHandlers, type SurfaceTriggerProps } from "../../primitives/surfaces/useAnchoredSurface.js";
 // @generated:end
 
 // @custom:start imports
@@ -9,19 +10,22 @@ import { useAnchorToggle, useControllableState, usePortal } from "../../primitiv
 
 // @generated:start types
 export interface UseTooltipOptions {
-  open?: () => boolean | undefined;
+  open: () => boolean | undefined;
   defaultOpen?: boolean;
-  onOpenChange?: (value: boolean) => void;
-  closeOnEscape?: boolean;
-  closeOnBlur?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: () => boolean;
+  closeOnEscape?: () => boolean | undefined;
+  closeOnBlur?: () => boolean | undefined;
 }
 
-export interface UseTooltipResult {
-  open: Ref<boolean>;
-  setOpen: (next: boolean) => void;
-  panelRef: Ref<HTMLElement | null>;
-  anchorRef: Ref<HTMLElement | null>;
-  portalTarget: Ref<Element | null>;
+export interface TooltipContextValue {
+  open: ComputedRef<boolean>;
+  contentId: string;
+  registerAnchor: SurfaceRefCallback;
+  registerAnchorRefOnly: SurfaceRefCallback;
+  registerContent: SurfaceRefCallback;
+  getTriggerHandlers: () => SurfaceTriggerHandlers;
+  triggerProps: ComputedRef<SurfaceTriggerProps>;
 }
 // @generated:end
 
@@ -29,27 +33,28 @@ export interface UseTooltipResult {
 
 // @custom:end
 
+// @generated:start context
+export const [provideTooltipContext, useTooltipContext] =
+  createCompoundContext<TooltipContextValue>("Tooltip");
+// @generated:end
+
 // @generated:start hook
-export function useTooltip(options: UseTooltipOptions = {}): UseTooltipResult {
-  const panelRef = ref<HTMLElement | null>(null);
-  const anchorToggle = useAnchorToggle({
+export function useTooltip(options: UseTooltipOptions) {
+  const dismissal = () => [
+      options.closeOnEscape?.() !== false ? "escape" as const : null,
+      options.closeOnBlur?.() !== false ? "blur" as const : null,
+      "pointer-leave" as const
+    ].filter((d): d is Exclude<typeof d, null> => d !== null);
+
+  return useAnchoredSurface({
     open: options.open,
-    defaultOpen: options.defaultOpen ?? false,
+    defaultOpen: options.defaultOpen,
     onOpenChange: options.onOpenChange,
+    openTriggers: () => ["hover","focus"],
+    dismissal,
+    anchorRelation: "describedby",
+    disabled: options.disabled,
   });
-
-  const { target: portalTarget } = usePortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
-  return {
-    open: anchorToggle.open,
-    setOpen: anchorToggle.setOpen,
-    anchorRef: anchorToggle.anchorRef,
-    panelRef: anchorToggle.panelRef,
-    portalTarget,
-  };
 }
 // @generated:end
 

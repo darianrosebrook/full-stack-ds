@@ -1,31 +1,63 @@
-// @generated:start imports
-import { describe, it, expect, vi } from "vitest";
-import { defineComponent, h } from "vue";
-import { mount } from "@vue/test-utils";
-import { axe } from "vitest-axe";
-import Tooltip from "../Tooltip.vue";
-import TooltipTrigger from "../TooltipTrigger.vue";
-import TooltipContent from "../TooltipContent.vue";
+/**
+ * Vue behavioral tests for the Anchored Presence Surface family.
+ *
+ * Parity with the React reference (commit 499ed17). Tests cover the
+ * same semantic surface: hover/focus open, pointer-leave/blur/escape
+ * close, aria-describedby wiring, disabled suppression,
+ * controlled/uncontrolled state, host-adoption via slot props, and
+ * consumer-handler preservation including the preventDefault opt-out.
+ */
+import type { ComponentIR } from "../../ir.js";
 
-declare module "vitest" {
-  interface Assertion<T> {
-    toHaveNoViolations(): void;
+export function generateVueSurfaceTest(ir: ComponentIR): string {
+  const surface = ir.surface;
+  if (!surface) {
+    throw new Error(
+      `generateVueSurfaceTest called on ${ir.name} without ir.surface`,
+    );
   }
+  if (surface.kind !== "tooltip") {
+    throw new Error(
+      `Vue surface test emitter only supports kind "tooltip" in F-2C-1 (got "${surface.kind}").`,
+    );
+  }
+  return emitTooltipTests(ir);
 }
-// @generated:end
 
-// @generated:start tests
-function mountDefault(rootProps: Record<string, unknown> = {}) {
+function emitTooltipTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+
+  const importsBody = [
+    `import { describe, it, expect, vi } from "vitest";`,
+    `import { defineComponent, h } from "vue";`,
+    `import { mount } from "@vue/test-utils";`,
+    `import { axe } from "vitest-axe";`,
+    `import ${name} from "../${name}.vue";`,
+    `import ${name}Trigger from "../${name}Trigger.vue";`,
+    `import ${name}Content from "../${name}Content.vue";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+  ].join("\n");
+
+  // Render helpers — Vue test-utils does not accept a fragment-shaped
+  // children prop the way React does, so we emit a small helper that
+  // mounts a defineComponent rendering Tooltip with its compound parts.
+  const testsBody = `function mountDefault(rootProps: Record<string, unknown> = {}) {
   const Host = defineComponent({
-    components: { Tooltip, TooltipTrigger, TooltipContent },
+    components: { ${name}, ${name}Trigger, ${name}Content },
     props: {
       tooltipProps: { type: Object, default: () => ({}) },
     },
     setup(props) {
       return () =>
-        h(Tooltip, props.tooltipProps as Record<string, unknown>, () => [
-          h(TooltipTrigger, { "data-testid": "trigger" }, () => "Open"),
-          h(TooltipContent, { "data-testid": "content" }, () => "Help text"),
+        h(${name}, props.tooltipProps as Record<string, unknown>, () => [
+          h(${name}Trigger, { "data-testid": "trigger" }, () => "Open"),
+          h(${name}Content, { "data-testid": "content" }, () => "Help text"),
         ]);
     },
   });
@@ -35,7 +67,7 @@ function mountDefault(rootProps: Record<string, unknown> = {}) {
   });
 }
 
-describe("Tooltip — compound API surface", () => {
+describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", () => {
     const wrapper = mountDefault();
     expect(wrapper.find("[data-testid='trigger']").exists()).toBe(true);
@@ -175,15 +207,15 @@ describe("Tooltip — compound API surface", () => {
   });
 });
 
-describe("Tooltip — slot-props host adoption", () => {
+describe("${name} — slot-props host adoption", () => {
   function mountAsChild(opts: { onPointerenter?: (e: PointerEvent) => void; consumerRef?: { value: Element | null } } = {}) {
     const Host = defineComponent({
-      components: { Tooltip, TooltipTrigger, TooltipContent },
+      components: { ${name}, ${name}Trigger, ${name}Content },
       setup() {
         return () =>
-          h(Tooltip, null, () => [
+          h(${name}, null, () => [
             h(
-              TooltipTrigger,
+              ${name}Trigger,
               { asChild: true },
               {
                 default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) => {
@@ -214,7 +246,7 @@ describe("Tooltip — slot-props host adoption", () => {
                 },
               },
             ),
-            h(TooltipContent, { "data-testid": "content" }, () => "Help text"),
+            h(${name}Content, { "data-testid": "content" }, () => "Help text"),
           ]);
       },
     });
@@ -243,9 +275,9 @@ describe("Tooltip — slot-props host adoption", () => {
     wrapper.unmount();
   });
 
-  it("asChild applies data-tooltip-trigger marker on the adopted host", () => {
+  it("asChild applies data-${cssPrefix}-trigger marker on the adopted host", () => {
     const wrapper = mountAsChild();
-    expect(wrapper.find("[data-testid='trigger']").attributes("data-tooltip-trigger")).toBeDefined();
+    expect(wrapper.find("[data-testid='trigger']").attributes("data-${cssPrefix}-trigger")).toBeDefined();
     wrapper.unmount();
   });
 
@@ -258,7 +290,7 @@ describe("Tooltip — slot-props host adoption", () => {
   });
 });
 
-describe("Tooltip — accessibility", () => {
+describe("${name} — accessibility", () => {
   it("has no unexpected axe violations when closed", async () => {
     const wrapper = mountDefault();
     const results = (await axe(wrapper.element)) as unknown as { violations: Array<{ id: string }> };
@@ -272,9 +304,20 @@ describe("Tooltip — accessibility", () => {
     expect(results.violations.map((v) => v.id)).toEqual([]);
     wrapper.unmount();
   });
-});
-// @generated:end
+});`;
 
-// @custom:start tests
-
-// @custom:end
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}

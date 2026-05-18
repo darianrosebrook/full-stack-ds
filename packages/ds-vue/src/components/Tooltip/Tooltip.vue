@@ -1,57 +1,59 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { useTooltip } from "./useTooltip.js";
+import { useTooltip, provideTooltipContext } from "./useTooltip.js";
 // @generated:end
-
 // @custom:start imports
 
 // @custom:end
-
 // @generated:start types
 export type TooltipPlacement = "top" | "bottom" | "left" | "right" | "auto";
-export type TooltipTrigger = "hover" | "focus" | "manual";
 // @generated:end
-
 // @custom:start types
 
 // @custom:end
-
 // @generated:start props
 interface Props {
-  content: unknown;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   placement?: TooltipPlacement;
-  trigger?: TooltipTrigger;
-  delay?: number;
   disabled?: boolean;
   closeOnEscape?: boolean;
   closeOnBlur?: boolean;
   class?: string;
   "data-testid"?: string;
 }
-// @generated:end
-
-// @generated:start defineProps
+// Vue runtime coerces unpassed Boolean props to `false` by
+// default; `withDefaults` with `undefined` keeps the
+// "controlled vs uncontrolled" distinction the substrate needs.
 const props = withDefaults(defineProps<Props>(), {
-  trigger: "hover",
-  closeOnEscape: true,
-  closeOnBlur: true,
+  open: undefined,
+  defaultOpen: undefined,
+  disabled: undefined,
+  closeOnEscape: undefined,
+  closeOnBlur: undefined,
 });
 // @generated:end
-
 // @generated:start hook
-const behavior = useTooltip({
+const surface = useTooltip({
   open: () => props.open,
   defaultOpen: props.defaultOpen,
   onOpenChange: props.onOpenChange,
-  closeOnEscape: props.closeOnEscape,
-  closeOnBlur: props.closeOnBlur,
+  disabled: () => props.disabled === true,
+  closeOnEscape: () => props.closeOnEscape !== false,
+  closeOnBlur: () => props.closeOnBlur !== false,
+});
+provideTooltipContext({
+  open: surface.open,
+  contentId: surface.contentId,
+  registerAnchor: surface.registerAnchor,
+  registerAnchorRefOnly: surface.registerAnchorRefOnly,
+  registerContent: surface.registerContent,
+  getTriggerHandlers: surface.getTriggerHandlers,
+  triggerProps: surface.triggerProps,
 });
 // @generated:end
-
 // @generated:start classes
 const classNames = computed(() => [
   "tooltip",
@@ -60,14 +62,13 @@ const classNames = computed(() => [
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end
-
 // @custom:start trailing
 
 // @custom:end
 </script>
-
 <template>
-  <div v-if="behavior.open.value" :class="classNames" role="tooltip" :data-testid="props['data-testid']">
+  <span :class="classNames" :data-testid="props['data-testid']">
     <slot />
-  </div>
+  </span>
 </template>
+<!-- openTriggers: ["hover","focus"] | anchorRelation: describedby -->

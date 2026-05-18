@@ -31,16 +31,30 @@ import { generateVueHookSource } from "./hook-source.js";
 import { generateVueBarrel } from "./barrel.js";
 import { generateVueTest } from "./tests.js";
 import { isCompoundStateContainer } from "../react/hook-source.js";
+import {
+  generateVueSurfaceFiles,
+  isSurfaceComponent,
+} from "./surface-emit.js";
+import { generateVueSurfaceTest } from "./surface-tests.js";
 
 export function createVueEmitter(): FrameworkEmitter {
   return {
     id: "vue",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      // F-2A: Vue does not yet handle presence-surface contracts. Skip
-      // emission so the on-disk Vue Tooltip remains untouched until F-2C
-      // ports the surface substrate to Vue.
-      if (ir.surface) return [];
+      // F-2C-1: Presence-surface family — emits the compound API as
+      // three SFCs (root, Trigger, Content) plus a composable in the
+      // emitHook step.
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateVueSurfaceFiles(ir);
+        const css = emitCss(ir);
+        return [
+          { relativePath: `${ir.name}/${ir.name}.vue`, contents: surfaceFiles.rootSfc, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Trigger.vue`, contents: surfaceFiles.triggerSfc, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Content.vue`, contents: surfaceFiles.contentSfc, preservable: true },
+        ];
+      }
       const sfc = generateVueComponentSource(ir);
       const css = emitCss(ir);
       const files: GeneratedFile[] = [
@@ -82,7 +96,15 @@ export function createVueEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        return [
+          {
+            relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
+            contents: generateVueSurfaceTest(ir),
+            preservable: true,
+          },
+        ];
+      }
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -93,7 +115,16 @@ export function createVueEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateVueSurfaceFiles(ir);
+        return [
+          {
+            relativePath: `${ir.name}/use${ir.name}.ts`,
+            contents: surfaceFiles.composable,
+            preservable: true,
+          },
+        ];
+      }
       const source = generateVueHookSource(ir);
       if (!source) return [];
       return [

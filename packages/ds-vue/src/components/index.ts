@@ -103,6 +103,8 @@ export { default as ToastItem } from "./Toast/ToastItem.vue";
 export { default as ToastTitle } from "./Toast/ToastTitle.vue";
 export { default as ToggleSwitch } from "./ToggleSwitch/ToggleSwitch.vue";
 export { default as Tooltip } from "./Tooltip/Tooltip.vue";
+export { default as TooltipContent } from "./Tooltip/TooltipContent.vue";
+export { default as TooltipTrigger } from "./Tooltip/TooltipTrigger.vue";
 export { default as Truncate } from "./Truncate/Truncate.vue";
 export { default as TruncateContent } from "./Truncate/TruncateContent.vue";
 export { default as VisuallyHidden } from "./VisuallyHidden/VisuallyHidden.vue";
