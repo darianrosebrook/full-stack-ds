@@ -176,6 +176,7 @@
     "focus": { "$ref": "#/$defs/focusContract" },
     "portal": { "$ref": "#/$defs/portalContract" },
     "dismissal": { "$ref": "#/$defs/dismissalContract" },
+    "surface": { "$ref": "#/$defs/surfaceContract" },
     "relationships": {
       "type": "array",
       "description": "Cross-part wiring (ID references) that implementers must maintain so assistive tech works.",
@@ -759,6 +760,111 @@
         "enabledBy": { "type": "string" },
         "defaultEnabled": { "type": "boolean" },
         "description": { "type": "string" }
+      }
+    },
+    "surfaceContract": {
+      "type": "object",
+      "description": "Declares this component as a presence surface (see docs/presence-surfaces.md). Coordinates anatomy part roles with presence, modality, anchoring, positioning, and controller selection. Does NOT duplicate the existing portal, dismissal, or focus blocks — those remain the detailed policy knobs; surface is the semantic and controller-selection descriptor.",
+      "additionalProperties": false,
+      "required": ["kind", "presence", "modality"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["tooltip", "popover", "dialog", "menu", "select", "toast", "coachmark", "sheet"],
+          "description": "Semantic presence-surface family. Selects the controller family (e.g. AnchoredSurfaceController for tooltip/popover/menu/select; DialogSurfaceController for dialog; ToastSurfaceController for toast)."
+        },
+        "presence": {
+          "type": "string",
+          "enum": ["ephemeral", "persistent"],
+          "description": "Lifecycle expectation. Ephemeral surfaces close when their trigger condition expires or a timing budget elapses. Persistent surfaces remain until explicitly dismissed."
+        },
+        "modality": {
+          "type": "string",
+          "enum": ["blocking", "non-blocking"],
+          "description": "Whether the surface blocks interaction with content outside itself. Blocking surfaces require focus trap, outside inertness, and overlay scrim (specifics live in the top-level focus and portal blocks)."
+        },
+        "anchor": {
+          "type": "object",
+          "description": "Relationship to an invoking element. Omit for unanchored surfaces (centered modal dialogs, viewport-edge toasts).",
+          "additionalProperties": false,
+          "required": ["part", "relation"],
+          "properties": {
+            "part": {
+              "type": "string",
+              "description": "Anatomy part name that registers the invoking element. Must reference a part whose details.role === 'trigger'."
+            },
+            "relation": {
+              "type": "string",
+              "enum": ["describedby", "controls-expanded", "labelledby", "activedescendant", "none"],
+              "description": "Semantic ARIA relation between the trigger element and the surface content."
+            }
+          }
+        },
+        "content": {
+          "type": "object",
+          "description": "Surface content part.",
+          "additionalProperties": false,
+          "required": ["part", "interactive"],
+          "properties": {
+            "part": {
+              "type": "string",
+              "description": "Anatomy part name that registers the rendered surface element. Expected to reference a part whose details.role is one of 'content', 'region', or 'overlay' depending on kind."
+            },
+            "interactive": {
+              "type": "boolean",
+              "description": "Whether the content accepts direct user interaction (focusable controls, links). False for tooltips and toasts."
+            }
+          }
+        },
+        "positioning": {
+          "type": "object",
+          "description": "Placement strategy family. Detailed portal target/layering lives in the top-level portal block.",
+          "additionalProperties": false,
+          "required": ["strategy"],
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["anchored", "centered", "viewport-edge", "inline"],
+              "description": "anchored: relative to the trigger element. centered: viewport-centered. viewport-edge: pinned to a viewport edge (toasts). inline: rendered in document flow (no portal)."
+            },
+            "placementProp": {
+              "type": "string",
+              "description": "Name of the consumer-facing prop that controls preferred placement (e.g. 'placement', 'side')."
+            },
+            "collision": {
+              "type": "string",
+              "enum": ["none", "flip", "shift", "flip-shift"],
+              "description": "Edge-avoidance behavior when anchored placement would overflow the viewport."
+            }
+          }
+        },
+        "dismissal": {
+          "type": "array",
+          "description": "Semantic dismissal modes expected for this surface. The existing top-level dismissal block carries prop-level enablement (e.g. closeOnEscape: boolean enabledBy). The two compose; they do not replace each other.",
+          "items": {
+            "type": "string",
+            "enum": ["escape", "outside-click", "blur", "pointer-leave", "close-button", "timeout"]
+          }
+        },
+        "timing": {
+          "type": "object",
+          "description": "Names of the consumer-facing props that control surface timing. Default values live in the props.styled.members[].default field, as today.",
+          "additionalProperties": false,
+          "properties": {
+            "openDelayProp": {
+              "type": "string",
+              "description": "Prop name controlling delayed open (ms before opening once trigger condition starts)."
+            },
+            "closeDelayProp": {
+              "type": "string",
+              "description": "Prop name controlling delayed close (ms before closing once trigger condition ends)."
+            },
+            "autoDismissProp": {
+              "type": "string",
+              "description": "Prop name controlling timed auto-dismiss (ms after which the surface closes regardless of trigger). Used by ephemeral surfaces like Toast."
+            }
+          }
+        }
       }
     },
     "eventSignature": {
