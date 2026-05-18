@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { runValidationPlan } from "./run-command";
-import type { FrameworkValidationPlan } from "./types";
+import { runValidationPlan } from "./run-command.js";
+import type { FrameworkValidationPlan } from "./types.js";
 
 /**
  * Unit tests for the rail runner. We don't shell out to real
