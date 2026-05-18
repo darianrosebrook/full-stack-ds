@@ -197,6 +197,83 @@ export interface ContractDismissal {
   triggers?: ContractDismissalTrigger[];
 }
 
+/**
+ * Presence-surface family (see docs/presence-surfaces.md).
+ * Semantic classifier + controller-selection descriptor. Coordinates
+ * anatomy part roles with presence, modality, anchoring, positioning,
+ * and dismissal mode list. Does NOT duplicate the existing portal,
+ * dismissal, or focus blocks — those remain the detailed policy knobs.
+ */
+export type ContractSurfaceKind =
+  | 'tooltip'
+  | 'popover'
+  | 'dialog'
+  | 'menu'
+  | 'select'
+  | 'toast'
+  | 'coachmark'
+  | 'sheet';
+
+export type ContractSurfacePresence = 'ephemeral' | 'persistent';
+
+export type ContractSurfaceModality = 'blocking' | 'non-blocking';
+
+export type ContractSurfaceAnchorRelation =
+  | 'describedby'
+  | 'controls-expanded'
+  | 'labelledby'
+  | 'activedescendant'
+  | 'none';
+
+export type ContractSurfacePositioningStrategy =
+  | 'anchored'
+  | 'centered'
+  | 'viewport-edge'
+  | 'inline';
+
+export type ContractSurfaceCollision = 'none' | 'flip' | 'shift' | 'flip-shift';
+
+export type ContractSurfaceDismissalMode =
+  | 'escape'
+  | 'outside-click'
+  | 'blur'
+  | 'pointer-leave'
+  | 'close-button'
+  | 'timeout';
+
+export interface ContractSurfaceAnchor {
+  part: string;
+  relation: ContractSurfaceAnchorRelation;
+}
+
+export interface ContractSurfaceContent {
+  part: string;
+  interactive: boolean;
+}
+
+export interface ContractSurfacePositioning {
+  strategy: ContractSurfacePositioningStrategy;
+  placementProp?: string;
+  collision?: ContractSurfaceCollision;
+}
+
+export interface ContractSurfaceTiming {
+  openDelayProp?: string;
+  closeDelayProp?: string;
+  autoDismissProp?: string;
+}
+
+export interface ContractSurface {
+  kind: ContractSurfaceKind;
+  presence: ContractSurfacePresence;
+  modality: ContractSurfaceModality;
+  anchor?: ContractSurfaceAnchor;
+  content?: ContractSurfaceContent;
+  positioning?: ContractSurfacePositioning;
+  dismissal?: ContractSurfaceDismissalMode[];
+  timing?: ContractSurfaceTiming;
+}
+
 export interface ContractFormSerialization {
   valueType: string;
   valueSource: string;
@@ -301,6 +378,7 @@ export interface ComponentContract {
   focus?: ContractFocus;
   portal?: ContractPortal;
   dismissal?: ContractDismissal;
+  surface?: ContractSurface;
   relationships?: Array<{
     from: string;
     to: string;

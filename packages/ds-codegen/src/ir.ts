@@ -26,6 +26,13 @@ import type {
   ContractForm,
   ContractPartDetails,
   ContractPortal,
+  ContractSurfaceAnchorRelation,
+  ContractSurfaceCollision,
+  ContractSurfaceDismissalMode,
+  ContractSurfaceKind,
+  ContractSurfaceModality,
+  ContractSurfacePositioningStrategy,
+  ContractSurfacePresence,
   ContractTypeDef,
   StyledPropMember,
   NormalizedStates,
@@ -290,6 +297,53 @@ export interface BehaviorIR {
   normalizedEvents: NormalizedEventIR[];
 }
 
+/**
+ * IR for the presence-surface family (see docs/presence-surfaces.md).
+ * Built only when `contract.surface` is present. Resolves the
+ * `anchor.part` and `content.part` strings against `PartIR[]` so
+ * emitters do not re-resolve. Validates that the referenced parts'
+ * `details.role` matches the surface contract's expectations
+ * ('trigger' for anchor; one of 'content' | 'region' | 'overlay'
+ * for content).
+ */
+export interface SurfaceAnchorIR {
+  /** Resolved PartIR — caller already validated details.role === 'trigger'. */
+  part: PartIR;
+  relation: ContractSurfaceAnchorRelation;
+}
+
+export interface SurfaceContentIR {
+  /** Resolved PartIR — caller already validated details.role is one of
+   * 'content' | 'region' | 'overlay'. */
+  part: PartIR;
+  interactive: boolean;
+}
+
+export interface SurfacePositioningIR {
+  strategy: ContractSurfacePositioningStrategy;
+  placementProp: string | undefined;
+  collision: ContractSurfaceCollision | undefined;
+}
+
+export interface SurfaceTimingIR {
+  openDelayProp: string | undefined;
+  closeDelayProp: string | undefined;
+  autoDismissProp: string | undefined;
+}
+
+export interface SurfaceIR {
+  kind: ContractSurfaceKind;
+  presence: ContractSurfacePresence;
+  modality: ContractSurfaceModality;
+  anchor: SurfaceAnchorIR | undefined;
+  content: SurfaceContentIR | undefined;
+  positioning: SurfacePositioningIR | undefined;
+  /** Semantic dismissal mode list — composes with BehaviorIR's
+   * normalizedDismissalTriggers (which carries enabledBy prop wiring). */
+  dismissal: ContractSurfaceDismissalMode[];
+  timing: SurfaceTimingIR | undefined;
+}
+
 export interface ComponentIR {
   /** Identity */
   name: string;
@@ -321,6 +375,14 @@ export interface ComponentIR {
 
   /** Higher-level behavior metadata. Emitters can ignore for now. */
   behavior: BehaviorIR;
+
+  /**
+   * Presence-surface IR — present only when `contract.surface` is set
+   * (see docs/presence-surfaces.md). Emitters MUST NOT read this in
+   * Phase F-1; the field is plumbed for forward compatibility and is
+   * consumed starting with Phase F-2 (Tooltip migration).
+   */
+  surface: SurfaceIR | undefined;
 
   /**
    * Optional DOM tree derived from `contract.anatomy.dom`. When present,
@@ -377,6 +439,7 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
   const keyframes = buildKeyframes(contract);
 
   const behavior = buildBehaviorIR(contract, styledProps);
+  const surface = buildSurfaceIR(contract, parts);
   const dom = buildDomTree(contract);
 
   if (dom) {
@@ -405,6 +468,7 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
     cssBlocks,
     keyframes,
     behavior,
+    surface,
     dom,
     generateTests: contract.codegen?.tests !== false,
   };
@@ -609,6 +673,93 @@ function buildBehaviorIR(
     normalizedChannels: buildChannelsIR(contract.channels, styledProps),
     normalizedDismissalTriggers: buildDismissalTriggersIR(contract.dismissal),
     normalizedEvents: buildEventsIR(contract.events),
+  };
+}
+
+const SURFACE_CONTENT_PART_ROLES = new Set<string>([
+  "content",
+  "region",
+  "overlay",
+]);
+
+/**
+ * Build the presence-surface IR (see docs/presence-surfaces.md). Returns
+ * `undefined` when the contract declares no `surface` block. Resolves
+ * `anchor.part` and `content.part` strings against the already-built
+ * `PartIR[]`, and fails loud when the referenced part is missing or
+ * carries the wrong `details.role`.
+ *
+ * This is the boundary that prevents future contracts from declaring
+ * `surface.anchor.part: "trigger"` when no trigger part exists, or
+ * pointing `surface.content.part` at an item / decoration / list part.
+ */
+export function buildSurfaceIR(
+  contract: ComponentContract,
+  parts: PartIR[],
+): SurfaceIR | undefined {
+  const surface = contract.surface;
+  if (!surface) return undefined;
+
+  const partByName = new Map(parts.map((p) => [p.name, p]));
+
+  let anchor: SurfaceAnchorIR | undefined;
+  if (surface.anchor) {
+    const part = partByName.get(surface.anchor.part);
+    if (!part) {
+      throw new Error(
+        `Contract "${contract.name}": surface.anchor.part "${surface.anchor.part}" is not declared in anatomy.parts.`,
+      );
+    }
+    if (part.details?.role !== "trigger") {
+      throw new Error(
+        `Contract "${contract.name}": surface.anchor.part "${surface.anchor.part}" must have details.role === "trigger" (got ${part.details?.role ?? "undefined"}).`,
+      );
+    }
+    anchor = { part, relation: surface.anchor.relation };
+  }
+
+  let content: SurfaceContentIR | undefined;
+  if (surface.content) {
+    const part = partByName.get(surface.content.part);
+    if (!part) {
+      throw new Error(
+        `Contract "${contract.name}": surface.content.part "${surface.content.part}" is not declared in anatomy.parts.`,
+      );
+    }
+    const role = part.details?.role;
+    if (!role || !SURFACE_CONTENT_PART_ROLES.has(role)) {
+      throw new Error(
+        `Contract "${contract.name}": surface.content.part "${surface.content.part}" must have details.role of "content", "region", or "overlay" (got ${role ?? "undefined"}).`,
+      );
+    }
+    content = { part, interactive: surface.content.interactive };
+  }
+
+  const positioning: SurfacePositioningIR | undefined = surface.positioning
+    ? {
+        strategy: surface.positioning.strategy,
+        placementProp: surface.positioning.placementProp,
+        collision: surface.positioning.collision,
+      }
+    : undefined;
+
+  const timing: SurfaceTimingIR | undefined = surface.timing
+    ? {
+        openDelayProp: surface.timing.openDelayProp,
+        closeDelayProp: surface.timing.closeDelayProp,
+        autoDismissProp: surface.timing.autoDismissProp,
+      }
+    : undefined;
+
+  return {
+    kind: surface.kind,
+    presence: surface.presence,
+    modality: surface.modality,
+    anchor,
+    content,
+    positioning,
+    dismissal: surface.dismissal ?? [],
+    timing,
   };
 }
 
