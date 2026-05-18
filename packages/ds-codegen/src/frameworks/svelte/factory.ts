@@ -30,15 +30,30 @@ import { generateSvelteHookSource } from "./hook-source.js";
 import { generateSvelteBarrel } from "./barrel.js";
 import { generateSvelteTest } from "./tests.js";
 import { isCompoundStateContainer } from "../react/hook-source.js";
+import {
+  generateSvelteSurfaceFiles,
+  isSurfaceComponent,
+} from "./surface-emit.js";
+import { generateSvelteSurfaceTestFiles } from "./surface-tests.js";
 
 export function createSvelteEmitter(): FrameworkEmitter {
   return {
     id: "svelte",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      // F-2A: Svelte does not yet handle presence-surface contracts. Skip
-      // emission so the on-disk Svelte Tooltip remains untouched until F-2C.
-      if (ir.surface) return [];
+      // F-2C-2: Presence-surface family — emits the compound API as
+      // three SFCs (root, Trigger, Content) plus a composable in the
+      // emitHook step.
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateSvelteSurfaceFiles(ir);
+        const css = emitCss(ir);
+        return [
+          { relativePath: `${ir.name}/${ir.name}.svelte`, contents: surfaceFiles.rootSfc, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Trigger.svelte`, contents: surfaceFiles.triggerSfc, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Content.svelte`, contents: surfaceFiles.contentSfc, preservable: true },
+        ];
+      }
       const sfc = generateSvelteComponentSource(ir);
       const css = emitCss(ir);
       const files: GeneratedFile[] = [
@@ -79,7 +94,21 @@ export function createSvelteEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        const surfaceTests = generateSvelteSurfaceTestFiles(ir);
+        return [
+          {
+            relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
+            contents: surfaceTests.testFile,
+            preservable: true,
+          },
+          {
+            relativePath: `${ir.name}/__tests__/${ir.name}Fixture.svelte`,
+            contents: surfaceTests.fixtureFile,
+            preservable: true,
+          },
+        ];
+      }
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -90,7 +119,16 @@ export function createSvelteEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateSvelteSurfaceFiles(ir);
+        return [
+          {
+            relativePath: `${ir.name}/use${ir.name}.svelte.ts`,
+            contents: surfaceFiles.composable,
+            preservable: true,
+          },
+        ];
+      }
       const source = generateSvelteHookSource(ir);
       if (!source) return [];
       return [

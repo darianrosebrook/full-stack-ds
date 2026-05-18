@@ -1,24 +1,149 @@
-// @generated:start imports
-import { describe, expect, it, vi } from "vitest";
-import type { Component } from "svelte";
-import { tick } from "svelte";
-import { render, fireEvent } from "@testing-library/svelte";
-import { axe } from "vitest-axe";
-import TooltipFixture from "./TooltipFixture.svelte";
+/**
+ * Svelte behavioral tests for the Anchored Presence Surface family.
+ *
+ * Parity with React (499ed17) and Vue (38454fe). Same semantic
+ * surface: hover/focus open, pointer-leave/blur/escape close,
+ * aria-describedby wiring, disabled suppression, controlled/
+ * uncontrolled state, host-adoption via snippet, and consumer
+ * handler/ref composition.
+ *
+ * Emits TWO files: the test file (`.test.ts`) and a fixture component
+ * file (`.svelte`) consumed by the tests. @testing-library/svelte
+ * cannot render an in-test compound tree without a fixture SFC.
+ */
+import type { ComponentIR } from "../../ir.js";
 
-declare module "vitest" {
-  interface Assertion<T> {
-    toHaveNoViolations(): void;
+export interface SvelteSurfaceTestFiles {
+  testFile: string;
+  fixtureFile: string;
+}
+
+export function generateSvelteSurfaceTestFiles(ir: ComponentIR): SvelteSurfaceTestFiles {
+  const surface = ir.surface;
+  if (!surface) {
+    throw new Error(
+      `generateSvelteSurfaceTestFiles called on ${ir.name} without ir.surface`,
+    );
   }
+  if (surface.kind !== "tooltip") {
+    throw new Error(
+      `Svelte surface test emitter only supports kind "tooltip" in F-2C-2 (got "${surface.kind}").`,
+    );
+  }
+  return {
+    testFile: emitTestFile(ir),
+    fixtureFile: emitFixtureFile(ir),
+  };
 }
-// @generated:end
 
-// @generated:start tests
-function mountDefault(props: Record<string, unknown> = {}) {
-  return render(TooltipFixture as unknown as Component<Record<string, unknown>>, { props });
+function emitFixtureFile(ir: ComponentIR): string {
+  const name = ir.name;
+  return [
+    `<script lang="ts">`,
+    `// Test fixture for ${name} presence-surface compound.`,
+    `import ${name} from "../${name}.svelte";`,
+    `import ${name}Trigger from "../${name}Trigger.svelte";`,
+    `import ${name}Content from "../${name}Content.svelte";`,
+    ``,
+    `interface Props {`,
+    `  open?: boolean;`,
+    `  defaultOpen?: boolean;`,
+    `  onOpenChange?: (open: boolean) => void;`,
+    `  disabled?: boolean;`,
+    `  closeOnEscape?: boolean;`,
+    `  closeOnBlur?: boolean;`,
+    `  /** When true, render the asChild snippet adoption path. */`,
+    `  asChild?: boolean;`,
+    `  /** Spy invoked from the adopted child's onpointerenter handler.`,
+    `   *  Used by the host-adoption tests to assert consumer handlers`,
+    `   *  still run when composed with the substrate's handler. */`,
+    `  consumerOnPointerEnter?: (event: PointerEvent) => void;`,
+    `  /** When set, the consumer's handler calls preventDefault to`,
+    `   *  exercise the substrate's consumer-opt-out contract. */`,
+    `  consumerPreventsDefault?: boolean;`,
+    `}`,
+    ``,
+    `let {`,
+    `  open,`,
+    `  defaultOpen,`,
+    `  onOpenChange,`,
+    `  disabled,`,
+    `  closeOnEscape,`,
+    `  closeOnBlur,`,
+    `  asChild,`,
+    `  consumerOnPointerEnter,`,
+    `  consumerPreventsDefault,`,
+    `}: Props = $props();`,
+    `</script>`,
+    ``,
+    `<${name}`,
+    `  {open}`,
+    `  {defaultOpen}`,
+    `  {onOpenChange}`,
+    `  {disabled}`,
+    `  {closeOnEscape}`,
+    `  {closeOnBlur}`,
+    `>`,
+    `  {#if asChild}`,
+    `    <${name}Trigger asChild>`,
+    `      {#snippet trigger({ action, attrs })}`,
+    `        <!--`,
+    `          Split binding: action owns DOM-node registration via`,
+    `          use:action; attrs carries ARIA/data/handlers via spread.`,
+    `          Both are required — applying only one silently breaks`,
+    `          the substrate.`,
+    ``,
+    `          Consumer-handler composition: we run our own`,
+    `          onpointerenter first, optionally call preventDefault,`,
+    `          and only invoke the substrate's handler when not`,
+    `          prevented. This mirrors the React asChild and Vue`,
+    `          slot-props contracts.`,
+    `        -->`,
+    `        <a`,
+    `          href="#help"`,
+    `          data-testid="trigger"`,
+    `          use:action`,
+    `          {...attrs}`,
+    `          onpointerenter={(e) => {`,
+    `            consumerOnPointerEnter?.(e);`,
+    `            if (consumerPreventsDefault) e.preventDefault();`,
+    `            if (!e.defaultPrevented) attrs.onpointerenter?.(e);`,
+    `          }}`,
+    `        >Save</a>`,
+    `      {/snippet}`,
+    `    </${name}Trigger>`,
+    `  {:else}`,
+    `    <${name}Trigger data-testid="trigger">Save</${name}Trigger>`,
+    `  {/if}`,
+    `  <${name}Content data-testid="content">Help text</${name}Content>`,
+    `</${name}>`,
+    ``,
+  ].join("\n");
 }
 
-describe("Tooltip — compound API surface", () => {
+function emitTestFile(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const importsBody = [
+    `import { describe, expect, it, vi } from "vitest";`,
+    `import type { Component } from "svelte";`,
+    `import { tick } from "svelte";`,
+    `import { render, fireEvent } from "@testing-library/svelte";`,
+    `import { axe } from "vitest-axe";`,
+    `import ${name}Fixture from "./${name}Fixture.svelte";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+  ].join("\n");
+
+  const testsBody = `function mountDefault(props: Record<string, unknown> = {}) {
+  return render(${name}Fixture as unknown as Component<Record<string, unknown>>, { props });
+}
+
+describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", async () => {
     const { container } = mountDefault();
     await tick();
@@ -173,7 +298,7 @@ describe("Tooltip — compound API surface", () => {
   });
 });
 
-describe("Tooltip — snippet host adoption", () => {
+describe("${name} — snippet host adoption", () => {
   it("renders the adopted child as the actual host (no nested button)", async () => {
     const { container } = mountDefault({ asChild: true });
     await tick();
@@ -208,11 +333,11 @@ describe("Tooltip — snippet host adoption", () => {
     expect(trigger.getAttribute("aria-describedby")).toBe(content.getAttribute("id"));
   });
 
-  it("asChild applies data-tooltip-trigger marker on the adopted host", async () => {
+  it("asChild applies data-${cssPrefix}-trigger marker on the adopted host", async () => {
     const { container } = mountDefault({ asChild: true });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    expect(trigger.hasAttribute("data-tooltip-trigger")).toBe(true);
+    expect(trigger.hasAttribute("data-${cssPrefix}-trigger")).toBe(true);
   });
 
   it("asChild preserves the consumer's onpointerenter handler when composed manually", async () => {
@@ -242,7 +367,7 @@ describe("Tooltip — snippet host adoption", () => {
     });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    // `pointerenter` is not cancellable per the DOM spec, so we have
+    // \`pointerenter\` is not cancellable per the DOM spec, so we have
     // to construct a cancellable event manually. Dispatching it on the
     // adopted element exercises the consumer's onpointerenter handler
     // and the substrate's defaultPrevented check.
@@ -254,7 +379,7 @@ describe("Tooltip — snippet host adoption", () => {
   });
 });
 
-describe("Tooltip — accessibility", () => {
+describe("${name} — accessibility", () => {
   it("has no unexpected axe violations when closed", async () => {
     const { container } = mountDefault();
     await tick();
@@ -268,9 +393,20 @@ describe("Tooltip — accessibility", () => {
     const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });
-});
-// @generated:end
+});`;
 
-// @custom:start tests
-
-// @custom:end
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}

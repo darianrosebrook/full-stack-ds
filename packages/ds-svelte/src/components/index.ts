@@ -103,6 +103,8 @@ export { default as ToastItem } from "./Toast/ToastItem.svelte";
 export { default as ToastTitle } from "./Toast/ToastTitle.svelte";
 export { default as ToggleSwitch } from "./ToggleSwitch/ToggleSwitch.svelte";
 export { default as Tooltip } from "./Tooltip/Tooltip.svelte";
+export { default as TooltipContent } from "./Tooltip/TooltipContent.svelte";
+export { default as TooltipTrigger } from "./Tooltip/TooltipTrigger.svelte";
 export { default as Truncate } from "./Truncate/Truncate.svelte";
 export { default as TruncateContent } from "./Truncate/TruncateContent.svelte";
 export { default as VisuallyHidden } from "./VisuallyHidden/VisuallyHidden.svelte";
