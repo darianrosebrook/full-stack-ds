@@ -14,17 +14,17 @@ declare module "vitest" {
 // @generated:start tests
 describe("Status — unit", () => {
   it("renders with default props", () => {
-    render(<Status data-testid="status">content</Status>);
+    render(<Status data-testid="status" status={"info"}>content</Status>);
     expect(screen.getByTestId("status")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Status data-testid="status">content</Status>);
+    render(<Status data-testid="status" status={"info"}>content</Status>);
     expect(screen.getByTestId("status")).toHaveClass("status");
   });
 
   it("merges custom className", () => {
-    render(<Status data-testid="status" className="custom">content</Status>);
+    render(<Status data-testid="status" status={"info"} className="custom">content</Status>);
     expect(screen.getByTestId("status")).toHaveClass("status", "custom");
   });
 
@@ -56,7 +56,7 @@ describe("Status — unit", () => {
 
 describe("Status — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Status aria-label="Test Status">content</Status></>);
+    const { container } = render(<><Status aria-label="Test Status" status={"info"}>content</Status></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

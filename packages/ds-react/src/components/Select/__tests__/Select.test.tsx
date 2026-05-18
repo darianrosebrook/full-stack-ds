@@ -14,63 +14,63 @@ declare module "vitest" {
 // @generated:start tests
 describe("Select — unit", () => {
   it("renders with default props", () => {
-    render(<Select data-testid="select" open={true} />);
+    render(<Select data-testid="select" options={[]} open={true} />);
     expect(screen.getByTestId("select")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Select data-testid="select" open={true} />);
+    render(<Select data-testid="select" options={[]} open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select");
   });
 
   it("merges custom className", () => {
-    render(<Select data-testid="select" className="custom" open={true} />);
+    render(<Select data-testid="select" options={[]} className="custom" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select", "custom");
   });
 
   it("applies size=sm variant class", () => {
-    render(<Select data-testid="select" size="sm" open={true} />);
+    render(<Select data-testid="select" options={[]} size="sm" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select--sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<Select data-testid="select" size="md" open={true} />);
+    render(<Select data-testid="select" options={[]} size="md" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select--md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<Select data-testid="select" size="lg" open={true} />);
+    render(<Select data-testid="select" options={[]} size="lg" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select--lg");
   });
 
   it("applies position=bottom variant class", () => {
-    render(<Select data-testid="select" position="bottom" open={true} />);
+    render(<Select data-testid="select" options={[]} position="bottom" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select--bottom");
   });
 
   it("applies position=top variant class", () => {
-    render(<Select data-testid="select" position="top" open={true} />);
+    render(<Select data-testid="select" options={[]} position="top" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select--top");
   });
 
   it("applies position=auto variant class", () => {
-    render(<Select data-testid="select" position="auto" open={true} />);
+    render(<Select data-testid="select" options={[]} position="auto" open={true} />);
     expect(screen.getByTestId("select")).toHaveClass("select--auto");
   });
 
   it("calls onChange when selection changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<Select data-testid="select" value={""} onChange={onChangeSpy} open={true} />)).not.toThrow();
+    expect(() => render(<Select data-testid="select" options={[]} value={""} onChange={onChangeSpy} open={true} />)).not.toThrow();
   });
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Select data-testid="select" open={false} onOpenChange={onOpenChangeSpy} />)).not.toThrow();
+    expect(() => render(<Select data-testid="select" options={[]} open={false} onOpenChange={onOpenChangeSpy} />)).not.toThrow();
   });
 
   it("closes on Escape key", () => {
     const onOpenChangeSpy = vi.fn();
-    render(<Select data-testid="select" open={true} onOpenChange={onOpenChangeSpy} />);
+    render(<Select data-testid="select" options={[]} open={true} onOpenChange={onOpenChangeSpy} />);
     act(() => {
       document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     });
@@ -80,7 +80,7 @@ describe("Select — unit", () => {
 
 describe("Select — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Select aria-label="Test Select" open={true} /></>);
+    const { container } = render(<><Select aria-label="Test Select" options={[]} open={true} /></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

@@ -14,84 +14,84 @@ declare module "vitest" {
 // @generated:start tests
 describe("AnimatedText — unit", () => {
   it("renders with default props", () => {
-    render(<AnimatedText data-testid="animated-text" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} />);
     expect(screen.getByTestId("animated-text")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<AnimatedText data-testid="animated-text" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text");
   });
 
   it("merges custom className", () => {
-    render(<AnimatedText data-testid="animated-text" className="custom" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} className="custom" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text", "custom");
   });
 
   it("applies as=h1 variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="h1" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="h1" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--h1");
   });
 
   it("applies as=h2 variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="h2" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="h2" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--h2");
   });
 
   it("applies as=h3 variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="h3" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="h3" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--h3");
   });
 
   it("applies as=h4 variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="h4" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="h4" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--h4");
   });
 
   it("applies as=h5 variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="h5" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="h5" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--h5");
   });
 
   it("applies as=h6 variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="h6" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="h6" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--h6");
   });
 
   it("applies as=p variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="p" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="p" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--p");
   });
 
   it("applies as=span variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="span" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="span" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--span");
   });
 
   it("applies as=div variant class", () => {
-    render(<AnimatedText data-testid="animated-text" as="div" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} as="div" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--div");
   });
 
   it("applies variant=blur-in variant class", () => {
-    render(<AnimatedText data-testid="animated-text" variant="blur-in" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} variant="blur-in" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--blur-in");
   });
 
   it("applies variant=fade-up variant class", () => {
-    render(<AnimatedText data-testid="animated-text" variant="fade-up" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} variant="fade-up" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--fade-up");
   });
 
   it("applies variant=slide-in variant class", () => {
-    render(<AnimatedText data-testid="animated-text" variant="slide-in" />);
+    render(<AnimatedText data-testid="animated-text" text={"placeholder"} variant="slide-in" />);
     expect(screen.getByTestId("animated-text")).toHaveClass("animated-text--slide-in");
   });
 });
 
 describe("AnimatedText — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><AnimatedText /></>);
+    const { container } = render(<><AnimatedText text={"placeholder"} /></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

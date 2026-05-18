@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { Icon } from "../Icon";
+import { Icon, type IconDefinition } from "../Icon";
 
 declare module "vitest" {
   interface Assertion<T> {
@@ -14,24 +14,24 @@ declare module "vitest" {
 // @generated:start tests
 describe("Icon — unit", () => {
   it("renders with default props", () => {
-    render(<Icon data-testid="icon" />);
+    render(<Icon data-testid="icon" icon={{} as IconDefinition} />);
     expect(screen.getByTestId("icon")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Icon data-testid="icon" />);
+    render(<Icon data-testid="icon" icon={{} as IconDefinition} />);
     expect(screen.getByTestId("icon")).toHaveClass("icon");
   });
 
   it("merges custom className", () => {
-    render(<Icon data-testid="icon" className="custom" />);
+    render(<Icon data-testid="icon" icon={{} as IconDefinition} className="custom" />);
     expect(screen.getByTestId("icon")).toHaveClass("icon", "custom");
   });
 });
 
 describe("Icon — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Icon aria-label="Test Icon" /></>);
+    const { container } = render(<><Icon aria-label="Test Icon" icon={{} as IconDefinition} /></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

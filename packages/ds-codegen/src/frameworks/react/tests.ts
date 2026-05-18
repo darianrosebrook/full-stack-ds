@@ -29,6 +29,28 @@ import { generateReactSurfaceTest } from "./surface-tests.js";
  * semantically; it just has to be type-assignable so the emitted
  * JSX passes tsc.
  */
+/**
+ * Extract type alias names from required-prop placeholder
+ * expressions. Names follow the pattern `{} as Name` (object alias
+ * cast) — primitives, union string literals, and array literals
+ * don't need imports. Returns a deduplicated list ordered as
+ * declared so imports stay stable on regen.
+ */
+function collectRequiredPropTypeImports(plan: {
+  requiredProps: { expression: string }[];
+}): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const prop of plan.requiredProps) {
+    const match = prop.expression.match(/\{\}\s+as\s+([A-Za-z_$][\w$]*)/);
+    if (match && !seen.has(match[1])) {
+      seen.add(match[1]);
+      out.push(match[1]);
+    }
+  }
+  return out;
+}
+
 function channelValuePlaceholder(valueType: string | undefined): string {
   if (valueType === "boolean") return "false";
   if (valueType === "number") return "0";
@@ -52,8 +74,32 @@ export function generateReactTest(ir: ComponentIR): string {
     return generateReactSurfaceTest(ir);
   }
   const plan = buildComponentTestPlan(ir);
-  const allImports = [plan.name, ...plan.compoundImports].join(", ");
+  // Type aliases referenced by the required-prop placeholder bag (e.g.
+  // {} as PostcardAuthor) must be imported alongside the component
+  // name so the generated test file type-checks.
+  const requiredPropTypeImports = collectRequiredPropTypeImports(plan);
+  const allImports = [
+    plan.name,
+    ...plan.compoundImports,
+    ...requiredPropTypeImports.map((name) => `type ${name}`),
+  ].join(", ");
   const renderProps = plan.renderOpenProp ? ` ${plan.renderOpenProp}={true}` : "";
+  // Required non-channel props splatted on every render call so the
+  // test JSX satisfies the component's TypeScript contract. The bag
+  // is computed by buildComponentTestPlan from `ir.styledProps`
+  // (where `required: true` && no `defaultExpr`), excluding channel
+  // valueProp / changeHandlerProp / defaultValueProp and the
+  // renderOpenProp. `requiredPropsAttrsExcept` returns the bag minus
+  // any names listed — used at variant render sites where the variant
+  // dimension is emitted separately and would otherwise duplicate.
+  const requiredPropsAttrs = plan.requiredProps
+    .map((p) => ` ${p.name}={${p.expression}}`)
+    .join("");
+  const requiredPropsAttrsExcept = (excludeNames: Set<string>): string =>
+    plan.requiredProps
+      .filter((p) => !excludeNames.has(p.name))
+      .map((p) => ` ${p.name}={${p.expression}}`)
+      .join("");
   // Components without a children placement (void elements like <img>, <hr>,
   // <input>) self-close in test JSX; otherwise we pass "content" as the
   // child to exercise children rendering.
@@ -79,7 +125,7 @@ export function generateReactTest(ir: ComponentIR): string {
   lines.push(`describe("${plan.name} — unit", () => {`);
   lines.push(`  it("renders with default props", () => {`);
   lines.push(
-    `    render(<${plan.name} data-testid="${plan.testId}"${renderProps}${closer});`,
+    `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs}${renderProps}${closer});`,
   );
   lines.push(
     `    expect(screen.getByTestId("${plan.testId}")).toBeInTheDocument();`,
@@ -89,7 +135,7 @@ export function generateReactTest(ir: ComponentIR): string {
 
   lines.push(`  it("applies the base CSS class", () => {`);
   lines.push(
-    `    render(<${plan.name} data-testid="${plan.testId}"${renderProps}${closer});`,
+    `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs}${renderProps}${closer});`,
   );
   lines.push(
     `    expect(screen.getByTestId("${plan.testId}")).toHaveClass("${plan.cssPrefix}");`,
@@ -99,7 +145,7 @@ export function generateReactTest(ir: ComponentIR): string {
 
   lines.push(`  it("merges custom className", () => {`);
   lines.push(
-    `    render(<${plan.name} data-testid="${plan.testId}" className="custom"${renderProps}${closer});`,
+    `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} className="custom"${renderProps}${closer});`,
   );
   lines.push(
     `    expect(screen.getByTestId("${plan.testId}")).toHaveClass("${plan.cssPrefix}", "custom");`,
@@ -110,7 +156,7 @@ export function generateReactTest(ir: ComponentIR): string {
     lines.push(``);
     lines.push(`  it("has the correct ARIA role", () => {`);
     lines.push(
-      `    render(<${plan.name} data-testid="${plan.testId}"${closer});`,
+      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs}${closer});`,
     );
     lines.push(
       `    expect(screen.getByTestId("${plan.testId}")).toHaveAttribute("role", "${plan.role.role}");`,
@@ -121,8 +167,16 @@ export function generateReactTest(ir: ComponentIR): string {
   for (const variant of plan.variants) {
     lines.push(``);
     lines.push(`  it("applies ${variant.dimension}=${variant.value} variant class", () => {`);
+    // Exclude the variant dimension from requiredPropsAttrs: when a
+    // required prop is also a variant dimension (e.g. Status.status,
+    // typed StatusIntent + declared as a variant), the variant render
+    // site emits its own ${dimension}={value} and we'd duplicate the
+    // attribute (TS17001).
+    const requiredPropsForVariant = requiredPropsAttrsExcept(
+      new Set([variant.dimension]),
+    );
     lines.push(
-      `    render(<${plan.name} data-testid="${plan.testId}" ${variant.dimension}="${variant.value}"${renderProps}${closer});`,
+      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsForVariant} ${variant.dimension}="${variant.value}"${renderProps}${closer});`,
     );
     lines.push(
       `    expect(screen.getByTestId("${plan.testId}")).toHaveClass("${variant.className}");`,
@@ -142,7 +196,7 @@ export function generateReactTest(ir: ComponentIR): string {
     if (testCase.interaction === "click") {
       // Inline control (Switch, Checkbox, Radio, Button): click fires the handler
       lines.push(
-        `    render(<${plan.name} data-testid="${plan.testId}" ${channel.changeHandlerProp}={${spyName}}${renderProps}${closer});`,
+        `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${channel.changeHandlerProp}={${spyName}}${renderProps}${closer});`,
       );
       lines.push(
         `    await userEvent.setup().click(screen.getByTestId("${plan.testId}"));`,
@@ -163,12 +217,12 @@ export function generateReactTest(ir: ComponentIR): string {
       // TextField, Walkthrough).
       const placeholder = channelValuePlaceholder(channel.valueType);
       lines.push(
-        `    expect(() => render(<${plan.name} data-testid="${plan.testId}" ${channel.valueProp}={${placeholder}} ${channel.changeHandlerProp}={${spyName}}${renderPropsForChannel}${closer})).not.toThrow();`,
+        `    expect(() => render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${channel.valueProp}={${placeholder}} ${channel.changeHandlerProp}={${spyName}}${renderPropsForChannel}${closer})).not.toThrow();`,
       );
     } else {
       // Non-boolean channel: fire a synthetic change event with target.value
       lines.push(
-        `    render(<${plan.name} data-testid="${plan.testId}" ${channel.changeHandlerProp}={${spyName}}${renderProps}${closer});`,
+        `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${channel.changeHandlerProp}={${spyName}}${renderProps}${closer});`,
       );
       lines.push(
         `    fireEvent.change(screen.getByTestId("${plan.testId}"), { target: { value: "test" } });`,
@@ -185,7 +239,7 @@ export function generateReactTest(ir: ComponentIR): string {
     lines.push(`  it("closes on Escape key", () => {`);
     lines.push(`    const ${testCase.spyName} = vi.fn();`);
     lines.push(
-      `    render(<${plan.name} data-testid="${plan.testId}" ${testCase.channel.valueProp}={true} ${testCase.channel.changeHandlerProp}={${testCase.spyName}}${closer});`,
+      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${testCase.channel.valueProp}={true} ${testCase.channel.changeHandlerProp}={${testCase.spyName}}${closer});`,
     );
     lines.push(`    act(() => {`);
     lines.push(
@@ -202,7 +256,7 @@ export function generateReactTest(ir: ComponentIR): string {
     lines.push(`  it("closes on overlay click", () => {`);
     lines.push(`    const ${testCase.spyName} = vi.fn();`);
     lines.push(
-      `    render(<${plan.name} data-testid="${plan.testId}" ${testCase.channel.valueProp}={true} ${testCase.channel.changeHandlerProp}={${testCase.spyName}}${closer});`,
+      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${testCase.channel.valueProp}={true} ${testCase.channel.changeHandlerProp}={${testCase.spyName}}${closer});`,
     );
     lines.push(
       `    fireEvent.click(screen.getByTestId("${plan.testId}"));`,
@@ -215,8 +269,8 @@ export function generateReactTest(ir: ComponentIR): string {
   lines.push(``);
 
   const axeJsx = plan.accessibility.needsListParent
-    ? `<ul><${plan.name}${plan.accessibility.axeProps}${renderProps}${closer}</ul>`
-    : `<${plan.name}${plan.accessibility.axeProps}${renderProps}${closer}`;
+    ? `<ul><${plan.name}${plan.accessibility.axeProps}${requiredPropsAttrs}${renderProps}${closer}</ul>`
+    : `<${plan.name}${plan.accessibility.axeProps}${requiredPropsAttrs}${renderProps}${closer}`;
 
   lines.push(`describe("${plan.name} — accessibility", () => {`);
   lines.push(`  it("has no unexpected axe violations with default props", async () => {`);

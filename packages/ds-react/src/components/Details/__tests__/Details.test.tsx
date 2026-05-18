@@ -14,64 +14,64 @@ declare module "vitest" {
 // @generated:start tests
 describe("Details — unit", () => {
   it("renders with default props", () => {
-    render(<Details data-testid="details" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} open={true}>content</Details>);
     expect(screen.getByTestId("details")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Details data-testid="details" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details");
   });
 
   it("merges custom className", () => {
-    render(<Details data-testid="details" className="custom" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} className="custom" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details", "custom");
   });
 
   it("has the correct ARIA role", () => {
-    render(<Details data-testid="details">content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"}>content</Details>);
     expect(screen.getByTestId("details")).toHaveAttribute("role", "group");
   });
 
   it("applies variant=default variant class", () => {
-    render(<Details data-testid="details" variant="default" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} variant="default" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--default");
   });
 
   it("applies variant=inline variant class", () => {
-    render(<Details data-testid="details" variant="inline" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} variant="inline" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--inline");
   });
 
   it("applies variant=compact variant class", () => {
-    render(<Details data-testid="details" variant="compact" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} variant="compact" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--compact");
   });
 
   it("applies icon=left variant class", () => {
-    render(<Details data-testid="details" icon="left" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} icon="left" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--left");
   });
 
   it("applies icon=right variant class", () => {
-    render(<Details data-testid="details" icon="right" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} icon="right" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--right");
   });
 
   it("applies icon=none variant class", () => {
-    render(<Details data-testid="details" icon="none" open={true}>content</Details>);
+    render(<Details data-testid="details" summary={"placeholder"} icon="none" open={true}>content</Details>);
     expect(screen.getByTestId("details")).toHaveClass("details--none");
   });
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Details data-testid="details" open={false} onOpenChange={onOpenChangeSpy}>content</Details>)).not.toThrow();
+    expect(() => render(<Details data-testid="details" summary={"placeholder"} open={false} onOpenChange={onOpenChangeSpy}>content</Details>)).not.toThrow();
   });
 });
 
 describe("Details — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Details aria-label="Test Details" open={true}>content</Details></>);
+    const { container } = render(<><Details aria-label="Test Details" summary={"placeholder"} open={true}>content</Details></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

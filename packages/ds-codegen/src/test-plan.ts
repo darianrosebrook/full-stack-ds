@@ -1,8 +1,10 @@
+import type { ContractTypeDef } from "./contract.js";
 import { toKebab } from "./contract.js";
 import type {
   ComponentIR,
   NormalizedChannelIR,
   NormalizedDismissalTriggerIR,
+  ResolvedPropIR,
 } from "./ir.js";
 import { hasChildrenPlaceholder } from "./ir.js";
 
@@ -93,6 +95,27 @@ export interface AccessibilityTestCase {
   needsListParent: boolean;
 }
 
+/**
+ * Required non-channel prop that must appear on every generated
+ * render call site so the component contract is satisfied at the
+ * test type level. The `expression` is a JS literal/cast string the
+ * test emitter can interpolate directly into JSX (e.g. `""`, `0`,
+ * `"info"`, `{} as PostcardAuthor`).
+ *
+ * Surfaced by FRAMEWORK-EMIT-VALIDATE-01: components with required
+ * non-channel props (AnimatedText.text, Avatar.name, Image.alt,
+ * Icon.icon, Details.summary, Field.name, Status.status,
+ * Postcard.{postId,author,timestamp,stats}, Select.options) had no
+ * generated placeholder, so the generated tests were green at
+ * runtime but red under tsc with TS2741/TS2739.
+ */
+export interface RequiredPropPlaceholder {
+  /** Prop name as authored. */
+  name: string;
+  /** JS expression string to splat into render-call JSX, e.g. `""`. */
+  expression: string;
+}
+
 export interface ComponentTestPlan {
   name: string;
   cssPrefix: string;
@@ -103,6 +126,14 @@ export interface ComponentTestPlan {
   needsAct: boolean;
   needsFireEvent: boolean;
   needsUserEvent: boolean;
+  /**
+   * Required non-channel props that the test emitter must splat
+   * into every render call. Channel-controlled props are emitted
+   * separately by the channel-specific render paths; this bag
+   * carries the props that the type signature insists on but the
+   * test framework wouldn't otherwise know to provide.
+   */
+  requiredProps: RequiredPropPlaceholder[];
   /**
    * Whether the component renders a child placement (either a dom-tree
    * `{ tag: "children" }` placeholder, or the legacy no-dom-tree path which
@@ -138,6 +169,7 @@ export function buildComponentTestPlan(ir: ComponentIR): ComponentTestPlan {
   const hasBehaviorTests = channels.length > 0 || dismissalTriggers.length > 0;
   const role = buildRoleTestCase(ir);
   const accessibility = buildAccessibilityTestCase(ir);
+  const requiredProps = buildRequiredPropPlaceholders(ir);
 
   const acceptsChildren = ir.dom ? hasChildrenPlaceholder(ir) : true;
 
@@ -170,7 +202,92 @@ export function buildComponentTestPlan(ir: ComponentIR): ComponentTestPlan {
     escapeDismissals,
     overlayClickDismissals,
     accessibility,
+    requiredProps,
   };
+}
+
+/**
+ * For every required non-channel non-renderOpen prop, synthesize a
+ * type-correct placeholder so generated test render calls satisfy
+ * the component's TypeScript contract.
+ *
+ * Excluded categories:
+ *   - Channel-controlled props (valueProp / defaultValueProp /
+ *     changeHandlerProp) are emitted by the channel-specific test
+ *     paths.
+ *   - The renderOpenProp ("open" / "isOpen") is emitted separately
+ *     by the open-renderProps mechanism in the React test emitter.
+ *   - Props with a `defaultExpr` (have a default value) are not
+ *     required at the call site even if `required: true` —
+ *     defaults make the prop optional at the JSX boundary.
+ *
+ * Placeholder resolution:
+ *   string                  → ""
+ *   number                  → 0
+ *   boolean                 → false
+ *   T[]                     → []
+ *   <Type> kind=union       → first union value as string literal
+ *   <Type> any other alias  → {} as <Type>   (named object types)
+ *   unknown                 → null as never   (forces author to fix)
+ */
+function buildRequiredPropPlaceholders(
+  ir: ComponentIR,
+): RequiredPropPlaceholder[] {
+  const channelProps = new Set<string>();
+  for (const channel of ir.behavior.normalizedChannels) {
+    channelProps.add(channel.valueProp);
+    channelProps.add(channel.changeHandlerProp);
+    if (channel.defaultValueProp) channelProps.add(channel.defaultValueProp);
+  }
+  const renderOpenProp = findRenderOpenProp(ir);
+  if (renderOpenProp) channelProps.add(renderOpenProp);
+
+  const out: RequiredPropPlaceholder[] = [];
+  for (const prop of ir.styledProps) {
+    if (!prop.required) continue;
+    if (prop.defaultExpr !== undefined) continue;
+    if (channelProps.has(prop.name)) continue;
+    out.push({
+      name: prop.name,
+      expression: placeholderForPropType(prop, ir.definedTypes),
+    });
+  }
+  return out;
+}
+
+function placeholderForPropType(
+  prop: ResolvedPropIR,
+  definedTypes: Record<string, ContractTypeDef>,
+): string {
+  const type = prop.type.trim();
+  // Use a non-empty string so axe a11y tests don't trip
+  // `presentation-role-conflict` when the prop is something like
+  // `alt` — an empty alt makes the image presentational, which
+  // conflicts if any other ARIA role is present. The actual value
+  // doesn't matter for typecheck or behavioral assertions; it just
+  // has to be a non-empty string.
+  if (type === "string") return '"placeholder"';
+  if (type === "number") return "0";
+  if (type === "boolean") return "false";
+  // Array suffix on a type alias or primitive: `Foo[]` or `string[]`.
+  if (/\[\s*\]\s*$/.test(type)) return "[]";
+  // Try a declared union type (e.g. StatusIntent → "info"). Use the
+  // first declared value; the test only needs assignability.
+  for (const ref of prop.typeRefs) {
+    const def = definedTypes[ref];
+    if (def && def.kind === "union" && def.values && def.values.length > 0) {
+      return `"${def.values[0]}"`;
+    }
+  }
+  // Named alias with non-union shape (e.g. PostcardAuthor): cast an
+  // empty object. This is sufficient for assignability in render-only
+  // tests that don't read the value.
+  if (prop.typeRefs.length > 0) {
+    return `{} as ${prop.typeRefs[0]}`;
+  }
+  // Last resort: force the call site to fail loudly rather than
+  // silently swap in a wrong primitive.
+  return "null as never";
 }
 
 function findRenderOpenProp(ir: ComponentIR): string | undefined {
