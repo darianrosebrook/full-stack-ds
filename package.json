@@ -14,6 +14,7 @@
     "generate:dry-run": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --dry-run",
     "generate:all:dry-run": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --target=all --dry-run",
     "generate:watch": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --watch",
+    "validate:generated": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/validation/validate-cli.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:vue": "pnpm --filter @full-stack-ds/vue run test",
