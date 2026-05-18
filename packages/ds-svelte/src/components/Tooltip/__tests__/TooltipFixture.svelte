@@ -45,28 +45,30 @@ let {
 >
   {#if asChild}
     <TooltipTrigger asChild>
-      {#snippet trigger({ action, attrs })}
+      {#snippet child(trigger)}
         <!--
-          Split binding: action owns DOM-node registration via
-          use:action; attrs carries ARIA/data/handlers via spread.
-          Both are required — applying only one silently breaks
-          the substrate.
+          Split binding via `trigger` (action + attrs).
+          `use:trigger.action` owns DOM-node registration via
+          Svelte's action lifecycle; `{...trigger.attrs}`
+          carries ARIA, data marker, and Svelte event handlers
+          via spread. Both are required — applying only one
+          silently breaks the substrate.
 
           Consumer-handler composition: we run our own
           onpointerenter first, optionally call preventDefault,
           and only invoke the substrate's handler when not
-          prevented. This mirrors the React asChild and Vue
+          prevented. Mirrors the React asChild and Vue
           slot-props contracts.
         -->
         <a
           href="#help"
           data-testid="trigger"
-          use:action
-          {...attrs}
+          use:trigger.action
+          {...trigger.attrs}
           onpointerenter={(e) => {
             consumerOnPointerEnter?.(e);
             if (consumerPreventsDefault) e.preventDefault();
-            if (!e.defaultPrevented) attrs.onpointerenter?.(e);
+            if (!e.defaultPrevented) trigger.attrs.onpointerenter?.(e);
           }}
         >Save</a>
       {/snippet}

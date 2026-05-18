@@ -10,20 +10,23 @@
  *   </Tooltip>
  *
  * Host-adoption uses a split binding (`action` + `attrs`) delivered
- * through the consumer's `children` snippet, because Svelte cannot
+ * through the consumer's `child` snippet, because Svelte cannot
  * spread a `use:` action or `bind:this` through a parameter object:
  *
  *   <TooltipTrigger>
- *     {#snippet children({ action, attrs })}
- *       <a href="#help" use:action {...attrs}>Save</a>
+ *     {#snippet child(trigger)}
+ *       <a href="#help" use:trigger.action {...trigger.attrs}>
+ *         Save
+ *       </a>
  *     {/snippet}
  *   </TooltipTrigger>
  *
- * The binding is logically atomic (consumer MUST use both `action`
- * and `attrs` or the substrate breaks) but physically split: the
- * action owns anchor registration, attrs carries ARIA + data marker
- * + Svelte event handlers. In adoption mode the controller runs in
- * handlerMode so anchor-side DOM listeners are not double-installed.
+ * The snippet receives the WHOLE trigger object (`{ action, attrs }`)
+ * so the split is explicit at the call site. Logically atomic
+ * (consumer MUST use both or the substrate breaks); physically split
+ * because Svelte's two channels (`use:` and spread) can't share an
+ * object. In adoption mode the controller runs in handlerMode so
+ * anchor-side DOM listeners are not double-installed.
  *
  * Bypasses the legacy `ir.dom` and compound-state-container paths
  * entirely — this is forward-facing replacement, not augmentation.
@@ -162,7 +165,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `// @generated:start imports`,
     `import type { Snippet } from "svelte";`,
     `import { useTooltipContext } from "./use${name}.svelte.js";`,
-    `import type { SurfaceTriggerBinding } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";`,
+    `import type { SurfaceTriggerProps } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";`,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -172,20 +175,21 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `// @generated:start props`,
     `interface Props {`,
     `  /** When true, the consumer takes over the host element via`,
-    `   *  the \`trigger\` snippet prop, which receives the split`,
-    `   *  \`{ action, attrs }\` binding. When false (default), a`,
-    `   *  \`<button>\` is rendered around the implicit \`children\`. */`,
+    `   *  the \`child\` snippet prop, which receives the whole`,
+    `   *  \`trigger\` object (\`{ action, attrs }\`). When false`,
+    `   *  (default), a \`<button>\` is rendered around the implicit`,
+    `   *  \`children\` snippet. */`,
     `  asChild?: boolean;`,
     `  class?: string;`,
     `  "data-testid"?: string;`,
     `  /** Default-host content (used when asChild is false). */`,
     `  children?: Snippet;`,
     `  /** Host-adoption snippet (used when asChild is true). Receives`,
-    `   *  the split binding \`{ action, attrs }\`. The consumer applies`,
-    `   *  \`use:action\` and spreads \`{...attrs}\` on the adopted`,
-    `   *  element. Applying one without the other will silently break`,
-    `   *  the substrate — both are required. */`,
-    `  trigger?: Snippet<[SurfaceTriggerBinding]>;`,
+    `   *  the trigger object \`{ action, attrs }\`. The consumer applies`,
+    `   *  \`use:trigger.action\` and spreads \`{...trigger.attrs}\` on`,
+    `   *  the adopted element. Applying one without the other will`,
+    `   *  silently break the substrate — both are required. */`,
+    `  child?: Snippet<[SurfaceTriggerProps]>;`,
     `}`,
     ``,
     `let {`,
@@ -193,7 +197,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `  class: className,`,
     `  "data-testid": dataTestid,`,
     `  children,`,
-    `  trigger,`,
+    `  child,`,
     `}: Props = $props();`,
     `// @generated:end`,
     ``,
@@ -204,8 +208,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     ``,
     `// Default-host path: bind the rendered <button> as the anchor`,
     `// (substrate auto-wires DOM listeners on it). The adoption path`,
-    `// is owned by the binding's \`action\` and does not need a $effect`,
-    `// here.`,
+    `// is owned by trigger.action and does not need a $effect here.`,
     `$effect(() => {`,
     `  if (!asChild && buttonEl) ctx.registerAnchor(buttonEl);`,
     `});`,
@@ -215,7 +218,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `// listeners in default-host mode (they would double-fire if also`,
     `// spread as Svelte handlers).`,
     `const defaultHostBindings = $derived.by(() => {`,
-    `  const { attrs } = ctx.getTriggerBinding();`,
+    `  const { attrs } = ctx.getTriggerProps();`,
     `  const { onpointerenter, onpointerleave, onfocus, onblur, onclick, ...rest } = attrs;`,
     `  return rest;`,
     `});`,
@@ -227,7 +230,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `</script>`,
     ``,
     `{#if asChild}`,
-    `  {@render trigger?.(ctx.getTriggerBinding())}`,
+    `  {@render child?.(ctx.getTriggerProps())}`,
     `{:else}`,
     `  <button`,
     `    type="button"`,

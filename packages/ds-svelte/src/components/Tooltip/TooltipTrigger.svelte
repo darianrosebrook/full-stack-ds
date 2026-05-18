@@ -2,7 +2,7 @@
 // @generated:start imports
 import type { Snippet } from "svelte";
 import { useTooltipContext } from "./useTooltip.svelte.js";
-import type { SurfaceTriggerBinding } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";
+import type { SurfaceTriggerProps } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -12,20 +12,21 @@ import type { SurfaceTriggerBinding } from "../../primitives/surfaces/createAnch
 // @generated:start props
 interface Props {
   /** When true, the consumer takes over the host element via
-   *  the `trigger` snippet prop, which receives the split
-   *  `{ action, attrs }` binding. When false (default), a
-   *  `<button>` is rendered around the implicit `children`. */
+   *  the `child` snippet prop, which receives the whole
+   *  `trigger` object (`{ action, attrs }`). When false
+   *  (default), a `<button>` is rendered around the implicit
+   *  `children` snippet. */
   asChild?: boolean;
   class?: string;
   "data-testid"?: string;
   /** Default-host content (used when asChild is false). */
   children?: Snippet;
   /** Host-adoption snippet (used when asChild is true). Receives
-   *  the split binding `{ action, attrs }`. The consumer applies
-   *  `use:action` and spreads `{...attrs}` on the adopted
-   *  element. Applying one without the other will silently break
-   *  the substrate — both are required. */
-  trigger?: Snippet<[SurfaceTriggerBinding]>;
+   *  the trigger object `{ action, attrs }`. The consumer applies
+   *  `use:trigger.action` and spreads `{...trigger.attrs}` on
+   *  the adopted element. Applying one without the other will
+   *  silently break the substrate — both are required. */
+  child?: Snippet<[SurfaceTriggerProps]>;
 }
 
 let {
@@ -33,7 +34,7 @@ let {
   class: className,
   "data-testid": dataTestid,
   children,
-  trigger,
+  child,
 }: Props = $props();
 // @generated:end
 
@@ -44,8 +45,7 @@ let buttonEl: HTMLButtonElement | null = $state(null);
 
 // Default-host path: bind the rendered <button> as the anchor
 // (substrate auto-wires DOM listeners on it). The adoption path
-// is owned by the binding's `action` and does not need a $effect
-// here.
+// is owned by trigger.action and does not need a $effect here.
 $effect(() => {
   if (!asChild && buttonEl) ctx.registerAnchor(buttonEl);
 });
@@ -55,7 +55,7 @@ $effect(() => {
 // listeners in default-host mode (they would double-fire if also
 // spread as Svelte handlers).
 const defaultHostBindings = $derived.by(() => {
-  const { attrs } = ctx.getTriggerBinding();
+  const { attrs } = ctx.getTriggerProps();
   const { onpointerenter, onpointerleave, onfocus, onblur, onclick, ...rest } = attrs;
   return rest;
 });
@@ -67,7 +67,7 @@ const defaultHostBindings = $derived.by(() => {
 </script>
 
 {#if asChild}
-  {@render trigger?.(ctx.getTriggerBinding())}
+  {@render child?.(ctx.getTriggerProps())}
 {:else}
   <button
     type="button"

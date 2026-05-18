@@ -3,13 +3,11 @@
 import { useTooltip, provideTooltipContext } from "./useTooltip.svelte.js";
 // @generated:end
 // @custom:start imports
-
 // @custom:end
 // @generated:start types
 type TooltipPlacement = "top" | "bottom" | "left" | "right" | "auto";
 // @generated:end
 // @custom:start types
-
 // @custom:end
 // @generated:start props
 interface Props {
@@ -61,7 +59,6 @@ const classes = $derived(
 );
 // @generated:end
 // @custom:start trailing
-
 // @custom:end
 </script>
 <span class={classes} data-testid={dataTestid}>

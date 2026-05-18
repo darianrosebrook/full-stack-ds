@@ -49,29 +49,33 @@ export interface SurfaceTriggerAttrs extends SurfaceTriggerHandlers {
 }
 
 /**
- * Host-adoption binding for the snippet-based adoption path. Svelte's
+ * Host-adoption props for the snippet-based adoption path. Svelte's
  * renderer cannot carry a node-registration callback inside a spread,
  * so the contract is **logically atomic but physically split**:
  *
- *   - `action` is a Svelte action applied via `use:action` that owns
- *     anchor registration (DOM node capture, ARIA/grace-path queries).
+ *   - `action` is a Svelte action applied via `use:trigger.action`
+ *     that owns anchor registration (DOM node capture, ARIA/
+ *     grace-path queries).
  *   - `attrs` is a plain object of ARIA, data marker, and Svelte
- *     event handlers spread via `{...attrs}`.
+ *     event handlers spread via `{...trigger.attrs}`.
  *
- * Consumer pattern:
+ * Consumer pattern (snippet prop is named `child`; snippet parameter
+ * is the whole `trigger` object so the split is explicit):
  *
  *   <TooltipTrigger>
- *     {#snippet children({ action, attrs })}
- *       <a href="#help" use:action {...attrs}>Save</a>
+ *     {#snippet child(trigger)}
+ *       <a href="#help" use:trigger.action {...trigger.attrs}>
+ *         Save
+ *       </a>
  *     {/snippet}
  *   </TooltipTrigger>
  *
  * Applying one without the other will silently break the substrate —
- * this is the same atomicity contract as React's `asChild` /
- * Vue's `triggerProps`, just expressed through Svelte's two native
- * channels (use: and spread).
+ * this is the same atomicity contract as React's `asChild` and Vue's
+ * `triggerProps`, expressed through Svelte's two native channels
+ * (`use:` and spread) instead of a single atomic object.
  */
-export interface SurfaceTriggerBinding {
+export interface SurfaceTriggerProps {
   action: Action<HTMLElement>;
   attrs: SurfaceTriggerAttrs;
 }
@@ -96,11 +100,12 @@ export interface CreateAnchoredSurfaceResult {
   /** Returns Svelte-shaped handlers gated by openTriggers/dismissal.
    *  Used by the snippet adoption path. */
   getTriggerHandlers: () => SurfaceTriggerHandlers;
-  /** Returns the host-adoption binding (`action` + `attrs`). The
-   *  consumer applies `use:action` and spreads `{...attrs}` on the
-   *  adopted host element. See `SurfaceTriggerBinding` doc for the
-   *  atomicity contract. */
-  getTriggerBinding: () => SurfaceTriggerBinding;
+  /** Returns the host-adoption props (`action` + `attrs`). The
+   *  generated TooltipTrigger passes this single object into its
+   *  `child` snippet so consumers can apply `use:trigger.action`
+   *  and `{...trigger.attrs}` explicitly. See `SurfaceTriggerProps`
+   *  doc for the atomicity contract. */
+  getTriggerProps: () => SurfaceTriggerProps;
 }
 
 let surfaceIdCounter = 0;
@@ -244,7 +249,7 @@ export function createAnchoredSurface(
     };
   };
 
-  function getTriggerBinding(): SurfaceTriggerBinding {
+  function getTriggerProps(): SurfaceTriggerProps {
     const relation = options.anchorRelation;
     const isOpen = open();
     const handlers = getTriggerHandlers();
@@ -280,7 +285,7 @@ export function createAnchoredSurface(
     registerAnchorRefOnly,
     registerContent,
     getTriggerHandlers,
-    getTriggerBinding,
+    getTriggerProps,
   };
 }
 
