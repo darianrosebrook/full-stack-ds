@@ -1,6 +1,10 @@
 // @generated:start imports
-import { DestroyRef, type Signal } from "@angular/core";
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import { InjectionToken, type Signal } from "@angular/core";
+import {
+  createAnchoredSurface,
+  type CreateAnchoredSurfaceOptions,
+  type CreateAnchoredSurfaceResult,
+} from "../../primitives/surfaces/createAnchoredSurface.js";
 // @generated:end
 
 // @custom:start imports
@@ -8,21 +12,13 @@ import { createAnchorToggle, createControllableState, createPortal } from "../..
 // @custom:end
 
 // @generated:start types
-export interface UseTooltipOptions {
-  open?: () => boolean | undefined;
-  defaultOpen?: boolean;
-  onOpenChange?: (value: boolean) => void;
-  closeOnEscape?: boolean;
-  closeOnBlur?: boolean;
-  destroyRef: DestroyRef;
-}
-
-export interface UseTooltipResult {
+export interface TooltipContextValue {
   open: Signal<boolean>;
   setOpen: (next: boolean) => void;
-  panelRef: { nativeElement: HTMLElement | null };
-  anchorRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
+  contentId: string;
+  anchorRelation: "describedby";
+  registerAnchor: (node: HTMLElement | null) => void;
+  registerContent: (node: HTMLElement | null) => void;
 }
 // @generated:end
 
@@ -30,28 +26,22 @@ export interface UseTooltipResult {
 
 // @custom:end
 
+// @generated:start context
+export const TooltipContextToken = new InjectionToken<TooltipContextValue>(
+  "TooltipContext",
+);
+// @generated:end
+
 // @generated:start hook
-export function useTooltip(options: UseTooltipOptions): UseTooltipResult {
-  const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
-  const anchorToggle = createAnchorToggle({
-    open: options.open,
-    defaultOpen: options.defaultOpen ?? false,
-    onOpenChange: options.onOpenChange,
-    destroyRef: options.destroyRef,
-  });
+// anchorRelation is contract-derived for this surface kind and
+// is set by useTooltip itself — consumers don't pass it.
+export type UseTooltipOptions = Omit<CreateAnchoredSurfaceOptions, "anchorRelation">;
 
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
+export function useTooltip(options: UseTooltipOptions): CreateAnchoredSurfaceResult {
+  return createAnchoredSurface({
+    ...options,
+    anchorRelation: "describedby",
   });
-
-  return {
-    open: anchorToggle.open,
-    setOpen: anchorToggle.setOpen,
-    anchorRef: anchorToggle.anchorRef,
-    panelRef: anchorToggle.panelRef,
-    portalTarget,
-  };
 }
 // @generated:end
 

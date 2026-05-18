@@ -28,15 +28,31 @@ import { generateAngularHookSource } from "./hook-source.js";
 import { generateAngularBarrel } from "./barrel.js";
 import { generateAngularTest } from "./tests.js";
 import { isCompoundStateContainer } from "../react/hook-source.js";
+import {
+  generateAngularSurfaceFiles,
+  isSurfaceComponent,
+} from "./surface-emit.js";
+import { generateAngularSurfaceTest } from "./surface-tests.js";
 
 export function createAngularEmitter(): FrameworkEmitter {
   return {
     id: "angular",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      // F-2A: Angular does not yet handle presence-surface contracts. Skip
-      // emission so the on-disk Angular Tooltip remains untouched until F-2C.
-      if (ir.surface) return [];
+      // F-2C-4: Presence-surface family. Emits five files (root,
+      // default-host trigger component, attribute directive, content,
+      // composable in emitHook).
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateAngularSurfaceFiles(ir);
+        const css = emitCss(ir);
+        return [
+          { relativePath: `${ir.name}/${ir.name}.component.ts`, contents: surfaceFiles.rootComponent, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Trigger.component.ts`, contents: surfaceFiles.triggerComponent, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Trigger.directive.ts`, contents: surfaceFiles.triggerDirective, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}Content.component.ts`, contents: surfaceFiles.contentComponent, preservable: true },
+        ];
+      }
       const component = generateAngularComponentSource(ir);
       const css = emitCss(ir);
       const files: GeneratedFile[] = [
@@ -66,7 +82,15 @@ export function createAngularEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        return [
+          {
+            relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
+            contents: generateAngularSurfaceTest(ir),
+            preservable: true,
+          },
+        ];
+      }
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -77,7 +101,16 @@ export function createAngularEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
-      if (ir.surface) return [];
+      if (isSurfaceComponent(ir)) {
+        const surfaceFiles = generateAngularSurfaceFiles(ir);
+        return [
+          {
+            relativePath: `${ir.name}/use${ir.name}.ts`,
+            contents: surfaceFiles.composable,
+            preservable: true,
+          },
+        ];
+      }
       const source = generateAngularHookSource(ir);
       if (!source) return [];
       return [

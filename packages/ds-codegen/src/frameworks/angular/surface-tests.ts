@@ -1,67 +1,62 @@
-// @generated:start imports
-import { describe, expect, it, beforeEach, jest } from "@jest/globals";
-import { Component } from "@angular/core";
-import { TestBed } from "@angular/core/testing";
-import { TooltipComponent } from "../Tooltip.component";
-import { TooltipTriggerComponent } from "../TooltipTrigger.component";
-import { TooltipTriggerDirective } from "../TooltipTrigger.directive";
-import { TooltipContentComponent } from "../TooltipContent.component";
+/**
+ * Angular behavioral tests for the Anchored Presence Surface family.
+ *
+ * Parity with React (499ed17), Vue (38454fe), Svelte (43863a0,
+ * 29f3fb4), and Lit (c4ed447). Covers default-host vs directive-based
+ * host adoption, ARIA wiring, controlled/uncontrolled state, disabled
+ * suppression, closeOn* opt-outs, grace path, unmount cleanup, and
+ * the consumer-preventDefault opt-out.
+ *
+ * Stack: Jest + jest-preset-angular + TestBed. Native event dispatch.
+ */
+import type { ComponentIR } from "../../ir.js";
 
-// jsdom doesn't ship PointerEvent. Polyfill via MouseEvent so the
-// substrate's pointerenter/pointerleave listeners receive an event
-// object with the right `type`, `relatedTarget`, `cancelable`, and
-// `defaultPrevented` semantics. We only need the relatedTarget +
-// defaultPrevented surface, so MouseEvent suffices.
-if (typeof globalThis.PointerEvent === "undefined") {
-  (globalThis as unknown as { PointerEvent: typeof MouseEvent }).PointerEvent = MouseEvent as unknown as typeof PointerEvent;
+export function generateAngularSurfaceTest(ir: ComponentIR): string {
+  const surface = ir.surface;
+  if (!surface) {
+    throw new Error(
+      `generateAngularSurfaceTest called on ${ir.name} without ir.surface`,
+    );
+  }
+  if (surface.kind !== "tooltip") {
+    throw new Error(
+      `Angular surface test emitter only supports kind "tooltip" in F-2C-4 (got "${surface.kind}").`,
+    );
+  }
+  return emitTooltipTests(ir);
 }
-import { NgIf } from "@angular/common";
-// @generated:end
 
-// @generated:start fixture
-@Component({
-  selector: "fsds-tooltip-fixture",
-  standalone: true,
-  imports: [
-    NgIf,
-    TooltipComponent,
-    TooltipTriggerComponent,
-    TooltipTriggerDirective,
-    TooltipContentComponent,
-  ],
-  template: `
-    <fsds-tooltip
-      [open]="open"
-      [defaultOpen]="defaultOpen"
-      [disabled]="disabled"
-      [closeOnEscape]="closeOnEscape"
-      [closeOnBlur]="closeOnBlur"
-      [onOpenChange]="onOpenChange"
-    >
-      <ng-container *ngIf="adopted">
-        <a fsdsTooltipTrigger href="#help" data-testid="anchor" (pointerenter)="onConsumerPointerEnter && onConsumerPointerEnter($event)">Save</a>
-      </ng-container>
-      <ng-container *ngIf="!adopted">
-        <fsds-tooltip-trigger data-testid="trigger-host">Save</fsds-tooltip-trigger>
-      </ng-container>
-      <fsds-tooltip-content data-testid="content">Help text</fsds-tooltip-content>
-    </fsds-tooltip>
-  `,
-})
-class TooltipFixture {
-  open?: boolean;
-  defaultOpen?: boolean;
-  disabled?: boolean;
-  closeOnEscape?: boolean;
-  closeOnBlur?: boolean;
-  adopted = false;
-  onOpenChange?: (v: boolean) => void;
-  onConsumerPointerEnter?: (e: PointerEvent) => void;
+function kebab(name: string): string {
+  return name.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, "");
 }
-// @generated:end
 
-// @generated:start tests
-function mount(setup: (host: TooltipFixture) => void = () => {}) {
+function emitTooltipTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const rootTag = `fsds-${kebab(name)}`;
+  const triggerTag = `${rootTag}-trigger`;
+  const contentTag = `${rootTag}-content`;
+
+  const importsBody = [
+    `import { describe, expect, it, beforeEach, jest } from "@jest/globals";`,
+    `import { Component } from "@angular/core";`,
+    `import { TestBed } from "@angular/core/testing";`,
+    `import { ${name}Component } from "../${name}.component";`,
+    `import { ${name}TriggerComponent } from "../${name}Trigger.component";`,
+    `import { ${name}TriggerDirective } from "../${name}Trigger.directive";`,
+    `import { ${name}ContentComponent } from "../${name}Content.component";`,
+    ``,
+    `// jsdom doesn't ship PointerEvent. Polyfill via MouseEvent so the`,
+    `// substrate's pointerenter/pointerleave listeners receive an event`,
+    `// object with the right \`type\`, \`relatedTarget\`, \`cancelable\`, and`,
+    `// \`defaultPrevented\` semantics. We only need the relatedTarget +`,
+    `// defaultPrevented surface, so MouseEvent suffices.`,
+    `if (typeof globalThis.PointerEvent === "undefined") {`,
+    `  (globalThis as unknown as { PointerEvent: typeof MouseEvent }).PointerEvent = MouseEvent as unknown as typeof PointerEvent;`,
+    `}`,
+  ].join("\n");
+
+  const testsBody = `function mount(setup: (host: TooltipFixture) => void = () => {}) {
   const fixture = TestBed.createComponent(TooltipFixture);
   setup(fixture.componentInstance);
   fixture.detectChanges();
@@ -84,14 +79,14 @@ function getAnchor(host: HTMLElement, adopted: boolean): HTMLElement {
 
 function getContentEl(host: HTMLElement): HTMLElement | null {
   const el = host.querySelector("[data-testid='content']") as HTMLElement | null;
-  return el?.hasAttribute("data-tooltip-content") ? el : null;
+  return el?.hasAttribute("data-${cssPrefix}-content") ? el : null;
 }
 
 beforeEach(() => {
   TestBed.configureTestingModule({ imports: [TooltipFixture] });
 });
 
-describe("Tooltip — compound API surface (default-host)", () => {
+describe("${name} — compound API surface (default-host)", () => {
   it("renders the trigger but not the content when closed", () => {
     const fixture = mount();
     const host = fixture.nativeElement as HTMLElement;
@@ -261,13 +256,13 @@ describe("Tooltip — compound API surface (default-host)", () => {
   });
 });
 
-describe("Tooltip — directive-based host adoption", () => {
+describe("${name} — directive-based host adoption", () => {
   it("uses the adopted <a> as the actual anchor (no nested button)", () => {
     const fixture = mount((c) => { c.adopted = true; });
     const host = fixture.nativeElement as HTMLElement;
     const anchor = getAnchor(host, true);
     expect(anchor.tagName).toBe("A");
-    expect(anchor.hasAttribute("data-tooltip-trigger")).toBe(true);
+    expect(anchor.hasAttribute("data-${cssPrefix}-trigger")).toBe(true);
     // There should be NO <button> rendered alongside it because we
     // chose the adopted path.
     expect(host.querySelector("button")).toBeNull();
@@ -316,9 +311,64 @@ describe("Tooltip — directive-based host adoption", () => {
     expect(surfaceSpy).not.toHaveBeenCalled();
     expect(getContentEl(host)).toBeNull();
   });
-});
-// @generated:end
+});`;
 
-// @custom:start tests
-
-// @custom:end
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `import { NgIf } from "@angular/common";`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start fixture`,
+    // Use the corrected version (without the duplicate imports block)
+    `@Component({`,
+    `  selector: "${rootTag}-fixture",`,
+    `  standalone: true,`,
+    `  imports: [`,
+    `    NgIf,`,
+    `    ${name}Component,`,
+    `    ${name}TriggerComponent,`,
+    `    ${name}TriggerDirective,`,
+    `    ${name}ContentComponent,`,
+    `  ],`,
+    `  template: \``,
+    `    <${rootTag}`,
+    `      [open]="open"`,
+    `      [defaultOpen]="defaultOpen"`,
+    `      [disabled]="disabled"`,
+    `      [closeOnEscape]="closeOnEscape"`,
+    `      [closeOnBlur]="closeOnBlur"`,
+    `      [onOpenChange]="onOpenChange"`,
+    `    >`,
+    `      <ng-container *ngIf="adopted">`,
+    `        <a fsds${name}Trigger href="#help" data-testid="anchor" (pointerenter)="onConsumerPointerEnter && onConsumerPointerEnter($event)">Save</a>`,
+    `      </ng-container>`,
+    `      <ng-container *ngIf="!adopted">`,
+    `        <${triggerTag} data-testid="trigger-host">Save</${triggerTag}>`,
+    `      </ng-container>`,
+    `      <${contentTag} data-testid="content">Help text</${contentTag}>`,
+    `    </${rootTag}>`,
+    `  \`,`,
+    `})`,
+    `class TooltipFixture {`,
+    `  open?: boolean;`,
+    `  defaultOpen?: boolean;`,
+    `  disabled?: boolean;`,
+    `  closeOnEscape?: boolean;`,
+    `  closeOnBlur?: boolean;`,
+    `  adopted = false;`,
+    `  onOpenChange?: (v: boolean) => void;`,
+    `  onConsumerPointerEnter?: (e: PointerEvent) => void;`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}
