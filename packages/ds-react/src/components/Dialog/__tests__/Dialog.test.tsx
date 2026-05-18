@@ -55,7 +55,7 @@ describe("Dialog — unit", () => {
 
   it("calls onOpenChange when openness changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Dialog data-testid="dialog" open={false} onOpenChange={onOpenChangeSpy} open={true}>content</Dialog>)).not.toThrow();
+    expect(() => render(<Dialog data-testid="dialog" open={false} onOpenChange={onOpenChangeSpy}>content</Dialog>)).not.toThrow();
   });
 
   it("closes on Escape key", () => {

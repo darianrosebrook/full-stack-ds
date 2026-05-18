@@ -65,7 +65,7 @@ describe("Select — unit", () => {
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Select data-testid="select" open={false} onOpenChange={onOpenChangeSpy} open={true} />)).not.toThrow();
+    expect(() => render(<Select data-testid="select" open={false} onOpenChange={onOpenChangeSpy} />)).not.toThrow();
   });
 
   it("closes on Escape key", () => {

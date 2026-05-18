@@ -30,7 +30,7 @@ describe("Command — unit", () => {
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Command data-testid="command" open={false} onOpenChange={onOpenChangeSpy} open={true} />)).not.toThrow();
+    expect(() => render(<Command data-testid="command" open={false} onOpenChange={onOpenChangeSpy} />)).not.toThrow();
   });
 
   it("calls onSearchChange when search changes", async () => {

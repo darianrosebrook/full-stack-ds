@@ -115,8 +115,14 @@ export function generateReactTest(ir: ComponentIR): string {
     } else if (testCase.interaction === "render-only") {
       // Overlay component (Modal, Tooltip, Dropdown): clicking the root does
       // not toggle the channel — verify the handler prop is accepted without throwing.
+      // Suppress `renderProps` when the channel's valueProp matches
+      // plan.renderOpenProp; otherwise the emitted JSX has both
+      // `${valueProp}={false}` and `${renderOpenProp}={true}` on the same
+      // element (TS17001 / React duplicate-attr).
+      const renderPropsForChannel =
+        plan.renderOpenProp === channel.valueProp ? "" : renderProps;
       lines.push(
-        `    expect(() => render(<${plan.name} data-testid="${plan.testId}" ${channel.valueProp}={false} ${channel.changeHandlerProp}={${spyName}}${renderProps}${closer})).not.toThrow();`,
+        `    expect(() => render(<${plan.name} data-testid="${plan.testId}" ${channel.valueProp}={false} ${channel.changeHandlerProp}={${spyName}}${renderPropsForChannel}${closer})).not.toThrow();`,
       );
     } else {
       // Non-boolean channel: fire a synthetic change event with target.value

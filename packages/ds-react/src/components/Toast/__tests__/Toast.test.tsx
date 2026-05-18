@@ -65,7 +65,7 @@ describe("Toast — unit", () => {
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Toast data-testid="toast" open={false} onOpenChange={onOpenChangeSpy} open={true}>content</Toast>)).not.toThrow();
+    expect(() => render(<Toast data-testid="toast" open={false} onOpenChange={onOpenChangeSpy}>content</Toast>)).not.toThrow();
   });
 
   it("closes on Escape key", () => {

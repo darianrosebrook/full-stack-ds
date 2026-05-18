@@ -65,7 +65,7 @@ describe("Details — unit", () => {
 
   it("calls onOpenChange when open changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Details data-testid="details" open={false} onOpenChange={onOpenChangeSpy} open={true}>content</Details>)).not.toThrow();
+    expect(() => render(<Details data-testid="details" open={false} onOpenChange={onOpenChangeSpy}>content</Details>)).not.toThrow();
   });
 });
 

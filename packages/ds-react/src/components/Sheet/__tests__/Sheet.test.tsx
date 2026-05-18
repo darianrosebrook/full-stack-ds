@@ -50,7 +50,7 @@ describe("Sheet — unit", () => {
 
   it("calls onOpenChange when openness changes", async () => {
     const onOpenChangeSpy = vi.fn();
-    expect(() => render(<Sheet data-testid="sheet" open={false} onOpenChange={onOpenChangeSpy} open={true}>content</Sheet>)).not.toThrow();
+    expect(() => render(<Sheet data-testid="sheet" open={false} onOpenChange={onOpenChangeSpy}>content</Sheet>)).not.toThrow();
   });
 
   it("closes on Escape key", () => {
