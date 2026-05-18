@@ -967,8 +967,19 @@ function renderSvelteDomNode(
     attrs.push(`${svelteAttrName(key)}="${escapeAttrValue(value)}"`);
   }
 
+  // Some contract binding keys are not real HTML attributes but
+  // DOM-property facades — `textContent` is the canonical example.
+  // Svelte rejects `textContent={...}` as an attribute (svelte-check:
+  // "textcontent" does not exist on HTMLProps); the idiomatic Svelte
+  // emit is to render the value as a text child of the element.
+  // Collect those bindings here and splice them into the body below.
+  let textContentExpr: string | null = null;
   for (const [key, expr] of Object.entries(node.bindings)) {
-    const rendered = renderSvelteBinding(svelteAttrName(key), expr, ctx);
+    if (key === "textContent") {
+      textContentExpr = renderSvelteTextChildExpression(expr, ctx);
+      continue;
+    }
+    const rendered = renderSvelteBinding(svelteAttrName(key), expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1015,8 +1026,20 @@ function renderSvelteDomNode(
   let body: string;
   if (renderedChildren.length === 0 && isVoidEl) {
     body = `${pad}<${tag}${formatSvelteAttrs(attrs)} />`;
+  } else if (renderedChildren.length === 0 && textContentExpr !== null) {
+    // textContent binding without other children: inline the
+    // expression as the element's text body.
+    body = `${pad}<${tag}${formatSvelteAttrs(attrs)}>${textContentExpr}</${tag}>`;
   } else if (renderedChildren.length === 0) {
     body = `${pad}<${tag}${formatSvelteAttrs(attrs)}></${tag}>`;
+  } else if (textContentExpr !== null) {
+    // textContent + other children: text first, then children. The
+    // contract treats textContent as the leading text node.
+    body = [
+      `${pad}<${tag}${formatSvelteAttrs(attrs)}>${textContentExpr}`,
+      ...renderedChildren,
+      `${pad}</${tag}>`,
+    ].join("\n");
   } else {
     body = [
       `${pad}<${tag}${formatSvelteAttrs(attrs)}>`,
@@ -1051,10 +1074,38 @@ function formatSvelteAttrs(attrs: string[]): string {
   return " " + attrs.join(" ");
 }
 
+/**
+ * Render a contract binding intended for an element's text content
+ * as a Svelte template-text expression (e.g. `{summary}`). The
+ * caller splices the result inside the open/close tags of the
+ * owning element. Returns null for binding kinds that don't map to
+ * text content (channels with no value field, etc.).
+ */
+function renderSvelteTextChildExpression(
+  expr: BindingExpression,
+  ctx: SvelteRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `{${jsAccessorFor(expr.prop)}}`;
+    case "literal":
+      return escapeAttrValue(expr.value);
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") {
+        return `{${ctx.hookVar}.${ch.name}}`;
+      }
+      return null;
+    }
+  }
+}
+
 function renderSvelteBinding(
   attr: string,
   expr: BindingExpression,
   ctx: SvelteRenderContext,
+  hostTag?: string,
 ): string | null {
   switch (expr.kind) {
     case "prop":
@@ -1065,6 +1116,22 @@ function renderSvelteBinding(
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
+        // ARIA-Booleanish coercion: aria-expanded / aria-pressed /
+        // aria-selected / aria-checked / aria-busy / aria-current /
+        // aria-disabled / aria-hidden / aria-grabbed accept
+        // Booleanish | null | undefined in svelte-check's DOM
+        // typings. When the channel valueType is not boolean (e.g.
+        // Accordion's "openness" is string | string[]), passing the
+        // raw value is admission-red. Coerce to Boolean so the
+        // attribute reflects "truthy" — matching React's existing
+        // emitter behavior.
+        if (
+          ARIA_BOOLEANISH_ATTRS.has(attr) &&
+          ch.valueType !== undefined &&
+          ch.valueType !== "boolean"
+        ) {
+          return `${attr}={Boolean(${ctx.hookVar}.${ch.name})}`;
+        }
         return `${attr}={${ctx.hookVar}.${ch.name}}`;
       }
       if (expr.field === "defaultValue") {
@@ -1078,13 +1145,36 @@ function renderSvelteBinding(
         return `${eventName}={${jsAccessorFor(ch.changeHandlerProp)}}`;
       }
       const setter = `set${capitalizeSvelte(ch.name)}`;
+      // Pick a TypeScript element type for the event target cast
+      // based on the host tag. Buttons (and other non-form controls)
+      // do NOT have `.checked` / `.value`; using HTMLInputElement on
+      // them is a svelte-check / tsc admission error
+      // (HTMLButtonElement → HTMLInputElement is not assignable).
+      // For boolean channels on a button-like host, the click is a
+      // toggle: dispatch !currentValue instead of reading .checked.
+      const hostTagName = (hostTag ?? "").toLowerCase();
+      const isFormControlHost =
+        hostTagName === "input" ||
+        hostTagName === "select" ||
+        hostTagName === "textarea";
       if (ch.valueType === "boolean") {
+        if (!isFormControlHost) {
+          // Toggle pattern: button-like host fires click; emit the
+          // negation of the current channel value.
+          return `${eventName}={() => ${ctx.hookVar}.${setter}(!${ctx.hookVar}.${ch.name})}`;
+        }
         return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLInputElement).checked)}`;
       }
       if (ch.valueType === "number") {
+        if (!isFormControlHost) {
+          return `${eventName}={(e) => ${ctx.hookVar}.${setter}(Number((e.currentTarget as HTMLElement & { value?: string }).value ?? "0"))}`;
+        }
         return `${eventName}={(e) => ${ctx.hookVar}.${setter}(Number((e.currentTarget as HTMLInputElement).value))}`;
       }
       if (ch.valueType === "string" || ch.valueType === undefined) {
+        if (!isFormControlHost) {
+          return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLElement & { value?: string }).value ?? "")}`;
+        }
         return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLInputElement).value)}`;
       }
       return `${eventName}={(e) => ${ctx.hookVar}.${setter}(e as unknown as ${ch.valueType})}`;
@@ -1125,5 +1215,29 @@ function capitalizeSvelte(s: string): string {
 const VOID_HTML_ELEMENTS_SVELTE = new Set([
   "area", "base", "br", "col", "embed", "hr", "img",
   "input", "link", "meta", "source", "track", "wbr",
+]);
+
+/**
+ * ARIA attributes typed as `Booleanish | null | undefined` in
+ * svelte-check's DOM typings. When a contract binds one of these
+ * to a non-boolean channel value (e.g. Accordion's `openness`
+ * channel is `string | string[]`), the Svelte emitter must coerce
+ * the value with `Boolean(...)` so the resulting attribute passes
+ * admission. Mirrors React's existing coercion behavior.
+ */
+const ARIA_BOOLEANISH_ATTRS = new Set([
+  "aria-expanded",
+  "aria-pressed",
+  "aria-selected",
+  "aria-checked",
+  "aria-busy",
+  "aria-disabled",
+  "aria-hidden",
+  "aria-grabbed",
+  "aria-modal",
+  "aria-multiline",
+  "aria-multiselectable",
+  "aria-readonly",
+  "aria-required",
 ]);
 

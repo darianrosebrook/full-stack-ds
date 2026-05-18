@@ -57,7 +57,7 @@ const classes = $derived(
 <div class={classes}>
   <div class={'accordion__item'}>
     <h3 class={'accordion__header'}>
-      <button class={'accordion__trigger'} type="button" aria-expanded={behavior.openness}>
+      <button class={'accordion__trigger'} type="button" aria-expanded={Boolean(behavior.openness)}>
         {@render children?.()}
         <span class={'accordion__chevron'}></span>
       </button>

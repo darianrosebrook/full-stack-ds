@@ -49,5 +49,5 @@ const classes = $derived(
   <div class={'show-more__content'}>
     {@render children?.()}
   </div>
-  <button class={'show-more__trigger'} type="button" aria-expanded={behavior.expanded} onclick={(e) => behavior.setExpanded((e.currentTarget as HTMLInputElement).checked)} textContent={showMoreLabel}></button>
+  <button class={'show-more__trigger'} type="button" aria-expanded={behavior.expanded} onclick={() => behavior.setExpanded(!behavior.expanded)}>{showMoreLabel}</button>
 </div>

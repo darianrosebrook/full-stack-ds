@@ -280,13 +280,19 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   }
 
   if (bindings.useAnchorToggle && openChannel) {
-    const defaultOpenAccess = openChannel.defaultValueProp
-      ? `opts.${openChannel.defaultValueProp}?.()`
-      : `opts.defaultOpen?.()`;
+    // Only pass defaultOpen when the contract declares a
+    // defaultValueProp on the channel. The previous fallback to
+    // `opts.defaultOpen?.()` referenced a field that wasn't in the
+    // generated UseXOptions interface, producing svelte-check
+    // admission errors (Toast: "Property 'defaultOpen' does not
+    // exist on type 'UseToastOptions'.").
+    const defaultOpenLine = openChannel.defaultValueProp
+      ? `    defaultOpen: opts.${openChannel.defaultValueProp}?.() ?? false,\n`
+      : "";
     lines.push(
       `  const anchorToggle = createAnchorToggle({`,
       `    open: opts.${openChannel.valueProp},`,
-      `    defaultOpen: ${defaultOpenAccess} ?? false,`,
+      ...(defaultOpenLine ? [defaultOpenLine.replace(/\n$/, "")] : []),
       `    onOpenChange: (v) => opts.${openChannel.changeHandlerProp}?.()?.(v),`,
       `  });`,
       ``,

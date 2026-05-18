@@ -29,7 +29,6 @@ export interface UseToastResult {
 export function useToast(opts: UseToastOptions = {}): UseToastResult {
   const anchorToggle = createAnchorToggle({
     open: opts.open,
-    defaultOpen: opts.defaultOpen?.() ?? false,
     onOpenChange: (v) => opts.onOpenChange?.()?.(v),
   });
 

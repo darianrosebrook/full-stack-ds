@@ -62,7 +62,7 @@ const classes = $derived(
   <summary class={'details__summary'}>
     <span class={'details__summaryContent'}>
       <span class={'details__icon'}></span>
-      <span class={'details__summaryText'} textContent={summary}></span>
+      <span class={'details__summaryText'}>{summary}</span>
     </span>
   </summary>
   {#if behavior.open}
