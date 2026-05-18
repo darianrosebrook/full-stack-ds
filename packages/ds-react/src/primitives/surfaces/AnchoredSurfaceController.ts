@@ -64,6 +64,23 @@ export class AnchoredSurfaceController extends SurfaceController {
     return this.anchoredOptions.disabled?.() === true;
   }
 
+  /**
+   * Returns true when `node` is part of the registered surface
+   * boundary (anchor ∪ content). Used by boundary-semantic dismissal
+   * predicates: `blur` (focus leaving the surface), `pointer-leave`
+   * (grace path), and `outside-click`. The surface boundary is what
+   * the substrate considers "inside the surface" — focus or pointer
+   * movement that stays within it must NOT trigger dismissal.
+   */
+  private isInsideSurface(node: EventTarget | null): boolean {
+    if (!(node instanceof Node)) return false;
+    const anchor = this.anchor;
+    const content = this.content;
+    return Boolean(
+      (anchor && anchor.contains(node)) || (content && content.contains(node)),
+    );
+  }
+
   private installOpenTriggers(): void {
     const anchor = this.anchor;
     if (!anchor) return;
@@ -118,18 +135,37 @@ export class AnchoredSurfaceController extends SurfaceController {
       );
     }
 
-    // In handlerMode, anchor-side blur/pointer-leave are owned by the
-    // host component (asChild path) as React handlers. Skip them here.
-    if (!handlerMode && dismissal.includes("blur") && anchor) {
-      const onBlur = (e: FocusEvent) => {
-        const next = e.relatedTarget as Node | null;
-        if (next && content && content.contains(next)) return;
+    // `blur` is boundary semantics: dismiss when focus leaves the
+    // anchor ∪ content surface. We listen via `focusout` (which
+    // bubbles, unlike `blur`) so a single listener on the content
+    // host catches focus leaving any descendant. The substrate
+    // installs on both anchor and content; in handler-mode the
+    // anchor side is skipped because the asChild host owns the
+    // consumer-facing React onBlur and would otherwise double-fire.
+    // Content is always controlled (never adopted in F-2B), so the
+    // content listener installs unconditionally. The boundary
+    // predicate `isInsideSurface` is what makes this work for
+    // interactive content (Popover) without regressing non-
+    // interactive content (Tooltip): Tooltip content has no
+    // focusable descendants, so the content listener never fires.
+    if (dismissal.includes("blur")) {
+      const onFocusOut = (e: FocusEvent) => {
+        if (!this.anchoredOptions.isOpen()) return;
+        if (this.isInsideSurface(e.relatedTarget)) return;
         close();
       };
-      anchor.addEventListener("blur", onBlur);
-      this.listenerCleanups.push(() =>
-        anchor.removeEventListener("blur", onBlur),
-      );
+      if (anchor && !handlerMode) {
+        anchor.addEventListener("focusout", onFocusOut);
+        this.listenerCleanups.push(() =>
+          anchor.removeEventListener("focusout", onFocusOut),
+        );
+      }
+      if (content) {
+        content.addEventListener("focusout", onFocusOut);
+        this.listenerCleanups.push(() =>
+          content.removeEventListener("focusout", onFocusOut),
+        );
+      }
     }
 
     if (!handlerMode && dismissal.includes("pointer-leave") && anchor) {
@@ -162,10 +198,7 @@ export class AnchoredSurfaceController extends SurfaceController {
     if (dismissal.includes("outside-click") && (anchor || content)) {
       const onPointer = (e: MouseEvent) => {
         if (!this.anchoredOptions.isOpen()) return;
-        const target = e.target as Node | null;
-        if (!target) return;
-        if (anchor && anchor.contains(target)) return;
-        if (content && content.contains(target)) return;
+        if (this.isInsideSurface(e.target)) return;
         close();
       };
       document.addEventListener("mousedown", onPointer);

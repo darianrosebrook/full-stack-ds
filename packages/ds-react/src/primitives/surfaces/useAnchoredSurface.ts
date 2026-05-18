@@ -230,10 +230,21 @@ export function useAnchoredSurface(
       };
     }
     if (dismissal.includes("blur")) {
+      // Boundary semantics: when focus leaves the asChild trigger,
+      // only dismiss if relatedTarget is outside the anchor ∪ content
+      // surface. Tooltip content is non-focusable, so this collapses
+      // to "outside content" in practice — but Popover content has
+      // focusable descendants and this check is what keeps the
+      // surface open when focus moves trigger → content. See
+      // AnchoredSurfaceController.isInsideSurface for the parallel
+      // substrate-side implementation.
       handlers.onBlur = (event) => {
         const next = event.relatedTarget as Node | null;
-        if (next && contentNodeRef.current && contentNodeRef.current.contains(next)) {
-          return;
+        const anchor = anchorNodeRef.current;
+        const content = contentNodeRef.current;
+        if (next instanceof Node) {
+          if (anchor && anchor.contains(next)) return;
+          if (content && content.contains(next)) return;
         }
         closeSurface();
       };
