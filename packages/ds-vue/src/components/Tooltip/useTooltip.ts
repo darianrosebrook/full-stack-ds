@@ -54,6 +54,7 @@ export function useTooltip(options: UseTooltipOptions) {
     dismissal,
     anchorRelation: "describedby",
     disabled: options.disabled,
+    dataMarker: "data-tooltip-trigger",
   });
 }
 // @generated:end

@@ -114,10 +114,18 @@ describe("${name} — compound API surface", () => {
     wrapper.unmount();
   });
 
-  it("closes on blur from the trigger", async () => {
+  it("closes when focus leaves the trigger to outside the surface", async () => {
+    // Boundary semantics: the substrate listens via \`focusout\` for
+    // focus leaving the anchor ∪ content surface. \`blur\` doesn't
+    // bubble; \`focusout\` does. See AnchoredSurfaceController.
     const wrapper = mountDefault({ defaultOpen: true });
     const trigger = wrapper.find("[data-testid='trigger']");
-    trigger.element.dispatchEvent(new FocusEvent("blur", { bubbles: true, relatedTarget: document.body }));
+    trigger.element.dispatchEvent(
+      new FocusEvent("focusout", {
+        bubbles: true,
+        relatedTarget: document.body,
+      }),
+    );
     await wrapper.vm.$nextTick();
     expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
     wrapper.unmount();
@@ -190,9 +198,14 @@ describe("${name} — compound API surface", () => {
     wrapper.unmount();
   });
 
-  it("closeOnBlur={false} prevents blur dismissal", async () => {
+  it("closeOnBlur={false} prevents boundary-focusout dismissal", async () => {
     const wrapper = mountDefault({ defaultOpen: true, closeOnBlur: false });
-    wrapper.find("[data-testid='trigger']").element.dispatchEvent(new FocusEvent("blur", { bubbles: true, relatedTarget: document.body }));
+    wrapper.find("[data-testid='trigger']").element.dispatchEvent(
+      new FocusEvent("focusout", {
+        bubbles: true,
+        relatedTarget: document.body,
+      }),
+    );
     await wrapper.vm.$nextTick();
     expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
     wrapper.unmount();

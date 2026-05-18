@@ -32,7 +32,22 @@ export interface UseAnchoredSurfaceOptions {
   disabled?: () => boolean;
   /** Optional override for the content id. Defaults to a unique id. */
   idBase?: string;
+  /**
+   * The data-attribute marker applied to the trigger element to make
+   * the trigger discoverable from CSS / DOM-walk integrations.
+   * Per-surface, derived from cssPrefix at emit time
+   * (e.g. "data-tooltip-trigger", "data-popover-trigger").
+   */
+  dataMarker: SurfaceDataMarker;
 }
+
+/**
+ * Template-literal type for the trigger data marker. Constrains the
+ * key shape to `data-<prefix>-trigger` so the emitter can't pass a
+ * malformed marker (e.g. without the `data-` prefix) without tsc
+ * flagging the call site.
+ */
+export type SurfaceDataMarker = `data-${string}-trigger`;
 
 export interface SurfaceTriggerHandlers {
   onPointerenter?: (event: PointerEvent) => void;
@@ -45,22 +60,26 @@ export interface SurfaceTriggerHandlers {
 /**
  * Public bag spread onto the consumer's adopted host element via
  *
- *   <TooltipTrigger v-slot="{ triggerProps }">
+ *   <SurfaceTrigger v-slot="{ triggerProps }">
  *     <button v-bind="triggerProps">Save</button>
- *   </TooltipTrigger>
+ *   </SurfaceTrigger>
  *
  * The bag is intentionally indivisible — ref, ARIA attribute, data
  * marker, and all event handlers travel together so consumers cannot
- * silently break the substrate by spreading only part of it.
+ * silently break the substrate by spreading only part of it. The
+ * data-marker key is parameterized by the per-surface `dataMarker`
+ * option (e.g. "data-tooltip-trigger", "data-popover-trigger"); the
+ * index signature constrains it to `data-<x>-trigger` shape.
  */
-export interface SurfaceTriggerProps extends SurfaceTriggerHandlers {
+export type SurfaceTriggerProps = SurfaceTriggerHandlers & {
   ref: SurfaceRefCallback;
-  "data-tooltip-trigger": "";
   "aria-describedby"?: string;
   "aria-controls"?: string;
   "aria-expanded"?: boolean;
   "aria-labelledby"?: string;
-}
+} & {
+  [K in SurfaceDataMarker]: "";
+};
 
 export interface UseAnchoredSurfaceResult {
   open: ComputedRef<boolean>;
@@ -228,12 +247,18 @@ export function useAnchoredSurface(
     } else if (relation === "labelledby" && isOpen) {
       ariaProps["aria-labelledby"] = contentId;
     }
-    return {
+    // Build a base object and assign the parameterized data-marker
+    // key dynamically. The cast back to SurfaceTriggerProps is safe
+    // because `options.dataMarker` is typed as SurfaceDataMarker, so
+    // the index signature is satisfied; TS can't narrow it through a
+    // dynamic key assignment without help.
+    const base: Record<string, unknown> = {
       ref: registerAnchorRefOnly,
-      "data-tooltip-trigger": "",
       ...ariaProps,
       ...handlers,
     };
+    base[options.dataMarker] = "";
+    return base as unknown as SurfaceTriggerProps;
   });
 
   function getTriggerHandlersImpl(): SurfaceTriggerHandlers {
@@ -269,10 +294,18 @@ export function useAnchoredSurface(
       };
     }
     if (dismissal.includes("blur")) {
+      // Boundary semantics: when focus leaves the slot-host trigger,
+      // only dismiss if relatedTarget is outside the anchor ∪
+      // content surface. Tooltip content is non-focusable, so this
+      // collapses to "outside content" in practice — but Popover
+      // content has focusable descendants and this check is what
+      // keeps the surface open when focus moves trigger → content.
+      // Mirror of React F-3A atom A.
       handlers.onBlur = (event) => {
         const next = event.relatedTarget as Node | null;
-        if (next && contentNode.value && contentNode.value.contains(next)) {
-          return;
+        if (next instanceof Node) {
+          if (anchorNode.value && anchorNode.value.contains(next)) return;
+          if (contentNode.value && contentNode.value.contains(next)) return;
         }
         closeSurface();
       };

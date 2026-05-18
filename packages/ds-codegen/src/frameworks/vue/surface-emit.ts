@@ -161,6 +161,7 @@ function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
 
 function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
   const name = ir.name;
+  const dataMarker = `data-${ir.cssPrefix}-trigger`;
   return [
     `<script setup lang="ts">`,
     `// @generated:start imports`,
@@ -207,7 +208,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `    "aria-controls": rest["aria-controls"],`,
     `    "aria-expanded": rest["aria-expanded"],`,
     `    "aria-labelledby": rest["aria-labelledby"],`,
-    `    "data-tooltip-trigger": rest["data-tooltip-trigger"],`,
+    `    "${dataMarker}": rest["${dataMarker}"],`,
     `  };`,
     `});`,
     `// @generated:end`,
@@ -281,6 +282,7 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
 
 function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
   const name = ir.name;
+  const dataMarker = `data-${ir.cssPrefix}-trigger`;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
   const dismissalAlwaysOn = surface.dismissal
@@ -357,6 +359,7 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
     `    dismissal,`,
     `    anchorRelation: "${anchorRelation}",`,
     `    disabled: options.disabled,`,
+    `    dataMarker: "${dataMarker}",`,
     `  });`,
     `}`,
     `// @generated:end`,
