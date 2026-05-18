@@ -7,8 +7,14 @@
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
+import { generateReactSurfaceTest } from "./surface-tests.js";
 
 export function generateReactTest(ir: ComponentIR): string {
+  // Presence-surface family: behavioral test plan replaces the legacy
+  // class-token-only plan.
+  if (ir.surface) {
+    return generateReactSurfaceTest(ir);
+  }
   const plan = buildComponentTestPlan(ir);
   const allImports = [plan.name, ...plan.compoundImports].join(", ");
   const renderProps = plan.renderOpenProp ? ` ${plan.renderOpenProp}={true}` : "";

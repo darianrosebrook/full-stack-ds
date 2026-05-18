@@ -1,22 +1,25 @@
 {
   "$schema": "./component.contract.schema.json",
   "name": "Tooltip",
-  "description": "Floating label providing supplemental information about a trigger element on hover or focus.",
+  "description": "Anchored ephemeral presence surface that exposes supplemental information about a trigger element on hover or focus. Composes as <Tooltip><Tooltip.Trigger>...</Tooltip.Trigger><Tooltip.Content>...</Tooltip.Content></Tooltip>; the substrate wires aria-describedby, hover/focus opening, and escape/blur/pointer-leave dismissal.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root"],
-    "dom": {
-      "tag": "div",
-      "part": "root",
-      "attrs": {
-        "role": "tooltip"
+    "parts": ["root", "trigger", "content"],
+    "details": {
+      "root": {
+        "role": "group"
       },
-      "if": "open",
-      "children": [
-        {
-          "tag": "children"
+      "trigger": {
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "content": {
+        "role": "content",
+        "aria": {
+          "role": "tooltip"
         }
-      ]
+      }
     }
   },
   "variants": {
@@ -41,6 +44,26 @@
       "valueType": "boolean",
       "description": "Whether the tooltip is visible."
     }
+  },
+  "surface": {
+    "kind": "tooltip",
+    "presence": "ephemeral",
+    "modality": "non-blocking",
+    "anchor": {
+      "part": "trigger",
+      "relation": "describedby"
+    },
+    "content": {
+      "part": "content",
+      "interactive": false
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": ["escape", "blur", "pointer-leave"],
+    "openTriggers": ["hover", "focus"]
   },
   "portal": {
     "enabled": true,
@@ -113,14 +136,8 @@
   },
   "props": {
     "styled": {
-      "description": "Props for the <Tooltip> component.",
+      "description": "Props for the <Tooltip> root component.",
       "members": [
-        {
-          "name": "content",
-          "type": "ReactNode",
-          "description": "Tooltip text or rich content shown in the floating panel.",
-          "required": true
-        },
         {
           "name": "open",
           "type": "boolean",
@@ -142,25 +159,14 @@
           "description": "Preferred placement. May be overridden by collision detection."
         },
         {
-          "name": "trigger",
-          "type": "TooltipTrigger",
-          "description": "Interaction that activates the tooltip.",
-          "default": "hover"
-        },
-        {
-          "name": "delay",
-          "type": "number",
-          "description": "Milliseconds to wait before showing on hover."
-        },
-        {
           "name": "disabled",
           "type": "boolean",
-          "description": "Suppresses the tooltip entirely."
+          "description": "Suppresses the tooltip entirely; the trigger renders but never opens."
         },
         {
           "name": "closeOnEscape",
           "type": "boolean",
-          "description": "When true, Escape closes the tooltip.",
+          "description": "When true, Escape closes the tooltip and returns focus is preserved.",
           "default": true
         },
         {
@@ -176,10 +182,6 @@
     "TooltipPlacement": {
       "kind": "union",
       "values": ["top", "bottom", "left", "right", "auto"]
-    },
-    "TooltipTrigger": {
-      "kind": "union",
-      "values": ["hover", "focus", "manual"]
     }
   }
 }

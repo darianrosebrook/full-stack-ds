@@ -37,6 +37,10 @@ export function createVueEmitter(): FrameworkEmitter {
     id: "vue",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      // F-2A: Vue does not yet handle presence-surface contracts. Skip
+      // emission so the on-disk Vue Tooltip remains untouched until F-2C
+      // ports the surface substrate to Vue.
+      if (ir.surface) return [];
       const sfc = generateVueComponentSource(ir);
       const css = emitCss(ir);
       const files: GeneratedFile[] = [
@@ -78,6 +82,7 @@ export function createVueEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -88,6 +93,7 @@ export function createVueEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       const source = generateVueHookSource(ir);
       if (!source) return [];
       return [

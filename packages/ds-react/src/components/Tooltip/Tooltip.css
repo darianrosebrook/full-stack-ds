@@ -24,6 +24,10 @@
 .tooltip--entering {}
 
 .tooltip--leaving {}
+
+.tooltip__trigger {}
+
+.tooltip__content {}
 /* @generated:end */
 
 /* @custom:start overrides */

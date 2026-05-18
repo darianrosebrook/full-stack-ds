@@ -28,6 +28,9 @@ export function createLitEmitter(): FrameworkEmitter {
     id: "lit",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      // F-2A: Lit does not yet handle presence-surface contracts. Skip
+      // emission so the on-disk Lit Tooltip remains untouched until F-2C.
+      if (ir.surface) return [];
       const source = generateLitComponentSource(ir);
       const css = emitCss(ir);
       return [
@@ -45,6 +48,7 @@ export function createLitEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -55,6 +59,7 @@ export function createLitEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       const source = generateLitHookSource(ir);
       if (!source) return [];
       return [

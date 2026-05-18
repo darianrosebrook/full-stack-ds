@@ -34,6 +34,9 @@ export function createAngularEmitter(): FrameworkEmitter {
     id: "angular",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      // F-2A: Angular does not yet handle presence-surface contracts. Skip
+      // emission so the on-disk Angular Tooltip remains untouched until F-2C.
+      if (ir.surface) return [];
       const component = generateAngularComponentSource(ir);
       const css = emitCss(ir);
       const files: GeneratedFile[] = [
@@ -63,6 +66,7 @@ export function createAngularEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -73,6 +77,7 @@ export function createAngularEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       const source = generateAngularHookSource(ir);
       if (!source) return [];
       return [

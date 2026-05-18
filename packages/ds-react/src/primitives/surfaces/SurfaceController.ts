@@ -1,0 +1,71 @@
+/**
+ * Internal substrate for the presence-surface family.
+ *
+ * NOT part of the public package API. Used only by generated surface
+ * components (Tooltip, Popover, Menu, ...). Consumers interact via the
+ * compound component API:
+ *
+ *   <Tooltip>
+ *     <Tooltip.Trigger>Save</Tooltip.Trigger>
+ *     <Tooltip.Content>Save the document</Tooltip.Content>
+ *   </Tooltip>
+ *
+ * If you are reading this from outside the package: the substrate shape
+ * is intentionally unstable. It will be promoted to public API only
+ * after Popover and Menu prove it generalises.
+ */
+export type SurfaceOpenTrigger = "hover" | "focus" | "click";
+
+export type SurfaceDismissalMode =
+  | "escape"
+  | "outside-click"
+  | "blur"
+  | "pointer-leave"
+  | "close-button"
+  | "timeout";
+
+export type SurfaceAnchorRelation =
+  | "describedby"
+  | "controls-expanded"
+  | "labelledby"
+  | "activedescendant"
+  | "none";
+
+export interface SurfaceLifecycle {
+  /** Called by the React adapter on mount / when configuration changes. */
+  mount(): void;
+  /** Called by the React adapter on unmount / before remounting. */
+  unmount(): void;
+}
+
+/**
+ * Abstract policy for a presence surface. Owns DOM listener wiring for
+ * a single instance (one anchor + one content). Open state lives in the
+ * consumer (React component); the controller is a stateless-ish bridge
+ * that translates DOM events into `setOpen` calls and reads the current
+ * `open()` snapshot when deciding whether to install/remove listeners.
+ */
+export abstract class SurfaceController implements SurfaceLifecycle {
+  protected anchor: HTMLElement | null = null;
+  protected content: HTMLElement | null = null;
+
+  constructor(
+    protected readonly options: {
+      /** Latest open state. Re-read on every event because consumers
+       *  may change it between mount and the next listener fire. */
+      isOpen: () => boolean;
+      setOpen: (next: boolean) => void;
+    },
+  ) {}
+
+  setAnchor(node: HTMLElement | null): void {
+    this.anchor = node;
+  }
+
+  setContent(node: HTMLElement | null): void {
+    this.content = node;
+  }
+
+  abstract mount(): void;
+  abstract unmount(): void;
+}

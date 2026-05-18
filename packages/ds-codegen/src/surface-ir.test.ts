@@ -67,6 +67,7 @@ describe("buildSurfaceIR — anchored tooltip-like surface", () => {
             collision: "flip-shift",
           },
           dismissal: ["escape", "blur", "pointer-leave"],
+          openTriggers: ["hover", "focus"],
         },
       }),
     );
@@ -86,6 +87,7 @@ describe("buildSurfaceIR — anchored tooltip-like surface", () => {
     expect(ir.surface?.positioning?.placementProp).toBe("placement");
     expect(ir.surface?.positioning?.collision).toBe("flip-shift");
     expect(ir.surface?.dismissal).toEqual(["escape", "blur", "pointer-leave"]);
+    expect(ir.surface?.openTriggers).toEqual(["hover", "focus"]);
     expect(ir.surface?.timing).toBeUndefined();
   });
 });
@@ -108,6 +110,7 @@ describe("buildSurfaceIR — fail-loud boundary on bad part references", () => {
             modality: "non-blocking",
             anchor: { part: "trigger", relation: "describedby" },
             content: { part: "content", interactive: false },
+            openTriggers: ["hover", "focus"],
           },
         }),
       ),
@@ -131,6 +134,7 @@ describe("buildSurfaceIR — fail-loud boundary on bad part references", () => {
             modality: "non-blocking",
             anchor: { part: "trigger", relation: "describedby" },
             content: { part: "content", interactive: false },
+            openTriggers: ["hover", "focus"],
           },
         }),
       ),
@@ -156,6 +160,7 @@ describe("buildSurfaceIR — fail-loud boundary on bad part references", () => {
             modality: "non-blocking",
             anchor: { part: "trigger", relation: "describedby" },
             content: { part: "content", interactive: false },
+            openTriggers: ["hover", "focus"],
           },
         }),
       ),
@@ -180,6 +185,7 @@ describe("buildSurfaceIR — fail-loud boundary on bad part references", () => {
             modality: "non-blocking",
             anchor: { part: "trigger", relation: "describedby" },
             content: { part: "decoration", interactive: false },
+            openTriggers: ["hover", "focus"],
           },
         }),
       ),
@@ -206,10 +212,112 @@ describe("buildSurfaceIR — fail-loud boundary on bad part references", () => {
             modality: "non-blocking",
             anchor: { part: "trigger", relation: "describedby" },
             content: { part: "content", interactive: false },
+            openTriggers: ["hover", "focus"],
           },
         }),
       ),
     ).toThrow(/anchor\.part "trigger" must have details\.role === "trigger" \(got undefined\)/);
+  });
+});
+
+describe("buildSurfaceIR — openTriggers validation", () => {
+  it("requires openTriggers when surface.kind === 'tooltip'", () => {
+    expect(() =>
+      buildComponentIR(
+        makeContract({
+          name: "BrokenTooltip",
+          anatomy: {
+            parts: ["root", "trigger", "content"],
+            details: {
+              trigger: { role: "trigger", interactive: true },
+              content: { role: "content", aria: { role: "tooltip" } },
+            },
+          },
+          surface: {
+            kind: "tooltip",
+            presence: "ephemeral",
+            modality: "non-blocking",
+            anchor: { part: "trigger", relation: "describedby" },
+            content: { part: "content", interactive: false },
+            // omitted openTriggers
+          },
+        }),
+      ),
+    ).toThrow(/surface\.openTriggers must declare at least one of "hover" \| "focus" \| "click"/);
+  });
+
+  it("requires openTriggers when positioning.strategy === 'anchored' (any kind)", () => {
+    expect(() =>
+      buildComponentIR(
+        makeContract({
+          name: "BrokenAnchored",
+          anatomy: {
+            parts: ["root", "trigger", "content"],
+            details: {
+              trigger: { role: "trigger", interactive: true },
+              content: { role: "content" },
+            },
+          },
+          surface: {
+            kind: "popover",
+            presence: "persistent",
+            modality: "non-blocking",
+            anchor: { part: "trigger", relation: "controls-expanded" },
+            content: { part: "content", interactive: true },
+            positioning: { strategy: "anchored" },
+            // omitted openTriggers
+          },
+        }),
+      ),
+    ).toThrow(/surface\.openTriggers must declare at least one of/);
+  });
+
+  it("does NOT require openTriggers when surface is non-anchored (e.g. toast, centered dialog)", () => {
+    const ir = buildComponentIR(
+      makeContract({
+        name: "ToastOk",
+        anatomy: {
+          parts: ["root", "content"],
+          details: {
+            content: { role: "content" },
+          },
+        },
+        surface: {
+          kind: "toast",
+          presence: "ephemeral",
+          modality: "non-blocking",
+          content: { part: "content", interactive: false },
+          positioning: { strategy: "viewport-edge" },
+          dismissal: ["timeout", "close-button"],
+        },
+      }),
+    );
+    expect(ir.surface?.openTriggers).toEqual([]);
+  });
+
+  it("copies openTriggers through verbatim and preserves order", () => {
+    const ir = buildComponentIR(
+      makeContract({
+        name: "PopoverLike",
+        anatomy: {
+          parts: ["root", "trigger", "content"],
+          details: {
+            trigger: { role: "trigger", interactive: true },
+            content: { role: "content" },
+          },
+        },
+        surface: {
+          kind: "popover",
+          presence: "persistent",
+          modality: "non-blocking",
+          anchor: { part: "trigger", relation: "controls-expanded" },
+          content: { part: "content", interactive: true },
+          positioning: { strategy: "anchored" },
+          openTriggers: ["click"],
+        },
+      }),
+    );
+    expect(ir.surface?.openTriggers).toEqual(["click"]);
   });
 });
 
@@ -317,6 +425,7 @@ describe("buildSurfaceIR — timing prop names copy through", () => {
           content: { part: "content", interactive: false },
           positioning: { strategy: "anchored", collision: "flip-shift" },
           dismissal: ["escape", "blur", "pointer-leave"],
+          openTriggers: ["hover", "focus"],
           timing: {
             openDelayProp: "openDelay",
             closeDelayProp: "closeDelay",

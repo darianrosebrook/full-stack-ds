@@ -31,6 +31,7 @@ import type {
   ContractSurfaceDismissalMode,
   ContractSurfaceKind,
   ContractSurfaceModality,
+  ContractSurfaceOpenTrigger,
   ContractSurfacePositioningStrategy,
   ContractSurfacePresence,
   ContractTypeDef,
@@ -341,6 +342,13 @@ export interface SurfaceIR {
   /** Semantic dismissal mode list — composes with BehaviorIR's
    * normalizedDismissalTriggers (which carries enabledBy prop wiring). */
   dismissal: ContractSurfaceDismissalMode[];
+  /**
+   * Anchor-element interactions that open the surface. Always an array
+   * (possibly empty for non-anchored surfaces). Validated fail-loud in
+   * buildSurfaceIR: anchored surfaces and tooltips must declare at least
+   * one trigger; non-anchored surfaces may omit.
+   */
+  openTriggers: ContractSurfaceOpenTrigger[];
   timing: SurfaceTimingIR | undefined;
 }
 
@@ -751,6 +759,16 @@ export function buildSurfaceIR(
       }
     : undefined;
 
+  const openTriggers = surface.openTriggers ?? [];
+  const requiresOpenTriggers =
+    surface.kind === "tooltip" ||
+    surface.positioning?.strategy === "anchored";
+  if (requiresOpenTriggers && openTriggers.length === 0) {
+    throw new Error(
+      `Contract "${contract.name}": surface.openTriggers must declare at least one of "hover" | "focus" | "click" when surface.kind === "tooltip" or surface.positioning.strategy === "anchored".`,
+    );
+  }
+
   return {
     kind: surface.kind,
     presence: surface.presence,
@@ -759,6 +777,7 @@ export function buildSurfaceIR(
     content,
     positioning,
     dismissal: surface.dismissal ?? [],
+    openTriggers,
     timing,
   };
 }

@@ -568,6 +568,9 @@ function capitalize(s: string): string {
  * `null` when the contract has no behavior worth lifting.
  */
 export function generateReactHookSource(ir: ComponentIR): string | null {
+  // Presence-surface family: substrate is imported directly by the
+  // generated component file; no per-component hook is emitted.
+  if (ir.surface) return null;
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
 

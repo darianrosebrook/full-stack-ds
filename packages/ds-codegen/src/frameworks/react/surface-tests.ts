@@ -1,27 +1,59 @@
-// @generated:start imports
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, act } from "@testing-library/react";
-import { axe } from "vitest-axe";
-import { Tooltip } from "../Tooltip";
+/**
+ * React behavioral tests for the Anchored Presence Surface family.
+ *
+ * Replaces the legacy class-token-only test plan with assertions against
+ * actual surface state and ARIA wiring. Tests cover:
+ *   - hover on trigger opens content
+ *   - focus on trigger opens content
+ *   - pointer-leave on trigger closes content
+ *   - blur on trigger closes content
+ *   - Escape closes content
+ *   - aria-describedby on trigger references the content's id when open
+ *   - disabled prop suppresses open
+ *   - onOpenChange fires on uncontrolled open
+ */
+import type { ComponentIR } from "../../ir.js";
 
-declare module "vitest" {
-  interface Assertion<T> {
-    toHaveNoViolations(): void;
+export function generateReactSurfaceTest(ir: ComponentIR): string {
+  const surface = ir.surface;
+  if (!surface) {
+    throw new Error(
+      `generateReactSurfaceTest called on ${ir.name} without ir.surface`,
+    );
   }
+  if (surface.kind !== "tooltip") {
+    throw new Error(
+      `React surface test emitter only supports kind "tooltip" in F-2A (got "${surface.kind}").`,
+    );
+  }
+  return emitTooltipTests(ir);
 }
-// @generated:end
 
-// @generated:start tests
-function renderTooltip(props: Partial<React.ComponentProps<typeof Tooltip>> = {}) {
+function emitTooltipTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const importsBody = [
+    `import { describe, it, expect, vi } from "vitest";`,
+    `import { render, screen, fireEvent, act } from "@testing-library/react";`,
+    `import { axe } from "vitest-axe";`,
+    `import { ${name} } from "../${name}";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+  ].join("\n");
+
+  const testsBody = `function renderTooltip(props: Partial<React.ComponentProps<typeof ${name}>> = {}) {
   return render(
-    <Tooltip {...props}>
-      <Tooltip.Trigger data-testid="trigger">Open</Tooltip.Trigger>
-      <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
-    </Tooltip>,
+    <${name} {...props}>
+      <${name}.Trigger data-testid="trigger">Open</${name}.Trigger>
+      <${name}.Content data-testid="content">Help text</${name}.Content>
+    </${name}>,
   );
 }
 
-describe("Tooltip — compound API surface", () => {
+describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", () => {
     renderTooltip();
     expect(screen.getByTestId("trigger")).toBeInTheDocument();
@@ -130,16 +162,16 @@ describe("Tooltip — compound API surface", () => {
     });
     expect(screen.queryByTestId("content")).toBeNull();
     rerender(
-      <Tooltip open={true}>
-        <Tooltip.Trigger data-testid="trigger">Open</Tooltip.Trigger>
-        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
-      </Tooltip>,
+      <${name} open={true}>
+        <${name}.Trigger data-testid="trigger">Open</${name}.Trigger>
+        <${name}.Content data-testid="content">Help text</${name}.Content>
+      </${name}>,
     );
     expect(screen.getByTestId("content")).toBeInTheDocument();
   });
 });
 
-describe("Tooltip — accessibility", () => {
+describe("${name} — accessibility", () => {
   it("has no unexpected axe violations when closed", async () => {
     const { container } = renderTooltip();
     const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
@@ -151,9 +183,20 @@ describe("Tooltip — accessibility", () => {
     const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });
-});
-// @generated:end
+});`;
 
-// @custom:start tests
-
-// @custom:end
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}

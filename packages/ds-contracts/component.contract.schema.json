@@ -846,6 +846,16 @@
             "enum": ["escape", "outside-click", "blur", "pointer-leave", "close-button", "timeout"]
           }
         },
+        "openTriggers": {
+          "type": "array",
+          "description": "Interactions on the anchor element that open the surface. Required by IR validation when surface.kind === 'tooltip' or surface.positioning.strategy === 'anchored'; otherwise optional (e.g. toasts and centered dialogs do not have an anchor-driven open trigger).",
+          "items": {
+            "type": "string",
+            "enum": ["hover", "focus", "click"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
         "timing": {
           "type": "object",
           "description": "Names of the consumer-facing props that control surface timing. Default values live in the props.styled.members[].default field, as today.",

@@ -241,6 +241,8 @@ export type ContractSurfaceDismissalMode =
   | 'close-button'
   | 'timeout';
 
+export type ContractSurfaceOpenTrigger = 'hover' | 'focus' | 'click';
+
 export interface ContractSurfaceAnchor {
   part: string;
   relation: ContractSurfaceAnchorRelation;
@@ -271,6 +273,13 @@ export interface ContractSurface {
   content?: ContractSurfaceContent;
   positioning?: ContractSurfacePositioning;
   dismissal?: ContractSurfaceDismissalMode[];
+  /**
+   * Anchor-element interactions that open the surface. Required by IR
+   * validation when kind === 'tooltip' OR positioning.strategy === 'anchored';
+   * otherwise optional. Surfaces like Toast (viewport-edge) and centered
+   * Dialog have no anchor-driven open trigger and omit this field.
+   */
+  openTriggers?: ContractSurfaceOpenTrigger[];
   timing?: ContractSurfaceTiming;
 }
 

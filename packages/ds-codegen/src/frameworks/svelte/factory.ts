@@ -36,6 +36,9 @@ export function createSvelteEmitter(): FrameworkEmitter {
     id: "svelte",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      // F-2A: Svelte does not yet handle presence-surface contracts. Skip
+      // emission so the on-disk Svelte Tooltip remains untouched until F-2C.
+      if (ir.surface) return [];
       const sfc = generateSvelteComponentSource(ir);
       const css = emitCss(ir);
       const files: GeneratedFile[] = [
@@ -76,6 +79,7 @@ export function createSvelteEmitter(): FrameworkEmitter {
     },
 
     emitTests(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       return [
         {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
@@ -86,6 +90,7 @@ export function createSvelteEmitter(): FrameworkEmitter {
     },
 
     emitHook(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
+      if (ir.surface) return [];
       const source = generateSvelteHookSource(ir);
       if (!source) return [];
       return [

@@ -25,6 +25,10 @@ import {
   getRegionPart,
   isCompoundStateContainer,
 } from "./hook-source.js";
+import {
+  generateReactSurfaceComponentSource,
+  isSurfaceComponent,
+} from "./surface-emit.js";
 
 /**
  * Generate the full React TSX source for a component IR.
@@ -43,6 +47,12 @@ export function generateReactComponentSource(
   ir: ComponentIR,
   stackImportPath: string,
 ): string {
+  // Presence-surface family path (Tooltip in F-2A; Popover/Menu/... later).
+  // Forward-facing replacement for ir.dom + compound-state-container paths
+  // for the anchored-surface kinds — no hybrid output.
+  if (isSurfaceComponent(ir)) {
+    return generateReactSurfaceComponentSource(ir);
+  }
   const isCompound = isCompoundStateContainer(ir);
   const reactTypeImports = collectReactImports(ir);
 
