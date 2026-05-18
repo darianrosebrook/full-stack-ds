@@ -1,4 +1,5 @@
 // @generated:start imports
+import { createRef } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { axe } from "vitest-axe";
@@ -136,6 +137,259 @@ describe("Tooltip — compound API surface", () => {
       </Tooltip>,
     );
     expect(screen.getByTestId("content")).toBeInTheDocument();
+  });
+
+  it("pointerleave INTO content does not close (grace path)", () => {
+    renderTooltip({ defaultOpen: true });
+    const trigger = screen.getByTestId("trigger");
+    const content = screen.getByTestId("content");
+    act(() => {
+      fireEvent.pointerLeave(trigger, { relatedTarget: content });
+    });
+    // Surface should stay open because the pointer moved into the content.
+    expect(screen.queryByTestId("content")).toBeInTheDocument();
+  });
+
+  it("closeOnEscape={false} prevents Escape dismissal", () => {
+    renderTooltip({ defaultOpen: true, closeOnEscape: false });
+    act(() => {
+      fireEvent.keyDown(document, { key: "Escape" });
+    });
+    expect(screen.queryByTestId("content")).toBeInTheDocument();
+  });
+
+  it("closeOnBlur={false} prevents blur dismissal", () => {
+    renderTooltip({ defaultOpen: true, closeOnBlur: false });
+    const trigger = screen.getByTestId("trigger");
+    act(() => {
+      fireEvent.blur(trigger, { relatedTarget: document.body });
+    });
+    expect(screen.queryByTestId("content")).toBeInTheDocument();
+  });
+
+  it("unmount removes document-level listeners (no setOpen after unmount)", () => {
+    const spy = vi.fn();
+    const { unmount } = renderTooltip({ defaultOpen: true, onOpenChange: spy });
+    unmount();
+    // Document-level Escape listener should be torn down; firing it now
+    // must not invoke setOpen on the unmounted instance.
+    act(() => {
+      fireEvent.keyDown(document, { key: "Escape" });
+    });
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("Tooltip — asChild adoption", () => {
+  it("renders the adopted child as the actual host (no nested button)", () => {
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger">Help</a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    const trigger = screen.getByTestId("trigger");
+    expect(trigger.tagName).toBe("A");
+    // No default <button> host was rendered alongside it.
+    expect(trigger.parentElement?.querySelector("button")).toBeNull();
+  });
+
+  it("default-host behavior is unchanged when asChild is absent", () => {
+    render(
+      <Tooltip>
+        <Tooltip.Trigger data-testid="trigger">Open</Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    expect(screen.getByTestId("trigger").tagName).toBe("BUTTON");
+  });
+
+  it("asChild opens on pointerenter over the adopted child", () => {
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger">Help</a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    act(() => {
+      fireEvent.pointerEnter(screen.getByTestId("trigger"));
+    });
+    expect(screen.getByTestId("content")).toBeInTheDocument();
+  });
+
+  it("asChild opens on focus over the adopted child", () => {
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger">Help</a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    act(() => {
+      fireEvent.focus(screen.getByTestId("trigger"));
+    });
+    expect(screen.getByTestId("content")).toBeInTheDocument();
+  });
+
+  it("asChild wires aria-describedby onto the adopted child when open", () => {
+    render(
+      <Tooltip defaultOpen>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger">Help</a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    const trigger = screen.getByTestId("trigger");
+    const content = screen.getByTestId("content");
+    expect(trigger).toHaveAttribute("aria-describedby", content.getAttribute("id"));
+  });
+
+  it("asChild preserves the consumer's onPointerEnter handler", () => {
+    const consumerSpy = vi.fn();
+    const surfaceSpy = vi.fn();
+    render(
+      <Tooltip onOpenChange={surfaceSpy}>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger" onPointerEnter={consumerSpy}>
+            Help
+          </a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    act(() => {
+      fireEvent.pointerEnter(screen.getByTestId("trigger"));
+    });
+    expect(consumerSpy).toHaveBeenCalled();
+    expect(surfaceSpy).toHaveBeenCalledWith(true);
+  });
+
+  it("asChild preserves the consumer's onFocus handler", () => {
+    const consumerSpy = vi.fn();
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger" onFocus={consumerSpy}>
+            Help
+          </a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    act(() => {
+      fireEvent.focus(screen.getByTestId("trigger"));
+    });
+    expect(consumerSpy).toHaveBeenCalled();
+  });
+
+  it("asChild — consumer event.preventDefault() suppresses the surface handler", () => {
+    const surfaceSpy = vi.fn();
+    render(
+      <Tooltip onOpenChange={surfaceSpy}>
+        <Tooltip.Trigger asChild>
+          <a
+            href="#help"
+            data-testid="trigger"
+            onPointerEnter={(e) => e.preventDefault()}
+          >
+            Help
+          </a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    act(() => {
+      fireEvent.pointerEnter(screen.getByTestId("trigger"));
+    });
+    expect(surfaceSpy).not.toHaveBeenCalled();
+    expect(screen.queryByTestId("content")).toBeNull();
+  });
+
+  it("asChild forwards the consumer's ref to the adopted DOM node", () => {
+    const consumerRef = createRef<HTMLAnchorElement>();
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger" ref={consumerRef}>
+            Help
+          </a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    expect(consumerRef.current).not.toBeNull();
+    expect(consumerRef.current?.tagName).toBe("A");
+  });
+
+  it("asChild throws when no child is provided", () => {
+    // React.Children.only logs an internal error and rethrows; we
+    // catch the throw at render time.
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    expect(() =>
+      render(
+        <Tooltip>
+          <Tooltip.Trigger asChild>{null}</Tooltip.Trigger>
+          <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+        </Tooltip>,
+      ),
+    ).toThrow();
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("asChild throws when multiple children are provided", () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    expect(() =>
+      render(
+        <Tooltip>
+          <Tooltip.Trigger asChild>
+            <a href="#a">A</a>
+            <a href="#b">B</a>
+          </Tooltip.Trigger>
+          <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+        </Tooltip>,
+      ),
+    ).toThrow();
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("asChild throws when child is a string (not a valid element)", () => {
+    // React.Children.only rejects strings up front; we don't need to
+    // reach our own isValidElement guard. Either message is acceptable
+    // as long as render() throws loudly.
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    expect(() =>
+      render(
+        <Tooltip>
+          <Tooltip.Trigger asChild>Help text</Tooltip.Trigger>
+          <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+        </Tooltip>,
+      ),
+    ).toThrow();
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("asChild applies the data-tooltip-trigger marker to the adopted host", () => {
+    render(
+      <Tooltip>
+        <Tooltip.Trigger asChild>
+          <a href="#help" data-testid="trigger">Help</a>
+        </Tooltip.Trigger>
+        <Tooltip.Content data-testid="content">Help text</Tooltip.Content>
+      </Tooltip>,
+    );
+    expect(screen.getByTestId("trigger")).toHaveAttribute("data-tooltip-trigger");
   });
 });
 

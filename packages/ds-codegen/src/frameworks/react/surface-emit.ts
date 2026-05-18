@@ -56,8 +56,20 @@ function emitTooltipSource(ir: ComponentIR, surface: SurfaceIR): string {
     : "";
 
   const imports = [
-    `import { type ReactNode, type HTMLAttributes, type ButtonHTMLAttributes, createContext, useContext } from "react";`,
-    `import { useAnchoredSurface } from "../../primitives/surfaces/useAnchoredSurface";`,
+    `import {`,
+    `  type ReactNode,`,
+    `  type HTMLAttributes,`,
+    `  type ButtonHTMLAttributes,`,
+    `  type ReactElement,`,
+    `  type Ref,`,
+    `  Children,`,
+    `  cloneElement,`,
+    `  createContext,`,
+    `  isValidElement,`,
+    `  useContext,`,
+    `} from "react";`,
+    `import { useAnchoredSurface, type SurfaceTriggerHandlers } from "../../primitives/surfaces/useAnchoredSurface";`,
+    `import { composeRefs, composeEventHandlers } from "../../primitives/surfaces/compose";`,
     `import "./${name}.css";`,
   ].join("\n");
 
@@ -81,6 +93,14 @@ function emitTooltipSource(ir: ComponentIR, surface: SurfaceIR): string {
 }
 
 export interface ${name}TriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  /**
+   * Adopt the consumer's single child element as the trigger host
+   * instead of rendering a default \`<button>\`. The adopted element
+   * receives the merged ref, ARIA props, data marker, and surface
+   * event handlers. Consumer event handlers run first; if they call
+   * \`event.preventDefault()\` the surface handler is suppressed.
+   */
+  asChild?: boolean;
   children?: ReactNode;
 }
 
@@ -94,7 +114,9 @@ export interface ${name}ContentProps extends HTMLAttributes<HTMLDivElement> {
   contentId: string;
   ariaAttrForAnchor: ${ariaAttrForAnchor ? `"${ariaAttrForAnchor}"` : "null"};
   registerAnchor: (node: HTMLElement | null) => void;
+  registerAnchorRefOnly: (node: HTMLElement | null) => void;
   registerContent: (node: HTMLElement | null) => void;
+  getTriggerHandlers: () => SurfaceTriggerHandlers;
 }
 
 const ${name}Context = createContext<${name}ContextValue | null>(null);
@@ -155,7 +177,9 @@ function use${name}Context(): ${name}ContextValue {
         contentId: surface.contentId,
         ariaAttrForAnchor: ${ariaAttrForAnchor ? `"${ariaAttrForAnchor}"` : "null"},
         registerAnchor: surface.registerAnchor,
+        registerAnchorRefOnly: surface.registerAnchorRefOnly,
         registerContent: surface.registerContent,
+        getTriggerHandlers: surface.getTriggerHandlers,
       }}
     >
       <span className={classNames} data-testid={testId}>
@@ -193,11 +217,22 @@ function use${name}Context(): ${name}ContextValue {
   })();
 
   const triggerBody = `${name}.Trigger = function ${name}Trigger({
+  asChild,
   children,
   ...rest
 }: ${name}TriggerProps) {
   const ctx = use${name}Context();
 ${triggerAriaProps}
+
+  if (asChild) {
+    return adoptChildAsTrigger({
+      child: children,
+      ctx,
+      ariaProps,
+      rest,
+    });
+  }
+
   return (
     <button
       type="button"
@@ -209,7 +244,79 @@ ${triggerAriaProps}
       {children}
     </button>
   );
-};`;
+};
+
+interface AdoptChildArgs {
+  child: ReactNode;
+  ctx: ${name}ContextValue;
+  ariaProps: Record<string, unknown>;
+  rest: Omit<${name}TriggerProps, "asChild" | "children">;
+}
+
+function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
+  // Validate exactly one valid React element child. React.Children.only
+  // throws when count !== 1 (handles 0 and >1 cases). isValidElement
+  // catches strings/numbers/fragments that slipped past Children.only.
+  const only = Children.only(child);
+  if (!isValidElement(only)) {
+    throw new Error(
+      "${name}.Trigger asChild requires its child to be a valid React element. " +
+        "Strings, numbers, and fragments are not adoptable as a host element.",
+    );
+  }
+  const element = only as ReactElement<Record<string, unknown>> & {
+    ref?: Ref<HTMLElement>;
+  };
+  const childProps = element.props ?? {};
+  const childRef = element.ref;
+
+  const handlers = ctx.getTriggerHandlers();
+  const mergedHandlers: Record<string, unknown> = {};
+  for (const key of [
+    "onPointerEnter",
+    "onPointerLeave",
+    "onFocus",
+    "onBlur",
+    "onClick",
+  ] as const) {
+    const surfaceHandler = handlers[key];
+    if (!surfaceHandler) continue;
+    const consumerHandler = childProps[key] as
+      | ((event: never) => void)
+      | undefined;
+    mergedHandlers[key] = composeEventHandlers(
+      consumerHandler as never,
+      surfaceHandler as never,
+    );
+  }
+
+  // ARIA precedence: consumer wins. The surface only supplies the
+  // anchor-relation attribute (e.g. aria-describedby); other aria-*
+  // belong to the consumer's element.
+  const mergedAria: Record<string, unknown> = { ...ariaProps };
+  for (const k of Object.keys(childProps)) {
+    if (k.startsWith("aria-") && childProps[k] !== undefined) {
+      mergedAria[k] = childProps[k];
+    }
+  }
+
+  // Composition order: start from rest (consumer-passed-to-Trigger),
+  // then child's own props (child wins), then merged aria/handlers,
+  // then the data marker, then the composed ref last.
+  const composedClassName = [rest.className, childProps.className as string | undefined]
+    .filter(Boolean)
+    .join(" ") || undefined;
+
+  return cloneElement(element, {
+    ...rest,
+    ...childProps,
+    ...mergedAria,
+    ...mergedHandlers,
+    className: composedClassName,
+    "data-${cssPrefix}-trigger": "",
+    ref: composeRefs(childRef, ctx.registerAnchorRefOnly as Ref<HTMLElement>),
+  });
+}`;
 
   // Content subcomponent (default host: <div role="${contentRole}">)
   const contentBody = `${name}.Content = function ${name}Content({

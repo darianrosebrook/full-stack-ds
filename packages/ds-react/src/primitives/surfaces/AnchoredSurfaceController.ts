@@ -14,6 +14,18 @@ export interface AnchoredSurfaceControllerOptions {
   /** When true, opening is suppressed (the trigger renders but the
    *  surface stays closed regardless of interaction). */
   disabled?: () => boolean;
+  /**
+   * When true, the controller does NOT install anchor-side DOM
+   * listeners (pointerenter/leave, focus/blur, click). The host
+   * component (asChild path) composes those as React handlers and
+   * dispatches into `setOpen` itself. The controller still installs
+   * document-level dismissal (Escape) and content-level pointer-leave
+   * grace listeners. The anchor node is still tracked for ARIA
+   * queries and content↔anchor grace-path checks.
+   *
+   * Default false (F-2A default-host behavior).
+   */
+  handlerMode?: boolean;
 }
 
 /**
@@ -37,7 +49,9 @@ export class AnchoredSurfaceController extends SurfaceController {
 
   mount(): void {
     this.unmount();
-    this.installOpenTriggers();
+    if (!this.anchoredOptions.handlerMode) {
+      this.installOpenTriggers();
+    }
     this.installDismissal();
   }
 
@@ -88,6 +102,7 @@ export class AnchoredSurfaceController extends SurfaceController {
     const content = this.content;
     const dismissal = this.anchoredOptions.dismissal;
     const close = () => this.anchoredOptions.setOpen(false);
+    const handlerMode = this.anchoredOptions.handlerMode === true;
 
     if (dismissal.includes("escape")) {
       const onKey = (e: KeyboardEvent) => {
@@ -103,12 +118,10 @@ export class AnchoredSurfaceController extends SurfaceController {
       );
     }
 
-    if (dismissal.includes("blur") && anchor) {
+    // In handlerMode, anchor-side blur/pointer-leave are owned by the
+    // host component (asChild path) as React handlers. Skip them here.
+    if (!handlerMode && dismissal.includes("blur") && anchor) {
       const onBlur = (e: FocusEvent) => {
-        // Don't close when focus moves into the content (e.g. interactive
-        // content like a popover). For ephemeral surfaces with
-        // non-interactive content (tooltip), the content never receives
-        // focus, so this guard is a no-op.
         const next = e.relatedTarget as Node | null;
         if (next && content && content.contains(next)) return;
         close();
@@ -119,11 +132,8 @@ export class AnchoredSurfaceController extends SurfaceController {
       );
     }
 
-    if (dismissal.includes("pointer-leave") && anchor) {
+    if (!handlerMode && dismissal.includes("pointer-leave") && anchor) {
       const onAnchorLeave = (e: PointerEvent) => {
-        // Grace path: if the pointer moves from the anchor into the
-        // content node, do not close. The content's own pointer-leave
-        // handler will close.
         const next = e.relatedTarget as Node | null;
         if (next && content && content.contains(next)) return;
         close();
@@ -132,18 +142,21 @@ export class AnchoredSurfaceController extends SurfaceController {
       this.listenerCleanups.push(() =>
         anchor.removeEventListener("pointerleave", onAnchorLeave),
       );
+    }
 
-      if (content) {
-        const onContentLeave = (e: PointerEvent) => {
-          const next = e.relatedTarget as Node | null;
-          if (next && anchor.contains(next)) return;
-          close();
-        };
-        content.addEventListener("pointerleave", onContentLeave);
-        this.listenerCleanups.push(() =>
-          content.removeEventListener("pointerleave", onContentLeave),
-        );
-      }
+    // Content-side pointer-leave grace listener installs in both modes
+    // because the content is always owned by Tooltip.Content (never
+    // adopted from the consumer in F-2B).
+    if (dismissal.includes("pointer-leave") && content) {
+      const onContentLeave = (e: PointerEvent) => {
+        const next = e.relatedTarget as Node | null;
+        if (next && anchor && anchor.contains(next)) return;
+        close();
+      };
+      content.addEventListener("pointerleave", onContentLeave);
+      this.listenerCleanups.push(() =>
+        content.removeEventListener("pointerleave", onContentLeave),
+      );
     }
 
     if (dismissal.includes("outside-click") && (anchor || content)) {
