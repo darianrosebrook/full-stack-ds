@@ -28,48 +28,12 @@
  * entirely — this is forward-facing replacement, not augmentation.
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
-
-// TEMPORARY EMITTER EXCEPTION
-// Source fact: codegen-progress allowlist.
-// Removable when: CODEGEN-SURFACE-KIND-POLICY-01 (#71) replaces
-// this with per-kind semantic policy derived from
-// surface.{presence,modality,anchorRelation,contentInteractive}.
-// Until then, this allowlist documents which kinds have been
-// audited as data-driven through the emitter; non-listed kinds
-// throw so a partially-tested kind doesn't ship silently.
-const SUPPORTED_ANCHORED_KINDS = new Set(["tooltip", "popover"] as const);
-
-/**
- * Map from a contract dismissal mode to its consumer-facing prop
- * shape. `null` means "no public prop knob — substrate-internal
- * only" (e.g. pointer-leave is a Tooltip grace path with no toggle).
- *
- * Source fact: dismissal mode → consumer prop ergonomics.
- * Applies by: declared surface.dismissal mode set.
- * Doctrine: generic; mirrors React surface emitter atom B.
- */
-interface DismissalPropSpec {
-  /** Public prop name (e.g. "closeOnEscape"); null for internal-only. */
-  prop: string | null;
-  /** TS default literal. */
-  default: boolean;
-  /**
-   * Whether the composable's dismissal-array assembly should gate
-   * this mode behind a runtime getter from the root component. When
-   * false, the mode is hardcoded "always on" in the dismissal array.
-   */
-  runtimeToggleable: boolean;
-}
-const DISMISSAL_PROP_SPECS: Record<string, DismissalPropSpec> = {
-  escape: { prop: "closeOnEscape", default: true, runtimeToggleable: true },
-  blur: { prop: "closeOnBlur", default: true, runtimeToggleable: true },
-  "outside-click": {
-    prop: "closeOnOutsideClick",
-    default: true,
-    runtimeToggleable: true,
-  },
-  "pointer-leave": { prop: null, default: true, runtimeToggleable: false },
-};
+import {
+  isAnchoredPresenceKind,
+  resolveAnchoredSurfacePolicy,
+  type AnchoredSurfacePolicy,
+  type PublicDismissalProp,
+} from "../../semantics.js";
 
 export interface VueSurfaceFiles {
   rootSfc: string;
@@ -89,20 +53,26 @@ export function generateVueSurfaceFiles(ir: ComponentIR): VueSurfaceFiles {
       `generateVueSurfaceFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (!SUPPORTED_ANCHORED_KINDS.has(surface.kind as "tooltip" | "popover")) {
+  if (!isAnchoredPresenceKind(surface.kind)) {
     throw new Error(
-      `Vue surface emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_ANCHORED_KINDS].join(", ")}.`,
+      `Vue surface emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
+        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
     );
   }
+  const policy = resolveAnchoredSurfacePolicy(surface);
   return {
-    rootSfc: emitRootSfc(ir, surface),
+    rootSfc: emitRootSfc(ir, surface, policy),
     triggerSfc: emitTriggerSfc(ir, surface),
-    contentSfc: emitContentSfc(ir, surface),
-    composable: emitComposable(ir, surface),
+    contentSfc: emitContentSfc(ir, surface, policy),
+    composable: emitComposable(ir, surface, policy),
   };
 }
 
-function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
+function emitRootSfc(
+  ir: ComponentIR,
+  surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const placementValues = ir.variants["placement"];
@@ -113,16 +83,11 @@ function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
 
-  // Data-driven dismissal props: one closeOnX boolean per public
-  // dismissal mode declared by the surface (escape, blur,
-  // outside-click). pointer-leave has no public toggle (Tooltip
-  // grace path; substrate-internal only).
-  const dismissalProps = surface.dismissal
-    .map((mode) => DISMISSAL_PROP_SPECS[mode])
-    .filter(
-      (spec): spec is DismissalPropSpec =>
-        spec !== undefined && spec.prop !== null,
-    );
+  // Policy-derived dismissal props. Public modes (prop !== null)
+  // become closeOnX consumer props.
+  const dismissalProps = policy.publicDismissalProps.filter(
+    (spec): spec is PublicDismissalProp & { prop: string } => spec.prop !== null,
+  );
 
   const closeOnPropLines = dismissalProps.map(
     (spec) => `  ${spec.prop}?: boolean;`,
@@ -300,16 +265,21 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
   ].join("\n");
 }
 
-function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
+function emitContentSfc(
+  ir: ComponentIR,
+  surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
+  // `surface` is no longer read but kept in the signature for symmetry
+  // with the other emit functions (and to leave room for content-
+  // specific facts the policy may need to look at later).
+  void surface;
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
-  // Default content role: tooltip kind defaults to "tooltip"; other
-  // anchored kinds (popover) emit no role unless the contract part
-  // explicitly declares one in anatomy.details.<part>.aria.role.
-  // Same authority shape as React surface emitter atom B.
-  const contentRole =
-    surface.content?.part.details?.aria?.role ??
-    (surface.kind === "tooltip" ? "tooltip" : null);
+  // Policy-derived default content role. Shared semantics owns the
+  // tooltip→"tooltip", popover→null rule (and the contract-override
+  // path).
+  const contentRole = policy.defaultContentRole;
   const templateLines: (string | null)[] = [
     `<template>`,
     `  <div`,
@@ -354,36 +324,33 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
   ].join("\n");
 }
 
-function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
+function emitComposable(
+  ir: ComponentIR,
+  surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const dataMarker = `data-${ir.cssPrefix}-trigger`;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
 
-  // Data-driven dismissal-array assembly. For each dismissal mode:
-  //   - public-prop modes (escape, blur, outside-click) gate behind
-  //     `options.${closeOnProp}?.()` so toggling the prop at runtime
-  //     re-mounts the controller.
+  // Policy-derived dismissal-array assembly. For each declared
+  // dismissal mode:
+  //   - public + runtime-toggleable modes (escape, blur,
+  //     outside-click) gate behind `options.${closeOnProp}?.()` so
+  //     toggling the prop at runtime re-mounts the controller.
   //   - internal-only modes (pointer-leave) are always-on.
-  const dismissalParts: string[] = [];
-  for (const mode of surface.dismissal) {
-    const spec = DISMISSAL_PROP_SPECS[mode];
-    if (!spec) continue;
-    if (spec.prop && spec.runtimeToggleable) {
-      dismissalParts.push(
-        `options.${spec.prop}?.() !== false ? "${mode}" as const : null`,
-      );
-    } else {
-      dismissalParts.push(`"${mode}" as const`);
-    }
-  }
+  const dismissalParts = policy.publicDismissalProps.map((spec) =>
+    spec.prop && spec.runtimeToggleable
+      ? `options.${spec.prop}?.() !== false ? "${spec.mode}" as const : null`
+      : `"${spec.mode}" as const`,
+  );
   const dismissalExpr = dismissalParts.join(",\n      ");
 
-  const optionsInterfaceLines = surface.dismissal
-    .map((mode) => DISMISSAL_PROP_SPECS[mode])
+  const optionsInterfaceLines = policy.publicDismissalProps
     .filter(
-      (spec): spec is DismissalPropSpec =>
-        spec !== undefined && spec.prop !== null,
+      (spec): spec is PublicDismissalProp & { prop: string } =>
+        spec.prop !== null,
     )
     .map((spec) => `  ${spec.prop}?: () => boolean | undefined;`);
 

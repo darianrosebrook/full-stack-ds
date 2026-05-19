@@ -1,4 +1,8 @@
-import type { ComponentContract } from "./contract.js";
+import type {
+  ComponentContract,
+  ContractSurfaceDismissalMode,
+  ContractSurfaceKind,
+} from "./contract.js";
 import { getParts } from "./contract.js";
 
 /** Map well-known anatomy parts to semantic HTML elements */
@@ -184,4 +188,168 @@ export function resolveEventValueStrategy(args: {
   // shim (the emitter lowers this case as the calling framework
   // requires).
   return "value";
+}
+
+// ---------------------------------------------------------------------------
+// Anchored-surface kind policy (CODEGEN-SURFACE-KIND-POLICY-01)
+// ---------------------------------------------------------------------------
+
+/**
+ * The substrate family a surface kind realizes against. Each
+ * family has its own controller-and-listener machinery in the per-
+ * framework primitives packages.
+ */
+export type SurfaceFamily =
+  | "anchored-presence" // tooltip, popover, menu, select (anchored, non-modal)
+  | "modal-presence" // dialog (centered, blocking)
+  | "edge-presence" // toast, sheet (viewport-edge or slide-in)
+  | "inline-presence"; // coachmark (inline-rendered guidance)
+
+/**
+ * Consumer-facing dismissal prop description. Promoted from the
+ * framework-local DISMISSAL_PROP_SPECS maps in React + Vue surface
+ * emitters (atom B + F-3B-1-B) so the prop-shape decision lives
+ * once in shared semantics.
+ *
+ * `prop === null` means the dismissal mode has no public knob and
+ * is substrate-internal only (Tooltip's pointer-leave grace path).
+ */
+export interface PublicDismissalProp {
+  mode: ContractSurfaceDismissalMode;
+  prop: string | null;
+  defaultValue: boolean;
+  /**
+   * When true, the prop is read via a runtime getter so toggling
+   * it at the consumer remounts the controller. When false, the
+   * mode is always-on in the dismissal array (no public toggle).
+   */
+  runtimeToggleable: boolean;
+}
+
+/**
+ * Resolved policy for an anchored-presence-family surface. Framework
+ * surface emitters consume this rather than re-deriving kind-specific
+ * behavior locally. The policy is purely contract-derived; it does
+ * NOT carry framework-progress state (i.e. "has Svelte landed this
+ * kind yet?"). Each framework retains its own implemented-set if
+ * needed, but the semantic shape of "what does this kind mean"
+ * lives here.
+ *
+ * Authority: shared codegen semantics derived from `surface.{kind,
+ * presence, modality, anchor, content, openTriggers, dismissal}`.
+ *
+ * Removable when: contracts begin declaring policy directly (no
+ * sane reason to expect this soon — the policy IS the contract's
+ * normalized form for emitter consumption).
+ */
+export interface AnchoredSurfacePolicy {
+  family: "anchored-presence";
+  kind: ContractSurfaceKind;
+  /**
+   * Default ARIA role for the content element when the contract
+   * does not declare one explicitly (anatomy.parts.<content>.aria.role).
+   * tooltip-kind surfaces default to "tooltip"; other anchored
+   * kinds (popover) emit no forced role and rely on the anchor
+   * relation + content interactivity for screen-reader semantics.
+   */
+  defaultContentRole: string | null;
+  /**
+   * Ordered list of consumer-facing dismissal props derived from
+   * `surface.dismissal`. Each entry tells the emitter the prop
+   * name, default value, and whether it's runtime-toggleable.
+   * Entries with `prop: null` are filtered for public-API emission
+   * but kept for substrate-internal dismissal-array assembly.
+   */
+  publicDismissalProps: PublicDismissalProp[];
+}
+
+/**
+ * Canonical map from dismissal mode → consumer prop shape. Owned
+ * here rather than in each framework's surface emitter so emitters
+ * agree on consumer ergonomics. Modes with `prop: null` have no
+ * consumer knob (pointer-leave is a substrate-internal Tooltip
+ * grace path).
+ */
+const DISMISSAL_PROP_TABLE: Record<
+  ContractSurfaceDismissalMode,
+  PublicDismissalProp
+> = {
+  escape: { mode: "escape", prop: "closeOnEscape", defaultValue: true, runtimeToggleable: true },
+  blur: { mode: "blur", prop: "closeOnBlur", defaultValue: true, runtimeToggleable: true },
+  "outside-click": {
+    mode: "outside-click",
+    prop: "closeOnOutsideClick",
+    defaultValue: true,
+    runtimeToggleable: true,
+  },
+  "pointer-leave": {
+    mode: "pointer-leave",
+    prop: null,
+    defaultValue: true,
+    runtimeToggleable: false,
+  },
+  "close-button": {
+    mode: "close-button",
+    prop: null,
+    defaultValue: true,
+    runtimeToggleable: false,
+  },
+  timeout: { mode: "timeout", prop: null, defaultValue: true, runtimeToggleable: false },
+};
+
+/**
+ * Anchored-presence kinds that the substrate currently
+ * understands. As more kinds (menu, select) get contracts on the
+ * same substrate, they're added here. This set declares
+ * "contract-level admissibility into the anchored family" — it is
+ * NOT a per-framework progress allowlist.
+ */
+const ANCHORED_PRESENCE_KINDS = new Set<ContractSurfaceKind>([
+  "tooltip",
+  "popover",
+]);
+
+export function isAnchoredPresenceKind(kind: ContractSurfaceKind): boolean {
+  return ANCHORED_PRESENCE_KINDS.has(kind);
+}
+
+/**
+ * Minimal surface shape the policy resolver needs. Defined locally
+ * to avoid an import cycle with ir.ts (which already imports from
+ * semantics.ts). Structurally compatible with SurfaceIR.
+ */
+export interface SurfacePolicyInput {
+  kind: ContractSurfaceKind;
+  dismissal: readonly ContractSurfaceDismissalMode[];
+  content?: { part: { details?: { aria?: { role?: string } } } };
+}
+
+/**
+ * Resolve the anchored-surface policy for an IR surface. Throws
+ * when the kind is not in the anchored family — emitters should
+ * gate on `isAnchoredPresenceKind` before calling.
+ */
+export function resolveAnchoredSurfacePolicy(
+  surface: SurfacePolicyInput,
+): AnchoredSurfacePolicy {
+  if (!isAnchoredPresenceKind(surface.kind)) {
+    throw new Error(
+      `resolveAnchoredSurfacePolicy: kind "${surface.kind}" is not in the anchored-presence family. ` +
+        `Allowed: ${[...ANCHORED_PRESENCE_KINDS].join(", ")}.`,
+    );
+  }
+  const contractRole = surface.content?.part.details?.aria?.role;
+  const defaultContentRole =
+    contractRole ?? (surface.kind === "tooltip" ? "tooltip" : null);
+
+  const publicDismissalProps = surface.dismissal.map(
+    (mode) => DISMISSAL_PROP_TABLE[mode],
+  );
+
+  return {
+    family: "anchored-presence",
+    kind: surface.kind,
+    defaultContentRole,
+    publicDismissalProps,
+  };
 }

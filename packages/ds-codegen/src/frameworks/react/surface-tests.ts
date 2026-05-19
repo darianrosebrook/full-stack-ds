@@ -13,8 +13,7 @@
  *   - onOpenChange fires on uncontrolled open
  */
 import type { ComponentIR } from "../../ir.js";
-
-const SUPPORTED_TEST_KINDS = new Set(["tooltip", "popover"] as const);
+import { isAnchoredPresenceKind } from "../../semantics.js";
 
 export function generateReactSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -23,11 +22,19 @@ export function generateReactSurfaceTest(ir: ComponentIR): string {
       `generateReactSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (!SUPPORTED_TEST_KINDS.has(surface.kind as "tooltip" | "popover")) {
+  if (!isAnchoredPresenceKind(surface.kind)) {
     throw new Error(
-      `React surface test emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_TEST_KINDS].join(", ")}.`,
+      `React surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
+        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
     );
   }
+  // Test-body shape is kind-specific (Tooltip's hover/focus contract
+  // vs Popover's click contract). Each kind has its own scaffold
+  // function; dispatch on kind here. Body emission is realization,
+  // not policy — the policy already said "this kind belongs in the
+  // anchored family." Adding a new anchored kind without a scaffold
+  // function here would fall through to the tooltip-shaped tests,
+  // which is wrong but loud.
   if (surface.kind === "popover") {
     return emitPopoverScaffoldTests(ir);
   }

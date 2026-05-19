@@ -144,7 +144,9 @@ This inventory was produced as part of CODEGEN-SEMANTIC-AUTHORITY-01. It documen
 | `composeRefs` / `composeEventHandlers` | React substrate | React grammar (ref + synthetic event composition) | React language |
 | `isInsideSurface(anchor ∪ content)` boundary predicate | React + Vue substrates | DOM focus semantics | Surface anatomy |
 | `SurfaceDataMarker` template-literal type | Vue substrate | Contract `cssPrefix` | Surface emit |
-| `DISMISSAL_PROP_SPECS` map | React surface emitter | Dismissal mode → consumer prop ergonomics | Surface dismissal mode set |
+| `AnchoredSurfacePolicy` + `resolveAnchoredSurfacePolicy` | Shared `semantics.ts` | Contract `surface.{kind, dismissal, content}` | Surface kind |
+| `isAnchoredPresenceKind` | Shared `semantics.ts` | Contract `surface.kind` | Surface kind |
+| `EventValueStrategy` + `resolveEventValueStrategy` | Shared `semantics.ts` | Host capability + channel valueType + callback kind | Event extraction site |
 | `channelValuePlaceholder(valueType)` | React test emitter | Channel `valueType` | Channel valueType |
 | `requiredProps` + `placeholderForPropType` | Test plan | Contract `prop.required` + `prop.type` + `definedTypes` | Prop type shape |
 | `defaultOpen` conditional emission | Svelte hook emitter | Channel `defaultValueProp` presence | Channel shape |
@@ -164,9 +166,18 @@ These rules are not component-specific, but their authority lives in the wrong p
 | Rule | Currently lives in | Authority source | Should live in | Follow-up |
 |---|---|---|---|---|
 | `textContent` binding rendered as child text | Svelte emitter local | DOM semantics: text-node assignment | IR `binding.kind = "text_child"` | CODEGEN-IR-TEXT-CHILD-01 |
-| `eventValueStrategy` (button-host toggle vs input-host `.checked`) | Svelte emitter local (`isFormControlHost`) | DOM capability + channel valueType + interaction | IR `channel.eventValueStrategy` | **CODEGEN-IR-EVENT-VALUE-STRATEGY-01** (THIS ATOM) |
 | `ARIA_BOOLEANISH_ATTRS` coercion | Svelte emitter local | DOM/ARIA semantics | Shared DOM/ARIA semantics table OR contract projection (`{ "from": "channel:x.value", "projection": "truthy" }`) | CODEGEN-ARIA-PROJECTION-01 |
-| `SUPPORTED_ANCHORED_KINDS` allowlist | React surface emitter | Codegen progress placeholder | Replace with per-kind semantic policy | CODEGEN-SURFACE-KIND-POLICY-01 |
+
+**Retired smells (promoted upstream):**
+
+| Rule | Was | Now lives in | Promoted by |
+|---|---|---|---|
+| `eventValueStrategy` (button-host toggle vs input-host `.checked`) | Svelte emitter local (`isFormControlHost`) | `resolveEventValueStrategy` in shared `semantics.ts` | CODEGEN-SEMANTIC-AUTHORITY-01 (df45fb8) |
+| `SUPPORTED_ANCHORED_KINDS` allowlist | React + Vue surface emitter locals | `isAnchoredPresenceKind` + `AnchoredSurfacePolicy` in shared `semantics.ts` | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
+| `DISMISSAL_PROP_SPECS` map (React) + identical map in Vue | React + Vue surface emitter locals | `AnchoredSurfacePolicy.publicDismissalProps` (from `DISMISSAL_PROP_TABLE` in shared `semantics.ts`) | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
+| Default content role per surface kind | React + Vue surface emitter locals | `AnchoredSurfacePolicy.defaultContentRole` in shared `semantics.ts` | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
+
+The Svelte/Lit/Angular surface emitters still gate locally on `kind === "tooltip"` because their Popover ports haven't landed yet. After F-3B-2/3/4 ship, those guards should also be replaced with `isAnchoredPresenceKind`.
 
 ### Reverted as fabricated semantics
 

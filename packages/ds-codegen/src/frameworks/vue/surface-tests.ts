@@ -8,11 +8,7 @@
  * consumer-handler preservation including the preventDefault opt-out.
  */
 import type { ComponentIR } from "../../ir.js";
-
-// TEMPORARY EMITTER EXCEPTION
-// Source fact: codegen-progress allowlist.
-// Removable when: CODEGEN-SURFACE-KIND-POLICY-01 (#71).
-const SUPPORTED_TEST_KINDS = new Set(["tooltip", "popover"] as const);
+import { isAnchoredPresenceKind } from "../../semantics.js";
 
 export function generateVueSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -21,11 +17,16 @@ export function generateVueSurfaceTest(ir: ComponentIR): string {
       `generateVueSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (!SUPPORTED_TEST_KINDS.has(surface.kind as "tooltip" | "popover")) {
+  if (!isAnchoredPresenceKind(surface.kind)) {
     throw new Error(
-      `Vue surface test emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_TEST_KINDS].join(", ")}.`,
+      `Vue surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
+        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
     );
   }
+  // Test-body shape is kind-specific (Tooltip's hover/focus contract
+  // vs Popover's click contract). Each kind has its own scaffold
+  // function; dispatch on kind here. Body emission is realization,
+  // not policy.
   if (surface.kind === "popover") {
     return emitPopoverScaffoldTests(ir);
   }
