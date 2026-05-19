@@ -1,76 +1,77 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { usePopover } from "./usePopover.js";
+import { usePopover, providePopoverContext } from "./usePopover.js";
 // @generated:end
-
 // @custom:start imports
 
 // @custom:end
-
 // @generated:start types
 export type PopoverPlacement = "top" | "bottom" | "left" | "right" | "auto";
-export type PopoverTriggerStrategy = "click" | "hover";
 // @generated:end
-
 // @custom:start types
 
 // @custom:end
-
 // @generated:start props
 interface Props {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   placement?: PopoverPlacement;
-  triggerStrategy?: PopoverTriggerStrategy;
-  offset?: number;
-  closeOnOutsideClick?: boolean;
+  disabled?: boolean;
   closeOnEscape?: boolean;
-  anchor?: HTMLElement | null;
+  closeOnOutsideClick?: boolean;
+  closeOnBlur?: boolean;
   class?: string;
   "data-testid"?: string;
 }
-// @generated:end
-
-// @generated:start defineProps
+// Vue runtime coerces unpassed Boolean props to `false` by
+// default; `withDefaults` with `undefined` keeps the
+// "controlled vs uncontrolled" distinction the substrate needs.
 const props = withDefaults(defineProps<Props>(), {
-  placement: "auto",
-  triggerStrategy: "click",
-  offset: 8,
+  open: undefined,
+  defaultOpen: undefined,
+  disabled: undefined,
+  closeOnEscape: undefined,
+  closeOnOutsideClick: undefined,
+  closeOnBlur: undefined,
 });
 // @generated:end
-
 // @generated:start hook
-const behavior = usePopover({
+const surface = usePopover({
   open: () => props.open,
   defaultOpen: props.defaultOpen,
   onOpenChange: props.onOpenChange,
-  closeOnEscape: props.closeOnEscape,
-  closeOnOutsideClick: props.closeOnOutsideClick,
+  disabled: () => props.disabled === true,
+  closeOnEscape: () => props.closeOnEscape !== false,
+  closeOnOutsideClick: () => props.closeOnOutsideClick !== false,
+  closeOnBlur: () => props.closeOnBlur !== false,
+});
+providePopoverContext({
+  open: surface.open,
+  contentId: surface.contentId,
+  registerAnchor: surface.registerAnchor,
+  registerAnchorRefOnly: surface.registerAnchorRefOnly,
+  registerContent: surface.registerContent,
+  getTriggerHandlers: surface.getTriggerHandlers,
+  triggerProps: surface.triggerProps,
 });
 // @generated:end
-
 // @generated:start classes
 const classNames = computed(() => [
   "popover",
   props.placement ? `popover--${props.placement}` : null,
+  props.disabled ? "popover--disabled" : null,
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end
-
 // @custom:start trailing
 
 // @custom:end
 </script>
-
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']">
-    <button :class="'popover__trigger'" type="button" aria-haspopup="true" :aria-expanded="behavior.open.value" aria-controls="popover-content">
-      <slot />
-    </button>
-    <div v-if="behavior.open.value" :class="'popover__content'" id="popover-content">
-      <slot />
-    </div>
-  </div>
+  <span :class="classNames" :data-testid="props['data-testid']">
+    <slot />
+  </span>
 </template>
+<!-- openTriggers: ["click"] | anchorRelation: controls-expanded -->

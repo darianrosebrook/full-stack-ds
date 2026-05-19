@@ -1,26 +1,20 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
+import { usePopoverContext } from "./usePopover.js";
 // @generated:end
 
 // @custom:start imports
 
 // @custom:end
 
-// @generated:start props
-interface Props {
-  class?: string;
-  "data-testid"?: string;
-}
-
-const props = defineProps<Props>();
+// @generated:start defineOptions
+// Conditional render via v-if disables Vue's automatic attribute
+// fallthrough; we apply $attrs explicitly on the rendered host.
+defineOptions({ inheritAttrs: false });
 // @generated:end
 
-// @generated:start classes
-const classNames = computed(() =>
-  ["popover__content", props.class].filter(Boolean).join(" "),
-);
+// @generated:start ctx
+const ctx = usePopoverContext();
 // @generated:end
 
 // @custom:start trailing
@@ -29,7 +23,13 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <Stack :class="classNames" :data-testid="props['data-testid']">
+  <div
+    v-if="ctx.open.value"
+    :ref="ctx.registerContent"
+    :id="ctx.contentId"
+    data-popover-content
+    v-bind="$attrs"
+  >
     <slot />
-  </Stack>
+  </div>
 </template>

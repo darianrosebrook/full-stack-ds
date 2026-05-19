@@ -1,93 +1,344 @@
 // @generated:start imports
 import { describe, it, expect, vi } from "vitest";
-import type { Component } from "vue";
+import { defineComponent, h } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
 import Popover from "../Popover.vue";
+import PopoverTrigger from "../PopoverTrigger.vue";
+import PopoverContent from "../PopoverContent.vue";
+
+declare module "vitest" {
+  interface Assertion<T> {
+    toHaveNoViolations(): void;
+  }
+}
 // @generated:end
 
 // @generated:start tests
-describe("Popover — unit", () => {
-  it("renders with default props", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.element).toBeTruthy();
+function mountDefault(rootProps: Record<string, unknown> = {}) {
+  const Host = defineComponent({
+    components: { Popover, PopoverTrigger, PopoverContent },
+    props: {
+      popoverProps: { type: Object, default: () => ({}) },
+    },
+    setup(props) {
+      return () =>
+        h(Popover, props.popoverProps as Record<string, unknown>, () => [
+          h(PopoverTrigger, { "data-testid": "trigger" }, () => "Open"),
+          h(PopoverContent, { "data-testid": "content" }, () => "Body"),
+        ]);
+    },
+  });
+  return mount(Host, {
+    props: { popoverProps: rootProps },
+    attachTo: document.body,
+  });
+}
+
+describe("Popover — compound API surface", () => {
+  it("renders the trigger but not the content when closed", () => {
+    const wrapper = mountDefault();
+    expect(wrapper.find("[data-testid='trigger']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
   });
 
-  it("applies the base CSS class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover");
+  it("renders the content when defaultOpen={true}", () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
   });
 
-  it("merges custom class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true }, attrs: { "data-testid": "popover", "class": "custom" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover");
-    expect(wrapper.classes()).toContain("custom");
+  it("opens on click of the trigger", async () => {
+    const wrapper = mountDefault();
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
   });
 
-  it("applies placement=top variant class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true, "placement": "top" }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover--top");
+  it("toggles closed on a second click of the trigger", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
   });
 
-  it("applies placement=bottom variant class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true, "placement": "bottom" }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover--bottom");
-  });
-
-  it("applies placement=left variant class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true, "placement": "left" }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover--left");
-  });
-
-  it("applies placement=right variant class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true, "placement": "right" }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover--right");
-  });
-
-  it("applies placement=auto variant class", () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true, "placement": "auto" }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("popover--auto");
-  });
-
-  it("closes on Escape key", async () => {
-    const onOpenChangeSpy = vi.fn();
-    mount(Popover as Component, { props: { "open": true, "onOpenChange": onOpenChangeSpy }, attrs: { "data-testid": "popover" }, slots: { default: "content" }, attachTo: document.body });
+  it("closes on Escape", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
-    expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("wires aria-controls + aria-expanded on the trigger", () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const trigger = wrapper.find("[data-testid='trigger']");
+    const content = wrapper.find("[data-testid='content']");
+    const id = content.attributes("id");
+    expect(id).toBeTruthy();
+    expect(trigger.attributes("aria-controls")).toBe(id);
+    expect(trigger.attributes("aria-expanded")).toBe("true");
+    wrapper.unmount();
+  });
+
+  it("aria-expanded reflects closed state", () => {
+    const wrapper = mountDefault();
+    const trigger = wrapper.find("[data-testid='trigger']");
+    expect(trigger.attributes("aria-expanded")).toBe("false");
+    wrapper.unmount();
+  });
+
+  it("fires onOpenChange on uncontrolled open", async () => {
+    const spy = vi.fn();
+    const wrapper = mountDefault({ onOpenChange: spy });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(spy).toHaveBeenCalledWith(true);
+    wrapper.unmount();
+  });
+
+  it("respects disabled — click does not open", async () => {
+    const wrapper = mountDefault({ disabled: true });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("unmount removes document-level listeners", async () => {
+    const spy = vi.fn();
+    const wrapper = mountDefault({ defaultOpen: true, onOpenChange: spy });
+    wrapper.unmount();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("Popover — slot-props host adoption", () => {
+  it("renders the adopted child as the actual host (no nested button)", () => {
+    const Host = defineComponent({
+      components: { Popover, PopoverTrigger, PopoverContent },
+      setup() {
+        return () =>
+          h(Popover, {}, () => [
+            h(PopoverTrigger, { asChild: true }, {
+              default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) =>
+                h("a", { ...triggerProps, href: "#open", "data-testid": "trigger" }, "Open"),
+            }),
+            h(PopoverContent, { "data-testid": "content" }, () => "Body"),
+          ]);
+      },
+    });
+    const wrapper = mount(Host, { attachTo: document.body });
+    const trigger = wrapper.find("[data-testid='trigger']");
+    expect(trigger.element.tagName).toBe("A");
+    wrapper.unmount();
+  });
+
+  it("asChild opens on click over the adopted child", async () => {
+    const Host = defineComponent({
+      components: { Popover, PopoverTrigger, PopoverContent },
+      setup() {
+        return () =>
+          h(Popover, {}, () => [
+            h(PopoverTrigger, { asChild: true }, {
+              default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) =>
+                h("a", { ...triggerProps, href: "#open", "data-testid": "trigger" }, "Open"),
+            }),
+            h(PopoverContent, { "data-testid": "content" }, () => "Body"),
+          ]);
+      },
+    });
+    const wrapper = mount(Host, { attachTo: document.body });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("asChild applies the data-popover-trigger marker to the adopted host", () => {
+    const Host = defineComponent({
+      components: { Popover, PopoverTrigger, PopoverContent },
+      setup() {
+        return () =>
+          h(Popover, {}, () => [
+            h(PopoverTrigger, { asChild: true }, {
+              default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) =>
+                h("a", { ...triggerProps, href: "#open", "data-testid": "trigger" }, "Open"),
+            }),
+            h(PopoverContent, { "data-testid": "content" }, () => "Body"),
+          ]);
+      },
+    });
+    const wrapper = mount(Host, { attachTo: document.body });
+    expect(wrapper.find("[data-testid='trigger']").attributes("data-popover-trigger")).toBeDefined();
+    wrapper.unmount();
   });
 });
 
 describe("Popover — accessibility", () => {
-  it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Popover as Component, { props: { "open": true }, attrs: { "data-testid": "popover" }, slots: { default: "content" } });
-    const results = await axe(wrapper.element);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+  it("has no unexpected axe violations when closed", async () => {
+    const wrapper = mountDefault();
+    const results = (await axe(wrapper.element)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+    wrapper.unmount();
+  });
+
+  it("has no unexpected axe violations when open", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const results = (await axe(wrapper.element)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+    wrapper.unmount();
   });
 });
 // @generated:end
 
 // @custom:start tests
+// F-3B-1-B atom C-equivalent: deep behavioral coverage that proves
+// the substrate generalization from F-3A atom A + F-3B-1-A
+// (boundary-focusout in Vue substrate) works end-to-end for
+// Popover. Lives in @custom because these behaviors are anchored
+// to the popover surface shape, not kind-agnostic scaffolding.
+
+describe("Popover — controlled mode", () => {
+  it("open prop overrides internal state across re-render", async () => {
+    const wrapper = mountDefault({ open: false });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    await wrapper.setProps({ popoverProps: { open: true } });
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("controlled open=true: click fires onOpenChange(false), content stays mounted", async () => {
+    const spy = vi.fn();
+    const wrapper = mountDefault({ open: true, onOpenChange: spy });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(spy).toHaveBeenCalledWith(false);
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+});
+
+describe("Popover — outside-click dismissal", () => {
+  it("closes on mousedown outside the surface", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const outside = document.createElement("button");
+    outside.setAttribute("data-testid", "outside");
+    document.body.appendChild(outside);
+    outside.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    outside.remove();
+    wrapper.unmount();
+  });
+
+  it("does NOT close on mousedown on the trigger", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    wrapper.find("[data-testid='trigger']").element.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true, cancelable: true }),
+    );
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("does NOT close on mousedown inside the content", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    wrapper.find("[data-testid='content']").element.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true, cancelable: true }),
+    );
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("closeOnOutsideClick={false} prevents outside-click dismissal", async () => {
+    const wrapper = mountDefault({ defaultOpen: true, closeOnOutsideClick: false });
+    const outside = document.createElement("button");
+    document.body.appendChild(outside);
+    outside.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    outside.remove();
+    wrapper.unmount();
+  });
+});
+
+describe("Popover — boundary focus dismissal (F-3B-1-A substrate)", () => {
+  function dispatchFocusOut(from: HTMLElement, to: EventTarget | null): void {
+    from.dispatchEvent(
+      new FocusEvent("focusout", {
+        bubbles: true,
+        cancelable: false,
+        relatedTarget: to as EventTarget,
+      }),
+    );
+  }
+
+  it("stays open when focus moves trigger -> content", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
+    const content = wrapper.find("[data-testid='content']").element as HTMLElement;
+    dispatchFocusOut(trigger, content);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("stays open when focus moves content -> trigger", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
+    const content = wrapper.find("[data-testid='content']").element as HTMLElement;
+    dispatchFocusOut(content, trigger);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("closes when focus moves content -> outside", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const outside = document.createElement("button");
+    document.body.appendChild(outside);
+    const content = wrapper.find("[data-testid='content']").element as HTMLElement;
+    dispatchFocusOut(content, outside);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    outside.remove();
+    wrapper.unmount();
+  });
+
+  it("closes when focus moves trigger -> outside", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const outside = document.createElement("button");
+    document.body.appendChild(outside);
+    const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
+    dispatchFocusOut(trigger, outside);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    outside.remove();
+    wrapper.unmount();
+  });
+
+  it("closeOnBlur={false} prevents boundary-focusout dismissal", async () => {
+    const wrapper = mountDefault({ defaultOpen: true, closeOnBlur: false });
+    const outside = document.createElement("button");
+    document.body.appendChild(outside);
+    const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
+    dispatchFocusOut(trigger, outside);
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    outside.remove();
+    wrapper.unmount();
+  });
+});
+
+describe("Popover — closeOnEscape prop wiring", () => {
+  it("closeOnEscape={false} prevents Escape dismissal", async () => {
+    const wrapper = mountDefault({ defaultOpen: true, closeOnEscape: false });
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+});
 
 // @custom:end

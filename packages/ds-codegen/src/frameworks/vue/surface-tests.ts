@@ -9,6 +9,11 @@
  */
 import type { ComponentIR } from "../../ir.js";
 
+// TEMPORARY EMITTER EXCEPTION
+// Source fact: codegen-progress allowlist.
+// Removable when: CODEGEN-SURFACE-KIND-POLICY-01 (#71).
+const SUPPORTED_TEST_KINDS = new Set(["tooltip", "popover"] as const);
+
 export function generateVueSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
   if (!surface) {
@@ -16,12 +21,234 @@ export function generateVueSurfaceTest(ir: ComponentIR): string {
       `generateVueSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
+  if (!SUPPORTED_TEST_KINDS.has(surface.kind as "tooltip" | "popover")) {
     throw new Error(
-      `Vue surface test emitter only supports kind "tooltip" in F-2C-1 (got "${surface.kind}").`,
+      `Vue surface test emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_TEST_KINDS].join(", ")}.`,
     );
   }
+  if (surface.kind === "popover") {
+    return emitPopoverScaffoldTests(ir);
+  }
   return emitTooltipTests(ir);
+}
+
+/**
+ * Minimal Vue Popover test scaffold. Mirrors the React Popover atom
+ * B scaffold shape: contract-essential behavioral coverage (click
+ * opens, click toggles, Escape closes, aria-controls + aria-expanded
+ * wiring, onOpenChange, disabled suppression, unmount cleanup) plus
+ * slot-host adoption (v-slot triggerProps). Deep behavioral coverage
+ * (focus boundary, outside-click, controlled mode) lives in the
+ * @custom block per atom B's precedent.
+ */
+function emitPopoverScaffoldTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const importsBody = [
+    `import { describe, it, expect, vi } from "vitest";`,
+    `import { defineComponent, h } from "vue";`,
+    `import { mount } from "@vue/test-utils";`,
+    `import { axe } from "vitest-axe";`,
+    `import ${name} from "../${name}.vue";`,
+    `import ${name}Trigger from "../${name}Trigger.vue";`,
+    `import ${name}Content from "../${name}Content.vue";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+  ].join("\n");
+
+  const testsBody = `function mountDefault(rootProps: Record<string, unknown> = {}) {
+  const Host = defineComponent({
+    components: { ${name}, ${name}Trigger, ${name}Content },
+    props: {
+      popoverProps: { type: Object, default: () => ({}) },
+    },
+    setup(props) {
+      return () =>
+        h(${name}, props.popoverProps as Record<string, unknown>, () => [
+          h(${name}Trigger, { "data-testid": "trigger" }, () => "Open"),
+          h(${name}Content, { "data-testid": "content" }, () => "Body"),
+        ]);
+    },
+  });
+  return mount(Host, {
+    props: { popoverProps: rootProps },
+    attachTo: document.body,
+  });
+}
+
+describe("${name} — compound API surface", () => {
+  it("renders the trigger but not the content when closed", () => {
+    const wrapper = mountDefault();
+    expect(wrapper.find("[data-testid='trigger']").exists()).toBe(true);
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("renders the content when defaultOpen={true}", () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("opens on click of the trigger", async () => {
+    const wrapper = mountDefault();
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("toggles closed on a second click of the trigger", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("closes on Escape", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("wires aria-controls + aria-expanded on the trigger", () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const trigger = wrapper.find("[data-testid='trigger']");
+    const content = wrapper.find("[data-testid='content']");
+    const id = content.attributes("id");
+    expect(id).toBeTruthy();
+    expect(trigger.attributes("aria-controls")).toBe(id);
+    expect(trigger.attributes("aria-expanded")).toBe("true");
+    wrapper.unmount();
+  });
+
+  it("aria-expanded reflects closed state", () => {
+    const wrapper = mountDefault();
+    const trigger = wrapper.find("[data-testid='trigger']");
+    expect(trigger.attributes("aria-expanded")).toBe("false");
+    wrapper.unmount();
+  });
+
+  it("fires onOpenChange on uncontrolled open", async () => {
+    const spy = vi.fn();
+    const wrapper = mountDefault({ onOpenChange: spy });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(spy).toHaveBeenCalledWith(true);
+    wrapper.unmount();
+  });
+
+  it("respects disabled — click does not open", async () => {
+    const wrapper = mountDefault({ disabled: true });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    wrapper.unmount();
+  });
+
+  it("unmount removes document-level listeners", async () => {
+    const spy = vi.fn();
+    const wrapper = mountDefault({ defaultOpen: true, onOpenChange: spy });
+    wrapper.unmount();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("${name} — slot-props host adoption", () => {
+  it("renders the adopted child as the actual host (no nested button)", () => {
+    const Host = defineComponent({
+      components: { ${name}, ${name}Trigger, ${name}Content },
+      setup() {
+        return () =>
+          h(${name}, {}, () => [
+            h(${name}Trigger, { asChild: true }, {
+              default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) =>
+                h("a", { ...triggerProps, href: "#open", "data-testid": "trigger" }, "Open"),
+            }),
+            h(${name}Content, { "data-testid": "content" }, () => "Body"),
+          ]);
+      },
+    });
+    const wrapper = mount(Host, { attachTo: document.body });
+    const trigger = wrapper.find("[data-testid='trigger']");
+    expect(trigger.element.tagName).toBe("A");
+    wrapper.unmount();
+  });
+
+  it("asChild opens on click over the adopted child", async () => {
+    const Host = defineComponent({
+      components: { ${name}, ${name}Trigger, ${name}Content },
+      setup() {
+        return () =>
+          h(${name}, {}, () => [
+            h(${name}Trigger, { asChild: true }, {
+              default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) =>
+                h("a", { ...triggerProps, href: "#open", "data-testid": "trigger" }, "Open"),
+            }),
+            h(${name}Content, { "data-testid": "content" }, () => "Body"),
+          ]);
+      },
+    });
+    const wrapper = mount(Host, { attachTo: document.body });
+    await wrapper.find("[data-testid='trigger']").trigger("click");
+    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    wrapper.unmount();
+  });
+
+  it("asChild applies the data-${cssPrefix}-trigger marker to the adopted host", () => {
+    const Host = defineComponent({
+      components: { ${name}, ${name}Trigger, ${name}Content },
+      setup() {
+        return () =>
+          h(${name}, {}, () => [
+            h(${name}Trigger, { asChild: true }, {
+              default: ({ triggerProps }: { triggerProps: Record<string, unknown> }) =>
+                h("a", { ...triggerProps, href: "#open", "data-testid": "trigger" }, "Open"),
+            }),
+            h(${name}Content, { "data-testid": "content" }, () => "Body"),
+          ]);
+      },
+    });
+    const wrapper = mount(Host, { attachTo: document.body });
+    expect(wrapper.find("[data-testid='trigger']").attributes("data-${cssPrefix}-trigger")).toBeDefined();
+    wrapper.unmount();
+  });
+});
+
+describe("${name} — accessibility", () => {
+  it("has no unexpected axe violations when closed", async () => {
+    const wrapper = mountDefault();
+    const results = (await axe(wrapper.element)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+    wrapper.unmount();
+  });
+
+  it("has no unexpected axe violations when open", async () => {
+    const wrapper = mountDefault({ defaultOpen: true });
+    const results = (await axe(wrapper.element)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+    wrapper.unmount();
+  });
+});`;
+
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
 }
 
 function emitTooltipTests(ir: ComponentIR): string {

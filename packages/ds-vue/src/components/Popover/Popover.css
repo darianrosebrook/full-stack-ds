@@ -18,9 +18,11 @@
 
 .popover--auto {}
 
-.popover:hover {}
+.popover--open {}
 
 .popover:focus-visible {}
+
+.popover--entering {}
 
 .popover--leaving {}
 

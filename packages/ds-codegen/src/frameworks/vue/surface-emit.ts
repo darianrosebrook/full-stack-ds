@@ -1,28 +1,75 @@
 /**
  * Vue emitter — Anchored Presence Surface path.
  *
- * Activated when `ir.surface?.kind === "tooltip"` (and, after F-3,
- * other anchored kinds). Emits the compound API:
+ * Activated for any `ir.surface` whose `kind` is in
+ * SUPPORTED_ANCHORED_KINDS. Emits the compound API:
  *
- *   <Tooltip>
- *     <TooltipTrigger>Save</TooltipTrigger>
- *     <TooltipContent>Save the document</TooltipContent>
- *   </Tooltip>
+ *   <Surface>
+ *     <SurfaceTrigger>Save</SurfaceTrigger>
+ *     <SurfaceContent>Save the document</SurfaceContent>
+ *   </Surface>
  *
  * Host-adoption uses Vue-native slot props:
  *
- *   <TooltipTrigger v-slot="{ triggerProps }">
+ *   <SurfaceTrigger v-slot="{ triggerProps }">
  *     <button v-bind="triggerProps" type="button">Save</button>
- *   </TooltipTrigger>
+ *   </SurfaceTrigger>
  *
  * The `triggerProps` bag is indivisible — consumer spreads it
  * atomically. No `as-child` prop and no `cloneVNode`. The slot-props
  * shape is the canonical Vue host-adoption equivalent.
  *
+ * The emitter is data-driven on `surface.dismissal` and
+ * `surface.openTriggers` — Tooltip and Popover share the same code
+ * path; only the contract differs (dismissal modes, anchor relation,
+ * content role).
+ *
  * Bypasses the legacy `ir.dom` and compound-state-container paths
  * entirely — this is forward-facing replacement, not augmentation.
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
+
+// TEMPORARY EMITTER EXCEPTION
+// Source fact: codegen-progress allowlist.
+// Removable when: CODEGEN-SURFACE-KIND-POLICY-01 (#71) replaces
+// this with per-kind semantic policy derived from
+// surface.{presence,modality,anchorRelation,contentInteractive}.
+// Until then, this allowlist documents which kinds have been
+// audited as data-driven through the emitter; non-listed kinds
+// throw so a partially-tested kind doesn't ship silently.
+const SUPPORTED_ANCHORED_KINDS = new Set(["tooltip", "popover"] as const);
+
+/**
+ * Map from a contract dismissal mode to its consumer-facing prop
+ * shape. `null` means "no public prop knob — substrate-internal
+ * only" (e.g. pointer-leave is a Tooltip grace path with no toggle).
+ *
+ * Source fact: dismissal mode → consumer prop ergonomics.
+ * Applies by: declared surface.dismissal mode set.
+ * Doctrine: generic; mirrors React surface emitter atom B.
+ */
+interface DismissalPropSpec {
+  /** Public prop name (e.g. "closeOnEscape"); null for internal-only. */
+  prop: string | null;
+  /** TS default literal. */
+  default: boolean;
+  /**
+   * Whether the composable's dismissal-array assembly should gate
+   * this mode behind a runtime getter from the root component. When
+   * false, the mode is hardcoded "always on" in the dismissal array.
+   */
+  runtimeToggleable: boolean;
+}
+const DISMISSAL_PROP_SPECS: Record<string, DismissalPropSpec> = {
+  escape: { prop: "closeOnEscape", default: true, runtimeToggleable: true },
+  blur: { prop: "closeOnBlur", default: true, runtimeToggleable: true },
+  "outside-click": {
+    prop: "closeOnOutsideClick",
+    default: true,
+    runtimeToggleable: true,
+  },
+  "pointer-leave": { prop: null, default: true, runtimeToggleable: false },
+};
 
 export interface VueSurfaceFiles {
   rootSfc: string;
@@ -42,9 +89,9 @@ export function generateVueSurfaceFiles(ir: ComponentIR): VueSurfaceFiles {
       `generateVueSurfaceFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
+  if (!SUPPORTED_ANCHORED_KINDS.has(surface.kind as "tooltip" | "popover")) {
     throw new Error(
-      `Vue surface emitter only supports kind "tooltip" in F-2C-1 (got "${surface.kind}").`,
+      `Vue surface emitter does not support kind "${surface.kind}" yet. Supported: ${[...SUPPORTED_ANCHORED_KINDS].join(", ")}.`,
     );
   }
   return {
@@ -65,6 +112,27 @@ function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
 
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
+
+  // Data-driven dismissal props: one closeOnX boolean per public
+  // dismissal mode declared by the surface (escape, blur,
+  // outside-click). pointer-leave has no public toggle (Tooltip
+  // grace path; substrate-internal only).
+  const dismissalProps = surface.dismissal
+    .map((mode) => DISMISSAL_PROP_SPECS[mode])
+    .filter(
+      (spec): spec is DismissalPropSpec =>
+        spec !== undefined && spec.prop !== null,
+    );
+
+  const closeOnPropLines = dismissalProps.map(
+    (spec) => `  ${spec.prop}?: boolean;`,
+  );
+  const closeOnUndefinedLines = dismissalProps.map(
+    (spec) => `  ${spec.prop}: undefined,`,
+  );
+  const closeOnGetterLines = dismissalProps.map(
+    (spec) => `  ${spec.prop}: () => props.${spec.prop} !== false,`,
+  );
 
   return [
     `<script setup lang="ts">`,
@@ -92,8 +160,7 @@ function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `  onOpenChange?: (open: boolean) => void;`,
     placementValues ? `  placement?: ${name}Placement;` : "",
     `  disabled?: boolean;`,
-    `  closeOnEscape?: boolean;`,
-    `  closeOnBlur?: boolean;`,
+    ...closeOnPropLines,
     `  class?: string;`,
     `  "data-testid"?: string;`,
     `}`,
@@ -105,8 +172,7 @@ function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `  open: undefined,`,
     `  defaultOpen: undefined,`,
     `  disabled: undefined,`,
-    `  closeOnEscape: undefined,`,
-    `  closeOnBlur: undefined,`,
+    ...closeOnUndefinedLines,
     `});`,
     `// @generated:end`,
     ``,
@@ -116,8 +182,7 @@ function emitRootSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `  defaultOpen: props.defaultOpen,`,
     `  onOpenChange: props.onOpenChange,`,
     `  disabled: () => props.disabled === true,`,
-    `  closeOnEscape: () => props.closeOnEscape !== false,`,
-    `  closeOnBlur: () => props.closeOnBlur !== false,`,
+    ...closeOnGetterLines,
     `});`,
     ``,
     `provide${name}Context({`,
@@ -238,7 +303,27 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
 function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
-  const contentRole = surface.content?.part.details?.aria?.role ?? "tooltip";
+  // Default content role: tooltip kind defaults to "tooltip"; other
+  // anchored kinds (popover) emit no role unless the contract part
+  // explicitly declares one in anatomy.details.<part>.aria.role.
+  // Same authority shape as React surface emitter atom B.
+  const contentRole =
+    surface.content?.part.details?.aria?.role ??
+    (surface.kind === "tooltip" ? "tooltip" : null);
+  const templateLines: (string | null)[] = [
+    `<template>`,
+    `  <div`,
+    `    v-if="ctx.open.value"`,
+    `    :ref="ctx.registerContent"`,
+    `    :id="ctx.contentId"`,
+    contentRole !== null ? `    role="${contentRole}"` : null,
+    `    data-${cssPrefix}-content`,
+    `    v-bind="$attrs"`,
+    `  >`,
+    `    <slot />`,
+    `  </div>`,
+    `</template>`,
+  ];
   return [
     `<script setup lang="ts">`,
     `// @generated:start imports`,
@@ -264,18 +349,7 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `// @custom:end`,
     `</script>`,
     ``,
-    `<template>`,
-    `  <div`,
-    `    v-if="ctx.open.value"`,
-    `    :ref="ctx.registerContent"`,
-    `    :id="ctx.contentId"`,
-    `    role="${contentRole}"`,
-    `    data-${cssPrefix}-content`,
-    `    v-bind="$attrs"`,
-    `  >`,
-    `    <slot />`,
-    `  </div>`,
-    `</template>`,
+    ...templateLines.filter((line): line is string => line !== null),
     ``,
   ].join("\n");
 }
@@ -285,24 +359,33 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
   const dataMarker = `data-${ir.cssPrefix}-trigger`;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
-  const dismissalAlwaysOn = surface.dismissal
-    .filter((d) => d === "pointer-leave" || d === "outside-click")
-    .map((d) => JSON.stringify(d));
 
-  // The composable owns the dismissal-array assembly. closeOnEscape /
-  // closeOnBlur are read via getter from the root component's props
-  // so toggling them at runtime re-mounts the controller.
+  // Data-driven dismissal-array assembly. For each dismissal mode:
+  //   - public-prop modes (escape, blur, outside-click) gate behind
+  //     `options.${closeOnProp}?.()` so toggling the prop at runtime
+  //     re-mounts the controller.
+  //   - internal-only modes (pointer-leave) are always-on.
   const dismissalParts: string[] = [];
-  if (surface.dismissal.includes("escape")) {
-    dismissalParts.push(`options.closeOnEscape?.() !== false ? "escape" as const : null`);
-  }
-  if (surface.dismissal.includes("blur")) {
-    dismissalParts.push(`options.closeOnBlur?.() !== false ? "blur" as const : null`);
-  }
-  for (const always of dismissalAlwaysOn) {
-    dismissalParts.push(`${always} as const`);
+  for (const mode of surface.dismissal) {
+    const spec = DISMISSAL_PROP_SPECS[mode];
+    if (!spec) continue;
+    if (spec.prop && spec.runtimeToggleable) {
+      dismissalParts.push(
+        `options.${spec.prop}?.() !== false ? "${mode}" as const : null`,
+      );
+    } else {
+      dismissalParts.push(`"${mode}" as const`);
+    }
   }
   const dismissalExpr = dismissalParts.join(",\n      ");
+
+  const optionsInterfaceLines = surface.dismissal
+    .map((mode) => DISMISSAL_PROP_SPECS[mode])
+    .filter(
+      (spec): spec is DismissalPropSpec =>
+        spec !== undefined && spec.prop !== null,
+    )
+    .map((spec) => `  ${spec.prop}?: () => boolean | undefined;`);
 
   return [
     `// @generated:start imports`,
@@ -321,8 +404,7 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
     `  defaultOpen?: boolean;`,
     `  onOpenChange?: (open: boolean) => void;`,
     `  disabled?: () => boolean;`,
-    `  closeOnEscape?: () => boolean | undefined;`,
-    `  closeOnBlur?: () => boolean | undefined;`,
+    ...optionsInterfaceLines,
     `}`,
     ``,
     `export interface ${name}ContextValue {`,
