@@ -27,6 +27,7 @@ import type {
 import { hasChildrenPlaceholder } from "../../ir.js";
 import { translateNonReactType } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { resolveEventValueStrategy } from "../../semantics.js";
 import {
   isCompoundStateContainer,
   getInteractiveItemPart,
@@ -1138,46 +1139,42 @@ function renderSvelteBinding(
         if (!ch.defaultValueProp) return null;
         return `${attr}={${jsAccessorFor(ch.defaultValueProp)}}`;
       }
-      // onChange synthesis. Event-shaped channels pass the raw event
-      // through to the consumer; consumer drives state externally.
+      // onChange synthesis. The framework-neutral fact "how does this
+      // host expose the channel value to a DOM event listener" lives
+      // in `resolveEventValueStrategy` in semantics.ts — see
+      // docs/codegen-authority.md (ARCH-CODEGEN-AUTHORITY-001) for
+      // why this is shared semantics, not a Svelte-emitter local.
       const eventName = mapJsxEventToSvelteAttr(attr);
-      if (ch.callbackKind === "event") {
+      const strategy = resolveEventValueStrategy({
+        hostTag: hostTag ?? "",
+        channelValueType: ch.valueType,
+        callbackKind: ch.callbackKind === "event" ? "event" : "value",
+      });
+      if (strategy === "event") {
         return `${eventName}={${jsAccessorFor(ch.changeHandlerProp)}}`;
       }
       const setter = `set${capitalizeSvelte(ch.name)}`;
-      // Pick a TypeScript element type for the event target cast
-      // based on the host tag. Buttons (and other non-form controls)
-      // do NOT have `.checked` / `.value`; using HTMLInputElement on
-      // them is a svelte-check / tsc admission error
-      // (HTMLButtonElement → HTMLInputElement is not assignable).
-      // For boolean channels on a button-like host, the click is a
-      // toggle: dispatch !currentValue instead of reading .checked.
-      const hostTagName = (hostTag ?? "").toLowerCase();
-      const isFormControlHost =
-        hostTagName === "input" ||
-        hostTagName === "select" ||
-        hostTagName === "textarea";
-      if (ch.valueType === "boolean") {
-        if (!isFormControlHost) {
-          // Toggle pattern: button-like host fires click; emit the
-          // negation of the current channel value.
+      switch (strategy) {
+        case "checked":
+          return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLInputElement).checked)}`;
+        case "numberValue":
+          return `${eventName}={(e) => ${ctx.hookVar}.${setter}(Number((e.currentTarget as HTMLInputElement).value))}`;
+        case "value": {
+          // Form-control hosts have `.value` on HTMLInputElement;
+          // non-form-control hosts shim via a structural type so the
+          // emit stays admissible without claiming the host is an input.
+          const isFormControl =
+            ch.valueType === "string" || ch.valueType === "number"
+              ? hostTag === "input" || hostTag === "select" || hostTag === "textarea"
+              : false;
+          if (!isFormControl) {
+            return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLElement & { value?: string }).value ?? "")}`;
+          }
+          return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLInputElement).value)}`;
+        }
+        case "toggle":
           return `${eventName}={() => ${ctx.hookVar}.${setter}(!${ctx.hookVar}.${ch.name})}`;
-        }
-        return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLInputElement).checked)}`;
       }
-      if (ch.valueType === "number") {
-        if (!isFormControlHost) {
-          return `${eventName}={(e) => ${ctx.hookVar}.${setter}(Number((e.currentTarget as HTMLElement & { value?: string }).value ?? "0"))}`;
-        }
-        return `${eventName}={(e) => ${ctx.hookVar}.${setter}(Number((e.currentTarget as HTMLInputElement).value))}`;
-      }
-      if (ch.valueType === "string" || ch.valueType === undefined) {
-        if (!isFormControlHost) {
-          return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLElement & { value?: string }).value ?? "")}`;
-        }
-        return `${eventName}={(e) => ${ctx.hookVar}.${setter}((e.currentTarget as HTMLInputElement).value)}`;
-      }
-      return `${eventName}={(e) => ${ctx.hookVar}.${setter}(e as unknown as ${ch.valueType})}`;
     }
   }
 }
