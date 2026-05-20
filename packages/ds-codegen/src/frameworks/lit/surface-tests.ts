@@ -9,6 +9,7 @@
  * cleanup.
  */
 import type { ComponentIR } from "../../ir.js";
+import { isAnchoredPresenceKind } from "../../semantics.js";
 
 export function generateLitSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -17,10 +18,18 @@ export function generateLitSurfaceTest(ir: ComponentIR): string {
       `generateLitSurfaceTest called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
+  if (!isAnchoredPresenceKind(surface.kind)) {
     throw new Error(
-      `Lit surface test emitter only supports kind "tooltip" in F-2C-3 (got "${surface.kind}").`,
+      `Lit surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
+        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
     );
+  }
+  // Test-body shape is kind-specific (Tooltip's hover/focus contract
+  // vs Popover's click contract). Each kind has its own scaffold
+  // function; dispatch on kind here. Body emission is realization,
+  // not policy.
+  if (surface.kind === "popover") {
+    return emitPopoverTests(ir);
   }
   return emitTooltipTests(ir);
 }
@@ -335,6 +344,287 @@ describe("${name} — accessibility", () => {
 
   it("has no unexpected axe violations when open", async () => {
     const root = await mountTooltip({ withSlottedHost: true, defaultOpen: true });
+    const results = (await axe(root)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});`;
+
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    helpersBody,
+    ``,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Lit Popover test scaffold. Mirrors React/Vue/Svelte Popover atom
+ * coverage: contract-essential behavioral coverage (click opens,
+ * click toggles, Escape closes, outside-click closes, aria-controls
+ * + aria-expanded wiring, onOpenChange, disabled suppression,
+ * unmount cleanup) plus slot-based host adoption. Lit registers the
+ * anchor through `slot.assignedElements` capture, so the adopted
+ * <a> host receives DOM listeners directly from the substrate.
+ */
+function emitPopoverTests(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const rootTag = tagFor(name);
+  const triggerTag = `${rootTag}-trigger`;
+  const contentTag = `${rootTag}-content`;
+
+  const importsBody = [
+    `import { describe, it, expect, vi, afterEach } from "vitest";`,
+    `import { axe } from "vitest-axe";`,
+    `import "../${name}.js";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+    ``,
+    `async function settle(el: Element): Promise<void> {`,
+    `  await (el as Element & { updateComplete?: Promise<unknown> }).updateComplete;`,
+    `  await Promise.resolve();`,
+    `  await Promise.resolve();`,
+    `}`,
+  ].join("\n");
+
+  const helpersBody = `interface MountOptions {
+  defaultOpen?: boolean;
+  open?: boolean;
+  disabled?: boolean;
+  closeOnEscape?: boolean;
+  closeOnBlur?: boolean;
+  closeOnOutsideClick?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** When true, slot an <a href="#open"> as the consumer-rendered
+   *  host. Otherwise the default-host <button> path is exercised. */
+  withSlottedHost?: boolean;
+}
+
+async function mountPopover(opts: MountOptions = {}): Promise<HTMLElement> {
+  await Promise.all([
+    customElements.whenDefined("${rootTag}"),
+    customElements.whenDefined("${triggerTag}"),
+    customElements.whenDefined("${contentTag}"),
+  ]);
+  const root = document.createElement("${rootTag}") as HTMLElement;
+  const props = root as unknown as Record<string, unknown>;
+  if (opts.defaultOpen !== undefined) props.defaultOpen = opts.defaultOpen;
+  if (opts.open !== undefined) props.open = opts.open;
+  if (opts.disabled !== undefined) props.disabled = opts.disabled;
+  if (opts.closeOnEscape !== undefined) props.closeOnEscape = opts.closeOnEscape;
+  if (opts.closeOnBlur !== undefined) props.closeOnBlur = opts.closeOnBlur;
+  if (opts.closeOnOutsideClick !== undefined) props.closeOnOutsideClick = opts.closeOnOutsideClick;
+  if (opts.onOpenChange) props.onOpenChange = opts.onOpenChange;
+
+  const trigger = document.createElement("${triggerTag}") as HTMLElement;
+  trigger.setAttribute("data-testid", "trigger-wrapper");
+  if (opts.withSlottedHost) {
+    const a = document.createElement("a");
+    a.setAttribute("href", "#open");
+    a.setAttribute("data-testid", "slotted-host");
+    a.textContent = "Open";
+    trigger.appendChild(a);
+  }
+
+  const content = document.createElement("${contentTag}") as HTMLElement;
+  content.setAttribute("data-testid", "content");
+  content.textContent = "Body";
+
+  root.appendChild(trigger);
+  root.appendChild(content);
+  document.body.appendChild(root);
+
+  await settle(root);
+  await settle(trigger);
+  await settle(content);
+  return root;
+}
+
+function getAnchor(root: HTMLElement, withSlottedHost: boolean): HTMLElement {
+  if (withSlottedHost) {
+    return root.querySelector("[data-testid='slotted-host']") as HTMLElement;
+  }
+  const trigger = root.querySelector("${triggerTag}") as HTMLElement;
+  return trigger.shadowRoot!.querySelector("button") as HTMLElement;
+}
+
+function getContentEl(root: HTMLElement): HTMLElement | null {
+  const host = root.querySelector("${contentTag}") as HTMLElement;
+  return host.hasAttribute("data-${cssPrefix}-content") ? host : null;
+}
+
+afterEach(() => {
+  document.body.innerHTML = "";
+});`;
+
+  const testsBody = `describe("${name} — compound API surface (default-host)", () => {
+  it("renders the trigger but not the content when closed", async () => {
+    const root = await mountPopover();
+    expect(getAnchor(root, false)).toBeTruthy();
+    expect(getContentEl(root)).toBeNull();
+  });
+
+  it("renders the content when defaultOpen=true", async () => {
+    const root = await mountPopover({ defaultOpen: true });
+    const content = getContentEl(root);
+    expect(content).toBeTruthy();
+  });
+
+  it("opens on click of the default <button>", async () => {
+    const root = await mountPopover();
+    const anchor = getAnchor(root, false);
+    anchor.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeTruthy();
+  });
+
+  it("toggles closed on a second click of the default <button>", async () => {
+    const root = await mountPopover({ defaultOpen: true });
+    const anchor = getAnchor(root, false);
+    anchor.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeNull();
+  });
+
+  it("closes on Escape", async () => {
+    const root = await mountPopover({ defaultOpen: true });
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeNull();
+  });
+
+  it("closes on outside-click", async () => {
+    const root = await mountPopover({ defaultOpen: true });
+    document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeNull();
+  });
+
+  it("click on content does not count as outside-click", async () => {
+    const root = await mountPopover({ defaultOpen: true });
+    const content = getContentEl(root)!;
+    content.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeTruthy();
+  });
+
+  it("wires aria-controls + aria-expanded on the anchor when open", async () => {
+    const root = await mountPopover({ defaultOpen: true });
+    const anchor = getAnchor(root, false);
+    const content = getContentEl(root)!;
+    const id = content.getAttribute("id");
+    expect(id).toBeTruthy();
+    expect(anchor.getAttribute("aria-controls")).toBe(id);
+    expect(anchor.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("aria-expanded reflects closed state", async () => {
+    const root = await mountPopover();
+    const anchor = getAnchor(root, false);
+    expect(anchor.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("fires onOpenChange on uncontrolled open", async () => {
+    const spy = vi.fn();
+    const root = await mountPopover({ onOpenChange: spy });
+    const anchor = getAnchor(root, false);
+    anchor.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle(root);
+    expect(spy).toHaveBeenCalledWith(true);
+  });
+
+  it("respects disabled — click does not open", async () => {
+    const root = await mountPopover({ disabled: true });
+    const anchor = getAnchor(root, false);
+    anchor.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeNull();
+  });
+
+  it("controlled open prop overrides internal state", async () => {
+    const root = await mountPopover({ open: false });
+    const anchor = getAnchor(root, false);
+    anchor.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeNull();
+    (root as unknown as Record<string, unknown>).open = true;
+    await settle(root);
+    expect(getContentEl(root)).toBeTruthy();
+  });
+
+  it("closeOnEscape=false prevents Escape dismissal", async () => {
+    const root = await mountPopover({ defaultOpen: true, closeOnEscape: false });
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeTruthy();
+  });
+
+  it("closeOnOutsideClick=false prevents outside-click dismissal", async () => {
+    const root = await mountPopover({ defaultOpen: true, closeOnOutsideClick: false });
+    document.body.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeTruthy();
+  });
+
+  it("disconnecting the root removes document-level listeners", async () => {
+    const spy = vi.fn();
+    const root = await mountPopover({ defaultOpen: true, onOpenChange: spy });
+    root.remove();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("${name} — slot-based host adoption", () => {
+  it("captures the slotted <a> as the anchor", async () => {
+    const root = await mountPopover({ withSlottedHost: true });
+    const anchor = getAnchor(root, true);
+    expect(anchor.tagName).toBe("A");
+    expect(anchor.hasAttribute("data-${cssPrefix}-trigger")).toBe(true);
+  });
+
+  it("click on the slotted anchor opens the popover", async () => {
+    const root = await mountPopover({ withSlottedHost: true });
+    const anchor = getAnchor(root, true);
+    anchor.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle(root);
+    expect(getContentEl(root)).toBeTruthy();
+  });
+
+  it("aria-controls + aria-expanded wire to the slotted anchor when open", async () => {
+    const root = await mountPopover({ withSlottedHost: true, defaultOpen: true });
+    const anchor = getAnchor(root, true);
+    const content = getContentEl(root)!;
+    const id = content.getAttribute("id");
+    expect(id).toBeTruthy();
+    expect(anchor.getAttribute("aria-controls")).toBe(id);
+    expect(anchor.getAttribute("aria-expanded")).toBe("true");
+  });
+});
+
+describe("${name} — accessibility", () => {
+  it("has no unexpected axe violations when closed", async () => {
+    const root = await mountPopover({ withSlottedHost: true });
+    const results = (await axe(root)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+
+  it("has no unexpected axe violations when open", async () => {
+    const root = await mountPopover({ withSlottedHost: true, defaultOpen: true });
     const results = (await axe(root)) as unknown as { violations: Array<{ id: string }> };
     expect(results.violations.map((v) => v.id)).toEqual([]);
   });

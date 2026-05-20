@@ -1,29 +1,35 @@
 /**
  * Lit emitter — Anchored Presence Surface path.
  *
- * Activated when `ir.surface?.kind === "tooltip"` (and, after F-3,
- * other anchored kinds). Emits a single `${Name}.ts` file containing
- * three custom-element classes plus their `customElements.define`
- * registrations, and a separate `${Name}Behavior.ts` file with the
- * substrate composable.
+ * Activated for any contract whose IR has a `surface` block of an
+ * anchored-presence kind (Tooltip, Popover, ...). Surface kind
+ * eligibility is decided by `isAnchoredPresenceKind` in shared
+ * semantics, and per-kind policy (`AnchoredSurfacePolicy`) drives
+ * default content role and public dismissal props. This emitter
+ * MUST NOT branch on component identity or on `surface.kind` for
+ * any rule that could be expressed by the policy.
  *
- *   <fsds-tooltip>
- *     <fsds-tooltip-trigger>
- *       <button>Save</button>          <!-- consumer-rendered host -->
- *     </fsds-tooltip-trigger>
- *     <fsds-tooltip-content>Save the document</fsds-tooltip-content>
- *   </fsds-tooltip>
+ * Emits a single `${Name}.ts` file containing three custom-element
+ * classes plus their `customElements.define` registrations, and a
+ * separate `${Name}Behavior.ts` file with the substrate composable.
+ *
+ *   <fsds-popover>
+ *     <fsds-popover-trigger>
+ *       <button>Open</button>          <!-- consumer-rendered host -->
+ *     </fsds-popover-trigger>
+ *     <fsds-popover-content>Body</fsds-popover-content>
+ *   </fsds-popover>
  *
  * Host adoption is **slot-assignment based**, the Lit-native idiom.
- * The TooltipTrigger element exposes a default `<slot>` in its shadow
- * root. When the consumer slots a host element (e.g. a `<button>` or
- * `<a>`) into TooltipTrigger, a `slotchange` listener captures the
- * first assigned element via `slot.assignedElements({ flatten: true })`
- * and passes it to the substrate via `setAnchor`. The substrate
- * installs DOM listeners (pointerenter, focus, etc.) directly on that
- * consumer-owned element and writes ARIA attributes via setAttribute.
+ * The Trigger element exposes a default `<slot>` in its shadow root.
+ * When the consumer slots a host element (e.g. a `<button>` or `<a>`)
+ * into the Trigger, a `slotchange` listener captures the first
+ * assigned element via `slot.assignedElements({ flatten: true })` and
+ * passes it to the substrate via `setAnchor`. The substrate installs
+ * DOM listeners directly on that consumer-owned element and writes
+ * ARIA attributes via setAttribute.
  *
- * If no element is slotted, TooltipTrigger falls back to rendering a
+ * If no element is slotted, the Trigger falls back to rendering a
  * default `<button>` host inside its shadow root.
  *
  * No "asChild" prop, no separate adoption type. The slot's presence/
@@ -35,6 +41,12 @@
  * entirely — this is forward-facing replacement, not augmentation.
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
+import {
+  isAnchoredPresenceKind,
+  resolveAnchoredSurfacePolicy,
+  type AnchoredSurfacePolicy,
+  type PublicDismissalProp,
+} from "../../semantics.js";
 
 export interface LitSurfaceFiles {
   componentFile: string;
@@ -42,7 +54,7 @@ export interface LitSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined;
+  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
 }
 
 export function generateLitSurfaceFiles(ir: ComponentIR): LitSurfaceFiles {
@@ -52,13 +64,9 @@ export function generateLitSurfaceFiles(ir: ComponentIR): LitSurfaceFiles {
       `generateLitSurfaceFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
-    throw new Error(
-      `Lit surface emitter only supports kind "tooltip" in F-2C-3 (got "${surface.kind}").`,
-    );
-  }
+  const policy = resolveAnchoredSurfacePolicy(surface);
   return {
-    componentFile: emitComponentFile(ir, surface),
+    componentFile: emitComponentFile(ir, surface, policy),
     behaviorFile: emitBehaviorFile(ir, surface),
   };
 }
@@ -69,14 +77,27 @@ function tagFor(name: string): string {
   return `fsds-${name.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, "")}`;
 }
 
-function emitComponentFile(ir: ComponentIR, surface: SurfaceIR): string {
+function camelToKebab(name: string): string {
+  // Used for Lit `@property({ attribute: "..." })` — the HTML
+  // attribute form must be kebab-case (closeOnEscape → close-on-escape).
+  return name.replace(/([A-Z])/g, "-$1").toLowerCase();
+}
+
+function emitComponentFile(
+  ir: ComponentIR,
+  surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const rootTag = tagFor(name);
   const triggerTag = `${rootTag}-trigger`;
   const contentTag = `${rootTag}-content`;
   const contextName = `${name}Surface`;
-  const contentRole = surface.content?.part.details?.aria?.role ?? "tooltip";
+  // Policy-derived default content role. Shared semantics owns the
+  // tooltip→"tooltip", popover→null rule (and the contract-override
+  // path).
+  const contentRole = policy.defaultContentRole;
   const placementValues = ir.variants["placement"];
   const placementTypeAlias = placementValues
     ? `export type ${name}Placement = ${placementValues.map((v) => `"${v}"`).join(" | ")};\n`
@@ -116,7 +137,7 @@ function emitComponentFile(ir: ComponentIR, surface: SurfaceIR): string {
     `let _surfaceIdCounter = 0;`,
     `// @generated:end`,
     ``,
-    emitRootClass(ir, surface, { name, cssPrefix, rootTag, contextName, placementValues }),
+    emitRootClass(ir, surface, policy, { name, cssPrefix, rootTag, contextName, placementValues }),
     ``,
     emitTriggerClass(ir, surface, { name, cssPrefix, triggerTag, contextName }),
     ``,
@@ -146,23 +167,41 @@ interface RootCtx {
 function emitRootClass(
   _ir: ComponentIR,
   surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
   c: RootCtx,
 ): string {
   const { name, cssPrefix, contextName, placementValues } = c;
-  const dismissalParts: string[] = [];
-  if (surface.dismissal.includes("escape")) {
-    dismissalParts.push(`this.closeOnEscape !== false ? "escape" as const : null`);
-  }
-  if (surface.dismissal.includes("blur")) {
-    dismissalParts.push(`this.closeOnBlur !== false ? "blur" as const : null`);
-  }
-  if (surface.dismissal.includes("pointer-leave")) {
-    dismissalParts.push(`"pointer-leave" as const`);
-  }
-  if (surface.dismissal.includes("outside-click")) {
-    dismissalParts.push(`"outside-click" as const`);
-  }
+
+  // Policy-derived dismissal-array assembly. For each declared
+  // dismissal mode:
+  //   - public + runtime-toggleable modes (escape, blur,
+  //     outside-click) gate behind `this.${closeOnProp} !== false`
+  //     so toggling the property at runtime triggers a re-mount.
+  //   - internal-only modes (pointer-leave, ...) are always-on.
+  const dismissalParts = policy.publicDismissalProps.map((spec) =>
+    spec.prop && spec.runtimeToggleable
+      ? `this.${spec.prop} !== false ? "${spec.mode}" as const : null`
+      : `"${spec.mode}" as const`,
+  );
   const dismissalExpr = dismissalParts.join(",\n      ");
+
+  // Policy-derived `@property` declarations for the consumer-facing
+  // dismissal flags. Only modes whose prop is non-null surface as a
+  // public property.
+  const dismissalProps = policy.publicDismissalProps.filter(
+    (spec): spec is PublicDismissalProp & { prop: string } =>
+      spec.prop !== null,
+  );
+  const closeOnPropertyLines = dismissalProps.map(
+    (spec) =>
+      `  @property({ type: Boolean, attribute: "${camelToKebab(spec.prop)}" }) ${spec.prop}?: boolean;`,
+  );
+  // `updated()` calls requestRemount when any runtime-toggleable
+  // dismissal flag changes, so the controller picks up the new array.
+  const requestRemountChangedExpr = dismissalProps
+    .filter((spec) => spec.runtimeToggleable)
+    .map((spec) => `_changed.has("${spec.prop}")`)
+    .join(" || ");
 
   const openTriggers = JSON.stringify(surface.openTriggers);
 
@@ -178,8 +217,7 @@ function emitRootClass(
       ? `  @property({ type: String }) placement?: ${name}Placement;`
       : "",
     `  @property({ type: Boolean }) disabled?: boolean;`,
-    `  @property({ type: Boolean, attribute: "close-on-escape" }) closeOnEscape?: boolean;`,
-    `  @property({ type: Boolean, attribute: "close-on-blur" }) closeOnBlur?: boolean;`,
+    ...closeOnPropertyLines,
     ``,
     `  /** Uncontrolled open state. Used as the fallback when no`,
     `   *  controlled \`open\` prop is set. Not seeded via onOpenChange`,
@@ -237,11 +275,16 @@ function emitRootClass(
     ``,
     `  override updated(_changed: PropertyValues): void {`,
     `    this._provideContext();`,
-    `    // closeOnEscape / closeOnBlur are read by the controller via`,
-    `    // the dismissal getter; force a re-install when either flips.`,
-    `    if (_changed.has("closeOnEscape") || _changed.has("closeOnBlur")) {`,
-    `      this._surfaceController.requestRemount();`,
-    `    }`,
+    `    // Public + runtime-toggleable dismissal props are read by the`,
+    `    // controller via the dismissal getter; force a re-install`,
+    `    // when any of them changes so the new array takes effect.`,
+    requestRemountChangedExpr
+      ? `    if (${requestRemountChangedExpr}) {`
+      : null,
+    requestRemountChangedExpr
+      ? `      this._surfaceController.requestRemount();`
+      : null,
+    requestRemountChangedExpr ? `    }` : null,
     `  }`,
     ``,
     `  private _provideContext(): void {`,
@@ -281,7 +324,7 @@ function emitRootClass(
     `}`,
     `// @generated:end`,
   ]
-    .filter((line) => line !== "")
+    .filter((line): line is string => line !== "" && line !== null)
     .join("\n");
 }
 
@@ -430,7 +473,10 @@ interface ContentCtx {
   cssPrefix: string;
   contentTag: string;
   contextName: string;
-  contentRole: string;
+  /** Policy-derived default ARIA role for the content host. `null`
+   *  for surface kinds (e.g. popover) that should not carry a
+   *  default role; in that case no role attribute is reflected. */
+  contentRole: string | null;
 }
 
 function emitContentClass(
@@ -439,6 +485,15 @@ function emitContentClass(
   c: ContentCtx,
 ): string {
   const { name, cssPrefix, contentRole, contextName } = c;
+  // Role-reflection branches: policy.defaultContentRole=null means
+  // no role attribute is set or cleared. Popover and other
+  // interactive surfaces omit role entirely.
+  const setRoleLine =
+    contentRole !== null
+      ? `      this.setAttribute("role", "${contentRole}");`
+      : null;
+  const clearRoleLine =
+    contentRole !== null ? `      this.removeAttribute("role");` : null;
   return [
     `// @generated:start content-class`,
     `export class ${name}ContentElement extends LitElement {`,
@@ -481,11 +536,11 @@ function emitContentClass(
     `    // so they apply to the same node the substrate registered.`,
     `    if (ctx.open()) {`,
     `      this.setAttribute("id", ctx.contentId);`,
-    `      this.setAttribute("role", "${contentRole}");`,
+    setRoleLine,
     `      this.setAttribute("data-${cssPrefix}-content", "");`,
     `    } else {`,
     `      this.removeAttribute("id");`,
-    `      this.removeAttribute("role");`,
+    clearRoleLine,
     `      this.removeAttribute("data-${cssPrefix}-content");`,
     `    }`,
     `  }`,
@@ -497,7 +552,9 @@ function emitContentClass(
     `  }`,
     `}`,
     `// @generated:end`,
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
 }
 
 function emitBehaviorFile(ir: ComponentIR, _surface: SurfaceIR): string {

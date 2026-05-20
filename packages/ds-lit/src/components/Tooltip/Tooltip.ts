@@ -92,8 +92,9 @@ export class TooltipElement extends LitElement {
   }
   override updated(_changed: PropertyValues): void {
     this._provideContext();
-    // closeOnEscape / closeOnBlur are read by the controller via
-    // the dismissal getter; force a re-install when either flips.
+    // Public + runtime-toggleable dismissal props are read by the
+    // controller via the dismissal getter; force a re-install
+    // when any of them changes so the new array takes effect.
     if (_changed.has("closeOnEscape") || _changed.has("closeOnBlur")) {
       this._surfaceController.requestRemount();
     }
