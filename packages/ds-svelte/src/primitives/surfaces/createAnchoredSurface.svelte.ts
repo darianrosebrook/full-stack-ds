@@ -10,6 +10,16 @@ import type {
   SurfaceOpenTrigger,
 } from "./SurfaceController";
 
+/**
+ * Per-kind data marker placed on the trigger element so consumers can
+ * select for "any tooltip trigger" / "any popover trigger" in CSS or
+ * test harnesses. Always shaped `data-<kind>-trigger` so the surface
+ * IR's cssPrefix is the single source of truth for the identifier.
+ * The template-literal type forces callers to construct the marker
+ * from a literal prefix instead of an arbitrary string.
+ */
+export type SurfaceDataMarker = `data-${string}-trigger`;
+
 export interface CreateAnchoredSurfaceOptions {
   /** Getter returning the current controlled open value, or undefined
    *  when uncontrolled. Svelte convention: callers pass `() => props.open`
@@ -23,13 +33,21 @@ export interface CreateAnchoredSurfaceOptions {
   disabled?: () => boolean;
   /** Optional override for the content id. Defaults to a unique id. */
   idBase?: string;
+  /** Per-kind data marker emitted on the trigger element. Derived
+   *  from the surface IR's cssPrefix at codegen time (e.g.
+   *  `data-tooltip-trigger`, `data-popover-trigger`). */
+  dataMarker: SurfaceDataMarker;
 }
 
 export interface SurfaceTriggerHandlers {
   onpointerenter?: (event: PointerEvent) => void;
   onpointerleave?: (event: PointerEvent) => void;
   onfocus?: (event: FocusEvent) => void;
-  onblur?: (event: FocusEvent) => void;
+  /** Boundary-focusout listener used in handler/adoption mode. Fires
+   *  on `focusout` (which bubbles), so a single listener on the anchor
+   *  catches focus leaving any descendant; the substrate's
+   *  `isInsideSurface` predicate then decides whether to dismiss. */
+  onfocusout?: (event: FocusEvent) => void;
   onclick?: (event: MouseEvent) => void;
 }
 
@@ -39,9 +57,13 @@ export interface SurfaceTriggerHandlers {
  * `action` (see `SurfaceTriggerBinding`) — applying only `attrs` is
  * a contract violation because the substrate will never be told which
  * element became the anchor.
+ *
+ * The `data-<kind>-trigger` key is per-surface (see `SurfaceDataMarker`)
+ * and is rendered via an index signature so different surface kinds
+ * can share this shape without one kind's marker leaking into another.
  */
 export interface SurfaceTriggerAttrs extends SurfaceTriggerHandlers {
-  "data-tooltip-trigger": "";
+  [dataMarker: SurfaceDataMarker]: "";
   "aria-describedby"?: string;
   "aria-controls"?: string;
   "aria-expanded"?: boolean;
@@ -101,7 +123,7 @@ export interface CreateAnchoredSurfaceResult {
    *  Used by the snippet adoption path. */
   getTriggerHandlers: () => SurfaceTriggerHandlers;
   /** Returns the host-adoption props (`action` + `attrs`). The
-   *  generated TooltipTrigger passes this single object into its
+   *  generated `<Surface>Trigger` passes this single object into its
    *  `child` snippet so consumers can apply `use:trigger.action`
    *  and `{...trigger.attrs}` explicitly. See `SurfaceTriggerProps`
    *  doc for the atomicity contract. */
@@ -112,8 +134,9 @@ let surfaceIdCounter = 0;
 
 /**
  * Internal substrate for anchored surfaces. The generated
- * `useTooltip.svelte.ts` calls this from inside `<script>` so the
- * Svelte component lifecycle owns teardown.
+ * `use<Surface>.svelte.ts` (e.g. `useTooltip`, `usePopover`) calls
+ * this from inside `<script>` so the Svelte component lifecycle owns
+ * teardown.
  */
 export function createAnchoredSurface(
   options: CreateAnchoredSurfaceOptions,
@@ -190,6 +213,14 @@ export function createAnchoredSurface(
     remount();
   }
 
+  function isInsideSurface(node: EventTarget | null): boolean {
+    if (!(node instanceof Node)) return false;
+    return Boolean(
+      (anchorNode && anchorNode.contains(node)) ||
+        (contentNode && contentNode.contains(node)),
+    );
+  }
+
   function getTriggerHandlers(): SurfaceTriggerHandlers {
     const handlers: SurfaceTriggerHandlers = {};
     const triggers = options.openTriggers();
@@ -221,9 +252,14 @@ export function createAnchoredSurface(
       };
     }
     if (dismissal.includes("blur")) {
-      handlers.onblur = (event) => {
-        const next = event.relatedTarget as Node | null;
-        if (next && contentNode && contentNode.contains(next)) return;
+      // Boundary semantics: focus leaving the anchor ∪ content surface
+      // dismisses. `focusout` bubbles, so a single listener on the
+      // adopted trigger catches focus leaving any descendant. Focus
+      // moving from anchor INTO content (or staying within content)
+      // is treated as staying inside the surface.
+      handlers.onfocusout = (event) => {
+        if (!open()) return;
+        if (isInsideSurface(event.relatedTarget)) return;
         closeSurface();
       };
     }
@@ -263,7 +299,7 @@ export function createAnchoredSurface(
       ariaProps["aria-labelledby"] = contentId;
     }
     const attrs: SurfaceTriggerAttrs = {
-      "data-tooltip-trigger": "",
+      [options.dataMarker]: "",
       ...ariaProps,
       ...handlers,
     };
@@ -289,10 +325,10 @@ export function createAnchoredSurface(
   };
 }
 
-// Context bridge: generated useTooltip.svelte.ts will call
-// `createAnchoredSurfaceContext` to set + retrieve the surface object
-// for compound components. Kept here so all three frameworks have the
-// same factory shape.
+// Context bridge: generated use<Surface>.svelte.ts (useTooltip,
+// usePopover, ...) calls these helpers to set + retrieve the
+// surface object for compound components. Kept here so all three
+// frameworks have the same factory shape.
 const SURFACE_CONTEXT_PREFIX = "fsds-surface:";
 
 export function provideSurfaceContext(

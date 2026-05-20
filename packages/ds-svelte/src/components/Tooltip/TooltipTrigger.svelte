@@ -56,7 +56,14 @@ $effect(() => {
 // spread as Svelte handlers).
 const defaultHostBindings = $derived.by(() => {
   const { attrs } = ctx.getTriggerProps();
-  const { onpointerenter, onpointerleave, onfocus, onblur, onclick, ...rest } = attrs;
+  const {
+    onpointerenter,
+    onpointerleave,
+    onfocus,
+    onfocusout,
+    onclick,
+    ...rest
+  } = attrs;
   return rest;
 });
 // @generated:end

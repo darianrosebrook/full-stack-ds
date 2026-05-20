@@ -219,7 +219,14 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `// spread as Svelte handlers).`,
     `const defaultHostBindings = $derived.by(() => {`,
     `  const { attrs } = ctx.getTriggerProps();`,
-    `  const { onpointerenter, onpointerleave, onfocus, onblur, onclick, ...rest } = attrs;`,
+    `  const {`,
+    `    onpointerenter,`,
+    `    onpointerleave,`,
+    `    onfocus,`,
+    `    onfocusout,`,
+    `    onclick,`,
+    `    ...rest`,
+    `  } = attrs;`,
     `  return rest;`,
     `});`,
     `// @generated:end`,
@@ -302,6 +309,7 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
 
 function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
   const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
   const alwaysOn = surface.dismissal
@@ -364,6 +372,7 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
     `    dismissal,`,
     `    anchorRelation: "${anchorRelation}",`,
     `    disabled: options.disabled,`,
+    `    dataMarker: "data-${cssPrefix}-trigger",`,
     `  });`,
     `}`,
     ``,

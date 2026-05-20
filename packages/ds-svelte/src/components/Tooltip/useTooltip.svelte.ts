@@ -43,6 +43,7 @@ export function useTooltip(options: UseTooltipOptions): CreateAnchoredSurfaceRes
     dismissal,
     anchorRelation: "describedby",
     disabled: options.disabled,
+    dataMarker: "data-tooltip-trigger",
   });
 }
 

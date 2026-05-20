@@ -142,8 +142,8 @@ This inventory was produced as part of CODEGEN-SEMANTIC-AUTHORITY-01. It documen
 | Rule | Lives in | Source fact | Applies by |
 |---|---|---|---|
 | `composeRefs` / `composeEventHandlers` | React substrate | React grammar (ref + synthetic event composition) | React language |
-| `isInsideSurface(anchor ∪ content)` boundary predicate | React + Vue substrates | DOM focus semantics | Surface anatomy |
-| `SurfaceDataMarker` template-literal type | Vue substrate | Contract `cssPrefix` | Surface emit |
+| `isInsideSurface(anchor ∪ content)` boundary predicate | React + Vue + Svelte substrates | DOM focus semantics | Surface anatomy |
+| `SurfaceDataMarker` template-literal type | Vue + Svelte substrates | Contract `cssPrefix` | Surface emit |
 | `AnchoredSurfacePolicy` + `resolveAnchoredSurfacePolicy` | Shared `semantics.ts` | Contract `surface.{kind, dismissal, content}` | Surface kind |
 | `isAnchoredPresenceKind` | Shared `semantics.ts` | Contract `surface.kind` | Surface kind |
 | `EventValueStrategy` + `resolveEventValueStrategy` | Shared `semantics.ts` | Host capability + channel valueType + callback kind | Event extraction site |

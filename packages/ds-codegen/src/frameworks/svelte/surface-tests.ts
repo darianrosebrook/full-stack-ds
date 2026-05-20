@@ -196,11 +196,20 @@ describe("${name} — compound API surface", () => {
     expect(container.querySelector("[data-testid='content']")).toBeNull();
   });
 
-  it("closes on blur from the trigger", async () => {
+  it("closes on focus leaving the surface boundary (focusout)", async () => {
+    // Boundary semantics: the substrate listens via focusout
+    // (which bubbles, unlike blur) for focus leaving the anchor +
+    // content surface. Focus moving from anchor to an outside node
+    // dismisses; focus moving from anchor INTO content does not.
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    trigger.dispatchEvent(new FocusEvent("blur", { bubbles: true, relatedTarget: document.body }));
+    trigger.dispatchEvent(
+      new FocusEvent("focusout", {
+        bubbles: true,
+        relatedTarget: document.body,
+      }),
+    );
     await tick();
     expect(container.querySelector("[data-testid='content']")).toBeNull();
   });
@@ -281,11 +290,16 @@ describe("${name} — compound API surface", () => {
     expect(container.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
-  it("closeOnBlur={false} prevents blur dismissal", async () => {
+  it("closeOnBlur={false} prevents boundary-focusout dismissal", async () => {
     const { container } = mountDefault({ defaultOpen: true, closeOnBlur: false });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    trigger.dispatchEvent(new FocusEvent("blur", { bubbles: true, relatedTarget: document.body }));
+    trigger.dispatchEvent(
+      new FocusEvent("focusout", {
+        bubbles: true,
+        relatedTarget: document.body,
+      }),
+    );
     await tick();
     expect(container.querySelector("[data-testid='content']")).toBeTruthy();
   });
