@@ -140,11 +140,15 @@ describe("${name} — compound API surface (default-host)", () => {
     expect(getContentEl(host)).toBeNull();
   });
 
-  it("closes on blur from the anchor", async () => {
+  it("closes on focus leaving the surface boundary (focusout)", async () => {
+    // Boundary semantics: the substrate listens via focusout
+    // (which bubbles, unlike blur) for focus leaving the anchor +
+    // content surface. Focus moving from anchor to an outside node
+    // dismisses; focus moving from anchor INTO content does not.
     const fixture = mount((c) => { c.defaultOpen = true; });
     const host = fixture.nativeElement as HTMLElement;
     const anchor = getAnchor(host, false);
-    anchor.dispatchEvent(new FocusEvent("blur", { bubbles: true, relatedTarget: document.body }));
+    anchor.dispatchEvent(new FocusEvent("focusout", { bubbles: true, relatedTarget: document.body }));
     await settle();
     fixture.detectChanges();
     expect(getContentEl(host)).toBeNull();
@@ -236,11 +240,11 @@ describe("${name} — compound API surface (default-host)", () => {
     expect(getContentEl(host)).toBeTruthy();
   });
 
-  it("closeOnBlur=false prevents blur dismissal", async () => {
+  it("closeOnBlur=false prevents boundary-focusout dismissal", async () => {
     const fixture = mount((c) => { c.defaultOpen = true; c.closeOnBlur = false; });
     const host = fixture.nativeElement as HTMLElement;
     const anchor = getAnchor(host, false);
-    anchor.dispatchEvent(new FocusEvent("blur", { bubbles: true, relatedTarget: document.body }));
+    anchor.dispatchEvent(new FocusEvent("focusout", { bubbles: true, relatedTarget: document.body }));
     await settle();
     fixture.detectChanges();
     expect(getContentEl(host)).toBeTruthy();
