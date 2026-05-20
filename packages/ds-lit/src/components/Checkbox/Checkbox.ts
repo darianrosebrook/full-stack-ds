@@ -20,13 +20,13 @@ export type CheckboxSize = "sm" | "md" | "lg";
 export class CheckboxElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() size?: CheckboxSize = "md";
+  @property({ attribute: false }) size?: CheckboxSize = "md";
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
   @property({ type: Boolean }) indeterminate?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
-  @property() name?: string;
-  @property() value?: string;
+  @property({ type: String }) name?: string;
+  @property({ type: String }) value?: string;
   @property({ attribute: false }) onChange?: (value: boolean) => void;
 
   private behavior = new CheckboxBehavior(this, {
@@ -49,7 +49,7 @@ export class CheckboxElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" ?checked=${this.behavior.checked} @change=${(e: Event) => this.handleCheckedChange(e)} ?disabled=${this.disabled} />`;
+    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" ?checked=${this.behavior.checked} @change=${(e: Event) => this.handleCheckedChange(e)} ?disabled=${this.disabled ?? false} />`;
   }
 }
 

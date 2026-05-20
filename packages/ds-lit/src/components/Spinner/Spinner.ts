@@ -21,12 +21,12 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 export class SpinnerElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() size?: SpinnerSize;
-  @property() variant?: SpinnerVariant;
-  @property() thickness?: SpinnerThickness;
+  @property({ attribute: false }) size?: SpinnerSize;
+  @property({ attribute: false }) variant?: SpinnerVariant;
+  @property({ attribute: false }) thickness?: SpinnerThickness;
   @property({ attribute: 'aria-hidden', reflect: true })
   override ariaHidden: string | null = null;
-  @property() label?: string;
+  @property({ type: String }) label?: string;
   @property({ type: Boolean }) inline?: boolean;
   @property({ type: Number }) showAfterMs?: number;
 

@@ -19,7 +19,7 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 export class IconElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() icon!: IconDefinition;
+  @property({ attribute: false }) icon!: IconDefinition;
   @property({ type: Number }) width?: number = 20;
   @property({ type: Number }) height?: number = 20;
 

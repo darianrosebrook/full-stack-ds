@@ -21,10 +21,10 @@ export type BadgeSize = "sm" | "md" | "lg";
 export class BadgeElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() variant?: BadgeVariant;
-  @property() intent?: BadgeIntent;
-  @property() size?: BadgeSize;
-  @property() icon?: unknown;
+  @property({ attribute: false }) variant?: BadgeVariant;
+  @property({ attribute: false }) intent?: BadgeIntent;
+  @property({ attribute: false }) size?: BadgeSize;
+  @property({ attribute: false }) icon?: unknown;
   @property({ type: Boolean }) showStatusIcon?: boolean;
 
   private computeClasses(): string {

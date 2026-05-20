@@ -19,7 +19,7 @@ import { property } from 'lit/decorators.js';
 export class PageTransitionElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() transitionName?: string;
+  @property({ type: String }) transitionName?: string;
   @property({ type: Number }) duration?: number;
   @property({ type: Boolean }) enabled?: boolean = true;
 

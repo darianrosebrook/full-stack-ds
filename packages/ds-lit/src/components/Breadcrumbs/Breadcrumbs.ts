@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +22,7 @@ export class BreadcrumbsElement extends LitElement {
 
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
-  @property() separator?: string;
+  @property({ type: String }) separator?: string;
 
   private computeClasses(): string {
     return [
@@ -30,7 +31,7 @@ export class BreadcrumbsElement extends LitElement {
   }
 
   override render() {
-    return html`<nav class="${this.computeClasses()}" aria-label=${this.ariaLabel}>
+    return html`<nav class="${this.computeClasses()}" aria-label=${ifDefined(this.ariaLabel ?? undefined)}>
   <ol class=${'breadcrumbs__list'}>
     <slot></slot>
   </ol>

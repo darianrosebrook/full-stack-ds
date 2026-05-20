@@ -20,9 +20,9 @@ export type AccordionType = "single" | "multiple";
 export class AccordionElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() type?: AccordionType = "single";
-  @property() value?: string | string[];
-  @property() defaultValue?: string | string[];
+  @property({ attribute: false }) type?: AccordionType = "single";
+  @property({ attribute: false }) value?: string | string[];
+  @property({ attribute: false }) defaultValue?: string | string[];
   @property({ type: Boolean }) collapsible?: boolean = false;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: false }) onValueChange?: (value: string | string[]) => void;

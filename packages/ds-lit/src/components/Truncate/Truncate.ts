@@ -24,8 +24,8 @@ export class TruncateElement extends LitElement {
   @property({ type: Boolean }) expandable?: boolean;
   @property({ type: Boolean }) expanded?: boolean;
   @property({ type: Boolean }) defaultExpanded?: boolean;
-  @property() expandText?: string = "Show more";
-  @property() collapseText?: string = "Show less";
+  @property({ type: String }) expandText?: string = "Show more";
+  @property({ type: String }) collapseText?: string = "Show less";
   @property({ attribute: false }) onExpandedChange?: (value: boolean) => void;
 
   private behavior = new TruncateBehavior(this, {

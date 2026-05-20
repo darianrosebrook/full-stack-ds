@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -20,10 +21,10 @@ export type LinkSize = "small" | "medium" | "large";
 export class LinksElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() href?: string;
-  @property() target?: LinkTarget;
-  @property() rel?: string;
-  @property() size?: LinkSize;
+  @property({ type: String }) href?: string;
+  @property({ attribute: false }) target?: LinkTarget;
+  @property({ type: String }) rel?: string;
+  @property({ attribute: false }) size?: LinkSize;
   @property({ type: Boolean }) disabled?: boolean;
 
   private computeClasses(): string {
@@ -35,7 +36,7 @@ export class LinksElement extends LitElement {
   }
 
   override render() {
-    return html`<a class="${this.computeClasses()}" .href=${this.href} .target=${this.target} .rel=${this.rel}>
+    return html`<a class="${this.computeClasses()}" href=${ifDefined(this.href)} target=${ifDefined(this.target)} rel=${ifDefined(this.rel)}>
   <slot></slot>
 </a>`;
   }

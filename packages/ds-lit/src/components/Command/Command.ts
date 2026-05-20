@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { CommandBehavior } from './CommandBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -22,13 +23,13 @@ export class CommandElement extends LitElement {
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
-  @property() search?: string;
-  @property() defaultSearch?: string;
-  @property() placeholder?: string = "Search...";
-  @property() emptyMessage?: string = "No results found.";
-  @property() label?: string = "Command palette";
+  @property({ type: String }) search?: string;
+  @property({ type: String }) defaultSearch?: string;
+  @property({ type: String }) placeholder?: string = "Search...";
+  @property({ type: String }) emptyMessage?: string = "No results found.";
+  @property({ type: String }) label?: string = "Command palette";
   @property({ type: Boolean }) shouldFilter?: boolean = true;
-  @property({ type: Number }) filter?: ((value: string, search: string) => number) | undefined;
+  @property({ attribute: false }) filter?: ((value: string, search: string) => number) | undefined;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
   @property({ attribute: false }) onSearchChange?: (value: string) => void;
 
@@ -71,10 +72,10 @@ export class CommandElement extends LitElement {
   <div class=${'command__overlay'} aria-hidden="true" data-fsds-channel-renders="open"></div>
   ` : nothing}
   ${this.behavior.open ? html`
-  <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${this.label} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${ifDefined(this.label)} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'command__inputWrapper'}>
       <span class=${'command__searchIcon'} aria-hidden="true"></span>
-      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} .placeholder=${this.placeholder} .value=${this.behavior.search} @change=${(e: Event) => this.handleSearchChange(e)} />
+      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} placeholder=${ifDefined(this.placeholder)} .value=${this.behavior.search} @change=${(e: Event) => this.handleSearchChange(e)} />
     </div>
     <div class=${'command__list'} role="listbox" id="fsds-command-listbox">
       <div class=${'command__empty'}></div>

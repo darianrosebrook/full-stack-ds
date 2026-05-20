@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { SwitchBehavior } from './SwitchBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -22,10 +23,10 @@ export class SwitchElement extends LitElement {
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
-  @property() size?: SwitchSize = "md";
+  @property({ attribute: false }) size?: SwitchSize = "md";
   @property({ type: Boolean }) disabled?: boolean;
-  @property() name?: string;
-  @property() value?: string;
+  @property({ type: String }) name?: string;
+  @property({ type: String }) value?: string;
   @property({ attribute: false }) onChange?: (value: boolean) => void;
 
   private behavior = new SwitchBehavior(this, {
@@ -49,7 +50,7 @@ export class SwitchElement extends LitElement {
 
   override render() {
     return html`<label class="${this.computeClasses()}">
-  <input class=${'switch__input'} type="checkbox" role="switch" ?checked=${this.behavior.checked} @change=${(e: Event) => this.handleCheckedChange(e)} ?disabled=${this.disabled} .name=${this.name} .value=${this.value} />
+  <input class=${'switch__input'} type="checkbox" role="switch" ?checked=${this.behavior.checked} @change=${(e: Event) => this.handleCheckedChange(e)} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} />
   <span class=${'switch__track'} aria-hidden="true">
     <span class=${'switch__thumb'}></span>
   </span>

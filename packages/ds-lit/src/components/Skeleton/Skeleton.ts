@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -23,13 +24,13 @@ export type SkeletonRadius = "sm" | "md" | "lg";
 export class SkeletonElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() variant?: SkeletonVariant = "block";
+  @property({ attribute: false }) variant?: SkeletonVariant = "block";
   @property({ attribute: 'animate' })
   _animate?: SkeletonAnimate = "shimmer";
-  @property() density?: SkeletonDensity = "regular";
-  @property() aspectRatio?: string;
-  @property() lines?: SkeletonLines;
-  @property() radius?: SkeletonRadius;
+  @property({ attribute: false }) density?: SkeletonDensity = "regular";
+  @property({ type: String }) aspectRatio?: string;
+  @property({ attribute: false }) lines?: SkeletonLines;
+  @property({ attribute: false }) radius?: SkeletonRadius;
   @property({ type: Boolean }) decorative?: boolean = true;
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
@@ -44,7 +45,7 @@ export class SkeletonElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-busy="true" role="status" aria-label=${this.ariaLabel}></div>`;
+    return html`<div class="${this.computeClasses()}" aria-busy="true" role="status" aria-label=${ifDefined(this.ariaLabel ?? undefined)}></div>`;
   }
 }
 

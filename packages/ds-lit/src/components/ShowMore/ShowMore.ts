@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ShowMoreBehavior } from './ShowMoreBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -23,8 +24,8 @@ export class ShowMoreElement extends LitElement {
   @property({ type: Boolean }) expanded?: boolean;
   @property({ type: Boolean }) defaultExpanded?: boolean;
   @property({ type: Number }) maxLines?: number = 3;
-  @property() showMoreLabel?: string = "Show more";
-  @property() showLessLabel?: string = "Show less";
+  @property({ type: String }) showMoreLabel?: string = "Show more";
+  @property({ type: String }) showLessLabel?: string = "Show less";
   @property({ attribute: false }) onExpandedChange?: (value: boolean) => void;
 
   private behavior = new ShowMoreBehavior(this, {
@@ -49,7 +50,7 @@ export class ShowMoreElement extends LitElement {
   <div class=${'show-more__content'}>
     <slot></slot>
   </div>
-  <button class=${'show-more__trigger'} type="button" aria-expanded=${this.behavior.expanded ? 'true' : 'false'} @click=${(e: Event) => this.handleExpandedChange(e)} .textContent=${this.showMoreLabel}></button>
+  <button class=${'show-more__trigger'} type="button" aria-expanded=${this.behavior.expanded ? 'true' : 'false'} @click=${(e: Event) => this.handleExpandedChange(e)} textContent=${ifDefined(this.showMoreLabel)}></button>
 </div>`;
   }
 }

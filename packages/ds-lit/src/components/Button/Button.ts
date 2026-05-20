@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,9 +22,9 @@ export type ButtonType = "button" | "submit" | "reset";
 export class ButtonElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() size?: ButtonSize = "medium";
-  @property() variant?: ButtonVariant = "primary";
-  @property() type?: ButtonType = "button";
+  @property({ attribute: false }) size?: ButtonSize = "medium";
+  @property({ attribute: false }) variant?: ButtonVariant = "primary";
+  @property({ attribute: false }) type?: ButtonType = "button";
   @property({ type: Boolean }) loading?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: 'aria-label', reflect: true })
@@ -43,7 +44,7 @@ export class ButtonElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" .type=${this.type} ?disabled=${this.disabled} aria-label=${this.ariaLabel} aria-expanded=${this.ariaExpanded} aria-pressed=${this.ariaPressed} aria-busy=${this.loading}>
+    return html`<button class="${this.computeClasses()}" type=${ifDefined(this.type)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-expanded=${ifDefined(this.ariaExpanded === undefined ? undefined : (this.ariaExpanded ? 'true' : 'false'))} aria-pressed=${ifDefined(this.ariaPressed === undefined ? undefined : (this.ariaPressed ? 'true' : 'false'))} aria-busy=${ifDefined(this.loading === undefined ? undefined : (this.loading ? 'true' : 'false'))}>
   <slot></slot>
 </button>`;
   }

@@ -19,8 +19,8 @@ import { property } from 'lit/decorators.js';
 export class AvatarElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() src?: string;
-  @property() name!: string;
+  @property({ type: String }) src?: string;
+  @property({ type: String }) name!: string;
   @property({ type: Boolean }) priority?: boolean;
   @property() size?: string;
 

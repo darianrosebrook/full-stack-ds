@@ -22,13 +22,13 @@ export type AlertNoticeLevel = "page" | "section" | "inline";
 export class AlertNoticeElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property({ type: String })
+  @property({ attribute: false })
   status?: AlertNoticeStatus;
-  @property({ type: String })
+  @property({ attribute: false })
   level?: AlertNoticeLevel;
   @property({ type: Boolean })
   dismissible?: boolean;
-  @property({ type: String })
+  @property({ attribute: false })
   icon?: unknown;
 
   override render() {

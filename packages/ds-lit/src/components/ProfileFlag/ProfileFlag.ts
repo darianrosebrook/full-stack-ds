@@ -19,7 +19,7 @@ export type ProfileFlagData = { id: string; username: string; full_name: string;
 export class ProfileFlagElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() profile?: ProfileFlagData;
+  @property({ attribute: false }) profile?: ProfileFlagData;
 
   private computeClasses(): string {
     return [

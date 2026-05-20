@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { SelectBehavior } from './SelectBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,15 +22,15 @@ export type SelectSize = "sm" | "md" | "lg";
 export class SelectElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() options!: SelectOption[];
-  @property() value?: string | string[];
-  @property() defaultValue?: string | string[];
+  @property({ attribute: false }) options!: SelectOption[];
+  @property({ attribute: false }) value?: string | string[];
+  @property({ attribute: false }) defaultValue?: string | string[];
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ type: Boolean }) multiple?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
-  @property() size?: SelectSize = "md";
-  @property({ type: Boolean }) filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
+  @property({ attribute: false }) size?: SelectSize = "md";
+  @property({ attribute: false }) filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   @property({ type: Boolean }) searchable?: boolean;
   @property({ type: Boolean }) empty?: boolean;
   @property({ attribute: false }) onChange?: (value: string | string[]) => void;
@@ -56,8 +57,8 @@ export class SelectElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${this.disabled}>
-  <button class=${'select__trigger'} type="button" ?disabled=${this.disabled}>
+    return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))}>
+  <button class=${'select__trigger'} type="button" ?disabled=${this.disabled ?? false}>
     <span class=${'select__text'}></span>
   </button>
   ${this.behavior.open ? html`

@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -19,13 +20,13 @@ export type AnimatedCardAs = "article" | "div" | "li" | "a";
 export class AnimatedCardElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() as?: AnimatedCardAs;
+  @property({ attribute: false }) as?: AnimatedCardAs;
   @property({ type: Number }) duration?: number;
   @property({ type: Number }) delay?: number;
   @property({ type: Boolean }) triggerOnScroll?: boolean;
-  @property() scrollStart?: string;
+  @property({ type: String }) scrollStart?: string;
   @property({ type: Boolean }) enableHover?: boolean;
-  @property() href?: string;
+  @property({ type: String }) href?: string;
 
   private computeClasses(): string {
     return [
@@ -35,7 +36,7 @@ export class AnimatedCardElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" data-as=${this.as}>
+    return html`<div class="${this.computeClasses()}" data-as=${ifDefined(this.as)}>
   <slot></slot>
 </div>`;
   }

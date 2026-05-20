@@ -19,7 +19,7 @@ export type StatusIntent = "info" | "success" | "warning" | "danger" | "error";
 export class StatusElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() status!: StatusIntent;
+  @property({ attribute: false }) status!: StatusIntent;
 
   private computeClasses(): string {
     return [

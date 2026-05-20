@@ -21,11 +21,11 @@ export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; as
 export class PostcardElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() postId!: string;
-  @property() author!: PostcardAuthor;
-  @property() timestamp!: string;
-  @property() stats!: PostcardStats;
-  @property() embed?: PostcardEmbed;
+  @property({ type: String }) postId!: string;
+  @property({ attribute: false }) author!: PostcardAuthor;
+  @property({ type: String }) timestamp!: string;
+  @property({ attribute: false }) stats!: PostcardStats;
+  @property({ attribute: false }) embed?: PostcardEmbed;
   @property() type?: string;
 
   private computeClasses(): string {

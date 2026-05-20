@@ -20,7 +20,7 @@ export class AspectRatioElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
   @property({ type: Number }) ratio?: number;
-  @property() preset?: AspectRatioPreset;
+  @property({ attribute: false }) preset?: AspectRatioPreset;
 
   private computeClasses(): string {
     return [

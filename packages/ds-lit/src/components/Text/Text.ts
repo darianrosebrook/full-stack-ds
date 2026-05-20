@@ -24,12 +24,12 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
 export class TextElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() as?: TextAs;
-  @property() variant?: TextVariant;
-  @property() size?: TextSize;
-  @property() weight?: TextWeight;
-  @property() align?: TextAlign;
-  @property() transform?: TextTransform;
+  @property({ attribute: false }) as?: TextAs;
+  @property({ attribute: false }) variant?: TextVariant;
+  @property({ attribute: false }) size?: TextSize;
+  @property({ attribute: false }) weight?: TextWeight;
+  @property({ attribute: false }) align?: TextAlign;
+  @property({ attribute: false }) transform?: TextTransform;
   @property({ type: Boolean }) truncate?: boolean;
 
   private computeClasses(): string {

@@ -20,13 +20,13 @@ export type AnimatedSectionVariant = "fade-up" | "fade-in" | "slide-in" | "stagg
 export class AnimatedSectionElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() as?: AnimatedSectionAs;
-  @property() variant?: AnimatedSectionVariant;
+  @property({ attribute: false }) as?: AnimatedSectionAs;
+  @property({ attribute: false }) variant?: AnimatedSectionVariant;
   @property({ type: Number }) duration?: number;
   @property({ type: Number }) stagger?: number;
   @property({ type: Number }) delay?: number;
   @property({ type: Boolean }) triggerOnScroll?: boolean;
-  @property() scrollStart?: string;
+  @property({ type: String }) scrollStart?: string;
 
   private computeClasses(): string {
     return [

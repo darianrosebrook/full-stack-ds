@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { InputBehavior } from './InputBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -20,14 +21,14 @@ import { InputBehavior } from './InputBehavior.js';
 export class InputElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() type?: string;
-  @property() value?: string;
-  @property() defaultValue?: string;
-  @property() placeholder?: string;
+  @property({ type: String }) type?: string;
+  @property({ type: String }) value?: string;
+  @property({ type: String }) defaultValue?: string;
+  @property({ type: String }) placeholder?: string;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) invalid?: boolean;
   @property({ type: Boolean }) required?: boolean;
-  @property() name?: string;
+  @property({ type: String }) name?: string;
   @property({ attribute: false }) onChange?: (value: string) => void;
 
   private behavior = new InputBehavior(this, {
@@ -49,7 +50,7 @@ export class InputElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" role="textbox" .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled} aria-invalid=${this.invalid} .type=${this.type} />`;
+    return html`<input class="${this.computeClasses()}" role="textbox" .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} type=${ifDefined(this.type)} />`;
   }
 }
 

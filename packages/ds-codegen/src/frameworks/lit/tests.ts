@@ -203,6 +203,14 @@ function generateCompoundStateContainerTest(ir: ComponentIR): string {
   lines.push(`      "aria-tooltip-name",`);
   lines.push(`      "button-name",`);
   lines.push(`      "empty-heading",`);
+  // image-alt: <fsds-image> requires the consumer to provide `alt`
+  // (or `alt=""` for decorative images). The scaffold test renders
+  // with no props. This violation joins the same scaffold-violation
+  // family as button-name/link-name/label — surfaced by the
+  // ifDefined-based attribute binding which now correctly omits
+  // the `alt` attribute when undefined, instead of the prior
+  // property-binding accident that coerced `undefined` to `""`.
+  lines.push(`      "image-alt",`);
   lines.push(`      "label",`);
   lines.push(`      "link-name",`);
   lines.push(`      "region",`);
@@ -590,6 +598,14 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(`      "aria-tooltip-name",`);
   lines.push(`      "button-name",`);
   lines.push(`      "empty-heading",`);
+  // image-alt: <fsds-image> requires the consumer to provide `alt`
+  // (or `alt=""` for decorative images). The scaffold test renders
+  // with no props. This violation joins the same scaffold-violation
+  // family as button-name/link-name/label — surfaced by the
+  // ifDefined-based attribute binding which now correctly omits
+  // the `alt` attribute when undefined, instead of the prior
+  // property-binding accident that coerced `undefined` to `""`.
+  lines.push(`      "image-alt",`);
   lines.push(`      "label",`);
   lines.push(`      "link-name",`);
   lines.push(`      "region",`);

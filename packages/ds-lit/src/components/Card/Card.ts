@@ -23,7 +23,7 @@ export class CardElement extends LitElement {
 
   @property({ type: Boolean })
   interactive?: boolean;
-  @property({ type: String })
+  @property({ attribute: false })
   status?: CardStatus;
 
   override render() {

@@ -22,9 +22,9 @@ export class ToastElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
   @property({ type: Boolean }) open?: boolean;
-  @property() variant?: ToastVariant = "info";
-  @property() politeness?: ToastPoliteness = "polite";
-  @property() action?: unknown;
+  @property({ attribute: false }) variant?: ToastVariant = "info";
+  @property({ attribute: false }) politeness?: ToastPoliteness = "polite";
+  @property({ attribute: false }) action?: unknown;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 
   private behavior = new ToastBehavior(this, {

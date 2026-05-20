@@ -23,11 +23,11 @@ export type ListSize = "sm" | "md" | "lg";
 export class ListElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() as?: ListAs;
-  @property() variant?: ListVariant;
-  @property() marker?: ListMarker;
-  @property() spacing?: ListSpacing;
-  @property() size?: ListSize;
+  @property({ attribute: false }) as?: ListAs;
+  @property({ attribute: false }) variant?: ListVariant;
+  @property({ attribute: false }) marker?: ListMarker;
+  @property({ attribute: false }) spacing?: ListSpacing;
+  @property({ attribute: false }) size?: ListSize;
 
   private computeClasses(): string {
     return [

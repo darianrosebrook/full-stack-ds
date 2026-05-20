@@ -20,9 +20,9 @@ export type BlockquoteSize = "sm" | "md" | "lg";
 export class BlockquoteElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() cite?: string;
-  @property() variant?: BlockquoteVariant;
-  @property() size?: BlockquoteSize;
+  @property({ type: String }) cite?: string;
+  @property({ attribute: false }) variant?: BlockquoteVariant;
+  @property({ attribute: false }) size?: BlockquoteSize;
 
   private computeClasses(): string {
     return [

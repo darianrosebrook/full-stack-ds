@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -22,18 +23,18 @@ export type ImageRadius = "none" | "sm" | "md" | "lg" | "full";
 export class ImageElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() src?: string;
-  @property() alt!: string;
+  @property({ type: String }) src?: string;
+  @property({ type: String }) alt!: string;
   @property({ type: Number }) width?: number;
   @property({ type: Number }) height?: number;
-  @property() aspectRatio?: ImageAspectRatio;
-  @property() objectFit?: ImageObjectFit;
-  @property() objectPosition?: string;
-  @property() loading?: ImageLoading;
-  @property() sizes?: string;
-  @property() radius?: ImageRadius;
+  @property({ attribute: false }) aspectRatio?: ImageAspectRatio;
+  @property({ attribute: false }) objectFit?: ImageObjectFit;
+  @property({ type: String }) objectPosition?: string;
+  @property({ attribute: false }) loading?: ImageLoading;
+  @property({ type: String }) sizes?: string;
+  @property({ attribute: false }) radius?: ImageRadius;
   @property({ type: Boolean }) showPlaceholder?: boolean;
-  @property() fallbackSrc?: string;
+  @property({ type: String }) fallbackSrc?: string;
   @property() size?: string;
 
   private computeClasses(): string {
@@ -45,7 +46,7 @@ export class ImageElement extends LitElement {
   }
 
   override render() {
-    return html`<img class="${this.computeClasses()}" role="img" .src=${this.src} .alt=${this.alt} .width=${this.width} .height=${this.height} .loading=${this.loading} .sizes=${this.sizes} />`;
+    return html`<img class="${this.computeClasses()}" role="img" src=${ifDefined(this.src)} alt=${ifDefined(this.alt)} width=${ifDefined(this.width)} height=${ifDefined(this.height)} loading=${ifDefined(this.loading)} sizes=${ifDefined(this.sizes)} />`;
   }
 }
 

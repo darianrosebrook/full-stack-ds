@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -22,12 +23,12 @@ export class ProgressElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
   @property({ type: Number }) value?: number;
-  @property() variant?: ProgressVariant;
-  @property() size?: ProgressSize;
-  @property() intent?: ProgressIntent;
-  @property() label?: string;
+  @property({ attribute: false }) variant?: ProgressVariant;
+  @property({ attribute: false }) size?: ProgressSize;
+  @property({ attribute: false }) intent?: ProgressIntent;
+  @property({ type: String }) label?: string;
   @property({ type: Boolean }) showValue?: boolean;
-  @property({ type: Number }) formatValue?: (value: number, max: number) => string;
+  @property({ attribute: false }) formatValue?: (value: number, max: number) => string;
 
   private computeClasses(): string {
     return [
@@ -39,7 +40,7 @@ export class ProgressElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="progressbar" aria-valuenow=${this.value} aria-valuemin="0" aria-valuemax="100" aria-label=${this.label}>
+    return html`<div class="${this.computeClasses()}" role="progressbar" aria-valuenow=${ifDefined(this.value)} aria-valuemin="0" aria-valuemax="100" aria-label=${ifDefined(this.label)}>
   <span class=${'progress__track'} aria-hidden="true">
     <span class=${'progress__fill'}></span>
   </span>

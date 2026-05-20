@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ToggleSwitchBehavior } from './ToggleSwitchBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -22,11 +23,11 @@ export class ToggleSwitchElement extends LitElement {
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
-  @property() size?: ToggleSwitchSize = "medium";
+  @property({ attribute: false }) size?: ToggleSwitchSize = "medium";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
-  @property() ariaDescribedby?: string;
+  @property({ type: String }) ariaDescribedby?: string;
   @property({ attribute: false }) onChange?: (value: boolean) => void;
 
   private behavior = new ToggleSwitchBehavior(this, {
@@ -49,7 +50,7 @@ export class ToggleSwitchElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" type="button" role="switch" aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${this.ariaLabel} aria-describedby=${this.ariaDescribedby} ?disabled=${this.disabled} @click=${(e: Event) => this.handleCheckedChange(e)}></button>`;
+    return html`<button class="${this.computeClasses()}" type="button" role="switch" aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-describedby=${ifDefined(this.ariaDescribedby)} ?disabled=${this.disabled ?? false} @click=${(e: Event) => this.handleCheckedChange(e)}></button>`;
   }
 }
 

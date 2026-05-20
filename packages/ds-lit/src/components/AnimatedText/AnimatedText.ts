@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -20,14 +21,14 @@ export type AnimatedTextVariant = "blur-in" | "fade-up" | "slide-in";
 export class AnimatedTextElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() text!: string;
-  @property() as?: AnimatedTextAs;
-  @property() variant?: AnimatedTextVariant;
+  @property({ type: String }) text!: string;
+  @property({ attribute: false }) as?: AnimatedTextAs;
+  @property({ attribute: false }) variant?: AnimatedTextVariant;
   @property({ type: Number }) duration?: number;
   @property({ type: Number }) stagger?: number;
   @property({ type: Number }) delay?: number;
   @property({ type: Boolean }) triggerOnScroll?: boolean;
-  @property() scrollStart?: string;
+  @property({ type: String }) scrollStart?: string;
 
   private computeClasses(): string {
     return [
@@ -38,7 +39,7 @@ export class AnimatedTextElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" data-text=${this.text}></div>`;
+    return html`<div class="${this.computeClasses()}" data-text=${ifDefined(this.text)}></div>`;
   }
 }
 

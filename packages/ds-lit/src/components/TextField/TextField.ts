@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { TextFieldBehavior } from './TextFieldBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -20,17 +21,17 @@ import { TextFieldBehavior } from './TextFieldBehavior.js';
 export class TextFieldElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() label?: unknown;
-  @property() description?: unknown;
-  @property() error?: unknown;
-  @property() type?: string;
-  @property() value?: string;
-  @property() defaultValue?: string;
+  @property({ attribute: false }) label?: unknown;
+  @property({ attribute: false }) description?: unknown;
+  @property({ attribute: false }) error?: unknown;
+  @property({ type: String }) type?: string;
+  @property({ type: String }) value?: string;
+  @property({ type: String }) defaultValue?: string;
   @property({ type: Boolean }) invalid?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) required?: boolean;
-  @property() name?: string;
-  @property() ariaDescribedby?: string;
+  @property({ type: String }) name?: string;
+  @property({ type: String }) ariaDescribedby?: string;
   @property({ attribute: false }) onChange?: (value: string) => void;
 
   private behavior = new TextFieldBehavior(this, {
@@ -58,7 +59,7 @@ export class TextFieldElement extends LitElement {
     <slot></slot>
   </label>
   ` : nothing}
-  <input class=${'text-field__field'} .type=${this.type} .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled} .name=${this.name} ?required=${this.required} aria-invalid=${this.invalid} aria-describedby=${this.ariaDescribedby} />
+  <input class=${'text-field__field'} type=${ifDefined(this.type)} .value=${this.behavior.value} @change=${(e: Event) => this.handleValueChange(e)} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} ?required=${this.required ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} aria-describedby=${ifDefined(this.ariaDescribedby)} />
   ${this.description ? html`
   <span class=${'text-field__description'}>
     <slot></slot>

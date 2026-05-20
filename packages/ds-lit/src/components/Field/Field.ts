@@ -19,16 +19,16 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
 export class FieldElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() name!: string;
+  @property({ type: String }) name!: string;
   @property({ type: Boolean }) required?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) readOnly?: boolean;
-  @property() value?: unknown;
-  @property({ type: Boolean }) validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  @property() label?: unknown;
-  @property() helpText?: unknown;
-  @property() error?: string;
-  @property() status?: FieldStatus;
+  @property({ attribute: false }) value?: unknown;
+  @property({ attribute: false }) validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
+  @property({ attribute: false }) label?: unknown;
+  @property({ attribute: false }) helpText?: unknown;
+  @property({ type: String }) error?: string;
+  @property({ attribute: false }) status?: FieldStatus;
   @property({ type: Boolean }) validating?: boolean;
 
   private computeClasses(): string {

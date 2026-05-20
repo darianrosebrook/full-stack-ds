@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,11 +22,11 @@ export type ChipSize = "small" | "medium" | "large";
 export class ChipElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() type?: ChipType;
-  @property() variant?: ChipVariant;
-  @property() size?: ChipSize;
+  @property({ attribute: false }) type?: ChipType;
+  @property({ attribute: false }) variant?: ChipVariant;
+  @property({ attribute: false }) size?: ChipSize;
   @property({ type: Boolean }) disabled?: boolean;
-  @property() icon?: unknown;
+  @property({ attribute: false }) icon?: unknown;
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
   @property({ attribute: 'aria-expanded', reflect: true })
@@ -43,7 +44,7 @@ export class ChipElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" .type=${this.type} ?disabled=${this.disabled} aria-label=${this.ariaLabel} aria-expanded=${this.ariaExpanded} aria-pressed=${this.ariaPressed}>
+    return html`<button class="${this.computeClasses()}" type=${ifDefined(this.type)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-expanded=${ifDefined(this.ariaExpanded === undefined ? undefined : (this.ariaExpanded ? 'true' : 'false'))} aria-pressed=${ifDefined(this.ariaPressed === undefined ? undefined : (this.ariaPressed ? 'true' : 'false'))}>
   ${this.icon ? html`
   <span class=${'chip__icon'} aria-hidden="true"></span>
   ` : nothing}

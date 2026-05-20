@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { DetailsBehavior } from './DetailsBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,12 +22,12 @@ export type DetailsIcon = "left" | "right" | "none";
 export class DetailsElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() summary!: string;
+  @property({ type: String }) summary!: string;
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
-  @property() variant?: DetailsVariant;
-  @property() icon?: DetailsIcon;
+  @property({ attribute: false }) variant?: DetailsVariant;
+  @property({ attribute: false }) icon?: DetailsIcon;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 
   private behavior = new DetailsBehavior(this, {
@@ -50,7 +51,7 @@ export class DetailsElement extends LitElement {
   <summary class=${'details__summary'}>
     <span class=${'details__summaryContent'}>
       <span class=${'details__icon'}></span>
-      <span class=${'details__summaryText'} .textContent=${this.summary}></span>
+      <span class=${'details__summaryText'} textContent=${ifDefined(this.summary)}></span>
     </span>
   </summary>
   ${this.behavior.open ? html`

@@ -19,9 +19,9 @@ import { property } from 'lit/decorators.js';
 export class DividerElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() orientation?: "horizontal" | "vertical";
+  @property({ attribute: false }) orientation?: "horizontal" | "vertical";
   @property({ type: Boolean }) decorative?: boolean;
-  @property() thickness?: string;
+  @property({ type: String }) thickness?: string;
 
   private computeClasses(): string {
     return [

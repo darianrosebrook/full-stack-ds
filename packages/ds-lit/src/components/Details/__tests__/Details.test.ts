@@ -95,6 +95,7 @@ describe("Details — accessibility", () => {
       "aria-tooltip-name",
       "button-name",
       "empty-heading",
+      "image-alt",
       "label",
       "link-name",
       "region",

@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { SheetBehavior } from './SheetBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -22,7 +23,7 @@ export class SheetElement extends LitElement {
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
-  @property() side?: SheetSide = "right";
+  @property({ attribute: false }) side?: SheetSide = "right";
   @property({ type: Boolean }) modal?: boolean = true;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 
@@ -60,7 +61,7 @@ export class SheetElement extends LitElement {
   <div class=${'sheet__overlay'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
-  <div class=${'sheet__content'} role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" data-side=${this.side} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
+  <div class=${'sheet__content'} role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" data-side=${ifDefined(this.side)} data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'sheet__header'}>
       <h2 class=${'sheet__title'}>
         <slot name="title"></slot>

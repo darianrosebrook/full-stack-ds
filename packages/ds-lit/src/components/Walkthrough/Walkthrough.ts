@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { WalkthroughBehavior } from './WalkthroughBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,14 +22,14 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
 export class WalkthroughElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() steps?: WalkthroughStepSpec[];
+  @property({ attribute: false }) steps?: WalkthroughStepSpec[];
   @property({ type: Number }) index?: number;
   @property({ type: Number }) defaultIndex?: number = 0;
-  @property() label?: string = "Feature tour";
-  @property() storageKey?: string;
+  @property({ type: String }) label?: string = "Feature tour";
+  @property({ type: String }) storageKey?: string;
   @property({ type: Boolean }) autoStart?: boolean = false;
   @property({ type: Boolean }) closeOnOutsideClick?: boolean = false;
-  @property() placement?: WalkthroughPlacement = "auto";
+  @property({ attribute: false }) placement?: WalkthroughPlacement = "auto";
   @property({ attribute: false }) onStepChange?: (value: number) => void;
 
   private behavior = new WalkthroughBehavior(this, {
@@ -46,7 +47,7 @@ export class WalkthroughElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="status" aria-label=${this.label}>
+    return html`<div class="${this.computeClasses()}" role="status" aria-label=${ifDefined(this.label)}>
   <div class=${'walkthrough__content'}>
     <h3 class=${'walkthrough__title'}>
       <slot name="title"></slot>

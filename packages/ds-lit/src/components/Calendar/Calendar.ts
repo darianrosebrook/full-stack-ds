@@ -20,13 +20,13 @@ export type CalendarMode = "single" | "range";
 export class CalendarElement extends LitElement {
   static override styles = css`:host { display: contents; }`;
 
-  @property() value?: Date | Date[] | null;
-  @property() defaultValue?: Date | Date[] | null;
-  @property() mode?: CalendarMode = "single";
+  @property({ attribute: false }) value?: Date | Date[] | null;
+  @property({ attribute: false }) defaultValue?: Date | Date[] | null;
+  @property({ attribute: false }) mode?: CalendarMode = "single";
   @property({ type: Boolean }) disabled?: boolean;
-  @property() minDate?: Date;
-  @property() maxDate?: Date;
-  @property() locale?: string = "en-US";
+  @property({ attribute: false }) minDate?: Date;
+  @property({ attribute: false }) maxDate?: Date;
+  @property({ type: String }) locale?: string = "en-US";
   @property({ attribute: false }) onChange?: (value: Date | Date[] | null) => void;
 
   private behavior = new CalendarBehavior(this, {

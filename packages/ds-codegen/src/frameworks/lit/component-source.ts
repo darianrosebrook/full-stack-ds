@@ -277,7 +277,37 @@ function ariaCamelToKebab(name: string): string {
   return out;
 }
 
-function litPropertyType(rawType: string): string | null {
+/**
+ * Decide how a contract-prop type should be reflected as a Lit
+ * `@property()` decorator option. Three buckets:
+ *
+ *   - `null`: not a declarative property at all (event handlers,
+ *     function-valued props). Caller should skip emitting an
+ *     @property declaration entirely.
+ *
+ *   - `{ kind: "primitive", type: "Boolean" | "Number" | "String" }`:
+ *     a primitive that Lit's built-in attribute<->property
+ *     converter understands. Emit `@property({ type: <T> })`.
+ *
+ *   - `{ kind: "internal" }`: a complex type (array, object, union
+ *     including object types, Date, etc.) that Lit's built-in
+ *     converter doesn't handle. Emit `@property({ attribute: false })`
+ *     so Lit does NOT try to reflect the value to an HTML attribute.
+ *     Consumers set the property directly on the element instance.
+ *
+ * Source of truth: Lit's built-in attribute converter handles
+ * Boolean/Number/String only (per the Lit 3 docs). Non-primitive
+ * @property declarations without `attribute: false` produce
+ * lit-analyzer warnings 'The built in converter doesn't handle the
+ * property type X' (rules: incompatible-property-type +
+ * no-incompatible-type-binding).
+ */
+type LitPropertyDecorator =
+  | null
+  | { kind: "primitive"; type: "Boolean" | "Number" | "String" }
+  | { kind: "internal" };
+
+function litPropertyType(rawType: string): LitPropertyDecorator {
   // Event handlers are not declarative Lit properties — skip them.
   if (
     rawType.includes("EventHandler") ||
@@ -287,9 +317,26 @@ function litPropertyType(rawType: string): string | null {
   )
     return null;
   const t = litType(rawType);
-  if (t === "boolean") return "Boolean";
-  if (t === "number") return "Number";
-  return "String";
+  if (t === "boolean") return { kind: "primitive", type: "Boolean" };
+  if (t === "number") return { kind: "primitive", type: "Number" };
+  if (t === "string") return { kind: "primitive", type: "String" };
+  // Anything else — array, object, named interface, union of object
+  // types, Date, etc. — is not attribute-reflectable via Lit's
+  // built-in converter. Emit as an internal-only property.
+  return { kind: "internal" };
+}
+
+/** Format the decorator options string for a LitPropertyDecorator. */
+function litPropertyDecoratorOptions(spec: LitPropertyDecorator): string {
+  if (spec === null) {
+    throw new Error(
+      "litPropertyDecoratorOptions called on a null spec; caller should have skipped emission.",
+    );
+  }
+  if (spec.kind === "primitive") {
+    return `{ type: ${spec.type} }`;
+  }
+  return `{ attribute: false }`;
 }
 
 function generatePropertyDeclarations(ir: ComponentIR): string[] {
@@ -327,7 +374,7 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     const defaultPart =
       p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
-    lines.push(`  @property({ type: ${litPropType} })`);
+    lines.push(`  @property(${litPropertyDecoratorOptions(litPropType)})`);
     lines.push(`  ${propName}?: ${t}${defaultPart};`);
     declared.add(p.name);
   }
@@ -825,7 +872,6 @@ export function generateLitComponentSource(ir: ComponentIR): string {
     return generateCompoundStateSource(ir);
   }
 
-  const importsBody = ir.dom ? generateDomTreeImports(ir) : generateImports(ir);
   const typesBody = generateTypes(ir);
   const compoundClasses = ir.compoundParts
     .map((part) => generateCompoundPartClass(ir, part))
@@ -833,6 +879,17 @@ export function generateLitComponentSource(ir: ComponentIR): string {
   const componentBody =
     (ir.dom ? generateDomTreeClassBody(ir) : generateClassBody(ir)) +
     (compoundClasses ? "\n\n" + compoundClasses : "");
+
+  // Imports depend on what the rendered class body actually references.
+  // Today the only such dependency is the `ifDefined` directive; emit
+  // its import only when at least one rendered binding uses it. This
+  // mirrors the same pattern used by `treeUsesNgIf` in the Angular
+  // emitter — only declare imports the template actually consumes.
+  const usesIfDefined = componentBody.includes("ifDefined(");
+  const baseImports = ir.dom ? generateDomTreeImports(ir) : generateImports(ir);
+  const importsBody = usesIfDefined
+    ? `${baseImports}\nimport { ifDefined } from 'lit/directives/if-defined.js';`
+    : baseImports;
 
   const blank = (): Section => ({ kind: "between", body: "" });
   const sections: Section[] = [
@@ -1129,13 +1186,30 @@ function generateLitDomTreePropertyDecl(
   }
   const propType = applyLitTypeRename(litType(p.type), rename);
   const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
+  // Use the same policy as the legacy emitter (litPropertyType +
+  // litPropertyDecoratorOptions): primitives → `{ type: <T> }`,
+  // anything else → `{ attribute: false }`. This is what lit-analyzer's
+  // `no-incompatible-property-type` rule expects — Lit's built-in
+  // attribute<->property converter handles only Boolean/Number/String.
+  // When the prop name is kebab-case, the attribute name must be
+  // explicit. `attribute: false` and `attribute: 'kebab-name'` are
+  // mutually exclusive — when the type is non-primitive, prefer the
+  // explicit kebab attribute mapping (consumer-set via setAttribute
+  // is the consumer's intent for kebab-named props), but warn via
+  // the type field that the converter isn't a fit. In practice
+  // contracts don't combine kebab-case names with non-primitive
+  // types today, so the conflict is theoretical.
+  const spec = litPropertyType(p.type);
   const decoratorArgs: string[] = [];
-  if (/\bboolean\b/.test(propType)) {
-    decoratorArgs.push("type: Boolean");
-  } else if (/\bnumber\b/.test(propType)) {
-    decoratorArgs.push("type: Number");
+  const hasKebabName = p.name.includes("-");
+  if (spec !== null) {
+    if (spec.kind === "primitive") {
+      decoratorArgs.push(`type: ${spec.type}`);
+    } else if (!hasKebabName) {
+      decoratorArgs.push("attribute: false");
+    }
   }
-  if (p.name.includes("-")) {
+  if (hasKebabName) {
     decoratorArgs.push(`attribute: '${p.name}'`);
   }
   const decoratorBody =
@@ -1281,29 +1355,63 @@ function renderLitBinding(
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
       const isBoolean = prop ? /\bboolean\b/.test(prop.type) : false;
-      const acc = propAccessor(expr.prop);
-      // ARIA attributes are always string-valued at the DOM level even when
-      // the contract types them as boolean (e.g. `aria-pressed`). Emit a
-      // plain `attr=` binding that lets the value coerce to "true"/"false"
-      // rather than `?attr=` boolean-attribute presence/absence, which is
-      // structurally wrong for ARIA semantics ("aria-pressed=false" is
-      // meaningful, while `?aria-pressed=${false}` removes the attribute).
+      // ARIA-mixin props (`ariaLabel`, `ariaDescribedby`, etc.) are
+      // declared as `string | null` because the underlying DOM IDL
+      // (ARIAMixin) typing is `string | null`. Coerce null to
+      // undefined before handing to `ifDefined` so a null value
+      // omits the attribute rather than serializing as the literal
+      // string "null". Other props are declared `T | undefined` and
+      // need no coercion.
+      const isAriaMixin = ARIA_MIXIN_NAMES.has(expr.prop);
+      const rawAcc = propAccessor(expr.prop);
+      const acc = isAriaMixin ? `${rawAcc} ?? undefined` : rawAcc;
+      // Every styled prop is declared as `propName?: T` in the Lit
+      // emitter (see generatePropertyDeclarations), so at the field
+      // type level the value is always `T | undefined` regardless of
+      // the IR `required` flag. Lit's `ifDefined` directive on an
+      // attribute binding handles `undefined` correctly: it removes
+      // the attribute when the value is undefined and sets it
+      // otherwise. lit-analyzer's strict-typing rules require this
+      // for any non-boolean attribute binding whose source can be
+      // undefined (no-incompatible-type-binding).
+      //
+      // ARIA attributes are always string-valued at the DOM level
+      // even when the contract types them as boolean (e.g.
+      // `aria-pressed`). Emit a plain `attr=` binding that lets the
+      // value coerce to "true"/"false" rather than `?attr=`
+      // boolean-attribute presence/absence, which is structurally
+      // wrong for ARIA semantics ("aria-pressed=false" is meaningful,
+      // while `?aria-pressed=${false}` removes the attribute).
+      // When the underlying prop is boolean, serialize as the
+      // explicit `'true'`/`'false'` string the ARIA spec expects —
+      // lit-analyzer's HTML data model types these attribute slots
+      // as the strict union `"true" | "false" | undefined` and
+      // refuses `boolean | undefined`. The ternary preserves
+      // undefined so `ifDefined` can omit the attribute when unset.
       if (attr.startsWith("aria-")) {
-        return `${attr}=\${${acc}}`;
+        if (isBoolean) {
+          return `${attr}=\${ifDefined(${rawAcc} === undefined ? undefined : (${rawAcc} ? 'true' : 'false'))}`;
+        }
+        return `${attr}=\${ifDefined(${acc})}`;
       }
       if (isBoolean) {
         // Boolean attrs → `?attr=` (Lit boolean attribute binding).
-        return `?${attr}=\${${acc}}`;
+        // Coerce `undefined` to `false` so the type narrows to
+        // `boolean` and lit-analyzer accepts it. Runtime semantics
+        // are unchanged: undefined and false both produce attribute
+        // absence in Lit's boolean-attribute binding.
+        return `?${attr}=\${${rawAcc} ?? false}`;
       }
-      if (isAttributeOnlyBinding(attr)) {
-        // Plain attribute binding: data-*/aria-* aren't real DOM properties,
-        // and a handful of native attributes (HTMLLabelElement.form,
-        // HTMLInputElement.list) are read-only IDL properties on their
-        // host element — Lit's `.prop=` syntax tries to assign and throws.
-        return `${attr}=\${${acc}}`;
-      }
-      // Default → property binding so the value flows through the DOM IDL.
-      return `.${attr}=\${${acc}}`;
+      // Attribute binding for every other case. The previous default
+      // emitted `.${attr}=` (DOM property binding), but Lit's
+      // property-binding syntax sets `el[attr] = undefined` literally
+      // when the value is undefined — lit-analyzer rejects this
+      // because the underlying DOM IDL is typed `string`. Switching
+      // to attribute binding with `ifDefined` is the canonical
+      // lit-html idiom for optional values: attribute set when
+      // defined, removed when undefined, with no DOM-property
+      // assignment of undefined.
+      return `${attr}=\${ifDefined(${acc})}`;
     }
     case "literal":
       return `${attr}="${expr.value.replace(/"/g, "&quot;")}"`;
