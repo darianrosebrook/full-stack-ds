@@ -14,7 +14,9 @@
       "types": "./dist/primitives/index.d.ts",
       "import": "./dist/primitives/index.js",
       "require": "./dist/primitives/index.cjs"
-    }
+    },
+    "./styles.css": "./dist/index.css",
+    "./primitives/styles.css": "./dist/primitives/index.css"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
