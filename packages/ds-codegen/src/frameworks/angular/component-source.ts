@@ -779,6 +779,14 @@ function treeHasChildrenGuard(node: DomNodeIR): boolean {
   return node.children.some(treeHasChildrenGuard);
 }
 
+/** Walk a DomNodeIR tree and return true if any node will render a
+ *  `*ngIf` (i.e. has a non-null `ifProp`). Used to decide whether
+ *  `NgIf` belongs in the standalone component's imports list. */
+function treeUsesNgIf(node: DomNodeIR): boolean {
+  if (node.ifProp) return true;
+  return node.children.some(treeUsesNgIf);
+}
+
 function generateDomTreeImports(ir: ComponentIR): string {
   const coreNames = [
     "Component",
@@ -793,9 +801,15 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (ir.dom && treeHasChildrenGuard(ir.dom)) {
     coreNames.push("AfterContentInit", "ElementRef");
   }
+  // Only import NgIf when the rendered template will actually use
+  // `*ngIf`. Declaring it otherwise triggers ngc NG8113 (unused
+  // directive in standalone imports) and clutters the public API
+  // surface of the standalone component.
+  const usesNgIf = ir.dom ? treeUsesNgIf(ir.dom) : false;
+  const commonImports = usesNgIf ? "NgClass, NgIf" : "NgClass";
   const lines: string[] = [
     `import { ${coreNames.join(", ")} } from "@angular/core";`,
-    `import { NgClass, NgIf } from "@angular/common";`,
+    `import { ${commonImports} } from "@angular/common";`,
   ];
   if (ir.compoundParts.length > 0) {
     lines.push(`import { StackComponent } from "../../primitives/index.js";`);
@@ -832,12 +846,13 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   };
   const template = renderAngularDomNode(ir.dom, ctx, 0);
   const hasChildrenGuard = treeHasChildrenGuard(ir.dom);
+  const usesNgIf = treeUsesNgIf(ir.dom);
 
   const lines: string[] = [];
   lines.push(`@Component({`);
   lines.push(`  selector: "fsds-${selector}",`);
   lines.push(`  standalone: true,`);
-  lines.push(`  imports: [NgClass, NgIf],`);
+  lines.push(`  imports: [${usesNgIf ? "NgClass, NgIf" : "NgClass"}],`);
   lines.push(`  template: \`${template}\`,`);
   lines.push(`  changeDetection: ChangeDetectionStrategy.OnPush,`);
   lines.push(`})`);
@@ -1059,7 +1074,7 @@ function renderAngularDomNode(
   }
 
   for (const [key, expr] of Object.entries(node.bindings)) {
-    const rendered = renderAngularBinding(key, expr, ctx);
+    const rendered = renderAngularBinding(key, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1160,8 +1175,27 @@ function renderAngularDomNode(
 // binds an HTML attribute. Additionally, `as` is reserved in Angular
 // templates (microsyntax for *ngFor), so any expression that evaluates to a
 // bare `as` parses as a keyword — using `[attr.X]` form sidesteps that.
-function angularAttrBinding(attr: string): string {
+//
+// Some bindings name a real HTML attribute but are NOT a writable IDL
+// property on the chosen element. Example: `<label form="...">` — the
+// HTML spec gives `HTMLLabelElement.form` as read-only (it reflects the
+// containing form), so Angular's `[form]` property binding fails ngc
+// strictTemplates (NG8002). The contract intent is to set the HTML
+// attribute, not the IDL property, so we coerce to `[attr.X]` here.
+//
+// Source of truth: HTMLLabelElement.form is read-only per HTML spec
+// (https://html.spec.whatwg.org/#htmllabelelement). Maintained as a
+// per-tag attribute set; entries here are derived from real DOM-IDL
+// facts, not from "tests are failing".
+const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>> = {
+  label: new Set(["form"]),
+};
+
+function angularAttrBinding(attr: string, tag?: string): string {
   if (attr.startsWith("data-") || attr.startsWith("aria-")) {
+    return `[attr.${attr}]`;
+  }
+  if (tag && ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG[tag]?.has(attr)) {
     return `[attr.${attr}]`;
   }
   return `[${attr}]`;
@@ -1193,21 +1227,22 @@ function renderAngularBinding(
   attr: string,
   expr: BindingExpression,
   ctx: AngularRenderContext,
+  tag?: string,
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${angularAttrBinding(attr)}="${safePropertyExpr(expr.prop)}"`;
+      return `${angularAttrBinding(attr, tag)}="${safePropertyExpr(expr.prop)}"`;
     case "literal":
       return `${attr}="${escapeAngularAttr(expr.value)}"`;
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
-        return `${angularAttrBinding(attr)}="behavior.${ch.name}()"`;
+        return `${angularAttrBinding(attr, tag)}="behavior.${ch.name}()"`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
-        return `${angularAttrBinding(attr)}="${safePropertyExpr(ch.defaultValueProp)}"`;
+        return `${angularAttrBinding(attr, tag)}="${safePropertyExpr(ch.defaultValueProp)}"`;
       }
       // onChange synthesis — bind to a method on the component.
       // Event-shaped channels pass the raw event to the consumer's

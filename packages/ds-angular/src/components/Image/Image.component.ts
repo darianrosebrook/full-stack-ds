@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -22,7 +22,7 @@ export type ImageRadius = "none" | "sm" | "md" | "lg" | "full";
 @Component({
   selector: "fsds-image",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<img [ngClass]="classes()" [src]="src" [alt]="alt" [width]="width" [height]="height" [loading]="loading" [sizes]="sizes" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

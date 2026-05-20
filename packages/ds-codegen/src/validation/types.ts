@@ -32,14 +32,54 @@ export type FrameworkId = "react" | "vue" | "svelte" | "lit" | "angular";
  */
 export type CheckOutcome = "direct" | "covered_by_typecheck" | "not_covered" | "pass" | "fail";
 
-export interface FrameworkValidationPlan {
-  framework: FrameworkId;
+/**
+ * A single shell-out exercising a specific admission check. Plans
+ * declare one or more PlanCommand entries; each runs serially and
+ * its check outcome (`direct`) becomes `pass` or `fail` based on
+ * the exit code. Multi-command plans let us distinguish e.g.
+ * Angular's `typecheck` (raw tsc) from `templateTypecheck` (ngc)
+ * without conflating them under one combined exit code.
+ */
+export interface PlanCommand {
+  /** The check name this command exercises (must be a key in `checks`). */
+  check: string;
   /** Argv form. The runner passes this to spawn() with shell: false. */
   command: readonly [string, ...string[]];
+}
+
+export interface FrameworkValidationPlan {
+  framework: FrameworkId;
+  /**
+   * Argv form for the single shell-out, when the plan only needs
+   * one command. Mutually exclusive with `commands`. The runner
+   * normalizes single-`command` plans by treating it as the first
+   * (and only) declared `direct` check.
+   */
+  command?: readonly [string, ...string[]];
+  /**
+   * Per-check commands for plans that need to attribute admission
+   * results to multiple shell-outs. Order is the run order; a
+   * failed command does NOT short-circuit subsequent commands
+   * because we want full diagnostic surface in one rail invocation.
+   */
+  commands?: readonly PlanCommand[];
   /** What each declared check produces in the plan's command. */
   checks: Readonly<Record<string, CheckOutcome>>;
   /** Honest gap declarations. Surfaced verbatim in the result. */
   knownGaps?: readonly string[];
+}
+
+/**
+ * Per-command run record. Captured for every PlanCommand the runner
+ * shells out for; lets closure notes cite which exact admission
+ * pass produced which diagnostics.
+ */
+export interface PlanCommandRun {
+  check: string;
+  command: string;
+  durationMs: number;
+  status: "pass" | "fail";
+  diagnostics: string[];
 }
 
 export interface FrameworkValidationResult {
@@ -47,15 +87,25 @@ export interface FrameworkValidationResult {
   scope: "workspace";
   artifactSelection: "none";
   artifactManifest: null;
+  /**
+   * Joined command strings for backwards-compat readability. Real
+   * structured output lives in `commandRuns`.
+   */
   command: string;
+  /** One entry per PlanCommand the runner executed. */
+  commandRuns: PlanCommandRun[];
   checks: Record<string, CheckOutcome>;
-  /** Wall-clock duration of the spawned command. */
+  /** Wall-clock duration: sum across all command runs. */
   durationMs: number;
-  /** Captured diagnostic lines (capped). Empty when the command passed. */
+  /**
+   * Concatenated diagnostic lines (capped). Each line is prefixed
+   * with `[<check>] ` so the source command is identifiable. Empty
+   * when all command runs passed.
+   */
   diagnostics: string[];
   /** Honest gap declarations from the plan. */
   knownGaps: string[];
-  /** Aggregate: `pass` when the spawned command exited 0. */
+  /** Aggregate: `pass` only when every command run exited 0. */
   status: "pass" | "fail";
 }
 

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { useInput } from "./useInput.js";
 // @generated:end
 
@@ -20,7 +20,7 @@ import { useInput } from "./useInput.js";
 @Component({
   selector: "fsds-input",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<input [ngClass]="classes()" [value]="behavior.value()" (change)="handleValueChange($event)" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

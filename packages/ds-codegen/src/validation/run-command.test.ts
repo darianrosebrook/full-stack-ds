@@ -49,7 +49,9 @@ describe("runValidationPlan", () => {
     const result = await runValidationPlan(plan);
     expect(result.status).toBe("fail");
     expect(result.checks.typecheck).toBe("fail");
-    expect(result.diagnostics).toContain("error TS2322: Type X");
+    // Diagnostics are prefixed with `[<check>] ` so multi-command
+    // plans (e.g. Angular tsc + ngc) can be attributed.
+    expect(result.diagnostics).toContain("[typecheck] error TS2322: Type X");
   });
 
   it("preserves `not_covered` regardless of command outcome", async () => {
@@ -94,14 +96,14 @@ describe("runValidationPlan", () => {
       checks: { typecheck: "direct" },
     };
     const result = await runValidationPlan(plan);
-    expect(result.diagnostics).toContain("real svelte error here");
+    expect(result.diagnostics).toContain("[typecheck] real svelte error here");
     expect(
       result.diagnostics.find((line) =>
-        line.startsWith("> @full-stack-ds/svelte"),
+        line.includes("> @full-stack-ds/svelte"),
       ),
     ).toBeUndefined();
     expect(
-      result.diagnostics.find((line) => line.startsWith(" ELIFECYCLE")),
+      result.diagnostics.find((line) => line.includes(" ELIFECYCLE")),
     ).toBeUndefined();
   });
 
@@ -115,5 +117,68 @@ describe("runValidationPlan", () => {
     expect(result.command).toContain("node");
     expect(result.command).toContain("setTimeout");
     expect(result.durationMs).toBeGreaterThanOrEqual(40);
+  });
+
+  it("multi-command plan: each direct check resolves from its own run", async () => {
+    // Both commands pass → both direct checks pass, aggregate pass.
+    const plan: FrameworkValidationPlan = {
+      framework: "angular",
+      commands: [
+        { check: "typecheck", command: ["node", "-e", "process.exit(0)"] },
+        { check: "templateTypecheck", command: ["node", "-e", "process.exit(0)"] },
+      ],
+      checks: { typecheck: "direct", templateTypecheck: "direct" },
+    };
+    const result = await runValidationPlan(plan);
+    expect(result.status).toBe("pass");
+    expect(result.checks.typecheck).toBe("pass");
+    expect(result.checks.templateTypecheck).toBe("pass");
+    expect(result.commandRuns).toHaveLength(2);
+    expect(result.commandRuns[0].check).toBe("typecheck");
+    expect(result.commandRuns[1].check).toBe("templateTypecheck");
+  });
+
+  it("multi-command plan: one fail does not short-circuit; checks attribute correctly", async () => {
+    // First passes, second fails → typecheck=pass, templateTypecheck=fail,
+    // aggregate=fail. Both runs are recorded.
+    const plan: FrameworkValidationPlan = {
+      framework: "angular",
+      commands: [
+        { check: "typecheck", command: ["node", "-e", "process.exit(0)"] },
+        {
+          check: "templateTypecheck",
+          command: [
+            "node",
+            "-e",
+            "console.error('NG8002: bad binding'); process.exit(1)",
+          ],
+        },
+      ],
+      checks: { typecheck: "direct", templateTypecheck: "direct" },
+    };
+    const result = await runValidationPlan(plan);
+    expect(result.status).toBe("fail");
+    expect(result.checks.typecheck).toBe("pass");
+    expect(result.checks.templateTypecheck).toBe("fail");
+    expect(result.diagnostics).toContain(
+      "[templateTypecheck] NG8002: bad binding",
+    );
+    // First run's diagnostics are empty because it passed.
+    expect(result.commandRuns[0].diagnostics).toEqual([]);
+    expect(result.commandRuns[1].diagnostics).toContain(
+      "[templateTypecheck] NG8002: bad binding",
+    );
+  });
+
+  it("rejects plans with both `command` and `commands`", async () => {
+    const plan: FrameworkValidationPlan = {
+      framework: "react",
+      command: ["node", "-e", ""],
+      commands: [{ check: "typecheck", command: ["node", "-e", ""] }],
+      checks: { typecheck: "direct" },
+    };
+    await expect(runValidationPlan(plan)).rejects.toThrow(
+      /declares both `command` and `commands`/,
+    );
   });
 });

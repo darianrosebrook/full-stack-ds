@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +21,7 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 @Component({
   selector: "fsds-spinner",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()">
   <span [ngClass]="'spinner__visual'" aria-hidden="true"></span>
 </div>`,

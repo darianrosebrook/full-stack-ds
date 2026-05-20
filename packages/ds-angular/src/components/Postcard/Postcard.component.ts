@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
 
@@ -22,7 +22,7 @@ export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; as
 @Component({
   selector: "fsds-postcard",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<article [ngClass]="classes()">
   <div [ngClass]="'postcard__header'">
     <div [ngClass]="'postcard__userInfo'">

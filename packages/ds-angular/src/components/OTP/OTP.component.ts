@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useOTP } from "./useOTP.js";
 // @generated:end
@@ -21,7 +21,7 @@ export type OTPMode = "numeric" | "alphanumeric";
 @Component({
   selector: "fsds-otp",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="label" aria-describedby="otp-error-id">
   <div [ngClass]="'otp__group'">
     <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" [disabled]="disabled" [attr.aria-readonly]="readOnly" />

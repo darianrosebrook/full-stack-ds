@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { useCheckbox } from "./useCheckbox.js";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-checkbox",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<input [ngClass]="classes()" type="checkbox" [checked]="behavior.checked()" (change)="handleCheckedChange($event)" [disabled]="disabled" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

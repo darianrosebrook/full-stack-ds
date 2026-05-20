@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:ngc": "ngc -p tsconfig.ngc.json",
     "test": "jest --config jest.config.cjs",
     "build": "tsc -p tsconfig.build.json"
   },
@@ -26,16 +27,16 @@
     "@angular/core": ">=17.0.0"
   },
   "devDependencies": {
-    "@angular/common": "^19.2.21",
-    "@angular/compiler": "^19.2.21",
-    "@angular/compiler-cli": "^19.2.21",
-    "@angular/core": "^19.2.21",
-    "@angular/platform-browser": "^19.2.21",
-    "@angular/platform-browser-dynamic": "^19.2.21",
+    "@angular/common": "^21.2.13",
+    "@angular/compiler": "^21.2.13",
+    "@angular/compiler-cli": "^21.2.13",
+    "@angular/core": "^21.2.13",
+    "@angular/platform-browser": "^21.2.13",
+    "@angular/platform-browser-dynamic": "^21.2.13",
     "@types/jest": "^30.0.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "jest-preset-angular": "^16.1.4",
+    "jest-preset-angular": "^16.1.5",
     "rxjs": "^7.8.0",
     "typescript": "^6.0.2",
     "zone.js": "^0.15.0"

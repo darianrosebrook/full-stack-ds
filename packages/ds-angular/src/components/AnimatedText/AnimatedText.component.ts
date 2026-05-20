@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -20,7 +20,7 @@ export type AnimatedTextVariant = "blur-in" | "fade-up" | "slide-in";
 @Component({
   selector: "fsds-animated-text",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()" [attr.data-text]="text"></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

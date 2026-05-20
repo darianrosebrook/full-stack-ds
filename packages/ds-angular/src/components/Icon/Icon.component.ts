@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,7 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 @Component({
   selector: "fsds-icon",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<span [ngClass]="classes()" aria-hidden="true"></span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

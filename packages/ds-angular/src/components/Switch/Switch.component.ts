@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { useSwitch } from "./useSwitch.js";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type SwitchSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-switch",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<label [ngClass]="classes()">
   <input [ngClass]="'switch__input'" type="checkbox" role="switch" [checked]="behavior.checked()" (change)="handleCheckedChange($event)" [disabled]="disabled" [name]="name" [value]="value" />
   <span [ngClass]="'switch__track'" aria-hidden="true">

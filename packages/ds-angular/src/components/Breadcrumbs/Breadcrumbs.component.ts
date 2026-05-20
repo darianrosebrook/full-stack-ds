@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
 
@@ -20,7 +20,7 @@ import { StackComponent } from "../../primitives/index.js";
 @Component({
   selector: "fsds-breadcrumbs",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<nav [ngClass]="classes()" [attr.aria-label]="ariaLabel">
   <ol [ngClass]="'breadcrumbs__list'">
     <ng-content />

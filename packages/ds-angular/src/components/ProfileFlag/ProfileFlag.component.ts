@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,7 @@ export type ProfileFlagData = { id: string; username: string; full_name: string;
 @Component({
   selector: "fsds-profile-flag",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()">
   <ng-content />
 </div>`,

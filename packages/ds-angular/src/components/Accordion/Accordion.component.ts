@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useAccordion } from "./useAccordion.js";
 // @generated:end
@@ -21,7 +21,7 @@ export type AccordionType = "single" | "multiple";
 @Component({
   selector: "fsds-accordion",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()">
   <div [ngClass]="'accordion__item'">
     <h3 [ngClass]="'accordion__header'">

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useCalendar } from "./useCalendar.js";
 // @generated:end
@@ -21,7 +21,7 @@ export type CalendarMode = "single" | "range";
 @Component({
   selector: "fsds-calendar",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()" role="application">
   <div [ngClass]="'calendar__header'">
     <button [ngClass]="'calendar__nav'" aria-label="Previous month"></button>

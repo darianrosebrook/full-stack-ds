@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { useToggleSwitch } from "./useToggleSwitch.js";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type ToggleSwitchSize = "small" | "medium" | "large";
 @Component({
   selector: "fsds-toggle-switch",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<button [ngClass]="classes()" type="button" [attr.aria-checked]="behavior.checked()" [attr.aria-label]="ariaLabel" [attr.aria-describedby]="ariaDescribedby" [disabled]="disabled" (click)="handleCheckedChange($event)"></button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

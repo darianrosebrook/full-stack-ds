@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +23,7 @@ export type ListSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-list",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<ul [ngClass]="classes()">
   <ng-content />
 </ul>`,

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type AnimatedCardAs = "article" | "div" | "li" | "a";
 @Component({
   selector: "fsds-animated-card",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()" [attr.data-as]="this.as">
   <ng-content />
 </div>`,

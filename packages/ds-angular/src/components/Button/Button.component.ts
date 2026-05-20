@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +21,7 @@ export type ButtonType = "button" | "submit" | "reset";
 @Component({
   selector: "fsds-button",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<button [ngClass]="classes()" [type]="type" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
   <ng-content />
 </button>`,

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -20,7 +20,7 @@ export type LinkSize = "small" | "medium" | "large";
 @Component({
   selector: "fsds-links",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<a [ngClass]="classes()" [href]="href" [target]="target" [rel]="rel">
   <ng-content />
 </a>`,

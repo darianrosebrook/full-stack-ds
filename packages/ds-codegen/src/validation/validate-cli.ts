@@ -35,8 +35,13 @@ async function main(): Promise<void> {
 
   const results: Partial<Record<FrameworkId, FrameworkValidationResult>> = {};
   for (const plan of PLANS) {
+    const commandSummary = plan.command
+      ? plan.command.join(" ")
+      : (plan.commands ?? [])
+          .map((pc) => `${pc.check}: ${pc.command.join(" ")}`)
+          .join(" | ");
     process.stderr.write(
-      `[validate:generated] ${plan.framework}: running ${plan.command.join(" ")}\n`,
+      `[validate:generated] ${plan.framework}: running ${commandSummary}\n`,
     );
     const result = await runValidationPlan(plan);
     results[plan.framework] = result;

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
 
@@ -25,7 +25,7 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
 @Component({
   selector: "fsds-text",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<p [ngClass]="classes()"></p>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

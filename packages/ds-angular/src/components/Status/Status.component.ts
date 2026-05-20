@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,7 @@ export type StatusIntent = "info" | "success" | "warning" | "danger" | "error";
 @Component({
   selector: "fsds-status",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<span [ngClass]="classes()">
   <span [ngClass]="'status__icon'" aria-hidden="true"></span>
   <span [ngClass]="'status__label'">

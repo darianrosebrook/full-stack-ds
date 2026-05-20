@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -20,7 +20,7 @@ export type AnimatedSectionVariant = "fade-up" | "fade-in" | "slide-in" | "stagg
 @Component({
   selector: "fsds-animated-section",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<section [ngClass]="classes()">
   <ng-content />
 </section>`,

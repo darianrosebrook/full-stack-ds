@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useWalkthrough } from "./useWalkthrough.js";
 // @generated:end
@@ -22,7 +22,7 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
 @Component({
   selector: "fsds-walkthrough",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="label">
   <div [ngClass]="'walkthrough__content'">
     <h3 [ngClass]="'walkthrough__title'">

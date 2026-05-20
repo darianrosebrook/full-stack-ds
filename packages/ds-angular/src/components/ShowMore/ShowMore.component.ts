@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useShowMore } from "./useShowMore.js";
 // @generated:end
@@ -21,7 +21,7 @@ import { useShowMore } from "./useShowMore.js";
 @Component({
   selector: "fsds-show-more",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()">
   <div [ngClass]="'show-more__content'">
     <ng-content />

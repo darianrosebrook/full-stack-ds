@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -20,7 +20,7 @@ export type BlockquoteSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-blockquote",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<blockquote [ngClass]="classes()">
   <ng-content />
 </blockquote>`,

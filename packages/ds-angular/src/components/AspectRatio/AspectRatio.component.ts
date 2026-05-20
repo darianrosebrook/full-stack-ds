@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,7 @@ export type AspectRatioPreset = "square" | "video" | "photo" | "wide" | "portrai
 @Component({
   selector: "fsds-aspect-ratio",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()">
   <ng-content />
 </div>`,

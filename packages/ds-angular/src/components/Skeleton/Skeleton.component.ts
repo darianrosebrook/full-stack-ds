@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +23,7 @@ export type SkeletonRadius = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-skeleton",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()" aria-busy="true" [attr.aria-label]="ariaLabel"></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

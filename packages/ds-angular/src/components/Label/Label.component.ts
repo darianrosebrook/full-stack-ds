@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,8 +19,8 @@ import { NgClass, NgIf } from "@angular/common";
 @Component({
   selector: "fsds-label",
   standalone: true,
-  imports: [NgClass, NgIf],
-  template: `<label [ngClass]="classes()" [htmlFor]="htmlFor" [form]="form">
+  imports: [NgClass],
+  template: `<label [ngClass]="classes()" [htmlFor]="htmlFor" [attr.form]="form">
   <ng-content />
 </label>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
