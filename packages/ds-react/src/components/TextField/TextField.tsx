@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useTextField } from "./useTextField";
 import "./TextField.css";
@@ -18,7 +18,7 @@ import "./TextField.css";
 // @custom:end
 
 // @generated:start props
-export interface TextFieldProps {
+export interface TextFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDescribedby" | "children" | "className" | "data-testid" | "defaultValue" | "description" | "disabled" | "error" | "invalid" | "label" | "name" | "onChange" | "required" | "type" | "value"> {
   label?: ReactNode;
   description?: ReactNode;
   error?: ReactNode;

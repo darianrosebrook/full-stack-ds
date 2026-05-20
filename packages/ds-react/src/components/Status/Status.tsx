@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Status.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ export type StatusIntent = "info" | "success" | "warning" | "danger" | "error";
 // @custom:end
 
 // @generated:start props
-export interface StatusProps {
+export interface StatusProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "status"> {
   status: StatusIntent;
   className?: string;
   "data-testid"?: string;

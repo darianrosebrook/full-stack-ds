@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useOTP } from "./useOTP";
 import "./OTP.css";
@@ -18,7 +18,7 @@ export type OTPMode = "numeric" | "alphanumeric";
 // @custom:end
 
 // @generated:start props
-export interface OTPProps {
+export interface OTPProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "label" | "length" | "mode" | "onChange" | "onComplete" | "readOnly" | "value"> {
   length?: number;
   value?: string;
   defaultValue?: string;

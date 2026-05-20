@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Skeleton.css";
 // @generated:end
 
@@ -24,7 +24,7 @@ export type SkeletonLines = number | { min: number; max: number };
 // @custom:end
 
 // @generated:start props
-export interface SkeletonProps {
+export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, "animate" | "ariaLabel" | "aspectRatio" | "children" | "className" | "data-testid" | "decorative" | "density" | "lines" | "radius" | "variant"> {
   variant?: SkeletonVariant;
   animate?: SkeletonAnimate;
   density?: SkeletonDensity;

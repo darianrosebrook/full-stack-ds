@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Divider.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./Divider.css";
 // @custom:end
 
 // @generated:start props
-export interface DividerProps {
+export interface DividerProps extends Omit<HTMLAttributes<HTMLHRElement>, "children" | "className" | "data-testid" | "decorative" | "orientation" | "thickness" | "title"> {
   orientation?: "horizontal" | "vertical";
   decorative?: boolean;
   thickness?: string;

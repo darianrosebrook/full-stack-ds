@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useCalendar } from "./useCalendar";
 import "./Calendar.css";
@@ -18,7 +18,7 @@ export type CalendarMode = "single" | "range";
 // @custom:end
 
 // @generated:start props
-export interface CalendarProps {
+export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "value"> {
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;

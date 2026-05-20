@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode } from "react";
 import { useInput } from "./useInput";
 import "./Input.css";
 // @generated:end
@@ -17,7 +17,7 @@ import "./Input.css";
 // @custom:end
 
 // @generated:start props
-export interface InputProps {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "invalid" | "name" | "onChange" | "placeholder" | "required" | "type" | "value"> {
   type?: string;
   value?: string;
   defaultValue?: string;

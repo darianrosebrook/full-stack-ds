@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useShowMore } from "./useShowMore";
 import "./ShowMore.css";
@@ -18,7 +18,7 @@ import "./ShowMore.css";
 // @custom:end
 
 // @generated:start props
-export interface ShowMoreProps {
+export interface ShowMoreProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultExpanded" | "expanded" | "maxLines" | "onExpandedChange" | "showLessLabel" | "showMoreLabel"> {
   expanded?: boolean;
   defaultExpanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;

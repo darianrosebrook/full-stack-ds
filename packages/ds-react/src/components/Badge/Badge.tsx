@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./Badge.css";
 // @generated:end
@@ -21,7 +21,7 @@ export type BadgeSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface BadgeProps {
+export interface BadgeProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "icon" | "intent" | "showStatusIcon" | "size" | "variant"> {
   variant?: BadgeVariant;
   intent?: BadgeIntent;
   size?: BadgeSize;

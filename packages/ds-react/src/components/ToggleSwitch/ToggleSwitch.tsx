@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import { useToggleSwitch } from "./useToggleSwitch";
 import "./ToggleSwitch.css";
 // @generated:end
@@ -17,7 +17,7 @@ export type ToggleSwitchSize = "small" | "medium" | "large";
 // @custom:end
 
 // @generated:start props
-export interface ToggleSwitchProps {
+export interface ToggleSwitchProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ariaDescribedby" | "ariaLabel" | "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "onChange" | "size"> {
   checked?: boolean;
   defaultChecked?: boolean;
   onChange?: (checked: boolean) => void;

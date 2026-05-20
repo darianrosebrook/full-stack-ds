@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import "./Button.css";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type ButtonType = "button" | "submit" | "reset";
 // @custom:end
 
 // @generated:start props
-export interface ButtonProps {
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ariaExpanded" | "ariaLabel" | "ariaPressed" | "children" | "className" | "data-testid" | "disabled" | "loading" | "size" | "title" | "type" | "variant"> {
   size?: ButtonSize;
   variant?: ButtonVariant;
   type?: ButtonType;

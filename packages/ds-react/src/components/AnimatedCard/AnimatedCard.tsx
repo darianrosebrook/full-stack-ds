@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./AnimatedCard.css";
 // @generated:end
@@ -17,7 +17,7 @@ export type AnimatedCardAs = "article" | "div" | "li" | "a";
 // @custom:end
 
 // @generated:start props
-export interface AnimatedCardProps {
+export interface AnimatedCardProps extends Omit<HTMLAttributes<HTMLDivElement>, "as" | "children" | "className" | "data-testid" | "delay" | "duration" | "enableHover" | "href" | "scrollStart" | "triggerOnScroll"> {
   as?: AnimatedCardAs;
   duration?: number;
   delay?: number;

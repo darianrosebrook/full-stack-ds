@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type KeyboardEvent, type ReactNode, useCallback, useEffect, useRef } from "react";
+import { type HTMLAttributes, type KeyboardEvent, type ReactNode, useCallback, useEffect, useRef } from "react";
 import { useTabs } from "./useTabs";
 import { createCompoundContext } from "../../primitives/hooks";
 import "./Tabs.css";
@@ -20,7 +20,7 @@ export type TabsActivationMode = "automatic" | "manual";
 // @custom:end
 
 // @generated:start props
-export interface TabsProps {
+export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "activationMode" | "children" | "className" | "data-testid" | "defaultValue" | "idBase" | "loop" | "onValueChange" | "orientation" | "unmountInactive" | "value"> {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;

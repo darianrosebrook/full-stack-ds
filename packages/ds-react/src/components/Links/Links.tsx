@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type AnchorHTMLAttributes, type ReactNode } from "react";
 import "./Links.css";
 // @generated:end
 
@@ -18,7 +18,7 @@ export type LinkSize = "small" | "medium" | "large";
 // @custom:end
 
 // @generated:start props
-export interface LinksProps {
+export interface LinksProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children" | "className" | "data-testid" | "disabled" | "href" | "rel" | "size" | "target"> {
   href?: string;
   target?: LinkTarget;
   rel?: string;

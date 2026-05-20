@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode } from "react";
 import { useCheckbox } from "./useCheckbox";
 import "./Checkbox.css";
 // @generated:end
@@ -17,7 +17,7 @@ export type CheckboxSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface CheckboxProps {
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "indeterminate" | "name" | "onChange" | "size" | "value"> {
   size?: CheckboxSize;
   checked?: boolean;
   defaultChecked?: boolean;

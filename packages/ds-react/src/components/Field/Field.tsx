@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./Field.css";
 // @generated:end
@@ -17,7 +17,7 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
 // @custom:end
 
 // @generated:start props
-export interface FieldProps {
+export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "disabled" | "error" | "helpText" | "id" | "label" | "name" | "onChange" | "readOnly" | "required" | "status" | "validate" | "validating" | "value"> {
   name: string;
   id?: string;
   required?: boolean;

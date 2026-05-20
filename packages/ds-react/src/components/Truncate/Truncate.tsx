@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useTruncate } from "./useTruncate";
 import "./Truncate.css";
@@ -18,7 +18,7 @@ import "./Truncate.css";
 // @custom:end
 
 // @generated:start props
-export interface TruncateProps {
+export interface TruncateProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "collapseText" | "data-testid" | "defaultExpanded" | "expandText" | "expandable" | "expanded" | "lines" | "onExpandedChange"> {
   lines?: number;
   expandable?: boolean;
   expanded?: boolean;

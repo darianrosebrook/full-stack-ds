@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./AnimatedText.css";
 // @generated:end
 
@@ -18,7 +18,7 @@ export type AnimatedTextVariant = "blur-in" | "fade-up" | "slide-in";
 // @custom:end
 
 // @generated:start props
-export interface AnimatedTextProps {
+export interface AnimatedTextProps extends Omit<HTMLAttributes<HTMLDivElement>, "as" | "children" | "className" | "data-testid" | "delay" | "duration" | "scrollStart" | "stagger" | "text" | "triggerOnScroll" | "variant"> {
   text: string;
   as?: AnimatedTextAs;
   variant?: AnimatedTextVariant;

@@ -179,15 +179,23 @@ const REACT_TYPE_IDENTIFIERS = [
   // Attribute interfaces
   "AllHTMLAttributes",
   "HTMLAttributes",
-  "ButtonHTMLAttributes",
-  "InputHTMLAttributes",
-  "TextareaHTMLAttributes",
-  "SelectHTMLAttributes",
   "AnchorHTMLAttributes",
-  "FormHTMLAttributes",
-  "DialogHTMLAttributes",
+  "BlockquoteHTMLAttributes",
+  "ButtonHTMLAttributes",
   "DetailsHTMLAttributes",
+  "DialogHTMLAttributes",
+  "FormHTMLAttributes",
+  "ImgHTMLAttributes",
+  "InputHTMLAttributes",
+  "LabelHTMLAttributes",
+  "OlHTMLAttributes",
   "OptionHTMLAttributes",
+  "SelectHTMLAttributes",
+  "TableHTMLAttributes",
+  "TdHTMLAttributes",
+  "TextareaHTMLAttributes",
+  "ThHTMLAttributes",
+  "TimeHTMLAttributes",
   "AriaAttributes",
 ] as const;
 
@@ -195,6 +203,54 @@ const REACT_TYPE_IDENTIFIERS = [
 function identifierRegex(name: string): RegExp {
   return new RegExp(`(?<![.\\w])${name}(?![\\w])`, "g");
 }
+
+/**
+ * Map an HTML tag (as it appears in the contract's `anatomy.dom.tag`) to the
+ * React HTMLAttributes interface that types the matching DOM element's full
+ * raw-attribute surface. The emitted Props interface extends an `Omit<>` of
+ * this type so consumers can pass standard DOM attrs (`onClick`, `id`, raw
+ * `aria-*`, etc.) without the codegen having to re-list every one of them.
+ *
+ * Branches on tag, not component name — fits the codegen authority doctrine
+ * (docs/codegen-authority.md). Tags missing from this map fall back to the
+ * generic `HTMLAttributes<HTMLElement>` form.
+ *
+ * Pairs are written as `[reactInterfaceName, elementInterfaceName]` so
+ * the emitted text reads `ButtonHTMLAttributes<HTMLButtonElement>`.
+ */
+const HOST_TAG_TO_REACT_ATTRS: Record<string, [string, string]> = {
+  a: ["AnchorHTMLAttributes", "HTMLAnchorElement"],
+  article: ["HTMLAttributes", "HTMLElement"],
+  blockquote: ["BlockquoteHTMLAttributes", "HTMLQuoteElement"],
+  button: ["ButtonHTMLAttributes", "HTMLButtonElement"],
+  details: ["DetailsHTMLAttributes", "HTMLDetailsElement"],
+  div: ["HTMLAttributes", "HTMLDivElement"],
+  form: ["FormHTMLAttributes", "HTMLFormElement"],
+  hr: ["HTMLAttributes", "HTMLHRElement"],
+  img: ["ImgHTMLAttributes", "HTMLImageElement"],
+  input: ["InputHTMLAttributes", "HTMLInputElement"],
+  label: ["LabelHTMLAttributes", "HTMLLabelElement"],
+  nav: ["HTMLAttributes", "HTMLElement"],
+  ol: ["OlHTMLAttributes", "HTMLOListElement"],
+  option: ["OptionHTMLAttributes", "HTMLOptionElement"],
+  p: ["HTMLAttributes", "HTMLParagraphElement"],
+  section: ["HTMLAttributes", "HTMLElement"],
+  select: ["SelectHTMLAttributes", "HTMLSelectElement"],
+  span: ["HTMLAttributes", "HTMLSpanElement"],
+  summary: ["HTMLAttributes", "HTMLElement"],
+  table: ["TableHTMLAttributes", "HTMLTableElement"],
+  tbody: ["HTMLAttributes", "HTMLTableSectionElement"],
+  td: ["TdHTMLAttributes", "HTMLTableCellElement"],
+  textarea: ["TextareaHTMLAttributes", "HTMLTextAreaElement"],
+  th: ["ThHTMLAttributes", "HTMLTableCellElement"],
+  time: ["TimeHTMLAttributes", "HTMLTimeElement"],
+  tr: ["HTMLAttributes", "HTMLTableRowElement"],
+  ul: ["HTMLAttributes", "HTMLUListElement"],
+  // dialog has DialogHTMLAttributes but consumers typically use it as a
+  // controlled overlay; project's Dialog has its own surface so we don't
+  // currently route the contract `dialog` tag through here.
+};
+
 
 /**
  * Strip a leading `React.` namespace prefix from any reference to a known
@@ -237,6 +293,17 @@ function collectReactImports(ir: ComponentIR): string[] {
     if (def.values) sources.push(def.values.join(" "));
   }
 
+  // The props interface may extend `XxxHTMLAttributes<HTMLXxxElement>` based
+  // on the contract's root dom tag. Surface that interface name here so the
+  // import scanner picks it up. The DOM element name (`HTMLButtonElement`,
+  // etc.) is part of TypeScript's lib.dom — globally available, no import
+  // needed.
+  const hostTag = ir.dom?.tag;
+  if (hostTag) {
+    const mapped = HOST_TAG_TO_REACT_ATTRS[hostTag];
+    if (mapped) sources.push(mapped[0]);
+  }
+
   const haystack = sources.join(" ");
   for (const name of REACT_TYPE_IDENTIFIERS) {
     if (identifierRegex(name).test(haystack)) imports.add(name);
@@ -275,11 +342,66 @@ function generateTypes(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * When the contract's root dom tag is a known HTML element, build an
+ * `extends Omit<XxxHTMLAttributes<HTMLXxxElement>, "...">` clause so the
+ * emitted props interface inherits the host element's full raw-attribute
+ * surface (onClick, id, raw aria-*, etc.).
+ *
+ * The Omit list scrubs every prop name the codegen will re-declare in the
+ * interface body — preventing TS "Subsequent property declarations must
+ * have the same type" errors when the contract intentionally narrows a
+ * field (e.g. `type: ButtonType` narrowing the React `type` string union).
+ *
+ * Returns `null` when the component has no dom tree or the root tag is not
+ * registered in HOST_TAG_TO_REACT_ATTRS — the caller falls back to a plain
+ * `interface XProps {` line.
+ */
+function buildHostAttrsExtendsClause(
+  ir: ComponentIR,
+  propNames: ReadonlySet<string>,
+): string | null {
+  const hostTag = ir.dom?.tag;
+  if (!hostTag) return null;
+  const mapped = HOST_TAG_TO_REACT_ATTRS[hostTag];
+  if (!mapped) return null;
+  const [reactInterface, elementInterface] = mapped;
+
+  const omit = new Set<string>();
+  for (const p of ir.styledProps) omit.add(p.name);
+  for (const dim of Object.keys(ir.variants)) {
+    if (!propNames.has(dim)) omit.add(dim);
+  }
+  omit.add("className");
+  omit.add("data-testid");
+  if (ir.dom && domTreeHasRole(ir.dom, "dialog")) {
+    omit.add("aria-label");
+    omit.add("aria-labelledby");
+  }
+  // `children` is always re-declared by the props interface when the
+  // component renders children, with type `ReactNode`. React's
+  // HTMLAttributes also declares `children?: ReactNode`, so the types
+  // match — but omit it anyway for consistency, so the interface body
+  // is the single source of truth for that field.
+  omit.add("children");
+
+  const omitKeys = [...omit]
+    .sort()
+    .map((k) => `"${k}"`)
+    .join(" | ");
+  return `Omit<${reactInterface}<${elementInterface}>, ${omitKeys}>`;
+}
+
 function generatePropsInterface(ir: ComponentIR): string {
   const propNames = new Set(ir.styledProps.map((p) => p.name));
   const lines: string[] = [];
 
-  lines.push(`export interface ${ir.name}Props {`);
+  const extendsClause = buildHostAttrsExtendsClause(ir, propNames);
+  lines.push(
+    extendsClause
+      ? `export interface ${ir.name}Props extends ${extendsClause} {`
+      : `export interface ${ir.name}Props {`,
+  );
 
   for (const p of ir.styledProps) {
     const optional = p.required ? "" : "?";

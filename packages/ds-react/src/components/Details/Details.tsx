@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type DetailsHTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useDetails } from "./useDetails";
 import "./Details.css";
@@ -20,7 +20,7 @@ export type DetailsIcon = "left" | "right" | "none";
 // @custom:end
 
 // @generated:start props
-export interface DetailsProps {
+export interface DetailsProps extends Omit<DetailsHTMLAttributes<HTMLDetailsElement>, "children" | "className" | "data-testid" | "defaultOpen" | "disabled" | "icon" | "onOpenChange" | "open" | "summary" | "variant"> {
   summary: string;
   open?: boolean;
   defaultOpen?: boolean;

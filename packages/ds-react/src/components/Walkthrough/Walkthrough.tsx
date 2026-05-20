@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useWalkthrough } from "./useWalkthrough";
 import "./Walkthrough.css";
@@ -20,7 +20,7 @@ export type WalkthroughStepSpec = { anchor: string; title: string; description?:
 // @custom:end
 
 // @generated:start props
-export interface WalkthroughProps {
+export interface WalkthroughProps extends Omit<HTMLAttributes<HTMLDivElement>, "autoStart" | "children" | "className" | "closeOnOutsideClick" | "data-testid" | "defaultIndex" | "index" | "label" | "onComplete" | "onSkip" | "onStepChange" | "placement" | "steps" | "storageKey"> {
   steps?: WalkthroughStepSpec[];
   index?: number;
   defaultIndex?: number;

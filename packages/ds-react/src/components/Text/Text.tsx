@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./Text.css";
 // @generated:end
@@ -27,7 +27,7 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
 // @custom:end
 
 // @generated:start props
-export interface TextProps {
+export interface TextProps extends Omit<HTMLAttributes<HTMLParagraphElement>, "align" | "as" | "children" | "className" | "data-testid" | "size" | "transform" | "truncate" | "variant" | "weight"> {
   as?: TextElement;
   variant?: TextVariant;
   size?: TextSize;

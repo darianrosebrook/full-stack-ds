@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./BrandSwitcher.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./BrandSwitcher.css";
 // @custom:end
 
 // @generated:start props
-export interface BrandSwitcherProps {
+export interface BrandSwitcherProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "compact" | "data-testid" | "enableKeyboard" | "showAutoCycle" | "showDensity" | "showFonts" | "sticky"> {
   showAutoCycle?: boolean;
   showDensity?: boolean;
   showFonts?: boolean;

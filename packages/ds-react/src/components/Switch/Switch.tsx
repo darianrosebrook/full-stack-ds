@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type LabelHTMLAttributes, type ReactNode } from "react";
 import { useSwitch } from "./useSwitch";
 import "./Switch.css";
 // @generated:end
@@ -17,7 +17,7 @@ export type SwitchSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface SwitchProps {
+export interface SwitchProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>, "checked" | "children" | "className" | "data-testid" | "defaultChecked" | "disabled" | "name" | "onChange" | "size" | "value"> {
   checked?: boolean;
   defaultChecked?: boolean;
   onChange?: (checked: boolean) => void;

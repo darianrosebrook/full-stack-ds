@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Progress.css";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type ProgressIntent = "info" | "success" | "warning" | "danger";
 // @custom:end
 
 // @generated:start props
-export interface ProgressProps {
+export interface ProgressProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "formatValue" | "intent" | "label" | "showValue" | "size" | "value" | "variant"> {
   value?: number;
   variant?: ProgressVariant;
   size?: ProgressSize;

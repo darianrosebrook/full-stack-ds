@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./PageTransition.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./PageTransition.css";
 // @custom:end
 
 // @generated:start props
-export interface PageTransitionProps {
+export interface PageTransitionProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "duration" | "enabled" | "transitionName"> {
   transitionName?: string;
   duration?: number;
   enabled?: boolean;

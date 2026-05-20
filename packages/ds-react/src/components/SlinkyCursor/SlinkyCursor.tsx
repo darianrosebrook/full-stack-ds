@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./SlinkyCursor.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./SlinkyCursor.css";
 // @custom:end
 
 // @generated:start props
-export interface SlinkyCursorProps {
+export interface SlinkyCursorProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid"> {
   className?: string;
   "data-testid"?: string;
 }

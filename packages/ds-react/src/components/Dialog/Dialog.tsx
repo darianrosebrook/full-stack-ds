@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useDialog } from "./useDialog";
 import "./Dialog.css";
@@ -18,7 +18,7 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 // @custom:end
 
 // @generated:start props
-export interface DialogProps {
+export interface DialogProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-label" | "aria-labelledby" | "children" | "className" | "closeOnBackdropClick" | "closeOnEscape" | "data-testid" | "defaultOpen" | "dismissible" | "initialFocus" | "modal" | "onOpenChange" | "open" | "returnFocus" | "size"> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;

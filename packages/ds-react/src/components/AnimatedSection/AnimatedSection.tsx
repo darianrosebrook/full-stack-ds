@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./AnimatedSection.css";
 // @generated:end
 
@@ -18,7 +18,7 @@ export type AnimatedSectionVariant = "fade-up" | "fade-in" | "slide-in" | "stagg
 // @custom:end
 
 // @generated:start props
-export interface AnimatedSectionProps {
+export interface AnimatedSectionProps extends Omit<HTMLAttributes<HTMLElement>, "as" | "children" | "className" | "data-testid" | "delay" | "duration" | "scrollStart" | "stagger" | "triggerOnScroll" | "variant"> {
   as?: AnimatedSectionAs;
   variant?: AnimatedSectionVariant;
   duration?: number;

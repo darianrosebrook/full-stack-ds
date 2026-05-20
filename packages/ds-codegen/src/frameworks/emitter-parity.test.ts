@@ -134,9 +134,12 @@ describe("dialog injection respects contract attrs", () => {
     );
     // Count aria-labelledby occurrences in the JSX body (rough but precise)
     const matches = react.match(/aria-labelledby/g) ?? [];
-    // 1 in Props interface declaration + 1 destructured + 1 in JSX = 3 max
-    // (the bug emitted 4: extra duplicate JSX attribute). After fix: ≤3.
-    expect(matches.length).toBeLessThanOrEqual(3);
+    // 1 in Omit<HTMLAttributes...> clause + 1 in Props interface declaration
+    // + 1 destructured + 1 in JSX = 4 max.
+    // The original bug emitted 5: the extra duplicate JSX attribute. The
+    // precise "no duplicate JSX attribute" assertion is below; this is a
+    // coarse upper bound.
+    expect(matches.length).toBeLessThanOrEqual(4);
     // Specifically, the JSX line should have the literal once, not twice
     const jsxLine = react
       .split("\n")

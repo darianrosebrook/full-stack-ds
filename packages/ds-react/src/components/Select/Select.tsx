@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useSelect } from "./useSelect";
 import "./Select.css";
@@ -20,7 +20,7 @@ export type SelectOption = { value: string; label: string; disabled?: boolean };
 // @custom:end
 
 // @generated:start props
-export interface SelectProps {
+export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultValue" | "disabled" | "empty" | "filterFn" | "multiple" | "onChange" | "onOpenChange" | "open" | "options" | "position" | "searchable" | "size" | "value"> {
   options: SelectOption[];
   value?: string | string[];
   defaultValue?: string | string[];

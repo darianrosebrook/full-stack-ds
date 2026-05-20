@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useCommand } from "./useCommand";
 import "./Command.css";
@@ -18,7 +18,7 @@ import "./Command.css";
 // @custom:end
 
 // @generated:start props
-export interface CommandProps {
+export interface CommandProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-label" | "aria-labelledby" | "children" | "className" | "data-testid" | "defaultOpen" | "defaultSearch" | "emptyMessage" | "filter" | "label" | "onOpenChange" | "onSearchChange" | "open" | "placeholder" | "search" | "shouldFilter"> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./Postcard.css";
 // @generated:end
@@ -21,7 +21,7 @@ export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; as
 // @custom:end
 
 // @generated:start props
-export interface PostcardProps {
+export interface PostcardProps extends Omit<HTMLAttributes<HTMLElement>, "author" | "children" | "className" | "data-testid" | "embed" | "postId" | "stats" | "timestamp" | "type"> {
   postId: string;
   author: PostcardAuthor;
   timestamp: string;

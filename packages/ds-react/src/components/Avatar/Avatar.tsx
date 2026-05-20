@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Avatar.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./Avatar.css";
 // @custom:end
 
 // @generated:start props
-export interface AvatarProps {
+export interface AvatarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "name" | "priority" | "size" | "src"> {
   src?: string;
   name: string;
   priority?: boolean;

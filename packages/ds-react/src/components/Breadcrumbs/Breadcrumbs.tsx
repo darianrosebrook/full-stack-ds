@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./Breadcrumbs.css";
 // @generated:end
@@ -17,7 +17,7 @@ import "./Breadcrumbs.css";
 // @custom:end
 
 // @generated:start props
-export interface BreadcrumbsProps {
+export interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, "ariaLabel" | "children" | "className" | "data-testid" | "separator"> {
   ariaLabel?: string;
   separator?: string;
   className?: string;

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type ButtonHTMLAttributes, type ReactNode } from "react";
 import "./Chip.css";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type ChipSize = "small" | "medium" | "large";
 // @custom:end
 
 // @generated:start props
-export interface ChipProps {
+export interface ChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ariaExpanded" | "ariaLabel" | "ariaPressed" | "children" | "className" | "data-testid" | "disabled" | "icon" | "size" | "title" | "type" | "variant"> {
   type?: ChipType;
   variant?: ChipVariant;
   size?: ChipSize;

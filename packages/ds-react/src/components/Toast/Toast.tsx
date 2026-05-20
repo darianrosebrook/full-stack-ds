@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useToast } from "./useToast";
 import "./Toast.css";
@@ -20,7 +20,7 @@ export type ToastPoliteness = "polite" | "assertive";
 // @custom:end
 
 // @generated:start props
-export interface ToastProps {
+export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "action" | "children" | "className" | "data-testid" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   title?: string;

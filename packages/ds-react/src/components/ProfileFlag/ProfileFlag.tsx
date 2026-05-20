@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./ProfileFlag.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ export type ProfileFlagData = { id: string; username: string; full_name: string;
 // @custom:end
 
 // @generated:start props
-export interface ProfileFlagProps {
+export interface ProfileFlagProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "profile"> {
   profile?: ProfileFlagData;
   className?: string;
   "data-testid"?: string;

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type LabelHTMLAttributes, type ReactNode } from "react";
 import "./Label.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./Label.css";
 // @custom:end
 
 // @generated:start props
-export interface LabelProps {
+export interface LabelProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>, "children" | "className" | "data-testid" | "form" | "htmlFor"> {
   htmlFor?: string;
   form?: string;
   className?: string;

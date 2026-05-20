@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./VisuallyHidden.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ import "./VisuallyHidden.css";
 // @custom:end
 
 // @generated:start props
-export interface VisuallyHiddenProps {
+export interface VisuallyHiddenProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "focusable" | "title"> {
   focusable?: boolean;
   title?: string;
   className?: string;

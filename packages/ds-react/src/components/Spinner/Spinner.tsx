@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Spinner.css";
 // @generated:end
 
@@ -20,7 +20,7 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @custom:end
 
 // @generated:start props
-export interface SpinnerProps {
+export interface SpinnerProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaHidden" | "children" | "className" | "data-testid" | "inline" | "label" | "showAfterMs" | "size" | "thickness" | "variant"> {
   size?: SpinnerSize;
   variant?: SpinnerVariant;
   thickness?: SpinnerThickness;

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useSheet } from "./useSheet";
 import "./Sheet.css";
@@ -18,7 +18,7 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
 // @custom:end
 
 // @generated:start props
-export interface SheetProps {
+export interface SheetProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria-label" | "aria-labelledby" | "children" | "className" | "data-testid" | "defaultOpen" | "modal" | "onOpenChange" | "open" | "side"> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;

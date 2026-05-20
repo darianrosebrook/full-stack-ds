@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type BlockquoteHTMLAttributes, type ReactNode } from "react";
 import "./Blockquote.css";
 // @generated:end
 
@@ -18,7 +18,7 @@ export type BlockquoteSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface BlockquoteProps {
+export interface BlockquoteProps extends Omit<BlockquoteHTMLAttributes<HTMLQuoteElement>, "children" | "cite" | "className" | "data-testid" | "size" | "variant"> {
   cite?: string;
   variant?: BlockquoteVariant;
   size?: BlockquoteSize;

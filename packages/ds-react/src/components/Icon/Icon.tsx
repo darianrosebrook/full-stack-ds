@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Icon.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 // @custom:end
 
 // @generated:start props
-export interface IconProps {
+export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "height" | "icon" | "width"> {
   icon: IconDefinition;
   width?: number;
   height?: number;

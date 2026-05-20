@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type ImgHTMLAttributes, type ReactNode } from "react";
 import "./Image.css";
 // @generated:end
 
@@ -22,7 +22,7 @@ export type ImageRadius = "none" | "sm" | "md" | "lg" | "full";
 // @custom:end
 
 // @generated:start props
-export interface ImageProps {
+export interface ImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, "alt" | "aspectRatio" | "children" | "className" | "data-testid" | "fallbackSrc" | "height" | "loading" | "objectFit" | "objectPosition" | "radius" | "showPlaceholder" | "size" | "sizes" | "src" | "width"> {
   src?: string;
   alt: string;
   width?: number;

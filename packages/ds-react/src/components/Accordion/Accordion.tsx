@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useAccordion } from "./useAccordion";
 import "./Accordion.css";
@@ -18,7 +18,7 @@ export type AccordionType = "single" | "multiple";
 // @custom:end
 
 // @generated:start props
-export interface AccordionProps {
+export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "collapsible" | "data-testid" | "defaultValue" | "disabled" | "onValueChange" | "type" | "value"> {
   type?: AccordionType;
   value?: string | string[];
   defaultValue?: string | string[];

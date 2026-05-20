@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./AspectRatio.css";
 // @generated:end
 
@@ -16,7 +16,7 @@ export type AspectRatioPreset = "square" | "video" | "photo" | "wide" | "portrai
 // @custom:end
 
 // @generated:start props
-export interface AspectRatioProps {
+export interface AspectRatioProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "preset" | "ratio"> {
   ratio?: number;
   preset?: AspectRatioPreset;
   className?: string;

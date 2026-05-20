@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./List.css";
 // @generated:end
 
@@ -24,7 +24,7 @@ export type ListSize = "sm" | "md" | "lg";
 // @custom:end
 
 // @generated:start props
-export interface ListProps {
+export interface ListProps extends Omit<HTMLAttributes<HTMLUListElement>, "as" | "children" | "className" | "data-testid" | "marker" | "size" | "spacing" | "variant"> {
   as?: ListElement;
   variant?: ListVariant;
   marker?: ListMarker;
