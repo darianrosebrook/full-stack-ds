@@ -28,7 +28,7 @@ export { LinksComponent } from "./Links/Links.component.js";
 export { ListComponent } from "./List/List.component.js";
 export { OTPComponent, OTPGroupComponent } from "./OTP/OTP.component.js";
 export { PageTransitionComponent } from "./PageTransition/PageTransition.component.js";
-export { PopoverComponent, PopoverContentComponent, PopoverTriggerComponent } from "./Popover/Popover.component.js";
+export { PopoverComponent } from "./Popover/Popover.component.js";
 export { PostcardComponent, PostcardContentComponent, PostcardFooterComponent, PostcardHeaderComponent } from "./Postcard/Postcard.component.js";
 export { ProfileFlagComponent } from "./ProfileFlag/ProfileFlag.component.js";
 export { ProgressComponent } from "./Progress/Progress.component.js";

@@ -1,6 +1,10 @@
 // @generated:start imports
-import { DestroyRef, type Signal } from "@angular/core";
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import { InjectionToken, type Signal } from "@angular/core";
+import {
+  createAnchoredSurface,
+  type CreateAnchoredSurfaceOptions,
+  type CreateAnchoredSurfaceResult,
+} from "../../primitives/surfaces/createAnchoredSurface.js";
 // @generated:end
 
 // @custom:start imports
@@ -8,21 +12,13 @@ import { createAnchorToggle, createControllableState, createPortal } from "../..
 // @custom:end
 
 // @generated:start types
-export interface UsePopoverOptions {
-  open?: () => boolean | undefined;
-  defaultOpen?: boolean;
-  onOpenChange?: (value: boolean) => void;
-  closeOnEscape?: boolean;
-  closeOnOutsideClick?: boolean;
-  destroyRef: DestroyRef;
-}
-
-export interface UsePopoverResult {
+export interface PopoverContextValue {
   open: Signal<boolean>;
   setOpen: (next: boolean) => void;
-  panelRef: { nativeElement: HTMLElement | null };
-  anchorRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
+  contentId: string;
+  anchorRelation: "controls-expanded";
+  registerAnchor: (node: HTMLElement | null) => void;
+  registerContent: (node: HTMLElement | null) => void;
 }
 // @generated:end
 
@@ -30,28 +26,22 @@ export interface UsePopoverResult {
 
 // @custom:end
 
+// @generated:start context
+export const PopoverContextToken = new InjectionToken<PopoverContextValue>(
+  "PopoverContext",
+);
+// @generated:end
+
 // @generated:start hook
-export function usePopover(options: UsePopoverOptions): UsePopoverResult {
-  const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
-  const anchorToggle = createAnchorToggle({
-    open: options.open,
-    defaultOpen: options.defaultOpen ?? false,
-    onOpenChange: options.onOpenChange,
-    destroyRef: options.destroyRef,
-  });
+// anchorRelation is contract-derived for this surface kind and
+// is set by usePopover itself — consumers don't pass it.
+export type UsePopoverOptions = Omit<CreateAnchoredSurfaceOptions, "anchorRelation">;
 
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
+export function usePopover(options: UsePopoverOptions): CreateAnchoredSurfaceResult {
+  return createAnchoredSurface({
+    ...options,
+    anchorRelation: "controls-expanded",
   });
-
-  return {
-    open: anchorToggle.open,
-    setOpen: anchorToggle.setOpen,
-    anchorRef: anchorToggle.anchorRef,
-    panelRef: anchorToggle.panelRef,
-    portalTarget,
-  };
 }
 // @generated:end
 

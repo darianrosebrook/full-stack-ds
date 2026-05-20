@@ -1,30 +1,43 @@
 /**
  * Angular emitter — Anchored Presence Surface path.
  *
- * Activated when `ir.surface?.kind === "tooltip"` (and, after F-3,
- * other anchored kinds). Emits the compound API:
+ * Activated for any contract whose IR has a `surface` block of an
+ * anchored-presence kind (Tooltip, Popover, ...). Surface kind
+ * eligibility is decided by `isAnchoredPresenceKind` in shared
+ * semantics, and per-kind policy (`AnchoredSurfacePolicy`) drives
+ * default content role and public dismissal props. This emitter
+ * MUST NOT branch on component identity or on `surface.kind` for
+ * any rule that could be expressed by the policy.
  *
- *   <fsds-tooltip>
- *     <fsds-tooltip-trigger>Save</fsds-tooltip-trigger>          <!-- default-host -->
- *     <fsds-tooltip-content>Save the document</fsds-tooltip-content>
- *   </fsds-tooltip>
+ * Emits the compound API:
  *
- *   <fsds-tooltip>
- *     <a fsdsTooltipTrigger href="#help">Save</a>                <!-- adopted host -->
- *     <fsds-tooltip-content>Save the document</fsds-tooltip-content>
- *   </fsds-tooltip>
+ *   <fsds-popover>
+ *     <fsds-popover-trigger>Open</fsds-popover-trigger>          <!-- default-host -->
+ *     <fsds-popover-content>Body</fsds-popover-content>
+ *   </fsds-popover>
+ *
+ *   <fsds-popover>
+ *     <a fsdsPopoverTrigger href="#open">Open</a>                <!-- adopted host -->
+ *     <fsds-popover-content>Body</fsds-popover-content>
+ *   </fsds-popover>
  *
  * Host adoption is **attribute-directive based**, Angular's native
- * idiom. The `[fsdsTooltipTrigger]` directive inject(s) ElementRef +
- * the TooltipContextToken; registers its host element as the anchor;
+ * idiom. The `[fsds<Name>Trigger]` directive inject(s) ElementRef +
+ * the <Name>ContextToken; registers its host element as the anchor;
  * applies ARIA + data marker via @HostBinding; and lets the substrate
  * install open-trigger/dismissal DOM listeners directly on it.
  *
- * The default-host `<fsds-tooltip-trigger>` component reuses the
+ * The default-host `<fsds-<name>-trigger>` component reuses the
  * directive internally on its own rendered <button>, so both modes
  * funnel through the same anchor-registration path.
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
+import {
+  isAnchoredPresenceKind,
+  resolveAnchoredSurfacePolicy,
+  type AnchoredSurfacePolicy,
+  type PublicDismissalProp,
+} from "../../semantics.js";
 
 export interface AngularSurfaceFiles {
   rootComponent: string;
@@ -35,7 +48,7 @@ export interface AngularSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined;
+  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
 }
 
 export function generateAngularSurfaceFiles(ir: ComponentIR): AngularSurfaceFiles {
@@ -45,16 +58,12 @@ export function generateAngularSurfaceFiles(ir: ComponentIR): AngularSurfaceFile
       `generateAngularSurfaceFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
-    throw new Error(
-      `Angular surface emitter only supports kind "tooltip" in F-2C-4 (got "${surface.kind}").`,
-    );
-  }
+  const policy = resolveAnchoredSurfacePolicy(surface);
   return {
-    rootComponent: emitRootComponent(ir, surface),
+    rootComponent: emitRootComponent(ir, surface, policy),
     triggerComponent: emitTriggerComponent(ir, surface),
     triggerDirective: emitTriggerDirective(ir, surface),
-    contentComponent: emitContentComponent(ir, surface),
+    contentComponent: emitContentComponent(ir, surface, policy),
     composable: emitComposable(ir, surface),
   };
 }
@@ -67,7 +76,11 @@ function tagFor(name: string): string {
   return `fsds-${kebab(name)}`;
 }
 
-function emitRootComponent(ir: ComponentIR, surface: SurfaceIR): string {
+function emitRootComponent(
+  ir: ComponentIR,
+  surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const placementValues = ir.variants["placement"];
@@ -78,20 +91,43 @@ function emitRootComponent(ir: ComponentIR, surface: SurfaceIR): string {
   const openTriggers = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
 
-  const dismissalParts: string[] = [];
-  if (surface.dismissal.includes("escape")) {
-    dismissalParts.push(`this._closeOnEscape() !== false ? "escape" as const : null`);
-  }
-  if (surface.dismissal.includes("blur")) {
-    dismissalParts.push(`this._closeOnBlur() !== false ? "blur" as const : null`);
-  }
-  if (surface.dismissal.includes("pointer-leave")) {
-    dismissalParts.push(`"pointer-leave" as const`);
-  }
-  if (surface.dismissal.includes("outside-click")) {
-    dismissalParts.push(`"outside-click" as const`);
-  }
+  // Policy-derived dismissal-array assembly. For each declared
+  // dismissal mode:
+  //   - public + runtime-toggleable modes (escape, blur,
+  //     outside-click) gate behind `this._<closeOnProp>() !== false`
+  //     so toggling the @Input at runtime drives a substrate remount.
+  //   - internal-only modes (pointer-leave, ...) are always-on.
+  const dismissalParts = policy.publicDismissalProps.map((spec) =>
+    spec.prop && spec.runtimeToggleable
+      ? `this._${spec.prop}() !== false ? "${spec.mode}" as const : null`
+      : `"${spec.mode}" as const`,
+  );
   const dismissalExpr = dismissalParts.join(",\n      ");
+
+  // Policy-derived public @Input + private signal mirror for each
+  // consumer-facing dismissal flag. Entries with `prop: null` (e.g.
+  // tooltip's pointer-leave) don't surface to the consumer.
+  const publicDismissalProps = policy.publicDismissalProps.filter(
+    (spec): spec is PublicDismissalProp & { prop: string } =>
+      spec.prop !== null,
+  );
+  const closeOnInputLines = publicDismissalProps.map(
+    (spec) => `  @Input() ${spec.prop}?: boolean;`,
+  );
+  const closeOnSignalLines = publicDismissalProps.map(
+    (spec) => `  private _${spec.prop} = signal<boolean | undefined>(undefined);`,
+  );
+  // Each runtime-toggleable closeOn* @Input mirrors into its signal
+  // and asks the substrate to remount so the new dismissal array
+  // takes effect mid-life.
+  const closeOnNgOnChangesBlocks = publicDismissalProps
+    .filter((spec) => spec.runtimeToggleable)
+    .flatMap((spec) => [
+      `    if (changes["${spec.prop}"]) {`,
+      `      this._${spec.prop}.set(this.${spec.prop});`,
+      `      this.behavior?.requestRemount();`,
+      `    }`,
+    ]);
 
   return [
     `// @generated:start imports`,
@@ -156,8 +192,7 @@ function emitRootComponent(ir: ComponentIR, surface: SurfaceIR): string {
     `  @Input() onOpenChange?: (open: boolean) => void;`,
     placementValues ? `  @Input() placement?: ${name}Placement;` : "",
     `  @Input() disabled?: boolean;`,
-    `  @Input() closeOnEscape?: boolean;`,
-    `  @Input() closeOnBlur?: boolean;`,
+    ...closeOnInputLines,
     `  @Input() class?: string;`,
     ``,
     `  // Signal mirrors of @Input values. The root owns its own`,
@@ -167,20 +202,12 @@ function emitRootComponent(ir: ComponentIR, surface: SurfaceIR): string {
     `  private _controlledOpen = signal<boolean | undefined>(undefined);`,
     `  private _uncontrolledOpen = signal<boolean>(false);`,
     `  private _disabled = signal<boolean>(false);`,
-    `  private _closeOnEscape = signal<boolean | undefined>(undefined);`,
-    `  private _closeOnBlur = signal<boolean | undefined>(undefined);`,
+    ...closeOnSignalLines,
     ``,
     `  ngOnChanges(changes: SimpleChanges): void {`,
     `    if (changes["open"]) this._controlledOpen.set(this.open);`,
     `    if (changes["disabled"]) this._disabled.set(this.disabled === true);`,
-    `    if (changes["closeOnEscape"]) {`,
-    `      this._closeOnEscape.set(this.closeOnEscape);`,
-    `      this.behavior?.requestRemount();`,
-    `    }`,
-    `    if (changes["closeOnBlur"]) {`,
-    `      this._closeOnBlur.set(this.closeOnBlur);`,
-    `      this.behavior?.requestRemount();`,
-    `    }`,
+    ...closeOnNgOnChangesBlocks,
     `  }`,
     ``,
     `  ngOnInit(): void {`,
@@ -388,11 +415,30 @@ function emitTriggerComponent(ir: ComponentIR, _surface: SurfaceIR): string {
   ].join("\n");
 }
 
-function emitContentComponent(ir: ComponentIR, surface: SurfaceIR): string {
+function emitContentComponent(
+  ir: ComponentIR,
+  _surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
-  const contentRole = surface.content?.part.details?.aria?.role ?? "tooltip";
+  // Policy-derived default content role. `null` means: do not force
+  // an ARIA role on the content host. Popover-kind surfaces let the
+  // anchor relation (controls-expanded) carry the semantics; tooltip-
+  // kind surfaces default to role="tooltip" unless the contract
+  // overrides via `anatomy.parts.<content>.aria.role`.
+  const contentRole = policy.defaultContentRole;
   const contentTag = `${tagFor(name)}-content`;
+  // Role-reflection host binding. Emitted only when policy yields a
+  // non-null role; otherwise the content host carries no `role` attr.
+  const roleHostBindingLines = contentRole
+    ? [
+        `  @HostBinding("attr.role") get _role(): string | null {`,
+        `    return this.isOpen() ? "${contentRole}" : null;`,
+        `  }`,
+        ``,
+      ]
+    : [];
   return [
     `// @generated:start imports`,
     `import {`,
@@ -437,10 +483,7 @@ function emitContentComponent(ir: ComponentIR, surface: SurfaceIR): string {
     `    return this.isOpen() && this.ctx ? this.ctx.contentId : null;`,
     `  }`,
     ``,
-    `  @HostBinding("attr.role") get _role(): string | null {`,
-    `    return this.isOpen() ? "${contentRole}" : null;`,
-    `  }`,
-    ``,
+    ...roleHostBindingLines,
     `  @HostBinding("attr.data-${cssPrefix}-content") get _dataMarker(): string | null {`,
     `    return this.isOpen() ? "" : null;`,
     `  }`,
