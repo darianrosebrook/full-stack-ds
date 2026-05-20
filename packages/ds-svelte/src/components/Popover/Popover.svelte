@@ -1,71 +1,72 @@
 <script lang="ts">
 // @generated:start imports
-import { usePopover } from "./usePopover.svelte.js";
+import { usePopover, providePopoverContext } from "./usePopover.svelte.js";
 // @generated:end
-
 // @custom:start imports
 
 // @custom:end
-
 // @generated:start types
 type PopoverPlacement = "top" | "bottom" | "left" | "right" | "auto";
-type PopoverTriggerStrategy = "click" | "hover";
 // @generated:end
-
 // @custom:start types
 
 // @custom:end
-
 // @generated:start props
 interface Props {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   placement?: PopoverPlacement;
-  triggerStrategy?: PopoverTriggerStrategy;
-  offset?: number;
-  closeOnOutsideClick?: boolean;
+  disabled?: boolean;
   closeOnEscape?: boolean;
-  anchor?: HTMLElement | null;
+  closeOnOutsideClick?: boolean;
+  closeOnBlur?: boolean;
   class?: string;
+  "data-testid"?: string;
   children?: import('svelte').Snippet;
 }
-
-let { open, defaultOpen, onOpenChange, placement = "auto", triggerStrategy = "click", offset = 8, closeOnOutsideClick, closeOnEscape, anchor, class: className, children }: Props = $props();
+let {
+  open,
+  defaultOpen,
+  onOpenChange,
+  placement,
+  disabled,
+  closeOnEscape,
+  closeOnOutsideClick,
+  closeOnBlur,
+  class: className,
+  "data-testid": dataTestid,
+  children,
+}: Props = $props();
 // @generated:end
-
 // @generated:start hook
-const behavior = usePopover({
+// Pass all reactive props as getters so Svelte 5 doesn't warn
+// about state captured at initialization time.
+const surface = usePopover({
   open: () => open,
   defaultOpen: () => defaultOpen,
-  onOpenChange: () => onOpenChange,
+  onOpenChange: (next) => onOpenChange?.(next),
+  disabled: () => disabled === true,
   closeOnEscape: () => closeOnEscape,
   closeOnOutsideClick: () => closeOnOutsideClick,
+  closeOnBlur: () => closeOnBlur,
 });
+providePopoverContext(surface);
 // @generated:end
-
 // @generated:start classes
 const classes = $derived(
   [
     "popover",
     placement ? `popover--${placement}` : null,
+    disabled ? "popover--disabled" : null,
     className,
   ].filter(Boolean).join(" ")
 );
 // @generated:end
-
 // @custom:start trailing
 
 // @custom:end
 </script>
-
-<div class={classes}>
-  <button class={'popover__trigger'} type="button" aria-haspopup="true" aria-expanded={behavior.open} aria-controls="popover-content">
-    {@render children?.()}
-  </button>
-  {#if behavior.open}
-  <div class={'popover__content'} id="popover-content">
-    {@render children?.()}
-  </div>
-  {/if}
-</div>
+<span class={classes} data-testid={dataTestid}>
+  {@render children?.()}
+</span>

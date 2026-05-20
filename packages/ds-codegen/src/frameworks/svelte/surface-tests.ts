@@ -12,6 +12,7 @@
  * cannot render an in-test compound tree without a fixture SFC.
  */
 import type { ComponentIR } from "../../ir.js";
+import { isAnchoredPresenceKind } from "../../semantics.js";
 
 export interface SvelteSurfaceTestFiles {
   testFile: string;
@@ -25,10 +26,21 @@ export function generateSvelteSurfaceTestFiles(ir: ComponentIR): SvelteSurfaceTe
       `generateSvelteSurfaceTestFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
+  if (!isAnchoredPresenceKind(surface.kind)) {
     throw new Error(
-      `Svelte surface test emitter only supports kind "tooltip" in F-2C-2 (got "${surface.kind}").`,
+      `Svelte surface test emitter expected an anchored-presence kind (got "${surface.kind}"). ` +
+        `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
     );
+  }
+  // Test-body shape is kind-specific (Tooltip's hover/focus contract
+  // vs Popover's click contract). Each kind has its own scaffold
+  // function; dispatch on kind here. Body emission is realization,
+  // not policy.
+  if (surface.kind === "popover") {
+    return {
+      testFile: emitPopoverTestFile(ir),
+      fixtureFile: emitPopoverFixtureFile(ir),
+    };
   }
   return {
     testFile: emitTestFile(ir),
@@ -392,6 +404,337 @@ describe("${name} — snippet host adoption", () => {
     expect(consumerSpy).toHaveBeenCalled();
     expect(surfaceSpy).not.toHaveBeenCalled();
     expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+});
+
+describe("${name} — accessibility", () => {
+  it("has no unexpected axe violations when closed", async () => {
+    const { container } = mountDefault();
+    await tick();
+    const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+
+  it("has no unexpected axe violations when open", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});`;
+
+  return [
+    `// @generated:start imports`,
+    importsBody,
+    `// @generated:end`,
+    ``,
+    `// @generated:start tests`,
+    testsBody,
+    `// @generated:end`,
+    ``,
+    `// @custom:start tests`,
+    ``,
+    `// @custom:end`,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Svelte Popover fixture. Mirrors the Tooltip fixture shape but
+ * carries the Popover-specific consumer-facing dismissal flags
+ * (closeOnEscape / closeOnBlur / closeOnOutsideClick) and the
+ * Popover trigger contract (click-to-toggle on `<button>` /
+ * `<a>` adopted host).
+ */
+function emitPopoverFixtureFile(ir: ComponentIR): string {
+  const name = ir.name;
+  return [
+    `<script lang="ts">`,
+    `// Test fixture for ${name} presence-surface compound.`,
+    `import ${name} from "../${name}.svelte";`,
+    `import ${name}Trigger from "../${name}Trigger.svelte";`,
+    `import ${name}Content from "../${name}Content.svelte";`,
+    ``,
+    `interface Props {`,
+    `  open?: boolean;`,
+    `  defaultOpen?: boolean;`,
+    `  onOpenChange?: (open: boolean) => void;`,
+    `  disabled?: boolean;`,
+    `  closeOnEscape?: boolean;`,
+    `  closeOnBlur?: boolean;`,
+    `  closeOnOutsideClick?: boolean;`,
+    `  /** When true, render the asChild snippet adoption path. */`,
+    `  asChild?: boolean;`,
+    `  /** Spy invoked from the adopted child's onclick handler.`,
+    `   *  Used by the host-adoption tests to assert consumer handlers`,
+    `   *  still run when composed with the substrate's handler. */`,
+    `  consumerOnClick?: (event: MouseEvent) => void;`,
+    `  /** When set, the consumer's handler calls preventDefault to`,
+    `   *  exercise the substrate's consumer-opt-out contract. */`,
+    `  consumerPreventsDefault?: boolean;`,
+    `}`,
+    ``,
+    `let {`,
+    `  open,`,
+    `  defaultOpen,`,
+    `  onOpenChange,`,
+    `  disabled,`,
+    `  closeOnEscape,`,
+    `  closeOnBlur,`,
+    `  closeOnOutsideClick,`,
+    `  asChild,`,
+    `  consumerOnClick,`,
+    `  consumerPreventsDefault,`,
+    `}: Props = $props();`,
+    `</script>`,
+    ``,
+    `<${name}`,
+    `  {open}`,
+    `  {defaultOpen}`,
+    `  {onOpenChange}`,
+    `  {disabled}`,
+    `  {closeOnEscape}`,
+    `  {closeOnBlur}`,
+    `  {closeOnOutsideClick}`,
+    `>`,
+    `  {#if asChild}`,
+    `    <${name}Trigger asChild>`,
+    `      {#snippet child(trigger)}`,
+    `        <!--`,
+    `          Split binding via \`trigger\` (action + attrs). Popover's`,
+    `          openTriggers is ["click"], so the substrate handler is`,
+    `          onclick. Consumer composition runs our handler first,`,
+    `          optionally calls preventDefault, and only invokes the`,
+    `          substrate handler when not prevented.`,
+    `        -->`,
+    `        <a`,
+    `          href="#open"`,
+    `          data-testid="trigger"`,
+    `          use:trigger.action`,
+    `          {...trigger.attrs}`,
+    `          onclick={(e) => {`,
+    `            consumerOnClick?.(e);`,
+    `            if (consumerPreventsDefault) e.preventDefault();`,
+    `            if (!e.defaultPrevented) trigger.attrs.onclick?.(e);`,
+    `          }}`,
+    `        >Open</a>`,
+    `      {/snippet}`,
+    `    </${name}Trigger>`,
+    `  {:else}`,
+    `    <${name}Trigger data-testid="trigger">Open</${name}Trigger>`,
+    `  {/if}`,
+    `  <${name}Content data-testid="content">Body</${name}Content>`,
+    `</${name}>`,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Minimal Svelte Popover test scaffold. Mirrors Vue Popover atom
+ * F-3B-1-B coverage: contract-essential behavioral coverage (click
+ * opens, click toggles, Escape closes, outside-click closes,
+ * aria-controls + aria-expanded wiring, onOpenChange, disabled
+ * suppression, unmount cleanup) plus snippet host adoption via the
+ * adopted \`<a>\`.
+ */
+function emitPopoverTestFile(ir: ComponentIR): string {
+  const name = ir.name;
+  const cssPrefix = ir.cssPrefix;
+  const importsBody = [
+    `import { describe, expect, it, vi } from "vitest";`,
+    `import type { Component } from "svelte";`,
+    `import { tick } from "svelte";`,
+    `import { render, fireEvent } from "@testing-library/svelte";`,
+    `import { axe } from "vitest-axe";`,
+    `import ${name}Fixture from "./${name}Fixture.svelte";`,
+    ``,
+    `declare module "vitest" {`,
+    `  interface Assertion<T> {`,
+    `    toHaveNoViolations(): void;`,
+    `  }`,
+    `}`,
+  ].join("\n");
+
+  const testsBody = `function mountDefault(props: Record<string, unknown> = {}) {
+  return render(${name}Fixture as unknown as Component<Record<string, unknown>>, { props });
+}
+
+describe("${name} — compound API surface", () => {
+  it("renders the trigger but not the content when closed", async () => {
+    const { container } = mountDefault();
+    await tick();
+    expect(container.querySelector("[data-testid='trigger']")).toBeTruthy();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("renders the content when defaultOpen={true}", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("opens on click of the trigger", async () => {
+    const { container } = mountDefault();
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("toggles closed on a second click of the trigger", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("closes on Escape", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("closes on outside-click", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    document.body.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true }),
+    );
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("click on content does not count as outside-click", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const content = container.querySelector("[data-testid='content']")!;
+    content.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("wires aria-controls + aria-expanded on the trigger", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    const content = container.querySelector("[data-testid='content']")!;
+    const id = content.getAttribute("id");
+    expect(id).toBeTruthy();
+    expect(trigger.getAttribute("aria-controls")).toBe(id);
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("aria-expanded reflects closed state", async () => {
+    const { container } = mountDefault();
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("fires onOpenChange on uncontrolled open", async () => {
+    const spy = vi.fn();
+    const { container } = mountDefault({ onOpenChange: spy });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(spy).toHaveBeenCalledWith(true);
+  });
+
+  it("respects disabled — click does not open", async () => {
+    const { container } = mountDefault({ disabled: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("closeOnEscape={false} prevents Escape dismissal", async () => {
+    const { container } = mountDefault({ defaultOpen: true, closeOnEscape: false });
+    await tick();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("closeOnOutsideClick={false} prevents outside-click dismissal", async () => {
+    const { container } = mountDefault({ defaultOpen: true, closeOnOutsideClick: false });
+    await tick();
+    document.body.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true }),
+    );
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("unmount removes document-level listeners", async () => {
+    const spy = vi.fn();
+    const { unmount } = mountDefault({ defaultOpen: true, onOpenChange: spy });
+    await tick();
+    unmount();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("${name} — snippet host adoption", () => {
+  it("renders the adopted child as the actual host (no nested button)", async () => {
+    const { container } = mountDefault({ asChild: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    expect(trigger.tagName).toBe("A");
+  });
+
+  it("asChild opens on click over the adopted child", async () => {
+    const { container } = mountDefault({ asChild: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("asChild applies the data-${cssPrefix}-trigger marker to the adopted host", async () => {
+    const { container } = mountDefault({ asChild: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    expect(trigger.hasAttribute("data-${cssPrefix}-trigger")).toBe(true);
+  });
+
+  it("consumer-handler composition: consumer onclick runs alongside substrate", async () => {
+    const spy = vi.fn();
+    const onOpenChange = vi.fn();
+    const { container } = mountDefault({
+      asChild: true,
+      consumerOnClick: spy,
+      onOpenChange,
+    });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(spy).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+  });
+
+  it("consumer preventDefault opts out of substrate open", async () => {
+    const onOpenChange = vi.fn();
+    const { container } = mountDefault({
+      asChild: true,
+      consumerPreventsDefault: true,
+      onOpenChange,
+    });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 });
 

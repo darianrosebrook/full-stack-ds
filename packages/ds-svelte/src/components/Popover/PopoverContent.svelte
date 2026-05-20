@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+import { usePopoverContext } from "./usePopover.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -17,8 +17,13 @@ interface Props {
 let { class: className, "data-testid": dataTestid, children }: Props = $props();
 // @generated:end
 
-// @generated:start classes
-const classes = $derived(["popover__content", className].filter(Boolean).join(" "));
+// @generated:start ctx
+const ctx = usePopoverContext();
+let contentEl: HTMLDivElement | null = $state(null);
+
+$effect(() => {
+  if (contentEl) ctx.registerContent(contentEl);
+});
 // @generated:end
 
 // @custom:start trailing
@@ -26,6 +31,14 @@ const classes = $derived(["popover__content", className].filter(Boolean).join(" 
 // @custom:end
 </script>
 
-<Stack class={classes} data-testid={dataTestid}>
-  {@render children?.()}
-</Stack>
+{#if ctx.open()}
+  <div
+    bind:this={contentEl}
+    id={ctx.contentId}
+    class={className}
+    data-testid={dataTestid}
+    data-popover-content
+  >
+    {@render children?.()}
+  </div>
+{/if}

@@ -1,89 +1,215 @@
 // @generated:start imports
 import { describe, expect, it, vi } from "vitest";
 import type { Component } from "svelte";
-import { render } from "@testing-library/svelte";
+import { tick } from "svelte";
+import { render, fireEvent } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
-import Popover from "../Popover.svelte";
+import PopoverFixture from "./PopoverFixture.svelte";
+
+declare module "vitest" {
+  interface Assertion<T> {
+    toHaveNoViolations(): void;
+  }
+}
 // @generated:end
 
 // @generated:start tests
-describe("Popover — unit", () => {
-  it("renders with default props", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild).toBeTruthy();
+function mountDefault(props: Record<string, unknown> = {}) {
+  return render(PopoverFixture as unknown as Component<Record<string, unknown>>, { props });
+}
+
+describe("Popover — compound API surface", () => {
+  it("renders the trigger but not the content when closed", async () => {
+    const { container } = mountDefault();
+    await tick();
+    expect(container.querySelector("[data-testid='trigger']")).toBeTruthy();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
   });
 
-  it("applies the base CSS class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild?.className).toContain("popover");
+  it("renders the content when defaultOpen={true}", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
-  it("merges custom class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
-    expect(container.firstElementChild?.className).toContain("popover");
-    expect(container.firstElementChild?.className).toContain("custom");
+  it("opens on click of the trigger", async () => {
+    const { container } = mountDefault();
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
-  it("applies placement=top variant class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "placement": "top" } });
-    expect(container.firstElementChild?.className).toContain("popover--top");
+  it("toggles closed on a second click of the trigger", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
   });
 
-  it("applies placement=bottom variant class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "placement": "bottom" } });
-    expect(container.firstElementChild?.className).toContain("popover--bottom");
-  });
-
-  it("applies placement=left variant class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "placement": "left" } });
-    expect(container.firstElementChild?.className).toContain("popover--left");
-  });
-
-  it("applies placement=right variant class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "placement": "right" } });
-    expect(container.firstElementChild?.className).toContain("popover--right");
-  });
-
-  it("applies placement=auto variant class", () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "placement": "auto" } });
-    expect(container.firstElementChild?.className).toContain("popover--auto");
-  });
-
-  it("closes on Escape key", async () => {
-    const onOpenChangeSpy = vi.fn();
-    render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true, "onOpenChange": onOpenChangeSpy } });
+  it("closes on Escape", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
-    expect(onOpenChangeSpy).toHaveBeenCalledWith(false);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("closes on outside-click", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    document.body.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true }),
+    );
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("click on content does not count as outside-click", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const content = container.querySelector("[data-testid='content']")!;
+    content.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("wires aria-controls + aria-expanded on the trigger", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    const content = container.querySelector("[data-testid='content']")!;
+    const id = content.getAttribute("id");
+    expect(id).toBeTruthy();
+    expect(trigger.getAttribute("aria-controls")).toBe(id);
+    expect(trigger.getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("aria-expanded reflects closed state", async () => {
+    const { container } = mountDefault();
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("fires onOpenChange on uncontrolled open", async () => {
+    const spy = vi.fn();
+    const { container } = mountDefault({ onOpenChange: spy });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(spy).toHaveBeenCalledWith(true);
+  });
+
+  it("respects disabled — click does not open", async () => {
+    const { container } = mountDefault({ disabled: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeNull();
+  });
+
+  it("closeOnEscape={false} prevents Escape dismissal", async () => {
+    const { container } = mountDefault({ defaultOpen: true, closeOnEscape: false });
+    await tick();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("closeOnOutsideClick={false} prevents outside-click dismissal", async () => {
+    const { container } = mountDefault({ defaultOpen: true, closeOnOutsideClick: false });
+    await tick();
+    document.body.dispatchEvent(
+      new MouseEvent("mousedown", { bubbles: true }),
+    );
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("unmount removes document-level listeners", async () => {
+    const spy = vi.fn();
+    const { unmount } = mountDefault({ defaultOpen: true, onOpenChange: spy });
+    await tick();
+    unmount();
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+describe("Popover — snippet host adoption", () => {
+  it("renders the adopted child as the actual host (no nested button)", async () => {
+    const { container } = mountDefault({ asChild: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    expect(trigger.tagName).toBe("A");
+  });
+
+  it("asChild opens on click over the adopted child", async () => {
+    const { container } = mountDefault({ asChild: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+  });
+
+  it("asChild applies the data-popover-trigger marker to the adopted host", async () => {
+    const { container } = mountDefault({ asChild: true });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    expect(trigger.hasAttribute("data-popover-trigger")).toBe(true);
+  });
+
+  it("consumer-handler composition: consumer onclick runs alongside substrate", async () => {
+    const spy = vi.fn();
+    const onOpenChange = vi.fn();
+    const { container } = mountDefault({
+      asChild: true,
+      consumerOnClick: spy,
+      onOpenChange,
+    });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(spy).toHaveBeenCalled();
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+  });
+
+  it("consumer preventDefault opts out of substrate open", async () => {
+    const onOpenChange = vi.fn();
+    const { container } = mountDefault({
+      asChild: true,
+      consumerPreventsDefault: true,
+      onOpenChange,
+    });
+    await tick();
+    const trigger = container.querySelector("[data-testid='trigger']")!;
+    await fireEvent.click(trigger);
+    await tick();
+    expect(onOpenChange).not.toHaveBeenCalled();
   });
 });
 
 describe("Popover — accessibility", () => {
-  it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Popover as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    const results = await axe(container);
-    const knownScaffoldViolationIds = new Set([
-      "aria-dialog-name",
-      "aria-input-field-name",
-      "aria-progressbar-name",
-      "aria-prohibited-attr",
-      "aria-required-attr",
-      "aria-required-children",
-      "aria-required-parent",
-      "aria-toggle-field-name",
-      "aria-tooltip-name",
-      "button-name",
-      "empty-heading",
-      "image-alt",
-      "label",
-      "link-name",
-      "list",
-      "region",
-      "summary-name",
-    ]);
-    const unexpectedViolations = results.violations.filter(
-      (violation) => !knownScaffoldViolationIds.has(violation.id),
-    );
-    expect(unexpectedViolations.map((v) => v.id)).toEqual([]);
+  it("has no unexpected axe violations when closed", async () => {
+    const { container } = mountDefault();
+    await tick();
+    const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+
+  it("has no unexpected axe violations when open", async () => {
+    const { container } = mountDefault({ defaultOpen: true });
+    await tick();
+    const results = (await axe(container)) as unknown as { violations: Array<{ id: string }> };
+    expect(results.violations.map((v) => v.id)).toEqual([]);
   });
 });
 // @generated:end

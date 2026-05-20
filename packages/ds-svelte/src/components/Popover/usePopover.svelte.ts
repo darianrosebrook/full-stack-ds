@@ -1,5 +1,10 @@
 // @generated:start imports
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import {
+  createAnchoredSurface,
+  provideSurfaceContext,
+  useSurfaceContext,
+  type CreateAnchoredSurfaceResult,
+} from "../../primitives/surfaces/createAnchoredSurface.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -8,19 +13,13 @@ import { createAnchorToggle, createControllableState, createPortal } from "../..
 
 // @generated:start types
 export interface UsePopoverOptions {
-  open?: () => boolean | undefined;
+  open: () => boolean | undefined;
   defaultOpen?: () => boolean | undefined;
-  onOpenChange?: () => ((value: boolean) => void) | undefined;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: () => boolean;
   closeOnEscape?: () => boolean | undefined;
   closeOnOutsideClick?: () => boolean | undefined;
-}
-
-export interface UsePopoverResult {
-  readonly open: boolean;
-  setOpen(next: boolean): void;
-  panelRef: { el: HTMLElement | null };
-  anchorRef: { el: HTMLElement | null };
-  readonly portalTarget: Element | null;
+  closeOnBlur?: () => boolean | undefined;
 }
 // @generated:end
 
@@ -29,26 +28,32 @@ export interface UsePopoverResult {
 // @custom:end
 
 // @generated:start hook
-export function usePopover(opts: UsePopoverOptions = {}): UsePopoverResult {
-  const anchorToggle = createAnchorToggle({
-    open: opts.open,
-    defaultOpen: opts.defaultOpen?.() ?? false,
-    onOpenChange: (v) => opts.onOpenChange?.()?.(v),
-  });
+export function usePopover(options: UsePopoverOptions): CreateAnchoredSurfaceResult {
+  const dismissal = () => [
+      options.closeOnEscape?.() !== false ? "escape" as const : null,
+      options.closeOnOutsideClick?.() !== false ? "outside-click" as const : null,
+      options.closeOnBlur?.() !== false ? "blur" as const : null
+    ].filter((d): d is Exclude<typeof d, null> => d !== null);
 
-  const panelRef = { el: null as HTMLElement | null };
-  const portal = createPortal({
-    enabled: true,
-    target: () => undefined,
+  return createAnchoredSurface({
+    open: options.open,
+    // defaultOpen is read once at substrate construction time.
+    defaultOpen: options.defaultOpen?.() ?? false,
+    onOpenChange: options.onOpenChange,
+    openTriggers: () => ["click"],
+    dismissal,
+    anchorRelation: "controls-expanded",
+    disabled: options.disabled,
+    dataMarker: "data-popover-trigger",
   });
+}
 
-  return {
-    get open() { return anchorToggle.open; },
-    setOpen(v) { anchorToggle.setOpen(v); },
-    anchorRef: anchorToggle.anchorRef,
-    panelRef: anchorToggle.panelRef,
-    get portalTarget() { return portal.target; },
-  };
+export function providePopoverContext(value: CreateAnchoredSurfaceResult): void {
+  provideSurfaceContext("Popover", value);
+}
+
+export function usePopoverContext(): CreateAnchoredSurfaceResult {
+  return useSurfaceContext("Popover");
 }
 // @generated:end
 

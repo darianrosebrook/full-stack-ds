@@ -1,8 +1,15 @@
 /**
  * Svelte emitter — Anchored Presence Surface path.
  *
- * Activated when `ir.surface?.kind === "tooltip"` (and, after F-3,
- * other anchored kinds). Emits the compound API:
+ * Activated for any contract whose IR has a `surface` block of an
+ * anchored-presence kind (Tooltip, Popover, ...). Surface kind
+ * eligibility is decided by `isAnchoredPresenceKind` in shared
+ * semantics, and per-kind policy (`AnchoredSurfacePolicy`) drives
+ * default content role and public dismissal props. This emitter
+ * MUST NOT branch on component identity or on `surface.kind` for
+ * any rule that could be expressed by the policy.
+ *
+ * Emits the compound API:
  *
  *   <Tooltip>
  *     <TooltipTrigger>Save</TooltipTrigger>
@@ -13,13 +20,13 @@
  * through the consumer's `child` snippet, because Svelte cannot
  * spread a `use:` action or `bind:this` through a parameter object:
  *
- *   <TooltipTrigger>
+ *   <PopoverTrigger>
  *     {#snippet child(trigger)}
  *       <a href="#help" use:trigger.action {...trigger.attrs}>
- *         Save
+ *         Open
  *       </a>
  *     {/snippet}
- *   </TooltipTrigger>
+ *   </PopoverTrigger>
  *
  * The snippet receives the WHOLE trigger object (`{ action, attrs }`)
  * so the split is explicit at the call site. Logically atomic
@@ -32,6 +39,12 @@
  * entirely — this is forward-facing replacement, not augmentation.
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
+import {
+  isAnchoredPresenceKind,
+  resolveAnchoredSurfacePolicy,
+  type AnchoredSurfacePolicy,
+  type PublicDismissalProp,
+} from "../../semantics.js";
 
 export interface SvelteSurfaceFiles {
   rootSfc: string;
@@ -41,7 +54,7 @@ export interface SvelteSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined;
+  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
 }
 
 export function generateSvelteSurfaceFiles(ir: ComponentIR): SvelteSurfaceFiles {
@@ -51,20 +64,20 @@ export function generateSvelteSurfaceFiles(ir: ComponentIR): SvelteSurfaceFiles 
       `generateSvelteSurfaceFiles called on ${ir.name} without ir.surface`,
     );
   }
-  if (surface.kind !== "tooltip") {
-    throw new Error(
-      `Svelte surface emitter only supports kind "tooltip" in F-2C-2 (got "${surface.kind}").`,
-    );
-  }
+  const policy = resolveAnchoredSurfacePolicy(surface);
   return {
-    rootSfc: emitRootSfc(ir, surface),
+    rootSfc: emitRootSfc(ir, surface, policy),
     triggerSfc: emitTriggerSfc(ir, surface),
-    contentSfc: emitContentSfc(ir, surface),
-    composable: emitComposable(ir, surface),
+    contentSfc: emitContentSfc(ir, surface, policy),
+    composable: emitComposable(ir, surface, policy),
   };
 }
 
-function emitRootSfc(ir: ComponentIR, _surface: SurfaceIR): string {
+function emitRootSfc(
+  ir: ComponentIR,
+  _surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const placementValues = ir.variants["placement"];
@@ -72,10 +85,24 @@ function emitRootSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     ? `type ${name}Placement = ${placementValues.map((v) => `"${v}"`).join(" | ")};\n`
     : "";
 
+  // Policy-derived consumer-facing dismissal-mode flags
+  // (closeOnEscape / closeOnBlur / closeOnOutsideClick / ...).
+  // Only modes whose prop is non-null become consumer props.
+  const dismissalProps = policy.publicDismissalProps.filter(
+    (spec): spec is PublicDismissalProp & { prop: string } => spec.prop !== null,
+  );
+  const closeOnPropLines = dismissalProps.map(
+    (spec) => `  ${spec.prop}?: boolean;`,
+  );
+  const closeOnDestructureLines = dismissalProps.map((spec) => `  ${spec.prop},`);
+  const closeOnGetterLines = dismissalProps.map(
+    (spec) => `  ${spec.prop}: () => ${spec.prop},`,
+  );
+
   return [
     `<script lang="ts">`,
     `// @generated:start imports`,
-    `import { useTooltip, provideTooltipContext } from "./use${name}.svelte.js";`,
+    `import { use${name}, provide${name}Context } from "./use${name}.svelte.js";`,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -97,8 +124,7 @@ function emitRootSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `  onOpenChange?: (open: boolean) => void;`,
     placementValues ? `  placement?: ${name}Placement;` : "",
     `  disabled?: boolean;`,
-    `  closeOnEscape?: boolean;`,
-    `  closeOnBlur?: boolean;`,
+    ...closeOnPropLines,
     `  class?: string;`,
     `  "data-testid"?: string;`,
     `  children?: import('svelte').Snippet;`,
@@ -110,8 +136,7 @@ function emitRootSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `  onOpenChange,`,
     placementValues ? `  placement,` : "",
     `  disabled,`,
-    `  closeOnEscape,`,
-    `  closeOnBlur,`,
+    ...closeOnDestructureLines,
     `  class: className,`,
     `  "data-testid": dataTestid,`,
     `  children,`,
@@ -121,16 +146,15 @@ function emitRootSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `// @generated:start hook`,
     `// Pass all reactive props as getters so Svelte 5 doesn't warn`,
     `// about state captured at initialization time.`,
-    `const surface = useTooltip({`,
+    `const surface = use${name}({`,
     `  open: () => open,`,
     `  defaultOpen: () => defaultOpen,`,
     `  onOpenChange: (next) => onOpenChange?.(next),`,
     `  disabled: () => disabled === true,`,
-    `  closeOnEscape: () => closeOnEscape,`,
-    `  closeOnBlur: () => closeOnBlur,`,
+    ...closeOnGetterLines,
     `});`,
     ``,
-    `provideTooltipContext(surface);`,
+    `provide${name}Context(surface);`,
     `// @generated:end`,
     ``,
     `// @generated:start classes`,
@@ -164,7 +188,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `<script lang="ts">`,
     `// @generated:start imports`,
     `import type { Snippet } from "svelte";`,
-    `import { useTooltipContext } from "./use${name}.svelte.js";`,
+    `import { use${name}Context } from "./use${name}.svelte.js";`,
     `import type { SurfaceTriggerProps } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";`,
     `// @generated:end`,
     ``,
@@ -202,7 +226,7 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
     `// @generated:end`,
     ``,
     `// @generated:start ctx`,
-    `const ctx = useTooltipContext();`,
+    `const ctx = use${name}Context();`,
     ``,
     `let buttonEl: HTMLButtonElement | null = $state(null);`,
     ``,
@@ -253,14 +277,18 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
   ].join("\n");
 }
 
-function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
+function emitContentSfc(
+  ir: ComponentIR,
+  _surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
-  const contentRole = surface.content?.part.details?.aria?.role ?? "tooltip";
+  const contentRole = policy.defaultContentRole;
   return [
     `<script lang="ts">`,
     `// @generated:start imports`,
-    `import { useTooltipContext } from "./use${name}.svelte.js";`,
+    `import { use${name}Context } from "./use${name}.svelte.js";`,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -278,7 +306,7 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `// @generated:end`,
     ``,
     `// @generated:start ctx`,
-    `const ctx = useTooltipContext();`,
+    `const ctx = use${name}Context();`,
     `let contentEl: HTMLDivElement | null = $state(null);`,
     ``,
     `$effect(() => {`,
@@ -295,7 +323,10 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `  <div`,
     `    bind:this={contentEl}`,
     `    id={ctx.contentId}`,
-    `    role="${contentRole}"`,
+    // Policy-derived default content role. Shared semantics owns the
+    // tooltip→"tooltip", popover→null rule (and the contract-override
+    // path) — Popover and other interactive surfaces emit no role.
+    contentRole !== null ? `    role="${contentRole}"` : null,
     `    class={className}`,
     `    data-testid={dataTestid}`,
     `    data-${cssPrefix}-content`,
@@ -304,29 +335,40 @@ function emitContentSfc(ir: ComponentIR, surface: SurfaceIR): string {
     `  </div>`,
     `{/if}`,
     ``,
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
 }
 
-function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
+function emitComposable(
+  ir: ComponentIR,
+  surface: SurfaceIR,
+  policy: AnchoredSurfacePolicy,
+): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
-  const alwaysOn = surface.dismissal
-    .filter((d) => d === "pointer-leave" || d === "outside-click")
-    .map((d) => JSON.stringify(d));
 
-  const dismissalParts: string[] = [];
-  if (surface.dismissal.includes("escape")) {
-    dismissalParts.push(`options.closeOnEscape?.() !== false ? "escape" as const : null`);
-  }
-  if (surface.dismissal.includes("blur")) {
-    dismissalParts.push(`options.closeOnBlur?.() !== false ? "blur" as const : null`);
-  }
-  for (const always of alwaysOn) {
-    dismissalParts.push(`${always} as const`);
-  }
+  // Policy-derived dismissal-array assembly. For each declared
+  // dismissal mode:
+  //   - public + runtime-toggleable modes (escape, blur,
+  //     outside-click) gate behind `options.${closeOnProp}?.()` so
+  //     toggling the prop at runtime re-mounts the controller.
+  //   - internal-only modes (pointer-leave, ...) are always-on.
+  const dismissalParts = policy.publicDismissalProps.map((spec) =>
+    spec.prop && spec.runtimeToggleable
+      ? `options.${spec.prop}?.() !== false ? "${spec.mode}" as const : null`
+      : `"${spec.mode}" as const`,
+  );
   const dismissalExpr = dismissalParts.join(",\n      ");
+
+  const optionsInterfaceLines = policy.publicDismissalProps
+    .filter(
+      (spec): spec is PublicDismissalProp & { prop: string } =>
+        spec.prop !== null,
+    )
+    .map((spec) => `  ${spec.prop}?: () => boolean | undefined;`);
 
   return [
     `// @generated:start imports`,
@@ -348,8 +390,7 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
     `  defaultOpen?: () => boolean | undefined;`,
     `  onOpenChange?: (open: boolean) => void;`,
     `  disabled?: () => boolean;`,
-    `  closeOnEscape?: () => boolean | undefined;`,
-    `  closeOnBlur?: () => boolean | undefined;`,
+    ...optionsInterfaceLines,
     `}`,
     `// @generated:end`,
     ``,
@@ -376,11 +417,11 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
     `  });`,
     `}`,
     ``,
-    `export function provideTooltipContext(value: CreateAnchoredSurfaceResult): void {`,
+    `export function provide${name}Context(value: CreateAnchoredSurfaceResult): void {`,
     `  provideSurfaceContext("${name}", value);`,
     `}`,
     ``,
-    `export function useTooltipContext(): CreateAnchoredSurfaceResult {`,
+    `export function use${name}Context(): CreateAnchoredSurfaceResult {`,
     `  return useSurfaceContext("${name}");`,
     `}`,
     `// @generated:end`,

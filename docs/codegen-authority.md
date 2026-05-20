@@ -177,7 +177,7 @@ These rules are not component-specific, but their authority lives in the wrong p
 | `DISMISSAL_PROP_SPECS` map (React) + identical map in Vue | React + Vue surface emitter locals | `AnchoredSurfacePolicy.publicDismissalProps` (from `DISMISSAL_PROP_TABLE` in shared `semantics.ts`) | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
 | Default content role per surface kind | React + Vue surface emitter locals | `AnchoredSurfacePolicy.defaultContentRole` in shared `semantics.ts` | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
 
-The Svelte/Lit/Angular surface emitters still gate locally on `kind === "tooltip"` because their Popover ports haven't landed yet. After F-3B-2/3/4 ship, those guards should also be replaced with `isAnchoredPresenceKind`.
+The Lit/Angular surface emitters still gate locally on `kind === "tooltip"` because their Popover ports haven't landed yet. After F-3B-3/4 ship, those guards should also be replaced with `isAnchoredPresenceKind`. Svelte was migrated in F-3B-2-B and now consumes `AnchoredSurfacePolicy` (no kind allowlist, no hardcoded content role, no hardcoded `closeOnX` props).
 
 ### Reverted as fabricated semantics
 
