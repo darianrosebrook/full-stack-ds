@@ -59,6 +59,22 @@ export class AnchoredSurfaceController extends SurfaceController {
     return this.anchoredOptions.disabled?.() === true;
   }
 
+  /**
+   * Returns true when `node` is part of the registered surface
+   * boundary (anchor ∪ content). Used by boundary-semantic dismissal
+   * predicates: `blur` (focus leaving the surface), `pointer-leave`
+   * (grace path), and `outside-click`. Focus or pointer movement that
+   * stays within this boundary must NOT trigger dismissal.
+   */
+  private isInsideSurface(node: EventTarget | null): boolean {
+    if (!(node instanceof Node)) return false;
+    const anchor = this.anchor;
+    const content = this.content;
+    return Boolean(
+      (anchor && anchor.contains(node)) || (content && content.contains(node)),
+    );
+  }
+
   private installOpenTriggers(): void {
     const anchor = this.anchor;
     if (!anchor) return;
@@ -132,17 +148,35 @@ export class AnchoredSurfaceController extends SurfaceController {
       );
     }
 
-    if (dismissal.includes("blur") && anchorAtInstall) {
-      const onBlur = (e: FocusEvent) => {
-        const next = e.relatedTarget as Node | null;
-        const content = this.content;
-        if (next && content && content.contains(next)) return;
+    // `blur` is boundary semantics: dismiss when focus leaves the
+    // anchor ∪ content surface. We listen via `focusout` (which
+    // bubbles, unlike `blur`) so a single listener on each host
+    // catches focus leaving any descendant. Lit's substrate has no
+    // handlerMode — the anchor element is always owned and registered
+    // by TooltipTrigger/PopoverTrigger via slot capture, so we
+    // install on both anchor and content unconditionally. The
+    // boundary predicate `isInsideSurface` is what makes this work
+    // for interactive content (Popover) without regressing non-
+    // interactive content (Tooltip): Tooltip content has no
+    // focusable descendants, so its focusout listener never fires.
+    if (dismissal.includes("blur")) {
+      const onFocusOut = (e: FocusEvent) => {
+        if (!this.anchoredOptions.isOpen()) return;
+        if (this.isInsideSurface(e.relatedTarget)) return;
         close(e);
       };
-      anchorAtInstall.addEventListener("blur", onBlur);
-      this.listenerCleanups.push(() =>
-        anchorAtInstall.removeEventListener("blur", onBlur),
-      );
+      if (anchorAtInstall) {
+        anchorAtInstall.addEventListener("focusout", onFocusOut);
+        this.listenerCleanups.push(() =>
+          anchorAtInstall.removeEventListener("focusout", onFocusOut),
+        );
+      }
+      if (contentAtInstall) {
+        contentAtInstall.addEventListener("focusout", onFocusOut);
+        this.listenerCleanups.push(() =>
+          contentAtInstall.removeEventListener("focusout", onFocusOut),
+        );
+      }
     }
 
     if (dismissal.includes("pointer-leave") && anchorAtInstall) {
@@ -174,12 +208,7 @@ export class AnchoredSurfaceController extends SurfaceController {
     if (dismissal.includes("outside-click") && (anchorAtInstall || contentAtInstall)) {
       const onPointer = (e: MouseEvent) => {
         if (!this.anchoredOptions.isOpen()) return;
-        const target = e.target as Node | null;
-        if (!target) return;
-        const anchor = this.anchor;
-        const content = this.content;
-        if (anchor && anchor.contains(target)) return;
-        if (content && content.contains(target)) return;
+        if (this.isInsideSurface(e.target)) return;
         close(e);
       };
       document.addEventListener("mousedown", onPointer);
