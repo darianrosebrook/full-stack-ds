@@ -19,6 +19,15 @@ import type { FrameworkValidationPlan } from "../types.js";
  * Both run unconditionally; a failure in one does NOT short-circuit
  * the other, so a single rail invocation surfaces the full
  * admission picture.
+ *
+ * Manifest×command scope authority
+ * (CODEGEN-RAIL-ARTIFACT-MANIFEST-ADMISSION-01):
+ *   - `typecheck` (tsc) sees `src/**` of `packages/ds-angular/`,
+ *     including tests. `.ts` only — Angular emits no `.tsx`.
+ *   - `templateTypecheck` (ngc) uses `tsconfig.ngc.json` which
+ *     excludes `src/**\/__tests__/**` and `*.spec.ts`/`*.test.ts`.
+ *     The join treats tests as `not_selected` for this command
+ *     (they ARE covered by the raw `typecheck` command).
  */
 export const angularValidationPlan: FrameworkValidationPlan = {
   framework: "angular",
@@ -32,6 +41,11 @@ export const angularValidationPlan: FrameworkValidationPlan = {
         "run",
         "typecheck",
       ],
+      scope: {
+        packageRoot: "packages/ds-angular/",
+        extensions: [".ts"],
+        coverage: "covered_by_package_check",
+      },
     },
     {
       check: "templateTypecheck",
@@ -42,6 +56,13 @@ export const angularValidationPlan: FrameworkValidationPlan = {
         "run",
         "typecheck:ngc",
       ],
+      scope: {
+        packageRoot: "packages/ds-angular/",
+        extensions: [".ts"],
+        // Mirrors `tsconfig.ngc.json` exclude.
+        excludePathSubstrings: ["/__tests__/", ".test.ts", ".spec.ts"],
+        coverage: "covered_by_direct_template_check",
+      },
     },
   ],
   checks: {

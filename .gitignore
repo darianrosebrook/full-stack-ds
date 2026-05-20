@@ -47,6 +47,11 @@ Thumbs.db
 # Scratch
 tmp/
 
+# Codegen emission manifest — per-run record of generated artifacts
+# consumed by validate:generated. Per-machine, regenerated on each
+# `pnpm run generate`.
+packages/ds-codegen/.emission-manifest.json
+
 # Claude runtime state — hooks/ and settings.json are tracked,
 # everything else under .claude/ is per-machine.
 CLAUDE.md

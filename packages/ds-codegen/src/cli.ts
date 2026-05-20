@@ -43,6 +43,14 @@ import {
   createContractValidator,
   formatIssues,
 } from "./validate.js";
+import type {
+  EmissionManifest,
+  EmittedArtifactGroup,
+} from "./validation/types.js";
+import {
+  EMISSION_MANIFEST_RELATIVE_PATH,
+  emissionManifestAbsolutePath,
+} from "./validation/emission-manifest-path.js";
 
 const cwd = process.cwd();
 const CONTRACTS_DIR = path.join(cwd, "packages", "ds-contracts");
@@ -210,14 +218,30 @@ function main(): void {
   );
 
   let totalGenerated = 0;
+  const allGroups: EmittedArtifactGroup[] = [];
   for (const targetId of requestedTargets) {
     const binding = registry.get(targetId);
-    totalGenerated += emitForTarget(binding, irs, args);
+    const { processed, groups } = emitForTarget(binding, irs, args);
+    totalGenerated += processed;
+    allGroups.push(...groups);
   }
 
   console.log(
     `\nDone. ${totalGenerated} file group(s) ${args.dryRun ? "would be " : ""}generated.`,
   );
+
+  // Write the EmissionManifest after all targets emit. The rail
+  // (validate:generated) joins this manifest against each
+  // framework's PlanCommand scopes to produce per-artifact
+  // admission attribution.
+  //
+  // Skipped in --dry-run (no files were actually written, so the
+  // manifest would not reflect on-disk state) and in --tests-only
+  // (the component-source artifacts would be missing from the
+  // group; misleading for downstream admission joins).
+  if (!args.dryRun && !args.testsOnly && allGroups.length > 0) {
+    writeEmissionManifest(allGroups);
+  }
 
   if (args.watch) {
     console.log(
@@ -230,33 +254,50 @@ function main(): void {
 
 /**
  * Apply one target's emitter to a list of IRs and write/preview the results.
- * Returns the count of components processed for that target.
+ * Returns the per-component artifact groups for the EmissionManifest, plus
+ * a count for the human-summary line. Groups are empty in `--dry-run` mode
+ * (no files were actually written).
  */
 function emitForTarget(
   binding: TargetBinding,
   irs: ComponentIR[],
   args: CliArgs,
-): number {
+): { processed: number; groups: EmittedArtifactGroup[] } {
   const { emitter, componentsRoot } = binding;
   console.log(`\n[${emitter.id}] components root: ${path.relative(cwd, componentsRoot)}`);
 
+  const groups: EmittedArtifactGroup[] = [];
   for (const ir of irs) {
-    writeFiles(emitter, ir, binding, args);
+    const writtenPaths = writeFiles(emitter, ir, binding, args);
+    if (writtenPaths.length > 0) {
+      groups.push({
+        framework: emitter.id,
+        component: ir.name,
+        paths: writtenPaths,
+      });
+    }
   }
 
   if (!args.dryRun) {
     writeBarrel(binding);
   }
 
-  return irs.length;
+  return { processed: irs.length, groups };
 }
 
+/**
+ * Write every file the emitter produced for one component on one target.
+ * Returns the workspace-root-relative POSIX paths of files actually
+ * written (empty in `--dry-run`, and excludes skipped legacy files).
+ * Legacy snapshots (kind: "migrated") are NOT included — they are
+ * preservation artifacts, not new generated output.
+ */
 function writeFiles(
   emitter: FrameworkEmitter,
   ir: ComponentIR,
   binding: TargetBinding,
   args: CliArgs,
-): void {
+): string[] {
   const componentFiles: GeneratedFile[] = args.testsOnly
     ? []
     : emitter.emitComponent(ir, {
@@ -285,9 +326,10 @@ function writeFiles(
         `    → ${path.relative(cwd, path.join(binding.componentsRoot, f.relativePath))}`,
       );
     }
-    return;
+    return [];
   }
 
+  const written: string[] = [];
   for (const file of allFiles) {
     const absPath = path.join(binding.componentsRoot, file.relativePath);
     fs.mkdirSync(path.dirname(absPath), { recursive: true });
@@ -303,8 +345,43 @@ function writeFiles(
       );
     }
     fs.writeFileSync(absPath, result.contents);
+    written.push(toPosixRel(absPath));
   }
   console.log(`  GENERATED  ${args.testsOnly ? "(tests) " : ""}${ir.name}`);
+  return written;
+}
+
+/**
+ * Workspace-root-relative POSIX path of an absolute path. Used to
+ * keep EmissionManifest paths portable across machines/OSes.
+ */
+function toPosixRel(absPath: string): string {
+  return path.relative(cwd, absPath).split(path.sep).join("/");
+}
+
+/**
+ * Serialize the EmissionManifest to its well-known location so
+ * `validate:generated` can join it against framework PlanCommand
+ * scopes.
+ *
+ * The manifest is per-machine (gitignored). Each successful
+ * non-dry-run, non-tests-only invocation of the codegen CLI
+ * overwrites it; partial invocations (target subsets) write a
+ * manifest scoped to the requested targets only — the rail consumes
+ * whatever is on disk, and a subsetted manifest means subsetted
+ * admission attribution.
+ */
+function writeEmissionManifest(groups: EmittedArtifactGroup[]): void {
+  const manifest: EmissionManifest = {
+    generatedAt: new Date().toISOString(),
+    groups,
+  };
+  const absPath = emissionManifestAbsolutePath(cwd);
+  fs.mkdirSync(path.dirname(absPath), { recursive: true });
+  fs.writeFileSync(absPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  console.log(
+    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} artifact group(s))`,
+  );
 }
 
 type WriteResolution =
@@ -525,6 +602,12 @@ function watchHandleChange(
 
   for (const targetId of requestedTargets) {
     const binding = registry.get(targetId);
+    // Watch mode intentionally does NOT update the EmissionManifest
+    // after each contract change. An incremental update would leave
+    // the manifest in a partial state the rail cannot distinguish
+    // from a full run; the manifest is a full-run snapshot by design.
+    // After a watch session, re-run `pnpm run generate` to refresh
+    // the manifest before invoking `validate:generated`.
     writeFiles(binding.emitter, ir, binding, args);
     writeBarrel(binding);
   }

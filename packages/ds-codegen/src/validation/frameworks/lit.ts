@@ -34,6 +34,11 @@ export const litValidationPlan: FrameworkValidationPlan = {
     {
       check: "typecheck",
       command: ["pnpm", "--filter", "@full-stack-ds/lit", "run", "typecheck"],
+      scope: {
+        packageRoot: "packages/ds-lit/",
+        extensions: [".ts"],
+        coverage: "covered_by_package_check",
+      },
     },
     {
       check: "templateTypecheck",
@@ -44,6 +49,16 @@ export const litValidationPlan: FrameworkValidationPlan = {
         "run",
         "typecheck:templates",
       ],
+      // Mirrors the `typecheck:templates` script glob:
+      // `lit-analyzer 'src/components/**/*.ts' --rules.no-incompatible-type-binding off`
+      // — restricted to src/components, excluding tests.
+      scope: {
+        packageRoot: "packages/ds-lit/src/components/",
+        extensions: [".ts"],
+        excludePathSubstrings: ["/__tests__/", ".test.ts", ".spec.ts"],
+        coverage: "covered_by_direct_template_check",
+      },
+      knownRuleNarrowings: ["no-incompatible-type-binding"],
     },
   ],
   checks: {
