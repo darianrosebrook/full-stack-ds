@@ -75,7 +75,15 @@ src/
   app.tsx                      # React showcase (imports @full-stack-ds/react)
 
 docs/
-  hook-wiring-design.md        # Design contract for behavior primitives (B.2a–B.2c)
+  admission-rail.md            # Generated artifact admission rail (concept)
+  manifest-schema.md           # Emission manifest schema (reference)
+  governed-ci.md               # Rail operator workflow + CI integration
+  codegen-authority.md         # Codegen layer authority doctrine
+  normal-form.md               # The seven properties of compositional systems
+  presence-surfaces.md         # Tooltips/popovers/dialogs/menus family doctrine
+  states-to-css.md             # Contract states → CSS selectors
+  specifications/
+    document_governance.md     # Frontmatter + location rules
 ```
 
 ## Generator
@@ -124,7 +132,7 @@ CLI flags (after `--`):
 
 ### Behavior primitives
 
-Each framework package ships an equivalent set of behavior primitives. They share an API contract (codified in [`docs/hook-wiring-design.md`](docs/hook-wiring-design.md)) so the codegen can dispatch to the right one based on the IR:
+Each framework package ships an equivalent set of behavior primitives. They share an API contract — the same `open` / `onDismiss` / `closeOnEscape` shape across React, Vue, Svelte, Angular, and Lit — so the codegen can dispatch to the right one based on the IR. Source of truth is the primitive code itself under `packages/ds-{framework}/src/primitives/`; the codegen's IR-to-primitive dispatch lives in `packages/ds-codegen/src/frameworks/<framework>/hook-source.ts`.
 
 | Primitive | React | Vue | Svelte | Angular | Lit |
 |---|---|---|---|---|---|
@@ -236,7 +244,7 @@ Two exceptions to "don't hand-edit generated files":
 - **CSS and pure scaffolding** are always regenerated, regardless of markers.
 - **Interactive TSX with custom logic** is preserved on regeneration by default. Pass `--force` to overwrite it.
 
-Historically, React's `Switch.tsx` and `Modal.tsx` (now `Dialog.tsx`) were hand-authored as the canonical reference behavior while the non-React frameworks were brought up to parity through generated code. All five frameworks now share the same generated path; see [`docs/hook-wiring-design.md`](docs/hook-wiring-design.md) for the rationale that drove the parity work.
+Historically, React's `Switch.tsx` and `Modal.tsx` (now `Dialog.tsx`) were hand-authored as the canonical reference behavior while the non-React frameworks were brought up to parity through generated code. All five frameworks now share the same generated path; if you find a `.tsx` without `@generated:start` markers, that's an exception worth investigating.
 
 ### Changing the contract schema or IR
 
@@ -273,7 +281,7 @@ Inside the monorepo, the showcase app (`src/app.tsx`) imports from `@full-stack-
 | Consumer | What it reads |
 |---|---|
 | **Code generators** | `packages/ds-codegen` — full contract + per-target paths in `Stack.primitive.json` |
-| **AI agents** | Full contract + `Stack.primitive.json` + `docs/hook-wiring-design.md` for capabilities |
+| **AI agents** | Full contract + `Stack.primitive.json` + the behavior primitives under `packages/ds-{framework}/src/primitives/` for capabilities |
 | **Documentation sites** | `props`, `types`, `a11y`, `usage` to render prop tables, examples, a11y guidelines |
 | **Design tools** | `tokens`, `variants`, `anatomy` to create component instances with correct properties |
 | **Test generators** | `props`, `variants`, `a11y`, `behavior` to scaffold runtime + a11y tests |
