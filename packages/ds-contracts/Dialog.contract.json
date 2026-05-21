@@ -81,6 +81,89 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Dialog> component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Uncontrolled initial open state."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when the open state changes."
+        },
+        {
+          "name": "modal",
+          "type": "boolean",
+          "description": "When true, renders a modal dialog with backdrop and focus trap.",
+          "default": true
+        },
+        {
+          "name": "size",
+          "type": "DialogSize",
+          "description": "Controls the maximum width of the dialog content panel.",
+          "default": "md"
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "description": "When false, removes the close button and disables backdrop-click dismissal.",
+          "default": true
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "description": "When false, pressing Escape does not close the dialog.",
+          "default": true
+        },
+        {
+          "name": "closeOnBackdropClick",
+          "type": "boolean",
+          "description": "When false, clicking the backdrop overlay does not close the dialog.",
+          "default": true
+        },
+        {
+          "name": "initialFocus",
+          "type": "string",
+          "description": "CSS selector or element ID to receive initial focus when the dialog opens."
+        },
+        {
+          "name": "returnFocus",
+          "type": "string",
+          "description": "CSS selector or element ID to return focus to on close."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "openness": {
+      "description": "Whether the dialog is open.",
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean"
+    }
+  },
+  "types": {
+    "DialogSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "full"
+      ]
+    }
+  },
   "variants": {
     "size": [
       "sm",
@@ -97,66 +180,6 @@
     "active",
     "leaving"
   ],
-  "a11y": {
-    "role": "dialog",
-    "labeling": [
-      "aria-label",
-      "aria-labelledby",
-      "aria-describedby"
-    ],
-    "keyboard": [
-      {
-        "key": "Escape",
-        "action": "Close the dialog and return focus to the trigger element.",
-        "when": "open"
-      },
-      {
-        "key": "Tab",
-        "action": "Cycle focus forward through interactive elements within the dialog.",
-        "when": "open"
-      },
-      {
-        "key": "Shift+Tab",
-        "action": "Cycle focus backward through interactive elements within the dialog.",
-        "when": "open"
-      }
-    ]
-  },
-  "channels": {
-    "openness": {
-      "description": "Whether the dialog is open.",
-      "value": "open",
-      "defaultValue": "defaultOpen",
-      "onChange": "onOpenChange",
-      "valueType": "boolean"
-    }
-  },
-  "portal": {
-    "enabled": true,
-    "defaultTarget": "body",
-    "positioning": "centered",
-    "layering": "modal",
-    "backdrop": true
-  },
-  "dismissal": {
-    "triggers": [
-      {
-        "event": "escape",
-        "enabledBy": "closeOnEscape"
-      },
-      {
-        "event": "overlayClick",
-        "enabledBy": "closeOnBackdropClick"
-      }
-    ]
-  },
-  "focus": {
-    "strategy": "trap",
-    "initialFocus": "prop:initialFocus",
-    "returnFocus": "trigger",
-    "scrollLock": true,
-    "wrap": true
-  },
   "tokens": {
     "root": {
       "dialog.color.background.default": {
@@ -279,77 +302,212 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Dialog> component.",
-      "members": [
+  "events": {
+    "opennessChange": {
+      "description": "Fires whenever the dialog moves toward open or closed. Distinct from `close` \u2014 this reports the new intent, it does not ask for confirmation.",
+      "emittedVia": [
+        "onOpenChange"
+      ],
+      "triggeredBy": [
+        "Programmatic open() / close()",
+        "Escape keypress (when closeOnEscape)",
+        "Overlay click (when closeOnOverlayClick)"
+      ],
+      "payload": [
         {
-          "name": "open",
+          "name": "isOpen",
           "type": "boolean",
-          "description": "Controlled open state."
-        },
-        {
-          "name": "defaultOpen",
-          "type": "boolean",
-          "description": "Uncontrolled initial open state."
-        },
-        {
-          "name": "onOpenChange",
-          "type": "(open: boolean) => void",
-          "description": "Called when the open state changes."
-        },
-        {
-          "name": "modal",
-          "type": "boolean",
-          "description": "When true, renders a modal dialog with backdrop and focus trap.",
-          "default": true
-        },
-        {
-          "name": "size",
-          "type": "DialogSize",
-          "description": "Controls the maximum width of the dialog content panel.",
-          "default": "md"
-        },
-        {
-          "name": "dismissible",
-          "type": "boolean",
-          "description": "When false, removes the close button and disables backdrop-click dismissal.",
-          "default": true
-        },
-        {
-          "name": "closeOnEscape",
-          "type": "boolean",
-          "description": "When false, pressing Escape does not close the dialog.",
-          "default": true
-        },
-        {
-          "name": "closeOnBackdropClick",
-          "type": "boolean",
-          "description": "When false, clicking the backdrop overlay does not close the dialog.",
-          "default": true
-        },
-        {
-          "name": "initialFocus",
-          "type": "string",
-          "description": "CSS selector or element ID to receive initial focus when the dialog opens."
-        },
-        {
-          "name": "returnFocus",
-          "type": "string",
-          "description": "CSS selector or element ID to return focus to on close."
+          "description": "The new desired open state."
         }
-      ]
+      ],
+      "returns": "void"
+    },
+    "close": {
+      "description": "Fires on a user-initiated close request. Present for QDS v2 parity; consumers who only need state changes should use opennessChange instead.",
+      "emittedVia": [
+        "onClose"
+      ],
+      "triggeredBy": [
+        "Escape keypress",
+        "Overlay click"
+      ],
+      "payload": [],
+      "returns": "void"
     }
   },
-  "types": {
-    "DialogSize": {
-      "kind": "union",
-      "values": [
-        "sm",
-        "md",
-        "lg",
-        "xl",
-        "full"
+  "stateMachine": {
+    "transitions": [
+      {
+        "event": "open",
+        "from": "openness=closed",
+        "to": "openness=opening",
+        "effect": "emit opennessChange(true); lock body scroll; record return-focus target; move focus to initialFocus when `opening` completes"
+      },
+      {
+        "event": "animationend",
+        "from": "openness=opening",
+        "to": "openness=open"
+      },
+      {
+        "event": "escape",
+        "from": "openness=open",
+        "to": "openness=closing",
+        "guard": "closeOnEscape=true",
+        "effect": "emit close; emit opennessChange(false)"
+      },
+      {
+        "event": "overlayClick",
+        "from": "openness=open",
+        "to": "openness=closing",
+        "guard": "closeOnOverlayClick=true",
+        "effect": "emit close; emit opennessChange(false)"
+      },
+      {
+        "event": "close",
+        "from": "openness=open",
+        "to": "openness=closing",
+        "effect": "emit opennessChange(false)"
+      },
+      {
+        "event": "animationend",
+        "from": "openness=closing",
+        "to": "openness=closed",
+        "effect": "unlock body scroll; return focus to elementRefToFocusOnClose or stored return-focus target"
+      }
+    ]
+  },
+  "motion": {
+    "reducedMotion": "respect",
+    "reducedMotionStrategy": "Duration set to 0 and animationend fires synchronously so opening/closing states collapse to open/closed immediately.",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=closed\u2192opening",
+        "phase": "enter",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "dialog.motion.duration.enter",
+        "easing": "dialog.motion.easing.enter"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=open\u2192closing",
+        "phase": "exit",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "dialog.motion.duration.exit",
+        "easing": "dialog.motion.easing.exit"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "trap",
+    "initialFocus": "prop:initialFocus",
+    "returnFocus": "trigger",
+    "scrollLock": true,
+    "wrap": true
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "centered",
+    "layering": "modal",
+    "backdrop": true
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape",
+        "enabledBy": "closeOnEscape"
+      },
+      {
+        "event": "overlayClick",
+        "enabledBy": "closeOnBackdropClick"
+      }
+    ]
+  },
+  "slots": {
+    "body": {
+      "required": false
+    },
+    "closeButton": {
+      "required": false
+    },
+    "footer": {
+      "required": false
+    },
+    "header": {
+      "required": false
+    },
+    "title": {
+      "required": false
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "root",
+      "to": "title",
+      "attribute": "aria-labelledby",
+      "description": "Dialog takes its accessible name from the title element's id when no aria-label is provided."
+    },
+    {
+      "from": "root",
+      "to": "description",
+      "attribute": "aria-describedby",
+      "description": "Optional \u2014 links the description region so screen readers announce it when the dialog opens."
+    }
+  ],
+  "a11y": {
+    "role": "dialog",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-describedby"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Close the dialog and return focus to the trigger element.",
+        "when": "open"
+      },
+      {
+        "key": "Tab",
+        "action": "Cycle focus forward through interactive elements within the dialog.",
+        "when": "open"
+      },
+      {
+        "key": "Shift+Tab",
+        "action": "Cycle focus backward through interactive elements within the dialog.",
+        "when": "open"
+      }
+    ]
+  },
+  "usage": {
+    "hookExample": "const { isOpen, open, close, getTriggerProps, getOverlayProps, getContentProps } = useModal({\n  closeOnEscape: true,\n  closeOnOverlayClick: true,\n});"
+  },
+  "a2ui": {
+    "category": "overlay",
+    "usageHints": [
+      "Bind open and onOpenChange (or defaultOpen) to control visibility",
+      "Compose children from a title, body content, and action buttons",
+      "Set closeOnEscape=false and closeOnOverlayClick=false for destructive confirmations",
+      "The dialog title is automatically linked to the dialog via aria-labelledby"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "node-ref"
       ]
     }
   }

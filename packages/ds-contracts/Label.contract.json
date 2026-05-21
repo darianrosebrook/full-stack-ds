@@ -4,7 +4,9 @@
   "description": "Accessible form label associated with a control via htmlFor.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root"],
+    "parts": [
+      "root"
+    ],
     "dom": {
       "tag": "label",
       "part": "root",
@@ -12,14 +14,33 @@
         "htmlFor": "prop:htmlFor",
         "form": "prop:form"
       },
-      "children": [{ "tag": "children" }]
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
     }
   },
-  "states": ["default"],
-  "a11y": {
-    "labeling": [],
-    "keyboard": []
+  "props": {
+    "styled": {
+      "description": "Props for the <Label> component.",
+      "members": [
+        {
+          "name": "htmlFor",
+          "type": "string",
+          "description": "ID of the form control this label is associated with."
+        },
+        {
+          "name": "form",
+          "type": "string",
+          "description": "ID of the form this label belongs to."
+        }
+      ]
+    }
   },
+  "states": [
+    "default"
+  ],
   "tokens": {
     "root": {
       "label.color.text.default": {
@@ -41,20 +62,37 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Label> component.",
-      "members": [
-        {
-          "name": "htmlFor",
-          "type": "string",
-          "description": "ID of the form control this label is associated with."
-        },
-        {
-          "name": "form",
-          "type": "string",
-          "description": "ID of the form this label belongs to."
-        }
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"label\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Label htmlFor=\"email\">Email address</Label>\n<input id=\"email\" type=\"email\" />",
+    "hookExample": "const { getLabelProps } = useLabel({ htmlFor: 'email', children: 'Email' });\nreturn <label {...getLabelProps()}>{children}</label>;"
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Always pair with an input via htmlFor; do not use as decorative text",
+      "TextField automatically wires Label to its Input \u2014 use Label directly only when composing custom forms"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string"
       ]
     }
   }

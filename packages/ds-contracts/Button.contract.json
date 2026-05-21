@@ -4,7 +4,11 @@
   "description": "Clickable element for triggering actions. Supports multiple visual variants and semantic intents.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "spinner", "loadingText"],
+    "parts": [
+      "root",
+      "spinner",
+      "loadingText"
+    ],
     "dom": {
       "tag": "button",
       "part": "root",
@@ -16,24 +20,119 @@
         "aria-pressed": "prop:ariaPressed",
         "aria-busy": "prop:loading"
       },
-      "children": [{ "tag": "children" }]
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Button> component.",
+      "members": [
+        {
+          "name": "size",
+          "type": "ButtonSize",
+          "description": "Visual size variant.",
+          "default": "medium"
+        },
+        {
+          "name": "variant",
+          "type": "ButtonVariant",
+          "description": "Visual intent variant. Use destructive only for irreversible actions.",
+          "default": "primary"
+        },
+        {
+          "name": "type",
+          "type": "ButtonType",
+          "description": "HTML button type. Defaults to button to prevent accidental form submission.",
+          "default": "button"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "description": "When true, replaces content with a spinner and sets aria-busy."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction and applies disabled styling."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for icon-only buttons."
+        },
+        {
+          "name": "ariaExpanded",
+          "type": "boolean",
+          "description": "aria-expanded for disclosure triggers."
+        },
+        {
+          "name": "ariaPressed",
+          "type": "boolean",
+          "description": "aria-pressed for toggle buttons."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Supplementary tooltip text."
+        }
+      ]
+    }
+  },
+  "types": {
+    "ButtonSize": {
+      "kind": "union",
+      "values": [
+        "small",
+        "medium",
+        "large"
+      ]
+    },
+    "ButtonVariant": {
+      "kind": "union",
+      "values": [
+        "primary",
+        "secondary",
+        "tertiary",
+        "ghost",
+        "destructive",
+        "outline"
+      ]
+    },
+    "ButtonType": {
+      "kind": "union",
+      "values": [
+        "button",
+        "submit",
+        "reset"
+      ]
     }
   },
   "variants": {
-    "size": ["small", "medium", "large"],
-    "variant": ["primary", "secondary", "tertiary", "ghost", "destructive", "outline"]
-  },
-  "states": ["default", "hover", "focus", "active", "disabled"],
-  "a11y": {
-    "role": "button",
-    "labeling": ["aria-label", "title"],
-    "keyboard": [
-      {
-        "key": "Enter|Space",
-        "action": "Activate the button (same as click)."
-      }
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ],
+    "variant": [
+      "primary",
+      "secondary",
+      "tertiary",
+      "ghost",
+      "destructive",
+      "outline"
     ]
   },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
   "tokens": {
     "root": {
       "button.color.background.default": {
@@ -136,73 +235,50 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Button> component.",
-      "members": [
-        {
-          "name": "size",
-          "type": "ButtonSize",
-          "description": "Visual size variant.",
-          "default": "medium"
-        },
-        {
-          "name": "variant",
-          "type": "ButtonVariant",
-          "description": "Visual intent variant. Use destructive only for irreversible actions.",
-          "default": "primary"
-        },
-        {
-          "name": "type",
-          "type": "ButtonType",
-          "description": "HTML button type. Defaults to button to prevent accidental form submission.",
-          "default": "button"
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "description": "When true, replaces content with a spinner and sets aria-busy."
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Prevents interaction and applies disabled styling."
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Accessible label for icon-only buttons."
-        },
-        {
-          "name": "ariaExpanded",
-          "type": "boolean",
-          "description": "aria-expanded for disclosure triggers."
-        },
-        {
-          "name": "ariaPressed",
-          "type": "boolean",
-          "description": "aria-pressed for toggle buttons."
-        },
-        {
-          "name": "title",
-          "type": "string",
-          "description": "Supplementary tooltip text."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"button\"]"
     }
   },
-  "types": {
-    "ButtonSize": {
-      "kind": "union",
-      "values": ["small", "medium", "large"]
-    },
-    "ButtonVariant": {
-      "kind": "union",
-      "values": ["primary", "secondary", "tertiary", "ghost", "destructive", "outline"]
-    },
-    "ButtonType": {
-      "kind": "union",
-      "values": ["button", "submit", "reset"]
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "button",
+    "labeling": [
+      "aria-label",
+      "title"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Activate the button (same as click)."
+      }
+    ]
+  },
+  "usage": {
+    "hookExample": "const { getButtonProps } = useButton({\n  disabled: false,\n  onClick: () => console.log('clicked'),\n});\n\nreturn <button {...getButtonProps()}>Click me</button>;"
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Use variant=primary for the single most important action in a view",
+      "Use variant=danger for irreversible or destructive actions",
+      "Use variant=ghost for tertiary actions that should not compete visually",
+      "Set disabled to prevent interaction when the action is unavailable",
+      "Use as=\"a\" with href for navigation-style buttons"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "icon-ref"
+      ]
     }
   }
 }

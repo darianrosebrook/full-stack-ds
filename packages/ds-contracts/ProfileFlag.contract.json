@@ -4,7 +4,9 @@
   "description": "Avatar-style display of a user or entity identity with name and optional status badge.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root"],
+    "parts": [
+      "root"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -15,12 +17,29 @@
       ]
     }
   },
-  "variants": {},
-  "states": ["default", "hover"],
-  "a11y": {
-    "labeling": [],
-    "keyboard": []
+  "props": {
+    "styled": {
+      "description": "Props for the <ProfileFlag> component.",
+      "members": [
+        {
+          "name": "profile",
+          "type": "ProfileFlagData",
+          "description": "Profile data object to display."
+        }
+      ]
+    }
   },
+  "types": {
+    "ProfileFlagData": {
+      "kind": "alias",
+      "alias": "{ id: string; username: string; full_name: string; first_name: string | null; last_name: string | null; avatar_url: string | null; bio: string; occupation: string | null; account_status: string; created_at: string; updated_at: string | null }"
+    }
+  },
+  "variants": {},
+  "states": [
+    "default",
+    "hover"
+  ],
   "tokens": {
     "root": {
       "profileFlag.color.background.default": {
@@ -75,22 +94,31 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <ProfileFlag> component.",
-      "members": [
-        {
-          "name": "profile",
-          "type": "ProfileFlagData",
-          "description": "Profile data object to display."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"profile-flag\"]"
     }
   },
-  "types": {
-    "ProfileFlagData": {
-      "kind": "alias",
-      "alias": "{ id: string; username: string; full_name: string; first_name: string | null; last_name: string | null; avatar_url: string | null; bio: string; occupation: string | null; account_status: string; created_at: string; updated_at: string | null }"
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use in comment threads, tables, or nav bars to identify the actor",
+      "size=compact for dense layouts like table rows",
+      "Pairs with StatusDot to indicate presence or role"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

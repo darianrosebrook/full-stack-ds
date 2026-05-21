@@ -4,33 +4,14 @@
   "description": "Renders a named SVG icon from the design system icon set.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root"],
+    "parts": [
+      "root"
+    ],
     "dom": {
       "tag": "span",
       "part": "root",
       "attrs": {
         "aria-hidden": "true"
-      }
-    }
-  },
-  "states": ["default"],
-  "a11y": {
-    "labeling": ["aria-label", "aria-hidden"],
-    "keyboard": []
-  },
-  "tokens": {
-    "root": {
-      "icon.color.foreground.default": {
-        "resolvesTo": "semantic.color.foreground.primary",
-        "fallback": "#141414",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "icon.size.padding.default": {
-        "resolvesTo": "core.spacing.size.01",
-        "fallback": "1px",
-        "property": "padding",
-        "layer": "core"
       }
     }
   },
@@ -63,6 +44,64 @@
     "IconDefinition": {
       "kind": "alias",
       "alias": "{ iconName: string; prefix?: string; icon?: unknown }"
+    }
+  },
+  "states": [
+    "default"
+  ],
+  "tokens": {
+    "root": {
+      "icon.color.foreground.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "icon.size.padding.default": {
+        "resolvesTo": "core.spacing.size.01",
+        "fallback": "1px",
+        "property": "padding",
+        "layer": "core"
+      }
+    }
+  },
+  "focus": {
+    "strategy": "none"
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"icon\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-hidden"
+    ],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Icon type=\"Success\" size=\"small\" />\n<Icon type=\"Error\" />"
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Set aria-hidden=\"true\" when the icon is decorative (has adjacent visible text)",
+      "Set aria-label when the icon stands alone without visible text",
+      "Use size to scale the icon to match surrounding text"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

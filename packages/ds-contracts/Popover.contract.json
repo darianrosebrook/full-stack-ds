@@ -25,142 +25,6 @@
       }
     }
   },
-  "variants": {
-    "placement": [
-      "top",
-      "bottom",
-      "left",
-      "right",
-      "auto"
-    ]
-  },
-  "states": [
-    "default",
-    "open",
-    "focus",
-    "entering",
-    "leaving"
-  ],
-  "a11y": {
-    "role": "group",
-    "labeling": [
-      "aria-controls",
-      "aria-expanded"
-    ],
-    "keyboard": [
-      {
-        "key": "Escape",
-        "action": "Close the popover and return focus to the trigger (WCAG 2.1 SC 2.1.1)."
-      },
-      {
-        "key": "Enter",
-        "action": "Toggle the popover open or closed.",
-        "when": "trigger"
-      },
-      {
-        "key": "Space",
-        "action": "Toggle the popover open or closed.",
-        "when": "trigger"
-      }
-    ]
-  },
-  "channels": {
-    "open": {
-      "value": "open",
-      "defaultValue": "defaultOpen",
-      "onChange": "onOpenChange",
-      "valueType": "boolean",
-      "description": "Whether the popover content is visible."
-    }
-  },
-  "surface": {
-    "kind": "popover",
-    "presence": "persistent",
-    "modality": "non-blocking",
-    "anchor": {
-      "part": "trigger",
-      "relation": "controls-expanded"
-    },
-    "content": {
-      "part": "content",
-      "interactive": true
-    },
-    "positioning": {
-      "strategy": "anchored",
-      "placementProp": "placement",
-      "collision": "flip-shift"
-    },
-    "dismissal": [
-      "escape",
-      "outside-click",
-      "blur"
-    ],
-    "openTriggers": [
-      "click"
-    ]
-  },
-  "portal": {
-    "enabled": true,
-    "defaultTarget": "body",
-    "positioning": "anchored",
-    "layering": "popover",
-    "collision": "flip-shift"
-  },
-  "dismissal": {
-    "triggers": [
-      {
-        "event": "escape",
-        "enabledBy": "closeOnEscape"
-      },
-      {
-        "event": "outsideClick",
-        "enabledBy": "closeOnOutsideClick"
-      },
-      {
-        "event": "blur",
-        "enabledBy": "closeOnBlur"
-      }
-    ]
-  },
-  "tokens": {
-    "root": {
-      "popover.size.padding.default": {
-        "resolvesTo": "core.spacing.size.06",
-        "fallback": "16px",
-        "property": "padding",
-        "layer": "core"
-      },
-      "popover.size.radius.default": {
-        "resolvesTo": "semantic.shape.control.radius.default",
-        "fallback": "8px",
-        "property": "border-radius",
-        "layer": "semantic"
-      },
-      "popover.size.gap.default": {
-        "resolvesTo": "core.spacing.size.04",
-        "fallback": "8px",
-        "property": "gap",
-        "layer": "core"
-      },
-      "popover.color.background.content": {
-        "resolvesTo": "semantic.color.background.secondary",
-        "fallback": "#efefef",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "popover.color.border.accent": {
-        "resolvesTo": "semantic.color.border.accent",
-        "fallback": "#d9292b",
-        "property": "border-color",
-        "layer": "semantic"
-      },
-      "popover.elevation.default": {
-        "resolvesTo": "semantic.elevation.default",
-        "fallback": "none",
-        "layer": "semantic"
-      }
-    }
-  },
   "props": {
     "styled": {
       "description": "Props for the <Popover> root component.",
@@ -211,6 +75,15 @@
       ]
     }
   },
+  "channels": {
+    "open": {
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean",
+      "description": "Whether the popover content is visible."
+    }
+  },
   "types": {
     "PopoverPlacement": {
       "kind": "union",
@@ -220,6 +93,221 @@
         "left",
         "right",
         "auto"
+      ]
+    }
+  },
+  "variants": {
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
+  },
+  "states": [
+    "default",
+    "open",
+    "focus",
+    "entering",
+    "leaving"
+  ],
+  "tokens": {
+    "root": {
+      "popover.size.padding.default": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "popover.size.radius.default": {
+        "resolvesTo": "semantic.shape.control.radius.default",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "semantic"
+      },
+      "popover.size.gap.default": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "popover.color.background.content": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "popover.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "popover.elevation.default": {
+        "resolvesTo": "semantic.elevation.default",
+        "fallback": "none",
+        "layer": "semantic"
+      }
+    }
+  },
+  "motion": {
+    "reducedMotion": "respect",
+    "reducedMotionStrategy": "Duration set to 0; popover appears/disappears instantly without animation.",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=closed\u2192open",
+        "phase": "enter",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasizedOut"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=open\u2192closed",
+        "phase": "exit",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasizedIn"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "Popover does not trap focus. Focus remains on the trigger or moves into the content if interactive children are present."
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "anchored",
+    "layering": "popover",
+    "collision": "flip-shift"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape",
+        "enabledBy": "closeOnEscape"
+      },
+      {
+        "event": "outsideClick",
+        "enabledBy": "closeOnOutsideClick"
+      },
+      {
+        "event": "blur",
+        "enabledBy": "closeOnBlur"
+      }
+    ]
+  },
+  "surface": {
+    "kind": "popover",
+    "presence": "persistent",
+    "modality": "non-blocking",
+    "anchor": {
+      "part": "trigger",
+      "relation": "controls-expanded"
+    },
+    "content": {
+      "part": "content",
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click",
+      "blur"
+    ],
+    "openTriggers": [
+      "click"
+    ]
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"popover\"]"
+    },
+    "trigger": {
+      "required": true,
+      "selector": "[data-slot=\"popover-trigger\"]"
+    },
+    "content": {
+      "required": true,
+      "selector": "[data-slot=\"popover-content\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "trigger",
+      "to": "content",
+      "attribute": "aria-controls",
+      "when": "openness=open"
+    },
+    {
+      "from": "trigger",
+      "to": "content",
+      "attribute": "aria-expanded",
+      "when": "openness=open",
+      "description": "aria-expanded is true when the popover is open, false when closed."
+    }
+  ],
+  "a11y": {
+    "role": "group",
+    "labeling": [
+      "aria-controls",
+      "aria-expanded"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Close the popover and return focus to the trigger (WCAG 2.1 SC 2.1.1)."
+      },
+      {
+        "key": "Enter",
+        "action": "Toggle the popover open or closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle the popover open or closed.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "usage": {
+    "example": "<PopoverContent aria-label=\"Menu\">\n  <div>Menu content</div>\n</PopoverContent>",
+    "hookExample": "const {\n  isOpen,\n  getAnchorProps,\n  getContentProps\n} = usePopover({\n  placement: 'bottom',\n  closeOnEscape: true,\n  closeOnClickOutside: true\n});"
+  },
+  "a2ui": {
+    "category": "overlay",
+    "usageHints": [
+      "Use for supplemental, non-blocking information that does not require a decision",
+      "Popover.Trigger wraps the element that opens the panel; Popover.Content is the floating panel",
+      "Bind open and onOpenChange for controlled mode",
+      "Prefer Tooltip for simple text-only hints; use Popover when content is interactive"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "Popover.Trigger",
+        "Popover.Content"
       ]
     }
   }

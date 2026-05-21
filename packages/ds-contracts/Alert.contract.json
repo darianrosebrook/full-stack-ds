@@ -12,6 +12,52 @@
       "dismiss"
     ]
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Alert> component.",
+      "members": [
+        {
+          "name": "intent",
+          "type": "AlertIntent",
+          "description": "Visual intent/severity of the alert"
+        },
+        {
+          "name": "level",
+          "type": "AlertLevel",
+          "description": "Display level affecting layout and emphasis"
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "description": "Whether the alert can be dismissed by the user"
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "Optional icon node rendered before the alert content"
+        }
+      ]
+    }
+  },
+  "types": {
+    "AlertIntent": {
+      "kind": "union",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    },
+    "AlertLevel": {
+      "kind": "union",
+      "values": [
+        "inline",
+        "section",
+        "page"
+      ]
+    }
+  },
   "variants": {
     "intent": [
       "info",
@@ -29,13 +75,6 @@
     "default",
     "hover"
   ],
-  "a11y": {
-    "role": "alert",
-    "labeling": [
-      "aria-label"
-    ],
-    "keyboard": []
-  },
   "tokens": {
     "root": {
       "alert.color.background.primary": {
@@ -179,49 +218,46 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Alert> component.",
-      "members": [
-        {
-          "name": "intent",
-          "type": "AlertIntent",
-          "description": "Visual intent/severity of the alert"
-        },
-        {
-          "name": "level",
-          "type": "AlertLevel",
-          "description": "Display level affecting layout and emphasis"
-        },
-        {
-          "name": "dismissible",
-          "type": "boolean",
-          "description": "Whether the alert can be dismissed by the user"
-        },
-        {
-          "name": "icon",
-          "type": "ReactNode",
-          "description": "Optional icon node rendered before the alert content"
-        }
-      ]
+  "slots": {
+    "body": {
+      "required": false
+    },
+    "container": {
+      "required": false
+    },
+    "icon": {
+      "required": false
+    },
+    "title": {
+      "required": false
     }
   },
-  "types": {
-    "AlertIntent": {
-      "kind": "union",
-      "values": [
-        "info",
-        "success",
-        "warning",
-        "danger"
-      ]
-    },
-    "AlertLevel": {
-      "kind": "union",
-      "values": [
-        "inline",
-        "section",
-        "page"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "a11y": {
+    "role": "alert",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use intent to convey severity: info, success, warning, or error",
+      "Keep messages concise \u2014 Alert is for brief contextual feedback, not lengthy instructions",
+      "Pair with an icon to reinforce intent visually"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "node-ref"
       ]
     }
   }

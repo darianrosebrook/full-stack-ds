@@ -17,88 +17,6 @@
       ]
     }
   },
-  "variants": {
-    "as": [
-      "ul",
-      "ol",
-      "dl"
-    ],
-    "variant": [
-      "default",
-      "unstyled",
-      "inline",
-      "divided",
-      "spaced"
-    ],
-    "marker": [
-      "default",
-      "none",
-      "disc",
-      "circle",
-      "square",
-      "decimal",
-      "alpha",
-      "roman"
-    ],
-    "spacing": [
-      "none",
-      "sm",
-      "md",
-      "lg"
-    ],
-    "size": [
-      "sm",
-      "md",
-      "lg"
-    ]
-  },
-  "states": [
-    "default"
-  ],
-  "a11y": {
-    "labeling": [
-      "aria-label",
-      "aria-labelledby"
-    ],
-    "keyboard": []
-  },
-  "tokens": {
-    "root": {
-      "list.color.foreground.primary": {
-        "resolvesTo": "semantic.color.foreground.primary",
-        "fallback": "#141414",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "list.color.border.default": {
-        "resolvesTo": "semantic.color.border.subtle",
-        "fallback": "#cecece",
-        "property": "border-color",
-        "layer": "semantic"
-      },
-      "list.size.padding.default": {
-        "resolvesTo": "core.spacing.size.06",
-        "fallback": "16px",
-        "property": "padding",
-        "layer": "core"
-      },
-      "list.spacing.sm": {
-        "resolvesTo": "core.spacing.size.03",
-        "fallback": "4px",
-        "layer": "core"
-      },
-      "list.spacing.md": {
-        "resolvesTo": "core.spacing.size.05",
-        "fallback": "12px",
-        "layer": "core"
-      },
-      "list.spacing.lg": {
-        "resolvesTo": "core.spacing.size.06",
-        "fallback": "16px",
-        "layer": "core"
-      }
-    }
-  },
   "props": {
     "styled": {
       "description": "Props for the <List> component.",
@@ -178,6 +96,123 @@
         "sm",
         "md",
         "lg"
+      ]
+    }
+  },
+  "variants": {
+    "as": [
+      "ul",
+      "ol",
+      "dl"
+    ],
+    "variant": [
+      "default",
+      "unstyled",
+      "inline",
+      "divided",
+      "spaced"
+    ],
+    "marker": [
+      "default",
+      "none",
+      "disc",
+      "circle",
+      "square",
+      "decimal",
+      "alpha",
+      "roman"
+    ],
+    "spacing": [
+      "none",
+      "sm",
+      "md",
+      "lg"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": [
+    "default"
+  ],
+  "tokens": {
+    "root": {
+      "list.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "list.color.border.default": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "list.size.padding.default": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "list.spacing.sm": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "layer": "core"
+      },
+      "list.spacing.md": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "layer": "core"
+      },
+      "list.spacing.lg": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "layer": "core"
+      }
+    }
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "ListItem is not focusable itself. Focusable elements (actions, drag handle) inside receive native tab focus managed by the parent list."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"list\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "layout",
+    "usageHints": [
+      "Use as=\"ul\" for unordered lists, \"ol\" for ordered, \"dl\" for description lists",
+      "Set variant to control bullet style (disc, decimal, none)",
+      "Nest lists by placing a List inside a list item"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "li",
+        "node-ref"
       ]
     }
   }

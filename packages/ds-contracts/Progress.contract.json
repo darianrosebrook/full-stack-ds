@@ -4,7 +4,12 @@
   "description": "Visual indicator for task completion. Supports linear bar and circular ring variants.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "track", "fill", "value"],
+    "parts": [
+      "root",
+      "track",
+      "fill",
+      "value"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -42,55 +47,6 @@
           ]
         }
       ]
-    }
-  },
-  "variants": {
-    "variant": ["linear", "circular"],
-    "size": ["sm", "md", "lg"],
-    "intent": ["info", "success", "warning", "danger"]
-  },
-  "states": ["default"],
-  "a11y": {
-    "role": "progressbar",
-    "labeling": ["aria-label", "aria-valuenow", "aria-valuemin", "aria-valuemax"],
-    "keyboard": []
-  },
-  "tokens": {
-    "root": {
-      "progress.color.text.default": {
-        "resolvesTo": "semantic.color.foreground.secondary",
-        "fallback": "#555555",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "progress.spacing.gap": {
-        "resolvesTo": "core.spacing.size.02",
-        "fallback": "2px",
-        "property": "gap",
-        "layer": "core"
-      },
-      "progress.motion.duration.indeterminate": {
-        "resolvesTo": "core.motion.duration.extra.long1",
-        "fallback": "1500ms",
-        "property": "transition-duration",
-        "layer": "core"
-      }
-    },
-    "track": {
-      "progress.color.track.background": {
-        "resolvesTo": "semantic.color.background.secondary",
-        "fallback": "#efefef",
-        "property": "background-color",
-        "layer": "semantic"
-      }
-    },
-    "fill": {
-      "progress.color.fill.info": {
-        "resolvesTo": "semantic.color.status.info",
-        "fallback": "#0a65fe",
-        "property": "background-color",
-        "layer": "semantic"
-      }
     }
   },
   "props": {
@@ -138,15 +94,131 @@
   "types": {
     "ProgressVariant": {
       "kind": "union",
-      "values": ["linear", "circular"]
+      "values": [
+        "linear",
+        "circular"
+      ]
     },
     "ProgressSize": {
       "kind": "union",
-      "values": ["sm", "md", "lg"]
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     "ProgressIntent": {
       "kind": "union",
-      "values": ["info", "success", "warning", "danger"]
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    }
+  },
+  "variants": {
+    "variant": [
+      "linear",
+      "circular"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ],
+    "intent": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ]
+  },
+  "states": [
+    "default"
+  ],
+  "tokens": {
+    "root": {
+      "progress.color.text.default": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "progress.spacing.gap": {
+        "resolvesTo": "core.spacing.size.02",
+        "fallback": "2px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "progress.motion.duration.indeterminate": {
+        "resolvesTo": "core.motion.duration.extra.long1",
+        "fallback": "1500ms",
+        "property": "transition-duration",
+        "layer": "core"
+      }
+    },
+    "track": {
+      "progress.color.track.background": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    },
+    "fill": {
+      "progress.color.fill.info": {
+        "resolvesTo": "semantic.color.status.info",
+        "fallback": "#0a65fe",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"progress\"]"
+    },
+    "track": {
+      "required": false,
+      "selector": "[data-slot=\"progress-track\"]"
+    },
+    "fill": {
+      "required": false,
+      "selector": "[data-slot=\"progress-fill\"]"
+    },
+    "value": {
+      "required": false,
+      "selector": "[data-slot=\"progress-value\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "progressbar",
+    "labeling": [
+      "aria-label",
+      "aria-valuenow",
+      "aria-valuemin",
+      "aria-valuemax"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use variant=linear for step-by-step progress; variant=circular for compact space-constrained contexts",
+      "Set value (0\u2013100) for determinate progress; omit for indeterminate animation",
+      "Set showValue to display the percentage label inside the component",
+      "Always provide aria-label when the progress bar has no adjacent visible label"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

@@ -80,6 +80,73 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Calendar> component.",
+      "members": [
+        {
+          "name": "value",
+          "type": "Date | Date[] | null",
+          "description": "Controlled selected date or range."
+        },
+        {
+          "name": "defaultValue",
+          "type": "Date | Date[] | null",
+          "description": "Uncontrolled initial selected date or range."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: Date | Date[] | null) => void",
+          "description": "Called when the selected date changes."
+        },
+        {
+          "name": "mode",
+          "type": "CalendarMode",
+          "description": "Selection mode: single date or date range.",
+          "default": "single"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables all interaction."
+        },
+        {
+          "name": "minDate",
+          "type": "Date",
+          "description": "Earliest selectable date."
+        },
+        {
+          "name": "maxDate",
+          "type": "Date",
+          "description": "Latest selectable date."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "BCP 47 locale tag for date formatting.",
+          "default": "en-US"
+        }
+      ]
+    }
+  },
+  "channels": {
+    "value": {
+      "description": "Selected date or date range.",
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "Date | Date[] | null"
+    }
+  },
+  "types": {
+    "CalendarMode": {
+      "kind": "union",
+      "values": [
+        "single",
+        "range"
+      ]
+    }
+  },
   "variants": {
     "mode": [
       "single",
@@ -95,59 +162,6 @@
     "today",
     "outsideMonth"
   ],
-  "a11y": {
-    "labeling": [
-      "aria-label",
-      "aria-labelledby"
-    ],
-    "keyboard": [
-      {
-        "key": "ArrowLeft",
-        "action": "Move focus to the previous day."
-      },
-      {
-        "key": "ArrowRight",
-        "action": "Move focus to the next day."
-      },
-      {
-        "key": "ArrowUp",
-        "action": "Move focus to the same day in the previous week."
-      },
-      {
-        "key": "ArrowDown",
-        "action": "Move focus to the same day in the next week."
-      },
-      {
-        "key": "PageUp",
-        "action": "Move focus to the same day in the previous month."
-      },
-      {
-        "key": "PageDown",
-        "action": "Move focus to the same day in the next month."
-      },
-      {
-        "key": "Home",
-        "action": "Move focus to the first day of the current week."
-      },
-      {
-        "key": "End",
-        "action": "Move focus to the last day of the current week."
-      },
-      {
-        "key": "Enter|Space",
-        "action": "Select the focused date."
-      }
-    ]
-  },
-  "channels": {
-    "value": {
-      "description": "Selected date or date range.",
-      "value": "value",
-      "defaultValue": "defaultValue",
-      "onChange": "onChange",
-      "valueType": "Date | Date[] | null"
-    }
-  },
   "tokens": {
     "root": {
       "calendar.color.background.default": {
@@ -206,62 +220,171 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Calendar> component.",
-      "members": [
-        {
-          "name": "value",
-          "type": "Date | Date[] | null",
-          "description": "Controlled selected date or range."
-        },
-        {
-          "name": "defaultValue",
-          "type": "Date | Date[] | null",
-          "description": "Uncontrolled initial selected date or range."
-        },
-        {
-          "name": "onChange",
-          "type": "(value: Date | Date[] | null) => void",
-          "description": "Called when the selected date changes."
-        },
-        {
-          "name": "mode",
-          "type": "CalendarMode",
-          "description": "Selection mode: single date or date range.",
-          "default": "single"
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Disables all interaction."
-        },
-        {
-          "name": "minDate",
-          "type": "Date",
-          "description": "Earliest selectable date."
-        },
-        {
-          "name": "maxDate",
-          "type": "Date",
-          "description": "Latest selectable date."
-        },
-        {
-          "name": "locale",
-          "type": "string",
-          "description": "BCP 47 locale tag for date formatting.",
-          "default": "en-US"
-        }
+  "form": {
+    "participates": true,
+    "inputType": "date",
+    "name": {
+      "prop": "name"
+    },
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "channel:selection",
+      "omitWhen": "empty"
+    },
+    "validity": {
+      "model": "props",
+      "ariaAttributes": [
+        "aria-invalid",
+        "aria-required"
+      ]
+    },
+    "labeling": {
+      "strategy": "associated-label",
+      "required": true,
+      "via": [
+        "aria-labelledby",
+        "aria-label",
+        "wrapping:FormField"
       ]
     }
   },
-  "types": {
-    "CalendarMode": {
-      "kind": "union",
-      "values": [
-        "single",
-        "range"
-      ]
+  "motion": {
+    "reducedMotion": "respect",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=collapsed\u2192expanded",
+        "phase": "enter",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "date-picker.motion.duration",
+        "easing": "date-picker.motion.easing"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=expanded\u2192collapsed",
+        "phase": "exit",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "date-picker.motion.duration",
+        "easing": "date-picker.motion.easing"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "roving",
+    "orientation": "both",
+    "wrap": false,
+    "description": "Arrow keys navigate between dates. Tab moves to prev/next month controls."
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "targetProp": "portalId",
+    "positioning": "anchored",
+    "layering": "popover",
+    "collision": "flip-shift"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape",
+        "defaultEnabled": true,
+        "description": "Closes the calendar popup and returns focus to the input."
+      },
+      {
+        "event": "outsideClick",
+        "defaultEnabled": true
+      },
+      {
+        "event": "selection",
+        "enabledBy": "shouldCloseOnSelect",
+        "defaultEnabled": true,
+        "description": "Selecting a date closes the popup (controlled by shouldCloseOnSelect)."
+      }
+    ]
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"calendar\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "input",
+      "to": "popup",
+      "attribute": "aria-controls",
+      "when": "openness=expanded"
+    }
+  ],
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowLeft",
+        "action": "Move focus to the previous day."
+      },
+      {
+        "key": "ArrowRight",
+        "action": "Move focus to the next day."
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the same day in the previous week."
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the same day in the next week."
+      },
+      {
+        "key": "PageUp",
+        "action": "Move focus to the same day in the previous month."
+      },
+      {
+        "key": "PageDown",
+        "action": "Move focus to the same day in the next month."
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first day of the current week."
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last day of the current week."
+      },
+      {
+        "key": "Enter|Space",
+        "action": "Select the focused date."
+      }
+    ]
+  },
+  "usage": {
+    "example": "<TimePicker\n  selected={time}\n  onChange={setTime}\n  timeIntervals={15}\n/>",
+    "hookExample": "const {\n  selectedDate,\n  isOpen,\n  weeks,\n  getInputProps,\n  getCalendarProps,\n  getDayProps,\n} = useDatePicker({\n  onChange: (date) => console.log('Selected:', date),\n  minDate: new Date(),\n});"
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Use for explicit date picking; combine with a text input for manual entry",
+      "For date ranges, configure mode=\"range\" and supply an array value",
+      "Pair with a DatePicker trigger for inline-vs-popup flexibility"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

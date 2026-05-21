@@ -100,6 +100,98 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Walkthrough> component.",
+      "members": [
+        {
+          "name": "steps",
+          "type": "WalkthroughStepSpec[]",
+          "description": "Array of step definitions, each specifying an anchor target and content."
+        },
+        {
+          "name": "index",
+          "type": "number",
+          "description": "Controlled active step index."
+        },
+        {
+          "name": "defaultIndex",
+          "type": "number",
+          "description": "Uncontrolled initial step index.",
+          "default": 0
+        },
+        {
+          "name": "onStepChange",
+          "type": "(index: number) => void",
+          "description": "Called when the active step changes."
+        },
+        {
+          "name": "onComplete",
+          "type": "() => void",
+          "description": "Called when the user advances past the last step."
+        },
+        {
+          "name": "onSkip",
+          "type": "() => void",
+          "description": "Called when the user skips the tour."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Accessible label for the walkthrough region.",
+          "default": "Feature tour"
+        },
+        {
+          "name": "storageKey",
+          "type": "string",
+          "description": "localStorage key to persist tour completion state across sessions."
+        },
+        {
+          "name": "autoStart",
+          "type": "boolean",
+          "description": "Automatically begin the tour on mount.",
+          "default": false
+        },
+        {
+          "name": "closeOnOutsideClick",
+          "type": "boolean",
+          "description": "Close/skip the tour when the user clicks outside the panel.",
+          "default": false
+        },
+        {
+          "name": "placement",
+          "type": "WalkthroughPlacement",
+          "description": "Preferred placement of the walkthrough panel relative to its anchor.",
+          "default": "auto"
+        }
+      ]
+    }
+  },
+  "channels": {
+    "step": {
+      "description": "Active step index.",
+      "value": "index",
+      "defaultValue": "defaultIndex",
+      "onChange": "onStepChange",
+      "valueType": "number"
+    }
+  },
+  "types": {
+    "WalkthroughPlacement": {
+      "kind": "union",
+      "values": [
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "auto"
+      ]
+    },
+    "WalkthroughStepSpec": {
+      "kind": "alias",
+      "alias": "{ anchor: string; title: string; description?: string }"
+    }
+  },
   "variants": {
     "placement": [
       "top",
@@ -114,60 +206,6 @@
     "hover",
     "disabled"
   ],
-  "a11y": {
-    "labeling": [
-      "aria-label"
-    ],
-    "keyboard": [
-      {
-        "key": "ArrowRight",
-        "action": "Advance to the next step.",
-        "when": "active"
-      },
-      {
-        "key": "ArrowLeft",
-        "action": "Go to the previous step.",
-        "when": "active"
-      },
-      {
-        "key": "Escape",
-        "action": "Close/skip the walkthrough tour.",
-        "when": "active"
-      },
-      {
-        "key": "Enter|Space",
-        "action": "Activate the focused control (skip, prev, next, or dot).",
-        "when": "active"
-      }
-    ]
-  },
-  "channels": {
-    "step": {
-      "description": "Active step index.",
-      "value": "index",
-      "defaultValue": "defaultIndex",
-      "onChange": "onStepChange",
-      "valueType": "number"
-    }
-  },
-  "portal": {
-    "enabled": true,
-    "defaultTarget": "body",
-    "positioning": "anchored",
-    "layering": "popover",
-    "collision": "flip-shift"
-  },
-  "dismissal": {
-    "triggers": [
-      {
-        "event": "escape"
-      },
-      {
-        "event": "outsideClick",
-        "enabledBy": "closeOnOutsideClick"
-      }
-    ]
-  },
   "tokens": {
     "root": {
       "walkthrough.surface.bg": {
@@ -353,87 +391,157 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Walkthrough> component.",
-      "members": [
-        {
-          "name": "steps",
-          "type": "WalkthroughStepSpec[]",
-          "description": "Array of step definitions, each specifying an anchor target and content."
-        },
-        {
-          "name": "index",
-          "type": "number",
-          "description": "Controlled active step index."
-        },
-        {
-          "name": "defaultIndex",
-          "type": "number",
-          "description": "Uncontrolled initial step index.",
-          "default": 0
-        },
-        {
-          "name": "onStepChange",
-          "type": "(index: number) => void",
-          "description": "Called when the active step changes."
-        },
-        {
-          "name": "onComplete",
-          "type": "() => void",
-          "description": "Called when the user advances past the last step."
-        },
-        {
-          "name": "onSkip",
-          "type": "() => void",
-          "description": "Called when the user skips the tour."
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "description": "Accessible label for the walkthrough region.",
-          "default": "Feature tour"
-        },
-        {
-          "name": "storageKey",
-          "type": "string",
-          "description": "localStorage key to persist tour completion state across sessions."
-        },
-        {
-          "name": "autoStart",
-          "type": "boolean",
-          "description": "Automatically begin the tour on mount.",
-          "default": false
-        },
-        {
-          "name": "closeOnOutsideClick",
-          "type": "boolean",
-          "description": "Close/skip the tour when the user clicks outside the panel.",
-          "default": false
-        },
-        {
-          "name": "placement",
-          "type": "WalkthroughPlacement",
-          "description": "Preferred placement of the walkthrough panel relative to its anchor.",
-          "default": "auto"
-        }
-      ]
+  "motion": {
+    "reducedMotion": "respect",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=hidden\u2192visible",
+        "phase": "enter",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasizedDecelerate"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=visible\u2192hidden",
+        "phase": "exit",
+        "properties": [
+          "opacity"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasizedAccelerate"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "Walkthrough panels are non-blocking. Focus remains on the anchored element while the panel is visible."
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "anchored",
+    "layering": "popover",
+    "collision": "flip-shift"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape"
+      },
+      {
+        "event": "outsideClick",
+        "enabledBy": "closeOnOutsideClick"
+      }
+    ]
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"walkthrough\"]"
+    },
+    "title": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-title\"]"
+    },
+    "description": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-description\"]"
+    },
+    "controls": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-controls\"]"
+    },
+    "skip": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-skip\"]"
+    },
+    "prev": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-prev\"]"
+    },
+    "next": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-next\"]"
+    },
+    "progress": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-progress\"]"
+    },
+    "dot": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-dot\"]"
+    },
+    "counter": {
+      "required": false,
+      "selector": "[data-slot=\"walkthrough-counter\"]"
     }
   },
-  "types": {
-    "WalkthroughPlacement": {
-      "kind": "union",
-      "values": [
-        "top",
-        "bottom",
-        "left",
-        "right",
-        "auto"
-      ]
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "panel",
+      "to": "title",
+      "attribute": "aria-labelledby"
     },
-    "WalkthroughStepSpec": {
-      "kind": "alias",
-      "alias": "{ anchor: string; title: string; description?: string }"
+    {
+      "from": "panel",
+      "to": "description",
+      "attribute": "aria-describedby"
+    }
+  ],
+  "a11y": {
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowRight",
+        "action": "Advance to the next step.",
+        "when": "active"
+      },
+      {
+        "key": "ArrowLeft",
+        "action": "Go to the previous step.",
+        "when": "active"
+      },
+      {
+        "key": "Escape",
+        "action": "Close/skip the walkthrough tour.",
+        "when": "active"
+      },
+      {
+        "key": "Enter|Space",
+        "action": "Activate the focused control (skip, prev, next, or dot).",
+        "when": "active"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "overlay",
+    "usageHints": [
+      "Define each step as a WalkthroughStep with an anchor ref and content",
+      "WalkthroughAnchor wraps the element each step points to",
+      "Use WalkthroughControls and WalkthroughProgress for navigation UI",
+      "Keyboard: ArrowRight/ArrowLeft navigate steps; Escape closes the tour",
+      "The walkthrough is non-blocking \u2014 it does not trap focus to the panel"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "WalkthroughStep",
+        "WalkthroughAnchor"
+      ]
     }
   }
 }

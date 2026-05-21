@@ -67,6 +67,90 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Field> form layout wrapper.",
+      "members": [
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form field name used for form submission and as the base for auto-generated element IDs.",
+          "required": true
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "Explicit input element ID. Auto-generated from name if omitted."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Marks the field as required. Surfaces as aria-required on the control element."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables the field and all of its child controls."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "description": "Puts the field into read-only mode. The value is visible but not editable."
+        },
+        {
+          "name": "value",
+          "type": "unknown",
+          "description": "Controlled value passed through to the control adapter."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: unknown) => void",
+          "description": "Change handler called with the new value when the control changes."
+        },
+        {
+          "name": "validate",
+          "type": "((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>)",
+          "description": "Async-capable validation function. Return null for valid, or error string(s) for invalid."
+        },
+        {
+          "name": "label",
+          "type": "ReactNode",
+          "description": "Label content rendered by the FieldLabel slot."
+        },
+        {
+          "name": "helpText",
+          "type": "ReactNode",
+          "description": "Supplementary help text rendered in the help slot below the control."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "description": "Validation error message. When present, the field renders in invalid state."
+        },
+        {
+          "name": "status",
+          "type": "FieldStatus",
+          "description": "Validation status of the field."
+        },
+        {
+          "name": "validating",
+          "type": "boolean",
+          "description": "True while async validation is in flight. Drives the validating indicator slot."
+        }
+      ]
+    }
+  },
+  "types": {
+    "FieldStatus": {
+      "kind": "union",
+      "values": [
+        "idle",
+        "validating",
+        "valid",
+        "invalid"
+      ]
+    }
+  },
   "variants": {
     "status": [
       "idle",
@@ -80,15 +164,6 @@
     "focus",
     "disabled"
   ],
-  "a11y": {
-    "role": "group",
-    "labeling": [
-      "aria-labelledby",
-      "aria-describedby",
-      "aria-errormessage"
-    ],
-    "keyboard": []
-  },
   "tokens": {
     "root": {
       "field.gap.y": {
@@ -180,87 +255,80 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Field> form layout wrapper.",
-      "members": [
-        {
-          "name": "name",
-          "type": "string",
-          "description": "Form field name used for form submission and as the base for auto-generated element IDs.",
-          "required": true
-        },
-        {
-          "name": "id",
-          "type": "string",
-          "description": "Explicit input element ID. Auto-generated from name if omitted."
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "description": "Marks the field as required. Surfaces as aria-required on the control element."
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Disables the field and all of its child controls."
-        },
-        {
-          "name": "readOnly",
-          "type": "boolean",
-          "description": "Puts the field into read-only mode. The value is visible but not editable."
-        },
-        {
-          "name": "value",
-          "type": "unknown",
-          "description": "Controlled value passed through to the control adapter."
-        },
-        {
-          "name": "onChange",
-          "type": "(value: unknown) => void",
-          "description": "Change handler called with the new value when the control changes."
-        },
-        {
-          "name": "validate",
-          "type": "((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>)",
-          "description": "Async-capable validation function. Return null for valid, or error string(s) for invalid."
-        },
-        {
-          "name": "label",
-          "type": "ReactNode",
-          "description": "Label content rendered by the FieldLabel slot."
-        },
-        {
-          "name": "helpText",
-          "type": "ReactNode",
-          "description": "Supplementary help text rendered in the help slot below the control."
-        },
-        {
-          "name": "error",
-          "type": "string",
-          "description": "Validation error message. When present, the field renders in invalid state."
-        },
-        {
-          "name": "status",
-          "type": "FieldStatus",
-          "description": "Validation status of the field."
-        },
-        {
-          "name": "validating",
-          "type": "boolean",
-          "description": "True while async validation is in flight. Drives the validating indicator slot."
-        }
-      ]
+  "form": {
+    "participates": false
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "FormField does not manage focus. The child control inside children handles its own focus."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "error": {
+      "required": false
+    },
+    "help": {
+      "required": false
+    },
+    "label": {
+      "required": false
     }
   },
-  "types": {
-    "FieldStatus": {
-      "kind": "union",
-      "values": [
-        "idle",
-        "validating",
-        "valid",
-        "invalid"
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "label",
+      "to": "context",
+      "attribute": "for",
+      "description": "label.for is wired to the child control's id via context, establishing the label association."
+    },
+    {
+      "from": "context",
+      "to": "helper",
+      "attribute": "aria-describedby",
+      "when": "validity=valid",
+      "description": "Child control receives helper id via context to set aria-describedby when valid."
+    },
+    {
+      "from": "context",
+      "to": "error",
+      "attribute": "aria-describedby",
+      "when": "validity=invalid",
+      "description": "Child control receives error id via context to set aria-describedby when invalid."
+    }
+  ],
+  "a11y": {
+    "role": "group",
+    "labeling": [
+      "aria-labelledby",
+      "aria-describedby",
+      "aria-errormessage"
+    ],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<ErrorText id=\"my-error\">This field is required</ErrorText>",
+    "hookExample": "const { getContainerProps, getHelperTextProps, getErrorTextProps, getChildProps } = useFormField({\n  helperText: 'Enter your full name',\n  errorText: 'Name is required',\n});"
+  },
+  "a2ui": {
+    "category": "layout",
+    "usageHints": [
+      "Wrap every form control in a Field to ensure consistent label/error placement",
+      "Pass error to Field (not the input) to colocate validation state",
+      "Field handles aria-describedby wiring between hint/error and the input"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "ReactNode"
       ]
     }
   }

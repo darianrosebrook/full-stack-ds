@@ -4,7 +4,11 @@
   "description": "Binary switch control rendered as a button[role=switch] with an adjacent label.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "label", "input"],
+    "parts": [
+      "root",
+      "label",
+      "input"
+    ],
     "dom": {
       "tag": "button",
       "part": "root",
@@ -20,19 +24,48 @@
       }
     }
   },
-  "variants": {
-    "size": ["small", "medium", "large"]
-  },
-  "states": ["default", "hover", "focus", "active", "disabled", "checked"],
-  "a11y": {
-    "role": "switch",
-    "labeling": ["aria-label", "aria-checked", "aria-describedby"],
-    "keyboard": [
-      {
-        "key": "Space|Enter",
-        "action": "Toggle the switch."
-      }
-    ]
+  "props": {
+    "styled": {
+      "description": "Props for the <ToggleSwitch> component.",
+      "members": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "Controlled checked state."
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "description": "Uncontrolled initial checked state."
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "description": "Called when checked changes."
+        },
+        {
+          "name": "size",
+          "type": "ToggleSwitchSize",
+          "description": "Size token.",
+          "default": "medium"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label."
+        },
+        {
+          "name": "ariaDescribedby",
+          "type": "string",
+          "description": "External description element id appended to aria-describedby."
+        }
+      ]
+    }
   },
   "channels": {
     "checked": {
@@ -43,6 +76,31 @@
       "description": "Whether the toggle switch is on."
     }
   },
+  "types": {
+    "ToggleSwitchSize": {
+      "kind": "union",
+      "values": [
+        "small",
+        "medium",
+        "large"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active",
+    "disabled",
+    "checked"
+  ],
   "tokens": {
     "root": {
       "toggleSwitch.color.background.default": {
@@ -101,53 +159,95 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <ToggleSwitch> component.",
-      "members": [
-        {
-          "name": "checked",
-          "type": "boolean",
-          "description": "Controlled checked state."
-        },
-        {
-          "name": "defaultChecked",
-          "type": "boolean",
-          "description": "Uncontrolled initial checked state."
-        },
-        {
-          "name": "onChange",
-          "type": "(checked: boolean) => void",
-          "description": "Called when checked changes."
-        },
-        {
-          "name": "size",
-          "type": "ToggleSwitchSize",
-          "description": "Size token.",
-          "default": "medium"
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Prevents interaction."
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Accessible label."
-        },
-        {
-          "name": "ariaDescribedby",
-          "type": "string",
-          "description": "External description element id appended to aria-describedby."
-        }
+  "form": {
+    "participates": true,
+    "inputType": "checkbox",
+    "name": {
+      "prop": "name"
+    },
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "static:on",
+      "omitWhen": "unchecked"
+    },
+    "validity": {
+      "model": "native",
+      "ariaAttributes": [
+        "aria-disabled"
+      ]
+    },
+    "labeling": {
+      "strategy": "associated-label",
+      "required": true,
+      "via": [
+        "aria-labelledby",
+        "aria-label"
       ]
     }
   },
-  "types": {
-    "ToggleSwitchSize": {
-      "kind": "union",
-      "values": ["small", "medium", "large"]
+  "focus": {
+    "strategy": "auto",
+    "description": "Native input[role=switch] receives focus via Tab. Space toggles the checked state."
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"toggle-switch\"]"
+    },
+    "input": {
+      "required": true,
+      "selector": "[data-slot=\"toggle-switch-input\"]"
+    },
+    "label": {
+      "required": false,
+      "selector": "[data-slot=\"toggle-switch-label\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "input",
+      "to": "label",
+      "attribute": "aria-labelledby",
+      "description": "The input's htmlFor attribute links to the label element's id for accessible naming."
+    },
+    {
+      "from": "input",
+      "to": "description",
+      "attribute": "aria-describedby",
+      "when": "ariaDescription=present",
+      "description": "When an ariaDescription prop is provided, a visually hidden span carries the text and the input references it via aria-describedby."
+    }
+  ],
+  "a11y": {
+    "role": "switch",
+    "labeling": [
+      "aria-label",
+      "aria-checked",
+      "aria-describedby"
+    ],
+    "keyboard": [
+      {
+        "key": "Space|Enter",
+        "action": "Toggle the switch."
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Use for immediate on/off settings that take effect without a Submit button",
+      "Use checked and onChange for controlled mode; defaultChecked for uncontrolled",
+      "Always provide ariaLabel or a visible label sibling for screen reader users",
+      "Use name for native form submission (submits \"on\" when checked)"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

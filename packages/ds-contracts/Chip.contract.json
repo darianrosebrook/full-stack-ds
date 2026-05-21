@@ -40,6 +40,84 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Chip> component.",
+      "members": [
+        {
+          "name": "type",
+          "type": "ChipType",
+          "description": "HTML button type attribute"
+        },
+        {
+          "name": "variant",
+          "type": "ChipVariant",
+          "description": "Visual variant"
+        },
+        {
+          "name": "size",
+          "type": "ChipSize",
+          "description": "Size token"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables the chip"
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "Icon node to render. Omit for text-only chips."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title attribute. Use to expose a tooltip-equivalent label."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label when content is not descriptive enough on its own."
+        },
+        {
+          "name": "ariaExpanded",
+          "type": "boolean",
+          "description": "Sets aria-expanded for chips that toggle a popover/menu."
+        },
+        {
+          "name": "ariaPressed",
+          "type": "boolean",
+          "description": "Sets aria-pressed for chips used as toggle buttons."
+        }
+      ]
+    }
+  },
+  "types": {
+    "ChipType": {
+      "kind": "union",
+      "values": [
+        "button",
+        "submit",
+        "reset"
+      ]
+    },
+    "ChipVariant": {
+      "kind": "union",
+      "values": [
+        "default",
+        "selected",
+        "dismissible"
+      ]
+    },
+    "ChipSize": {
+      "kind": "union",
+      "values": [
+        "small",
+        "medium",
+        "large"
+      ]
+    }
+  },
   "variants": {
     "variant": [
       "default",
@@ -59,19 +137,6 @@
     "active",
     "disabled"
   ],
-  "a11y": {
-    "role": "button",
-    "labeling": [
-      "aria-label",
-      "title"
-    ],
-    "keyboard": [
-      {
-        "key": "Enter|Space",
-        "action": "Activate the chip (same as click)"
-      }
-    ]
-  },
   "tokens": {
     "root": {
       "chip.color.background.default": {
@@ -157,81 +222,52 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Chip> component.",
-      "members": [
-        {
-          "name": "type",
-          "type": "ChipType",
-          "description": "HTML button type attribute"
-        },
-        {
-          "name": "variant",
-          "type": "ChipVariant",
-          "description": "Visual variant"
-        },
-        {
-          "name": "size",
-          "type": "ChipSize",
-          "description": "Size token"
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Disables the chip"
-        },
-        {
-          "name": "icon",
-          "type": "ReactNode",
-          "description": "Icon node to render. Omit for text-only chips."
-        },
-        {
-          "name": "title",
-          "type": "string",
-          "description": "Title attribute. Use to expose a tooltip-equivalent label."
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Accessible label when content is not descriptive enough on its own."
-        },
-        {
-          "name": "ariaExpanded",
-          "type": "boolean",
-          "description": "Sets aria-expanded for chips that toggle a popover/menu."
-        },
-        {
-          "name": "ariaPressed",
-          "type": "boolean",
-          "description": "Sets aria-pressed for chips used as toggle buttons."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"chip\"]"
+    },
+    "text": {
+      "required": false,
+      "selector": "[data-slot=\"chip-text\"]"
+    },
+    "icon": {
+      "required": false,
+      "selector": "[data-slot=\"chip-icon\"]"
     }
   },
-  "types": {
-    "ChipType": {
-      "kind": "union",
-      "values": [
-        "button",
-        "submit",
-        "reset"
-      ]
-    },
-    "ChipVariant": {
-      "kind": "union",
-      "values": [
-        "default",
-        "selected",
-        "dismissible"
-      ]
-    },
-    "ChipSize": {
-      "kind": "union",
-      "values": [
-        "small",
-        "medium",
-        "large"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "a11y": {
+    "role": "button",
+    "labeling": [
+      "aria-label",
+      "title"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Activate the chip (same as click)"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Use variant=filter for toggleable filter chips; variant=action for one-time interactions",
+      "Set selected to mark the chip as active in a filter group",
+      "Use onDismiss to make the chip removable with an X button",
+      "Chips with onClick render as buttons; without onClick they render as spans"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string"
       ]
     }
   }

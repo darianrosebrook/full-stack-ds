@@ -66,6 +66,63 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Accordion> component.",
+      "members": [
+        {
+          "name": "type",
+          "type": "AccordionType",
+          "description": "Whether only one panel can be open at a time (single) or multiple may be open simultaneously (multiple).",
+          "default": "single"
+        },
+        {
+          "name": "value",
+          "type": "string | string[]",
+          "description": "Controlled value. String in single mode; string array in multiple mode."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string | string[]",
+          "description": "Uncontrolled initial open value."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string | string[]) => void",
+          "description": "Called when the open panel(s) change."
+        },
+        {
+          "name": "collapsible",
+          "type": "boolean",
+          "description": "When true in single mode, the open panel may be collapsed by clicking its trigger again.",
+          "default": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables all accordion items."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "openness": {
+      "description": "Which panel(s) are expanded. String in single mode, string[] in multiple mode.",
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onValueChange",
+      "valueType": "string | string[]"
+    }
+  },
+  "types": {
+    "AccordionType": {
+      "kind": "union",
+      "values": [
+        "single",
+        "multiple"
+      ]
+    }
+  },
   "variants": {
     "type": [
       "single",
@@ -80,51 +137,6 @@
     "open",
     "closed"
   ],
-  "a11y": {
-    "labeling": [],
-    "keyboard": [
-      {
-        "key": "Enter|Space",
-        "action": "Toggle the focused accordion item open or closed.",
-        "when": "trigger"
-      },
-      {
-        "key": "ArrowDown",
-        "action": "Move focus to the next accordion trigger.",
-        "when": "trigger"
-      },
-      {
-        "key": "ArrowUp",
-        "action": "Move focus to the previous accordion trigger.",
-        "when": "trigger"
-      },
-      {
-        "key": "Home",
-        "action": "Move focus to the first accordion trigger.",
-        "when": "trigger"
-      },
-      {
-        "key": "End",
-        "action": "Move focus to the last accordion trigger.",
-        "when": "trigger"
-      }
-    ]
-  },
-  "channels": {
-    "openness": {
-      "description": "Which panel(s) are expanded. String in single mode, string[] in multiple mode.",
-      "value": "value",
-      "defaultValue": "defaultValue",
-      "onChange": "onValueChange",
-      "valueType": "string | string[]"
-    }
-  },
-  "portal": {
-    "enabled": false
-  },
-  "dismissal": {
-    "triggers": []
-  },
   "tokens": {
     "root": {
       "accordion.color.background.hover": {
@@ -252,51 +264,134 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Accordion> component.",
-      "members": [
-        {
-          "name": "type",
-          "type": "AccordionType",
-          "description": "Whether only one panel can be open at a time (single) or multiple may be open simultaneously (multiple).",
-          "default": "single"
-        },
-        {
-          "name": "value",
-          "type": "string | string[]",
-          "description": "Controlled value. String in single mode; string array in multiple mode."
-        },
-        {
-          "name": "defaultValue",
-          "type": "string | string[]",
-          "description": "Uncontrolled initial open value."
-        },
-        {
-          "name": "onValueChange",
-          "type": "(value: string | string[]) => void",
-          "description": "Called when the open panel(s) change."
-        },
-        {
-          "name": "collapsible",
-          "type": "boolean",
-          "description": "When true in single mode, the open panel may be collapsed by clicking its trigger again.",
-          "default": false
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Disables all accordion items."
-        }
-      ]
+  "motion": {
+    "reducedMotion": "respect",
+    "reducedMotionStrategy": "Duration set to 0; panels snap between collapsed and expanded states without height animation.",
+    "transitions": [
+      {
+        "name": "expand",
+        "trigger": "openness=collapsed\u2192expanded",
+        "phase": "enter",
+        "properties": [
+          "height",
+          "opacity"
+        ],
+        "duration": "accordion.motion.duration",
+        "easing": "accordion.motion.easing"
+      },
+      {
+        "name": "collapse",
+        "trigger": "openness=expanded\u2192collapsed",
+        "phase": "exit",
+        "properties": [
+          "height",
+          "opacity"
+        ],
+        "duration": "accordion.motion.duration",
+        "easing": "accordion.motion.easing"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "manual",
+    "orientation": "vertical",
+    "initialFocus": "trigger",
+    "wrap": true,
+    "description": "Arrow keys navigate between accordion triggers; Space/Enter toggles the focused panel."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "dismissal": {
+    "triggers": []
+  },
+  "slots": {
+    "content": {
+      "required": false,
+      "selector": "[data-slot=\"accordion-content\"]"
+    },
+    "item": {
+      "required": false,
+      "selector": "[data-slot=\"accordion-item\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"accordion\"]"
+    },
+    "trigger": {
+      "required": false,
+      "selector": "[data-slot=\"accordion-trigger\"]"
     }
   },
-  "types": {
-    "AccordionType": {
-      "kind": "union",
-      "values": [
-        "single",
-        "multiple"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "relationships": [
+    {
+      "from": "trigger",
+      "to": "panel",
+      "attribute": "aria-controls",
+      "description": "Each accordion trigger controls its associated panel region."
+    },
+    {
+      "from": "panel",
+      "to": "trigger",
+      "attribute": "aria-labelledby",
+      "description": "Each panel is labelled by its corresponding trigger heading."
+    }
+  ],
+  "a11y": {
+    "labeling": [],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Toggle the focused accordion item open or closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last accordion trigger.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "usage": {
+    "example": "<Accordion headingLevel={3} isMultiOpen={false}>\n  <AccordionSection id=\"section-1\">\n    <AccordionHeader>Section 1</AccordionHeader>\n    <AccordionPanel>Content 1</AccordionPanel>\n  </AccordionSection>\n</Accordion>",
+    "hookExample": "const accordion = useAccordion({ isMultiOpen: false });\n\nreturn (\n  <div>\n    {sections.map((section, index) => (\n      <div key={section.id}>\n        <button {...accordion.getHeaderProps(section.id, index)}>\n          {section.title}\n        </button>\n        <div {...accordion.getPanelProps(section.id, index)}>\n          {section.content}\n        </div>\n      </div>\n    ))}\n  </div>\n);"
+  },
+  "a2ui": {
+    "category": "navigation",
+    "usageHints": [
+      "Use type=\"single\" to allow only one panel open at a time; \"multiple\" allows several",
+      "Set collapsible on single mode to allow the open panel to also be closed",
+      "Bind value and onValueChange for controlled mode",
+      "Avoid deeply nesting accordions \u2014 prefer flat structures for better readability"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "AccordionItem",
+        "AccordionTrigger",
+        "AccordionContent"
       ]
     }
   }

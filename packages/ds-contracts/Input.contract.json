@@ -4,7 +4,9 @@
   "description": "Native text input with design-system styling. Use inside TextField for label and error support.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root"],
+    "parts": [
+      "root"
+    ],
     "dom": {
       "tag": "input",
       "part": "root",
@@ -17,11 +19,57 @@
       }
     }
   },
-  "states": ["default", "hover", "focus", "disabled", "invalid"],
-  "a11y": {
-    "role": "textbox",
-    "labeling": ["aria-label", "aria-labelledby", "aria-invalid"],
-    "keyboard": []
+  "props": {
+    "styled": {
+      "description": "Props for the <Input> component.",
+      "members": [
+        {
+          "name": "type",
+          "type": "string",
+          "description": "HTML input type (text, email, password, number, search, etc.)."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Controlled value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "description": "Called when value changes."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text shown when empty."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Applies error styling and sets aria-invalid."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Sets the native required attribute."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form name for native submission."
+        }
+      ]
+    }
   },
   "channels": {
     "value": {
@@ -32,6 +80,13 @@
       "description": "The current text value of the input."
     }
   },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "invalid"
+  ],
   "tokens": {
     "root": {
       "input.color.bg.default": {
@@ -88,56 +143,99 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Input> component.",
-      "members": [
-        {
-          "name": "type",
-          "type": "string",
-          "description": "HTML input type (text, email, password, number, search, etc.)."
-        },
-        {
-          "name": "value",
-          "type": "string",
-          "description": "Controlled value."
-        },
-        {
-          "name": "defaultValue",
-          "type": "string",
-          "description": "Uncontrolled initial value."
-        },
-        {
-          "name": "onChange",
-          "type": "(value: string) => void",
-          "description": "Called when value changes."
-        },
-        {
-          "name": "placeholder",
-          "type": "string",
-          "description": "Placeholder text shown when empty."
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Prevents interaction."
-        },
-        {
-          "name": "invalid",
-          "type": "boolean",
-          "description": "Applies error styling and sets aria-invalid."
-        },
-        {
-          "name": "required",
-          "type": "boolean",
-          "description": "Sets the native required attribute."
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "description": "Form name for native submission."
-        }
+  "form": {
+    "participates": true,
+    "inputType": "text",
+    "name": {
+      "prop": "name"
+    },
+    "required": {
+      "prop": "required",
+      "constraintValidation": true
+    },
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "channel:value",
+      "omitWhen": "never"
+    },
+    "validity": {
+      "model": "hybrid",
+      "invalidProp": "invalid",
+      "ariaAttributes": [
+        "aria-invalid",
+        "aria-required",
+        "aria-describedby"
       ]
+    },
+    "labeling": {
+      "strategy": "associated-label",
+      "required": true,
+      "via": [
+        "aria-labelledby",
+        "aria-label"
+      ]
+    }
+  },
+  "focus": {
+    "strategy": "none"
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"input\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "label",
+      "to": "input",
+      "attribute": "for"
+    },
+    {
+      "from": "input",
+      "to": "helper",
+      "attribute": "aria-describedby",
+      "when": "validity=valid"
+    },
+    {
+      "from": "input",
+      "to": "error",
+      "attribute": "aria-describedby",
+      "when": "validity=invalid"
+    }
+  ],
+  "a11y": {
+    "role": "textbox",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-invalid"
+    ],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Input\n  label=\"Full Name\"\n  value={name}\n  onChange={(e) => setName(e.target.value)}\n  placeholder=\"Jane Doe\"\n  helperText=\"Enter your legal name\"\n/>",
+    "hookExample": "const { value, getInputProps, getLabelProps } = useInput({\n  initialValue: '',\n  label: 'Email',\n  onChange: (e) => console.log(e.target.value)\n});"
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Prefer TextField over Input when you need a label, description, or error message",
+      "Use type to change the input mode (text, email, password, number, search, etc.)",
+      "Set invalid for error state styling without a form validation message",
+      "Use name for native form submission"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

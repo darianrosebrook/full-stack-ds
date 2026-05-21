@@ -17,6 +17,36 @@
       "note"
     ]
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Card> component.",
+      "members": [
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "description": "Enable hover affordances (shadow lift, translate)"
+        },
+        {
+          "name": "status",
+          "type": "CardStatus",
+          "description": "Visual status variant of the card"
+        }
+      ]
+    }
+  },
+  "types": {
+    "CardStatus": {
+      "kind": "union",
+      "values": [
+        "completed",
+        "in-progress",
+        "planned",
+        "deprecated",
+        "category",
+        "complexity"
+      ]
+    }
+  },
   "variants": {
     "status": [
       "completed",
@@ -33,10 +63,6 @@
     "focus",
     "active"
   ],
-  "a11y": {
-    "labeling": [],
-    "keyboard": []
-  },
   "tokens": {
     "root": {
       "card.color.background.default": {
@@ -183,33 +209,68 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Card> component.",
-      "members": [
-        {
-          "name": "interactive",
-          "type": "boolean",
-          "description": "Enable hover affordances (shadow lift, translate)"
-        },
-        {
-          "name": "status",
-          "type": "CardStatus",
-          "description": "Visual status variant of the card"
-        }
-      ]
+  "slots": {
+    "actions": {
+      "required": false
+    },
+    "badge": {
+      "required": false
+    },
+    "content": {
+      "required": false
+    },
+    "description": {
+      "required": false
+    },
+    "footer": {
+      "required": false
+    },
+    "header": {
+      "required": false
+    },
+    "link": {
+      "required": false
+    },
+    "media": {
+      "required": false
+    },
+    "note": {
+      "required": false
+    },
+    "title": {
+      "required": false
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"card\"]"
     }
   },
-  "types": {
-    "CardStatus": {
-      "kind": "union",
-      "values": [
-        "completed",
-        "in-progress",
-        "planned",
-        "deprecated",
-        "category",
-        "complexity"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Card variant=\"small\">\n  <CardHeader>\n    <CardTitle>Project Update</CardTitle>\n    <CardDescription>Latest status report</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p>Everything is on track for the Q2 release.</p>\n  </CardContent>\n  <CardFooter>\n    <Button kind=\"primary\">View Details</Button>\n  </CardFooter>\n</Card>",
+    "hookExample": "// Static card\nconst { getRootProps } = useCard({ variant: 'small' });\n<article {...getRootProps()}>...</article>\n\n// Interactive card \u2014 action area split\nconst { getRootProps, getActionAreaProps } = useCard({ interactive: true, onClick: handleClick });\n<div {...getRootProps()}>\n  <div {...getActionAreaProps()}>content</div>\n  <footer>actions</footer>\n</div>"
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use Card.Link to make the entire card clickable",
+      "Keep Card.Actions to 1\u20132 actions; move secondary actions to an overflow menu",
+      "Card.Media expects a fixed-aspect image or media slot"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "ReactNode"
       ]
     }
   }

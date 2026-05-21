@@ -31,19 +31,30 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Breadcrumbs> component.",
+      "members": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the nav landmark. Defaults to \"Breadcrumb\".",
+          "default": "Breadcrumb"
+        },
+        {
+          "name": "separator",
+          "type": "string",
+          "description": "Separator character or string rendered between items."
+        }
+      ]
+    }
+  },
   "variants": {},
   "states": [
     "default",
     "hover",
     "focus"
   ],
-  "a11y": {
-    "role": "navigation",
-    "labeling": [
-      "aria-label"
-    ],
-    "keyboard": []
-  },
   "tokens": {
     "root": {
       "breadcrumbs.color.foreground.secondary": {
@@ -134,22 +145,46 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Breadcrumbs> component.",
-      "members": [
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Accessible label for the nav landmark. Defaults to \"Breadcrumb\".",
-          "default": "Breadcrumb"
-        },
-        {
-          "name": "separator",
-          "type": "string",
-          "description": "Separator character or string rendered between items."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"breadcrumbs\"]"
+    },
+    "list": {
+      "required": true,
+      "selector": "[data-slot=\"breadcrumbs-list\"]"
+    },
+    "separator": {
+      "required": false,
+      "selector": "[data-slot=\"breadcrumbs-separator\"]"
+    },
+    "current": {
+      "required": true,
+      "selector": "[data-slot=\"breadcrumbs-current\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "navigation",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "navigation",
+    "usageHints": [
+      "Provide items as an array of { label, href } objects; the last item is the current page (no href)",
+      "The component automatically renders a nav[aria-label=\"Breadcrumb\"] and marks the current item with aria-current=\"page\"",
+      "Use separator to customize the divider character"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

@@ -4,7 +4,12 @@
   "description": "Responsive image component with layout and aspect-ratio helpers.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "img", "placeholder", "errorState"],
+    "parts": [
+      "root",
+      "img",
+      "placeholder",
+      "errorState"
+    ],
     "dom": {
       "tag": "img",
       "part": "root",
@@ -15,56 +20,6 @@
         "height": "prop:height",
         "loading": "prop:loading",
         "sizes": "prop:sizes"
-      }
-    }
-  },
-  "variants": {
-    "size": ["xs", "sm", "md", "lg", "xl", "full"],
-    "radius": ["none", "sm", "md", "lg", "full"]
-  },
-  "states": ["default", "loading", "error"],
-  "a11y": {
-    "role": "img",
-    "labeling": ["aria-label", "alt"],
-    "keyboard": []
-  },
-  "tokens": {
-    "root": {
-      "image.color.background.default": {
-        "resolvesTo": "semantic.color.background.secondary",
-        "fallback": "#efefef",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "image.color.foreground.primary": {
-        "resolvesTo": "semantic.color.foreground.primary",
-        "fallback": "#141414",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "image.size.icon": {
-        "resolvesTo": "core.spacing.size.08",
-        "fallback": "32px",
-        "layer": "core"
-      },
-      "image.typography.error.fontSize": {
-        "resolvesTo": "semantic.typography.body.04",
-        "fallback": "12px",
-        "layer": "semantic"
-      }
-    },
-    "error": {
-      "image.color.background.error": {
-        "resolvesTo": "semantic.color.background.danger.subtle",
-        "fallback": "#fceaea",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "image.color.foreground.error": {
-        "resolvesTo": "semantic.color.foreground.danger",
-        "fallback": "#d9292b",
-        "property": "color",
-        "layer": "semantic"
       }
     }
   },
@@ -139,19 +94,137 @@
   "types": {
     "ImageAspectRatio": {
       "kind": "union",
-      "values": ["square", "video", "photo", "wide", "portrait"]
+      "values": [
+        "square",
+        "video",
+        "photo",
+        "wide",
+        "portrait"
+      ]
     },
     "ImageObjectFit": {
       "kind": "union",
-      "values": ["cover", "contain", "fill", "scale-down", "none"]
+      "values": [
+        "cover",
+        "contain",
+        "fill",
+        "scale-down",
+        "none"
+      ]
     },
     "ImageLoading": {
       "kind": "union",
-      "values": ["lazy", "eager"]
+      "values": [
+        "lazy",
+        "eager"
+      ]
     },
     "ImageRadius": {
       "kind": "union",
-      "values": ["none", "sm", "md", "lg", "full"]
+      "values": [
+        "none",
+        "sm",
+        "md",
+        "lg",
+        "full"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "full"
+    ],
+    "radius": [
+      "none",
+      "sm",
+      "md",
+      "lg",
+      "full"
+    ]
+  },
+  "states": [
+    "default",
+    "loading",
+    "error"
+  ],
+  "tokens": {
+    "root": {
+      "image.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "image.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "image.size.icon": {
+        "resolvesTo": "core.spacing.size.08",
+        "fallback": "32px",
+        "layer": "core"
+      },
+      "image.typography.error.fontSize": {
+        "resolvesTo": "semantic.typography.body.04",
+        "fallback": "12px",
+        "layer": "semantic"
+      }
+    },
+    "error": {
+      "image.color.background.error": {
+        "resolvesTo": "semantic.color.background.danger.subtle",
+        "fallback": "#fceaea",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "image.color.foreground.error": {
+        "resolvesTo": "semantic.color.foreground.danger",
+        "fallback": "#d9292b",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"image\"]"
+    },
+    "img": {
+      "required": true,
+      "selector": "[data-slot=\"image-img\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "img",
+    "labeling": [
+      "aria-label",
+      "alt"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Always provide a meaningful alt string; use alt=\"\" for decorative images",
+      "Set fill for images that should cover their container; use width/height otherwise",
+      "Use priority on above-the-fold images to avoid layout shift"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

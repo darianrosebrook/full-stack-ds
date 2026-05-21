@@ -4,7 +4,11 @@
   "description": "Small label conveying status, category, or count. Typically paired with other content.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "icon", "content"],
+    "parts": [
+      "root",
+      "icon",
+      "content"
+    ],
     "dom": {
       "tag": "span",
       "part": "root",
@@ -29,16 +33,89 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Badge> component.",
+      "members": [
+        {
+          "name": "variant",
+          "type": "BadgeVariant",
+          "description": "Visual variant of the badge"
+        },
+        {
+          "name": "intent",
+          "type": "BadgeIntent",
+          "description": "Intent/severity for status badges"
+        },
+        {
+          "name": "size",
+          "type": "BadgeSize",
+          "description": "Badge size token"
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "Icon to display. For status variant, defaults to a star icon if not provided. Pass null to hide."
+        },
+        {
+          "name": "showStatusIcon",
+          "type": "boolean",
+          "description": "Whether to show the default status icon (only applies to status variant)"
+        }
+      ]
+    }
+  },
+  "types": {
+    "BadgeVariant": {
+      "kind": "union",
+      "values": [
+        "default",
+        "status",
+        "counter",
+        "tag"
+      ]
+    },
+    "BadgeIntent": {
+      "kind": "union",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    },
+    "BadgeSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  },
   "variants": {
-    "variant": ["default", "status", "counter", "tag"],
-    "intent": ["info", "success", "warning", "danger"],
-    "size": ["sm", "md", "lg"]
+    "variant": [
+      "default",
+      "status",
+      "counter",
+      "tag"
+    ],
+    "intent": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
   },
-  "states": ["default", "hover"],
-  "a11y": {
-    "labeling": [],
-    "keyboard": []
-  },
+  "states": [
+    "default",
+    "hover"
+  ],
   "tokens": {
     "root": {
       "badge.color.background.default": {
@@ -91,50 +168,44 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Badge> component.",
-      "members": [
-        {
-          "name": "variant",
-          "type": "BadgeVariant",
-          "description": "Visual variant of the badge"
-        },
-        {
-          "name": "intent",
-          "type": "BadgeIntent",
-          "description": "Intent/severity for status badges"
-        },
-        {
-          "name": "size",
-          "type": "BadgeSize",
-          "description": "Badge size token"
-        },
-        {
-          "name": "icon",
-          "type": "ReactNode",
-          "description": "Icon to display. For status variant, defaults to a star icon if not provided. Pass null to hide."
-        },
-        {
-          "name": "showStatusIcon",
-          "type": "boolean",
-          "description": "Whether to show the default status icon (only applies to status variant)"
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"badge\"]"
+    },
+    "icon": {
+      "required": false,
+      "selector": "[data-slot=\"badge-icon\"]"
+    },
+    "content": {
+      "required": false,
+      "selector": "[data-slot=\"badge-content\"]"
     }
   },
-  "types": {
-    "BadgeVariant": {
-      "kind": "union",
-      "values": ["default", "status", "counter", "tag"]
-    },
-    "BadgeIntent": {
-      "kind": "union",
-      "values": ["info", "success", "warning", "danger"]
-    },
-    "BadgeSize": {
-      "kind": "union",
-      "values": ["sm", "md", "lg"]
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use intent to apply semantic color (info, success, warning, danger, neutral)",
+      "Use variant to switch between filled, outlined, or subtle styles",
+      "Keep badge text short \u2014 ideally a single word or number",
+      "Pair with an icon using the icon prop to reinforce meaning"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string"
+      ]
     }
   }
 }

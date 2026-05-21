@@ -15,6 +15,29 @@
       "part": "root"
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Avatar> component.",
+      "members": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Image source URL. Omit to render initials from `name`."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "User/entity name. Used for initials fallback and as the accessible label.",
+          "required": true
+        },
+        {
+          "name": "priority",
+          "type": "boolean",
+          "description": "Mark image as priority for above-the-fold loading."
+        }
+      ]
+    }
+  },
   "variants": {
     "size": [
       "small",
@@ -27,10 +50,6 @@
     "default",
     "focus"
   ],
-  "a11y": {
-    "labeling": [],
-    "keyboard": []
-  },
   "tokens": {
     "root": {
       "avatar.size.small": {
@@ -111,27 +130,39 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Avatar> component.",
-      "members": [
-        {
-          "name": "src",
-          "type": "string",
-          "description": "Image source URL. Omit to render initials from `name`."
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "description": "User/entity name. Used for initials fallback and as the accessible label.",
-          "required": true
-        },
-        {
-          "name": "priority",
-          "type": "boolean",
-          "description": "Mark image as priority for above-the-fold loading."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"avatar\"]"
+    },
+    "image": {
+      "required": false,
+      "selector": "[data-slot=\"avatar-image\"]"
+    },
+    "initials": {
+      "required": false,
+      "selector": "[data-slot=\"avatar-initials\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Provide src and alt for image avatars; omit src to render initials from the name prop",
+      "Use size to scale the avatar to fit its context (xs through xl)",
+      "Always set alt text or a name prop so screen readers have a meaningful label"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

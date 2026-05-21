@@ -4,24 +4,174 @@
   "description": "Polymorphic text element with design-system typography variants and semantic element control.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "headline", "title", "body", "caption", "overline", "code"],
+    "parts": [
+      "root",
+      "headline",
+      "title",
+      "body",
+      "caption",
+      "overline",
+      "code"
+    ],
     "dom": {
       "tag": "p",
       "part": "root"
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Text> component.",
+      "members": [
+        {
+          "name": "as",
+          "type": "TextElement",
+          "description": "Element tag to render."
+        },
+        {
+          "name": "variant",
+          "type": "TextVariant",
+          "description": "Typography variant"
+        },
+        {
+          "name": "size",
+          "type": "TextSize",
+          "description": "Type-scale size token"
+        },
+        {
+          "name": "weight",
+          "type": "TextWeight",
+          "description": "Font weight token"
+        },
+        {
+          "name": "align",
+          "type": "TextAlign",
+          "description": "Text alignment"
+        },
+        {
+          "name": "transform",
+          "type": "TextTransform",
+          "description": "CSS text-transform"
+        },
+        {
+          "name": "truncate",
+          "type": "boolean",
+          "description": "Single-line truncation with ellipsis."
+        }
+      ]
+    }
+  },
+  "types": {
+    "TextElement": {
+      "kind": "union",
+      "values": [
+        "p",
+        "span",
+        "div",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ]
+    },
+    "TextVariant": {
+      "kind": "union",
+      "values": [
+        "display",
+        "headline",
+        "title",
+        "body",
+        "caption",
+        "overline",
+        "code"
+      ]
+    },
+    "TextSize": {
+      "kind": "union",
+      "values": [
+        "xs",
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "2xl",
+        "3xl"
+      ]
+    },
+    "TextWeight": {
+      "kind": "union",
+      "values": [
+        "light",
+        "normal",
+        "medium",
+        "semibold",
+        "bold"
+      ]
+    },
+    "TextAlign": {
+      "kind": "union",
+      "values": [
+        "left",
+        "center",
+        "right",
+        "justify"
+      ]
+    },
+    "TextTransform": {
+      "kind": "union",
+      "values": [
+        "none",
+        "uppercase",
+        "lowercase",
+        "capitalize"
+      ]
+    }
+  },
   "variants": {
-    "variant": ["display", "headline", "title", "body", "caption", "overline", "code"],
-    "size": ["xs", "sm", "md", "lg", "xl", "2xl", "3xl"],
-    "weight": ["light", "normal", "medium", "semibold", "bold"],
-    "align": ["left", "center", "right", "justify"],
-    "transform": ["none", "uppercase", "lowercase", "capitalize"]
+    "variant": [
+      "display",
+      "headline",
+      "title",
+      "body",
+      "caption",
+      "overline",
+      "code"
+    ],
+    "size": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "2xl",
+      "3xl"
+    ],
+    "weight": [
+      "light",
+      "normal",
+      "medium",
+      "semibold",
+      "bold"
+    ],
+    "align": [
+      "left",
+      "center",
+      "right",
+      "justify"
+    ],
+    "transform": [
+      "none",
+      "uppercase",
+      "lowercase",
+      "capitalize"
+    ]
   },
-  "states": ["default", "error", "success"],
-  "a11y": {
-    "labeling": [],
-    "keyboard": []
-  },
+  "states": [
+    "default",
+    "error",
+    "success"
+  ],
   "tokens": {
     "root": {
       "text.color.foreground.primary": {
@@ -86,72 +236,36 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Text> component.",
-      "members": [
-        {
-          "name": "as",
-          "type": "TextElement",
-          "description": "Element tag to render."
-        },
-        {
-          "name": "variant",
-          "type": "TextVariant",
-          "description": "Typography variant"
-        },
-        {
-          "name": "size",
-          "type": "TextSize",
-          "description": "Type-scale size token"
-        },
-        {
-          "name": "weight",
-          "type": "TextWeight",
-          "description": "Font weight token"
-        },
-        {
-          "name": "align",
-          "type": "TextAlign",
-          "description": "Text alignment"
-        },
-        {
-          "name": "transform",
-          "type": "TextTransform",
-          "description": "CSS text-transform"
-        },
-        {
-          "name": "truncate",
-          "type": "boolean",
-          "description": "Single-line truncation with ellipsis."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"text\"]"
     }
   },
-  "types": {
-    "TextElement": {
-      "kind": "union",
-      "values": ["p", "span", "div", "h1", "h2", "h3", "h4", "h5", "h6"]
-    },
-    "TextVariant": {
-      "kind": "union",
-      "values": ["display", "headline", "title", "body", "caption", "overline", "code"]
-    },
-    "TextSize": {
-      "kind": "union",
-      "values": ["xs", "sm", "md", "lg", "xl", "2xl", "3xl"]
-    },
-    "TextWeight": {
-      "kind": "union",
-      "values": ["light", "normal", "medium", "semibold", "bold"]
-    },
-    "TextAlign": {
-      "kind": "union",
-      "values": ["left", "center", "right", "justify"]
-    },
-    "TextTransform": {
-      "kind": "union",
-      "values": ["none", "uppercase", "lowercase", "capitalize"]
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use as to control the rendered element (p, span, h1\u2013h6, label, etc.)",
+      "Use variant to apply typography scale (body, caption, heading, etc.)",
+      "Do not nest block-level Text elements inside inline ones"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "node-ref"
+      ]
     }
   }
 }

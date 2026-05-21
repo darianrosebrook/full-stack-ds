@@ -16,6 +16,33 @@
       "cell"
     ]
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Table> component.",
+      "members": [
+        {
+          "name": "responsive",
+          "type": "boolean",
+          "description": "Enable responsive horizontal scrolling"
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the table"
+        }
+      ]
+    }
+  },
+  "channels": {
+    "selection": {
+      "description": "Set of selected row identifiers when the table supports row selection.",
+      "value": "selectedRows",
+      "defaultValue": "defaultSelectedRows",
+      "onChange": "onSelectionChange",
+      "valueType": "string[]",
+      "notes": "Only relevant when the table is used in a selectable context. The table primitive itself is presentational; selection state is managed by the consumer."
+    }
+  },
   "variants": {},
   "states": [
     "default",
@@ -23,28 +50,6 @@
     "focus",
     "selected"
   ],
-  "a11y": {
-    "labeling": [
-      "aria-sort",
-      "aria-label",
-      "aria-labelledby"
-    ],
-    "keyboard": [
-      {
-        "key": "Tab",
-        "action": "Move focus between interactive column headers and rows"
-      },
-      {
-        "key": "Space|Enter",
-        "action": "Activate sort on focused column header"
-      },
-      {
-        "key": "ArrowUp|ArrowDown",
-        "action": "Navigate between rows",
-        "when": "interactive row is focused"
-      }
-    ]
-  },
   "tokens": {
     "root": {
       "table.color.text": {
@@ -174,21 +179,105 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Table> component.",
-      "members": [
-        {
-          "name": "responsive",
-          "type": "boolean",
-          "description": "Enable responsive horizontal scrolling"
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Accessible label for the table"
-        }
-      ]
+  "focus": {
+    "strategy": "none",
+    "description": "The table itself does not manage focus. Individual interactive cells (sortable headers, checkboxes) are reachable via standard tab order."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "body": {
+      "required": false,
+      "selector": "[data-slot=\"table-body\"]"
+    },
+    "caption": {
+      "required": false,
+      "selector": "[data-slot=\"table-caption\"]"
+    },
+    "cell": {
+      "required": false,
+      "selector": "[data-slot=\"table-cell\"]"
+    },
+    "container": {
+      "required": false,
+      "selector": "[data-slot=\"table-container\"]"
+    },
+    "element": {
+      "required": false
+    },
+    "footer": {
+      "required": false,
+      "selector": "[data-slot=\"table-footer\"]"
+    },
+    "head": {
+      "required": false,
+      "selector": "[data-slot=\"table-head\"]"
+    },
+    "header": {
+      "required": false,
+      "selector": "[data-slot=\"table-header\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"table\"]"
+    },
+    "row": {
+      "required": false,
+      "selector": "[data-slot=\"table-row\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "root",
+      "to": "head",
+      "attribute": "aria-labelledby",
+      "description": "If a caption or external label is used, root references it via aria-labelledby."
+    },
+    {
+      "from": "headerCell",
+      "to": "cell",
+      "attribute": "aria-sort",
+      "description": "Sorted column's headerCell carries aria-sort; associated cells are in the same column."
+    }
+  ],
+  "a11y": {
+    "labeling": [
+      "aria-sort",
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "Tab",
+        "action": "Move focus between interactive column headers and rows"
+      },
+      {
+        "key": "Space|Enter",
+        "action": "Activate sort on focused column header"
+      },
+      {
+        "key": "ArrowUp|ArrowDown",
+        "action": "Navigate between rows",
+        "when": "interactive row is focused"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use for structured data that benefits from sorting or comparison across rows",
+      "Enable row selection for bulk actions; pair with a toolbar for the action bar",
+      "Keep column count to 6\u20138 max; use column visibility controls for wider datasets"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

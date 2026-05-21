@@ -55,6 +55,76 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Details> disclosure component.",
+      "members": [
+        {
+          "name": "summary",
+          "type": "string",
+          "description": "The summary text displayed in the toggle button.",
+          "required": true
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Default open state for uncontrolled usage."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when open state changes."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disabled state."
+        },
+        {
+          "name": "variant",
+          "type": "DetailsVariant",
+          "description": "Visual variant."
+        },
+        {
+          "name": "icon",
+          "type": "DetailsIcon",
+          "description": "Icon position or absence."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "open": {
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean",
+      "description": "Whether the disclosure is expanded."
+    }
+  },
+  "types": {
+    "DetailsVariant": {
+      "kind": "union",
+      "values": [
+        "default",
+        "inline",
+        "compact"
+      ]
+    },
+    "DetailsIcon": {
+      "kind": "union",
+      "values": [
+        "left",
+        "right",
+        "none"
+      ]
+    }
+  },
   "variants": {
     "variant": [
       "default",
@@ -75,33 +145,6 @@
     "open",
     "closed"
   ],
-  "a11y": {
-    "role": "group",
-    "labeling": [
-      "aria-label"
-    ],
-    "keyboard": [
-      {
-        "key": "Enter",
-        "action": "Toggle the disclosure open or closed.",
-        "when": "summary"
-      },
-      {
-        "key": "Space",
-        "action": "Toggle the disclosure open or closed.",
-        "when": "summary"
-      }
-    ]
-  },
-  "channels": {
-    "open": {
-      "value": "open",
-      "defaultValue": "defaultOpen",
-      "onChange": "onOpenChange",
-      "valueType": "boolean",
-      "description": "Whether the disclosure is expanded."
-    }
-  },
   "tokens": {
     "root": {
       "details.size.padding.default": {
@@ -199,64 +242,62 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Details> disclosure component.",
-      "members": [
-        {
-          "name": "summary",
-          "type": "string",
-          "description": "The summary text displayed in the toggle button.",
-          "required": true
-        },
-        {
-          "name": "open",
-          "type": "boolean",
-          "description": "Controlled open state."
-        },
-        {
-          "name": "defaultOpen",
-          "type": "boolean",
-          "description": "Default open state for uncontrolled usage."
-        },
-        {
-          "name": "onOpenChange",
-          "type": "(open: boolean) => void",
-          "description": "Called when open state changes."
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Disabled state."
-        },
-        {
-          "name": "variant",
-          "type": "DetailsVariant",
-          "description": "Visual variant."
-        },
-        {
-          "name": "icon",
-          "type": "DetailsIcon",
-          "description": "Icon position or absence."
-        }
-      ]
+  "slots": {
+    "compact": {
+      "required": false
+    },
+    "inline": {
+      "required": false
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"details\"]"
+    },
+    "summary": {
+      "required": true,
+      "selector": "[data-slot=\"details-summary\"]"
+    },
+    "content": {
+      "required": true,
+      "selector": "[data-slot=\"details-content\"]"
     }
   },
-  "types": {
-    "DetailsVariant": {
-      "kind": "union",
-      "values": [
-        "default",
-        "inline",
-        "compact"
-      ]
-    },
-    "DetailsIcon": {
-      "kind": "union",
-      "values": [
-        "left",
-        "right",
-        "none"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "a11y": {
+    "role": "group",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter",
+        "action": "Toggle the disclosure open or closed.",
+        "when": "summary"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle the disclosure open or closed.",
+        "when": "summary"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "content",
+    "usageHints": [
+      "Use for progressive disclosure of non-critical detail",
+      "Not for navigation \u2014 use Accordion for a multi-section expand/collapse list",
+      "The summary is always visible; the content is hidden until expanded"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "ReactNode"
       ]
     }
   }

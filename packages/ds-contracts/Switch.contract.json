@@ -4,7 +4,12 @@
   "description": "Boolean toggle for enabling or disabling a setting. Semantically equivalent to a checkbox but with a sliding thumb affordance.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "track", "thumb", "input"],
+    "parts": [
+      "root",
+      "track",
+      "thumb",
+      "input"
+    ],
     "dom": {
       "tag": "label",
       "part": "root",
@@ -40,18 +45,48 @@
       ]
     }
   },
-  "variants": {
-    "size": ["sm", "md", "lg"]
-  },
-  "states": ["default", "hover", "focus", "disabled", "checked"],
-  "a11y": {
-    "labeling": ["aria-label", "aria-labelledby", "aria-checked"],
-    "keyboard": [
-      {
-        "key": "Space",
-        "action": "Toggle the switch."
-      }
-    ]
+  "props": {
+    "styled": {
+      "description": "Props for the <Switch> component.",
+      "members": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "Controlled checked state."
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "description": "Uncontrolled initial checked state."
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "description": "Called when checked changes."
+        },
+        {
+          "name": "size",
+          "type": "SwitchSize",
+          "description": "Size token.",
+          "default": "md"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form name for native submission."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Form value submitted when on."
+        }
+      ]
+    }
   },
   "channels": {
     "checked": {
@@ -62,6 +97,30 @@
       "description": "Whether the switch is on."
     }
   },
+  "types": {
+    "SwitchSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "checked"
+  ],
   "tokens": {
     "root": {
       "switch.color.track.background.default": {
@@ -124,53 +183,88 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Switch> component.",
-      "members": [
-        {
-          "name": "checked",
-          "type": "boolean",
-          "description": "Controlled checked state."
-        },
-        {
-          "name": "defaultChecked",
-          "type": "boolean",
-          "description": "Uncontrolled initial checked state."
-        },
-        {
-          "name": "onChange",
-          "type": "(checked: boolean) => void",
-          "description": "Called when checked changes."
-        },
-        {
-          "name": "size",
-          "type": "SwitchSize",
-          "description": "Size token.",
-          "default": "md"
-        },
-        {
-          "name": "disabled",
-          "type": "boolean",
-          "description": "Prevents interaction."
-        },
-        {
-          "name": "name",
-          "type": "string",
-          "description": "Form name for native submission."
-        },
-        {
-          "name": "value",
-          "type": "string",
-          "description": "Form value submitted when on."
-        }
-      ]
+  "form": {
+    "participates": true,
+    "inputType": "checkbox",
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "static:on",
+      "omitWhen": "unchecked"
+    },
+    "validity": {
+      "model": "native"
     }
   },
-  "types": {
-    "SwitchSize": {
-      "kind": "union",
-      "values": ["sm", "md", "lg"]
+  "motion": {
+    "reducedMotion": "respect",
+    "transitions": [
+      {
+        "name": "toggle",
+        "trigger": "checked=false\u2192true",
+        "phase": "enter",
+        "properties": [
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.standard"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "auto"
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "field": {
+      "required": false,
+      "selector": "[data-slot=\"switch-field\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"switch\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "input",
+      "to": "label",
+      "attribute": "aria-labelledby"
+    }
+  ],
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-checked"
+    ],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Toggle the switch."
+      }
+    ]
+  },
+  "usage": {
+    "example": "<SwitchField\n  label=\"Enable notifications\"\n  checked={isOn}\n  onChange={(e) => setIsOn(e.target.checked)}\n/>",
+    "hookExample": "const { isChecked, getInputProps, getLabelProps } = useSwitch({\n  defaultChecked: false,\n  onChange: (e) => console.log(e.target.checked)\n});\n\nreturn (\n  <label {...getLabelProps()}>\n    <input {...getInputProps()} />\n    <span>Toggle me</span>\n  </label>\n);"
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Use for settings that take effect immediately on toggle (no save needed)",
+      "Pair with a visible label \u2014 the Switch has no intrinsic label text",
+      "Use a Checkbox instead when the toggle requires a form submit to take effect"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

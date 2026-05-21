@@ -4,20 +4,50 @@
   "description": "Visual separator between content sections. Renders as an hr or div depending on orientation.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root"],
+    "parts": [
+      "root"
+    ],
     "dom": {
       "tag": "hr",
       "part": "root"
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Divider> component.",
+      "members": [
+        {
+          "name": "orientation",
+          "type": "\"horizontal\" | \"vertical\"",
+          "description": "Visual orientation of the divider"
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "description": "Semantic role - separator (default) or presentation for purely decorative"
+        },
+        {
+          "name": "thickness",
+          "type": "string",
+          "description": "Custom thickness/size"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title attribute on the underlying hr element."
+        }
+      ]
+    }
+  },
   "variants": {
-    "orientation": ["horizontal", "vertical"]
+    "orientation": [
+      "horizontal",
+      "vertical"
+    ]
   },
-  "states": ["default"],
-  "a11y": {
-    "labeling": ["aria-orientation"],
-    "keyboard": []
-  },
+  "states": [
+    "default"
+  ],
   "tokens": {
     "root": {
       "divider.color.default": {
@@ -52,31 +82,32 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Divider> component.",
-      "members": [
-        {
-          "name": "orientation",
-          "type": "\"horizontal\" | \"vertical\"",
-          "description": "Visual orientation of the divider"
-        },
-        {
-          "name": "decorative",
-          "type": "boolean",
-          "description": "Semantic role - separator (default) or presentation for purely decorative"
-        },
-        {
-          "name": "thickness",
-          "type": "string",
-          "description": "Custom thickness/size"
-        },
-        {
-          "name": "title",
-          "type": "string",
-          "description": "Title attribute on the underlying hr element."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"divider\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-orientation"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "layout",
+    "usageHints": [
+      "Use orientation=horizontal for horizontal rules; orientation=vertical for column separators",
+      "Do not place Divider inside flex-row containers unless you set an explicit height"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

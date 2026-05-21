@@ -9,30 +9,22 @@
       "item"
     ]
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Shuttle> component.",
+      "members": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the shuttle widget"
+        }
+      ]
+    }
+  },
   "variants": {},
   "states": [
     "default"
   ],
-  "a11y": {
-    "labeling": [
-      "aria-label",
-      "aria-labelledby"
-    ],
-    "keyboard": [
-      {
-        "key": "Space",
-        "action": "Select or deselect the focused item"
-      },
-      {
-        "key": "ArrowUp|ArrowDown",
-        "action": "Navigate between items in a listbox"
-      },
-      {
-        "key": "Enter",
-        "action": "Transfer the selected items to the other listbox"
-      }
-    ]
-  },
   "tokens": {
     "root": {
       "shuttle.color.background.default": {
@@ -79,16 +71,46 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Shuttle> component.",
-      "members": [
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Accessible label for the shuttle widget"
-        }
-      ]
+  "slots": {
+    "item": {
+      "required": false
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Select or deselect the focused item"
+      },
+      {
+        "key": "ArrowUp|ArrowDown",
+        "action": "Navigate between items in a listbox"
+      },
+      {
+        "key": "Enter",
+        "action": "Transfer the selected items to the other listbox"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Use for permission assignment, column selection, or playlist management",
+      "Support keyboard: Space to select/deselect, arrow keys to navigate, Enter to transfer",
+      "Show item counts in the listbox headers to communicate selection progress"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

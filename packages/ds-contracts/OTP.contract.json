@@ -44,115 +44,6 @@
       ]
     }
   },
-  "variants": {
-    "mode": [
-      "numeric",
-      "alphanumeric"
-    ]
-  },
-  "states": [
-    "default",
-    "focus",
-    "disabled"
-  ],
-  "a11y": {
-    "labeling": [
-      "aria-label",
-      "aria-describedby",
-      "aria-readonly"
-    ],
-    "keyboard": [
-      {
-        "key": "0-9",
-        "action": "Enter a digit and advance focus to the next field.",
-        "when": "field"
-      },
-      {
-        "key": "Backspace",
-        "action": "Clear the current field and move focus to the previous field.",
-        "when": "field"
-      },
-      {
-        "key": "ArrowLeft",
-        "action": "Move focus to the previous OTP field.",
-        "when": "field"
-      },
-      {
-        "key": "ArrowRight",
-        "action": "Move focus to the next OTP field.",
-        "when": "field"
-      }
-    ]
-  },
-  "channels": {
-    "value": {
-      "description": "The full OTP string assembled from individual digit inputs.",
-      "value": "value",
-      "defaultValue": "defaultValue",
-      "onChange": "onChange",
-      "valueType": "string"
-    }
-  },
-  "form": {
-    "participates": true,
-    "inputType": "text",
-    "serialization": {
-      "valueType": "string",
-      "valueSource": "channel:value"
-    },
-    "validity": {
-      "model": "native",
-      "errorSurface": "aria-describedby"
-    }
-  },
-  "tokens": {
-    "root": {
-      "otp.color.background.default": {
-        "resolvesTo": "semantic.color.background.secondary",
-        "fallback": "#efefef",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "otp.color.foreground.primary": {
-        "resolvesTo": "semantic.color.foreground.primary",
-        "fallback": "#141414",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "otp.color.foreground.secondary": {
-        "resolvesTo": "semantic.color.foreground.secondary",
-        "fallback": "#555555",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "otp.color.border.default": {
-        "resolvesTo": "semantic.color.border.light",
-        "fallback": "#fceaea",
-        "property": "border-color",
-        "layer": "semantic"
-      },
-      "otp.size.padding.default": {
-        "resolvesTo": "core.spacing.size.07",
-        "fallback": "24px",
-        "property": "padding",
-        "layer": "core"
-      },
-      "otp.size.radius.default": {
-        "resolvesTo": "core.shape.radius.medium",
-        "fallback": "8px",
-        "property": "border-radius",
-        "layer": "core"
-      }
-    },
-    "focus": {
-      "otp.color.border.accent": {
-        "resolvesTo": "semantic.color.border.accent",
-        "fallback": "#d9292b",
-        "property": "border-color",
-        "layer": "semantic"
-      }
-    }
-  },
   "props": {
     "styled": {
       "description": "Props for the <OTP> component.",
@@ -208,12 +99,200 @@
       ]
     }
   },
+  "channels": {
+    "value": {
+      "description": "The full OTP string assembled from individual digit inputs.",
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "string"
+    }
+  },
   "types": {
     "OTPMode": {
       "kind": "union",
       "values": [
         "numeric",
         "alphanumeric"
+      ]
+    }
+  },
+  "variants": {
+    "mode": [
+      "numeric",
+      "alphanumeric"
+    ]
+  },
+  "states": [
+    "default",
+    "focus",
+    "disabled"
+  ],
+  "tokens": {
+    "root": {
+      "otp.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "otp.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "otp.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "otp.color.border.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "otp.size.padding.default": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "otp.size.radius.default": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      }
+    },
+    "focus": {
+      "otp.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "form": {
+    "participates": true,
+    "inputType": "text",
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "channel:value"
+    },
+    "validity": {
+      "model": "native",
+      "errorSurface": "aria-describedby"
+    }
+  },
+  "focus": {
+    "strategy": "manual",
+    "orientation": "horizontal",
+    "initialFocus": "field",
+    "wrap": false,
+    "description": "Focus moves automatically to the next OTPField after a digit is entered, and to the previous field on Backspace. Arrow keys can also navigate between fields."
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"otp\"]"
+    },
+    "group": {
+      "required": false,
+      "selector": "[data-slot=\"otp-group\"]"
+    },
+    "field": {
+      "required": true,
+      "selector": "[data-slot=\"otp-field\"]"
+    },
+    "label": {
+      "required": false,
+      "selector": "[data-slot=\"otp-label\"]"
+    },
+    "error": {
+      "required": false,
+      "selector": "[data-slot=\"otp-error\"]"
+    },
+    "separator": {
+      "required": false,
+      "selector": "[data-slot=\"otp-separator\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "root",
+      "to": "label",
+      "attribute": "aria-labelledby",
+      "description": "The OTP group region is labelled by the OTPLabel element when present."
+    },
+    {
+      "from": "root",
+      "to": "error",
+      "attribute": "aria-describedby",
+      "when": "validity=invalid",
+      "description": "The group references the error message region when in an invalid state."
+    },
+    {
+      "from": "field",
+      "to": "group",
+      "attribute": "aria-label",
+      "description": "Each individual input field carries an aria-label like 'Digit N of M' for screen reader enumeration."
+    }
+  ],
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-describedby",
+      "aria-readonly"
+    ],
+    "keyboard": [
+      {
+        "key": "0-9",
+        "action": "Enter a digit and advance focus to the next field.",
+        "when": "field"
+      },
+      {
+        "key": "Backspace",
+        "action": "Clear the current field and move focus to the previous field.",
+        "when": "field"
+      },
+      {
+        "key": "ArrowLeft",
+        "action": "Move focus to the previous OTP field.",
+        "when": "field"
+      },
+      {
+        "key": "ArrowRight",
+        "action": "Move focus to the next OTP field.",
+        "when": "field"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Set length to control the number of digit fields",
+      "Focus advances automatically after each digit is entered",
+      "Compose with OTPLabel for the field label and OTPError for validation feedback",
+      "Use OTPSeparator between fields for visual grouping (e.g., 3+3 pattern)"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "OTPInput",
+        "OTPLabel",
+        "OTPError",
+        "OTPSeparator"
       ]
     }
   }

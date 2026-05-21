@@ -37,28 +37,45 @@
       ]
     }
   },
-  "variants": {},
-  "states": [
-    "default",
-    "expanded",
-    "collapsed"
-  ],
-  "a11y": {
-    "labeling": [
-      "aria-expanded"
-    ],
-    "keyboard": [
-      {
-        "key": "Enter",
-        "action": "Toggle expanded state.",
-        "when": "trigger"
-      },
-      {
-        "key": "Space",
-        "action": "Toggle expanded state.",
-        "when": "trigger"
-      }
-    ]
+  "props": {
+    "styled": {
+      "description": "Props for the <ShowMore> expandable content component.",
+      "members": [
+        {
+          "name": "expanded",
+          "type": "boolean",
+          "description": "Controlled expanded state."
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "description": "Default expanded state for uncontrolled usage."
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "(expanded: boolean) => void",
+          "description": "Called when expanded state changes."
+        },
+        {
+          "name": "maxLines",
+          "type": "number",
+          "description": "Number of lines to show before truncation.",
+          "default": 3
+        },
+        {
+          "name": "showMoreLabel",
+          "type": "string",
+          "description": "Label for the expand trigger button.",
+          "default": "Show more"
+        },
+        {
+          "name": "showLessLabel",
+          "type": "string",
+          "description": "Label for the collapse trigger button.",
+          "default": "Show less"
+        }
+      ]
+    }
   },
   "channels": {
     "expanded": {
@@ -69,6 +86,12 @@
       "description": "Whether the full content is revealed."
     }
   },
+  "variants": {},
+  "states": [
+    "default",
+    "expanded",
+    "collapsed"
+  ],
   "tokens": {
     "root": {
       "showmore.color.background.default": {
@@ -120,43 +143,49 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <ShowMore> expandable content component.",
-      "members": [
-        {
-          "name": "expanded",
-          "type": "boolean",
-          "description": "Controlled expanded state."
-        },
-        {
-          "name": "defaultExpanded",
-          "type": "boolean",
-          "description": "Default expanded state for uncontrolled usage."
-        },
-        {
-          "name": "onExpandedChange",
-          "type": "(expanded: boolean) => void",
-          "description": "Called when expanded state changes."
-        },
-        {
-          "name": "maxLines",
-          "type": "number",
-          "description": "Number of lines to show before truncation.",
-          "default": 3
-        },
-        {
-          "name": "showMoreLabel",
-          "type": "string",
-          "description": "Label for the expand trigger button.",
-          "default": "Show more"
-        },
-        {
-          "name": "showLessLabel",
-          "type": "string",
-          "description": "Label for the collapse trigger button.",
-          "default": "Show less"
-        }
+  "slots": {
+    "content": {
+      "required": false
+    },
+    "trigger": {
+      "required": false
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-expanded"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter",
+        "action": "Toggle expanded state.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle expanded state.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "content",
+    "usageHints": [
+      "Use when content could be long but brevity is preferred by default",
+      "Configure maxLines to control how many lines are shown before truncation",
+      "Avoid if the full content is always needed \u2014 prefer Details instead"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "ReactNode"
       ]
     }
   }

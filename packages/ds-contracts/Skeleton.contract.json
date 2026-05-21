@@ -4,7 +4,12 @@
   "description": "Loading placeholder that mimics the shape of content before data is available.",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "stack", "row", "shape"],
+    "parts": [
+      "root",
+      "stack",
+      "row",
+      "shape"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -16,17 +21,123 @@
       }
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Skeleton> component.",
+      "members": [
+        {
+          "name": "variant",
+          "type": "SkeletonVariant",
+          "description": "Visual variant",
+          "default": "block"
+        },
+        {
+          "name": "animate",
+          "type": "SkeletonAnimate",
+          "description": "Animation style",
+          "default": "shimmer"
+        },
+        {
+          "name": "density",
+          "type": "SkeletonDensity",
+          "description": "Spacing density to match surrounding content",
+          "default": "regular"
+        },
+        {
+          "name": "aspectRatio",
+          "type": "string",
+          "description": "CSS aspect-ratio value to size the placeholder"
+        },
+        {
+          "name": "lines",
+          "type": "SkeletonLines",
+          "description": "Number of lines to render for text variant. Pass a number or {min, max} range."
+        },
+        {
+          "name": "radius",
+          "type": "SkeletonRadius",
+          "description": "Border radius token"
+        },
+        {
+          "name": "decorative",
+          "type": "boolean",
+          "description": "Set true for decorative skeletons that should not announce to screen readers.",
+          "default": true
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Localized loading label when decorative is false."
+        }
+      ]
+    }
+  },
+  "types": {
+    "SkeletonVariant": {
+      "kind": "union",
+      "values": [
+        "block",
+        "text",
+        "avatar",
+        "media",
+        "dataviz",
+        "actions"
+      ]
+    },
+    "SkeletonAnimate": {
+      "kind": "union",
+      "values": [
+        "shimmer",
+        "wipe",
+        "pulse",
+        "none"
+      ]
+    },
+    "SkeletonDensity": {
+      "kind": "union",
+      "values": [
+        "compact",
+        "regular",
+        "spacious"
+      ]
+    },
+    "SkeletonRadius": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    "SkeletonLines": {
+      "kind": "alias",
+      "alias": "number | { min: number; max: number }"
+    }
+  },
   "variants": {
-    "variant": ["block", "text", "avatar", "media", "dataviz", "actions"],
-    "animate": ["shimmer", "wipe", "pulse", "none"],
-    "density": ["compact", "regular", "spacious"]
+    "variant": [
+      "block",
+      "text",
+      "avatar",
+      "media",
+      "dataviz",
+      "actions"
+    ],
+    "animate": [
+      "shimmer",
+      "wipe",
+      "pulse",
+      "none"
+    ],
+    "density": [
+      "compact",
+      "regular",
+      "spacious"
+    ]
   },
-  "states": ["default"],
-  "a11y": {
-    "role": "status",
-    "labeling": ["aria-label", "aria-busy"],
-    "keyboard": []
-  },
+  "states": [
+    "default"
+  ],
   "tokens": {
     "root": {
       "skeleton.color.base": {
@@ -94,77 +205,36 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Skeleton> component.",
-      "members": [
-        {
-          "name": "variant",
-          "type": "SkeletonVariant",
-          "description": "Visual variant",
-          "default": "block"
-        },
-        {
-          "name": "animate",
-          "type": "SkeletonAnimate",
-          "description": "Animation style",
-          "default": "shimmer"
-        },
-        {
-          "name": "density",
-          "type": "SkeletonDensity",
-          "description": "Spacing density to match surrounding content",
-          "default": "regular"
-        },
-        {
-          "name": "aspectRatio",
-          "type": "string",
-          "description": "CSS aspect-ratio value to size the placeholder"
-        },
-        {
-          "name": "lines",
-          "type": "SkeletonLines",
-          "description": "Number of lines to render for text variant. Pass a number or {min, max} range."
-        },
-        {
-          "name": "radius",
-          "type": "SkeletonRadius",
-          "description": "Border radius token"
-        },
-        {
-          "name": "decorative",
-          "type": "boolean",
-          "description": "Set true for decorative skeletons that should not announce to screen readers.",
-          "default": true
-        },
-        {
-          "name": "ariaLabel",
-          "type": "string",
-          "description": "Localized loading label when decorative is false."
-        }
-      ]
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"skeleton\"]"
     }
   },
-  "types": {
-    "SkeletonVariant": {
-      "kind": "union",
-      "values": ["block", "text", "avatar", "media", "dataviz", "actions"]
-    },
-    "SkeletonAnimate": {
-      "kind": "union",
-      "values": ["shimmer", "wipe", "pulse", "none"]
-    },
-    "SkeletonDensity": {
-      "kind": "union",
-      "values": ["compact", "regular", "spacious"]
-    },
-    "SkeletonRadius": {
-      "kind": "union",
-      "values": ["sm", "md", "lg"]
-    },
-    "SkeletonLines": {
-      "kind": "alias",
-      "alias": "number | { min: number; max: number }"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "status",
+    "labeling": [
+      "aria-label",
+      "aria-busy"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Match the width and height to the content it replaces to minimize layout shift",
+      "Use animate to select the loading animation (shimmer, pulse, wipe, or none)",
+      "Use density to match the spacing of the surrounding content",
+      "Remove Skeleton and render real content once data is loaded"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

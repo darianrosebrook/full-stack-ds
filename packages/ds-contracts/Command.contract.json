@@ -146,45 +146,71 @@
       ]
     }
   },
-  "variants": {},
-  "states": [
-    "default",
-    "hover",
-    "disabled",
-    "selected"
-  ],
-  "a11y": {
-    "role": "dialog",
-    "labeling": [
-      "aria-label"
-    ],
-    "keyboard": [
-      {
-        "key": "ArrowDown",
-        "action": "Move highlight to the next command item.",
-        "when": "open"
-      },
-      {
-        "key": "ArrowUp",
-        "action": "Move highlight to the previous command item.",
-        "when": "open"
-      },
-      {
-        "key": "Enter",
-        "action": "Execute the highlighted command item.",
-        "when": "open"
-      },
-      {
-        "key": "Escape",
-        "action": "Close the command palette.",
-        "when": "open"
-      },
-      {
-        "key": "Tab",
-        "action": "Cycle focus within the command palette.",
-        "when": "open"
-      }
-    ]
+  "props": {
+    "styled": {
+      "description": "Props for the <Command> component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Uncontrolled initial open state."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when open state changes."
+        },
+        {
+          "name": "search",
+          "type": "string",
+          "description": "Controlled search query."
+        },
+        {
+          "name": "defaultSearch",
+          "type": "string",
+          "description": "Uncontrolled initial search query."
+        },
+        {
+          "name": "onSearchChange",
+          "type": "(value: string) => void",
+          "description": "Called when the search query changes."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text for the search input.",
+          "default": "Search..."
+        },
+        {
+          "name": "emptyMessage",
+          "type": "string",
+          "description": "Message shown when no items match the current search.",
+          "default": "No results found."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Accessible label for the command palette dialog.",
+          "default": "Command palette"
+        },
+        {
+          "name": "shouldFilter",
+          "type": "boolean",
+          "description": "When true, items are filtered client-side against the search query.",
+          "default": true
+        },
+        {
+          "name": "filter",
+          "type": "((value: string, search: string) => number) | undefined",
+          "description": "Custom filter function. Return a score >= 1 to include the item."
+        }
+      ]
+    }
   },
   "channels": {
     "open": {
@@ -202,23 +228,28 @@
       "valueType": "string"
     }
   },
-  "portal": {
-    "enabled": true,
-    "defaultTarget": "body",
-    "positioning": "centered",
-    "layering": "modal",
-    "backdrop": true
-  },
-  "dismissal": {
-    "triggers": [
-      {
-        "event": "escape"
-      },
-      {
-        "event": "overlayClick"
+  "dataModel": {
+    "entities": {
+      "CommandItem": {
+        "description": "A single executable command.",
+        "fields": {
+          "value": "string",
+          "label": "string",
+          "description?": "string",
+          "icon?": "ReactNode",
+          "disabled?": "boolean",
+          "onSelect": "(value: string) => void"
+        }
       }
-    ]
+    }
   },
+  "variants": {},
+  "states": [
+    "default",
+    "hover",
+    "disabled",
+    "selected"
+  ],
   "tokens": {
     "root": {
       "command.color.overlay": {
@@ -319,85 +350,136 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Command> component.",
-      "members": [
-        {
-          "name": "open",
-          "type": "boolean",
-          "description": "Controlled open state."
-        },
-        {
-          "name": "defaultOpen",
-          "type": "boolean",
-          "description": "Uncontrolled initial open state."
-        },
-        {
-          "name": "onOpenChange",
-          "type": "(open: boolean) => void",
-          "description": "Called when open state changes."
-        },
-        {
-          "name": "search",
-          "type": "string",
-          "description": "Controlled search query."
-        },
-        {
-          "name": "defaultSearch",
-          "type": "string",
-          "description": "Uncontrolled initial search query."
-        },
-        {
-          "name": "onSearchChange",
-          "type": "(value: string) => void",
-          "description": "Called when the search query changes."
-        },
-        {
-          "name": "placeholder",
-          "type": "string",
-          "description": "Placeholder text for the search input.",
-          "default": "Search..."
-        },
-        {
-          "name": "emptyMessage",
-          "type": "string",
-          "description": "Message shown when no items match the current search.",
-          "default": "No results found."
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "description": "Accessible label for the command palette dialog.",
-          "default": "Command palette"
-        },
-        {
-          "name": "shouldFilter",
-          "type": "boolean",
-          "description": "When true, items are filtered client-side against the search query.",
-          "default": true
-        },
-        {
-          "name": "filter",
-          "type": "((value: string, search: string) => number) | undefined",
-          "description": "Custom filter function. Return a score >= 1 to include the item."
-        }
-      ]
+  "form": {
+    "participates": false
+  },
+  "focus": {
+    "strategy": "manual",
+    "orientation": "vertical",
+    "initialFocus": "input",
+    "wrap": true,
+    "description": "Input retains DOM focus while the user navigates results. Highlighted option is tracked via aria-activedescendant."
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "centered",
+    "layering": "modal",
+    "backdrop": true
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape"
+      },
+      {
+        "event": "overlayClick"
+      }
+    ]
+  },
+  "slots": {
+    "dialog": {
+      "required": false,
+      "selector": "[data-slot=\"command-dialog\"]"
+    },
+    "group": {
+      "required": false,
+      "selector": "[data-slot=\"command-group\"]"
+    },
+    "input": {
+      "required": false,
+      "selector": "[data-slot=\"command-input\"]"
+    },
+    "item": {
+      "required": false,
+      "selector": "[data-slot=\"command-item\"]"
+    },
+    "items": {
+      "required": false,
+      "selector": "[data-slot=\"command-items\"]"
+    },
+    "list": {
+      "required": false,
+      "selector": "[data-slot=\"command-list\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"command\"]"
+    },
+    "separator": {
+      "required": false,
+      "selector": "[data-slot=\"command-separator\"]"
     }
   },
-  "dataModel": {
-    "entities": {
-      "CommandItem": {
-        "description": "A single executable command.",
-        "fields": {
-          "value": "string",
-          "label": "string",
-          "description?": "string",
-          "icon?": "ReactNode",
-          "disabled?": "boolean",
-          "onSelect": "(value: string) => void"
-        }
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "input",
+      "to": "list",
+      "attribute": "aria-controls",
+      "when": "openness=expanded"
+    },
+    {
+      "from": "input",
+      "to": "option",
+      "attribute": "aria-activedescendant",
+      "when": "openness=expanded",
+      "description": "Points to the currently highlighted option's id."
+    },
+    {
+      "from": "list",
+      "to": "input",
+      "attribute": "aria-labelledby",
+      "description": "Listbox shares the input's accessible name."
+    }
+  ],
+  "a11y": {
+    "role": "dialog",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowDown",
+        "action": "Move highlight to the next command item.",
+        "when": "open"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move highlight to the previous command item.",
+        "when": "open"
+      },
+      {
+        "key": "Enter",
+        "action": "Execute the highlighted command item.",
+        "when": "open"
+      },
+      {
+        "key": "Escape",
+        "action": "Close the command palette.",
+        "when": "open"
+      },
+      {
+        "key": "Tab",
+        "action": "Cycle focus within the command palette.",
+        "when": "open"
       }
+    ]
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Trigger with \u2318K or a toolbar button",
+      "Register commands with a label and handler \u2014 they appear in the search results",
+      "Group commands with Command.Group for visual separation"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }

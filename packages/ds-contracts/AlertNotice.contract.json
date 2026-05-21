@@ -12,6 +12,53 @@
       "dismiss"
     ]
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <AlertNotice> component.",
+      "members": [
+        {
+          "name": "status",
+          "type": "AlertNoticeStatus",
+          "description": "Status severity of the alert notice"
+        },
+        {
+          "name": "level",
+          "type": "AlertNoticeLevel",
+          "description": "Display level affecting layout and emphasis"
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "description": "Whether the alert notice can be dismissed by the user"
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "Optional icon node rendered before the alert content"
+        }
+      ]
+    }
+  },
+  "types": {
+    "AlertNoticeStatus": {
+      "kind": "union",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "error"
+      ]
+    },
+    "AlertNoticeLevel": {
+      "kind": "union",
+      "values": [
+        "page",
+        "section",
+        "inline"
+      ]
+    }
+  },
   "variants": {
     "status": [
       "info",
@@ -29,13 +76,6 @@
   "states": [
     "default"
   ],
-  "a11y": {
-    "role": "alert",
-    "labeling": [
-      "aria-label"
-    ],
-    "keyboard": []
-  },
   "tokens": {
     "root": {
       "alertnotice.color.background.primary": {
@@ -173,50 +213,47 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <AlertNotice> component.",
-      "members": [
-        {
-          "name": "status",
-          "type": "AlertNoticeStatus",
-          "description": "Status severity of the alert notice"
-        },
-        {
-          "name": "level",
-          "type": "AlertNoticeLevel",
-          "description": "Display level affecting layout and emphasis"
-        },
-        {
-          "name": "dismissible",
-          "type": "boolean",
-          "description": "Whether the alert notice can be dismissed by the user"
-        },
-        {
-          "name": "icon",
-          "type": "ReactNode",
-          "description": "Optional icon node rendered before the alert content"
-        }
-      ]
+  "slots": {
+    "body": {
+      "required": false
+    },
+    "container": {
+      "required": false
+    },
+    "icon": {
+      "required": false
+    },
+    "title": {
+      "required": false
     }
   },
-  "types": {
-    "AlertNoticeStatus": {
-      "kind": "union",
-      "values": [
-        "info",
-        "success",
-        "warning",
-        "danger",
-        "error"
-      ]
-    },
-    "AlertNoticeLevel": {
-      "kind": "union",
-      "values": [
-        "page",
-        "section",
-        "inline"
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "a11y": {
+    "role": "alert",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use variant=error when a form submission or action failed",
+      "Use variant=warning for recoverable issues that need attention",
+      "Use variant=success after a positive outcome",
+      "Avoid using for transient notifications \u2014 use Toast instead"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "ReactNode"
       ]
     }
   }

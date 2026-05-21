@@ -4,7 +4,11 @@
   "description": "Compact icon-and-label pair conveying a status condition (online, offline, busy, etc.).",
   "layer": "primitive",
   "anatomy": {
-    "parts": ["root", "icon", "label"],
+    "parts": [
+      "root",
+      "icon",
+      "label"
+    ],
     "dom": {
       "tag": "span",
       "part": "root",
@@ -28,14 +32,43 @@
       ]
     }
   },
+  "props": {
+    "styled": {
+      "description": "Props for the <Status> component.",
+      "members": [
+        {
+          "name": "status",
+          "type": "StatusIntent",
+          "description": "Status intent that drives the icon and color scheme.",
+          "required": true
+        }
+      ]
+    }
+  },
+  "types": {
+    "StatusIntent": {
+      "kind": "union",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "error"
+      ]
+    }
+  },
   "variants": {
-    "status": ["info", "success", "warning", "danger", "error"]
+    "status": [
+      "info",
+      "success",
+      "warning",
+      "danger",
+      "error"
+    ]
   },
-  "states": ["default"],
-  "a11y": {
-    "labeling": ["aria-label"],
-    "keyboard": []
-  },
+  "states": [
+    "default"
+  ],
   "tokens": {
     "root": {
       "status.color.background.default": {
@@ -81,23 +114,50 @@
       }
     }
   },
-  "props": {
-    "styled": {
-      "description": "Props for the <Status> component.",
-      "members": [
-        {
-          "name": "status",
-          "type": "StatusIntent",
-          "description": "Status intent that drives the icon and color scheme.",
-          "required": true
-        }
-      ]
+  "focus": {
+    "strategy": "none"
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"status\"]"
+    },
+    "icon": {
+      "required": true,
+      "selector": "[data-slot=\"status-icon\"]"
+    },
+    "label": {
+      "required": true,
+      "selector": "[data-slot=\"status-label\"]"
     }
   },
-  "types": {
-    "StatusIntent": {
-      "kind": "union",
-      "values": ["info", "success", "warning", "danger", "error"]
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Indicator variant=\"success\">Completed</Indicator>\n<Indicator variant=\"error\" size=\"small\">Error</Indicator>\n<Indicator variant=\"informational\" hideIcon>Info only</Indicator>"
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "The icon is chosen automatically based on the status prop value",
+      "Pair with Avatar to show user presence",
+      "Use size to match surrounding text"
+    ],
+    "children": {
+      "allowed": false
     }
   }
 }
