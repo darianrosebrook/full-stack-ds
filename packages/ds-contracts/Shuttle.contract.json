@@ -17,8 +17,32 @@
           "name": "ariaLabel",
           "type": "string",
           "description": "Accessible label for the shuttle widget"
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Controlled list of selected-item ids (items currently in the right-hand list)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Uncontrolled initial selection."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string[]) => void",
+          "description": "Called when items move between the two lists; the new value reflects the right-hand list contents."
         }
       ]
+    }
+  },
+  "channels": {
+    "selection": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onValueChange",
+      "valueType": "string[]",
+      "description": "The set of item ids currently in the right-hand (selected) list. Changes as items are transferred between the two listboxes."
     }
   },
   "focus": {

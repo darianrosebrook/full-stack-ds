@@ -323,9 +323,9 @@
       "returns": "void"
     },
     "close": {
-      "description": "Fires on a user-initiated close request. Present for QDS v2 parity; consumers who only need state changes should use opennessChange instead.",
+      "description": "Fires on a user-initiated close request. A specialization of opennessChange that fires only on close (escape, overlay click, explicit dismiss). Emitted via the same onOpenChange callback with value=false; the consumer distinguishes by inspecting the new value.",
       "emittedVia": [
-        "onClose"
+        "onOpenChange"
       ],
       "triggeredBy": [
         "Escape keypress",
@@ -462,9 +462,9 @@
     },
     {
       "from": "root",
-      "to": "description",
+      "to": "body",
       "attribute": "aria-describedby",
-      "description": "Optional \u2014 links the description region so screen readers announce it when the dialog opens."
+      "description": "Optional \u2014 links the body region so screen readers announce it when the dialog opens. Dialog uses `body` as the description target since it doesn't carry a separate `description` anatomy part."
     }
   ],
   "a11y": {

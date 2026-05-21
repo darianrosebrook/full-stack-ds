@@ -332,15 +332,15 @@
   "relationships": [
     {
       "from": "trigger",
-      "to": "panel",
+      "to": "content",
       "attribute": "aria-controls",
-      "description": "Each accordion trigger controls its associated panel region."
+      "description": "Each accordion trigger controls its associated content region."
     },
     {
-      "from": "panel",
+      "from": "content",
       "to": "trigger",
       "attribute": "aria-labelledby",
-      "description": "Each panel is labelled by its corresponding trigger heading."
+      "description": "Each content region is labelled by its corresponding trigger heading."
     }
   ],
   "a11y": {

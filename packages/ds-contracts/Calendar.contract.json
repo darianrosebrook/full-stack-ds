@@ -321,14 +321,7 @@
   "rtl": {
     "flipIcon": false
   },
-  "relationships": [
-    {
-      "from": "input",
-      "to": "popup",
-      "attribute": "aria-controls",
-      "when": "openness=expanded"
-    }
-  ],
+  "relationships": [],
   "a11y": {
     "role": "application",
     "apgPattern": null,

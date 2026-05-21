@@ -229,13 +229,7 @@
   "rtl": {
     "flipIcon": false
   },
-  "relationships": [
-    {
-      "from": "input",
-      "to": "label",
-      "attribute": "aria-labelledby"
-    }
-  ],
+  "relationships": [],
   "a11y": {
     "labeling": [
       "aria-label",

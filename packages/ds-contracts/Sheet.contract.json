@@ -299,9 +299,9 @@
       "returns": "void"
     },
     "close": {
-      "description": "Fires on a user-initiated close request. Present for QDS v2 parity; consumers who only need state changes should use opennessChange instead.",
+      "description": "Fires on a user-initiated close request. A specialization of opennessChange that fires only on close (escape, overlay click). Emitted via the same onOpenChange callback with value=false; the consumer distinguishes by inspecting the new value.",
       "emittedVia": [
-        "onClose"
+        "onOpenChange"
       ],
       "triggeredBy": [
         "Escape keypress",

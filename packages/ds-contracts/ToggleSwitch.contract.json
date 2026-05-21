@@ -215,13 +215,6 @@
       "to": "label",
       "attribute": "aria-labelledby",
       "description": "The input's htmlFor attribute links to the label element's id for accessible naming."
-    },
-    {
-      "from": "input",
-      "to": "description",
-      "attribute": "aria-describedby",
-      "when": "ariaDescription=present",
-      "description": "When an ariaDescription prop is provided, a visually hidden span carries the text and the input references it via aria-describedby."
     }
   ],
   "a11y": {

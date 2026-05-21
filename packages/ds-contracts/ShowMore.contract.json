@@ -151,6 +151,10 @@
       "required": false
     }
   },
+  "focus": {
+    "strategy": "auto",
+    "description": "Focus stays on the trigger when expanded or collapsed; the revealed content is not auto-focused."
+  },
   "ssr": {
     "hydrateOn": "interaction"
   },

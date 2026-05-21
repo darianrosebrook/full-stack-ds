@@ -30,8 +30,8 @@
           "part": "field",
           "bindings": {
             "type": "prop:type",
-            "value": "channel:value.value",
-            "onChange": "channel:value.onChange",
+            "value": "prop:value",
+            "onChange": "prop:onChange",
             "disabled": "prop:disabled",
             "name": "prop:name",
             "required": "prop:required",
@@ -132,15 +132,6 @@
       ]
     }
   },
-  "channels": {
-    "value": {
-      "value": "value",
-      "defaultValue": "defaultValue",
-      "onChange": "onChange",
-      "valueType": "string",
-      "description": "The text value of the underlying input element."
-    }
-  },
   "states": [
     "default",
     "focus",
@@ -206,7 +197,7 @@
     },
     "serialization": {
       "valueType": "string",
-      "valueSource": "channel:value",
+      "valueSource": "prop:value",
       "omitWhen": "never"
     },
     "validity": {
@@ -232,8 +223,8 @@
   },
   "focus": {
     "strategy": "auto",
-    "initialFocus": "input",
-    "description": "Focus moves to the native input via Tab. Label, description, and error are non-interactive and not in the tab sequence."
+    "initialFocus": "field",
+    "description": "Focus moves to the native input (anatomy part `field`) via Tab. Label, description, and error are non-interactive and not in the tab sequence."
   },
   "portal": {
     "enabled": false
@@ -260,20 +251,20 @@
   },
   "relationships": [
     {
-      "from": "input",
+      "from": "field",
       "to": "label",
       "attribute": "aria-labelledby",
-      "description": "Input's htmlFor/id pair associates it with the label for accessible naming."
+      "description": "The input's htmlFor/id pair associates it with the label for accessible naming. TextField's `field` anatomy part is the input element."
     },
     {
-      "from": "input",
+      "from": "field",
       "to": "description",
       "attribute": "aria-describedby",
       "when": "description=present",
       "description": "When a description is provided, the input references its id via aria-describedby."
     },
     {
-      "from": "input",
+      "from": "field",
       "to": "error",
       "attribute": "aria-describedby",
       "when": "validity=invalid",

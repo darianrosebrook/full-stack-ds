@@ -208,14 +208,6 @@
       "required": true,
       "selector": "[data-slot=\"otp-field\"]"
     },
-    "label": {
-      "required": false,
-      "selector": "[data-slot=\"otp-label\"]"
-    },
-    "error": {
-      "required": false,
-      "selector": "[data-slot=\"otp-error\"]"
-    },
     "separator": {
       "required": false,
       "selector": "[data-slot=\"otp-separator\"]"
@@ -228,19 +220,6 @@
     "flipIcon": false
   },
   "relationships": [
-    {
-      "from": "root",
-      "to": "label",
-      "attribute": "aria-labelledby",
-      "description": "The OTP group region is labelled by the OTPLabel element when present."
-    },
-    {
-      "from": "root",
-      "to": "error",
-      "attribute": "aria-describedby",
-      "when": "validity=invalid",
-      "description": "The group references the error message region when in an invalid state."
-    },
     {
       "from": "field",
       "to": "group",

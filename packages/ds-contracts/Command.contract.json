@@ -447,10 +447,10 @@
     },
     {
       "from": "input",
-      "to": "option",
+      "to": "item",
       "attribute": "aria-activedescendant",
       "when": "openness=expanded",
-      "description": "Points to the currently highlighted option's id."
+      "description": "Points to the currently highlighted item's id."
     },
     {
       "from": "list",

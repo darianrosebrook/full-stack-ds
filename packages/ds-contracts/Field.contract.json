@@ -290,23 +290,23 @@
   "relationships": [
     {
       "from": "label",
-      "to": "context",
+      "to": "control",
       "attribute": "for",
-      "description": "label.for is wired to the child control's id via context, establishing the label association."
+      "description": "label.for is wired to the child control's id, establishing the label association. Field propagates IDs to its slotted control via React context internally; the schema relationship records the resulting ARIA attribute."
     },
     {
-      "from": "context",
-      "to": "helper",
+      "from": "control",
+      "to": "help",
       "attribute": "aria-describedby",
       "when": "validity=valid",
-      "description": "Child control receives helper id via context to set aria-describedby when valid."
+      "description": "Child control receives help id (via context propagation) to set aria-describedby when valid."
     },
     {
-      "from": "context",
+      "from": "control",
       "to": "error",
       "attribute": "aria-describedby",
       "when": "validity=invalid",
-      "description": "Child control receives error id via context to set aria-describedby when invalid."
+      "description": "Child control receives error id (via context propagation) to set aria-describedby when invalid."
     }
   ],
   "channels": {

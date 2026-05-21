@@ -446,13 +446,15 @@
   "relationships": [
     {
       "from": "trigger",
-      "to": "listbox",
-      "attribute": "aria-controls"
+      "to": "options",
+      "attribute": "aria-controls",
+      "description": "Trigger controls the options listbox via aria-controls (Select's listbox role lives on the `options` anatomy part)."
     },
     {
       "from": "trigger",
-      "to": "listbox",
-      "attribute": "aria-expanded"
+      "to": "options",
+      "attribute": "aria-expanded",
+      "description": "Trigger reflects whether the options listbox is currently expanded."
     }
   ],
   "a11y": {

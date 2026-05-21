@@ -231,10 +231,10 @@
       "description": "If a caption or external label is used, root references it via aria-labelledby."
     },
     {
-      "from": "headerCell",
+      "from": "header",
       "to": "cell",
       "attribute": "aria-sort",
-      "description": "Sorted column's headerCell carries aria-sort; associated cells are in the same column."
+      "description": "Sorted column's header carries aria-sort; associated cells are in the same column. (Table anatomy uses `header` as the column-header role; row-header semantics are inferred from scope.)"
     }
   ],
   "a11y": {

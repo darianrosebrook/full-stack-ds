@@ -336,10 +336,10 @@
   },
   "relationships": [
     {
-      "from": "toast",
+      "from": "item",
       "to": "title",
       "attribute": "aria-labelledby",
-      "description": "Each toast has an implicit aria-live region; the title provides accessible labeling."
+      "description": "Each toast item has an implicit aria-live region; the title provides accessible labeling."
     }
   ],
   "a11y": {
