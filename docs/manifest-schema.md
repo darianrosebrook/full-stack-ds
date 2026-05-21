@@ -338,5 +338,5 @@ The same policy will apply at the v5→v6 boundary if a future slice (e.g. envir
 ## Where to read next
 
 - [`docs/admission-rail.md`](./admission-rail.md) — the conceptual entry point. Read this if you're new to the rail or want the doctrinal non-claims before encountering the schema.
-- [`docs/governed-ci.md`](./governed-ci.md) (forthcoming) — the operator workflow. How `governed:rail` and `governed:rail:changed` are invoked, how to read a JSON/markdown report, what to cite in closure notes.
+- [`docs/governed-ci.md`](./governed-ci.md) — the operator workflow. How `governed:rail` and `governed:rail:changed` are invoked, how to read a JSON/markdown report, what to cite in closure notes.
 - [`docs/codegen-authority.md`](./codegen-authority.md) — the authority split this rail's "validation evidence, not generation policy" line refers to.

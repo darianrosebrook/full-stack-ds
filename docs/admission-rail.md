@@ -28,7 +28,7 @@ governs:
 
 The admission rail is the inspection surface that answers "what evidence backs the generated output checked into this repo?" It is invoked locally as `pnpm run governed:rail`, runs in CI on every PR, and produces a machine-readable JSON report (`RailReport`) plus a markdown projection at `tmp/generated-admission-report.md`.
 
-This document teaches the rail's claim. The diagnostic codes, the manifest, and the four evidence rungs all exist to make one specific kind of trust inspectable. Reading this doc first lets the rest of the rail surfaces ([`docs/manifest-schema.md`](./manifest-schema.md), `docs/governed-ci.md`) make sense.
+This document teaches the rail's claim. The diagnostic codes, the manifest, and the four evidence rungs all exist to make one specific kind of trust inspectable. Reading this doc first lets the rest of the rail surfaces ([`docs/manifest-schema.md`](./manifest-schema.md), [`docs/governed-ci.md`](./governed-ci.md)) make sense.
 
 ## What problem this solves
 
@@ -242,5 +242,5 @@ The rail report is designed to make those citations mechanical — the JSON is c
 ## Where to read next
 
 - [`docs/manifest-schema.md`](./manifest-schema.md) — the manifest's field-by-field reference, schema migration history, and the rung-specific non-claims for each schema version.
-- `docs/governed-ci.md` — the operator workflow: what `governed:rail` and `governed:rail:changed` do, how the CI pipeline uses them, how to read a rail JSON or markdown report.
+- [`docs/governed-ci.md`](./governed-ci.md) — the operator workflow: what `governed:rail` and `governed:rail:changed` do, how the CI pipeline uses them, how to read a rail JSON or markdown report.
 - `docs/codegen-authority.md` — the authority split this rail's "validation evidence, not generation policy" line refers to.
