@@ -2,9 +2,14 @@
   "$schema": "./component.contract.schema.json",
   "name": "OTP",
   "description": "One-time password input composed of individual single-character digit fields.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "group", "field", "separator"],
+    "parts": [
+      "root",
+      "group",
+      "field",
+      "separator"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -40,11 +45,22 @@
     }
   },
   "variants": {
-    "mode": ["numeric", "alphanumeric"]
+    "mode": [
+      "numeric",
+      "alphanumeric"
+    ]
   },
-  "states": ["default", "focus", "disabled"],
+  "states": [
+    "default",
+    "focus",
+    "disabled"
+  ],
   "a11y": {
-    "labeling": ["aria-label", "aria-describedby", "aria-readonly"],
+    "labeling": [
+      "aria-label",
+      "aria-describedby",
+      "aria-readonly"
+    ],
     "keyboard": [
       {
         "key": "0-9",
@@ -195,7 +211,10 @@
   "types": {
     "OTPMode": {
       "kind": "union",
-      "values": ["numeric", "alphanumeric"]
+      "values": [
+        "numeric",
+        "alphanumeric"
+      ]
     }
   }
 }

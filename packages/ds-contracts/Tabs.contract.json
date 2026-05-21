@@ -2,14 +2,22 @@
   "$schema": "./component.contract.schema.json",
   "name": "Tabs",
   "description": "Tabbed navigation for switching between related content panels within the same page context.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "list", "tab", "indicator", "panel"],
+    "parts": [
+      "root",
+      "list",
+      "tab",
+      "indicator",
+      "panel"
+    ],
     "details": {
       "list": {
         "description": "Container for tab buttons. Hosts keyboard navigation (arrow keys, Home/End).",
         "role": "group",
-        "aria": { "role": "tablist" }
+        "aria": {
+          "role": "tablist"
+        }
       },
       "tab": {
         "description": "Single tab button. Auto-registers with the parent Tabs context.",
@@ -19,7 +27,11 @@
         "focusable": "roving",
         "aria": {
           "role": "tab",
-          "attributes": ["aria-selected", "aria-controls", "tabindex"]
+          "attributes": [
+            "aria-selected",
+            "aria-controls",
+            "tabindex"
+          ]
         }
       },
       "panel": {
@@ -28,7 +40,11 @@
         "multiple": true,
         "aria": {
           "role": "tabpanel",
-          "attributes": ["aria-labelledby", "tabindex", "hidden"]
+          "attributes": [
+            "aria-labelledby",
+            "tabindex",
+            "hidden"
+          ]
         }
       }
     },
@@ -76,12 +92,25 @@
     }
   },
   "variants": {
-    "orientation": ["horizontal", "vertical"],
-    "activationMode": ["automatic", "manual"]
+    "orientation": [
+      "horizontal",
+      "vertical"
+    ],
+    "activationMode": [
+      "automatic",
+      "manual"
+    ]
   },
-  "states": ["default", "hover", "focus"],
+  "states": [
+    "default",
+    "hover",
+    "focus"
+  ],
   "a11y": {
-    "labeling": ["aria-label", "aria-labelledby"],
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
     "keyboard": [
       {
         "key": "ArrowLeft",
@@ -273,11 +302,17 @@
   "types": {
     "TabsOrientation": {
       "kind": "union",
-      "values": ["horizontal", "vertical"]
+      "values": [
+        "horizontal",
+        "vertical"
+      ]
     },
     "TabsActivationMode": {
       "kind": "union",
-      "values": ["automatic", "manual"]
+      "values": [
+        "automatic",
+        "manual"
+      ]
     }
   }
 }

@@ -2,11 +2,12 @@ import { Fragment, useMemo, useState } from "react";
 import type { Bundle, ComponentBundle } from "../types/data";
 import { buildHref, type Route } from "../router";
 
-const LAYER_ORDER = ["primitive", "styled", "composite"] as const;
+const LAYER_ORDER = ["primitive", "compound", "composer", "assembly"] as const;
 const LAYER_LABEL: Record<(typeof LAYER_ORDER)[number], string> = {
   primitive: "Primitives",
-  styled: "Styled",
-  composite: "Composites",
+  compound: "Compounds",
+  composer: "Composers",
+  assembly: "Assemblies",
 };
 
 interface SidebarProps {
@@ -21,7 +22,7 @@ export function Sidebar({ bundle, route }: SidebarProps) {
     const groups = new Map<string, ComponentBundle[]>();
     const needle = filter.trim().toLowerCase();
     for (const c of bundle.components) {
-      const layer = c.contract.layer ?? "styled";
+      const layer = c.contract.layer ?? "compound";
       if (needle && !c.name.toLowerCase().includes(needle)) continue;
       if (!groups.has(layer)) groups.set(layer, []);
       groups.get(layer)!.push(c);

@@ -2,9 +2,18 @@
   "$schema": "./component.contract.schema.json",
   "name": "Toast",
   "description": "Transient notification message appearing briefly at the edge of the viewport.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "viewport", "item", "title", "description", "row", "action", "close"],
+    "parts": [
+      "root",
+      "viewport",
+      "item",
+      "title",
+      "description",
+      "row",
+      "action",
+      "close"
+    ],
     "dom": {
       "tag": "div",
       "part": "viewport",
@@ -60,13 +69,32 @@
     }
   },
   "variants": {
-    "variant": ["info", "success", "warning", "error"],
-    "politeness": ["polite", "assertive"]
+    "variant": [
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
+    "politeness": [
+      "polite",
+      "assertive"
+    ]
   },
-  "states": ["default", "hover", "focus", "entering", "visible", "leaving"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "entering",
+    "visible",
+    "leaving"
+  ],
   "a11y": {
     "role": "alert",
-    "labeling": ["aria-label", "aria-live", "aria-labelledby"],
+    "labeling": [
+      "aria-label",
+      "aria-live",
+      "aria-labelledby"
+    ],
     "keyboard": [
       {
         "key": "Escape",
@@ -238,11 +266,19 @@
   "types": {
     "ToastVariant": {
       "kind": "union",
-      "values": ["info", "success", "warning", "error"]
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ]
     },
     "ToastPoliteness": {
       "kind": "union",
-      "values": ["polite", "assertive"]
+      "values": [
+        "polite",
+        "assertive"
+      ]
     }
   }
 }

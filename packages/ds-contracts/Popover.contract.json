@@ -2,9 +2,13 @@
   "$schema": "./component.contract.schema.json",
   "name": "Popover",
   "description": "Anchored persistent presence surface that exposes interactive content adjacent to a trigger element on click. Composes as <Popover><Popover.Trigger>...</Popover.Trigger><Popover.Content>...</Popover.Content></Popover>; the substrate wires aria-controls/aria-expanded, click toggling, and escape/outside-click/boundary-blur dismissal. Non-modal: does NOT trap focus or render an overlay scrim.",
-  "layer": "primitive",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "trigger", "content"],
+    "parts": [
+      "root",
+      "trigger",
+      "content"
+    ],
     "details": {
       "root": {
         "role": "group"
@@ -22,12 +26,27 @@
     }
   },
   "variants": {
-    "placement": ["top", "bottom", "left", "right", "auto"]
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
   },
-  "states": ["default", "open", "focus", "entering", "leaving"],
+  "states": [
+    "default",
+    "open",
+    "focus",
+    "entering",
+    "leaving"
+  ],
   "a11y": {
     "role": "group",
-    "labeling": ["aria-controls", "aria-expanded"],
+    "labeling": [
+      "aria-controls",
+      "aria-expanded"
+    ],
     "keyboard": [
       {
         "key": "Escape",
@@ -71,8 +90,14 @@
       "placementProp": "placement",
       "collision": "flip-shift"
     },
-    "dismissal": ["escape", "outside-click", "blur"],
-    "openTriggers": ["click"]
+    "dismissal": [
+      "escape",
+      "outside-click",
+      "blur"
+    ],
+    "openTriggers": [
+      "click"
+    ]
   },
   "portal": {
     "enabled": true,
@@ -174,13 +199,13 @@
         {
           "name": "closeOnOutsideClick",
           "type": "boolean",
-          "description": "When true, a click outside the anchor ∪ content surface closes the popover.",
+          "description": "When true, a click outside the anchor \u222a content surface closes the popover.",
           "default": true
         },
         {
           "name": "closeOnBlur",
           "type": "boolean",
-          "description": "When true, focus leaving the anchor ∪ content surface boundary closes the popover.",
+          "description": "When true, focus leaving the anchor \u222a content surface boundary closes the popover.",
           "default": true
         }
       ]
@@ -189,7 +214,13 @@
   "types": {
     "PopoverPlacement": {
       "kind": "union",
-      "values": ["top", "bottom", "left", "right", "auto"]
+      "values": [
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "auto"
+      ]
     }
   }
 }

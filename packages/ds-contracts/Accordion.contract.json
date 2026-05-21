@@ -2,9 +2,17 @@
   "$schema": "./component.contract.schema.json",
   "name": "Accordion",
   "description": "Vertically stacked sections that expand/collapse to reveal content. Supports single or multi-panel open modes.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "item", "trigger", "header", "chevron", "content", "contentInner"],
+    "parts": [
+      "root",
+      "item",
+      "trigger",
+      "header",
+      "chevron",
+      "content",
+      "contentInner"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -27,8 +35,13 @@
                     "aria-expanded": "channel:openness.value"
                   },
                   "children": [
-                    { "tag": "children" },
-                    { "tag": "span", "part": "chevron" }
+                    {
+                      "tag": "children"
+                    },
+                    {
+                      "tag": "span",
+                      "part": "chevron"
+                    }
                   ]
                 }
               ]
@@ -37,7 +50,15 @@
               "tag": "div",
               "part": "content",
               "children": [
-                { "tag": "div", "part": "contentInner", "children": [{ "tag": "children" }] }
+                {
+                  "tag": "div",
+                  "part": "contentInner",
+                  "children": [
+                    {
+                      "tag": "children"
+                    }
+                  ]
+                }
               ]
             }
           ]
@@ -46,9 +67,19 @@
     }
   },
   "variants": {
-    "type": ["single", "multiple"]
+    "type": [
+      "single",
+      "multiple"
+    ]
   },
-  "states": ["default", "hover", "focus", "disabled", "open", "closed"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "open",
+    "closed"
+  ],
   "a11y": {
     "labeling": [],
     "keyboard": [
@@ -263,7 +294,10 @@
   "types": {
     "AccordionType": {
       "kind": "union",
-      "values": ["single", "multiple"]
+      "values": [
+        "single",
+        "multiple"
+      ]
     }
   }
 }

@@ -2,9 +2,27 @@
   "$schema": "./component.contract.schema.json",
   "name": "Command",
   "description": "Command palette modal for keyboard-driven search and action execution.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "overlay", "dialog", "inputWrapper", "searchIcon", "input", "list", "group", "groupHeading", "groupItems", "item", "itemIcon", "itemContent", "itemLabel", "itemDescription", "separator", "empty"],
+    "parts": [
+      "root",
+      "overlay",
+      "dialog",
+      "inputWrapper",
+      "searchIcon",
+      "input",
+      "list",
+      "group",
+      "groupHeading",
+      "groupItems",
+      "item",
+      "itemIcon",
+      "itemContent",
+      "itemLabel",
+      "itemDescription",
+      "separator",
+      "empty"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -13,7 +31,9 @@
           "tag": "div",
           "part": "overlay",
           "if": "open",
-          "attrs": { "aria-hidden": "true" }
+          "attrs": {
+            "aria-hidden": "true"
+          }
         },
         {
           "tag": "div",
@@ -31,7 +51,13 @@
               "tag": "div",
               "part": "inputWrapper",
               "children": [
-                { "tag": "span", "part": "searchIcon", "attrs": { "aria-hidden": "true" } },
+                {
+                  "tag": "span",
+                  "part": "searchIcon",
+                  "attrs": {
+                    "aria-hidden": "true"
+                  }
+                },
                 {
                   "tag": "input",
                   "part": "input",
@@ -53,14 +79,23 @@
             {
               "tag": "div",
               "part": "list",
-              "attrs": { "role": "listbox", "id": "fsds-command-listbox" },
+              "attrs": {
+                "role": "listbox",
+                "id": "fsds-command-listbox"
+              },
               "children": [
-                { "tag": "div", "part": "empty" },
+                {
+                  "tag": "div",
+                  "part": "empty"
+                },
                 {
                   "tag": "div",
                   "part": "group",
                   "children": [
-                    { "tag": "div", "part": "groupHeading" },
+                    {
+                      "tag": "div",
+                      "part": "groupHeading"
+                    },
                     {
                       "tag": "div",
                       "part": "groupItems",
@@ -68,15 +103,26 @@
                         {
                           "tag": "div",
                           "part": "item",
-                          "attrs": { "role": "option" },
+                          "attrs": {
+                            "role": "option"
+                          },
                           "children": [
-                            { "tag": "span", "part": "itemIcon" },
+                            {
+                              "tag": "span",
+                              "part": "itemIcon"
+                            },
                             {
                               "tag": "div",
                               "part": "itemContent",
                               "children": [
-                                { "tag": "span", "part": "itemLabel" },
-                                { "tag": "span", "part": "itemDescription" }
+                                {
+                                  "tag": "span",
+                                  "part": "itemLabel"
+                                },
+                                {
+                                  "tag": "span",
+                                  "part": "itemDescription"
+                                }
                               ]
                             }
                           ]
@@ -85,7 +131,14 @@
                     }
                   ]
                 },
-                { "tag": "div", "part": "separator", "attrs": { "role": "separator", "aria-hidden": "true" } }
+                {
+                  "tag": "div",
+                  "part": "separator",
+                  "attrs": {
+                    "role": "separator",
+                    "aria-hidden": "true"
+                  }
+                }
               ]
             }
           ]
@@ -94,10 +147,17 @@
     }
   },
   "variants": {},
-  "states": ["default", "hover", "disabled", "selected"],
+  "states": [
+    "default",
+    "hover",
+    "disabled",
+    "selected"
+  ],
   "a11y": {
     "role": "dialog",
-    "labeling": ["aria-label"],
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": [
       {
         "key": "ArrowDown",

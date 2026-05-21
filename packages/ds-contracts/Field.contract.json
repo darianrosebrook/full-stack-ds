@@ -2,9 +2,18 @@
   "$schema": "./component.contract.schema.json",
   "name": "Field",
   "description": "Form field layout wrapper that pairs a label, input, and optional hint or error message.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "label", "header", "control", "help", "error", "meta", "validatingIndicator"],
+    "parts": [
+      "root",
+      "label",
+      "header",
+      "control",
+      "help",
+      "error",
+      "meta",
+      "validatingIndicator"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -59,12 +68,25 @@
     }
   },
   "variants": {
-    "status": ["idle", "validating", "valid", "invalid"]
+    "status": [
+      "idle",
+      "validating",
+      "valid",
+      "invalid"
+    ]
   },
-  "states": ["default", "focus", "disabled"],
+  "states": [
+    "default",
+    "focus",
+    "disabled"
+  ],
   "a11y": {
     "role": "group",
-    "labeling": ["aria-labelledby", "aria-describedby", "aria-errormessage"],
+    "labeling": [
+      "aria-labelledby",
+      "aria-describedby",
+      "aria-errormessage"
+    ],
     "keyboard": []
   },
   "tokens": {
@@ -234,7 +256,12 @@
   "types": {
     "FieldStatus": {
       "kind": "union",
-      "values": ["idle", "validating", "valid", "invalid"]
+      "values": [
+        "idle",
+        "validating",
+        "valid",
+        "invalid"
+      ]
     }
   }
 }

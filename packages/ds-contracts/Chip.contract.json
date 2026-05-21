@@ -2,9 +2,13 @@
   "$schema": "./component.contract.schema.json",
   "name": "Chip",
   "description": "Compact interactive element for tags, filters, or multi-select choices.",
-  "layer": "primitive",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "icon", "text"],
+    "parts": [
+      "root",
+      "icon",
+      "text"
+    ],
     "dom": {
       "tag": "button",
       "part": "root",
@@ -37,13 +41,30 @@
     }
   },
   "variants": {
-    "variant": ["default", "selected", "dismissible"],
-    "size": ["small", "medium", "large"]
+    "variant": [
+      "default",
+      "selected",
+      "dismissible"
+    ],
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ]
   },
-  "states": ["default", "hover", "focus", "active", "disabled"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
   "a11y": {
     "role": "button",
-    "labeling": ["aria-label", "title"],
+    "labeling": [
+      "aria-label",
+      "title"
+    ],
     "keyboard": [
       {
         "key": "Enter|Space",
@@ -191,15 +212,27 @@
   "types": {
     "ChipType": {
       "kind": "union",
-      "values": ["button", "submit", "reset"]
+      "values": [
+        "button",
+        "submit",
+        "reset"
+      ]
     },
     "ChipVariant": {
       "kind": "union",
-      "values": ["default", "selected", "dismissible"]
+      "values": [
+        "default",
+        "selected",
+        "dismissible"
+      ]
     },
     "ChipSize": {
       "kind": "union",
-      "values": ["small", "medium", "large"]
+      "values": [
+        "small",
+        "medium",
+        "large"
+      ]
     }
   }
 }

@@ -91,7 +91,7 @@ export interface ComponentContract {
   $schema?: string;
   name: string;
   description?: string;
-  layer: "primitive" | "styled" | "composite";
+  layer: "primitive" | "compound" | "composer" | "assembly";
   cssPrefix?: string;
   anatomy?: string[] | AnatomyDetailed;
   variants?: Record<string, string[]>;

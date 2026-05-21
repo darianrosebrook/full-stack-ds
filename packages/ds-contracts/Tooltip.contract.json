@@ -2,9 +2,13 @@
   "$schema": "./component.contract.schema.json",
   "name": "Tooltip",
   "description": "Anchored ephemeral presence surface that exposes supplemental information about a trigger element on hover or focus. Composes as <Tooltip><Tooltip.Trigger>...</Tooltip.Trigger><Tooltip.Content>...</Tooltip.Content></Tooltip>; the substrate wires aria-describedby, hover/focus opening, and escape/blur/pointer-leave dismissal.",
-  "layer": "primitive",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "trigger", "content"],
+    "parts": [
+      "root",
+      "trigger",
+      "content"
+    ],
     "details": {
       "root": {
         "role": "group"
@@ -23,12 +27,25 @@
     }
   },
   "variants": {
-    "placement": ["top", "bottom", "left", "right", "auto"]
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
   },
-  "states": ["default", "hover", "entering", "leaving"],
+  "states": [
+    "default",
+    "hover",
+    "entering",
+    "leaving"
+  ],
   "a11y": {
     "role": "tooltip",
-    "labeling": ["aria-describedby"],
+    "labeling": [
+      "aria-describedby"
+    ],
     "keyboard": [
       {
         "key": "Escape",
@@ -62,8 +79,15 @@
       "placementProp": "placement",
       "collision": "flip-shift"
     },
-    "dismissal": ["escape", "blur", "pointer-leave"],
-    "openTriggers": ["hover", "focus"]
+    "dismissal": [
+      "escape",
+      "blur",
+      "pointer-leave"
+    ],
+    "openTriggers": [
+      "hover",
+      "focus"
+    ]
   },
   "portal": {
     "enabled": true,
@@ -181,7 +205,13 @@
   "types": {
     "TooltipPlacement": {
       "kind": "union",
-      "values": ["top", "bottom", "left", "right", "auto"]
+      "values": [
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "auto"
+      ]
     }
   }
 }

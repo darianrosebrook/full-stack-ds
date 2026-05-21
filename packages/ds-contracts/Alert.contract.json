@@ -2,18 +2,38 @@
   "$schema": "./component.contract.schema.json",
   "name": "Alert",
   "description": "Inline notification banner for important messages. Does not require user interaction to dismiss.",
-  "layer": "composite",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "icon", "body", "title", "dismiss"]
+    "parts": [
+      "root",
+      "icon",
+      "body",
+      "title",
+      "dismiss"
+    ]
   },
   "variants": {
-    "intent": ["info", "success", "warning", "danger"],
-    "level": ["inline", "section", "page"]
+    "intent": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ],
+    "level": [
+      "inline",
+      "section",
+      "page"
+    ]
   },
-  "states": ["default", "hover"],
+  "states": [
+    "default",
+    "hover"
+  ],
   "a11y": {
     "role": "alert",
-    "labeling": ["aria-label"],
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": []
   },
   "tokens": {
@@ -189,11 +209,20 @@
   "types": {
     "AlertIntent": {
       "kind": "union",
-      "values": ["info", "success", "warning", "danger"]
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
     },
     "AlertLevel": {
       "kind": "union",
-      "values": ["inline", "section", "page"]
+      "values": [
+        "inline",
+        "section",
+        "page"
+      ]
     }
   }
 }

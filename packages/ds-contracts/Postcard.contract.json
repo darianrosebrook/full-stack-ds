@@ -2,9 +2,20 @@
   "$schema": "./component.contract.schema.json",
   "name": "Postcard",
   "description": "Social-media-style post card with author, content, media embed, and engagement stat slots.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "header", "userInfo", "displayName", "handle", "timestamp", "content", "footer", "stats", "stat"],
+    "parts": [
+      "root",
+      "header",
+      "userInfo",
+      "displayName",
+      "handle",
+      "timestamp",
+      "content",
+      "footer",
+      "stats",
+      "stat"
+    ],
     "dom": {
       "tag": "article",
       "part": "root",
@@ -62,12 +73,21 @@
     }
   },
   "variants": {
-    "type": ["image", "video", "audio"]
+    "type": [
+      "image",
+      "video",
+      "audio"
+    ]
   },
-  "states": ["default", "hover"],
+  "states": [
+    "default",
+    "hover"
+  ],
   "a11y": {
     "role": "article",
-    "labeling": ["aria-labelledby"],
+    "labeling": [
+      "aria-labelledby"
+    ],
     "keyboard": []
   },
   "tokens": {

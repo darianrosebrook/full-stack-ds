@@ -98,16 +98,18 @@ function inferLayerOrder(layer: string): number {
   switch (layer) {
     case "primitive":
       return 0;
-    case "styled":
+    case "compound":
       return 1;
-    case "composite":
+    case "composer":
       return 2;
-    default:
+    case "assembly":
       return 3;
+    default:
+      return 4;
   }
 }
 
-async function buildBundle(rootDir: string) {
+export async function buildBundle(rootDir: string) {
   const contractsDir = path.join(rootDir, "packages", "ds-contracts");
   const contractFiles = (await readdir(contractsDir))
     .filter((f) => f.endsWith(".contract.json"))

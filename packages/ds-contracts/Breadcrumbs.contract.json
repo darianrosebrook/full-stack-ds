@@ -2,9 +2,16 @@
   "$schema": "./component.contract.schema.json",
   "name": "Breadcrumbs",
   "description": "Navigation landmark showing the current page location within a site hierarchy.",
-  "layer": "primitive",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "list", "link", "current", "separator", "overflow"],
+    "parts": [
+      "root",
+      "list",
+      "link",
+      "current",
+      "separator",
+      "overflow"
+    ],
     "dom": {
       "tag": "nav",
       "part": "root",
@@ -25,10 +32,16 @@
     }
   },
   "variants": {},
-  "states": ["default", "hover", "focus"],
+  "states": [
+    "default",
+    "hover",
+    "focus"
+  ],
   "a11y": {
     "role": "navigation",
-    "labeling": ["aria-label"],
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": []
   },
   "tokens": {

@@ -2,13 +2,27 @@
   "$schema": "./component.contract.schema.json",
   "name": "Walkthrough",
   "description": "Step-by-step guided tour overlay anchored to page elements. Manages step progression and keyboard navigation.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "content", "title", "description", "controls", "skip", "prev", "next", "dots", "dot", "counter"],
+    "parts": [
+      "root",
+      "content",
+      "title",
+      "description",
+      "controls",
+      "skip",
+      "prev",
+      "next",
+      "dots",
+      "dot",
+      "counter"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
-      "attrs": { "role": "status" },
+      "attrs": {
+        "role": "status"
+      },
       "bindings": {
         "aria-label": "prop:label"
       },
@@ -20,12 +34,22 @@
             {
               "tag": "h3",
               "part": "title",
-              "children": [{ "tag": "slot", "name": "title" }]
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "title"
+                }
+              ]
             },
             {
               "tag": "p",
               "part": "description",
-              "children": [{ "tag": "slot", "name": "description" }]
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "description"
+                }
+              ]
             }
           ]
         },
@@ -33,28 +57,67 @@
           "tag": "div",
           "part": "controls",
           "children": [
-            { "tag": "button", "part": "skip", "attrs": { "type": "button" } },
-            { "tag": "button", "part": "prev", "attrs": { "type": "button" } },
+            {
+              "tag": "button",
+              "part": "skip",
+              "attrs": {
+                "type": "button"
+              }
+            },
+            {
+              "tag": "button",
+              "part": "prev",
+              "attrs": {
+                "type": "button"
+              }
+            },
             {
               "tag": "div",
               "part": "dots",
               "children": [
-                { "tag": "button", "part": "dot", "attrs": { "type": "button" } }
+                {
+                  "tag": "button",
+                  "part": "dot",
+                  "attrs": {
+                    "type": "button"
+                  }
+                }
               ]
             },
-            { "tag": "span", "part": "counter" },
-            { "tag": "button", "part": "next", "attrs": { "type": "button" } }
+            {
+              "tag": "span",
+              "part": "counter"
+            },
+            {
+              "tag": "button",
+              "part": "next",
+              "attrs": {
+                "type": "button"
+              }
+            }
           ]
         }
       ]
     }
   },
   "variants": {
-    "placement": ["top", "bottom", "left", "right", "auto"]
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
   },
-  "states": ["default", "hover", "disabled"],
+  "states": [
+    "default",
+    "hover",
+    "disabled"
+  ],
   "a11y": {
-    "labeling": ["aria-label"],
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": [
       {
         "key": "ArrowRight",
@@ -360,7 +423,13 @@
   "types": {
     "WalkthroughPlacement": {
       "kind": "union",
-      "values": ["top", "bottom", "left", "right", "auto"]
+      "values": [
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "auto"
+      ]
     },
     "WalkthroughStepSpec": {
       "kind": "alias",

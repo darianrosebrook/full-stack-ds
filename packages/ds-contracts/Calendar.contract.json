@@ -2,9 +2,17 @@
   "$schema": "./component.contract.schema.json",
   "name": "Calendar",
   "description": "Interactive calendar grid for selecting a single date or a date range.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "header", "nav", "grid", "cell", "day", "caption"],
+    "parts": [
+      "root",
+      "header",
+      "nav",
+      "grid",
+      "cell",
+      "day",
+      "caption"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -16,9 +24,24 @@
           "tag": "div",
           "part": "header",
           "children": [
-            { "tag": "button", "part": "nav", "attrs": { "aria-label": "Previous month" } },
-            { "tag": "span", "part": "caption" },
-            { "tag": "button", "part": "nav", "attrs": { "aria-label": "Next month" } }
+            {
+              "tag": "button",
+              "part": "nav",
+              "attrs": {
+                "aria-label": "Previous month"
+              }
+            },
+            {
+              "tag": "span",
+              "part": "caption"
+            },
+            {
+              "tag": "button",
+              "part": "nav",
+              "attrs": {
+                "aria-label": "Next month"
+              }
+            }
           ]
         },
         {
@@ -38,9 +61,14 @@
                     {
                       "tag": "td",
                       "part": "cell",
-                      "attrs": { "role": "gridcell" },
+                      "attrs": {
+                        "role": "gridcell"
+                      },
                       "children": [
-                        { "tag": "button", "part": "day" }
+                        {
+                          "tag": "button",
+                          "part": "day"
+                        }
                       ]
                     }
                   ]
@@ -53,11 +81,25 @@
     }
   },
   "variants": {
-    "mode": ["single", "range"]
+    "mode": [
+      "single",
+      "range"
+    ]
   },
-  "states": ["default", "hover", "focus", "selected", "disabled", "today", "outsideMonth"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "selected",
+    "disabled",
+    "today",
+    "outsideMonth"
+  ],
   "a11y": {
-    "labeling": ["aria-label", "aria-labelledby"],
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
     "keyboard": [
       {
         "key": "ArrowLeft",
@@ -216,7 +258,10 @@
   "types": {
     "CalendarMode": {
       "kind": "union",
-      "values": ["single", "range"]
+      "values": [
+        "single",
+        "range"
+      ]
     }
   }
 }

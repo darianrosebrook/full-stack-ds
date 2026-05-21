@@ -15,7 +15,7 @@ import { generateAngularComponentSource } from "./angular/component-source.js";
 
 const CONTRACT: ComponentContract = {
   name: "TitledCard",
-  layer: "composite",
+  layer: "compound",
   cssPrefix: "titled-card",
   anatomy: {
     parts: ["root", "title", "body"],

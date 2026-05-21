@@ -15,7 +15,7 @@ import { buildComponentIR } from "./ir.js";
 function makeContract(overrides: Partial<ComponentContract> = {}): ComponentContract {
   return {
     name: "TestSurface",
-    layer: "composite",
+    layer: "composer",
     ...overrides,
   } as ComponentContract;
 }

@@ -91,20 +91,25 @@ describe("shell smoke — Button (primitive)", () => {
     assertShellSane(html, "lit");
   });
 
-  it("Angular shell returns its placeholder (does not consume source)", () => {
+  it("builds Angular shell that imports the plugin-served compiled host", () => {
+    // Angular doesn't transpile in-iframe like the other four — the
+    // fsds-angular Vite plugin AOT-compiles the package server-side and the
+    // shell imports the synthesized host from /preview/angular/. Source +
+    // demo args are unused for Angular but kept for shell signature symmetry.
     const html = buildAngularShell({ componentName: c.name, componentSource: c.react.source, demo: "" });
-    expect(html).toContain("Angular live preview unavailable");
+    assertShellSane(html, "angular");
+    expect(html).toContain(`/preview/angular/.fsds-preview-hosts/${c.name}.host.component.js`);
   });
 });
 
-describe("shell smoke — Card (composite with compound parts)", () => {
+describe("shell smoke — Card (compound with sibling parts)", () => {
   // Card is interesting because Vue/Svelte emit sibling SFCs for compound
   // parts (CardHeader.vue, CardBody.vue, etc.). The iframe shell only loads
   // the root Card source — it does NOT import the compound siblings. If the
   // Card root references CardHeader at module-load time, the iframe will
   // fail. This smoke test guards the contract that the root Card source
   // alone produces a buildable shell.
-  const c = loadCase("Card", "composite");
+  const c = loadCase("Card", "compound");
 
   it("builds React shell from real Card.tsx", () => {
     const html = buildReactShell({ componentName: c.name, componentSource: c.react.source, demo: c.react.demo });
@@ -127,11 +132,11 @@ describe("shell smoke — Card (composite with compound parts)", () => {
   });
 });
 
-describe("shell smoke — Calendar (composite, rich types + hook)", () => {
+describe("shell smoke — Calendar (composer, rich types + hook)", () => {
   // Calendar is the worst case for type-heavy output (typed dates, range
   // types, complex prop unions). If TypeScript-stripping ever breaks in the
   // Vue or Lit pipelines, this case catches it before runtime.
-  const c = loadCase("Calendar", "composite");
+  const c = loadCase("Calendar", "composer");
 
   it("builds React shell from real Calendar.tsx", () => {
     const html = buildReactShell({ componentName: c.name, componentSource: c.react.source, demo: c.react.demo });

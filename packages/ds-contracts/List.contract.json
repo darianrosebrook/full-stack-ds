@@ -2,25 +2,64 @@
   "$schema": "./component.contract.schema.json",
   "name": "List",
   "description": "Semantic list element (ul, ol, or dl) with consistent spacing and marker styles.",
-  "layer": "primitive",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root"],
+    "parts": [
+      "root"
+    ],
     "dom": {
       "tag": "ul",
       "part": "root",
-      "children": [{ "tag": "children" }]
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
     }
   },
   "variants": {
-    "as": ["ul", "ol", "dl"],
-    "variant": ["default", "unstyled", "inline", "divided", "spaced"],
-    "marker": ["default", "none", "disc", "circle", "square", "decimal", "alpha", "roman"],
-    "spacing": ["none", "sm", "md", "lg"],
-    "size": ["sm", "md", "lg"]
+    "as": [
+      "ul",
+      "ol",
+      "dl"
+    ],
+    "variant": [
+      "default",
+      "unstyled",
+      "inline",
+      "divided",
+      "spaced"
+    ],
+    "marker": [
+      "default",
+      "none",
+      "disc",
+      "circle",
+      "square",
+      "decimal",
+      "alpha",
+      "roman"
+    ],
+    "spacing": [
+      "none",
+      "sm",
+      "md",
+      "lg"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
   },
-  "states": ["default"],
+  "states": [
+    "default"
+  ],
   "a11y": {
-    "labeling": ["aria-label", "aria-labelledby"],
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
     "keyboard": []
   },
   "tokens": {
@@ -95,23 +134,51 @@
   "types": {
     "ListElement": {
       "kind": "union",
-      "values": ["ul", "ol", "dl"]
+      "values": [
+        "ul",
+        "ol",
+        "dl"
+      ]
     },
     "ListVariant": {
       "kind": "union",
-      "values": ["default", "unstyled", "inline", "divided", "spaced"]
+      "values": [
+        "default",
+        "unstyled",
+        "inline",
+        "divided",
+        "spaced"
+      ]
     },
     "ListMarker": {
       "kind": "union",
-      "values": ["default", "none", "disc", "circle", "square", "decimal", "alpha", "roman"]
+      "values": [
+        "default",
+        "none",
+        "disc",
+        "circle",
+        "square",
+        "decimal",
+        "alpha",
+        "roman"
+      ]
     },
     "ListSpacing": {
       "kind": "union",
-      "values": ["none", "sm", "md", "lg"]
+      "values": [
+        "none",
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     "ListSize": {
       "kind": "union",
-      "values": ["sm", "md", "lg"]
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
     }
   }
 }

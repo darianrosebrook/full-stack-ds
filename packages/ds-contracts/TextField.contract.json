@@ -2,9 +2,15 @@
   "$schema": "./component.contract.schema.json",
   "name": "TextField",
   "description": "Full-featured form field composing a label, input, optional description, and error message with ARIA wiring.",
-  "layer": "composite",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "label", "field", "description", "error"],
+    "parts": [
+      "root",
+      "label",
+      "field",
+      "description",
+      "error"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -59,9 +65,18 @@
       ]
     }
   },
-  "states": ["default", "focus", "disabled", "invalid"],
+  "states": [
+    "default",
+    "focus",
+    "disabled",
+    "invalid"
+  ],
   "a11y": {
-    "labeling": ["aria-label", "aria-labelledby", "aria-describedby"],
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-describedby"
+    ],
     "keyboard": []
   },
   "channels": {

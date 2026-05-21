@@ -2,9 +2,18 @@
   "$schema": "./component.contract.schema.json",
   "name": "Select",
   "description": "Dropdown selector with optional search, single or multi-select, and keyboard navigation. Renders a floating listbox anchored to the trigger.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "trigger", "content", "search", "options", "option", "check", "emptyState"],
+    "parts": [
+      "root",
+      "trigger",
+      "content",
+      "search",
+      "options",
+      "option",
+      "check",
+      "emptyState"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -80,13 +89,34 @@
     }
   },
   "variants": {
-    "size": ["sm", "md", "lg"],
-    "position": ["bottom", "top", "auto"]
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ],
+    "position": [
+      "bottom",
+      "top",
+      "auto"
+    ]
   },
-  "states": ["default", "hover", "focus", "active", "disabled", "open", "closed", "selected"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active",
+    "disabled",
+    "open",
+    "closed",
+    "selected"
+  ],
   "a11y": {
     "role": "combobox",
-    "labeling": ["aria-label", "aria-expanded", "aria-haspopup"],
+    "labeling": [
+      "aria-label",
+      "aria-expanded",
+      "aria-haspopup"
+    ],
     "keyboard": [
       {
         "key": "Enter",
@@ -391,7 +421,11 @@
   "types": {
     "SelectSize": {
       "kind": "union",
-      "values": ["sm", "md", "lg"]
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
     },
     "SelectOption": {
       "kind": "alias",

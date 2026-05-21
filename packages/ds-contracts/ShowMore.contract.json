@@ -2,9 +2,13 @@
   "$schema": "./component.contract.schema.json",
   "name": "ShowMore",
   "description": "Expandable container that truncates long content with a 'show more' affordance.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "content", "trigger"],
+    "parts": [
+      "root",
+      "content",
+      "trigger"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -34,9 +38,15 @@
     }
   },
   "variants": {},
-  "states": ["default", "expanded", "collapsed"],
+  "states": [
+    "default",
+    "expanded",
+    "collapsed"
+  ],
   "a11y": {
-    "labeling": ["aria-expanded"],
+    "labeling": [
+      "aria-expanded"
+    ],
     "keyboard": [
       {
         "key": "Enter",

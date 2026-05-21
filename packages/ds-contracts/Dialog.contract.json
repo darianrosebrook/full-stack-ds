@@ -2,9 +2,18 @@
   "$schema": "./component.contract.schema.json",
   "name": "Dialog",
   "description": "Modal overlay requiring user attention before returning to the page. Traps focus until dismissed.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "backdrop", "modal", "header", "title", "body", "footer", "closeButton"],
+    "parts": [
+      "root",
+      "backdrop",
+      "modal",
+      "header",
+      "title",
+      "body",
+      "footer",
+      "closeButton"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -13,7 +22,9 @@
           "tag": "div",
           "part": "backdrop",
           "if": "open",
-          "attrs": { "aria-hidden": "true" }
+          "attrs": {
+            "aria-hidden": "true"
+          }
         },
         {
           "tag": "div",
@@ -35,25 +46,64 @@
                 {
                   "tag": "h2",
                   "part": "title",
-                  "children": [{ "tag": "slot", "name": "title" }]
+                  "children": [
+                    {
+                      "tag": "slot",
+                      "name": "title"
+                    }
+                  ]
                 },
-                { "tag": "button", "part": "closeButton", "attrs": { "type": "button", "aria-label": "Close dialog" } }
+                {
+                  "tag": "button",
+                  "part": "closeButton",
+                  "attrs": {
+                    "type": "button",
+                    "aria-label": "Close dialog"
+                  }
+                }
               ]
             },
-            { "tag": "div", "part": "body", "children": [{ "tag": "children" }] },
-            { "tag": "div", "part": "footer" }
+            {
+              "tag": "div",
+              "part": "body",
+              "children": [
+                {
+                  "tag": "children"
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "part": "footer"
+            }
           ]
         }
       ]
     }
   },
   "variants": {
-    "size": ["sm", "md", "lg", "xl", "full"]
+    "size": [
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "full"
+    ]
   },
-  "states": ["default", "hover", "focus", "active", "leaving"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active",
+    "leaving"
+  ],
   "a11y": {
     "role": "dialog",
-    "labeling": ["aria-label", "aria-labelledby", "aria-describedby"],
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-describedby"
+    ],
     "keyboard": [
       {
         "key": "Escape",
@@ -294,7 +344,13 @@
   "types": {
     "DialogSize": {
       "kind": "union",
-      "values": ["sm", "md", "lg", "xl", "full"]
+      "values": [
+        "sm",
+        "md",
+        "lg",
+        "xl",
+        "full"
+      ]
     }
   }
 }

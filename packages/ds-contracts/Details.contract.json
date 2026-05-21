@@ -2,9 +2,16 @@
   "$schema": "./component.contract.schema.json",
   "name": "Details",
   "description": "Disclosure widget revealing additional content on demand. Semantically equivalent to <details>/<summary>.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "summary", "summaryContent", "icon", "summaryText", "content"],
+    "parts": [
+      "root",
+      "summary",
+      "summaryContent",
+      "icon",
+      "summaryText",
+      "content"
+    ],
     "dom": {
       "tag": "details",
       "part": "root",
@@ -49,13 +56,30 @@
     }
   },
   "variants": {
-    "variant": ["default", "inline", "compact"],
-    "icon": ["left", "right", "none"]
+    "variant": [
+      "default",
+      "inline",
+      "compact"
+    ],
+    "icon": [
+      "left",
+      "right",
+      "none"
+    ]
   },
-  "states": ["default", "hover", "focus", "disabled", "open", "closed"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "open",
+    "closed"
+  ],
   "a11y": {
     "role": "group",
-    "labeling": ["aria-label"],
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": [
       {
         "key": "Enter",
@@ -221,11 +245,19 @@
   "types": {
     "DetailsVariant": {
       "kind": "union",
-      "values": ["default", "inline", "compact"]
+      "values": [
+        "default",
+        "inline",
+        "compact"
+      ]
     },
     "DetailsIcon": {
       "kind": "union",
-      "values": ["left", "right", "none"]
+      "values": [
+        "left",
+        "right",
+        "none"
+      ]
     }
   }
 }

@@ -2,18 +2,38 @@
   "$schema": "./component.contract.schema.json",
   "name": "AlertNotice",
   "description": "Inline alert message communicating status, errors, warnings, or success. Always visible (not triggered by user interaction).",
-  "layer": "composite",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "icon", "body", "title", "dismiss"]
+    "parts": [
+      "root",
+      "icon",
+      "body",
+      "title",
+      "dismiss"
+    ]
   },
   "variants": {
-    "status": ["info", "success", "warning", "danger", "error"],
-    "level": ["page", "section", "inline"]
+    "status": [
+      "info",
+      "success",
+      "warning",
+      "danger",
+      "error"
+    ],
+    "level": [
+      "page",
+      "section",
+      "inline"
+    ]
   },
-  "states": ["default"],
+  "states": [
+    "default"
+  ],
   "a11y": {
     "role": "alert",
-    "labeling": ["aria-label"],
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": []
   },
   "tokens": {
@@ -183,11 +203,21 @@
   "types": {
     "AlertNoticeStatus": {
       "kind": "union",
-      "values": ["info", "success", "warning", "danger", "error"]
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "error"
+      ]
     },
     "AlertNoticeLevel": {
       "kind": "union",
-      "values": ["page", "section", "inline"]
+      "values": [
+        "page",
+        "section",
+        "inline"
+      ]
     }
   }
 }

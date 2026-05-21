@@ -2,14 +2,33 @@
   "$schema": "./component.contract.schema.json",
   "name": "Table",
   "description": "Data table with sortable columns, row selection, and pagination support.",
-  "layer": "composite",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "container", "caption", "head", "body", "footer", "row", "header", "cell"]
+    "parts": [
+      "root",
+      "container",
+      "caption",
+      "head",
+      "body",
+      "footer",
+      "row",
+      "header",
+      "cell"
+    ]
   },
   "variants": {},
-  "states": ["default", "hover", "focus", "selected"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "selected"
+  ],
   "a11y": {
-    "labeling": ["aria-sort", "aria-label", "aria-labelledby"],
+    "labeling": [
+      "aria-sort",
+      "aria-label",
+      "aria-labelledby"
+    ],
     "keyboard": [
       {
         "key": "Tab",

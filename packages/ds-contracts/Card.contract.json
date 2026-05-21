@@ -2,14 +2,37 @@
   "$schema": "./component.contract.schema.json",
   "name": "Card",
   "description": "Surface container grouping related content with optional header, media, and action areas.",
-  "layer": "composite",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "header", "media", "content", "footer", "actions", "badge", "description", "link", "note"]
+    "parts": [
+      "root",
+      "header",
+      "media",
+      "content",
+      "footer",
+      "actions",
+      "badge",
+      "description",
+      "link",
+      "note"
+    ]
   },
   "variants": {
-    "status": ["completed", "in-progress", "planned", "deprecated", "category", "complexity"]
+    "status": [
+      "completed",
+      "in-progress",
+      "planned",
+      "deprecated",
+      "category",
+      "complexity"
+    ]
   },
-  "states": ["default", "hover", "focus", "active"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active"
+  ],
   "a11y": {
     "labeling": [],
     "keyboard": []
@@ -180,7 +203,14 @@
   "types": {
     "CardStatus": {
       "kind": "union",
-      "values": ["completed", "in-progress", "planned", "deprecated", "category", "complexity"]
+      "values": [
+        "completed",
+        "in-progress",
+        "planned",
+        "deprecated",
+        "category",
+        "complexity"
+      ]
     }
   }
 }

@@ -2,18 +2,31 @@
   "$schema": "./component.contract.schema.json",
   "name": "Avatar",
   "description": "Circular user or entity representation showing an image, initials, or icon fallback.",
-  "layer": "primitive",
+  "layer": "compound",
   "anatomy": {
-    "parts": ["root", "image", "initials", "status"],
+    "parts": [
+      "root",
+      "image",
+      "initials",
+      "status"
+    ],
     "dom": {
       "tag": "div",
       "part": "root"
     }
   },
   "variants": {
-    "size": ["small", "medium", "large", "extra-large"]
+    "size": [
+      "small",
+      "medium",
+      "large",
+      "extra-large"
+    ]
   },
-  "states": ["default", "focus"],
+  "states": [
+    "default",
+    "focus"
+  ],
   "a11y": {
     "labeling": [],
     "keyboard": []

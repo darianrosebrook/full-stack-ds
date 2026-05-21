@@ -37,8 +37,8 @@
     },
     "layer": {
       "type": "string",
-      "enum": ["primitive", "styled", "composite"],
-      "description": "Architecture layer: primitive (leaf), styled (themed primitive), composite (multiple primitives)."
+      "enum": ["primitive", "compound", "composer", "assembly"],
+      "description": "Architecture layer per the component-complexity blueprint: 'primitive' (irreducible to the user, e.g. Button, Input, Icon), 'compound' (blessed bundle of primitives with ARIA wiring but no state orchestration, e.g. TextField, Card, Chip), 'composer' (orchestrates state, focus, dismissal, or multi-step interaction, e.g. Dialog, Popover, Field, Tabs), or 'assembly' (product flow; assemblies live in the app, not the system)."
     },
     "cssPrefix": {
       "type": "string",

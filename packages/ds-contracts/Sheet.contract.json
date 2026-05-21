@@ -2,9 +2,19 @@
   "$schema": "./component.contract.schema.json",
   "name": "Sheet",
   "description": "Slide-in panel (drawer) that overlays the page from an edge. Traps focus until dismissed.",
-  "layer": "composite",
+  "layer": "composer",
   "anatomy": {
-    "parts": ["root", "overlay", "content", "header", "title", "description", "body", "footer", "close"],
+    "parts": [
+      "root",
+      "overlay",
+      "content",
+      "header",
+      "title",
+      "description",
+      "body",
+      "footer",
+      "close"
+    ],
     "dom": {
       "tag": "div",
       "part": "root",
@@ -13,7 +23,9 @@
           "tag": "div",
           "part": "overlay",
           "if": "open",
-          "attrs": { "aria-hidden": "true" }
+          "attrs": {
+            "aria-hidden": "true"
+          }
         },
         {
           "tag": "div",
@@ -36,30 +48,73 @@
                 {
                   "tag": "h2",
                   "part": "title",
-                  "children": [{ "tag": "slot", "name": "title" }]
+                  "children": [
+                    {
+                      "tag": "slot",
+                      "name": "title"
+                    }
+                  ]
                 },
                 {
                   "tag": "p",
                   "part": "description",
-                  "children": [{ "tag": "slot", "name": "description" }]
+                  "children": [
+                    {
+                      "tag": "slot",
+                      "name": "description"
+                    }
+                  ]
                 },
-                { "tag": "button", "part": "close", "attrs": { "type": "button", "aria-label": "Close sheet" } }
+                {
+                  "tag": "button",
+                  "part": "close",
+                  "attrs": {
+                    "type": "button",
+                    "aria-label": "Close sheet"
+                  }
+                }
               ]
             },
-            { "tag": "div", "part": "body", "children": [{ "tag": "children" }] },
-            { "tag": "div", "part": "footer" }
+            {
+              "tag": "div",
+              "part": "body",
+              "children": [
+                {
+                  "tag": "children"
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "part": "footer"
+            }
           ]
         }
       ]
     }
   },
   "variants": {
-    "side": ["top", "right", "bottom", "left"]
+    "side": [
+      "top",
+      "right",
+      "bottom",
+      "left"
+    ]
   },
-  "states": ["default", "hover", "focus", "open", "closed"],
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "open",
+    "closed"
+  ],
   "a11y": {
     "role": "dialog",
-    "labeling": ["aria-label", "aria-labelledby", "aria-describedby"],
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-describedby"
+    ],
     "keyboard": [
       {
         "key": "Escape",
@@ -264,7 +319,12 @@
   "types": {
     "SheetSide": {
       "kind": "union",
-      "values": ["top", "right", "bottom", "left"]
+      "values": [
+        "top",
+        "right",
+        "bottom",
+        "left"
+      ]
     }
   }
 }
