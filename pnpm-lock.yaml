@@ -11,9 +11,18 @@ importers:
       '@full-stack-ds/angular':
         specifier: workspace:*
         version: link:packages/ds-angular
+      '@full-stack-ds/lit':
+        specifier: workspace:*
+        version: link:packages/ds-lit
       '@full-stack-ds/react':
         specifier: workspace:*
         version: link:packages/ds-react
+      '@full-stack-ds/svelte':
+        specifier: workspace:*
+        version: link:packages/ds-svelte
+      '@full-stack-ds/vue':
+        specifier: workspace:*
+        version: link:packages/ds-vue
       '@testing-library/dom':
         specifier: ^10.4.1
         version: 10.4.1
@@ -23,15 +32,24 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
+      lit:
+        specifier: ^3.2.0
+        version: 3.3.3
       react:
         specifier: ^19.2.5
         version: 19.2.6
       react-dom:
         specifier: ^19.2.5
         version: 19.2.6(react@19.2.6)
+      svelte:
+        specifier: ^5.0.0
+        version: 5.55.5(@typescript-eslint/types@8.59.3)
       typescript:
         specifier: ^6.0.2
         version: 6.0.3
+      vue:
+        specifier: ^3.4.0
+        version: 3.5.34(typescript@6.0.3)
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.4
@@ -39,6 +57,9 @@ importers:
       '@playwright/test':
         specifier: ^1.60.0
         version: 1.60.0
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.1.2
+        version: 7.1.2(svelte@5.55.5(@typescript-eslint/types@8.59.3))(vite@8.0.13(@types/node@25.7.0)(esbuild@0.28.0))
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -54,6 +75,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.1(vite@8.0.13(@types/node@25.7.0)(esbuild@0.28.0))
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.6
+        version: 6.0.6(vite@8.0.13(@types/node@25.7.0)(esbuild@0.28.0))(vue@3.5.34(typescript@6.0.3))
       eslint:
         specifier: ^9.39.4
         version: 9.39.4
