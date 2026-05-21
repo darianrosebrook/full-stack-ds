@@ -556,6 +556,96 @@ export type ComponentAdmissionIndex = Record<
   Partial<Record<FrameworkId, ComponentAdmissionRow>>
 >;
 
+/**
+ * Scope mode for the rail
+ * (CODEGEN-RAIL-CHANGED-ARTIFACT-SCOPE-01).
+ *
+ * Discriminated union so future scope sources (e.g. a manifest
+ * subset, or a per-component allow-list) can be added without
+ * breaking the existing shape.
+ *
+ *   - `workspace`: the rail's default; report covers the full
+ *     manifest universe. NO scope projection is emitted.
+ *   - `git_range`: the rail still admits the full workspace; an
+ *     additional scoped projection is added to the report
+ *     highlighting which artifact groups intersect the given
+ *     git range. Reviewer ergonomic, NOT a reduced gate.
+ */
+export type RailScopeMode =
+  | { kind: "workspace" }
+  | {
+      kind: "git_range";
+      /**
+       * The exact `<base>...<head>` (or `<base>..<head>`) string
+       * the operator passed to `--scope-to-git-range`. Stored
+       * verbatim so closure notes can cite the same notation.
+       */
+      rangeNotation: string;
+    };
+
+/**
+ * One artifact group inside the scoped projection. Carries the
+ * manifest's files (path + sha256) AND the joined admission
+ * entries so the projection is self-contained — a closure note
+ * reading the scoped section does not have to cross-reference
+ * the per-framework artifacts[] to find the admission verdict.
+ */
+export interface ScopedArtifactGroup {
+  framework: FrameworkId;
+  component: string;
+  /** From EmissionManifest — same shape as EmittedArtifactGroup.files. */
+  files: readonly EmittedArtifactFile[];
+  /** Pulled from FrameworkValidationResult.artifacts[] for this component. */
+  admission: readonly ArtifactAdmissionEntry[];
+}
+
+/**
+ * Projection of the rail's full-workspace admission report down
+ * to the subset implicated by a git range. Read-only — the rail
+ * still admits the full workspace; this surface only changes
+ * what the report HIGHLIGHTS.
+ *
+ * `unmatchedGeneratedPaths` does NOT itself fail the rail. The
+ * required-mode invariants (RAIL_REQUIRE_MANIFEST_MISSING_PATHS,
+ * RAIL_REQUIRE_MANIFEST_UNTRACKED_GENERATED_PATHS,
+ * RAIL_REQUIRE_MANIFEST_HASH_MISMATCH) remain the authoritative
+ * failure surface for content drift. Unmatched paths are
+ * surfaced here as REVIEW CONTEXT — a path changed by the PR
+ * that the rail could not bind to a manifest group, which the
+ * reviewer needs to know about even when required mode is not
+ * engaged.
+ */
+export interface ScopedProjection {
+  mode: RailScopeMode;
+  /**
+   * All changed paths that live under any
+   * `packages/ds-{framework}/src/components/**` tree. Subset of
+   * the full git-range diff; the rest goes into
+   * `nonGeneratedChangedPaths`.
+   */
+  changedGeneratedPaths: readonly string[];
+  /**
+   * Changed paths NOT under generated-tree roots and NOT in the
+   * exclude list (e.g. tmp/, dist/, the manifest itself). Often
+   * contracts, codegen sources, validation configs — the PR
+   * context that explains WHY the generated tree changed.
+   * Capped/truncated in the markdown projection.
+   */
+  nonGeneratedChangedPaths: readonly string[];
+  /**
+   * Changed generated paths that could NOT be reconciled with
+   * any manifest group. See doc above — does not itself fail
+   * the rail; reviewer-visible surface only.
+   */
+  unmatchedGeneratedPaths: readonly string[];
+  /**
+   * Artifact groups whose `files[]` intersects
+   * `changedGeneratedPaths`. Each group carries the manifest
+   * digests AND the joined admission entries.
+   */
+  matchedGroups: readonly ScopedArtifactGroup[];
+}
+
 export interface RailReport {
   timestamp: string;
   scope: "workspace";
@@ -595,6 +685,13 @@ export interface RailReport {
    * answers only by walking every framework and filtering.
    */
   componentsIndex?: ComponentAdmissionIndex;
+  /**
+   * Reviewer-projection of the full admission report down to the
+   * artifact groups implicated by a git range. Present only when
+   * `--scope-to-git-range` was passed; absent in workspace mode.
+   * The rail still admits the full workspace in either mode.
+   */
+  scopedProjection?: ScopedProjection;
   frameworks: Record<FrameworkId, FrameworkValidationResult>;
   knownGaps: string[];
   overall: "pass" | "fail";

@@ -231,3 +231,147 @@ describe("renderMarkdownReport", () => {
     expect(md).toContain("| OnlyOnReact | pass [pkg] | — | — | — | — |");
   });
 });
+
+describe("renderMarkdownReport scoped projection section", () => {
+  it("omits the section when scopedProjection is absent", () => {
+    const md = renderMarkdownReport(baseReport());
+    expect(md).not.toContain("## Changed artifact scope");
+  });
+
+  it("renders the doctrine sentence as the first prose line of the section", () => {
+    const r = baseReport();
+    r.scopedProjection = {
+      mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
+      changedGeneratedPaths: [],
+      nonGeneratedChangedPaths: [],
+      unmatchedGeneratedPaths: [],
+      matchedGroups: [],
+    };
+    const md = renderMarkdownReport(r);
+    expect(md).toContain("## Changed artifact scope");
+    expect(md).toContain(
+      "Reviewer projection over the full admission report below. The rail still admitted the full workspace.",
+    );
+  });
+
+  it("renders matched groups as a sorted table with admission cell", () => {
+    const r = baseReport();
+    r.scopedProjection = {
+      mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
+      changedGeneratedPaths: [
+        "packages/ds-react/src/components/Button/Button.tsx",
+        "packages/ds-lit/src/components/Button/Button.ts",
+      ],
+      nonGeneratedChangedPaths: [],
+      unmatchedGeneratedPaths: [],
+      matchedGroups: [
+        {
+          framework: "lit",
+          component: "Button",
+          files: [
+            {
+              path: "packages/ds-lit/src/components/Button/Button.ts",
+              sha256: "0".repeat(64),
+            },
+          ],
+          admission: [
+            {
+              check: "typecheck",
+              command: "tsc",
+              status: "pass",
+              coverage: "covered_by_package_check",
+            },
+            {
+              check: "templateTypecheck",
+              command: "lit-analyzer",
+              status: "pass",
+              coverage: "covered_by_direct_template_check",
+              knownRuleNarrowings: ["no-incompatible-type-binding"],
+            },
+          ],
+        },
+        {
+          framework: "react",
+          component: "Button",
+          files: [
+            {
+              path: "packages/ds-react/src/components/Button/Button.tsx",
+              sha256: "0".repeat(64),
+            },
+          ],
+          admission: [
+            {
+              check: "typecheck",
+              command: "tsc",
+              status: "pass",
+              coverage: "covered_by_package_check",
+            },
+          ],
+        },
+      ],
+    };
+    const md = renderMarkdownReport(r);
+    // react comes before lit because of FRAMEWORK_RANK ordering.
+    const reactIdx = md.indexOf("| Button | react | 1 | pass [pkg] |");
+    const litIdx = md.indexOf(
+      "| Button | lit | 1 | pass [pkg+tpl] (narrowings: no-incompatible-type-binding) |",
+    );
+    expect(reactIdx).toBeGreaterThan(0);
+    expect(litIdx).toBeGreaterThan(reactIdx);
+  });
+
+  it("renders unmatched generated paths with the required-mode hand-off note", () => {
+    const r = baseReport();
+    r.scopedProjection = {
+      mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
+      changedGeneratedPaths: [
+        "packages/ds-react/src/components/Ghost/Ghost.tsx",
+      ],
+      nonGeneratedChangedPaths: [],
+      unmatchedGeneratedPaths: [
+        "packages/ds-react/src/components/Ghost/Ghost.tsx",
+      ],
+      matchedGroups: [],
+    };
+    const md = renderMarkdownReport(r);
+    expect(md).toContain("### Unmatched generated paths");
+    expect(md).toContain(
+      "required-mode diagnostics are the authoritative failure surface",
+    );
+    expect(md).toContain(
+      "- `packages/ds-react/src/components/Ghost/Ghost.tsx`",
+    );
+  });
+
+  it("renders non-generated changed paths as context", () => {
+    const r = baseReport();
+    r.scopedProjection = {
+      mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
+      changedGeneratedPaths: [],
+      nonGeneratedChangedPaths: [
+        "packages/ds-contracts/Button.contract.json",
+      ],
+      unmatchedGeneratedPaths: [],
+      matchedGroups: [],
+    };
+    const md = renderMarkdownReport(r);
+    expect(md).toContain("### Non-generated changed paths");
+    expect(md).toContain("- `packages/ds-contracts/Button.contract.json`");
+  });
+
+  it("renders BEFORE the per-component index when both are present", () => {
+    const r = baseReport();
+    r.scopedProjection = {
+      mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
+      changedGeneratedPaths: [],
+      nonGeneratedChangedPaths: [],
+      unmatchedGeneratedPaths: [],
+      matchedGroups: [],
+    };
+    const md = renderMarkdownReport(r);
+    const scopeIdx = md.indexOf("## Changed artifact scope");
+    const componentIdx = md.indexOf("## Per-component admission index");
+    expect(scopeIdx).toBeGreaterThan(0);
+    expect(componentIdx).toBeGreaterThan(scopeIdx);
+  });
+});

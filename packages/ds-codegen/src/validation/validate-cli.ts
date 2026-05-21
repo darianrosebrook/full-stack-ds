@@ -23,11 +23,22 @@
  *     code rather than prose. Without this flag the rail keeps its
  *     legacy fallback behavior: missing/mismatched manifests
  *     downgrade gracefully to artifactSelection: "none".
+ *
+ *   --scope-to-git-range <range>
+ *     (CODEGEN-RAIL-CHANGED-ARTIFACT-SCOPE-01) Add a reviewer
+ *     projection to the report scoped to artifact groups whose
+ *     files intersect the given git range (e.g.
+ *     `origin/main...HEAD`). This DOES NOT change what the rail
+ *     checks — full-workspace admission still runs. The flag only
+ *     adds a `scopedProjection` field to the report and a
+ *     "Changed artifact scope" section to the markdown output.
+ *     Reviewer ergonomic, NOT a reduced gate.
  */
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { buildComponentIndex } from "./component-index.js";
+import { projectGitRange } from "./git-range-scope.js";
 import { renderMarkdownReport } from "./markdown-report.js";
 import { runValidationPlan } from "./run-command.js";
 import type {
@@ -69,11 +80,17 @@ async function main(): Promise<void> {
   const requireArtifactManifest = process.argv.includes(
     "--require-artifact-manifest",
   );
+  const scopeToGitRange = parseScopeToGitRangeArg(process.argv);
 
   process.stderr.write("[validate:generated] starting framework-admission rail\n");
   if (requireArtifactManifest) {
     process.stderr.write(
       "[validate:generated] mode: required (--require-artifact-manifest)\n",
+    );
+  }
+  if (scopeToGitRange) {
+    process.stderr.write(
+      `[validate:generated] scope projection: git range \`${scopeToGitRange}\` (rail still admits full workspace)\n`,
     );
   }
 
@@ -223,6 +240,33 @@ async function main(): Promise<void> {
     results as Record<FrameworkId, FrameworkValidationResult>,
   );
 
+  // Project the full-workspace admission report down to the
+  // artifact groups intersecting the requested git range
+  // (CODEGEN-RAIL-CHANGED-ARTIFACT-SCOPE-01). Read-only
+  // projection — the rail's overall verdict is independent of
+  // this surface. Only computed when --scope-to-git-range was
+  // passed AND a manifest is available to project against;
+  // without a manifest there is no artifact-group universe to
+  // intersect with.
+  const scopedProjection =
+    scopeToGitRange && manifest
+      ? projectGitRange({
+          rangeNotation: scopeToGitRange,
+          workspaceRoot: cwd,
+          manifest,
+          results: results as Record<FrameworkId, FrameworkValidationResult>,
+        })
+      : undefined;
+  if (scopedProjection) {
+    process.stderr.write(
+      `[validate:generated] scope counts: ${scopedProjection.matchedGroups.length} matched group(s), ${scopedProjection.changedGeneratedPaths.length} changed generated file(s), ${scopedProjection.unmatchedGeneratedPaths.length} unmatched, ${scopedProjection.nonGeneratedChangedPaths.length} non-generated\n`,
+    );
+  } else if (scopeToGitRange && !manifest) {
+    process.stderr.write(
+      "[validate:generated] WARNING: --scope-to-git-range requested but no manifest is available; skipping projection\n",
+    );
+  }
+
   const frameworksPass = PLANS.every(
     (plan) => results[plan.framework]?.status === "pass",
   );
@@ -244,6 +288,7 @@ async function main(): Promise<void> {
       ? { requiredModeDiagnostics: requiredModeDiagnostics ?? [] }
       : {}),
     ...(componentsIndex ? { componentsIndex } : {}),
+    ...(scopedProjection ? { scopedProjection } : {}),
     frameworks: results as Record<FrameworkId, FrameworkValidationResult>,
     knownGaps,
     overall,
@@ -269,6 +314,28 @@ async function main(): Promise<void> {
   process.stdout.write("\n");
 
   process.exit(overall === "pass" ? 0 : 1);
+}
+
+/**
+ * Parse `--scope-to-git-range <range>` from argv. Accepts either
+ * `--scope-to-git-range origin/main...HEAD` (two argv elements)
+ * or `--scope-to-git-range=origin/main...HEAD` (one). Returns the
+ * range string, or undefined when the flag is absent.
+ */
+function parseScopeToGitRangeArg(argv: readonly string[]): string | undefined {
+  const FLAG = "--scope-to-git-range";
+  for (let i = 0; i < argv.length; i += 1) {
+    const a = argv[i]!;
+    if (a === FLAG) {
+      const next = argv[i + 1];
+      if (next && !next.startsWith("--")) return next;
+      return undefined;
+    }
+    if (a.startsWith(`${FLAG}=`)) {
+      return a.slice(FLAG.length + 1);
+    }
+  }
+  return undefined;
 }
 
 /**
@@ -321,6 +388,17 @@ function writeHumanSummary(report: RailReport): void {
     w(
       `${fw.padEnd(9)}  ${r.status.padEnd(6)}  ${durationStr}  ${checks}  ${artifactStr}\n`,
     );
+  }
+  if (report.scopedProjection) {
+    const sp = report.scopedProjection;
+    w("\nChanged artifact scope (reviewer projection; rail still admitted full workspace):\n");
+    if (sp.mode.kind === "git_range") {
+      w(`  git range: ${sp.mode.rangeNotation}\n`);
+    }
+    w(`  matched groups: ${sp.matchedGroups.length}\n`);
+    w(`  changed generated files: ${sp.changedGeneratedPaths.length}\n`);
+    w(`  unmatched generated paths: ${sp.unmatchedGeneratedPaths.length}\n`);
+    w(`  non-generated changed paths: ${sp.nonGeneratedChangedPaths.length}\n`);
   }
   if (report.requiredModeDiagnostics && report.requiredModeDiagnostics.length > 0) {
     w("\nRequired-mode diagnostics:\n");

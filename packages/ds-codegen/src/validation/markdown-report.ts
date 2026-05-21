@@ -14,9 +14,12 @@
  * not what it asserts.
  */
 import type {
+  ArtifactAdmissionEntry,
   ComponentAdmissionRow,
   FrameworkId,
   RailReport,
+  ScopedArtifactGroup,
+  ScopedProjection,
 } from "./types.js";
 
 const HEADER_AUTHORITY_PREFIX =
@@ -90,6 +93,14 @@ export function renderMarkdownReport(report: RailReport): string {
   }
   lines.push("");
 
+  // Changed artifact scope (reviewer projection over full-rail
+  // evidence; rendered after the per-framework summary but
+  // BEFORE the full per-component index so reviewers see the
+  // PR-relevant subset first).
+  if (report.scopedProjection) {
+    appendScopedProjectionSection(lines, report.scopedProjection);
+  }
+
   // Per-component index.
   if (report.componentsIndex) {
     lines.push("## Per-component admission index");
@@ -147,6 +158,114 @@ export function renderMarkdownReport(report: RailReport): string {
   }
 
   return lines.join("\n");
+}
+
+/**
+ * Append the "Changed artifact scope" section to the rendered
+ * markdown. Doctrine sentence is the first prose line of the
+ * section: this is a reviewer projection over already-admitted
+ * evidence, NOT a reduced gate.
+ */
+function appendScopedProjectionSection(
+  lines: string[],
+  sp: ScopedProjection,
+): void {
+  lines.push("## Changed artifact scope");
+  lines.push("");
+  lines.push(
+    "Reviewer projection over the full admission report below. The rail still admitted the full workspace.",
+  );
+  lines.push("");
+  if (sp.mode.kind === "git_range") {
+    lines.push(`- Git range: \`${sp.mode.rangeNotation}\``);
+  }
+  lines.push(`- Matched artifact groups: ${sp.matchedGroups.length}`);
+  lines.push(`- Changed generated files: ${sp.changedGeneratedPaths.length}`);
+  lines.push(`- Unmatched generated paths: ${sp.unmatchedGeneratedPaths.length}`);
+  lines.push(
+    `- Non-generated changed paths: ${sp.nonGeneratedChangedPaths.length}`,
+  );
+  lines.push("");
+
+  if (sp.matchedGroups.length > 0) {
+    lines.push("| Component | Framework | Files | Admission |");
+    lines.push("| --- | --- | ---: | --- |");
+    const sorted = [...sp.matchedGroups].sort(compareScopedGroup);
+    for (const g of sorted) {
+      lines.push(
+        `| ${g.component} | ${g.framework} | ${g.files.length} | ${renderScopedAdmission(g.admission)} |`,
+      );
+    }
+    lines.push("");
+  }
+
+  if (sp.unmatchedGeneratedPaths.length > 0) {
+    lines.push("### Unmatched generated paths");
+    lines.push("");
+    lines.push(
+      "These paths appear in the git diff but were not in any artifact group; required-mode diagnostics are the authoritative failure surface for these.",
+    );
+    lines.push("");
+    const head = sp.unmatchedGeneratedPaths.slice(0, 10);
+    for (const p of head) lines.push(`- \`${p}\``);
+    if (sp.unmatchedGeneratedPaths.length > head.length) {
+      lines.push(
+        `- ... (${sp.unmatchedGeneratedPaths.length - head.length} more)`,
+      );
+    }
+    lines.push("");
+  }
+
+  if (sp.nonGeneratedChangedPaths.length > 0) {
+    lines.push("### Non-generated changed paths");
+    lines.push("");
+    lines.push(
+      "Context for why the generated tree changed (contracts, codegen, configs, etc.).",
+    );
+    lines.push("");
+    const head = sp.nonGeneratedChangedPaths.slice(0, 10);
+    for (const p of head) lines.push(`- \`${p}\``);
+    if (sp.nonGeneratedChangedPaths.length > head.length) {
+      lines.push(
+        `- ... (${sp.nonGeneratedChangedPaths.length - head.length} more)`,
+      );
+    }
+    lines.push("");
+  }
+}
+
+const FRAMEWORK_RANK: Record<FrameworkId, number> = {
+  react: 0,
+  vue: 1,
+  svelte: 2,
+  lit: 3,
+  angular: 4,
+};
+
+function compareScopedGroup(
+  a: ScopedArtifactGroup,
+  b: ScopedArtifactGroup,
+): number {
+  if (a.component !== b.component) return a.component.localeCompare(b.component);
+  return FRAMEWORK_RANK[a.framework] - FRAMEWORK_RANK[b.framework];
+}
+
+function renderScopedAdmission(
+  admission: readonly ArtifactAdmissionEntry[],
+): string {
+  if (admission.length === 0) return "not_admitted";
+  const anyFail = admission.some((a) => a.status === "fail");
+  const status = anyFail ? "fail" : "pass";
+  const abbrev = admission.map((a) => abbreviateCoverage(a.coverage)).join("+");
+  const narrowings = new Set<string>();
+  for (const a of admission) {
+    for (const n of a.knownRuleNarrowings ?? []) narrowings.add(n);
+  }
+  const narrowSuffix =
+    narrowings.size > 0
+      ? ` (narrowings: ${[...narrowings].join(", ")})`
+      : "";
+  return `${status} [${abbrev}]${narrowSuffix}`;
 }
 
 /** Render one cell of the per-component table. */
