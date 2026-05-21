@@ -1251,9 +1251,11 @@
             "feedback",
             "navigation",
             "overlay",
-            "media"
+            "media",
+            "content",
+            "layout"
           ],
-          "description": "Broad agent-facing grouping."
+          "description": "Broad agent-facing grouping. `content` for static or semi-static text/media containers (Blockquote, Postcard); `layout` for arrangement primitives (Field, List)."
         },
         "usageHints": {
           "type": "array",
