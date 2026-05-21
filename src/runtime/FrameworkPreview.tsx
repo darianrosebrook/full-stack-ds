@@ -11,6 +11,8 @@ interface FrameworkPreviewProps {
   componentName: string;
   componentSource: SourceFile;
   css?: SourceFile;
+  /** Global token CSS to inject before the per-component css. */
+  tokensCss?: string;
   demo: string;
   height?: number;
   interactive?: boolean;
@@ -29,6 +31,7 @@ export function FrameworkPreview({
   componentName,
   componentSource,
   css,
+  tokensCss,
   demo,
   height = 200,
   interactive = true,
@@ -39,13 +42,14 @@ export function FrameworkPreview({
 
   const html = useMemo(() => {
     const build = SHELL_BUILDERS[framework];
+    const combinedCss = [tokensCss, css?.code].filter(Boolean).join("\n");
     return build({
       componentName,
       componentSource: componentSource.code,
-      css: css?.code,
+      css: combinedCss || undefined,
       demo,
     });
-  }, [framework, componentName, componentSource.code, css?.code, demo]);
+  }, [framework, componentName, componentSource.code, css?.code, tokensCss, demo]);
 
   // Reset to loading whenever the iframe will reload (html changes drive srcDoc).
   useEffect(() => {

@@ -121,5 +121,6 @@ export interface Bundle {
   components: ComponentBundle[];
   primitives: PrimitiveBundle[];
   schema: unknown;
+  tokensCss: string;
   generatedAt: number;
 }

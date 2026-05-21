@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { ComponentBundle, Framework } from "../types/data";
 import type { Route } from "../router";
 import { buildHref } from "../router";
+import { bundle } from "../types/bundle";
 import { FrameworkPreview } from "../runtime/FrameworkPreview";
 import { CodeViewer } from "../components/CodeViewer";
 import { buildTraceIndex } from "../trace/buildTraceIndex";
@@ -122,6 +123,7 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
                   componentName={component.name}
                   componentSource={componentFile}
                   css={cssFile}
+                  tokensCss={bundle.tokensCss}
                   demo={demo}
                   height={280}
                 />

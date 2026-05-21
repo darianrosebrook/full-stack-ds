@@ -1,4 +1,5 @@
 import type { ComponentBundle } from "../../types/data";
+import { bundle } from "../../types/bundle";
 import { FrameworkPreview } from "../../runtime/FrameworkPreview";
 import { buildReactDemo } from "../../runtime/demos";
 
@@ -48,6 +49,7 @@ export function VariantsMatrix({ component }: VariantsMatrixProps) {
                     componentName={component.name}
                     componentSource={reactSource.component}
                     css={reactSource.css}
+                    tokensCss={bundle.tokensCss}
                     demo={buildReactDemo(component, props)}
                     height={120}
                     interactive={false}

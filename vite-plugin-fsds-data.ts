@@ -116,6 +116,14 @@ async function buildBundle(rootDir: string) {
   const schemaText = await safeRead(path.join(contractsDir, "component.contract.schema.json"));
   const schema = schemaText ? JSON.parse(schemaText) : null;
 
+  const tokensDir = path.join(contractsDir, "tokens");
+  const tokensCss = [
+    await safeRead(path.join(tokensDir, "designTokens.css")),
+    await safeRead(path.join(tokensDir, "vars.css")),
+  ]
+    .filter((s): s is string => Boolean(s))
+    .join("\n");
+
   const components: ComponentBundle[] = [];
   for (const file of contractFiles) {
     const full = path.join(contractsDir, file);
@@ -155,7 +163,7 @@ async function buildBundle(rootDir: string) {
     },
   ];
 
-  return { components, primitives, schema, generatedAt: Date.now() };
+  return { components, primitives, schema, tokensCss, generatedAt: Date.now() };
 }
 
 export default function fsdsDataPlugin(): Plugin {

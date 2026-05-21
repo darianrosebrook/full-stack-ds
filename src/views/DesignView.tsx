@@ -1,6 +1,7 @@
 import type { ComponentBundle } from "../types/data";
 import type { Route } from "../router";
 import { buildHref } from "../router";
+import { bundle } from "../types/bundle";
 import { Anatomy } from "./sections/Anatomy";
 import { PropsTable } from "./sections/PropsTable";
 import { VariantsMatrix } from "./sections/VariantsMatrix";
@@ -23,6 +24,7 @@ export function DesignView({ component }: DesignViewProps) {
       componentName={component.name}
       componentSource={reactSource.component}
       css={reactSource.css}
+      tokensCss={bundle.tokensCss}
       demo={buildReactDemo(component)}
       height={260}
     />
