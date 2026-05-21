@@ -10,8 +10,18 @@ import { describe, expect, it } from "vitest";
 import { renderMarkdownReport } from "./markdown-report.js";
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
+  type EmitterSourceSet,
+  type FrameworkId,
   type RailReport,
 } from "./types.js";
+
+const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
+  react: { framework: "react", sources: [] },
+  vue: { framework: "vue", sources: [] },
+  svelte: { framework: "svelte", sources: [] },
+  lit: { framework: "lit", sources: [] },
+  angular: { framework: "angular", sources: [] },
+};
 
 function baseReport(): RailReport {
   return {
@@ -21,6 +31,7 @@ function baseReport(): RailReport {
     artifactManifest: {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
           framework: "react",
@@ -127,7 +138,7 @@ describe("renderMarkdownReport", () => {
   it("includes the verbatim 'JSON is canonical' header line", () => {
     const md = renderMarkdownReport(baseReport());
     expect(md).toContain(
-      "> Derived from RailReport at 2026-05-21T00:00:00.000Z; manifest schemaVersion v3. The JSON is canonical.",
+      "> Derived from RailReport at 2026-05-21T00:00:00.000Z; manifest schemaVersion v4. The JSON is canonical.",
     );
   });
 
@@ -137,6 +148,28 @@ describe("renderMarkdownReport", () => {
     expect(md).toContain("- Scope: workspace");
     expect(md).toContain("- Artifact selection: by_manifest");
     expect(md).toContain("- Required-mode invocation: yes");
+  });
+
+  it("renders the per-framework emitter provenance section with source counts", () => {
+    const r = baseReport();
+    r.artifactManifest!.emitterSourceSets = {
+      react: {
+        framework: "react",
+        sources: [
+          { path: "packages/ds-codegen/src/cli.ts", sha256: "0".repeat(64) },
+          { path: "packages/ds-codegen/src/ir.ts", sha256: "0".repeat(64) },
+        ],
+      },
+      vue: { framework: "vue", sources: [] },
+      svelte: { framework: "svelte", sources: [] },
+      lit: { framework: "lit", sources: [] },
+      angular: { framework: "angular", sources: [] },
+    };
+    const md = renderMarkdownReport(r);
+    expect(md).toContain("## Per-framework emitter provenance");
+    expect(md).toContain("RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_");
+    expect(md).toContain("| react | 2 |");
+    expect(md).toContain("| vue | 0 |");
   });
 
   it("renders the per-framework summary table with all five frameworks", () => {

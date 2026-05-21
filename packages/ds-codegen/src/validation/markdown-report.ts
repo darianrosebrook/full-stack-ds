@@ -93,6 +93,31 @@ export function renderMarkdownReport(report: RailReport): string {
   }
   lines.push("");
 
+  // Per-framework emitter source set summary
+  // (CODEGEN-RAIL-EMITTER-PROVENANCE-01). Cites the size of each
+  // framework's declared material source set so a reader knows
+  // how much surface required-mode is verifying. Drift, when it
+  // occurs, is rendered in the Required-mode diagnostics section
+  // below by the existing diagnostic-rendering loop.
+  if (report.artifactManifest?.emitterSourceSets) {
+    const sets = report.artifactManifest.emitterSourceSets;
+    const present = FRAMEWORKS_IN_ORDER.filter((fw) => sets[fw]);
+    if (present.length > 0) {
+      lines.push("## Per-framework emitter provenance");
+      lines.push("");
+      lines.push(
+        "Bounded material codegen source set, per framework. Required mode rejects drift between these recorded bytes and the on-disk source files via `RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_*` diagnostics.",
+      );
+      lines.push("");
+      lines.push("| Framework | Source files |");
+      lines.push("|---|---:|");
+      for (const fw of present) {
+        lines.push(`| ${fw} | ${sets[fw]!.sources.length} |`);
+      }
+      lines.push("");
+    }
+  }
+
   // Changed artifact scope (reviewer projection over full-rail
   // evidence; rendered after the per-framework summary but
   // BEFORE the full per-component index so reviewers see the

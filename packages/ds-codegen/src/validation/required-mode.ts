@@ -13,7 +13,7 @@
  * for the caller (validate-cli) to act on according to the
  * invocation mode.
  *
- * Eight distinct failure modes are surfaced as distinct codes so
+ * Ten distinct failure modes are surfaced as distinct codes so
  * CI pipelines can grep by code:
  *
  *   1. RAIL_REQUIRE_MANIFEST_MISSING
@@ -52,11 +52,21 @@
  *      contract is on disk but its sha256 has drifted — the
  *      contract was edited without a regenerate.
  *
+ *   9. RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_MISSING
+ *      (CODEGEN-RAIL-EMITTER-PROVENANCE-01) An emitter source
+ *      file named by the manifest's emitterSourceSets no longer
+ *      exists on disk.
+ *
+ *  10. RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_HASH_MISMATCH
+ *      (CODEGEN-RAIL-EMITTER-PROVENANCE-01) An emitter source
+ *      file is on disk but its sha256 has drifted — the codegen
+ *      module was edited without a regenerate.
+ *
  * Hash and path checks run together; one failure mode does not
  * suppress the others (unless MISSING / MALFORMED / SCHEMA_MISMATCH
- * already short-circuited). Contract integrity is checked
- * independently of output integrity so a closure note can cite
- * which side of the source→artifact attribution drifted.
+ * already short-circuited). Contract, emitter, and output
+ * integrity are checked independently so a closure note can cite
+ * which layer of the source→artifact attribution drifted.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -261,6 +271,58 @@ export function verifyManifestAgainstDisk(
     });
   }
 
+  // Check 5: emitter source integrity. Each framework's declared
+  // source set must still exist on disk with matching sha256.
+  // Reported independently of contract/output drift because an
+  // emitter edit can leave both contract and output bytes
+  // untouched on disk yet produce stale attribution. The
+  // diagnostic names the specific drifted file so a reviewer can
+  // judge whether re-running codegen would produce a textual
+  // change in the committed output.
+  //
+  // Dedupe by path across framework sets: a single file like
+  // `frameworks/react/hook-source.ts` is referenced by react,
+  // vue, svelte, and angular sets. If that file drifts, it
+  // should surface ONCE in the diagnostic, not four times.
+  const emitterMissing = new Set<string>();
+  const emitterMismatch = new Set<string>();
+  for (const set of Object.values(manifest.emitterSourceSets)) {
+    for (const src of set.sources) {
+      const abs = path.join(workspaceRoot, src.path);
+      if (!fs.existsSync(abs)) {
+        emitterMissing.add(src.path);
+        continue;
+      }
+      const onDiskDigest = sha256OfFile(abs);
+      if (onDiskDigest !== src.sha256) {
+        emitterMismatch.add(src.path);
+      }
+    }
+  }
+  if (emitterMissing.size > 0) {
+    const sorted = [...emitterMissing].sort();
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_MISSING",
+      message:
+        `${sorted.length} declared emitter source file(s) named by the manifest are missing on disk. ` +
+        "Most common cause: an emitter helper was renamed or removed without a regenerate. " +
+        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+      paths: sorted,
+    });
+  }
+  if (emitterMismatch.size > 0) {
+    const sorted = [...emitterMismatch].sort();
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_HASH_MISMATCH",
+      message:
+        `${sorted.length} emitter source file(s) have on-disk bytes that do not match the manifest's recorded digest. ` +
+        "The codegen module was edited after the generated output was produced; the manifest's attribution is stale until regenerate. " +
+        "NOT itself a code-correctness assertion — the new emitter may produce byte-identical output — but the rail's evidence is honest only after regenerate. " +
+        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+      paths: sorted,
+    });
+  }
+
   return diagnostics;
 }
 
@@ -380,7 +442,8 @@ export function readManifestForVerification(
   // structurally broken producer write, distinct from a
   // schemaVersion mismatch — surface it as MALFORMED so CI can
   // tell "wrote v3 incorrectly" from "wrote v2".
-  const groups = (parsed as EmissionManifest).groups;
+  const manifestParsed = parsed as EmissionManifest;
+  const groups = manifestParsed.groups;
   for (let i = 0; i < groups.length; i += 1) {
     const g = groups[i] as Partial<EmissionManifest["groups"][number]>;
     if (
@@ -397,5 +460,33 @@ export function readManifestForVerification(
       };
     }
   }
-  return { kind: "ok", manifest: parsed as EmissionManifest };
+  // v4 invariant: top-level `emitterSourceSets` must be an
+  // object with one EmitterSourceSet per recorded framework
+  // (each set carries its own `sources[]`). A v4-stamped
+  // manifest without it is structurally broken — same MALFORMED
+  // surfacing as the missing-contract case above.
+  if (
+    !manifestParsed.emitterSourceSets ||
+    typeof manifestParsed.emitterSourceSets !== "object"
+  ) {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`emitterSourceSets\` is missing or not an object`,
+    };
+  }
+  for (const [framework, set] of Object.entries(
+    manifestParsed.emitterSourceSets,
+  )) {
+    if (
+      !set ||
+      typeof set !== "object" ||
+      !Array.isArray((set as EmissionManifest["emitterSourceSets"][FrameworkId]).sources)
+    ) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources is missing or not an array`,
+      };
+    }
+  }
+  return { kind: "ok", manifest: manifestParsed };
 }

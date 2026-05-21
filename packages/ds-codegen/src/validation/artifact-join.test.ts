@@ -21,6 +21,7 @@ import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
   type EmittedArtifactGroup,
+  type EmitterSourceSet,
   type FrameworkId,
   type FrameworkValidationPlan,
   type FrameworkValidationResult,
@@ -28,6 +29,14 @@ import {
 } from "./types.js";
 
 const STUB_DIGEST = "0".repeat(64);
+
+const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
+  react: { framework: "react", sources: [] },
+  vue: { framework: "vue", sources: [] },
+  svelte: { framework: "svelte", sources: [] },
+  lit: { framework: "lit", sources: [] },
+  angular: { framework: "angular", sources: [] },
+};
 
 function makeRun(
   check: string,
@@ -57,6 +66,7 @@ function mkManifest(groups: EmittedArtifactGroup[]): EmissionManifest {
   return {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: "2026-05-20T00:00:00.000Z",
+    emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
     groups,
   };
 }

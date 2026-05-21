@@ -50,11 +50,101 @@ import {
   type EmissionManifest,
   type EmittedArtifactFile,
   type EmittedArtifactGroup,
+  type EmitterSourceFile,
+  type EmitterSourceSet,
+  type FrameworkId,
 } from "./validation/types.js";
 import {
   EMISSION_MANIFEST_RELATIVE_PATH,
   emissionManifestAbsolutePath,
 } from "./validation/emission-manifest-path.js";
+
+/**
+ * Static declaration of the BOUNDED MATERIAL SOURCE SET per
+ * framework (CODEGEN-RAIL-EMITTER-PROVENANCE-01). "Bounded": every
+ * file is named explicitly here, not derived at runtime. "Material":
+ * inclusion means "this file's bytes can change what THIS framework
+ * emits"; validation, reporting, and other non-emit code is
+ * deliberately excluded.
+ *
+ * Authority for this set lives in this file alone. When you add a
+ * new emitter helper, you MUST add it here (and to the right
+ * framework subset) for the rail's emitter-provenance evidence to
+ * stay honest. If you don't, the manifest will silently under-claim
+ * coverage and a contributor could edit the helper without
+ * EMITTER_SOURCE_HASH_MISMATCH firing.
+ *
+ * Cross-framework borrowing: `frameworks/react/hook-source.ts` is
+ * imported by vue/svelte/angular emitters as a shared substrate, so
+ * it appears in those framework sets too (even though it lives
+ * under react/). Same logic for `non-react-types.ts`. Bytes are
+ * identical regardless of which set claims them.
+ */
+const SHARED_EMITTER_SOURCES: readonly string[] = [
+  "packages/ds-codegen/src/cli.ts",
+  "packages/ds-codegen/src/contract.ts",
+  "packages/ds-codegen/src/css.ts",
+  "packages/ds-codegen/src/emitter.ts",
+  "packages/ds-codegen/src/ir.ts",
+  "packages/ds-codegen/src/preserve.ts",
+  "packages/ds-codegen/src/registry.ts",
+  "packages/ds-codegen/src/semantics.ts",
+  "packages/ds-codegen/src/test-plan.ts",
+];
+
+const FRAMEWORK_EMITTER_SOURCES: Record<FrameworkId, readonly string[]> = {
+  react: [
+    "packages/ds-codegen/src/frameworks/react/component-source.ts",
+    "packages/ds-codegen/src/frameworks/react/factory.ts",
+    "packages/ds-codegen/src/frameworks/react/hook-source.ts",
+    "packages/ds-codegen/src/frameworks/react/surface-emit.ts",
+    "packages/ds-codegen/src/frameworks/react/surface-tests.ts",
+    "packages/ds-codegen/src/frameworks/react/tests.ts",
+  ],
+  vue: [
+    "packages/ds-codegen/src/frameworks/vue/barrel.ts",
+    "packages/ds-codegen/src/frameworks/vue/component-source.ts",
+    "packages/ds-codegen/src/frameworks/vue/factory.ts",
+    "packages/ds-codegen/src/frameworks/vue/hook-source.ts",
+    "packages/ds-codegen/src/frameworks/vue/surface-emit.ts",
+    "packages/ds-codegen/src/frameworks/vue/surface-tests.ts",
+    "packages/ds-codegen/src/frameworks/vue/tests.ts",
+    "packages/ds-codegen/src/non-react-types.ts",
+    "packages/ds-codegen/src/frameworks/react/hook-source.ts",
+  ],
+  svelte: [
+    "packages/ds-codegen/src/frameworks/svelte/barrel.ts",
+    "packages/ds-codegen/src/frameworks/svelte/component-source.ts",
+    "packages/ds-codegen/src/frameworks/svelte/factory.ts",
+    "packages/ds-codegen/src/frameworks/svelte/hook-source.ts",
+    "packages/ds-codegen/src/frameworks/svelte/surface-emit.ts",
+    "packages/ds-codegen/src/frameworks/svelte/surface-tests.ts",
+    "packages/ds-codegen/src/frameworks/svelte/tests.ts",
+    "packages/ds-codegen/src/non-react-types.ts",
+    "packages/ds-codegen/src/frameworks/react/hook-source.ts",
+  ],
+  angular: [
+    "packages/ds-codegen/src/frameworks/angular/barrel.ts",
+    "packages/ds-codegen/src/frameworks/angular/component-source.ts",
+    "packages/ds-codegen/src/frameworks/angular/factory.ts",
+    "packages/ds-codegen/src/frameworks/angular/hook-source.ts",
+    "packages/ds-codegen/src/frameworks/angular/surface-emit.ts",
+    "packages/ds-codegen/src/frameworks/angular/surface-tests.ts",
+    "packages/ds-codegen/src/frameworks/angular/tests.ts",
+    "packages/ds-codegen/src/non-react-types.ts",
+    "packages/ds-codegen/src/frameworks/react/hook-source.ts",
+  ],
+  lit: [
+    "packages/ds-codegen/src/frameworks/lit/barrel.ts",
+    "packages/ds-codegen/src/frameworks/lit/component-source.ts",
+    "packages/ds-codegen/src/frameworks/lit/factory.ts",
+    "packages/ds-codegen/src/frameworks/lit/hook-source.ts",
+    "packages/ds-codegen/src/frameworks/lit/surface-emit.ts",
+    "packages/ds-codegen/src/frameworks/lit/surface-tests.ts",
+    "packages/ds-codegen/src/frameworks/lit/tests.ts",
+    "packages/ds-codegen/src/non-react-types.ts",
+  ],
+};
 
 /**
  * One contract's parsed value paired with the source-side
@@ -434,18 +524,60 @@ function sha256FromDisk(absPath: string): string {
  * (required rail). Never silently degrade.
  */
 function writeEmissionManifest(groups: EmittedArtifactGroup[]): void {
+  const emitterSourceSets = computeEmitterSourceSets();
   const manifest: EmissionManifest = {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: new Date().toISOString(),
+    emitterSourceSets,
     groups,
   };
   const absPath = emissionManifestAbsolutePath(cwd);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, `${JSON.stringify(manifest, null, 2)}\n`);
   const fileCount = groups.reduce((acc, g) => acc + g.files.length, 0);
-  console.log(
-    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} group(s), ${fileCount} file(s), schema v${EMISSION_MANIFEST_SCHEMA_VERSION})`,
+  const emitterSourceCount = Object.values(emitterSourceSets).reduce(
+    (acc, set) => acc + set.sources.length,
+    0,
   );
+  console.log(
+    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} group(s), ${fileCount} file(s), ${emitterSourceCount} emitter source(s), schema v${EMISSION_MANIFEST_SCHEMA_VERSION})`,
+  );
+}
+
+/**
+ * Build the per-framework EmitterSourceSet map by reading each
+ * declared source file from disk and hashing its bytes
+ * (CODEGEN-RAIL-EMITTER-PROVENANCE-01). Sources are sorted by
+ * path within each set so manifest diffs are stable across runs.
+ *
+ * Throws when a declared source file is missing on disk — that's
+ * a codegen build/test invariant failure (the static set is wrong
+ * for the current tree), not a runtime user condition, so the
+ * loud failure is the right behavior.
+ */
+function computeEmitterSourceSets(): Record<FrameworkId, EmitterSourceSet> {
+  const out: Partial<Record<FrameworkId, EmitterSourceSet>> = {};
+  for (const framework of Object.keys(FRAMEWORK_EMITTER_SOURCES) as FrameworkId[]) {
+    const declared = [
+      ...SHARED_EMITTER_SOURCES,
+      ...FRAMEWORK_EMITTER_SOURCES[framework],
+    ];
+    // Dedupe (a cross-framework borrow could in theory collide
+    // with shared) and sort by path for stable manifest diffs.
+    const uniquePaths = Array.from(new Set(declared)).sort();
+    const sources: EmitterSourceFile[] = uniquePaths.map((relPath) => {
+      const abs = path.join(cwd, relPath);
+      if (!fs.existsSync(abs)) {
+        throw new Error(
+          `Declared emitter source missing on disk: ${relPath}. ` +
+            "Update FRAMEWORK_EMITTER_SOURCES / SHARED_EMITTER_SOURCES in cli.ts.",
+        );
+      }
+      return { path: relPath, sha256: sha256FromDisk(abs) };
+    });
+    out[framework] = { framework, sources };
+  }
+  return out as Record<FrameworkId, EmitterSourceSet>;
 }
 
 type WriteResolution =

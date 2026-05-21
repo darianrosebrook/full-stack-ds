@@ -11,12 +11,21 @@ import { projectGitRange } from "./git-range-scope.js";
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
+  type EmitterSourceSet,
   type FrameworkId,
   type FrameworkValidationResult,
   type PlanCommandRun,
 } from "./types.js";
 
 const STUB_DIGEST = "0".repeat(64);
+
+const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
+  react: { framework: "react", sources: [] },
+  vue: { framework: "vue", sources: [] },
+  svelte: { framework: "svelte", sources: [] },
+  lit: { framework: "lit", sources: [] },
+  angular: { framework: "angular", sources: [] },
+};
 
 function makeRun(check: string): PlanCommandRun {
   return { check, command: check, durationMs: 1, status: "pass", diagnostics: [] };
@@ -26,6 +35,7 @@ function manifestWith(paths: { framework: FrameworkId; component: string; paths:
   return {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: "2026-05-21T00:00:00.000Z",
+    emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
     groups: paths.map((p) => ({
       framework: p.framework,
       component: p.component,

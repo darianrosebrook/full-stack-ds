@@ -24,7 +24,17 @@ import {
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
+  type EmitterSourceSet,
+  type FrameworkId,
 } from "./types.js";
+
+const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
+  react: { framework: "react", sources: [] },
+  vue: { framework: "vue", sources: [] },
+  svelte: { framework: "svelte", sources: [] },
+  lit: { framework: "lit", sources: [] },
+  angular: { framework: "angular", sources: [] },
+};
 
 function sha256OfString(s: string): string {
   return crypto.createHash("sha256").update(Buffer.from(s, "utf8")).digest("hex");
@@ -75,6 +85,7 @@ function makeFixture(): Fixture {
       return {
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "2026-05-21T00:00:00.000Z",
+        emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
         groups: [
           {
             framework: "react",
@@ -190,6 +201,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
           framework: "react",
@@ -279,6 +291,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
           framework: "react",
@@ -363,6 +376,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
           framework: "react",
@@ -388,6 +402,113 @@ describe("verifyManifestAgainstDisk", () => {
     );
     expect(cd).toHaveLength(1);
     expect(cd[0]!.paths).toEqual([DEFAULT_CONTRACT_PATH]);
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_MISSING when an emitter source is gone", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    // Manifest claims an emitter source that's not on disk.
+    const manifest: EmissionManifest = {
+      ...m,
+      emitterSourceSets: {
+        ...EMPTY_EMITTER_SOURCE_SETS,
+        react: {
+          framework: "react",
+          sources: [
+            {
+              path: "packages/ds-codegen/src/never-existed.ts",
+              sha256: "0".repeat(64),
+            },
+          ],
+        },
+      },
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_MISSING",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.paths).toEqual([
+      "packages/ds-codegen/src/never-existed.ts",
+    ]);
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_HASH_MISMATCH on emitter byte drift", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    // Write an emitter source file on disk; record a bad
+    // digest in the manifest so the hash compare fails.
+    const emitterPath = "packages/ds-codegen/src/ir.ts";
+    fx.writeContractFile(emitterPath, "export const x = 1;\n");
+    const m = fx.manifestFor([fooPath]);
+    const manifest: EmissionManifest = {
+      ...m,
+      emitterSourceSets: {
+        ...EMPTY_EMITTER_SOURCE_SETS,
+        react: {
+          framework: "react",
+          sources: [
+            { path: emitterPath, sha256: "deadbeef".repeat(8) },
+          ],
+        },
+      },
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_HASH_MISMATCH",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.paths).toEqual([emitterPath]);
+    // Contract and output integrity untouched in this scenario.
+    const otherCodes = out
+      .map((d) => d.code)
+      .filter((c) => c.includes("HASH_MISMATCH") && !c.includes("EMITTER"));
+    expect(otherCodes).toEqual([]);
+  });
+
+  it("dedupes emitter diagnostics across framework sets sharing one source file", () => {
+    // Two framework sets (react + vue) both declare the same
+    // file (mirrors the cross-framework borrow of
+    // react/hook-source.ts). A drift on that file should fire
+    // ONCE with one path, not twice (one per claiming set).
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const sharedPath = "packages/ds-codegen/src/frameworks/react/hook-source.ts";
+    fx.writeContractFile(sharedPath, "export const x = 1;\n");
+    const m = fx.manifestFor([fooPath]);
+    const manifest: EmissionManifest = {
+      ...m,
+      emitterSourceSets: {
+        ...EMPTY_EMITTER_SOURCE_SETS,
+        react: {
+          framework: "react",
+          sources: [{ path: sharedPath, sha256: "deadbeef".repeat(8) }],
+        },
+        vue: {
+          framework: "vue",
+          sources: [{ path: sharedPath, sha256: "deadbeef".repeat(8) }],
+        },
+      },
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const cds = out.filter(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_HASH_MISMATCH",
+    );
+    expect(cds).toHaveLength(1);
+    expect(cds[0]!.paths).toEqual([sharedPath]);
   });
 
   it("contract drift is independent of output drift (both can co-occur cleanly)", () => {
@@ -422,6 +543,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
           framework: "react",
@@ -475,6 +597,7 @@ describe("readManifestForVerification", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [],
     };
     fs.writeFileSync(manifestPath, JSON.stringify(manifest));
@@ -528,8 +651,8 @@ describe("readManifestForVerification", () => {
     expect(out.kind).toBe("parse_error");
   });
 
-  it("returns parse_error when a v3 group is missing contract provenance", () => {
-    // Schema-stamped v3 but group lacks the required
+  it("returns parse_error when a v4 group is missing contract provenance", () => {
+    // Schema-stamped v4 but group lacks the required
     // `contract` field. Distinguished from SCHEMA_MISMATCH —
     // the producer wrote the right version but a structurally
     // incomplete body. CI grep on MALFORMED captures both this
@@ -539,6 +662,7 @@ describe("readManifestForVerification", () => {
       JSON.stringify({
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "x",
+        emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
         groups: [
           {
             framework: "react",
@@ -552,6 +676,66 @@ describe("readManifestForVerification", () => {
     expect(out.kind).toBe("parse_error");
     if (out.kind === "parse_error") {
       expect(out.message).toMatch(/contract provenance/);
+    }
+  });
+
+  it("returns parse_error when a v4 manifest is missing emitterSourceSets", () => {
+    // Schema-stamped v4 but the new top-level field is absent.
+    // Same MALFORMED surfacing as the v3-without-contract case;
+    // CI can grep on MALFORMED for both, message string carries
+    // the specific cause.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/emitterSourceSets/);
+    }
+  });
+
+  it("returns parse_error when a v4 emitterSourceSets entry has malformed sources", () => {
+    // The set object is present but `sources` is not an array.
+    // Catches a producer that wrote v4 with a broken inner
+    // shape — still MALFORMED, message names the offending key.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: { react: { framework: "react", sources: "nope" } },
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/emitterSourceSets\["react"\]/);
+    }
+  });
+
+  it("returns schema_mismatch when a v3 manifest is encountered (no compat bridge)", () => {
+    // v3 manifests now fall through SCHEMA_MISMATCH for the
+    // same reason v2 manifests did at the v2→v3 boundary:
+    // the manifest is gitignored runtime state, the migration
+    // is a regenerate, no compat shim.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: 3,
+        generatedAt: "x",
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("schema_mismatch");
+    if (out.kind === "schema_mismatch") {
+      expect(out.foundVersion).toBe(3);
     }
   });
 
