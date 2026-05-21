@@ -22,6 +22,7 @@ import {
   type EmissionManifest,
   type EmittedArtifactGroup,
   type EmitterSourceSet,
+  type EnvironmentProvenance,
   type FrameworkId,
   type FrameworkValidationPlan,
   type FrameworkValidationResult,
@@ -36,6 +37,12 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   svelte: { framework: "svelte", sources: [] },
   lit: { framework: "lit", sources: [] },
   angular: { framework: "angular", sources: [] },
+};
+
+const STUB_ENVIRONMENT: EnvironmentProvenance = {
+  nodeMajor: 22,
+  codegenPackageVersion: "1.0.0",
+  lockfile: { path: "pnpm-lock.yaml", sha256: STUB_DIGEST },
 };
 
 function makeRun(
@@ -66,6 +73,7 @@ function mkManifest(groups: EmittedArtifactGroup[]): EmissionManifest {
   return {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: "2026-05-20T00:00:00.000Z",
+    environment: STUB_ENVIRONMENT,
     emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
     groups,
   };

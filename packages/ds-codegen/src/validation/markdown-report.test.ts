@@ -11,6 +11,7 @@ import { renderMarkdownReport } from "./markdown-report.js";
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmitterSourceSet,
+  type EnvironmentProvenance,
   type FrameworkId,
   type RailReport,
 } from "./types.js";
@@ -23,6 +24,12 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   angular: { framework: "angular", sources: [] },
 };
 
+const STUB_ENVIRONMENT: EnvironmentProvenance = {
+  nodeMajor: 22,
+  codegenPackageVersion: "1.0.0",
+  lockfile: { path: "pnpm-lock.yaml", sha256: "0".repeat(64) },
+};
+
 function baseReport(): RailReport {
   return {
     timestamp: "2026-05-21T00:00:00.000Z",
@@ -31,6 +38,7 @@ function baseReport(): RailReport {
     artifactManifest: {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: STUB_ENVIRONMENT,
       emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
@@ -138,7 +146,7 @@ describe("renderMarkdownReport", () => {
   it("includes the verbatim 'JSON is canonical' header line", () => {
     const md = renderMarkdownReport(baseReport());
     expect(md).toContain(
-      "> Derived from RailReport at 2026-05-21T00:00:00.000Z; manifest schemaVersion v4. The JSON is canonical.",
+      "> Derived from RailReport at 2026-05-21T00:00:00.000Z; manifest schemaVersion v5. The JSON is canonical.",
     );
   });
 
@@ -148,6 +156,25 @@ describe("renderMarkdownReport", () => {
     expect(md).toContain("- Scope: workspace");
     expect(md).toContain("- Artifact selection: by_manifest");
     expect(md).toContain("- Required-mode invocation: yes");
+  });
+
+  it("renders the environment provenance section with all three sub-fields", () => {
+    const r = baseReport();
+    r.artifactManifest!.environment = {
+      nodeMajor: 22,
+      codegenPackageVersion: "1.2.3",
+      lockfile: {
+        path: "pnpm-lock.yaml",
+        sha256: "abcdef0123456789".padEnd(64, "0"),
+      },
+    };
+    const md = renderMarkdownReport(r);
+    expect(md).toContain("## Environment provenance");
+    expect(md).toContain("RAIL_REQUIRE_MANIFEST_NODE_MAJOR_MISMATCH");
+    expect(md).toContain("RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH");
+    expect(md).toContain("- Node major: `22`");
+    expect(md).toContain("- Codegen package version: `1.2.3`");
+    expect(md).toContain("- Lockfile: `pnpm-lock.yaml` (sha256 `abcdef012345`)");
   });
 
   it("renders the per-framework emitter provenance section with source counts", () => {

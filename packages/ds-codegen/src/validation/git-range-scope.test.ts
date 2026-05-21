@@ -12,6 +12,7 @@ import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
   type EmitterSourceSet,
+  type EnvironmentProvenance,
   type FrameworkId,
   type FrameworkValidationResult,
   type PlanCommandRun,
@@ -27,6 +28,12 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   angular: { framework: "angular", sources: [] },
 };
 
+const STUB_ENVIRONMENT: EnvironmentProvenance = {
+  nodeMajor: 22,
+  codegenPackageVersion: "1.0.0",
+  lockfile: { path: "pnpm-lock.yaml", sha256: STUB_DIGEST },
+};
+
 function makeRun(check: string): PlanCommandRun {
   return { check, command: check, durationMs: 1, status: "pass", diagnostics: [] };
 }
@@ -35,6 +42,7 @@ function manifestWith(paths: { framework: FrameworkId; component: string; paths:
   return {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: "2026-05-21T00:00:00.000Z",
+    environment: STUB_ENVIRONMENT,
     emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
     groups: paths.map((p) => ({
       framework: p.framework,

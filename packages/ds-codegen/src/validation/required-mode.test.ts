@@ -25,6 +25,7 @@ import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
   type EmitterSourceSet,
+  type EnvironmentProvenance,
   type FrameworkId,
 } from "./types.js";
 
@@ -74,6 +75,21 @@ const STUB_VALID_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   },
 };
 
+/**
+ * Reader-acceptable stub environment. Mirrors the producer's
+ * fingerprint: positive integer Node major, non-empty version
+ * string, lockfile with a digest-grammar-valid sha256. Verifier-
+ * only tests can use this without engaging environment integrity
+ * checks (those compare against the live process, so a stub
+ * digest will trigger LOCKFILE_HASH_MISMATCH unless tests
+ * separately write a matching lockfile).
+ */
+const STUB_VALID_ENVIRONMENT: EnvironmentProvenance = {
+  nodeMajor: 22,
+  codegenPackageVersion: "1.0.0",
+  lockfile: { path: "pnpm-lock.yaml", sha256: "a".repeat(64) },
+};
+
 function sha256OfString(s: string): string {
   return crypto.createHash("sha256").update(Buffer.from(s, "utf8")).digest("hex");
 }
@@ -94,6 +110,15 @@ interface Fixture {
   manifestFor: (paths: string[], contractPath?: string) => EmissionManifest;
   /** Override the manifest's recorded digest for a path (to simulate hash drift). */
   manifestWithBadDigest: (paths: string[], badPath: string) => EmissionManifest;
+  /**
+   * Build an EnvironmentProvenance matching the fixture's
+   * tmpdir state (live Node major + the synthetic lockfile +
+   * codegen package version `beforeEach` wrote). Verifier
+   * tests building inline manifests use this to avoid
+   * spurious environment-drift diagnostics on tests that
+   * aren't about environment.
+   */
+  liveEnvironment: () => EnvironmentProvenance;
 }
 
 function makeFixture(): Fixture {
@@ -120,9 +145,23 @@ function makeFixture(): Fixture {
           ? fs.readFileSync(contractAbs, "utf8")
           : "(absent)",
       );
+      // Build an environment that the verifier will accept
+      // against the live test process: live Node major, the
+      // codegen version that the test's beforeEach wrote into
+      // the tmpdir's package.json, and the digest of the
+      // synthetic lockfile that was also written there.
+      const lockfileAbs = path.join(workspaceRoot, "pnpm-lock.yaml");
+      const lockfileSha = fs.existsSync(lockfileAbs)
+        ? sha256OfString(fs.readFileSync(lockfileAbs, "utf8"))
+        : "0".repeat(64);
       return {
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "2026-05-21T00:00:00.000Z",
+        environment: {
+          nodeMajor: parseInt(process.versions.node.split(".")[0]!, 10),
+          codegenPackageVersion: "1.0.0",
+          lockfile: { path: "pnpm-lock.yaml", sha256: lockfileSha },
+        },
         emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
         groups: [
           {
@@ -153,6 +192,17 @@ function makeFixture(): Fixture {
         })),
       };
     },
+    liveEnvironment() {
+      const lockfileAbs = path.join(workspaceRoot, "pnpm-lock.yaml");
+      const lockfileSha = fs.existsSync(lockfileAbs)
+        ? sha256OfString(fs.readFileSync(lockfileAbs, "utf8"))
+        : "0".repeat(64);
+      return {
+        nodeMajor: parseInt(process.versions.node.split(".")[0]!, 10),
+        codegenPackageVersion: "1.0.0",
+        lockfile: { path: "pnpm-lock.yaml", sha256: lockfileSha },
+      };
+    },
   };
 }
 
@@ -166,6 +216,24 @@ describe("verifyManifestAgainstDisk", () => {
     // on tests that aren't about contract drift. Tests that
     // ARE about contract drift override or delete this file.
     fx.writeContractFile();
+    // Same idea for environment-provenance checks: write a
+    // synthetic lockfile and codegen package.json so
+    // LOCKFILE_MISSING / LOCKFILE_HASH_MISMATCH /
+    // CODEGEN_VERSION_MISMATCH do not fire on tests that
+    // aren't about environment drift. Tests that ARE about
+    // environment drift override or delete these files.
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, "pnpm-lock.yaml"),
+      "lockfileVersion: 9.0\npackages: {}\n",
+    );
+    fs.mkdirSync(
+      path.join(fx.workspaceRoot, "packages/ds-codegen"),
+      { recursive: true },
+    );
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, "packages/ds-codegen/package.json"),
+      JSON.stringify({ name: "@full-stack-ds/codegen", version: "1.0.0" }),
+    );
   });
   afterEach(() => {
     fx.cleanup();
@@ -239,6 +307,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: fx.liveEnvironment(),
       emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
@@ -329,6 +398,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: fx.liveEnvironment(),
       emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
@@ -414,6 +484,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: fx.liveEnvironment(),
       emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
@@ -549,6 +620,114 @@ describe("verifyManifestAgainstDisk", () => {
     expect(cds[0]!.paths).toEqual([sharedPath]);
   });
 
+  it("emits RAIL_REQUIRE_MANIFEST_NODE_MAJOR_MISMATCH on Node major drift", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    // Manifest claims a Node major that doesn't match the live
+    // process. Verifier rejects with overall fail.
+    const manifest: EmissionManifest = {
+      ...m,
+      environment: { ...m.environment, nodeMajor: 999 },
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_NODE_MAJOR_MISMATCH",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.message).toContain("Node major 999");
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH on package version drift", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    const manifest: EmissionManifest = {
+      ...m,
+      environment: { ...m.environment, codegenPackageVersion: "9.9.9" },
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.message).toContain("9.9.9");
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING when the manifest's lockfile is gone", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    // Delete the synthetic lockfile beforeEach() wrote.
+    fs.rmSync(path.join(fx.workspaceRoot, "pnpm-lock.yaml"));
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest: m },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.paths).toEqual(["pnpm-lock.yaml"]);
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH on lockfile drift", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    // Mutate the lockfile after the manifest was built.
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, "pnpm-lock.yaml"),
+      "lockfileVersion: 9.0\npackages: { drifted: true }\n",
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest: m },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH",
+    );
+    expect(cd).toBeDefined();
+    // The HASH_MISMATCH (output bytes) code is NOT triggered;
+    // environment drift is a separate evidence class.
+    expect(out.map((d) => d.code)).not.toContain(
+      "RAIL_REQUIRE_MANIFEST_HASH_MISMATCH",
+    );
+  });
+
+  it("environment drift is independent of output/contract/emitter drift", () => {
+    // Mutate the lockfile AND the generated output; both
+    // codes fire as separate diagnostics — environment drift
+    // is its own evidence class.
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestWithBadDigest([fooPath], fooPath);
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, "pnpm-lock.yaml"),
+      "lockfileVersion: 9.0\npackages: { drifted: true }\n",
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest: m },
+      fx.workspaceRoot,
+    );
+    const codes = new Set(out.map((d) => d.code));
+    expect(codes.has("RAIL_REQUIRE_MANIFEST_HASH_MISMATCH")).toBe(true);
+    expect(codes.has("RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH")).toBe(
+      true,
+    );
+  });
+
   it("contract drift is independent of output drift (both can co-occur cleanly)", () => {
     const fooPath = fx.writeGeneratedFile(
       "packages/ds-react/src/components/Foo/Foo.tsx",
@@ -581,6 +760,7 @@ describe("verifyManifestAgainstDisk", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: fx.liveEnvironment(),
       emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
       groups: [
         {
@@ -635,6 +815,7 @@ describe("readManifestForVerification", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: STUB_VALID_ENVIRONMENT,
       emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
       groups: [],
     };
@@ -1073,6 +1254,81 @@ describe("readManifestForVerification", () => {
     expect(out.kind).toBe("schema_mismatch");
     if (out.kind === "schema_mismatch") {
       expect(out.foundVersion).toBe(3);
+    }
+  });
+
+  it("returns schema_mismatch when a v4 manifest is encountered (no compat bridge)", () => {
+    // Mirrors the v3 case at the v4→v5 boundary.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({ schemaVersion: 4, generatedAt: "x", groups: [] }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("schema_mismatch");
+    if (out.kind === "schema_mismatch") {
+      expect(out.foundVersion).toBe(4);
+    }
+  });
+
+  it("returns parse_error when a v5 manifest is missing environment", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/`environment` is missing/);
+    }
+  });
+
+  it("returns parse_error when environment.nodeMajor is not a non-negative integer", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        environment: {
+          nodeMajor: "22", // string, not number
+          codegenPackageVersion: "1.0.0",
+          lockfile: { path: "pnpm-lock.yaml", sha256: "a".repeat(64) },
+        },
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/`environment\.nodeMajor`/);
+    }
+  });
+
+  it("returns parse_error when environment.lockfile.sha256 fails the digest grammar", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        environment: {
+          nodeMajor: 22,
+          codegenPackageVersion: "1.0.0",
+          // uppercase hex — fails the lowercase-only grammar.
+          lockfile: { path: "pnpm-lock.yaml", sha256: "A".repeat(64) },
+        },
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/`environment\.lockfile\.sha256`/);
     }
   });
 

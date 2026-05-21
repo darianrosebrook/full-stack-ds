@@ -13,8 +13,8 @@
  * for the caller (validate-cli) to act on according to the
  * invocation mode.
  *
- * Ten distinct failure modes are surfaced as distinct codes so
- * CI pipelines can grep by code:
+ * Fourteen distinct failure modes are surfaced as distinct codes
+ * so CI pipelines can grep by code:
  *
  *   1. RAIL_REQUIRE_MANIFEST_MISSING
  *      No manifest file on disk. Other checks meaningless;
@@ -62,11 +62,31 @@
  *      file is on disk but its sha256 has drifted — the codegen
  *      module was edited without a regenerate.
  *
+ *  11. RAIL_REQUIRE_MANIFEST_NODE_MAJOR_MISMATCH
+ *      (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01) The verifier's
+ *      Node major does not match the manifest's recorded
+ *      nodeMajor.
+ *
+ *  12. RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH
+ *      (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01) The on-disk
+ *      codegen package.json `version` does not match the
+ *      manifest's recorded `codegenPackageVersion`.
+ *
+ *  13. RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING
+ *      (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01) The lockfile
+ *      named by the manifest no longer exists on disk.
+ *
+ *  14. RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH
+ *      (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01) The on-disk
+ *      lockfile's sha256 does not match the manifest's recorded
+ *      digest — a dependency has changed since generation.
+ *
  * Hash and path checks run together; one failure mode does not
  * suppress the others (unless MISSING / MALFORMED / SCHEMA_MISMATCH
- * already short-circuited). Contract, emitter, and output
- * integrity are checked independently so a closure note can cite
- * which layer of the source→artifact attribution drifted.
+ * already short-circuited). Contract, emitter, output, and
+ * environment integrity are checked independently so a closure
+ * note can cite which layer of the source→artifact attribution
+ * drifted.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -74,6 +94,7 @@ import path from "node:path";
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
+  type EnvironmentProvenance,
   type FrameworkId,
   type RailDiagnostic,
 } from "./types.js";
@@ -115,6 +136,16 @@ const GENERATED_MARKER = "@generated:start";
  * content drift occurred.
  */
 const DIGEST_GRAMMAR = /^[0-9a-f]{64}$/;
+
+/**
+ * Workspace-relative POSIX path of the codegen package.json the
+ * verifier reads `version` from when comparing against
+ * `manifest.environment.codegenPackageVersion`
+ * (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01). Kept here rather
+ * than imported from cli.ts because validation depending on cli
+ * would invert the existing dependency direction.
+ */
+const CODEGEN_PACKAGE_JSON_RELATIVE_PATH = "packages/ds-codegen/package.json";
 
 /**
  * Run all required-mode checks. Returns diagnostics in declaration
@@ -337,7 +368,97 @@ export function verifyManifestAgainstDisk(
     });
   }
 
+  // Check 6: environment provenance
+  // (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01). Three integrity
+  // questions:
+  //   (a) Does the verifier's Node major match the manifest's?
+  //   (b) Does the codegen package version on disk match?
+  //   (c) Does the lockfile still exist with the recorded digest?
+  // Each is reported as its own diagnostic so a closure note can
+  // cite which environment input drifted. NOT a code-correctness
+  // assertion — a Node version bump or lockfile churn may produce
+  // byte-identical output — but the manifest's attribution is
+  // stale until regenerate.
+  const env = manifest.environment;
+  const localNodeMajor = parseNodeMajorOrZero(process.versions.node);
+  if (localNodeMajor !== env.nodeMajor) {
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_NODE_MAJOR_MISMATCH",
+      message:
+        `Manifest was produced under Node major ${env.nodeMajor}, but the rail is running under Node major ${localNodeMajor}. ` +
+        "Major drift can affect runtime/ABI surface even when no source bytes change. " +
+        "Repair: install the matching Node major, or regenerate under the current Node major to refresh the manifest's claim.",
+    });
+  }
+  const codegenPkgAbs = path.join(
+    workspaceRoot,
+    CODEGEN_PACKAGE_JSON_RELATIVE_PATH,
+  );
+  if (fs.existsSync(codegenPkgAbs)) {
+    let pkgVersion: string | null = null;
+    try {
+      const pkg = JSON.parse(fs.readFileSync(codegenPkgAbs, "utf8")) as {
+        version?: unknown;
+      };
+      if (typeof pkg.version === "string") pkgVersion = pkg.version;
+    } catch {
+      // Treat as a mismatch rather than throwing; the verifier
+      // doctrine is "never throw." A malformed local
+      // package.json is a different class of bug from the rail's
+      // concern, but the operator still benefits from knowing
+      // the rail couldn't compare.
+    }
+    if (pkgVersion !== null && pkgVersion !== env.codegenPackageVersion) {
+      diagnostics.push({
+        code: "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH",
+        message:
+          `Manifest was produced under codegen ${env.codegenPackageVersion}, but the on-disk codegen package is ${pkgVersion}. ` +
+          "Repair: regenerate (`pnpm run generate -- --target=all`).",
+      });
+    }
+  }
+  const lockfileAbs = path.join(workspaceRoot, env.lockfile.path);
+  if (!fs.existsSync(lockfileAbs)) {
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING",
+      message:
+        `Manifest names a lockfile at \`${env.lockfile.path}\` but it is not on disk. ` +
+        "Most common cause: the lockfile was deleted or moved without a regenerate. " +
+        "Repair: restore the lockfile, or regenerate under the current dependency surface.",
+      paths: [env.lockfile.path],
+    });
+  } else {
+    const onDiskLockDigest = sha256OfFile(lockfileAbs);
+    if (onDiskLockDigest !== env.lockfile.sha256) {
+      diagnostics.push({
+        code: "RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH",
+        message:
+          `On-disk lockfile (\`${env.lockfile.path}\`) does not match the manifest's recorded digest. ` +
+          "A direct dependency, transitive dependency, pnpm version, or registry resolution has changed since the manifest was written. " +
+          "NOT itself a code-correctness assertion — the dep change may produce byte-identical output — but the rail's attribution is stale until regenerate. " +
+          `Repair: regenerate (\`pnpm run generate -- --target=all\`). Use \`git diff ${env.lockfile.path}\` to see which dep moved.`,
+        paths: [env.lockfile.path],
+      });
+    }
+  }
+
   return diagnostics;
+}
+
+/**
+ * Parse `process.versions.node` into a major integer. Tolerant
+ * fallback (returns 0) when the string is unrecognized, so the
+ * verifier's "never throw" doctrine is preserved even under an
+ * exotic Node runtime. A 0 will compare unequal to any producer-
+ * stamped value, surfacing as NODE_MAJOR_MISMATCH — which is the
+ * correct semantic (the verifier cannot trust an unrecognized
+ * runtime to be equivalent to what produced the manifest).
+ */
+function parseNodeMajorOrZero(versionString: string): number {
+  const m = /^(\d+)\./.exec(versionString);
+  if (!m) return 0;
+  const n = Number.parseInt(m[1]!, 10);
+  return Number.isInteger(n) && n >= 0 ? n : 0;
 }
 
 /** Recursively walk a components tree, returning POSIX-relative paths of generated files. */
@@ -604,6 +725,56 @@ export function readManifestForVerification(
         };
       }
     }
+  }
+  // v5 invariant
+  // (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01): `environment` is
+  // required; nodeMajor must be a non-negative integer;
+  // codegenPackageVersion a non-empty string; lockfile.path a
+  // non-empty string and lockfile.sha256 a valid digest. Same
+  // MALFORMED surfacing as the previous structural checks.
+  const env = manifestParsed.environment as Partial<EnvironmentProvenance> | undefined;
+  if (!env || typeof env !== "object") {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment\` is missing or not an object`,
+    };
+  }
+  if (
+    typeof env.nodeMajor !== "number" ||
+    !Number.isInteger(env.nodeMajor) ||
+    env.nodeMajor < 0
+  ) {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment.nodeMajor\` is not a non-negative integer`,
+    };
+  }
+  if (
+    typeof env.codegenPackageVersion !== "string" ||
+    env.codegenPackageVersion.length === 0
+  ) {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment.codegenPackageVersion\` is missing or empty`,
+    };
+  }
+  if (
+    !env.lockfile ||
+    typeof env.lockfile !== "object" ||
+    typeof env.lockfile.path !== "string" ||
+    env.lockfile.path.length === 0 ||
+    typeof env.lockfile.sha256 !== "string"
+  ) {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment.lockfile\` is missing path/sha256 or has invalid fields`,
+    };
+  }
+  if (!DIGEST_GRAMMAR.test(env.lockfile.sha256)) {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment.lockfile.sha256\` is not lowercase 64-char hex`,
+    };
   }
   return { kind: "ok", manifest: manifestParsed };
 }

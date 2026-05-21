@@ -93,6 +93,26 @@ export function renderMarkdownReport(report: RailReport): string {
   }
   lines.push("");
 
+  // Environment provenance summary
+  // (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01). Records what runtime
+  // / dependency surface produced the manifest. Drift is rendered
+  // by the existing required-mode diagnostics section below.
+  if (report.artifactManifest?.environment) {
+    const env = report.artifactManifest.environment;
+    lines.push("## Environment provenance");
+    lines.push("");
+    lines.push(
+      "Generate-time Node major, codegen package version, and lockfile digest. Drift surfaces as `RAIL_REQUIRE_MANIFEST_NODE_MAJOR_MISMATCH`, `RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH`, `RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING`, or `RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH`.",
+    );
+    lines.push("");
+    lines.push(`- Node major: \`${env.nodeMajor}\``);
+    lines.push(`- Codegen package version: \`${env.codegenPackageVersion}\``);
+    lines.push(
+      `- Lockfile: \`${env.lockfile.path}\` (sha256 \`${shortHash(env.lockfile.sha256)}\`)`,
+    );
+    lines.push("");
+  }
+
   // Per-framework emitter source set summary
   // (CODEGEN-RAIL-EMITTER-PROVENANCE-01). Cites the size of each
   // framework's declared material source set so a reader knows

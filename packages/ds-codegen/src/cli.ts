@@ -52,6 +52,7 @@ import {
   type EmittedArtifactGroup,
   type EmitterSourceFile,
   type EmitterSourceSet,
+  type EnvironmentProvenance,
   type FrameworkId,
 } from "./validation/types.js";
 import {
@@ -145,6 +146,24 @@ const FRAMEWORK_EMITTER_SOURCES: Record<FrameworkId, readonly string[]> = {
     "packages/ds-codegen/src/non-react-types.ts",
   ],
 };
+
+/**
+ * Workspace-relative POSIX path of the pnpm lockfile. Authority
+ * lives here so a future migration to a different lockfile (e.g.
+ * `pnpm-workspace.yaml` overrides, or a non-pnpm package manager)
+ * is a single-constant change. The verifier uses
+ * `manifest.environment.lockfile.path` rather than this constant
+ * because old manifests must continue to verify against the path
+ * the producer recorded, even if the constant later moves.
+ */
+const LOCKFILE_RELATIVE_PATH = "pnpm-lock.yaml";
+
+/**
+ * Workspace-relative POSIX path of the codegen package manifest.
+ * Producer reads `version` from here to stamp the manifest's
+ * `environment.codegenPackageVersion`.
+ */
+const CODEGEN_PACKAGE_JSON_RELATIVE_PATH = "packages/ds-codegen/package.json";
 
 /**
  * One contract's parsed value paired with the source-side
@@ -524,10 +543,12 @@ function sha256FromDisk(absPath: string): string {
  * (required rail). Never silently degrade.
  */
 function writeEmissionManifest(groups: EmittedArtifactGroup[]): void {
+  const environment = computeEnvironmentProvenance();
   const emitterSourceSets = computeEmitterSourceSets();
   const manifest: EmissionManifest = {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: new Date().toISOString(),
+    environment,
     emitterSourceSets,
     groups,
   };
@@ -540,8 +561,69 @@ function writeEmissionManifest(groups: EmittedArtifactGroup[]): void {
     0,
   );
   console.log(
-    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} group(s), ${fileCount} file(s), ${emitterSourceCount} emitter source(s), schema v${EMISSION_MANIFEST_SCHEMA_VERSION})`,
+    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} group(s), ${fileCount} file(s), ${emitterSourceCount} emitter source(s), node v${environment.nodeMajor}+, codegen v${environment.codegenPackageVersion}, schema v${EMISSION_MANIFEST_SCHEMA_VERSION})`,
   );
+}
+
+/**
+ * Build the EnvironmentProvenance record
+ * (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01) by capturing the
+ * Node major from `process.versions.node`, the codegen package
+ * version from its package.json, and the on-disk lockfile bytes.
+ *
+ * Throws when the lockfile is missing — that's a producer-side
+ * invariant violation (operator ran codegen without a lockfile),
+ * not a runtime user condition. Loud failure is the right
+ * behavior because the rail's environment claim would be
+ * fundamentally incomplete without it.
+ */
+function computeEnvironmentProvenance(): EnvironmentProvenance {
+  const nodeMajor = parseNodeMajor(process.versions.node);
+  const pkgPath = path.join(cwd, CODEGEN_PACKAGE_JSON_RELATIVE_PATH);
+  if (!fs.existsSync(pkgPath)) {
+    throw new Error(
+      `codegen package.json missing at ${CODEGEN_PACKAGE_JSON_RELATIVE_PATH}; cannot stamp environment provenance.`,
+    );
+  }
+  const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8")) as {
+    version?: unknown;
+  };
+  if (typeof pkg.version !== "string") {
+    throw new Error(
+      `codegen package.json at ${CODEGEN_PACKAGE_JSON_RELATIVE_PATH} has no string \`version\` field.`,
+    );
+  }
+  const lockAbs = path.join(cwd, LOCKFILE_RELATIVE_PATH);
+  if (!fs.existsSync(lockAbs)) {
+    throw new Error(
+      `Lockfile missing at ${LOCKFILE_RELATIVE_PATH}; environment provenance requires a lockfile to attribute against.`,
+    );
+  }
+  return {
+    nodeMajor,
+    codegenPackageVersion: pkg.version,
+    lockfile: {
+      path: LOCKFILE_RELATIVE_PATH,
+      sha256: sha256FromDisk(lockAbs),
+    },
+  };
+}
+
+/**
+ * Parse `process.versions.node` (e.g. "22.19.0") to an integer
+ * major version. Throws if the input is not a valid Node-style
+ * version string. The throw posture matches
+ * `computeEnvironmentProvenance` — these are producer-side
+ * invariants, not user inputs.
+ */
+function parseNodeMajor(versionString: string): number {
+  const m = /^(\d+)\./.exec(versionString);
+  if (!m) {
+    throw new Error(
+      `Unrecognized Node version string: ${versionString}`,
+    );
+  }
+  return Number.parseInt(m[1]!, 10);
 }
 
 /**
