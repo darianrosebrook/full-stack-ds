@@ -213,9 +213,6 @@
   "focus": {
     "strategy": "auto"
   },
-  "portal": {
-    "enabled": false
-  },
   "slots": {
     "field": {
       "required": false,
@@ -251,10 +248,6 @@
         "action": "Toggle the switch."
       }
     ]
-  },
-  "usage": {
-    "example": "<SwitchField\n  label=\"Enable notifications\"\n  checked={isOn}\n  onChange={(e) => setIsOn(e.target.checked)}\n/>",
-    "hookExample": "const { isChecked, getInputProps, getLabelProps } = useSwitch({\n  defaultChecked: false,\n  onChange: (e) => console.log(e.target.checked)\n});\n\nreturn (\n  <label {...getLabelProps()}>\n    <input {...getInputProps()} />\n    <span>Toggle me</span>\n  </label>\n);"
   },
   "a2ui": {
     "category": "form-field",

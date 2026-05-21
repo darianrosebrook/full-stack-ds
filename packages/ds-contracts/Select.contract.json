@@ -401,13 +401,17 @@
   "dismissal": {
     "triggers": [
       {
-        "event": "escape"
+        "event": "escape",
+        "defaultEnabled": true
       },
       {
-        "event": "outsideClick"
+        "event": "outsideClick",
+        "defaultEnabled": true
       },
       {
-        "event": "selection"
+        "event": "selection",
+        "defaultEnabled": true,
+        "description": "After a single-select choice is made, the listbox closes automatically."
       }
     ]
   },
@@ -453,6 +457,7 @@
   ],
   "a11y": {
     "role": "combobox",
+    "apgPattern": "combobox",
     "labeling": [
       "aria-label",
       "aria-expanded",

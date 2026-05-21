@@ -185,7 +185,6 @@
       "strategy": "associated-label",
       "required": true,
       "via": [
-        "prop:label",
         "aria-labelledby",
         "aria-label"
       ]

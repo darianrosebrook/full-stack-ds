@@ -262,6 +262,24 @@
       "selector": "[data-slot=\"details-content\"]"
     }
   },
+  "focus": {
+    "strategy": "auto",
+    "description": "Native <details>/<summary> focus behavior; no custom roving or trap required."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "dismissal": {
+    "triggers": []
+  },
+  "relationships": [
+    {
+      "from": "summary",
+      "to": "content",
+      "attribute": "aria-controls",
+      "description": "Native HTML: <summary> implicitly controls the sibling content via the <details> open attribute."
+    }
+  ],
   "ssr": {
     "hydrateOn": "interaction"
   },
@@ -270,6 +288,7 @@
   },
   "a11y": {
     "role": "group",
+    "apgPattern": null,
     "labeling": [
       "aria-label"
     ],

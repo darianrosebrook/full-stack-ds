@@ -334,8 +334,13 @@
   "rtl": {
     "flipIcon": false
   },
+  "focus": {
+    "strategy": "none",
+    "description": "Postcard is a display surface. Focus is not managed — child engagement actions (Like, Reply, Repost) carry their own focus handling."
+  },
   "a11y": {
     "role": "article",
+    "apgPattern": null,
     "labeling": [
       "aria-labelledby"
     ],

@@ -264,7 +264,7 @@
     "activeTabChange": {
       "description": "Fires when the active tab index changes. Under automatic activation this also fires when focus moves via arrow keys.",
       "emittedVia": [
-        "onChange"
+        "onValueChange"
       ],
       "triggeredBy": [
         "Click on tab",
@@ -387,6 +387,7 @@
     }
   ],
   "a11y": {
+    "apgPattern": "tabs",
     "labeling": [
       "aria-label",
       "aria-labelledby"

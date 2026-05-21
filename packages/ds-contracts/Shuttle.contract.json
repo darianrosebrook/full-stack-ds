@@ -21,6 +21,17 @@
       ]
     }
   },
+  "focus": {
+    "strategy": "roving",
+    "orientation": "vertical",
+    "description": "Arrow keys move focus within each listbox independently. Focus does not leave the shuttle widget."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "dismissal": {
+    "triggers": []
+  },
   "variants": {},
   "states": [
     "default"
@@ -83,6 +94,8 @@
     "flipIcon": false
   },
   "a11y": {
+    "role": "listbox",
+    "apgPattern": "listbox",
     "labeling": [
       "aria-label",
       "aria-labelledby"

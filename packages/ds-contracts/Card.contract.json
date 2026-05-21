@@ -252,7 +252,11 @@
     "flipIcon": false
   },
   "a11y": {
-    "labeling": [],
+    "role": "group",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
     "keyboard": []
   },
   "usage": {

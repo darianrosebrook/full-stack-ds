@@ -128,7 +128,7 @@
     }
   },
   "ssr": {
-    "hydrateOn": "interaction"
+    "hydrateOn": "none"
   },
   "rtl": {
     "flipIcon": false

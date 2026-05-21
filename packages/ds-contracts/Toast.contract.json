@@ -263,7 +263,7 @@
           "transform"
         ],
         "duration": "core.motion.duration.short",
-        "easing": "core.motion.easing.emphasizedDecelerate"
+        "easing": "core.motion.easing.emphasized-in"
       },
       {
         "name": "close",
@@ -274,7 +274,7 @@
           "transform"
         ],
         "duration": "core.motion.duration.short",
-        "easing": "core.motion.easing.emphasizedAccelerate"
+        "easing": "core.motion.easing.emphasized-out"
       }
     ]
   },
@@ -344,6 +344,7 @@
   ],
   "a11y": {
     "role": "alert",
+    "apgPattern": "alert",
     "labeling": [
       "aria-label",
       "aria-live",
@@ -358,8 +359,8 @@
     ]
   },
   "usage": {
-    "example": "<Banner status=\"info\" onClose={() => setVisible(false)}>\n  <BannerTitle>Notice</BannerTitle>\n  <BannerBody>This is important information.</BannerBody>\n  <BannerFooter>\n    <button>Learn More</button>\n  </BannerFooter>\n</Banner>",
-    "hookExample": "const { isOpen, dismiss, getRootProps, getCloseButtonProps } = useBanner({\n  defaultOpen: true,\n  status: 'info'\n});\n\nif (!isOpen) return null;\n\nreturn (\n  <div {...getRootProps()}>\n    <button {...getCloseButtonProps()}>\u00d7</button>\n    <p>Banner content</p>\n  </div>\n);"
+    "example": "<ToastProvider>\n  <ToastViewport />\n  <Toast open={open} onOpenChange={setOpen} variant=\"success\">\n    <ToastTitle>Saved</ToastTitle>\n    <ToastDescription>Your changes have been saved.</ToastDescription>\n    <ToastClose />\n  </Toast>\n</ToastProvider>",
+    "hookExample": "const { toast } = useToast();\ntoast({ title: 'Saved', variant: 'success' });"
   },
   "a2ui": {
     "category": "overlay",

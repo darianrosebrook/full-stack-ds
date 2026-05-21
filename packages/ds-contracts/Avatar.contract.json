@@ -151,7 +151,10 @@
     "flipIcon": false
   },
   "a11y": {
-    "labeling": [],
+    "role": "img",
+    "labeling": [
+      "aria-label"
+    ],
     "keyboard": []
   },
   "a2ui": {

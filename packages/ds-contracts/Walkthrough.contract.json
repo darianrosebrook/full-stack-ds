@@ -403,7 +403,7 @@
           "transform"
         ],
         "duration": "core.motion.duration.short",
-        "easing": "core.motion.easing.emphasizedDecelerate"
+        "easing": "core.motion.easing.emphasized-in"
       },
       {
         "name": "close",
@@ -413,7 +413,7 @@
           "opacity"
         ],
         "duration": "core.motion.duration.short",
-        "easing": "core.motion.easing.emphasizedAccelerate"
+        "easing": "core.motion.easing.emphasized-out"
       }
     ]
   },
@@ -489,17 +489,21 @@
   },
   "relationships": [
     {
-      "from": "panel",
+      "from": "content",
       "to": "title",
-      "attribute": "aria-labelledby"
+      "attribute": "aria-labelledby",
+      "description": "Walkthrough content region takes its accessible name from its title element."
     },
     {
-      "from": "panel",
+      "from": "content",
       "to": "description",
-      "attribute": "aria-describedby"
+      "attribute": "aria-describedby",
+      "description": "Walkthrough content region is described by its description element."
     }
   ],
   "a11y": {
+    "role": "status",
+    "apgPattern": "status",
     "labeling": [
       "aria-label"
     ],

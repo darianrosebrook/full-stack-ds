@@ -183,7 +183,7 @@
     }
   },
   "ssr": {
-    "hydrateOn": "interaction"
+    "hydrateOn": "none"
   },
   "rtl": {
     "flipIcon": true

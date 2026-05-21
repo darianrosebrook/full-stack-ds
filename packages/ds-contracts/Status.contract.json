@@ -114,12 +114,6 @@
       }
     }
   },
-  "focus": {
-    "strategy": "none"
-  },
-  "portal": {
-    "enabled": false
-  },
   "slots": {
     "root": {
       "required": true,
@@ -141,13 +135,11 @@
     "flipIcon": false
   },
   "a11y": {
+    "role": "generic",
     "labeling": [
       "aria-label"
     ],
     "keyboard": []
-  },
-  "usage": {
-    "example": "<Indicator variant=\"success\">Completed</Indicator>\n<Indicator variant=\"error\" size=\"small\">Error</Indicator>\n<Indicator variant=\"informational\" hideIcon>Info only</Indicator>"
   },
   "a2ui": {
     "category": "display",

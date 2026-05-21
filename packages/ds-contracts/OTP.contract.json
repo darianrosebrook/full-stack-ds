@@ -249,6 +249,8 @@
     }
   ],
   "a11y": {
+    "role": "group",
+    "apgPattern": "spinbutton",
     "labeling": [
       "aria-label",
       "aria-describedby",

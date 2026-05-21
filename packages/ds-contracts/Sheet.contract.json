@@ -363,8 +363,8 @@
         "properties": [
           "transform"
         ],
-        "duration": "sheet.motion.duration",
-        "easing": "sheet.motion.easing"
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasized-in"
       },
       {
         "name": "close",
@@ -373,8 +373,8 @@
         "properties": [
           "transform"
         ],
-        "duration": "sheet.motion.duration",
-        "easing": "sheet.motion.easing"
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasized-out"
       }
     ]
   },
@@ -463,6 +463,7 @@
   ],
   "a11y": {
     "role": "dialog",
+    "apgPattern": "dialog-modal",
     "labeling": [
       "aria-label",
       "aria-labelledby",

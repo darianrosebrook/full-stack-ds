@@ -353,6 +353,27 @@
   "form": {
     "participates": false
   },
+  "motion": {
+    "reducedMotion": "respect",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=closed→expanded",
+        "phase": "enter",
+        "properties": ["opacity", "transform"],
+        "duration": "command.motion.duration",
+        "easing": "command.motion.easing"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=expanded→closed",
+        "phase": "exit",
+        "properties": ["opacity", "transform"],
+        "duration": "command.motion.duration",
+        "easing": "command.motion.easing"
+      }
+    ]
+  },
   "focus": {
     "strategy": "manual",
     "orientation": "vertical",
@@ -440,6 +461,7 @@
   ],
   "a11y": {
     "role": "dialog",
+    "apgPattern": "dialog-modal",
     "labeling": [
       "aria-label"
     ],

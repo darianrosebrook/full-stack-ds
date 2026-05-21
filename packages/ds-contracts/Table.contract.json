@@ -33,16 +33,6 @@
       ]
     }
   },
-  "channels": {
-    "selection": {
-      "description": "Set of selected row identifiers when the table supports row selection.",
-      "value": "selectedRows",
-      "defaultValue": "defaultSelectedRows",
-      "onChange": "onSelectionChange",
-      "valueType": "string[]",
-      "notes": "Only relevant when the table is used in a selectable context. The table primitive itself is presentational; selection state is managed by the consumer."
-    }
-  },
   "variants": {},
   "states": [
     "default",

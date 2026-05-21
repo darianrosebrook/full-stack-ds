@@ -167,8 +167,8 @@
         "properties": [
           "opacity"
         ],
-        "duration": "tooltip.motion.duration.enter",
-        "easing": "tooltip.motion.easing.enter"
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.soft-enter"
       },
       {
         "name": "hide",
@@ -177,8 +177,8 @@
         "properties": [
           "opacity"
         ],
-        "duration": "tooltip.motion.duration.exit",
-        "easing": "tooltip.motion.easing.exit"
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.soft-exit"
       }
     ]
   },
@@ -255,6 +255,7 @@
   ],
   "a11y": {
     "role": "tooltip",
+    "apgPattern": "tooltip",
     "labeling": [
       "aria-describedby"
     ],

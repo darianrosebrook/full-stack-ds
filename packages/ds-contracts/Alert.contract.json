@@ -225,6 +225,9 @@
     "container": {
       "required": false
     },
+    "dismiss": {
+      "required": false
+    },
     "icon": {
       "required": false
     },

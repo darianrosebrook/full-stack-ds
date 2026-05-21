@@ -259,8 +259,8 @@
           "opacity",
           "transform"
         ],
-        "duration": "date-picker.motion.duration",
-        "easing": "date-picker.motion.easing"
+        "duration": "calendar.motion.duration",
+        "easing": "calendar.motion.easing"
       },
       {
         "name": "close",
@@ -270,14 +270,15 @@
           "opacity",
           "transform"
         ],
-        "duration": "date-picker.motion.duration",
-        "easing": "date-picker.motion.easing"
+        "duration": "calendar.motion.duration",
+        "easing": "calendar.motion.easing"
       }
     ]
   },
   "focus": {
     "strategy": "roving",
     "orientation": "both",
+    "initialFocus": "today",
     "wrap": false,
     "description": "Arrow keys navigate between dates. Tab moves to prev/next month controls."
   },
@@ -329,6 +330,8 @@
     }
   ],
   "a11y": {
+    "role": "application",
+    "apgPattern": null,
     "labeling": [
       "aria-label",
       "aria-labelledby"

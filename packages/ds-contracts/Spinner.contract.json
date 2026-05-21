@@ -157,12 +157,6 @@
       }
     }
   },
-  "focus": {
-    "strategy": "none"
-  },
-  "portal": {
-    "enabled": false
-  },
   "slots": {
     "root": {
       "required": true,
@@ -185,10 +179,6 @@
       "aria-label"
     ],
     "keyboard": []
-  },
-  "usage": {
-    "example": "// Standalone spinner\n<LoadingSpinner show size=\"medium\" />\n\n// Overlaying content\n<LoadingSpinner show background=\"fade\">\n  <div>Content that's loading...</div>\n</LoadingSpinner>\n\n// Inverted for dark backgrounds\n<div style={{ background: '#000' }}>\n  <LoadingSpinner show inverted />\n</div>",
-    "hookExample": "const { isShowing, getContainerProps, getContentProps, getLiveRegionProps } = useLoadingSpinner({\n  defaultShow: false,\n  size: 'medium',\n  background: 'fade',\n});\n\nreturn (\n  <div {...getContainerProps()}>\n    {isShowing && <div className=\"overlay\"><Spinner /></div>}\n    <div {...getContentProps()}>{children}</div>\n    <div {...getLiveRegionProps()} className=\"sr-only\" />\n  </div>\n);"
   },
   "a2ui": {
     "category": "display",

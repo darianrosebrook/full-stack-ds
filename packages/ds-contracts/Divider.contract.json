@@ -89,12 +89,13 @@
     }
   },
   "ssr": {
-    "hydrateOn": "interaction"
+    "hydrateOn": "none"
   },
   "rtl": {
     "flipIcon": false
   },
   "a11y": {
+    "role": "separator",
     "labeling": [
       "aria-orientation"
     ],

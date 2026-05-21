@@ -469,6 +469,7 @@
   ],
   "a11y": {
     "role": "dialog",
+    "apgPattern": "dialog-modal",
     "labeling": [
       "aria-label",
       "aria-labelledby",

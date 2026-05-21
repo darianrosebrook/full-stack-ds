@@ -103,6 +103,11 @@
           "description": "Controlled value passed through to the control adapter."
         },
         {
+          "name": "defaultValue",
+          "type": "unknown",
+          "description": "Uncontrolled initial value passed through to the control adapter."
+        },
+        {
           "name": "onChange",
           "type": "(value: unknown) => void",
           "description": "Change handler called with the new value when the control changes."
@@ -304,8 +309,23 @@
       "description": "Child control receives error id via context to set aria-describedby when invalid."
     }
   ],
+  "channels": {
+    "value": {
+      "description": "Controlled value of the field's child control, passed through context.",
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "unknown"
+    }
+  },
   "a11y": {
     "role": "group",
+    "roles": [
+      "group",
+      "alert",
+      "radiogroup"
+    ],
+    "apgPattern": "alert",
     "labeling": [
       "aria-labelledby",
       "aria-describedby",
