@@ -1,0 +1,386 @@
+/**
+ * Tests for the required-mode verifier
+ * (CODEGEN-RAIL-ARTIFACT-MANIFEST-REQUIRED-CI-01).
+ *
+ * Each test pins one diagnostic code. The codes are public API
+ * for CI scripts grepping the rail report by code; renaming any
+ * of them is a breaking change.
+ *
+ * Fixtures use a tmpdir "workspace" with synthetic
+ * `packages/ds-react/src/components/Foo/Foo.tsx` files. Each
+ * generated file contains the literal `@generated:start` marker
+ * so it's picked up by the verifier's marker scan.
+ */
+import crypto from "node:crypto";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  readManifestForVerification,
+  verifyManifestAgainstDisk,
+  type ManifestReadResult,
+} from "./required-mode.js";
+import {
+  EMISSION_MANIFEST_SCHEMA_VERSION,
+  type EmissionManifest,
+} from "./types.js";
+
+function sha256OfString(s: string): string {
+  return crypto.createHash("sha256").update(Buffer.from(s, "utf8")).digest("hex");
+}
+
+const GENERATED_HEADER = "// @generated:start\nexport const x = 1;\n// @generated:end\n";
+const GENERATED_HEADER_DIGEST = sha256OfString(GENERATED_HEADER);
+
+interface Fixture {
+  workspaceRoot: string;
+  cleanup: () => void;
+  /** Write a synthetic generated file under the components tree. */
+  writeGeneratedFile: (relPath: string, contents?: string) => string;
+  /** Build a v2 manifest matching the current on-disk state, for a list of paths. */
+  manifestFor: (paths: string[]) => EmissionManifest;
+  /** Override the manifest's recorded digest for a path (to simulate hash drift). */
+  manifestWithBadDigest: (paths: string[], badPath: string) => EmissionManifest;
+}
+
+function makeFixture(): Fixture {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "rail-required-"));
+  return {
+    workspaceRoot,
+    cleanup: () => fs.rmSync(workspaceRoot, { recursive: true, force: true }),
+    writeGeneratedFile(relPath, contents = GENERATED_HEADER) {
+      const abs = path.join(workspaceRoot, relPath);
+      fs.mkdirSync(path.dirname(abs), { recursive: true });
+      fs.writeFileSync(abs, contents);
+      return relPath;
+    },
+    manifestFor(paths) {
+      return {
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "2026-05-21T00:00:00.000Z",
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            files: paths.map((p) => ({
+              path: p,
+              sha256: sha256OfString(
+                fs.existsSync(path.join(workspaceRoot, p))
+                  ? fs.readFileSync(path.join(workspaceRoot, p), "utf8")
+                  : "(absent)",
+              ),
+            })),
+          },
+        ],
+      };
+    },
+    manifestWithBadDigest(paths, badPath) {
+      const m = this.manifestFor(paths);
+      return {
+        ...m,
+        groups: m.groups.map((g) => ({
+          ...g,
+          files: g.files.map((f) =>
+            f.path === badPath ? { ...f, sha256: "deadbeef".repeat(8) } : f,
+          ),
+        })),
+      };
+    },
+  };
+}
+
+describe("verifyManifestAgainstDisk", () => {
+  let fx: Fixture;
+  beforeEach(() => {
+    fx = makeFixture();
+  });
+  afterEach(() => {
+    fx.cleanup();
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_MISSING when no manifest is provided", () => {
+    const out = verifyManifestAgainstDisk({ kind: "absent" }, fx.workspaceRoot);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_MISSING");
+    expect(out[0]!.message).toMatch(/Repair: run/);
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH for wrong schemaVersion", () => {
+    const read: ManifestReadResult = { kind: "schema_mismatch", foundVersion: 99 };
+    const out = verifyManifestAgainstDisk(read, fx.workspaceRoot);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH");
+    expect(out[0]!.message).toContain("99");
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_MALFORMED for an unreadable manifest", () => {
+    // parse_error covers JSON-parse failure, filesystem read
+    // error, and "schemaVersion matched but groups not an array".
+    // All three flow through the same MALFORMED code (operator
+    // repair is identical, evidence state is materially different
+    // from MISSING/SCHEMA_MISMATCH).
+    const read: ManifestReadResult = {
+      kind: "parse_error",
+      message: "Unexpected token",
+    };
+    const out = verifyManifestAgainstDisk(read, fx.workspaceRoot);
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_MALFORMED");
+    expect(out[0]!.message).toContain("Unexpected token");
+  });
+
+  it("distinguishes MALFORMED from MISSING — both fail required mode but with different codes", () => {
+    // Pinning the contract that CI scripts can rely on: these
+    // codes do NOT collapse into one another. A grep for
+    // RAIL_REQUIRE_MANIFEST_MISSING must NOT match malformed
+    // manifests, and vice versa.
+    const missing = verifyManifestAgainstDisk(
+      { kind: "absent" },
+      fx.workspaceRoot,
+    );
+    const malformed = verifyManifestAgainstDisk(
+      { kind: "parse_error", message: "x" },
+      fx.workspaceRoot,
+    );
+    expect(missing[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_MISSING");
+    expect(malformed[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_MALFORMED");
+    expect(missing[0]!.code).not.toBe(malformed[0]!.code);
+  });
+
+  it("returns empty diagnostics when on-disk state matches the manifest", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const manifest = fx.manifestFor([fooPath]);
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    expect(out).toEqual([]);
+  });
+
+  it("emits MISSING_PATHS for paths the manifest claims but disk does not have", () => {
+    // Do NOT write the file — the manifest's claim is the only
+    // record of it. We construct the manifest manually so the
+    // digest doesn't depend on a file.
+    const manifest: EmissionManifest = {
+      schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+      generatedAt: "2026-05-21T00:00:00.000Z",
+      groups: [
+        {
+          framework: "react",
+          component: "Foo",
+          files: [
+            {
+              path: "packages/ds-react/src/components/Foo/Foo.tsx",
+              sha256: GENERATED_HEADER_DIGEST,
+            },
+          ],
+        },
+      ],
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_MISSING_PATHS");
+    expect(out[0]!.paths).toEqual([
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    ]);
+  });
+
+  it("emits UNTRACKED_GENERATED_PATHS for on-disk generated files not in the manifest", () => {
+    fx.writeGeneratedFile("packages/ds-react/src/components/Foo/Foo.tsx");
+    fx.writeGeneratedFile("packages/ds-react/src/components/Bar/Bar.tsx");
+    // Manifest only knows about Foo; Bar is on disk with the
+    // marker, so it must surface as untracked.
+    const manifest = fx.manifestFor([
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    ]);
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_UNTRACKED_GENERATED_PATHS");
+    expect(out[0]!.paths).toEqual([
+      "packages/ds-react/src/components/Bar/Bar.tsx",
+    ]);
+  });
+
+  it("does NOT flag hand-authored files (no @generated marker) as untracked", () => {
+    fx.writeGeneratedFile("packages/ds-react/src/components/Foo/Foo.tsx");
+    // A hand-authored sibling utility — no marker.
+    fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/handAuthored.ts",
+      "export const x = 1;\n",
+    );
+    const manifest = fx.manifestFor([
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    ]);
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    expect(out).toEqual([]);
+  });
+
+  it("emits HASH_MISMATCH when on-disk content diverges from manifest digest", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const manifest = fx.manifestWithBadDigest([fooPath], fooPath);
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_HASH_MISMATCH");
+    expect(out[0]!.paths).toEqual([fooPath]);
+  });
+
+  it("does NOT double-report a missing path as also hash-mismatched", () => {
+    // Build a manifest claiming TWO files but write only one to
+    // disk: the missing one should appear in MISSING_PATHS only,
+    // not in HASH_MISMATCH.
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const ghostPath = "packages/ds-react/src/components/Foo/Ghost.tsx";
+    const manifest: EmissionManifest = {
+      schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+      generatedAt: "2026-05-21T00:00:00.000Z",
+      groups: [
+        {
+          framework: "react",
+          component: "Foo",
+          files: [
+            { path: fooPath, sha256: sha256OfString(GENERATED_HEADER) },
+            { path: ghostPath, sha256: GENERATED_HEADER_DIGEST },
+          ],
+        },
+      ],
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    expect(out).toHaveLength(1);
+    expect(out[0]!.code).toBe("RAIL_REQUIRE_MANIFEST_MISSING_PATHS");
+    expect(out[0]!.paths).toEqual([ghostPath]);
+  });
+
+  it("emits multiple distinct diagnostics when several drift modes coexist", () => {
+    // Manifest references two files; one exists (Foo), one
+    // doesn't (Ghost). Disk also has an untracked Bar file.
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    fx.writeGeneratedFile("packages/ds-react/src/components/Bar/Bar.tsx");
+    const manifest: EmissionManifest = {
+      schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+      generatedAt: "2026-05-21T00:00:00.000Z",
+      groups: [
+        {
+          framework: "react",
+          component: "Foo",
+          files: [
+            // Wrong digest for Foo (hash mismatch).
+            { path: fooPath, sha256: "deadbeef".repeat(8) },
+            // Ghost file not on disk (missing path).
+            {
+              path: "packages/ds-react/src/components/Foo/Ghost.tsx",
+              sha256: GENERATED_HEADER_DIGEST,
+            },
+          ],
+        },
+      ],
+    };
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const codes = out.map((d) => d.code).sort();
+    expect(codes).toEqual([
+      "RAIL_REQUIRE_MANIFEST_HASH_MISMATCH",
+      "RAIL_REQUIRE_MANIFEST_MISSING_PATHS",
+      "RAIL_REQUIRE_MANIFEST_UNTRACKED_GENERATED_PATHS",
+    ]);
+  });
+});
+
+describe("readManifestForVerification", () => {
+  let workspaceRoot: string;
+  let manifestPath: string;
+  beforeEach(() => {
+    workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), "rail-read-"));
+    manifestPath = path.join(workspaceRoot, "manifest.json");
+  });
+  afterEach(() => {
+    fs.rmSync(workspaceRoot, { recursive: true, force: true });
+  });
+
+  it("returns absent when the file does not exist", () => {
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("absent");
+  });
+
+  it("returns ok when the manifest matches the current schema", () => {
+    const manifest: EmissionManifest = {
+      schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+      generatedAt: "2026-05-21T00:00:00.000Z",
+      groups: [],
+    };
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest));
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("ok");
+  });
+
+  it("returns schema_mismatch when schemaVersion is wrong", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({ schemaVersion: 99, generatedAt: "x", groups: [] }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("schema_mismatch");
+    if (out.kind === "schema_mismatch") {
+      expect(out.foundVersion).toBe(99);
+    }
+  });
+
+  it("returns schema_mismatch when schemaVersion is missing (legacy v1)", () => {
+    // Pre-REQUIRED-CI-01 manifests had no schemaVersion field at
+    // all. The reader treats this as a mismatch with foundVersion
+    // === undefined.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({ generatedAt: "x", groups: [] }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("schema_mismatch");
+    if (out.kind === "schema_mismatch") {
+      expect(out.foundVersion).toBeUndefined();
+    }
+  });
+
+  it("returns parse_error for invalid JSON", () => {
+    fs.writeFileSync(manifestPath, "not json");
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+  });
+
+  it("returns parse_error when groups is not an array", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        groups: "broken",
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+  });
+});

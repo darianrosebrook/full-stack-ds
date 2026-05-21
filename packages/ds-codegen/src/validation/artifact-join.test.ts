@@ -7,19 +7,27 @@
  * from plan to per-artifact entry, must emit empty admission
  * arrays (not lies) for groups no command covers, and must
  * tolerate the legacy single-command (no-scope) plan shape.
+ *
+ * Manifest fixtures use a placeholder sha256 (`STUB_DIGEST`)
+ * because the join is path-driven; digest verification is the
+ * required-mode verifier's concern, tested separately.
  */
 import { describe, expect, it } from "vitest";
 import {
   attributeFrameworkArtifacts,
   joinManifestAgainstResults,
 } from "./artifact-join.js";
-import type {
-  EmissionManifest,
-  FrameworkId,
-  FrameworkValidationPlan,
-  FrameworkValidationResult,
-  PlanCommandRun,
+import {
+  EMISSION_MANIFEST_SCHEMA_VERSION,
+  type EmissionManifest,
+  type EmittedArtifactGroup,
+  type FrameworkId,
+  type FrameworkValidationPlan,
+  type FrameworkValidationResult,
+  type PlanCommandRun,
 } from "./types.js";
+
+const STUB_DIGEST = "0".repeat(64);
 
 function makeRun(
   check: string,
@@ -29,21 +37,34 @@ function makeRun(
   return { check, command, durationMs: 1, status, diagnostics: [] };
 }
 
+function mkGroup(
+  framework: FrameworkId,
+  component: string,
+  paths: string[],
+): EmittedArtifactGroup {
+  return {
+    framework,
+    component,
+    files: paths.map((p) => ({ path: p, sha256: STUB_DIGEST })),
+  };
+}
+
+function mkManifest(groups: EmittedArtifactGroup[]): EmissionManifest {
+  return {
+    schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+    generatedAt: "2026-05-20T00:00:00.000Z",
+    groups,
+  };
+}
+
 describe("attributeFrameworkArtifacts", () => {
   it("emits one ArtifactAdmissionEntry per in-scope command per group", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "lit",
-          component: "Input",
-          paths: [
-            "packages/ds-lit/src/components/Input/Input.ts",
-            "packages/ds-lit/src/components/Input/Input.css",
-          ],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("lit", "Input", [
+        "packages/ds-lit/src/components/Input/Input.ts",
+        "packages/ds-lit/src/components/Input/Input.css",
+      ]),
+    ]);
     const plan: FrameworkValidationPlan = {
       framework: "lit",
       commands: [
@@ -89,16 +110,9 @@ describe("attributeFrameworkArtifacts", () => {
   });
 
   it("propagates rule narrowings only for commands that declare them", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "lit",
-          component: "Switch",
-          paths: ["packages/ds-lit/src/components/Switch/Switch.ts"],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("lit", "Switch", ["packages/ds-lit/src/components/Switch/Switch.ts"]),
+    ]);
     const plan: FrameworkValidationPlan = {
       framework: "lit",
       commands: [
@@ -134,19 +148,12 @@ describe("attributeFrameworkArtifacts", () => {
   });
 
   it("respects excludePathSubstrings (test files dropped from ngc-style scope)", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "angular",
-          component: "Button",
-          paths: [
-            // Tests-only group: the template check should NOT cover it.
-            "packages/ds-angular/src/components/Button/__tests__/Button.test.ts",
-          ],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("angular", "Button", [
+        // Tests-only group: the template check should NOT cover it.
+        "packages/ds-angular/src/components/Button/__tests__/Button.test.ts",
+      ]),
+    ]);
     const plan: FrameworkValidationPlan = {
       framework: "angular",
       commands: [
@@ -176,16 +183,9 @@ describe("attributeFrameworkArtifacts", () => {
   });
 
   it("relays the run's fail status into the entry (does NOT silently downgrade)", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "lit",
-          component: "Switch",
-          paths: ["packages/ds-lit/src/components/Switch/Switch.ts"],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("lit", "Switch", ["packages/ds-lit/src/components/Switch/Switch.ts"]),
+    ]);
     const plan: FrameworkValidationPlan = {
       framework: "lit",
       commands: [
@@ -207,16 +207,9 @@ describe("attributeFrameworkArtifacts", () => {
   });
 
   it("contributes nothing for plans that use the legacy single-command shape with no scope", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "react",
-          component: "Switch",
-          paths: ["packages/ds-react/src/components/Switch/Switch.tsx"],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("react", "Switch", ["packages/ds-react/src/components/Switch/Switch.tsx"]),
+    ]);
     const plan: FrameworkValidationPlan = {
       framework: "react",
       // Legacy `command` shape — no scope declaration anywhere.
@@ -229,16 +222,9 @@ describe("attributeFrameworkArtifacts", () => {
   });
 
   it("returns empty array when manifest has no groups for the framework", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "vue",
-          component: "Switch",
-          paths: ["packages/ds-vue/src/components/Switch/Switch.vue"],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("vue", "Switch", ["packages/ds-vue/src/components/Switch/Switch.vue"]),
+    ]);
     const plan: FrameworkValidationPlan = {
       framework: "react",
       command: ["pnpm", "run", "typecheck"],
@@ -252,16 +238,9 @@ describe("attributeFrameworkArtifacts", () => {
 
 describe("joinManifestAgainstResults", () => {
   it("attributes only frameworks that have manifest entries (no empty stubs)", () => {
-    const manifest: EmissionManifest = {
-      generatedAt: "2026-05-20T00:00:00.000Z",
-      groups: [
-        {
-          framework: "react",
-          component: "Switch",
-          paths: ["packages/ds-react/src/components/Switch/Switch.tsx"],
-        },
-      ],
-    };
+    const manifest = mkManifest([
+      mkGroup("react", "Switch", ["packages/ds-react/src/components/Switch/Switch.tsx"]),
+    ]);
     const plans: Record<FrameworkId, FrameworkValidationPlan> = {
       react: {
         framework: "react",

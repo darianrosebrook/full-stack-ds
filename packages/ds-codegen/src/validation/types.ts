@@ -259,6 +259,32 @@ export interface ArtifactAdmissionEntry {
 }
 
 /**
+ * One file in an EmittedArtifactGroup. Carries both the path and
+ * a content digest. The digest binds the manifest to specific
+ * on-disk bytes, so the required-mode verifier
+ * (CODEGEN-RAIL-ARTIFACT-MANIFEST-REQUIRED-CI-01) can detect
+ * `--force` rewrites, hand-edits to `@generated` regions, or any
+ * other content drift between the generator's claim and the
+ * checker's actual input.
+ *
+ * The digest MUST be computed over the exact on-disk bytes AFTER
+ * write (not from the in-memory generated string), so it reflects
+ * any newline/formatter effects of the write path. See
+ * `cli.ts.writeFiles`.
+ */
+export interface EmittedArtifactFile {
+  /** Workspace-root-relative POSIX path. */
+  path: string;
+  /**
+   * Lowercase hex SHA-256 of the exact on-disk file bytes after
+   * write. Algorithm and encoding are fixed for the lifetime of
+   * the manifest schema; a future migration may extend or replace
+   * this field but must bump `EmissionManifest.schemaVersion`.
+   */
+  sha256: string;
+}
+
+/**
  * A group of generated files emitted for one component on one
  * framework. The group is the unit of admission attribution: all
  * files in a group share the same per-check coverage (they live
@@ -272,21 +298,51 @@ export interface EmittedArtifactGroup {
   /** Component name from the contract (e.g. "Input", "Popover"). */
   component: string;
   /**
-   * Workspace-root-relative POSIX paths of every file written
-   * for this component on this framework, in emission order.
+   * Every file written for this component on this framework, in
+   * emission order. Each entry carries the POSIX path AND a
+   * sha256 digest of the on-disk bytes.
+   *
+   * Schema migration note: pre-REQUIRED-CI-01 manifests used
+   * `paths: string[]` directly on the group. That shape is
+   * removed, not aliased. Manifests with the old shape are
+   * detected by the schemaVersion mismatch on EmissionManifest
+   * and either fall back to legacy unattributed mode (optional
+   * rail) or fail with RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH
+   * (required rail).
    */
-  paths: readonly string[];
+  files: readonly EmittedArtifactFile[];
 }
+
+/**
+ * Current schema version for EmissionManifest. Bumped whenever
+ * the manifest shape changes in a way that requires consumer
+ * changes (renaming/removing fields, changing semantic meaning).
+ * Additive optional fields do NOT bump the version.
+ *
+ *   v1 (pre-REQUIRED-CI-01): groups carried `paths: string[]`.
+ *       Implicit (no schemaVersion field on disk).
+ *   v2 (REQUIRED-CI-01): groups carry `files: EmittedArtifactFile[]`
+ *       with sha256 digests. schemaVersion: 2 written explicitly.
+ */
+export const EMISSION_MANIFEST_SCHEMA_VERSION = 2 as const;
 
 /**
  * Record produced by the codegen CLI after a successful generate
  * run. Captures what the generator claims it emitted, with enough
- * structure that the rail can join it against admission commands.
+ * structure that the rail can join it against admission commands
+ * AND verify the on-disk artifacts match the manifest's claims.
  *
  * This is the "emission" half of the slice; the "admission" half
  * lives in each FrameworkValidationResult's `artifacts` field.
  */
 export interface EmissionManifest {
+  /**
+   * Schema version. Must equal `EMISSION_MANIFEST_SCHEMA_VERSION`
+   * for the rail to consume the manifest. Mismatches are surfaced
+   * as RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH in required mode and
+   * as a stderr warning + legacy fallback in optional mode.
+   */
+  schemaVersion: typeof EMISSION_MANIFEST_SCHEMA_VERSION;
   /** When the generate run completed (ISO 8601). */
   generatedAt: string;
   /** All artifact groups emitted in this run, in emission order. */
@@ -351,6 +407,98 @@ export interface FrameworkValidationResult {
   status: "pass" | "fail";
 }
 
+/**
+ * Stable codes emitted by the required-mode verifier
+ * (CODEGEN-RAIL-ARTIFACT-MANIFEST-REQUIRED-CI-01). Public API:
+ * CI pipelines may grep RailReport JSON by code rather than by
+ * prose, so codes must not change once published. Adding a new
+ * code is additive; renaming or removing one requires a slice
+ * with a migration plan.
+ */
+export type RailDiagnosticCode =
+  /**
+   * The manifest file does not exist on disk. Required mode fails
+   * the rail. Repair: run `pnpm run generate -- --target=all`
+   * before `validate:generated --require-artifact-manifest`.
+   *
+   * Distinct from MALFORMED — MISSING means "no file at all";
+   * MALFORMED means "file exists but is not consumable as a
+   * manifest." Distinct from SCHEMA_MISMATCH — SCHEMA_MISMATCH
+   * means the producer wrote a different schema version (a
+   * staleness / version-drift problem); MALFORMED means the file
+   * is structurally broken regardless of schema version.
+   */
+  | "RAIL_REQUIRE_MANIFEST_MISSING"
+  /**
+   * The manifest file exists but cannot be consumed as valid
+   * manifest data. Causes: JSON parse failure, filesystem read
+   * error, or the file matches the expected schemaVersion but
+   * has a structurally broken body (e.g. `groups` is not an
+   * array). Required mode fails the rail; optional mode warns to
+   * stderr and falls back to unattributed legacy admission.
+   *
+   * The operator repair is the same as MISSING (regenerate), but
+   * the evidence state is materially different: a MALFORMED
+   * manifest tells you the producer wrote something AND it's
+   * unreadable, which can indicate disk corruption, a partial
+   * write, or external tooling interfering with the file.
+   * Surfacing this as its own code lets CI distinguish "no
+   * manifest" from "manifest is broken."
+   */
+  | "RAIL_REQUIRE_MANIFEST_MALFORMED"
+  /**
+   * The manifest's `schemaVersion` does not match
+   * `EMISSION_MANIFEST_SCHEMA_VERSION`. Required mode fails the
+   * rail; optional mode warns to stderr and falls back to
+   * unattributed legacy admission. Repair: regenerate to produce
+   * a manifest at the current schema version.
+   */
+  | "RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH"
+  /**
+   * The manifest claims one or more paths that do not exist on
+   * disk. Most common cause: a generated file was deleted by
+   * hand, or the manifest is stale (predates a contract that was
+   * later removed). Repair: regenerate.
+   */
+  | "RAIL_REQUIRE_MANIFEST_MISSING_PATHS"
+  /**
+   * One or more on-disk files generated by codegen (detected via
+   * the `@generated:start` marker under
+   * `packages/ds-{framework}/src/components/**`) are NOT in the
+   * manifest. Most common cause: the manifest was produced by a
+   * partial-target generate run and is being checked against a
+   * full-target tree. Repair: regenerate with `--target=all`.
+   */
+  | "RAIL_REQUIRE_MANIFEST_UNTRACKED_GENERATED_PATHS"
+  /**
+   * The sha256 digest of an on-disk file does not match the
+   * manifest's recorded digest for that path. Most common
+   * causes: `--force` overwrite without a fresh manifest write,
+   * hand-edits inside `@generated:start`/`@generated:end`
+   * regions, or external tooling (formatters, eslint --fix) that
+   * mutated the file after the manifest was written. Repair:
+   * regenerate, or revert the unintended edit.
+   */
+  | "RAIL_REQUIRE_MANIFEST_HASH_MISMATCH";
+
+/**
+ * One typed diagnostic emitted by the required-mode verifier.
+ * Carries the offending paths (when applicable) so closure notes
+ * can cite the specific files. `message` is plain prose for human
+ * consumption in the stderr summary; `code` is the stable
+ * machine-readable identifier.
+ */
+export interface RailDiagnostic {
+  code: RailDiagnosticCode;
+  message: string;
+  /**
+   * The offending paths, when applicable to the code. Workspace-
+   * root-relative POSIX. Empty/absent for codes that do not
+   * relate to specific files (e.g. SCHEMA_MISMATCH).
+   */
+  paths?: readonly string[];
+}
+
 export interface RailReport {
   timestamp: string;
   scope: "workspace";
@@ -365,6 +513,19 @@ export interface RailReport {
    * one was supplied. `null` in legacy invocations.
    */
   artifactManifest: EmissionManifest | null;
+  /**
+   * Whether the rail was invoked with `--require-artifact-manifest`.
+   * Carried in the report so closure notes can distinguish
+   * required-mode passes from optional-mode passes.
+   */
+  requireArtifactManifest: boolean;
+  /**
+   * Diagnostics from the required-mode verifier. Present (possibly
+   * empty) when `requireArtifactManifest` is true; omitted in
+   * optional mode. A non-empty list forces `overall: "fail"`
+   * regardless of framework-plan outcomes.
+   */
+  requiredModeDiagnostics?: readonly RailDiagnostic[];
   frameworks: Record<FrameworkId, FrameworkValidationResult>;
   knownGaps: string[];
   overall: "pass" | "fail";

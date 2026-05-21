@@ -13,6 +13,7 @@
  *
  * Run from repository root: `npm run generate -- [--target=react,vue] [...]`
  */
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
@@ -43,9 +44,11 @@ import {
   createContractValidator,
   formatIssues,
 } from "./validate.js";
-import type {
-  EmissionManifest,
-  EmittedArtifactGroup,
+import {
+  EMISSION_MANIFEST_SCHEMA_VERSION,
+  type EmissionManifest,
+  type EmittedArtifactFile,
+  type EmittedArtifactGroup,
 } from "./validation/types.js";
 import {
   EMISSION_MANIFEST_RELATIVE_PATH,
@@ -268,12 +271,12 @@ function emitForTarget(
 
   const groups: EmittedArtifactGroup[] = [];
   for (const ir of irs) {
-    const writtenPaths = writeFiles(emitter, ir, binding, args);
-    if (writtenPaths.length > 0) {
+    const writtenFiles = writeFiles(emitter, ir, binding, args);
+    if (writtenFiles.length > 0) {
       groups.push({
         framework: emitter.id,
         component: ir.name,
-        paths: writtenPaths,
+        files: writtenFiles,
       });
     }
   }
@@ -286,18 +289,26 @@ function emitForTarget(
 }
 
 /**
- * Write every file the emitter produced for one component on one target.
- * Returns the workspace-root-relative POSIX paths of files actually
- * written (empty in `--dry-run`, and excludes skipped legacy files).
- * Legacy snapshots (kind: "migrated") are NOT included — they are
- * preservation artifacts, not new generated output.
+ * Write every file the emitter produced for one component on one
+ * target. Returns one EmittedArtifactFile per file actually
+ * written, with the post-write content sha256 digest. Empty in
+ * `--dry-run`. Excludes skipped legacy files. Legacy snapshots
+ * (kind: "migrated") are NOT included — they are preservation
+ * artifacts, not new generated output.
+ *
+ * The sha256 is computed by re-reading the just-written file from
+ * disk, NOT by hashing the in-memory generated string. This
+ * intentionally captures any newline/formatter effects that
+ * `fs.writeFileSync` (or downstream tooling between write and
+ * verification) might introduce, so the digest binds the manifest
+ * to the bytes the framework checkers actually consume.
  */
 function writeFiles(
   emitter: FrameworkEmitter,
   ir: ComponentIR,
   binding: TargetBinding,
   args: CliArgs,
-): string[] {
+): EmittedArtifactFile[] {
   const componentFiles: GeneratedFile[] = args.testsOnly
     ? []
     : emitter.emitComponent(ir, {
@@ -329,7 +340,7 @@ function writeFiles(
     return [];
   }
 
-  const written: string[] = [];
+  const written: EmittedArtifactFile[] = [];
   for (const file of allFiles) {
     const absPath = path.join(binding.componentsRoot, file.relativePath);
     fs.mkdirSync(path.dirname(absPath), { recursive: true });
@@ -345,7 +356,10 @@ function writeFiles(
       );
     }
     fs.writeFileSync(absPath, result.contents);
-    written.push(toPosixRel(absPath));
+    written.push({
+      path: toPosixRel(absPath),
+      sha256: sha256FromDisk(absPath),
+    });
   }
   console.log(`  GENERATED  ${args.testsOnly ? "(tests) " : ""}${ir.name}`);
   return written;
@@ -360,9 +374,22 @@ function toPosixRel(absPath: string): string {
 }
 
 /**
+ * Lowercase hex sha256 of the file at `absPath`. Reads bytes from
+ * disk (NOT from any in-memory copy) so the digest captures the
+ * actual on-disk state — including any newline normalization
+ * `fs.writeFileSync` applied, or any downstream tooling that may
+ * have mutated the file after write.
+ */
+function sha256FromDisk(absPath: string): string {
+  const bytes = fs.readFileSync(absPath);
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+/**
  * Serialize the EmissionManifest to its well-known location so
  * `validate:generated` can join it against framework PlanCommand
- * scopes.
+ * scopes AND verify on-disk artifacts against the manifest's
+ * recorded digests (REQUIRED-CI-01).
  *
  * The manifest is per-machine (gitignored). Each successful
  * non-dry-run, non-tests-only invocation of the codegen CLI
@@ -370,17 +397,24 @@ function toPosixRel(absPath: string): string {
  * manifest scoped to the requested targets only — the rail consumes
  * whatever is on disk, and a subsetted manifest means subsetted
  * admission attribution.
+ *
+ * The manifest carries an explicit `schemaVersion`. Consumers that
+ * see a mismatch must either fall back to legacy unattributed mode
+ * (optional rail) or fail with RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH
+ * (required rail). Never silently degrade.
  */
 function writeEmissionManifest(groups: EmittedArtifactGroup[]): void {
   const manifest: EmissionManifest = {
+    schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: new Date().toISOString(),
     groups,
   };
   const absPath = emissionManifestAbsolutePath(cwd);
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  const fileCount = groups.reduce((acc, g) => acc + g.files.length, 0);
   console.log(
-    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} artifact group(s))`,
+    `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} group(s), ${fileCount} file(s), schema v${EMISSION_MANIFEST_SCHEMA_VERSION})`,
   );
 }
 

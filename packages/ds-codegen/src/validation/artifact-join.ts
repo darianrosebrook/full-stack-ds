@@ -102,16 +102,16 @@ function attributeGroup(
   runByCheck: ReadonlyMap<string, PlanCommandRun>,
 ): ArtifactGroupAttribution {
   // Per-command attribution at the GROUP level. A command covers
-  // the group if its scope covers at least one path in the group.
-  // (All paths in a group live in the same package by
-  // construction, so per-path attribution within a group would
-  // produce identical labels for every path and just inflate the
-  // report.) Files that fail extension/exclude filters are
-  // surfaced via `notSelectedExtensions` in the entry below.
+  // the group if its scope covers at least one file in the group.
+  // (All files in a group live in the same package by
+  // construction, so per-file attribution within a group would
+  // produce identical labels for every file and just inflate the
+  // report.)
+  const groupPaths = group.files.map((f) => f.path);
   const admission: ArtifactAdmissionEntry[] = [];
   for (const pc of planCommands) {
     if (!pc.scope) continue;
-    const coverage = labelGroupForCommand(group, pc.scope);
+    const coverage = labelGroupForCommand(groupPaths, pc.scope);
     if (coverage === null) continue;
     const run = runByCheck.get(pc.check);
     if (!run) continue;
@@ -128,7 +128,7 @@ function attributeGroup(
   }
   return {
     component: group.component,
-    paths: group.paths,
+    paths: groupPaths,
     admission,
   };
 }
@@ -149,10 +149,10 @@ function attributeGroup(
  * comments for the semantic distinction).
  */
 function labelGroupForCommand(
-  group: EmittedArtifactGroup,
+  groupPaths: readonly string[],
   scope: PlanCommandScope,
 ): ArtifactAdmissionCoverage | null {
-  for (const p of group.paths) {
+  for (const p of groupPaths) {
     if (pathInScope(p, scope)) return scope.coverage;
   }
   return null;
