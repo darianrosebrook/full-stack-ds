@@ -60,6 +60,7 @@ import {
   emissionManifestAbsolutePath,
 } from "./validation/emission-manifest-path.js";
 import { readManifestForVerification } from "./validation/required-mode.js";
+import { validateContractSemantics } from "./validation/semantic.js";
 import {
   detectOrphans,
   executeOrphanRemoval,
@@ -195,6 +196,14 @@ const STACK_PRIMITIVE_PATH = path.join(
 
 interface CliArgs {
   validateOnly: boolean;
+  /**
+   * When set with --validate, also run the beyond-schema semantic
+   * validator (cross-field references + layer-conditional rules).
+   * Findings are surfaced as additional issues alongside any AJV
+   * errors. Off by default so legacy invocations of --validate stay
+   * non-breaking; opt-in via `pnpm run generate:check`.
+   */
+  checkSemantics: boolean;
   dryRun: boolean;
   testsOnly: boolean;
   force: boolean;
@@ -217,6 +226,7 @@ interface CliArgs {
 
 function parseArgs(argv: string[]): CliArgs {
   const validateOnly = argv.includes("--validate");
+  const checkSemantics = argv.includes("--check-semantics");
   const dryRun = argv.includes("--dry-run");
   const testsOnly = argv.includes("--tests-only");
   const force = argv.includes("--force");
@@ -254,6 +264,7 @@ function parseArgs(argv: string[]): CliArgs {
   const names = argv.filter((a) => !a.startsWith("--"));
   return {
     validateOnly,
+    checkSemantics,
     dryRun,
     testsOnly,
     force,
@@ -366,16 +377,33 @@ function main(): void {
       console.error(`INVALID  ${file}`);
       console.error(formatIssues(result.issues));
       hasErrors = true;
+      continue;
+    }
+
+    // Beyond-schema semantic checks run only when explicitly
+    // requested (--check-semantics). Surfaced as DRIFT separately
+    // from INVALID so operators can tell "fails JSON Schema" from
+    // "fails cross-field invariants".
+    if (args.checkSemantics) {
+      const semIssues = validateContractSemantics(result.value);
+      if (semIssues.length > 0) {
+        console.error(`DRIFT    ${file}`);
+        console.error(formatIssues(semIssues));
+        hasErrors = true;
+      } else {
+        console.log(`  VALID  ${file}`);
+      }
     } else {
       console.log(`  VALID  ${file}`);
-      validContracts.push({
-        contract: result.value,
-        provenance: {
-          path: toPosixRel(filePath),
-          sha256: crypto.createHash("sha256").update(rawBytes).digest("hex"),
-        },
-      });
     }
+
+    validContracts.push({
+      contract: result.value,
+      provenance: {
+        path: toPosixRel(filePath),
+        sha256: crypto.createHash("sha256").update(rawBytes).digest("hex"),
+      },
+    });
   }
 
   console.log(

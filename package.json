@@ -11,6 +11,7 @@
     "generate": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js",
     "generate:all": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --target=all",
     "generate:validate": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --validate",
+    "generate:check": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --validate --check-semantics",
     "generate:dry-run": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --dry-run",
     "generate:all:dry-run": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --target=all --dry-run",
     "generate:watch": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --watch",
