@@ -1,17 +1,19 @@
 ---
 doc_id: ADR-PREVIEW-PIPELINE-001
 authority: adr
-status: draft
+status: proven
+verified_at_commit: ebbfb79
 title: Preview pipeline architecture — Vite middleware per framework
 owner: "@darianrosebrook"
 updated: 2026-05-21
 governs:
-  - src/runtime/shells/react.ts
-  - src/runtime/shells/vue.ts
-  - src/runtime/shells/svelte.ts
-  - src/runtime/shells/lit.ts
   - src/runtime/shells/angular.ts
   - src/runtime/angular-compiler/vite-plugin.ts
+  - src/runtime/react-preview/vite-plugin.ts
+  - src/runtime/vue-preview/vite-plugin.ts
+  - src/runtime/svelte-preview/vite-plugin.ts
+  - src/runtime/lit-preview/vite-plugin.ts
+  - src/runtime/preview-shell-common.ts
   - src/runtime/FrameworkPreview.tsx
 ---
 
@@ -19,7 +21,7 @@ governs:
 
 ## Status
 
-Draft. Recommends migrating the four non-Angular framework shells from in-iframe Babel transpile to a Vite-middleware backend, matching Angular's existing pattern. No code changes have landed against this ADR yet.
+**Accepted. Steps 1-6 shipped and verified.** Final sweep (v3) shows 223/225 components render across all five frameworks; the two remaining failures (`Input.react`, `Checkbox.react`) are a separate `buildReactDemo` bug — `<input>` is a void HTML element and the demo emits `<Input>Input</Input>` — tracked outside this ADR. **Zero regressions vs. v2.** See "Implementation outcome" at the bottom for the per-step commit map and the v2→v3 sweep diff.
 
 ## Context
 
@@ -209,3 +211,51 @@ This ADR does NOT claim:
 - [Vite configureServer / Plugin API](https://vite.dev/guide/api-plugin) — the plugin hooks we'll use.
 - `src/runtime/angular-compiler/vite-plugin.ts` (this repo) — the existing implementation of this pattern.
 - `docs/internal/preview-sweep-results-v2.json` (this repo, gitignored) — the failure catalogue this ADR responds to.
+
+## Implementation outcome
+
+Steps 1-6 shipped across six commits between 2026-05-21 (ADR draft) and the verification at `ebbfb79`. Sweep results recorded in `docs/internal/preview-sweep-results-v3.json` (gitignored). Helper scripts under `docs/internal/sweep-runner.mjs` and `docs/internal/sweep-compare.mjs`.
+
+### Commit map
+
+| Step | What landed | Commit |
+|------|-------------|--------|
+| 1 | Install `@vitejs/plugin-vue` + `@sveltejs/vite-plugin-svelte`, register Vue/Svelte plugins in `vite.config.ts`, add workspace deps for ds-vue/ds-svelte/ds-lit | `e049140` |
+| 2 | `fsds-react-preview` plugin: `/preview/react/<Name>` middleware + `virtual:fsds-preview-react/<Name>/entry.tsx` virtual module + tests | `c27e434` |
+| 3 | `FrameworkPreview.tsx` per-framework src↔srcDoc switch; React tab uses new pipeline live; tests updated to assert per-pipeline iframe contract | `d18fc3b` |
+| 4 | `fsds-vue-preview`, `fsds-svelte-preview`, `fsds-lit-preview` plugins; shared `preview-shell-common.ts`; FrameworkPreview wired for all four; `react()` exclude scopes plugin-react off Vue/Svelte/Lit/Angular workspace files | `5d83fdd` |
+| 5 | Delete `shells/{react,vue,svelte,lit}.ts`, `shells/encode.ts`, `rewriteImports.ts`, `smoke.test.ts`; unify `vite-plugin-fsds-data.ts` types with `src/types/data.ts` to fix a Step 4 typecheck error | `ebbfb79` |
+| 6 | Sweep verification (no code changes — only `docs/internal/sweep-runner.mjs` + `sweep-compare.mjs`, both gitignored). | this commit |
+
+### v2 → v3 sweep diff
+
+Sweep methodology: same as v2 (drive a real Chromium against each `/preview/<fw>/<Name>` for the new-pipeline frameworks, and against `/#/component/<Name>/developer` with the Angular tab clicked for Angular, recording `fsds:ready` / `fsds:error` postMessage per combo). v3 runtime: ~55s for 225 combos with warm Angular cache.
+
+```
+Total cells:       225
+  no-change-pass:  142  (already worked before, still works)
+  no-change-fail:    2  (Input.react, Checkbox.react — pre-existing demos.ts void-element bug)
+  fixed:            81  (v2 fail → v3 pass)
+  regressed:         0
+```
+
+| Framework | v2 ready | v3 ready | Δ |
+|-----------|----------|----------|---|
+| React     | 20/45    | 43/45    | +23 |
+| Vue       | 20/45    | 45/45    | +25 |
+| Svelte    | 20/45    | 45/45    | +25 |
+| Angular   | 45/45    | 45/45    | 0 |
+| Lit       | 37/45    | 45/45    | +8 |
+| **Total** | **142/225** | **223/225** | **+81** |
+
+### Pitfalls hit during implementation (in addition to those documented above)
+
+1. **`@vitejs/plugin-react` v6 + plugin-vue/plugin-svelte coexistence.** plugin-react v6 uses oxc under the hood and injects React Fast Refresh hooks (`$RefreshSig$`, `$RefreshReg$`) into any `.ts`/`.tsx` file it claims — including the `<script lang="ts">` sub-modules emitted by plugin-vue, the `.svelte.ts` rune files in ds-svelte, and any plain `.ts` in ds-lit. Even with an explicit `exclude` regex matching the workspace path, the oxc transform fires before the exclude takes effect. Worked around by inlining no-op stubs for both globals at the top of the common preview shell (`src/runtime/preview-shell-common.ts:REFRESH_STUBS`). The React preview shell wires the real refresh runtime.
+2. **Vite's import-analysis rejects `/@id/<virtual:...>` URLs with literal colons.** The shells use a runtime-computed string (`"/@id/" + entryId`) to dodge static analysis. See `src/runtime/preview-shell-common.ts` and `src/runtime/react-preview/shell.ts`.
+3. **Entry virtual IDs must carry a file extension.** Without `.tsx` (for React) / `.ts` (for Vue/Svelte/Lit), Vite's import-analyzer refuses to parse JSX in extensionless virtual modules.
+4. **Showcase-top-window pageerror contamination during sweeping.** Angular previews live inside an iframe inside the showcase; when the React tab's preview crashes (e.g. Input/Checkbox void-element bug), its `fsds:error` postMessage and any React error boundary noise bubbles up to the showcase top window. The sweep runner clears the captured result after clicking the Angular tab so only post-click messages count.
+
+### Non-pipeline residuals
+
+- `Input.react` and `Checkbox.react` still fail because `buildReactDemo` emits `<Input>Input</Input>` for components whose root is a void HTML element. Same bug affects Img, Hr, Br if/when they're added. Tracked separately as a `demos.ts` cleanup (the `NO_CHILD_LABEL` set in `src/runtime/demos.ts` should be expanded, or the demo builder should consult `anatomy.dom.tag` to detect void elements).
+- `demos.ts:elementTag` uses naive lowercase for the "lit" branch (`fsds-profileflag` instead of `fsds-profile-flag`). The Lit preview plugin computes the tag correctly itself via `pascalToKebab` — see `src/runtime/lit-preview/vite-plugin.ts:litElementTag` — so previews work today, but the `demos.ts` helper still has the bug for any consumer that depends on it.
