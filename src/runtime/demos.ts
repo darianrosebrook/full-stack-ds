@@ -55,7 +55,8 @@ function escape(s: string): string {
 // Components whose demo node should render with no inner text — typically
 // because the visual is purely graphic (icon, avatar) or purely structural
 // (divider, aspect ratio, page transition). Editing this list is the cheapest
-// way to fix a noisy demo without touching the contract.
+// way to fix a noisy demo for components whose root element CAN take
+// children but shouldn't for demo aesthetics.
 const NO_CHILD_LABEL = new Set<string>([
   "Avatar",
   "Divider",
@@ -68,18 +69,62 @@ const NO_CHILD_LABEL = new Set<string>([
   "Status",
 ]);
 
+// HTML void elements per the spec — they cannot have children. Putting
+// text inside any of these is a hard error in React (it throws at render
+// time: "X is a void element tag and must neither have `children` nor use
+// `dangerouslySetInnerHTML`") and undefined behavior in the other frameworks
+// (Svelte / Lit may silently drop the text; Vue may emit invalid HTML).
+//
+// Source: https://html.spec.whatwg.org/multipage/syntax.html#void-elements
+const VOID_HTML_TAGS = new Set<string>([
+  "area",
+  "base",
+  "br",
+  "col",
+  "embed",
+  "hr",
+  "img",
+  "input",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr",
+]);
+
+/**
+ * True when the component's root DOM tag is an HTML void element. Derived
+ * from the contract's `anatomy.dom.tag` so newly-added components inherit
+ * correct child-suppression automatically — no per-component allow-list
+ * entry needed for Input/Checkbox/Image/etc.
+ *
+ * The legacy NO_CHILD_LABEL set is still consulted because some non-void
+ * components (Avatar, Divider, etc.) also look bad with demo text inside.
+ */
+function isVoidRootElement(component: ComponentBundle): boolean {
+  const anatomy = component.contract.anatomy;
+  if (!anatomy || Array.isArray(anatomy)) return false;
+  const rootTag = anatomy.dom?.tag;
+  return typeof rootTag === "string" && VOID_HTML_TAGS.has(rootTag);
+}
+
 export function childLabel(component: ComponentBundle): string {
-  return NO_CHILD_LABEL.has(component.name) ? "" : component.name;
+  if (NO_CHILD_LABEL.has(component.name)) return "";
+  if (isVoidRootElement(component)) return "";
+  return component.name;
 }
 
 export function elementTag(component: ComponentBundle, fw: Framework): string {
-  if (fw === "lit") {
-    return `fsds-${component.name.toLowerCase()}`;
-  }
-  if (fw === "angular") {
-    // Angular emitters use kebab-case selectors (e.g. fsds-profile-flag, not
-    // fsds-profileflag). Lowercasing alone collapses internal word boundaries
-    // and produces selectors that don't match the components.
+  // Both Lit and Angular emitters register their custom elements using
+  // kebab-case selectors (fsds-profile-flag, not fsds-profileflag). Naive
+  // lowercase collapses internal word boundaries and produces selectors
+  // that don't match the components. The Lit branch used to use naive
+  // lowercase, which produced wrong tags for multi-word components — the
+  // Lit preview plugin worked around this internally
+  // (src/runtime/lit-preview/vite-plugin.ts:litElementTag); aligning the
+  // helper here lets any other consumer use this function correctly too.
+  if (fw === "lit" || fw === "angular") {
     return `fsds-${pascalToKebab(component.name)}`;
   }
   return component.name;

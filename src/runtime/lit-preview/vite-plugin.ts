@@ -10,7 +10,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { defaultPropsFromContract, childLabel } from "../demos";
+import { defaultPropsFromContract, childLabel, elementTag } from "../demos";
 import type { ComponentBundle } from "../../types/data";
 
 const URL_PREFIX = "/preview/lit/";
@@ -39,26 +39,6 @@ function parseVirtualEntryId(id: string) {
   return { componentName: match[1] };
 }
 
-/**
- * The Lit components define their custom-element tags as kebab-case
- * (e.g. `fsds-profile-flag`, not `fsds-profileflag`). Mirror the conversion
- * the existing Angular path uses in demos.ts elementTag — lowercasing alone
- * collapses internal word boundaries.
- *
- * Note: demos.ts:elementTag uses naive lowercase for the "lit" branch,
- * which is a pre-existing bug (won't match multi-word custom elements like
- * ProfileFlag). Tracking the fix on task #25 along with the void-element
- * demo cleanup. For now this plugin computes the tag correctly so the
- * preview works while the demos.ts helper stays as-is.
- */
-function litElementTag(componentName: string): string {
-  const kebab = componentName
-    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
-    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
-    .toLowerCase();
-  return `fsds-${kebab}`;
-}
-
 function renderHtmlAttrs(component: ComponentBundle): string {
   const props = defaultPropsFromContract(component);
   return Object.entries(props)
@@ -80,7 +60,7 @@ function buildEntrySource(componentName: string, bundle: Awaited<ReturnType<type
   // registration. Use absolute Vite-served path so siblings (Behavior file,
   // primitives) resolve through the normal graph.
   const absImport = `/packages/ds-lit/src/components/${componentName}/${componentName}.ts`;
-  const tag = litElementTag(componentName);
+  const tag = elementTag(component, "lit");
   const attrs = renderHtmlAttrs(component);
   const child = childLabel(component);
   const inner = child.replace(/</g, "&lt;").replace(/&/g, "&amp;");
