@@ -1,0 +1,33 @@
+{
+  "name": "@full-stack-ds/tokens",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Design-token source (DTCG 1.0) + build pipeline emitting cascade-layered CSS, brand/density variants, and TypeScript types.",
+  "exports": {
+    "./tokens.css": "./generated/tokens.css",
+    "./generated/*": "./generated/*",
+    "./brands/*": "./generated/brands/*",
+    "./components/*": "./components/*"
+  },
+  "files": [
+    "generated",
+    "components",
+    "core",
+    "brands",
+    "density"
+  ],
+  "scripts": {
+    "build": "tsx build/build.ts --prefix=fsds",
+    "validate": "tsx build/build.ts --prefix=fsds --validate-only"
+  },
+  "dependencies": {
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.2",
+    "tsx": "^4.7.0",
+    "typescript": "^6.0.2"
+  }
+}

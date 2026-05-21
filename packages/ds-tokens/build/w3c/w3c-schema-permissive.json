@@ -1,0 +1,490 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://darianrosebrook.com/ui/designTokens/designTokens.schema.json",
+  "title": "Design Tokens Schema (Permissive)",
+  "description": "A permissive JSON schema for validating design token files. Accepts both DTCG 2025.10 format and legacy/simplified formats with custom extensions.",
+  "type": "object",
+  "$defs": {
+    "token": {
+      "type": "object",
+      "properties": {
+        "$value": {
+          "description": "The value of the design token (accepts multiple formats)",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "array"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "$type": {
+          "description": "The type of the design token (DTCG 2025.10 + common extensions)",
+          "type": "string",
+          "enum": [
+            "color",
+            "dimension",
+            "fontFamily",
+            "fontWeight",
+            "duration",
+            "cubicBezier",
+            "number",
+            "border",
+            "transition",
+            "shadow",
+            "gradient",
+            "typography",
+            "strokeStyle",
+            "opacity",
+            "spacing",
+            "radius",
+            "elevation",
+            "motion",
+            "layout",
+            "interaction",
+            "string",
+            "keyframes"
+          ]
+        },
+        "$description": {
+          "description": "A human-readable description of the design token",
+          "type": "string"
+        },
+        "$deprecated": {
+          "description": "Indicates if the token is deprecated (DTCG 2025.10)",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "description": "Deprecation message or reason"
+            }
+          ]
+        },
+        "$extensions": {
+          "description": "Platform-specific extensions",
+          "type": "object",
+          "properties": {
+            "design": {
+              "type": "object",
+              "description": "Design system specific extensions",
+              "properties": {
+                "paths": {
+                  "type": "object",
+                  "description": "Theme-specific token references for light/dark modes",
+                  "properties": {
+                    "light": {
+                      "type": "string",
+                      "description": "Token reference for light mode (e.g., \"{core.color.palette.neutral.600}\")",
+                      "pattern": "^\\{[^}]+\\}$"
+                    },
+                    "dark": {
+                      "type": "string",
+                      "description": "Token reference for dark mode (e.g., \"{core.color.palette.neutral.300}\")",
+                      "pattern": "^\\{[^}]+\\}$"
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "calc": {
+                  "type": "string",
+                  "description": "CSS calc() expression with token substitution (e.g., \"calc({spacing.size.04} + 2px)\")",
+                  "pattern": "^calc\\(.*\\{.*\\}.*\\)$"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "description": "The type inherited by all tokens in this group",
+          "type": "string",
+          "enum": [
+            "color",
+            "dimension",
+            "fontFamily",
+            "fontWeight",
+            "duration",
+            "cubicBezier",
+            "number",
+            "border",
+            "transition",
+            "shadow",
+            "gradient",
+            "typography",
+            "opacity",
+            "spacing",
+            "radius",
+            "elevation",
+            "motion",
+            "layout",
+            "interaction",
+            "string",
+            "keyframes",
+            "strokeStyle"
+          ]
+        },
+        "$description": {
+          "description": "A human-readable description of the token group",
+          "type": "string"
+        }
+      },
+      "patternProperties": {
+        "^(?!\\$).*": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/token"
+            },
+            {
+              "$ref": "#/$defs/group"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "colorToken": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "color"
+            },
+            "$value": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "description": "DTCG 2025.10 color object format",
+                  "properties": {
+                    "colorSpace": {
+                      "type": "string",
+                      "enum": [
+                        "srgb",
+                        "srgb-linear",
+                        "hsl",
+                        "hwb",
+                        "lab",
+                        "lch",
+                        "oklab",
+                        "oklch",
+                        "display-p3",
+                        "a98-rgb",
+                        "prophoto-rgb",
+                        "rec2020",
+                        "xyz-d65",
+                        "xyz-d50"
+                      ]
+                    },
+                    "components": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          { "type": "number" },
+                          { "type": "string", "enum": ["none"] }
+                        ]
+                      },
+                      "minItems": 3,
+                      "maxItems": 3
+                    },
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "hex": {
+                      "type": "string",
+                      "pattern": "^#[0-9A-Fa-f]{6}$"
+                    }
+                  },
+                  "required": ["colorSpace", "components"],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{3,8}$",
+                  "description": "Legacy hex color"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^rgb\\(",
+                  "description": "Legacy rgb() color"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^hsl\\(",
+                  "description": "Legacy hsl() color"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^oklch\\(",
+                  "description": "Legacy oklch() color"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\{[^}]+\\}$",
+                  "description": "Token reference"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "dimensionToken": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "dimension"
+            },
+            "$value": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "description": "DTCG 2025.10 dimension object format",
+                  "properties": {
+                    "value": {
+                      "type": "number"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["px", "rem"]
+                    }
+                  },
+                  "required": ["value", "unit"],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "string",
+                  "pattern": "^-?[0-9]+(\\.[0-9]+)?(px|rem|em|%|vh|vw|vmin|vmax)$",
+                  "description": "Legacy string dimension"
+                },
+                {
+                  "type": "number",
+                  "description": "Legacy numeric dimension"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\{[^}]+\\}$",
+                  "description": "Token reference"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "numberToken": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "number"
+            },
+            "$value": {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\{[^}]+\\}$"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "fontFamilyToken": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "fontFamily"
+            },
+            "$value": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\{[^}]+\\}$"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "durationToken": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "duration"
+            },
+            "$value": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "description": "DTCG 2025.10 duration object format",
+                  "properties": {
+                    "value": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["ms", "s"]
+                    }
+                  },
+                  "required": ["value", "unit"],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Legacy numeric duration (assumed ms)"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[0-9]+(\\.[0-9]+)?(ms|s)$",
+                  "description": "Legacy string duration"
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\{[^}]+\\}$",
+                  "description": "Token reference"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "shadowToken": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "properties": {
+            "$type": {
+              "const": "shadow"
+            },
+            "$value": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "description": "DTCG 2025.10 shadow object format",
+                  "properties": {
+                    "offsetX": {
+                      "oneOf": [{ "type": "object" }, { "type": "string" }]
+                    },
+                    "offsetY": {
+                      "oneOf": [{ "type": "object" }, { "type": "string" }]
+                    },
+                    "blur": {
+                      "oneOf": [{ "type": "object" }, { "type": "string" }]
+                    },
+                    "spread": {
+                      "oneOf": [{ "type": "object" }, { "type": "string" }]
+                    },
+                    "color": {
+                      "oneOf": [{ "type": "object" }, { "type": "string" }]
+                    },
+                    "inset": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["offsetX", "offsetY", "blur", "spread", "color"],
+                  "additionalProperties": true
+                },
+                {
+                  "type": "array",
+                  "description": "Array of shadows",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object"
+                      },
+                      {
+                        "type": "string",
+                        "pattern": "^\\{[^}]+\\}$"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\{[^}]+\\}$",
+                  "description": "Token reference"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "patternProperties": {
+    "^(?!\\$).*": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "$ref": "#/$defs/group"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "additionalProperties": true
+}

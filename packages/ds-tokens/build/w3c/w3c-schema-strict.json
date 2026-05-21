@@ -1,0 +1,722 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://design-tokens.github.io/schema/w3c-design-tokens.schema.json",
+  "title": "W3C Design Tokens Schema (DTCG 2025.10)",
+  "description": "A JSON schema for validating design token files according to the W3C Design Tokens Community Group (DTCG) 2025.10 specification. Created by Darian Rosebrook (@darianrosebrook)",
+  "type": "object",
+  "$defs": {
+    "token": {
+      "type": "object",
+      "properties": {
+        "$value": {
+          "description": "The value of the design token. Structure depends on $type.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/colorValue"
+            },
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "$ref": "#/$defs/fontFamilyValue"
+            },
+            {
+              "$ref": "#/$defs/fontWeightValue"
+            },
+            {
+              "$ref": "#/$defs/numberValue"
+            },
+            {
+              "$ref": "#/$defs/durationValue"
+            },
+            {
+              "$ref": "#/$defs/cubicBezierValue"
+            },
+            {
+              "$ref": "#/$defs/shadowValue"
+            },
+            {
+              "$ref": "#/$defs/typographyValue"
+            },
+            {
+              "$ref": "#/$defs/borderValue"
+            },
+            {
+              "$ref": "#/$defs/gradientValue"
+            },
+            {
+              "$ref": "#/$defs/strokeStyleValue"
+            },
+            {
+              "$ref": "#/$defs/transitionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias reference to another token"
+            }
+          ]
+        },
+        "$type": {
+          "description": "The type of the design token (DTCG 2025.10 standard types)",
+          "type": "string",
+          "enum": [
+            "color",
+            "dimension",
+            "fontFamily",
+            "fontWeight",
+            "duration",
+            "cubicBezier",
+            "number",
+            "border",
+            "transition",
+            "shadow",
+            "gradient",
+            "typography",
+            "strokeStyle"
+          ]
+        },
+        "$description": {
+          "description": "A human-readable description of the design token",
+          "type": "string"
+        },
+        "$deprecated": {
+          "description": "Indicates if the token is deprecated",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string",
+              "description": "Deprecation message or reason"
+            }
+          ]
+        },
+        "$extensions": {
+          "description": "Platform-specific extensions and custom properties",
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "$type": {
+          "description": "The type inherited by all tokens in this group",
+          "type": "string",
+          "enum": [
+            "color",
+            "dimension",
+            "fontFamily",
+            "fontWeight",
+            "duration",
+            "cubicBezier",
+            "number",
+            "border",
+            "transition",
+            "shadow",
+            "gradient",
+            "typography",
+            "strokeStyle"
+          ]
+        },
+        "$description": {
+          "description": "A human-readable description of the token group",
+          "type": "string"
+        },
+        "$extensions": {
+          "description": "Platform-specific extensions and custom properties",
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "patternProperties": {
+        "^(?!\\$).*": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/token"
+            },
+            {
+              "$ref": "#/$defs/group"
+            }
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "colorValue": {
+      "description": "A DTCG 2025.10-compliant color value object (Section 4.1)",
+      "type": "object",
+      "properties": {
+        "colorSpace": {
+          "type": "string",
+          "description": "The color space (Section 4.2)",
+          "enum": [
+            "srgb",
+            "srgb-linear",
+            "hsl",
+            "hwb",
+            "lab",
+            "lch",
+            "oklab",
+            "oklch",
+            "display-p3",
+            "a98-rgb",
+            "prophoto-rgb",
+            "rec2020",
+            "xyz-d65",
+            "xyz-d50"
+          ]
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "enum": ["none"],
+                "description": "The 'none' keyword for missing/not applicable components (Section 4.1.1)"
+              }
+            ]
+          },
+          "description": "The channel values for the specified color space (3 components, numbers or 'none')",
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "alpha": {
+          "type": "number",
+          "description": "The alpha channel value (0 to 1, default 1 if omitted)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "hex": {
+          "type": "string",
+          "description": "Optional fallback color in 6-digit CSS hex notation (Section 4.1)",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
+      },
+      "required": ["colorSpace", "components"],
+      "additionalProperties": false
+    },
+    "dimensionValue": {
+      "description": "A DTCG 2025.10-compliant dimension value object",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "The numeric value"
+        },
+        "unit": {
+          "type": "string",
+          "description": "The unit of measurement (DTCG 2025.10 standard units)",
+          "enum": ["px", "rem"]
+        }
+      },
+      "required": ["value", "unit"],
+      "additionalProperties": true
+    },
+    "fontFamilyValue": {
+      "description": "A DTCG 2025.10-compliant font family value",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "A single font family name"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "An array of font family names (font stack)"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to another fontFamily token"
+        }
+      ]
+    },
+    "fontWeightValue": {
+      "description": "A DTCG 2025.10-compliant font weight value",
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Numeric font weight (1-1000)"
+        },
+        {
+          "type": "string",
+          "enum": [
+            "thin",
+            "hairline",
+            "extra-light",
+            "ultra-light",
+            "light",
+            "normal",
+            "regular",
+            "book",
+            "medium",
+            "semi-bold",
+            "demi-bold",
+            "bold",
+            "extra-bold",
+            "ultra-bold",
+            "black",
+            "heavy",
+            "extra-black",
+            "ultra-black"
+          ],
+          "description": "Named font weight"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to another fontWeight token"
+        }
+      ]
+    },
+    "numberValue": {
+      "description": "A DTCG 2025.10-compliant number value",
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to another number token"
+        }
+      ]
+    },
+    "durationValue": {
+      "description": "A DTCG 2025.10-compliant duration value (Section 8.5)",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "minimum": 0,
+              "description": "An integer or floating-point value representing the numeric value"
+            },
+            "unit": {
+              "type": "string",
+              "enum": ["ms", "s"],
+              "description": "Unit of time: 'ms' (millisecond) or 's' (second)"
+            }
+          },
+          "required": ["value", "unit"],
+          "additionalProperties": false
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to another duration token"
+        }
+      ]
+    },
+    "cubicBezierValue": {
+      "description": "A DTCG 2025.10-compliant cubic bezier value",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "Array of 4 numbers [x1, y1, x2, y2]"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to another cubicBezier token"
+        }
+      ]
+    },
+    "shadowValue": {
+      "description": "A DTCG 2025.10-compliant shadow value (single shadow or array of shadows)",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/singleShadowValue"
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/singleShadowValue"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\{[^}]+\\}$",
+                "description": "An alias to another shadow token"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to another shadow token"
+        }
+      ]
+    },
+    "singleShadowValue": {
+      "description": "A DTCG 2025.10-compliant single shadow object",
+      "type": "object",
+      "properties": {
+        "offsetX": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "offsetY": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "blur": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "spread": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "color": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/colorValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a color token"
+            }
+          ]
+        },
+        "inset": {
+          "type": "boolean",
+          "description": "Whether the shadow is inset"
+        }
+      },
+      "required": ["offsetX", "offsetY", "blur", "spread", "color"],
+      "additionalProperties": true
+    },
+    "typographyValue": {
+      "description": "A DTCG 2025.10-compliant typography composite value",
+      "type": "object",
+      "properties": {
+        "fontFamily": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/fontFamilyValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a fontFamily token"
+            }
+          ]
+        },
+        "fontSize": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "fontWeight": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/fontWeightValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a fontWeight token"
+            }
+          ]
+        },
+        "letterSpacing": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "lineHeight": {
+          "oneOf": [
+            {
+              "type": "number",
+              "description": "Unitless line height multiplier"
+            },
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a number or dimension token"
+            }
+          ]
+        }
+      },
+      "required": ["fontFamily", "fontSize"],
+      "additionalProperties": true
+    },
+    "borderValue": {
+      "description": "A DTCG 2025.10-compliant border composite value",
+      "type": "object",
+      "properties": {
+        "color": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/colorValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a color token"
+            }
+          ]
+        },
+        "width": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/dimensionValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a dimension token"
+            }
+          ]
+        },
+        "style": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/strokeStyleValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a strokeStyle token"
+            }
+          ]
+        }
+      },
+      "required": ["color", "width", "style"],
+      "additionalProperties": true
+    },
+    "strokeStyleValue": {
+      "description": "A DTCG 2025.10-compliant stroke style value",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "solid",
+            "dashed",
+            "dotted",
+            "double",
+            "groove",
+            "ridge",
+            "inset",
+            "outset"
+          ],
+          "description": "Standard CSS border style"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "dashArray": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/dimensionValue"
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^\\{[^}]+\\}$",
+                    "description": "An alias to a dimension token"
+                  }
+                ]
+              },
+              "minItems": 1,
+              "description": "Array of dimension values for custom dash pattern"
+            },
+            "lineCap": {
+              "type": "string",
+              "enum": ["butt", "round", "square"],
+              "description": "Line cap style"
+            }
+          },
+          "required": ["dashArray"],
+          "additionalProperties": true
+        },
+        {
+          "type": "string",
+          "pattern": "^\\{[^}]+\\}$",
+          "description": "An alias to a strokeStyle token"
+        }
+      ]
+    },
+    "gradientValue": {
+      "description": "A DTCG 2025.10-compliant gradient value (array of color stops)",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "color": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/colorValue"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\{[^}]+\\}$",
+                "description": "An alias to a color token"
+              }
+            ]
+          },
+          "position": {
+            "oneOf": [
+              {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Position as a number between 0 and 1"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\{[^}]+\\}$",
+                "description": "An alias to a number token"
+              }
+            ]
+          }
+        },
+        "required": ["color"],
+        "additionalProperties": true
+      },
+      "minItems": 2
+    },
+    "transitionValue": {
+      "description": "A DTCG 2025.10-compliant transition composite value",
+      "type": "object",
+      "properties": {
+        "duration": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/durationValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a duration token"
+            }
+          ]
+        },
+        "delay": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/durationValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a duration token"
+            }
+          ]
+        },
+        "timingFunction": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/cubicBezierValue"
+            },
+            {
+              "type": "string",
+              "pattern": "^\\{[^}]+\\}$",
+              "description": "An alias to a cubicBezier token"
+            }
+          ]
+        }
+      },
+      "required": ["duration", "timingFunction"],
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference (optional)"
+    },
+    "$extensions": {
+      "type": "object",
+      "description": "File-level extensions and custom properties",
+      "additionalProperties": true
+    }
+  },
+  "patternProperties": {
+    "^(?!\\$).*": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/token"
+        },
+        {
+          "$ref": "#/$defs/group"
+        }
+      ]
+    }
+  },
+  "additionalProperties": true
+}
