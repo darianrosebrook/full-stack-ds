@@ -37,12 +37,13 @@ const COMMON_PROPS = {
 };
 
 describe("FrameworkPreview", () => {
-  it("legacy-pipeline frameworks mount with srcDoc + scripts-only sandbox", () => {
-    // Vue / Svelte / Lit / Angular still use the in-iframe Babel shell while
-    // their Vite-middleware plugins are pending (ADR-PREVIEW-PIPELINE-001
-    // step 4). Keep their sandbox tight: srcdoc origin is null, so
-    // `allow-same-origin` would have no effect anyway, and stricter is fine.
-    render(<FrameworkPreview framework="vue" {...COMMON_PROPS} />);
+  it("legacy-pipeline framework (Angular) mounts with srcDoc + scripts-only sandbox", () => {
+    // After ADR-PREVIEW-PIPELINE-001 step 4 Angular is the only framework
+    // still on the legacy in-iframe shell — its preview path uses srcdoc
+    // wrapping an importmap pointing at /preview/angular/<file>.js compiled
+    // by the existing angular-compiler plugin. Sandbox stays at scripts-only
+    // because srcdoc's origin is null and allow-same-origin would no-op.
+    render(<FrameworkPreview framework="angular" {...COMMON_PROPS} />);
     const iframe = getIframe();
     expect(iframe.getAttribute("sandbox")).toBe("allow-scripts");
     const srcDoc = iframe.getAttribute("srcdoc") ?? "";
@@ -50,17 +51,21 @@ describe("FrameworkPreview", () => {
     expect(iframe.getAttribute("src")).toBeNull();
   });
 
-  it("new-pipeline frameworks mount with src + allow-same-origin sandbox", () => {
-    // React now loads via /preview/react/<Name> served by fsds-react-preview
-    // (ADR-PREVIEW-PIPELINE-001 step 2). The iframe needs `allow-same-origin`
-    // so its dynamic module imports succeed (pitfall #2: opaque origins
-    // CORS-block /@id/ fetches).
-    render(<FrameworkPreview framework="react" {...COMMON_PROPS} />);
-    const iframe = getIframe();
-    expect(iframe.getAttribute("sandbox")).toBe("allow-scripts allow-same-origin");
-    expect(iframe.getAttribute("src")).toBe("/preview/react/Button");
-    expect(iframe.getAttribute("srcdoc")).toBeNull();
-  });
+  it.each<Framework>(["react", "vue", "svelte", "lit"])(
+    "new-pipeline framework (%s) mounts with src + allow-same-origin sandbox",
+    (framework) => {
+      // React/Vue/Svelte/Lit each load via /preview/<fw>/<Name> served by
+      // their respective fsds-<fw>-preview plugins (ADR-PREVIEW-PIPELINE-001
+      // steps 2 + 4). The iframe needs `allow-same-origin` so its dynamic
+      // module imports succeed (pitfall #2: opaque origins CORS-block /@id/
+      // fetches).
+      render(<FrameworkPreview framework={framework} {...COMMON_PROPS} />);
+      const iframe = getIframe();
+      expect(iframe.getAttribute("sandbox")).toBe("allow-scripts allow-same-origin");
+      expect(iframe.getAttribute("src")).toBe(`/preview/${framework}/Button`);
+      expect(iframe.getAttribute("srcdoc")).toBeNull();
+    },
+  );
 
   it("starts in a loading state with a 'Booting <framework>…' indicator", () => {
     render(<FrameworkPreview framework="vue" {...COMMON_PROPS} />);
@@ -102,18 +107,20 @@ describe("FrameworkPreview", () => {
   });
 
   it("swaps iframe contract (src ↔ srcDoc) when the framework prop changes", () => {
-    // React (new pipeline) → Vue (legacy pipeline) flips the iframe between
-    // `src` and `srcdoc`. Both must work; switching back must clean up.
+    // React (new pipeline) → Angular (legacy pipeline) flips the iframe
+    // between `src` and `srcdoc`. Both must work; switching back must clean
+    // up. After step 4 Angular is the only legacy framework, so it's the
+    // only direction this transition still tests.
     const { rerender } = render(<FrameworkPreview framework="react" {...COMMON_PROPS} />);
     let iframe = getIframe();
     expect(iframe.getAttribute("src")).toBe("/preview/react/Button");
     expect(iframe.getAttribute("srcdoc")).toBeNull();
 
-    rerender(<FrameworkPreview framework="vue" {...COMMON_PROPS} />);
+    rerender(<FrameworkPreview framework="angular" {...COMMON_PROPS} />);
     iframe = getIframe();
     expect(iframe.getAttribute("src")).toBeNull();
-    const vueSrcDoc = iframe.getAttribute("srcdoc") ?? "";
-    expect(vueSrcDoc).toContain('"vue"'); // importmap entry — sanity for legacy shell
+    const angularSrcDoc = iframe.getAttribute("srcdoc") ?? "";
+    expect(angularSrcDoc).toContain("<!doctype html>");
 
     rerender(<FrameworkPreview framework="react" {...COMMON_PROPS} />);
     iframe = getIframe();
@@ -133,25 +140,29 @@ describe("FrameworkPreview", () => {
     expect(iframe.style.height).toBe("420px");
   });
 
-  it.each<Framework>(["vue", "svelte", "lit", "angular"])(
-    "renders a legacy-pipeline srcDoc for framework=%s",
+  it("renders a legacy-pipeline srcDoc for framework=angular", () => {
+    // Angular keeps the legacy in-iframe shell because its preview path
+    // depends on the angular-compiler plugin's AOT cache at /preview/angular/.
+    // The srcdoc bundles an importmap pointing at those compiled files.
+    render(<FrameworkPreview framework="angular" {...COMMON_PROPS} />);
+    const iframe = getIframe();
+    const srcDoc = iframe.getAttribute("srcdoc") ?? "";
+    expect(srcDoc.length).toBeGreaterThan(100);
+    expect(srcDoc).toContain("<!doctype html>");
+    expect(iframe.getAttribute("src")).toBeNull();
+  });
+
+  it.each<Framework>(["react", "vue", "svelte", "lit"])(
+    "renders a new-pipeline src URL for framework=%s",
     (framework) => {
+      // Each of these frameworks has its own fsds-<fw>-preview plugin
+      // (ADR-PREVIEW-PIPELINE-001 steps 2 + 4). The iframe loads from
+      // /preview/<fw>/<Name>; the plugin synthesizes the shell HTML and
+      // virtual entry server-side.
       render(<FrameworkPreview framework={framework} {...COMMON_PROPS} />);
       const iframe = getIframe();
-      const srcDoc = iframe.getAttribute("srcdoc") ?? "";
-      expect(srcDoc.length).toBeGreaterThan(100);
-      expect(srcDoc).toContain("<!doctype html>");
-      expect(iframe.getAttribute("src")).toBeNull();
+      expect(iframe.getAttribute("src")).toBe(`/preview/${framework}/Button`);
+      expect(iframe.getAttribute("srcdoc")).toBeNull();
     },
   );
-
-  it("renders a new-pipeline src URL for framework=react", () => {
-    // React's iframe boots from /preview/react/<Name> (fsds-react-preview).
-    // No srcdoc is built locally — the dev-server plugin synthesizes the
-    // shell HTML server-side.
-    render(<FrameworkPreview framework="react" {...COMMON_PROPS} />);
-    const iframe = getIframe();
-    expect(iframe.getAttribute("src")).toBe("/preview/react/Button");
-    expect(iframe.getAttribute("srcdoc")).toBeNull();
-  });
 });

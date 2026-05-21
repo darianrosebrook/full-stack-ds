@@ -1,6 +1,6 @@
 import type { ComponentBundle, Framework } from "../types/data";
 
-interface DemoProps {
+export interface DemoProps {
   [key: string]: unknown;
 }
 
@@ -14,7 +14,7 @@ interface DemoProps {
  * combinations.
  */
 
-function defaultPropsFromContract(component: ComponentBundle): DemoProps {
+export function defaultPropsFromContract(component: ComponentBundle): DemoProps {
   const props: DemoProps = {};
   const variants = component.contract.variants ?? {};
   for (const [k, vals] of Object.entries(variants)) {
@@ -68,11 +68,11 @@ const NO_CHILD_LABEL = new Set<string>([
   "Status",
 ]);
 
-function childLabel(component: ComponentBundle): string {
+export function childLabel(component: ComponentBundle): string {
   return NO_CHILD_LABEL.has(component.name) ? "" : component.name;
 }
 
-function elementTag(component: ComponentBundle, fw: Framework): string {
+export function elementTag(component: ComponentBundle, fw: Framework): string {
   if (fw === "lit") {
     return `fsds-${component.name.toLowerCase()}`;
   }

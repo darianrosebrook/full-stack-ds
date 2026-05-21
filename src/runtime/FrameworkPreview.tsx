@@ -6,6 +6,9 @@ import { buildSvelteShell } from "./shells/svelte";
 import { buildLitShell } from "./shells/lit";
 import { buildAngularShell } from "./shells/angular";
 import { REACT_PREVIEW_URL_PREFIX } from "./react-preview/constants";
+import { VUE_PREVIEW_URL_PREFIX } from "./vue-preview/constants";
+import { SVELTE_PREVIEW_URL_PREFIX } from "./svelte-preview/constants";
+import { LIT_PREVIEW_URL_PREFIX } from "./lit-preview/constants";
 
 interface FrameworkPreviewProps {
   framework: Framework;
@@ -36,6 +39,9 @@ const SHELL_BUILDERS = {
  */
 const NEW_PIPELINE_URL_PREFIX: Partial<Record<Framework, string>> = {
   react: REACT_PREVIEW_URL_PREFIX,
+  vue: VUE_PREVIEW_URL_PREFIX,
+  svelte: SVELTE_PREVIEW_URL_PREFIX,
+  lit: LIT_PREVIEW_URL_PREFIX,
 };
 
 export function FrameworkPreview({
