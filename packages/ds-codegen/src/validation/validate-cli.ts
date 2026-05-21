@@ -24,7 +24,11 @@
  *     legacy fallback behavior: missing/mismatched manifests
  *     downgrade gracefully to artifactSelection: "none".
  */
+import fs from "node:fs";
+import path from "node:path";
 import process from "node:process";
+import { buildComponentIndex } from "./component-index.js";
+import { renderMarkdownReport } from "./markdown-report.js";
 import { runValidationPlan } from "./run-command.js";
 import type {
   FrameworkId,
@@ -212,6 +216,13 @@ async function main(): Promise<void> {
     }
   }
 
+  // Pivot per-framework artifacts into the per-component index
+  // (CODEGEN-RAIL-ARTIFACT-EVIDENCE-REPORT-01). Pure derivation
+  // over existing evidence; no new pass/fail behavior.
+  const componentsIndex = buildComponentIndex(
+    results as Record<FrameworkId, FrameworkValidationResult>,
+  );
+
   const frameworksPass = PLANS.every(
     (plan) => results[plan.framework]?.status === "pass",
   );
@@ -232,6 +243,7 @@ async function main(): Promise<void> {
     ...(requireArtifactManifest
       ? { requiredModeDiagnostics: requiredModeDiagnostics ?? [] }
       : {}),
+    ...(componentsIndex ? { componentsIndex } : {}),
     frameworks: results as Record<FrameworkId, FrameworkValidationResult>,
     knownGaps,
     overall,
@@ -241,11 +253,37 @@ async function main(): Promise<void> {
   // without humans losing visibility into what happened).
   writeHumanSummary(report);
 
+  // Markdown projection alongside the JSON. Skipped when no
+  // manifest was supplied — projecting an empty index would be a
+  // misleading artifact rather than evidence.
+  if (componentsIndex) {
+    writeMarkdownReport(report, cwd);
+  } else {
+    process.stderr.write(
+      "[validate:generated] markdown report skipped (no manifest; legacy unattributed mode)\n",
+    );
+  }
+
   // Machine-readable JSON to stdout — citable from closure notes.
   process.stdout.write(JSON.stringify(report, null, 2));
   process.stdout.write("\n");
 
   process.exit(overall === "pass" ? 0 : 1);
+}
+
+/**
+ * Write the derived markdown projection to a known path under
+ * tmp/ (gitignored). The JSON on stdout remains canonical; the
+ * markdown is a citation surface, not a parallel source of truth.
+ */
+function writeMarkdownReport(report: RailReport, workspaceRoot: string): void {
+  const relPath = "tmp/generated-admission-report.md";
+  const absPath = path.join(workspaceRoot, relPath);
+  fs.mkdirSync(path.dirname(absPath), { recursive: true });
+  fs.writeFileSync(absPath, renderMarkdownReport(report));
+  process.stderr.write(
+    `[validate:generated] wrote markdown report to ${relPath}\n`,
+  );
 }
 
 function writeHumanSummary(report: RailReport): void {

@@ -499,6 +499,63 @@ export interface RailDiagnostic {
   paths?: readonly string[];
 }
 
+/**
+ * One row in the per-component index: how one component was
+ * admitted on one framework.
+ *
+ * Derived from the framework's `artifacts[]` by pivoting on
+ * component name. Read-only projection of existing evidence —
+ * adding this surface does NOT introduce new pass/fail behavior
+ * (CODEGEN-RAIL-ARTIFACT-EVIDENCE-REPORT-01).
+ */
+export interface ComponentAdmissionRow {
+  /**
+   * Aggregate status for this (component, framework) pair:
+   *   - "pass": the component's admission array had ≥1 entry and
+   *     all entries' run statuses were "pass".
+   *   - "fail": the component's admission array had ≥1 entry
+   *     with a "fail" run status.
+   *   - "not_admitted": the component appeared in the manifest
+   *     for this framework but produced ZERO admission entries
+   *     (e.g. tests-only group on a template-check-only command,
+   *     or a CSS-only group on a TS-scope command). Honest claim,
+   *     not a failure — the framework's checks did not look at
+   *     this group, by design.
+   */
+  status: "pass" | "fail" | "not_admitted";
+  /**
+   * The coverage labels of each admission entry, in PlanCommand
+   * declaration order. A reader can tell typecheck from
+   * templateTypecheck because the list preserves order, and
+   * because the labels themselves are distinct
+   * (covered_by_package_check vs covered_by_direct_template_check).
+   * Empty when `status === "not_admitted"`.
+   */
+  coverages: readonly ArtifactAdmissionCoverage[];
+  /**
+   * Union of `knownRuleNarrowings` across all admission entries
+   * for this (component, framework). Deduplicated. Empty when
+   * no admission entry declared a narrowing.
+   */
+  knownRuleNarrowings: readonly string[];
+  /** Number of files in the manifest group for this component on this framework. */
+  pathCount: number;
+}
+
+/**
+ * Per-component pivot of the artifact attribution.
+ * Outer key: component name. Inner key: framework id. The inner
+ * map is partial — a framework key is absent when the manifest
+ * had no group for this (component, framework) pair.
+ *
+ * Populated only when the rail was invoked with a manifest;
+ * `undefined` on the report otherwise.
+ */
+export type ComponentAdmissionIndex = Record<
+  string,
+  Partial<Record<FrameworkId, ComponentAdmissionRow>>
+>;
+
 export interface RailReport {
   timestamp: string;
   scope: "workspace";
@@ -526,6 +583,18 @@ export interface RailReport {
    * regardless of framework-plan outcomes.
    */
   requiredModeDiagnostics?: readonly RailDiagnostic[];
+  /**
+   * Per-component pivot of the artifact attribution. Present when
+   * a manifest was supplied (so per-framework `artifacts[]` is
+   * also populated); omitted in legacy unattributed mode.
+   *
+   * Derived from `frameworks[].artifacts[]`; this surface adds no
+   * new pass/fail behavior, only a citation-friendly index for
+   * closure notes asking "what happened to component X across
+   * all five frameworks" — a question the existing report shape
+   * answers only by walking every framework and filtering.
+   */
+  componentsIndex?: ComponentAdmissionIndex;
   frameworks: Record<FrameworkId, FrameworkValidationResult>;
   knownGaps: string[];
   overall: "pass" | "fail";
