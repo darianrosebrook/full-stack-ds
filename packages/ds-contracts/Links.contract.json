@@ -156,8 +156,7 @@
     "keyboard": []
   },
   "usage": {
-    "example": "<Link href=\"https://example.com\">\n  I am a link\n</Link>\n\n<Link href=\"/support\" target=\"_blank\">\n  Take me to the support pages.\n</Link>",
-    "hookExample": "const { getLinkProps } = useLink({\n  href: 'https://example.com',\n  target: '_blank',\n});\n\nreturn <a {...getLinkProps()}>Visit Example</a>;"
+    "example": "<Link href=\"https://example.com\">\n  I am a link\n</Link>\n\n<Link href=\"/support\" target=\"_blank\">\n  Take me to the support pages.\n</Link>"
   },
   "a2ui": {
     "category": "navigation",

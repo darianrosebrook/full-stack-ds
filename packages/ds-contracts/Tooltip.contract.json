@@ -267,8 +267,7 @@
     ]
   },
   "usage": {
-    "example": "<Tooltip content=\"This is a tooltip\" placement=\"top\">\n  <button>Hover me</button>\n</Tooltip>",
-    "hookExample": "const tooltip = useTooltip({ placement: 'top', delayMs: 300 });\n\nreturn (\n  <>\n    <button ref={tooltip.triggerRef} {...tooltip.getTriggerProps()}>\n      Hover me\n    </button>\n    {tooltip.isOpen && (\n      <div ref={tooltip.tooltipRef} {...tooltip.getTooltipProps()}>\n        Tooltip content\n      </div>\n    )}\n  </>\n);"
+    "example": "<Tooltip content=\"This is a tooltip\" placement=\"top\">\n  <button>Hover me</button>\n</Tooltip>"
   },
   "a2ui": {
     "category": "overlay",

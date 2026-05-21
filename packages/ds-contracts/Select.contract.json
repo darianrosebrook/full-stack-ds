@@ -515,7 +515,7 @@
   },
   "usage": {
     "example": "<MenuItem value=\"opt1\">Option 1</MenuItem>\n<MenuItem value=\"opt2\" disabled>Option 2 (disabled)</MenuItem>",
-    "hookExample": "const { selectedValue, getButtonProps, getListProps, getItemProps } = useSelectMenu({\n  items: [\n    { value: '1', label: 'Option 1' },\n    { value: '2', label: 'Option 2' },\n  ],\n  onChange: (value) => console.log('Selected:', value),\n  searchable: true,\n});"
+    "hookExample": "const { selection, setSelection, open, setOpen, panelRef, anchorRef, renderInPortal } = useSelect({\n  defaultValue: '',\n  onChange: (value) => console.log('Selected:', value),\n});"
   },
   "a2ui": {
     "category": "form-field",

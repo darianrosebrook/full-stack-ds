@@ -261,7 +261,7 @@
     ]
   },
   "usage": {
-    "hookExample": "const { getButtonProps } = useButton({\n  disabled: false,\n  onClick: () => console.log('clicked'),\n});\n\nreturn <button {...getButtonProps()}>Click me</button>;"
+    "example": "<Button kind=\"primary\" onClick={() => console.log('clicked')}>Click me</Button>"
   },
   "a2ui": {
     "category": "action",

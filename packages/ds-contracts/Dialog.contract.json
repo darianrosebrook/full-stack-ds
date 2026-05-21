@@ -494,7 +494,7 @@
     ]
   },
   "usage": {
-    "hookExample": "const { isOpen, open, close, getTriggerProps, getOverlayProps, getContentProps } = useModal({\n  closeOnEscape: true,\n  closeOnOverlayClick: true,\n});"
+    "hookExample": "const { openness, setOpenness, panelRef, renderInPortal } = useDialog({\n  defaultOpen: false,\n  onOpenChange: (next) => console.log('Dialog open?', next),\n  closeOnEscape: true,\n});"
   },
   "a2ui": {
     "category": "overlay",

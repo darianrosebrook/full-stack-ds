@@ -79,8 +79,7 @@
     "keyboard": []
   },
   "usage": {
-    "example": "<Label htmlFor=\"email\">Email address</Label>\n<input id=\"email\" type=\"email\" />",
-    "hookExample": "const { getLabelProps } = useLabel({ htmlFor: 'email', children: 'Email' });\nreturn <label {...getLabelProps()}>{children}</label>;"
+    "example": "<Label htmlFor=\"email\">Email address</Label>\n<input id=\"email\" type=\"email\" />"
   },
   "a2ui": {
     "category": "form-field",

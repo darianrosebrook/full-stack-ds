@@ -292,8 +292,7 @@
     ]
   },
   "usage": {
-    "example": "<PopoverContent aria-label=\"Menu\">\n  <div>Menu content</div>\n</PopoverContent>",
-    "hookExample": "const {\n  isOpen,\n  getAnchorProps,\n  getContentProps\n} = usePopover({\n  placement: 'bottom',\n  closeOnEscape: true,\n  closeOnClickOutside: true\n});"
+    "example": "<Popover open={open} onOpenChange={setOpen} placement=\"bottom\">\n  <PopoverTrigger>\n    <Button>Open menu</Button>\n  </PopoverTrigger>\n  <PopoverContent>\n    <div>Menu content</div>\n  </PopoverContent>\n</Popover>"
   },
   "a2ui": {
     "category": "overlay",

@@ -334,8 +334,7 @@
     "keyboard": []
   },
   "usage": {
-    "example": "<ErrorText id=\"my-error\">This field is required</ErrorText>",
-    "hookExample": "const { getContainerProps, getHelperTextProps, getErrorTextProps, getChildProps } = useFormField({\n  helperText: 'Enter your full name',\n  errorText: 'Name is required',\n});"
+    "example": "<Field label=\"Name\" helpText=\"Enter your full name\" error={errors.name}>\n  <Input name=\"name\" value={name} onChange={setName} />\n</Field>"
   },
   "a2ui": {
     "category": "layout",
