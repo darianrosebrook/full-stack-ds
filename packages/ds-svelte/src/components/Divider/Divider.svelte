@@ -34,4 +34,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<hr class={classes} />
+<hr class={classes} role="separator" />

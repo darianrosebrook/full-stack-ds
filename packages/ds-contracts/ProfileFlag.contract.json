@@ -107,7 +107,6 @@
     "flipIcon": false
   },
   "a11y": {
-    "role": "generic",
     "labeling": [],
     "keyboard": []
   },

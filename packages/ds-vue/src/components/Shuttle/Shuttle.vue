@@ -19,6 +19,9 @@ import { Stack } from "../../primitives/index.js";
 // @generated:start props
 interface Props {
   ariaLabel?: string;
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
   class?: string;
   "data-testid"?: string;
 }
@@ -35,13 +38,19 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start events
+function handleRootChange(event: Event) {
+  props.onValueChange?.([]);
+}
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <template>
-  <Stack :data-testid="props['data-testid']" :class="classNames">
+  <Stack role="listbox" @change="handleRootChange" :data-testid="props['data-testid']" :class="classNames">
     <slot />
   </Stack>
 </template>

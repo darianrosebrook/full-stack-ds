@@ -159,6 +159,27 @@ export function canClickToToggle(ir: ComponentIR): boolean {
   );
 }
 
+/**
+ * True when the component's root element can receive a synthetic `change`
+ * event with `target.value` set (i.e. testing-library's
+ * `fireEvent.change(el, { target: { value: "..." } })` works on it).
+ *
+ * Only native form-value elements have a `value` setter. Firing `change`
+ * on a `<div>` or `<span>` throws "The given element does not have a
+ * value setter" — happened in practice for Shuttle whose root is a
+ * `<div role="listbox">` container. This gate lets the test plan fall
+ * back to render-only for non-form roots.
+ */
+function rootTagSupportsChangeEvent(ir: ComponentIR): boolean {
+  return CHANGE_EVENT_ROOT_ELEMENTS.has(ir.root.element);
+}
+
+const CHANGE_EVENT_ROOT_ELEMENTS = new Set([
+  "input",
+  "textarea",
+  "select",
+]);
+
 export function buildComponentTestPlan(ir: ComponentIR): ComponentTestPlan {
   const channels = ir.behavior.normalizedChannels.map((channel) =>
     buildChannelTestCase(ir, channel),
@@ -334,8 +355,14 @@ function buildChannelTestCase(
     interaction = "click";
   } else if (channel.valueType === "boolean") {
     interaction = "render-only";
-  } else {
+  } else if (rootTagSupportsChangeEvent(ir)) {
     interaction = "change";
+  } else {
+    // Handler IS on root but the root is a non-input element (e.g.
+    // Shuttle's listbox <div>). fireEvent.change on a div throws
+    // "The given element does not have a value setter" — fall back to
+    // render-only so the test exercises prop acceptance instead.
+    interaction = "render-only";
   }
 
   return {

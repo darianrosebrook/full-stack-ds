@@ -28,6 +28,11 @@ describe("OTP — unit", () => {
     expect(screen.getByTestId("otp")).toHaveClass("otp", "custom");
   });
 
+  it("has the correct ARIA role", () => {
+    render(<OTP data-testid="otp" />);
+    expect(screen.getByTestId("otp")).toHaveAttribute("role", "group");
+  });
+
   it("applies mode=numeric variant class", () => {
     render(<OTP data-testid="otp" mode="numeric" />);
     expect(screen.getByTestId("otp")).toHaveClass("otp--numeric");

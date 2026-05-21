@@ -49,7 +49,7 @@ export function Divider({
     .join(" ");
 
   return (
-  <hr className={`${classNames}`} data-testid={testId} {...rest} />
+  <hr className={`${classNames}`} role="separator" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

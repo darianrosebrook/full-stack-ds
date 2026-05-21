@@ -31,7 +31,7 @@ export class CardElement extends LitElement {
       'card': true,
       [`card--${this.status}`]: !!this.status,
     };
-    return html`<fsds-stack class=${classMap(classes)}><slot></slot></fsds-stack>`;
+    return html`<fsds-stack role="group" class=${classMap(classes)}><slot></slot></fsds-stack>`;
   }
 }
 

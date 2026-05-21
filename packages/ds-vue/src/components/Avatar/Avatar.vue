@@ -44,5 +44,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']"></div>
+  <div :class="classNames" role="img" :data-testid="props['data-testid']"></div>
 </template>

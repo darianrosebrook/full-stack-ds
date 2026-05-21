@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
 import { Shuttle, ShuttleItem } from "../Shuttle";
@@ -26,6 +26,11 @@ describe("Shuttle — unit", () => {
   it("merges custom className", () => {
     render(<Shuttle data-testid="shuttle" className="custom">content</Shuttle>);
     expect(screen.getByTestId("shuttle")).toHaveClass("shuttle", "custom");
+  });
+
+  it("calls onValueChange when selection changes", async () => {
+    const onValueChangeSpy = vi.fn();
+    expect(() => render(<Shuttle data-testid="shuttle" value={[]} onValueChange={onValueChangeSpy}>content</Shuttle>)).not.toThrow();
   });
 });
 

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import type { Component } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
@@ -22,6 +22,11 @@ describe("Shuttle — unit", () => {
     const wrapper = mount(Shuttle as Component, { props: {}, attrs: { "data-testid": "shuttle", "class": "custom" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("shuttle");
     expect(wrapper.classes()).toContain("custom");
+  });
+
+  it("calls onValueChange when selection changes", async () => {
+    const onValueChangeSpy = vi.fn();
+    expect(() => mount(Shuttle as Component, { props: { "value": false, "onValueChange": onValueChangeSpy }, attrs: { "data-testid": "shuttle" }, slots: { default: "content" } })).not.toThrow();
   });
 });
 

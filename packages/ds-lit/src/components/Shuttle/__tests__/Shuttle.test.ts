@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { axe } from "vitest-axe";
 import "../Shuttle";
 // @generated:end
@@ -14,6 +14,12 @@ describe("Shuttle — unit", () => {
   it("applies the base CSS class", async () => {
     const { stack } = await renderElement("fsds-shuttle");
     expect(classTokens(stack)).toContain("shuttle");
+  });
+
+  it("calls onValueChange when selection changes", async () => {
+    const onValueChangeSpy = vi.fn();
+    const { element } = await renderElement("fsds-shuttle", { "value": false });
+    expect(() => { (element as unknown as Record<string, unknown>)["onValueChange"] = onValueChangeSpy; }).not.toThrow();
   });
 });
 

@@ -24,6 +24,11 @@ describe("Divider — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const wrapper = mount(Divider as Component, { props: {}, attrs: { "data-testid": "divider" }, slots: { default: "content" } });
+    expect(wrapper.attributes("role")).toBe("separator");
+  });
+
   it("applies orientation=horizontal variant class", () => {
     const wrapper = mount(Divider as Component, { props: { "orientation": "horizontal" }, attrs: { "data-testid": "divider" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("divider--horizontal");

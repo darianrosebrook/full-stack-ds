@@ -25,10 +25,11 @@ interface Props {
   minDate?: Date;
   maxDate?: Date;
   locale?: string;
+  shouldCloseOnSelect?: boolean;
   class?: string;
 }
 
-let { value, defaultValue, onChange, mode = "single", disabled, minDate, maxDate, locale = "en-US", class: className }: Props = $props();
+let { value, defaultValue, onChange, mode = "single", disabled, minDate, maxDate, locale = "en-US", shouldCloseOnSelect = true, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -36,6 +37,7 @@ const behavior = useCalendar({
   value: () => value,
   defaultValue: () => defaultValue,
   onChange: () => onChange,
+  shouldCloseOnSelect: () => shouldCloseOnSelect,
 });
 // @generated:end
 

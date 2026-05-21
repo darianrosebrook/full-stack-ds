@@ -28,6 +28,11 @@ describe("Walkthrough — unit", () => {
     expect(screen.getByTestId("walkthrough")).toHaveClass("walkthrough", "custom");
   });
 
+  it("has the correct ARIA role", () => {
+    render(<Walkthrough data-testid="walkthrough" />);
+    expect(screen.getByTestId("walkthrough")).toHaveAttribute("role", "status");
+  });
+
   it("applies placement=top variant class", () => {
     render(<Walkthrough data-testid="walkthrough" placement="top" />);
     expect(screen.getByTestId("walkthrough")).toHaveClass("walkthrough--top");

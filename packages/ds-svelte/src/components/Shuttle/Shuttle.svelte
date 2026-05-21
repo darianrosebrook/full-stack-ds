@@ -10,11 +10,14 @@ import { Stack } from "../../primitives/index.js";
 // @generated:start props
 interface Props {
   ariaLabel?: string;
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
   class?: string;
   children?: import('svelte').Snippet;
 }
 
-let { ariaLabel, class: className, children }: Props = $props();
+let { ariaLabel, value, defaultValue, onValueChange, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -31,6 +34,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<Stack class={classes}>
+<Stack role="listbox" class={classes}>
   {@render children?.()}
 </Stack>

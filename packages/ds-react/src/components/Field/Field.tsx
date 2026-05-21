@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { useField } from "./useField";
 import "./Field.css";
 // @generated:end
 
@@ -17,13 +18,14 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
 // @custom:end
 
 // @generated:start props
-export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "disabled" | "error" | "helpText" | "id" | "label" | "name" | "onChange" | "readOnly" | "required" | "status" | "validate" | "validating" | "value"> {
+export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "error" | "helpText" | "id" | "label" | "name" | "onChange" | "readOnly" | "required" | "status" | "validate" | "validating" | "value"> {
   name: string;
   id?: string;
   required?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
   value?: unknown;
+  defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   label?: ReactNode;
@@ -60,6 +62,9 @@ export function FieldHeader({
 
 // @generated:start component
 export function Field({
+  value: controlledValue,
+  defaultValue,
+  onChange,
   status,
   disabled,
   className,
@@ -69,8 +74,6 @@ export function Field({
   id,
   required,
   readOnly,
-  value,
-  onChange,
   validate,
   label,
   helpText,
@@ -78,6 +81,12 @@ export function Field({
   validating,
   ...rest
 }: FieldProps) {
+  const { value, setValue } = useField({
+    value: controlledValue,
+    defaultValue,
+    onChange,
+  });
+
   const classNames = [
     "field",
     status && `field--${status}`,

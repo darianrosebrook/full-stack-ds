@@ -24,6 +24,11 @@ describe("Walkthrough — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const wrapper = mount(Walkthrough as Component, { props: {}, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
+    expect(wrapper.attributes("role")).toBe("status");
+  });
+
   it("applies placement=top variant class", () => {
     const wrapper = mount(Walkthrough as Component, { props: { "placement": "top" }, attrs: { "data-testid": "walkthrough" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("walkthrough--top");

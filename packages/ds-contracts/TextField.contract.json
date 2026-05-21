@@ -30,8 +30,8 @@
           "part": "field",
           "bindings": {
             "type": "prop:type",
-            "value": "prop:value",
-            "onChange": "prop:onChange",
+            "value": "channel:value.value",
+            "onChange": "channel:value.onChange",
             "disabled": "prop:disabled",
             "name": "prop:name",
             "required": "prop:required",
@@ -130,6 +130,15 @@
           "description": "External description element id appended to aria-describedby."
         }
       ]
+    }
+  },
+  "channels": {
+    "value": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "string",
+      "description": "The current text value of the field's input."
     }
   },
   "states": [

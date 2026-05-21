@@ -24,6 +24,11 @@ describe("Card — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const wrapper = mount(Card as Component, { props: {}, attrs: { "data-testid": "card" }, slots: { default: "content" } });
+    expect(wrapper.attributes("role")).toBe("group");
+  });
+
   it("applies status=completed variant class", () => {
     const wrapper = mount(Card as Component, { props: { "status": "completed" }, attrs: { "data-testid": "card" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("card--completed");
@@ -57,7 +62,7 @@ describe("Card — unit", () => {
 
 describe("Card — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Card as Component, { props: {}, attrs: { "data-testid": "card" }, slots: { default: "content" } });
+    const wrapper = mount(Card as Component, { props: {}, attrs: { "data-testid": "card", "aria-label": "Test Card" }, slots: { default: "content" } });
     const results = await axe(wrapper.element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

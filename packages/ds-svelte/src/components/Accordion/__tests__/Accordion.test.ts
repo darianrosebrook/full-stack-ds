@@ -37,7 +37,7 @@ describe("Accordion — unit", () => {
 
 describe("Accordion — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Accordion as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Accordion as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Accordion" } });
     const results = await axe(container);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

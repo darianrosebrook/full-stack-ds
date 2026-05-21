@@ -49,7 +49,7 @@ export function Avatar({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest} />
+  <div className={`${classNames}`} role="img" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

@@ -27,12 +27,14 @@ export class CalendarElement extends LitElement {
   @property({ attribute: false }) minDate?: Date;
   @property({ attribute: false }) maxDate?: Date;
   @property({ type: String }) locale?: string = "en-US";
+  @property({ type: Boolean }) shouldCloseOnSelect?: boolean = true;
   @property({ attribute: false }) onChange?: (value: Date | Date[] | null) => void;
 
   private behavior = new CalendarBehavior(this, {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
+    shouldCloseOnSelect: this.shouldCloseOnSelect,
   });
 
   private computeClasses(): string {

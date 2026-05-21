@@ -34,4 +34,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}></div>
+<div class={classes} role="img"></div>

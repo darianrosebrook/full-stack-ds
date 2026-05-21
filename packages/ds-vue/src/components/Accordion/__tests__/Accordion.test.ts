@@ -37,7 +37,7 @@ describe("Accordion — unit", () => {
 
 describe("Accordion — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Accordion as Component, { props: {}, attrs: { "data-testid": "accordion" }, slots: { default: "content" } });
+    const wrapper = mount(Accordion as Component, { props: {}, attrs: { "data-testid": "accordion", "aria-label": "Test Accordion" }, slots: { default: "content" } });
     const results = await axe(wrapper.element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

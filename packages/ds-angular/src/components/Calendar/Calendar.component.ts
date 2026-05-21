@@ -48,6 +48,7 @@ export class CalendarComponent {
   @Input() minDate?: Date;
   @Input() maxDate?: Date;
   @Input() locale?: string = "en-US";
+  @Input() shouldCloseOnSelect?: boolean = true;
   @Input() class?: string;
   @Input() onChange?: (value: Date | Date[] | null) => void;
 
@@ -56,6 +57,7 @@ export class CalendarComponent {
     value: () => this.value,
     defaultValue: this.defaultValue,
     onChange: (v) => this.onChange?.(v),
+    shouldCloseOnSelect: this.shouldCloseOnSelect,
     destroyRef: this.destroyRef,
   });
 

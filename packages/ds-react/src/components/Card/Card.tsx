@@ -123,6 +123,7 @@ export function Card({
 
   return (
     <Stack
+      role="group"
       className={classNames}
       data-testid={testId}
       {...rest}

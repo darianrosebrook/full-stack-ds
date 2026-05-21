@@ -28,6 +28,11 @@ describe("Card — unit", () => {
     expect(screen.getByTestId("card")).toHaveClass("card", "custom");
   });
 
+  it("has the correct ARIA role", () => {
+    render(<Card data-testid="card">content</Card>);
+    expect(screen.getByTestId("card")).toHaveAttribute("role", "group");
+  });
+
   it("applies status=completed variant class", () => {
     render(<Card data-testid="card" status="completed">content</Card>);
     expect(screen.getByTestId("card")).toHaveClass("card--completed");
@@ -61,7 +66,7 @@ describe("Card — unit", () => {
 
 describe("Card — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Card>content</Card></>);
+    const { container } = render(<><Card aria-label="Test Card">content</Card></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

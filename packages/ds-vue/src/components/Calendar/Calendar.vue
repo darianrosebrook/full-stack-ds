@@ -26,6 +26,7 @@ interface Props {
   minDate?: Date;
   maxDate?: Date;
   locale?: string;
+  shouldCloseOnSelect?: boolean;
   class?: string;
   "data-testid"?: string;
 }
@@ -35,6 +36,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   mode: "single",
   locale: "en-US",
+  shouldCloseOnSelect: true,
 });
 // @generated:end
 
@@ -43,6 +45,7 @@ const behavior = useCalendar({
   value: () => props.value,
   defaultValue: props.defaultValue,
   onChange: props.onChange,
+  shouldCloseOnSelect: props.shouldCloseOnSelect,
 });
 // @generated:end
 

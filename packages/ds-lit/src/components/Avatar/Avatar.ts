@@ -32,7 +32,7 @@ export class AvatarElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}"></div>`;
+    return html`<div class="${this.computeClasses()}" role="img"></div>`;
   }
 }
 

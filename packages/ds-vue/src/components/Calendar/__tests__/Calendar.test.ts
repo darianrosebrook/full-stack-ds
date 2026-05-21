@@ -24,6 +24,11 @@ describe("Calendar — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const wrapper = mount(Calendar as Component, { props: {}, attrs: { "data-testid": "calendar" }, slots: { default: "content" } });
+    expect(wrapper.attributes("role")).toBe("application");
+  });
+
   it("applies mode=single variant class", () => {
     const wrapper = mount(Calendar as Component, { props: { "mode": "single" }, attrs: { "data-testid": "calendar" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("calendar--single");

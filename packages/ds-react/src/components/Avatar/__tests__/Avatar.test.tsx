@@ -28,6 +28,11 @@ describe("Avatar — unit", () => {
     expect(screen.getByTestId("avatar")).toHaveClass("avatar", "custom");
   });
 
+  it("has the correct ARIA role", () => {
+    render(<Avatar data-testid="avatar" name={"placeholder"} />);
+    expect(screen.getByTestId("avatar")).toHaveAttribute("role", "img");
+  });
+
   it("applies size=small variant class", () => {
     render(<Avatar data-testid="avatar" name={"placeholder"} size="small" />);
     expect(screen.getByTestId("avatar")).toHaveClass("avatar--small");
@@ -51,7 +56,7 @@ describe("Avatar — unit", () => {
 
 describe("Avatar — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Avatar name={"placeholder"} /></>);
+    const { container } = render(<><Avatar aria-label="Test Avatar" name={"placeholder"} /></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

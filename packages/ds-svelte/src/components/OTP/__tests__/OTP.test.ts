@@ -24,6 +24,11 @@ describe("OTP — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const { container } = render(OTP as unknown as Component<Record<string, unknown>>, { props: {} });
+    expect(container.firstElementChild?.getAttribute("role")).toBe("group");
+  });
+
   it("applies mode=numeric variant class", () => {
     const { container } = render(OTP as unknown as Component<Record<string, unknown>>, { props: { "mode": "numeric" } });
     expect(container.firstElementChild?.className).toContain("otp--numeric");

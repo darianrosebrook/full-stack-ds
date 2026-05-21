@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import { useField } from "./useField.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,6 +24,7 @@ interface Props {
   disabled?: boolean;
   readOnly?: boolean;
   value?: unknown;
+  defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   label?: unknown;
@@ -37,6 +39,14 @@ interface Props {
 
 // @generated:start defineProps
 const props = defineProps<Props>();
+// @generated:end
+
+// @generated:start hook
+const behavior = useField({
+  value: () => props.value,
+  defaultValue: props.defaultValue,
+  onChange: props.onChange,
+});
 // @generated:end
 
 // @generated:start classes

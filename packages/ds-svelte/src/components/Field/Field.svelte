@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import { useField } from "./useField.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,6 +23,7 @@ interface Props {
   disabled?: boolean;
   readOnly?: boolean;
   value?: unknown;
+  defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   label?: unknown;
@@ -34,7 +35,15 @@ interface Props {
   children?: import('svelte').Snippet;
 }
 
-let { name, id, required, disabled, readOnly, value, onChange, validate, label, helpText, error, status, validating, class: className, children }: Props = $props();
+let { name, id, required, disabled, readOnly, value, defaultValue, onChange, validate, label, helpText, error, status, validating, class: className, children }: Props = $props();
+// @generated:end
+
+// @generated:start hook
+const behavior = useField({
+  value: () => value,
+  defaultValue: () => defaultValue,
+  onChange: () => onChange,
+});
 // @generated:end
 
 // @generated:start classes

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy, computed } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
@@ -21,11 +21,13 @@ import { StackComponent } from "../../primitives/index.js";
   selector: "fsds-shuttle",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack role="listbox" [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShuttleComponent {
   @Input() ariaLabel?: string;
+  @Input() value?: string[];
+  @Input() defaultValue?: string[];
 
   classes(): string {
     const parts: Array<string | null | undefined> = ["shuttle"];

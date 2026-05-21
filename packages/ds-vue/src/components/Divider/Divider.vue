@@ -44,5 +44,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <hr :class="classNames" :data-testid="props['data-testid']" />
+  <hr :class="classNames" role="separator" :data-testid="props['data-testid']" />
 </template>

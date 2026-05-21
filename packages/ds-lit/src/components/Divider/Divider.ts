@@ -31,7 +31,7 @@ export class DividerElement extends LitElement {
   }
 
   override render() {
-    return html`<hr class="${this.computeClasses()}" />`;
+    return html`<hr class="${this.computeClasses()}" role="separator" />`;
   }
 }
 

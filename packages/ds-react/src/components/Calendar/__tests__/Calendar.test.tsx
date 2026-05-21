@@ -1,6 +1,6 @@
 // @generated:start imports
 import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { axe } from "vitest-axe";
 import { Calendar, CalendarHeader } from "../Calendar";
 
@@ -26,6 +26,11 @@ describe("Calendar — unit", () => {
   it("merges custom className", () => {
     render(<Calendar data-testid="calendar" className="custom" />);
     expect(screen.getByTestId("calendar")).toHaveClass("calendar", "custom");
+  });
+
+  it("has the correct ARIA role", () => {
+    render(<Calendar data-testid="calendar" />);
+    expect(screen.getByTestId("calendar")).toHaveAttribute("role", "application");
   });
 
   it("applies mode=single variant class", () => {

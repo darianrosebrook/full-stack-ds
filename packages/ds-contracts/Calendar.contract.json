@@ -125,6 +125,12 @@
           "type": "string",
           "description": "BCP 47 locale tag for date formatting.",
           "default": "en-US"
+        },
+        {
+          "name": "shouldCloseOnSelect",
+          "type": "boolean",
+          "description": "When true, selecting a date closes the popup. Wired to behavior.dismissalTriggers.select.enabledBy.",
+          "default": true
         }
       ]
     }

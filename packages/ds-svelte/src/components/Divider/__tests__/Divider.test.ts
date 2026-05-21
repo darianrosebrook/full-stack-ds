@@ -24,6 +24,11 @@ describe("Divider — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const { container } = render(Divider as unknown as Component<Record<string, unknown>>, { props: {} });
+    expect(container.firstElementChild?.getAttribute("role")).toBe("separator");
+  });
+
   it("applies orientation=horizontal variant class", () => {
     const { container } = render(Divider as unknown as Component<Record<string, unknown>>, { props: { "orientation": "horizontal" } });
     expect(container.firstElementChild?.className).toContain("divider--horizontal");

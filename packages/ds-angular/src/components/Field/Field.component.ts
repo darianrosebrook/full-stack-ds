@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
+import { useField } from "./useField.js";
 // @generated:end
 
 // @custom:start imports
@@ -53,6 +54,7 @@ export class FieldComponent {
   @Input() disabled?: boolean;
   @Input() readOnly?: boolean;
   @Input() value?: unknown;
+  @Input() defaultValue?: unknown;
   @Input() validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   @Input() label?: unknown;
   @Input() helpText?: unknown;
@@ -60,15 +62,24 @@ export class FieldComponent {
   @Input() status?: FieldStatus;
   @Input() validating?: boolean;
   @Input() class?: string;
+  @Input() onChange?: (value: unknown) => void;
 
-  classes(): string {
-    return [
+  private destroyRef = inject(DestroyRef);
+  protected behavior = useField({
+    value: () => this.value,
+    defaultValue: this.defaultValue,
+    onChange: (v) => this.onChange?.(v),
+    destroyRef: this.destroyRef,
+  });
+
+  classes = computed(() =>
+    [
       "field",
       this.status ? `field--${this.status}` : null,
       this.disabled ? "field--disabled" : null,
       this.class,
-    ].filter(Boolean).join(" ");
-  }
+    ].filter(Boolean).join(" "),
+  );
 }
 
 @Component({

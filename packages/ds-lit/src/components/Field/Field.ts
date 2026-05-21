@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { FieldBehavior } from './FieldBehavior.js';
 // @generated:end
 
 // @custom:start imports
@@ -24,12 +25,20 @@ export class FieldElement extends LitElement {
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) readOnly?: boolean;
   @property({ attribute: false }) value?: unknown;
+  @property({ attribute: false }) defaultValue?: unknown;
   @property({ attribute: false }) validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   @property({ attribute: false }) label?: unknown;
   @property({ attribute: false }) helpText?: unknown;
   @property({ type: String }) error?: string;
   @property({ attribute: false }) status?: FieldStatus;
   @property({ type: Boolean }) validating?: boolean;
+  @property({ attribute: false }) onChange?: (value: unknown) => void;
+
+  private behavior = new FieldBehavior(this, {
+    value: () => this.value,
+    defaultValue: this.defaultValue,
+    onChange: (v) => this.onChange?.(v),
+  });
 
   private computeClasses(): string {
     return [

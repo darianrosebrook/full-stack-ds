@@ -24,6 +24,11 @@ describe("Card — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: {} });
+    expect(container.firstElementChild?.getAttribute("role")).toBe("group");
+  });
+
   it("applies status=completed variant class", () => {
     const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "completed" } });
     expect(container.firstElementChild?.className).toContain("card--completed");
@@ -57,7 +62,7 @@ describe("Card — unit", () => {
 
 describe("Card — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: {} });
+    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Card" } });
     const results = await axe(container);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

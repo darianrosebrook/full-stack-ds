@@ -21,7 +21,7 @@ export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" 
   selector: "fsds-card",
   standalone: true,
   imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  template: `<fsds-stack role="group" [ngClass]="classes()"><ng-content /></fsds-stack>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardComponent {

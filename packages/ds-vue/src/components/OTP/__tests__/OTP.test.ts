@@ -24,6 +24,11 @@ describe("OTP — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const wrapper = mount(OTP as Component, { props: {}, attrs: { "data-testid": "otp" }, slots: { default: "content" } });
+    expect(wrapper.attributes("role")).toBe("group");
+  });
+
   it("applies mode=numeric variant class", () => {
     const wrapper = mount(OTP as Component, { props: { "mode": "numeric" }, attrs: { "data-testid": "otp" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("otp--numeric");

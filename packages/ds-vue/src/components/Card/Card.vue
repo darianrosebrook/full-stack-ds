@@ -43,7 +43,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <Stack :data-testid="props['data-testid']" :class="classNames">
+  <Stack role="group" :data-testid="props['data-testid']" :class="classNames">
     <slot />
   </Stack>
 </template>

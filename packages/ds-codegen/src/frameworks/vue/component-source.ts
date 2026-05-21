@@ -282,6 +282,12 @@ function callbackArgument(propType: string, valueType: string | undefined): stri
     return "true";
   }
   if (valueType === "number") return "0";
+  // Array channel values (e.g. selection: string[], multi-select: string[]).
+  // Returning a string literal here produces a type-mismatched demo handler:
+  // `onValueChange?.("test")` where the signature expects string[]. Emit an
+  // empty array placeholder so the demo typechecks. The handler is a no-op
+  // demo stub anyway; the literal value is irrelevant to behavior.
+  if (valueType && /\[\]$/.test(valueType)) return "[]";
   return `"test"`;
 }
 

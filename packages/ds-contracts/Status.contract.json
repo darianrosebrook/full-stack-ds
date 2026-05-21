@@ -135,7 +135,6 @@
     "flipIcon": false
   },
   "a11y": {
-    "role": "generic",
     "labeling": [
       "aria-label"
     ],

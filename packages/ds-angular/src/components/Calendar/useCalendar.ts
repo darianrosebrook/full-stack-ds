@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createControllableState } from "../../primitives/index.js";
+import { createControllableState, createDismissal, createPortal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -12,12 +12,16 @@ export interface UseCalendarOptions {
   value?: () => Date | Date[] | null | undefined;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
+  shouldCloseOnSelect?: boolean;
+  portalId?: Element | string;
   destroyRef: DestroyRef;
 }
 
 export interface UseCalendarResult {
   value: Signal<Date | Date[] | null>;
   setValue: (next: Date | Date[] | null) => void;
+  panelRef: { nativeElement: HTMLElement | null };
+  portalTarget: Signal<Element | null>;
 }
 // @generated:end
 
@@ -33,9 +37,24 @@ export function useCalendar(options: UseCalendarOptions): UseCalendarResult {
     onChange: options.onChange,
   });
 
+  const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
+  const { target: portalTarget } = createPortal({
+    enabled: true,
+    target: () => options.portalId,
+  });
+
+  createDismissal({
+    open: () => true,
+    closeOnEscape: () => true,
+    onDismiss: () => { void 0; },
+    destroyRef: options.destroyRef,
+  });
+
   return {
     value,
     setValue,
+    panelRef,
+    portalTarget,
   };
 }
 // @generated:end

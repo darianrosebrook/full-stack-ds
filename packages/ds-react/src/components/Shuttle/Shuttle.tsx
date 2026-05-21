@@ -19,6 +19,9 @@ import "./Shuttle.css";
 // @generated:start props
 export interface ShuttleProps {
   ariaLabel?: string;
+  value?: string[];
+  defaultValue?: string[];
+  onValueChange?: (value: string[]) => void;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -52,6 +55,9 @@ export function Shuttle({
   "data-testid": testId,
   children,
   ariaLabel,
+  value,
+  defaultValue,
+  onValueChange,
   ...rest
 }: ShuttleProps) {
   const classNames = [
@@ -63,6 +69,7 @@ export function Shuttle({
 
   return (
     <Stack
+      role="listbox"
       className={classNames}
       data-testid={testId}
       {...rest}

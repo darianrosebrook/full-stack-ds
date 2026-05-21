@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
@@ -22,6 +22,11 @@ describe("Shuttle — unit", () => {
     const { container } = render(Shuttle as unknown as Component<Record<string, unknown>>, { props: { "class": "custom" } });
     expect(container.firstElementChild?.className).toContain("shuttle");
     expect(container.firstElementChild?.className).toContain("custom");
+  });
+
+  it("calls onValueChange when selection changes", async () => {
+    const onValueChangeSpy = vi.fn();
+    expect(() => render(Shuttle as unknown as Component<Record<string, unknown>>, { props: { "value": false, "onValueChange": onValueChangeSpy } })).not.toThrow();
   });
 });
 

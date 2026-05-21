@@ -41,6 +41,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<Stack class={classes}>
+<Stack role="group" class={classes}>
   {@render children?.()}
 </Stack>

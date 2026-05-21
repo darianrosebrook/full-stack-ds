@@ -57,6 +57,9 @@ function channelValuePlaceholder(valueType: string | undefined): string {
   if (valueType === "string") return '""';
   if (valueType === "string | string[]") return '""';
   if (valueType === "Date | Date[] | null") return "null";
+  // Array channels (e.g. Shuttle's selection: string[]). An empty array
+  // satisfies any array-typed prop and is the cleanest no-op placeholder.
+  if (valueType && /\[\]$/.test(valueType)) return "[]";
   // Unknown / unspecified valueType. Default to `false` to match the
   // pre-fix behavior for boolean channels (which is the common case)
   // and avoid surfacing the unknown placeholder as a regression. New

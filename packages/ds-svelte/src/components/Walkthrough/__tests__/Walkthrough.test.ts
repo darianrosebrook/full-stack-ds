@@ -24,6 +24,11 @@ describe("Walkthrough — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: {} });
+    expect(container.firstElementChild?.getAttribute("role")).toBe("status");
+  });
+
   it("applies placement=top variant class", () => {
     const { container } = render(Walkthrough as unknown as Component<Record<string, unknown>>, { props: { "placement": "top" } });
     expect(container.firstElementChild?.className).toContain("walkthrough--top");

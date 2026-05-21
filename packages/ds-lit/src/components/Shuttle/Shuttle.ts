@@ -22,9 +22,13 @@ export class ShuttleElement extends LitElement {
 
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
+  @property({ attribute: false })
+  value?: string[];
+  @property({ attribute: false })
+  defaultValue?: string[];
 
   override render() {
-    return html`<fsds-stack class="shuttle"><slot></slot></fsds-stack>`;
+    return html`<fsds-stack role="listbox" class="shuttle"><slot></slot></fsds-stack>`;
   }
 }
 

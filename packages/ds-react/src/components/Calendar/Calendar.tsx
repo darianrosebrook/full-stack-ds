@@ -18,7 +18,7 @@ export type CalendarMode = "single" | "range";
 // @custom:end
 
 // @generated:start props
-export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "value"> {
+export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "locale" | "maxDate" | "minDate" | "mode" | "onChange" | "shouldCloseOnSelect" | "value"> {
   value?: Date | Date[] | null;
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
@@ -27,6 +27,7 @@ export interface CalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, "chi
   minDate?: Date;
   maxDate?: Date;
   locale?: string;
+  shouldCloseOnSelect?: boolean;
   className?: string;
   "data-testid"?: string;
 }
@@ -65,12 +66,14 @@ export function Calendar({
   minDate,
   maxDate,
   locale = "en-US",
+  shouldCloseOnSelect = true,
   ...rest
 }: CalendarProps) {
   const { value, setValue } = useCalendar({
     value: controlledValue,
     defaultValue,
     onChange,
+    shouldCloseOnSelect,
   });
 
   const classNames = [

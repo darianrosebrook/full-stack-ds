@@ -5,7 +5,7 @@
   gap: var(--core-spacing-size-04, 8px);
   background-color: var(--semantic-color-background-secondary, #efefef);
   border-color: var(--semantic-color-border-accent, #d9292b);
-  /* --semantic-elevation-default: none; */
+  /* --semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
 }
 
 .popover--top {}

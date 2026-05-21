@@ -24,6 +24,11 @@ describe("Avatar — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
+  it("has the correct ARIA role", () => {
+    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar" }, slots: { default: "content" } });
+    expect(wrapper.attributes("role")).toBe("img");
+  });
+
   it("applies size=small variant class", () => {
     const wrapper = mount(Avatar as Component, { props: { "size": "small" }, attrs: { "data-testid": "avatar" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("avatar--small");
@@ -47,7 +52,7 @@ describe("Avatar — unit", () => {
 
 describe("Avatar — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar" }, slots: { default: "content" } });
+    const wrapper = mount(Avatar as Component, { props: {}, attrs: { "data-testid": "avatar", "aria-label": "Test Avatar" }, slots: { default: "content" } });
     const results = await axe(wrapper.element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
