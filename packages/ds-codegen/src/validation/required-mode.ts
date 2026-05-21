@@ -91,6 +91,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { isGeneratedFile as sharedIsGeneratedFile } from "../markers.js";
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
   type EmissionManifest,
@@ -119,9 +120,6 @@ const COMPONENT_TREES: ReadonlyArray<{ framework: FrameworkId; relPath: string }
   { framework: "lit", relPath: "packages/ds-lit/src/components" },
   { framework: "angular", relPath: "packages/ds-angular/src/components" },
 ];
-
-/** The marker token an emitted file must contain to be considered "generated". */
-const GENERATED_MARKER = "@generated:start";
 
 /**
  * Canonical sha256 digest grammar
@@ -565,21 +563,12 @@ function walkTree(absDir: string, workspaceRoot: string, out: string[]): void {
  * Legacy snapshots (`*.legacy.*`) are deliberately included if
  * they contain the marker, but in practice they don't — the
  * snapshot is a copy of the pre-marker hand-authored source.
+ *
+ * Implementation delegated to `../markers.ts` so the prune pipeline
+ * applies the same definition without depending on required-mode.
  */
 function isGeneratedFile(absPath: string): boolean {
-  // Read only the first ~2KB to avoid hashing whole files just to
-  // check for a marker — codegen writes the marker near the top.
-  let buf: Buffer;
-  try {
-    const fd = fs.openSync(absPath, "r");
-    buf = Buffer.alloc(2048);
-    const bytesRead = fs.readSync(fd, buf, 0, 2048, 0);
-    fs.closeSync(fd);
-    buf = buf.subarray(0, bytesRead);
-  } catch {
-    return false;
-  }
-  return buf.toString("utf8").includes(GENERATED_MARKER);
+  return sharedIsGeneratedFile(absPath);
 }
 
 function sha256OfFile(absPath: string): string {

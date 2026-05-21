@@ -59,6 +59,13 @@ import {
   EMISSION_MANIFEST_RELATIVE_PATH,
   emissionManifestAbsolutePath,
 } from "./validation/emission-manifest-path.js";
+import { readManifestForVerification } from "./validation/required-mode.js";
+import {
+  detectOrphans,
+  executeOrphanRemoval,
+  type OrphanGroup,
+  type OrphanRemovalReport,
+} from "./prune/orphans.js";
 
 /**
  * Static declaration of the BOUNDED MATERIAL SOURCE SET per
@@ -194,6 +201,16 @@ interface CliArgs {
   strictTypes: boolean;
   migrate: boolean;
   watch: boolean;
+  /**
+   * Orphan-pruning policy for hand-edited files when --prune is set.
+   *   "off"         — pruning disabled entirely (default).
+   *   "skip"        — delete generated orphans; leave hand-edited
+   *                   files in place; list them in the summary.
+   *   "force"       — delete every orphan file regardless of marker.
+   *   "quarantine"  — delete generated orphans; move hand-edited
+   *                   files into packages/ds-codegen/.orphan-quarantine/.
+   */
+  prune: "off" | "skip" | "force" | "quarantine";
   targets: string | undefined;
   names: string[];
 }
@@ -206,6 +223,27 @@ function parseArgs(argv: string[]): CliArgs {
   const strictTypes = argv.includes("--strict-types");
   const migrate = argv.includes("--migrate");
   const watch = argv.includes("--watch");
+
+  // --prune (default policy: skip) | --prune=force | --prune=quarantine.
+  // Off when --prune is not passed at all. `--prune` alone is the
+  // recommended default — it removes generated orphans and surfaces
+  // hand-edited ones in the summary without losing them.
+  let prune: CliArgs["prune"] = "off";
+  for (const a of argv) {
+    if (a === "--prune") {
+      prune = "skip";
+    } else if (a.startsWith("--prune=")) {
+      const value = a.slice("--prune=".length);
+      if (value === "skip" || value === "force" || value === "quarantine") {
+        prune = value;
+      } else {
+        console.error(
+          `Unknown --prune value "${value}". Expected: skip, force, or quarantine.`,
+        );
+        process.exit(1);
+      }
+    }
+  }
 
   let targets: string | undefined;
   for (const a of argv) {
@@ -222,6 +260,7 @@ function parseArgs(argv: string[]): CliArgs {
     strictTypes,
     migrate,
     watch,
+    prune,
     targets,
     names,
   };
@@ -242,6 +281,38 @@ function main(): void {
   if (args.watch && args.migrate) {
     console.error("--watch is incompatible with --migrate.");
     process.exit(1);
+  }
+
+  // --prune is only safe when the generator sees the complete
+  // current component set. Partial runs (--target=<subset>,
+  // name-filtered) would falsely declare every component outside
+  // the partial scope as orphan. Refuse instead of producing
+  // dangerous state.
+  if (args.prune !== "off") {
+    if (args.watch) {
+      console.error("--prune is incompatible with --watch.");
+      process.exit(1);
+    }
+    if (args.testsOnly) {
+      console.error("--prune is incompatible with --tests-only.");
+      process.exit(1);
+    }
+    if (args.names.length > 0) {
+      console.error(
+        "--prune refuses to run with a name filter — it would falsely\n" +
+          "  orphan every component outside the filter. Drop the name args\n" +
+          "  or remove --prune.",
+      );
+      process.exit(1);
+    }
+    if (args.targets && args.targets !== "all") {
+      console.error(
+        `--prune refuses to run with --target=${args.targets} — it would falsely\n` +
+          "  orphan components in untargeted frameworks. Use --target=all or\n" +
+          "  remove --prune.",
+      );
+      process.exit(1);
+    }
   }
 
   if (!fs.existsSync(CONTRACTS_DIR)) {
@@ -370,6 +441,13 @@ function main(): void {
     `\nDone. ${totalGenerated} file group(s) ${args.dryRun ? "would be " : ""}generated.`,
   );
 
+  // Snapshot the previous manifest BEFORE it is overwritten so the
+  // prune pass can compare its groups against the current contract
+  // set. `null` means there was no previous manifest (first run or
+  // the file was deleted by hand) — orphan detection then has
+  // nothing to compare against and silently does nothing.
+  const previousManifest = args.prune !== "off" ? snapshotPreviousManifest() : null;
+
   // Write the EmissionManifest after all targets emit. The rail
   // (validate:generated) joins this manifest against each
   // framework's PlanCommand scopes to produce per-artifact
@@ -381,6 +459,14 @@ function main(): void {
   // group; misleading for downstream admission joins).
   if (!args.dryRun && !args.testsOnly && allGroups.length > 0) {
     writeEmissionManifest(allGroups);
+  }
+
+  // Run orphan pruning AFTER the new manifest has been written so
+  // the prior manifest is the source of truth for "what existed
+  // before this run". --dry-run prints what would be removed
+  // without touching disk.
+  if (args.prune !== "off" && previousManifest) {
+    runPruneStep(args, previousManifest, registry, requestedTargets);
   }
 
   if (args.watch) {
@@ -563,6 +649,115 @@ function writeEmissionManifest(groups: EmittedArtifactGroup[]): void {
   console.log(
     `\n  MANIFEST  ${EMISSION_MANIFEST_RELATIVE_PATH} (${groups.length} group(s), ${fileCount} file(s), ${emitterSourceCount} emitter source(s), node v${environment.nodeMajor}+, codegen v${environment.codegenPackageVersion}, schema v${EMISSION_MANIFEST_SCHEMA_VERSION})`,
   );
+}
+
+/**
+ * Load the on-disk EmissionManifest snapshot from the previous run.
+ * Returns null when there is nothing usable to compare against —
+ * the manifest is missing, malformed, or on an incompatible schema
+ * version. Prune logic treats null as "no previous state", which is
+ * the correct semantics for first-run, hand-deleted, or
+ * schema-bumped scenarios; absence is information, not an error.
+ */
+function snapshotPreviousManifest(): EmissionManifest | null {
+  const absPath = emissionManifestAbsolutePath(cwd);
+  const read = readManifestForVerification(absPath);
+  if (read.kind !== "ok") return null;
+  return read.manifest;
+}
+
+/**
+ * Detect and remove orphaned generated artifacts. An orphan is a
+ * (framework, component) group from the previous manifest whose
+ * source contract no longer exists on disk. The contract is the
+ * single source of truth, so anything it used to produce is stale
+ * and should be cleaned up.
+ *
+ * Hand-edited files (no `@generated:start` marker) are handled per
+ * the policy from --prune:
+ *   skip       — left in place, listed in the summary
+ *   quarantine — moved to packages/ds-codegen/.orphan-quarantine/<iso>/
+ *   force      — deleted alongside generated files
+ *
+ * --dry-run prints the orphan set without modifying disk.
+ */
+function runPruneStep(
+  args: CliArgs,
+  previousManifest: EmissionManifest,
+  registry: TargetRegistry,
+  requestedTargets: TargetId[],
+): void {
+  const policy = args.prune;
+  if (policy === "off") return;
+  const orphans = detectOrphans(previousManifest, cwd);
+  if (orphans.length === 0) {
+    console.log("\n  PRUNE  no orphan components found.");
+    return;
+  }
+
+  if (args.dryRun) {
+    printPruneDryRun(orphans);
+    return;
+  }
+  // policy is "skip" | "force" | "quarantine" here, never "off".
+  const report = executeOrphanRemoval(orphans, policy, cwd);
+
+  // Rewrite each framework barrel that lost a component. The
+  // per-framework `discoverComponentIds` walks the live components
+  // directory, so it naturally excludes the orphan dirs we just
+  // removed. Done after orphan removal — order matters.
+  const touchedFrameworks = new Set<string>(orphans.map((g) => g.framework));
+  for (const targetId of requestedTargets) {
+    if (!touchedFrameworks.has(targetId)) continue;
+    writeBarrel(registry.get(targetId));
+  }
+
+  printPruneReport(orphans, report);
+}
+
+function printPruneDryRun(orphans: OrphanGroup[]): void {
+  const components = new Set(orphans.map((g) => g.component));
+  console.log(
+    `\n  PRUNE (dry-run)  ${orphans.length} orphan group(s) across ${components.size} component(s):`,
+  );
+  for (const group of orphans) {
+    console.log(`    - ${group.framework}/${group.component} (contract gone: ${group.contractPath})`);
+    for (const file of group.files) {
+      console.log(`        [${file.kind}] ${file.path}`);
+    }
+  }
+}
+
+function printPruneReport(
+  orphans: OrphanGroup[],
+  report: OrphanRemovalReport,
+): void {
+  const components = new Set(orphans.map((g) => g.component));
+  console.log(
+    `\n  PRUNE  ${orphans.length} orphan group(s) across ${components.size} component(s):`,
+  );
+  console.log(
+    `    deleted:     ${report.deleted.length} file(s)`,
+  );
+  if (report.quarantined.length > 0) {
+    console.log(`    quarantined: ${report.quarantined.length} file(s)`);
+    if (report.quarantineRoot) {
+      console.log(
+        `      sidecar: ${path.relative(cwd, report.quarantineRoot)}`,
+      );
+    }
+  }
+  if (report.skipped.length > 0) {
+    console.log(
+      `    skipped:     ${report.skipped.length} hand-edited file(s) (re-run with --prune=force or --prune=quarantine to handle):`,
+    );
+    for (const file of report.skipped) {
+      console.log(`      - ${file.path}`);
+    }
+  }
+  if (report.removedDirs.length > 0) {
+    console.log(`    empty dirs removed: ${report.removedDirs.length}`);
+  }
 }
 
 /**
