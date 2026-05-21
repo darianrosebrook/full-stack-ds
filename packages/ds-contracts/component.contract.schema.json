@@ -175,8 +175,61 @@
     "motion": { "$ref": "#/$defs/motionContract" },
     "focus": { "$ref": "#/$defs/focusContract" },
     "portal": { "$ref": "#/$defs/portalContract" },
-    "dismissal": { "$ref": "#/$defs/dismissalContract" },
+    "dismissal": {
+      "description": "How a dismissable surface can be closed. Accepts either the structured form ({ triggers: [...] }) or a legacy flat array of event names — the flat form lets older portfolio contracts import unchanged.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["escape", "overlayClick", "outsideClick", "blur", "routeChange", "triggerReclick", "userDismiss", "selection"]
+          },
+          "description": "Legacy flat form: array of event names. Equivalent to { triggers: [{ event: <name> }, ...] }."
+        },
+        { "$ref": "#/$defs/dismissalContract" }
+      ]
+    },
     "surface": { "$ref": "#/$defs/surfaceContract" },
+    "slots": {
+      "type": "object",
+      "description": "Named slot anchors keyed by slot name. Each entry declares whether the slot is required and an optional CSS selector consumers or test harnesses can use to locate the slot in rendered output. Complements anatomy.details — anatomy describes the part's semantic role; slots describes its DOM anchor.",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["required"],
+        "properties": {
+          "required": { "type": "boolean" },
+          "selector": {
+            "type": "string",
+            "description": "CSS selector that identifies the slot anchor in rendered DOM (e.g. \"[data-slot=\\\"trigger\\\"]\")."
+          }
+        }
+      }
+    },
+    "ssr": {
+      "type": "object",
+      "description": "Server-side rendering and hydration contract. Tells the codegen and consumers whether the component must be wrapped in a client boundary.",
+      "additionalProperties": false,
+      "required": ["hydrateOn"],
+      "properties": {
+        "hydrateOn": {
+          "type": "string",
+          "enum": ["interaction", "load", "none"],
+          "description": "When the component hydrates. \"interaction\" defers until first user interaction (lazy); \"load\" hydrates on initial page load; \"none\" is fully server-rendered with no client behavior."
+        }
+      }
+    },
+    "rtl": {
+      "type": "object",
+      "description": "Right-to-left behavior contract. Currently a single field; structured as an object so additional RTL concerns can be added without a breaking change.",
+      "additionalProperties": false,
+      "properties": {
+        "flipIcon": {
+          "type": "boolean",
+          "description": "Whether directional icons (e.g. chevrons, arrows) should be horizontally mirrored under dir=\"rtl\"."
+        }
+      }
+    },
     "relationships": {
       "type": "array",
       "description": "Cross-part wiring (ID references) that implementers must maintain so assistive tech works.",
@@ -378,9 +431,18 @@
     },
     "tokenResolution": {
       "type": "object",
-      "description": "Structured resolution for a single token: the semantic token it resolves to, the hardcoded fallback, the CSS property it drives, and the optional cascade layer.",
-      "required": ["resolvesTo", "fallback"],
+      "description": "Structured resolution for a single token: either backs to a semantic token via `resolvesTo` + `fallback`, or carries a literal CSS value via `literal`. Hardcoded values (e.g. \"0px\") that are intentionally not token-backed should use `literal` instead of being smuggled into `resolvesTo`.",
       "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["resolvesTo", "fallback"],
+          "description": "Token reference — resolves via the token graph at runtime via var(--<resolvesTo>, <fallback>)."
+        },
+        {
+          "required": ["literal"],
+          "description": "Literal CSS value — not a token reference. Use this for intentional hardcodes that should NOT be themable (e.g. \"0px\" spacing, internal animation easings)."
+        }
+      ],
       "properties": {
         "resolvesTo": {
           "type": "string",
@@ -389,6 +451,10 @@
         "fallback": {
           "type": "string",
           "description": "Hardcoded fallback value — the second argument passed to var() in .tokens.css. Brand-agnostic default and safety net when the semantic token is missing."
+        },
+        "literal": {
+          "type": "string",
+          "description": "Hardcoded CSS value used when the token is intentionally not backed by a graph reference. Mutually exclusive with `resolvesTo`+`fallback`."
         },
         "property": {
           "type": "string",
@@ -929,7 +995,13 @@
       "additionalProperties": false,
       "properties": {
         "event": { "type": "string" },
-        "from": { "type": "string" },
+        "from": {
+          "description": "Source state(s). Accepts a single state name or an array of names for shared-target transitions (e.g. both 'hover' and 'focus' transitioning to 'visible' without duplicating entries).",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+          ]
+        },
         "to": { "type": "string" },
         "guard": { "type": "string" },
         "effect": { "type": "string" },
