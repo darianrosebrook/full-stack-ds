@@ -84,9 +84,87 @@
     },
     "props": {
       "type": "object",
-      "description": "Prop groups keyed by surface name (e.g. \"styled\", \"hook\").",
-      "additionalProperties": {
-        "$ref": "#/$defs/propGroup"
+      "description": "Component prop API in the six-bucket form. New contracts should use `designed` + `passthrough` and (where applicable) `constrained` / `restricted`. The `styled` and `hook` buckets are accepted as legacy surfaces during migration; both carry the same shape they had under the open-keyed schema.",
+      "additionalProperties": false,
+      "properties": {
+        "designed": {
+          "type": "object",
+          "description": "Props the component intentionally exposes as part of its designed API. Every member must have a non-empty description.",
+          "required": ["members"],
+          "additionalProperties": false,
+          "properties": {
+            "members": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/designedPropMember" }
+            }
+          }
+        },
+        "passthrough": {
+          "type": "object",
+          "description": "HTML attribute surface the component deliberately forwards to its root element. `extends` names the HTML element whose attribute surface is inherited (e.g. \"button\", \"input\", \"div\"); the emitter uses this to forward attributes without guessing.",
+          "additionalProperties": false,
+          "properties": {
+            "extends": {
+              "type": "string",
+              "description": "HTML element whose attribute surface is forwarded, e.g. 'button', 'input', 'div'."
+            },
+            "allowed": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Explicit allowlist of forwarded attribute names. If absent, every attribute of the extended element is forwarded."
+            }
+          }
+        },
+        "constrained": {
+          "type": "object",
+          "description": "Props that are valid only under specific conditions. Each member must describe its constraint.",
+          "required": ["members"],
+          "additionalProperties": false,
+          "properties": {
+            "members": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/constrainedPropMember" }
+            }
+          }
+        },
+        "restricted": {
+          "type": "object",
+          "description": "Props that must NOT be passed by consumers. Each member must describe why.",
+          "required": ["members"],
+          "additionalProperties": false,
+          "properties": {
+            "members": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/designedPropMember" }
+            }
+          }
+        },
+        "styled": {
+          "description": "Legacy surface — migrate to `designed` + `passthrough` when updating this contract.",
+          "type": "object",
+          "required": ["members"],
+          "additionalProperties": false,
+          "properties": {
+            "description": { "type": "string" },
+            "members": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/propMember" }
+            }
+          }
+        },
+        "hook": {
+          "description": "Props surfaced via a companion hook (e.g. useDialog). Migrate to `designed` when updating this contract.",
+          "type": "object",
+          "required": ["members"],
+          "additionalProperties": false,
+          "properties": {
+            "description": { "type": "string" },
+            "members": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/propMember" }
+            }
+          }
+        }
       }
     },
     "channels": {
@@ -324,6 +402,57 @@
         }
       }
     },
+    "designedPropMember": {
+      "type": "object",
+      "description": "A prop in the `designed` or `restricted` bucket. Identical shape to `propMember` except `description` is required to be non-empty — new contracts must explain every designed prop.",
+      "required": ["name", "type", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Non-empty description of what this prop controls."
+        },
+        "required": { "type": "boolean", "default": false },
+        "default": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        },
+        "nodeKind": {
+          "type": "string",
+          "enum": ["node-ref", "icon-ref"]
+        }
+      }
+    },
+    "constrainedPropMember": {
+      "type": "object",
+      "description": "A prop in the `constrained` bucket. Adds a required `constraint` field documenting the condition under which the prop is valid.",
+      "required": ["name", "type", "description", "constraint"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string", "minLength": 1 },
+        "constraint": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable condition under which this prop is valid (e.g. 'only when asChild=true')."
+        },
+        "required": { "type": "boolean", "default": false },
+        "default": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" },
+            { "type": "boolean" }
+          ]
+        }
+      }
+    },
     "propGroup": {
       "type": "object",
       "description": "A named group of related props (e.g. styled component props, hook options).",
@@ -374,6 +503,10 @@
         "notes": {
           "type": "string",
           "description": "Free-form notes about semantics (e.g. \"in multi mode the value is an array\")."
+        },
+        "omitWhen": {
+          "type": "string",
+          "description": "Condition under which this channel's value is omitted from form submission. Mirrors `form.serialization.omitWhen`. Documents the case rather than implementing it; the codegen reads this to comment the emitted serialization logic."
         }
       }
     },
@@ -1022,7 +1155,7 @@
       }
     },
     "keyboardEntry": {
-      "description": "A keyboard interaction. Bare strings remain valid (legacy); prefer the structured form with `when` and `mode` qualifiers.",
+      "description": "A keyboard interaction. Three forms accepted: (1) bare string (legacy); (2) structured ours: { key, action, when?, mode? }; (3) structured portfolio: { key, when, then } — portfolio contracts import unchanged. `then` is an alias for `action`; downstream consumers should treat them equivalently.",
       "oneOf": [
         { "type": "string" },
         {
@@ -1047,6 +1180,17 @@
               "description": "State condition required for this binding (e.g. \"openness=expanded\")."
             }
           }
+        },
+        {
+          "type": "object",
+          "required": ["key", "when", "then"],
+          "additionalProperties": false,
+          "description": "Portfolio-shape keyboard entry. `then` is the action; treat as an alias for `action` in the structured-ours form.",
+          "properties": {
+            "key": { "type": "string" },
+            "when": { "type": "string" },
+            "then": { "type": "string" }
+          }
         }
       ]
     },
@@ -1067,6 +1211,18 @@
         "screenReader": {
           "type": "array",
           "items": { "type": "string" }
+        },
+        "roles": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "All ARIA roles when multiple are used. Use alongside `role` when the component takes more than one role across its anatomy."
+        },
+        "apgPattern": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "null" }
+          ],
+          "description": "ARIA Authoring Practices Guide pattern name (e.g. \"accordion\", \"dialog\", \"combobox\"). Helps agent tooling and a11y review route to the correct interaction expectations. Nullable to make explicit absence distinguishable from forgotten field."
         }
       }
     },
