@@ -103,6 +103,20 @@ const COMPONENT_TREES: ReadonlyArray<{ framework: FrameworkId; relPath: string }
 const GENERATED_MARKER = "@generated:start";
 
 /**
+ * Canonical sha256 digest grammar
+ * (CODEGEN-RAIL-MANIFEST-DIGEST-GRAMMAR-01): lowercase hex,
+ * exactly 64 characters. The producer always writes digests in
+ * this shape (via `crypto.createHash("sha256").digest("hex")`),
+ * so anything else on disk is a hand-edited or
+ * externally-mutated manifest — structurally malformed, not a
+ * content-drift case. Surfacing the violation as MALFORMED at
+ * the reader (rather than as a HASH_MISMATCH later in the
+ * verifier) tells operators the file is broken, not that real
+ * content drift occurred.
+ */
+const DIGEST_GRAMMAR = /^[0-9a-f]{64}$/;
+
+/**
  * Run all required-mode checks. Returns diagnostics in declaration
  * order; an empty list means the manifest is consistent with
  * on-disk state under the current schema version.
@@ -442,6 +456,13 @@ export function readManifestForVerification(
   // structurally broken producer write, distinct from a
   // schemaVersion mismatch — surface it as MALFORMED so CI can
   // tell "wrote v3 incorrectly" from "wrote v2".
+  //
+  // Also (CODEGEN-RAIL-MANIFEST-DIGEST-GRAMMAR-01) validates
+  // group.files[] item shape + every sha256 against the
+  // canonical hex grammar, so the verifier's later
+  // `path.join(workspaceRoot, file.path)` and digest comparison
+  // never see malformed values (same "verifier never throws"
+  // boundary the emitter-source item-shape fix closes).
   const manifestParsed = parsed as EmissionManifest;
   const groups = manifestParsed.groups;
   for (let i = 0; i < groups.length; i += 1) {
@@ -458,6 +479,38 @@ export function readManifestForVerification(
         kind: "parse_error",
         message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}] is missing contract provenance`,
       };
+    }
+    if (!DIGEST_GRAMMAR.test(g.contract.sha256)) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].contract.sha256 is not lowercase 64-char hex`,
+      };
+    }
+    if (!Array.isArray(g.files)) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].files is missing or not an array`,
+      };
+    }
+    for (let j = 0; j < g.files.length; j += 1) {
+      const f = g.files[j] as Partial<EmissionManifest["groups"][number]["files"][number]>;
+      if (
+        !f ||
+        typeof f !== "object" ||
+        typeof f.path !== "string" ||
+        typeof f.sha256 !== "string"
+      ) {
+        return {
+          kind: "parse_error",
+          message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].files[${j}] is missing path/sha256 or has non-string fields`,
+        };
+      }
+      if (!DIGEST_GRAMMAR.test(f.sha256)) {
+        return {
+          kind: "parse_error",
+          message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].files[${j}].sha256 is not lowercase 64-char hex`,
+        };
+      }
     }
   }
   // v4 invariant: top-level `emitterSourceSets` must be an
@@ -542,6 +595,12 @@ export function readManifestForVerification(
         return {
           kind: "parse_error",
           message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources[${i}] is missing path/sha256 or has non-string fields`,
+        };
+      }
+      if (!DIGEST_GRAMMAR.test(src.sha256)) {
+        return {
+          kind: "parse_error",
+          message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources[${i}].sha256 is not lowercase 64-char hex`,
         };
       }
     }

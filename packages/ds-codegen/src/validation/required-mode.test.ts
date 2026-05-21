@@ -778,10 +778,10 @@ describe("readManifestForVerification", () => {
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "x",
         emitterSourceSets: {
-          react: { framework: "react", sources: [{ path: "x", sha256: "a" }] },
-          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
-          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
-          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
+          react: { framework: "react", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a".repeat(64) }] },
         },
         groups: [],
       }),
@@ -804,11 +804,11 @@ describe("readManifestForVerification", () => {
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "x",
         emitterSourceSets: {
-          react: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
-          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
-          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
-          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
-          angular: { framework: "angular", sources: [{ path: "x", sha256: "a" }] },
+          react: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a".repeat(64) }] },
         },
         groups: [],
       }),
@@ -828,10 +828,10 @@ describe("readManifestForVerification", () => {
         generatedAt: "x",
         emitterSourceSets: {
           react: { framework: "react", sources: [] },
-          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
-          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
-          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
-          angular: { framework: "angular", sources: [{ path: "x", sha256: "a" }] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a".repeat(64) }] },
         },
         groups: [],
       }),
@@ -840,6 +840,190 @@ describe("readManifestForVerification", () => {
     expect(out.kind).toBe("parse_error");
     if (out.kind === "parse_error") {
       expect(out.message).toMatch(/emitterSourceSets\["react"\]\.sources is empty/);
+    }
+  });
+
+  // CODEGEN-RAIL-MANIFEST-DIGEST-GRAMMAR-01:
+  // Every sha256-shaped field must be lowercase 64-char hex.
+  // The producer writes via `crypto.createHash().digest("hex")`
+  // which always produces this shape, so anything else on disk
+  // is hand-edited / externally-mutated — surface as MALFORMED
+  // at the reader, not as a later content-drift HASH_MISMATCH.
+  it("returns parse_error when a group.files[] entry has a non-hex sha256", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            contract: {
+              path: "packages/ds-contracts/Foo.contract.json",
+              sha256: "a".repeat(64),
+            },
+            files: [
+              { path: "x.tsx", sha256: "ZZZZ".repeat(16) }, // non-hex
+            ],
+          },
+        ],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/group\[0\]\.files\[0\]\.sha256 is not lowercase 64-char hex/);
+    }
+  });
+
+  it("returns parse_error when a contract sha256 is uppercase hex (grammar is lowercase-only)", () => {
+    // Uppercase is structurally hex but Node's
+    // `crypto.createHash().digest("hex")` always emits
+    // lowercase. Tolerating uppercase would let a hand-edit
+    // slip through that the producer would never have written.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            contract: {
+              path: "packages/ds-contracts/Foo.contract.json",
+              sha256: "A".repeat(64), // uppercase
+            },
+            files: [{ path: "x.tsx", sha256: "a".repeat(64) }],
+          },
+        ],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/group\[0\]\.contract\.sha256 is not lowercase 64-char hex/);
+    }
+  });
+
+  it("returns parse_error when an emitter source sha256 is the wrong length", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: {
+          react: {
+            framework: "react",
+            sources: [
+              { path: "packages/ds-codegen/src/stub.ts", sha256: "abc123" }, // too short
+            ],
+          },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+        },
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/emitterSourceSets\["react"\]\.sources\[0\]\.sha256 is not lowercase 64-char hex/);
+    }
+  });
+
+  it("returns parse_error when a sha256 is empty string", () => {
+    // Empty string is type-correct (it's a string) so the
+    // existing item-shape check passes, but it fails the digest
+    // grammar. Verifies the two checks are independent.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            contract: {
+              path: "packages/ds-contracts/Foo.contract.json",
+              sha256: "", // empty
+            },
+            files: [{ path: "x.tsx", sha256: "a".repeat(64) }],
+          },
+        ],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/sha256 is not lowercase 64-char hex/);
+    }
+  });
+
+  it("returns parse_error when group.files is missing entirely", () => {
+    // Producer always writes `files: [...]` (possibly empty);
+    // a v4 manifest with `files` absent or non-array is a
+    // hand-edit. MALFORMED, not SCHEMA_MISMATCH.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            contract: {
+              path: "packages/ds-contracts/Foo.contract.json",
+              sha256: "a".repeat(64),
+            },
+            // files omitted entirely.
+          },
+        ],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/group\[0\]\.files is missing or not an array/);
+    }
+  });
+
+  it("returns parse_error when a group.files entry has non-string fields", () => {
+    // Mirror of the emitter-source item-shape test on the
+    // artifact-files side. Closes the same "verifier never
+    // throws" boundary: path.join would crash on path: 42.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            contract: {
+              path: "packages/ds-contracts/Foo.contract.json",
+              sha256: "a".repeat(64),
+            },
+            files: [{ path: 42, sha256: "a".repeat(64) }], // non-string path
+          },
+        ],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/group\[0\]\.files\[0\] is missing path\/sha256 or has non-string fields/);
     }
   });
 
@@ -857,10 +1041,10 @@ describe("readManifestForVerification", () => {
             framework: "react",
             sources: [{ path: 42, sha256: "a" }], // non-string path
           },
-          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
-          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
-          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
-          angular: { framework: "angular", sources: [{ path: "x", sha256: "a" }] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a".repeat(64) }] },
         },
         groups: [],
       }),
