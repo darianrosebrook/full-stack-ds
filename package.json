@@ -15,6 +15,7 @@
     "generate:all:dry-run": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --target=all --dry-run",
     "generate:watch": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js --watch",
     "validate:generated": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/validation/validate-cli.js",
+    "governed:rail": "pnpm run generate -- --target=all && node packages/ds-codegen/dist/validation/validate-cli.js --require-artifact-manifest",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:vue": "pnpm --filter @full-stack-ds/vue run test",
