@@ -48,11 +48,6 @@ describe("AlertNotice — unit", () => {
     expect(screen.getByTestId("alert-notice")).toHaveClass("alert-notice--warning");
   });
 
-  it("applies status=danger variant class", () => {
-    render(<AlertNotice data-testid="alert-notice" status="danger">content</AlertNotice>);
-    expect(screen.getByTestId("alert-notice")).toHaveClass("alert-notice--danger");
-  });
-
   it("applies status=error variant class", () => {
     render(<AlertNotice data-testid="alert-notice" status="error">content</AlertNotice>);
     expect(screen.getByTestId("alert-notice")).toHaveClass("alert-notice--error");

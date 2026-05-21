@@ -44,11 +44,6 @@ describe("AlertNotice — unit", () => {
     expect(container.firstElementChild?.className).toContain("alert-notice--warning");
   });
 
-  it("applies status=danger variant class", () => {
-    const { container } = render(AlertNotice as unknown as Component<Record<string, unknown>>, { props: { "status": "danger" } });
-    expect(container.firstElementChild?.className).toContain("alert-notice--danger");
-  });
-
   it("applies status=error variant class", () => {
     const { container } = render(AlertNotice as unknown as Component<Record<string, unknown>>, { props: { "status": "error" } });
     expect(container.firstElementChild?.className).toContain("alert-notice--error");

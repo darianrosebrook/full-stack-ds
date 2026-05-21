@@ -8,7 +8,7 @@ import { Stack } from "../../primitives/index.js";
 // @custom:end
 
 // @generated:start types
-type AlertNoticeStatus = "info" | "success" | "warning" | "danger" | "error";
+type AlertNoticeStatus = "info" | "success" | "warning" | "error";
 type AlertNoticeLevel = "page" | "section" | "inline";
 // @generated:end
 

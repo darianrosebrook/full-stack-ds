@@ -9,7 +9,7 @@ import "./AlertNotice.css";
 // @custom:end
 
 // @generated:start types
-export type AlertNoticeStatus = "info" | "success" | "warning" | "danger" | "error";
+export type AlertNoticeStatus = "info" | "success" | "warning" | "error";
 
 export type AlertNoticeLevel = "page" | "section" | "inline";
 // @generated:end

@@ -44,11 +44,6 @@ describe("AlertNotice — unit", () => {
     expect(wrapper.classes()).toContain("alert-notice--warning");
   });
 
-  it("applies status=danger variant class", () => {
-    const wrapper = mount(AlertNotice as Component, { props: { "status": "danger" }, attrs: { "data-testid": "alert-notice" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("alert-notice--danger");
-  });
-
   it("applies status=error variant class", () => {
     const wrapper = mount(AlertNotice as Component, { props: { "status": "error" }, attrs: { "data-testid": "alert-notice" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("alert-notice--error");

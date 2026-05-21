@@ -31,11 +31,6 @@ describe("AlertNotice — unit", () => {
     expect(classTokens(stack)).toContain("alert-notice--warning");
   });
 
-  it("applies status=danger variant class", async () => {
-    const { stack } = await renderElement("fsds-alert-notice", { "status": "danger" });
-    expect(classTokens(stack)).toContain("alert-notice--danger");
-  });
-
   it("applies status=error variant class", async () => {
     const { stack } = await renderElement("fsds-alert-notice", { "status": "error" });
     expect(classTokens(stack)).toContain("alert-notice--error");

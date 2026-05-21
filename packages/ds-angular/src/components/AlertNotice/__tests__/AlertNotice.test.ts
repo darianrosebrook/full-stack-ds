@@ -32,12 +32,6 @@ describe("AlertNotice — unit", () => {
     expect(classTokens(component)).toContain("alert-notice--warning");
   });
 
-  it("applies status=danger variant class", () => {
-    const component = new AlertNoticeComponent();
-    component.status = "danger";
-    expect(classTokens(component)).toContain("alert-notice--danger");
-  });
-
   it("applies status=error variant class", () => {
     const component = new AlertNoticeComponent();
     component.status = "error";

@@ -46,7 +46,6 @@
         "info",
         "success",
         "warning",
-        "danger",
         "error"
       ]
     },
@@ -64,7 +63,6 @@
       "info",
       "success",
       "warning",
-      "danger",
       "error"
     ],
     "level": [

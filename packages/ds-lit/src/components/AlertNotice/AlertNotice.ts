@@ -10,7 +10,7 @@ import { StackElement as _Stack } from '../../primitives/index.js';
 // @custom:end
 
 // @generated:start types
-export type AlertNoticeStatus = "info" | "success" | "warning" | "danger" | "error";
+export type AlertNoticeStatus = "info" | "success" | "warning" | "error";
 export type AlertNoticeLevel = "page" | "section" | "inline";
 // @generated:end
 
