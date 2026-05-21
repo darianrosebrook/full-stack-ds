@@ -31,11 +31,26 @@ interface SourceFile {
   code: string;
 }
 
+interface ComponentSourceSlot {
+  /** Root component source — the file the iframe shell bootstraps. */
+  component?: SourceFile;
+  /** Stylesheet sibling (regenerated, not authored). */
+  css?: SourceFile;
+  /** Convenience pointer at the behavior hook within siblings. */
+  hook?: SourceFile;
+  /** Every non-test, non-css file in the component directory. Used by the
+   *  preview shells' relative-import rewriter to resolve `./use<Name>`,
+   *  `./<CompoundPart>.vue`, `./<Name>Behavior.js`, etc. without 404-ing.
+   *  The root component is included here too — callers can filter on
+   *  filename if they need just the siblings. */
+  siblings: SourceFile[];
+}
+
 interface ComponentBundle {
   name: string;
   contract: unknown;
   contractPath: string;
-  sources: Partial<Record<Framework, { component?: SourceFile; css?: SourceFile; hook?: SourceFile }>>;
+  sources: Partial<Record<Framework, ComponentSourceSlot>>;
 }
 
 interface PrimitiveBundle {
@@ -59,22 +74,78 @@ async function tryFile(dir: string, name: string): Promise<SourceFile | undefine
   return { filename: name, code };
 }
 
+// Sibling-file extensions we expect to find inside a component directory.
+// Compound-part SFCs, behavior hooks, and the root component all match one of
+// these. Tests and CSS are excluded — CSS is gathered separately, tests aren't
+// needed in the preview iframe.
+const SIBLING_EXTS = new Set([".ts", ".tsx", ".vue", ".svelte"]);
+
+/**
+ * Heuristic: which file is the *root* component for this framework?
+ * The bundle plugin already knows the canonical root pattern per framework
+ * (FRAMEWORK_FILE_PATTERNS[fw](name)[0]). We match against that.
+ */
+function isRootComponentFilename(framework: Framework, componentName: string, filename: string): boolean {
+  const patterns = FRAMEWORK_FILE_PATTERNS[framework](componentName);
+  return filename === patterns[0];
+}
+
+/**
+ * Heuristic: is this filename a behavior hook?
+ * - React/Vue: `use<Name>.ts`
+ * - Svelte: `use<Name>.svelte.ts`
+ * - Angular: `use<Name>.ts`
+ * - Lit: `<Name>Behavior.ts`
+ */
+function isHookFilename(componentName: string, filename: string): boolean {
+  return (
+    filename === `use${componentName}.ts` ||
+    filename === `use${componentName}.svelte.ts` ||
+    filename === `${componentName}Behavior.ts`
+  );
+}
+
 async function gatherComponentSources(rootDir: string, componentName: string): Promise<ComponentBundle["sources"]> {
   const sources: ComponentBundle["sources"] = {};
   for (const fw of FRAMEWORKS) {
     const compDir = path.join(rootDir, "packages", `ds-${fw}`, "src", "components", componentName);
     if (!existsSync(compDir)) continue;
-    const patterns = FRAMEWORK_FILE_PATTERNS[fw](componentName);
-    const slot: { component?: SourceFile; css?: SourceFile; hook?: SourceFile } = {};
-    for (const pat of patterns) {
-      const file = await tryFile(compDir, pat);
+
+    const entries = await readdir(compDir, { withFileTypes: true });
+    const slot: ComponentSourceSlot = { siblings: [] };
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) continue;
+      const filename = entry.name;
+      if (filename.endsWith(".css")) {
+        if (filename === `${componentName}.css`) {
+          const file = await tryFile(compDir, filename);
+          if (file) slot.css = file;
+        }
+        continue;
+      }
+      // Skip test files and .test.ts/.spec.ts even if they live at the dir root.
+      if (filename.endsWith(".test.ts") || filename.endsWith(".spec.ts")) continue;
+      const ext = path.extname(filename);
+      if (!SIBLING_EXTS.has(ext)) continue;
+
+      const file = await tryFile(compDir, filename);
       if (!file) continue;
-      if (pat.startsWith("use")) slot.hook = file;
-      else slot.component = file;
+      slot.siblings.push(file);
+      if (isRootComponentFilename(fw, componentName, filename)) {
+        slot.component = file;
+      } else if (isHookFilename(componentName, filename)) {
+        slot.hook = file;
+      }
     }
-    const css = await tryFile(compDir, `${componentName}.css`);
-    if (css) slot.css = css;
-    if (Object.keys(slot).length > 0) sources[fw] = slot;
+
+    // Stable sort by filename so consumers (and snapshots) see a deterministic
+    // order regardless of underlying fs.readdir ordering.
+    slot.siblings.sort((a, b) => a.filename.localeCompare(b.filename));
+
+    if (slot.component || slot.css || slot.siblings.length > 0) {
+      sources[fw] = slot;
+    }
   }
   return sources;
 }

@@ -9,6 +9,14 @@ export interface ComponentSources {
   component?: SourceFile;
   css?: SourceFile;
   hook?: SourceFile;
+  /**
+   * Every non-test, non-css file in the component's source directory for this
+   * framework. Includes the root component, the behavior hook (if any), and
+   * any sibling SFC files (e.g. AccordionHeader.vue, AccordionItem.svelte).
+   * The preview shells use this to fetch siblings into the iframe so relative
+   * imports (`./useFoo`, `./FooBehavior.js`, `./CompoundPart.vue`) resolve.
+   */
+  siblings: SourceFile[];
 }
 
 export interface PropMember {
