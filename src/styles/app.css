@@ -280,6 +280,10 @@ button {
   border-bottom: 1px solid var(--border-subtle);
 }
 
+* + .section-header {
+  margin-top: 1em;
+}
+
 .section-title {
   font-size: var(--fs-600);
   line-height: var(--lh-tight);
@@ -624,6 +628,11 @@ button {
 .lang-svelte { color: #ff3e00; }
 .lang-angular { color: #dd0031; }
 .lang-lit { color: #325cff; }
+.lang-react-native { color: #61dafb; }
+.lang-swift { color: #41b883; }
+.lang-uikit { color: #ff3e00; }
+.lang-kotlin { color: #dd0031; }
+.lang-jetpack { color: #325cff; }
 
 /* Trace panel */
 .trace {
