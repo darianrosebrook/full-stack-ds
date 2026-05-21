@@ -28,7 +28,7 @@ governs:
 
 The admission rail is the inspection surface that answers "what evidence backs the generated output checked into this repo?" It is invoked locally as `pnpm run governed:rail`, runs in CI on every PR, and produces a machine-readable JSON report (`RailReport`) plus a markdown projection at `tmp/generated-admission-report.md`.
 
-This document teaches the rail's claim. The diagnostic codes, the manifest, and the four evidence rungs all exist to make one specific kind of trust inspectable. Reading this doc first lets the rest of the rail surfaces (`docs/manifest-schema.md`, `docs/governed-ci.md`) make sense.
+This document teaches the rail's claim. The diagnostic codes, the manifest, and the four evidence rungs all exist to make one specific kind of trust inspectable. Reading this doc first lets the rest of the rail surfaces ([`docs/manifest-schema.md`](./manifest-schema.md), `docs/governed-ci.md`) make sense.
 
 ## What problem this solves
 
@@ -46,7 +46,7 @@ That single sentence is the durable claim. Everything below is its expansion.
 
 The rail composes three records:
 
-1. **The emission manifest** (`packages/ds-codegen/.emission-manifest.json`, gitignored). Written by the codegen CLI at the end of every successful `generate` run. Records what the producer claims it emitted, the contract bytes that drove each group, the bounded emitter source set per framework, and the generate-time environment fingerprint. Schema is versioned; see `docs/manifest-schema.md` for the field-by-field reference.
+1. **The emission manifest** (`packages/ds-codegen/.emission-manifest.json`, gitignored). Written by the codegen CLI at the end of every successful `generate` run. Records what the producer claims it emitted, the contract bytes that drove each group, the bounded emitter source set per framework, and the generate-time environment fingerprint. Schema is versioned; see [`docs/manifest-schema.md`](./manifest-schema.md) for the field-by-field reference.
 
 2. **Per-framework admission plans** (`packages/ds-codegen/src/validation/frameworks/*.ts`). Declare, per framework, which checks the rail will run (e.g. `tsc`, `ngc strictTemplates`, `lit-analyzer`), what they exercise, and which artifact paths each check's command-line scope binds to.
 
@@ -68,7 +68,7 @@ These are global non-claims. They apply across all four current evidence rungs. 
 
 - **Changed-artifact scope is a reporting projection, not a reduced admission mode.** When `--scope-to-git-range` is passed, the rail STILL admits the full workspace; the projection narrows what the markdown report highlights. A passing scoped report does not mean a smaller set of artifacts was checked. Operators who want to "make CI faster by scoping" are pointed at the wrong tool.
 
-The rung-specific non-claims (e.g. "contract provenance does not prove emitter determinism," "emitter provenance does not prove the source set is complete by construction") live alongside their respective schema versions in `docs/manifest-schema.md`. They are not repeated here so this document stays the conceptual entry surface rather than a reference manual.
+The rung-specific non-claims (e.g. "contract provenance does not prove emitter determinism," "emitter provenance does not prove the source set is complete by construction") live alongside their respective schema versions in [`docs/manifest-schema.md`](./manifest-schema.md). They are not repeated here so this document stays the conceptual entry surface rather than a reference manual.
 
 ## The evidence ladder
 
@@ -241,6 +241,6 @@ The rail report is designed to make those citations mechanical — the JSON is c
 
 ## Where to read next
 
-- `docs/manifest-schema.md` — the manifest's field-by-field reference, schema migration history, and the rung-specific non-claims for each schema version.
+- [`docs/manifest-schema.md`](./manifest-schema.md) — the manifest's field-by-field reference, schema migration history, and the rung-specific non-claims for each schema version.
 - `docs/governed-ci.md` — the operator workflow: what `governed:rail` and `governed:rail:changed` do, how the CI pipeline uses them, how to read a rail JSON or markdown report.
 - `docs/codegen-authority.md` — the authority split this rail's "validation evidence, not generation policy" line refers to.
