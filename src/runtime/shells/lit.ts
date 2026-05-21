@@ -35,7 +35,10 @@ ${css ? `<style data-fsds="component-css">${css.replace(/<\/style>/g, "<\\/style
 {
   "imports": {
     "lit": "https://esm.sh/lit@3",
-    "lit/decorators.js": "https://esm.sh/lit@3/decorators.js"
+    "lit/decorators.js": "https://esm.sh/lit@3/decorators.js",
+    "lit/directives/class-map.js": "https://esm.sh/lit@3/directives/class-map.js",
+    "lit/directives/if-defined.js": "https://esm.sh/lit@3/directives/if-defined.js",
+    "lit/directives/ref.js": "https://esm.sh/lit@3/directives/ref.js"
   }
 }
 </script>

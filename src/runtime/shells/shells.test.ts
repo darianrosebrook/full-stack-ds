@@ -191,6 +191,17 @@ describe("buildLitShell", () => {
     expect(html).toContain('"lit/decorators.js"');
   });
 
+  it("emits importmap for lit/directives/* used by generated components", () => {
+    // The Lit codegen output imports class-map, if-defined, and ref directives.
+    // Without these importmap entries the iframe throws "Failed to resolve
+    // module specifier 'lit/directives/*.js'" at module-load time and the
+    // preview never bootstraps. Verified against the on-disk sources:
+    //   grep -rh 'lit/directives' packages/ds-lit/src --include='*.ts'
+    expect(html).toContain('"lit/directives/class-map.js"');
+    expect(html).toContain('"lit/directives/if-defined.js"');
+    expect(html).toContain('"lit/directives/ref.js"');
+  });
+
   it("passes through valid lowercase custom element names without mutation", () => {
     // Now that the Lit codegen emits `fsds-button` directly, no normalization
     // happens at the showcase boundary. We assert the source survives intact.
