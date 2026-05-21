@@ -12,9 +12,9 @@ function makeBundle(name: string): ComponentBundle {
 }
 
 const NO_LABEL = [
-  "AspectRatio", "Avatar", "BrandSwitcher", "Divider", "Icon", "Image",
-  "PageTransition", "Postcard", "Progress", "Skeleton", "SlinkyCursor",
-  "Spinner", "Status", "VisuallyHidden",
+  "Avatar", "Divider", "Icon", "Image",
+  "Postcard", "Progress", "Skeleton",
+  "Spinner", "Status",
 ];
 const WITH_LABEL = ["Button", "Badge", "Alert", "Card", "Switch", "Dialog"];
 

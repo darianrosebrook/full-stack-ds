@@ -1,14 +1,9 @@
 export { AccordionElement, AccordionContentElement, AccordionHeaderElement, AccordionItemElement, AccordionTriggerElement } from "./Accordion/Accordion.js";
 export { AlertElement, AlertBodyElement, AlertTitleElement } from "./Alert/Alert.js";
 export { AlertNoticeElement, AlertNoticeBodyElement, AlertNoticeTitleElement } from "./AlertNotice/AlertNotice.js";
-export { AnimatedCardElement, AnimatedCardTitleElement } from "./AnimatedCard/AnimatedCard.js";
-export { AnimatedSectionElement } from "./AnimatedSection/AnimatedSection.js";
-export { AnimatedTextElement } from "./AnimatedText/AnimatedText.js";
-export { AspectRatioElement } from "./AspectRatio/AspectRatio.js";
 export { AvatarElement } from "./Avatar/Avatar.js";
 export { BadgeElement, BadgeContentElement } from "./Badge/Badge.js";
 export { BlockquoteElement } from "./Blockquote/Blockquote.js";
-export { BrandSwitcherElement } from "./BrandSwitcher/BrandSwitcher.js";
 export { BreadcrumbsElement, BreadcrumbsListElement } from "./Breadcrumbs/Breadcrumbs.js";
 export { ButtonElement } from "./Button/Button.js";
 export { CalendarElement, CalendarHeaderElement } from "./Calendar/Calendar.js";
@@ -27,7 +22,6 @@ export { LabelElement } from "./Label/Label.js";
 export { LinksElement } from "./Links/Links.js";
 export { ListElement } from "./List/List.js";
 export { OTPElement, OTPGroupElement } from "./OTP/OTP.js";
-export { PageTransitionElement } from "./PageTransition/PageTransition.js";
 export { PopoverElement, PopoverContentElement, PopoverTriggerElement } from "./Popover/Popover.js";
 export { PostcardElement, PostcardContentElement, PostcardFooterElement, PostcardHeaderElement } from "./Postcard/Postcard.js";
 export { ProfileFlagElement } from "./ProfileFlag/ProfileFlag.js";
@@ -37,7 +31,6 @@ export { SheetElement, SheetBodyElement, SheetContentElement, SheetDescriptionEl
 export { ShowMoreElement, ShowMoreContentElement, ShowMoreTriggerElement } from "./ShowMore/ShowMore.js";
 export { ShuttleElement, ShuttleItemElement } from "./Shuttle/Shuttle.js";
 export { SkeletonElement } from "./Skeleton/Skeleton.js";
-export { SlinkyCursorElement } from "./SlinkyCursor/SlinkyCursor.js";
 export { SpinnerElement } from "./Spinner/Spinner.js";
 export { StatusElement } from "./Status/Status.js";
 export { SwitchElement } from "./Switch/Switch.js";
@@ -49,5 +42,4 @@ export { ToastElement, ToastDescriptionElement, ToastItemElement, ToastTitleElem
 export { ToggleSwitchElement } from "./ToggleSwitch/ToggleSwitch.js";
 export { TooltipElement, TooltipContentElement, TooltipTriggerElement } from "./Tooltip/Tooltip.js";
 export { TruncateElement, TruncateContentElement } from "./Truncate/Truncate.js";
-export { VisuallyHiddenElement } from "./VisuallyHidden/VisuallyHidden.js";
 export { WalkthroughElement, WalkthroughContentElement, WalkthroughDescriptionElement, WalkthroughTitleElement } from "./Walkthrough/Walkthrough.js";

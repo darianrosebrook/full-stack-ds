@@ -57,20 +57,15 @@ function escape(s: string): string {
 // (divider, aspect ratio, page transition). Editing this list is the cheapest
 // way to fix a noisy demo without touching the contract.
 const NO_CHILD_LABEL = new Set<string>([
-  "AspectRatio",
   "Avatar",
-  "BrandSwitcher",
   "Divider",
   "Icon",
   "Image",
-  "PageTransition",
   "Postcard",
   "Progress",
   "Skeleton",
-  "SlinkyCursor",
   "Spinner",
   "Status",
-  "VisuallyHidden",
 ]);
 
 function childLabel(component: ComponentBundle): string {
