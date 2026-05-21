@@ -1,9 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Framework, SourceFile } from "../types/data";
-import { buildReactShell } from "./shells/react";
-import { buildVueShell } from "./shells/vue";
-import { buildSvelteShell } from "./shells/svelte";
-import { buildLitShell } from "./shells/lit";
 import { buildAngularShell } from "./shells/angular";
 import { REACT_PREVIEW_URL_PREFIX } from "./react-preview/constants";
 import { VUE_PREVIEW_URL_PREFIX } from "./vue-preview/constants";
@@ -22,20 +18,14 @@ interface FrameworkPreviewProps {
   interactive?: boolean;
 }
 
-const SHELL_BUILDERS = {
-  react: buildReactShell,
-  vue: buildVueShell,
-  svelte: buildSvelteShell,
-  lit: buildLitShell,
-  angular: buildAngularShell,
-} as const;
-
 /**
  * Frameworks that use the new Vite-middleware preview pipeline
  * (ADR-PREVIEW-PIPELINE-001). For these, the iframe is loaded via `src` from
  * a real same-origin URL; the dev server's plugin handles HTML + module
- * transforms. Other frameworks continue using the legacy `srcDoc` + Babel-
- * in-iframe path until their plugins land in step 4.
+ * transforms. Angular keeps the legacy srcDoc shell because its bootstrap
+ * needs explicit importmap + JIT-compiler fallback and doesn't fit the
+ * uniform middleware shape — see src/runtime/angular-compiler/vite-plugin.ts
+ * for the parallel design.
  */
 const NEW_PIPELINE_URL_PREFIX: Partial<Record<Framework, string>> = {
   react: REACT_PREVIEW_URL_PREFIX,
@@ -61,16 +51,14 @@ export function FrameworkPreview({
   const newPipelinePrefix = NEW_PIPELINE_URL_PREFIX[framework];
   const useNewPipeline = newPipelinePrefix !== undefined;
 
-  // For new-pipeline frameworks, the iframe loads from a same-origin URL and
-  // the dev-server plugin synthesizes the HTML. For legacy-pipeline frameworks,
-  // we still build a `srcdoc` blob locally. We only build `html` when we're
-  // going to use it — building it for React under the new pipeline would
-  // pull in dead Babel-shell work on every render.
+  // Angular is the only framework still on the legacy srcdoc shell — its
+  // bootstrap path needs an explicit importmap + JIT-compiler fallback that
+  // doesn't fit the uniform middleware shape. For everyone else we don't
+  // build any HTML here; the dev-server plugin synthesizes it.
   const html = useMemo(() => {
     if (useNewPipeline) return null;
-    const build = SHELL_BUILDERS[framework];
     const combinedCss = [tokensCss, css?.code].filter(Boolean).join("\n");
-    return build({
+    return buildAngularShell({
       componentName,
       componentSource: componentSource.code,
       css: combinedCss || undefined,
@@ -78,7 +66,6 @@ export function FrameworkPreview({
     });
   }, [
     useNewPipeline,
-    framework,
     componentName,
     componentSource.code,
     css?.code,

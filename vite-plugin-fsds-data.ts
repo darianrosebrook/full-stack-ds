@@ -2,8 +2,14 @@ import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite";
-
-type Framework = "react" | "vue" | "svelte" | "angular" | "lit";
+import type {
+  ComponentBundle,
+  ComponentContract,
+  ComponentSources,
+  Framework,
+  PrimitiveBundle,
+  SourceFile,
+} from "./src/types/data";
 
 const FRAMEWORKS: Framework[] = ["react", "vue", "svelte", "angular", "lit"];
 
@@ -26,38 +32,9 @@ const PRIMITIVE_FILES: Record<Framework, string[]> = {
 const VIRTUAL_ID = "virtual:fsds/data";
 const RESOLVED_ID = "\0" + VIRTUAL_ID;
 
-interface SourceFile {
-  filename: string;
-  code: string;
-}
-
-interface ComponentSourceSlot {
-  /** Root component source — the file the iframe shell bootstraps. */
-  component?: SourceFile;
-  /** Stylesheet sibling (regenerated, not authored). */
-  css?: SourceFile;
-  /** Convenience pointer at the behavior hook within siblings. */
-  hook?: SourceFile;
-  /** Every non-test, non-css file in the component directory. Used by the
-   *  preview shells' relative-import rewriter to resolve `./use<Name>`,
-   *  `./<CompoundPart>.vue`, `./<Name>Behavior.js`, etc. without 404-ing.
-   *  The root component is included here too — callers can filter on
-   *  filename if they need just the siblings. */
-  siblings: SourceFile[];
-}
-
-interface ComponentBundle {
-  name: string;
-  contract: unknown;
-  contractPath: string;
-  sources: Partial<Record<Framework, ComponentSourceSlot>>;
-}
-
-interface PrimitiveBundle {
-  name: string;
-  contract: unknown;
-  sources: Partial<Record<Framework, SourceFile[]>>;
-}
+// Local alias kept for readability — the public type's ComponentSources is
+// the same shape as the historical ComponentSourceSlot.
+type ComponentSourceSlot = ComponentSources;
 
 async function safeRead(p: string): Promise<string | null> {
   try {
@@ -202,9 +179,13 @@ export async function buildBundle(rootDir: string) {
     const full = path.join(contractsDir, file);
     const text = await safeRead(full);
     if (!text) continue;
-    let contract: any;
+    let contract: ComponentContract;
     try {
-      contract = JSON.parse(text);
+      // JSON.parse returns unknown shape; we cast to ComponentContract because
+      // contracts are schema-validated upstream by codegen. The shape is the
+      // contract's job to maintain — if a contract is malformed, the
+      // validator catches it before this code path runs.
+      contract = JSON.parse(text) as ComponentContract;
     } catch {
       continue;
     }
@@ -219,8 +200,8 @@ export async function buildBundle(rootDir: string) {
   }
 
   components.sort((a, b) => {
-    const la = inferLayerOrder((a.contract as any).layer ?? "");
-    const lb = inferLayerOrder((b.contract as any).layer ?? "");
+    const la = inferLayerOrder(a.contract.layer ?? "");
+    const lb = inferLayerOrder(b.contract.layer ?? "");
     if (la !== lb) return la - lb;
     return a.name.localeCompare(b.name);
   });
