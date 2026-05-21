@@ -6,6 +6,7 @@ import vue from "@vitejs/plugin-vue";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import fsdsData from "./vite-plugin-fsds-data";
 import { angularPreviewPlugin } from "./src/runtime/angular-compiler/vite-plugin";
+import { reactPreviewPlugin } from "./src/runtime/react-preview/vite-plugin";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -22,6 +23,7 @@ export default defineConfig({
     svelte({ configFile: false }),
     fsdsData(),
     angularPreviewPlugin(),
+    reactPreviewPlugin(),
   ],
   resolve: {
     alias: {
