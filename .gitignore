@@ -52,6 +52,12 @@ tmp/
 # `pnpm run generate`.
 packages/ds-codegen/.emission-manifest.json
 
+# Per-contributor ephemeral docs (roadmaps, working notes, in-flight
+# thinking). Consumer-facing docs/ is durable reference only; anything
+# with authority roadmap/working/ephemeral lives here off-tree. Spec:
+# docs/specifications/document_governance.md, "Location" section.
+docs/internal/
+
 # Claude runtime state — hooks/ and settings.json are tracked,
 # everything else under .claude/ is per-machine.
 CLAUDE.md

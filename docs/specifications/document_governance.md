@@ -4,7 +4,7 @@ authority: spec
 status: draft
 title: Document Governance
 owner: "@darianrosebrook"
-updated: 2026-05-14
+updated: 2026-05-21
 governs:
   - docs/**/*.md
 ---
@@ -50,6 +50,28 @@ Higher authority = harder to change without coordination. Listed roughly highest
 | `reference` | Stable factual lookup material (glossaries, APIs, schemas). |
 | `working` | In-flight thinking, design discussion, drafts. |
 | `ephemeral` | Short-lived notes that should be deleted or promoted later. |
+
+## Location
+
+The `authority` value determines where the doc lives on disk. The tree is partitioned so consumer-facing surfaces (`docs/`) stay durable, while ephemeral surfaces (roadmaps, working notes, in-flight thinking) live off-tree.
+
+| Authority | Location | Tracked |
+|---|---|---|
+| `canonical` | `docs/` | yes |
+| `policy` | `docs/` | yes |
+| `architecture` | `docs/` | yes |
+| `adr` | `docs/` | yes |
+| `spec` | `docs/` | yes |
+| `reference` | `docs/` | yes |
+| `roadmap` | `docs/internal/` | no (`.gitignore`) |
+| `working` | `docs/internal/` | no (`.gitignore`) |
+| `ephemeral` | `docs/internal/` | no (`.gitignore`) |
+
+**Why the partition exists.** Consumer-facing docs are the study surface a reader uses to understand the project. Roadmaps and working notes go stale faster than reference docs, and stale content in `docs/` becomes a trust hazard — readers can't distinguish "this teaches current reality" from "this is in-flight thinking from three weeks ago." Moving the ephemeral surfaces off-tree makes the partition mechanical rather than depending on reader judgment about each file.
+
+**Collaboration.** `docs/internal/` is contributor-local. Teams that need to share roadmaps or working notes do so through an out-of-band surface (a team doc folder, an issue tracker, a wiki) — not through this repository.
+
+**Enforcement.** Currently advisory: the hook (`.claude/hooks/doc-frontmatter-check.sh`) does not yet check authority-vs-location consistency. Contributors are expected to honor the partition on Write. A future hook extension could enforce it mechanically by warning when a `docs/*.md` file declares `authority: roadmap | working | ephemeral`, or when a `docs/internal/*.md` file declares a durable authority.
 
 ## `status` enum
 
