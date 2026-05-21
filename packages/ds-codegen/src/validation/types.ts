@@ -794,8 +794,30 @@ export type RailDiagnosticCode =
    * happen to be unchanged (a version bump can touch only
    * package.json metadata, but the rail's record must still
    * reflect the producer's stamp). Repair: regenerate.
+   *
+   * Fires ONLY when both sides parsed and differed. If the
+   * verifier could not even establish equality (file absent,
+   * unreadable, parse failure, missing string `version`), the
+   * surface is CODEGEN_PACKAGE_MISSING_OR_MALFORMED below.
    */
   | "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH"
+  /**
+   * The verifier could not establish equality between the
+   * on-disk codegen package and the manifest's recorded
+   * `codegenPackageVersion`
+   * (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01).
+   * Causes: codegen package.json is absent, unreadable, has
+   * malformed JSON, or lacks a string `version` field.
+   *
+   * Distinct from CODEGEN_VERSION_MISMATCH (which is the
+   * "both parsed, they disagree" surface). This code closes a
+   * silent-skip gap where the verifier previously stayed
+   * silent if it could not read the package — leaving the
+   * environment-integrity claim incomplete without operator
+   * visibility. Repair: restore the package.json, or
+   * regenerate from a clean codegen workspace.
+   */
+  | "RAIL_REQUIRE_MANIFEST_CODEGEN_PACKAGE_MISSING_OR_MALFORMED"
   /**
    * The lockfile path named by the manifest no longer exists
    * on disk (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-01). Most

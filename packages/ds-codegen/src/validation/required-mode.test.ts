@@ -705,6 +705,142 @@ describe("verifyManifestAgainstDisk", () => {
     );
   });
 
+  // CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01:
+  // closes the silent-skip gap where the verifier previously
+  // stayed quiet if the codegen package.json could not be
+  // read or parsed. The verifier must surface
+  // CODEGEN_PACKAGE_MISSING_OR_MALFORMED whenever it cannot
+  // establish equality.
+  it("emits CODEGEN_PACKAGE_MISSING_OR_MALFORMED when the package.json is absent", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    fs.rmSync(
+      path.join(fx.workspaceRoot, "packages/ds-codegen/package.json"),
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest: m },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) =>
+        d.code === "RAIL_REQUIRE_MANIFEST_CODEGEN_PACKAGE_MISSING_OR_MALFORMED",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.message).toMatch(/package\.json is absent/);
+    // The original VERSION_MISMATCH code must NOT fire — these
+    // are distinct evidence states (could not compare vs
+    // compared and disagreed).
+    expect(out.map((d) => d.code)).not.toContain(
+      "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH",
+    );
+  });
+
+  it("emits CODEGEN_PACKAGE_MISSING_OR_MALFORMED on malformed JSON", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, "packages/ds-codegen/package.json"),
+      "{ this is not json",
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest: m },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) =>
+        d.code === "RAIL_REQUIRE_MANIFEST_CODEGEN_PACKAGE_MISSING_OR_MALFORMED",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.message).toMatch(/not valid JSON/);
+  });
+
+  it("emits CODEGEN_PACKAGE_MISSING_OR_MALFORMED when version is missing", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, "packages/ds-codegen/package.json"),
+      JSON.stringify({ name: "@full-stack-ds/codegen" }), // no version
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest: m },
+      fx.workspaceRoot,
+    );
+    const cd = out.find(
+      (d) =>
+        d.code === "RAIL_REQUIRE_MANIFEST_CODEGEN_PACKAGE_MISSING_OR_MALFORMED",
+    );
+    expect(cd).toBeDefined();
+    expect(cd!.message).toMatch(/no string `version` field/);
+  });
+
+  // CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01:
+  // The "verifier never throws" doctrine is now mechanical
+  // via safeSha256OfRegularFile. Paths that resolve to a
+  // directory (instead of a regular file) route into the
+  // matching MISSING-class code rather than crashing
+  // path.join / readFileSync.
+  it("routes a directory at a generated-output path into MISSING_PATHS without throwing", () => {
+    const dirPath = "packages/ds-react/src/components/Dir/Dir.tsx";
+    // Create the path as a DIRECTORY, not a file.
+    fs.mkdirSync(path.join(fx.workspaceRoot, dirPath), { recursive: true });
+    const manifest: EmissionManifest = {
+      schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+      generatedAt: "2026-05-21T00:00:00.000Z",
+      environment: fx.liveEnvironment(),
+      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
+      groups: [
+        {
+          framework: "react",
+          component: "Dir",
+          contract: {
+            path: DEFAULT_CONTRACT_PATH,
+            sha256: sha256OfString(CONTRACT_BODY),
+          },
+          files: [{ path: dirPath, sha256: "a".repeat(64) }],
+        },
+      ],
+    };
+    // verifyManifestAgainstDisk must not throw; instead it
+    // emits MISSING_PATHS naming the directory path.
+    expect(() => {
+      const out = verifyManifestAgainstDisk(
+        { kind: "ok", manifest },
+        fx.workspaceRoot,
+      );
+      const cd = out.find(
+        (d) => d.code === "RAIL_REQUIRE_MANIFEST_MISSING_PATHS",
+      );
+      expect(cd).toBeDefined();
+      expect(cd!.paths).toContain(dirPath);
+    }).not.toThrow();
+  });
+
+  it("routes a directory at the lockfile path into LOCKFILE_MISSING without throwing", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const m = fx.manifestFor([fooPath]);
+    // Replace the lockfile FILE with a DIRECTORY at the same path.
+    fs.rmSync(path.join(fx.workspaceRoot, "pnpm-lock.yaml"));
+    fs.mkdirSync(path.join(fx.workspaceRoot, "pnpm-lock.yaml"));
+    expect(() => {
+      const out = verifyManifestAgainstDisk(
+        { kind: "ok", manifest: m },
+        fx.workspaceRoot,
+      );
+      const cd = out.find(
+        (d) => d.code === "RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING",
+      );
+      expect(cd).toBeDefined();
+    }).not.toThrow();
+  });
+
   it("environment drift is independent of output/contract/emitter drift", () => {
     // Mutate the lockfile AND the generated output; both
     // codes fire as separate diagnostics — environment drift

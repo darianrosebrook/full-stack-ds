@@ -202,15 +202,28 @@ export function verifyManifestAgainstDisk(
   const { manifest } = manifestRead;
   const diagnostics: RailDiagnostic[] = [];
 
-  // Check 1: manifest paths that don't exist on disk.
+  // Checks 1 + 3: manifest paths that don't exist on disk +
+  // hash mismatches. Unified into one pass driven by
+  // `safeSha256OfRegularFile` (CODEGEN-RAIL-ENVIRONMENT-
+  // PROVENANCE-SCHEMA-HARDEN-01). The `not_regular_file` branch
+  // (directory or special file) collapses into MISSING_PATHS —
+  // the operator's repair is the same as "file isn't there to
+  // compare," and a directory at a generated-output path is a
+  // hand-edit the producer would never write.
   const missingPaths: string[] = [];
   const manifestPathSet = new Set<string>();
+  const mismatchPaths: string[] = [];
   for (const group of manifest.groups) {
     for (const file of group.files) {
       manifestPathSet.add(file.path);
       const abs = path.join(workspaceRoot, file.path);
-      if (!fs.existsSync(abs)) {
+      const result = safeSha256OfRegularFile(abs);
+      if (result.kind !== "ok") {
         missingPaths.push(file.path);
+        continue;
+      }
+      if (result.sha256 !== file.sha256) {
+        mismatchPaths.push(file.path);
       }
     }
   }
@@ -218,7 +231,7 @@ export function verifyManifestAgainstDisk(
     diagnostics.push({
       code: "RAIL_REQUIRE_MANIFEST_MISSING_PATHS",
       message:
-        `${missingPaths.length} path(s) in the manifest do not exist on disk. ` +
+        `${missingPaths.length} path(s) in the manifest do not exist on disk (or exist but are not regular files). ` +
         "Most common cause: a generated file was deleted, or the manifest is stale. " +
         "Repair: regenerate (`pnpm run generate -- --target=all`).",
       paths: missingPaths,
@@ -241,21 +254,6 @@ export function verifyManifestAgainstDisk(
     });
   }
 
-  // Check 3: hash mismatches between manifest entries and on-disk
-  // content. Only check paths that exist in BOTH places — paths
-  // already flagged as MISSING_PATHS would noisily re-flag here
-  // otherwise.
-  const mismatchPaths: string[] = [];
-  for (const group of manifest.groups) {
-    for (const file of group.files) {
-      const abs = path.join(workspaceRoot, file.path);
-      if (!fs.existsSync(abs)) continue; // already reported above
-      const onDiskDigest = sha256OfFile(abs);
-      if (onDiskDigest !== file.sha256) {
-        mismatchPaths.push(file.path);
-      }
-    }
-  }
   if (mismatchPaths.length > 0) {
     diagnostics.push({
       code: "RAIL_REQUIRE_MANIFEST_HASH_MISMATCH",
@@ -284,12 +282,12 @@ export function verifyManifestAgainstDisk(
   for (const group of manifest.groups) {
     const c = group.contract;
     const abs = path.join(workspaceRoot, c.path);
-    if (!fs.existsSync(abs)) {
+    const result = safeSha256OfRegularFile(abs);
+    if (result.kind !== "ok") {
       contractMissing.add(c.path);
       continue;
     }
-    const onDiskDigest = sha256OfFile(abs);
-    if (onDiskDigest !== c.sha256) {
+    if (result.sha256 !== c.sha256) {
       contractMismatch.add(c.path);
     }
   }
@@ -298,7 +296,7 @@ export function verifyManifestAgainstDisk(
     diagnostics.push({
       code: "RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING",
       message:
-        `${sorted.length} contract path(s) named by the manifest do not exist on disk. ` +
+        `${sorted.length} contract path(s) named by the manifest do not exist on disk (or exist but are not regular files). ` +
         "Most common cause: a contract was deleted or renamed after generation. " +
         "Repair: restore the contract or regenerate (`pnpm run generate -- --target=all`).",
       paths: sorted,
@@ -334,12 +332,12 @@ export function verifyManifestAgainstDisk(
   for (const set of Object.values(manifest.emitterSourceSets)) {
     for (const src of set.sources) {
       const abs = path.join(workspaceRoot, src.path);
-      if (!fs.existsSync(abs)) {
+      const result = safeSha256OfRegularFile(abs);
+      if (result.kind !== "ok") {
         emitterMissing.add(src.path);
         continue;
       }
-      const onDiskDigest = sha256OfFile(abs);
-      if (onDiskDigest !== src.sha256) {
+      if (result.sha256 !== src.sha256) {
         emitterMismatch.add(src.path);
       }
     }
@@ -349,7 +347,7 @@ export function verifyManifestAgainstDisk(
     diagnostics.push({
       code: "RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_MISSING",
       message:
-        `${sorted.length} declared emitter source file(s) named by the manifest are missing on disk. ` +
+        `${sorted.length} declared emitter source file(s) named by the manifest are missing on disk (or exist but are not regular files). ` +
         "Most common cause: an emitter helper was renamed or removed without a regenerate. " +
         "Repair: regenerate (`pnpm run generate -- --target=all`).",
       paths: sorted,
@@ -390,56 +388,56 @@ export function verifyManifestAgainstDisk(
         "Repair: install the matching Node major, or regenerate under the current Node major to refresh the manifest's claim.",
     });
   }
-  const codegenPkgAbs = path.join(
-    workspaceRoot,
-    CODEGEN_PACKAGE_JSON_RELATIVE_PATH,
-  );
-  if (fs.existsSync(codegenPkgAbs)) {
-    let pkgVersion: string | null = null;
-    try {
-      const pkg = JSON.parse(fs.readFileSync(codegenPkgAbs, "utf8")) as {
-        version?: unknown;
-      };
-      if (typeof pkg.version === "string") pkgVersion = pkg.version;
-    } catch {
-      // Treat as a mismatch rather than throwing; the verifier
-      // doctrine is "never throw." A malformed local
-      // package.json is a different class of bug from the rail's
-      // concern, but the operator still benefits from knowing
-      // the rail couldn't compare.
-    }
-    if (pkgVersion !== null && pkgVersion !== env.codegenPackageVersion) {
-      diagnostics.push({
-        code: "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH",
-        message:
-          `Manifest was produced under codegen ${env.codegenPackageVersion}, but the on-disk codegen package is ${pkgVersion}. ` +
-          "Repair: regenerate (`pnpm run generate -- --target=all`).",
-      });
-    }
+  // Codegen package version compare. Three outcomes:
+  //   - File is absent, unreadable, malformed JSON, or has no
+  //     string `version` → CODEGEN_PACKAGE_MISSING_OR_MALFORMED.
+  //     The verifier could not establish equality; staying
+  //     silent (the prior behavior) left environment-integrity
+  //     incomplete without operator visibility.
+  //   - File parses with a string version that equals the
+  //     manifest's claim → no diagnostic.
+  //   - File parses with a string version that differs →
+  //     CODEGEN_VERSION_MISMATCH (the original "both parsed,
+  //     they disagree" surface).
+  const codegenPkgRead = readCodegenPackageVersion(workspaceRoot);
+  if (codegenPkgRead.kind === "missing_or_malformed") {
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_CODEGEN_PACKAGE_MISSING_OR_MALFORMED",
+      message:
+        `The verifier could not establish equality with manifest.environment.codegenPackageVersion (${env.codegenPackageVersion}). ` +
+        `Reason: ${codegenPkgRead.reason}. ` +
+        "Repair: restore the codegen package.json, or regenerate from a clean codegen workspace.",
+      paths: [CODEGEN_PACKAGE_JSON_RELATIVE_PATH],
+    });
+  } else if (codegenPkgRead.version !== env.codegenPackageVersion) {
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH",
+      message:
+        `Manifest was produced under codegen ${env.codegenPackageVersion}, but the on-disk codegen package is ${codegenPkgRead.version}. ` +
+        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+    });
   }
   const lockfileAbs = path.join(workspaceRoot, env.lockfile.path);
-  if (!fs.existsSync(lockfileAbs)) {
+  const lockResult = safeSha256OfRegularFile(lockfileAbs);
+  if (lockResult.kind !== "ok") {
     diagnostics.push({
       code: "RAIL_REQUIRE_MANIFEST_LOCKFILE_MISSING",
       message:
-        `Manifest names a lockfile at \`${env.lockfile.path}\` but it is not on disk. ` +
+        `Manifest names a lockfile at \`${env.lockfile.path}\` but it is not on disk (or exists but is not a regular file). ` +
         "Most common cause: the lockfile was deleted or moved without a regenerate. " +
         "Repair: restore the lockfile, or regenerate under the current dependency surface.",
       paths: [env.lockfile.path],
     });
-  } else {
-    const onDiskLockDigest = sha256OfFile(lockfileAbs);
-    if (onDiskLockDigest !== env.lockfile.sha256) {
-      diagnostics.push({
-        code: "RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH",
-        message:
-          `On-disk lockfile (\`${env.lockfile.path}\`) does not match the manifest's recorded digest. ` +
-          "A direct dependency, transitive dependency, pnpm version, or registry resolution has changed since the manifest was written. " +
-          "NOT itself a code-correctness assertion — the dep change may produce byte-identical output — but the rail's attribution is stale until regenerate. " +
-          `Repair: regenerate (\`pnpm run generate -- --target=all\`). Use \`git diff ${env.lockfile.path}\` to see which dep moved.`,
-        paths: [env.lockfile.path],
-      });
-    }
+  } else if (lockResult.sha256 !== env.lockfile.sha256) {
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_LOCKFILE_HASH_MISMATCH",
+      message:
+        `On-disk lockfile (\`${env.lockfile.path}\`) does not match the manifest's recorded digest. ` +
+        "A direct dependency, transitive dependency, pnpm version, or registry resolution has changed since the manifest was written. " +
+        "NOT itself a code-correctness assertion — the dep change may produce byte-identical output — but the rail's attribution is stale until regenerate. " +
+        `Repair: regenerate (\`pnpm run generate -- --target=all\`). Use \`git diff ${env.lockfile.path}\` to see which dep moved.`,
+      paths: [env.lockfile.path],
+    });
   }
 
   return diagnostics;
@@ -459,6 +457,71 @@ function parseNodeMajorOrZero(versionString: string): number {
   if (!m) return 0;
   const n = Number.parseInt(m[1]!, 10);
   return Number.isInteger(n) && n >= 0 ? n : 0;
+}
+
+/**
+ * Read and parse the codegen package.json's `version` field from
+ * disk (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01).
+ * Returns a discriminated result so the caller can distinguish
+ * "we could not establish equality" (any failure mode collapsed
+ * into `missing_or_malformed`) from "we read a version string
+ * cleanly" (`ok`). The `reason` field on the malformed branch
+ * names the specific failure for the operator-facing diagnostic.
+ *
+ * Never throws — every IO/parse exception is captured into the
+ * `missing_or_malformed` branch, preserving the verifier-never-
+ * throws doctrine.
+ */
+type CodegenPackageReadResult =
+  | { kind: "ok"; version: string }
+  | { kind: "missing_or_malformed"; reason: string };
+
+function readCodegenPackageVersion(
+  workspaceRoot: string,
+): CodegenPackageReadResult {
+  const abs = path.join(workspaceRoot, CODEGEN_PACKAGE_JSON_RELATIVE_PATH);
+  const stat = safeSha256OfRegularFile(abs);
+  if (stat.kind === "missing") {
+    return { kind: "missing_or_malformed", reason: "package.json is absent" };
+  }
+  if (stat.kind === "not_regular_file") {
+    return {
+      kind: "missing_or_malformed",
+      reason: "package.json path exists but is not a regular file (directory or special file)",
+    };
+  }
+  let raw: string;
+  try {
+    raw = fs.readFileSync(abs, "utf8");
+  } catch (err) {
+    return {
+      kind: "missing_or_malformed",
+      reason: `package.json could not be read: ${(err as Error).message}`,
+    };
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (err) {
+    return {
+      kind: "missing_or_malformed",
+      reason: `package.json is not valid JSON: ${(err as Error).message}`,
+    };
+  }
+  if (!parsed || typeof parsed !== "object") {
+    return {
+      kind: "missing_or_malformed",
+      reason: "package.json did not parse to an object",
+    };
+  }
+  const version = (parsed as { version?: unknown }).version;
+  if (typeof version !== "string") {
+    return {
+      kind: "missing_or_malformed",
+      reason: "package.json has no string `version` field",
+    };
+  }
+  return { kind: "ok", version };
 }
 
 /** Recursively walk a components tree, returning POSIX-relative paths of generated files. */
@@ -522,6 +585,59 @@ function isGeneratedFile(absPath: string): boolean {
 function sha256OfFile(absPath: string): string {
   const bytes = fs.readFileSync(absPath);
   return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+/**
+ * Discriminated result of attempting to hash an on-disk regular
+ * file (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01).
+ *
+ * The verifier's load-bearing invariant — "never throws" — was
+ * previously enforced case-by-case across every fs.readFileSync
+ * call. That left an exotic-but-real gap: if a hand-edited
+ * manifest names a path that resolves to a directory or a broken
+ * symlink, `fs.readFileSync` throws EISDIR / ENOENT despite
+ * `fs.existsSync` returning true (for the directory case) or
+ * false (for the broken-symlink case). The discriminated return
+ * lets the caller route directories, symlinks, and read errors
+ * back into the existing MISSING-class diagnostics — the
+ * operator's repair is the same as "file isn't there to compare."
+ */
+type SafeHashResult =
+  | { kind: "ok"; sha256: string }
+  | { kind: "missing" }
+  | { kind: "not_regular_file" };
+
+/**
+ * Stat the path; if it's a regular file, return its sha256. If
+ * it's missing, returns `{ kind: "missing" }`. If it exists but
+ * is not a regular file (directory, fifo, socket, broken symlink
+ * resolved by `fs.statSync`), returns
+ * `{ kind: "not_regular_file" }`. Never throws — any IO error is
+ * collapsed into `{ kind: "missing" }`, which preserves the
+ * verifier-never-throws doctrine mechanically.
+ *
+ * Callers route both non-`ok` results into the existing
+ * MISSING-class diagnostic for their evidence layer (output,
+ * contract, emitter, lockfile) because the operator's repair —
+ * "restore the file or regenerate" — is the same.
+ */
+function safeSha256OfRegularFile(absPath: string): SafeHashResult {
+  let stat: fs.Stats;
+  try {
+    stat = fs.statSync(absPath);
+  } catch {
+    return { kind: "missing" };
+  }
+  if (!stat.isFile()) return { kind: "not_regular_file" };
+  try {
+    return { kind: "ok", sha256: sha256OfFile(absPath) };
+  } catch {
+    // statSync said it's a file, but readFileSync still failed
+    // (race condition, permission denied, etc.). Collapse to
+    // missing — the verifier could not establish equality, and
+    // the operator's repair is the same as the missing case.
+    return { kind: "missing" };
+  }
 }
 
 /**
