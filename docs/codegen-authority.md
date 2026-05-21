@@ -76,7 +76,9 @@ The first three are framework realization. The last three would be hidden produc
 
 ### Admission rail owns detection, not generation policy
 
-The admission rail (`pnpm run validate:generated`, see `FRAMEWORK-EMIT-VALIDATE-01`) proves that emitted artifacts are accepted by the framework compiler/parser/language server. It does not become a place where hidden generation policy lives. It can tell us "Svelte rejects this," but it should not silently decide "therefore `ShowMore` should be emitted differently."
+The admission rail (`pnpm run validate:generated`, originally `FRAMEWORK-EMIT-VALIDATE-01`; now invoked in governed CI as `pnpm run governed:rail`) proves that emitted artifacts are accepted by the framework compiler/parser/language server. It does not become a place where hidden generation policy lives. It can tell us "Svelte rejects this," but it should not silently decide "therefore `ShowMore` should be emitted differently."
+
+For the rail itself — what it proves, the four evidence rungs (artifact / contract / emitter / environment attribution), the diagnostic-code reading guide, the doctrinal non-claims (no determinism, no environment attestation, no per-file proof, no semantic correctness, changed-artifact scope ≠ reduced gate), and the verifier-never-throws posture — see [`docs/admission-rail.md`](./admission-rail.md).
 
 ## The non-negotiable invariant
 

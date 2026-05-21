@@ -139,6 +139,12 @@ Each framework package ships an equivalent set of behavior primitives. They shar
 
 Generated files use `@generated:start`/`@generated:end` and `@custom:start`/`@custom:end` markers so framework outputs can carry hand-authored sections (additional tests, custom logic) across regenerations without being clobbered. CSS and pure component scaffolding are always regenerated.
 
+### Generated artifact integrity
+
+Generated output gets a separate inspection surface called the **admission rail**. It answers "what evidence backs the bytes checked into this repo?" by binding every emitted artifact to four independent attribution rungs: the framework checks that admitted it, the contract bytes that produced it, the codegen source bytes that could affect it, and the bounded environment (Node major, codegen package version, lockfile sha256) under which the manifest was written. Required mode (`pnpm run governed:rail`) refuses to pass when any of those bindings drift from the on-disk state.
+
+The rail makes the trust claim inspectable rather than making generated output trustworthy by assertion. For what it proves, what it deliberately does NOT prove (no determinism, no full environment attestation, no per-file proof, no semantic correctness), and the diagnostic-code reading guide, see [`docs/admission-rail.md`](docs/admission-rail.md).
+
 ## Contract format
 
 ```jsonc
