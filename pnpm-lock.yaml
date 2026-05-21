@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@full-stack-ds/angular':
+        specifier: workspace:*
+        version: link:packages/ds-angular
       '@full-stack-ds/react':
         specifier: workspace:*
         version: link:packages/ds-react

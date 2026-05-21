@@ -13,7 +13,18 @@ function makeBundle(overrides: Partial<ComponentBundle> = {}): ComponentBundle {
   return {
     name: "Button",
     contractPath: "packages/ds-contracts/Button.contract.json",
-    sources: {},
+    sources: {
+      // buildAngularDemo reads the Angular source to discover exported
+      // standalone component classes — without this it falls back to a
+      // failure-stub host. A realistic shape lets us assert against the
+      // bootstrap-ready host the showcase actually uses.
+      angular: {
+        component: {
+          filename: "Button.component.ts",
+          code: `import { Component } from "@angular/core";\nexport class ButtonComponent {}`,
+        },
+      },
+    },
     contract: {
       name: "Button",
       layer: "primitive",
@@ -98,10 +109,93 @@ describe("buildLitDemo", () => {
 });
 
 describe("buildAngularDemo", () => {
-  it("uses the same lowercase fsds- prefix as Lit", () => {
+  it("emits a standalone host component that wraps the target's selector", () => {
+    // Angular's preview path mounts a synthesized host via bootstrapApplication.
+    // The host must (a) import the standalone component class so it can be
+    // declared in the host's `imports: [...]`, and (b) template the component's
+    // lowercase selector. Without both, bootstrapApplication errors out at
+    // runtime ("selector did not match" or "is not a known element").
     const out = buildAngularDemo(makeBundle());
+    expect(out).toContain("@Component(");
+    expect(out).toContain('selector: "fsds-host"');
+    expect(out).toContain("standalone: true");
+    expect(out).toContain("imports: [ButtonComponent]");
+    expect(out).toContain("export class HostComponent");
+    // The template uses the lowercase custom-element selector for the target.
     expect(out).toContain("<fsds-button");
     expect(out).not.toContain("FSDS-");
+  });
+
+  it("imports every standalone class exported from the component source", () => {
+    // Compound contracts (Accordion, Dialog, Tabs…) emit multiple sibling
+    // classes in one file. The host must import all of them so the template
+    // can use any of their selectors.
+    const out = buildAngularDemo(
+      makeBundle({
+        name: "Accordion",
+        sources: {
+          angular: {
+            component: {
+              filename: "Accordion.component.ts",
+              code: [
+                `export class AccordionComponent {}`,
+                `export class AccordionItemComponent {}`,
+                `export class AccordionTriggerComponent {}`,
+              ].join("\n"),
+            },
+          },
+        },
+      }),
+    );
+    expect(out).toContain(
+      "imports: [AccordionComponent, AccordionItemComponent, AccordionTriggerComponent]",
+    );
+  });
+
+  it("renders default + override props as HTML attributes in the host template", () => {
+    // Same attribute renderer as the Lit demo — string variants land as
+    // attrs, booleans become bare-attribute flags. Sanity-check the wiring
+    // didn't regress when we switched to the host-component shape.
+    const out = buildAngularDemo(makeBundle(), { disabled: true });
+    expect(out).toMatch(/<fsds-button[^>]*size="small"/);
+    expect(out).toMatch(/<fsds-button[^>]*variant="primary"/);
+    // Boolean true → bare attribute.
+    expect(out).toMatch(/<fsds-button[^>]*\bdisabled\b(?!=)/);
+  });
+
+  it("kebab-cases multi-word component names to match Angular selectors", () => {
+    // Angular emitters use kebab-case selectors (fsds-profile-flag), not the
+    // dropped-boundary lowercase used by Lit (fsds-profileflag). Without
+    // kebab conversion the compiled host's template references a selector
+    // that doesn't exist on any standalone component and the Angular
+    // compiler errors with "is not a known element".
+    const out = buildAngularDemo(
+      makeBundle({
+        name: "ProfileFlag",
+        sources: {
+          angular: {
+            component: {
+              filename: "ProfileFlag.component.ts",
+              code: "export class ProfileFlagComponent {}",
+            },
+          },
+        },
+      }),
+    );
+    expect(out).toContain("<fsds-profile-flag");
+    expect(out).not.toContain("<fsds-profileflag");
+  });
+
+  it("falls back to a failure-stub host when Angular source is missing", () => {
+    // If sources.angular.component is absent the preview cannot bootstrap —
+    // we prefer a loud failure over silent empty preview. The stub still
+    // compiles so the pipeline doesn't crash, but its template makes the
+    // missing-source state visible.
+    const out = buildAngularDemo(
+      makeBundle({ sources: {} }),
+    );
+    expect(out).toContain("Angular source missing for Button");
+    expect(out).toContain("export class HostComponent");
   });
 });
 
@@ -112,6 +206,8 @@ describe("buildDemo (dispatcher)", () => {
     expect(buildDemo("vue", bundle)).toContain('import Button from "./Button.vue"');
     expect(buildDemo("svelte", bundle)).toContain('import Button from "./Button.svelte"');
     expect(buildDemo("lit", bundle)).toContain("<fsds-button");
-    expect(buildDemo("angular", bundle)).toContain("<fsds-button");
+    // Angular dispatches to the host-component builder; assert on a marker
+    // that's specific to that path (not just the selector, which Lit also has).
+    expect(buildDemo("angular", bundle)).toContain('selector: "fsds-host"');
   });
 });

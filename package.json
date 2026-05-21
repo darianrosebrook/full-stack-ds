@@ -40,6 +40,7 @@
     "e2e:report": "playwright show-report"
   },
   "dependencies": {
+    "@full-stack-ds/angular": "workspace:*",
     "@full-stack-ds/react": "workspace:*",
     "@testing-library/dom": "^10.4.1",
     "@types/react": "^19.2.14",

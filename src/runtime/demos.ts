@@ -73,10 +73,23 @@ function childLabel(component: ComponentBundle): string {
 }
 
 function elementTag(component: ComponentBundle, fw: Framework): string {
-  if (fw === "lit" || fw === "angular") {
+  if (fw === "lit") {
     return `fsds-${component.name.toLowerCase()}`;
   }
+  if (fw === "angular") {
+    // Angular emitters use kebab-case selectors (e.g. fsds-profile-flag, not
+    // fsds-profileflag). Lowercasing alone collapses internal word boundaries
+    // and produces selectors that don't match the components.
+    return `fsds-${pascalToKebab(component.name)}`;
+  }
   return component.name;
+}
+
+function pascalToKebab(name: string): string {
+  return name
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
 }
 
 export function buildReactDemo(
@@ -163,17 +176,82 @@ export function buildLitDemo(
     : `<${tag}${attrs}></${tag}>`;
 }
 
+/**
+ * Angular's preview path needs more than an HTML snippet — bootstrapApplication
+ * mounts a standalone component, so we synthesize a tiny host. The host imports
+ * every standalone class exported from the component's source file (so compound
+ * parts like AccordionItem/AccordionTrigger are usable in the template) and
+ * templates the component's selector with default + override props.
+ *
+ * Returned string is TypeScript source that the Angular preview pipeline writes
+ * to disk and feeds to performCompilation alongside the package sources. The
+ * bootstrap shell then imports the compiled host's class and mounts it.
+ *
+ * Why a synthesized host instead of an HTML snippet: Angular standalone
+ * components must be declared in the host's `imports: [...]` to be usable in
+ * its template. There is no Angular equivalent of the "just write the custom
+ * element tag in HTML" pattern Lit uses, even though the selectors look the
+ * same in markup.
+ */
 export function buildAngularDemo(
   component: ComponentBundle,
   overrideProps?: DemoProps,
 ): string {
   const props = { ...defaultPropsFromContract(component), ...(overrideProps ?? {}) };
+  const componentFile = component.sources.angular?.component;
+  if (!componentFile) {
+    // Should not happen at runtime — DeveloperView only enables the Angular
+    // tab when this file is present — but if it does we fall back to a stub
+    // host so the bootstrap pipeline fails loudly with a useful message instead
+    // of silently rendering nothing.
+    return [
+      `// Angular source unavailable for ${component.name} — preview cannot bootstrap.`,
+      `import { Component } from "@angular/core";`,
+      `@Component({ selector: "fsds-host", standalone: true, template: "Angular source missing for ${component.name}" })`,
+      `export class HostComponent {}`,
+    ].join("\n");
+  }
+
+  const exportedClasses = extractStandaloneExports(componentFile.code);
   const tag = elementTag(component, "angular");
   const child = childLabel(component);
   const attrs = renderHtmlAttrs(props);
-  return child
+
+  const node = child
     ? `<${tag}${attrs}>${escape(child)}</${tag}>`
     : `<${tag}${attrs}></${tag}>`;
+
+  // Import path is resolved relative to wherever the synthesizer writes the
+  // host file. The synthesizer is responsible for writing the host into a
+  // location where `./<ComponentName>/<ComponentName>.component` resolves;
+  // see runtime/angular-compiler/host.ts.
+  const importPath = `./components/${component.name}/${component.name}.component.js`;
+
+  return [
+    `import { Component } from "@angular/core";`,
+    `import { ${exportedClasses.join(", ")} } from "${importPath}";`,
+    ``,
+    `@Component({`,
+    `  selector: "fsds-host",`,
+    `  standalone: true,`,
+    `  imports: [${exportedClasses.join(", ")}],`,
+    `  template: \`${node}\`,`,
+    `})`,
+    `export class HostComponent {}`,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Pull `export class FooComponent` names out of the contract-emitted source.
+ * Compound contracts emit several sibling classes in the same file (e.g.
+ * AccordionComponent + AccordionItemComponent + AccordionTriggerComponent…),
+ * and the host needs all of them in its `imports: [...]` so the template can
+ * use their selectors.
+ */
+function extractStandaloneExports(source: string): string[] {
+  const matches = source.matchAll(/export\s+class\s+([A-Z][A-Za-z0-9_]*Component)\b/g);
+  return Array.from(matches, (m) => m[1]);
 }
 
 export function buildDemo(
