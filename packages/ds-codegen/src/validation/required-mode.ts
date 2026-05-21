@@ -13,7 +13,7 @@
  * for the caller (validate-cli) to act on according to the
  * invocation mode.
  *
- * Six distinct failure modes are surfaced as distinct codes so
+ * Eight distinct failure modes are surfaced as distinct codes so
  * CI pipelines can grep by code:
  *
  *   1. RAIL_REQUIRE_MANIFEST_MISSING
@@ -43,9 +43,20 @@
  *      Paths exist in both manifest and on-disk, but the on-disk
  *      sha256 differs from the manifest's recorded digest.
  *
+ *   7. RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING
+ *      (CODEGEN-RAIL-CONTRACT-PROVENANCE-01) A manifest group
+ *      names a contract file that does not exist on disk.
+ *
+ *   8. RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH
+ *      (CODEGEN-RAIL-CONTRACT-PROVENANCE-01) A manifest group's
+ *      contract is on disk but its sha256 has drifted — the
+ *      contract was edited without a regenerate.
+ *
  * Hash and path checks run together; one failure mode does not
  * suppress the others (unless MISSING / MALFORMED / SCHEMA_MISMATCH
- * already short-circuited).
+ * already short-circuited). Contract integrity is checked
+ * independently of output integrity so a closure note can cite
+ * which side of the source→artifact attribution drifted.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -201,6 +212,55 @@ export function verifyManifestAgainstDisk(
     });
   }
 
+  // Check 4: contract integrity. Each manifest group names a
+  // source contract; verify the contract still exists and its
+  // on-disk bytes still hash to the manifest's recorded digest.
+  // Reported independently of the output-integrity checks above
+  // because a contract edit without regenerate produces clean
+  // generated output on disk (HASH_MISMATCH does not fire) but
+  // stale attribution — only CONTRACT_HASH_MISMATCH catches it.
+  //
+  // Dedupe per contract path: multiple groups (different
+  // frameworks for the same component) share one contract, and
+  // a missing/drifted contract should surface once with all
+  // affected paths, not five times.
+  const contractMissing = new Set<string>();
+  const contractMismatch = new Set<string>();
+  for (const group of manifest.groups) {
+    const c = group.contract;
+    const abs = path.join(workspaceRoot, c.path);
+    if (!fs.existsSync(abs)) {
+      contractMissing.add(c.path);
+      continue;
+    }
+    const onDiskDigest = sha256OfFile(abs);
+    if (onDiskDigest !== c.sha256) {
+      contractMismatch.add(c.path);
+    }
+  }
+  if (contractMissing.size > 0) {
+    const sorted = [...contractMissing].sort();
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING",
+      message:
+        `${sorted.length} contract path(s) named by the manifest do not exist on disk. ` +
+        "Most common cause: a contract was deleted or renamed after generation. " +
+        "Repair: restore the contract or regenerate (`pnpm run generate -- --target=all`).",
+      paths: sorted,
+    });
+  }
+  if (contractMismatch.size > 0) {
+    const sorted = [...contractMismatch].sort();
+    diagnostics.push({
+      code: "RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH",
+      message:
+        `${sorted.length} contract(s) have on-disk bytes that do not match the manifest's recorded digest. ` +
+        "The contract was edited after the generated output was produced; the checked-in generated files reflect the previous contract revision. " +
+        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+      paths: sorted,
+    });
+  }
+
   return diagnostics;
 }
 
@@ -314,6 +374,28 @@ export function readManifestForVerification(
       kind: "parse_error",
       message: "manifest schemaVersion matched but `groups` is not an array",
     };
+  }
+  // v3 invariant: every group MUST carry contract provenance.
+  // A v3-stamped manifest without `contract` on a group is a
+  // structurally broken producer write, distinct from a
+  // schemaVersion mismatch — surface it as MALFORMED so CI can
+  // tell "wrote v3 incorrectly" from "wrote v2".
+  const groups = (parsed as EmissionManifest).groups;
+  for (let i = 0; i < groups.length; i += 1) {
+    const g = groups[i] as Partial<EmissionManifest["groups"][number]>;
+    if (
+      !g ||
+      typeof g !== "object" ||
+      !g.contract ||
+      typeof g.contract !== "object" ||
+      typeof g.contract.path !== "string" ||
+      typeof g.contract.sha256 !== "string"
+    ) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}] is missing contract provenance`,
+      };
+    }
   }
   return { kind: "ok", manifest: parsed as EmissionManifest };
 }

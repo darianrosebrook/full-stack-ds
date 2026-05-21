@@ -46,6 +46,7 @@ import {
 } from "./validate.js";
 import {
   EMISSION_MANIFEST_SCHEMA_VERSION,
+  type ContractProvenance,
   type EmissionManifest,
   type EmittedArtifactFile,
   type EmittedArtifactGroup,
@@ -54,6 +55,19 @@ import {
   EMISSION_MANIFEST_RELATIVE_PATH,
   emissionManifestAbsolutePath,
 } from "./validation/emission-manifest-path.js";
+
+/**
+ * One contract's parsed value paired with the source-side
+ * provenance the EmissionManifest needs at write time
+ * (CODEGEN-RAIL-CONTRACT-PROVENANCE-01). The digest is captured
+ * over the on-disk bytes at read time so the manifest binds to the
+ * contract revision the generator actually consumed, not to a
+ * later edit.
+ */
+interface ContractInput {
+  contract: ComponentContract;
+  provenance: ContractProvenance;
+}
 
 const cwd = process.cwd();
 const CONTRACTS_DIR = path.join(cwd, "packages", "ds-contracts");
@@ -160,11 +174,12 @@ function main(): void {
     console.log("  VALID  primitives/Stack.primitive.json");
   }
 
-  const validContracts: ComponentContract[] = [];
+  const validContracts: ContractInput[] = [];
 
   for (const file of filtered) {
     const filePath = path.join(CONTRACTS_DIR, file);
-    const raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    const rawBytes = fs.readFileSync(filePath);
+    const raw = JSON.parse(rawBytes.toString("utf-8"));
     const result = validator.validateComponent(raw);
 
     if (!result.ok) {
@@ -173,7 +188,13 @@ function main(): void {
       hasErrors = true;
     } else {
       console.log(`  VALID  ${file}`);
-      validContracts.push(result.value);
+      validContracts.push({
+        contract: result.value,
+        provenance: {
+          path: toPosixRel(filePath),
+          sha256: crypto.createHash("sha256").update(rawBytes).digest("hex"),
+        },
+      });
     }
   }
 
@@ -209,8 +230,15 @@ function main(): void {
     process.exit(1);
   }
 
-  // Build IRs once; emitters share them.
-  const irs: ComponentIR[] = validContracts.map(buildComponentIR);
+  // Build IRs once; emitters share them. Pair each IR with the
+  // contract's provenance so emit time can stamp every artifact
+  // group with its source contract revision.
+  const irInputs: { ir: ComponentIR; provenance: ContractProvenance }[] =
+    validContracts.map((input) => ({
+      ir: buildComponentIR(input.contract),
+      provenance: input.provenance,
+    }));
+  const irs: ComponentIR[] = irInputs.map((x) => x.ir);
 
   if (!surfaceTypeDiagnostics(irs, args.strictTypes)) {
     process.exit(1);
@@ -224,7 +252,7 @@ function main(): void {
   const allGroups: EmittedArtifactGroup[] = [];
   for (const targetId of requestedTargets) {
     const binding = registry.get(targetId);
-    const { processed, groups } = emitForTarget(binding, irs, args);
+    const { processed, groups } = emitForTarget(binding, irInputs, args);
     totalGenerated += processed;
     allGroups.push(...groups);
   }
@@ -258,24 +286,26 @@ function main(): void {
 /**
  * Apply one target's emitter to a list of IRs and write/preview the results.
  * Returns the per-component artifact groups for the EmissionManifest, plus
- * a count for the human-summary line. Groups are empty in `--dry-run` mode
+ * a count for the human-summary line. Each group carries the source contract
+ * provenance the IR was built from. Groups are empty in `--dry-run` mode
  * (no files were actually written).
  */
 function emitForTarget(
   binding: TargetBinding,
-  irs: ComponentIR[],
+  irInputs: { ir: ComponentIR; provenance: ContractProvenance }[],
   args: CliArgs,
 ): { processed: number; groups: EmittedArtifactGroup[] } {
   const { emitter, componentsRoot } = binding;
   console.log(`\n[${emitter.id}] components root: ${path.relative(cwd, componentsRoot)}`);
 
   const groups: EmittedArtifactGroup[] = [];
-  for (const ir of irs) {
+  for (const { ir, provenance } of irInputs) {
     const writtenFiles = writeFiles(emitter, ir, binding, args);
     if (writtenFiles.length > 0) {
       groups.push({
         framework: emitter.id,
         component: ir.name,
+        contract: provenance,
         files: writtenFiles,
       });
     }
@@ -285,7 +315,7 @@ function emitForTarget(
     writeBarrel(binding);
   }
 
-  return { processed: irs.length, groups };
+  return { processed: irInputs.length, groups };
 }
 
 /**

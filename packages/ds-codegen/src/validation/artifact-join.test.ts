@@ -45,6 +45,10 @@ function mkGroup(
   return {
     framework,
     component,
+    contract: {
+      path: `packages/ds-contracts/${component}.contract.json`,
+      sha256: STUB_DIGEST,
+    },
     files: paths.map((p) => ({ path: p, sha256: STUB_DIGEST })),
   };
 }

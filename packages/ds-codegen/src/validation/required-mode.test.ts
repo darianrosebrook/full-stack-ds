@@ -32,14 +32,18 @@ function sha256OfString(s: string): string {
 
 const GENERATED_HEADER = "// @generated:start\nexport const x = 1;\n// @generated:end\n";
 const GENERATED_HEADER_DIGEST = sha256OfString(GENERATED_HEADER);
+const CONTRACT_BODY = '{"name":"Foo"}';
+const DEFAULT_CONTRACT_PATH = "packages/ds-contracts/Foo.contract.json";
 
 interface Fixture {
   workspaceRoot: string;
   cleanup: () => void;
   /** Write a synthetic generated file under the components tree. */
   writeGeneratedFile: (relPath: string, contents?: string) => string;
-  /** Build a v2 manifest matching the current on-disk state, for a list of paths. */
-  manifestFor: (paths: string[]) => EmissionManifest;
+  /** Write a synthetic contract file (defaults to Foo.contract.json). */
+  writeContractFile: (relPath?: string, contents?: string) => string;
+  /** Build a v3 manifest matching the current on-disk state. */
+  manifestFor: (paths: string[], contractPath?: string) => EmissionManifest;
   /** Override the manifest's recorded digest for a path (to simulate hash drift). */
   manifestWithBadDigest: (paths: string[], badPath: string) => EmissionManifest;
 }
@@ -55,7 +59,19 @@ function makeFixture(): Fixture {
       fs.writeFileSync(abs, contents);
       return relPath;
     },
-    manifestFor(paths) {
+    writeContractFile(relPath = DEFAULT_CONTRACT_PATH, contents = CONTRACT_BODY) {
+      const abs = path.join(workspaceRoot, relPath);
+      fs.mkdirSync(path.dirname(abs), { recursive: true });
+      fs.writeFileSync(abs, contents);
+      return relPath;
+    },
+    manifestFor(paths, contractPath = DEFAULT_CONTRACT_PATH) {
+      const contractAbs = path.join(workspaceRoot, contractPath);
+      const contractSha = sha256OfString(
+        fs.existsSync(contractAbs)
+          ? fs.readFileSync(contractAbs, "utf8")
+          : "(absent)",
+      );
       return {
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "2026-05-21T00:00:00.000Z",
@@ -63,6 +79,7 @@ function makeFixture(): Fixture {
           {
             framework: "react",
             component: "Foo",
+            contract: { path: contractPath, sha256: contractSha },
             files: paths.map((p) => ({
               path: p,
               sha256: sha256OfString(
@@ -94,6 +111,12 @@ describe("verifyManifestAgainstDisk", () => {
   let fx: Fixture;
   beforeEach(() => {
     fx = makeFixture();
+    // Every fixture starts with the default contract file
+    // present on disk so the new contract-provenance checks
+    // (CONTRACT_MISSING / CONTRACT_HASH_MISMATCH) do not fire
+    // on tests that aren't about contract drift. Tests that
+    // ARE about contract drift override or delete this file.
+    fx.writeContractFile();
   });
   afterEach(() => {
     fx.cleanup();
@@ -171,6 +194,10 @@ describe("verifyManifestAgainstDisk", () => {
         {
           framework: "react",
           component: "Foo",
+          contract: {
+            path: DEFAULT_CONTRACT_PATH,
+            sha256: sha256OfString(CONTRACT_BODY),
+          },
           files: [
             {
               path: "packages/ds-react/src/components/Foo/Foo.tsx",
@@ -256,6 +283,10 @@ describe("verifyManifestAgainstDisk", () => {
         {
           framework: "react",
           component: "Foo",
+          contract: {
+            path: DEFAULT_CONTRACT_PATH,
+            sha256: sha256OfString(CONTRACT_BODY),
+          },
           files: [
             { path: fooPath, sha256: sha256OfString(GENERATED_HEADER) },
             { path: ghostPath, sha256: GENERATED_HEADER_DIGEST },
@@ -272,6 +303,115 @@ describe("verifyManifestAgainstDisk", () => {
     expect(out[0]!.paths).toEqual([ghostPath]);
   });
 
+  it("emits RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING when the source contract is gone", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const manifest = fx.manifestFor([fooPath]);
+    // Delete the contract that beforeEach() wrote — the
+    // generated file is fine, but the source claim in the
+    // manifest no longer resolves.
+    fs.rmSync(path.join(fx.workspaceRoot, DEFAULT_CONTRACT_PATH));
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const codes = out.map((d) => d.code);
+    expect(codes).toContain("RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING");
+    expect(codes).not.toContain("RAIL_REQUIRE_MANIFEST_HASH_MISMATCH");
+    const cd = out.find((d) => d.code === "RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING");
+    expect(cd!.paths).toEqual([DEFAULT_CONTRACT_PATH]);
+  });
+
+  it("emits RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH when contract bytes drift", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const manifest = fx.manifestFor([fooPath]);
+    // Rewrite the contract — manifest's recorded digest no
+    // longer matches.
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, DEFAULT_CONTRACT_PATH),
+      '{"name":"Foo","edited":true}',
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const codes = out.map((d) => d.code);
+    expect(codes).toContain("RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH");
+    // The generated output is still untouched; do NOT fire
+    // HASH_MISMATCH on output bytes.
+    expect(codes).not.toContain("RAIL_REQUIRE_MANIFEST_HASH_MISMATCH");
+    const cd = out.find(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH",
+    );
+    expect(cd!.paths).toEqual([DEFAULT_CONTRACT_PATH]);
+  });
+
+  it("dedupes contract diagnostics across multiple groups sharing one contract", () => {
+    // Two framework groups for one component share a single
+    // contract file. A missing contract should surface ONCE
+    // with the single contract path, not twice (one per group).
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const fooVuePath = fx.writeGeneratedFile(
+      "packages/ds-vue/src/components/Foo/Foo.vue",
+    );
+    const contractSha = sha256OfString(CONTRACT_BODY);
+    const manifest: EmissionManifest = {
+      schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+      generatedAt: "2026-05-21T00:00:00.000Z",
+      groups: [
+        {
+          framework: "react",
+          component: "Foo",
+          contract: { path: DEFAULT_CONTRACT_PATH, sha256: contractSha },
+          files: [{ path: fooPath, sha256: sha256OfString(GENERATED_HEADER) }],
+        },
+        {
+          framework: "vue",
+          component: "Foo",
+          contract: { path: DEFAULT_CONTRACT_PATH, sha256: contractSha },
+          files: [{ path: fooVuePath, sha256: sha256OfString(GENERATED_HEADER) }],
+        },
+      ],
+    };
+    fs.rmSync(path.join(fx.workspaceRoot, DEFAULT_CONTRACT_PATH));
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const cd = out.filter(
+      (d) => d.code === "RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING",
+    );
+    expect(cd).toHaveLength(1);
+    expect(cd[0]!.paths).toEqual([DEFAULT_CONTRACT_PATH]);
+  });
+
+  it("contract drift is independent of output drift (both can co-occur cleanly)", () => {
+    const fooPath = fx.writeGeneratedFile(
+      "packages/ds-react/src/components/Foo/Foo.tsx",
+    );
+    const manifest = fx.manifestWithBadDigest([fooPath], fooPath);
+    // Drift the contract too — both sides of the source→
+    // artifact attribution have moved.
+    fs.writeFileSync(
+      path.join(fx.workspaceRoot, DEFAULT_CONTRACT_PATH),
+      '{"name":"Foo","edited":true}',
+    );
+    const out = verifyManifestAgainstDisk(
+      { kind: "ok", manifest },
+      fx.workspaceRoot,
+    );
+    const codes = new Set(out.map((d) => d.code));
+    expect(codes.has("RAIL_REQUIRE_MANIFEST_HASH_MISMATCH")).toBe(true);
+    expect(codes.has("RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH")).toBe(
+      true,
+    );
+  });
+
   it("emits multiple distinct diagnostics when several drift modes coexist", () => {
     // Manifest references two files; one exists (Foo), one
     // doesn't (Ghost). Disk also has an untracked Bar file.
@@ -286,6 +426,10 @@ describe("verifyManifestAgainstDisk", () => {
         {
           framework: "react",
           component: "Foo",
+          contract: {
+            path: DEFAULT_CONTRACT_PATH,
+            sha256: sha256OfString(CONTRACT_BODY),
+          },
           files: [
             // Wrong digest for Foo (hash mismatch).
             { path: fooPath, sha256: "deadbeef".repeat(8) },
@@ -382,5 +526,52 @@ describe("readManifestForVerification", () => {
     );
     const out = readManifestForVerification(manifestPath);
     expect(out.kind).toBe("parse_error");
+  });
+
+  it("returns parse_error when a v3 group is missing contract provenance", () => {
+    // Schema-stamped v3 but group lacks the required
+    // `contract` field. Distinguished from SCHEMA_MISMATCH —
+    // the producer wrote the right version but a structurally
+    // incomplete body. CI grep on MALFORMED captures both this
+    // and other body-shape failures.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            files: [{ path: "x.tsx", sha256: "a".repeat(64) }],
+          },
+        ],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/contract provenance/);
+    }
+  });
+
+  it("returns schema_mismatch when a v2 manifest is encountered (no compat bridge)", () => {
+    // v2 manifests are gitignored runtime state; the slice
+    // doctrine is to fail honestly and require a regenerate
+    // rather than carry a compatibility shim. foundVersion
+    // surfaces the actual on-disk value.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: 2,
+        generatedAt: "x",
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("schema_mismatch");
+    if (out.kind === "schema_mismatch") {
+      expect(out.foundVersion).toBe(2);
+    }
   });
 });

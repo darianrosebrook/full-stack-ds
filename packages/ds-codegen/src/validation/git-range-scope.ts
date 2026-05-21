@@ -87,15 +87,37 @@ export function projectGitRange(args: ProjectGitRangeArgs): ScopedProjection {
     .filter((p) => !isGeneratedTreePath(p))
     .filter((p) => !isExcludedFromContext(p));
 
+  // Collect every contract path the manifest knows about so we
+  // can answer "did this PR touch a contract" without re-walking
+  // the manifest in the markdown renderer. NOT itself a failure
+  // surface — the required-mode CONTRACT_HASH_MISMATCH code is
+  // the authoritative failure for contract-without-regenerate
+  // drift.
+  const knownContractPaths = new Set<string>();
+  for (const group of manifest.groups) {
+    knownContractPaths.add(group.contract.path);
+  }
+  const changedContractPaths = allChanged.filter((p) =>
+    knownContractPaths.has(p),
+  );
+
   // Walk the manifest; a group MATCHES the range when any of its
-  // files is in the changed-generated set.
+  // files OR its source contract is in the changed set.
+  // Contract-driven matches surface groups whose generated output
+  // didn't textually change but whose source contract did — the
+  // operator may have edited the contract without re-running
+  // codegen, which required mode will catch as
+  // CONTRACT_HASH_MISMATCH; the reviewer projection cites the
+  // implicated group either way.
+  const changedContractSet = new Set(changedContractPaths);
   const matchedGroups: ScopedArtifactGroup[] = [];
   const matchedPathSet = new Set<string>();
   for (const group of manifest.groups) {
-    const intersects = group.files.some((f) =>
+    const filesIntersect = group.files.some((f) =>
       generatedChangedSet.has(f.path),
     );
-    if (!intersects) continue;
+    const contractIntersects = changedContractSet.has(group.contract.path);
+    if (!filesIntersect && !contractIntersects) continue;
     for (const f of group.files) matchedPathSet.add(f.path);
 
     // Pull the joined admission entries for this (framework,
@@ -110,6 +132,7 @@ export function projectGitRange(args: ProjectGitRangeArgs): ScopedProjection {
     matchedGroups.push({
       framework: group.framework,
       component: group.component,
+      contract: group.contract,
       files: group.files,
       admission,
     });
@@ -129,6 +152,7 @@ export function projectGitRange(args: ProjectGitRangeArgs): ScopedProjection {
     changedGeneratedPaths: generatedChanged,
     nonGeneratedChangedPaths: nonGeneratedChanged,
     unmatchedGeneratedPaths,
+    changedContractPaths,
     matchedGroups,
   };
 }

@@ -181,6 +181,7 @@ function appendScopedProjectionSection(
   }
   lines.push(`- Matched artifact groups: ${sp.matchedGroups.length}`);
   lines.push(`- Changed generated files: ${sp.changedGeneratedPaths.length}`);
+  lines.push(`- Changed contracts: ${sp.changedContractPaths.length}`);
   lines.push(`- Unmatched generated paths: ${sp.unmatchedGeneratedPaths.length}`);
   lines.push(
     `- Non-generated changed paths: ${sp.nonGeneratedChangedPaths.length}`,
@@ -188,12 +189,29 @@ function appendScopedProjectionSection(
   lines.push("");
 
   if (sp.matchedGroups.length > 0) {
-    lines.push("| Component | Framework | Files | Admission |");
-    lines.push("| --- | --- | ---: | --- |");
+    lines.push("| Component | Framework | Files | Contract | Contract hash | Admission |");
+    lines.push("| --- | --- | ---: | --- | --- | --- |");
     const sorted = [...sp.matchedGroups].sort(compareScopedGroup);
     for (const g of sorted) {
       lines.push(
-        `| ${g.component} | ${g.framework} | ${g.files.length} | ${renderScopedAdmission(g.admission)} |`,
+        `| ${g.component} | ${g.framework} | ${g.files.length} | \`${g.contract.path}\` | \`${shortHash(g.contract.sha256)}\` | ${renderScopedAdmission(g.admission)} |`,
+      );
+    }
+    lines.push("");
+  }
+
+  if (sp.changedContractPaths.length > 0) {
+    lines.push("### Changed contracts");
+    lines.push("");
+    lines.push(
+      "Contracts in the PR diff that the manifest attributes to one or more artifact groups. Surfaced as review context; the required-mode `RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH` code is the authoritative failure surface when a contract changes without a corresponding regenerate.",
+    );
+    lines.push("");
+    const head = sp.changedContractPaths.slice(0, 10);
+    for (const p of head) lines.push(`- \`${p}\``);
+    if (sp.changedContractPaths.length > head.length) {
+      lines.push(
+        `- ... (${sp.changedContractPaths.length - head.length} more)`,
       );
     }
     lines.push("");
@@ -277,6 +295,15 @@ function renderCell(row: ComponentAdmissionRow | undefined): string {
       ? ` (narrowings: ${row.knownRuleNarrowings.join(", ")})`
       : "";
   return `${row.status} [${coverageAbbrev || "—"}]${narrowings}`;
+}
+
+/**
+ * Render the first 12 hex chars of a sha256 — enough to
+ * distinguish contract revisions at a glance in a markdown table
+ * without bloating the cell width.
+ */
+function shortHash(sha256: string): string {
+  return sha256.slice(0, 12);
 }
 
 function abbreviateCoverage(c: string): string {

@@ -22,13 +22,17 @@ function makeRun(check: string): PlanCommandRun {
   return { check, command: check, durationMs: 1, status: "pass", diagnostics: [] };
 }
 
-function manifestWith(paths: { framework: FrameworkId; component: string; paths: string[] }[]): EmissionManifest {
+function manifestWith(paths: { framework: FrameworkId; component: string; paths: string[]; contractPath?: string }[]): EmissionManifest {
   return {
     schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: "2026-05-21T00:00:00.000Z",
     groups: paths.map((p) => ({
       framework: p.framework,
       component: p.component,
+      contract: {
+        path: p.contractPath ?? `packages/ds-contracts/${p.component}.contract.json`,
+        sha256: STUB_DIGEST,
+      },
       files: p.paths.map((path) => ({ path, sha256: STUB_DIGEST })),
     })),
   };
@@ -93,6 +97,7 @@ describe("projectGitRange", () => {
     expect(out.changedGeneratedPaths).toEqual([]);
     expect(out.unmatchedGeneratedPaths).toEqual([]);
     expect(out.nonGeneratedChangedPaths).toEqual([]);
+    expect(out.changedContractPaths).toEqual([]);
   });
 
   it("matches a changed path against the manifest group and includes admission entries", () => {
@@ -265,6 +270,88 @@ describe("projectGitRange", () => {
       kind: "git_range",
       rangeNotation: "origin/main...HEAD",
     });
+  });
+
+  it("surfaces a changed contract path in changedContractPaths AND matches its group", () => {
+    // Contract edit without regenerate: the generated files
+    // are untouched, but the source contract drifted. The
+    // projection should still match the group (so the reviewer
+    // sees which artifact group the contract feeds), and the
+    // contract path should appear in changedContractPaths.
+    const manifest = manifestWith([
+      {
+        framework: "react",
+        component: "Button",
+        paths: ["packages/ds-react/src/components/Button/Button.tsx"],
+        contractPath: "packages/ds-contracts/Button.contract.json",
+      },
+    ]);
+    const out = projectGitRange({
+      rangeNotation: "origin/main...HEAD",
+      workspaceRoot: "/tmp/fake",
+      manifest,
+      results: emptyResults(),
+      gitExec: stubGit("packages/ds-contracts/Button.contract.json\n"),
+    });
+    expect(out.changedContractPaths).toEqual([
+      "packages/ds-contracts/Button.contract.json",
+    ]);
+    expect(out.matchedGroups).toHaveLength(1);
+    expect(out.matchedGroups[0]!.component).toBe("Button");
+    // No generated files changed, so the contract was the
+    // sole match trigger.
+    expect(out.changedGeneratedPaths).toEqual([]);
+  });
+
+  it("propagates the manifest's contract provenance into matched groups", () => {
+    const manifest = manifestWith([
+      {
+        framework: "react",
+        component: "Button",
+        paths: ["packages/ds-react/src/components/Button/Button.tsx"],
+      },
+    ]);
+    const out = projectGitRange({
+      rangeNotation: "origin/main...HEAD",
+      workspaceRoot: "/tmp/fake",
+      manifest,
+      results: emptyResults(),
+      gitExec: stubGit(
+        "packages/ds-react/src/components/Button/Button.tsx\n",
+      ),
+    });
+    expect(out.matchedGroups[0]!.contract).toEqual({
+      path: "packages/ds-contracts/Button.contract.json",
+      sha256: STUB_DIGEST,
+    });
+  });
+
+  it("classifies an unknown contract-shaped path as non-generated context, not a contract change", () => {
+    // Only paths the manifest claims as contracts qualify as
+    // "changed contracts." A contracts/ path the manifest does
+    // not attribute (e.g. a brand-new contract not yet
+    // generated) flows through nonGeneratedChangedPaths only.
+    const manifest = manifestWith([
+      {
+        framework: "react",
+        component: "Button",
+        paths: ["packages/ds-react/src/components/Button/Button.tsx"],
+        contractPath: "packages/ds-contracts/Button.contract.json",
+      },
+    ]);
+    const out = projectGitRange({
+      rangeNotation: "origin/main...HEAD",
+      workspaceRoot: "/tmp/fake",
+      manifest,
+      results: emptyResults(),
+      gitExec: stubGit(
+        "packages/ds-contracts/NewlyDrafted.contract.json\n",
+      ),
+    });
+    expect(out.changedContractPaths).toEqual([]);
+    expect(out.nonGeneratedChangedPaths).toEqual([
+      "packages/ds-contracts/NewlyDrafted.contract.json",
+    ]);
   });
 
   it("preserves the operator's exact range notation in mode.rangeNotation", () => {
