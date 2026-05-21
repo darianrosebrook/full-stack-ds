@@ -343,9 +343,11 @@ export interface EmitterSourceFile {
  *
  * The set is computed statically at the codegen's build time —
  * NOT by parsing imports at runtime. Adding a new emitter helper
- * therefore requires explicitly extending the declared set in
- * `cli.ts`'s `EMITTER_SOURCE_PATHS`; that's the single point of
- * material-source authority.
+ * therefore requires explicitly extending the declared sets in
+ * `cli.ts` (`SHARED_EMITTER_SOURCES` for cross-framework helpers,
+ * `FRAMEWORK_EMITTER_SOURCES[<id>]` for framework-specific or
+ * cross-framework-borrowed helpers); that pair is the single point
+ * of material-source authority.
  *
  * Top-level dedupe: a framework's source set is recorded ONCE on
  * `EmissionManifest.emitterSourceSets[framework]`, not inlined

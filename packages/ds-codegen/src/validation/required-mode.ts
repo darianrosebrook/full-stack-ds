@@ -488,5 +488,63 @@ export function readManifestForVerification(
       };
     }
   }
+  // v4 coverage invariant
+  // (CODEGEN-RAIL-EMITTER-PROVENANCE-SCHEMA-HARDEN-01):
+  // every FrameworkId the rail knows about must have a
+  // non-empty source set whose `framework` self-identifier
+  // matches its key. The producer (`computeEmitterSourceSets`
+  // in cli.ts) always writes all five sets, so a manifest
+  // missing one is either a producer regression or an
+  // externally-mutated manifest — either way it must NOT
+  // be admitted as `ok`, because the verifier would then
+  // silently skip emitter-source integrity for that framework.
+  //
+  // We enforce coverage for all five framework ids rather than
+  // only frameworks present in `groups`, because: (1) governed
+  // CI is full-target oriented; (2) a partial-target manifest
+  // would also under-claim emitter coverage on regenerate; and
+  // (3) producer behavior is "always write all five," so a
+  // missing key is the load-bearing signal of malformedness.
+  for (const { framework } of COMPONENT_TREES) {
+    const set = manifestParsed.emitterSourceSets[framework];
+    if (!set) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"] is missing`,
+      };
+    }
+    if (set.framework !== framework) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].framework is "${set.framework}" — mismatched self-identifier`,
+      };
+    }
+    if (set.sources.length === 0) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources is empty — the producer must declare at least one material source per framework`,
+      };
+    }
+    // Per-item shape: the verifier later joins these into
+    // workspace-relative paths and hashes them; non-string
+    // path/sha256 would crash `path.join` and violate the
+    // "verifier never throws" doctrine. Validate item shape
+    // here so MALFORMED is the load-bearing surface, not a
+    // runtime stack trace.
+    for (let i = 0; i < set.sources.length; i += 1) {
+      const src = set.sources[i] as Partial<EmissionManifest["emitterSourceSets"][FrameworkId]["sources"][number]>;
+      if (
+        !src ||
+        typeof src !== "object" ||
+        typeof src.path !== "string" ||
+        typeof src.sha256 !== "string"
+      ) {
+        return {
+          kind: "parse_error",
+          message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources[${i}] is missing path/sha256 or has non-string fields`,
+        };
+      }
+    }
+  }
   return { kind: "ok", manifest: manifestParsed };
 }

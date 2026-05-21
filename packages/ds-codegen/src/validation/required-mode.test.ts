@@ -28,12 +28,50 @@ import {
   type FrameworkId,
 } from "./types.js";
 
+/**
+ * Empty source sets for verifier-only tests that go through
+ * `verifyManifestAgainstDisk({ kind: "ok", manifest })` directly
+ * — bypassing the reader. The reader rejects empty sources
+ * (CODEGEN-RAIL-EMITTER-PROVENANCE-SCHEMA-HARDEN-01), so any
+ * reader-exercising test must use STUB_VALID_EMITTER_SOURCE_SETS
+ * instead.
+ */
 const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   react: { framework: "react", sources: [] },
   vue: { framework: "vue", sources: [] },
   svelte: { framework: "svelte", sources: [] },
   lit: { framework: "lit", sources: [] },
   angular: { framework: "angular", sources: [] },
+};
+
+/**
+ * Reader-acceptable stub source sets. Each set has exactly one
+ * synthetic source so the structural invariants
+ * (non-empty + matching self-identifier + string fields) pass.
+ * The verifier later treats these synthetic paths as MISSING
+ * unless tests separately write them to disk.
+ */
+const STUB_VALID_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
+  react: {
+    framework: "react",
+    sources: [{ path: "packages/ds-codegen/src/stub-react.ts", sha256: "a".repeat(64) }],
+  },
+  vue: {
+    framework: "vue",
+    sources: [{ path: "packages/ds-codegen/src/stub-vue.ts", sha256: "a".repeat(64) }],
+  },
+  svelte: {
+    framework: "svelte",
+    sources: [{ path: "packages/ds-codegen/src/stub-svelte.ts", sha256: "a".repeat(64) }],
+  },
+  lit: {
+    framework: "lit",
+    sources: [{ path: "packages/ds-codegen/src/stub-lit.ts", sha256: "a".repeat(64) }],
+  },
+  angular: {
+    framework: "angular",
+    sources: [{ path: "packages/ds-codegen/src/stub-angular.ts", sha256: "a".repeat(64) }],
+  },
 };
 
 function sha256OfString(s: string): string {
@@ -597,7 +635,7 @@ describe("readManifestForVerification", () => {
     const manifest: EmissionManifest = {
       schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
       generatedAt: "2026-05-21T00:00:00.000Z",
-      emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
+      emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
       groups: [],
     };
     fs.writeFileSync(manifestPath, JSON.stringify(manifest));
@@ -657,12 +695,16 @@ describe("readManifestForVerification", () => {
     // the producer wrote the right version but a structurally
     // incomplete body. CI grep on MALFORMED captures both this
     // and other body-shape failures.
+    //
+    // Uses STUB_VALID_EMITTER_SOURCE_SETS so the v4 emitter
+    // coverage check passes; the test isolates the contract
+    // check by making it the only failing invariant.
     fs.writeFileSync(
       manifestPath,
       JSON.stringify({
         schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
         generatedAt: "x",
-        emitterSourceSets: EMPTY_EMITTER_SOURCE_SETS,
+        emitterSourceSets: STUB_VALID_EMITTER_SOURCE_SETS,
         groups: [
           {
             framework: "react",
@@ -716,6 +758,117 @@ describe("readManifestForVerification", () => {
     expect(out.kind).toBe("parse_error");
     if (out.kind === "parse_error") {
       expect(out.message).toMatch(/emitterSourceSets\["react"\]/);
+    }
+  });
+
+  // CODEGEN-RAIL-EMITTER-PROVENANCE-SCHEMA-HARDEN-01:
+  // The reader must require non-empty, framework-aligned source
+  // sets for every FrameworkId — not merely for the frameworks
+  // present in `groups`. A manifest missing a key would let the
+  // verifier silently skip emitter-source integrity for that
+  // framework, undercutting the slice's claim that "each generated
+  // artifact group is covered by a framework emitter source set."
+  it("returns parse_error when a v4 manifest omits a framework key in emitterSourceSets", () => {
+    // Manifest with only react+vue+svelte+lit keys — missing
+    // angular. Verifier-loop would have happily skipped angular
+    // emitter integrity; reader must refuse the manifest first.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: {
+          react: { framework: "react", sources: [{ path: "x", sha256: "a" }] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
+        },
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/emitterSourceSets\["angular"\] is missing/);
+    }
+  });
+
+  it("returns parse_error when an emitterSourceSets entry has a mismatched framework self-identifier", () => {
+    // The set under `react` claims framework: "vue" — a producer
+    // bug or hand-edit. Reader must reject because the verifier
+    // joins by key, not by self-identifier, and a mismatch would
+    // silently misattribute the source set.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: {
+          react: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a" }] },
+        },
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/mismatched self-identifier/);
+    }
+  });
+
+  it("returns parse_error when an emitterSourceSets entry has an empty sources array", () => {
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: {
+          react: { framework: "react", sources: [] },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a" }] },
+        },
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/emitterSourceSets\["react"\]\.sources is empty/);
+    }
+  });
+
+  it("returns parse_error when a sources[] item has non-string path or sha256", () => {
+    // The verifier later does path.join(workspaceRoot, src.path)
+    // and would throw on a non-string path, violating the
+    // "verifier never throws" doctrine. Reader catches this.
+    fs.writeFileSync(
+      manifestPath,
+      JSON.stringify({
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "x",
+        emitterSourceSets: {
+          react: {
+            framework: "react",
+            sources: [{ path: 42, sha256: "a" }], // non-string path
+          },
+          vue: { framework: "vue", sources: [{ path: "x", sha256: "a" }] },
+          svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a" }] },
+          lit: { framework: "lit", sources: [{ path: "x", sha256: "a" }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a" }] },
+        },
+        groups: [],
+      }),
+    );
+    const out = readManifestForVerification(manifestPath);
+    expect(out.kind).toBe("parse_error");
+    if (out.kind === "parse_error") {
+      expect(out.message).toMatch(/emitterSourceSets\["react"\]\.sources\[0\]/);
     }
   });
 
