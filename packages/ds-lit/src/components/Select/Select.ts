@@ -54,6 +54,15 @@ export class SelectElement extends LitElement {
       position: relative;
     }
     
+    .select__text {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
+    
     .select__trigger {
       display: inline-flex;
       align-items: center;
@@ -168,7 +177,7 @@ export class SelectElement extends LitElement {
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ type: Boolean }) multiple?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
-  @property({ attribute: false }) size?: SelectSize = "md";
+  @property({ type: String }) size?: SelectSize = "md";
   @property({ attribute: false }) filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   @property({ type: Boolean }) searchable?: boolean;
   @property({ type: Boolean }) empty?: boolean;
@@ -254,6 +263,15 @@ export class SelectTriggerElement extends LitElement {
       display: inline-flex;
       flex-direction: column;
       position: relative;
+    }
+    
+    .select__text {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
     }
     
     .select__trigger {
@@ -405,6 +423,15 @@ export class SelectContentElement extends LitElement {
       position: relative;
     }
     
+    .select__text {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
+    }
+    
     .select__trigger {
       display: inline-flex;
       align-items: center;
@@ -552,6 +579,15 @@ export class SelectOptionElement extends LitElement {
       display: inline-flex;
       flex-direction: column;
       position: relative;
+    }
+    
+    .select__text {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: left;
     }
     
     .select__trigger {

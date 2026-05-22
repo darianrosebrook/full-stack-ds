@@ -7,11 +7,11 @@
     "parts": [
       "root",
       "trigger",
+      "text",
       "content",
       "search",
       "options",
       "option",
-      "check",
       "emptyState"
     ],
     "dom": {

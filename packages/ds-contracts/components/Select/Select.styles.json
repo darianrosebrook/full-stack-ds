@@ -13,6 +13,32 @@
       "platforms": ["web"]
     }
   },
+  "text": {
+    "flex": {
+      "literal": "1 1 auto",
+      "platforms": ["web"]
+    },
+    "min-width": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "overflow": {
+      "literal": "hidden",
+      "platforms": ["web"]
+    },
+    "text-overflow": {
+      "literal": "ellipsis",
+      "platforms": ["web"]
+    },
+    "white-space": {
+      "literal": "nowrap",
+      "platforms": ["web"]
+    },
+    "text-align": {
+      "literal": "left",
+      "platforms": ["web"]
+    }
+  },
   "trigger": {
     "display": {
       "literal": "inline-flex",
