@@ -13,7 +13,7 @@
 import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
-import { PROJECT_ROOT, PATHS } from '../core/index';
+import { PROJECT_ROOT, PATHS, tokenPathToCSSVar } from '../core/index';
 import type { TokenGroup } from '../core/index';
 
 export interface TokenUsage {
@@ -66,35 +66,87 @@ function extractAllTokenPaths(
 }
 
 /**
- * Scan file for token references
+ * Reference forms a file can contain:
+ *   - DTCG dotted path inside braces: `{core.color.palette.red.500}`.
+ *     ONLY meaningful in `.tokens.json` source files — in JS/TS files,
+ *     `{x}` is template-literal syntax and would produce false positives.
+ *   - CSS custom property: `var(--fsds-core-color-palette-red-500)` or
+ *     `var(--fsds-core-color-palette-red-500, fallback)`. The fallback
+ *     form is critical because the codegen emits fallbacks on every
+ *     reference.
+ *   - TypeScript dictionary lookup: `designTokens['core.color...']`.
  */
-function scanFileForTokens(filePath: string): string[] {
+interface ScanContext {
+  /** Map from CSS var name (e.g. `--fsds-core-color-...`) → token path. */
+  cssVarToPath: Map<string, string>;
+  /** All known token paths as a Set, for exact-match lookup of DTCG refs. */
+  pathSet: Set<string>;
+}
+
+/**
+ * Scan a single file for token references. Returns the set of matched
+ * token paths (already resolved against the known token set, so the
+ * caller doesn't need to do another lookup).
+ *
+ * Strict matching only — no substring fallback. A reference matches a
+ * token when (a) its CSS var name resolves through `cssVarToPath`, or
+ * (b) the dotted path appears literally in the token set, or (c) the
+ * `designTokens[...]` key matches a token path.
+ */
+function scanFileForTokens(
+  filePath: string,
+  ctx: ScanContext,
+): string[] {
   const content = fs.readFileSync(filePath, 'utf8');
-  const found: string[] = [];
+  const found = new Set<string>();
+  const isTokenJson = filePath.endsWith('.tokens.json');
 
-  // Match {token.path} references
-  const jsonRefs = content.matchAll(/\{([a-zA-Z0-9_.-]+)\}/g);
-  for (const match of jsonRefs) {
-    found.push(match[1]);
-  }
-
-  // Match var(--token-name) usage
+  // (a) `var(--fsds-...)` — handles optional ", fallback" tail.
+  // Capture the var name up to the first `,` or `)`.
   const cssVarRefs = content.matchAll(
-    /var\(--([a-zA-Z0-9_-]+(?:-[a-zA-Z0-9_-]+)*)\)/g
+    /var\((--[a-zA-Z0-9_-]+)(?:\s*,[^)]*)?\)/g,
   );
   for (const match of cssVarRefs) {
-    // Convert CSS var name back to token path
-    const tokenPath = match[1].replace(/-/g, '.');
-    found.push(tokenPath);
+    const tokenPath = ctx.cssVarToPath.get(match[1]);
+    if (tokenPath) found.add(tokenPath);
   }
 
-  // Match designTokens.usage patterns in TypeScript
+  // (b) `{a.b.c}` DTCG references — only in token JSON files. In JS/TS
+  // files this regex would match template-literal interpolations like
+  // `{id}`, which are NOT token references.
+  if (isTokenJson) {
+    const jsonRefs = content.matchAll(/\{([a-zA-Z0-9_.-]+)\}/g);
+    for (const match of jsonRefs) {
+      const ref = match[1];
+      if (!ref.includes('.')) continue; // single-word — not a token path
+      if (ctx.pathSet.has(ref)) found.add(ref);
+    }
+  }
+
+  // (c) `designTokens['path']` lookups in TypeScript.
   const tsRefs = content.matchAll(/designTokens\[['"]([^'"]+)['"]\]/g);
   for (const match of tsRefs) {
-    found.push(match[1]);
+    if (ctx.pathSet.has(match[1])) found.add(match[1]);
   }
 
-  return found;
+  return [...found];
+}
+
+/**
+ * Build a CSS-var → token-path lookup map by walking every token and
+ * computing its canonical CSS variable name with `tokenPathToCSSVar`.
+ * This lets the scanner resolve `var(--fsds-foo-bar-baz)` to a token
+ * path without trying to invert the slug, which is ambiguous (slugs
+ * collapse dots and hyphens).
+ */
+function buildCssVarLookup(
+  paths: Iterable<string>,
+): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const p of paths) {
+    map.set(tokenPathToCSSVar(p), p);
+  }
+  return map;
 }
 
 /**
@@ -152,40 +204,31 @@ export async function analyzeTokenUsage(): Promise<UsageReport> {
     });
   }
 
-  // Scan files
+  // Pre-compute scan context: CSS var → token-path lookup, plus the
+  // canonical path set for exact-match against DTCG references.
+  const scanCtx: ScanContext = {
+    cssVarToPath: buildCssVarLookup(tokenSet),
+    pathSet: tokenSet,
+  };
+
+  // Scan files — strict exact-match. scanFileForTokens already returns
+  // only paths that exist in the token set, so we credit each one once
+  // per file.
   for (const filePath of filesToScan) {
     try {
-      const foundTokens = scanFileForTokens(filePath);
+      const foundTokens = scanFileForTokens(filePath, scanCtx);
+      if (foundTokens.length === 0) continue;
       const relativePath = path.relative(PROJECT_ROOT, filePath);
+      usageByFile.set(relativePath, foundTokens);
 
-      if (foundTokens.length > 0) {
-        usageByFile.set(relativePath, foundTokens);
-
-        for (const foundToken of foundTokens) {
-          // Try exact match first
-          if (usageByToken.has(foundToken)) {
-            const usage = usageByToken.get(foundToken)!;
-            usage.usageCount++;
-            if (!usage.usedIn.includes(relativePath)) {
-              usage.usedIn.push(relativePath);
-            }
-            usage.lastUsed = new Date();
-          } else {
-            // Try partial matches (for CSS var names that might not match exactly)
-            for (const [tokenPath, usage] of usageByToken.entries()) {
-              if (
-                tokenPath.includes(foundToken) ||
-                foundToken.includes(tokenPath)
-              ) {
-                usage.usageCount++;
-                if (!usage.usedIn.includes(relativePath)) {
-                  usage.usedIn.push(relativePath);
-                }
-                usage.lastUsed = new Date();
-              }
-            }
-          }
+      for (const foundToken of foundTokens) {
+        const usage = usageByToken.get(foundToken);
+        if (!usage) continue;
+        usage.usageCount++;
+        if (!usage.usedIn.includes(relativePath)) {
+          usage.usedIn.push(relativePath);
         }
+        usage.lastUsed = new Date();
       }
     } catch {
       // Skip files that can't be read

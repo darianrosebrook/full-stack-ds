@@ -46,6 +46,31 @@ jobs:
       - name: Verify token build is up-to-date
         run: pnpm run tokens:build:check
 
+      # Design tokens — WCAG contrast gate. Loads resolved.tokens.json
+      # and checks the curated semantic foreground × background pair
+      # list (extractCanonicalPairs in build/w3c/w3c-contrast-validator.ts)
+      # against AA in both light and dark themes. Fails if any declared
+      # pair drops below its declared level.
+      - name: Validate token contrast (WCAG AA)
+        run: pnpm run tokens:check-contrast
+
+      # Design tokens — usage report. Non-failing informational step
+      # that surfaces unused tokens (data-viz scales, orphans from
+      # token deletions, etc.) for visibility. Doesn't gate the build;
+      # we'd need a baseline to gate on. The report is uploaded as an
+      # artifact for inspection.
+      - name: Report token usage
+        run: pnpm run tokens:check-usage -- --output=tokens-usage-report.md
+        continue-on-error: true
+
+      - name: Upload token usage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tokens-usage-report
+          path: tokens-usage-report.md
+          if-no-files-found: ignore
+
       - name: Lint
         run: pnpm run lint
 

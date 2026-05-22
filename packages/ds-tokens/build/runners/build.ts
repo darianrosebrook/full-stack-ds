@@ -8,6 +8,8 @@
 
 import { composeTokens } from "../generators/compose.js";
 import { generateGlobalTokens } from "../generators/global.js";
+import { resolveAndWrite } from "../generators/resolve.js";
+import { PATHS } from "../core/index.js";
 // Types generator is lazy-loaded — it imports `prettier`, which isn't a
 // devDependency of this package yet. Loading it eagerly would crash the whole
 // build pipeline on the require. Step 2 doesn't need types; we'll add the
@@ -17,6 +19,31 @@ type StepFn = (incremental?: boolean) => boolean | Promise<boolean>;
 async function generateTokenTypes(incremental?: boolean): Promise<boolean> {
   const mod = await import("../generators/types.js");
   return mod.generateTokenTypes(incremental);
+}
+
+/**
+ * Walk composed.tokens.json and emit resolved.tokens.json — every {ref}
+ * dereferenced down to a literal value. Consumers needing concrete colors
+ * (contrast / a11y validators) read this artifact. Cheap (~50ms) since
+ * it's a single tree walk with memoizable reference lookups.
+ */
+function resolveTokens(): boolean {
+  const result = resolveAndWrite(PATHS.tokens, PATHS.outputResolved);
+  if (result.warnings.length > 0) {
+    console.warn(
+      `[resolve] ⚠️  ${result.warnings.length} unresolved token(s):`,
+    );
+    for (const w of result.warnings.slice(0, 10)) {
+      console.warn(`  - ${w}`);
+    }
+    if (result.warnings.length > 10) {
+      console.warn(`  ... and ${result.warnings.length - 10} more`);
+    }
+  }
+  console.log(`[resolve] Resolved ${result.leafCount} leaf token(s)`);
+  // Warnings don't fail the build — they're diagnostics. A future hardening
+  // step could promote these to errors once the token tree is clean.
+  return true;
 }
 
 interface BuildStep {
@@ -46,6 +73,12 @@ export async function buildTokens(incremental = true): Promise<boolean> {
       name: "global",
       description: "Generate global CSS variables",
       fn: generateGlobalTokens,
+      required: true,
+    },
+    {
+      name: "resolve",
+      description: "Resolve refs → emit resolved.tokens.json",
+      fn: resolveTokens,
       required: true,
     },
     // 'types' step is parked until `prettier` is added as a devDep here and
@@ -134,6 +167,7 @@ export async function runSteps(stepNames: string[]): Promise<boolean> {
   const availableSteps: Record<string, () => boolean | Promise<boolean>> = {
     compose: composeTokens,
     global: generateGlobalTokens,
+    resolve: resolveTokens,
     types: generateTokenTypes,
   };
 

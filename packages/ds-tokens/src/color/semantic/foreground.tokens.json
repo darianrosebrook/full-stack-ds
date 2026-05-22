@@ -291,9 +291,9 @@
         "$value": "{color.mode.light}",
         "$extensions": {
           "fsds.light": "{color.mode.light}",
-          "fsds.dark": "{color.mode.dark}"
+          "fsds.dark": "{color.mode.light}"
         },
-        "$description": "Inverse foreground color (opposite of primary)"
+        "$description": "Inverse foreground color — the label color used INSIDE colored action surfaces (primary/danger buttons). The colored surface keeps its hue across light and dark themes, so the inverse label stays light in both. NOT the inverse of foreground.primary — use color.mode.dark/light directly for that."
       }
     }
   }

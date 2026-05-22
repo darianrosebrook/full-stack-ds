@@ -109,22 +109,41 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
 }
 
 /**
- * Convert DTCG color value to hex string
+ * Convert DTCG color value to hex string.
+ *
+ * Accepts three input shapes:
+ *   - Literal hex string: `"#abcdef"` (passes through verbatim).
+ *   - DTCG structured color: `{ colorSpace: "srgb", components: [r, g, b] }`.
+ *   - Resolved theme object: `{ light: "#abcdef", dark: "#xyz" }` — when
+ *     `theme` is set, the matching variant is returned; otherwise `light`
+ *     is the default.
+ *
+ * Returns `null` for any other shape (e.g. unresolved `{ref}` strings).
  */
-function colorValueToHex(colorValue: unknown): string | null {
+function colorValueToHex(
+  colorValue: unknown,
+  theme: 'light' | 'dark' = 'light',
+): string | null {
   if (typeof colorValue === 'string') {
-    // Already a hex string or token reference
     if (colorValue.startsWith('#')) {
       return colorValue;
     }
-    // Token reference - can't resolve here
+    // Unresolved token reference — caller should be passing resolved values.
     return null;
   }
 
   if (typeof colorValue === 'object' && colorValue !== null) {
     const cv = colorValue as Record<string, unknown>;
 
-    // DTCG structured color value
+    // Theme-keyed resolved object (from resolved.tokens.json).
+    if ('light' in cv || 'dark' in cv) {
+      const themed = cv[theme] ?? cv.light;
+      return typeof themed === 'string' && themed.startsWith('#')
+        ? themed
+        : null;
+    }
+
+    // DTCG structured color value.
     if ('colorSpace' in cv && 'components' in cv) {
       const colorSpace = cv.colorSpace as string;
       const components = cv.components as number[];
@@ -218,7 +237,145 @@ function generateContrastSuggestion(
 }
 
 /**
- * Extract color pairs from design tokens
+ * Read a token's `$value` field by dotted path from a tree of resolved
+ * tokens (e.g. resolved.tokens.json). Returns `undefined` if the path
+ * doesn't exist or doesn't point at a DTCG leaf.
+ */
+function readResolvedValue(
+  tree: unknown,
+  dotted: string,
+): unknown {
+  if (typeof tree !== 'object' || tree === null) return undefined;
+  const parts = dotted.split('.');
+  let cur: unknown = tree;
+  for (const p of parts) {
+    if (typeof cur !== 'object' || cur === null) return undefined;
+    cur = (cur as Record<string, unknown>)[p];
+  }
+  if (typeof cur === 'object' && cur !== null && '$value' in (cur as Record<string, unknown>)) {
+    return (cur as Record<string, unknown>).$value;
+  }
+  return undefined;
+}
+
+/**
+ * Enumerate the canonical foreground × background pairs the design
+ * system should pass at AA. Returns only pairs where both ends resolve
+ * to concrete hex values (skips pairs gated by a missing token rather
+ * than failing the whole report).
+ *
+ * `theme` selects which theme-extension variant to read when a leaf has
+ * a `{light, dark}` resolved value.
+ *
+ * The list is intentionally curated, not exhaustive — these are the
+ * pairs the system ASSERTS will pass at AA. Adding pairs here is how
+ * we extend the contract; the validator then enforces them on every CI
+ * run.
+ */
+export function extractCanonicalPairs(
+  resolvedTree: unknown,
+  theme: 'light' | 'dark' = 'light',
+): Array<{
+  foreground: string;
+  background: string;
+  context: string;
+  level: WCAGLevel;
+}> {
+  // Each entry is a (fgPath, bgPath, contextLabel, wcagLevel) tuple.
+  // Paths are dotted DTCG paths into the resolved tree.
+  const candidates: Array<{
+    fg: string;
+    bg: string;
+    context: string;
+    level?: WCAGLevel;
+  }> = [
+    // Text on backgrounds — the most common consumption pattern.
+    {
+      fg: 'semantic.color.foreground.primary',
+      bg: 'semantic.color.background.primary',
+      context: 'Primary text on primary background',
+    },
+    {
+      fg: 'semantic.color.foreground.primary',
+      bg: 'semantic.color.background.secondary',
+      context: 'Primary text on secondary background',
+    },
+    {
+      fg: 'semantic.color.foreground.secondary',
+      bg: 'semantic.color.background.primary',
+      context: 'Secondary text on primary background',
+    },
+    {
+      fg: 'semantic.color.foreground.tertiary',
+      bg: 'semantic.color.background.primary',
+      context: 'Tertiary text on primary background',
+      // Tertiary is often used for hints/captions — AA Large is the
+      // realistic bar.
+      level: 'AA_LARGE',
+    },
+    // Inverse text on action backgrounds — this is where the showcase
+    // audit found the readability bug. Foreground.inverse is the text
+    // color INSIDE primary/destructive buttons.
+    {
+      fg: 'semantic.color.foreground.inverse',
+      bg: 'semantic.color.action.background.primary.default',
+      context: 'Button label on primary action background',
+    },
+    {
+      fg: 'semantic.color.foreground.inverse',
+      bg: 'semantic.color.action.background.danger.default',
+      context: 'Button label on danger action background',
+    },
+    // Status / feedback colors against the primary surface.
+    {
+      fg: 'semantic.color.status.info',
+      bg: 'semantic.color.background.primary',
+      context: 'Info status on primary background',
+    },
+    {
+      fg: 'semantic.color.status.success',
+      bg: 'semantic.color.background.primary',
+      context: 'Success status on primary background',
+    },
+    {
+      fg: 'semantic.color.status.warning',
+      bg: 'semantic.color.background.primary',
+      context: 'Warning status on primary background',
+      level: 'AA_LARGE',
+    },
+    {
+      fg: 'semantic.color.status.danger',
+      bg: 'semantic.color.background.primary',
+      context: 'Danger status on primary background',
+    },
+  ];
+
+  const out: Array<{
+    foreground: string;
+    background: string;
+    context: string;
+    level: WCAGLevel;
+  }> = [];
+  for (const c of candidates) {
+    const fgValue = readResolvedValue(resolvedTree, c.fg);
+    const bgValue = readResolvedValue(resolvedTree, c.bg);
+    const fg = colorValueToHex(fgValue, theme);
+    const bg = colorValueToHex(bgValue, theme);
+    if (!fg || !bg) continue; // skip pairs we can't resolve
+    out.push({
+      foreground: fg,
+      background: bg,
+      context: `${c.context} (${theme})`,
+      level: c.level ?? 'AA_NORMAL',
+    });
+  }
+  return out;
+}
+
+/**
+ * Legacy extractor — retained for backwards compatibility with callers
+ * that pass an un-resolved DTCG tree. Prefer `extractCanonicalPairs`
+ * with a resolved tree for any new use.
  */
 function extractColorPairsFromTokens(tokens: unknown): Array<{
   foreground: string;

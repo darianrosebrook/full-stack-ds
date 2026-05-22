@@ -73,6 +73,11 @@ export const PATHS = {
   // Output artifacts
   outputTypes: path.join(PACKAGE_ROOT, "src", "types", "designTokens.ts"),
   outputCSS: path.join(GENERATED_DIR, "tokens.css"),
+  // Fully-resolved token tree — every {ref} dereferenced down to a literal
+  // value (hex string for colors, "<n>px" for dimensions, etc.). Consumed
+  // by contrast / accessibility validators that need concrete colors to
+  // compute ratios.
+  outputResolved: path.join(GENERATED_DIR, "resolved.tokens.json"),
   // global.ts (lines 1174/1318/1324) reads `outputScss`; keep an alias so the
   // dropped portfolio code links without edits at every call site.
   outputScss: path.join(GENERATED_DIR, "tokens.css"),

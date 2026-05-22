@@ -23,6 +23,8 @@
     "tokens:validate": "pnpm --filter @full-stack-ds/tokens run validate",
     "tokens:build": "pnpm --filter @full-stack-ds/tokens run build",
     "tokens:build:check": "pnpm run tokens:build && git diff --exit-code packages/ds-tokens/generated",
+    "tokens:check-contrast": "pnpm --filter @full-stack-ds/tokens run check-contrast",
+    "tokens:check-usage": "pnpm --filter @full-stack-ds/tokens run check-usage",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:vue": "pnpm --filter @full-stack-ds/vue run test",

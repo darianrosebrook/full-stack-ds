@@ -42,17 +42,17 @@ echo ""
 # Mirror CI's `pnpm install --frozen-lockfile`. Running this catches
 # lockfile drift before we push — the same drift that produces the
 # "@jest/globals not found" class of CI failure.
-echo "[pre-push 1/9] pnpm install --frozen-lockfile"
+echo "[pre-push 1/10] pnpm install --frozen-lockfile"
 pnpm install --frozen-lockfile
 
 echo ""
-echo "[pre-push 2/9] pnpm run generate:validate"
+echo "[pre-push 2/10] pnpm run generate:validate"
 pnpm run generate:validate
 
 # Design tokens — DTCG validation catches malformed token JSON,
 # self-references, and unknown $type values before they reach codegen.
 echo ""
-echo "[pre-push 3/9] pnpm run tokens:validate"
+echo "[pre-push 3/10] pnpm run tokens:validate"
 pnpm run tokens:validate
 
 # Design tokens — drift gate. Rebuilds composed.tokens.json + tokens.css
@@ -60,28 +60,35 @@ pnpm run tokens:validate
 # committed. Mirrors the `governed:rail` drift check below but scoped to
 # the tokens output.
 echo ""
-echo "[pre-push 4/9] pnpm run tokens:build:check"
+echo "[pre-push 4/10] pnpm run tokens:build:check"
 pnpm run tokens:build:check
 
+# Design tokens — WCAG contrast gate. Loads resolved.tokens.json and
+# checks the curated foreground × background pair list against AA. Fails
+# loud if any pair drops below its declared level.
 echo ""
-echo "[pre-push 5/9] pnpm run lint"
+echo "[pre-push 5/10] pnpm run tokens:check-contrast"
+pnpm run tokens:check-contrast
+
+echo ""
+echo "[pre-push 6/10] pnpm run lint"
 pnpm run lint
 
 echo ""
-echo "[pre-push 6/9] pnpm run typecheck (root + codegen)"
+echo "[pre-push 7/10] pnpm run typecheck (root + codegen)"
 pnpm run typecheck
 
 echo ""
-echo "[pre-push 7/9] pnpm run typecheck:vue"
+echo "[pre-push 8/10] pnpm run typecheck:vue"
 pnpm run typecheck:vue
 
 echo ""
-echo "[pre-push 8/9] pnpm test (root) + pnpm run test:vue"
+echo "[pre-push 9/10] pnpm test (root) + pnpm run test:vue"
 pnpm test
 pnpm run test:vue
 
 echo ""
-echo "[pre-push 9/9] pnpm run governed:rail + framework-src diff check"
+echo "[pre-push 10/10] pnpm run governed:rail + framework-src diff check"
 pnpm run governed:rail
 
 # Mirror the CI "Generated artifacts are committed" step. If the rail
