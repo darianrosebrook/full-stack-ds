@@ -48,13 +48,15 @@ export class WalkthroughComponent {
   @Input() steps?: WalkthroughStepSpec[];
   @Input() index?: number;
   @Input() defaultIndex?: number = 0;
+  @Input() onStepChange?: (index: number) => void;
+  @Input() onComplete?: () => void;
+  @Input() onSkip?: () => void;
   @Input() label?: string = "Feature tour";
   @Input() storageKey?: string;
   @Input() autoStart?: boolean = false;
   @Input() closeOnOutsideClick?: boolean = false;
   @Input() placement?: WalkthroughPlacement = "auto";
   @Input() class?: string;
-  @Input() onStepChange?: (value: number) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useWalkthrough({

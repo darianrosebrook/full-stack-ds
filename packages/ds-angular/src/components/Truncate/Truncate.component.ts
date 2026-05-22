@@ -37,10 +37,10 @@ export class TruncateComponent {
   @Input() expandable?: boolean;
   @Input() expanded?: boolean;
   @Input() defaultExpanded?: boolean;
+  @Input() onExpandedChange?: (expanded: boolean) => void;
   @Input() expandText?: string = "Show more";
   @Input() collapseText?: string = "Show less";
   @Input() class?: string;
-  @Input() onExpandedChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useTruncate({

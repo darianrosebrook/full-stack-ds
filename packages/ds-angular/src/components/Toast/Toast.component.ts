@@ -45,12 +45,12 @@ export type ToastPoliteness = "polite" | "assertive";
 })
 export class ToastComponent {
   @Input() open?: boolean;
+  @Input() onOpenChange?: (open: boolean) => void;
   @Input() title?: string;
   @Input() variant?: ToastVariant = "info";
   @Input() politeness?: ToastPoliteness = "polite";
   @Input() action?: unknown;
   @Input() class?: string;
-  @Input() onOpenChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useToast({

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import "./AlertNotice.css";
 // @generated:end
@@ -19,7 +19,7 @@ export type AlertNoticeLevel = "page" | "section" | "inline";
 // @custom:end
 
 // @generated:start props
-export interface AlertNoticeProps {
+export interface AlertNoticeProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "dismissLabel" | "dismissible" | "icon" | "level" | "onDismiss" | "status"> {
   status?: AlertNoticeStatus;
   level?: AlertNoticeLevel;
   dismissible?: boolean;
@@ -95,14 +95,17 @@ export function AlertNotice({
     .join(" ");
 
   return (
-    <Stack
-      role="alert"
-      className={classNames}
-      data-testid={testId}
-      {...rest}
-    >
-      {children}
-    </Stack>
+  <div className={`${classNames}`} role="alert" data-testid={testId} {...rest}>
+    {icon && (
+      <span className="alert-notice__icon" aria-hidden="true">
+        {icon}
+      </span>
+    )}
+    {children}
+    {dismissible && (
+      <button className="alert-notice__dismiss" type="button" onClick={onDismiss} aria-label={dismissLabel} />
+    )}
+  </div>
   );
 }
 // @generated:end

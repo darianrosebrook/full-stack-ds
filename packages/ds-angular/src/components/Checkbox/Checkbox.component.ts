@@ -28,12 +28,12 @@ export class CheckboxComponent {
   @Input() size?: CheckboxSize = "md";
   @Input() checked?: boolean;
   @Input() defaultChecked?: boolean;
+  @Input() onChange?: (checked: boolean) => void;
   @Input() indeterminate?: boolean;
   @Input() disabled?: boolean;
   @Input() name?: string;
   @Input() value?: string;
   @Input() class?: string;
-  @Input() onChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useCheckbox({

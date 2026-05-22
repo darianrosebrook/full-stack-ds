@@ -683,21 +683,7 @@ function generateComponent(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
-function isEventHandler(rawType: string): boolean {
-  return (
-    rawType.includes("EventHandler") ||
-    rawType.includes("=> void") ||
-    rawType.includes("=> never")
-  );
-}
-
 function generateInputProp(p: ResolvedPropIR): string | null {
-  if (isEventHandler(p.type)) {
-    // Angular uses @Output() EventEmitter for events, not @Input().
-    // Omit event-handler props from the generated scaffold; authors add them
-    // in the @custom:trailing region.
-    return null;
-  }
   const type = angularType(p.type);
   const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
   // Required props with no default need a definite-assignment assertion to
@@ -708,6 +694,15 @@ function generateInputProp(p: ResolvedPropIR): string | null {
   } else {
     modifier = "?:";
   }
+  // Function-typed props (callbacks like `onDismiss?: () => void`) are
+  // consumer-callback inputs, NOT @Output() EventEmitters. Angular's
+  // canonical event-source is the EventEmitter, but here the contract
+  // declares a prop the consumer *passes in* — the component invokes
+  // it on click. The dom-tree's events field references these via
+  // `(click)="onDismiss && onDismiss()"`, so the @Input must exist or
+  // the template fails ngc strictTemplates. Pre-IR-DOM-BINDING-
+  // CAPABILITY-01 these were silently dropped and the rail caught the
+  // ensuing template error.
   return `  @Input() ${p.safeName}${modifier} ${type}${defaultPart};`;
 }
 

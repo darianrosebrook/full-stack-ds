@@ -1,6 +1,6 @@
 // @generated:start imports
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
 
@@ -21,22 +21,36 @@ export type AlertLevel = "inline" | "section" | "page";
 @Component({
   selector: "fsds-alert",
   standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack role="alert" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  imports: [NgClass, NgIf],
+  template: `<div [ngClass]="classes()" role="alert">
+  <ng-container *ngIf="icon">
+    <span [ngClass]="'alert__icon'" aria-hidden="true">
+      {{ icon }}
+    </span>
+  </ng-container>
+  <ng-content />
+  <ng-container *ngIf="dismissible">
+    <button [ngClass]="'alert__dismiss'" type="button" (click)="onDismiss && onDismiss()" [attr.aria-label]="dismissLabel"></button>
+  </ng-container>
+</div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertComponent {
   @Input() intent?: AlertIntent;
   @Input() level?: AlertLevel;
   @Input() dismissible?: boolean;
+  @Input() onDismiss?: () => void;
   @Input() dismissLabel?: string = "Dismiss";
   @Input() icon?: unknown;
+  @Input() class?: string;
 
   classes(): string {
-    const parts: Array<string | null | undefined> = ["alert"];
-    if (this.intent) parts.push(`alert--${this.intent}`);
-    if (this.level) parts.push(`alert--${this.level}`);
-    return parts.filter(Boolean).join(" ");
+    return [
+      "alert",
+      this.intent ? `alert--${this.intent}` : null,
+      this.level ? `alert--${this.level}` : null,
+      this.class,
+    ].filter(Boolean).join(" ");
   }
 }
 

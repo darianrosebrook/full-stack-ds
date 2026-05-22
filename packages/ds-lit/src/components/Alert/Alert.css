@@ -17,11 +17,42 @@
   font-weight: var(--fsds-alert-text-weight);
 }
 
+.alert__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .alert__body {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: var(--fsds-alert-spacing-gap);
+}
+
+.alert__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin-left: auto;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+}
+
+.alert__dismiss:hover {
+  opacity: 0.7;
+}
+
+.alert__dismiss:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 .alert__title {

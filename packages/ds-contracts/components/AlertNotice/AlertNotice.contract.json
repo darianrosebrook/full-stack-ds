@@ -10,7 +10,42 @@
       "body",
       "title",
       "dismiss"
-    ]
+    ],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "attrs": {
+        "role": "alert"
+      },
+      "children": [
+        {
+          "tag": "span",
+          "part": "icon",
+          "if": "icon",
+          "attrs": {
+            "aria-hidden": "true"
+          },
+          "content": "prop:icon"
+        },
+        {
+          "tag": "children"
+        },
+        {
+          "tag": "button",
+          "part": "dismiss",
+          "if": "dismissible",
+          "attrs": {
+            "type": "button"
+          },
+          "bindings": {
+            "aria-label": "prop:dismissLabel"
+          },
+          "events": {
+            "click": "prop:onDismiss"
+          }
+        }
+      ]
+    }
   },
   "props": {
     "styled": {

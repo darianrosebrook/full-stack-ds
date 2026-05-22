@@ -1,8 +1,7 @@
 // @generated:start imports
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
-import { StackElement as _Stack } from '../../primitives/index.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -63,11 +62,42 @@ export class AlertNoticeElement extends LitElement {
       font-weight: var(--fsds-alert-notice-text-weight);
     }
     
+    .alert-notice__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
     .alert-notice__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-notice-spacing-gap);
+    }
+    
+    .alert-notice__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+    }
+    
+    .alert-notice__dismiss:hover {
+      opacity: 0.7;
+    }
+    
+    .alert-notice__dismiss:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
     
     .alert-notice__title {
@@ -101,26 +131,31 @@ export class AlertNoticeElement extends LitElement {
     }
   `;
 
-  @property({ type: String })
-  status?: AlertNoticeStatus;
-  @property({ type: String })
-  level?: AlertNoticeLevel;
-  @property({ type: Boolean })
-  dismissible?: boolean;
-  @property({ attribute: false })
-  onDismiss?: () => void;
-  @property({ type: String })
-  dismissLabel?: string = "Dismiss";
-  @property({ attribute: false })
-  icon?: unknown;
+  @property({ type: String }) status?: AlertNoticeStatus;
+  @property({ type: String }) level?: AlertNoticeLevel;
+  @property({ type: Boolean }) dismissible?: boolean;
+  @property({ attribute: false }) onDismiss?: () => void;
+  @property({ type: String }) dismissLabel?: string = "Dismiss";
+  @property({ attribute: false }) icon?: unknown;
+
+  private computeClasses(): string {
+    return [
+      "alert-notice",
+      this.status ? `alert-notice--${this.status}` : null,
+      this.level ? `alert-notice--${this.level}` : null,
+    ].filter(Boolean).join(" ");
+  }
 
   override render() {
-    const classes = {
-      'alert-notice': true,
-      [`alert-notice--${this.status}`]: !!this.status,
-      [`alert-notice--${this.level}`]: !!this.level,
-    };
-    return html`<fsds-stack role="alert" class=${classMap(classes)}><slot></slot></fsds-stack>`;
+    return html`<div class="${this.computeClasses()}" role="alert">
+  ${this.icon ? html`
+  <span class=${'alert-notice__icon'} aria-hidden="true">${this.icon}</span>
+  ` : nothing}
+  <slot></slot>
+  ${this.dismissible ? html`
+  <button class=${'alert-notice__dismiss'} type="button" @click=${this.onDismiss} aria-label=${ifDefined(this.dismissLabel)}></button>
+  ` : nothing}
+</div>`;
   }
 }
 
@@ -170,11 +205,42 @@ export class AlertNoticeBodyElement extends LitElement {
       font-weight: var(--fsds-alert-notice-text-weight);
     }
     
+    .alert-notice__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
     .alert-notice__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-notice-spacing-gap);
+    }
+    
+    .alert-notice__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+    }
+    
+    .alert-notice__dismiss:hover {
+      opacity: 0.7;
+    }
+    
+    .alert-notice__dismiss:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
     
     .alert-notice__title {
@@ -259,11 +325,42 @@ export class AlertNoticeTitleElement extends LitElement {
       font-weight: var(--fsds-alert-notice-text-weight);
     }
     
+    .alert-notice__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
     .alert-notice__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-notice-spacing-gap);
+    }
+    
+    .alert-notice__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+    }
+    
+    .alert-notice__dismiss:hover {
+      opacity: 0.7;
+    }
+    
+    .alert-notice__dismiss:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
     
     .alert-notice__title {

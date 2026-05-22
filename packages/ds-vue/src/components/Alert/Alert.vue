@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -51,7 +50,11 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <Stack role="alert" :data-testid="props['data-testid']" :class="classNames">
+  <div :class="classNames" role="alert" :data-testid="props['data-testid']">
+    <span v-if="props.icon" :class="'alert__icon'" aria-hidden="true">
+      {{ props.icon }}
+    </span>
     <slot />
-  </Stack>
+    <button v-if="props.dismissible" :class="'alert__dismiss'" type="button" @click="props.onDismiss?.()" :aria-label="props.dismissLabel"></button>
+  </div>
 </template>

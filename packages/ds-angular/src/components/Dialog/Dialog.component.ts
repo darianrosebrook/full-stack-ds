@@ -46,6 +46,7 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 export class DialogComponent {
   @Input() open?: boolean;
   @Input() defaultOpen?: boolean;
+  @Input() onOpenChange?: (open: boolean) => void;
   @Input() modal?: boolean = true;
   @Input() size?: DialogSize = "md";
   @Input() dismissible?: boolean = true;
@@ -54,7 +55,6 @@ export class DialogComponent {
   @Input() initialFocus?: string;
   @Input() returnFocus?: string;
   @Input() class?: string;
-  @Input() onOpenChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useDialog({

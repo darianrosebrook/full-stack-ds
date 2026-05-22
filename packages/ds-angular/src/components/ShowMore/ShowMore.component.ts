@@ -35,11 +35,11 @@ import { useShowMore } from "./useShowMore.js";
 export class ShowMoreComponent {
   @Input() expanded?: boolean;
   @Input() defaultExpanded?: boolean;
+  @Input() onExpandedChange?: (expanded: boolean) => void;
   @Input() maxLines?: number = 3;
   @Input() showMoreLabel?: string = "Show more";
   @Input() showLessLabel?: string = "Show less";
   @Input() class?: string;
-  @Input() onExpandedChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useShowMore({

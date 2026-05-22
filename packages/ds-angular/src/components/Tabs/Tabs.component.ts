@@ -54,6 +54,7 @@ export type TabsActivationMode = "automatic" | "manual";
 export class TabsComponent implements OnChanges {
   @Input() value?: string;
   @Input() defaultValue?: string;
+  @Input() onValueChange?: (value: string) => void;
   @Input() orientation?: TabsOrientation = "horizontal";
   @Input() appearance?: TabsAppearance = "underline";
   @Input() activationMode?: TabsActivationMode = "automatic";
@@ -61,7 +62,6 @@ export class TabsComponent implements OnChanges {
   @Input() unmountInactive?: boolean;
   @Input() idBase?: string;
   @Input() class?: string;
-  @Input() onValueChange?: (value: string) => void;
 
   // Signal mirrors of @Input values — reactive so computed() and child
   // components can track them as signal dependencies.

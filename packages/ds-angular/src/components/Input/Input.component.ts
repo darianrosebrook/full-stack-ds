@@ -28,13 +28,13 @@ export class InputComponent {
   @Input() type?: string;
   @Input() value?: string;
   @Input() defaultValue?: string;
+  @Input() onChange?: (value: string) => void;
   @Input() placeholder?: string;
   @Input() disabled?: boolean;
   @Input() invalid?: boolean;
   @Input() required?: boolean;
   @Input() name?: string;
   @Input() class?: string;
-  @Input() onChange?: (value: string) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useInput({

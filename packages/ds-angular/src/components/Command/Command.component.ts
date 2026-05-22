@@ -56,16 +56,16 @@ import { useCommand } from "./useCommand.js";
 export class CommandComponent {
   @Input() open?: boolean;
   @Input() defaultOpen?: boolean;
+  @Input() onOpenChange?: (open: boolean) => void;
   @Input() search?: string;
   @Input() defaultSearch?: string;
+  @Input() onSearchChange?: (value: string) => void;
   @Input() placeholder?: string = "Search...";
   @Input() emptyMessage?: string = "No results found.";
   @Input() label?: string = "Command palette";
   @Input() shouldFilter?: boolean = true;
   @Input() filter?: ((value: string, search: string) => number) | undefined;
   @Input() class?: string;
-  @Input() onOpenChange?: (value: boolean) => void;
-  @Input() onSearchChange?: (value: string) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useCommand({

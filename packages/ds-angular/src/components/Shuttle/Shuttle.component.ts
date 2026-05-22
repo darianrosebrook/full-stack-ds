@@ -28,6 +28,7 @@ export class ShuttleComponent {
   @Input() ariaLabel?: string;
   @Input() value?: string[];
   @Input() defaultValue?: string[];
+  @Input() onValueChange?: (value: string[]) => void;
 
   classes(): string {
     const parts: Array<string | null | undefined> = ["shuttle"];

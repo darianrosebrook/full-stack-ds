@@ -27,12 +27,12 @@ export type ToggleSwitchSize = "small" | "medium" | "large";
 export class ToggleSwitchComponent {
   @Input() checked?: boolean;
   @Input() defaultChecked?: boolean;
+  @Input() onChange?: (checked: boolean) => void;
   @Input() size?: ToggleSwitchSize = "medium";
   @Input() disabled?: boolean;
   @Input() ariaLabel?: string;
   @Input() ariaDescribedby?: string;
   @Input() class?: string;
-  @Input() onChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useToggleSwitch({

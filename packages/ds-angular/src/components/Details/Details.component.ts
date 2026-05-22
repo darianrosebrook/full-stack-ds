@@ -44,11 +44,11 @@ export class DetailsComponent {
   @Input() summary!: string;
   @Input() open?: boolean;
   @Input() defaultOpen?: boolean;
+  @Input() onOpenChange?: (open: boolean) => void;
   @Input() disabled?: boolean;
   @Input() variant?: DetailsVariant;
   @Input() icon?: DetailsIcon;
   @Input() class?: string;
-  @Input() onOpenChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useDetails({

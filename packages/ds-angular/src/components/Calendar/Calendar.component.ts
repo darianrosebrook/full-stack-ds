@@ -43,6 +43,7 @@ export type CalendarMode = "single" | "range";
 export class CalendarComponent {
   @Input() value?: Date | Date[] | null;
   @Input() defaultValue?: Date | Date[] | null;
+  @Input() onChange?: (value: Date | Date[] | null) => void;
   @Input() mode?: CalendarMode = "single";
   @Input() disabled?: boolean;
   @Input() minDate?: Date;
@@ -50,7 +51,6 @@ export class CalendarComponent {
   @Input() locale?: string = "en-US";
   @Input() shouldCloseOnSelect?: boolean = true;
   @Input() class?: string;
-  @Input() onChange?: (value: Date | Date[] | null) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useCalendar({

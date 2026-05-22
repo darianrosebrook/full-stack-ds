@@ -14,11 +14,38 @@
     "font-size": { "resolvesTo": "alert.text.size" },
     "font-weight": { "resolvesTo": "alert.text.weight" }
   },
+  "icon": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] }
+  },
   "body": {
     "flex": { "literal": "1 1 auto", "platforms": ["web"] },
     "display": { "literal": "flex", "platforms": ["web"] },
     "flex-direction": { "literal": "column", "platforms": ["web"] },
     "gap": { "resolvesTo": "alert.spacing.gap" }
+  },
+  "dismiss": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "background": { "literal": "transparent", "platforms": ["web"] },
+    "border": { "literal": "0", "platforms": ["web"] },
+    "padding": { "literal": "0", "platforms": ["web"] },
+    "margin-left": { "literal": "auto", "platforms": ["web"] },
+    "color": { "literal": "inherit", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "font": { "literal": "inherit", "platforms": ["web"] },
+    "line-height": { "literal": "1", "platforms": ["web"] }
+  },
+  ".alert__dismiss:hover": {
+    "opacity": { "literal": "0.7", "platforms": ["web"] }
+  },
+  ".alert__dismiss:focus-visible": {
+    "outline": { "literal": "2px solid currentColor", "platforms": ["web"] },
+    "outline-offset": { "literal": "2px", "platforms": ["web"] }
   },
   "title": {
     "margin": { "literal": "0", "platforms": ["web"] },

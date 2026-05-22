@@ -49,8 +49,10 @@ export class SelectComponent {
   @Input() options!: SelectOption[];
   @Input() value?: string | string[];
   @Input() defaultValue?: string | string[];
+  @Input() onChange?: (value: string | string[]) => void;
   @Input() open?: boolean;
   @Input() defaultOpen?: boolean;
+  @Input() onOpenChange?: (open: boolean) => void;
   @Input() multiple?: boolean;
   @Input() disabled?: boolean;
   @Input() size?: SelectSize = "md";
@@ -58,8 +60,6 @@ export class SelectComponent {
   @Input() searchable?: boolean;
   @Input() empty?: boolean;
   @Input() class?: string;
-  @Input() onChange?: (value: string | string[]) => void;
-  @Input() onOpenChange?: (value: boolean) => void;
   @Input() position?: string;
 
   private destroyRef = inject(DestroyRef);

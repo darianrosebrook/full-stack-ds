@@ -43,10 +43,10 @@ export class AccordionComponent {
   @Input() type?: AccordionType = "single";
   @Input() value?: string | string[];
   @Input() defaultValue?: string | string[];
+  @Input() onValueChange?: (value: string | string[]) => void;
   @Input() collapsible?: boolean = false;
   @Input() disabled?: boolean;
   @Input() class?: string;
-  @Input() onValueChange?: (value: string | string[]) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useAccordion({

@@ -12,43 +12,51 @@ describe("Alert — unit", () => {
   });
 
   it("applies the base CSS class", async () => {
-    const { stack } = await renderElement("fsds-alert");
-    expect(classTokens(stack)).toContain("alert");
+    const { element } = await renderElement("fsds-alert");
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert");
   });
 
   it("applies intent=info variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "intent": "info" });
-    expect(classTokens(stack)).toContain("alert--info");
+    const { element } = await renderElement("fsds-alert", { "intent": "info" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--info");
   });
 
   it("applies intent=success variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "intent": "success" });
-    expect(classTokens(stack)).toContain("alert--success");
+    const { element } = await renderElement("fsds-alert", { "intent": "success" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--success");
   });
 
   it("applies intent=warning variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "intent": "warning" });
-    expect(classTokens(stack)).toContain("alert--warning");
+    const { element } = await renderElement("fsds-alert", { "intent": "warning" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--warning");
   });
 
   it("applies intent=danger variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "intent": "danger" });
-    expect(classTokens(stack)).toContain("alert--danger");
+    const { element } = await renderElement("fsds-alert", { "intent": "danger" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--danger");
   });
 
   it("applies level=inline variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "level": "inline" });
-    expect(classTokens(stack)).toContain("alert--inline");
+    const { element } = await renderElement("fsds-alert", { "level": "inline" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--inline");
   });
 
   it("applies level=section variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "level": "section" });
-    expect(classTokens(stack)).toContain("alert--section");
+    const { element } = await renderElement("fsds-alert", { "level": "section" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--section");
   });
 
   it("applies level=page variant class", async () => {
-    const { stack } = await renderElement("fsds-alert", { "level": "page" });
-    expect(classTokens(stack)).toContain("alert--page");
+    const { element } = await renderElement("fsds-alert", { "level": "page" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("alert--page");
   });
 });
 

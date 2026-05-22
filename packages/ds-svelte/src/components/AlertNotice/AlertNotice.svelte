@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+
 // @generated:end
 
 // @custom:start imports
@@ -47,6 +47,12 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<Stack role="alert" class={classes}>
+<div class={classes} role="alert">
+  {#if icon}
+  <span class={'alert-notice__icon'} aria-hidden="true">{icon}</span>
+  {/if}
   {@render children?.()}
-</Stack>
+  {#if dismissible}
+  <button class={'alert-notice__dismiss'} type="button" onclick={onDismiss} aria-label={dismissLabel}></button>
+  {/if}
+</div>

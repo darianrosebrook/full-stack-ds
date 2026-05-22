@@ -49,13 +49,13 @@ export class TextFieldComponent {
   @Input() type?: string;
   @Input() value?: string;
   @Input() defaultValue?: string;
+  @Input() onChange?: (value: string) => void;
   @Input() invalid?: boolean;
   @Input() disabled?: boolean;
   @Input() required?: boolean;
   @Input() name?: string;
   @Input() ariaDescribedby?: string;
   @Input() class?: string;
-  @Input() onChange?: (value: string) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useTextField({

@@ -32,12 +32,12 @@ export type SwitchSize = "sm" | "md" | "lg";
 export class SwitchComponent {
   @Input() checked?: boolean;
   @Input() defaultChecked?: boolean;
+  @Input() onChange?: (checked: boolean) => void;
   @Input() size?: SwitchSize = "md";
   @Input() disabled?: boolean;
   @Input() name?: string;
   @Input() value?: string;
   @Input() class?: string;
-  @Input() onChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useSwitch({

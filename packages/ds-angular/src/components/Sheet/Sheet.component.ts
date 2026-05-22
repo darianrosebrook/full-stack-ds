@@ -49,10 +49,10 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
 export class SheetComponent {
   @Input() open?: boolean;
   @Input() defaultOpen?: boolean;
+  @Input() onOpenChange?: (open: boolean) => void;
   @Input() side?: SheetSide = "right";
   @Input() modal?: boolean = true;
   @Input() class?: string;
-  @Input() onOpenChange?: (value: boolean) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useSheet({

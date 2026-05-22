@@ -33,12 +33,13 @@ export class OTPComponent {
   @Input() length?: number = 6;
   @Input() value?: string;
   @Input() defaultValue?: string;
+  @Input() onChange?: (value: string) => void;
+  @Input() onComplete?: (value: string) => void;
   @Input() mode?: OTPMode = "numeric";
   @Input() disabled?: boolean;
   @Input() readOnly?: boolean;
   @Input() label?: string = "One-time password";
   @Input() class?: string;
-  @Input() onChange?: (value: string) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useOTP({

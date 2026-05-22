@@ -1,8 +1,7 @@
 // @generated:start imports
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
-import { StackElement as _Stack } from '../../primitives/index.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -64,11 +63,42 @@ export class AlertElement extends LitElement {
       font-weight: var(--fsds-alert-text-weight);
     }
     
+    .alert__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
     .alert__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-spacing-gap);
+    }
+    
+    .alert__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+    }
+    
+    .alert__dismiss:hover {
+      opacity: 0.7;
+    }
+    
+    .alert__dismiss:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
     
     .alert__title {
@@ -102,26 +132,31 @@ export class AlertElement extends LitElement {
     }
   `;
 
-  @property({ type: String })
-  intent?: AlertIntent;
-  @property({ type: String })
-  level?: AlertLevel;
-  @property({ type: Boolean })
-  dismissible?: boolean;
-  @property({ attribute: false })
-  onDismiss?: () => void;
-  @property({ type: String })
-  dismissLabel?: string = "Dismiss";
-  @property({ attribute: false })
-  icon?: unknown;
+  @property({ type: String }) intent?: AlertIntent;
+  @property({ type: String }) level?: AlertLevel;
+  @property({ type: Boolean }) dismissible?: boolean;
+  @property({ attribute: false }) onDismiss?: () => void;
+  @property({ type: String }) dismissLabel?: string = "Dismiss";
+  @property({ attribute: false }) icon?: unknown;
+
+  private computeClasses(): string {
+    return [
+      "alert",
+      this.intent ? `alert--${this.intent}` : null,
+      this.level ? `alert--${this.level}` : null,
+    ].filter(Boolean).join(" ");
+  }
 
   override render() {
-    const classes = {
-      'alert': true,
-      [`alert--${this.intent}`]: !!this.intent,
-      [`alert--${this.level}`]: !!this.level,
-    };
-    return html`<fsds-stack role="alert" class=${classMap(classes)}><slot></slot></fsds-stack>`;
+    return html`<div class="${this.computeClasses()}" role="alert">
+  ${this.icon ? html`
+  <span class=${'alert__icon'} aria-hidden="true">${this.icon}</span>
+  ` : nothing}
+  <slot></slot>
+  ${this.dismissible ? html`
+  <button class=${'alert__dismiss'} type="button" @click=${this.onDismiss} aria-label=${ifDefined(this.dismissLabel)}></button>
+  ` : nothing}
+</div>`;
   }
 }
 
@@ -172,11 +207,42 @@ export class AlertBodyElement extends LitElement {
       font-weight: var(--fsds-alert-text-weight);
     }
     
+    .alert__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
     .alert__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-spacing-gap);
+    }
+    
+    .alert__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+    }
+    
+    .alert__dismiss:hover {
+      opacity: 0.7;
+    }
+    
+    .alert__dismiss:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
     
     .alert__title {
@@ -262,11 +328,42 @@ export class AlertTitleElement extends LitElement {
       font-weight: var(--fsds-alert-text-weight);
     }
     
+    .alert__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
     .alert__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-spacing-gap);
+    }
+    
+    .alert__dismiss {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      margin-left: auto;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+      line-height: 1;
+    }
+    
+    .alert__dismiss:hover {
+      opacity: 0.7;
+    }
+    
+    .alert__dismiss:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
     }
     
     .alert__title {

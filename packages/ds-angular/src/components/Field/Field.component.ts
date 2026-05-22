@@ -55,6 +55,7 @@ export class FieldComponent {
   @Input() readOnly?: boolean;
   @Input() value?: unknown;
   @Input() defaultValue?: unknown;
+  @Input() onChange?: (value: unknown) => void;
   @Input() validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
   @Input() label?: unknown;
   @Input() helpText?: unknown;
@@ -62,7 +63,6 @@ export class FieldComponent {
   @Input() status?: FieldStatus;
   @Input() validating?: boolean;
   @Input() class?: string;
-  @Input() onChange?: (value: unknown) => void;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useField({
