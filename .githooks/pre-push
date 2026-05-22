@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# Pre-push gate — runs the same sequence GitHub Actions runs in
+# .github/workflows/ci.yml. The contract: if this passes locally, CI
+# should pass too. Reasoning behind every step is in that workflow file
+# (search for the matching `- name:` block).
+#
+# Install: this file is tracked in `.githooks/`. To activate it for
+# your clone, run once:
+#
+#     git config core.hooksPath .githooks
+#
+# To bypass for an emergency push (use sparingly — CI will still run):
+#
+#     git push --no-verify
+#
+# Maintenance: when .github/workflows/ci.yml changes its step list, this
+# script must change in lockstep. The header comment in CI references
+# this file by path so the dependency is discoverable.
+
+set -euo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+# Don't run when pushing tags or when no commits are being pushed
+# (e.g. `git push --tags` with up-to-date branch).
+PUSHING_COMMITS=false
+while IFS=' ' read -r _local_ref local_sha _remote_ref remote_sha; do
+  if [ -n "$local_sha" ] && [ "$local_sha" != "0000000000000000000000000000000000000000" ]; then
+    PUSHING_COMMITS=true
+    break
+  fi
+done
+
+if [ "$PUSHING_COMMITS" = false ]; then
+  echo "[pre-push] no commits to push; skipping gate"
+  exit 0
+fi
+
+echo "[pre-push] running CI-equivalent gate (mirrors .github/workflows/ci.yml)"
+echo ""
+
+# Mirror CI's `pnpm install --frozen-lockfile`. Running this catches
+# lockfile drift before we push — the same drift that produces the
+# "@jest/globals not found" class of CI failure.
+echo "[pre-push 1/7] pnpm install --frozen-lockfile"
+pnpm install --frozen-lockfile
+
+echo ""
+echo "[pre-push 2/7] pnpm run generate:validate"
+pnpm run generate:validate
+
+echo ""
+echo "[pre-push 3/7] pnpm run lint"
+pnpm run lint
+
+echo ""
+echo "[pre-push 4/7] pnpm run typecheck (root + codegen)"
+pnpm run typecheck
+
+echo ""
+echo "[pre-push 5/7] pnpm run typecheck:vue"
+pnpm run typecheck:vue
+
+echo ""
+echo "[pre-push 6/7] pnpm test (root) + pnpm run test:vue"
+pnpm test
+pnpm run test:vue
+
+echo ""
+echo "[pre-push 7/7] pnpm run governed:rail + framework-src diff check"
+pnpm run governed:rail
+
+# Mirror the CI "Generated artifacts are committed" step. If the rail
+# regenerated and produced drift, this fails — preventing a push that
+# would land out-of-sync generated files.
+if ! git diff --exit-code -- \
+    packages/ds-react/src \
+    packages/ds-vue/src \
+    packages/ds-svelte/src \
+    packages/ds-angular/src \
+    packages/ds-lit/src; then
+  echo ""
+  echo "[pre-push] generated framework src trees have uncommitted drift after"
+  echo "[pre-push] running the rail. The rail regenerates from contracts; if"
+  echo "[pre-push] the regen produced different output than what's committed,"
+  echo "[pre-push] commit the regen output before pushing. CI will reject."
+  exit 1
+fi
+
+echo ""
+echo "[pre-push] all checks passed; proceeding with push"

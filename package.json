@@ -6,6 +6,7 @@
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks 2>/dev/null || true",
     "dev": "vite",
     "build": "vite build",
     "generate": "pnpm --filter @full-stack-ds/codegen run build && node packages/ds-codegen/dist/cli.js",
