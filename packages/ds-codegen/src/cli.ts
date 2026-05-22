@@ -74,6 +74,7 @@ import {
   validateStylesSelectorCollisions,
 } from "./validation/styles.js";
 import { validateContractEmittedCss } from "./validation/contract-tokens.js";
+import { validateContractEmittedStyles } from "./validation/contract-styles.js";
 import {
   parseUsageJsonl,
   validateUsageLine as validateUsageLineCrossRefs,
@@ -449,21 +450,28 @@ function main(): void {
     //   3. validateContractEmittedCss — emitted <Component>.tokens.css per
     //      framework matches what the codegen would emit right now. Catches
     //      "edited the contract but didn't regen" / "hand-edited the CSS
-    //      out of contract truth" drift.
-    //   4. validateContractStyles — every resolvesTo in styles.json must
+    //      out of contract truth" drift on the SLOT side.
+    //   4. validateContractEmittedStyles — same byte-compare invariant on
+    //      the CONSUMER side: each framework's <Component>.css
+    //      @generated:start styles region must match the contract's
+    //      derived emit. Closes the asymmetric proof that existed after
+    //      the convergence (slot side was admission-locked; consumer side
+    //      had only indirect IR-unit-test coverage).
+    //   5. validateContractStyles — every resolvesTo in styles.json must
     //      either name a slot declared in tokens.json (component-local
     //      paths, first segment === cssPrefix) or exist in the global
     //      token graph. Catches typos and cross-contract drift.
-    //   5. validateStylesSelectorCollisions — two distinct top-level keys
+    //   6. validateStylesSelectorCollisions — two distinct top-level keys
     //      in styles.json that expand to the same CSS selector silently
     //      overwrite each other.
     // All pass results merge — one DRIFT line per failing contract
-    // with all issues from all five validators concatenated.
+    // with all issues from all validators concatenated.
     if (args.checkSemantics) {
       const driftIssues = [
         ...validateContractSemantics(result.value),
         ...validateContractTokens(result.value),
         ...validateContractEmittedCss(result.value),
+        ...validateContractEmittedStyles(result.value),
         ...validateContractStyles(result.value),
         ...validateStylesSelectorCollisions(result.value),
       ];
