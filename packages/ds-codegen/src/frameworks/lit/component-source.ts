@@ -1383,7 +1383,26 @@ function renderLitDomNode(
     attrs.push(`${key}="${value.replace(/"/g, "&quot;")}"`);
   }
 
+  // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Lit's
+  // `@eventname=` syntax. Critically, event handlers are NOT wrapped in
+  // ifDefined() — Lit invokes the bound expression once per render to
+  // produce the listener; an undefined value installs no listener
+  // (silent no-op), which is exactly the right behavior for optional
+  // callback props. ifDefined() would wrap the listener-producing
+  // function itself, breaking listener installation.
+  for (const [eventName, expr] of Object.entries(node.events)) {
+    const rendered = renderLitEvent(eventName, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   for (const [key, expr] of Object.entries(node.bindings)) {
+    // Dual-pathway dedup: parseDomNode mirrored `bindings.onX` into
+    // `events.<x>` for back-compat. Skip the legacy attribute pass.
+    if (/^on[A-Z]/.test(key)) {
+      const evt = key.slice(2).toLowerCase();
+      if (node.events[evt]) continue;
+    }
     const rendered = renderLitBinding(key, expr, ctx);
     if (rendered === null) continue;
     attrs.push(rendered);
@@ -1422,11 +1441,27 @@ function renderLitDomNode(
     renderLitDomNode(c, childCtx, indent + 2),
   );
 
+  // IR-DOM-BINDING-CAPABILITY-01: content binding lowers to a `${...}`
+  // interpolation as the element's child content. Lit's html`` tagged
+  // template invokes the expression once per render; the result is
+  // rendered as text or a nested template depending on its type
+  // (Lit's renderer handles strings, nodes, and templates uniformly).
+  // Mutually exclusive with children — parseDomNode rejects the
+  // combination. Inline (no newline) because most content bindings are
+  // short value interpolations, not block elements.
+  let contentInline: string | null = null;
+  if (node.content) {
+    const contentExpr = renderLitContent(node.content, ctx);
+    if (contentExpr !== null) contentInline = contentExpr;
+  }
+
   const tag = node.tag;
   const isVoidEl = VOID_HTML_ELEMENTS_LIT.has(tag);
 
   let body: string;
-  if (renderedChildren.length === 0 && isVoidEl) {
+  if (contentInline !== null && renderedChildren.length === 0) {
+    body = `${pad}<${tag}${formatLitAttrs(attrs)}>${contentInline}</${tag}>`;
+  } else if (renderedChildren.length === 0 && isVoidEl) {
     body = `${pad}<${tag}${formatLitAttrs(attrs)} />`;
   } else if (renderedChildren.length === 0) {
     body = `${pad}<${tag}${formatLitAttrs(attrs)}></${tag}>`;
@@ -1580,6 +1615,63 @@ function renderLitBinding(
       // Event-shaped channels pass the raw event to the consumer's
       // change handler property; consumer drives state externally.
       const eventName = mapJsxEventToLit(attr);
+      if (ch.callbackKind === "event") {
+        return `@${eventName}=\${(e: Event) => this.${ch.changeHandlerProp}?.(e)}`;
+      }
+      const handlerName = `handle${capitalizeLit(ch.name)}Change`;
+      return `@${eventName}=\${(e: Event) => this.${handlerName}(e)}`;
+    }
+  }
+}
+
+/**
+ * Lower a content binding to the bare Lit template expression that goes
+ * inside `${...}` interpolation. For `prop:X` returns `this.X`; for
+ * `literal:X` returns the JSON-quoted literal; for `channel:X.value`
+ * returns `this.behavior.X`.
+ */
+function renderLitContent(
+  expr: BindingExpression,
+  ctx: LitRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `\${this.${expr.prop}}`;
+    case "literal":
+      return expr.value.replace(/[<>&]/g, (c) =>
+        c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&amp;",
+      );
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") return `\${this.behavior.${ch.name}}`;
+      return null;
+    }
+  }
+}
+
+/**
+ * Lower an entry from `node.events` into Lit's `@eventname=${...}` form.
+ * For `prop:X` returns `@click=${this.X}` — NOT wrapped in ifDefined()
+ * because Lit installs no listener when the value is undefined, which
+ * is the correct behavior for optional callbacks. ifDefined() would
+ * apply to attribute bindings, not event bindings.
+ */
+function renderLitEvent(
+  eventName: string,
+  expr: BindingExpression,
+  ctx: LitRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `@${eventName}=\${this.${expr.prop}}`;
+    case "literal":
+      // Rare. Inline as a string handler — would need eval at runtime;
+      // emit verbatim and let the consumer catch authoring errors.
+      return `@${eventName}="${expr.value.replace(/"/g, "&quot;")}"`;
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
       if (ch.callbackKind === "event") {
         return `@${eventName}=\${(e: Event) => this.${ch.changeHandlerProp}?.(e)}`;
       }

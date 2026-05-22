@@ -189,7 +189,7 @@ export class SwitchElement extends LitElement {
 
   override render() {
     return html`<label class="${this.computeClasses()}">
-  <input class=${'switch__input'} type="checkbox" role="switch" ?checked=${this.behavior.checked} @change=${(e: Event) => this.handleCheckedChange(e)} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} />
+  <input class=${'switch__input'} type="checkbox" role="switch" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} />
   <span class=${'switch__track'} aria-hidden="true">
     <span class=${'switch__thumb'}></span>
   </span>

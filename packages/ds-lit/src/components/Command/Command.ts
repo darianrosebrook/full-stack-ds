@@ -260,7 +260,7 @@ export class CommandElement extends LitElement {
   <div class=${'command__dialog'} role="dialog" aria-modal="true" aria-label=${ifDefined(this.label)} data-fsds-channel-renders="open" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'command__inputWrapper'}>
       <span class=${'command__searchIcon'} aria-hidden="true"></span>
-      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} placeholder=${ifDefined(this.placeholder)} .value=${this.behavior.search} @change=${(e: Event) => this.handleSearchChange(e)} />
+      <input class=${'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" @change=${(e: Event) => this.handleSearchChange(e)} aria-expanded=${this.behavior.open ? 'true' : 'false'} placeholder=${ifDefined(this.placeholder)} .value=${this.behavior.search} />
     </div>
     <div class=${'command__list'} role="listbox" id="fsds-command-listbox">
       <div class=${'command__empty'}></div>

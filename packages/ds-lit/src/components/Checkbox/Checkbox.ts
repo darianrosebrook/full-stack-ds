@@ -106,7 +106,7 @@ export class CheckboxElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" ?checked=${this.behavior.checked} @change=${(e: Event) => this.handleCheckedChange(e)} ?disabled=${this.disabled ?? false} />`;
+    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} />`;
   }
 }
 

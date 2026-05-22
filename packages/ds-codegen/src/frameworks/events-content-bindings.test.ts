@@ -130,7 +130,7 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
     });
   });
 
-  describe.skip("Lit", () => {
+  describe("Lit", () => {
     const src = generateLitComponentSource(ir);
 
     it("renders content binding as `${this.prop}` interpolation, not as an attribute", () => {

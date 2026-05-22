@@ -89,7 +89,7 @@ export class ToggleSwitchElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" type="button" role="switch" aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-describedby=${ifDefined(this.ariaDescribedby)} ?disabled=${this.disabled ?? false} @click=${(e: Event) => this.handleCheckedChange(e)}></button>`;
+    return html`<button class="${this.computeClasses()}" type="button" role="switch" @click=${(e: Event) => this.handleCheckedChange(e)} aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-describedby=${ifDefined(this.ariaDescribedby)} ?disabled=${this.disabled ?? false}></button>`;
   }
 }
 
