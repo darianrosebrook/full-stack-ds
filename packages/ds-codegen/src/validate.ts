@@ -39,6 +39,13 @@ export interface ContractValidator {
    */
   validateTokens(tokens: unknown): ValidationResult<Record<string, unknown>>;
   /**
+   * Validate a component's styles sidecar (`<Name>.styles.json`). Sidecars
+   * are optional — absent file means the IR derives the component from
+   * tokens.json + anatomy alone. When present, must match
+   * `component.styles.schema.json`: selector -> property -> styleEntry.
+   */
+  validateStyles(styles: unknown): ValidationResult<Record<string, unknown>>;
+  /**
    * Validate a single JSONL line from a `<Name>.usage.jsonl` sidecar against
    * `component.usage.schema.json`. Each line is one example. Cross-component
    * ref validation (props/slots exist on target contract) lives in a separate
@@ -53,6 +60,7 @@ export interface ContractValidatorPaths {
   componentSchemaPath?: string;
   primitiveSchemaPath?: string;
   tokensSchemaPath?: string;
+  stylesSchemaPath?: string;
   usageSchemaPath?: string;
 }
 
@@ -62,6 +70,7 @@ const DEFAULT_PRIMITIVE_SCHEMA = path.join(
   "primitive.contract.schema.json",
 );
 const DEFAULT_TOKENS_SCHEMA = "component.tokens.schema.json";
+const DEFAULT_STYLES_SCHEMA = "component.styles.schema.json";
 const DEFAULT_USAGE_SCHEMA = "component.usage.schema.json";
 
 /**
@@ -84,12 +93,22 @@ export function createContractValidator(
     paths.contractsRoot,
     paths.tokensSchemaPath ?? DEFAULT_TOKENS_SCHEMA,
   );
+  const stylesSchemaPath = path.resolve(
+    paths.contractsRoot,
+    paths.stylesSchemaPath ?? DEFAULT_STYLES_SCHEMA,
+  );
   const usageSchemaPath = path.resolve(
     paths.contractsRoot,
     paths.usageSchemaPath ?? DEFAULT_USAGE_SCHEMA,
   );
 
-  for (const p of [componentSchemaPath, primitiveSchemaPath, tokensSchemaPath, usageSchemaPath]) {
+  for (const p of [
+    componentSchemaPath,
+    primitiveSchemaPath,
+    tokensSchemaPath,
+    stylesSchemaPath,
+    usageSchemaPath,
+  ]) {
     if (!fs.existsSync(p)) {
       throw new Error(`Schema file not found: ${p}`);
     }
@@ -105,6 +124,9 @@ export function createContractValidator(
   const validateTokensFn = ajv.compile(
     JSON.parse(fs.readFileSync(tokensSchemaPath, "utf-8")),
   );
+  const validateStylesFn = ajv.compile(
+    JSON.parse(fs.readFileSync(stylesSchemaPath, "utf-8")),
+  );
   const validateUsageLineFn = ajv.compile(
     JSON.parse(fs.readFileSync(usageSchemaPath, "utf-8")),
   );
@@ -118,6 +140,9 @@ export function createContractValidator(
     },
     validateTokens(tokens) {
       return runValidation<Record<string, unknown>>(validateTokensFn, tokens);
+    },
+    validateStyles(styles) {
+      return runValidation<Record<string, unknown>>(validateStylesFn, styles);
     },
     validateUsageLine(line) {
       return runValidation<Record<string, unknown>>(validateUsageLineFn, line);

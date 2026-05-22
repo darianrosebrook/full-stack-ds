@@ -37,6 +37,9 @@ import type {
   ContractSurfacePresence,
   ContractTypeDef,
   StyledPropMember,
+  StyleEntry,
+  StylePlatform,
+  TokenResolution,
   NormalizedStates,
 } from "./contract.js";
 import {
@@ -1150,291 +1153,66 @@ function buildCssBlocks(
 export function computeCssBlocks(
   contract: ComponentContract,
   cssPrefix: string,
+  options: { platformTarget?: StylePlatform } = {},
 ): CssBlockIR[] {
-  const styles = contract.styles || {};
-  const variants = contract.variants || {};
-  const flatStates = normalizeStates(contract.states).flat;
-  const tokens = contract.tokens || {};
-  const parts = getParts(contract.anatomy);
+  const platformTarget: StylePlatform = options.platformTarget ?? "web";
+  const styles = contract.styles ?? {};
+  const tokens = contract.tokens ?? {};
 
   const blocks: CssBlockIR[] = [];
   const emitted = new Set<string>();
 
-  // Variant-keyed token routing (Gap 1b fix, TOKENS-WORKSTREAM-STEP-06A-I).
-  //
-  // Contracts authored in the flat shape put variant-conditional tokens
-  // under tokens.root with keys like "switch.size.md.track.width". Naively
-  // walking tokens.root would emit those on the base `.switch` selector,
-  // which is wrong for two reasons: (a) they only apply when the size
-  // variant is the named value, and (b) emitting them on root means
-  // size=md tokens leak onto size=sm/lg instances at runtime.
-  //
-  // The partition recognizes keys of the form
-  //   <cssPrefix>.<variantName>.<variantValue>.<rest>
-  // where variantName ∈ Object.keys(contract.variants) and variantValue ∈
-  // contract.variants[variantName]. Those entries are routed away from
-  // root and into per-variant buckets, then merged into the
-  // `.<cssPrefix>--<variantValue>` block below. Entries that don't match
-  // any variant stay at root. We also surface the default variant value
-  // (per contract.props.styled.members[name=variantName].default) so
-  // its tokens emit on `.<cssPrefix>` in addition to `.<cssPrefix>--<default>`
-  // — the base selector should reflect the default-variant rendering.
-  const rootTokensRaw =
-    ((tokens as Record<string, unknown>).root as Record<string, unknown>) ?? {};
-  const { variantBuckets } = partitionVariantKeyedRootTokens({
-    rootTokens: rootTokensRaw,
+  // Root block: slot declarations from tokens.json (always; even when
+  // styles.root is absent), then styles.root consumers. Slot declarations
+  // live ONLY on root and inherit through the CSS cascade to every
+  // descendant selector that reads them via var(--<slug>).
+  const rootSelector = `.${cssPrefix}`;
+  const slotDeclarations = renderTokenSlots(tokens);
+  const rootStyleDeclarations = renderStyleBlock(
+    styles.root,
     cssPrefix,
-    variants,
-  });
-  const variantDefaults = collectVariantDefaults(contract);
-
-  // Build the set of (dim, value) pairs that count as "default" — those are
-  // the entries that should appear on the base selector in addition to
-  // their `.<prefix>--<value>` modifier.
-  const defaultVariantPairs = new Set<string>();
-  for (const [dim, defaultValue] of Object.entries(variantDefaults)) {
-    if (defaultValue) defaultVariantPairs.add(`${dim}:${defaultValue}`);
-  }
-
-  // Decide per-key whether it belongs on the root selector. Preserves
-  // tokens.root insertion order so the emitted CSS doesn't shuffle on
-  // contract authoring just because variant-keyed entries are now routed
-  // differently. A key is on root if:
-  //   - it's not variant-keyed at all, OR
-  //   - it IS variant-keyed and the third segment matches the dim's default.
-  function rootIncludes(key: string): boolean {
-    const segments = key.split(".");
-    if (segments.length < 4 || segments[0] !== cssPrefix) return true;
-    const candidateDim = segments[1];
-    const candidateValue = segments[2];
-    if (
-      !variants[candidateDim] ||
-      !variants[candidateDim].includes(candidateValue)
-    ) {
-      return true;
-    }
-    return defaultVariantPairs.has(`${candidateDim}:${candidateValue}`);
-  }
-
-  const rootMergedTokens: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(rootTokensRaw)) {
-    if (rootIncludes(key)) rootMergedTokens[key] = value;
-  }
-
-  // Track which `styles.<key>` entries have been consumed by an
-  // anatomy-derived block. Anything left over at the end is a compound /
-  // arbitrary selector authored by hand (e.g. `__header > __title`) and
-  // gets emitted as its own flat block.
-  const consumedStyleKeys = new Set<string>();
-
-  // Root block first; always emitted (even if empty) for stable ordering.
-  // Token declarations are merged BEFORE styled values so authored styles
-  // win when both target the same property (intentional: codegen output
-  // should not erase explicit design decisions in the contract's `styles`).
-  const rootTokenRender = renderTokens(rootMergedTokens);
+    platformTarget,
+  );
   blocks.push({
-    selector: `.${cssPrefix}`,
-    declarations: { ...rootTokenRender.declarations, ...(styles.root ?? {}) },
-    comments: rootTokenRender.comments,
+    selector: rootSelector,
+    declarations: { ...slotDeclarations, ...rootStyleDeclarations },
   });
-  if (styles.root) consumedStyleKeys.add("root");
+  emitted.add(rootSelector);
 
-  for (const [dim, values] of Object.entries(variants)) {
-    for (const val of values) {
-      const sel = `.${cssPrefix}--${val}`;
-      if (emitted.has(sel)) continue;
-      // Per-variant tokens authored under tokens.<dim>.<val> (legacy nested
-      // shape) merge with tokens routed from root via variant-keyed names
-      // (flat shape). Flat-shape entries win on key collision — they're
-      // the more precise authoring form.
-      const nestedVariantTokens = (
-        tokens as Record<string, Record<string, unknown>>
-      )[dim]?.[val];
-      const partitionedVariantTokens = variantBuckets[dim]?.[val];
-      const mergedVariantTokens: Record<string, unknown> = {
-        ...(nestedVariantTokens ?? {}),
-        ...(partitionedVariantTokens ?? {}),
-      };
-      const { declarations, comments } = renderTokens(mergedVariantTokens);
-      // Merge `styles.--<val>` onto the variant block (authored styles win
-      // on property collision, same doctrine as the root merge).
-      const styleKey = `--${val}`;
-      const variantStyles = (styles as Record<string, Record<string, string>>)[
-        styleKey
-      ];
-      if (variantStyles) consumedStyleKeys.add(styleKey);
-      blocks.push({
-        selector: sel,
-        declarations: { ...declarations, ...(variantStyles ?? {}) },
-        comments,
-      });
-      emitted.add(sel);
-    }
-  }
-
-  for (const state of flatStates) {
-    if (state === "default") continue;
-    const pseudo = DERIVABLE_STATE_TO_PSEUDO[state];
-    const sel = pseudo
-      ? `.${cssPrefix}${pseudo}`
-      : `.${cssPrefix}--${state}`;
-    if (emitted.has(sel)) continue;
-    // Allow `tokens.<state>` to populate declarations on the state selector
-    // (mirrors how variants and parts pick up their own token block).
-    const stateTokens = (tokens as Record<string, unknown>)[state];
-    const { declarations, comments } = renderTokens(stateTokens);
-    // Merge `styles.<state>` (authored styles win on property collision).
-    const stateStyles = (styles as Record<string, Record<string, string>>)[
-      state
-    ];
-    if (stateStyles) consumedStyleKeys.add(state);
-    blocks.push({
-      selector: sel,
-      declarations: { ...declarations, ...(stateStyles ?? {}) },
-      comments,
-    });
-    emitted.add(sel);
-  }
-
-  for (const part of parts) {
-    if (ROOT_ONLY_PARTS_FOR_CSS.has(part)) continue;
-    const sel = `.${cssPrefix}__${part}`;
-    if (emitted.has(sel)) continue;
-    const partTokens = (tokens as Record<string, unknown>)[part];
-    const { declarations, comments } = renderTokens(partTokens);
-    // Merge `styles.<part>` (authored styles win on property collision).
-    // This is the Gap 6 path: contracts can declare layout primitives
-    // (display, position, box-sizing) on a part without dropping the
-    // tokenized theming for the same part.
-    const partStyles = (styles as Record<string, Record<string, string>>)[part];
-    if (partStyles) consumedStyleKeys.add(part);
-    blocks.push({
-      selector: sel,
-      declarations: { ...declarations, ...(partStyles ?? {}) },
-      comments,
-    });
-  }
-
-  // Any styles entry that wasn't consumed by a known root / variant /
-  // state / part block is treated as a hand-authored selector key
-  // (compound BEM, pseudo-element, arbitrary attribute selector, etc.)
-  // and emitted as its own flat block.
-  for (const [key, declarations] of Object.entries(styles)) {
-    if (consumedStyleKeys.has(key)) continue;
+  // Every other selector key in styles.json gets its own block. The
+  // selector key is interpreted by expandStylesKey:
+  //   - "root"          → already handled above; skip.
+  //   - bare state name (hover, checked, disabled, ...) → pseudo-class
+  //     via DERIVABLE_STATE_TO_PSEUDO.
+  //   - "--<value>"     → BEM variant modifier.
+  //   - "__<part>"      → BEM anatomy part.
+  //   - ":..." / "[..." → pseudo-class / attribute selector on root.
+  //   - bare part name  → BEM anatomy part.
+  //   - compound (whitespace, +, >, ~, or mixed __/: selectors) →
+  //     expanded verbatim with bare parts qualified.
+  for (const [key, rawBlock] of Object.entries(styles)) {
+    if (key === "root") continue;
     const selector = expandStylesKey(key, cssPrefix);
     if (emitted.has(selector)) continue;
+    const declarations = renderStyleBlock(rawBlock, cssPrefix, platformTarget);
+    if (Object.keys(declarations).length === 0) continue;
     blocks.push({ selector, declarations });
     emitted.add(selector);
-  }
-
-  const focusSel = `.${cssPrefix}:focus-visible`;
-  if (!emitted.has(focusSel)) {
-    const focusTokens = (tokens as Record<string, unknown>).focus;
-    const { declarations, comments } = renderTokens(focusTokens);
-    if (Object.keys(declarations).length > 0 || comments.length > 0) {
-      blocks.push({ selector: focusSel, declarations, comments });
-    }
   }
 
   return blocks;
 }
 
 /**
- * Partition tokens.root entries into "stays at root" and "belongs to a
- * specific variant value." Variant-keyed entries match the pattern
- *   <cssPrefix>.<variantName>.<variantValue>.<rest>
- * where variantName ∈ Object.keys(variants) and variantValue ∈
- * variants[variantName]. Anything else (different prefix, different
- * variant name, an unknown variant value, or a key with no variant
- * segment at all) is treated as base-selector content and stays at root.
- *
- * The split is order-independent — partitioning N tokens.root entries
- * is O(N) and never reorders within a bucket, so downstream rendering
- * stays deterministic.
- *
- * Exported for unit testing the partition logic in isolation. Production
- * use is internal to computeCssBlocks.
- */
-export function partitionVariantKeyedRootTokens(input: {
-  rootTokens: Record<string, unknown>;
-  cssPrefix: string;
-  variants: Record<string, string[]>;
-}): {
-  rootRemainder: Record<string, unknown>;
-  variantBuckets: Record<string, Record<string, Record<string, unknown>>>;
-} {
-  const { rootTokens, cssPrefix, variants } = input;
-  const rootRemainder: Record<string, unknown> = {};
-  const variantBuckets: Record<
-    string,
-    Record<string, Record<string, unknown>>
-  > = {};
-
-  // Index variant values for O(1) lookup per variant name.
-  const variantValueSets: Record<string, Set<string>> = {};
-  for (const [dim, values] of Object.entries(variants)) {
-    variantValueSets[dim] = new Set(values);
-  }
-
-  for (const [key, value] of Object.entries(rootTokens)) {
-    const segments = key.split(".");
-    // Need at minimum: <cssPrefix>.<variantName>.<variantValue>.<rest>
-    // i.e. 4 segments. Shorter keys can't be variant-keyed.
-    if (segments.length < 4 || segments[0] !== cssPrefix) {
-      rootRemainder[key] = value;
-      continue;
-    }
-    const candidateDim = segments[1];
-    const candidateValue = segments[2];
-    const valueSet = variantValueSets[candidateDim];
-    if (!valueSet || !valueSet.has(candidateValue)) {
-      // Either the second segment doesn't name a variant dimension, or
-      // the third segment isn't one of its declared values. Could still
-      // be a legit root token like "switch.color.thumb.background.default"
-      // — `color` is not a variant. Stays at root.
-      rootRemainder[key] = value;
-      continue;
-    }
-    if (!variantBuckets[candidateDim]) {
-      variantBuckets[candidateDim] = {};
-    }
-    if (!variantBuckets[candidateDim][candidateValue]) {
-      variantBuckets[candidateDim][candidateValue] = {};
-    }
-    variantBuckets[candidateDim][candidateValue][key] = value;
-  }
-
-  return { rootRemainder, variantBuckets };
-}
-
-/**
- * Collect each variant dimension's default value from the contract's
- * props bucket. The contract authoring shape is:
- *   props.styled.members[].name = "<dimension>"
- *   props.styled.members[].default = "<value>"
- * Missing defaults mean "no implicit default" and the caller treats the
- * dimension as having no preferred value for the base selector.
- */
-function collectVariantDefaults(
-  contract: ComponentContract,
-): Record<string, string | undefined> {
-  const out: Record<string, string | undefined> = {};
-  const styledMembers = contract.props?.styled?.members ?? [];
-  for (const member of styledMembers) {
-    if (member && typeof member === "object" && typeof member.name === "string") {
-      const def = (member as { default?: unknown }).default;
-      if (typeof def === "string") {
-        out[member.name] = def;
-      }
-    }
-  }
-  return out;
-}
-
-/**
  * Selector keys in `styles` use a compact authoring notation (e.g.
  * `__header`, `--primary`, `:hover`, or compound `__header > .x`). This
  * function expands those into fully-qualified selectors.
+ *
+ * Resolution order for a bare key (no prefix sigils):
+ *   1. State-name lookup in DERIVABLE_STATE_TO_PSEUDO — `hover` → `:hover`.
+ *      State semantics are universal; anatomy parts wouldn't share names
+ *      with state pseudo-classes.
+ *   2. Anatomy-part fallback — `track` → `.{prefix}__track`.
  */
 function expandStylesKey(key: string, prefix: string): string {
   const isCompound =
@@ -1449,6 +1227,8 @@ function expandStylesKey(key: string, prefix: string): string {
   if (key.includes(":") || key.includes("[")) {
     return expandComplexSelector(key, prefix);
   }
+  const statePseudo = DERIVABLE_STATE_TO_PSEUDO[key];
+  if (statePseudo) return `.${prefix}${statePseudo}`;
   return `.${prefix}__${key}`;
 }
 
@@ -1462,6 +1242,12 @@ export function expandComplexSelector(key: string, prefix: string): string {
     .map((segment) => {
       const trimmed = segment.trim();
       if (!trimmed || /^[+~>]$/.test(trimmed)) return segment;
+      // Already-qualified or root-anchored selectors emit verbatim: a
+      // segment that starts with `.`, `:`, `[`, `#`, or `*` is fully
+      // specified by the author and must not be re-qualified with the
+      // BEM prefix. This includes `:has(.x__input:checked)`, `.x__track`,
+      // `[aria-pressed="true"]`, etc.
+      if (/^[.:#*\[]/.test(trimmed)) return segment;
       if (trimmed.startsWith("--")) return `.${prefix}${trimmed}`;
       if (trimmed.startsWith("__")) return `.${prefix}${trimmed}`;
       const match = trimmed.match(/^([a-zA-Z][\w-]*)([:[\s].*)?$/);
@@ -1475,122 +1261,80 @@ export function expandComplexSelector(key: string, prefix: string): string {
 }
 
 /**
- * Render a token leaf into CSS. Two shapes:
+ * Render the flat slot pool from `<Name>.tokens.json` into root-level CSS
+ * custom-property declarations.
  *
- *   - Flat string array (legacy):
- *       ["btn.color.primary-bg", ...]
- *     emitted as commented placeholders that designers fill in by hand.
+ * For each entry in `tokens`:
+ *   - `{ resolvesTo, fallback }` → `--<tokenSlug(name)>: var(--<tokenSlug(resolvesTo)>, <fallback>);`
+ *   - `{ literal }`              → `--<tokenSlug(name)>: <literal>;`
  *
- *   - Structured map (preferred):
- *       { "btn.color.primary-bg": { resolvesTo, fallback, property, layer } }
- *     emitted as `${property}: var(--<resolvesTo>, <fallback>);` declarations
- *     when `property` is set. Entries without `property` fall through to the
- *     comment shim.
- *
- * Returns both the declarations to merge into the block and any leftover
- * comment lines that should accompany them.
+ * The result is merged onto the component's root selector — `.{cssPrefix}` —
+ * so all descendant selectors read the slots through the CSS cascade by
+ * name. Consumers (in `<Name>.styles.json`) reference the slot via
+ * `var(--<tokenSlug(name)>)`; the fallback chains automatically.
  */
-function renderTokens(
-  raw: unknown,
-): { declarations: Record<string, string>; comments: string[] } {
-  if (raw == null) return { declarations: {}, comments: [] };
-
-  if (Array.isArray(raw)) {
-    return { declarations: {}, comments: legacyTokenComments(raw) };
-  }
-
-  if (typeof raw === "object") {
-    // Two-hop indirection (TOKENS-WORKSTREAM-STEP-06A-II):
-    //   For each structured TokenResolution with a `property`, emit TWO
-    //   declarations on the same block:
-    //     1. `--fsds-{slug(name)}: var(--fsds-{slug(resolvesTo)}, {fallback});`
-    //        The component-scoped indirection slot. Fallback inside the
-    //        inner var() preserves the safety net at the slot boundary.
-    //     2. `{property}: var(--fsds-{slug(name)});`
-    //        The property consumes the slot, no second arg. A brand can
-    //        override the slot or the global token; either way the
-    //        consumer doesn't have to know.
-    //
-    // Two passes so ALL slot declarations precede the property references
-    // in CSS output. A single pass would interleave slot/property/slot/...
-    // and — for contracts that author two TokenResolutions onto the same
-    // CSS property (e.g. switch.color.track.background and
-    // switch.color.thumb.background both targeting `background-color`) —
-    // would produce confusing output where the property reference shows
-    // up textually before its slot's declaration. With two passes, the
-    // CSS reads:
-    //
-    //   .switch {
-    //     --fsds-switch-color-track-background-default: var(--fsds-..., #cecece);
-    //     --fsds-switch-color-thumb-background-default: var(--fsds-..., #ffffff);
-    //     background-color: var(--fsds-switch-color-thumb-background-default);  /* last-writer-wins */
-    //   }
-    //
-    // The last-writer-wins on `background-color` is a contract-authoring
-    // issue (two tokens fighting over one CSS property in one selector)
-    // surfaced by the validator workstream — not something renderTokens
-    // can resolve. Emitting both slots makes the loss visible: a brand
-    // override on either slot still gets to declare its preference.
-    //
-    // Entries without `property` produce only a CSS comment shim. A slot
-    // declaration with no consumer would be dead weight; we won't emit
-    // one (6a-ii falsification clause).
-    const declarations: Record<string, string> = {};
-    const comments: string[] = [];
-    const entries = Object.entries(raw as Record<string, unknown>);
-
-    // Pass 1: slot declarations and legacy comments (no property refs yet).
-    for (const [name, value] of entries) {
-      if (typeof value === "string") {
-        // Mixed-map shape: legacy entry that still needs migration.
-        comments.push(`/* --${tokenSlug(value)}: ; */`);
-        continue;
-      }
-      if (isTokenResolution(value)) {
-        const slotProp = `--${tokenSlug(name)}`;
-        const globalRef = `--${tokenSlug(value.resolvesTo)}`;
-        if (value.property) {
-          declarations[slotProp] = `var(${globalRef}, ${value.fallback})`;
-        } else {
-          // Without a `property`, slot has no consumer — keep the intent
-          // as a comment that designers can promote later.
-          comments.push(`/* ${globalRef}: ${value.fallback}; */`);
-        }
-      } else {
-        comments.push(`/* --${tokenSlug(name)}: ; */`);
-      }
+function renderTokenSlots(
+  tokens: Record<string, TokenResolution>,
+): Record<string, string> {
+  const declarations: Record<string, string> = {};
+  for (const [name, value] of Object.entries(tokens)) {
+    if (!value || typeof value !== "object") continue;
+    const slotProp = `--${tokenSlug(name)}`;
+    if (typeof value.literal === "string") {
+      declarations[slotProp] = value.literal;
+      continue;
     }
-
-    // Pass 2: property references (last-writer-wins on conflict).
-    for (const [name, value] of entries) {
-      if (
-        isTokenResolution(value) &&
-        value.property &&
-        typeof value.property === "string"
-      ) {
-        declarations[value.property] = `var(--${tokenSlug(name)})`;
-      }
+    if (typeof value.resolvesTo === "string") {
+      const globalRef = `--${tokenSlug(value.resolvesTo)}`;
+      declarations[slotProp] =
+        typeof value.fallback === "string"
+          ? `var(${globalRef}, ${value.fallback})`
+          : `var(${globalRef})`;
     }
-
-    return { declarations, comments };
   }
-
-  return { declarations: {}, comments: [] };
+  return declarations;
 }
 
-function legacyTokenComments(tokens: string[]): string[] {
-  return tokens.map((t) => `/* --${tokenSlug(t)}: ; */`);
-}
-
-function isTokenResolution(v: unknown): v is {
-  resolvesTo: string;
-  fallback: string;
-  property?: string;
-  layer?: string;
-} {
-  if (!v || typeof v !== "object") return false;
-  const o = v as Record<string, unknown>;
-  return typeof o.resolvesTo === "string" && typeof o.fallback === "string";
+/**
+ * Render one selector's property → styleEntry map into CSS declarations.
+ *
+ * For each `(property, entry)` pair:
+ *   - `entry.resolvesTo` → `<property>: var(--<tokenSlug(resolvesTo)>[, <fallback>]);`
+ *     The slot is declared on root by `renderTokenSlots`; the cascade
+ *     delivers it. Authoring a global-graph path (`core.*` / `semantic.*`)
+ *     at a styles.json consumer site is unusual — supported but flagged
+ *     by the validator (component-local slots are the doctrine).
+ *   - `entry.literal` (+ `platforms`) → `<property>: <literal>;`, emitted
+ *     only if `platformTarget` is in `platforms`. Required-array on
+ *     literals: an entry that doesn't apply to the current target is
+ *     silently dropped at this site (other emitters honor it).
+ */
+function renderStyleBlock(
+  block: Record<string, StyleEntry> | undefined,
+  _cssPrefix: string,
+  platformTarget: StylePlatform,
+): Record<string, string> {
+  if (!block) return {};
+  const declarations: Record<string, string> = {};
+  for (const [property, entry] of Object.entries(block)) {
+    if (!entry || typeof entry !== "object") continue;
+    if (typeof entry.literal === "string") {
+      const platforms = entry.platforms ?? [];
+      if (!platforms.includes(platformTarget)) continue;
+      declarations[property] = entry.literal;
+      continue;
+    }
+    if (typeof entry.resolvesTo === "string") {
+      const platforms = entry.platforms;
+      if (platforms && !platforms.includes(platformTarget)) continue;
+      const ref = `--${tokenSlug(entry.resolvesTo)}`;
+      declarations[property] =
+        typeof entry.fallback === "string"
+          ? `var(${ref}, ${entry.fallback})`
+          : `var(${ref})`;
+    }
+  }
+  return declarations;
 }
 
 /**
@@ -1612,17 +1356,6 @@ function isTokenResolution(v: unknown): v is {
 function tokenSlug(name: string): string {
   return `fsds-${name.replace(/\./g, "-")}`;
 }
-
-/**
- * Parts whose names are infrastructural (focus rings, providers, etc.) and
- * should not be emitted as standalone BEM placeholders.
- */
-const ROOT_ONLY_PARTS_FOR_CSS = new Set([
-  "root",
-  "focus",
-  "context",
-  "provider",
-]);
 
 /**
  * States that are pseudo-class-derivable in CSS. When a contract declares

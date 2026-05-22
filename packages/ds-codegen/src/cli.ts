@@ -19,6 +19,7 @@ import path from "node:path";
 import process from "node:process";
 import type { ComponentContract } from "./contract.js";
 import {
+  findComponentStyles,
   findComponentTokens,
   findComponentUsage,
   listComponentContracts,
@@ -400,10 +401,12 @@ function main(): void {
       continue;
     }
 
-    // Attach tokens from the sidecar (if any) onto the in-memory contract
-    // before IR/emit. Downstream code reads `contract.tokens` as it always
-    // has; the sidecar is purely a source-of-truth split. A missing sidecar
-    // means this component has no tokens — that is supported, not an error.
+    // Attach tokens + styles from the sidecars (if any) onto the in-memory
+    // contract before IR/emit. Downstream code reads `contract.tokens` and
+    // `contract.styles` as if they came from the contract directly; the
+    // sidecars are purely a source-of-truth split. A missing sidecar means
+    // this component has no tokens / no styles — that is supported, not an
+    // error.
     const tokensEntry = findComponentTokens(entry);
     if (tokensEntry) {
       const tokensRaw = JSON.parse(fs.readFileSync(tokensEntry.absPath, "utf-8"));
@@ -415,6 +418,18 @@ function main(): void {
         continue;
       }
       (result.value as { tokens?: unknown }).tokens = tokensResult.value;
+    }
+    const stylesEntry = findComponentStyles(entry);
+    if (stylesEntry) {
+      const stylesRaw = JSON.parse(fs.readFileSync(stylesEntry.absPath, "utf-8"));
+      const stylesResult = validator.validateStyles(stylesRaw);
+      if (!stylesResult.ok) {
+        console.error(`INVALID  ${stylesEntry.filename}`);
+        console.error(formatIssues(stylesResult.issues));
+        hasErrors = true;
+        continue;
+      }
+      (result.value as { styles?: unknown }).styles = stylesResult.value;
     }
 
     // Beyond-schema semantic checks run only when explicitly
@@ -1192,17 +1207,18 @@ function startWatch(
     (event, filename) => {
       if (!filename) return;
       if (event !== "change" && event !== "rename") return;
-      // With recursive:true, filename arrives as e.g. "Button/Button.contract.json"
-      // or "Button/Button.tokens.json". Accept either; reject editor temp files
-      // and stray top-level files. Coalesce both into a single component-keyed
-      // debounce entry so a contract+sidecar edit in one save triggers a single
-      // re-emit.
+      // With recursive:true, filename arrives as e.g. "Button/Button.contract.json",
+      // "Button/Button.tokens.json", or "Button/Button.styles.json". Accept
+      // any of the three; reject editor temp files and stray top-level files.
+      // Coalesce all three into a single component-keyed debounce entry so a
+      // contract+sidecar edit in one save triggers a single re-emit.
       const parts = filename.split(path.sep);
       if (parts.length !== 2) return;
       const [folder, leaf] = parts;
       const isContract = leaf === `${folder}.contract.json`;
       const isTokens = leaf === `${folder}.tokens.json`;
-      if (!isContract && !isTokens) return;
+      const isStyles = leaf === `${folder}.styles.json`;
+      if (!isContract && !isTokens && !isStyles) return;
 
       const componentName = folder;
       const existing = debounce.get(componentName);
@@ -1257,28 +1273,48 @@ function watchHandleChange(
     return;
   }
 
-  // Attach tokens from sibling sidecar — missing file means zero tokens.
-  const tokensPath = path.join(
-    CONTRACTS_DIR,
-    "components",
-    componentName,
-    `${componentName}.tokens.json`,
-  );
-  if (fs.existsSync(tokensPath)) {
+  // Attach tokens + styles from sibling sidecars — missing file means
+  // zero tokens / zero styles. Routes through findComponentTokens /
+  // findComponentStyles for symmetry with the main loop.
+  const watchEntry: DiscoveredContract = {
+    name: componentName,
+    filename: contractFilename,
+    relPath: path.join("components", componentName, contractFilename),
+    absPath: filePath,
+  };
+  const tokensEntry = findComponentTokens(watchEntry);
+  if (tokensEntry) {
     let tokensRaw: unknown;
     try {
-      tokensRaw = JSON.parse(fs.readFileSync(tokensPath, "utf-8"));
+      tokensRaw = JSON.parse(fs.readFileSync(tokensEntry.absPath, "utf-8"));
     } catch {
-      console.error(`[watch] JSON parse error in ${componentName}.tokens.json — skipping.`);
+      console.error(`[watch] JSON parse error in ${tokensEntry.filename} — skipping.`);
       return;
     }
     const tokensResult = validator.validateTokens(tokensRaw);
     if (!tokensResult.ok) {
-      console.error(`[watch] INVALID ${componentName}.tokens.json:`);
+      console.error(`[watch] INVALID ${tokensEntry.filename}:`);
       console.error(formatIssues(tokensResult.issues));
       return;
     }
     (result.value as { tokens?: unknown }).tokens = tokensResult.value;
+  }
+  const stylesEntry = findComponentStyles(watchEntry);
+  if (stylesEntry) {
+    let stylesRaw: unknown;
+    try {
+      stylesRaw = JSON.parse(fs.readFileSync(stylesEntry.absPath, "utf-8"));
+    } catch {
+      console.error(`[watch] JSON parse error in ${stylesEntry.filename} — skipping.`);
+      return;
+    }
+    const stylesResult = validator.validateStyles(stylesRaw);
+    if (!stylesResult.ok) {
+      console.error(`[watch] INVALID ${stylesEntry.filename}:`);
+      console.error(formatIssues(stylesResult.issues));
+      return;
+    }
+    (result.value as { styles?: unknown }).styles = stylesResult.value;
   }
 
   const ir = buildComponentIR(result.value);

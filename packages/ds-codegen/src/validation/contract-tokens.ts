@@ -60,24 +60,22 @@ function resolveRepoRoot(): string {
 }
 
 /**
- * Determine whether a contract authors any structured TokenResolution.
- * Used to decide whether a missing `<Component>.tokens.css` is a failure
- * (contract authored structured tokens; CSS must exist) vs. a no-op
- * (contract has no structured tokens, nothing to validate against).
+ * Determine whether a contract authors any slot resolution that will emit
+ * a `var(--global, fallback)` declaration on the root selector — i.e., at
+ * least one slot with `resolvesTo`. Used to decide whether a missing
+ * `<Component>.tokens.css` is a failure (slot pool is non-empty; CSS must
+ * exist) vs. a no-op (no slots → nothing to drift against).
  */
 function hasStructuredTokens(contract: ComponentContract): boolean {
-  function walk(node: unknown): boolean {
-    if (!node || typeof node !== "object" || Array.isArray(node)) return false;
-    const obj = node as Record<string, unknown>;
-    if (typeof obj.resolvesTo === "string" && typeof obj.fallback === "string") {
+  const tokens = contract.tokens;
+  if (!tokens || typeof tokens !== "object") return false;
+  for (const entry of Object.values(tokens)) {
+    if (!entry || typeof entry !== "object") continue;
+    if (typeof (entry as { resolvesTo?: unknown }).resolvesTo === "string") {
       return true;
     }
-    for (const value of Object.values(obj)) {
-      if (walk(value)) return true;
-    }
-    return false;
   }
-  return walk(contract.tokens);
+  return false;
 }
 
 /**

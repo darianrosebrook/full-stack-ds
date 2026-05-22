@@ -130,33 +130,50 @@ export interface ContractDomNode {
 }
 
 /**
- * Structured token value. Required for codegen to emit `var(--<name>, <fallback>)`
- * declarations rather than blank comment placeholders.
+ * Resolution for a single slot in `<Name>.tokens.json` — either a graph-backed
+ * `resolvesTo` + `fallback` pair, or an intentional `literal` hardcode.
+ *
+ * No `property` field: slots are pure indirection; which CSS property reads
+ * which slot is the concern of `<Name>.styles.json`.
  */
 export interface TokenResolution {
-  /** Semantic token name without the leading `--` (e.g. `btn.color.primary-bg`). */
-  resolvesTo: string;
-  /** Hardcoded fallback value used when the custom property is unset. */
-  fallback: string;
-  /** CSS property this token binds to (e.g. `background-color`, `padding`). */
-  property?: string;
+  /** Dotted path into the global token graph (e.g. `semantic.color.background.tertiary`). */
+  resolvesTo?: string;
+  /** Hardcoded fallback used as the second argument to `var()`. */
+  fallback?: string;
+  /** Intentional literal value, mutually exclusive with `resolvesTo`+`fallback`. */
+  literal?: string;
   /** Token tier; defaults to `semantic`. */
   layer?: 'core' | 'semantic' | 'brand' | 'density';
 }
 
 /**
- * A token leaf is either a flat list of names (legacy) or a structured map.
- * In the structured form each value is either a `TokenResolution` (drives a
- * real `var()` declaration) or a plain string (legacy entry, still rendered
- * as a comment shim). Mixed maps are allowed so partial migration doesn't
- * force whole leaves to stay flat.
+ * Targets a styleEntry literal can render to. Defaults to all three when
+ * omitted on a `resolvesTo` entry; required on `literal` entries.
  */
-export type TokenLeaf =
-  | string[]
-  | Record<string, TokenResolution | string>;
+export type StylePlatform = 'web' | 'ios' | 'android';
 
-/** Recursive token tree: a leaf, or a map keyed by part/variant of more leaves/trees. */
-export type TokenTree = TokenLeaf | { [key: string]: TokenLeaf | TokenTree };
+/**
+ * Resolution for a single CSS declaration inside a styles.json selector
+ * block. Either references a slot / global token (`resolvesTo`) or carries
+ * an intentional literal (`literal` + `platforms`).
+ */
+export interface StyleEntry {
+  /**
+   * Dotted path. If the first segment matches the contract's `cssPrefix`,
+   * the path refers to a slot declared in this contract's tokens.json
+   * (component-local). Otherwise the path refers to the global token graph
+   * (`core.*` / `semantic.*`) — only legal when authored by the IR as a
+   * direct global passthrough; the validator catches improper uses.
+   */
+  resolvesTo?: string;
+  /** Optional consumer-site fallback. Usually unneeded; the slot's own fallback chains via the cascade. */
+  fallback?: string;
+  /** Hardcoded CSS value, emitted verbatim when the build target is in `platforms`. */
+  literal?: string;
+  /** Build targets that honor this entry. Required on `literal`, optional on `resolvesTo`. */
+  platforms?: StylePlatform[];
+}
 
 // ---------------------------------------------------------------------------
 // Behavior contract types — previously `unknown` in ComponentContract.
@@ -381,8 +398,8 @@ export interface ComponentContract {
   states?:
     | string[]
     | { dimensions: Record<string, ContractStateDimension>; description?: string };
-  tokens?: Record<string, TokenLeaf | TokenTree>;
-  styles?: Record<string, Record<string, string>>;
+  tokens?: Record<string, TokenResolution>;
+  styles?: Record<string, Record<string, StyleEntry>>;
   keyframes?: Record<string, Record<string, Record<string, string>>>;
   events?: Record<string, ContractEventSignature>;
   stateMachine?: {

@@ -88,6 +88,31 @@ export function findComponentTokens(contract: DiscoveredContract): DiscoveredTok
   };
 }
 
+export interface DiscoveredStyles {
+  filename: string;
+  relPath: string;
+  absPath: string;
+}
+
+/**
+ * Locate the styles sidecar (`<Name>.styles.json`) that sits next to a
+ * component contract. Returns `null` when no sidecar exists — supported,
+ * not an error: an absent file means the component has no consumer-side
+ * declarations beyond what the IR derives structurally (compound parts,
+ * default anatomy bindings).
+ */
+export function findComponentStyles(contract: DiscoveredContract): DiscoveredStyles | null {
+  const folder = path.dirname(contract.absPath);
+  const filename = `${contract.name}.styles.json`;
+  const absPath = path.join(folder, filename);
+  if (!fs.existsSync(absPath)) return null;
+  return {
+    filename,
+    relPath: path.join(path.dirname(contract.relPath), filename),
+    absPath,
+  };
+}
+
 export interface DiscoveredUsage {
   filename: string;
   relPath: string;

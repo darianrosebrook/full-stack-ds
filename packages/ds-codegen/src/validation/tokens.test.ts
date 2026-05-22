@@ -1,12 +1,13 @@
 /**
  * Tests for the contract → token-graph drift validator.
  *
- * The validator's correctness gate has two halves:
- *   1. Walks resolvesTo paths in arbitrary contract.tokens shapes
- *      (top-level keys → nested groups → TokenResolution leaves), AND
- *      legacy flat-array TokenLeaf and nested TokenTree shapes interleaved.
- *   2. Reports JSON-pointer-correctly when a resolvesTo doesn't exist
- *      in the supplied known-paths set.
+ * After the tokens/styles convergence (PLAN-TOKENS-STYLES-CONVERGENCE-001),
+ * `contract.tokens` is a flat slot pool: each top-level key is a slot name,
+ * each value is a `TokenResolution`. The validator's job:
+ *   1. For every entry that has a `resolvesTo`, confirm the dotted path
+ *      exists in the composed token graph.
+ *   2. Ignore `literal`-only entries (intentional hardcodes).
+ *   3. Report missing paths with JSON pointers tied to the slot name.
  *
  * Test strategy: inject a synthetic knownPaths via the test-only escape
  * hatch (`_resetKnownTokenPathsCacheForTests`) so tests don't depend on
@@ -56,41 +57,24 @@ describe("validateContractTokens — happy paths", () => {
     );
     const contract = base({
       tokens: {
-        root: {
-          "test.color": {
-            resolvesTo: "semantic.color.foreground.primary",
-            fallback: "#000",
-            property: "color",
-          },
-          "test.radius": {
-            resolvesTo: "core.shape.radius.medium",
-            fallback: "6px",
-            property: "border-radius",
-          },
+        "test.color": {
+          resolvesTo: "semantic.color.foreground.primary",
+          fallback: "#000",
+        },
+        "test.radius": {
+          resolvesTo: "core.shape.radius.medium",
+          fallback: "6px",
         },
       },
     });
     expect(validateContractTokens(contract)).toEqual([]);
   });
 
-  it("ignores legacy flat-array TokenLeaf entries (no resolvesTo)", () => {
+  it("ignores `literal`-only entries (no resolvesTo to validate)", () => {
     _resetKnownTokenPathsCacheForTests(new Set());
     const contract = base({
       tokens: {
-        root: ["test.legacy.one", "test.legacy.two"],
-      },
-    });
-    // No resolvesTo to validate → no issues, even though knownPaths is empty.
-    expect(validateContractTokens(contract)).toEqual([]);
-  });
-
-  it("ignores plain-string entries inside a TokenLeaf record (legacy shape)", () => {
-    _resetKnownTokenPathsCacheForTests(new Set());
-    const contract = base({
-      tokens: {
-        root: {
-          "test.legacy-string-entry": "test.legacy.path",
-        },
+        "test.hardcode": { literal: "0px" },
       },
     });
     expect(validateContractTokens(contract)).toEqual([]);
@@ -100,22 +84,19 @@ describe("validateContractTokens — happy paths", () => {
 describe("validateContractTokens — drift detection", () => {
   afterEach(() => _resetKnownTokenPathsCacheForTests());
 
-  it("flags a single missing resolvesTo with the correct JSON pointer", () => {
+  it("flags a single missing resolvesTo with a slot-keyed JSON pointer", () => {
     _resetKnownTokenPathsCacheForTests(new Set(["semantic.color.background.primary"]));
     const contract = base({
       tokens: {
-        root: {
-          "test.color": {
-            resolvesTo: "semantic.color.foreground.nonexistent",
-            fallback: "#000",
-            property: "color",
-          },
+        "test.color": {
+          resolvesTo: "semantic.color.foreground.nonexistent",
+          fallback: "#000",
         },
       },
     });
     const issues = validateContractTokens(contract);
     expect(issues).toHaveLength(1);
-    expect(issueAt(issues, "/tokens/root/test.color/resolvesTo")).toBe(true);
+    expect(issueAt(issues, "/tokens/test.color/resolvesTo")).toBe(true);
     expect(issues[0].message).toContain("semantic.color.foreground.nonexistent");
   });
 
@@ -123,45 +104,33 @@ describe("validateContractTokens — drift detection", () => {
     _resetKnownTokenPathsCacheForTests(new Set());
     const contract = base({
       tokens: {
-        root: {
-          "test.a": {
-            resolvesTo: "semantic.missing.one",
-            fallback: "x",
-          },
-          "test.b": {
-            resolvesTo: "semantic.missing.two",
-            fallback: "y",
-          },
-        },
+        "test.a": { resolvesTo: "semantic.missing.one", fallback: "x" },
+        "test.b": { resolvesTo: "semantic.missing.two", fallback: "y" },
       },
     });
     const issues = validateContractTokens(contract);
     expect(issues).toHaveLength(2);
-    expect(issueAt(issues, "/tokens/root/test.a/resolvesTo")).toBe(true);
-    expect(issueAt(issues, "/tokens/root/test.b/resolvesTo")).toBe(true);
+    expect(issueAt(issues, "/tokens/test.a/resolvesTo")).toBe(true);
+    expect(issueAt(issues, "/tokens/test.b/resolvesTo")).toBe(true);
   });
 
-  it("walks into nested TokenTree groups", () => {
-    _resetKnownTokenPathsCacheForTests(new Set(["semantic.foo"]));
+  it("mixes hits and misses; only the miss flags", () => {
+    _resetKnownTokenPathsCacheForTests(new Set(["semantic.color.foreground.primary"]));
     const contract = base({
       tokens: {
-        root: {
-          "test.nested": {
-            // This is a nested object that ISN'T a TokenResolution — it lacks
-            // resolvesTo, so the walker descends. Its child has a bad ref.
-            "deep.key": {
-              resolvesTo: "semantic.does.not.exist",
-              fallback: "z",
-            },
-          },
+        "test.good": {
+          resolvesTo: "semantic.color.foreground.primary",
+          fallback: "#000",
         },
-      } as unknown as ComponentContract["tokens"],
+        "test.bad": {
+          resolvesTo: "semantic.does.not.exist",
+          fallback: "#fff",
+        },
+      },
     });
     const issues = validateContractTokens(contract);
     expect(issues).toHaveLength(1);
-    expect(
-      issueAt(issues, "/tokens/root/test.nested/deep.key/resolvesTo"),
-    ).toBe(true);
+    expect(issueAt(issues, "/tokens/test.bad/resolvesTo")).toBe(true);
   });
 });
 
@@ -172,11 +141,9 @@ describe("validateContractTokens — token graph not built", () => {
     _resetKnownTokenPathsCacheForTests("missing");
     const contract = base({
       tokens: {
-        root: {
-          "test.color": {
-            resolvesTo: "semantic.color.foreground.primary",
-            fallback: "#000",
-          },
+        "test.color": {
+          resolvesTo: "semantic.color.foreground.primary",
+          fallback: "#000",
         },
       },
     });

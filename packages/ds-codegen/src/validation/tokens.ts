@@ -28,7 +28,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { ComponentContract, TokenLeaf, TokenTree } from "../contract.js";
+import type { ComponentContract } from "../contract.js";
 import type { ValidationIssue } from "../validate.js";
 
 /**
@@ -151,46 +151,23 @@ export function validateContractTokens(
   const tokens = contract.tokens;
   if (!tokens || typeof tokens !== "object") return issues;
 
-  walkTokenTree(tokens as Record<string, TokenLeaf | TokenTree>, "/tokens", known, issues);
-  return issues;
-}
-
-function walkTokenTree(
-  node: Record<string, TokenLeaf | TokenTree>,
-  pointer: string,
-  known: Set<string>,
-  issues: ValidationIssue[],
-): void {
-  for (const [key, value] of Object.entries(node)) {
-    const childPointer = `${pointer}/${escapePointerSegment(key)}`;
-    if (Array.isArray(value)) {
-      // Legacy flat-list TokenLeaf — no resolvesTo to validate. Skip.
-      continue;
-    }
-    if (!value || typeof value !== "object") continue;
-
-    const obj = value as Record<string, unknown>;
-    if (typeof obj.resolvesTo === "string") {
-      // This is a TokenResolution leaf.
-      if (!known.has(obj.resolvesTo)) {
-        issues.push({
-          pointer: `${childPointer}/resolvesTo`,
-          message:
-            `references token "${obj.resolvesTo}" which is not defined in ` +
-            `the token graph (packages/ds-tokens/generated/composed.tokens.json). ` +
-            `Add the token under packages/ds-tokens/src/ or change resolvesTo.`,
-        });
-      }
-      continue;
-    }
-    // Otherwise it's a nested TokenTree / nested TokenLeaf map — recurse.
-    walkTokenTree(
-      obj as Record<string, TokenLeaf | TokenTree>,
-      childPointer,
-      known,
-      issues,
-    );
+  // Flat slot pool: each top-level key is a slot name; each value is a
+  // tokenResolution. Only `resolvesTo` paths point at the global graph;
+  // `literal` entries are intentional hardcodes and bypass this check.
+  for (const [slotName, entry] of Object.entries(tokens)) {
+    if (!entry || typeof entry !== "object") continue;
+    const resolvesTo = (entry as { resolvesTo?: unknown }).resolvesTo;
+    if (typeof resolvesTo !== "string") continue;
+    if (known.has(resolvesTo)) continue;
+    issues.push({
+      pointer: `/tokens/${escapePointerSegment(slotName)}/resolvesTo`,
+      message:
+        `references token "${resolvesTo}" which is not defined in ` +
+        `the token graph (packages/ds-tokens/generated/composed.tokens.json). ` +
+        `Add the token under packages/ds-tokens/src/ or change resolvesTo.`,
+    });
   }
+  return issues;
 }
 
 /** RFC 6901 escape: `/` → `~1`, `~` → `~0`. */
