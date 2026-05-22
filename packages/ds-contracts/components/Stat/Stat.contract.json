@@ -1,0 +1,104 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Stat",
+  "description": "Single-value metric display with prominent typography. Use inside a labelled wrapper (a captioned figure, Card, or Stack with Text label) for at-a-glance KPIs.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root"
+    ],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Stat> component.",
+      "members": [
+        {
+          "name": "size",
+          "type": "StatSize",
+          "description": "Visual size of the metric value.",
+          "default": "md"
+        },
+        {
+          "name": "trend",
+          "type": "StatTrend",
+          "description": "Optional direction-of-change indicator. Drives the value's color via a data attribute; consumers may render a trend arrow as inline children."
+        }
+      ]
+    }
+  },
+  "types": {
+    "StatSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    "StatTrend": {
+      "kind": "union",
+      "values": [
+        "up",
+        "down",
+        "neutral"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ],
+    "trend": [
+      "up",
+      "down",
+      "neutral"
+    ]
+  },
+  "states": [
+    "default"
+  ],
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"stat\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Use Stat for at-a-glance KPIs (counts, percentages, money). For multi-dimensional data, use a Table or Card.",
+      "Set size=lg for hero stats, md for dashboard grids, sm for inline annotations.",
+      "Wrap Stat with a Text label below (e.g., <div><Stat>{n}</Stat><Text variant=overline>Components</Text></div>) — Stat itself is the value, not the captioned tile.",
+      "trend recolors the value; inline an arrow as children when direction matters: <Stat trend=up>+12%</Stat>."
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "number",
+        "ReactNode"
+      ]
+    }
+  }
+}

@@ -52,6 +52,34 @@ describe("Tabs — unit", () => {
     container.remove();
   });
 
+  it("applies appearance=underline variant class", async () => {
+    const el = document.createElement("fsds-tabs") as any;
+    el.setAttribute("appearance", "underline");
+    const container = document.createElement("div");
+    container.append(el);
+    document.body.append(container);
+    await customElements.whenDefined("fsds-tabs");
+    await el.updateComplete;
+    const root = el.shadowRoot?.firstElementChild ?? el;
+    const classes = (root?.className ?? "").split(/\s+/).filter(Boolean);
+    expect(classes).toContain("tabs--underline");
+    container.remove();
+  });
+
+  it("applies appearance=pills variant class", async () => {
+    const el = document.createElement("fsds-tabs") as any;
+    el.setAttribute("appearance", "pills");
+    const container = document.createElement("div");
+    container.append(el);
+    document.body.append(container);
+    await customElements.whenDefined("fsds-tabs");
+    await el.updateComplete;
+    const root = el.shadowRoot?.firstElementChild ?? el;
+    const classes = (root?.className ?? "").split(/\s+/).filter(Boolean);
+    expect(classes).toContain("tabs--pills");
+    container.remove();
+  });
+
   it("applies activationMode=automatic variant class", async () => {
     const el = document.createElement("fsds-tabs") as any;
     el.setAttribute("activationMode", "automatic");

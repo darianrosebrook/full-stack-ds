@@ -62,6 +62,16 @@ describe("Card — unit", () => {
     render(<Card data-testid="card" status="complexity">content</Card>);
     expect(screen.getByTestId("card")).toHaveClass("card--complexity");
   });
+
+  it("applies density=default variant class", () => {
+    render(<Card data-testid="card" density="default">content</Card>);
+    expect(screen.getByTestId("card")).toHaveClass("card--default");
+  });
+
+  it("applies density=inset variant class", () => {
+    render(<Card data-testid="card" density="inset">content</Card>);
+    expect(screen.getByTestId("card")).toHaveClass("card--inset");
+  });
 });
 
 describe("Card — accessibility", () => {

@@ -140,5 +140,36 @@
     "padding": {
       "resolvesTo": "tabs.spacing.padding"
     }
+  },
+  "--pills __list": {
+    "border-bottom-width": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "resolvesTo": "tabs.spacing.gap"
+    }
+  },
+  "--pills __tab": {
+    "border-radius": {
+      "resolvesTo": "tabs.shape.radius"
+    },
+    "padding": {
+      "resolvesTo": "tabs.spacing.pillPadding"
+    }
+  },
+  "--pills __tab--active": {
+    "background-color": {
+      "resolvesTo": "tabs.color.active-bg"
+    },
+    "color": {
+      "resolvesTo": "tabs.color.active-fg"
+    }
+  },
+  "--pills __indicator": {
+    "display": {
+      "literal": "none",
+      "platforms": ["web"]
+    }
   }
 }

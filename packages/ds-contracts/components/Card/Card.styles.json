@@ -16,6 +16,9 @@
   "hover": {
     "background-color": { "resolvesTo": "card.color.background.hover" }
   },
+  "--inset": {
+    "padding": { "resolvesTo": "card.size.padding.inset" }
+  },
   "header": {
     "display": { "literal": "flex", "platforms": ["web"] },
     "align-items": { "literal": "flex-start", "platforms": ["web"] },

@@ -21,6 +21,7 @@ export { InputComponent } from "./Input/Input.component.js";
 export { LabelComponent } from "./Label/Label.component.js";
 export { LinksComponent } from "./Links/Links.component.js";
 export { ListComponent } from "./List/List.component.js";
+export { NavListComponent, NavListItemComponent, NavListListComponent } from "./NavList/NavList.component.js";
 export { OTPComponent, OTPGroupComponent } from "./OTP/OTP.component.js";
 export { PopoverComponent } from "./Popover/Popover.component.js";
 export { PostcardComponent, PostcardContentComponent, PostcardFooterComponent, PostcardHeaderComponent } from "./Postcard/Postcard.component.js";
@@ -32,6 +33,7 @@ export { ShowMoreComponent, ShowMoreContentComponent, ShowMoreTriggerComponent }
 export { ShuttleComponent, ShuttleItemComponent } from "./Shuttle/Shuttle.component.js";
 export { SkeletonComponent } from "./Skeleton/Skeleton.component.js";
 export { SpinnerComponent } from "./Spinner/Spinner.component.js";
+export { StatComponent } from "./Stat/Stat.component.js";
 export { StatusComponent } from "./Status/Status.component.js";
 export { SwitchComponent } from "./Switch/Switch.component.js";
 export { TableComponent, TableBodyComponent, TableFooterComponent, TableHeaderComponent } from "./Table/Table.component.js";

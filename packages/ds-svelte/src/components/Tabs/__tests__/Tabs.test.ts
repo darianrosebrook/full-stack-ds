@@ -34,6 +34,16 @@ describe("Tabs — unit", () => {
     expect(container.firstElementChild?.className).toContain("tabs--vertical");
   });
 
+  it("applies appearance=underline variant class", () => {
+    const { container } = render(Tabs as unknown as Component<Record<string, unknown>>, { props: { "appearance": "underline" } });
+    expect(container.firstElementChild?.className).toContain("tabs--underline");
+  });
+
+  it("applies appearance=pills variant class", () => {
+    const { container } = render(Tabs as unknown as Component<Record<string, unknown>>, { props: { "appearance": "pills" } });
+    expect(container.firstElementChild?.className).toContain("tabs--pills");
+  });
+
   it("applies activationMode=automatic variant class", () => {
     const { container } = render(Tabs as unknown as Component<Record<string, unknown>>, { props: { "activationMode": "automatic" } });
     expect(container.firstElementChild?.className).toContain("tabs--automatic");

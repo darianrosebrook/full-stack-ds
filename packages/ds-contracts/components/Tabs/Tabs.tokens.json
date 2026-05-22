@@ -9,6 +9,10 @@
     "fallback": "8px",
     "layer": "core"
   },
+  "tabs.spacing.pillPadding": {
+    "literal": "4px 10px",
+    "layer": "core"
+  },
   "tabs.spacing.panelGap": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",

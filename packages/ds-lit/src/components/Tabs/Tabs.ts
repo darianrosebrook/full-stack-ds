@@ -15,6 +15,7 @@ import {
 
 // @generated:start types
 export type TabsOrientation = "horizontal" | "vertical";
+export type TabsAppearance = "underline" | "pills";
 export type TabsActivationMode = "automatic" | "manual";
 
 export interface TabsContextValue {
@@ -45,6 +46,7 @@ export class TabsElement extends LitElement {
     .tabs {
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
@@ -115,6 +117,25 @@ export class TabsElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--pills .tabs__list {
+      border-bottom-width: 0;
+      gap: var(--fsds-tabs-spacing-gap);
+    }
+    
+    .tabs--pills .tabs__tab {
+      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-pillPadding);
+    }
+    
+    .tabs--pills .tabs__tab--active {
+      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg);
+    }
+    
+    .tabs--pills .tabs__indicator {
+      display: none;
     }
   `;
 
@@ -191,6 +212,7 @@ export class TabsListElement extends LitElement {
     .tabs {
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
@@ -261,6 +283,25 @@ export class TabsListElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--pills .tabs__list {
+      border-bottom-width: 0;
+      gap: var(--fsds-tabs-spacing-gap);
+    }
+    
+    .tabs--pills .tabs__tab {
+      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-pillPadding);
+    }
+    
+    .tabs--pills .tabs__tab--active {
+      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg);
+    }
+    
+    .tabs--pills .tabs__indicator {
+      display: none;
     }
   `;
 
@@ -333,6 +374,7 @@ export class TabsTabElement extends LitElement {
     .tabs {
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
@@ -403,6 +445,25 @@ export class TabsTabElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--pills .tabs__list {
+      border-bottom-width: 0;
+      gap: var(--fsds-tabs-spacing-gap);
+    }
+    
+    .tabs--pills .tabs__tab {
+      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-pillPadding);
+    }
+    
+    .tabs--pills .tabs__tab--active {
+      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg);
+    }
+    
+    .tabs--pills .tabs__indicator {
+      display: none;
     }
   `;
 
@@ -465,6 +526,7 @@ export class TabsPanelElement extends LitElement {
     .tabs {
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-pillPadding: 4px 10px;
       --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
@@ -535,6 +597,25 @@ export class TabsPanelElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--pills .tabs__list {
+      border-bottom-width: 0;
+      gap: var(--fsds-tabs-spacing-gap);
+    }
+    
+    .tabs--pills .tabs__tab {
+      border-radius: var(--fsds-tabs-shape-radius);
+      padding: var(--fsds-tabs-spacing-pillPadding);
+    }
+    
+    .tabs--pills .tabs__tab--active {
+      background-color: var(--fsds-tabs-color-active-bg);
+      color: var(--fsds-tabs-color-active-fg);
+    }
+    
+    .tabs--pills .tabs__indicator {
+      display: none;
     }
   `;
 

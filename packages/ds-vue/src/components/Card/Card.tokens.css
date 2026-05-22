@@ -6,6 +6,7 @@
   --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
   --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
   --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
   --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
   --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);

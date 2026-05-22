@@ -45,6 +45,16 @@ describe("Card — unit", () => {
     const { stack } = await renderElement("fsds-card", { "status": "complexity" });
     expect(classTokens(stack)).toContain("card--complexity");
   });
+
+  it("applies density=default variant class", async () => {
+    const { stack } = await renderElement("fsds-card", { "density": "default" });
+    expect(classTokens(stack)).toContain("card--default");
+  });
+
+  it("applies density=inset variant class", async () => {
+    const { stack } = await renderElement("fsds-card", { "density": "inset" });
+    expect(classTokens(stack)).toContain("card--inset");
+  });
 });
 
 describe("Card — accessibility", () => {

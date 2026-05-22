@@ -1,0 +1,137 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "NavList",
+  "description": "Vertical or horizontal navigation list landmark. Composes a <nav> with grouped or flat <li> children; consumers render <a aria-current=page> for the active item.",
+  "layer": "compound",
+  "anatomy": {
+    "parts": [
+      "root",
+      "list",
+      "item"
+    ],
+    "details": {
+      "root": {
+        "description": "Navigation landmark wrapping the list. Renders <nav>.",
+        "role": "region"
+      },
+      "list": {
+        "description": "Outer <ul> containing items.",
+        "role": "group"
+      },
+      "item": {
+        "description": "Single list entry (<li>). Consumer renders an <a href> (and optional Badge) as children. Mark the active entry with aria-current=page on the anchor.",
+        "role": "item",
+        "multiple": true
+      }
+    },
+    "dom": {
+      "tag": "nav",
+      "part": "root",
+      "bindings": {
+        "aria-label": "prop:ariaLabel"
+      },
+      "children": [
+        {
+          "tag": "ul",
+          "part": "list",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <NavList> component.",
+      "members": [
+        {
+          "name": "orientation",
+          "type": "NavListOrientation",
+          "description": "Layout direction of the list.",
+          "default": "vertical"
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the navigation landmark. Required when the page has more than one nav landmark."
+        }
+      ]
+    }
+  },
+  "types": {
+    "NavListOrientation": {
+      "kind": "union",
+      "values": [
+        "vertical",
+        "horizontal"
+      ]
+    }
+  },
+  "variants": {
+    "orientation": [
+      "vertical",
+      "horizontal"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus"
+  ],
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"navlist\"]"
+    },
+    "list": {
+      "required": true,
+      "selector": "[data-slot=\"navlist-list\"]"
+    },
+    "item": {
+      "required": false,
+      "selector": "[data-slot=\"navlist-item\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "navigation",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "Tab",
+        "action": "Move focus through nav items in DOM order."
+      },
+      {
+        "key": "Enter",
+        "action": "Activate the focused link (follow href)."
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "navigation",
+    "usageHints": [
+      "Use orientation=vertical for sidebar / drawer navigation; horizontal for top-bar nav.",
+      "Render the active item's <a> with aria-current=\"page\" so assistive tech announces the current location.",
+      "When more than one navigation landmark exists on a page, provide a unique ariaLabel.",
+      "Pair item labels with Badge for trailing counts or status tags.",
+      "To group items under headings, render a sibling <li> with caption-styled text (e.g., a Text variant=overline) directly between groups of NavListItem. Group headings are app-level composition, not part of the NavList anatomy."
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "NavListItem"
+      ]
+    }
+  }
+}

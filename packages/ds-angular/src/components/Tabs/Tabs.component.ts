@@ -10,6 +10,7 @@ import { useTabs, TabsContextToken } from "./useTabs.js";
 
 // @generated:start types
 export type TabsOrientation = "horizontal" | "vertical";
+export type TabsAppearance = "underline" | "pills";
 export type TabsActivationMode = "automatic" | "manual";
 // @generated:end
 
@@ -54,6 +55,7 @@ export class TabsComponent implements OnChanges {
   @Input() value?: string;
   @Input() defaultValue?: string;
   @Input() orientation?: TabsOrientation = "horizontal";
+  @Input() appearance?: TabsAppearance = "underline";
   @Input() activationMode?: TabsActivationMode = "automatic";
   @Input() loop?: boolean = true;
   @Input() unmountInactive?: boolean;
@@ -92,6 +94,7 @@ export class TabsComponent implements OnChanges {
     [
       "tabs",
       this.orientation ? `tabs--${this.orientation}` : null,
+      this.appearance ? `tabs--${this.appearance}` : null,
       this.activationMode ? `tabs--${this.activationMode}` : null,
       this.class,
     ].filter(Boolean).join(" "),

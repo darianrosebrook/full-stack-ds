@@ -59,6 +59,25 @@
   display: block;
   padding: var(--fsds-tabs-spacing-padding);
 }
+
+.tabs--pills .tabs__list {
+  border-bottom-width: 0;
+  gap: var(--fsds-tabs-spacing-gap);
+}
+
+.tabs--pills .tabs__tab {
+  border-radius: var(--fsds-tabs-shape-radius);
+  padding: var(--fsds-tabs-spacing-pillPadding);
+}
+
+.tabs--pills .tabs__tab--active {
+  background-color: var(--fsds-tabs-color-active-bg);
+  color: var(--fsds-tabs-color-active-fg);
+}
+
+.tabs--pills .tabs__indicator {
+  display: none;
+}
 /* @generated:end */
 
 /* @custom:start overrides */

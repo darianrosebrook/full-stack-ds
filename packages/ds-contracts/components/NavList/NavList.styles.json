@@ -1,0 +1,17 @@
+{
+  "root": {
+    "display": { "literal": "block", "platforms": ["web"] }
+  },
+  "list": {
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "flex-direction": { "literal": "column", "platforms": ["web"] },
+    "gap": { "resolvesTo": "navlist.size.gap.list" },
+    "list-style": { "literal": "none", "platforms": ["web"] },
+    "margin": { "literal": "0", "platforms": ["web"] },
+    "padding": { "literal": "0", "platforms": ["web"] }
+  },
+  "item": {
+    "display": { "literal": "block", "platforms": ["web"] },
+    "color": { "resolvesTo": "navlist.color.foreground.default" }
+  }
+}

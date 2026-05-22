@@ -58,6 +58,16 @@ describe("Card — unit", () => {
     const wrapper = mount(Card as Component, { props: { "status": "complexity" }, attrs: { "data-testid": "card" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("card--complexity");
   });
+
+  it("applies density=default variant class", () => {
+    const wrapper = mount(Card as Component, { props: { "density": "default" }, attrs: { "data-testid": "card" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("card--default");
+  });
+
+  it("applies density=inset variant class", () => {
+    const wrapper = mount(Card as Component, { props: { "density": "inset" }, attrs: { "data-testid": "card" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("card--inset");
+  });
 });
 
 describe("Card — accessibility", () => {

@@ -10,6 +10,7 @@ import { useTabs, provideTabsContext } from "./useTabs.js";
 
 // @generated:start types
 export type TabsOrientation = "horizontal" | "vertical";
+export type TabsAppearance = "underline" | "pills";
 export type TabsActivationMode = "automatic" | "manual";
 // @generated:end
 
@@ -23,6 +24,7 @@ interface Props {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   orientation?: TabsOrientation;
+  appearance?: TabsAppearance;
   activationMode?: TabsActivationMode;
   loop?: boolean;
   unmountInactive?: boolean;
@@ -35,6 +37,7 @@ interface Props {
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
   orientation: "horizontal",
+  appearance: "underline",
   activationMode: "automatic",
   loop: true,
   unmountInactive: true,
@@ -67,6 +70,7 @@ provideTabsContext({
 const classNames = computed(() => [
   "tabs",
   props.orientation ? `tabs--${props.orientation}` : null,
+  props.appearance ? `tabs--${props.appearance}` : null,
   props.activationMode ? `tabs--${props.activationMode}` : null,
   props.class,
 ].filter(Boolean).join(" "));

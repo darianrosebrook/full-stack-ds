@@ -10,6 +10,7 @@ import { StackComponent } from "../../primitives/index.js";
 
 // @generated:start types
 export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
+export type CardDensity = "default" | "inset";
 // @generated:end
 
 // @custom:start types
@@ -27,10 +28,12 @@ export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" 
 export class CardComponent {
   @Input() interactive?: boolean;
   @Input() status?: CardStatus;
+  @Input() density?: CardDensity = "default";
 
   classes(): string {
     const parts: Array<string | null | undefined> = ["card"];
     if (this.status) parts.push(`card--${this.status}`);
+    if (this.density) parts.push(`card--${this.density}`);
     return parts.filter(Boolean).join(" ");
   }
 }

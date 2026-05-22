@@ -30,6 +30,12 @@
           "name": "status",
           "type": "CardStatus",
           "description": "Visual status variant of the card"
+        },
+        {
+          "name": "density",
+          "type": "CardDensity",
+          "description": "Padding and border treatment. Use 'inset' for compact tiles inside a list or grid where the surrounding container provides primary structure.",
+          "default": "default"
         }
       ]
     }
@@ -45,6 +51,13 @@
         "category",
         "complexity"
       ]
+    },
+    "CardDensity": {
+      "kind": "union",
+      "values": [
+        "default",
+        "inset"
+      ]
     }
   },
   "variants": {
@@ -55,6 +68,10 @@
       "deprecated",
       "category",
       "complexity"
+    ],
+    "density": [
+      "default",
+      "inset"
     ]
   },
   "states": [

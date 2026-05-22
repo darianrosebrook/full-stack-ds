@@ -2,6 +2,7 @@
 .tabs {
   --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
   --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-tabs-spacing-pillPadding: 4px 10px;
   --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
   --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);

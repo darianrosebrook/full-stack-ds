@@ -1,0 +1,72 @@
+{
+  "navlist.color.foreground.default": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "navlist.color.foreground.hover": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "navlist.color.foreground.current": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "navlist.color.background.default": {
+    "resolvesTo": "semantic.color.background.transparent",
+    "fallback": "transparent",
+    "layer": "semantic"
+  },
+  "navlist.color.background.hover": {
+    "resolvesTo": "semantic.color.background.subtle",
+    "fallback": "#f5f5f5",
+    "layer": "semantic"
+  },
+  "navlist.color.background.current": {
+    "resolvesTo": "semantic.color.background.accentSubtle",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "navlist.color.outline.focus": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "navlist.size.padding.block": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "navlist.size.padding.inline": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "navlist.size.radius.default": {
+    "resolvesTo": "semantic.shape.control.radius.default",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "navlist.size.gap.list": {
+    "resolvesTo": "core.spacing.size.01",
+    "fallback": "2px",
+    "layer": "core"
+  },
+  "navlist.size.gap.group": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "navlist.size.fontSize.item": {
+    "resolvesTo": "semantic.typography.body.size.sm",
+    "fallback": "14px",
+    "layer": "semantic"
+  },
+  "navlist.size.fontSize.groupLabel": {
+    "resolvesTo": "semantic.typography.caption.size.xs",
+    "fallback": "11px",
+    "layer": "semantic"
+  }
+}

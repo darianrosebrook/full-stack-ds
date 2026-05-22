@@ -29,6 +29,11 @@
     "fallback": "16px",
     "layer": "core"
   },
+  "card.size.padding.inset": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
   "card.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",

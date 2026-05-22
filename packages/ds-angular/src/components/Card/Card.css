@@ -20,6 +20,10 @@
   }
 }
 
+.card--inset {
+  padding: var(--fsds-card-size-padding-inset);
+}
+
 .card__header {
   display: flex;
   align-items: flex-start;

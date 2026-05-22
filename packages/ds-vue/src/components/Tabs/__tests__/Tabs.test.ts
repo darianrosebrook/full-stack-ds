@@ -34,6 +34,16 @@ describe("Tabs — unit", () => {
     expect(wrapper.classes()).toContain("tabs--vertical");
   });
 
+  it("applies appearance=underline variant class", () => {
+    const wrapper = mount(Tabs as Component, { props: { "appearance": "underline" }, attrs: { "data-testid": "tabs" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("tabs--underline");
+  });
+
+  it("applies appearance=pills variant class", () => {
+    const wrapper = mount(Tabs as Component, { props: { "appearance": "pills" }, attrs: { "data-testid": "tabs" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("tabs--pills");
+  });
+
   it("applies activationMode=automatic variant class", () => {
     const wrapper = mount(Tabs as Component, { props: { "activationMode": "automatic" }, attrs: { "data-testid": "tabs" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("tabs--automatic");

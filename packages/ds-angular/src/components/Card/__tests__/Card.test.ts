@@ -49,6 +49,18 @@ describe("Card — unit", () => {
     component.status = "complexity";
     expect(classTokens(component)).toContain("card--complexity");
   });
+
+  it("applies density=default variant class", () => {
+    const component = new CardComponent();
+    component.density = "default";
+    expect(classTokens(component)).toContain("card--default");
+  });
+
+  it("applies density=inset variant class", () => {
+    const component = new CardComponent();
+    component.density = "inset";
+    expect(classTokens(component)).toContain("card--inset");
+  });
 });
 
 function classTokens(component: { classes: () => string }): string[] {

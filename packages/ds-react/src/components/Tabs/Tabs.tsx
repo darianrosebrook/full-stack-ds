@@ -12,6 +12,8 @@ import "./Tabs.css";
 // @generated:start types
 export type TabsOrientation = "horizontal" | "vertical";
 
+export type TabsAppearance = "underline" | "pills";
+
 export type TabsActivationMode = "automatic" | "manual";
 // @generated:end
 
@@ -20,11 +22,12 @@ export type TabsActivationMode = "automatic" | "manual";
 // @custom:end
 
 // @generated:start props
-export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "activationMode" | "children" | "className" | "data-testid" | "defaultValue" | "idBase" | "loop" | "onValueChange" | "orientation" | "unmountInactive" | "value"> {
+export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "activationMode" | "appearance" | "children" | "className" | "data-testid" | "defaultValue" | "idBase" | "loop" | "onValueChange" | "orientation" | "unmountInactive" | "value"> {
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   orientation?: TabsOrientation;
+  appearance?: TabsAppearance;
   activationMode?: TabsActivationMode;
   loop?: boolean;
   unmountInactive?: boolean;
@@ -229,6 +232,7 @@ export function Tabs({
   defaultValue,
   onValueChange,
   orientation = "horizontal",
+  appearance = "underline",
   activationMode = "automatic",
   loop = true,
   unmountInactive,
@@ -248,6 +252,7 @@ export function Tabs({
   const classNames = [
     "tabs",
     orientation && `tabs--${orientation}`,
+    appearance && `tabs--${appearance}`,
     activationMode && `tabs--${activationMode}`,
     className,
   ]

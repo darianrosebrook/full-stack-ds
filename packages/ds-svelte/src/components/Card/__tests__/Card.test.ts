@@ -58,6 +58,16 @@ describe("Card — unit", () => {
     const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "status": "complexity" } });
     expect(container.firstElementChild?.className).toContain("card--complexity");
   });
+
+  it("applies density=default variant class", () => {
+    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "density": "default" } });
+    expect(container.firstElementChild?.className).toContain("card--default");
+  });
+
+  it("applies density=inset variant class", () => {
+    const { container } = render(Card as unknown as Component<Record<string, unknown>>, { props: { "density": "inset" } });
+    expect(container.firstElementChild?.className).toContain("card--inset");
+  });
 });
 
 describe("Card — accessibility", () => {

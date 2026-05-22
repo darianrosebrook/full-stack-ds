@@ -117,6 +117,12 @@
           "default": "horizontal"
         },
         {
+          "name": "appearance",
+          "type": "TabsAppearance",
+          "description": "Visual style of the tab list. 'underline' draws an indicator bar under the active tab; 'pills' renders each tab as a rounded segmented control.",
+          "default": "underline"
+        },
+        {
           "name": "activationMode",
           "type": "TabsActivationMode",
           "description": "Whether tabs activate on focus or require Enter/Space.",
@@ -158,6 +164,13 @@
         "vertical"
       ]
     },
+    "TabsAppearance": {
+      "kind": "union",
+      "values": [
+        "underline",
+        "pills"
+      ]
+    },
     "TabsActivationMode": {
       "kind": "union",
       "values": [
@@ -170,6 +183,10 @@
     "orientation": [
       "horizontal",
       "vertical"
+    ],
+    "appearance": [
+      "underline",
+      "pills"
     ],
     "activationMode": [
       "automatic",

@@ -9,6 +9,7 @@ import { useTabs, provideTabsContext } from "./useTabs.svelte.js";
 
 // @generated:start types
 type TabsOrientation = "horizontal" | "vertical";
+type TabsAppearance = "underline" | "pills";
 type TabsActivationMode = "automatic" | "manual";
 // @generated:end
 
@@ -22,6 +23,7 @@ interface Props {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
   orientation?: TabsOrientation;
+  appearance?: TabsAppearance;
   activationMode?: TabsActivationMode;
   loop?: boolean;
   unmountInactive?: boolean;
@@ -36,6 +38,7 @@ let {
   defaultValue,
   onValueChange,
   orientation = "horizontal",
+  appearance = "underline",
   activationMode = "automatic",
   loop = true,
   unmountInactive,
@@ -74,6 +77,7 @@ const classes = $derived(
   [
     "tabs",
     orientation ? `tabs--${orientation}` : null,
+    appearance ? `tabs--${appearance}` : null,
     activationMode ? `tabs--${activationMode}` : null,
     className,
   ].filter(Boolean).join(" ")

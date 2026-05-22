@@ -32,6 +32,18 @@ describe("Tabs — unit", () => {
     expect(classTokens(fixture.componentInstance)).toContain("tabs--vertical");
   });
 
+  it("applies appearance=underline variant class", () => {
+    const fixture = TestBed.createComponent(TabsComponent);
+    fixture.componentInstance.appearance = "underline";
+    expect(classTokens(fixture.componentInstance)).toContain("tabs--underline");
+  });
+
+  it("applies appearance=pills variant class", () => {
+    const fixture = TestBed.createComponent(TabsComponent);
+    fixture.componentInstance.appearance = "pills";
+    expect(classTokens(fixture.componentInstance)).toContain("tabs--pills");
+  });
+
   it("applies activationMode=automatic variant class", () => {
     const fixture = TestBed.createComponent(TabsComponent);
     fixture.componentInstance.activationMode = "automatic";

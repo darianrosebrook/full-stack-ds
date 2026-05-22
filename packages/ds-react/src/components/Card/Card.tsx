@@ -10,6 +10,8 @@ import "./Card.css";
 
 // @generated:start types
 export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
+
+export type CardDensity = "default" | "inset";
 // @generated:end
 
 // @custom:start types
@@ -20,6 +22,7 @@ export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" 
 export interface CardProps {
   interactive?: boolean;
   status?: CardStatus;
+  density?: CardDensity;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -107,6 +110,7 @@ export function CardDescription({
 // @generated:start component
 export function Card({
   status,
+  density = "default",
   className,
   "data-testid": testId,
   children,
@@ -116,6 +120,7 @@ export function Card({
   const classNames = [
     "card",
     status && `card--${status}`,
+    density && `card--${density}`,
     className,
   ]
     .filter(Boolean)

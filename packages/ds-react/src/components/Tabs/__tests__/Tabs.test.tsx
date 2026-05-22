@@ -38,6 +38,16 @@ describe("Tabs — unit", () => {
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--vertical");
   });
 
+  it("applies appearance=underline variant class", () => {
+    render(<Tabs data-testid="tabs" appearance="underline">content</Tabs>);
+    expect(screen.getByTestId("tabs")).toHaveClass("tabs--underline");
+  });
+
+  it("applies appearance=pills variant class", () => {
+    render(<Tabs data-testid="tabs" appearance="pills">content</Tabs>);
+    expect(screen.getByTestId("tabs")).toHaveClass("tabs--pills");
+  });
+
   it("applies activationMode=automatic variant class", () => {
     render(<Tabs data-testid="tabs" activationMode="automatic">content</Tabs>);
     expect(screen.getByTestId("tabs")).toHaveClass("tabs--automatic");

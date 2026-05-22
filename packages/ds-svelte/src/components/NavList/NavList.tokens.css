@@ -1,0 +1,22 @@
+/* @generated:start tokens */
+.nav-list {
+  --fsds-navlist-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-navlist-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-navlist-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-navlist-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
+  --fsds-navlist-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+  --fsds-navlist-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
+  --fsds-navlist-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+  --fsds-navlist-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
+  --fsds-navlist-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-navlist-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-navlist-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
+  --fsds-navlist-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-navlist-size-fontSize-item: var(--fsds-semantic-typography-body-size-sm, 14px);
+  --fsds-navlist-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-size-xs, 11px);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

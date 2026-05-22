@@ -21,6 +21,7 @@ export { InputElement } from "./Input/Input.js";
 export { LabelElement } from "./Label/Label.js";
 export { LinksElement } from "./Links/Links.js";
 export { ListElement } from "./List/List.js";
+export { NavListElement, NavListItemElement, NavListListElement } from "./NavList/NavList.js";
 export { OTPElement, OTPGroupElement } from "./OTP/OTP.js";
 export { PopoverElement, PopoverContentElement, PopoverTriggerElement } from "./Popover/Popover.js";
 export { PostcardElement, PostcardContentElement, PostcardFooterElement, PostcardHeaderElement } from "./Postcard/Postcard.js";
@@ -32,6 +33,7 @@ export { ShowMoreElement, ShowMoreContentElement, ShowMoreTriggerElement } from 
 export { ShuttleElement, ShuttleItemElement } from "./Shuttle/Shuttle.js";
 export { SkeletonElement } from "./Skeleton/Skeleton.js";
 export { SpinnerElement } from "./Spinner/Spinner.js";
+export { StatElement } from "./Stat/Stat.js";
 export { StatusElement } from "./Status/Status.js";
 export { SwitchElement } from "./Switch/Switch.js";
 export { TableElement, TableBodyElement, TableFooterElement, TableHeaderElement } from "./Table/Table.js";

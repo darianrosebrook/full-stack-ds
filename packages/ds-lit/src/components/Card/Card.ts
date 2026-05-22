@@ -11,6 +11,7 @@ import { StackElement as _Stack } from '../../primitives/index.js';
 
 // @generated:start types
 export type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
+export type CardDensity = "default" | "inset";
 // @generated:end
 
 // @custom:start types
@@ -28,6 +29,7 @@ export class CardElement extends LitElement {
       --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
@@ -64,6 +66,10 @@ export class CardElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
+    
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset);
     }
     
     .card__header {
@@ -144,11 +150,14 @@ export class CardElement extends LitElement {
   interactive?: boolean;
   @property({ attribute: false })
   status?: CardStatus;
+  @property({ attribute: false })
+  density?: CardDensity = "default";
 
   override render() {
     const classes = {
       'card': true,
       [`card--${this.status}`]: !!this.status,
+      [`card--${this.density}`]: !!this.density,
     };
     return html`<fsds-stack role="group" class=${classMap(classes)}><slot></slot></fsds-stack>`;
   }
@@ -166,6 +175,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
@@ -202,6 +212,10 @@ export class CardHeaderElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
+    
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset);
     }
     
     .card__header {
@@ -295,6 +309,7 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
@@ -331,6 +346,10 @@ export class CardContentElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
+    
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset);
     }
     
     .card__header {
@@ -424,6 +443,7 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
@@ -460,6 +480,10 @@ export class CardFooterElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
+    
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset);
     }
     
     .card__header {
@@ -553,6 +577,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
@@ -589,6 +614,10 @@ export class CardDescriptionElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
+    
+    .card--inset {
+      padding: var(--fsds-card-size-padding-inset);
     }
     
     .card__header {

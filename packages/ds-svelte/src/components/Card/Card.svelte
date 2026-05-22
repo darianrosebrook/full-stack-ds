@@ -9,6 +9,7 @@ import { Stack } from "../../primitives/index.js";
 
 // @generated:start types
 type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "category" | "complexity";
+type CardDensity = "default" | "inset";
 // @generated:end
 
 // @custom:start types
@@ -19,11 +20,12 @@ type CardStatus = "completed" | "in-progress" | "planned" | "deprecated" | "cate
 interface Props {
   interactive?: boolean;
   status?: CardStatus;
+  density?: CardDensity;
   class?: string;
   children?: import('svelte').Snippet;
 }
 
-let { interactive, status, class: className, children }: Props = $props();
+let { interactive, status, density = "default", class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -31,6 +33,7 @@ const classes = $derived(
   [
     "card",
     status ? `card--${status}` : null,
+    density ? `card--${density}` : null,
     className,
   ].filter(Boolean).join(" ")
 );

@@ -1,0 +1,62 @@
+{
+  "stat.color.foreground.value": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "stat.color.foreground.label": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "stat.color.foreground.trend.up": {
+    "resolvesTo": "semantic.color.feedback.positive",
+    "fallback": "#1f8a4c",
+    "layer": "semantic"
+  },
+  "stat.color.foreground.trend.down": {
+    "resolvesTo": "semantic.color.feedback.negative",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "stat.color.foreground.trend.neutral": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "stat.size.value.sm": {
+    "resolvesTo": "semantic.typography.heading.size.sm",
+    "fallback": "20px",
+    "layer": "semantic"
+  },
+  "stat.size.value.md": {
+    "resolvesTo": "semantic.typography.heading.size.md",
+    "fallback": "28px",
+    "layer": "semantic"
+  },
+  "stat.size.value.lg": {
+    "resolvesTo": "semantic.typography.heading.size.lg",
+    "fallback": "40px",
+    "layer": "semantic"
+  },
+  "stat.size.label": {
+    "resolvesTo": "semantic.typography.caption.size.sm",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "stat.size.gap": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "stat.typography.weight.value": {
+    "resolvesTo": "semantic.typography.weight.bold",
+    "fallback": "700",
+    "layer": "semantic"
+  },
+  "stat.typography.weight.label": {
+    "resolvesTo": "semantic.typography.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
+  }
+}
