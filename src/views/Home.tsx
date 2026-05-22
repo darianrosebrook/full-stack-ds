@@ -14,11 +14,10 @@ const FRAMEWORK_LABELS = [
 ] as const;
 
 const NON_WEB_LABELS = [
-  { key: "react-native", label: "React-Native", dot: "lang-react" },
-  { key: "swift", label: "SwiftUI", dot: "lang-swift" },
-  { key: "uiKit", label: "UI Kit", dot: "lang-uikit" },
-  { key: "kotlin", label: "Kotlin", dot: "lang-kotlin" },
-  { key: "jetpack", label: "Jetpack Compose", dot: "lang-jetpack" },
+  { key: "react-native", label: "React Native", dot: "lang-react" },
+  { key: "swiftui", label: "SwiftUI", dot: "lang-swift" },
+  { key: "uikit", label: "UIKit", dot: "lang-uikit" },
+  { key: "jetpack-compose", label: "Jetpack Compose", dot: "lang-jetpack" },
 ] as const;
 
 export function Home({ bundle }: HomeProps) {
@@ -176,11 +175,10 @@ export function Home({ bundle }: HomeProps) {
                   fontSize: "var(--fs-200)",
                 }}
               >
-                {fw.key === "react-native" && "React Native"}
-                {fw.key === "swift" && "Swift"}
-                {fw.key === "uiKit" && "UI Kit views"}
-                {fw.key === "kotlin" && "Kotlin"}
-                {fw.key === "jetpack" && "Jetpack Compose for Android."}
+                {fw.key === "react-native" && "TSX, hooks, native primitives."}
+                {fw.key === "swiftui" && "View structs, @Binding state."}
+                {fw.key === "uikit" && "UIControl subclass + target/action."}
+                {fw.key === "jetpack-compose" && "@Composable, hoisted state."}
               </p>
             </div>
           ))}
