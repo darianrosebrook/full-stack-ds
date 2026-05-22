@@ -22,7 +22,7 @@ export type SwitchSize = "sm" | "md" | "lg";
   standalone: true,
   imports: [NgClass],
   template: `<label [ngClass]="classes()">
-  <input [ngClass]="'switch__input'" type="checkbox" role="switch" [checked]="behavior.checked()" (change)="handleCheckedChange($event)" [disabled]="disabled" [name]="name" [value]="value" />
+  <input [ngClass]="'switch__input'" type="checkbox" role="switch" (change)="handleCheckedChange($event)" [checked]="behavior.checked()" [disabled]="disabled" [name]="name" [value]="value" />
   <span [ngClass]="'switch__track'" aria-hidden="true">
     <span [ngClass]="'switch__thumb'"></span>
   </span>

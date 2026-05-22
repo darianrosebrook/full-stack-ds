@@ -26,7 +26,9 @@ import { useShowMore } from "./useShowMore.js";
   <div [ngClass]="'show-more__content'">
     <ng-content />
   </div>
-  <button [ngClass]="'show-more__trigger'" type="button" [attr.aria-expanded]="behavior.expanded()" (click)="handleExpandedChange($event)" [textContent]="showMoreLabel"></button>
+  <button [ngClass]="'show-more__trigger'" type="button" (click)="handleExpandedChange($event)" [attr.aria-expanded]="behavior.expanded()" [textContent]="showMoreLabel">
+    {{ showMoreLabel }}
+  </button>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

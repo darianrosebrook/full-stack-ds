@@ -108,7 +108,7 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
     });
   });
 
-  describe.skip("Angular", () => {
+  describe("Angular", () => {
     const src = generateAngularComponentSource(ir);
 
     it("renders content binding as `{{ prop }}` interpolation, not `[content]`", () => {
@@ -116,8 +116,10 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
       expect(src).toMatch(/<span[^>]*>\s*\{\{\s*icon\s*\}\}\s*<\/span>/);
     });
 
-    it("renders event binding as `(click)=\"prop()\"`, not as a property binding", () => {
-      expect(src).toMatch(/\(click\)="\s*onDismiss\(\)/);
+    it("renders event binding as `(click)=\"prop && prop()\"`, not as a property binding", () => {
+      // Optional callback prop: guard with truthy check so an unset
+      // handler is a silent no-op rather than a runtime TypeError.
+      expect(src).toMatch(/\(click\)="onDismiss && onDismiss\(\)"/);
       expect(src).not.toMatch(/\[onClick\]=/);
       // Must NOT appear as a raw `onClick="..."` attribute.
       expect(src).not.toMatch(/onClick="[^"]+"/);

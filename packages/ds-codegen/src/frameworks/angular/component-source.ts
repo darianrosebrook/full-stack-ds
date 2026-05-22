@@ -1073,7 +1073,28 @@ function renderAngularDomNode(
     attrs.push(`${key}="${escapeAngularAttr(value)}"`);
   }
 
+  // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Angular's
+  // `(eventname)="..."` syntax. Distinct from attribute bindings because
+  // Angular's template parser rejects `onClick` / `[onClick]` as event-
+  // property attributes (security disallow). For `prop:X` events emit
+  // `(click)="X && X()"` so the no-op case is silent; for `channel:X`
+  // events the existing channel-onChange path in renderAngularBinding
+  // produces `(click)="behavior.X()"`. Legacy `bindings.onX` is filtered
+  // below to avoid double-emit.
+  for (const [eventName, expr] of Object.entries(node.events)) {
+    const rendered = renderAngularEvent(eventName, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   for (const [key, expr] of Object.entries(node.bindings)) {
+    // Dual-pathway dedup: parseDomNode mirrored `bindings.onX` to
+    // `events.<x>` for back-compat. The canonical events loop above
+    // already emitted the handler — skip the legacy attribute pass.
+    if (/^on[A-Z]/.test(key)) {
+      const evt = key.slice(2).toLowerCase();
+      if (node.events[evt]) continue;
+    }
     const rendered = renderAngularBinding(key, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
@@ -1123,18 +1144,30 @@ function renderAngularDomNode(
     renderAngularDomNode(c, childCtx, indent + 2),
   );
 
+  // IR-DOM-BINDING-CAPABILITY-01: content binding lowers to Angular's
+  // `{{ expr }}` interpolation as the element's text content. Mutually
+  // exclusive with children — parseDomNode rejects the combination.
+  const contentLines: string[] = [];
+  if (node.content) {
+    const contentExpr = renderAngularBindingValue(node.content, ctx);
+    if (contentExpr !== null) {
+      contentLines.push(`${" ".repeat(indent + 2)}{{ ${contentExpr} }}`);
+    }
+  }
+  const allChildren = [...contentLines, ...renderedChildren];
+
   const tag = node.tag;
   const isVoidEl = VOID_HTML_ELEMENTS_ANGULAR.has(tag);
 
   let body: string;
-  if (renderedChildren.length === 0 && isVoidEl) {
+  if (allChildren.length === 0 && isVoidEl) {
     body = `${pad}<${tag}${formatAngularAttrs(attrs)} />`;
-  } else if (renderedChildren.length === 0) {
+  } else if (allChildren.length === 0) {
     body = `${pad}<${tag}${formatAngularAttrs(attrs)}></${tag}>`;
   } else {
     body = [
       `${pad}<${tag}${formatAngularAttrs(attrs)}>`,
-      ...renderedChildren,
+      ...allChildren,
       `${pad}</${tag}>`,
     ].join("\n");
   }
@@ -1249,6 +1282,63 @@ function renderAngularBinding(
       // Event-shaped channels pass the raw event to the consumer's
       // @Input handler; consumer drives state externally.
       const eventName = mapJsxEventToAngular(attr);
+      if (ch.callbackKind === "event") {
+        return `(${eventName})="${ch.changeHandlerProp}?.($event)"`;
+      }
+      const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
+      return `(${eventName})="${handlerName}($event)"`;
+    }
+  }
+}
+
+/**
+ * Lower a content binding to the bare Angular template expression that
+ * goes inside `{{ ... }}`. Mirrors the prop/channel/literal switch in
+ * renderAngularBinding but without the attribute scaffolding.
+ */
+function renderAngularBindingValue(
+  expr: BindingExpression,
+  ctx: AngularRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return safePropertyExpr(expr.prop);
+    case "literal":
+      return JSON.stringify(expr.value);
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") return `behavior.${ch.name}()`;
+      if (expr.field === "defaultValue" && ch.defaultValueProp) {
+        return safePropertyExpr(ch.defaultValueProp);
+      }
+      return null;
+    }
+  }
+}
+
+/**
+ * Lower an entry from `node.events` (keyed by unprefixed event name like
+ * `click`) into Angular's `(eventname)="..."` form. For `prop:X` events
+ * we emit `(click)="X && X()"` so that an unset handler is a silent
+ * no-op rather than a runtime "is not a function" throw. Channel-routed
+ * events delegate to the existing onChange logic.
+ */
+function renderAngularEvent(
+  eventName: string,
+  expr: BindingExpression,
+  ctx: AngularRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `(${eventName})="${safePropertyExpr(expr.prop)} && ${safePropertyExpr(expr.prop)}()"`;
+    case "literal":
+      // Rare — usually events should be wired to a callback. Pass the
+      // literal through as the expression body.
+      return `(${eventName})="${escapeAngularAttr(expr.value)}"`;
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
       if (ch.callbackKind === "event") {
         return `(${eventName})="${ch.changeHandlerProp}?.($event)"`;
       }

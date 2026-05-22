@@ -28,7 +28,7 @@ import { useTextField } from "./useTextField.js";
       <ng-content />
     </label>
   </ng-container>
-  <input [ngClass]="'text-field__field'" [type]="type" [value]="behavior.value()" (change)="handleValueChange($event)" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-describedby]="ariaDescribedby" />
+  <input [ngClass]="'text-field__field'" (change)="handleValueChange($event)" [type]="type" [value]="behavior.value()" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-describedby]="ariaDescribedby" />
   <ng-container *ngIf="description">
     <span [ngClass]="'text-field__description'">
       <ng-content />
