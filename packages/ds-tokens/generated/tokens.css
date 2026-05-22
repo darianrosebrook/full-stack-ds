@@ -436,7 +436,7 @@
   --fsds-semantic-elevation-none: none;
   --fsds-semantic-elevation-surface-raised: var(--fsds-core-elevation-level-1);
   --fsds-semantic-elevation-surface-floating: var(--fsds-core-elevation-level-2);
-  --fsds-semantic-interaction-disabled-opacity: var(--fsds-semantic-interaction-disabled-opacity);
+  --fsds-semantic-interaction-disabled-opacity: var(--fsds-core-interaction-disabled-opacity);
   --fsds-semantic-link-decoration-offset: 2px;
   --fsds-semantic-link-decoration-thickness: 1px;
   --fsds-semantic-motion-icon-scale-enter: var(--fsds-core-scale-080);

@@ -4,7 +4,7 @@
     "disabled": {
       "opacity": {
         "$type": "number",
-        "$value": "{interaction.disabled.opacity}",
+        "$value": "{core.interaction.disabled.opacity}",
         "$description": "Semantic alias for the disabled-state opacity. Resolves to the core interaction.disabled.opacity primitive (0.5). Contracts reference this semantic path; core path is the underlying primitive."
       }
     }

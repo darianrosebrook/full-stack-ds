@@ -33,6 +33,19 @@ jobs:
       - name: Validate contracts
         run: pnpm run generate:validate
 
+      # Design tokens — DTCG validation. Catches malformed token JSON,
+      # self-references, and unknown $type values in source token files
+      # before the build composes them.
+      - name: Validate design tokens (DTCG)
+        run: pnpm run tokens:validate
+
+      # Design tokens — drift gate. Rebuilds composed.tokens.json +
+      # tokens.css and fails if the regenerated artifacts differ from
+      # what's committed (same shape as the framework-src diff check
+      # below, scoped to the tokens output).
+      - name: Verify token build is up-to-date
+        run: pnpm run tokens:build:check
+
       - name: Lint
         run: pnpm run lint
 

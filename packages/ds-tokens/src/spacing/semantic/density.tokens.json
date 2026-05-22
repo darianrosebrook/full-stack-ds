@@ -10,30 +10,30 @@
       "compact": {
         "xs": {
           "$type": "dimension",
-          "$value": "{spacing.density.compact.xs}",
+          "$value": "{core.spacing.density.compact.xs}",
           "$description": "Semantic alias for the compact-density xs spacing primitive."
         },
         "sm": {
           "$type": "dimension",
-          "$value": "{spacing.density.compact.sm}",
+          "$value": "{core.spacing.density.compact.sm}",
           "$description": "Semantic alias for the compact-density sm spacing primitive (8px). Contracts (Field.field.gap.y, Field.field.pad.x.sm) reference this semantic path; core path is the underlying primitive."
         },
         "md": {
           "$type": "dimension",
-          "$value": "{spacing.density.compact.md}",
+          "$value": "{core.spacing.density.compact.md}",
           "$description": "Semantic alias for the compact-density md spacing primitive (12px). Contracts (Field.field.pad.x) reference this semantic path; core path is the underlying primitive."
         },
         "lg": {
           "$type": "dimension",
-          "$value": "{spacing.density.compact.lg}"
+          "$value": "{core.spacing.density.compact.lg}"
         },
         "xl": {
           "$type": "dimension",
-          "$value": "{spacing.density.compact.xl}"
+          "$value": "{core.spacing.density.compact.xl}"
         },
         "2xl": {
           "$type": "dimension",
-          "$value": "{spacing.density.compact.2xl}"
+          "$value": "{core.spacing.density.compact.2xl}"
         }
       }
     }
