@@ -128,7 +128,7 @@ export class FieldElement extends LitElement {
   @property({ attribute: false }) label?: unknown;
   @property({ attribute: false }) helpText?: unknown;
   @property({ type: String }) error?: string;
-  @property({ attribute: false }) status?: FieldStatus;
+  @property({ type: String }) status?: FieldStatus;
   @property({ type: Boolean }) validating?: boolean;
   @property({ attribute: false }) onChange?: (value: unknown) => void;
 

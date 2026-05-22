@@ -105,8 +105,10 @@ export function Text({
     .filter(Boolean)
     .join(" ");
 
+  const As = as ?? "p";
+
   return (
-  <p className={`${classNames}`} data-testid={testId} {...rest} />
+  <As className={`${classNames}`} data-testid={testId} {...rest} />
   );
 }
 // @generated:end

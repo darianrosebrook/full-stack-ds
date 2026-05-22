@@ -62,7 +62,7 @@ export class ToggleSwitchElement extends LitElement {
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
-  @property({ attribute: false }) size?: ToggleSwitchSize = "medium";
+  @property({ type: String }) size?: ToggleSwitchSize = "medium";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;

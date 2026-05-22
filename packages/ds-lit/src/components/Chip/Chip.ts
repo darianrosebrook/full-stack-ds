@@ -77,9 +77,9 @@ export class ChipElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) type?: ChipType;
-  @property({ attribute: false }) variant?: ChipVariant;
-  @property({ attribute: false }) size?: ChipSize;
+  @property({ type: String }) type?: ChipType;
+  @property({ type: String }) variant?: ChipVariant;
+  @property({ type: String }) size?: ChipSize;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: false }) icon?: unknown;
   @property({ attribute: 'aria-label', reflect: true })

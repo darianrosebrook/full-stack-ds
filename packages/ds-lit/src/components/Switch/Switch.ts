@@ -162,7 +162,7 @@ export class SwitchElement extends LitElement {
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
-  @property({ attribute: false }) size?: SwitchSize = "md";
+  @property({ type: String }) size?: SwitchSize = "md";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: String }) name?: string;
   @property({ type: String }) value?: string;

@@ -153,7 +153,7 @@ export class WalkthroughElement extends LitElement {
   @property({ type: String }) storageKey?: string;
   @property({ type: Boolean }) autoStart?: boolean = false;
   @property({ type: Boolean }) closeOnOutsideClick?: boolean = false;
-  @property({ attribute: false }) placement?: WalkthroughPlacement = "auto";
+  @property({ type: String }) placement?: WalkthroughPlacement = "auto";
   @property({ attribute: false }) onStepChange?: (value: number) => void;
 
   private behavior = new WalkthroughBehavior(this, {

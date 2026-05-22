@@ -127,8 +127,8 @@ export class ToastElement extends LitElement {
   `;
 
   @property({ type: Boolean }) open?: boolean;
-  @property({ attribute: false }) variant?: ToastVariant = "info";
-  @property({ attribute: false }) politeness?: ToastPoliteness = "polite";
+  @property({ type: String }) variant?: ToastVariant = "info";
+  @property({ type: String }) politeness?: ToastPoliteness = "polite";
   @property({ attribute: false }) action?: unknown;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 

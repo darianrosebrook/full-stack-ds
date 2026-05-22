@@ -120,8 +120,8 @@ export class DetailsElement extends LitElement {
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
-  @property({ attribute: false }) variant?: DetailsVariant;
-  @property({ attribute: false }) icon?: DetailsIcon;
+  @property({ type: String }) variant?: DetailsVariant;
+  @property({ type: String }) icon?: DetailsIcon;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 
   private behavior = new DetailsBehavior(this, {

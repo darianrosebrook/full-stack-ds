@@ -44,12 +44,12 @@ export class ImageElement extends LitElement {
   @property({ type: String }) alt!: string;
   @property({ type: Number }) width?: number;
   @property({ type: Number }) height?: number;
-  @property({ attribute: false }) aspectRatio?: ImageAspectRatio;
-  @property({ attribute: false }) objectFit?: ImageObjectFit;
+  @property({ type: String }) aspectRatio?: ImageAspectRatio;
+  @property({ type: String }) objectFit?: ImageObjectFit;
   @property({ type: String }) objectPosition?: string;
-  @property({ attribute: false }) loading?: ImageLoading;
+  @property({ type: String }) loading?: ImageLoading;
   @property({ type: String }) sizes?: string;
-  @property({ attribute: false }) radius?: ImageRadius;
+  @property({ type: String }) radius?: ImageRadius;
   @property({ type: Boolean }) showPlaceholder?: boolean;
   @property({ type: String }) fallbackSrc?: string;
   @property() size?: string;

@@ -52,9 +52,9 @@ export class LinksElement extends LitElement {
   `;
 
   @property({ type: String }) href?: string;
-  @property({ attribute: false }) target?: LinkTarget;
+  @property({ type: String }) target?: LinkTarget;
   @property({ type: String }) rel?: string;
-  @property({ attribute: false }) size?: LinkSize;
+  @property({ type: String }) size?: LinkSize;
   @property({ type: Boolean }) disabled?: boolean;
 
   private computeClasses(): string {

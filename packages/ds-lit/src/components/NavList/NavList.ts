@@ -56,7 +56,7 @@ export class NavListElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) orientation?: NavListOrientation = "vertical";
+  @property({ type: String }) orientation?: NavListOrientation = "vertical";
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
 

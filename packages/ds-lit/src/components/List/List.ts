@@ -39,11 +39,11 @@ export class ListElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) as?: ListAs;
-  @property({ attribute: false }) variant?: ListVariant;
-  @property({ attribute: false }) marker?: ListMarker;
-  @property({ attribute: false }) spacing?: ListSpacing;
-  @property({ attribute: false }) size?: ListSize;
+  @property({ type: String }) as?: ListAs;
+  @property({ type: String }) variant?: ListVariant;
+  @property({ type: String }) marker?: ListMarker;
+  @property({ type: String }) spacing?: ListSpacing;
+  @property({ type: String }) size?: ListSize;
 
   private computeClasses(): string {
     return [

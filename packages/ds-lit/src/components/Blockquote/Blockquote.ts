@@ -41,8 +41,8 @@ export class BlockquoteElement extends LitElement {
   `;
 
   @property({ type: String }) cite?: string;
-  @property({ attribute: false }) variant?: BlockquoteVariant;
-  @property({ attribute: false }) size?: BlockquoteSize;
+  @property({ type: String }) variant?: BlockquoteVariant;
+  @property({ type: String }) size?: BlockquoteSize;
 
   private computeClasses(): string {
     return [

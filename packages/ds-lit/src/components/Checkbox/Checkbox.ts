@@ -77,7 +77,7 @@ export class CheckboxElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) size?: CheckboxSize = "md";
+  @property({ type: String }) size?: CheckboxSize = "md";
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
   @property({ type: Boolean }) indeterminate?: boolean;

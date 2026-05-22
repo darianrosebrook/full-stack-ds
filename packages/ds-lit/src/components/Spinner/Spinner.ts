@@ -62,9 +62,9 @@ export class SpinnerElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) size?: SpinnerSize;
-  @property({ attribute: false }) variant?: SpinnerVariant;
-  @property({ attribute: false }) thickness?: SpinnerThickness;
+  @property({ type: String }) size?: SpinnerSize;
+  @property({ type: String }) variant?: SpinnerVariant;
+  @property({ type: String }) thickness?: SpinnerThickness;
   @property({ attribute: 'aria-hidden', reflect: true })
   override ariaHidden: string | null = null;
   @property({ type: String }) label?: string;

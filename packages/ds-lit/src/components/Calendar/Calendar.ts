@@ -108,7 +108,7 @@ export class CalendarElement extends LitElement {
 
   @property({ attribute: false }) value?: Date | Date[] | null;
   @property({ attribute: false }) defaultValue?: Date | Date[] | null;
-  @property({ attribute: false }) mode?: CalendarMode = "single";
+  @property({ type: String }) mode?: CalendarMode = "single";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: false }) minDate?: Date;
   @property({ attribute: false }) maxDate?: Date;

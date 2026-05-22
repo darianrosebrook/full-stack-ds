@@ -179,7 +179,7 @@ export class SheetElement extends LitElement {
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
-  @property({ attribute: false }) side?: SheetSide = "right";
+  @property({ type: String }) side?: SheetSide = "right";
   @property({ type: Boolean }) modal?: boolean = true;
   @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 

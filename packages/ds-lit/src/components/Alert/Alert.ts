@@ -102,9 +102,9 @@ export class AlertElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false })
+  @property({ type: String })
   intent?: AlertIntent;
-  @property({ attribute: false })
+  @property({ type: String })
   level?: AlertLevel;
   @property({ type: Boolean })
   dismissible?: boolean;

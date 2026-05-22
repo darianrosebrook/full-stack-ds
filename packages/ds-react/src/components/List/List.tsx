@@ -64,10 +64,12 @@ export function List({
     .filter(Boolean)
     .join(" ");
 
+  const As = as ?? "ul";
+
   return (
-  <ul className={`${classNames}`} data-testid={testId} {...rest}>
+  <As className={`${classNames}`} data-testid={testId} {...rest}>
     {children}
-  </ul>
+  </As>
   );
 }
 // @generated:end

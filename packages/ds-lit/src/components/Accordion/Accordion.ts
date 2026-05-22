@@ -128,7 +128,7 @@ export class AccordionElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) type?: AccordionType = "single";
+  @property({ type: String }) type?: AccordionType = "single";
   @property({ attribute: false }) value?: string | string[];
   @property({ attribute: false }) defaultValue?: string | string[];
   @property({ type: Boolean }) collapsible?: boolean = false;

@@ -61,13 +61,13 @@ export class SkeletonElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) variant?: SkeletonVariant = "block";
+  @property({ type: String }) variant?: SkeletonVariant = "block";
   @property({ attribute: 'animate' })
   _animate?: SkeletonAnimate = "shimmer";
-  @property({ attribute: false }) density?: SkeletonDensity = "regular";
+  @property({ type: String }) density?: SkeletonDensity = "regular";
   @property({ type: String }) aspectRatio?: string;
   @property({ attribute: false }) lines?: SkeletonLines;
-  @property({ attribute: false }) radius?: SkeletonRadius;
+  @property({ type: String }) radius?: SkeletonRadius;
   @property({ type: Boolean }) decorative?: boolean = true;
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;

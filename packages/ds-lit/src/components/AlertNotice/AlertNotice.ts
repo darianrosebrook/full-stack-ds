@@ -101,9 +101,9 @@ export class AlertNoticeElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false })
+  @property({ type: String })
   status?: AlertNoticeStatus;
-  @property({ attribute: false })
+  @property({ type: String })
   level?: AlertNoticeLevel;
   @property({ type: Boolean })
   dismissible?: boolean;

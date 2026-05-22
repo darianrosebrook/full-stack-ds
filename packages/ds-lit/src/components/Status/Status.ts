@@ -53,7 +53,7 @@ export class StatusElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) status!: StatusIntent;
+  @property({ type: String }) status!: StatusIntent;
 
   private computeClasses(): string {
     return [

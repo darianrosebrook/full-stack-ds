@@ -53,9 +53,9 @@ export class ProgressElement extends LitElement {
   `;
 
   @property({ type: Number }) value?: number;
-  @property({ attribute: false }) variant?: ProgressVariant;
-  @property({ attribute: false }) size?: ProgressSize;
-  @property({ attribute: false }) intent?: ProgressIntent;
+  @property({ type: String }) variant?: ProgressVariant;
+  @property({ type: String }) size?: ProgressSize;
+  @property({ type: String }) intent?: ProgressIntent;
   @property({ type: String }) label?: string;
   @property({ type: Boolean }) showValue?: boolean;
   @property({ attribute: false }) formatValue?: (value: number, max: number) => string;

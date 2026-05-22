@@ -66,12 +66,12 @@ export class TextElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) as?: TextAs;
-  @property({ attribute: false }) variant?: TextVariant;
-  @property({ attribute: false }) size?: TextSize;
-  @property({ attribute: false }) weight?: TextWeight;
-  @property({ attribute: false }) align?: TextAlign;
-  @property({ attribute: false }) transform?: TextTransform;
+  @property({ type: String }) as?: TextAs;
+  @property({ type: String }) variant?: TextVariant;
+  @property({ type: String }) size?: TextSize;
+  @property({ type: String }) weight?: TextWeight;
+  @property({ type: String }) align?: TextAlign;
+  @property({ type: String }) transform?: TextTransform;
   @property({ type: Boolean }) truncate?: boolean;
 
   private computeClasses(): string {

@@ -93,9 +93,9 @@ export class ButtonElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) size?: ButtonSize = "medium";
-  @property({ attribute: false }) variant?: ButtonVariant = "primary";
-  @property({ attribute: false }) type?: ButtonType = "button";
+  @property({ type: String }) size?: ButtonSize = "medium";
+  @property({ type: String }) variant?: ButtonVariant = "primary";
+  @property({ type: String }) type?: ButtonType = "button";
   @property({ type: Boolean }) loading?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: 'aria-label', reflect: true })

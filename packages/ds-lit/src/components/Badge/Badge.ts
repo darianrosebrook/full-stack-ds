@@ -54,9 +54,9 @@ export class BadgeElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) variant?: BadgeVariant;
-  @property({ attribute: false }) intent?: BadgeIntent;
-  @property({ attribute: false }) size?: BadgeSize;
+  @property({ type: String }) variant?: BadgeVariant;
+  @property({ type: String }) intent?: BadgeIntent;
+  @property({ type: String }) size?: BadgeSize;
   @property({ attribute: false }) icon?: unknown;
   @property({ type: Boolean }) showStatusIcon?: boolean;
 

@@ -175,7 +175,7 @@ export class DialogElement extends LitElement {
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ type: Boolean }) modal?: boolean = true;
-  @property({ attribute: false }) size?: DialogSize = "md";
+  @property({ type: String }) size?: DialogSize = "md";
   @property({ type: Boolean }) dismissible?: boolean = true;
   @property({ type: Boolean }) closeOnEscape?: boolean = true;
   @property({ type: Boolean }) closeOnBackdropClick?: boolean = true;

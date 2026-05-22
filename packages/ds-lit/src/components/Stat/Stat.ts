@@ -45,8 +45,8 @@ export class StatElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) size?: StatSize = "md";
-  @property({ attribute: false }) trend?: StatTrend;
+  @property({ type: String }) size?: StatSize = "md";
+  @property({ type: String }) trend?: StatTrend;
 
   private computeClasses(): string {
     return [

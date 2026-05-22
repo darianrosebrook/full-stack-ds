@@ -1,4 +1,4 @@
-import { Card } from "@full-stack-ds/react";
+import { Card, List } from "@full-stack-ds/react";
 import type { A11y } from "../../types/data";
 
 interface A11yPanelProps {
@@ -16,7 +16,10 @@ export function A11yPanel({ a11y }: A11yPanelProps) {
     >
       <Card density="inset">
         <h3 style={{ marginTop: 0, marginBottom: "var(--space-3)", fontSize: "var(--fs-300)" }}>Semantics</h3>
-        <dl style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-3) var(--space-5)", margin: 0, fontSize: "var(--fs-200)" }}>
+        <List
+          as="dl"
+          style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-3) var(--space-5)", margin: 0, fontSize: "var(--fs-200)" }}
+        >
           <dt className="muted">Role</dt>
           <dd style={{ margin: 0 }}>
             {a11y.role ? <code>{a11y.role}</code> : <span className="subtle">implicit from tag</span>}
@@ -33,7 +36,7 @@ export function A11yPanel({ a11y }: A11yPanelProps) {
               <span className="subtle">—</span>
             )}
           </dd>
-        </dl>
+        </List>
         {a11y.notes && a11y.notes.length > 0 && (
           <ul style={{ marginTop: "var(--space-4)", paddingLeft: "var(--space-5)", color: "var(--fg-muted)", fontSize: "var(--fs-200)" }}>
             {a11y.notes.map((n, i) => (

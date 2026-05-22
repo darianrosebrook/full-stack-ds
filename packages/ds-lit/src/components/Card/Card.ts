@@ -148,9 +148,9 @@ export class CardElement extends LitElement {
 
   @property({ type: Boolean })
   interactive?: boolean;
-  @property({ attribute: false })
+  @property({ type: String })
   status?: CardStatus;
-  @property({ attribute: false })
+  @property({ type: String })
   density?: CardDensity = "default";
 
   override render() {
