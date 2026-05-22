@@ -19,8 +19,10 @@
         "aria-checked": "channel:checked.value",
         "aria-label": "prop:ariaLabel",
         "aria-describedby": "prop:ariaDescribedby",
-        "disabled": "prop:disabled",
-        "onClick": "channel:checked.onChange"
+        "disabled": "prop:disabled"
+      },
+      "events": {
+        "click": "channel:checked.onChange"
       }
     }
   },

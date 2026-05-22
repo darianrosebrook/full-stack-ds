@@ -27,7 +27,7 @@ export type DetailsIcon = "left" | "right" | "none";
   <summary [ngClass]="'details__summary'">
     <span [ngClass]="'details__summaryContent'">
       <span [ngClass]="'details__icon'"></span>
-      <span [ngClass]="'details__summaryText'" [textContent]="summary">
+      <span [ngClass]="'details__summaryText'">
         {{ summary }}
       </span>
     </span>

@@ -12,10 +12,12 @@
       "part": "root",
       "bindings": {
         "value": "channel:value.value",
-        "onChange": "channel:value.onChange",
         "disabled": "prop:disabled",
         "aria-invalid": "prop:invalid",
         "type": "prop:type"
+      },
+      "events": {
+        "change": "channel:value.onChange"
       }
     }
   },

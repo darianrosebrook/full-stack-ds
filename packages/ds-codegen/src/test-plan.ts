@@ -1,6 +1,7 @@
 import type { ContractTypeDef } from "./contract.js";
 import { toKebab } from "./contract.js";
 import type {
+  BindingExpression,
   ComponentIR,
   NormalizedChannelIR,
   NormalizedDismissalTriggerIR,
@@ -387,28 +388,31 @@ function findChannelHandlerLocation(
   channel: NormalizedChannelIR,
 ): HandlerLocation {
   if (!ir.dom) return "root";
-  // Root bindings first
+  // Channel-onChange handlers may live in `node.events` (post-IR-DOM-
+  // BINDING-CAPABILITY-01 canonical shape) or, historically, in
+  // `node.bindings` under an event-shaped key. Walk both maps for each
+  // node so the test planner finds the handler regardless of which
+  // authoring path the contract used.
+  const matchesChannelOnChange = (expr: BindingExpression): boolean =>
+    expr.kind === "channel" &&
+    expr.channel === channel.name &&
+    expr.field === "onChange";
+
   for (const expr of Object.values(ir.dom.bindings)) {
-    if (
-      expr.kind === "channel" &&
-      expr.channel === channel.name &&
-      expr.field === "onChange"
-    ) {
-      return "root";
-    }
+    if (matchesChannelOnChange(expr)) return "root";
+  }
+  for (const expr of Object.values(ir.dom.events)) {
+    if (matchesChannelOnChange(expr)) return "root";
   }
   // Walk descendants
   const stack = [...(ir.dom.children ?? [])];
   while (stack.length > 0) {
     const node = stack.pop()!;
     for (const expr of Object.values(node.bindings)) {
-      if (
-        expr.kind === "channel" &&
-        expr.channel === channel.name &&
-        expr.field === "onChange"
-      ) {
-        return "deep";
-      }
+      if (matchesChannelOnChange(expr)) return "deep";
+    }
+    for (const expr of Object.values(node.events)) {
+      if (matchesChannelOnChange(expr)) return "deep";
     }
     if (node.children) stack.push(...node.children);
   }

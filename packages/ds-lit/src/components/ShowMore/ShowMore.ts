@@ -2,7 +2,6 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ShowMoreBehavior } from './ShowMoreBehavior.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -85,7 +84,7 @@ export class ShowMoreElement extends LitElement {
   <div class=${'show-more__content'}>
     <slot></slot>
   </div>
-  <button class=${'show-more__trigger'} type="button" @click=${(e: Event) => this.handleExpandedChange(e)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'} textContent=${ifDefined(this.showMoreLabel)}>${this.showMoreLabel}</button>
+  <button class=${'show-more__trigger'} type="button" @click=${(e: Event) => this.handleExpandedChange(e)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${this.showMoreLabel}</button>
 </div>`;
   }
 }

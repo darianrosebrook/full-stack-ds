@@ -758,63 +758,59 @@ function buildDomTree(contract: ComponentContract): DomNodeIR | undefined {
 }
 
 function parseDomNode(node: ContractDomNode): DomNodeIR {
-  // Authors interact with three sibling fields:
+  // Authors interact with three sibling fields, each with a distinct
+  // semantic shape that the framework emitters lower idiomatically:
   //   bindings — attribute bindings (aria-label, disabled, src, …)
   //   events   — event-handler bindings (keyed by unprefixed event name)
-  //   content  — single inner-content binding
+  //   content  — single inner-content binding (BindingExpression)
   //
-  // `bindings.textContent` and `bindings.children` are historical sugar for
-  // content bindings; translate them into the new `content` field so old
-  // contracts keep working without per-emitter special cases. Event-shaped
-  // keys in `bindings` are an authoring bug — they appear to work on React
-  // (JSX accepts arbitrary props) but break Angular and Lit. Reject them
-  // here with a clear message rather than let the bad shape leak into
-  // per-framework output.
+  // The IR-DOM-BINDING-CAPABILITY-01 capability stack was built to make
+  // these three shapes the *only* portable authoring path. The previous
+  // single-bag `bindings` field collapsed all three into one map — that
+  // shape worked on React/Vue (JSX/templates accept arbitrary props) but
+  // broke Angular (template parser rejects `[children]=` / `onClick=`)
+  // and Lit (function-typed callbacks were silently dropped from
+  // attribute decorators). Earlier steps shipped a back-compat
+  // dual-pathway translation so the migration could land emitter-by-
+  // emitter; step 4C removes it. Legacy shapes now hard-fail with an
+  // actionable error message so contract authors get redirected
+  // explicitly to the canonical field.
   const bindings: Record<string, BindingExpression> = {};
-  const eventsFromBindings: Record<string, BindingExpression> = {};
-  let contentFromBindings: BindingExpression | undefined;
   if (node.bindings) {
     for (const [attr, expr] of Object.entries(node.bindings)) {
       if (/^on[A-Z]/.test(attr)) {
-        // Legacy authoring path: contracts that wrote `bindings.onClick`
-        // get auto-translated to `events.click` so existing fixtures and
-        // older contracts keep working. The raw binding entry is also
-        // retained on `bindings` so emitters still reading the legacy
-        // location see the same value during the step-4 migration.
-        // Once every emitter reads from `events`, drop the bindings copy.
-        const eventName = attr.slice(2).toLowerCase();
-        eventsFromBindings[eventName] = parseBindingExpression(expr);
-        bindings[attr] = parseBindingExpression(expr);
-        continue;
+        const suggestedEvent = attr.slice(2).toLowerCase();
+        throw new Error(
+          `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+            `bindings.${attr} is an event-shaped key. Move it under the ` +
+            `\`events\` field as { "${suggestedEvent}": "${expr}" }. Event ` +
+            `handlers are not portable as attribute bindings across all five ` +
+            `framework emitters (Angular rejects them, Lit drops the prop). ` +
+            `This used to be auto-translated; the back-compat path was ` +
+            `removed in IR-DOM-BINDING-CAPABILITY-01/4C.`,
+        );
       }
       if (attr === "children" || attr === "textContent") {
-        // Same dual-pathway pattern for content bindings. Translate to
-        // the new content field but keep the raw entry until every
-        // emitter migrates to reading `content`.
-        contentFromBindings = parseBindingExpression(expr);
-        bindings[attr] = parseBindingExpression(expr);
-        continue;
+        throw new Error(
+          `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+            `bindings.${attr} smuggles inner content through an attribute ` +
+            `slot. Use the top-level \`content\` field instead: ` +
+            `{ "content": "${expr}" }. This used to be auto-translated; the ` +
+            `back-compat path was removed in IR-DOM-BINDING-CAPABILITY-01/4C.`,
+        );
       }
       bindings[attr] = parseBindingExpression(expr);
     }
   }
-  const events: Record<string, BindingExpression> = { ...eventsFromBindings };
+  const events: Record<string, BindingExpression> = {};
   if (node.events) {
     for (const [evt, expr] of Object.entries(node.events)) {
       events[evt] = parseBindingExpression(expr);
     }
   }
   const children = (node.children ?? []).map(parseDomNode);
-  const explicitContent =
+  const content =
     node.content !== undefined ? parseBindingExpression(node.content) : undefined;
-  if (explicitContent !== undefined && contentFromBindings !== undefined) {
-    throw new Error(
-      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
-        `\`content\` is set both as a top-level field and as bindings.{children,textContent}. ` +
-        `Pick one — prefer the top-level \`content\`.`,
-    );
-  }
-  const content = explicitContent ?? contentFromBindings;
   if (content !== undefined && children.length > 0) {
     throw new Error(
       `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +

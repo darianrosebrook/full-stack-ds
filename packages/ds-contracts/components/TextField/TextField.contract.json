@@ -31,12 +31,14 @@
           "bindings": {
             "type": "prop:type",
             "value": "channel:value.value",
-            "onChange": "channel:value.onChange",
             "disabled": "prop:disabled",
             "name": "prop:name",
             "required": "prop:required",
             "aria-invalid": "prop:invalid",
             "aria-describedby": "prop:ariaDescribedby"
+          },
+          "events": {
+            "change": "channel:value.onChange"
           }
         },
         {

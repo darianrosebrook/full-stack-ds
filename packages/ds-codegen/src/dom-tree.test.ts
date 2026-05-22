@@ -118,8 +118,10 @@ describe("buildDomTree (via buildComponentIR)", () => {
               attrs: { type: "checkbox", role: "switch" },
               bindings: {
                 checked: "channel:checked.value",
-                onChange: "channel:checked.onChange",
                 disabled: "prop:disabled",
+              },
+              events: {
+                change: "channel:checked.onChange",
               },
             },
             { tag: "slot" },
@@ -156,10 +158,6 @@ describe("buildDomTree (via buildComponentIR)", () => {
           attrs: { type: "checkbox", role: "switch" },
           bindings: {
             checked: { kind: "channel", channel: "checked", field: "value" },
-            // Legacy `bindings.onChange` is kept on bindings (back-compat
-            // for emitters still reading from the old location) AND
-            // surfaced on events.change (canonical post-capability shape).
-            onChange: { kind: "channel", channel: "checked", field: "onChange" },
             disabled: { kind: "prop", prop: "disabled" },
           },
           events: {
@@ -220,6 +218,195 @@ describe("buildDomTree (via buildComponentIR)", () => {
       }),
     );
     expect(ir.dom?.children[0].ifProp).toBe("children");
+  });
+});
+
+describe("legacy bindings shapes hard-reject (IR-DOM-BINDING-CAPABILITY-01/4C)", () => {
+  // After step 4C, the IR rejects the three legacy shapes that used to
+  // be auto-translated. These tests pin the rejection so a future
+  // refactor can't silently reintroduce the dual-pathway retention.
+
+  it("rejects bindings.onClick with an actionable message", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "LegacyEventBinding",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "button",
+            part: "root",
+            attrs: { type: "button" },
+            bindings: {
+              onClick: "prop:onPress",
+            } as any,
+          },
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "onPress", type: "() => void" },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/bindings\.onClick is an event-shaped key.*events.*click/);
+  });
+
+  it("rejects bindings.onChange with an actionable message", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "LegacyChangeBinding",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "input",
+            part: "root",
+            bindings: {
+              onChange: "channel:value.onChange",
+            } as any,
+          },
+        },
+        channels: {
+          value: { value: "value", onChange: "onValueChange", valueType: "string" },
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "value", type: "string" },
+              { name: "onValueChange", type: "(v: string) => void" },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/bindings\.onChange is an event-shaped key.*events.*change/);
+  });
+
+  it("rejects bindings.children with an actionable message", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "LegacyChildrenBinding",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "span",
+            part: "root",
+            bindings: {
+              children: "prop:icon",
+            } as any,
+          },
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "icon", type: "ReactNode" },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/bindings\.children smuggles inner content.*content.*prop:icon/);
+  });
+
+  it("rejects bindings.textContent with an actionable message", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "LegacyTextContentBinding",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "span",
+            part: "root",
+            bindings: {
+              textContent: "prop:label",
+            } as any,
+          },
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "label", type: "string" },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/bindings\.textContent smuggles inner content.*content.*prop:label/);
+  });
+
+  it("rejects content + children on the same node", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "ContentAndChildrenConflict",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            content: "prop:label",
+            children: [{ tag: "span" }],
+          } as any,
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "label", type: "string" },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/`content` and `children` are mutually exclusive/);
+  });
+
+  it("accepts the canonical authoring path", () => {
+    // The post-4C shape. Should parse without throwing and surface all
+    // three fields on the IR.
+    const ir = buildComponentIR({
+      name: "CanonicalAuthoring",
+      anatomy: {
+        parts: ["root", "icon", "dismiss"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "span",
+              part: "icon",
+              attrs: { "aria-hidden": "true" },
+              content: "prop:icon",
+            },
+            {
+              tag: "button",
+              part: "dismiss",
+              attrs: { type: "button" },
+              bindings: { "aria-label": "prop:dismissLabel" },
+              events: { click: "prop:onDismiss" },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "icon", type: "ReactNode" },
+            { name: "onDismiss", type: "() => void" },
+            { name: "dismissLabel", type: "string" },
+          ],
+        },
+      },
+    } as ComponentContract);
+
+    const root = ir.dom!;
+    expect(root.children).toHaveLength(2);
+    // icon: content set, bindings empty, events empty.
+    expect(root.children[0].content).toEqual({ kind: "prop", prop: "icon" });
+    expect(root.children[0].bindings).toEqual({});
+    expect(root.children[0].events).toEqual({});
+    // dismiss: bindings.aria-label and events.click set, content undefined.
+    expect(root.children[1].bindings).toEqual({
+      "aria-label": { kind: "prop", prop: "dismissLabel" },
+    });
+    expect(root.children[1].events).toEqual({
+      click: { kind: "prop", prop: "onDismiss" },
+    });
+    expect(root.children[1].content).toBeUndefined();
   });
 });
 

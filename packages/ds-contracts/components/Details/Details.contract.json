@@ -34,9 +34,7 @@
                 {
                   "tag": "span",
                   "part": "summaryText",
-                  "bindings": {
-                    "textContent": "prop:summary"
-                  }
+                  "content": "prop:summary"
                 }
               ]
             }

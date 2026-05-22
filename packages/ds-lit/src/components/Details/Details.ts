@@ -2,7 +2,6 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { DetailsBehavior } from './DetailsBehavior.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -145,7 +144,7 @@ export class DetailsElement extends LitElement {
   <summary class=${'details__summary'}>
     <span class=${'details__summaryContent'}>
       <span class=${'details__icon'}></span>
-      <span class=${'details__summaryText'} textContent=${ifDefined(this.summary)}>${this.summary}</span>
+      <span class=${'details__summaryText'}>${this.summary}</span>
     </span>
   </summary>
   ${this.behavior.open ? html`

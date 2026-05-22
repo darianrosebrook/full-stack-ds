@@ -70,8 +70,10 @@
                   "bindings": {
                     "aria-expanded": "channel:open.value",
                     "placeholder": "prop:placeholder",
-                    "value": "channel:search.value",
-                    "onChange": "channel:search.onChange"
+                    "value": "channel:search.value"
+                  },
+                  "events": {
+                    "change": "channel:search.onChange"
                   }
                 }
               ]

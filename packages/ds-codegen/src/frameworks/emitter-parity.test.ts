@@ -275,7 +275,9 @@ function makeTextContentContract(): ComponentContract {
               {
                 tag: "span",
                 part: "summaryText",
-                bindings: { textContent: "prop:summary" },
+                // IR-DOM-BINDING-CAPABILITY-01: inner content lives in
+                // the `content` field, not in bindings.textContent.
+                content: "prop:summary",
               },
             ],
           },
@@ -370,8 +372,13 @@ function makeChannelContract(
             tag: "button",
             part: "trigger",
             attrs: { type: "button" },
-            bindings: {
-              [hostAttr]: "channel:expanded.onChange",
+            // IR-DOM-BINDING-CAPABILITY-01: event handlers live in the
+            // dedicated `events` field, keyed by unprefixed event name.
+            // The test parameter `hostAttr` ("onChange" | "onClick") maps
+            // to the corresponding event name.
+            events: {
+              [hostAttr === "onChange" ? "change" : "click"]:
+                "channel:expanded.onChange",
             },
           },
         ],

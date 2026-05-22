@@ -29,10 +29,12 @@
             "type": "button"
           },
           "bindings": {
-            "aria-expanded": "channel:expanded.value",
-            "onClick": "channel:expanded.onChange",
-            "textContent": "prop:showMoreLabel"
-          }
+            "aria-expanded": "channel:expanded.value"
+          },
+          "events": {
+            "click": "channel:expanded.onChange"
+          },
+          "content": "prop:showMoreLabel"
         }
       ]
     }
