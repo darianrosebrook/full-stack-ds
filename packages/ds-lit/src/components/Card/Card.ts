@@ -50,20 +50,93 @@ export class CardElement extends LitElement {
     .card {
       background-color: var(--fsds-card-color-background-default);
       border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-link);
+      color: var(--fsds-card-color-foreground-primary);
       padding: var(--fsds-card-size-padding-default);
       border-radius: var(--fsds-card-size-radius-default);
       gap: var(--fsds-card-size-gap-default);
       line-height: var(--fsds-card-typography-lineHeight-normal);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
     }
     
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default);
+      line-height: var(--fsds-card-typography-lineHeight-heading);
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default);
+    }
+    
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__description {
+      margin: 0;
+      color: var(--fsds-card-color-foreground-secondary);
+    }
+    
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default);
+      padding-top: var(--fsds-card-size-padding-default);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default);
+    }
+    
     .card__badge {
+      display: inline-flex;
+      align-items: center;
       background-color: var(--fsds-card-color-badge-accent-background);
       color: var(--fsds-card-color-badge-accent-foreground);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+    
+    .card__link {
+      color: var(--fsds-card-color-foreground-link);
+      text-decoration: none;
+    }
+    
+    .card__link:hover {
+      text-decoration: underline;
+    }
+    
+    .card__note {
+      color: var(--fsds-card-color-foreground-secondary);
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-lineHeight-normal);
     }
   `;
 
@@ -115,20 +188,93 @@ export class CardHeaderElement extends LitElement {
     .card {
       background-color: var(--fsds-card-color-background-default);
       border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-link);
+      color: var(--fsds-card-color-foreground-primary);
       padding: var(--fsds-card-size-padding-default);
       border-radius: var(--fsds-card-size-radius-default);
       gap: var(--fsds-card-size-gap-default);
       line-height: var(--fsds-card-typography-lineHeight-normal);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
     }
     
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default);
+      line-height: var(--fsds-card-typography-lineHeight-heading);
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default);
+    }
+    
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__description {
+      margin: 0;
+      color: var(--fsds-card-color-foreground-secondary);
+    }
+    
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default);
+      padding-top: var(--fsds-card-size-padding-default);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default);
+    }
+    
     .card__badge {
+      display: inline-flex;
+      align-items: center;
       background-color: var(--fsds-card-color-badge-accent-background);
       color: var(--fsds-card-color-badge-accent-foreground);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+    
+    .card__link {
+      color: var(--fsds-card-color-foreground-link);
+      text-decoration: none;
+    }
+    
+    .card__link:hover {
+      text-decoration: underline;
+    }
+    
+    .card__note {
+      color: var(--fsds-card-color-foreground-secondary);
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-lineHeight-normal);
     }
   `;
 
@@ -171,20 +317,93 @@ export class CardContentElement extends LitElement {
     .card {
       background-color: var(--fsds-card-color-background-default);
       border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-link);
+      color: var(--fsds-card-color-foreground-primary);
       padding: var(--fsds-card-size-padding-default);
       border-radius: var(--fsds-card-size-radius-default);
       gap: var(--fsds-card-size-gap-default);
       line-height: var(--fsds-card-typography-lineHeight-normal);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
     }
     
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default);
+      line-height: var(--fsds-card-typography-lineHeight-heading);
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default);
+    }
+    
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__description {
+      margin: 0;
+      color: var(--fsds-card-color-foreground-secondary);
+    }
+    
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default);
+      padding-top: var(--fsds-card-size-padding-default);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default);
+    }
+    
     .card__badge {
+      display: inline-flex;
+      align-items: center;
       background-color: var(--fsds-card-color-badge-accent-background);
       color: var(--fsds-card-color-badge-accent-foreground);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+    
+    .card__link {
+      color: var(--fsds-card-color-foreground-link);
+      text-decoration: none;
+    }
+    
+    .card__link:hover {
+      text-decoration: underline;
+    }
+    
+    .card__note {
+      color: var(--fsds-card-color-foreground-secondary);
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-lineHeight-normal);
     }
   `;
 
@@ -227,20 +446,93 @@ export class CardFooterElement extends LitElement {
     .card {
       background-color: var(--fsds-card-color-background-default);
       border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-link);
+      color: var(--fsds-card-color-foreground-primary);
       padding: var(--fsds-card-size-padding-default);
       border-radius: var(--fsds-card-size-radius-default);
       gap: var(--fsds-card-size-gap-default);
       line-height: var(--fsds-card-typography-lineHeight-normal);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
     }
     
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default);
+      line-height: var(--fsds-card-typography-lineHeight-heading);
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default);
+    }
+    
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__description {
+      margin: 0;
+      color: var(--fsds-card-color-foreground-secondary);
+    }
+    
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default);
+      padding-top: var(--fsds-card-size-padding-default);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default);
+    }
+    
     .card__badge {
+      display: inline-flex;
+      align-items: center;
       background-color: var(--fsds-card-color-badge-accent-background);
       color: var(--fsds-card-color-badge-accent-foreground);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+    
+    .card__link {
+      color: var(--fsds-card-color-foreground-link);
+      text-decoration: none;
+    }
+    
+    .card__link:hover {
+      text-decoration: underline;
+    }
+    
+    .card__note {
+      color: var(--fsds-card-color-foreground-secondary);
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-lineHeight-normal);
     }
   `;
 
@@ -283,20 +575,93 @@ export class CardDescriptionElement extends LitElement {
     .card {
       background-color: var(--fsds-card-color-background-default);
       border-color: var(--fsds-card-color-border-default);
-      color: var(--fsds-card-color-foreground-link);
+      color: var(--fsds-card-color-foreground-primary);
       padding: var(--fsds-card-size-padding-default);
       border-radius: var(--fsds-card-size-radius-default);
       gap: var(--fsds-card-size-gap-default);
       line-height: var(--fsds-card-typography-lineHeight-normal);
+      display: flex;
+      flex-direction: column;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
     }
     
+    .card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--fsds-card-size-gap-default);
+      line-height: var(--fsds-card-typography-lineHeight-heading);
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__media {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--fsds-card-size-radius-default);
+    }
+    
+    .card__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-card-size-gap-default);
+      flex: 1 1 auto;
+      color: var(--fsds-card-color-foreground-primary);
+    }
+    
+    .card__description {
+      margin: 0;
+      color: var(--fsds-card-color-foreground-secondary);
+    }
+    
+    .card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--fsds-card-size-gap-default);
+      padding-top: var(--fsds-card-size-padding-default);
+      margin-top: auto;
+      border-top-color: var(--fsds-card-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .card__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-card-size-gap-default);
+    }
+    
     .card__badge {
+      display: inline-flex;
+      align-items: center;
       background-color: var(--fsds-card-color-badge-accent-background);
       color: var(--fsds-card-color-badge-accent-foreground);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.75em;
+      line-height: 1.4;
+    }
+    
+    .card__link {
+      color: var(--fsds-card-color-foreground-link);
+      text-decoration: none;
+    }
+    
+    .card__link:hover {
+      text-decoration: underline;
+    }
+    
+    .card__note {
+      color: var(--fsds-card-color-foreground-secondary);
+      font-size: 0.875em;
+      line-height: var(--fsds-card-typography-lineHeight-normal);
     }
   `;
 
