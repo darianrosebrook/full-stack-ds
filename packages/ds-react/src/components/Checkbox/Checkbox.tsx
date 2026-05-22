@@ -66,7 +66,7 @@ export function Checkbox({
     .join(" ");
 
   return (
-  <input className={`${classNames}`} type="checkbox" checked={checked} onChange={(e) => setChecked(e.target.checked)} disabled={disabled} role="checkbox" data-testid={testId} {...rest} />
+  <input className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} role="checkbox" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

@@ -67,7 +67,7 @@ export function Input({
     .join(" ");
 
   return (
-  <input className={`${classNames}`} value={value} onChange={(e) => setValue(e.target.value)} disabled={disabled} aria-invalid={invalid} type={type} role="textbox" data-testid={testId} {...rest} />
+  <input className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} role="textbox" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

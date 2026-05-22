@@ -64,7 +64,7 @@ export function ToggleSwitch({
     .join(" ");
 
   return (
-  <button className={`${classNames}`} type="button" aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} onClick={() => setChecked(!checked)} role="switch" data-testid={testId} {...rest} />
+  <button className={`${classNames}`} type="button" onClick={() => setChecked(!checked)} aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} role="switch" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

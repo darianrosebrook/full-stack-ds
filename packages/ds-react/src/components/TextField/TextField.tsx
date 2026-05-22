@@ -99,7 +99,7 @@ export function TextField({
         {children}
       </label>
     )}
-    <input className="text-field__field" type={type} value={value} onChange={(e) => setValue(e.target.value)} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
+    <input className="text-field__field" onChange={(e) => setValue(e.target.value)} type={type} value={value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
     {description && (
       <span className="text-field__description">
         {children}

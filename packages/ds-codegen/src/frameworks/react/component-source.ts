@@ -1290,11 +1290,55 @@ function renderReactDomNode(
   // React does not have a `textContent` prop. We collect them here and
   // splice them into the child render below.
   const textChildren: string[] = [];
+
+  // IR-DOM-BINDING-CAPABILITY-01: the new `content` field is the canonical
+  // location for an inner-content binding. Lower it to a JSX child
+  // expression. We thread it through `renderReactBinding` with the
+  // synthetic attr name "textContent" so channel/literal handling
+  // mirrors the legacy textContent path; the result is unwrapped as a
+  // child instead of an attribute. The legacy `bindings.textContent` /
+  // `bindings.children` paths below still feed this collection for
+  // backward compatibility until parseDomNode drops the dual-pathway
+  // retention.
+  if (node.content) {
+    const contentExpr = renderReactBinding("textContent", node.content, ctx);
+    if (contentExpr !== null) {
+      textChildren.push(`{${contentExpr}}`);
+    }
+  }
+
+  // IR-DOM-BINDING-CAPABILITY-01: the new `events` field is the canonical
+  // location for event-handler bindings. Lower each to a React-style
+  // `onCamelCaseEvent={expr}` JSX prop. Channel value strategies for
+  // event handlers reuse the existing onChange/onClick logic in
+  // `renderReactBinding` — we re-derive the synthetic JSX attribute name
+  // (`onClick`, `onInput`, ...) and pass it through so that branch fires
+  // for channel-routed events too. Legacy `bindings.onX` paths feed
+  // through the attribute loop below until the retention drops.
+  for (const [eventName, expr] of Object.entries(node.events)) {
+    const jsxEventProp = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    const valueExpr = renderReactBinding(jsxEventProp, expr, ctx);
+    if (valueExpr === null) continue;
+    attrs.push(`${jsxEventProp}={${valueExpr}}`);
+  }
+
   for (const [key, expr] of Object.entries(node.bindings)) {
+    // Dual-pathway retention dedup: when parseDomNode mirrored a legacy
+    // `bindings.onX` entry into `events.<x>`, the canonical `events` loop
+    // above already emitted it. Skip the legacy attribute pass to avoid
+    // double-emit. (Step 4C drops the retention entirely.)
+    if (/^on[A-Z]/.test(key)) {
+      const eventName = key.slice(2).toLowerCase();
+      if (node.events[eventName]) continue;
+    }
     const valueExpr = renderReactBinding(key, expr, ctx);
     if (valueExpr === null) continue; // skip unsupported
-    if (key === "textContent") {
-      textChildren.push(`{${valueExpr}}`);
+    if (key === "textContent" || key === "children") {
+      // Dual-pathway retention: if the new `content` field is already set,
+      // it took precedence above and this legacy entry would double-emit.
+      if (!node.content) {
+        textChildren.push(`{${valueExpr}}`);
+      }
       continue;
     }
     const jsxKey = jsxAttrName(key);

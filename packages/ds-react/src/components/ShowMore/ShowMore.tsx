@@ -103,7 +103,7 @@ export function ShowMore({
     <div className="show-more__content">
       {children}
     </div>
-    <button className="show-more__trigger" type="button" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+    <button className="show-more__trigger" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
       {showMoreLabel}
     </button>
   </div>

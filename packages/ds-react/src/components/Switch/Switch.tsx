@@ -65,7 +65,7 @@ export function Switch({
 
   return (
   <label className={`${classNames}`} data-testid={testId} {...rest}>
-    <input className="switch__input" type="checkbox" role="switch" checked={checked} onChange={(e) => setChecked(e.target.checked)} disabled={disabled} name={name} value={value} />
+    <input className="switch__input" type="checkbox" role="switch" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} />
     <span className="switch__track" aria-hidden="true">
       <span className="switch__thumb" />
     </span>
