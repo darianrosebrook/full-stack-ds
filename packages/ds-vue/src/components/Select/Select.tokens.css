@@ -23,6 +23,10 @@
   --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
   --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
   --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
+  --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+  --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+  --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+  --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
 }
 /* @generated:end */
 

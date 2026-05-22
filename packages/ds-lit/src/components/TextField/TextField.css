@@ -39,8 +39,10 @@
 }
 
 .text-field__field:focus-visible {
-  outline: 2px solid;
-  outline-offset: 2px;
+  outline-width: var(--fsds-text-field-focus-ring-width);
+  outline-color: var(--fsds-text-field-focus-ring-color);
+  outline-style: var(--fsds-text-field-focus-ring-style);
+  outline-offset: var(--fsds-text-field-focus-ring-offset);
 }
 
 .text-field--invalid .text-field__field {

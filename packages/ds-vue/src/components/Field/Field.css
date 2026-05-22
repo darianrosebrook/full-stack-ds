@@ -62,8 +62,10 @@
 
 .field__control:focus-within {
   border-color: var(--fsds-field-color-focus-border);
-  outline: 2px solid;
-  outline-offset: 2px;
+  outline-width: var(--fsds-field-focus-ring-width);
+  outline-color: var(--fsds-field-focus-ring-color);
+  outline-style: var(--fsds-field-focus-ring-style);
+  outline-offset: var(--fsds-field-focus-ring-offset);
 }
 
 .field--invalid .field__control {

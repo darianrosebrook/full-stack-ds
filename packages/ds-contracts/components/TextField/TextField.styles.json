@@ -91,13 +91,17 @@
     }
   },
   ".text-field__field:focus-visible": {
-    "outline": {
-      "literal": "2px solid",
-      "platforms": ["web"]
+    "outline-width": {
+      "resolvesTo": "text-field.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "text-field.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "text-field.focus.ring.style"
     },
     "outline-offset": {
-      "literal": "2px",
-      "platforms": ["web"]
+      "resolvesTo": "text-field.focus.ring.offset"
     }
   },
   ".text-field--invalid .text-field__field": {

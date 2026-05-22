@@ -37,6 +37,10 @@ export class FieldElement extends LitElement {
       --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
       --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .field {
@@ -100,8 +104,10 @@ export class FieldElement extends LitElement {
     
     .field__control:focus-within {
       border-color: var(--fsds-field-color-focus-border);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-field-focus-ring-width);
+      outline-color: var(--fsds-field-focus-ring-color);
+      outline-style: var(--fsds-field-focus-ring-style);
+      outline-offset: var(--fsds-field-focus-ring-offset);
     }
     
     .field--invalid .field__control {
@@ -195,6 +201,10 @@ export class FieldHeaderElement extends LitElement {
       --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
       --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .field {
@@ -258,8 +268,10 @@ export class FieldHeaderElement extends LitElement {
     
     .field__control:focus-within {
       border-color: var(--fsds-field-color-focus-border);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-field-focus-ring-width);
+      outline-color: var(--fsds-field-focus-ring-color);
+      outline-style: var(--fsds-field-focus-ring-style);
+      outline-offset: var(--fsds-field-focus-ring-offset);
     }
     
     .field--invalid .field__control {

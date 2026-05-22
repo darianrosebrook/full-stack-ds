@@ -33,5 +33,25 @@
     "resolvesTo": "semantic.color.border.accent",
     "fallback": "#d9292b",
     "layer": "semantic"
+  },
+  "otp.focus.ring.width": {
+    "resolvesTo": "semantic.focus.ring.width",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "otp.focus.ring.color": {
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#0a65fe",
+    "layer": "semantic"
+  },
+  "otp.focus.ring.style": {
+    "resolvesTo": "semantic.focus.ring.style",
+    "fallback": "solid",
+    "layer": "semantic"
+  },
+  "otp.focus.ring.offset": {
+    "resolvesTo": "semantic.focus.ring.offset",
+    "fallback": "2px",
+    "layer": "semantic"
   }
 }

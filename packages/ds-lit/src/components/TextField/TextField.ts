@@ -29,6 +29,10 @@ export class TextFieldElement extends LitElement {
       --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
       --fsds-text-field-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-text-field-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-text-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-text-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-text-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-text-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .text-field {
@@ -69,8 +73,10 @@ export class TextFieldElement extends LitElement {
     }
     
     .text-field__field:focus-visible {
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-text-field-focus-ring-width);
+      outline-color: var(--fsds-text-field-focus-ring-color);
+      outline-style: var(--fsds-text-field-focus-ring-style);
+      outline-offset: var(--fsds-text-field-focus-ring-offset);
     }
     
     .text-field--invalid .text-field__field {
@@ -149,6 +155,10 @@ export class TextFieldDescriptionElement extends LitElement {
       --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
       --fsds-text-field-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-text-field-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-text-field-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-text-field-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-text-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-text-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .text-field {
@@ -189,8 +199,10 @@ export class TextFieldDescriptionElement extends LitElement {
     }
     
     .text-field__field:focus-visible {
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-text-field-focus-ring-width);
+      outline-color: var(--fsds-text-field-focus-ring-color);
+      outline-style: var(--fsds-text-field-focus-ring-style);
+      outline-offset: var(--fsds-text-field-focus-ring-offset);
     }
     
     .text-field--invalid .text-field__field {

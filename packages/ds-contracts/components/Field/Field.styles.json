@@ -146,13 +146,17 @@
     "border-color": {
       "resolvesTo": "field.color.focus-border"
     },
-    "outline": {
-      "literal": "2px solid",
-      "platforms": ["web"]
+    "outline-width": {
+      "resolvesTo": "field.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "field.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "field.focus.ring.style"
     },
     "outline-offset": {
-      "literal": "2px",
-      "platforms": ["web"]
+      "resolvesTo": "field.focus.ring.offset"
     }
   },
   ".field--invalid .field__control": {

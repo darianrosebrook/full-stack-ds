@@ -30,20 +30,21 @@ async function generateTokenTypes(incremental?: boolean): Promise<boolean> {
 function resolveTokens(): boolean {
   const result = resolveAndWrite(PATHS.tokens, PATHS.outputResolved);
   if (result.warnings.length > 0) {
-    console.warn(
-      `[resolve] ⚠️  ${result.warnings.length} unresolved token(s):`,
+    console.error(
+      `[resolve] ❌ ${result.warnings.length} unresolved token reference(s):`,
     );
-    for (const w of result.warnings.slice(0, 10)) {
-      console.warn(`  - ${w}`);
+    for (const w of result.warnings) {
+      console.error(`  - ${w}`);
     }
-    if (result.warnings.length > 10) {
-      console.warn(`  ... and ${result.warnings.length - 10} more`);
-    }
+    console.error(
+      `[resolve] Unresolved references resolve to silent CSS fallbacks at runtime, ` +
+        `which can mask theme and contrast regressions (e.g. a foreground token that ` +
+        `silently locks to its light-theme value in dark mode). Fix the reference path ` +
+        `or remove the orphan token.`,
+    );
   }
   console.log(`[resolve] Resolved ${result.leafCount} leaf token(s)`);
-  // Warnings don't fail the build — they're diagnostics. A future hardening
-  // step could promote these to errors once the token tree is clean.
-  return true;
+  return result.warnings.length === 0;
 }
 
 interface BuildStep {

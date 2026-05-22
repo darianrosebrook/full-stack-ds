@@ -77,13 +77,17 @@
     "border-color": {
       "resolvesTo": "otp.color.border.accent"
     },
-    "outline": {
-      "literal": "2px solid",
-      "platforms": ["web"]
+    "outline-width": {
+      "resolvesTo": "otp.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "otp.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "otp.focus.ring.style"
     },
     "outline-offset": {
-      "literal": "2px",
-      "platforms": ["web"]
+      "resolvesTo": "otp.focus.ring.offset"
     }
   },
   ".otp__field:disabled": {

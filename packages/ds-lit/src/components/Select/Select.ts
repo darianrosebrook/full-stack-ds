@@ -46,6 +46,10 @@ export class SelectElement extends LitElement {
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
       --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
+      --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .select {
@@ -137,8 +141,10 @@ export class SelectElement extends LitElement {
     
     .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-select-focus-ring-width);
+      outline-color: var(--fsds-select-focus-ring-color);
+      outline-style: var(--fsds-select-focus-ring-style);
+      outline-offset: var(--fsds-select-focus-ring-offset);
     }
     
     .select__trigger:hover {
@@ -257,6 +263,10 @@ export class SelectTriggerElement extends LitElement {
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
       --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
+      --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .select {
@@ -348,8 +358,10 @@ export class SelectTriggerElement extends LitElement {
     
     .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-select-focus-ring-width);
+      outline-color: var(--fsds-select-focus-ring-color);
+      outline-style: var(--fsds-select-focus-ring-style);
+      outline-offset: var(--fsds-select-focus-ring-offset);
     }
     
     .select__trigger:hover {
@@ -415,6 +427,10 @@ export class SelectContentElement extends LitElement {
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
       --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
+      --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .select {
@@ -506,8 +522,10 @@ export class SelectContentElement extends LitElement {
     
     .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-select-focus-ring-width);
+      outline-color: var(--fsds-select-focus-ring-color);
+      outline-style: var(--fsds-select-focus-ring-style);
+      outline-offset: var(--fsds-select-focus-ring-offset);
     }
     
     .select__trigger:hover {
@@ -573,6 +591,10 @@ export class SelectOptionElement extends LitElement {
       --fsds-select-color-icon-isOpen: var(--fsds-semantic-color-foreground-accent, #d9292b);
       --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
       --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
+      --fsds-select-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .select {
@@ -664,8 +686,10 @@ export class SelectOptionElement extends LitElement {
     
     .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-select-focus-ring-width);
+      outline-color: var(--fsds-select-focus-ring-color);
+      outline-style: var(--fsds-select-focus-ring-style);
+      outline-offset: var(--fsds-select-focus-ring-offset);
     }
     
     .select__trigger:hover {

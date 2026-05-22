@@ -90,8 +90,10 @@
 
 .select__trigger:focus-visible {
   border-color: var(--fsds-select-color-border-isOpen);
-  outline: 2px solid;
-  outline-offset: 2px;
+  outline-width: var(--fsds-select-focus-ring-width);
+  outline-color: var(--fsds-select-focus-ring-color);
+  outline-style: var(--fsds-select-focus-ring-style);
+  outline-offset: var(--fsds-select-focus-ring-offset);
 }
 
 .select__trigger:hover {

@@ -29,6 +29,10 @@ export class OTPElement extends LitElement {
       --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-otp-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-otp-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-otp-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-otp-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-otp-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .otp {
@@ -60,8 +64,10 @@ export class OTPElement extends LitElement {
     
     .otp__field:focus-visible {
       border-color: var(--fsds-otp-color-border-accent);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-otp-focus-ring-width);
+      outline-color: var(--fsds-otp-focus-ring-color);
+      outline-style: var(--fsds-otp-focus-ring-style);
+      outline-offset: var(--fsds-otp-focus-ring-offset);
     }
     
     .otp__field:disabled {
@@ -116,6 +122,10 @@ export class OTPGroupElement extends LitElement {
       --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-otp-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-otp-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-otp-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-otp-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-otp-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .otp {
@@ -147,8 +157,10 @@ export class OTPGroupElement extends LitElement {
     
     .otp__field:focus-visible {
       border-color: var(--fsds-otp-color-border-accent);
-      outline: 2px solid;
-      outline-offset: 2px;
+      outline-width: var(--fsds-otp-focus-ring-width);
+      outline-color: var(--fsds-otp-focus-ring-color);
+      outline-style: var(--fsds-otp-focus-ring-style);
+      outline-offset: var(--fsds-otp-focus-ring-offset);
     }
     
     .otp__field:disabled {

@@ -436,6 +436,9 @@
   --fsds-semantic-elevation-none: none;
   --fsds-semantic-elevation-surface-raised: var(--fsds-core-elevation-level-1);
   --fsds-semantic-elevation-surface-floating: var(--fsds-core-elevation-level-2);
+  --fsds-semantic-focus-ring-width: var(--fsds-core-interaction-focus-ring-width);
+  --fsds-semantic-focus-ring-offset: var(--fsds-core-interaction-focus-ring-offset);
+  --fsds-semantic-focus-ring-style: solid;
   --fsds-semantic-interaction-disabled-opacity: var(--fsds-core-interaction-disabled-opacity);
   --fsds-semantic-link-decoration-offset: 2px;
   --fsds-semantic-link-decoration-thickness: 1px;
@@ -708,6 +711,7 @@
   --fsds-semantic-datavis-gridline-minor: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-datavis-on-fill-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-datavis-on-fill-muted: var(--fsds-core-color-palette-neutral-100);
+  --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-200);
@@ -873,6 +877,7 @@
   --fsds-semantic-datavis-gridline-minor: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-datavis-on-fill-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-datavis-on-fill-muted: var(--fsds-core-color-palette-neutral-100);
+  --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-200);
@@ -1036,6 +1041,7 @@
   --fsds-semantic-datavis-gridline-minor: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-datavis-on-fill-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-datavis-on-fill-muted: var(--fsds-core-color-palette-neutral-100);
+  --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-800);
@@ -1200,6 +1206,7 @@
   --fsds-semantic-datavis-gridline-minor: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-datavis-on-fill-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-datavis-on-fill-muted: var(--fsds-core-color-palette-neutral-100);
+  --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-800);
@@ -1362,6 +1369,7 @@
   --fsds-semantic-datavis-gridline-minor: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-datavis-on-fill-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-datavis-on-fill-muted: var(--fsds-core-color-palette-neutral-100);
+  --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-200);

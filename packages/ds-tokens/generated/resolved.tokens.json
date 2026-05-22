@@ -3304,16 +3304,28 @@
     },
     "focus": {
       "ring": {
-        "$type": "composition",
-        "$description": "Focus ring styling for accessibility and interactive elements.",
-        "$value": "{\"border\":{\"width\":\"{semantic.interaction.focus.ringWidth}\",\"style\":\"solid\",\"color\":\"{core.color.palette.red.500}\"},\"offset\":\"{semantic.interaction.focus.ringOffset}\",\"opacity\":\"{semantic.interaction.focus.ringOpacity}\"}"
-      },
-      "ringOffset": {
-        "$type": "dimension",
-        "$description": "Focus ring offset distance",
-        "$value": {
-          "light": "2px",
-          "dark": "2px"
+        "width": {
+          "$type": "borderWidth",
+          "$description": "Focus ring thickness — references core interaction primitive.",
+          "$value": "2px"
+        },
+        "offset": {
+          "$type": "dimension",
+          "$description": "Distance between focused element and ring.",
+          "$value": "2px"
+        },
+        "color": {
+          "$type": "color",
+          "$description": "Focus ring color — references theme-aware semantic border-focus so dark/light themes invert correctly.",
+          "$value": {
+            "light": "#0a65fe",
+            "dark": "#0a65fe"
+          }
+        },
+        "style": {
+          "$type": "strokeStyle",
+          "$description": "Focus ring stroke style. Constant across themes.",
+          "$value": "solid"
         }
       }
     },

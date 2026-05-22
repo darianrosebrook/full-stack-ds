@@ -2,16 +2,29 @@
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "focus": {
     "ring": {
-      "$description": "Focus ring styling for accessibility and interactive elements.",
-      "$type": "composition",
-      "$value": {
-        "border": {
-          "width": "{interaction.focus.ringWidth}",
-          "style": "solid",
-          "color": "{color.palette.red.500}"
+      "width": {
+        "$type": "borderWidth",
+        "$value": "{core.interaction.focus.ringWidth}",
+        "$description": "Focus ring thickness — references core interaction primitive."
+      },
+      "offset": {
+        "$type": "dimension",
+        "$value": "{core.interaction.focus.ringOffset}",
+        "$description": "Distance between focused element and ring."
+      },
+      "color": {
+        "$type": "color",
+        "$value": "{semantic.color.border.focus}",
+        "$extensions": {
+          "fsds.light": "{semantic.color.border.focus}",
+          "fsds.dark": "{semantic.color.border.focus}"
         },
-        "offset": "{interaction.focus.ringOffset}",
-        "opacity": "{interaction.focus.ringOpacity}"
+        "$description": "Focus ring color — references theme-aware semantic border-focus so dark/light themes invert correctly."
+      },
+      "style": {
+        "$type": "strokeStyle",
+        "$value": "solid",
+        "$description": "Focus ring stroke style. Constant across themes."
       }
     }
   }

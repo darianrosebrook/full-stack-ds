@@ -243,13 +243,17 @@
     "border-color": {
       "resolvesTo": "select.color.border.isOpen"
     },
-    "outline": {
-      "literal": "2px solid",
-      "platforms": ["web"]
+    "outline-width": {
+      "resolvesTo": "select.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "select.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "select.focus.ring.style"
     },
     "outline-offset": {
-      "literal": "2px",
-      "platforms": ["web"]
+      "resolvesTo": "select.focus.ring.offset"
     }
   },
   ".select__trigger:hover": {

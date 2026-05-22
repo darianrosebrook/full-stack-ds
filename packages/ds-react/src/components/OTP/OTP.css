@@ -30,8 +30,10 @@
 
 .otp__field:focus-visible {
   border-color: var(--fsds-otp-color-border-accent);
-  outline: 2px solid;
-  outline-offset: 2px;
+  outline-width: var(--fsds-otp-focus-ring-width);
+  outline-color: var(--fsds-otp-focus-ring-color);
+  outline-style: var(--fsds-otp-focus-ring-style);
+  outline-offset: var(--fsds-otp-focus-ring-offset);
 }
 
 .otp__field:disabled {
