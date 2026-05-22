@@ -17,12 +17,12 @@
     border-color: var(--fsds-button-color-border-hover);
   }
 
-  &:focus-visible {
-    border-color: var(--fsds-button-color-border-focus);
-  }
-
   &:active {
     background-color: var(--fsds-button-color-background-active);
+  }
+
+  &:focus-visible {
+    border-color: var(--fsds-button-color-border-focus);
   }
 
   &:disabled {

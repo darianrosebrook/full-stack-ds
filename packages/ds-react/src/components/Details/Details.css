@@ -9,11 +9,6 @@
   border-color: var(--fsds-details-color-border-accent);
   gap: var(--fsds-details-spacing-gap-default);
   line-height: var(--fsds-details-typography-lineHeight-body);
-  /* --fsds-core-spacing-size-05: 12px; */
-  /* --fsds-core-shape-border-width-thick: 2px; */
-  /* --fsds-semantic-color-border-accent: #d9292b; */
-  /* --fsds-core-spacing-size-02: 2px; */
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
 
   &:hover {
     background-color: var(--fsds-details-color-background-hover);

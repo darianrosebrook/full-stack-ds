@@ -20,12 +20,12 @@ export class DividerElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .divider {
-      /* --fsds-semantic-color-border-light: #fceaea; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-border-light: #fceaea; */
-      /* --fsds-core-shape-border-width-hairline: 1px; */
-      /* --fsds-core-shape-border-width-hairline: 1px; */
-      /* --fsds-core-spacing-size-04: 8px; */
+      --fsds-divider-color-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-divider-color-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-divider-color-muted: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-divider-size-thickness: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-divider-size-thicknessThick: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-divider-spacing-margin: var(--fsds-core-spacing-size-04, 8px);
     }
   `;
 

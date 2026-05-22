@@ -12,12 +12,6 @@
   font-size: var(--fsds-sheet-text-sizeTitle);
   font-weight: var(--fsds-sheet-text-weightTitle);
   box-shadow: var(--fsds-sheet-shadow);
-  /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
-  /* --fsds-sheet-size-width: ; */
-  /* --fsds-sheet-size-height: ; */
-  /* --fsds-core-spacing-size-06: 16px; */
-  /* --fsds-core-shape-border-width-thick: 2px; */
-  /* --fsds-semantic-color-border-accent: #d9292b; */
 
   &:hover {
     background-color: var(--fsds-sheet-color-backgroundHover);

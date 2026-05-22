@@ -25,18 +25,20 @@ export class DetailsElement extends LitElement {
     .details {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-details-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-details-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
+      --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-    
-      &:hover {
-        --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
-        --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
+      --fsds-details-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .details {
@@ -47,11 +49,6 @@ export class DetailsElement extends LitElement {
       border-color: var(--fsds-details-color-border-accent);
       gap: var(--fsds-details-spacing-gap-default);
       line-height: var(--fsds-details-typography-lineHeight-body);
-      /* --fsds-core-spacing-size-05: 12px; */
-      /* --fsds-core-shape-border-width-thick: 2px; */
-      /* --fsds-semantic-color-border-accent: #d9292b; */
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
     
       &:hover {
         background-color: var(--fsds-details-color-background-hover);
@@ -109,18 +106,20 @@ export class DetailsContentElement extends LitElement {
     .details {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-details-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-details-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
+      --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-    
-      &:hover {
-        --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
-        --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
+      --fsds-details-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .details {
@@ -131,11 +130,6 @@ export class DetailsContentElement extends LitElement {
       border-color: var(--fsds-details-color-border-accent);
       gap: var(--fsds-details-spacing-gap-default);
       line-height: var(--fsds-details-typography-lineHeight-body);
-      /* --fsds-core-spacing-size-05: 12px; */
-      /* --fsds-core-shape-border-width-thick: 2px; */
-      /* --fsds-semantic-color-border-accent: #d9292b; */
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
     
       &:hover {
         background-color: var(--fsds-details-color-background-hover);

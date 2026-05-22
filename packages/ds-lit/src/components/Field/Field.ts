@@ -24,28 +24,25 @@ export class FieldElement extends LitElement {
       --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-field-pad-x: var(--fsds-semantic-spacing-density-compact-md, 12px);
+      --fsds-field-pad-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
+      --fsds-field-color-bg: var(--fsds-semantic-color-background-elevated, #ffffff);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
+      --fsds-field-color-focus-border: var(--fsds-semantic-color-border-focus, #d9292b);
+      --fsds-field-color-invalid-border: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #336006);
+      --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
+      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .field {
       gap: var(--fsds-field-gap-meta);
       border-radius: var(--fsds-field-radius);
       border-color: var(--fsds-field-color-borderBold);
-      /* --fsds-semantic-spacing-density-compact-md: 12px; */
-      /* --fsds-semantic-spacing-density-compact-sm: 8px; */
-      /* --fsds-semantic-color-background-elevated: #ffffff; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-color-border-focus: #d9292b; */
-      /* --fsds-semantic-color-border-danger: #ae0001; */
-      /* --fsds-semantic-color-foreground-danger: #d9292b; */
-      /* --fsds-semantic-color-feedback-border-success: #336006; */
-      /* --fsds-core-spacing-size-03: 4px; */
-    }
-    
-    .field__label {
-      /* --fsds-semantic-typography-body-small-font-size: 14px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
   `;
 
@@ -113,28 +110,25 @@ export class FieldHeaderElement extends LitElement {
       --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-field-pad-x: var(--fsds-semantic-spacing-density-compact-md, 12px);
+      --fsds-field-pad-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
+      --fsds-field-color-bg: var(--fsds-semantic-color-background-elevated, #ffffff);
+      --fsds-field-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
+      --fsds-field-color-focus-border: var(--fsds-semantic-color-border-focus, #d9292b);
+      --fsds-field-color-invalid-border: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-field-color-invalid-text: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-field-color-valid-border: var(--fsds-semantic-color-feedback-border-success, #336006);
+      --fsds-field-spacing-indicator: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-field-label-fontSize: var(--fsds-semantic-typography-body-small-font-size, 14px);
+      --fsds-field-label-color: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .field {
       gap: var(--fsds-field-gap-meta);
       border-radius: var(--fsds-field-radius);
       border-color: var(--fsds-field-color-borderBold);
-      /* --fsds-semantic-spacing-density-compact-md: 12px; */
-      /* --fsds-semantic-spacing-density-compact-sm: 8px; */
-      /* --fsds-semantic-color-background-elevated: #ffffff; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-color-border-focus: #d9292b; */
-      /* --fsds-semantic-color-border-danger: #ae0001; */
-      /* --fsds-semantic-color-foreground-danger: #d9292b; */
-      /* --fsds-semantic-color-feedback-border-success: #336006; */
-      /* --fsds-core-spacing-size-03: 4px; */
-    }
-    
-    .field__label {
-      /* --fsds-semantic-typography-body-small-font-size: 14px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
   `;
 

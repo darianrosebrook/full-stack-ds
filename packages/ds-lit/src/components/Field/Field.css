@@ -5,20 +5,6 @@
   gap: var(--fsds-field-gap-meta);
   border-radius: var(--fsds-field-radius);
   border-color: var(--fsds-field-color-borderBold);
-  /* --fsds-semantic-spacing-density-compact-md: 12px; */
-  /* --fsds-semantic-spacing-density-compact-sm: 8px; */
-  /* --fsds-semantic-color-background-elevated: #ffffff; */
-  /* --fsds-semantic-color-foreground-primary: #141414; */
-  /* --fsds-semantic-color-border-focus: #d9292b; */
-  /* --fsds-semantic-color-border-danger: #ae0001; */
-  /* --fsds-semantic-color-foreground-danger: #d9292b; */
-  /* --fsds-semantic-color-feedback-border-success: #336006; */
-  /* --fsds-core-spacing-size-03: 4px; */
-}
-
-.field__label {
-  /* --fsds-semantic-typography-body-small-font-size: 14px; */
-  /* --fsds-semantic-color-foreground-secondary: #555555; */
 }
 /* @generated:end */
 

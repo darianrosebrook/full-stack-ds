@@ -6,34 +6,6 @@
   box-shadow: var(--fsds-walkthrough-surface-shadow);
   padding: var(--fsds-walkthrough-surface-padding);
   gap: var(--fsds-walkthrough-dots-gap);
-  /* --fsds-semantic-color-background-secondary: #efefef; */
-  /* --fsds-semantic-color-border-subtle: #cecece; */
-  /* --fsds-semantic-typography-heading-03: 20px; */
-  /* --fsds-semantic-typography-font-weight-bold: 700; */
-  /* --fsds-semantic-color-foreground-primary: #141414; */
-  /* --fsds-semantic-typography-body-02: 16px; */
-  /* --fsds-semantic-color-foreground-secondary: #555555; */
-  /* --fsds-core-spacing-size-04: 8px; */
-  /* --fsds-core-spacing-size-06: 16px; */
-  /* --fsds-core-spacing-size-02: 2px; */
-  /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-  /* --fsds-semantic-color-border-subtle: #cecece; */
-  /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-  /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
-  /* --fsds-core-color-mode-transparent: transparent; */
-  /* --fsds-semantic-color-foreground-secondary: #555555; */
-  /* --fsds-semantic-color-border-subtle: #cecece; */
-}
-
-.walkthrough__title {
-  /* --fsds-semantic-typography-heading-03: 20px; */
-  /* --fsds-semantic-typography-font-weight-bold: 700; */
-  /* --fsds-semantic-color-foreground-primary: #141414; */
-}
-
-.walkthrough__description {
-  /* --fsds-semantic-typography-body-02: 16px; */
-  /* --fsds-semantic-color-foreground-secondary: #555555; */
 }
 
 .walkthrough__controls {
@@ -42,9 +14,6 @@
 
 .walkthrough__dots {
   gap: var(--fsds-walkthrough-dots-gap);
-  /* --fsds-core-spacing-size-02: 2px; */
-  /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-  /* --fsds-semantic-color-border-subtle: #cecece; */
 }
 /* @generated:end */
 

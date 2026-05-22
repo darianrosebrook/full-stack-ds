@@ -6,10 +6,9 @@
   border-width: var(--fsds-textfield-border-width);
   border-radius: var(--fsds-textfield-border-radius);
   color: var(--fsds-textfield-color-input-text);
-  /* --fsds-semantic-color-foreground-tertiary: #717171; */
 }
 
-.text-field--invalid {
+.text-field__invalid {
   border-color: var(--fsds-textfield-color-input-borderError);
   color: var(--fsds-textfield-color-error);
 }

@@ -9,24 +9,12 @@
   --fsds-button-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
   --fsds-button-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
   --fsds-button-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
-
-  &:hover {
-    --fsds-button-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
-    --fsds-button-color-border-hover: var(--fsds-semantic-interaction-border-hover, #8f8f8f);
-  }
-
-  &:focus-visible {
-    --fsds-button-color-border-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-  }
-
-  &:active {
-    --fsds-button-color-background-active: var(--fsds-semantic-interaction-background-active, #cecece);
-  }
-
-  &:disabled {
-    --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #cecece);
-    --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-  }
+  --fsds-button-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+  --fsds-button-color-border-hover: var(--fsds-semantic-interaction-border-hover, #8f8f8f);
+  --fsds-button-color-background-active: var(--fsds-semantic-interaction-background-active, #cecece);
+  --fsds-button-color-border-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+  --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #cecece);
+  --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
 }
 /* @generated:end */
 

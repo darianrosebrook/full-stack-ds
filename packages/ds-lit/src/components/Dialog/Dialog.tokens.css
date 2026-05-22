@@ -6,14 +6,25 @@
   --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
   --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+  --fsds-dialog-size-sm-width: 400px;
+  --fsds-dialog-size-sm-maxWidth: 90vw;
+  --fsds-dialog-size-md-width: 500px;
+  --fsds-dialog-size-md-maxWidth: 90vw;
+  --fsds-dialog-size-lg-width: 700px;
+  --fsds-dialog-size-lg-maxWidth: 90vw;
+  --fsds-dialog-size-xl-width: 900px;
+  --fsds-dialog-size-xl-maxWidth: 95vw;
+  --fsds-dialog-size-full-width: 100vw;
+  --fsds-dialog-size-full-height: 100vh;
+  --fsds-dialog-size-closeButton-size: var(--fsds-core-spacing-size-08, 32px);
+  --fsds-dialog-elevation-default: var(--fsds-semantic-elevation-surface-floating, 0 8px 32px rgba(0,0,0,0.16));
   --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
   --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
   --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
+  --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
   --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-
-  &:hover {
-    --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
-  }
+  --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
 }
 /* @generated:end */
 

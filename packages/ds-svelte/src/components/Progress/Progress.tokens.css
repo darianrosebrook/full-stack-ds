@@ -3,13 +3,7 @@
   --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-progress-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
   --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
-}
-
-.progress__track {
   --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
-}
-
-.progress__fill {
   --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
 }
 /* @generated:end */

@@ -6,13 +6,7 @@
   --fsds-input-size-height-default: var(--fsds-semantic-control-size-lg-height, 48px);
   --fsds-input-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
   --fsds-input-space-inline-default: var(--fsds-core-spacing-size-05, 12px);
-
-  &:focus-visible {
-    --fsds-input-color-focus-default: var(--fsds-semantic-color-border-focus, #d9292b);
-  }
-}
-
-.input--invalid {
+  --fsds-input-color-focus-default: var(--fsds-semantic-color-border-focus, #d9292b);
   --fsds-input-color-invalid-default: var(--fsds-semantic-color-border-danger, #ae0001);
 }
 /* @generated:end */

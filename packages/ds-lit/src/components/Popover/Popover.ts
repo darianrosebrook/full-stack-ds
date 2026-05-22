@@ -41,6 +41,7 @@ export class PopoverElement extends LitElement {
       --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .popover {
@@ -49,7 +50,9 @@ export class PopoverElement extends LitElement {
       gap: var(--fsds-popover-size-gap-default);
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
-      /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+      box-shadow: var(--fsds-popover-elevation-default);
+      position: relative;
+      display: inline-block;
     }
   `;
   @property({ type: Boolean }) open?: boolean;
@@ -161,6 +164,7 @@ export class PopoverTriggerElement extends LitElement {
       --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .popover {
@@ -169,7 +173,9 @@ export class PopoverTriggerElement extends LitElement {
       gap: var(--fsds-popover-size-gap-default);
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
-      /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+      box-shadow: var(--fsds-popover-elevation-default);
+      position: relative;
+      display: inline-block;
     }
   `;
   private _ctx = new ContextConsumerController<PopoverSurfaceContext>(this, PopoverSurface_CTX);
@@ -262,6 +268,7 @@ export class PopoverContentElement extends LitElement {
       --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .popover {
@@ -270,7 +277,9 @@ export class PopoverContentElement extends LitElement {
       gap: var(--fsds-popover-size-gap-default);
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
-      /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+      box-shadow: var(--fsds-popover-elevation-default);
+      position: relative;
+      display: inline-block;
     }
   `;
 

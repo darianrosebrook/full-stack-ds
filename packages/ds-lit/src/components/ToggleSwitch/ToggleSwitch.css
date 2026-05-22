@@ -12,12 +12,12 @@
     background-color: var(--fsds-toggleSwitch-color-background-hover);
   }
 
-  &:disabled {
-    background-color: var(--fsds-toggleSwitch-color-background-disabled);
-  }
-
   &:checked {
     background-color: var(--fsds-toggleSwitch-color-background-checked);
+  }
+
+  &:disabled {
+    background-color: var(--fsds-toggleSwitch-color-background-disabled);
   }
 }
 /* @generated:end */

@@ -6,9 +6,6 @@
   gap: var(--fsds-skeleton-gap-lg);
   transition-duration: var(--fsds-skeleton-anim-duration);
   transition-timing-function: var(--fsds-skeleton-anim-easing);
-  /* --fsds-semantic-color-background-secondary: #efefef; */
-  /* --fsds-semantic-color-background-highlight: #f7c1c2; */
-  /* --fsds-semantic-color-background-secondary: #efefef; */
 }
 /* @generated:end */
 

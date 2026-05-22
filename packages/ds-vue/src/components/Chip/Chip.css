@@ -11,7 +11,6 @@
   font-size: var(--fsds-chip-text-size);
   font-weight: var(--fsds-chip-text-weight);
   transition-duration: var(--fsds-chip-motion-duration-fast);
-  /* --fsds-core-shape-border-width-hairline: 1px; */
 
   &:hover {
     background-color: var(--fsds-chip-color-background-hover);

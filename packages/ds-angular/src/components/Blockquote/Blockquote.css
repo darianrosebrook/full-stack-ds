@@ -7,9 +7,6 @@
   border-color: var(--fsds-blockquote-color-border-default);
   padding: var(--fsds-blockquote-size-padding-default);
   border-radius: var(--fsds-blockquote-size-radius-default);
-  /* --fsds-semantic-typography-font-style-italic: italic; */
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
-  /* --fsds-core-shape-border-width-thick: 2px; */
 }
 /* @generated:end */
 

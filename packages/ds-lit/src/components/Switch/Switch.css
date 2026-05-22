@@ -8,14 +8,6 @@
   align-items: center;
   cursor: pointer;
   position: relative;
-
-  &:disabled {
-    background-color: var(--fsds-switch-color-track-background-disabled);
-  }
-
-  &:checked {
-    background-color: var(--fsds-switch-color-thumb-background-checked);
-  }
 }
 
 .switch__track {
@@ -37,10 +29,10 @@
   box-shadow: var(--fsds-switch-color-thumb-shadow-default);
   width: var(--fsds-switch-size-md-thumb-size);
   height: var(--fsds-switch-size-md-thumb-height);
-  display: block;
-  position: absolute;
   top: var(--fsds-switch-size-md-track-padding);
   left: var(--fsds-switch-size-md-track-padding);
+  display: block;
+  position: absolute;
   border-radius: 50%;
   box-sizing: border-box;
 }
@@ -56,6 +48,18 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+:has(.switch__input:checked) .switch__track {
+  background-color: var(--fsds-switch-color-track-background-checked);
+}
+
+:has(.switch__input:checked) .switch__thumb {
+  background-color: var(--fsds-switch-color-thumb-background-checked);
+}
+
+:has(.switch__input:disabled) .switch__track {
+  background-color: var(--fsds-switch-color-track-background-disabled);
 }
 /* @generated:end */
 

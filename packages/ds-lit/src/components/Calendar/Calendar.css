@@ -7,11 +7,6 @@
   border-color: var(--fsds-calendar-color-border-accent);
   padding: var(--fsds-calendar-size-padding-default);
   border-radius: var(--fsds-calendar-size-radius-default);
-  /* --fsds-semantic-elevation-default: none; */
-
-  &:hover {
-    /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
-  }
 }
 /* @generated:end */
 

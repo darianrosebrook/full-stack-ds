@@ -28,6 +28,8 @@ export class CalendarElement extends LitElement {
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-default, none);
+      --fsds-calendar-elevation-hover: var(--fsds-semantic-elevation-surface-floating, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .calendar {
@@ -36,11 +38,6 @@ export class CalendarElement extends LitElement {
       border-color: var(--fsds-calendar-color-border-accent);
       padding: var(--fsds-calendar-size-padding-default);
       border-radius: var(--fsds-calendar-size-radius-default);
-      /* --fsds-semantic-elevation-default: none; */
-    
-      &:hover {
-        /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
-      }
     }
   `;
 
@@ -102,6 +99,8 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-default, none);
+      --fsds-calendar-elevation-hover: var(--fsds-semantic-elevation-surface-floating, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .calendar {
@@ -110,11 +109,6 @@ export class CalendarHeaderElement extends LitElement {
       border-color: var(--fsds-calendar-color-border-accent);
       padding: var(--fsds-calendar-size-padding-default);
       border-radius: var(--fsds-calendar-size-radius-default);
-      /* --fsds-semantic-elevation-default: none; */
-    
-      &:hover {
-        /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
-      }
     }
   `;
 

@@ -10,7 +10,6 @@
   gap: var(--fsds-alertnotice-spacing-gap);
   font-size: var(--fsds-alertnotice-text-size);
   font-weight: var(--fsds-alertnotice-text-weight);
-  /* --fsds-core-spacing-size-06: 16px; */
 }
 
 .alert-notice__title {

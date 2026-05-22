@@ -4,7 +4,6 @@
 .label {
   color: var(--fsds-label-color-text-default);
   line-height: var(--fsds-label-typo-lineHeight-default);
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
 }
 /* @generated:end */
 

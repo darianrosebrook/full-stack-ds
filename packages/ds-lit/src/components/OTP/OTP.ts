@@ -28,10 +28,7 @@ export class OTPElement extends LitElement {
       --fsds-otp-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-otp-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-    
-      &:focus-visible {
-        --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      }
+      --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
     .otp {
@@ -91,10 +88,7 @@ export class OTPGroupElement extends LitElement {
       --fsds-otp-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-otp-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-    
-      &:focus-visible {
-        --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      }
+      --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
     .otp {

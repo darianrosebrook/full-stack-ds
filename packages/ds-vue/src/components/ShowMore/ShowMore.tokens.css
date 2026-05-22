@@ -7,6 +7,7 @@
   --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
   --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
   --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+  --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
 }
 /* @generated:end */
 

@@ -27,18 +27,9 @@ export class ToggleSwitchElement extends LitElement {
       --fsds-toggleSwitch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-toggleSwitch-border-radius-default: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-toggleSwitch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
-    
-      &:hover {
-        --fsds-toggleSwitch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
-      }
-    
-      &:disabled {
-        --fsds-toggleSwitch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
-      }
-    
-      &:checked {
-        --fsds-toggleSwitch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
-      }
+      --fsds-toggleSwitch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-toggleSwitch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-toggleSwitch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
     }
     
     .toggle-switch {
@@ -52,12 +43,12 @@ export class ToggleSwitchElement extends LitElement {
         background-color: var(--fsds-toggleSwitch-color-background-hover);
       }
     
-      &:disabled {
-        background-color: var(--fsds-toggleSwitch-color-background-disabled);
-      }
-    
       &:checked {
         background-color: var(--fsds-toggleSwitch-color-background-checked);
+      }
+    
+      &:disabled {
+        background-color: var(--fsds-toggleSwitch-color-background-disabled);
       }
     }
   `;

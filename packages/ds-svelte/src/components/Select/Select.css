@@ -9,10 +9,6 @@
   border-radius: var(--fsds-select-size-radius-default);
   font-size: var(--fsds-select-font-size-default);
   line-height: var(--fsds-select-font-lineHeight-default);
-  /* --fsds-semantic-color-foreground-secondary: #555555; */
-  /* --fsds-semantic-color-foreground-placeholder: #8f8f8f; */
-  /* --fsds-core-shape-border-width-hairline: 1px; */
-  /* --fsds-semantic-control-size-md-height: 32px; */
 
   &:hover {
     background-color: var(--fsds-select-color-background-hover);
@@ -32,21 +28,8 @@
   }
 }
 
-.select--sm {
-  /* --fsds-semantic-control-size-sm-height: 24px; */
-}
-
-.select--md {
-  /* --fsds-semantic-control-size-md-height: 32px; */
-}
-
-.select--lg {
-  /* --fsds-semantic-control-size-lg-height: 48px; */
-}
-
-.select--open {
+.select__open {
   border-color: var(--fsds-select-color-border-isOpen);
-  /* --fsds-semantic-color-foreground-accent: #d9292b; */
 }
 /* @generated:end */
 

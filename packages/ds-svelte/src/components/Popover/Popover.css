@@ -7,7 +7,9 @@
   gap: var(--fsds-popover-size-gap-default);
   background-color: var(--fsds-popover-color-background-content);
   border-color: var(--fsds-popover-color-border-accent);
-  /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+  box-shadow: var(--fsds-popover-elevation-default);
+  position: relative;
+  display: inline-block;
 }
 /* @generated:end */
 

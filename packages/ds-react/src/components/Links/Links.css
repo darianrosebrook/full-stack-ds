@@ -16,7 +16,7 @@
   }
 }
 
-.links--visited {
+.links__visited {
   color: var(--fsds-links-color-foreground-visited);
 }
 /* @generated:end */

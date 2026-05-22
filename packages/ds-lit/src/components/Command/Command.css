@@ -11,10 +11,6 @@
   font-size: var(--fsds-command-text-sizeSmall);
   box-shadow: var(--fsds-command-shadow);
   opacity: var(--fsds-command-opacity-disabled);
-  /* --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
-  /* --fsds-command-size-maxWidth: ; */
-  /* --fsds-command-size-maxHeight: ; */
-  /* --fsds-core-spacing-size-04: 8px; */
 
   &:hover {
     background-color: var(--fsds-command-color-backgroundHover);

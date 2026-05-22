@@ -9,12 +9,6 @@
   border-radius: var(--fsds-postcard-size-radius-full);
   gap: var(--fsds-postcard-size-gap-small);
   line-height: var(--fsds-postcard-typography-content-lineHeight);
-  /* --fsds-core-shape-border-width-hairline: 1px; */
-  /* --fsds-semantic-typography-body-02: 16px; */
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
-  /* --fsds-semantic-typography-body-03: 14px; */
-  /* --fsds-semantic-typography-body-02: 16px; */
-  /* --fsds-semantic-typography-body-03: 14px; */
 
   &:hover {
     background-color: var(--fsds-postcard-color-background-hover);
@@ -22,22 +16,8 @@
   }
 }
 
-.postcard__displayName {
-  /* --fsds-semantic-typography-body-02: 16px; */
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
-}
-
-.postcard__handle {
-  /* --fsds-semantic-typography-body-03: 14px; */
-}
-
 .postcard__content {
   line-height: var(--fsds-postcard-typography-content-lineHeight);
-  /* --fsds-semantic-typography-body-02: 16px; */
-}
-
-.postcard__footer {
-  /* --fsds-semantic-typography-body-03: 14px; */
 }
 /* @generated:end */
 

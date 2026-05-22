@@ -5,19 +5,6 @@
   gap: var(--fsds-tabs-spacing-panelGap);
   padding: var(--fsds-tabs-spacing-padding);
   border-radius: var(--fsds-tabs-shape-radius);
-  /* --fsds-semantic-color-foreground-primary: #141414; */
-  /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
-  /* --fsds-semantic-color-border-accent: #d9292b; */
-  /* --fsds-core-motion-duration-short: 150ms; */
-
-  &:hover {
-    /* --fsds-semantic-color-background-hover: #cecece; */
-    /* --fsds-semantic-color-foreground-primary: #141414; */
-  }
-
-  &:focus-visible {
-    /* --fsds-semantic-color-border-accent: #d9292b; */
-  }
 }
 /* @generated:end */
 

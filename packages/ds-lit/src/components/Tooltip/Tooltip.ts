@@ -42,6 +42,7 @@ export class TooltipElement extends LitElement {
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
     }
     
@@ -51,8 +52,8 @@ export class TooltipElement extends LitElement {
       border-color: var(--fsds-tooltip-color-border-default);
       padding: var(--fsds-tooltip-size-padding-x);
       border-radius: var(--fsds-tooltip-size-radius-default);
+      max-width: var(--fsds-tooltip-size-maxWidth);
       font-size: var(--fsds-tooltip-typography-fontSize);
-      /* --fsds-tooltip-size-maxWidth: ; */
     }
   `;
   @property({ type: Boolean }) open?: boolean;
@@ -164,6 +165,7 @@ export class TooltipTriggerElement extends LitElement {
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
     }
     
@@ -173,8 +175,8 @@ export class TooltipTriggerElement extends LitElement {
       border-color: var(--fsds-tooltip-color-border-default);
       padding: var(--fsds-tooltip-size-padding-x);
       border-radius: var(--fsds-tooltip-size-radius-default);
+      max-width: var(--fsds-tooltip-size-maxWidth);
       font-size: var(--fsds-tooltip-typography-fontSize);
-      /* --fsds-tooltip-size-maxWidth: ; */
     }
   `;
   private _ctx = new ContextConsumerController<TooltipSurfaceContext>(this, TooltipSurface_CTX);
@@ -268,6 +270,7 @@ export class TooltipContentElement extends LitElement {
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
     }
     
@@ -277,8 +280,8 @@ export class TooltipContentElement extends LitElement {
       border-color: var(--fsds-tooltip-color-border-default);
       padding: var(--fsds-tooltip-size-padding-x);
       border-radius: var(--fsds-tooltip-size-radius-default);
+      max-width: var(--fsds-tooltip-size-maxWidth);
       font-size: var(--fsds-tooltip-typography-fontSize);
-      /* --fsds-tooltip-size-maxWidth: ; */
     }
   `;
 

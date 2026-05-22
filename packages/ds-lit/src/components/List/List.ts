@@ -27,15 +27,15 @@ export class ListElement extends LitElement {
       --fsds-list-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-list-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-list-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-list-spacing-sm: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-list-spacing-md: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-list-spacing-lg: var(--fsds-core-spacing-size-06, 16px);
     }
     
     .list {
       color: var(--fsds-list-color-foreground-primary);
       border-color: var(--fsds-list-color-border-default);
       padding: var(--fsds-list-size-padding-default);
-      /* --fsds-core-spacing-size-03: 4px; */
-      /* --fsds-core-spacing-size-05: 12px; */
-      /* --fsds-core-spacing-size-06: 16px; */
     }
   `;
 

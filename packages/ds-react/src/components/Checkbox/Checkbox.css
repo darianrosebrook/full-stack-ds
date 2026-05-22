@@ -12,12 +12,12 @@
     border-color: var(--fsds-checkbox-color-border-hover);
   }
 
-  &:disabled {
-    background-color: var(--fsds-checkbox-color-background-disabled);
-  }
-
   &:checked {
     background-color: var(--fsds-checkbox-color-background-checked);
+  }
+
+  &:disabled {
+    background-color: var(--fsds-checkbox-color-background-disabled);
   }
 }
 /* @generated:end */

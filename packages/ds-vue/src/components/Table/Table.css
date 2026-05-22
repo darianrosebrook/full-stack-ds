@@ -11,19 +11,9 @@
   font-size: var(--fsds-table-text-sizeCaption);
   line-height: var(--fsds-table-text-lineHeight);
   font-weight: var(--fsds-table-text-weightFooter);
-  /* --fsds-core-spacing-size-03: 4px; */
-  /* --fsds-core-spacing-size-02: 2px; */
-  /* --fsds-core-spacing-size-04: 8px; */
-  /* --fsds-semantic-control-size-md-height: 32px; */
 
   &:hover {
     background-color: var(--fsds-table-color-background-hover);
-  }
-
-  &:focus-visible {
-    /* --fsds-core-shape-border-width-thick: 2px; */
-    /* --fsds-semantic-color-border-accent: #d9292b; */
-    /* --fsds-core-spacing-size-01: 1px; */
   }
 
   &[aria-selected="true"] {

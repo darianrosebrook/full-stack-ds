@@ -43,9 +43,7 @@ export class AlertElement extends LitElement {
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
-    }
-    
-    .alert__title {
+      --fsds-alert-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
@@ -59,7 +57,6 @@ export class AlertElement extends LitElement {
       gap: var(--fsds-alert-spacing-gap);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
-      /* --fsds-core-spacing-size-06: 16px; */
     }
     
     .alert__title {
@@ -113,9 +110,7 @@ export class AlertBodyElement extends LitElement {
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
-    }
-    
-    .alert__title {
+      --fsds-alert-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
@@ -129,7 +124,6 @@ export class AlertBodyElement extends LitElement {
       gap: var(--fsds-alert-spacing-gap);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
-      /* --fsds-core-spacing-size-06: 16px; */
     }
     
     .alert__title {
@@ -169,9 +163,7 @@ export class AlertTitleElement extends LitElement {
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
-    }
-    
-    .alert__title {
+      --fsds-alert-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
@@ -185,7 +177,6 @@ export class AlertTitleElement extends LitElement {
       gap: var(--fsds-alert-spacing-gap);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
-      /* --fsds-core-spacing-size-06: 16px; */
     }
     
     .alert__title {

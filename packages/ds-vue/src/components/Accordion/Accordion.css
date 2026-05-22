@@ -13,11 +13,6 @@
   font-size: var(--fsds-accordion-text-sizeContent);
   line-height: var(--fsds-accordion-text-lineHeightContent);
   opacity: var(--fsds-accordion-opacity-disabled);
-  /* --fsds-semantic-color-foreground-tertiary: #717171; */
-  /* --fsds-core-spacing-size-04: 8px; */
-  /* --fsds-core-shape-border-width-thick: 2px; */
-  /* --fsds-semantic-color-border-accent: #d9292b; */
-  /* --fsds-core-spacing-size-01: 1px; */
 
   &:hover {
     color: var(--fsds-accordion-color-textHover);

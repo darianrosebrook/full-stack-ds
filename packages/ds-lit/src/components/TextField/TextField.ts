@@ -26,9 +26,7 @@ export class TextFieldElement extends LitElement {
       --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
-    }
-    
-    .text-field--invalid {
+      --fsds-textfield-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
       --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
@@ -38,10 +36,9 @@ export class TextFieldElement extends LitElement {
       border-width: var(--fsds-textfield-border-width);
       border-radius: var(--fsds-textfield-border-radius);
       color: var(--fsds-textfield-color-input-text);
-      /* --fsds-semantic-color-foreground-tertiary: #717171; */
     }
     
-    .text-field--invalid {
+    .text-field__invalid {
       border-color: var(--fsds-textfield-color-input-borderError);
       color: var(--fsds-textfield-color-error);
     }
@@ -110,9 +107,7 @@ export class TextFieldDescriptionElement extends LitElement {
       --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
-    }
-    
-    .text-field--invalid {
+      --fsds-textfield-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
       --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
@@ -122,10 +117,9 @@ export class TextFieldDescriptionElement extends LitElement {
       border-width: var(--fsds-textfield-border-width);
       border-radius: var(--fsds-textfield-border-radius);
       color: var(--fsds-textfield-color-input-text);
-      /* --fsds-semantic-color-foreground-tertiary: #717171; */
     }
     
-    .text-field--invalid {
+    .text-field__invalid {
       border-color: var(--fsds-textfield-color-input-borderError);
       color: var(--fsds-textfield-color-error);
     }

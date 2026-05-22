@@ -3,16 +3,7 @@
 /* @generated:start styles */
 .spinner {
   gap: var(--fsds-spinner-dots-gap);
-  /* --fsds-spinner-size-xs: ; */
-  /* --fsds-spinner-size-sm: ; */
-  /* --fsds-spinner-size-md: ; */
-  /* --fsds-spinner-size-lg: ; */
-  /* --fsds-spinner-thickness-hairline: ; */
-  /* --fsds-spinner-thickness-regular: ; */
-  /* --fsds-spinner-thickness-bold: ; */
-  /* --fsds-semantic-color-background-accent: #d9292b; */
-  /* --fsds-semantic-color-border-subtle: #cecece; */
-  /* --fsds-spinner-anim-duration: ; */
+  transition-duration: var(--fsds-spinner-anim-duration);
 }
 /* @generated:end */
 

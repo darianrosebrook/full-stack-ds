@@ -24,8 +24,11 @@ export class BlockquoteElement extends LitElement {
       --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-blockquote-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-blockquote-typography-fontStyle: var(--fsds-semantic-typography-font-style-italic, italic);
+      --fsds-blockquote-typography-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-blockquote-size-padding-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-blockquote-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-blockquote-size-border-thick: var(--fsds-core-shape-border-width-thick, 2px);
     }
     
     .blockquote {
@@ -34,9 +37,6 @@ export class BlockquoteElement extends LitElement {
       border-color: var(--fsds-blockquote-color-border-default);
       padding: var(--fsds-blockquote-size-padding-default);
       border-radius: var(--fsds-blockquote-size-radius-default);
-      /* --fsds-semantic-typography-font-style-italic: italic; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-core-shape-border-width-thick: 2px; */
     }
   `;
 

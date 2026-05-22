@@ -4,17 +4,13 @@
 .text {
   color: var(--fsds-text-color-foreground-secondary);
   line-height: var(--fsds-text-typography-lineHeight-body);
-  /* --fsds-semantic-typography-font-weight-light: 300; */
-  /* --fsds-semantic-typography-font-weight-regular: 400; */
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
-  /* --fsds-semantic-typography-font-weight-bold: 700; */
 }
 
-.text--error {
+.text__error {
   color: var(--fsds-text-color-foreground-danger);
 }
 
-.text--success {
+.text__success {
   color: var(--fsds-text-color-foreground-success);
 }
 /* @generated:end */

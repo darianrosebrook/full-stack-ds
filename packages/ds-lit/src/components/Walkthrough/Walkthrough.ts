@@ -23,20 +23,29 @@ export class WalkthroughElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
+      --fsds-walkthrough-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-walkthrough-title-color: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-walkthrough-description-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-walkthrough-description-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
       --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
-    }
-    
-    .walkthrough__controls {
-      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
-    }
-    
-    .walkthrough__dots {
-      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
+      --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
     }
     
     .walkthrough {
@@ -44,34 +53,6 @@ export class WalkthroughElement extends LitElement {
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-core-spacing-size-04: 8px; */
-      /* --fsds-core-spacing-size-06: 16px; */
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
-      /* --fsds-core-color-mode-transparent: transparent; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-    }
-    
-    .walkthrough__title {
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-    }
-    
-    .walkthrough__description {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
     
     .walkthrough__controls {
@@ -80,9 +61,6 @@ export class WalkthroughElement extends LitElement {
     
     .walkthrough__dots {
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
     }
   `;
 
@@ -139,20 +117,29 @@ export class WalkthroughContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
+      --fsds-walkthrough-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-walkthrough-title-color: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-walkthrough-description-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-walkthrough-description-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
       --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
-    }
-    
-    .walkthrough__controls {
-      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
-    }
-    
-    .walkthrough__dots {
-      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
+      --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
     }
     
     .walkthrough {
@@ -160,34 +147,6 @@ export class WalkthroughContentElement extends LitElement {
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-core-spacing-size-04: 8px; */
-      /* --fsds-core-spacing-size-06: 16px; */
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
-      /* --fsds-core-color-mode-transparent: transparent; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-    }
-    
-    .walkthrough__title {
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-    }
-    
-    .walkthrough__description {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
     
     .walkthrough__controls {
@@ -196,9 +155,6 @@ export class WalkthroughContentElement extends LitElement {
     
     .walkthrough__dots {
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
     }
   `;
 
@@ -213,20 +169,29 @@ export class WalkthroughTitleElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
+      --fsds-walkthrough-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-walkthrough-title-color: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-walkthrough-description-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-walkthrough-description-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
       --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
-    }
-    
-    .walkthrough__controls {
-      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
-    }
-    
-    .walkthrough__dots {
-      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
+      --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
     }
     
     .walkthrough {
@@ -234,34 +199,6 @@ export class WalkthroughTitleElement extends LitElement {
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-core-spacing-size-04: 8px; */
-      /* --fsds-core-spacing-size-06: 16px; */
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
-      /* --fsds-core-color-mode-transparent: transparent; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-    }
-    
-    .walkthrough__title {
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-    }
-    
-    .walkthrough__description {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
     
     .walkthrough__controls {
@@ -270,9 +207,6 @@ export class WalkthroughTitleElement extends LitElement {
     
     .walkthrough__dots {
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
     }
   `;
 
@@ -287,20 +221,29 @@ export class WalkthroughDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
+      --fsds-walkthrough-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-walkthrough-title-color: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-walkthrough-description-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-walkthrough-description-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
       --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
-    }
-    
-    .walkthrough__controls {
-      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
-    }
-    
-    .walkthrough__dots {
-      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
+      --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
     }
     
     .walkthrough {
@@ -308,34 +251,6 @@ export class WalkthroughDescriptionElement extends LitElement {
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-core-spacing-size-04: 8px; */
-      /* --fsds-core-spacing-size-06: 16px; */
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
-      /* --fsds-core-color-mode-transparent: transparent; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-    }
-    
-    .walkthrough__title {
-      /* --fsds-semantic-typography-heading-03: 20px; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-    }
-    
-    .walkthrough__description {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
     
     .walkthrough__controls {
@@ -344,9 +259,6 @@ export class WalkthroughDescriptionElement extends LitElement {
     
     .walkthrough__dots {
       gap: var(--fsds-walkthrough-dots-gap);
-      /* --fsds-core-spacing-size-02: 2px; */
-      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
     }
   `;
 

@@ -5,9 +5,6 @@
   color: var(--fsds-list-color-foreground-primary);
   border-color: var(--fsds-list-color-border-default);
   padding: var(--fsds-list-size-padding-default);
-  /* --fsds-core-spacing-size-03: 4px; */
-  /* --fsds-core-spacing-size-05: 12px; */
-  /* --fsds-core-spacing-size-06: 16px; */
 }
 /* @generated:end */
 

@@ -4,8 +4,6 @@
 .truncate {
   color: var(--fsds-truncate-color-foreground-link);
   background-color: var(--fsds-truncate-color-background-primary);
-  /* --fsds-semantic-typography-font-weight-medium: 500; */
-  /* --fsds-core-spacing-size-02: 2px; */
 
   &:hover {
     color: var(--fsds-truncate-color-foreground-linkHover);

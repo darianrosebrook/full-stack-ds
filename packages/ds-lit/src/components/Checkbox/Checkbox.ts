@@ -26,18 +26,9 @@ export class CheckboxElement extends LitElement {
       --fsds-checkbox-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-checkbox-border-radius: var(--fsds-core-shape-radius-small, 4px);
       --fsds-checkbox-transition-duration: var(--fsds-core-motion-duration-short, 150ms);
-    
-      &:hover {
-        --fsds-checkbox-color-border-hover: var(--fsds-semantic-color-border-hover, #f29495);
-      }
-    
-      &:disabled {
-        --fsds-checkbox-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
-      }
-    
-      &:checked {
-        --fsds-checkbox-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
-      }
+      --fsds-checkbox-color-border-hover: var(--fsds-semantic-color-border-hover, #f29495);
+      --fsds-checkbox-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-checkbox-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
     }
     
     .checkbox {
@@ -51,12 +42,12 @@ export class CheckboxElement extends LitElement {
         border-color: var(--fsds-checkbox-color-border-hover);
       }
     
-      &:disabled {
-        background-color: var(--fsds-checkbox-color-background-disabled);
-      }
-    
       &:checked {
         background-color: var(--fsds-checkbox-color-background-checked);
+      }
+    
+      &:disabled {
+        background-color: var(--fsds-checkbox-color-background-disabled);
       }
     }
   `;

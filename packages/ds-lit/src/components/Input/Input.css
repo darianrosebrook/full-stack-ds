@@ -14,7 +14,7 @@
   }
 }
 
-.input--invalid {
+.input__invalid {
   border-color: var(--fsds-input-color-invalid-default);
 }
 /* @generated:end */

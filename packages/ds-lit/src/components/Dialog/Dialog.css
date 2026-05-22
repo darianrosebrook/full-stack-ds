@@ -9,41 +9,10 @@
   padding: var(--fsds-dialog-spacing-body-paddingRight);
   gap: var(--fsds-dialog-spacing-footer-gap);
   line-height: var(--fsds-dialog-typography-title-lineHeight);
-  /* --fsds-dialog-size-md-width: ; */
-  /* --fsds-dialog-size-md-maxWidth: ; */
-  /* --fsds-core-spacing-size-08: 32px; */
-  /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
-  /* --fsds-semantic-typography-heading-04: 18px; */
-  /* --fsds-semantic-typography-font-weight-bold: 700; */
 
   &:hover {
     background-color: var(--fsds-dialog-color-background-hover);
   }
-}
-
-.dialog--sm {
-  /* --fsds-dialog-size-sm-width: ; */
-  /* --fsds-dialog-size-sm-maxWidth: ; */
-}
-
-.dialog--md {
-  /* --fsds-dialog-size-md-width: ; */
-  /* --fsds-dialog-size-md-maxWidth: ; */
-}
-
-.dialog--lg {
-  /* --fsds-dialog-size-lg-width: ; */
-  /* --fsds-dialog-size-lg-maxWidth: ; */
-}
-
-.dialog--xl {
-  /* --fsds-dialog-size-xl-width: ; */
-  /* --fsds-dialog-size-xl-maxWidth: ; */
-}
-
-.dialog--full {
-  /* --fsds-dialog-size-full-width: ; */
-  /* --fsds-dialog-size-full-height: ; */
 }
 /* @generated:end */
 

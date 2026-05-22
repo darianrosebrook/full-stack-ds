@@ -7,8 +7,8 @@
   border-color: var(--fsds-tooltip-color-border-default);
   padding: var(--fsds-tooltip-size-padding-x);
   border-radius: var(--fsds-tooltip-size-radius-default);
+  max-width: var(--fsds-tooltip-size-maxWidth);
   font-size: var(--fsds-tooltip-typography-fontSize);
-  /* --fsds-tooltip-size-maxWidth: ; */
 }
 /* @generated:end */
 

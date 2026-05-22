@@ -7,10 +7,7 @@
   --fsds-profileFlag-spacing-gap-default: var(--fsds-core-spacing-size-03, 4px);
   --fsds-profileFlag-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
   --fsds-profileFlag-spacing-padding-right: var(--fsds-core-spacing-size-06, 16px);
-
-  &:hover {
-    --fsds-profileFlag-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-  }
+  --fsds-profileFlag-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
 }
 /* @generated:end */
 

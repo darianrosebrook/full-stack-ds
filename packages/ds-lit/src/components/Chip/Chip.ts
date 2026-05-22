@@ -30,17 +30,12 @@ export class ChipElement extends LitElement {
       --fsds-chip-size-padding-vertical: var(--fsds-core-spacing-size-02, 2px);
       --fsds-chip-size-gap: var(--fsds-core-spacing-size-02, 2px);
       --fsds-chip-size-radius: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-chip-size-border: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-chip-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-chip-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-chip-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
-    
-      &:hover {
-        --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
-      }
-    
-      &:active {
-        --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
-      }
+      --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
+      --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
     }
     
     .chip {
@@ -53,7 +48,6 @@ export class ChipElement extends LitElement {
       font-size: var(--fsds-chip-text-size);
       font-weight: var(--fsds-chip-text-weight);
       transition-duration: var(--fsds-chip-motion-duration-fast);
-      /* --fsds-core-shape-border-width-hairline: 1px; */
     
       &:hover {
         background-color: var(--fsds-chip-color-background-hover);

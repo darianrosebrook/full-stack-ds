@@ -23,17 +23,14 @@ export class TruncateElement extends LitElement {
     .truncate {
       --fsds-truncate-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-truncate-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
-    
-      &:hover {
-        --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
-      }
+      --fsds-truncate-typography-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-truncate-spacing-toggle: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
     }
     
     .truncate {
       color: var(--fsds-truncate-color-foreground-link);
       background-color: var(--fsds-truncate-color-background-primary);
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-core-spacing-size-02: 2px; */
     
       &:hover {
         color: var(--fsds-truncate-color-foreground-linkHover);
@@ -82,17 +79,14 @@ export class TruncateContentElement extends LitElement {
     .truncate {
       --fsds-truncate-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-truncate-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
-    
-      &:hover {
-        --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
-      }
+      --fsds-truncate-typography-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-truncate-spacing-toggle: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
     }
     
     .truncate {
       color: var(--fsds-truncate-color-foreground-link);
       background-color: var(--fsds-truncate-color-background-primary);
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-core-spacing-size-02: 2px; */
     
       &:hover {
         color: var(--fsds-truncate-color-foreground-linkHover);

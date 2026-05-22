@@ -29,6 +29,7 @@ export class ShowMoreElement extends LitElement {
       --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
     
     .show-more {
@@ -37,7 +38,6 @@ export class ShowMoreElement extends LitElement {
       border-color: var(--fsds-showmore-color-border-accent);
       padding: var(--fsds-showmore-size-padding-default);
       border-radius: var(--fsds-showmore-size-radius-default);
-      /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
     }
   `;
 
@@ -88,6 +88,7 @@ export class ShowMoreContentElement extends LitElement {
       --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
     
     .show-more {
@@ -96,7 +97,6 @@ export class ShowMoreContentElement extends LitElement {
       border-color: var(--fsds-showmore-color-border-accent);
       padding: var(--fsds-showmore-size-padding-default);
       border-radius: var(--fsds-showmore-size-radius-default);
-      /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
     }
   `;
 
@@ -118,6 +118,7 @@ export class ShowMoreTriggerElement extends LitElement {
       --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
     
     .show-more {
@@ -126,7 +127,6 @@ export class ShowMoreTriggerElement extends LitElement {
       border-color: var(--fsds-showmore-color-border-accent);
       padding: var(--fsds-showmore-size-padding-default);
       border-radius: var(--fsds-showmore-size-radius-default);
-      /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
     }
   `;
 

@@ -6,19 +6,6 @@
   box-shadow: var(--fsds-toast-surface-shadow);
   padding: var(--fsds-toast-spacing-padding);
   gap: var(--fsds-toast-spacing-stackGap);
-  /* --fsds-semantic-color-background-secondary: #efefef; */
-  /* --fsds-semantic-color-border-subtle: #cecece; */
-  /* --fsds-semantic-color-foreground-primary: #141414; */
-  /* --fsds-semantic-color-foreground-success: #487e1e; */
-  /* --fsds-semantic-color-foreground-warning: #ac5c00; */
-  /* --fsds-semantic-color-foreground-danger: #d9292b; */
-  /* --fsds-semantic-color-status-info: #0a65fe; */
-  /* --fsds-semantic-color-status-success: #487e1e; */
-  /* --fsds-semantic-color-status-warning: #ac5c00; */
-  /* --fsds-semantic-color-status-danger: #d9292b; */
-  /* --fsds-toast-size-maxWidth: ; */
-  /* --fsds-core-motion-duration-short: 150ms; */
-  /* --fsds-core-motion-duration-short: 150ms; */
 }
 /* @generated:end */
 

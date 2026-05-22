@@ -25,6 +25,9 @@ export class SkeletonElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .skeleton {
+      --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f7c1c2);
+      --fsds-skeleton-color-static: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-skeleton-radius-sm: var(--fsds-core-shape-radius-02, 4px);
       --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-03, 8px);
       --fsds-skeleton-radius-lg: var(--fsds-core-shape-radius-04, 16px);
@@ -40,9 +43,6 @@ export class SkeletonElement extends LitElement {
       gap: var(--fsds-skeleton-gap-lg);
       transition-duration: var(--fsds-skeleton-anim-duration);
       transition-timing-function: var(--fsds-skeleton-anim-easing);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-background-highlight: #f7c1c2; */
-      /* --fsds-semantic-color-background-secondary: #efefef; */
     }
   `;
 

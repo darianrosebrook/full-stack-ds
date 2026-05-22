@@ -22,11 +22,24 @@ export class ToastElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-color-info: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-toast-color-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      --fsds-toast-color-warning: var(--fsds-semantic-color-foreground-warning, #ac5c00);
+      --fsds-toast-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-toast-accent-info: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-accent-success: var(--fsds-semantic-color-status-success, #487e1e);
+      --fsds-toast-accent-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
+      --fsds-toast-accent-error: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
     }
     
     .toast {
@@ -34,19 +47,6 @@ export class ToastElement extends LitElement {
       box-shadow: var(--fsds-toast-surface-shadow);
       padding: var(--fsds-toast-spacing-padding);
       gap: var(--fsds-toast-spacing-stackGap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-color-foreground-success: #487e1e; */
-      /* --fsds-semantic-color-foreground-warning: #ac5c00; */
-      /* --fsds-semantic-color-foreground-danger: #d9292b; */
-      /* --fsds-semantic-color-status-info: #0a65fe; */
-      /* --fsds-semantic-color-status-success: #487e1e; */
-      /* --fsds-semantic-color-status-warning: #ac5c00; */
-      /* --fsds-semantic-color-status-danger: #d9292b; */
-      /* --fsds-toast-size-maxWidth: ; */
-      /* --fsds-core-motion-duration-short: 150ms; */
-      /* --fsds-core-motion-duration-short: 150ms; */
     }
   `;
 
@@ -97,11 +97,24 @@ export class ToastItemElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-color-info: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-toast-color-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      --fsds-toast-color-warning: var(--fsds-semantic-color-foreground-warning, #ac5c00);
+      --fsds-toast-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-toast-accent-info: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-accent-success: var(--fsds-semantic-color-status-success, #487e1e);
+      --fsds-toast-accent-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
+      --fsds-toast-accent-error: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
     }
     
     .toast {
@@ -109,19 +122,6 @@ export class ToastItemElement extends LitElement {
       box-shadow: var(--fsds-toast-surface-shadow);
       padding: var(--fsds-toast-spacing-padding);
       gap: var(--fsds-toast-spacing-stackGap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-color-foreground-success: #487e1e; */
-      /* --fsds-semantic-color-foreground-warning: #ac5c00; */
-      /* --fsds-semantic-color-foreground-danger: #d9292b; */
-      /* --fsds-semantic-color-status-info: #0a65fe; */
-      /* --fsds-semantic-color-status-success: #487e1e; */
-      /* --fsds-semantic-color-status-warning: #ac5c00; */
-      /* --fsds-semantic-color-status-danger: #d9292b; */
-      /* --fsds-toast-size-maxWidth: ; */
-      /* --fsds-core-motion-duration-short: 150ms; */
-      /* --fsds-core-motion-duration-short: 150ms; */
     }
   `;
 
@@ -136,11 +136,24 @@ export class ToastTitleElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-color-info: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-toast-color-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      --fsds-toast-color-warning: var(--fsds-semantic-color-foreground-warning, #ac5c00);
+      --fsds-toast-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-toast-accent-info: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-accent-success: var(--fsds-semantic-color-status-success, #487e1e);
+      --fsds-toast-accent-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
+      --fsds-toast-accent-error: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
     }
     
     .toast {
@@ -148,19 +161,6 @@ export class ToastTitleElement extends LitElement {
       box-shadow: var(--fsds-toast-surface-shadow);
       padding: var(--fsds-toast-spacing-padding);
       gap: var(--fsds-toast-spacing-stackGap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-color-foreground-success: #487e1e; */
-      /* --fsds-semantic-color-foreground-warning: #ac5c00; */
-      /* --fsds-semantic-color-foreground-danger: #d9292b; */
-      /* --fsds-semantic-color-status-info: #0a65fe; */
-      /* --fsds-semantic-color-status-success: #487e1e; */
-      /* --fsds-semantic-color-status-warning: #ac5c00; */
-      /* --fsds-semantic-color-status-danger: #d9292b; */
-      /* --fsds-toast-size-maxWidth: ; */
-      /* --fsds-core-motion-duration-short: 150ms; */
-      /* --fsds-core-motion-duration-short: 150ms; */
     }
   `;
 
@@ -175,11 +175,24 @@ export class ToastDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-color-info: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-toast-color-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      --fsds-toast-color-warning: var(--fsds-semantic-color-foreground-warning, #ac5c00);
+      --fsds-toast-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-toast-accent-info: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-accent-success: var(--fsds-semantic-color-status-success, #487e1e);
+      --fsds-toast-accent-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
+      --fsds-toast-accent-error: var(--fsds-semantic-color-status-danger, #d9292b);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-toast-size-maxWidth: 400px;
+      --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
     }
     
     .toast {
@@ -187,19 +200,6 @@ export class ToastDescriptionElement extends LitElement {
       box-shadow: var(--fsds-toast-surface-shadow);
       padding: var(--fsds-toast-spacing-padding);
       gap: var(--fsds-toast-spacing-stackGap);
-      /* --fsds-semantic-color-background-secondary: #efefef; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-semantic-color-foreground-primary: #141414; */
-      /* --fsds-semantic-color-foreground-success: #487e1e; */
-      /* --fsds-semantic-color-foreground-warning: #ac5c00; */
-      /* --fsds-semantic-color-foreground-danger: #d9292b; */
-      /* --fsds-semantic-color-status-info: #0a65fe; */
-      /* --fsds-semantic-color-status-success: #487e1e; */
-      /* --fsds-semantic-color-status-warning: #ac5c00; */
-      /* --fsds-semantic-color-status-danger: #d9292b; */
-      /* --fsds-toast-size-maxWidth: ; */
-      /* --fsds-core-motion-duration-short: 150ms; */
-      /* --fsds-core-motion-duration-short: 150ms; */
     }
   `;
 

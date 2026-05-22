@@ -22,21 +22,22 @@ export class SpinnerElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .spinner {
+      --fsds-spinner-size-xs: 12px;
+      --fsds-spinner-size-sm: 16px;
+      --fsds-spinner-size-md: 20px;
+      --fsds-spinner-size-lg: 28px;
+      --fsds-spinner-thickness-hairline: 2px;
+      --fsds-spinner-thickness-regular: 3px;
+      --fsds-spinner-thickness-bold: 4px;
+      --fsds-spinner-color-accent: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-spinner-color-track: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-spinner-dots-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-spinner-anim-duration: 800ms;
     }
     
     .spinner {
       gap: var(--fsds-spinner-dots-gap);
-      /* --fsds-spinner-size-xs: ; */
-      /* --fsds-spinner-size-sm: ; */
-      /* --fsds-spinner-size-md: ; */
-      /* --fsds-spinner-size-lg: ; */
-      /* --fsds-spinner-thickness-hairline: ; */
-      /* --fsds-spinner-thickness-regular: ; */
-      /* --fsds-spinner-thickness-bold: ; */
-      /* --fsds-semantic-color-background-accent: #d9292b; */
-      /* --fsds-semantic-color-border-subtle: #cecece; */
-      /* --fsds-spinner-anim-duration: ; */
+      transition-duration: var(--fsds-spinner-anim-duration);
     }
   `;
 

@@ -32,16 +32,15 @@ export class PostcardElement extends LitElement {
       --fsds-postcard-size-radius-full: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-gap-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-postcard-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-postcard-typography-displayName-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-postcard-typography-displayName-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-postcard-typography-handle-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-typography-content-fontSize: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
-    
-      &:hover {
-        --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
-    }
-    
-    .postcard__content {
-      --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-postcard-typography-footer-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .postcard {
@@ -52,12 +51,6 @@ export class PostcardElement extends LitElement {
       border-radius: var(--fsds-postcard-size-radius-full);
       gap: var(--fsds-postcard-size-gap-small);
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-core-shape-border-width-hairline: 1px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-body-03: 14px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-body-03: 14px; */
     
       &:hover {
         background-color: var(--fsds-postcard-color-background-hover);
@@ -65,22 +58,8 @@ export class PostcardElement extends LitElement {
       }
     }
     
-    .postcard__displayName {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-    }
-    
-    .postcard__handle {
-      /* --fsds-semantic-typography-body-03: 14px; */
-    }
-    
     .postcard__content {
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-semantic-typography-body-02: 16px; */
-    }
-    
-    .postcard__footer {
-      /* --fsds-semantic-typography-body-03: 14px; */
     }
   `;
 
@@ -135,16 +114,15 @@ export class PostcardHeaderElement extends LitElement {
       --fsds-postcard-size-radius-full: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-gap-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-postcard-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-postcard-typography-displayName-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-postcard-typography-displayName-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-postcard-typography-handle-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-typography-content-fontSize: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
-    
-      &:hover {
-        --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
-    }
-    
-    .postcard__content {
-      --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-postcard-typography-footer-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .postcard {
@@ -155,12 +133,6 @@ export class PostcardHeaderElement extends LitElement {
       border-radius: var(--fsds-postcard-size-radius-full);
       gap: var(--fsds-postcard-size-gap-small);
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-core-shape-border-width-hairline: 1px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-body-03: 14px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-body-03: 14px; */
     
       &:hover {
         background-color: var(--fsds-postcard-color-background-hover);
@@ -168,22 +140,8 @@ export class PostcardHeaderElement extends LitElement {
       }
     }
     
-    .postcard__displayName {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-    }
-    
-    .postcard__handle {
-      /* --fsds-semantic-typography-body-03: 14px; */
-    }
-    
     .postcard__content {
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-semantic-typography-body-02: 16px; */
-    }
-    
-    .postcard__footer {
-      /* --fsds-semantic-typography-body-03: 14px; */
     }
   `;
 
@@ -208,16 +166,15 @@ export class PostcardContentElement extends LitElement {
       --fsds-postcard-size-radius-full: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-gap-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-postcard-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-postcard-typography-displayName-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-postcard-typography-displayName-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-postcard-typography-handle-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-typography-content-fontSize: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
-    
-      &:hover {
-        --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
-    }
-    
-    .postcard__content {
-      --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-postcard-typography-footer-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .postcard {
@@ -228,12 +185,6 @@ export class PostcardContentElement extends LitElement {
       border-radius: var(--fsds-postcard-size-radius-full);
       gap: var(--fsds-postcard-size-gap-small);
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-core-shape-border-width-hairline: 1px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-body-03: 14px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-body-03: 14px; */
     
       &:hover {
         background-color: var(--fsds-postcard-color-background-hover);
@@ -241,22 +192,8 @@ export class PostcardContentElement extends LitElement {
       }
     }
     
-    .postcard__displayName {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-    }
-    
-    .postcard__handle {
-      /* --fsds-semantic-typography-body-03: 14px; */
-    }
-    
     .postcard__content {
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-semantic-typography-body-02: 16px; */
-    }
-    
-    .postcard__footer {
-      /* --fsds-semantic-typography-body-03: 14px; */
     }
   `;
 
@@ -281,16 +218,15 @@ export class PostcardFooterElement extends LitElement {
       --fsds-postcard-size-radius-full: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-postcard-size-gap-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-postcard-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-postcard-typography-displayName-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-postcard-typography-displayName-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-postcard-typography-handle-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-typography-content-fontSize: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
-    
-      &:hover {
-        --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
-    }
-    
-    .postcard__content {
-      --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
+      --fsds-postcard-typography-footer-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .postcard {
@@ -301,12 +237,6 @@ export class PostcardFooterElement extends LitElement {
       border-radius: var(--fsds-postcard-size-radius-full);
       gap: var(--fsds-postcard-size-gap-small);
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-core-shape-border-width-hairline: 1px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-body-03: 14px; */
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-body-03: 14px; */
     
       &:hover {
         background-color: var(--fsds-postcard-color-background-hover);
@@ -314,22 +244,8 @@ export class PostcardFooterElement extends LitElement {
       }
     }
     
-    .postcard__displayName {
-      /* --fsds-semantic-typography-body-02: 16px; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-    }
-    
-    .postcard__handle {
-      /* --fsds-semantic-typography-body-03: 14px; */
-    }
-    
     .postcard__content {
       line-height: var(--fsds-postcard-typography-content-lineHeight);
-      /* --fsds-semantic-typography-body-02: 16px; */
-    }
-    
-    .postcard__footer {
-      /* --fsds-semantic-typography-body-03: 14px; */
     }
   `;
 

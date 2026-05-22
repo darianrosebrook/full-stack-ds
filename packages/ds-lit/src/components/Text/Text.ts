@@ -27,32 +27,26 @@ export class TextElement extends LitElement {
     .text {
       --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
+      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-    }
-    
-    .text--error {
       --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
-    }
-    
-    .text--success {
       --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
     }
     
     .text {
       color: var(--fsds-text-color-foreground-secondary);
       line-height: var(--fsds-text-typography-lineHeight-body);
-      /* --fsds-semantic-typography-font-weight-light: 300; */
-      /* --fsds-semantic-typography-font-weight-regular: 400; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
     }
     
-    .text--error {
+    .text__error {
       color: var(--fsds-text-color-foreground-danger);
     }
     
-    .text--success {
+    .text__success {
       color: var(--fsds-text-color-foreground-success);
     }
   `;
@@ -89,32 +83,26 @@ export class TextTitleElement extends LitElement {
     .text {
       --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
+      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-    }
-    
-    .text--error {
       --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
-    }
-    
-    .text--success {
       --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
     }
     
     .text {
       color: var(--fsds-text-color-foreground-secondary);
       line-height: var(--fsds-text-typography-lineHeight-body);
-      /* --fsds-semantic-typography-font-weight-light: 300; */
-      /* --fsds-semantic-typography-font-weight-regular: 400; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
     }
     
-    .text--error {
+    .text__error {
       color: var(--fsds-text-color-foreground-danger);
     }
     
-    .text--success {
+    .text__success {
       color: var(--fsds-text-color-foreground-success);
     }
   `;
@@ -132,32 +120,26 @@ export class TextBodyElement extends LitElement {
     .text {
       --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
+      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
+      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-    }
-    
-    .text--error {
       --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
-    }
-    
-    .text--success {
       --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
     }
     
     .text {
       color: var(--fsds-text-color-foreground-secondary);
       line-height: var(--fsds-text-typography-lineHeight-body);
-      /* --fsds-semantic-typography-font-weight-light: 300; */
-      /* --fsds-semantic-typography-font-weight-regular: 400; */
-      /* --fsds-semantic-typography-font-weight-medium: 500; */
-      /* --fsds-semantic-typography-font-weight-bold: 700; */
     }
     
-    .text--error {
+    .text__error {
       color: var(--fsds-text-color-foreground-danger);
     }
     
-    .text--success {
+    .text__success {
       color: var(--fsds-text-color-foreground-success);
     }
   `;

@@ -8,7 +8,6 @@
   border-radius: var(--fsds-status-size-radius-default);
   padding: var(--fsds-status-size-padding-default);
   line-height: var(--fsds-status-typography-lineHeight);
-  /* --fsds-core-shape-border-width-hairline: 1px; */
 }
 /* @generated:end */
 

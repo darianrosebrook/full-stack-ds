@@ -32,13 +32,7 @@ export class CardElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-    
-      &:hover {
-        --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
-    }
-    
-    .card__badge {
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
@@ -103,13 +97,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-    
-      &:hover {
-        --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
-    }
-    
-    .card__badge {
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
@@ -165,13 +153,7 @@ export class CardContentElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-    
-      &:hover {
-        --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
-    }
-    
-    .card__badge {
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
@@ -227,13 +209,7 @@ export class CardFooterElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-    
-      &:hover {
-        --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
-    }
-    
-    .card__badge {
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
@@ -289,13 +265,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
-    
-      &:hover {
-        --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
-    }
-    
-    .card__badge {
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
