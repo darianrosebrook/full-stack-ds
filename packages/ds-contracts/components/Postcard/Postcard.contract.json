@@ -1,0 +1,367 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Postcard",
+  "description": "Social-media-style post card with author, content, media embed, and engagement stat slots.",
+  "layer": "compound",
+  "anatomy": {
+    "parts": [
+      "root",
+      "header",
+      "userInfo",
+      "displayName",
+      "handle",
+      "timestamp",
+      "content",
+      "footer",
+      "stats",
+      "stat"
+    ],
+    "dom": {
+      "tag": "article",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "header",
+          "children": [
+            {
+              "tag": "div",
+              "part": "userInfo",
+              "children": [
+                {
+                  "tag": "span",
+                  "part": "displayName"
+                },
+                {
+                  "tag": "span",
+                  "part": "handle"
+                }
+              ]
+            },
+            {
+              "tag": "time",
+              "part": "timestamp"
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "part": "content",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "part": "footer",
+          "children": [
+            {
+              "tag": "div",
+              "part": "stats",
+              "children": [
+                {
+                  "tag": "span",
+                  "part": "stat"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Postcard> component.",
+      "members": [
+        {
+          "name": "postId",
+          "type": "string",
+          "description": "Unique identifier for the post.",
+          "required": true
+        },
+        {
+          "name": "author",
+          "type": "PostcardAuthor",
+          "description": "Author metadata: name, handle, and avatar URL.",
+          "required": true
+        },
+        {
+          "name": "timestamp",
+          "type": "string",
+          "description": "ISO 8601 timestamp of the post.",
+          "required": true
+        },
+        {
+          "name": "stats",
+          "type": "PostcardStats",
+          "description": "Engagement statistics: likes, replies, reposts.",
+          "required": true
+        },
+        {
+          "name": "embed",
+          "type": "PostcardEmbed",
+          "description": "Optional media embed with type, URL, and aspect ratio."
+        }
+      ]
+    }
+  },
+  "types": {
+    "PostcardAuthor": {
+      "kind": "alias",
+      "alias": "{ name: string; handle: string; avatar: string }"
+    },
+    "PostcardStats": {
+      "kind": "alias",
+      "alias": "{ likes: number; replies: number; reposts: number }"
+    },
+    "PostcardEmbed": {
+      "kind": "alias",
+      "alias": "{ type: 'image' | 'video' | 'audio'; url: string; aspectRatio: { width: number; height: number } }"
+    }
+  },
+  "variants": {
+    "type": [
+      "image",
+      "video",
+      "audio"
+    ]
+  },
+  "states": [
+    "default",
+    "hover"
+  ],
+  "tokens": {
+    "root": {
+      "postcard.color.background.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "postcard.color.border.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "postcard.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "postcard.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "postcard.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "postcard.size.padding.default": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "postcard.size.radius.default": {
+        "resolvesTo": "semantic.shape.control.radius.default",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "semantic"
+      },
+      "postcard.size.radius.full": {
+        "resolvesTo": "core.shape.radius.full",
+        "fallback": "9999px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "postcard.size.gap.default": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "postcard.size.gap.small": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "postcard.size.border.default": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "postcard.typography.displayName.fontSize": {
+        "resolvesTo": "semantic.typography.body.02",
+        "fallback": "16px",
+        "layer": "semantic"
+      },
+      "postcard.typography.displayName.fontWeight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "layer": "semantic"
+      },
+      "postcard.typography.handle.fontSize": {
+        "resolvesTo": "semantic.typography.body.03",
+        "fallback": "14px",
+        "layer": "semantic"
+      },
+      "postcard.typography.content.fontSize": {
+        "resolvesTo": "semantic.typography.body.02",
+        "fallback": "16px",
+        "layer": "semantic"
+      },
+      "postcard.typography.content.lineHeight": {
+        "resolvesTo": "semantic.typography.line.height.body",
+        "fallback": "1.5",
+        "property": "line-height",
+        "layer": "semantic"
+      },
+      "postcard.typography.footer.fontSize": {
+        "resolvesTo": "semantic.typography.body.03",
+        "fallback": "14px",
+        "layer": "semantic"
+      }
+    },
+    "hover": {
+      "postcard.color.background.hover": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "postcard.color.border.hover": {
+        "resolvesTo": "semantic.color.border.bold",
+        "fallback": "#8f8f8f",
+        "property": "border-color",
+        "layer": "semantic"
+      }
+    },
+    "displayName": {
+      "postcard.typography.displayName.fontSize": {
+        "resolvesTo": "semantic.typography.body.02",
+        "fallback": "16px",
+        "layer": "semantic"
+      },
+      "postcard.typography.displayName.fontWeight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "layer": "semantic"
+      }
+    },
+    "handle": {
+      "postcard.typography.handle.fontSize": {
+        "resolvesTo": "semantic.typography.body.03",
+        "fallback": "14px",
+        "layer": "semantic"
+      }
+    },
+    "content": {
+      "postcard.typography.content.fontSize": {
+        "resolvesTo": "semantic.typography.body.02",
+        "fallback": "16px",
+        "layer": "semantic"
+      },
+      "postcard.typography.content.lineHeight": {
+        "resolvesTo": "semantic.typography.line.height.body",
+        "fallback": "1.5",
+        "property": "line-height",
+        "layer": "semantic"
+      }
+    },
+    "footer": {
+      "postcard.typography.footer.fontSize": {
+        "resolvesTo": "semantic.typography.body.03",
+        "fallback": "14px",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"postcard\"]"
+    },
+    "header": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-header\"]"
+    },
+    "body": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-body\"]"
+    },
+    "footer": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-footer\"]"
+    },
+    "stats": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-stats\"]"
+    },
+    "author": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-author\"]"
+    },
+    "timestamp": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-timestamp\"]"
+    },
+    "content": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-content\"]"
+    },
+    "embed": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-embed\"]"
+    },
+    "stat": {
+      "required": false,
+      "selector": "[data-slot=\"postcard-stat\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "Postcard is a display surface. Focus is not managed — child engagement actions (Like, Reply, Repost) carry their own focus handling."
+  },
+  "a11y": {
+    "role": "article",
+    "apgPattern": null,
+    "labeling": [
+      "aria-labelledby"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "content",
+    "usageHints": [
+      "Compose with Postcard.Header, .Body, .Footer, .Stats, .Author, .Timestamp, .Content, .Embed",
+      "Like, Reply, Repost, and ExternalLink sub-components render the engagement action buttons",
+      "Postcard.Embed auto-selects image/video/audio renderer based on embed.type"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "Postcard.Header",
+        "Postcard.Body",
+        "Postcard.Footer",
+        "Postcard.Stats"
+      ]
+    }
+  }
+}

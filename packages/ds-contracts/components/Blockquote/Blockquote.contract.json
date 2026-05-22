@@ -1,0 +1,155 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Blockquote",
+  "description": "Styled blockquote for displaying cited passages or testimonials.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root"
+    ],
+    "dom": {
+      "tag": "blockquote",
+      "part": "root",
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Blockquote> component.",
+      "members": [
+        {
+          "name": "cite",
+          "type": "string",
+          "description": "Citation or source URL of the quote"
+        },
+        {
+          "name": "variant",
+          "type": "BlockquoteVariant",
+          "description": "Visual variant of the blockquote"
+        },
+        {
+          "name": "size",
+          "type": "BlockquoteSize",
+          "description": "Size token"
+        }
+      ]
+    }
+  },
+  "types": {
+    "BlockquoteVariant": {
+      "kind": "union",
+      "values": [
+        "default",
+        "bordered",
+        "highlighted"
+      ]
+    },
+    "BlockquoteSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  },
+  "variants": {
+    "variant": [
+      "default",
+      "bordered",
+      "highlighted"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": [
+    "default"
+  ],
+  "tokens": {
+    "root": {
+      "blockquote.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "blockquote.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "blockquote.color.border.default": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "blockquote.typography.fontStyle": {
+        "resolvesTo": "semantic.typography.font.style.italic",
+        "fallback": "italic",
+        "layer": "semantic"
+      },
+      "blockquote.typography.fontWeight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "layer": "semantic"
+      },
+      "blockquote.size.padding.default": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "blockquote.size.radius.default": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "blockquote.size.border.thick": {
+        "resolvesTo": "core.shape.border.width.thick",
+        "fallback": "2px",
+        "layer": "core"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"blockquote\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "content",
+    "usageHints": [
+      "Set the cite prop to the URL of the source document (not the visible citation text)",
+      "Pair with a figcaption sibling for the attribution text"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "node-ref"
+      ]
+    }
+  }
+}

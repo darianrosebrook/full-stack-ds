@@ -1,0 +1,507 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Command",
+  "description": "Command palette modal for keyboard-driven search and action execution.",
+  "layer": "composer",
+  "anatomy": {
+    "parts": [
+      "root",
+      "overlay",
+      "dialog",
+      "inputWrapper",
+      "searchIcon",
+      "input",
+      "list",
+      "group",
+      "groupHeading",
+      "groupItems",
+      "item",
+      "itemIcon",
+      "itemContent",
+      "itemLabel",
+      "itemDescription",
+      "separator",
+      "empty"
+    ],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "overlay",
+          "if": "open",
+          "attrs": {
+            "aria-hidden": "true"
+          }
+        },
+        {
+          "tag": "div",
+          "part": "dialog",
+          "if": "open",
+          "attrs": {
+            "role": "dialog",
+            "aria-modal": "true"
+          },
+          "bindings": {
+            "aria-label": "prop:label"
+          },
+          "children": [
+            {
+              "tag": "div",
+              "part": "inputWrapper",
+              "children": [
+                {
+                  "tag": "span",
+                  "part": "searchIcon",
+                  "attrs": {
+                    "aria-hidden": "true"
+                  }
+                },
+                {
+                  "tag": "input",
+                  "part": "input",
+                  "attrs": {
+                    "type": "search",
+                    "role": "combobox",
+                    "aria-autocomplete": "list",
+                    "aria-controls": "fsds-command-listbox"
+                  },
+                  "bindings": {
+                    "aria-expanded": "channel:open.value",
+                    "placeholder": "prop:placeholder",
+                    "value": "channel:search.value",
+                    "onChange": "channel:search.onChange"
+                  }
+                }
+              ]
+            },
+            {
+              "tag": "div",
+              "part": "list",
+              "attrs": {
+                "role": "listbox",
+                "id": "fsds-command-listbox"
+              },
+              "children": [
+                {
+                  "tag": "div",
+                  "part": "empty"
+                },
+                {
+                  "tag": "div",
+                  "part": "group",
+                  "children": [
+                    {
+                      "tag": "div",
+                      "part": "groupHeading"
+                    },
+                    {
+                      "tag": "div",
+                      "part": "groupItems",
+                      "children": [
+                        {
+                          "tag": "div",
+                          "part": "item",
+                          "attrs": {
+                            "role": "option"
+                          },
+                          "children": [
+                            {
+                              "tag": "span",
+                              "part": "itemIcon"
+                            },
+                            {
+                              "tag": "div",
+                              "part": "itemContent",
+                              "children": [
+                                {
+                                  "tag": "span",
+                                  "part": "itemLabel"
+                                },
+                                {
+                                  "tag": "span",
+                                  "part": "itemDescription"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "part": "separator",
+                  "attrs": {
+                    "role": "separator",
+                    "aria-hidden": "true"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Command> component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Uncontrolled initial open state."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when open state changes."
+        },
+        {
+          "name": "search",
+          "type": "string",
+          "description": "Controlled search query."
+        },
+        {
+          "name": "defaultSearch",
+          "type": "string",
+          "description": "Uncontrolled initial search query."
+        },
+        {
+          "name": "onSearchChange",
+          "type": "(value: string) => void",
+          "description": "Called when the search query changes."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text for the search input.",
+          "default": "Search..."
+        },
+        {
+          "name": "emptyMessage",
+          "type": "string",
+          "description": "Message shown when no items match the current search.",
+          "default": "No results found."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "description": "Accessible label for the command palette dialog.",
+          "default": "Command palette"
+        },
+        {
+          "name": "shouldFilter",
+          "type": "boolean",
+          "description": "When true, items are filtered client-side against the search query.",
+          "default": true
+        },
+        {
+          "name": "filter",
+          "type": "((value: string, search: string) => number) | undefined",
+          "description": "Custom filter function. Return a score >= 1 to include the item."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "open": {
+      "description": "Whether the command palette is open.",
+      "value": "open",
+      "defaultValue": "defaultOpen",
+      "onChange": "onOpenChange",
+      "valueType": "boolean"
+    },
+    "search": {
+      "description": "Current search query string.",
+      "value": "search",
+      "defaultValue": "defaultSearch",
+      "onChange": "onSearchChange",
+      "valueType": "string"
+    }
+  },
+  "dataModel": {
+    "entities": {
+      "CommandItem": {
+        "description": "A single executable command.",
+        "fields": {
+          "value": "string",
+          "label": "string",
+          "description?": "string",
+          "icon?": "ReactNode",
+          "disabled?": "boolean",
+          "onSelect": "(value: string) => void"
+        }
+      }
+    }
+  },
+  "variants": {},
+  "states": [
+    "default",
+    "hover",
+    "disabled",
+    "selected"
+  ],
+  "tokens": {
+    "root": {
+      "command.color.overlay": {
+        "resolvesTo": "semantic.overlay.scrim.dialog",
+        "fallback": "rgba(0,0,0,0.60)",
+        "layer": "semantic"
+      },
+      "command.color.background": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "command.color.border": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "command.color.borderLight": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "command.color.text": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "command.color.textMuted": {
+        "resolvesTo": "semantic.color.foreground.tertiary",
+        "fallback": "#717171",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "command.border.width": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "property": "border-width",
+        "layer": "core"
+      },
+      "command.border.radius": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "command.size.maxWidth": {
+        "literal": "640px"
+      },
+      "command.size.maxHeight": {
+        "literal": "400px"
+      },
+      "command.size.icon": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "layer": "core"
+      },
+      "command.spacing.dialogPadding": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "command.text.size": {
+        "resolvesTo": "semantic.typography.body.02",
+        "fallback": "16px",
+        "property": "font-size",
+        "layer": "semantic"
+      },
+      "command.text.sizeSmall": {
+        "resolvesTo": "semantic.typography.body.04",
+        "fallback": "12px",
+        "property": "font-size",
+        "layer": "semantic"
+      },
+      "command.shadow": {
+        "resolvesTo": "semantic.elevation.surface.floating",
+        "fallback": "0 4px 24px rgba(0,0,0,0.12)",
+        "property": "box-shadow",
+        "layer": "semantic"
+      },
+      "command.opacity.disabled": {
+        "resolvesTo": "semantic.interaction.disabled.opacity",
+        "fallback": "0.5",
+        "property": "opacity",
+        "layer": "semantic"
+      }
+    },
+    "hover": {
+      "command.color.backgroundHover": {
+        "resolvesTo": "semantic.interaction.background.hover",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "form": {
+    "participates": false
+  },
+  "motion": {
+    "reducedMotion": "respect",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=closed→expanded",
+        "phase": "enter",
+        "properties": ["opacity", "transform"],
+        "duration": "command.motion.duration",
+        "easing": "command.motion.easing"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=expanded→closed",
+        "phase": "exit",
+        "properties": ["opacity", "transform"],
+        "duration": "command.motion.duration",
+        "easing": "command.motion.easing"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "manual",
+    "orientation": "vertical",
+    "initialFocus": "input",
+    "wrap": true,
+    "description": "Input retains DOM focus while the user navigates results. Highlighted option is tracked via aria-activedescendant."
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "centered",
+    "layering": "modal",
+    "backdrop": true
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape"
+      },
+      {
+        "event": "overlayClick"
+      }
+    ]
+  },
+  "slots": {
+    "dialog": {
+      "required": false,
+      "selector": "[data-slot=\"command-dialog\"]"
+    },
+    "group": {
+      "required": false,
+      "selector": "[data-slot=\"command-group\"]"
+    },
+    "input": {
+      "required": false,
+      "selector": "[data-slot=\"command-input\"]"
+    },
+    "item": {
+      "required": false,
+      "selector": "[data-slot=\"command-item\"]"
+    },
+    "items": {
+      "required": false,
+      "selector": "[data-slot=\"command-items\"]"
+    },
+    "list": {
+      "required": false,
+      "selector": "[data-slot=\"command-list\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"command\"]"
+    },
+    "separator": {
+      "required": false,
+      "selector": "[data-slot=\"command-separator\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "input",
+      "to": "list",
+      "attribute": "aria-controls",
+      "when": "openness=expanded"
+    },
+    {
+      "from": "input",
+      "to": "item",
+      "attribute": "aria-activedescendant",
+      "when": "openness=expanded",
+      "description": "Points to the currently highlighted item's id."
+    },
+    {
+      "from": "list",
+      "to": "input",
+      "attribute": "aria-labelledby",
+      "description": "Listbox shares the input's accessible name."
+    }
+  ],
+  "a11y": {
+    "role": "dialog",
+    "apgPattern": "dialog-modal",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowDown",
+        "action": "Move highlight to the next command item.",
+        "when": "open"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move highlight to the previous command item.",
+        "when": "open"
+      },
+      {
+        "key": "Enter",
+        "action": "Execute the highlighted command item.",
+        "when": "open"
+      },
+      {
+        "key": "Escape",
+        "action": "Close the command palette.",
+        "when": "open"
+      },
+      {
+        "key": "Tab",
+        "action": "Cycle focus within the command palette.",
+        "when": "open"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Trigger with \u2318K or a toolbar button",
+      "Register commands with a label and handler \u2014 they appear in the search results",
+      "Group commands with Command.Group for visual separation"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

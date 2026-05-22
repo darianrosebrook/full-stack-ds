@@ -1,0 +1,230 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Image",
+  "description": "Responsive image component with layout and aspect-ratio helpers.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root",
+      "img",
+      "placeholder",
+      "errorState"
+    ],
+    "dom": {
+      "tag": "img",
+      "part": "root",
+      "bindings": {
+        "src": "prop:src",
+        "alt": "prop:alt",
+        "width": "prop:width",
+        "height": "prop:height",
+        "loading": "prop:loading",
+        "sizes": "prop:sizes"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Image> component.",
+      "members": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Image source URL."
+        },
+        {
+          "name": "alt",
+          "type": "string",
+          "description": "Accessible text describing the image. Use empty string for decorative images.",
+          "required": true
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "description": "Pixel width."
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "description": "Pixel height."
+        },
+        {
+          "name": "aspectRatio",
+          "type": "ImageAspectRatio",
+          "description": "Aspect ratio preset or numeric ratio."
+        },
+        {
+          "name": "objectFit",
+          "type": "ImageObjectFit",
+          "description": "Object fit behavior"
+        },
+        {
+          "name": "objectPosition",
+          "type": "string",
+          "description": "Object position CSS value"
+        },
+        {
+          "name": "loading",
+          "type": "ImageLoading",
+          "description": "Native image loading hint"
+        },
+        {
+          "name": "sizes",
+          "type": "string",
+          "description": "Native sizes attribute for responsive images"
+        },
+        {
+          "name": "radius",
+          "type": "ImageRadius",
+          "description": "Border radius token"
+        },
+        {
+          "name": "showPlaceholder",
+          "type": "boolean",
+          "description": "Whether to show a placeholder while loading"
+        },
+        {
+          "name": "fallbackSrc",
+          "type": "string",
+          "description": "Fallback image source on error"
+        }
+      ]
+    }
+  },
+  "types": {
+    "ImageAspectRatio": {
+      "kind": "union",
+      "values": [
+        "square",
+        "video",
+        "photo",
+        "wide",
+        "portrait"
+      ]
+    },
+    "ImageObjectFit": {
+      "kind": "union",
+      "values": [
+        "cover",
+        "contain",
+        "fill",
+        "scale-down",
+        "none"
+      ]
+    },
+    "ImageLoading": {
+      "kind": "union",
+      "values": [
+        "lazy",
+        "eager"
+      ]
+    },
+    "ImageRadius": {
+      "kind": "union",
+      "values": [
+        "none",
+        "sm",
+        "md",
+        "lg",
+        "full"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "full"
+    ],
+    "radius": [
+      "none",
+      "sm",
+      "md",
+      "lg",
+      "full"
+    ]
+  },
+  "states": [
+    "default",
+    "loading",
+    "error"
+  ],
+  "tokens": {
+    "root": {
+      "image.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "image.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "image.size.icon": {
+        "resolvesTo": "core.spacing.size.08",
+        "fallback": "32px",
+        "layer": "core"
+      },
+      "image.typography.error.fontSize": {
+        "resolvesTo": "semantic.typography.body.04",
+        "fallback": "12px",
+        "layer": "semantic"
+      }
+    },
+    "error": {
+      "image.color.background.error": {
+        "resolvesTo": "semantic.color.background.danger.subtle",
+        "fallback": "#fceaea",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "image.color.foreground.error": {
+        "resolvesTo": "semantic.color.foreground.danger",
+        "fallback": "#d9292b",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"image\"]"
+    },
+    "img": {
+      "required": true,
+      "selector": "[data-slot=\"image-img\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "img",
+    "labeling": [
+      "aria-label",
+      "alt"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Always provide a meaningful alt string; use alt=\"\" for decorative images",
+      "Set fill for images that should cover their container; use width/height otherwise",
+      "Use priority on above-the-fold images to avoid layout shift"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

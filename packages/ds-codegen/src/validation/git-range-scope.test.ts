@@ -48,7 +48,7 @@ function manifestWith(paths: { framework: FrameworkId; component: string; paths:
       framework: p.framework,
       component: p.component,
       contract: {
-        path: p.contractPath ?? `packages/ds-contracts/${p.component}.contract.json`,
+        path: p.contractPath ?? `packages/ds-contracts/components/${p.component}/${p.component}.contract.json`,
         sha256: STUB_DIGEST,
       },
       files: p.paths.map((path) => ({ path, sha256: STUB_DIGEST })),
@@ -196,13 +196,13 @@ describe("projectGitRange", () => {
       manifest,
       results: emptyResults(),
       gitExec: stubGit(
-        "packages/ds-contracts/Button.contract.json\n" +
+        "packages/ds-contracts/components/Button/Button.contract.json\n" +
           "packages/ds-codegen/src/emitter.ts\n",
       ),
     });
     expect(out.changedGeneratedPaths).toEqual([]);
     expect(out.nonGeneratedChangedPaths).toEqual([
-      "packages/ds-contracts/Button.contract.json",
+      "packages/ds-contracts/components/Button/Button.contract.json",
       "packages/ds-codegen/src/emitter.ts",
     ]);
   });
@@ -218,12 +218,12 @@ describe("projectGitRange", () => {
         "tmp/generated-admission-report.md\n" +
           "packages/ds-codegen/dist/cli.js\n" +
           "packages/ds-codegen/.emission-manifest.json\n" +
-          "packages/ds-contracts/Button.contract.json\n",
+          "packages/ds-contracts/components/Button/Button.contract.json\n",
       ),
     });
     // Only the contract survives; the rest are excluded.
     expect(out.nonGeneratedChangedPaths).toEqual([
-      "packages/ds-contracts/Button.contract.json",
+      "packages/ds-contracts/components/Button/Button.contract.json",
     ]);
   });
 
@@ -257,7 +257,7 @@ describe("projectGitRange", () => {
       gitExec: stubGit(
         "packages/ds-react/src/components/Button/Button.tsx\n" +
           "packages/ds-react/src/components/Untracked/Untracked.tsx\n" +
-          "packages/ds-contracts/Button.contract.json\n",
+          "packages/ds-contracts/components/Button/Button.contract.json\n",
       ),
     });
     expect(out.matchedGroups).toHaveLength(1);
@@ -265,7 +265,7 @@ describe("projectGitRange", () => {
       "packages/ds-react/src/components/Untracked/Untracked.tsx",
     ]);
     expect(out.nonGeneratedChangedPaths).toEqual([
-      "packages/ds-contracts/Button.contract.json",
+      "packages/ds-contracts/components/Button/Button.contract.json",
     ]);
   });
 
@@ -301,7 +301,7 @@ describe("projectGitRange", () => {
         framework: "react",
         component: "Button",
         paths: ["packages/ds-react/src/components/Button/Button.tsx"],
-        contractPath: "packages/ds-contracts/Button.contract.json",
+        contractPath: "packages/ds-contracts/components/Button/Button.contract.json",
       },
     ]);
     const out = projectGitRange({
@@ -309,10 +309,10 @@ describe("projectGitRange", () => {
       workspaceRoot: "/tmp/fake",
       manifest,
       results: emptyResults(),
-      gitExec: stubGit("packages/ds-contracts/Button.contract.json\n"),
+      gitExec: stubGit("packages/ds-contracts/components/Button/Button.contract.json\n"),
     });
     expect(out.changedContractPaths).toEqual([
-      "packages/ds-contracts/Button.contract.json",
+      "packages/ds-contracts/components/Button/Button.contract.json",
     ]);
     expect(out.matchedGroups).toHaveLength(1);
     expect(out.matchedGroups[0]!.component).toBe("Button");
@@ -339,7 +339,7 @@ describe("projectGitRange", () => {
       ),
     });
     expect(out.matchedGroups[0]!.contract).toEqual({
-      path: "packages/ds-contracts/Button.contract.json",
+      path: "packages/ds-contracts/components/Button/Button.contract.json",
       sha256: STUB_DIGEST,
     });
   });
@@ -354,7 +354,7 @@ describe("projectGitRange", () => {
         framework: "react",
         component: "Button",
         paths: ["packages/ds-react/src/components/Button/Button.tsx"],
-        contractPath: "packages/ds-contracts/Button.contract.json",
+        contractPath: "packages/ds-contracts/components/Button/Button.contract.json",
       },
     ]);
     const out = projectGitRange({
@@ -363,12 +363,12 @@ describe("projectGitRange", () => {
       manifest,
       results: emptyResults(),
       gitExec: stubGit(
-        "packages/ds-contracts/NewlyDrafted.contract.json\n",
+        "packages/ds-contracts/components/NewlyDrafted/NewlyDrafted.contract.json\n",
       ),
     });
     expect(out.changedContractPaths).toEqual([]);
     expect(out.nonGeneratedChangedPaths).toEqual([
-      "packages/ds-contracts/NewlyDrafted.contract.json",
+      "packages/ds-contracts/components/NewlyDrafted/NewlyDrafted.contract.json",
     ]);
   });
 

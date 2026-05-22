@@ -18,6 +18,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import type { ComponentContract } from "./contract.js";
+import { listComponentContracts } from "./contracts-fs.js";
 import {
   type FrameworkEmitter,
   type GeneratedFile,
@@ -335,22 +336,20 @@ function main(): void {
 
   const validator = createContractValidator({ contractsRoot: CONTRACTS_DIR });
 
-  const contractFiles = fs
-    .readdirSync(CONTRACTS_DIR)
-    .filter((f) => f.endsWith(".contract.json"));
+  const discovered = listComponentContracts(CONTRACTS_DIR);
 
-  if (contractFiles.length === 0) {
-    console.error("No *.contract.json files in", CONTRACTS_DIR);
+  if (discovered.length === 0) {
+    console.error(
+      "No *.contract.json files found under",
+      path.join(CONTRACTS_DIR, "components"),
+    );
     process.exit(1);
   }
 
   const filtered =
     args.names.length > 0
-      ? contractFiles.filter((f) => {
-          const cName = f.replace(".contract.json", "");
-          return args.names.includes(cName);
-        })
-      : contractFiles;
+      ? discovered.filter((c) => args.names.includes(c.name))
+      : discovered;
 
   console.log(`Found ${filtered.length} component contract(s) to process.\n`);
 
@@ -369,8 +368,8 @@ function main(): void {
 
   const validContracts: ContractInput[] = [];
 
-  for (const file of filtered) {
-    const filePath = path.join(CONTRACTS_DIR, file);
+  for (const entry of filtered) {
+    const { filename: file, absPath: filePath } = entry;
     const rawBytes = fs.readFileSync(filePath);
     const raw = JSON.parse(rawBytes.toString("utf-8"));
     const result = validator.validateComponent(raw);
@@ -1049,21 +1048,34 @@ function startWatch(
   validator: ContractValidator,
 ): void {
   const debounce = new Map<string, ReturnType<typeof setTimeout>>();
+  const componentsRoot = path.join(CONTRACTS_DIR, "components");
 
-  fs.watch(CONTRACTS_DIR, { persistent: true }, (event, filename) => {
-    if (!filename?.endsWith(".contract.json")) return;
-    if (event !== "change" && event !== "rename") return;
+  fs.watch(
+    componentsRoot,
+    { persistent: true, recursive: true },
+    (event, filename) => {
+      if (!filename?.endsWith(".contract.json")) return;
+      if (event !== "change" && event !== "rename") return;
+      // With recursive:true, filename arrives as e.g. "Button/Button.contract.json".
+      // Reject anything that doesn't match the <Name>/<Name>.contract.json shape so
+      // editor temp files (e.g. ".#Button.contract.json") and stray top-level files
+      // don't trigger regen.
+      const parts = filename.split(path.sep);
+      if (parts.length !== 2) return;
+      const [folder, leaf] = parts;
+      if (leaf !== `${folder}.contract.json`) return;
 
-    const existing = debounce.get(filename);
-    if (existing) clearTimeout(existing);
-    debounce.set(
-      filename,
-      setTimeout(() => {
-        debounce.delete(filename);
-        watchHandleChange(filename, args, requestedTargets, registry, validator);
-      }, 150),
-    );
-  });
+      const existing = debounce.get(filename);
+      if (existing) clearTimeout(existing);
+      debounce.set(
+        filename,
+        setTimeout(() => {
+          debounce.delete(filename);
+          watchHandleChange(filename, args, requestedTargets, registry, validator);
+        }, 150),
+      );
+    },
+  );
 }
 
 function watchHandleChange(
@@ -1073,13 +1085,14 @@ function watchHandleChange(
   registry: TargetRegistry,
   validator: ContractValidator,
 ): void {
-  const filePath = path.join(CONTRACTS_DIR, filename);
+  const filePath = path.join(CONTRACTS_DIR, "components", filename);
   if (!fs.existsSync(filePath)) {
     console.log(`\n[watch] ${filename} removed — skipping.`);
     return;
   }
 
-  const componentName = filename.replace(".contract.json", "");
+  // filename is "<Name>/<Name>.contract.json"; the component name is the folder.
+  const componentName = filename.split(path.sep)[0];
 
   // If a names filter was set, only process matching contracts.
   if (args.names.length > 0 && !args.names.includes(componentName)) return;

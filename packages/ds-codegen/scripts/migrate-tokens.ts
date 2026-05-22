@@ -334,10 +334,17 @@ function main(): void {
   const dryRun = argv.includes("--dry-run");
   const names = argv.filter((a) => !a.startsWith("--"));
 
-  const files = fs
-    .readdirSync(CONTRACTS_DIR)
-    .filter((f) => f.endsWith(".contract.json"))
-    .filter((f) => names.length === 0 || names.includes(f.replace(".contract.json", "")));
+  const componentsDir = path.join(CONTRACTS_DIR, "components");
+  const files: { filename: string; absPath: string }[] = [];
+  for (const name of fs.readdirSync(componentsDir)) {
+    const folder = path.join(componentsDir, name);
+    if (!fs.statSync(folder).isDirectory()) continue;
+    const filename = `${name}.contract.json`;
+    const absPath = path.join(folder, filename);
+    if (!fs.existsSync(absPath)) continue;
+    if (names.length > 0 && !names.includes(name)) continue;
+    files.push({ filename, absPath });
+  }
 
   console.log(
     `Migrating tokens in ${files.length} contract(s)${dryRun ? " (dry-run)" : ""}.\n`,
@@ -348,7 +355,7 @@ function main(): void {
   const aggregateReasons: Record<string, number> = {};
 
   for (const f of files) {
-    const result = processContract(path.join(CONTRACTS_DIR, f), dryRun);
+    const result = processContract(f.absPath, dryRun);
     if (!result) continue;
     totalMigrated += result.migrated;
     totalSkipped += result.skipped;

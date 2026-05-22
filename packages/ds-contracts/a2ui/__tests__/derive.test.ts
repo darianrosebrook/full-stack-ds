@@ -370,10 +370,12 @@ describe('deriveA2UIDescriptor — edge cases', () => {
 describe('deriveA2UIDescriptor — corpus sanity', () => {
   it('derives descriptors for every upgraded contract without throwing', () => {
     const contractFiles: string[] = [];
-    for (const f of fs.readdirSync(CONTRACTS_DIR)) {
-      if (f.endsWith('.contract.json')) {
-        contractFiles.push(path.join(CONTRACTS_DIR, f));
-      }
+    const componentsDir = path.join(CONTRACTS_DIR, 'components');
+    for (const name of fs.readdirSync(componentsDir)) {
+      const folder = path.join(componentsDir, name);
+      if (!fs.statSync(folder).isDirectory()) continue;
+      const contractPath = path.join(folder, `${name}.contract.json`);
+      if (fs.existsSync(contractPath)) contractFiles.push(contractPath);
     }
     expect(contractFiles.length, 'no contract files found').toBeGreaterThan(0);
 

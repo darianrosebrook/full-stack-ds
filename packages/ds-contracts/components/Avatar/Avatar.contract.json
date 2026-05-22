@@ -1,0 +1,174 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Avatar",
+  "description": "Circular user or entity representation showing an image, initials, or icon fallback.",
+  "layer": "compound",
+  "anatomy": {
+    "parts": [
+      "root",
+      "image",
+      "initials",
+      "status"
+    ],
+    "dom": {
+      "tag": "div",
+      "part": "root"
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Avatar> component.",
+      "members": [
+        {
+          "name": "src",
+          "type": "string",
+          "description": "Image source URL. Omit to render initials from `name`."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "User/entity name. Used for initials fallback and as the accessible label.",
+          "required": true
+        },
+        {
+          "name": "priority",
+          "type": "boolean",
+          "description": "Mark image as priority for above-the-fold loading."
+        }
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "small",
+      "medium",
+      "large",
+      "extra-large"
+    ]
+  },
+  "states": [
+    "default",
+    "focus"
+  ],
+  "tokens": {
+    "root": {
+      "avatar.size.small": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "layer": "core"
+      },
+      "avatar.size.default": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "layer": "core"
+      },
+      "avatar.size.medium": {
+        "resolvesTo": "core.spacing.size.08",
+        "fallback": "32px",
+        "layer": "core"
+      },
+      "avatar.size.large": {
+        "resolvesTo": "core.spacing.size.10",
+        "fallback": "64px",
+        "layer": "core"
+      },
+      "avatar.size.status": {
+        "resolvesTo": "core.spacing.size.03",
+        "fallback": "4px",
+        "layer": "core"
+      },
+      "avatar.size.radius.default": {
+        "resolvesTo": "core.shape.radius.full",
+        "fallback": "9999px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "avatar.size.radius.small": {
+        "resolvesTo": "core.shape.radius.small",
+        "fallback": "4px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "avatar.size.border.default": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "avatar.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "avatar.color.background.inverse": {
+        "resolvesTo": "semantic.color.background.inverse",
+        "fallback": "#141414",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "avatar.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "avatar.color.border.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "avatar.typography.fontWeight.medium": {
+        "resolvesTo": "core.typography.weight.medium",
+        "fallback": "500",
+        "layer": "core"
+      },
+      "avatar.typography.fontFamily.sans": {
+        "resolvesTo": "core.typography.font.family.sans",
+        "fallback": "\"Inter\", sans-serif",
+        "layer": "core"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"avatar\"]"
+    },
+    "image": {
+      "required": false,
+      "selector": "[data-slot=\"avatar-image\"]"
+    },
+    "initials": {
+      "required": false,
+      "selector": "[data-slot=\"avatar-initials\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "img",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "usage": {
+
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Provide src and alt for image avatars; omit src to render initials from the name prop",
+      "Use size to scale the avatar to fit its context (xs through xl)",
+      "Always set alt text or a name prop so screen readers have a meaningful label"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Checkbox",
+  "description": "Binary or tri-state input for boolean selection. Supports indeterminate state for partial group selection.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root",
+      "input",
+      "indicator"
+    ],
+    "dom": {
+      "tag": "input",
+      "part": "input",
+      "attrs": {
+        "type": "checkbox"
+      },
+      "bindings": {
+        "checked": "channel:checked.value",
+        "onChange": "channel:checked.onChange",
+        "disabled": "prop:disabled"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Checkbox> component.",
+      "members": [
+        {
+          "name": "size",
+          "type": "CheckboxSize",
+          "description": "Visual size variant.",
+          "default": "md"
+        },
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "Controlled checked state."
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "description": "Uncontrolled initial checked state."
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "description": "Called when checked state changes."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "description": "Renders indeterminate state (some-but-not-all children selected)."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form name for native submission."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Form value submitted when checked."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "checked": {
+      "value": "checked",
+      "defaultValue": "defaultChecked",
+      "onChange": "onChange",
+      "valueType": "boolean",
+      "description": "Whether the checkbox is checked."
+    }
+  },
+  "types": {
+    "CheckboxSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "checked"
+  ],
+  "tokens": {
+    "root": {
+      "checkbox.color.background.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "checkbox.color.border.default": {
+        "resolvesTo": "semantic.color.border.default",
+        "fallback": "#aeaeae",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "checkbox.border.width": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "property": "border-width",
+        "layer": "core"
+      },
+      "checkbox.border.radius": {
+        "resolvesTo": "core.shape.radius.small",
+        "fallback": "4px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "checkbox.transition.duration": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "property": "transition-duration",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "checkbox.color.border.hover": {
+        "resolvesTo": "semantic.color.border.hover",
+        "fallback": "#f29495",
+        "property": "border-color",
+        "layer": "semantic"
+      }
+    },
+    "checked": {
+      "checkbox.color.background.checked": {
+        "resolvesTo": "semantic.color.action.background.primary.default",
+        "fallback": "#d9292b",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    },
+    "disabled": {
+      "checkbox.color.background.disabled": {
+        "resolvesTo": "semantic.color.background.disabled",
+        "fallback": "#cecece",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "form": {
+    "participates": true,
+    "inputType": "checkbox",
+    "name": {
+      "prop": "name"
+    },
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "prop:value",
+      "omitWhen": "unchecked",
+      "multiple": false
+    },
+    "validity": {
+      "model": "native",
+      "ariaAttributes": [
+        "aria-invalid",
+        "aria-required",
+        "aria-describedby"
+      ]
+    },
+    "labeling": {
+      "strategy": "associated-label",
+      "required": true,
+      "via": [
+        "aria-labelledby",
+        "aria-label"
+      ]
+    }
+  },
+  "focus": {
+    "strategy": "auto",
+    "description": "Native checkbox receives focus via Tab. No custom roving or trap needed."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"checkbox\"]"
+    },
+    "input": {
+      "required": true,
+      "selector": "[data-slot=\"checkbox-input\"]"
+    },
+    "indicator": {
+      "required": true,
+      "selector": "[data-slot=\"checkbox-indicator\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "input",
+      "to": "indicator",
+      "attribute": "aria-hidden",
+      "description": "The visual indicator div is aria-hidden so screen readers use only the native input's state."
+    }
+  ],
+  "a11y": {
+    "role": "checkbox",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-checked"
+    ],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Toggle the checked state."
+      }
+    ]
+  },
+  "usage": {
+    "example": "<Checkbox\n  checked={checked}\n  onChange={(e) => setChecked(e.target.checked)}\n  label=\"Subscribe to newsletter\"\n  name=\"subscribe\"\n  helperText=\"We'll send you weekly updates\"\n  errorText={errors.subscribe}\n/>",
+    "hookExample": "const { checked, getInputProps, getLabelProps } = useCheckbox({\n  defaultChecked: false,\n  onChange: (e) => console.log(e.target.checked)\n});\n\nreturn (\n  <label {...getLabelProps()}>\n    <input {...getInputProps()} />\n    <span>Label text</span>\n  </label>\n);"
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Use checked and onChange for controlled mode; defaultChecked for uncontrolled",
+      "Set indeterminate for parent checkboxes in a group where some children are checked",
+      "Always pair with a label \u2014 either via prop:label or a visible sibling Label component",
+      "Use name and value for native form submission"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

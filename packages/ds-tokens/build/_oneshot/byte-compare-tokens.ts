@@ -20,10 +20,9 @@
  * Exit code: always 0 — informational only, not a gate.
  */
 
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, statSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readdirSync } from "node:fs";
 
 // ---------------------------------------------------------------------------
 // Paths
@@ -132,19 +131,26 @@ console.log();
 // Load contracts
 // ---------------------------------------------------------------------------
 
-const contractFiles = readdirSync(CONTRACTS_DIR).filter((f) =>
-  f.endsWith(".contract.json"),
-);
+const componentsDir = join(CONTRACTS_DIR, "components");
+const contractFiles: { filename: string; absPath: string }[] = [];
+for (const name of readdirSync(componentsDir)) {
+  const folder = join(componentsDir, name);
+  if (!statSync(folder).isDirectory()) continue;
+  const filename = `${name}.contract.json`;
+  const absPath = join(folder, filename);
+  if (existsSync(absPath)) {
+    contractFiles.push({ filename, absPath });
+  }
+}
 
-console.log(`Contracts dir: ${CONTRACTS_DIR}`);
+console.log(`Contracts dir: ${componentsDir}`);
 console.log(`  → ${contractFiles.length} contract files found`);
 console.log();
 
 // contractRefs: Map from dotPath → first sourceFile seen (for reporting)
 const contractRefsMap = new Map<string, string>();
 
-for (const filename of contractFiles) {
-  const fullPath = join(CONTRACTS_DIR, filename);
+for (const { filename, absPath: fullPath } of contractFiles) {
   let parsed: unknown;
   try {
     parsed = JSON.parse(readFileSync(fullPath, "utf-8"));

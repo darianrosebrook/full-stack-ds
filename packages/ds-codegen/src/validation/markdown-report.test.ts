@@ -45,7 +45,7 @@ function baseReport(): RailReport {
           framework: "react",
           component: "Button",
           contract: {
-            path: "packages/ds-contracts/Button.contract.json",
+            path: "packages/ds-contracts/components/Button/Button.contract.json",
             sha256: "1".repeat(64),
           },
           files: [
@@ -335,7 +335,7 @@ describe("renderMarkdownReport scoped projection section", () => {
           framework: "lit",
           component: "Button",
           contract: {
-            path: "packages/ds-contracts/Button.contract.json",
+            path: "packages/ds-contracts/components/Button/Button.contract.json",
             sha256: "abcdef0123456789".padEnd(64, "0"),
           },
           files: [
@@ -364,7 +364,7 @@ describe("renderMarkdownReport scoped projection section", () => {
           framework: "react",
           component: "Button",
           contract: {
-            path: "packages/ds-contracts/Button.contract.json",
+            path: "packages/ds-contracts/components/Button/Button.contract.json",
             sha256: "abcdef0123456789".padEnd(64, "0"),
           },
           files: [
@@ -387,9 +387,9 @@ describe("renderMarkdownReport scoped projection section", () => {
     const md = renderMarkdownReport(r);
     // react comes before lit because of FRAMEWORK_RANK ordering.
     const reactRow =
-      "| Button | react | 1 | `packages/ds-contracts/Button.contract.json` | `abcdef012345` | pass [pkg] |";
+      "| Button | react | 1 | `packages/ds-contracts/components/Button/Button.contract.json` | `abcdef012345` | pass [pkg] |";
     const litRow =
-      "| Button | lit | 1 | `packages/ds-contracts/Button.contract.json` | `abcdef012345` | pass [pkg+tpl] (narrowings: no-incompatible-type-binding) |";
+      "| Button | lit | 1 | `packages/ds-contracts/components/Button/Button.contract.json` | `abcdef012345` | pass [pkg+tpl] (narrowings: no-incompatible-type-binding) |";
     const reactIdx = md.indexOf(reactRow);
     const litIdx = md.indexOf(litRow);
     expect(reactIdx).toBeGreaterThan(0);
@@ -426,7 +426,7 @@ describe("renderMarkdownReport scoped projection section", () => {
       mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
       changedGeneratedPaths: [],
       nonGeneratedChangedPaths: [
-        "packages/ds-contracts/Button.contract.json",
+        "packages/ds-contracts/components/Button/Button.contract.json",
       ],
       unmatchedGeneratedPaths: [],
       changedContractPaths: [],
@@ -434,7 +434,7 @@ describe("renderMarkdownReport scoped projection section", () => {
     };
     const md = renderMarkdownReport(r);
     expect(md).toContain("### Non-generated changed paths");
-    expect(md).toContain("- `packages/ds-contracts/Button.contract.json`");
+    expect(md).toContain("- `packages/ds-contracts/components/Button/Button.contract.json`");
   });
 
   it("renders changed contracts as a separate section with the required-mode hand-off note", () => {
@@ -443,18 +443,18 @@ describe("renderMarkdownReport scoped projection section", () => {
       mode: { kind: "git_range", rangeNotation: "origin/main...HEAD" },
       changedGeneratedPaths: [],
       nonGeneratedChangedPaths: [
-        "packages/ds-contracts/Button.contract.json",
+        "packages/ds-contracts/components/Button/Button.contract.json",
       ],
       unmatchedGeneratedPaths: [],
       changedContractPaths: [
-        "packages/ds-contracts/Button.contract.json",
+        "packages/ds-contracts/components/Button/Button.contract.json",
       ],
       matchedGroups: [],
     };
     const md = renderMarkdownReport(r);
     expect(md).toContain("### Changed contracts");
     expect(md).toContain("RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH");
-    expect(md).toContain("- `packages/ds-contracts/Button.contract.json`");
+    expect(md).toContain("- `packages/ds-contracts/components/Button/Button.contract.json`");
   });
 
   it("renders BEFORE the per-component index when both are present", () => {

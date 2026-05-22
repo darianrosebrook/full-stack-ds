@@ -1,0 +1,384 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Toast",
+  "description": "Transient notification message appearing briefly at the edge of the viewport.",
+  "layer": "composer",
+  "anatomy": {
+    "parts": [
+      "root",
+      "viewport",
+      "item",
+      "title",
+      "description",
+      "row",
+      "action",
+      "close"
+    ],
+    "dom": {
+      "tag": "div",
+      "part": "viewport",
+      "attrs": {
+        "aria-live": "polite",
+        "aria-label": "Notifications"
+      },
+      "children": [
+        {
+          "tag": "div",
+          "part": "item",
+          "attrs": {
+            "role": "status"
+          },
+          "if": "open",
+          "children": [
+            {
+              "tag": "div",
+              "part": "row",
+              "children": [
+                {
+                  "tag": "div",
+                  "part": "title",
+                  "if": "title"
+                },
+                {
+                  "tag": "div",
+                  "part": "description",
+                  "children": [
+                    {
+                      "tag": "children"
+                    }
+                  ]
+                },
+                {
+                  "tag": "div",
+                  "part": "action",
+                  "if": "action"
+                },
+                {
+                  "tag": "button",
+                  "part": "close",
+                  "attrs": {
+                    "type": "button",
+                    "aria-label": "Dismiss"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Toast> notification component.",
+      "members": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "description": "Whether this toast is visible."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when the toast is dismissed."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Toast title text."
+        },
+        {
+          "name": "variant",
+          "type": "ToastVariant",
+          "description": "Visual style indicating intent.",
+          "default": "info"
+        },
+        {
+          "name": "politeness",
+          "type": "ToastPoliteness",
+          "description": "ARIA live region politeness level.",
+          "default": "polite"
+        },
+        {
+          "name": "action",
+          "type": "ReactNode",
+          "description": "Optional action slot rendered next to the toast description (e.g. an undo button)."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "open": {
+      "value": "open",
+      "onChange": "onOpenChange",
+      "valueType": "boolean",
+      "description": "Per-toast visibility managed by ToastProvider."
+    }
+  },
+  "types": {
+    "ToastVariant": {
+      "kind": "union",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "error"
+      ]
+    },
+    "ToastPoliteness": {
+      "kind": "union",
+      "values": [
+        "polite",
+        "assertive"
+      ]
+    }
+  },
+  "variants": {
+    "variant": [
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
+    "politeness": [
+      "polite",
+      "assertive"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "entering",
+    "visible",
+    "leaving"
+  ],
+  "tokens": {
+    "root": {
+      "toast.surface.bg": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "layer": "semantic"
+      },
+      "toast.surface.border": {
+        "resolvesTo": "semantic.color.border.subtle",
+        "fallback": "#cecece",
+        "layer": "semantic"
+      },
+      "toast.surface.radius": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "toast.surface.shadow": {
+        "resolvesTo": "semantic.elevation.surface.raised",
+        "fallback": "none",
+        "property": "box-shadow",
+        "layer": "semantic"
+      },
+      "toast.color.info": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      },
+      "toast.color.success": {
+        "resolvesTo": "semantic.color.foreground.success",
+        "fallback": "#487e1e",
+        "layer": "semantic"
+      },
+      "toast.color.warning": {
+        "resolvesTo": "semantic.color.foreground.warning",
+        "fallback": "#ac5c00",
+        "layer": "semantic"
+      },
+      "toast.color.error": {
+        "resolvesTo": "semantic.color.foreground.danger",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "toast.accent.info": {
+        "resolvesTo": "semantic.color.status.info",
+        "fallback": "#0a65fe",
+        "layer": "semantic"
+      },
+      "toast.accent.success": {
+        "resolvesTo": "semantic.color.status.success",
+        "fallback": "#487e1e",
+        "layer": "semantic"
+      },
+      "toast.accent.warning": {
+        "resolvesTo": "semantic.color.status.warning",
+        "fallback": "#ac5c00",
+        "layer": "semantic"
+      },
+      "toast.accent.error": {
+        "resolvesTo": "semantic.color.status.danger",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "toast.spacing.padding": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "toast.spacing.gap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "toast.spacing.stackGap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "toast.size.maxWidth": {
+        "literal": "400px"
+      },
+      "toast.motion.enter": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "layer": "core"
+      },
+      "toast.motion.leave": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "layer": "core"
+      }
+    }
+  },
+  "motion": {
+    "reducedMotion": "respect",
+    "reducedMotionStrategy": "Duration set to 0 so enter/exit collapses to immediate show/hide.",
+    "transitions": [
+      {
+        "name": "open",
+        "trigger": "openness=hidden\u2192visible",
+        "phase": "enter",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasized-in"
+      },
+      {
+        "name": "close",
+        "trigger": "openness=visible\u2192hidden",
+        "phase": "exit",
+        "properties": [
+          "opacity",
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.emphasized-out"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "none",
+    "description": "ToastViewport is an ARIA live region. Toasts appear without moving keyboard focus."
+  },
+  "portal": {
+    "enabled": true,
+    "defaultTarget": "body",
+    "positioning": "fixed",
+    "layering": "popover"
+  },
+  "dismissal": {
+    "triggers": [
+      {
+        "event": "escape"
+      },
+      {
+        "event": "userDismiss"
+      }
+    ]
+  },
+  "slots": {
+    "viewport": {
+      "required": true,
+      "selector": "[data-slot=\"toast-viewport\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"toast\"]"
+    },
+    "title": {
+      "required": false,
+      "selector": "[data-slot=\"toast-title\"]"
+    },
+    "description": {
+      "required": false,
+      "selector": "[data-slot=\"toast-description\"]"
+    },
+    "row": {
+      "required": false,
+      "selector": "[data-slot=\"toast-row\"]"
+    },
+    "action": {
+      "required": false,
+      "selector": "[data-slot=\"toast-action\"]"
+    },
+    "close": {
+      "required": false,
+      "selector": "[data-slot=\"toast-close\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "item",
+      "to": "title",
+      "attribute": "aria-labelledby",
+      "description": "Each toast item has an implicit aria-live region; the title provides accessible labeling."
+    }
+  ],
+  "a11y": {
+    "role": "alert",
+    "apgPattern": "alert",
+    "labeling": [
+      "aria-label",
+      "aria-live",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Dismiss the focused toast.",
+        "when": "item"
+      }
+    ]
+  },
+  "usage": {
+    "example": "<ToastProvider>\n  <ToastViewport />\n  <Toast open={open} onOpenChange={setOpen} variant=\"success\">\n    <ToastTitle>Saved</ToastTitle>\n    <ToastDescription>Your changes have been saved.</ToastDescription>\n    <ToastClose />\n  </Toast>\n</ToastProvider>",
+    "hookExample": "const { toast } = useToast();\ntoast({ title: 'Saved', variant: 'success' });"
+  },
+  "a2ui": {
+    "category": "overlay",
+    "usageHints": [
+      "Trigger toasts via the useToast hook or ToastProvider API \u2014 do not render Toast directly",
+      "Use variant to set the visual style (default, success, warning, error)",
+      "Toasts are live regions \u2014 screen readers announce them without requiring focus",
+      "Keep toast messages brief; use an action button only for critical reversible operations"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "ToastTitle",
+        "ToastDescription",
+        "ToastAction",
+        "ToastClose"
+      ]
+    }
+  }
+}

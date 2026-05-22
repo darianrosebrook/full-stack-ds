@@ -1,0 +1,222 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Input",
+  "description": "Native text input with design-system styling. Use inside TextField for label and error support.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root"
+    ],
+    "dom": {
+      "tag": "input",
+      "part": "root",
+      "bindings": {
+        "value": "channel:value.value",
+        "onChange": "channel:value.onChange",
+        "disabled": "prop:disabled",
+        "aria-invalid": "prop:invalid",
+        "type": "prop:type"
+      }
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Input> component.",
+      "members": [
+        {
+          "name": "type",
+          "type": "string",
+          "description": "HTML input type (text, email, password, number, search, etc.)."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Controlled value."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Uncontrolled initial value."
+        },
+        {
+          "name": "onChange",
+          "type": "(value: string) => void",
+          "description": "Called when value changes."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "description": "Placeholder text shown when empty."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "description": "Applies error styling and sets aria-invalid."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "description": "Sets the native required attribute."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form name for native submission."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "value": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onChange",
+      "valueType": "string",
+      "description": "The current text value of the input."
+    }
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "invalid"
+  ],
+  "tokens": {
+    "root": {
+      "input.color.bg.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "input.color.text.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "input.color.border.default": {
+        "resolvesTo": "semantic.color.border.default",
+        "fallback": "#aeaeae",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "input.size.height.default": {
+        "resolvesTo": "semantic.control.size.lg.height",
+        "fallback": "48px",
+        "property": "min-height",
+        "layer": "semantic"
+      },
+      "input.size.radius.default": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "input.space.inline.default": {
+        "resolvesTo": "core.spacing.size.05",
+        "fallback": "12px",
+        "property": "padding",
+        "layer": "core"
+      }
+    },
+    "focus": {
+      "input.color.focus.default": {
+        "resolvesTo": "semantic.color.border.focus",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      }
+    },
+    "invalid": {
+      "input.color.invalid.default": {
+        "resolvesTo": "semantic.color.border.danger",
+        "fallback": "#ae0001",
+        "property": "border-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "form": {
+    "participates": true,
+    "inputType": "text",
+    "name": {
+      "prop": "name"
+    },
+    "required": {
+      "prop": "required",
+      "constraintValidation": true
+    },
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "channel:value",
+      "omitWhen": "never"
+    },
+    "validity": {
+      "model": "hybrid",
+      "invalidProp": "invalid",
+      "ariaAttributes": [
+        "aria-invalid",
+        "aria-required",
+        "aria-describedby"
+      ]
+    },
+    "labeling": {
+      "strategy": "associated-label",
+      "required": true,
+      "via": [
+        "aria-labelledby",
+        "aria-label"
+      ]
+    }
+  },
+  "focus": {
+    "strategy": "none"
+  },
+  "portal": {
+    "enabled": false
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"input\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "textbox",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-invalid"
+    ],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Input\n  label=\"Full Name\"\n  value={name}\n  onChange={(e) => setName(e.target.value)}\n  placeholder=\"Jane Doe\"\n  helperText=\"Enter your legal name\"\n/>",
+    "hookExample": "const { value, getInputProps, getLabelProps } = useInput({\n  initialValue: '',\n  label: 'Email',\n  onChange: (e) => console.log(e.target.value)\n});"
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Prefer TextField over Input when you need a label, description, or error message",
+      "Use type to change the input mode (text, email, password, number, search, etc.)",
+      "Set invalid for error state styling without a form validation message",
+      "Use name for native form submission"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

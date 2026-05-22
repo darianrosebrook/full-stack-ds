@@ -1,0 +1,154 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Status",
+  "description": "Compact icon-and-label pair conveying a status condition (online, offline, busy, etc.).",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root",
+      "icon",
+      "label"
+    ],
+    "dom": {
+      "tag": "span",
+      "part": "root",
+      "children": [
+        {
+          "tag": "span",
+          "part": "icon",
+          "attrs": {
+            "aria-hidden": "true"
+          }
+        },
+        {
+          "tag": "span",
+          "part": "label",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Status> component.",
+      "members": [
+        {
+          "name": "status",
+          "type": "StatusIntent",
+          "description": "Status intent that drives the icon and color scheme.",
+          "required": true
+        }
+      ]
+    }
+  },
+  "types": {
+    "StatusIntent": {
+      "kind": "union",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "error"
+      ]
+    }
+  },
+  "variants": {
+    "status": [
+      "info",
+      "success",
+      "warning",
+      "danger",
+      "error"
+    ]
+  },
+  "states": [
+    "default"
+  ],
+  "tokens": {
+    "root": {
+      "status.color.background.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "status.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "status.color.border.default": {
+        "resolvesTo": "semantic.color.border.primary",
+        "fallback": "#f29495",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "status.size.radius.default": {
+        "resolvesTo": "core.shape.radius.full",
+        "fallback": "9999px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "status.size.padding.default": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "status.size.border.default": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "status.typography.lineHeight": {
+        "resolvesTo": "semantic.typography.line.height.collapse",
+        "fallback": "1",
+        "property": "line-height",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"status\"]"
+    },
+    "icon": {
+      "required": true,
+      "selector": "[data-slot=\"status-icon\"]"
+    },
+    "label": {
+      "required": true,
+      "selector": "[data-slot=\"status-label\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "The icon is chosen automatically based on the status prop value",
+      "Pair with Avatar to show user presence",
+      "Use size to match surrounding text"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

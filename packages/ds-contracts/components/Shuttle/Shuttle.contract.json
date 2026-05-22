@@ -1,0 +1,153 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Shuttle",
+  "description": "Dual-listbox transfer widget for moving items between two ordered collections.",
+  "layer": "composer",
+  "anatomy": {
+    "parts": [
+      "root",
+      "item"
+    ]
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Shuttle> component.",
+      "members": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label for the shuttle widget"
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "description": "Controlled list of selected-item ids (items currently in the right-hand list)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "description": "Uncontrolled initial selection."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string[]) => void",
+          "description": "Called when items move between the two lists; the new value reflects the right-hand list contents."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "selection": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onValueChange",
+      "valueType": "string[]",
+      "description": "The set of item ids currently in the right-hand (selected) list. Changes as items are transferred between the two listboxes."
+    }
+  },
+  "focus": {
+    "strategy": "roving",
+    "orientation": "vertical",
+    "description": "Arrow keys move focus within each listbox independently. Focus does not leave the shuttle widget."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "dismissal": {
+    "triggers": []
+  },
+  "variants": {},
+  "states": [
+    "default"
+  ],
+  "tokens": {
+    "root": {
+      "shuttle.color.background.default": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "shuttle.color.foreground.primary": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "shuttle.color.foreground.secondary": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "shuttle.color.border.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "shuttle.color.border.accent": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "shuttle.size.padding.default": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "shuttle.size.radius.default": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      }
+    }
+  },
+  "slots": {
+    "item": {
+      "required": false
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "role": "listbox",
+    "apgPattern": "listbox",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Select or deselect the focused item"
+      },
+      {
+        "key": "ArrowUp|ArrowDown",
+        "action": "Navigate between items in a listbox"
+      },
+      {
+        "key": "Enter",
+        "action": "Transfer the selected items to the other listbox"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Use for permission assignment, column selection, or playlist management",
+      "Support keyboard: Space to select/deselect, arrow keys to navigate, Enter to transfer",
+      "Show item counts in the listbox headers to communicate selection progress"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

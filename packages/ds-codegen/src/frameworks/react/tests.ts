@@ -17,7 +17,7 @@ import { generateReactSurfaceTest } from "./surface-tests.js";
  * or Date.
  *
  * Coverage across the 53 component contracts (verified by
- * `grep -h "\"valueType\":" packages/ds-contracts/*.contract.json`):
+ * `grep -rh "\"valueType\":" packages/ds-contracts/components/`):
  *   - boolean
  *   - string
  *   - string | string[]

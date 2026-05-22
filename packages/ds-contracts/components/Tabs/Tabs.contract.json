@@ -1,0 +1,467 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Tabs",
+  "description": "Tabbed navigation for switching between related content panels within the same page context.",
+  "layer": "composer",
+  "anatomy": {
+    "parts": [
+      "root",
+      "list",
+      "tab",
+      "indicator",
+      "panel"
+    ],
+    "details": {
+      "list": {
+        "description": "Container for tab buttons. Hosts keyboard navigation (arrow keys, Home/End).",
+        "role": "group",
+        "aria": {
+          "role": "tablist"
+        }
+      },
+      "tab": {
+        "description": "Single tab button. Auto-registers with the parent Tabs context.",
+        "role": "item",
+        "multiple": true,
+        "interactive": true,
+        "focusable": "roving",
+        "aria": {
+          "role": "tab",
+          "attributes": [
+            "aria-selected",
+            "aria-controls",
+            "tabindex"
+          ]
+        }
+      },
+      "panel": {
+        "description": "Content panel associated with a tab.",
+        "role": "region",
+        "multiple": true,
+        "aria": {
+          "role": "tabpanel",
+          "attributes": [
+            "aria-labelledby",
+            "tabindex",
+            "hidden"
+          ]
+        }
+      }
+    },
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "div",
+          "part": "list",
+          "attrs": {
+            "role": "tablist"
+          },
+          "children": [
+            {
+              "tag": "button",
+              "part": "tab",
+              "attrs": {
+                "role": "tab",
+                "type": "button"
+              },
+              "bindings": {
+                "aria-selected": "channel:activeTab.value"
+              }
+            },
+            {
+              "tag": "span",
+              "part": "indicator",
+              "attrs": {
+                "aria-hidden": "true"
+              }
+            }
+          ]
+        },
+        {
+          "tag": "div",
+          "part": "panel",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Tabs> component.",
+      "members": [
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Controlled value of the active tab."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "description": "Default value for uncontrolled usage."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "description": "Called when the active tab changes."
+        },
+        {
+          "name": "orientation",
+          "type": "TabsOrientation",
+          "description": "Layout direction of the tab list.",
+          "default": "horizontal"
+        },
+        {
+          "name": "activationMode",
+          "type": "TabsActivationMode",
+          "description": "Whether tabs activate on focus or require Enter/Space.",
+          "default": "automatic"
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "description": "Whether arrow-key navigation wraps around.",
+          "default": true
+        },
+        {
+          "name": "unmountInactive",
+          "type": "boolean",
+          "description": "Whether inactive panels are unmounted from the DOM."
+        },
+        {
+          "name": "idBase",
+          "type": "string",
+          "description": "Base string for generating tab and panel IDs."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "activeTab": {
+      "value": "value",
+      "defaultValue": "defaultValue",
+      "onChange": "onValueChange",
+      "valueType": "string",
+      "description": "The value of the currently active tab."
+    }
+  },
+  "types": {
+    "TabsOrientation": {
+      "kind": "union",
+      "values": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    "TabsActivationMode": {
+      "kind": "union",
+      "values": [
+        "automatic",
+        "manual"
+      ]
+    }
+  },
+  "variants": {
+    "orientation": [
+      "horizontal",
+      "vertical"
+    ],
+    "activationMode": [
+      "automatic",
+      "manual"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus"
+  ],
+  "tokens": {
+    "root": {
+      "tabs.spacing.gap": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "tabs.spacing.padding": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "tabs.spacing.panelGap": {
+        "resolvesTo": "core.spacing.size.06",
+        "fallback": "16px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "tabs.color.fg": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      },
+      "tabs.color.disabled-fg": {
+        "resolvesTo": "semantic.color.foreground.disabled",
+        "fallback": "#aeaeae",
+        "layer": "semantic"
+      },
+      "tabs.color.indicator": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      },
+      "tabs.shape.radius": {
+        "resolvesTo": "core.shape.radius.medium",
+        "fallback": "8px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "tabs.motion.indicator": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "tabs.color.hover.bg": {
+        "resolvesTo": "semantic.color.background.hover",
+        "fallback": "#cecece",
+        "layer": "semantic"
+      },
+      "tabs.color.hover.fg": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      }
+    },
+    "active": {
+      "tabs.color.active-fg": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "layer": "semantic"
+      },
+      "tabs.color.active-bg": {
+        "resolvesTo": "semantic.color.background.secondary",
+        "fallback": "#efefef",
+        "layer": "semantic"
+      }
+    },
+    "focus": {
+      "tabs.color.focus": {
+        "resolvesTo": "semantic.color.border.accent",
+        "fallback": "#d9292b",
+        "layer": "semantic"
+      }
+    }
+  },
+  "events": {
+    "activeTabChange": {
+      "description": "Fires when the active tab index changes. Under automatic activation this also fires when focus moves via arrow keys.",
+      "emittedVia": [
+        "onValueChange"
+      ],
+      "triggeredBy": [
+        "Click on tab",
+        "ArrowLeft/ArrowRight (horizontal) or ArrowUp/ArrowDown (vertical) while a tab is focused",
+        "Home/End while a tab is focused"
+      ],
+      "payload": [
+        {
+          "name": "activeTab",
+          "type": "number",
+          "description": "Zero-based index of the now-active tab."
+        }
+      ],
+      "returns": "void"
+    }
+  },
+  "stateMachine": {
+    "description": "Automatic activation: arrow navigation moves both focus and the `selection` dimension. Wrapping is enabled at the ends.",
+    "transitions": [
+      {
+        "event": "tab.click",
+        "to": "selection=selected",
+        "effect": "emit activeTabChange(index); move focus to clicked tab"
+      },
+      {
+        "event": "arrow.next",
+        "from": "focus=focused",
+        "to": "selection=selected",
+        "effect": "emit activeTabChange(nextIndex); move roving tabindex and DOM focus to next tab (wraps at end)"
+      },
+      {
+        "event": "arrow.prev",
+        "from": "focus=focused",
+        "to": "selection=selected",
+        "effect": "emit activeTabChange(prevIndex); move roving tabindex and DOM focus to previous tab (wraps at start)"
+      },
+      {
+        "event": "home",
+        "from": "focus=focused",
+        "to": "selection=selected",
+        "effect": "emit activeTabChange(0); move focus to first tab"
+      },
+      {
+        "event": "end",
+        "from": "focus=focused",
+        "to": "selection=selected",
+        "effect": "emit activeTabChange(tabCount-1); move focus to last tab"
+      }
+    ]
+  },
+  "motion": {
+    "reducedMotion": "respect",
+    "reducedMotionStrategy": "Active indicator moves instantly without animation when prefers-reduced-motion is set.",
+    "transitions": [
+      {
+        "name": "indicator",
+        "trigger": "activeTab=changed",
+        "phase": "enter",
+        "properties": [
+          "transform",
+          "width"
+        ],
+        "duration": "tabs.motion.indicator"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "roving",
+    "orientation": "horizontal",
+    "initialFocus": "activeTab",
+    "wrap": true,
+    "description": "Arrow keys move focus between tabs; focus follows the active indicator. Tab panels are reached with Tab key."
+  },
+  "portal": {
+    "enabled": false
+  },
+  "dismissal": {
+    "triggers": []
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"tabs\"]"
+    },
+    "list": {
+      "required": true,
+      "selector": "[data-slot=\"tabs-list\"]"
+    },
+    "indicator": {
+      "required": false,
+      "selector": "[data-slot=\"tabs-indicator\"]"
+    },
+    "tab": {
+      "required": true,
+      "selector": "[data-slot=\"tabs-tab\"]"
+    },
+    "panel": {
+      "required": true,
+      "selector": "[data-slot=\"tabs-panel\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [
+    {
+      "from": "tab",
+      "to": "panel",
+      "attribute": "aria-controls",
+      "description": "Each tab controls its associated tab panel."
+    },
+    {
+      "from": "panel",
+      "to": "tab",
+      "attribute": "aria-labelledby",
+      "description": "Each tab panel is labelled by its corresponding tab."
+    }
+  ],
+  "a11y": {
+    "apgPattern": "tabs",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowLeft",
+        "action": "Move focus to the previous tab (horizontal orientation).",
+        "when": "tab"
+      },
+      {
+        "key": "ArrowRight",
+        "action": "Move focus to the next tab (horizontal orientation).",
+        "when": "tab"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous tab (vertical orientation).",
+        "when": "tab",
+        "mode": "vertical"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next tab (vertical orientation).",
+        "when": "tab",
+        "mode": "vertical"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first tab.",
+        "when": "tab"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last tab.",
+        "when": "tab"
+      },
+      {
+        "key": "Enter",
+        "action": "Activate the focused tab (when activationMode is manual).",
+        "when": "tab"
+      },
+      {
+        "key": "Space",
+        "action": "Activate the focused tab (when activationMode is manual).",
+        "when": "tab"
+      },
+      {
+        "key": "Tab",
+        "action": "Move focus to the active tab panel content.",
+        "when": "list"
+      }
+    ]
+  },
+  "usage": {
+    "example": "<Tabs initialActiveTab={0} onChange={setTab}>\n  <TabList>\n    <Tab>Tab 1</Tab>\n    <Tab>Tab 2</Tab>\n  </TabList>\n  <TabPanels>\n    <TabPanel>Content 1</TabPanel>\n    <TabPanel>Content 2</TabPanel>\n  </TabPanels>\n</Tabs>",
+    "hookExample": "const tabs = useTabs({ tabCount: 3 });\n\nreturn (\n  <div>\n    <div {...tabs.getTabListProps()}>\n      {['Tab 1', 'Tab 2', 'Tab 3'].map((label, i) => (\n        <button key={i} {...tabs.getTabProps(i)}>{label}</button>\n      ))}\n    </div>\n    {['Content 1', 'Content 2', 'Content 3'].map((content, i) => (\n      <div key={i} {...tabs.getTabPanelProps(i)}>{content}</div>\n    ))}\n  </div>\n);"
+  },
+  "a2ui": {
+    "category": "navigation",
+    "usageHints": [
+      "Bind value and onValueChange for controlled tabs; use defaultValue for uncontrolled",
+      "Use activationMode=\"manual\" when tab panels are expensive to render (focus without selecting)",
+      "Each Tab must have a corresponding TabsContent with a matching value string",
+      "Use orientation=\"vertical\" for sidebar-style tab lists"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "TabsList",
+        "TabsTrigger",
+        "TabsContent"
+      ]
+    }
+  }
+}

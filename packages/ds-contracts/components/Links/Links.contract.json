@@ -1,0 +1,177 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Links",
+  "description": "Styled anchor links with design-system typography and color variants.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root"
+    ],
+    "dom": {
+      "tag": "a",
+      "part": "root",
+      "bindings": {
+        "href": "prop:href",
+        "target": "prop:target",
+        "rel": "prop:rel"
+      },
+      "children": [
+        {
+          "tag": "children"
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Links> component.",
+      "members": [
+        {
+          "name": "href",
+          "type": "string",
+          "description": "Navigation destination URL."
+        },
+        {
+          "name": "target",
+          "type": "LinkTarget",
+          "description": "Where to open the linked document."
+        },
+        {
+          "name": "rel",
+          "type": "string",
+          "description": "Relationship between current document and the linked one (e.g., \"noopener noreferrer\")."
+        },
+        {
+          "name": "size",
+          "type": "LinkSize",
+          "description": "Visual size token."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Visually disables the link. Note: anchors are not natively disable-able; intercept onClick to actually prevent navigation."
+        }
+      ]
+    }
+  },
+  "types": {
+    "LinkTarget": {
+      "kind": "union",
+      "values": [
+        "_self",
+        "_blank",
+        "_parent",
+        "_top"
+      ]
+    },
+    "LinkSize": {
+      "kind": "union",
+      "values": [
+        "small",
+        "medium",
+        "large"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "visited",
+    "disabled"
+  ],
+  "tokens": {
+    "root": {
+      "links.color.foreground.default": {
+        "resolvesTo": "semantic.color.foreground.primary",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "links.color.underline.default": {
+        "resolvesTo": "semantic.color.border.light",
+        "fallback": "#fceaea",
+        "property": "text-decoration-color",
+        "layer": "semantic"
+      },
+      "links.spacing.gap.default": {
+        "resolvesTo": "core.spacing.size.02",
+        "fallback": "2px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "links.motion.duration.fast": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "property": "transition-duration",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "links.color.foreground.hover": {
+        "resolvesTo": "semantic.interaction.text.hover",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      }
+    },
+    "visited": {
+      "links.color.foreground.visited": {
+        "resolvesTo": "semantic.color.foreground.secondary",
+        "fallback": "#555555",
+        "property": "color",
+        "layer": "semantic"
+      }
+    },
+    "disabled": {
+      "links.color.foreground.disabled": {
+        "resolvesTo": "semantic.color.foreground.disabled",
+        "fallback": "#aeaeae",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"links\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "usage": {
+    "example": "<Link href=\"https://example.com\">\n  I am a link\n</Link>\n\n<Link href=\"/support\" target=\"_blank\">\n  Take me to the support pages.\n</Link>"
+  },
+  "a2ui": {
+    "category": "navigation",
+    "usageHints": [
+      "Use for inline hyperlinks within body copy",
+      "Use variant=standalone for a link that stands alone, not within a sentence",
+      "Prefer Button for actions \u2014 Links are for navigation"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "ReactNode"
+      ]
+    }
+  }
+}

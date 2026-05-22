@@ -1,0 +1,274 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Chip",
+  "description": "Compact interactive element for tags, filters, or multi-select choices.",
+  "layer": "compound",
+  "anatomy": {
+    "parts": [
+      "root",
+      "icon",
+      "text"
+    ],
+    "dom": {
+      "tag": "button",
+      "part": "root",
+      "bindings": {
+        "type": "prop:type",
+        "disabled": "prop:disabled",
+        "aria-label": "prop:ariaLabel",
+        "aria-expanded": "prop:ariaExpanded",
+        "aria-pressed": "prop:ariaPressed"
+      },
+      "children": [
+        {
+          "tag": "span",
+          "part": "icon",
+          "attrs": {
+            "aria-hidden": "true"
+          },
+          "if": "icon"
+        },
+        {
+          "tag": "span",
+          "part": "text",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Chip> component.",
+      "members": [
+        {
+          "name": "type",
+          "type": "ChipType",
+          "description": "HTML button type attribute"
+        },
+        {
+          "name": "variant",
+          "type": "ChipVariant",
+          "description": "Visual variant"
+        },
+        {
+          "name": "size",
+          "type": "ChipSize",
+          "description": "Size token"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Disables the chip"
+        },
+        {
+          "name": "icon",
+          "type": "ReactNode",
+          "description": "Icon node to render. Omit for text-only chips."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "Title attribute. Use to expose a tooltip-equivalent label."
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "description": "Accessible label when content is not descriptive enough on its own."
+        },
+        {
+          "name": "ariaExpanded",
+          "type": "boolean",
+          "description": "Sets aria-expanded for chips that toggle a popover/menu."
+        },
+        {
+          "name": "ariaPressed",
+          "type": "boolean",
+          "description": "Sets aria-pressed for chips used as toggle buttons."
+        }
+      ]
+    }
+  },
+  "types": {
+    "ChipType": {
+      "kind": "union",
+      "values": [
+        "button",
+        "submit",
+        "reset"
+      ]
+    },
+    "ChipVariant": {
+      "kind": "union",
+      "values": [
+        "default",
+        "selected",
+        "dismissible"
+      ]
+    },
+    "ChipSize": {
+      "kind": "union",
+      "values": [
+        "small",
+        "medium",
+        "large"
+      ]
+    }
+  },
+  "variants": {
+    "variant": [
+      "default",
+      "selected",
+      "dismissible"
+    ],
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "active",
+    "disabled"
+  ],
+  "tokens": {
+    "root": {
+      "chip.color.background.default": {
+        "resolvesTo": "semantic.color.action.background.secondary.default",
+        "fallback": "#fafafa",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "chip.color.foreground.default": {
+        "resolvesTo": "semantic.color.action.foreground.secondary.default",
+        "fallback": "#141414",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "chip.color.border.default": {
+        "resolvesTo": "semantic.color.action.border.secondary.default",
+        "fallback": "#aeaeae",
+        "property": "border-color",
+        "layer": "semantic"
+      },
+      "chip.size.padding.horizontal": {
+        "resolvesTo": "core.spacing.size.04",
+        "fallback": "8px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "chip.size.padding.vertical": {
+        "resolvesTo": "core.spacing.size.02",
+        "fallback": "2px",
+        "property": "padding",
+        "layer": "core"
+      },
+      "chip.size.gap": {
+        "resolvesTo": "core.spacing.size.02",
+        "fallback": "2px",
+        "property": "gap",
+        "layer": "core"
+      },
+      "chip.size.radius": {
+        "resolvesTo": "core.shape.radius.full",
+        "fallback": "9999px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "chip.size.border": {
+        "resolvesTo": "core.shape.border.width.hairline",
+        "fallback": "1px",
+        "layer": "core"
+      },
+      "chip.text.size": {
+        "resolvesTo": "semantic.typography.body.04",
+        "fallback": "12px",
+        "property": "font-size",
+        "layer": "semantic"
+      },
+      "chip.text.weight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "property": "font-weight",
+        "layer": "semantic"
+      },
+      "chip.motion.duration.fast": {
+        "resolvesTo": "core.motion.duration.short",
+        "fallback": "150ms",
+        "property": "transition-duration",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "chip.color.background.hover": {
+        "resolvesTo": "semantic.color.action.background.secondary.hover",
+        "fallback": "#efefef",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    },
+    "active": {
+      "chip.color.background.active": {
+        "resolvesTo": "semantic.color.action.background.secondary.active",
+        "fallback": "#cecece",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"chip\"]"
+    },
+    "text": {
+      "required": false,
+      "selector": "[data-slot=\"chip-text\"]"
+    },
+    "icon": {
+      "required": false,
+      "selector": "[data-slot=\"chip-icon\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": true
+  },
+  "a11y": {
+    "role": "button",
+    "labeling": [
+      "aria-label",
+      "title"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Activate the chip (same as click)"
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "action",
+    "usageHints": [
+      "Use variant=filter for toggleable filter chips; variant=action for one-time interactions",
+      "Set selected to mark the chip as active in a filter group",
+      "Use onDismiss to make the chip removable with an X button",
+      "Chips with onClick render as buttons; without onClick they render as spans"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string"
+      ]
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { listComponentContracts } from "./contracts-fs.js";
 import { createContractValidator } from "./validate.js";
 
 // This test schema-validates every contract on disk through the same Ajv
@@ -16,12 +17,6 @@ const CONTRACTS_ROOT = resolve(__dirname, "../../ds-contracts");
 
 const validator = createContractValidator({ contractsRoot: CONTRACTS_ROOT });
 
-function listContractFiles(): string[] {
-  return readdirSync(CONTRACTS_ROOT)
-    .filter((f) => f.endsWith(".contract.json"))
-    .sort();
-}
-
 function listPrimitiveFiles(): string[] {
   return readdirSync(resolve(CONTRACTS_ROOT, "primitives"))
     .filter((f) => f.endsWith(".primitive.json"))
@@ -29,27 +24,30 @@ function listPrimitiveFiles(): string[] {
 }
 
 describe("contract schema validation", () => {
-  const contractFiles = listContractFiles();
+  const contractEntries = listComponentContracts(CONTRACTS_ROOT);
   const primitiveFiles = listPrimitiveFiles();
 
   it("finds at least one contract and one primitive on disk", () => {
     // Sanity guard so this test can't silently pass-by-being-empty if the
     // contracts directory is ever misconfigured in CI.
-    expect(contractFiles.length).toBeGreaterThan(0);
+    expect(contractEntries.length).toBeGreaterThan(0);
     expect(primitiveFiles.length).toBeGreaterThan(0);
   });
 
-  it.each(contractFiles)("%s validates against component.contract.schema.json", (file) => {
-    const raw = readFileSync(resolve(CONTRACTS_ROOT, file), "utf8");
-    const json: unknown = JSON.parse(raw);
-    const result = validator.validateComponent(json);
-    if (!result.ok) {
-      // Build a readable error message — Ajv error pointers + messages.
-      const detail = result.issues.map((i) => `  ${i.pointer}: ${i.message}`).join("\n");
-      expect.fail(`${file} failed schema validation:\n${detail}`);
-    }
-    expect(result.ok).toBe(true);
-  });
+  it.each(contractEntries.map((c) => [c.filename, c.absPath] as const))(
+    "%s validates against component.contract.schema.json",
+    (file, absPath) => {
+      const raw = readFileSync(absPath, "utf8");
+      const json: unknown = JSON.parse(raw);
+      const result = validator.validateComponent(json);
+      if (!result.ok) {
+        // Build a readable error message — Ajv error pointers + messages.
+        const detail = result.issues.map((i) => `  ${i.pointer}: ${i.message}`).join("\n");
+        expect.fail(`${file} failed schema validation:\n${detail}`);
+      }
+      expect(result.ok).toBe(true);
+    },
+  );
 
   it.each(primitiveFiles)("%s validates against primitive.contract.schema.json", (file) => {
     const raw = readFileSync(resolve(CONTRACTS_ROOT, "primitives", file), "utf8");

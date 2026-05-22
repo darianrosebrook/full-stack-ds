@@ -1,0 +1,179 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Truncate",
+  "description": "Clamps multi-line text to a fixed number of lines with an optional expand/collapse toggle.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root",
+      "content",
+      "toggle"
+    ],
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "span",
+          "part": "content",
+          "children": [
+            {
+              "tag": "children"
+            }
+          ]
+        },
+        {
+          "tag": "button",
+          "part": "toggle",
+          "if": "expandable",
+          "attrs": {
+            "type": "button"
+          },
+          "bindings": {
+            "aria-expanded": "channel:expanded.value"
+          }
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Truncate> component.",
+      "members": [
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Maximum number of visible lines before truncation."
+        },
+        {
+          "name": "expandable",
+          "type": "boolean",
+          "description": "Whether to render an expand/collapse toggle button."
+        },
+        {
+          "name": "expanded",
+          "type": "boolean",
+          "description": "Controlled expanded state."
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "description": "Initial expanded state for uncontrolled mode."
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "(expanded: boolean) => void",
+          "description": "Called when expanded changes."
+        },
+        {
+          "name": "expandText",
+          "type": "string",
+          "description": "Custom expand button label.",
+          "default": "Show more"
+        },
+        {
+          "name": "collapseText",
+          "type": "string",
+          "description": "Custom collapse button label.",
+          "default": "Show less"
+        }
+      ]
+    }
+  },
+  "channels": {
+    "expanded": {
+      "value": "expanded",
+      "defaultValue": "defaultExpanded",
+      "onChange": "onExpandedChange",
+      "valueType": "boolean",
+      "description": "Whether the truncated content is fully visible."
+    }
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "expanded"
+  ],
+  "tokens": {
+    "root": {
+      "truncate.color.foreground.link": {
+        "resolvesTo": "semantic.color.foreground.link",
+        "fallback": "#d9292b",
+        "property": "color",
+        "layer": "semantic"
+      },
+      "truncate.color.background.primary": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "truncate.typography.fontWeight": {
+        "resolvesTo": "semantic.typography.font.weight.medium",
+        "fallback": "500",
+        "layer": "semantic"
+      },
+      "truncate.spacing.toggle": {
+        "resolvesTo": "core.spacing.size.02",
+        "fallback": "2px",
+        "layer": "core"
+      }
+    },
+    "hover": {
+      "truncate.color.foreground.linkHover": {
+        "resolvesTo": "semantic.link.hover.text",
+        "fallback": "#ae0001",
+        "property": "color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"truncate\"]"
+    },
+    "content": {
+      "required": true,
+      "selector": "[data-slot=\"truncate-content\"]"
+    },
+    "toggle": {
+      "required": false,
+      "selector": "[data-slot=\"truncate-toggle\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "when": "toggle",
+        "action": "Toggle the expanded/collapsed state."
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "display",
+    "usageHints": [
+      "Set lines to control the maximum number of visible lines before truncation",
+      "Set expandable=false to hard-truncate without a toggle button",
+      "Use expandText and collapseText to customize the toggle button labels",
+      "Bind expanded and onExpandedChange for controlled mode"
+    ],
+    "children": {
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "string",
+        "node-ref"
+      ]
+    }
+  }
+}

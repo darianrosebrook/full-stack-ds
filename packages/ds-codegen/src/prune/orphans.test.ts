@@ -101,12 +101,12 @@ describe("detectOrphans", () => {
       {
         framework: "react",
         component: "Button",
-        contractPath: "packages/ds-contracts/Button.contract.json",
+        contractPath: "packages/ds-contracts/components/Button/Button.contract.json",
         files: ["packages/ds-react/src/components/Button/Button.tsx"],
       },
     ]);
     root = buildFakeWorkspace(m, {
-      liveContracts: ["packages/ds-contracts/Button.contract.json"],
+      liveContracts: ["packages/ds-contracts/components/Button/Button.contract.json"],
     });
 
     expect(detectOrphans(m, root)).toEqual([]);
@@ -117,7 +117,7 @@ describe("detectOrphans", () => {
       {
         framework: "react",
         component: "AspectRatio",
-        contractPath: "packages/ds-contracts/AspectRatio.contract.json",
+        contractPath: "packages/ds-contracts/components/AspectRatio/AspectRatio.contract.json",
         files: [
           "packages/ds-react/src/components/AspectRatio/AspectRatio.tsx",
           "packages/ds-react/src/components/AspectRatio/AspectRatio.css",
@@ -141,7 +141,7 @@ describe("detectOrphans", () => {
       {
         framework: "react",
         component: "AspectRatio",
-        contractPath: "packages/ds-contracts/AspectRatio.contract.json",
+        contractPath: "packages/ds-contracts/components/AspectRatio/AspectRatio.contract.json",
         files: [
           "packages/ds-react/src/components/AspectRatio/AspectRatio.tsx", // generated
           "packages/ds-react/src/components/AspectRatio/AspectRatio.css", // hand
@@ -168,13 +168,13 @@ describe("detectOrphans", () => {
       {
         framework: "react",
         component: "AspectRatio",
-        contractPath: "packages/ds-contracts/AspectRatio.contract.json",
+        contractPath: "packages/ds-contracts/components/AspectRatio/AspectRatio.contract.json",
         files: ["packages/ds-react/src/components/AspectRatio/AspectRatio.tsx"],
       },
       {
         framework: "vue",
         component: "AspectRatio",
-        contractPath: "packages/ds-contracts/AspectRatio.contract.json",
+        contractPath: "packages/ds-contracts/components/AspectRatio/AspectRatio.contract.json",
         files: ["packages/ds-vue/src/components/AspectRatio/AspectRatio.vue"],
       },
     ]);
@@ -199,7 +199,7 @@ describe("executeOrphanRemoval", () => {
       {
         framework: "react",
         component: "AspectRatio",
-        contractPath: "packages/ds-contracts/AspectRatio.contract.json",
+        contractPath: "packages/ds-contracts/components/AspectRatio/AspectRatio.contract.json",
         files: [
           "packages/ds-react/src/components/AspectRatio/AspectRatio.tsx", // generated
           "packages/ds-react/src/components/AspectRatio/AspectRatio.css", // hand
@@ -306,7 +306,7 @@ describe("executeOrphanRemoval", () => {
       {
         framework: "react",
         component: "AspectRatio",
-        contractPath: "packages/ds-contracts/AspectRatio.contract.json",
+        contractPath: "packages/ds-contracts/components/AspectRatio/AspectRatio.contract.json",
         files: ["packages/ds-react/src/components/AspectRatio/AspectRatio.tsx"],
       },
     ]);
@@ -338,12 +338,12 @@ describe("executeOrphanRemoval", () => {
       {
         framework: "react",
         component: "Button",
-        contractPath: "packages/ds-contracts/Button.contract.json",
+        contractPath: "packages/ds-contracts/components/Button/Button.contract.json",
         files: ["packages/ds-react/src/components/Button/Button.tsx"],
       },
     ]);
     root = buildFakeWorkspace(m, {
-      liveContracts: ["packages/ds-contracts/Button.contract.json"],
+      liveContracts: ["packages/ds-contracts/components/Button/Button.contract.json"],
     });
 
     const orphans = detectOrphans(m, root);

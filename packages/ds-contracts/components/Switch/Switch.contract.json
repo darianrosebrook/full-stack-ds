@@ -1,0 +1,267 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "Switch",
+  "description": "Boolean toggle for enabling or disabling a setting. Semantically equivalent to a checkbox but with a sliding thumb affordance.",
+  "layer": "primitive",
+  "anatomy": {
+    "parts": [
+      "root",
+      "track",
+      "thumb",
+      "input"
+    ],
+    "details": {
+      "track": {
+        "role": "decoration",
+        "collapsibleTo": "native-toggle-affordance"
+      },
+      "thumb": {
+        "role": "decoration",
+        "collapsibleTo": "native-toggle-affordance"
+      }
+    },
+    "dom": {
+      "tag": "label",
+      "part": "root",
+      "children": [
+        {
+          "tag": "input",
+          "part": "input",
+          "attrs": {
+            "type": "checkbox",
+            "role": "switch"
+          },
+          "bindings": {
+            "checked": "channel:checked.value",
+            "onChange": "channel:checked.onChange",
+            "disabled": "prop:disabled",
+            "name": "prop:name",
+            "value": "prop:value"
+          }
+        },
+        {
+          "tag": "span",
+          "part": "track",
+          "attrs": {
+            "aria-hidden": "true"
+          },
+          "children": [
+            {
+              "tag": "span",
+              "part": "thumb"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "props": {
+    "styled": {
+      "description": "Props for the <Switch> component.",
+      "members": [
+        {
+          "name": "checked",
+          "type": "boolean",
+          "description": "Controlled checked state."
+        },
+        {
+          "name": "defaultChecked",
+          "type": "boolean",
+          "description": "Uncontrolled initial checked state."
+        },
+        {
+          "name": "onChange",
+          "type": "(checked: boolean) => void",
+          "description": "Called when checked changes."
+        },
+        {
+          "name": "size",
+          "type": "SwitchSize",
+          "description": "Size token.",
+          "default": "md"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "description": "Prevents interaction."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "Form name for native submission."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "description": "Form value submitted when on."
+        }
+      ]
+    }
+  },
+  "channels": {
+    "checked": {
+      "value": "checked",
+      "defaultValue": "defaultChecked",
+      "onChange": "onChange",
+      "valueType": "boolean",
+      "description": "Whether the switch is on."
+    }
+  },
+  "types": {
+    "SwitchSize": {
+      "kind": "union",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    }
+  },
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "disabled",
+    "checked"
+  ],
+  "tokens": {
+    "root": {
+      "switch.color.track.background.default": {
+        "resolvesTo": "semantic.color.background.tertiary",
+        "fallback": "#cecece",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "switch.color.thumb.background.default": {
+        "resolvesTo": "semantic.color.background.primary",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "switch.size.md.track.width": {
+        "resolvesTo": "core.spacing.size.09",
+        "fallback": "48px",
+        "property": "width",
+        "layer": "core"
+      },
+      "switch.size.md.track.height": {
+        "resolvesTo": "core.spacing.size.07",
+        "fallback": "24px",
+        "property": "height",
+        "layer": "core"
+      },
+      "switch.size.md.track.radius": {
+        "resolvesTo": "core.shape.radius.full",
+        "fallback": "9999px",
+        "property": "border-radius",
+        "layer": "core"
+      },
+      "switch.motion.duration": {
+        "resolvesTo": "semantic.motion.interaction.press.duration",
+        "fallback": "100ms",
+        "property": "transition-duration",
+        "layer": "semantic"
+      }
+    },
+    "checked": {
+      "switch.color.track.background.checked": {
+        "resolvesTo": "semantic.color.foreground.accent",
+        "fallback": "#d9292b",
+        "property": "background-color",
+        "layer": "semantic"
+      },
+      "switch.color.thumb.background.checked": {
+        "resolvesTo": "semantic.color.foreground.on.brand",
+        "fallback": "#ffffff",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    },
+    "disabled": {
+      "switch.color.track.background.disabled": {
+        "resolvesTo": "semantic.color.background.disabled",
+        "fallback": "#cecece",
+        "property": "background-color",
+        "layer": "semantic"
+      }
+    }
+  },
+  "form": {
+    "participates": true,
+    "inputType": "checkbox",
+    "serialization": {
+      "valueType": "string",
+      "valueSource": "static:on",
+      "omitWhen": "unchecked"
+    },
+    "validity": {
+      "model": "native"
+    }
+  },
+  "motion": {
+    "reducedMotion": "respect",
+    "transitions": [
+      {
+        "name": "toggle",
+        "trigger": "checked=false\u2192true",
+        "phase": "enter",
+        "properties": [
+          "transform"
+        ],
+        "duration": "core.motion.duration.short",
+        "easing": "core.motion.easing.standard"
+      }
+    ]
+  },
+  "focus": {
+    "strategy": "auto"
+  },
+  "slots": {
+    "field": {
+      "required": false,
+      "selector": "[data-slot=\"switch-field\"]"
+    },
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"switch\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "interaction"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "relationships": [],
+  "a11y": {
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-checked"
+    ],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Toggle the switch."
+      }
+    ]
+  },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "Use for settings that take effect immediately on toggle (no save needed)",
+      "Pair with a visible label \u2014 the Switch has no intrinsic label text",
+      "Use a Checkbox instead when the toggle requires a form submit to take effect"
+    ],
+    "children": {
+      "allowed": false
+    }
+  }
+}

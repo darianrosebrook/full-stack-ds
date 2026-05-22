@@ -19,7 +19,8 @@ function repoRoot(): string {
 function loadContract(name: string): unknown {
   const path = resolve(
     repoRoot(),
-    "packages/ds-contracts",
+    "packages/ds-contracts/components",
+    name,
     `${name}.contract.json`,
   );
   return JSON.parse(readFileSync(path, "utf8"));
