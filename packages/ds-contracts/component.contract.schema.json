@@ -217,13 +217,6 @@
         }
       ]
     },
-    "styles": {
-      "type": "object",
-      "description": "CSS declarations keyed by selector. Keys are anatomy parts (root, header, etc.), variant modifiers (--primary, --disabled), state pseudo-classes (:hover, :focus-visible), or compound selectors. Values are objects of CSS property: value pairs.",
-      "additionalProperties": {
-        "$ref": "#/$defs/styleBlock"
-      }
-    },
     "keyframes": {
       "type": "object",
       "description": "CSS @keyframes definitions. Keys are animation names, values are objects mapping keyframe selectors (from, to, 50%, etc.) to CSS property-value pairs.",

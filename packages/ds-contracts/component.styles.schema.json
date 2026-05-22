@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "component.styles.schema.json",
+  "title": "Component Styles Sidecar",
+  "description": "Consumer-side CSS declarations for a single component. Top-level keys are selectors (anatomy parts like \"root\"/\"track\", state shorthands like \"hover\"/\"checked\", variant modifiers like \"--md\", or compound selectors like \":has(.switch__input:checked) .switch__track\"). Each value is a property-keyed map; the property name is the entry's identity. Entry values are structured resolutions: `resolvesTo` (slot or global token graph), or `literal` with required `platforms` array.",
+  "type": "object",
+  "additionalProperties": {
+    "type": "object",
+    "description": "A selector's block: keys are CSS property names; values are styleEntry resolutions.",
+    "additionalProperties": {
+      "$ref": "#/$defs/styleEntry"
+    }
+  },
+  "$defs": {
+    "styleEntry": {
+      "type": "object",
+      "description": "Resolution for a single CSS declaration. Either `resolvesTo` (slot reference or global token graph) or `literal` (with required `platforms`).",
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["resolvesTo"],
+          "description": "Slot or global-token reference. First segment of the dotted path decides namespace: <cssPrefix>.* resolves to a slot declared in this contract's tokens.json; core.* / semantic.* resolves to the global token graph."
+        },
+        {
+          "required": ["literal", "platforms"]
+        }
+      ],
+      "properties": {
+        "resolvesTo": {
+          "type": "string",
+          "description": "Dotted path. Component-local slot (e.g. \"switch.color.track.background.default\") or global token (e.g. \"semantic.color.background.tertiary\")."
+        },
+        "fallback": {
+          "type": "string",
+          "description": "Optional fallback for the var() reference at the consumer site. Usually unneeded — the slot's own fallback chains via the cascade."
+        },
+        "literal": {
+          "type": "string",
+          "description": "Hardcoded CSS value emitted verbatim when the build target matches `platforms`."
+        },
+        "platforms": {
+          "type": "array",
+          "description": "Targets that should honor this declaration. Required on `literal`; optional on `resolvesTo` (defaults to all three platforms).",
+          "items": {
+            "type": "string",
+            "enum": ["web", "ios", "android"]
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    }
+  }
+}
