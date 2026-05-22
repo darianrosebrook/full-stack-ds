@@ -69,6 +69,10 @@ import {
 import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
 import { validateContractTokens } from "./validation/tokens.js";
+import {
+  validateContractStyles,
+  validateStylesSelectorCollisions,
+} from "./validation/styles.js";
 import { validateContractEmittedCss } from "./validation/contract-tokens.js";
 import {
   parseUsageJsonl,
@@ -446,13 +450,22 @@ function main(): void {
     //      framework matches what the codegen would emit right now. Catches
     //      "edited the contract but didn't regen" / "hand-edited the CSS
     //      out of contract truth" drift.
-    // All three pass results merge — one DRIFT line per failing contract
-    // with all issues from all three validators concatenated.
+    //   4. validateContractStyles — every resolvesTo in styles.json must
+    //      either name a slot declared in tokens.json (component-local
+    //      paths, first segment === cssPrefix) or exist in the global
+    //      token graph. Catches typos and cross-contract drift.
+    //   5. validateStylesSelectorCollisions — two distinct top-level keys
+    //      in styles.json that expand to the same CSS selector silently
+    //      overwrite each other.
+    // All pass results merge — one DRIFT line per failing contract
+    // with all issues from all five validators concatenated.
     if (args.checkSemantics) {
       const driftIssues = [
         ...validateContractSemantics(result.value),
         ...validateContractTokens(result.value),
         ...validateContractEmittedCss(result.value),
+        ...validateContractStyles(result.value),
+        ...validateStylesSelectorCollisions(result.value),
       ];
       if (driftIssues.length > 0) {
         console.error(`DRIFT    ${file}`);

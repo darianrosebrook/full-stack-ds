@@ -1,24 +1,24 @@
 {
   "root": {
     "gap": {
-      "resolvesTo": "textfield.spacing.gap"
+      "resolvesTo": "text-field.spacing.gap"
     },
     "border-width": {
-      "resolvesTo": "textfield.border.width"
+      "resolvesTo": "text-field.border.width"
     },
     "border-radius": {
-      "resolvesTo": "textfield.border.radius"
+      "resolvesTo": "text-field.border.radius"
     },
     "color": {
-      "resolvesTo": "textfield.color.input.text"
+      "resolvesTo": "text-field.color.input.text"
     }
   },
   "invalid": {
     "border-color": {
-      "resolvesTo": "textfield.color.input.borderError"
+      "resolvesTo": "text-field.color.input.borderError"
     },
     "color": {
-      "resolvesTo": "textfield.color.error"
+      "resolvesTo": "text-field.color.error"
     }
   }
 }

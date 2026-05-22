@@ -1,36 +1,36 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "alertnotice.color.background.danger"
+      "resolvesTo": "alert-notice.color.background.danger"
     },
     "color": {
-      "resolvesTo": "alertnotice.color.foreground.danger"
+      "resolvesTo": "alert-notice.color.foreground.danger"
     },
     "border-color": {
-      "resolvesTo": "alertnotice.color.border.danger"
+      "resolvesTo": "alert-notice.color.border.danger"
     },
     "padding": {
-      "resolvesTo": "alertnotice.size.padding"
+      "resolvesTo": "alert-notice.size.padding"
     },
     "border-radius": {
-      "resolvesTo": "alertnotice.size.radius"
+      "resolvesTo": "alert-notice.size.radius"
     },
     "gap": {
-      "resolvesTo": "alertnotice.spacing.gap"
+      "resolvesTo": "alert-notice.spacing.gap"
     },
     "font-size": {
-      "resolvesTo": "alertnotice.text.size"
+      "resolvesTo": "alert-notice.text.size"
     },
     "font-weight": {
-      "resolvesTo": "alertnotice.text.weight"
+      "resolvesTo": "alert-notice.text.weight"
     }
   },
   "title": {
     "font-weight": {
-      "resolvesTo": "alertnotice.typography.title.fontWeight"
+      "resolvesTo": "alert-notice.typography.title.fontWeight"
     },
     "font-size": {
-      "resolvesTo": "alertnotice.typography.title.fontSize"
+      "resolvesTo": "alert-notice.typography.title.fontSize"
     }
   }
 }

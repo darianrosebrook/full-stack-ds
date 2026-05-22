@@ -22,22 +22,22 @@ export class ShowMoreElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .show-more {
-      --fsds-showmore-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-showmore-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-showmore-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-showmore-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
     
     .show-more {
-      background-color: var(--fsds-showmore-color-background-default);
-      color: var(--fsds-showmore-color-foreground-secondary);
-      border-color: var(--fsds-showmore-color-border-accent);
-      padding: var(--fsds-showmore-size-padding-default);
-      border-radius: var(--fsds-showmore-size-radius-default);
+      background-color: var(--fsds-show-more-color-background-default);
+      color: var(--fsds-show-more-color-foreground-secondary);
+      border-color: var(--fsds-show-more-color-border-accent);
+      padding: var(--fsds-show-more-size-padding-default);
+      border-radius: var(--fsds-show-more-size-radius-default);
     }
   `;
 
@@ -81,22 +81,22 @@ export class ShowMoreContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .show-more {
-      --fsds-showmore-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-showmore-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-showmore-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-showmore-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
     
     .show-more {
-      background-color: var(--fsds-showmore-color-background-default);
-      color: var(--fsds-showmore-color-foreground-secondary);
-      border-color: var(--fsds-showmore-color-border-accent);
-      padding: var(--fsds-showmore-size-padding-default);
-      border-radius: var(--fsds-showmore-size-radius-default);
+      background-color: var(--fsds-show-more-color-background-default);
+      color: var(--fsds-show-more-color-foreground-secondary);
+      border-color: var(--fsds-show-more-color-border-accent);
+      padding: var(--fsds-show-more-size-padding-default);
+      border-radius: var(--fsds-show-more-size-radius-default);
     }
   `;
 
@@ -111,22 +111,22 @@ export class ShowMoreTriggerElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .show-more {
-      --fsds-showmore-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-showmore-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-showmore-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-showmore-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-showmore-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
+      --fsds-show-more-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-show-more-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-show-more-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
     
     .show-more {
-      background-color: var(--fsds-showmore-color-background-default);
-      color: var(--fsds-showmore-color-foreground-secondary);
-      border-color: var(--fsds-showmore-color-border-accent);
-      padding: var(--fsds-showmore-size-padding-default);
-      border-radius: var(--fsds-showmore-size-radius-default);
+      background-color: var(--fsds-show-more-color-background-default);
+      color: var(--fsds-show-more-color-foreground-secondary);
+      border-color: var(--fsds-show-more-color-border-accent);
+      padding: var(--fsds-show-more-size-padding-default);
+      border-radius: var(--fsds-show-more-size-radius-default);
     }
   `;
 

@@ -1,27 +1,27 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "profileFlag.color.background.default"
+      "resolvesTo": "profile-flag.color.background.default"
     },
     "border-color": {
-      "resolvesTo": "profileFlag.color.border.default"
+      "resolvesTo": "profile-flag.color.border.default"
     },
     "color": {
-      "resolvesTo": "profileFlag.color.foreground.primary"
+      "resolvesTo": "profile-flag.color.foreground.primary"
     },
     "border-radius": {
-      "resolvesTo": "profileFlag.size.radius.default"
+      "resolvesTo": "profile-flag.size.radius.default"
     },
     "gap": {
-      "resolvesTo": "profileFlag.spacing.gap.default"
+      "resolvesTo": "profile-flag.spacing.gap.default"
     },
     "padding": {
-      "resolvesTo": "profileFlag.spacing.padding.right"
+      "resolvesTo": "profile-flag.spacing.padding.right"
     }
   },
   "hover": {
     "border-color": {
-      "resolvesTo": "profileFlag.color.border.hover"
+      "resolvesTo": "profile-flag.color.border.hover"
     }
   }
 }

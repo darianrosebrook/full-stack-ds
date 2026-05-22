@@ -1,40 +1,40 @@
 {
-  "toggleSwitch.color.background.default": {
+  "toggle-switch.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
     "fallback": "#efefef",
     "layer": "semantic"
   },
-  "toggleSwitch.color.foreground.default": {
+  "toggle-switch.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "toggleSwitch.color.border.default": {
+  "toggle-switch.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
     "fallback": "#fceaea",
     "layer": "semantic"
   },
-  "toggleSwitch.border.radius.default": {
+  "toggle-switch.border.radius.default": {
     "resolvesTo": "core.shape.radius.full",
     "fallback": "9999px",
     "layer": "core"
   },
-  "toggleSwitch.motion.duration.fast": {
+  "toggle-switch.motion.duration.fast": {
     "resolvesTo": "core.motion.duration.short",
     "fallback": "150ms",
     "layer": "core"
   },
-  "toggleSwitch.color.background.hover": {
+  "toggle-switch.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
     "fallback": "#efefef",
     "layer": "semantic"
   },
-  "toggleSwitch.color.background.checked": {
+  "toggle-switch.color.background.checked": {
     "resolvesTo": "semantic.color.action.background.primary.default",
     "fallback": "#d9292b",
     "layer": "semantic"
   },
-  "toggleSwitch.color.background.disabled": {
+  "toggle-switch.color.background.disabled": {
     "resolvesTo": "semantic.color.background.disabled",
     "fallback": "#cecece",
     "layer": "semantic"

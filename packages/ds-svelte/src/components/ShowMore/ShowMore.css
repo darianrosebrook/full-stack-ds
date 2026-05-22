@@ -2,11 +2,11 @@
 
 /* @generated:start styles */
 .show-more {
-  background-color: var(--fsds-showmore-color-background-default);
-  color: var(--fsds-showmore-color-foreground-secondary);
-  border-color: var(--fsds-showmore-color-border-accent);
-  padding: var(--fsds-showmore-size-padding-default);
-  border-radius: var(--fsds-showmore-size-radius-default);
+  background-color: var(--fsds-show-more-color-background-default);
+  color: var(--fsds-show-more-color-foreground-secondary);
+  border-color: var(--fsds-show-more-color-border-accent);
+  padding: var(--fsds-show-more-size-padding-default);
+  border-radius: var(--fsds-show-more-size-radius-default);
 }
 /* @generated:end */
 

@@ -2,22 +2,22 @@
 
 /* @generated:start styles */
 .toggle-switch {
-  background-color: var(--fsds-toggleSwitch-color-background-default);
-  color: var(--fsds-toggleSwitch-color-foreground-default);
-  border-color: var(--fsds-toggleSwitch-color-border-default);
-  border-radius: var(--fsds-toggleSwitch-border-radius-default);
-  transition-duration: var(--fsds-toggleSwitch-motion-duration-fast);
+  background-color: var(--fsds-toggle-switch-color-background-default);
+  color: var(--fsds-toggle-switch-color-foreground-default);
+  border-color: var(--fsds-toggle-switch-color-border-default);
+  border-radius: var(--fsds-toggle-switch-border-radius-default);
+  transition-duration: var(--fsds-toggle-switch-motion-duration-fast);
 
   &:hover {
-    background-color: var(--fsds-toggleSwitch-color-background-hover);
+    background-color: var(--fsds-toggle-switch-color-background-hover);
   }
 
   &:checked {
-    background-color: var(--fsds-toggleSwitch-color-background-checked);
+    background-color: var(--fsds-toggle-switch-color-background-checked);
   }
 
   &:disabled {
-    background-color: var(--fsds-toggleSwitch-color-background-disabled);
+    background-color: var(--fsds-toggle-switch-color-background-disabled);
   }
 }
 /* @generated:end */

@@ -1,110 +1,110 @@
 {
-  "alertnotice.color.background.primary": {
+  "alert-notice.color.background.primary": {
     "resolvesTo": "semantic.color.background.primary",
     "fallback": "#ffffff",
     "layer": "semantic"
   },
-  "alertnotice.color.foreground.primary": {
+  "alert-notice.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "alertnotice.color.background.info": {
+  "alert-notice.color.background.info": {
     "resolvesTo": "semantic.color.background.info.subtle",
     "fallback": "#d9f3fe",
     "layer": "semantic"
   },
-  "alertnotice.color.background.success": {
+  "alert-notice.color.background.success": {
     "resolvesTo": "semantic.color.background.success.subtle",
     "fallback": "#e4f2e0",
     "layer": "semantic"
   },
-  "alertnotice.color.background.warning": {
+  "alert-notice.color.background.warning": {
     "resolvesTo": "semantic.color.background.warning.subtle",
     "fallback": "#ffedcc",
     "layer": "semantic"
   },
-  "alertnotice.color.background.danger": {
+  "alert-notice.color.background.danger": {
     "resolvesTo": "semantic.color.background.danger.subtle",
     "fallback": "#fceaea",
     "layer": "semantic"
   },
-  "alertnotice.color.foreground.info": {
+  "alert-notice.color.foreground.info": {
     "resolvesTo": "semantic.color.foreground.on.info.subtle",
     "fallback": "#002d99",
     "layer": "semantic"
   },
-  "alertnotice.color.foreground.success": {
+  "alert-notice.color.foreground.success": {
     "resolvesTo": "semantic.color.foreground.on.success.subtle",
     "fallback": "#234104",
     "layer": "semantic"
   },
-  "alertnotice.color.foreground.warning": {
+  "alert-notice.color.foreground.warning": {
     "resolvesTo": "semantic.color.foreground.on.warning.subtle",
     "fallback": "#593000",
     "layer": "semantic"
   },
-  "alertnotice.color.foreground.danger": {
+  "alert-notice.color.foreground.danger": {
     "resolvesTo": "semantic.color.foreground.on.danger.subtle",
     "fallback": "#7b0000",
     "layer": "semantic"
   },
-  "alertnotice.color.border.info": {
+  "alert-notice.color.border.info": {
     "resolvesTo": "semantic.color.border.info",
     "fallback": "#0042dc",
     "layer": "semantic"
   },
-  "alertnotice.color.border.success": {
+  "alert-notice.color.border.success": {
     "resolvesTo": "semantic.color.border.success",
     "fallback": "#336006",
     "layer": "semantic"
   },
-  "alertnotice.color.border.warning": {
+  "alert-notice.color.border.warning": {
     "resolvesTo": "semantic.color.border.warning",
     "fallback": "#824500",
     "layer": "semantic"
   },
-  "alertnotice.color.border.danger": {
+  "alert-notice.color.border.danger": {
     "resolvesTo": "semantic.color.border.danger",
     "fallback": "#ae0001",
     "layer": "semantic"
   },
-  "alertnotice.size.padding": {
+  "alert-notice.size.padding": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",
     "layer": "core"
   },
-  "alertnotice.size.radius": {
+  "alert-notice.size.radius": {
     "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
     "layer": "semantic"
   },
-  "alertnotice.spacing.gap": {
+  "alert-notice.spacing.gap": {
     "resolvesTo": "semantic.spacing.gap.grid.small",
     "fallback": "8px",
     "layer": "semantic"
   },
-  "alertnotice.text.size": {
+  "alert-notice.text.size": {
     "resolvesTo": "semantic.typography.body.03",
     "fallback": "14px",
     "layer": "semantic"
   },
-  "alertnotice.text.weight": {
+  "alert-notice.text.weight": {
     "resolvesTo": "semantic.typography.font.weight.regular",
     "fallback": "400",
     "layer": "semantic"
   },
-  "alertnotice.icon.size": {
+  "alert-notice.icon.size": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",
     "layer": "core"
   },
-  "alertnotice.typography.title.fontWeight": {
+  "alert-notice.typography.title.fontWeight": {
     "resolvesTo": "semantic.typography.font.weight.bold",
     "fallback": "700",
     "layer": "semantic"
   },
-  "alertnotice.typography.title.fontSize": {
+  "alert-notice.typography.title.fontSize": {
     "resolvesTo": "semantic.typography.body.02",
     "fallback": "16px",
     "layer": "semantic"

@@ -22,33 +22,33 @@ export class ToggleSwitchElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toggle-switch {
-      --fsds-toggleSwitch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-toggleSwitch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-toggleSwitch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-toggleSwitch-border-radius-default: var(--fsds-core-shape-radius-full, 9999px);
-      --fsds-toggleSwitch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-toggleSwitch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
-      --fsds-toggleSwitch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
-      --fsds-toggleSwitch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+      --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toggle-switch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-toggle-switch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-toggle-switch-border-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-toggle-switch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      --fsds-toggle-switch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-toggle-switch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
     }
     
     .toggle-switch {
-      background-color: var(--fsds-toggleSwitch-color-background-default);
-      color: var(--fsds-toggleSwitch-color-foreground-default);
-      border-color: var(--fsds-toggleSwitch-color-border-default);
-      border-radius: var(--fsds-toggleSwitch-border-radius-default);
-      transition-duration: var(--fsds-toggleSwitch-motion-duration-fast);
+      background-color: var(--fsds-toggle-switch-color-background-default);
+      color: var(--fsds-toggle-switch-color-foreground-default);
+      border-color: var(--fsds-toggle-switch-color-border-default);
+      border-radius: var(--fsds-toggle-switch-border-radius-default);
+      transition-duration: var(--fsds-toggle-switch-motion-duration-fast);
     
       &:hover {
-        background-color: var(--fsds-toggleSwitch-color-background-hover);
+        background-color: var(--fsds-toggle-switch-color-background-hover);
       }
     
       &:checked {
-        background-color: var(--fsds-toggleSwitch-color-background-checked);
+        background-color: var(--fsds-toggle-switch-color-background-checked);
       }
     
       &:disabled {
-        background-color: var(--fsds-toggleSwitch-color-background-disabled);
+        background-color: var(--fsds-toggle-switch-color-background-disabled);
       }
     }
   `;

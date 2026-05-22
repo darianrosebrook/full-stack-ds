@@ -2,15 +2,15 @@
 
 /* @generated:start styles */
 .text-field {
-  gap: var(--fsds-textfield-spacing-gap);
-  border-width: var(--fsds-textfield-border-width);
-  border-radius: var(--fsds-textfield-border-radius);
-  color: var(--fsds-textfield-color-input-text);
+  gap: var(--fsds-text-field-spacing-gap);
+  border-width: var(--fsds-text-field-border-width);
+  border-radius: var(--fsds-text-field-border-radius);
+  color: var(--fsds-text-field-color-input-text);
 }
 
 .text-field__invalid {
-  border-color: var(--fsds-textfield-color-input-borderError);
-  color: var(--fsds-textfield-color-error);
+  border-color: var(--fsds-text-field-color-input-borderError);
+  color: var(--fsds-text-field-color-error);
 }
 /* @generated:end */
 

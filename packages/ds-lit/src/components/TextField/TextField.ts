@@ -22,25 +22,25 @@ export class TextFieldElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .text-field {
-      --fsds-textfield-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-      --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-textfield-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
-      --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
-      --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-text-field-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-text-field-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-text-field-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-text-field-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-text-field-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
+      --fsds-text-field-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
     
     .text-field {
-      gap: var(--fsds-textfield-spacing-gap);
-      border-width: var(--fsds-textfield-border-width);
-      border-radius: var(--fsds-textfield-border-radius);
-      color: var(--fsds-textfield-color-input-text);
+      gap: var(--fsds-text-field-spacing-gap);
+      border-width: var(--fsds-text-field-border-width);
+      border-radius: var(--fsds-text-field-border-radius);
+      color: var(--fsds-text-field-color-input-text);
     }
     
     .text-field__invalid {
-      border-color: var(--fsds-textfield-color-input-borderError);
-      color: var(--fsds-textfield-color-error);
+      border-color: var(--fsds-text-field-color-input-borderError);
+      color: var(--fsds-text-field-color-error);
     }
   `;
 
@@ -103,25 +103,25 @@ export class TextFieldDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .text-field {
-      --fsds-textfield-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-      --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-textfield-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
-      --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
-      --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      --fsds-text-field-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-text-field-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-text-field-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-text-field-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-text-field-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
+      --fsds-text-field-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
     
     .text-field {
-      gap: var(--fsds-textfield-spacing-gap);
-      border-width: var(--fsds-textfield-border-width);
-      border-radius: var(--fsds-textfield-border-radius);
-      color: var(--fsds-textfield-color-input-text);
+      gap: var(--fsds-text-field-spacing-gap);
+      border-width: var(--fsds-text-field-border-width);
+      border-radius: var(--fsds-text-field-border-radius);
+      color: var(--fsds-text-field-color-input-text);
     }
     
     .text-field__invalid {
-      border-color: var(--fsds-textfield-color-input-borderError);
-      color: var(--fsds-textfield-color-error);
+      border-color: var(--fsds-text-field-color-input-borderError);
+      color: var(--fsds-text-field-color-error);
     }
   `;
 

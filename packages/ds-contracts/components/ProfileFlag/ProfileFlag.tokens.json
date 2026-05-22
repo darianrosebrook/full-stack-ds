@@ -1,40 +1,40 @@
 {
-  "profileFlag.color.background.default": {
+  "profile-flag.color.background.default": {
     "resolvesTo": "semantic.color.background.primary",
     "fallback": "#ffffff",
     "layer": "semantic"
   },
-  "profileFlag.color.border.default": {
+  "profile-flag.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
     "fallback": "#fceaea",
     "layer": "semantic"
   },
-  "profileFlag.color.foreground.primary": {
+  "profile-flag.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "profileFlag.size.radius.default": {
+  "profile-flag.size.radius.default": {
     "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
     "layer": "semantic"
   },
-  "profileFlag.spacing.gap.default": {
+  "profile-flag.spacing.gap.default": {
     "resolvesTo": "core.spacing.size.03",
     "fallback": "4px",
     "layer": "core"
   },
-  "profileFlag.spacing.padding.default": {
+  "profile-flag.spacing.padding.default": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",
     "layer": "core"
   },
-  "profileFlag.spacing.padding.right": {
+  "profile-flag.spacing.padding.right": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",
     "layer": "core"
   },
-  "profileFlag.color.border.hover": {
+  "profile-flag.color.border.hover": {
     "resolvesTo": "semantic.color.border.bold",
     "fallback": "#8f8f8f",
     "layer": "semantic"

@@ -20,26 +20,26 @@ export class ProfileFlagElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .profile-flag {
-      --fsds-profileFlag-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-profileFlag-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-profileFlag-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-profileFlag-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-profileFlag-spacing-gap-default: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-profileFlag-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-profileFlag-spacing-padding-right: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-profileFlag-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
+      --fsds-profile-flag-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-profile-flag-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-profile-flag-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-profile-flag-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-profile-flag-spacing-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-profile-flag-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-profile-flag-spacing-padding-right: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-profile-flag-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
     
     .profile-flag {
-      background-color: var(--fsds-profileFlag-color-background-default);
-      border-color: var(--fsds-profileFlag-color-border-default);
-      color: var(--fsds-profileFlag-color-foreground-primary);
-      border-radius: var(--fsds-profileFlag-size-radius-default);
-      gap: var(--fsds-profileFlag-spacing-gap-default);
-      padding: var(--fsds-profileFlag-spacing-padding-right);
+      background-color: var(--fsds-profile-flag-color-background-default);
+      border-color: var(--fsds-profile-flag-color-border-default);
+      color: var(--fsds-profile-flag-color-foreground-primary);
+      border-radius: var(--fsds-profile-flag-size-radius-default);
+      gap: var(--fsds-profile-flag-spacing-gap-default);
+      padding: var(--fsds-profile-flag-spacing-padding-right);
     
       &:hover {
-        border-color: var(--fsds-profileFlag-color-border-hover);
+        border-color: var(--fsds-profile-flag-color-border-hover);
       }
     }
   `;

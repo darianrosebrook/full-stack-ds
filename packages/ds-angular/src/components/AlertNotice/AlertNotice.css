@@ -2,19 +2,19 @@
 
 /* @generated:start styles */
 .alert-notice {
-  background-color: var(--fsds-alertnotice-color-background-danger);
-  color: var(--fsds-alertnotice-color-foreground-danger);
-  border-color: var(--fsds-alertnotice-color-border-danger);
-  padding: var(--fsds-alertnotice-size-padding);
-  border-radius: var(--fsds-alertnotice-size-radius);
-  gap: var(--fsds-alertnotice-spacing-gap);
-  font-size: var(--fsds-alertnotice-text-size);
-  font-weight: var(--fsds-alertnotice-text-weight);
+  background-color: var(--fsds-alert-notice-color-background-danger);
+  color: var(--fsds-alert-notice-color-foreground-danger);
+  border-color: var(--fsds-alert-notice-color-border-danger);
+  padding: var(--fsds-alert-notice-size-padding);
+  border-radius: var(--fsds-alert-notice-size-radius);
+  gap: var(--fsds-alert-notice-spacing-gap);
+  font-size: var(--fsds-alert-notice-text-size);
+  font-weight: var(--fsds-alert-notice-text-weight);
 }
 
 .alert-notice__title {
-  font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
-  font-size: var(--fsds-alertnotice-typography-title-fontSize);
+  font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
+  font-size: var(--fsds-alert-notice-typography-title-fontSize);
 }
 /* @generated:end */
 

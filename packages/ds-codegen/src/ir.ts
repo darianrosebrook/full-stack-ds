@@ -1213,8 +1213,11 @@ export function computeCssBlocks(
  *      State semantics are universal; anatomy parts wouldn't share names
  *      with state pseudo-classes.
  *   2. Anatomy-part fallback — `track` → `.{prefix}__track`.
+ *
+ * Exported so validation/styles.ts can detect selector-aliasing
+ * collisions between two distinct keys that resolve to the same selector.
  */
-function expandStylesKey(key: string, prefix: string): string {
+export function expandStylesKey(key: string, prefix: string): string {
   const isCompound =
     /[\s+~>]/.test(key) ||
     (key.includes(":") && key.includes("__")) ||

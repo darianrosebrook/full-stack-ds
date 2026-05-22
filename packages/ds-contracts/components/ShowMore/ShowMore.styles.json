@@ -1,19 +1,19 @@
 {
   "root": {
     "background-color": {
-      "resolvesTo": "showmore.color.background.default"
+      "resolvesTo": "show-more.color.background.default"
     },
     "color": {
-      "resolvesTo": "showmore.color.foreground.secondary"
+      "resolvesTo": "show-more.color.foreground.secondary"
     },
     "border-color": {
-      "resolvesTo": "showmore.color.border.accent"
+      "resolvesTo": "show-more.color.border.accent"
     },
     "padding": {
-      "resolvesTo": "showmore.size.padding.default"
+      "resolvesTo": "show-more.size.padding.default"
     },
     "border-radius": {
-      "resolvesTo": "showmore.size.radius.default"
+      "resolvesTo": "show-more.size.radius.default"
     }
   }
 }
