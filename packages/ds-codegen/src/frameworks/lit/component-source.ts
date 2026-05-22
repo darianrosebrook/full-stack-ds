@@ -30,6 +30,7 @@ import type {
   DomNodeIR,
   NormalizedChannelIR,
 } from "../../ir.js";
+import type { ContractTypeDef } from "../../contract.js";
 import {
   emitNonReactTypeAliases,
   translateNonReactType,
@@ -341,7 +342,10 @@ type LitPropertyDecorator =
   | { kind: "primitive"; type: "Boolean" | "Number" | "String" }
   | { kind: "internal" };
 
-function litPropertyType(rawType: string): LitPropertyDecorator {
+function litPropertyType(
+  rawType: string,
+  definedTypes?: Record<string, ContractTypeDef>,
+): LitPropertyDecorator {
   // Event handlers are not declarative Lit properties — skip them.
   if (
     rawType.includes("EventHandler") ||
@@ -354,6 +358,20 @@ function litPropertyType(rawType: string): LitPropertyDecorator {
   if (t === "boolean") return { kind: "primitive", type: "Boolean" };
   if (t === "number") return { kind: "primitive", type: "Number" };
   if (t === "string") return { kind: "primitive", type: "String" };
+  // Named string-union aliases (e.g. `TabsAppearance = "underline" | "pills"`)
+  // are attribute-reflectable as plain strings. Without this, declaring the
+  // prop as `attribute: false` would decouple the HTML attribute from the
+  // property and break `el.setAttribute("appearance", "pills")` usage.
+  if (definedTypes) {
+    const def = definedTypes[rawType];
+    if (
+      def?.kind === "union" &&
+      Array.isArray(def.values) &&
+      def.values.every((v) => typeof v === "string")
+    ) {
+      return { kind: "primitive", type: "String" };
+    }
+  }
   // Anything else — array, object, named interface, union of object
   // types, Date, etc. — is not attribute-reflectable via Lit's
   // built-in converter. Emit as an internal-only property.
@@ -402,7 +420,7 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
       declared.add(p.name);
       continue;
     }
-    const litPropType = litPropertyType(p.type);
+    const litPropType = litPropertyType(p.type, ir.definedTypes);
     if (litPropType === null) continue;
     const t = applyLitTypeRename(litType(p.type), rename);
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
@@ -534,16 +552,24 @@ function generateClassBody(ir: ComponentIR): string {
  *   - `<Name>PanelElement` — content panel, gated by activeTab
  */
 function generateCompoundStateImports(ir: ComponentIR): string {
+  const hasClassMap =
+    ir.classRecipe.valueModifiers.length > 0 ||
+    ir.classRecipe.booleanModifiers.length > 0;
   const lines: string[] = [
     `import { LitElement, html, css } from 'lit';`,
     `import { property } from 'lit/decorators.js';`,
+  ];
+  if (hasClassMap) {
+    lines.push(`import { classMap } from 'lit/directives/class-map.js';`);
+  }
+  lines.push(
     `import { ${ir.name}Behavior } from './${ir.name}Behavior.js';`,
     `import {`,
     `  createCompoundContext,`,
     `  provideContext,`,
     `  ContextConsumerController,`,
     `} from '../../primitives/index.js';`,
-  ];
+  );
   return lines.join("\n");
 }
 
@@ -1062,7 +1088,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   const rename = litAliasRename(ir);
   for (const p of ir.styledProps) {
     if (LIT_DOM_SKIP_PROPS.has(p.name)) continue;
-    const decl = generateLitDomTreePropertyDecl(p, rename);
+    const decl = generateLitDomTreePropertyDecl(p, rename, ir.definedTypes);
     if (decl) {
       lines.push(decl);
       declared.add(p.name);
@@ -1243,6 +1269,7 @@ function generateLitDomTreePropertyDecl(
     required: boolean;
   },
   rename: { from: string; to: string } | null = null,
+  definedTypes?: Record<string, ContractTypeDef>,
 ): string | null {
   const skipEventHandler = /=>\s*(void|never)|EventHandler/.test(p.type);
   if (skipEventHandler) return null;
@@ -1275,7 +1302,7 @@ function generateLitDomTreePropertyDecl(
   // the type field that the converter isn't a fit. In practice
   // contracts don't combine kebab-case names with non-primitive
   // types today, so the conflict is theoretical.
-  const spec = litPropertyType(p.type);
+  const spec = litPropertyType(p.type, definedTypes);
   const decoratorArgs: string[] = [];
   const hasKebabName = p.name.includes("-");
   if (spec !== null) {

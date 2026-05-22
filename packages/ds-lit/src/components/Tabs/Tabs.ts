@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css } from 'lit';
 import { property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
 import { TabsBehavior } from './TabsBehavior.js';
 import {
   createCompoundContext,
@@ -139,13 +140,22 @@ export class TabsElement extends LitElement {
     }
   `;
 
-  @property() value?: string;
-  @property() defaultValue?: string;
-  @property() orientation?: "horizontal" | "vertical" = "horizontal";
-  @property() activationMode?: "automatic" | "manual" = "automatic";
-  @property({ type: Boolean }) loop?: boolean = true;
-  @property({ type: Boolean }) unmountInactive?: boolean;
-  @property() idBase?: string;
+  @property({ type: String })
+  value?: string;
+  @property({ type: String })
+  defaultValue?: string;
+  @property({ type: String })
+  orientation?: TabsOrientation = "horizontal";
+  @property({ type: String })
+  appearance?: TabsAppearance = "underline";
+  @property({ type: String })
+  activationMode?: TabsActivationMode = "automatic";
+  @property({ type: Boolean })
+  loop?: boolean = true;
+  @property({ type: Boolean })
+  unmountInactive?: boolean;
+  @property({ type: String })
+  idBase?: string;
   @property({ attribute: false }) onValueChange?: (value: string) => void;
 
   private behavior = new TabsBehavior(this, {
@@ -196,11 +206,13 @@ export class TabsElement extends LitElement {
   }
 
   override render() {
-    const cssBase = "tabs";
-    const orientation = this.orientation ?? "horizontal";
-    const activationMode = this.activationMode ?? "automatic";
-    const classes = [cssBase, `${cssBase}--${orientation}`, `${cssBase}--${activationMode}`].join(" ");
-    return html`<div class="${classes}"><slot></slot></div>`;
+    const classes = {
+      'tabs': true,
+      [`tabs--${this.orientation}`]: !!this.orientation,
+      [`tabs--${this.appearance}`]: !!this.appearance,
+      [`tabs--${this.activationMode}`]: !!this.activationMode,
+    };
+    return html`<div class=${classMap(classes)}><slot></slot></div>`;
   }
 }
 
