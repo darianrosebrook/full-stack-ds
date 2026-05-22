@@ -406,7 +406,7 @@ It always builds `.<prefix><pseudo>`, never `.<prefix>:has(<inner>:<pseudo>)`.
 
 **Impact:** unblocks correct state styling for ~6 components today
 (Switch, Checkbox, ToggleSwitch, Field, TextField, OTP). Same shape
-applies to the qualtrics doctrine — they hand-author this pattern
+applies to Darian's doctrine — they hand-author this pattern
 in styled/ today; we'd be encoding it structurally.
 
 ### Gap 8 — Visually-hidden input pattern
