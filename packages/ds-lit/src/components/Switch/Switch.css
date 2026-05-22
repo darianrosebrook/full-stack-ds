@@ -1,8 +1,8 @@
 /* @generated:start styles */
 .switch {
   background-color: var(--semantic-color-background-primary, #ffffff);
-  width: var(--core-spacing-size-10, 64px);
-  height: var(--core-spacing-size-08, 32px);
+  width: var(--core-spacing-size-09, 48px);
+  height: var(--core-spacing-size-07, 24px);
   border-radius: var(--core-shape-radius-full, 9999px);
   transition-duration: var(--semantic-motion-interaction-press-duration, 100ms);
 }
