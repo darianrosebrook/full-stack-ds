@@ -281,7 +281,7 @@ Particularly load-bearing IR facts that held up under web translation:
 
 ## Web gaps (gap numbering continues from non-web round 1)
 
-### Gap 6 — Layout primitives have no contract home
+### Gap 6 — Layout primitives have no contract home — RESOLVED in commit 85cdf56
 
 **Where:** `Switch.css` lines for `display: inline-flex` on `.switch`,
 `display: inline-block` + `position: relative` + `box-sizing` on
@@ -334,6 +334,25 @@ with anatomies that can't be assembled purely from Stack (Switch's
 track/thumb being absolutely positioned is the canonical example).
 Estimated <10 contracts will gain a `styles` block; the other 35+
 keep `styles: null`.
+
+**Resolution (2026-05-22, commit `85cdf56`):**
+
+- `computeCssBlocks` refactored: each anatomy-derived block (root,
+  variant, state, part) now consults `styles.<key>` and merges it onto
+  its own declarations, preserving the "authored styles win on property
+  collision" doctrine. The earlier standalone `styles` loop is replaced
+  by a final pass that emits only `styles` entries which didn't match
+  any anatomy-derived key (compound selectors, pseudo-elements).
+- Switch contract authored `styles.root` / `styles.input` /
+  `styles.track` / `styles.thumb` with the layout primitives the
+  golden required (~22 declarations total).
+- Three regression tests in `states-to-css.test.ts` lock in:
+  (1) `styles.<part>` + `tokens.<part>` coexist in one block,
+  (2) `styles.<part>` alone emits correctly,
+  (3) authored property overrides token-emitted property while
+  preserving the slot declaration for brand override.
+- Visual verification: Switch now renders as a visible pill in
+  React + Lit previews (matches design intent for the first time).
 
 ### Gap 7 — State-on-part transformation
 
@@ -461,12 +480,11 @@ expansion in `computeCssBlocks`, additional fields on tokenResolution).
 
 ## Suggested next moves for round 1-web
 
-1. **Resolve Gap 6 first.** It's the largest visible-impact gap and
-   requires the smallest IR / schema change: extend the schema to
-   document `styles.<part>`, add a `styles` block to Switch's
-   contract, verify `computeCssBlocks` emits it correctly. Regenerate
-   and diff against the golden — the diff should shrink dramatically.
-2. **Then Gap 7.** State-on-part is the largest functional gap (the
+1. ~~**Resolve Gap 6 first.**~~ **Done** in commit `85cdf56`. The
+   merge refactor in `computeCssBlocks` plus Switch's authored
+   `styles` block landed together and produced a visible pill in
+   React + Lit previews.
+2. **Now Gap 7.** State-on-part is the largest functional gap (the
    switch can't visually toggle without it) and the change is
    well-bounded (one new contract field, two IR rewrites). Should be
    one focused commit with regression tests against Switch, Checkbox,
