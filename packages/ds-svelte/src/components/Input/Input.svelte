@@ -48,4 +48,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<input class={classes} value={behavior.value} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} disabled={disabled} aria-invalid={invalid} type={type} role="textbox" />
+<input class={classes} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} role="textbox" />

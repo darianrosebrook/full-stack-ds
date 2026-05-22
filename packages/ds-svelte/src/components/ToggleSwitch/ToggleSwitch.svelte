@@ -55,4 +55,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<button class={classes} type="button" aria-checked={behavior.checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} onclick={() => behavior.setChecked(!behavior.checked)} role="switch"></button>
+<button class={classes} type="button" onclick={() => behavior.setChecked(!behavior.checked)} aria-checked={behavior.checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} role="switch"></button>

@@ -147,7 +147,7 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
     });
   });
 
-  describe.skip("Svelte", () => {
+  describe("Svelte", () => {
     const src = generateSvelteComponentSource(ir);
 
     it("renders content binding as `{prop}` interpolation, not as a `content=` attr", () => {
@@ -155,8 +155,13 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
       expect(src).toMatch(/<span[^>]*>\{icon\}<\/span>/);
     });
 
-    it("renders event binding as `on:click={prop}`, not as `onClick=`", () => {
-      expect(src).toContain("on:click={onDismiss}");
+    it("renders event binding as Svelte 5 `onclick={prop}` (no colon prefix)", () => {
+      // Svelte 5 uses lowercase event attribute names without the
+      // legacy `on:` directive. Existing Switch emit at
+      // packages/ds-svelte/src/components/Switch/Switch.svelte uses
+      // `onchange={(e) => …}`, confirming the idiom for this codebase.
+      expect(src).toContain("onclick={onDismiss}");
+      // Must NOT regress to React-style camelCase JSX prop.
       expect(src).not.toMatch(/<button[^>]*\sonClick=/);
     });
   });

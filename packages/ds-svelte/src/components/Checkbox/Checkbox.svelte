@@ -56,4 +56,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<input class={classes} type="checkbox" checked={behavior.checked} onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} disabled={disabled} role="checkbox" />
+<input class={classes} type="checkbox" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} role="checkbox" />

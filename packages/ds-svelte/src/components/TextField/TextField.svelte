@@ -58,7 +58,7 @@ const classes = $derived(
     {@render children?.()}
   </label>
   {/if}
-  <input class={'text-field__field'} type={type} value={behavior.value} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
+  <input class={'text-field__field'} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} type={type} value={behavior.value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
   {#if description}
   <span class={'text-field__description'}>
     {@render children?.()}

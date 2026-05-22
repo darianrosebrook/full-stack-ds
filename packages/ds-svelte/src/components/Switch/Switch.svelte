@@ -56,7 +56,7 @@ const classes = $derived(
 </script>
 
 <label class={classes}>
-  <input class={'switch__input'} type="checkbox" role="switch" checked={behavior.checked} onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} disabled={disabled} name={name} value={value} />
+  <input class={'switch__input'} type="checkbox" role="switch" onchange={(e) => behavior.setChecked((e.currentTarget as HTMLInputElement).checked)} checked={behavior.checked} disabled={disabled} name={name} value={value} />
   <span class={'switch__track'} aria-hidden="true">
     <span class={'switch__thumb'}></span>
   </span>

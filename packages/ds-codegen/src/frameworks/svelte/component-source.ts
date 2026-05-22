@@ -975,10 +975,34 @@ function renderSvelteDomNode(
   // emit is to render the value as a text child of the element.
   // Collect those bindings here and splice them into the body below.
   let textContentExpr: string | null = null;
+
+  // IR-DOM-BINDING-CAPABILITY-01: the new `content` field is the
+  // canonical inner-content binding. Surface it through the same
+  // textContentExpr slot the legacy textContent path uses.
+  if (node.content) {
+    textContentExpr = renderSvelteTextChildExpression(node.content, ctx);
+  }
+
+  // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Svelte 5's
+  // `onclick={...}` lowercased-attribute form (NOT the legacy Svelte 4
+  // `on:click={...}` directive — this codebase uses Svelte 5 runes).
+  for (const [eventName, expr] of Object.entries(node.events)) {
+    const rendered = renderSvelteEvent(eventName, expr, ctx, node.tag);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   for (const [key, expr] of Object.entries(node.bindings)) {
-    if (key === "textContent") {
-      textContentExpr = renderSvelteTextChildExpression(expr, ctx);
+    if (key === "textContent" || key === "children") {
+      if (textContentExpr === null) {
+        textContentExpr = renderSvelteTextChildExpression(expr, ctx);
+      }
       continue;
+    }
+    // Dual-pathway dedup for events.
+    if (/^on[A-Z]/.test(key)) {
+      const evt = key.slice(2).toLowerCase();
+      if (node.events[evt]) continue;
     }
     const rendered = renderSvelteBinding(svelteAttrName(key), expr, ctx, node.tag);
     if (rendered === null) continue;
@@ -1190,6 +1214,38 @@ function renderSvelteBinding(
 function svelteAttrName(name: string): string {
   if (name === "htmlFor") return "for";
   return name;
+}
+
+/**
+ * Lower an entry from `node.events` (keyed by unprefixed event name like
+ * `click`) into Svelte 5's `oneventname={...}` form. For `prop:X` returns
+ * `onclick={X}`. Channel-routed events follow the existing channel
+ * handling (using `resolveEventValueStrategy`) by delegating to the
+ * synthetic JSX-attr name path in renderSvelteBinding.
+ */
+function renderSvelteEvent(
+  eventName: string,
+  expr: BindingExpression,
+  ctx: SvelteRenderContext,
+  hostTag?: string,
+): string | null {
+  // Svelte 5: event attribute is the lowercased event name without
+  // the `on:` directive prefix used by Svelte 4.
+  const svelteEventAttr = `on${eventName}`;
+  switch (expr.kind) {
+    case "prop":
+      return `${svelteEventAttr}={${jsAccessorFor(expr.prop)}}`;
+    case "literal":
+      // Rare. Emit as a string handler — consumer-error territory.
+      return `${svelteEventAttr}="${escapeAttrValue(expr.value)}"`;
+    case "channel": {
+      // Delegate to the channel-onChange path in renderSvelteBinding by
+      // re-deriving the synthetic JSX-attr name. resolveEventValueStrategy
+      // there handles host-tag-specific value extraction.
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderSvelteBinding(jsxAttr, expr, ctx, hostTag);
+    }
+  }
 }
 
 function mapJsxEventToSvelteAttr(attr: string): string {
