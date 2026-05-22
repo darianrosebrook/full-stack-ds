@@ -40,6 +40,7 @@ const COMPONENTS_DIR = join(REPO_ROOT, "packages", "ds-contracts", "components")
 const REACT_DIR = join(REPO_ROOT, "packages", "ds-react", "src", "components");
 
 const VERBOSE = process.argv.includes("--verbose");
+const SELF_TEST = process.argv.includes("--self-test");
 
 const INFRASTRUCTURAL_PARTS = new Set(["root", "focus", "context", "provider"]);
 const STATE_KEYS = new Set([
@@ -76,14 +77,32 @@ function getCssPrefix(contract) {
  * `<prefix>--<value>` patterns inside quoted strings (className literals).
  * Not perfect — won't catch dynamically-composed class names — but covers
  * the 99% case where emitters write `"prefix__part"` literally.
+ *
+ * Part names in this codebase are camelCase, never hyphenated. The BEM
+ * modifier separator `--` would otherwise let `tab--active` match as a
+ * part with capture `tab` and then re-match as `tab--active` — that's
+ * how `tab--active` ended up classified as a rendered part in Round 5A.
+ * Refuse `-` in the captured suffix to keep parts and modifiers disjoint.
  */
 function extractRenderedClasses(tsxPath, prefix) {
   if (!existsSync(tsxPath)) return { parts: new Set(), modifiers: new Set() };
   const source = readFileSync(tsxPath, "utf8");
+  return matchRenderedClasses(source, prefix);
+}
+
+function matchRenderedClasses(source, prefix) {
   // Escape regex metachars in the prefix
   const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const partRe = new RegExp(`['"\`]${escaped}__([a-zA-Z][a-zA-Z0-9_-]*)`, "g");
-  const modRe = new RegExp(`['"\`]${escaped}--([a-zA-Z][a-zA-Z0-9_-]*)`, "g");
+  // Part: no hyphens — stops before the BEM modifier separator.
+  const partRe = new RegExp(
+    `['"\`]${escaped}__([a-zA-Z][a-zA-Z0-9_]*)(?![a-zA-Z0-9_-])`,
+    "g",
+  );
+  // Modifier: hyphens allowed inside the value (e.g. focus-visible).
+  const modRe = new RegExp(
+    `['"\`]${escaped}--([a-zA-Z][a-zA-Z0-9_-]*)`,
+    "g",
+  );
   const parts = new Set();
   const modifiers = new Set();
   let m;
@@ -183,6 +202,11 @@ function auditComponent(name) {
   };
 }
 
+if (SELF_TEST) {
+  runSelfTest();
+  process.exit(0);
+}
+
 const rows = listComponents()
   .map(auditComponent)
   .filter(Boolean);
@@ -271,4 +295,67 @@ if (VERBOSE) {
       console.log(`  rendered-not-declared (${r.renderedNotDeclared.length}): [${r.renderedNotDeclared.join(", ")}]`);
     }
   }
+}
+
+function runSelfTest() {
+  // Realistic source fragments mirror how the audit reads React TSX:
+  // BEM class literals appear inside quoted strings, often as ordered
+  // siblings in a join() argument list. The audit tokenizes by quote
+  // boundaries, so each literal is its own match site.
+  const cases = [
+    {
+      name: "element-modifier is dropped, sibling element survives",
+      source: `"tabs__list", "tabs__tab", "tabs__tab--active"`,
+      prefix: "tabs",
+      expectParts: ["list", "tab"],
+      // `--active` qualifies an element, not the block, so it is not
+      // a block modifier and is intentionally not captured.
+      expectModifiers: [],
+    },
+    {
+      name: "block modifier on root is captured as a modifier",
+      source: `"switch", "switch--md"`,
+      prefix: "switch",
+      expectParts: [],
+      expectModifiers: ["md"],
+    },
+    {
+      name: "camelCase part captures the whole name",
+      source: `"command__inputWrapper"`,
+      prefix: "command",
+      expectParts: ["inputWrapper"],
+      expectModifiers: [],
+    },
+    {
+      name: "block modifier with internal hyphen survives",
+      source: `"button", "button--focus-visible"`,
+      prefix: "button",
+      expectParts: [],
+      expectModifiers: ["focus-visible"],
+    },
+  ];
+  let failed = 0;
+  for (const c of cases) {
+    const got = matchRenderedClasses(c.source, c.prefix);
+    const parts = [...got.parts].sort();
+    const mods = [...got.modifiers].sort();
+    const expectParts = [...c.expectParts].sort();
+    const expectMods = [...c.expectModifiers].sort();
+    const ok =
+      JSON.stringify(parts) === JSON.stringify(expectParts) &&
+      JSON.stringify(mods) === JSON.stringify(expectMods);
+    if (ok) {
+      console.log(`ok   ${c.name}`);
+    } else {
+      failed++;
+      console.log(`FAIL ${c.name}`);
+      console.log(`     parts:     got ${JSON.stringify(parts)}  expected ${JSON.stringify(expectParts)}`);
+      console.log(`     modifiers: got ${JSON.stringify(mods)}  expected ${JSON.stringify(expectMods)}`);
+    }
+  }
+  if (failed > 0) {
+    console.log(`\n${failed} self-test case(s) failed.`);
+    process.exit(1);
+  }
+  console.log(`\nAll ${cases.length} self-test cases passed.`);
 }
