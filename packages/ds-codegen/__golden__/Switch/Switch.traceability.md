@@ -112,14 +112,14 @@ for Switch + Checkbox.
 1b ships a regression, 1b without 1a is unverifiable because Switch
 is the only contract that would exercise the fixed path.
 
-### Gap 2 — Anatomy collapse on platforms with native Toggle
+### Gap 2 — Anatomy collapse on platforms with native Toggle (RESOLVED)
 
 **Where:** SwiftUI uses `Toggle(.switch)`; RN uses `<RNSwitch>`; Compose
 uses `M3Switch`; UIKit reimplements track+thumb because there's no
 single native control that matches (`UISwitch` exists but ships its own
 look that diverges from the contract's tokens).
 
-**Why it's a gap:** the contract's `anatomy.dom` (label > input + track
+**Why it was a gap:** the contract's `anatomy.dom` (label > input + track
 span > thumb span) is a web-DOM shape. On three of four non-web targets,
 the realization is one native primitive, not a four-part composition.
 The emitter for SwiftUI/RN/Compose must *know* it can collapse the
@@ -127,24 +127,19 @@ anatomy; the emitter for UIKit must know it can't (because UIKit's
 `UISwitch` is uncustomizable enough that we'd lose the contract's
 token-driven appearance).
 
-The current `anatomy.parts` list is faithful to web; the IR has no
-"platform may collapse this" signal.
+**Resolution (commit `7996472`):** added optional per-part
+`details.collapsibleTo` field with a closed-enum vocabulary seeded with
+`native-toggle-affordance`. `Switch.contract.json` declares the field
+on `track` and `thumb`. `collectCollapseIntents(ir)` in
+`packages/ds-codegen/src/ir.ts` returns an intent→part-names map that
+emitters consult alongside their own intent→primitive table. Web
+emitters ignore the field. Per binding-rule doctrine: rules consuming
+this field branch on binding kind, not component identity.
 
-**Proposal (smallest):** add `anatomy.collapsibleTo` to the contract
-schema — an optional field per part declaring "this part's purpose is
-fully served by the target's native primitive if available." For
-Switch: `anatomy.parts.track.collapsibleTo = "native-toggle-affordance"`,
-`anatomy.parts.thumb.collapsibleTo = "native-toggle-affordance"`. The
-IR exposes this as `ir.parts[i].collapsibleTo`. Each emitter consults
-its own table mapping collapse-intents to native primitives (SwiftUI
-knows `native-toggle-affordance` → `Toggle(.switch)`; UIKit knows it
-maps to nothing reusable, so falls back to the multi-part render).
-
-**Proposal (larger):** widen the contract to declare semantic intent
-("this is a binary toggle with a visible affordance") and demote
-`anatomy.dom` to a *web realization hint*. This is a bigger redesign
-and shouldn't block round 2 — round 2 can succeed with
-`collapsibleTo` annotations alone.
+**Future work (deferred, larger):** widen the contract to declare
+semantic intent ("this is a binary toggle with a visible affordance")
+and demote `anatomy.dom` to a *web realization hint*. Not needed for
+round 2 — collapse intents alone unblock SwiftUI / RN / Compose.
 
 ### Gap 3 — Disabled prop polarity mismatch
 
@@ -214,33 +209,31 @@ the right home for that.
 ## Pass/fail verdict for round 1
 
 **Pass.** Every line in every golden file classifies into one of the
-five allowed fact prefixes (or an explicitly-tracked `GAP`). The gaps
-are:
+five allowed fact prefixes (or an explicitly-tracked `GAP`). Gap status:
 
-- Gap 1a — contract data fix (sm/lg tokens for Switch). Pending.
+- Gap 1a — contract data fix (sm/lg tokens for Switch). **Deferred** —
+  paired with Gap 1b in a focused emitter PR.
 - Gap 1b — latent CSS emitter bug discovered while attempting 1a:
-  variant-keyed tokens flatten into the base selector. Must land
-  alongside 1a.
-- Gap 2 — needs an optional `anatomy.collapsibleTo` schema/IR addition.
+  variant-keyed tokens flatten into the base selector. **Deferred.**
+- Gap 2 — `anatomy.collapsibleTo` schema/IR addition. **Resolved** in
+  commit `7996472`.
 - Gap 3 — pure emitter-side framework-grammar rule, no upstream change.
 - Gap 4 — documentation-only, no schema/IR change.
 - Gap 5 — separable token-emission workstream, no per-component-emitter
   change.
 
-Of those, only Gap 2 requires upstream work before round 2 *for the
-non-web targets*. Gaps 1a/1b are real but affect the existing React
-emitter, not the round-2 SwiftUI work — round 2 can proceed in
-parallel with a focused 1a+1b PR.
+**Round 2 is unblocked.** The remaining gaps (1a/1b on the existing
+React/CSS emitter; 3 and 4 absorbed inside the eventual non-web
+emitters; 5 as its own workstream) do not block implementing
+`generateSwiftUIComponentSource` for Switch.
 
 ## Suggested next moves
 
-1. **Resolve Gap 2** — implement `anatomy.collapsibleTo` (small, ~30
-   lines in schema + ir.ts + a per-target lookup table). This is the
-   only blocker for round 2.
-2. **Begin round 2** — implement `generateSwiftUIComponentSource` for
+1. **Begin round 2** — implement `generateSwiftUIComponentSource` for
    Switch only. Use `Switch.swiftui.swift` as the snapshot target.
    The first invocation that produces byte-identical output is the
-   round-2 pass condition.
-3. **Address Gap 1a + 1b in a focused PR** — separable from round 2,
+   round-2 pass condition. Consumes the new `collectCollapseIntents`
+   helper from commit `7996472`.
+2. **Address Gap 1a + 1b in a focused PR** — separable from round 2,
    needs regression coverage for the CSS emitter against variant-keyed
    tokens (Switch + Checkbox).
