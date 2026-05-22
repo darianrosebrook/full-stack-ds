@@ -52,6 +52,7 @@
     "@full-stack-ds/lit": "workspace:*",
     "@full-stack-ds/react": "workspace:*",
     "@full-stack-ds/svelte": "workspace:*",
+    "@full-stack-ds/tokens": "workspace:*",
     "@full-stack-ds/vue": "workspace:*",
     "@testing-library/dom": "^10.4.1",
     "@types/react": "^19.2.14",

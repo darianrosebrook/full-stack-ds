@@ -752,14 +752,13 @@ function generateBrandLayerCSS(brands: Map<BrandId, BrandOverrides>): string {
       blocks.push(lightBlock);
     }
 
-    // Light mode class overrides (for manual .light toggle when system prefers dark)
+    // Light mode class overrides (for manual .light/data-theme toggle when system prefers dark)
     if (Object.keys(overrides.lightVars).length > 0) {
+      const lightProps = Object.entries(overrides.lightVars)
+        .map(([p, v]) => `    ${p}: ${v};`)
+        .join("\n");
       blocks.push(
-        `  .light[data-brand="${brandId}"], .light [data-brand="${brandId}"] {\n${Object.entries(
-          overrides.lightVars,
-        )
-          .map(([p, v]) => `    ${p}: ${v};`)
-          .join("\n")}\n  }`,
+        `  .light[data-brand="${brandId}"], .light [data-brand="${brandId}"], [data-theme="light"][data-brand="${brandId}"], [data-theme="light"] [data-brand="${brandId}"] {\n${lightProps}\n  }`,
       );
     }
 
@@ -772,12 +771,11 @@ function generateBrandLayerCSS(brands: Map<BrandId, BrandOverrides>): string {
       blocks.push(
         `  @media (prefers-color-scheme: dark) {\n    [data-brand="${brandId}"] {\n${darkBlock}\n    }\n  }`,
       );
+      const darkProps = Object.entries(overrides.darkVars)
+        .map(([p, v]) => `    ${p}: ${v};`)
+        .join("\n");
       blocks.push(
-        `  .dark[data-brand="${brandId}"], .dark [data-brand="${brandId}"] {\n${Object.entries(
-          overrides.darkVars,
-        )
-          .map(([p, v]) => `    ${p}: ${v};`)
-          .join("\n")}\n  }`,
+        `  .dark[data-brand="${brandId}"], .dark [data-brand="${brandId}"], [data-theme="dark"][data-brand="${brandId}"], [data-theme="dark"] [data-brand="${brandId}"] {\n${darkProps}\n  }`,
       );
     }
   }
@@ -953,14 +951,13 @@ function generateDensityLayerCSS(
       blocks.push(lightBlock);
     }
 
-    // Light mode class overrides (for manual .light toggle when system prefers dark)
+    // Light mode class overrides (for manual .light/data-theme toggle when system prefers dark)
     if (Object.keys(overrides.lightVars).length > 0) {
+      const lightProps = Object.entries(overrides.lightVars)
+        .map(([p, v]) => `    ${p}: ${v};`)
+        .join("\n");
       blocks.push(
-        `  .light[data-density="${densityId}"], .light [data-density="${densityId}"] {\n${Object.entries(
-          overrides.lightVars,
-        )
-          .map(([p, v]) => `    ${p}: ${v};`)
-          .join("\n")}\n  }`,
+        `  .light[data-density="${densityId}"], .light [data-density="${densityId}"], [data-theme="light"][data-density="${densityId}"], [data-theme="light"] [data-density="${densityId}"] {\n${lightProps}\n  }`,
       );
     }
 
@@ -973,12 +970,11 @@ function generateDensityLayerCSS(
       blocks.push(
         `  @media (prefers-color-scheme: dark) {\n    [data-density="${densityId}"] {\n${darkBlock}\n    }\n  }`,
       );
+      const darkProps = Object.entries(overrides.darkVars)
+        .map(([p, v]) => `    ${p}: ${v};`)
+        .join("\n");
       blocks.push(
-        `  .dark[data-density="${densityId}"], .dark [data-density="${densityId}"] {\n${Object.entries(
-          overrides.darkVars,
-        )
-          .map(([p, v]) => `    ${p}: ${v};`)
-          .join("\n")}\n  }`,
+        `  .dark[data-density="${densityId}"], .dark [data-density="${densityId}"], [data-theme="dark"][data-density="${densityId}"], [data-theme="dark"] [data-density="${densityId}"] {\n${darkProps}\n  }`,
       );
     }
   }
@@ -1078,13 +1074,23 @@ function generateCSSFromTokens(tokens: TokenGroup): boolean {
     }
 
     if (Object.keys(lightSemanticVars).length > 0) {
-      themeLayerContent.push(formatCSSBlock("  .light", lightSemanticVars));
+      themeLayerContent.push(
+        formatCSSBlock(
+          '  .light, [data-theme="light"]',
+          lightSemanticVars,
+        ),
+      );
     }
 
     if (Object.keys(darkSemanticVars).length > 0) {
-      themeLayerContent.push(formatCSSBlock("  .dark", darkSemanticVars));
       themeLayerContent.push(
-        `  @media (prefers-color-scheme: dark) {\n${formatCSSBlock("    :root", darkSemanticVars)}\n${formatCSSBlock("    .light", lightSemanticVars)}\n  }`,
+        formatCSSBlock(
+          '  .dark, [data-theme="dark"]',
+          darkSemanticVars,
+        ),
+      );
+      themeLayerContent.push(
+        `  @media (prefers-color-scheme: dark) {\n${formatCSSBlock("    :root", darkSemanticVars)}\n${formatCSSBlock('    .light, [data-theme="light"]', lightSemanticVars)}\n  }`,
       );
     }
   }
@@ -1311,13 +1317,23 @@ export function generateGlobalTokens(incremental = true): boolean {
     }
 
     if (Object.keys(lightSemanticVars).length > 0) {
-      themeLayerContent.push(formatCSSBlock("  .light", lightSemanticVars));
+      themeLayerContent.push(
+        formatCSSBlock(
+          '  .light, [data-theme="light"]',
+          lightSemanticVars,
+        ),
+      );
     }
 
     if (Object.keys(darkSemanticVars).length > 0) {
-      themeLayerContent.push(formatCSSBlock("  .dark", darkSemanticVars));
       themeLayerContent.push(
-        `  @media (prefers-color-scheme: dark) {\n${formatCSSBlock("    :root", darkSemanticVars)}\n${formatCSSBlock("    .light", lightSemanticVars)}\n  }`,
+        formatCSSBlock(
+          '  .dark, [data-theme="dark"]',
+          darkSemanticVars,
+        ),
+      );
+      themeLayerContent.push(
+        `  @media (prefers-color-scheme: dark) {\n${formatCSSBlock("    :root", darkSemanticVars)}\n${formatCSSBlock('    .light, [data-theme="light"]', lightSemanticVars)}\n  }`,
       );
     }
   }

@@ -20,6 +20,9 @@ importers:
       '@full-stack-ds/svelte':
         specifier: workspace:*
         version: link:packages/ds-svelte
+      '@full-stack-ds/tokens':
+        specifier: workspace:*
+        version: link:packages/ds-tokens
       '@full-stack-ds/vue':
         specifier: workspace:*
         version: link:packages/ds-vue
