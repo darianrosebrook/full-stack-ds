@@ -41,11 +41,11 @@ export class FieldElement extends LitElement {
       /* --fsds-semantic-color-foreground-danger: #d9292b; */
       /* --fsds-semantic-color-feedback-border-success: #336006; */
       /* --fsds-core-spacing-size-03: 4px; */
+    }
     
-      &__label {
-        /* --fsds-semantic-typography-body-small-font-size: 14px; */
-        /* --fsds-semantic-color-foreground-secondary: #555555; */
-      }
+    .field__label {
+      /* --fsds-semantic-typography-body-small-font-size: 14px; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
   `;
 
@@ -130,11 +130,11 @@ export class FieldHeaderElement extends LitElement {
       /* --fsds-semantic-color-foreground-danger: #d9292b; */
       /* --fsds-semantic-color-feedback-border-success: #336006; */
       /* --fsds-core-spacing-size-03: 4px; */
+    }
     
-      &__label {
-        /* --fsds-semantic-typography-body-small-font-size: 14px; */
-        /* --fsds-semantic-color-foreground-secondary: #555555; */
-      }
+    .field__label {
+      /* --fsds-semantic-typography-body-small-font-size: 14px; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
     }
   `;
 

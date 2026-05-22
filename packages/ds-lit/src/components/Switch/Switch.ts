@@ -22,21 +22,11 @@ export class SwitchElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .switch {
-      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
-      --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
-      --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
-    
-      &--md {
-        --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
-        --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
-        --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
-      }
+      --fsds-switch-motion-easing: var(--fsds-semantic-motion-interaction-press-easing, ease-out);
     
       &:disabled {
-        --fsds-switch-color-track-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+        --fsds-switch-color-track-background-disabled: var(--fsds-semantic-color-background-disabled, #efefef);
       }
     
       &:checked {
@@ -45,18 +35,29 @@ export class SwitchElement extends LitElement {
       }
     }
     
-    .switch {
-      background-color: var(--fsds-switch-color-thumb-background-default);
-      width: var(--fsds-switch-size-md-track-width);
-      height: var(--fsds-switch-size-md-track-height);
-      border-radius: var(--fsds-switch-size-md-track-radius);
-      transition-duration: var(--fsds-switch-motion-duration);
+    .switch__track {
+      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
+      --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #aeaeae);
+      --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
+      --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-switch-size-md-track-padding: var(--fsds-core-spacing-size-01, 2px);
+    }
     
-      &--md {
-        width: var(--fsds-switch-size-md-track-width);
-        height: var(--fsds-switch-size-md-track-height);
-        border-radius: var(--fsds-switch-size-md-track-radius);
-      }
+    .switch__thumb {
+      --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0, 0, 0, 0.1));
+      --fsds-switch-size-md-thumb-size: var(--fsds-core-spacing-size-06, 20px);
+      --fsds-switch-size-md-thumb-height: var(--fsds-core-spacing-size-06, 20px);
+    }
+    
+    .switch__input {
+      --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #d9292b);
+    }
+    
+    .switch {
+      transition-duration: var(--fsds-switch-motion-duration);
+      transition-timing-function: var(--fsds-switch-motion-easing);
     
       &:disabled {
         background-color: var(--fsds-switch-color-track-background-disabled);
@@ -65,6 +66,26 @@ export class SwitchElement extends LitElement {
       &:checked {
         background-color: var(--fsds-switch-color-thumb-background-checked);
       }
+    }
+    
+    .switch__track {
+      background-color: var(--fsds-switch-color-track-background-default);
+      border-color: var(--fsds-switch-color-track-border-default);
+      width: var(--fsds-switch-size-md-track-width);
+      height: var(--fsds-switch-size-md-track-height);
+      border-radius: var(--fsds-switch-size-md-track-radius);
+      padding: var(--fsds-switch-size-md-track-padding);
+    }
+    
+    .switch__thumb {
+      background-color: var(--fsds-switch-color-thumb-background-default);
+      box-shadow: var(--fsds-switch-color-thumb-shadow-default);
+      width: var(--fsds-switch-size-md-thumb-size);
+      height: var(--fsds-switch-size-md-thumb-height);
+    }
+    
+    .switch__input {
+      outline-color: var(--fsds-switch-color-input-outline-focus);
     }
   `;
 

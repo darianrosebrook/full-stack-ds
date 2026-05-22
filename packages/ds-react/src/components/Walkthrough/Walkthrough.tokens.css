@@ -6,14 +6,14 @@
   --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
   --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
   --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+}
 
-  &__controls {
-    --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
-  }
+.walkthrough__controls {
+  --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+}
 
-  &__dots {
-    --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
-  }
+.walkthrough__dots {
+  --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
 }
 /* @generated:end */
 

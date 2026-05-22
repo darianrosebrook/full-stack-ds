@@ -42,11 +42,11 @@ export class AlertNoticeElement extends LitElement {
       --fsds-alertnotice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alertnotice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alertnotice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+    }
     
-      &__title {
-        --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-        --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-      }
+    .alert-notice__title {
+      --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
     
     .alert-notice {
@@ -59,11 +59,11 @@ export class AlertNoticeElement extends LitElement {
       font-size: var(--fsds-alertnotice-text-size);
       font-weight: var(--fsds-alertnotice-text-weight);
       /* --fsds-core-spacing-size-06: 16px; */
+    }
     
-      &__title {
-        font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
-        font-size: var(--fsds-alertnotice-typography-title-fontSize);
-      }
+    .alert-notice__title {
+      font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
+      font-size: var(--fsds-alertnotice-typography-title-fontSize);
     }
   `;
 
@@ -111,11 +111,11 @@ export class AlertNoticeBodyElement extends LitElement {
       --fsds-alertnotice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alertnotice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alertnotice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+    }
     
-      &__title {
-        --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-        --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-      }
+    .alert-notice__title {
+      --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
     
     .alert-notice {
@@ -128,11 +128,11 @@ export class AlertNoticeBodyElement extends LitElement {
       font-size: var(--fsds-alertnotice-text-size);
       font-weight: var(--fsds-alertnotice-text-weight);
       /* --fsds-core-spacing-size-06: 16px; */
+    }
     
-      &__title {
-        font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
-        font-size: var(--fsds-alertnotice-typography-title-fontSize);
-      }
+    .alert-notice__title {
+      font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
+      font-size: var(--fsds-alertnotice-typography-title-fontSize);
     }
   `;
 
@@ -166,11 +166,11 @@ export class AlertNoticeTitleElement extends LitElement {
       --fsds-alertnotice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alertnotice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alertnotice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+    }
     
-      &__title {
-        --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-        --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-      }
+    .alert-notice__title {
+      --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
     
     .alert-notice {
@@ -183,11 +183,11 @@ export class AlertNoticeTitleElement extends LitElement {
       font-size: var(--fsds-alertnotice-text-size);
       font-weight: var(--fsds-alertnotice-text-weight);
       /* --fsds-core-spacing-size-06: 16px; */
+    }
     
-      &__title {
-        font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
-        font-size: var(--fsds-alertnotice-typography-title-fontSize);
-      }
+    .alert-notice__title {
+      font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
+      font-size: var(--fsds-alertnotice-typography-title-fontSize);
     }
   `;
 

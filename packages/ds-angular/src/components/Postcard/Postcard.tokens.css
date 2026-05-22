@@ -16,10 +16,10 @@
     --fsds-postcard-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
     --fsds-postcard-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
   }
+}
 
-  &__content {
-    --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
-  }
+.postcard__content {
+  --fsds-postcard-typography-content-lineHeight: var(--fsds-semantic-typography-line-height-body, 1.5);
 }
 /* @generated:end */
 

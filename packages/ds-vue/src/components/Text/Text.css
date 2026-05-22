@@ -8,14 +8,14 @@
   /* --fsds-semantic-typography-font-weight-regular: 400; */
   /* --fsds-semantic-typography-font-weight-medium: 500; */
   /* --fsds-semantic-typography-font-weight-bold: 700; */
+}
 
-  &--error {
-    color: var(--fsds-text-color-foreground-danger);
-  }
+.text--error {
+  color: var(--fsds-text-color-foreground-danger);
+}
 
-  &--success {
-    color: var(--fsds-text-color-foreground-success);
-  }
+.text--success {
+  color: var(--fsds-text-color-foreground-success);
 }
 /* @generated:end */
 

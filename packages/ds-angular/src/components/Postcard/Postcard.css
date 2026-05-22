@@ -20,24 +20,24 @@
     background-color: var(--fsds-postcard-color-background-hover);
     border-color: var(--fsds-postcard-color-border-hover);
   }
+}
 
-  &__displayName {
-    /* --fsds-semantic-typography-body-02: 16px; */
-    /* --fsds-semantic-typography-font-weight-medium: 500; */
-  }
+.postcard__displayName {
+  /* --fsds-semantic-typography-body-02: 16px; */
+  /* --fsds-semantic-typography-font-weight-medium: 500; */
+}
 
-  &__handle {
-    /* --fsds-semantic-typography-body-03: 14px; */
-  }
+.postcard__handle {
+  /* --fsds-semantic-typography-body-03: 14px; */
+}
 
-  &__content {
-    line-height: var(--fsds-postcard-typography-content-lineHeight);
-    /* --fsds-semantic-typography-body-02: 16px; */
-  }
+.postcard__content {
+  line-height: var(--fsds-postcard-typography-content-lineHeight);
+  /* --fsds-semantic-typography-body-02: 16px; */
+}
 
-  &__footer {
-    /* --fsds-semantic-typography-body-03: 14px; */
-  }
+.postcard__footer {
+  /* --fsds-semantic-typography-body-03: 14px; */
 }
 /* @generated:end */
 

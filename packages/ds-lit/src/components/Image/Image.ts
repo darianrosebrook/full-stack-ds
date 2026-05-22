@@ -26,11 +26,11 @@ export class ImageElement extends LitElement {
     .image {
       --fsds-image-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-image-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+    }
     
-      &--error {
-        --fsds-image-color-background-error: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-        --fsds-image-color-foreground-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      }
+    .image--error {
+      --fsds-image-color-background-error: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-image-color-foreground-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
     
     .image {
@@ -38,11 +38,11 @@ export class ImageElement extends LitElement {
       color: var(--fsds-image-color-foreground-primary);
       /* --fsds-core-spacing-size-08: 32px; */
       /* --fsds-semantic-typography-body-04: 12px; */
+    }
     
-      &--error {
-        background-color: var(--fsds-image-color-background-error);
-        color: var(--fsds-image-color-foreground-error);
-      }
+    .image--error {
+      background-color: var(--fsds-image-color-background-error);
+      color: var(--fsds-image-color-foreground-error);
     }
   `;
 

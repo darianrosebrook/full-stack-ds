@@ -36,21 +36,21 @@ export class CardElement extends LitElement {
       &:hover {
         --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
     
-      &__badge {
-        --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-        --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-        --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-        --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-        --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-        --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-        --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-        --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-        --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-        --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
-        --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      }
+    .card__badge {
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
     }
     
     .card {
@@ -65,11 +65,11 @@ export class CardElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
     
-      &__badge {
-        background-color: var(--fsds-card-color-badge-accent-background);
-        color: var(--fsds-card-color-badge-accent-foreground);
-      }
+    .card__badge {
+      background-color: var(--fsds-card-color-badge-accent-background);
+      color: var(--fsds-card-color-badge-accent-foreground);
     }
   `;
 
@@ -107,21 +107,21 @@ export class CardHeaderElement extends LitElement {
       &:hover {
         --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
     
-      &__badge {
-        --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-        --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-        --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-        --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-        --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-        --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-        --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-        --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-        --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-        --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
-        --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      }
+    .card__badge {
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
     }
     
     .card {
@@ -136,11 +136,11 @@ export class CardHeaderElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
     
-      &__badge {
-        background-color: var(--fsds-card-color-badge-accent-background);
-        color: var(--fsds-card-color-badge-accent-foreground);
-      }
+    .card__badge {
+      background-color: var(--fsds-card-color-badge-accent-background);
+      color: var(--fsds-card-color-badge-accent-foreground);
     }
   `;
 
@@ -169,21 +169,21 @@ export class CardContentElement extends LitElement {
       &:hover {
         --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
     
-      &__badge {
-        --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-        --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-        --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-        --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-        --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-        --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-        --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-        --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-        --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-        --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
-        --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      }
+    .card__badge {
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
     }
     
     .card {
@@ -198,11 +198,11 @@ export class CardContentElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
     
-      &__badge {
-        background-color: var(--fsds-card-color-badge-accent-background);
-        color: var(--fsds-card-color-badge-accent-foreground);
-      }
+    .card__badge {
+      background-color: var(--fsds-card-color-badge-accent-background);
+      color: var(--fsds-card-color-badge-accent-foreground);
     }
   `;
 
@@ -231,21 +231,21 @@ export class CardFooterElement extends LitElement {
       &:hover {
         --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
     
-      &__badge {
-        --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-        --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-        --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-        --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-        --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-        --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-        --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-        --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-        --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-        --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
-        --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      }
+    .card__badge {
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
     }
     
     .card {
@@ -260,11 +260,11 @@ export class CardFooterElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
     
-      &__badge {
-        background-color: var(--fsds-card-color-badge-accent-background);
-        color: var(--fsds-card-color-badge-accent-foreground);
-      }
+    .card__badge {
+      background-color: var(--fsds-card-color-badge-accent-background);
+      color: var(--fsds-card-color-badge-accent-foreground);
     }
   `;
 
@@ -293,21 +293,21 @@ export class CardDescriptionElement extends LitElement {
       &:hover {
         --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
     
-      &__badge {
-        --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
-        --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
-        --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
-        --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
-        --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
-        --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
-        --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-        --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-        --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
-        --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
-        --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
-        --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-      }
+    .card__badge {
+      --fsds-card-color-badge-success-background: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-card-color-badge-success-foreground: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-card-color-badge-warning-background: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-card-color-badge-warning-foreground: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-card-color-badge-info-background: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-card-color-badge-info-foreground: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-card-color-badge-error-background: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-card-color-badge-error-foreground: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-card-color-badge-neutral-background: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
+      --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
     }
     
     .card {
@@ -322,11 +322,11 @@ export class CardDescriptionElement extends LitElement {
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
       }
+    }
     
-      &__badge {
-        background-color: var(--fsds-card-color-badge-accent-background);
-        color: var(--fsds-card-color-badge-accent-foreground);
-      }
+    .card__badge {
+      background-color: var(--fsds-card-color-badge-accent-background);
+      color: var(--fsds-card-color-badge-accent-foreground);
     }
   `;
 

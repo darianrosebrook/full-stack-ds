@@ -2,11 +2,11 @@
 .image {
   --fsds-image-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-image-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+}
 
-  &--error {
-    --fsds-image-color-background-error: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-    --fsds-image-color-foreground-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
-  }
+.image--error {
+  --fsds-image-color-background-error: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+  --fsds-image-color-foreground-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
 }
 /* @generated:end */
 

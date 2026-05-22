@@ -19,11 +19,11 @@
   --fsds-alertnotice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
   --fsds-alertnotice-text-size: var(--fsds-semantic-typography-body-03, 14px);
   --fsds-alertnotice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+}
 
-  &__title {
-    --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-    --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-  }
+.alert-notice__title {
+  --fsds-alertnotice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+  --fsds-alertnotice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
 }
 /* @generated:end */
 

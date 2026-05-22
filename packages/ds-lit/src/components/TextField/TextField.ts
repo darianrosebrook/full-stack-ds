@@ -26,11 +26,11 @@ export class TextFieldElement extends LitElement {
       --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
+    }
     
-      &--invalid {
-        --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
-        --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      }
+    .text-field--invalid {
+      --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
+      --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
     
     .text-field {
@@ -39,11 +39,11 @@ export class TextFieldElement extends LitElement {
       border-radius: var(--fsds-textfield-border-radius);
       color: var(--fsds-textfield-color-input-text);
       /* --fsds-semantic-color-foreground-tertiary: #717171; */
+    }
     
-      &--invalid {
-        border-color: var(--fsds-textfield-color-input-borderError);
-        color: var(--fsds-textfield-color-error);
-      }
+    .text-field--invalid {
+      border-color: var(--fsds-textfield-color-input-borderError);
+      color: var(--fsds-textfield-color-error);
     }
   `;
 
@@ -110,11 +110,11 @@ export class TextFieldDescriptionElement extends LitElement {
       --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
+    }
     
-      &--invalid {
-        --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
-        --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      }
+    .text-field--invalid {
+      --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
+      --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
     
     .text-field {
@@ -123,11 +123,11 @@ export class TextFieldDescriptionElement extends LitElement {
       border-radius: var(--fsds-textfield-border-radius);
       color: var(--fsds-textfield-color-input-text);
       /* --fsds-semantic-color-foreground-tertiary: #717171; */
+    }
     
-      &--invalid {
-        border-color: var(--fsds-textfield-color-input-borderError);
-        color: var(--fsds-textfield-color-error);
-      }
+    .text-field--invalid {
+      border-color: var(--fsds-textfield-color-input-borderError);
+      color: var(--fsds-textfield-color-error);
     }
   `;
 

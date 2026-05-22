@@ -11,13 +11,13 @@
     color: var(--fsds-links-color-foreground-hover);
   }
 
-  &--visited {
-    color: var(--fsds-links-color-foreground-visited);
-  }
-
   &:disabled {
     color: var(--fsds-links-color-foreground-disabled);
   }
+}
+
+.links--visited {
+  color: var(--fsds-links-color-foreground-visited);
 }
 /* @generated:end */
 

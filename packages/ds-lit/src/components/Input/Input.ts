@@ -32,10 +32,10 @@ export class InputElement extends LitElement {
       &:focus-visible {
         --fsds-input-color-focus-default: var(--fsds-semantic-color-border-focus, #d9292b);
       }
+    }
     
-      &--invalid {
-        --fsds-input-color-invalid-default: var(--fsds-semantic-color-border-danger, #ae0001);
-      }
+    .input--invalid {
+      --fsds-input-color-invalid-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
     
     .input {
@@ -49,10 +49,10 @@ export class InputElement extends LitElement {
       &:focus-visible {
         border-color: var(--fsds-input-color-focus-default);
       }
+    }
     
-      &--invalid {
-        border-color: var(--fsds-input-color-invalid-default);
-      }
+    .input--invalid {
+      border-color: var(--fsds-input-color-invalid-default);
     }
   `;
 

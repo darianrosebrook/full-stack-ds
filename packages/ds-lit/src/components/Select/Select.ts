@@ -43,14 +43,14 @@ export class SelectElement extends LitElement {
         --fsds-select-color-border-disabled: var(--fsds-semantic-color-border-disabled, #cecece);
       }
     
-      &--open {
-        --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
-      }
-    
       &[aria-selected="true"] {
         --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
         --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
       }
+    }
+    
+    .select--open {
+      --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
     .select {
@@ -66,18 +66,6 @@ export class SelectElement extends LitElement {
       /* --fsds-core-shape-border-width-hairline: 1px; */
       /* --fsds-semantic-control-size-md-height: 32px; */
     
-      &--sm {
-        /* --fsds-semantic-control-size-sm-height: 24px; */
-      }
-    
-      &--md {
-        /* --fsds-semantic-control-size-md-height: 32px; */
-      }
-    
-      &--lg {
-        /* --fsds-semantic-control-size-lg-height: 48px; */
-      }
-    
       &:hover {
         background-color: var(--fsds-select-color-background-hover);
         color: var(--fsds-select-color-foreground-hover);
@@ -90,15 +78,27 @@ export class SelectElement extends LitElement {
         border-color: var(--fsds-select-color-border-disabled);
       }
     
-      &--open {
-        border-color: var(--fsds-select-color-border-isOpen);
-        /* --fsds-semantic-color-foreground-accent: #d9292b; */
-      }
-    
       &[aria-selected="true"] {
         background-color: var(--fsds-select-color-background-selected);
         color: var(--fsds-select-color-foreground-selected);
       }
+    }
+    
+    .select--sm {
+      /* --fsds-semantic-control-size-sm-height: 24px; */
+    }
+    
+    .select--md {
+      /* --fsds-semantic-control-size-md-height: 32px; */
+    }
+    
+    .select--lg {
+      /* --fsds-semantic-control-size-lg-height: 48px; */
+    }
+    
+    .select--open {
+      border-color: var(--fsds-select-color-border-isOpen);
+      /* --fsds-semantic-color-foreground-accent: #d9292b; */
     }
   `;
 
@@ -186,14 +186,14 @@ export class SelectTriggerElement extends LitElement {
         --fsds-select-color-border-disabled: var(--fsds-semantic-color-border-disabled, #cecece);
       }
     
-      &--open {
-        --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
-      }
-    
       &[aria-selected="true"] {
         --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
         --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
       }
+    }
+    
+    .select--open {
+      --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
     .select {
@@ -209,18 +209,6 @@ export class SelectTriggerElement extends LitElement {
       /* --fsds-core-shape-border-width-hairline: 1px; */
       /* --fsds-semantic-control-size-md-height: 32px; */
     
-      &--sm {
-        /* --fsds-semantic-control-size-sm-height: 24px; */
-      }
-    
-      &--md {
-        /* --fsds-semantic-control-size-md-height: 32px; */
-      }
-    
-      &--lg {
-        /* --fsds-semantic-control-size-lg-height: 48px; */
-      }
-    
       &:hover {
         background-color: var(--fsds-select-color-background-hover);
         color: var(--fsds-select-color-foreground-hover);
@@ -233,15 +221,27 @@ export class SelectTriggerElement extends LitElement {
         border-color: var(--fsds-select-color-border-disabled);
       }
     
-      &--open {
-        border-color: var(--fsds-select-color-border-isOpen);
-        /* --fsds-semantic-color-foreground-accent: #d9292b; */
-      }
-    
       &[aria-selected="true"] {
         background-color: var(--fsds-select-color-background-selected);
         color: var(--fsds-select-color-foreground-selected);
       }
+    }
+    
+    .select--sm {
+      /* --fsds-semantic-control-size-sm-height: 24px; */
+    }
+    
+    .select--md {
+      /* --fsds-semantic-control-size-md-height: 32px; */
+    }
+    
+    .select--lg {
+      /* --fsds-semantic-control-size-lg-height: 48px; */
+    }
+    
+    .select--open {
+      border-color: var(--fsds-select-color-border-isOpen);
+      /* --fsds-semantic-color-foreground-accent: #d9292b; */
     }
   `;
 
@@ -276,14 +276,14 @@ export class SelectContentElement extends LitElement {
         --fsds-select-color-border-disabled: var(--fsds-semantic-color-border-disabled, #cecece);
       }
     
-      &--open {
-        --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
-      }
-    
       &[aria-selected="true"] {
         --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
         --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
       }
+    }
+    
+    .select--open {
+      --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
     .select {
@@ -299,18 +299,6 @@ export class SelectContentElement extends LitElement {
       /* --fsds-core-shape-border-width-hairline: 1px; */
       /* --fsds-semantic-control-size-md-height: 32px; */
     
-      &--sm {
-        /* --fsds-semantic-control-size-sm-height: 24px; */
-      }
-    
-      &--md {
-        /* --fsds-semantic-control-size-md-height: 32px; */
-      }
-    
-      &--lg {
-        /* --fsds-semantic-control-size-lg-height: 48px; */
-      }
-    
       &:hover {
         background-color: var(--fsds-select-color-background-hover);
         color: var(--fsds-select-color-foreground-hover);
@@ -323,15 +311,27 @@ export class SelectContentElement extends LitElement {
         border-color: var(--fsds-select-color-border-disabled);
       }
     
-      &--open {
-        border-color: var(--fsds-select-color-border-isOpen);
-        /* --fsds-semantic-color-foreground-accent: #d9292b; */
-      }
-    
       &[aria-selected="true"] {
         background-color: var(--fsds-select-color-background-selected);
         color: var(--fsds-select-color-foreground-selected);
       }
+    }
+    
+    .select--sm {
+      /* --fsds-semantic-control-size-sm-height: 24px; */
+    }
+    
+    .select--md {
+      /* --fsds-semantic-control-size-md-height: 32px; */
+    }
+    
+    .select--lg {
+      /* --fsds-semantic-control-size-lg-height: 48px; */
+    }
+    
+    .select--open {
+      border-color: var(--fsds-select-color-border-isOpen);
+      /* --fsds-semantic-color-foreground-accent: #d9292b; */
     }
   `;
 
@@ -366,14 +366,14 @@ export class SelectOptionElement extends LitElement {
         --fsds-select-color-border-disabled: var(--fsds-semantic-color-border-disabled, #cecece);
       }
     
-      &--open {
-        --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
-      }
-    
       &[aria-selected="true"] {
         --fsds-select-color-background-selected: var(--fsds-semantic-color-background-highlight, #f7c1c2);
         --fsds-select-color-foreground-selected: var(--fsds-semantic-color-foreground-accent, #d9292b);
       }
+    }
+    
+    .select--open {
+      --fsds-select-color-border-isOpen: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
     .select {
@@ -389,18 +389,6 @@ export class SelectOptionElement extends LitElement {
       /* --fsds-core-shape-border-width-hairline: 1px; */
       /* --fsds-semantic-control-size-md-height: 32px; */
     
-      &--sm {
-        /* --fsds-semantic-control-size-sm-height: 24px; */
-      }
-    
-      &--md {
-        /* --fsds-semantic-control-size-md-height: 32px; */
-      }
-    
-      &--lg {
-        /* --fsds-semantic-control-size-lg-height: 48px; */
-      }
-    
       &:hover {
         background-color: var(--fsds-select-color-background-hover);
         color: var(--fsds-select-color-foreground-hover);
@@ -413,15 +401,27 @@ export class SelectOptionElement extends LitElement {
         border-color: var(--fsds-select-color-border-disabled);
       }
     
-      &--open {
-        border-color: var(--fsds-select-color-border-isOpen);
-        /* --fsds-semantic-color-foreground-accent: #d9292b; */
-      }
-    
       &[aria-selected="true"] {
         background-color: var(--fsds-select-color-background-selected);
         color: var(--fsds-select-color-foreground-selected);
       }
+    }
+    
+    .select--sm {
+      /* --fsds-semantic-control-size-sm-height: 24px; */
+    }
+    
+    .select--md {
+      /* --fsds-semantic-control-size-md-height: 32px; */
+    }
+    
+    .select--lg {
+      /* --fsds-semantic-control-size-lg-height: 48px; */
+    }
+    
+    .select--open {
+      border-color: var(--fsds-select-color-border-isOpen);
+      /* --fsds-semantic-color-foreground-accent: #d9292b; */
     }
   `;
 

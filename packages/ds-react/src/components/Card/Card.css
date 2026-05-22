@@ -13,11 +13,11 @@
   &:hover {
     background-color: var(--fsds-card-color-background-hover);
   }
+}
 
-  &__badge {
-    background-color: var(--fsds-card-color-badge-accent-background);
-    color: var(--fsds-card-color-badge-accent-foreground);
-  }
+.card__badge {
+  background-color: var(--fsds-card-color-badge-accent-background);
+  color: var(--fsds-card-color-badge-accent-foreground);
 }
 /* @generated:end */
 

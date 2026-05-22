@@ -11,11 +11,11 @@
   font-size: var(--fsds-alertnotice-text-size);
   font-weight: var(--fsds-alertnotice-text-weight);
   /* --fsds-core-spacing-size-06: 16px; */
+}
 
-  &__title {
-    font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
-    font-size: var(--fsds-alertnotice-typography-title-fontSize);
-  }
+.alert-notice__title {
+  font-weight: var(--fsds-alertnotice-typography-title-fontWeight);
+  font-size: var(--fsds-alertnotice-typography-title-fontSize);
 }
 /* @generated:end */
 

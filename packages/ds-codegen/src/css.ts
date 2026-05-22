@@ -50,22 +50,37 @@ function isSlotDeclaration(prop: string): boolean {
 
 /**
  * Given the root selector (`.switch`), convert a sibling selector
- * (`.switch--md`, `.switch:hover`, `.switch__track`, `.switch[data-x="y"]`)
- * into its nested form (`&--md`, `&:hover`, `&__track`, `&[data-x="y"]`).
+ * (`.switch:hover`, `.switch[data-x="y"]`) into its nested form
+ * (`&:hover`, `&[data-x="y"]`).
  *
- * Returns null when the selector isn't a direct extension of the root —
- * compound selectors like `.switch__header > .x` stay flat for safety
- * (CSS nesting selector lists don't compose cleanly with descendant
- * combinators in every authoring tool).
+ * Returns null when the selector cannot be safely nested under `&`.
+ * The caller then emits the block as a flat sibling rule, which is
+ * the only spec-compliant way to express BEM child / modifier
+ * selectors under the current root.
+ *
+ * The CSS Nesting Level 1 spec requires `&` to behave like a single
+ * compound-selector token: it can be followed by `:` (pseudo-class),
+ * `::` (pseudo-element), `[` (attribute), or a combinator / whitespace.
+ * It CANNOT be followed by an identifier-continuing character — `-`
+ * or `_` start an identifier, and the parser will not concatenate
+ * `&--md` into `.switch--md`. Chromium, Firefox, and Safari all drop
+ * such rules silently (verified empirically and against
+ * https://www.w3.org/TR/css-nesting-1/ and
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_nesting).
+ *
+ * Concretely: `.switch__track`, `.switch--md`, `.switch__thumb` must
+ * be emitted as standalone selectors. Only state pseudo-classes
+ * (`:hover`, `:checked`) and attribute selectors (`[aria-expanded]`)
+ * are eligible for nesting.
  */
 function toNestedSelector(rootSelector: string, child: string): string | null {
   if (!child.startsWith(rootSelector)) return null;
   const remainder = child.slice(rootSelector.length);
   if (remainder === "") return null; // identical to root, would be a no-op
-  // Native CSS nesting allows `&--mod`, `&:state`, `&__part`, `&[attr]`.
-  // Anything else (descendant combinator, attribute after space, etc.)
-  // doesn't survive `&` prefixing reliably across CSS engines.
-  if (/^[-:_[]/.test(remainder)) {
+  // Only `:` (pseudo) and `[` (attribute) start a fragment the parser
+  // will append to `&` as part of the same compound selector. `-` and
+  // `_` start identifiers and break nesting (see docblock above).
+  if (/^[:[]/.test(remainder)) {
     return `&${remainder}`;
   }
   return null;
@@ -106,7 +121,7 @@ interface GroupedBlock {
   decls: Record<string, string>;
   comments: string[];
   children: Array<{
-    selector: string; // nested form, e.g. `&--md`, `&:hover`
+    selector: string; // nested form, only ever `&:state` or `&[attr]`
     decls: Record<string, string>;
     comments: string[];
   }>;

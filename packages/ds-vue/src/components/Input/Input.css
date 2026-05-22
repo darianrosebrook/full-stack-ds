@@ -12,10 +12,10 @@
   &:focus-visible {
     border-color: var(--fsds-input-color-focus-default);
   }
+}
 
-  &--invalid {
-    border-color: var(--fsds-input-color-invalid-default);
-  }
+.input--invalid {
+  border-color: var(--fsds-input-color-invalid-default);
 }
 /* @generated:end */
 

@@ -26,28 +26,28 @@ export class ProgressElement extends LitElement {
       --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-progress-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
       --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
+    }
     
-      &__track {
-        --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
+    .progress__track {
+      --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
+    }
     
-      &__fill {
-        --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
-      }
+    .progress__fill {
+      --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
     }
     
     .progress {
       color: var(--fsds-progress-color-text-default);
       gap: var(--fsds-progress-spacing-gap);
       transition-duration: var(--fsds-progress-motion-duration-indeterminate);
+    }
     
-      &__track {
-        background-color: var(--fsds-progress-color-track-background);
-      }
+    .progress__track {
+      background-color: var(--fsds-progress-color-track-background);
+    }
     
-      &__fill {
-        background-color: var(--fsds-progress-color-fill-info);
-      }
+    .progress__fill {
+      background-color: var(--fsds-progress-color-fill-info);
     }
   `;
 

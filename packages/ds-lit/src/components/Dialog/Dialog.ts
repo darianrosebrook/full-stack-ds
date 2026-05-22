@@ -52,34 +52,34 @@ export class DialogElement extends LitElement {
       /* --fsds-semantic-typography-heading-04: 18px; */
       /* --fsds-semantic-typography-font-weight-bold: 700; */
     
-      &--sm {
-        /* --fsds-dialog-size-sm-width: ; */
-        /* --fsds-dialog-size-sm-maxWidth: ; */
-      }
-    
-      &--md {
-        /* --fsds-dialog-size-md-width: ; */
-        /* --fsds-dialog-size-md-maxWidth: ; */
-      }
-    
-      &--lg {
-        /* --fsds-dialog-size-lg-width: ; */
-        /* --fsds-dialog-size-lg-maxWidth: ; */
-      }
-    
-      &--xl {
-        /* --fsds-dialog-size-xl-width: ; */
-        /* --fsds-dialog-size-xl-maxWidth: ; */
-      }
-    
-      &--full {
-        /* --fsds-dialog-size-full-width: ; */
-        /* --fsds-dialog-size-full-height: ; */
-      }
-    
       &:hover {
         background-color: var(--fsds-dialog-color-background-hover);
       }
+    }
+    
+    .dialog--sm {
+      /* --fsds-dialog-size-sm-width: ; */
+      /* --fsds-dialog-size-sm-maxWidth: ; */
+    }
+    
+    .dialog--md {
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+    }
+    
+    .dialog--lg {
+      /* --fsds-dialog-size-lg-width: ; */
+      /* --fsds-dialog-size-lg-maxWidth: ; */
+    }
+    
+    .dialog--xl {
+      /* --fsds-dialog-size-xl-width: ; */
+      /* --fsds-dialog-size-xl-maxWidth: ; */
+    }
+    
+    .dialog--full {
+      /* --fsds-dialog-size-full-width: ; */
+      /* --fsds-dialog-size-full-height: ; */
     }
   `;
 
@@ -185,34 +185,34 @@ export class DialogHeaderElement extends LitElement {
       /* --fsds-semantic-typography-heading-04: 18px; */
       /* --fsds-semantic-typography-font-weight-bold: 700; */
     
-      &--sm {
-        /* --fsds-dialog-size-sm-width: ; */
-        /* --fsds-dialog-size-sm-maxWidth: ; */
-      }
-    
-      &--md {
-        /* --fsds-dialog-size-md-width: ; */
-        /* --fsds-dialog-size-md-maxWidth: ; */
-      }
-    
-      &--lg {
-        /* --fsds-dialog-size-lg-width: ; */
-        /* --fsds-dialog-size-lg-maxWidth: ; */
-      }
-    
-      &--xl {
-        /* --fsds-dialog-size-xl-width: ; */
-        /* --fsds-dialog-size-xl-maxWidth: ; */
-      }
-    
-      &--full {
-        /* --fsds-dialog-size-full-width: ; */
-        /* --fsds-dialog-size-full-height: ; */
-      }
-    
       &:hover {
         background-color: var(--fsds-dialog-color-background-hover);
       }
+    }
+    
+    .dialog--sm {
+      /* --fsds-dialog-size-sm-width: ; */
+      /* --fsds-dialog-size-sm-maxWidth: ; */
+    }
+    
+    .dialog--md {
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+    }
+    
+    .dialog--lg {
+      /* --fsds-dialog-size-lg-width: ; */
+      /* --fsds-dialog-size-lg-maxWidth: ; */
+    }
+    
+    .dialog--xl {
+      /* --fsds-dialog-size-xl-width: ; */
+      /* --fsds-dialog-size-xl-maxWidth: ; */
+    }
+    
+    .dialog--full {
+      /* --fsds-dialog-size-full-width: ; */
+      /* --fsds-dialog-size-full-height: ; */
     }
   `;
 
@@ -258,34 +258,34 @@ export class DialogTitleElement extends LitElement {
       /* --fsds-semantic-typography-heading-04: 18px; */
       /* --fsds-semantic-typography-font-weight-bold: 700; */
     
-      &--sm {
-        /* --fsds-dialog-size-sm-width: ; */
-        /* --fsds-dialog-size-sm-maxWidth: ; */
-      }
-    
-      &--md {
-        /* --fsds-dialog-size-md-width: ; */
-        /* --fsds-dialog-size-md-maxWidth: ; */
-      }
-    
-      &--lg {
-        /* --fsds-dialog-size-lg-width: ; */
-        /* --fsds-dialog-size-lg-maxWidth: ; */
-      }
-    
-      &--xl {
-        /* --fsds-dialog-size-xl-width: ; */
-        /* --fsds-dialog-size-xl-maxWidth: ; */
-      }
-    
-      &--full {
-        /* --fsds-dialog-size-full-width: ; */
-        /* --fsds-dialog-size-full-height: ; */
-      }
-    
       &:hover {
         background-color: var(--fsds-dialog-color-background-hover);
       }
+    }
+    
+    .dialog--sm {
+      /* --fsds-dialog-size-sm-width: ; */
+      /* --fsds-dialog-size-sm-maxWidth: ; */
+    }
+    
+    .dialog--md {
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+    }
+    
+    .dialog--lg {
+      /* --fsds-dialog-size-lg-width: ; */
+      /* --fsds-dialog-size-lg-maxWidth: ; */
+    }
+    
+    .dialog--xl {
+      /* --fsds-dialog-size-xl-width: ; */
+      /* --fsds-dialog-size-xl-maxWidth: ; */
+    }
+    
+    .dialog--full {
+      /* --fsds-dialog-size-full-width: ; */
+      /* --fsds-dialog-size-full-height: ; */
     }
   `;
 
@@ -331,34 +331,34 @@ export class DialogBodyElement extends LitElement {
       /* --fsds-semantic-typography-heading-04: 18px; */
       /* --fsds-semantic-typography-font-weight-bold: 700; */
     
-      &--sm {
-        /* --fsds-dialog-size-sm-width: ; */
-        /* --fsds-dialog-size-sm-maxWidth: ; */
-      }
-    
-      &--md {
-        /* --fsds-dialog-size-md-width: ; */
-        /* --fsds-dialog-size-md-maxWidth: ; */
-      }
-    
-      &--lg {
-        /* --fsds-dialog-size-lg-width: ; */
-        /* --fsds-dialog-size-lg-maxWidth: ; */
-      }
-    
-      &--xl {
-        /* --fsds-dialog-size-xl-width: ; */
-        /* --fsds-dialog-size-xl-maxWidth: ; */
-      }
-    
-      &--full {
-        /* --fsds-dialog-size-full-width: ; */
-        /* --fsds-dialog-size-full-height: ; */
-      }
-    
       &:hover {
         background-color: var(--fsds-dialog-color-background-hover);
       }
+    }
+    
+    .dialog--sm {
+      /* --fsds-dialog-size-sm-width: ; */
+      /* --fsds-dialog-size-sm-maxWidth: ; */
+    }
+    
+    .dialog--md {
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+    }
+    
+    .dialog--lg {
+      /* --fsds-dialog-size-lg-width: ; */
+      /* --fsds-dialog-size-lg-maxWidth: ; */
+    }
+    
+    .dialog--xl {
+      /* --fsds-dialog-size-xl-width: ; */
+      /* --fsds-dialog-size-xl-maxWidth: ; */
+    }
+    
+    .dialog--full {
+      /* --fsds-dialog-size-full-width: ; */
+      /* --fsds-dialog-size-full-height: ; */
     }
   `;
 
@@ -404,34 +404,34 @@ export class DialogFooterElement extends LitElement {
       /* --fsds-semantic-typography-heading-04: 18px; */
       /* --fsds-semantic-typography-font-weight-bold: 700; */
     
-      &--sm {
-        /* --fsds-dialog-size-sm-width: ; */
-        /* --fsds-dialog-size-sm-maxWidth: ; */
-      }
-    
-      &--md {
-        /* --fsds-dialog-size-md-width: ; */
-        /* --fsds-dialog-size-md-maxWidth: ; */
-      }
-    
-      &--lg {
-        /* --fsds-dialog-size-lg-width: ; */
-        /* --fsds-dialog-size-lg-maxWidth: ; */
-      }
-    
-      &--xl {
-        /* --fsds-dialog-size-xl-width: ; */
-        /* --fsds-dialog-size-xl-maxWidth: ; */
-      }
-    
-      &--full {
-        /* --fsds-dialog-size-full-width: ; */
-        /* --fsds-dialog-size-full-height: ; */
-      }
-    
       &:hover {
         background-color: var(--fsds-dialog-color-background-hover);
       }
+    }
+    
+    .dialog--sm {
+      /* --fsds-dialog-size-sm-width: ; */
+      /* --fsds-dialog-size-sm-maxWidth: ; */
+    }
+    
+    .dialog--md {
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+    }
+    
+    .dialog--lg {
+      /* --fsds-dialog-size-lg-width: ; */
+      /* --fsds-dialog-size-lg-maxWidth: ; */
+    }
+    
+    .dialog--xl {
+      /* --fsds-dialog-size-xl-width: ; */
+      /* --fsds-dialog-size-xl-maxWidth: ; */
+    }
+    
+    .dialog--full {
+      /* --fsds-dialog-size-full-width: ; */
+      /* --fsds-dialog-size-full-height: ; */
     }
   `;
 

@@ -5,14 +5,14 @@
   color: var(--fsds-progress-color-text-default);
   gap: var(--fsds-progress-spacing-gap);
   transition-duration: var(--fsds-progress-motion-duration-indeterminate);
+}
 
-  &__track {
-    background-color: var(--fsds-progress-color-track-background);
-  }
+.progress__track {
+  background-color: var(--fsds-progress-color-track-background);
+}
 
-  &__fill {
-    background-color: var(--fsds-progress-color-fill-info);
-  }
+.progress__fill {
+  background-color: var(--fsds-progress-color-fill-info);
 }
 /* @generated:end */
 

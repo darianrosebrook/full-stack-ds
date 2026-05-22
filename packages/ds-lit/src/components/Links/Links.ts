@@ -31,13 +31,13 @@ export class LinksElement extends LitElement {
         --fsds-links-color-foreground-hover: var(--fsds-semantic-interaction-text-hover, #555555);
       }
     
-      &--visited {
-        --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
-      }
-    
       &:disabled {
         --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       }
+    }
+    
+    .links--visited {
+      --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .links {
@@ -50,13 +50,13 @@ export class LinksElement extends LitElement {
         color: var(--fsds-links-color-foreground-hover);
       }
     
-      &--visited {
-        color: var(--fsds-links-color-foreground-visited);
-      }
-    
       &:disabled {
         color: var(--fsds-links-color-foreground-disabled);
       }
+    }
+    
+    .links--visited {
+      color: var(--fsds-links-color-foreground-visited);
     }
   `;
 

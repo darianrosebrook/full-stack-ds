@@ -43,11 +43,11 @@ export class AlertElement extends LitElement {
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+    }
     
-      &__title {
-        --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-        --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-      }
+    .alert__title {
+      --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
     
     .alert {
@@ -60,11 +60,11 @@ export class AlertElement extends LitElement {
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
       /* --fsds-core-spacing-size-06: 16px; */
+    }
     
-      &__title {
-        font-weight: var(--fsds-alert-typography-title-fontWeight);
-        font-size: var(--fsds-alert-typography-title-fontSize);
-      }
+    .alert__title {
+      font-weight: var(--fsds-alert-typography-title-fontWeight);
+      font-size: var(--fsds-alert-typography-title-fontSize);
     }
   `;
 
@@ -113,11 +113,11 @@ export class AlertBodyElement extends LitElement {
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+    }
     
-      &__title {
-        --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-        --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-      }
+    .alert__title {
+      --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
     
     .alert {
@@ -130,11 +130,11 @@ export class AlertBodyElement extends LitElement {
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
       /* --fsds-core-spacing-size-06: 16px; */
+    }
     
-      &__title {
-        font-weight: var(--fsds-alert-typography-title-fontWeight);
-        font-size: var(--fsds-alert-typography-title-fontSize);
-      }
+    .alert__title {
+      font-weight: var(--fsds-alert-typography-title-fontWeight);
+      font-size: var(--fsds-alert-typography-title-fontSize);
     }
   `;
 
@@ -169,11 +169,11 @@ export class AlertTitleElement extends LitElement {
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
+    }
     
-      &__title {
-        --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
-        --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
-      }
+    .alert__title {
+      --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
     
     .alert {
@@ -186,11 +186,11 @@ export class AlertTitleElement extends LitElement {
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
       /* --fsds-core-spacing-size-06: 16px; */
+    }
     
-      &__title {
-        font-weight: var(--fsds-alert-typography-title-fontWeight);
-        font-size: var(--fsds-alert-typography-title-fontSize);
-      }
+    .alert__title {
+      font-weight: var(--fsds-alert-typography-title-fontWeight);
+      font-size: var(--fsds-alert-typography-title-fontSize);
     }
   `;
 

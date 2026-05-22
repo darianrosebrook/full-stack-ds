@@ -6,11 +6,11 @@
   color: var(--fsds-image-color-foreground-primary);
   /* --fsds-core-spacing-size-08: 32px; */
   /* --fsds-semantic-typography-body-04: 12px; */
+}
 
-  &--error {
-    background-color: var(--fsds-image-color-background-error);
-    color: var(--fsds-image-color-foreground-error);
-  }
+.image--error {
+  background-color: var(--fsds-image-color-background-error);
+  color: var(--fsds-image-color-foreground-error);
 }
 /* @generated:end */
 
