@@ -9,7 +9,11 @@
 
 .switch--sm {}
 
-.switch--md {}
+.switch--md {
+  width: var(--fsds-core-spacing-size-09, 48px);
+  height: var(--fsds-core-spacing-size-07, 24px);
+  border-radius: var(--fsds-core-shape-radius-full, 9999px);
+}
 
 .switch--lg {}
 

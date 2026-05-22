@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "./contract.js";
-import { computeCssBlocks } from "./ir.js";
+import { computeCssBlocks, partitionVariantKeyedRootTokens } from "./ir.js";
 
 /**
  * Contract `states` declare author intent. The CSS emitter decides how
@@ -18,7 +18,10 @@ import { computeCssBlocks } from "./ir.js";
  */
 describe("computeCssBlocks: contract.states -> CSS selectors", () => {
   it("maps :hover and :focus-visible to pseudo-class selectors", () => {
-    const blocks = computeCssBlocks(makeContract(["default", "hover", "focus"]), "x");
+    const blocks = computeCssBlocks(
+      makeContract(["default", "hover", "focus"]),
+      "x",
+    );
     const selectors = blocks.map((b) => b.selector);
 
     expect(selectors).toContain(".x:hover");
@@ -74,8 +77,147 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
     expect(hoverBlock).toBeDefined();
     // A resolvesTo token with `property` writes a real declaration.
     expect(hoverBlock?.declarations).toEqual({
-      color: "var(--semantic-color-fg, red)",
+      color: "var(--fsds-semantic-color-fg, red)",
     });
+  });
+
+  // -------- Variant-keyed token routing (Gap 1b fix, TOKENS-WORKSTREAM-STEP-06A-I) --------
+  //
+  // Contracts authored in the flat shape carry per-variant tokens under
+  // tokens.root with keys like "switch.size.md.track.width". Before the
+  // fix the emitter would collapse those onto `.switch`, dropping all
+  // but the alphabetically-last entry. The fix routes them to the
+  // appropriate `.switch--<value>` modifier, and surfaces the
+  // default-variant tokens on the base selector as well (since the
+  // base selector represents the default rendering).
+
+  it("routes variant-keyed root tokens to the matching --<value> modifier (sm/lg)", () => {
+    const contract: ComponentContract = {
+      ...makeContract(["default"]),
+      cssPrefix: "switch",
+      variants: { size: ["sm", "md", "lg"] },
+      props: {
+        styled: {
+          members: [{ name: "size", type: "string", default: "md" }],
+        },
+      },
+      tokens: {
+        root: {
+          // Variant-keyed: should route OFF root, ONTO `.switch--sm`.
+          "switch.size.sm.track.width": {
+            resolvesTo: "core.spacing.size.07",
+            fallback: "24px",
+            property: "width",
+            layer: "core",
+          },
+          // Default variant — should appear on BOTH `.switch` and `.switch--md`.
+          "switch.size.md.track.width": {
+            resolvesTo: "core.spacing.size.09",
+            fallback: "48px",
+            property: "width",
+            layer: "core",
+          },
+          // Variant-keyed: routes ONTO `.switch--lg`.
+          "switch.size.lg.track.width": {
+            resolvesTo: "core.spacing.size.10",
+            fallback: "64px",
+            property: "width",
+            layer: "core",
+          },
+          // Not variant-keyed: stays at root.
+          "switch.color.track.background.default": {
+            resolvesTo: "semantic.color.background.tertiary",
+            fallback: "#cecece",
+            property: "background-color",
+            layer: "semantic",
+          },
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "switch");
+    const byKey = Object.fromEntries(blocks.map((b) => [b.selector, b]));
+
+    // Base selector: gets the default variant (md) PLUS the non-variant root token.
+    expect(byKey[".switch"]?.declarations).toEqual({
+      width: "var(--fsds-core-spacing-size-09, 48px)",
+      "background-color": "var(--fsds-semantic-color-background-tertiary, #cecece)",
+    });
+    // Default modifier: same as base (redundant but consistent).
+    expect(byKey[".switch--md"]?.declarations).toEqual({
+      width: "var(--fsds-core-spacing-size-09, 48px)",
+    });
+    // sm modifier: only the sm entry.
+    expect(byKey[".switch--sm"]?.declarations).toEqual({
+      width: "var(--fsds-core-spacing-size-07, 24px)",
+    });
+    // lg modifier: only the lg entry.
+    expect(byKey[".switch--lg"]?.declarations).toEqual({
+      width: "var(--fsds-core-spacing-size-10, 64px)",
+    });
+  });
+
+  it("does not regress when a variant is declared with NO per-variant tokens (Checkbox case)", () => {
+    // Checkbox declares `variants.size=[sm,md,lg]` but ships no per-size
+    // tokens at all. The parser must NOT invent variant entries — empty
+    // modifier blocks must stay empty, and root must still emit normally.
+    const contract: ComponentContract = {
+      ...makeContract(["default"]),
+      cssPrefix: "checkbox",
+      variants: { size: ["sm", "md", "lg"] },
+      props: {
+        styled: {
+          members: [{ name: "size", type: "string", default: "md" }],
+        },
+      },
+      tokens: {
+        root: {
+          "checkbox.color.background": {
+            resolvesTo: "semantic.color.background.primary",
+            fallback: "#ffffff",
+            property: "background-color",
+            layer: "semantic",
+          },
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "checkbox");
+    const byKey = Object.fromEntries(blocks.map((b) => [b.selector, b]));
+
+    expect(byKey[".checkbox"]?.declarations).toEqual({
+      "background-color": "var(--fsds-semantic-color-background-primary, #ffffff)",
+    });
+    expect(byKey[".checkbox--sm"]?.declarations).toEqual({});
+    expect(byKey[".checkbox--md"]?.declarations).toEqual({});
+    expect(byKey[".checkbox--lg"]?.declarations).toEqual({});
+  });
+
+  it("ignores variant-keyed keys whose dimension isn't declared in variants", () => {
+    // `switch.tone.subtle.color` looks variant-keyed but `tone` isn't in
+    // contract.variants. Treat it as a regular root token (it stays).
+    const contract: ComponentContract = {
+      ...makeContract(["default"]),
+      cssPrefix: "switch",
+      variants: { size: ["sm", "md"] },
+      props: { styled: { members: [{ name: "size", type: "string", default: "md" }] } },
+      tokens: {
+        root: {
+          "switch.tone.subtle.color": {
+            resolvesTo: "semantic.color.foreground.muted",
+            fallback: "#888",
+            property: "color",
+            layer: "semantic",
+          },
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "switch");
+    const byKey = Object.fromEntries(blocks.map((b) => [b.selector, b]));
+
+    expect(byKey[".switch"]?.declarations).toEqual({
+      color: "var(--fsds-semantic-color-foreground-muted, #888)",
+    });
+    // `tone-subtle` is NOT a modifier; we did not invent one.
+    expect(byKey[".switch--subtle"]).toBeUndefined();
   });
 
   it("does not double-emit when `focus` state and `tokens.focus` are both present", () => {
@@ -89,9 +231,7 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
       },
     };
     const blocks = computeCssBlocks(contract, "x");
-    const focusBlocks = blocks.filter(
-      (b) => b.selector === ".x:focus-visible",
-    );
+    const focusBlocks = blocks.filter((b) => b.selector === ".x:focus-visible");
 
     expect(focusBlocks).toHaveLength(1);
   });
@@ -106,3 +246,71 @@ function makeContract(states: string[]): ComponentContract {
     props: { styled: { members: [] } },
   };
 }
+
+/**
+ * Unit tests for the variant-keyed partition function in isolation.
+ * These cover the parser's edge cases (unknown variant, key too short,
+ * mismatched prefix) without dragging the rest of computeCssBlocks in.
+ */
+describe("partitionVariantKeyedRootTokens", () => {
+  it("partitions a single variant-keyed entry into the right bucket", () => {
+    const result = partitionVariantKeyedRootTokens({
+      rootTokens: {
+        "switch.size.md.track.width": { resolvesTo: "x", fallback: "1px" },
+      },
+      cssPrefix: "switch",
+      variants: { size: ["sm", "md", "lg"] },
+    });
+    expect(result.rootRemainder).toEqual({});
+    expect(result.variantBuckets).toEqual({
+      size: {
+        md: {
+          "switch.size.md.track.width": { resolvesTo: "x", fallback: "1px" },
+        },
+      },
+    });
+  });
+
+  it("leaves keys too short to be variant-keyed at root", () => {
+    // "switch.size.md" is only 3 segments — needs at least 4 (<prefix>.<dim>.<val>.<rest>).
+    const result = partitionVariantKeyedRootTokens({
+      rootTokens: { "switch.size.md": { resolvesTo: "x", fallback: "y" } },
+      cssPrefix: "switch",
+      variants: { size: ["md"] },
+    });
+    expect(result.rootRemainder).toEqual({
+      "switch.size.md": { resolvesTo: "x", fallback: "y" },
+    });
+    expect(result.variantBuckets).toEqual({});
+  });
+
+  it("leaves keys with a mismatched prefix at root", () => {
+    const result = partitionVariantKeyedRootTokens({
+      rootTokens: {
+        // First segment is "button", not "switch" — must not get routed.
+        "button.size.md.track.width": { resolvesTo: "x", fallback: "y" },
+      },
+      cssPrefix: "switch",
+      variants: { size: ["md"] },
+    });
+    expect(result.rootRemainder).toEqual({
+      "button.size.md.track.width": { resolvesTo: "x", fallback: "y" },
+    });
+    expect(result.variantBuckets).toEqual({});
+  });
+
+  it("leaves keys whose third segment isn't a declared variant value at root", () => {
+    const result = partitionVariantKeyedRootTokens({
+      rootTokens: {
+        // "huge" is not in variants.size; treat as a regular root token.
+        "switch.size.huge.track.width": { resolvesTo: "x", fallback: "y" },
+      },
+      cssPrefix: "switch",
+      variants: { size: ["sm", "md", "lg"] },
+    });
+    expect(result.rootRemainder).toEqual({
+      "switch.size.huge.track.width": { resolvesTo: "x", fallback: "y" },
+    });
+    expect(result.variantBuckets).toEqual({});
+  });
+});

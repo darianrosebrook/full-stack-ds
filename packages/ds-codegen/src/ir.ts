@@ -1160,11 +1160,72 @@ export function computeCssBlocks(
   const blocks: CssBlockIR[] = [];
   const emitted = new Set<string>();
 
+  // Variant-keyed token routing (Gap 1b fix, TOKENS-WORKSTREAM-STEP-06A-I).
+  //
+  // Contracts authored in the flat shape put variant-conditional tokens
+  // under tokens.root with keys like "switch.size.md.track.width". Naively
+  // walking tokens.root would emit those on the base `.switch` selector,
+  // which is wrong for two reasons: (a) they only apply when the size
+  // variant is the named value, and (b) emitting them on root means
+  // size=md tokens leak onto size=sm/lg instances at runtime.
+  //
+  // The partition recognizes keys of the form
+  //   <cssPrefix>.<variantName>.<variantValue>.<rest>
+  // where variantName ∈ Object.keys(contract.variants) and variantValue ∈
+  // contract.variants[variantName]. Those entries are routed away from
+  // root and into per-variant buckets, then merged into the
+  // `.<cssPrefix>--<variantValue>` block below. Entries that don't match
+  // any variant stay at root. We also surface the default variant value
+  // (per contract.props.styled.members[name=variantName].default) so
+  // its tokens emit on `.<cssPrefix>` in addition to `.<cssPrefix>--<default>`
+  // — the base selector should reflect the default-variant rendering.
+  const rootTokensRaw =
+    ((tokens as Record<string, unknown>).root as Record<string, unknown>) ?? {};
+  const { variantBuckets } = partitionVariantKeyedRootTokens({
+    rootTokens: rootTokensRaw,
+    cssPrefix,
+    variants,
+  });
+  const variantDefaults = collectVariantDefaults(contract);
+
+  // Build the set of (dim, value) pairs that count as "default" — those are
+  // the entries that should appear on the base selector in addition to
+  // their `.<prefix>--<value>` modifier.
+  const defaultVariantPairs = new Set<string>();
+  for (const [dim, defaultValue] of Object.entries(variantDefaults)) {
+    if (defaultValue) defaultVariantPairs.add(`${dim}:${defaultValue}`);
+  }
+
+  // Decide per-key whether it belongs on the root selector. Preserves
+  // tokens.root insertion order so the emitted CSS doesn't shuffle on
+  // contract authoring just because variant-keyed entries are now routed
+  // differently. A key is on root if:
+  //   - it's not variant-keyed at all, OR
+  //   - it IS variant-keyed and the third segment matches the dim's default.
+  function rootIncludes(key: string): boolean {
+    const segments = key.split(".");
+    if (segments.length < 4 || segments[0] !== cssPrefix) return true;
+    const candidateDim = segments[1];
+    const candidateValue = segments[2];
+    if (
+      !variants[candidateDim] ||
+      !variants[candidateDim].includes(candidateValue)
+    ) {
+      return true;
+    }
+    return defaultVariantPairs.has(`${candidateDim}:${candidateValue}`);
+  }
+
+  const rootMergedTokens: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(rootTokensRaw)) {
+    if (rootIncludes(key)) rootMergedTokens[key] = value;
+  }
+
   // Root block first; always emitted (even if empty) for stable ordering.
   // Token declarations are merged BEFORE styled values so authored styles
   // win when both target the same property (intentional: codegen output
   // should not erase explicit design decisions in the contract's `styles`).
-  const rootTokenRender = renderTokens((tokens as Record<string, unknown>).root);
+  const rootTokenRender = renderTokens(rootMergedTokens);
   blocks.push({
     selector: `.${cssPrefix}`,
     declarations: { ...rootTokenRender.declarations, ...(styles.root ?? {}) },
@@ -1182,10 +1243,19 @@ export function computeCssBlocks(
     for (const val of values) {
       const sel = `.${cssPrefix}--${val}`;
       if (emitted.has(sel)) continue;
-      const variantTokens = (tokens as Record<string, Record<string, unknown>>)[
-        dim
-      ]?.[val];
-      const { declarations, comments } = renderTokens(variantTokens);
+      // Per-variant tokens authored under tokens.<dim>.<val> (legacy nested
+      // shape) merge with tokens routed from root via variant-keyed names
+      // (flat shape). Flat-shape entries win on key collision — they're
+      // the more precise authoring form.
+      const nestedVariantTokens = (
+        tokens as Record<string, Record<string, unknown>>
+      )[dim]?.[val];
+      const partitionedVariantTokens = variantBuckets[dim]?.[val];
+      const mergedVariantTokens: Record<string, unknown> = {
+        ...(nestedVariantTokens ?? {}),
+        ...(partitionedVariantTokens ?? {}),
+      };
+      const { declarations, comments } = renderTokens(mergedVariantTokens);
       blocks.push({ selector: sel, declarations, comments });
       emitted.add(sel);
     }
@@ -1225,6 +1295,98 @@ export function computeCssBlocks(
   }
 
   return blocks;
+}
+
+/**
+ * Partition tokens.root entries into "stays at root" and "belongs to a
+ * specific variant value." Variant-keyed entries match the pattern
+ *   <cssPrefix>.<variantName>.<variantValue>.<rest>
+ * where variantName ∈ Object.keys(variants) and variantValue ∈
+ * variants[variantName]. Anything else (different prefix, different
+ * variant name, an unknown variant value, or a key with no variant
+ * segment at all) is treated as base-selector content and stays at root.
+ *
+ * The split is order-independent — partitioning N tokens.root entries
+ * is O(N) and never reorders within a bucket, so downstream rendering
+ * stays deterministic.
+ *
+ * Exported for unit testing the partition logic in isolation. Production
+ * use is internal to computeCssBlocks.
+ */
+export function partitionVariantKeyedRootTokens(input: {
+  rootTokens: Record<string, unknown>;
+  cssPrefix: string;
+  variants: Record<string, string[]>;
+}): {
+  rootRemainder: Record<string, unknown>;
+  variantBuckets: Record<string, Record<string, Record<string, unknown>>>;
+} {
+  const { rootTokens, cssPrefix, variants } = input;
+  const rootRemainder: Record<string, unknown> = {};
+  const variantBuckets: Record<
+    string,
+    Record<string, Record<string, unknown>>
+  > = {};
+
+  // Index variant values for O(1) lookup per variant name.
+  const variantValueSets: Record<string, Set<string>> = {};
+  for (const [dim, values] of Object.entries(variants)) {
+    variantValueSets[dim] = new Set(values);
+  }
+
+  for (const [key, value] of Object.entries(rootTokens)) {
+    const segments = key.split(".");
+    // Need at minimum: <cssPrefix>.<variantName>.<variantValue>.<rest>
+    // i.e. 4 segments. Shorter keys can't be variant-keyed.
+    if (segments.length < 4 || segments[0] !== cssPrefix) {
+      rootRemainder[key] = value;
+      continue;
+    }
+    const candidateDim = segments[1];
+    const candidateValue = segments[2];
+    const valueSet = variantValueSets[candidateDim];
+    if (!valueSet || !valueSet.has(candidateValue)) {
+      // Either the second segment doesn't name a variant dimension, or
+      // the third segment isn't one of its declared values. Could still
+      // be a legit root token like "switch.color.thumb.background.default"
+      // — `color` is not a variant. Stays at root.
+      rootRemainder[key] = value;
+      continue;
+    }
+    if (!variantBuckets[candidateDim]) {
+      variantBuckets[candidateDim] = {};
+    }
+    if (!variantBuckets[candidateDim][candidateValue]) {
+      variantBuckets[candidateDim][candidateValue] = {};
+    }
+    variantBuckets[candidateDim][candidateValue][key] = value;
+  }
+
+  return { rootRemainder, variantBuckets };
+}
+
+/**
+ * Collect each variant dimension's default value from the contract's
+ * props bucket. The contract authoring shape is:
+ *   props.styled.members[].name = "<dimension>"
+ *   props.styled.members[].default = "<value>"
+ * Missing defaults mean "no implicit default" and the caller treats the
+ * dimension as having no preferred value for the base selector.
+ */
+function collectVariantDefaults(
+  contract: ComponentContract,
+): Record<string, string | undefined> {
+  const out: Record<string, string | undefined> = {};
+  const styledMembers = contract.props?.styled?.members ?? [];
+  for (const member of styledMembers) {
+    if (member && typeof member === "object" && typeof member.name === "string") {
+      const def = (member as { default?: unknown }).default;
+      if (typeof def === "string") {
+        out[member.name] = def;
+      }
+    }
+  }
+  return out;
 }
 
 /**
@@ -1337,9 +1499,24 @@ function isTokenResolution(v: unknown): v is {
   return typeof o.resolvesTo === "string" && typeof o.fallback === "string";
 }
 
-/** Convert a dotted token name into its CSS custom-property slug. */
+/**
+ * Convert a dotted token path into its CSS custom-property slug,
+ * prefixed with the project namespace.
+ *
+ *   "semantic.color.fg" → "fsds-semantic-color-fg"
+ *
+ * Caller prepends `--` (e.g. `--${tokenSlug(...)}`) so the IR never carries
+ * the leading dashes — same convention as packages/ds-tokens/build/core/
+ * index.ts:tokenPathToCSSVar (which is the authority for the prefix
+ * choice; see docs/tokens-architecture.md §Decision 2).
+ *
+ * The prefix is identical on every call. Threading it as a parameter
+ * would just push the constant up to every caller without unlocking
+ * any meaningful configurability — if the prefix needs to change, this
+ * is the one site to edit, and the token-graph emitter is the other.
+ */
 function tokenSlug(name: string): string {
-  return name.replace(/\./g, "-");
+  return `fsds-${name.replace(/\./g, "-")}`;
 }
 
 /**
