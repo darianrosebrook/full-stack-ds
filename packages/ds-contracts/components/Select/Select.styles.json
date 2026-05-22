@@ -1,13 +1,191 @@
 {
   "root": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
+    "position": {
+      "literal": "relative",
+      "platforms": ["web"]
+    }
+  },
+  "trigger": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "justify-content": {
+      "literal": "space-between",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "resolvesTo": "select.size.padding.default"
+    },
+    "padding": {
+      "resolvesTo": "select.size.padding.default"
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "select.size.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "select.size.radius.default"
+    },
+    "border-color": {
+      "resolvesTo": "select.color.border.default"
+    },
     "background-color": {
       "resolvesTo": "select.color.background.default"
     },
     "color": {
       "resolvesTo": "select.color.foreground.default"
     },
+    "font-size": {
+      "resolvesTo": "select.font.size.default"
+    },
+    "line-height": {
+      "resolvesTo": "select.font.lineHeight.default"
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": ["web"]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": ["web"]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": ["web"]
+    }
+  },
+  "content": {
+    "background-color": {
+      "resolvesTo": "select.color.background.default"
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "select.size.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "select.size.radius.default"
+    },
     "border-color": {
       "resolvesTo": "select.color.border.default"
+    },
+    "box-shadow": {
+      "literal": "0 4px 16px rgba(0,0,0,0.12)",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "resolvesTo": "select.size.padding.default"
+    },
+    "max-height": {
+      "literal": "320px",
+      "platforms": ["web"]
+    },
+    "overflow-y": {
+      "literal": "auto",
+      "platforms": ["web"]
+    },
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "resolvesTo": "select.size.padding.default"
+    }
+  },
+  "search": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "resolvesTo": "select.size.padding.default"
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "select.size.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "select.size.radius.default"
+    },
+    "border-color": {
+      "resolvesTo": "select.color.border.default"
+    },
+    "background-color": {
+      "resolvesTo": "select.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "select.color.foreground.default"
+    },
+    "font-size": {
+      "resolvesTo": "select.font.size.default"
+    }
+  },
+  "options": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "literal": "2px",
+      "platforms": ["web"]
+    },
+    "list-style": {
+      "literal": "none",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "margin": {
+      "literal": "0",
+      "platforms": ["web"]
+    }
+  },
+  "option": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "resolvesTo": "select.size.padding.default"
     },
     "padding": {
       "resolvesTo": "select.size.padding.default"
@@ -15,25 +193,56 @@
     "border-radius": {
       "resolvesTo": "select.size.radius.default"
     },
-    "font-size": {
-      "resolvesTo": "select.font.size.default"
+    "color": {
+      "resolvesTo": "select.color.foreground.default"
     },
-    "line-height": {
-      "resolvesTo": "select.font.lineHeight.default"
+    "cursor": {
+      "literal": "pointer",
+      "platforms": ["web"]
     }
   },
-  "hover": {
+  "emptyState": {
+    "text-align": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "resolvesTo": "select.size.padding.default"
+    },
+    "color": {
+      "resolvesTo": "select.color.placeholder.default"
+    }
+  },
+  ".select__trigger:focus-visible": {
+    "border-color": {
+      "resolvesTo": "select.color.border.isOpen"
+    },
+    "outline": {
+      "literal": "2px solid",
+      "platforms": ["web"]
+    },
+    "outline-offset": {
+      "literal": "2px",
+      "platforms": ["web"]
+    }
+  },
+  ".select__trigger:hover": {
+    "border-color": {
+      "resolvesTo": "select.color.border.hover"
+    },
     "background-color": {
       "resolvesTo": "select.color.background.hover"
     },
     "color": {
       "resolvesTo": "select.color.foreground.hover"
-    },
-    "border-color": {
-      "resolvesTo": "select.color.border.hover"
     }
   },
-  "disabled": {
+  ".select--open .select__trigger": {
+    "border-color": {
+      "resolvesTo": "select.color.border.isOpen"
+    }
+  },
+  ".select--disabled .select__trigger": {
     "background-color": {
       "resolvesTo": "select.color.background.disabled"
     },
@@ -42,14 +251,25 @@
     },
     "border-color": {
       "resolvesTo": "select.color.border.disabled"
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": ["web"]
+    },
+    "opacity": {
+      "literal": "0.5",
+      "platforms": ["web"]
     }
   },
-  "open": {
-    "border-color": {
-      "resolvesTo": "select.color.border.isOpen"
+  ".select__option:hover": {
+    "background-color": {
+      "resolvesTo": "select.color.background.hover"
+    },
+    "color": {
+      "resolvesTo": "select.color.foreground.hover"
     }
   },
-  "selected": {
+  ".select__option[aria-selected=\"true\"]": {
     "background-color": {
       "resolvesTo": "select.color.background.selected"
     },

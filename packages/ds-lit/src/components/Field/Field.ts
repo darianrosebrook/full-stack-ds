@@ -40,9 +40,81 @@ export class FieldElement extends LitElement {
     }
     
     .field {
-      gap: var(--fsds-field-gap-meta);
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-field-gap-y);
       border-radius: var(--fsds-field-radius);
-      border-color: var(--fsds-field-color-borderBold);
+    }
+    
+    .field__label {
+      display: inline-block;
+      font-size: var(--fsds-field-label-fontSize);
+      font-weight: 500;
+      color: var(--fsds-field-label-color);
+    }
+    
+    .field__header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--fsds-field-gap-meta);
+    }
+    
+    .field__control {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-field-radius);
+      border-color: var(--fsds-field-color-border);
+      background-color: var(--fsds-field-color-bg);
+      padding: var(--fsds-field-pad-x);
+    }
+    
+    .field__help {
+      display: block;
+      font-size: 0.875em;
+      color: var(--fsds-field-color-fg);
+    }
+    
+    .field__error {
+      display: block;
+      font-size: 0.875em;
+      color: var(--fsds-field-color-invalid-text);
+    }
+    
+    .field__meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-field-gap-meta);
+    }
+    
+    .field__validatingIndicator {
+      display: inline-flex;
+      width: 1em;
+      height: 1em;
+      color: var(--fsds-field-color-fg);
+    }
+    
+    .field__control:focus-within {
+      border-color: var(--fsds-field-color-focus-border);
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .field--invalid .field__control {
+      border-color: var(--fsds-field-color-invalid-border);
+    }
+    
+    .field--disabled .field__control {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .field--valid .field__control {
+      border-color: var(--fsds-field-color-valid-border);
     }
   `;
 
@@ -126,9 +198,81 @@ export class FieldHeaderElement extends LitElement {
     }
     
     .field {
-      gap: var(--fsds-field-gap-meta);
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-field-gap-y);
       border-radius: var(--fsds-field-radius);
-      border-color: var(--fsds-field-color-borderBold);
+    }
+    
+    .field__label {
+      display: inline-block;
+      font-size: var(--fsds-field-label-fontSize);
+      font-weight: 500;
+      color: var(--fsds-field-label-color);
+    }
+    
+    .field__header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--fsds-field-gap-meta);
+    }
+    
+    .field__control {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-field-radius);
+      border-color: var(--fsds-field-color-border);
+      background-color: var(--fsds-field-color-bg);
+      padding: var(--fsds-field-pad-x);
+    }
+    
+    .field__help {
+      display: block;
+      font-size: 0.875em;
+      color: var(--fsds-field-color-fg);
+    }
+    
+    .field__error {
+      display: block;
+      font-size: 0.875em;
+      color: var(--fsds-field-color-invalid-text);
+    }
+    
+    .field__meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-field-gap-meta);
+    }
+    
+    .field__validatingIndicator {
+      display: inline-flex;
+      width: 1em;
+      height: 1em;
+      color: var(--fsds-field-color-fg);
+    }
+    
+    .field__control:focus-within {
+      border-color: var(--fsds-field-color-focus-border);
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .field--invalid .field__control {
+      border-color: var(--fsds-field-color-invalid-border);
+    }
+    
+    .field--disabled .field__control {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .field--valid .field__control {
+      border-color: var(--fsds-field-color-valid-border);
     }
   `;
 

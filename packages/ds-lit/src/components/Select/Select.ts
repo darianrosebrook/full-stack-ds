@@ -49,34 +49,115 @@ export class SelectElement extends LitElement {
     }
     
     .select {
-      background-color: var(--fsds-select-color-background-default);
-      color: var(--fsds-select-color-foreground-default);
-      border-color: var(--fsds-select-color-border-default);
-      padding: var(--fsds-select-size-padding-default);
-      border-radius: var(--fsds-select-size-radius-default);
-      font-size: var(--fsds-select-font-size-default);
-      line-height: var(--fsds-select-font-lineHeight-default);
-    
-      &:hover {
-        background-color: var(--fsds-select-color-background-hover);
-        color: var(--fsds-select-color-foreground-hover);
-        border-color: var(--fsds-select-color-border-hover);
-      }
-    
-      &:disabled {
-        background-color: var(--fsds-select-color-background-disabled);
-        color: var(--fsds-select-color-foreground-disabled);
-        border-color: var(--fsds-select-color-border-disabled);
-      }
-    
-      &[aria-selected="true"] {
-        background-color: var(--fsds-select-color-background-selected);
-        color: var(--fsds-select-color-foreground-selected);
-      }
+      display: inline-flex;
+      flex-direction: column;
+      position: relative;
     }
     
-    .select__open {
+    .select__trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+      line-height: var(--fsds-select-font-lineHeight-default);
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .select__content {
+      background-color: var(--fsds-select-color-background-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: var(--fsds-select-size-padding-default);
+      max-height: 320px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-select-size-padding-default);
+    }
+    
+    .select__search {
+      display: flex;
+      align-items: center;
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+    }
+    
+    .select__options {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .select__option {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      color: var(--fsds-select-color-foreground-default);
+      cursor: pointer;
+    }
+    
+    .select__emptyState {
+      text-align: center;
+      padding: var(--fsds-select-size-padding-default);
+      color: var(--fsds-select-color-placeholder-default);
+    }
+    
+    .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .select__trigger:hover {
+      border-color: var(--fsds-select-color-border-hover);
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select--open .select__trigger {
+      border-color: var(--fsds-select-color-border-isOpen);
+    }
+    
+    .select--disabled .select__trigger {
+      background-color: var(--fsds-select-color-background-disabled);
+      color: var(--fsds-select-color-foreground-disabled);
+      border-color: var(--fsds-select-color-border-disabled);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    
+    .select__option:hover {
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select__option[aria-selected="true"] {
+      background-color: var(--fsds-select-color-background-selected);
+      color: var(--fsds-select-color-foreground-selected);
     }
   `;
 
@@ -170,34 +251,115 @@ export class SelectTriggerElement extends LitElement {
     }
     
     .select {
-      background-color: var(--fsds-select-color-background-default);
-      color: var(--fsds-select-color-foreground-default);
-      border-color: var(--fsds-select-color-border-default);
-      padding: var(--fsds-select-size-padding-default);
-      border-radius: var(--fsds-select-size-radius-default);
-      font-size: var(--fsds-select-font-size-default);
-      line-height: var(--fsds-select-font-lineHeight-default);
-    
-      &:hover {
-        background-color: var(--fsds-select-color-background-hover);
-        color: var(--fsds-select-color-foreground-hover);
-        border-color: var(--fsds-select-color-border-hover);
-      }
-    
-      &:disabled {
-        background-color: var(--fsds-select-color-background-disabled);
-        color: var(--fsds-select-color-foreground-disabled);
-        border-color: var(--fsds-select-color-border-disabled);
-      }
-    
-      &[aria-selected="true"] {
-        background-color: var(--fsds-select-color-background-selected);
-        color: var(--fsds-select-color-foreground-selected);
-      }
+      display: inline-flex;
+      flex-direction: column;
+      position: relative;
     }
     
-    .select__open {
+    .select__trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+      line-height: var(--fsds-select-font-lineHeight-default);
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .select__content {
+      background-color: var(--fsds-select-color-background-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: var(--fsds-select-size-padding-default);
+      max-height: 320px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-select-size-padding-default);
+    }
+    
+    .select__search {
+      display: flex;
+      align-items: center;
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+    }
+    
+    .select__options {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .select__option {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      color: var(--fsds-select-color-foreground-default);
+      cursor: pointer;
+    }
+    
+    .select__emptyState {
+      text-align: center;
+      padding: var(--fsds-select-size-padding-default);
+      color: var(--fsds-select-color-placeholder-default);
+    }
+    
+    .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .select__trigger:hover {
+      border-color: var(--fsds-select-color-border-hover);
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select--open .select__trigger {
+      border-color: var(--fsds-select-color-border-isOpen);
+    }
+    
+    .select--disabled .select__trigger {
+      background-color: var(--fsds-select-color-background-disabled);
+      color: var(--fsds-select-color-foreground-disabled);
+      border-color: var(--fsds-select-color-border-disabled);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    
+    .select__option:hover {
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select__option[aria-selected="true"] {
+      background-color: var(--fsds-select-color-background-selected);
+      color: var(--fsds-select-color-foreground-selected);
     }
   `;
 
@@ -238,34 +400,115 @@ export class SelectContentElement extends LitElement {
     }
     
     .select {
-      background-color: var(--fsds-select-color-background-default);
-      color: var(--fsds-select-color-foreground-default);
-      border-color: var(--fsds-select-color-border-default);
-      padding: var(--fsds-select-size-padding-default);
-      border-radius: var(--fsds-select-size-radius-default);
-      font-size: var(--fsds-select-font-size-default);
-      line-height: var(--fsds-select-font-lineHeight-default);
-    
-      &:hover {
-        background-color: var(--fsds-select-color-background-hover);
-        color: var(--fsds-select-color-foreground-hover);
-        border-color: var(--fsds-select-color-border-hover);
-      }
-    
-      &:disabled {
-        background-color: var(--fsds-select-color-background-disabled);
-        color: var(--fsds-select-color-foreground-disabled);
-        border-color: var(--fsds-select-color-border-disabled);
-      }
-    
-      &[aria-selected="true"] {
-        background-color: var(--fsds-select-color-background-selected);
-        color: var(--fsds-select-color-foreground-selected);
-      }
+      display: inline-flex;
+      flex-direction: column;
+      position: relative;
     }
     
-    .select__open {
+    .select__trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+      line-height: var(--fsds-select-font-lineHeight-default);
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .select__content {
+      background-color: var(--fsds-select-color-background-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: var(--fsds-select-size-padding-default);
+      max-height: 320px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-select-size-padding-default);
+    }
+    
+    .select__search {
+      display: flex;
+      align-items: center;
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+    }
+    
+    .select__options {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .select__option {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      color: var(--fsds-select-color-foreground-default);
+      cursor: pointer;
+    }
+    
+    .select__emptyState {
+      text-align: center;
+      padding: var(--fsds-select-size-padding-default);
+      color: var(--fsds-select-color-placeholder-default);
+    }
+    
+    .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .select__trigger:hover {
+      border-color: var(--fsds-select-color-border-hover);
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select--open .select__trigger {
+      border-color: var(--fsds-select-color-border-isOpen);
+    }
+    
+    .select--disabled .select__trigger {
+      background-color: var(--fsds-select-color-background-disabled);
+      color: var(--fsds-select-color-foreground-disabled);
+      border-color: var(--fsds-select-color-border-disabled);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    
+    .select__option:hover {
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select__option[aria-selected="true"] {
+      background-color: var(--fsds-select-color-background-selected);
+      color: var(--fsds-select-color-foreground-selected);
     }
   `;
 
@@ -306,34 +549,115 @@ export class SelectOptionElement extends LitElement {
     }
     
     .select {
-      background-color: var(--fsds-select-color-background-default);
-      color: var(--fsds-select-color-foreground-default);
-      border-color: var(--fsds-select-color-border-default);
-      padding: var(--fsds-select-size-padding-default);
-      border-radius: var(--fsds-select-size-radius-default);
-      font-size: var(--fsds-select-font-size-default);
-      line-height: var(--fsds-select-font-lineHeight-default);
-    
-      &:hover {
-        background-color: var(--fsds-select-color-background-hover);
-        color: var(--fsds-select-color-foreground-hover);
-        border-color: var(--fsds-select-color-border-hover);
-      }
-    
-      &:disabled {
-        background-color: var(--fsds-select-color-background-disabled);
-        color: var(--fsds-select-color-foreground-disabled);
-        border-color: var(--fsds-select-color-border-disabled);
-      }
-    
-      &[aria-selected="true"] {
-        background-color: var(--fsds-select-color-background-selected);
-        color: var(--fsds-select-color-foreground-selected);
-      }
+      display: inline-flex;
+      flex-direction: column;
+      position: relative;
     }
     
-    .select__open {
+    .select__trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+      line-height: var(--fsds-select-font-lineHeight-default);
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .select__content {
+      background-color: var(--fsds-select-color-background-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      padding: var(--fsds-select-size-padding-default);
+      max-height: 320px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-select-size-padding-default);
+    }
+    
+    .select__search {
+      display: flex;
+      align-items: center;
+      padding: var(--fsds-select-size-padding-default);
+      border-style: solid;
+      border-width: var(--fsds-select-size-border-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      border-color: var(--fsds-select-color-border-default);
+      background-color: var(--fsds-select-color-background-default);
+      color: var(--fsds-select-color-foreground-default);
+      font-size: var(--fsds-select-font-size-default);
+    }
+    
+    .select__options {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .select__option {
+      display: flex;
+      align-items: center;
+      gap: var(--fsds-select-size-padding-default);
+      padding: var(--fsds-select-size-padding-default);
+      border-radius: var(--fsds-select-size-radius-default);
+      color: var(--fsds-select-color-foreground-default);
+      cursor: pointer;
+    }
+    
+    .select__emptyState {
+      text-align: center;
+      padding: var(--fsds-select-size-padding-default);
+      color: var(--fsds-select-color-placeholder-default);
+    }
+    
+    .select__trigger:focus-visible {
       border-color: var(--fsds-select-color-border-isOpen);
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .select__trigger:hover {
+      border-color: var(--fsds-select-color-border-hover);
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select--open .select__trigger {
+      border-color: var(--fsds-select-color-border-isOpen);
+    }
+    
+    .select--disabled .select__trigger {
+      background-color: var(--fsds-select-color-background-disabled);
+      color: var(--fsds-select-color-foreground-disabled);
+      border-color: var(--fsds-select-color-border-disabled);
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    
+    .select__option:hover {
+      background-color: var(--fsds-select-color-background-hover);
+      color: var(--fsds-select-color-foreground-hover);
+    }
+    
+    .select__option[aria-selected="true"] {
+      background-color: var(--fsds-select-color-background-selected);
+      color: var(--fsds-select-color-foreground-selected);
     }
   `;
 
