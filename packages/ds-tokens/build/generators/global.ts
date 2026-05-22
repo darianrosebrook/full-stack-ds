@@ -617,14 +617,15 @@ function loadBrandTokens(): Map<BrandId, BrandOverrides> {
       // Process brand token overrides (skip $brand metadata)
       processBrandTokens(brandData, [], context, lightVars, darkVars);
 
-      // Validate that brand token references resolve to known vars
-      const brandRefErrors = validateReferences(context);
-      if (brandRefErrors.length > 0) {
-        console.warn(
-          `[tokens] Brand "${brandName}" has unresolved references:`,
-        );
-        brandRefErrors.forEach((err) => console.warn(`  - ${err}`));
-      }
+      // NOTE: We deliberately do NOT call validateReferences() here. Brand
+      // tokens reference core tokens via `{shape.border.style.solid}` etc.,
+      // which the global walker emits as `--fsds-core-*` later in the same
+      // build. Reference resolution happens at CSS-cascade time via var(),
+      // not at build time — so the brand processor's local `definedVars` set
+      // (empty at this point) would generate false-positive warnings about
+      // every cross-tier ref. The brand block's emitted `var(--fsds-core-*)`
+      // calls are validated by the browser at runtime against the @layer core
+      // block in the same stylesheet.
 
       brands.set(brandName, {
         metadata: brandData.$brand,

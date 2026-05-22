@@ -1376,3 +1376,153 @@
 }
   }
 }
+
+@layer brand {
+
+  [data-brand="default"] {
+    --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-600);
+    --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-red-200);
+    --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-300);
+    --fsds-semantic-color-border-hover: var(--fsds-core-color-palette-red-300);
+    --fsds-semantic-color-border-focus: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-border-light: var(--fsds-core-color-palette-red-100);
+    --fsds-semantic-color-border-primary: var(--fsds-core-color-palette-neutral-300);
+    --fsds-semantic-color-navigation-foreground-active: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-action-background-primary-default: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-action-background-primary-hover: var(--fsds-core-color-palette-red-600);
+    --fsds-semantic-color-action-background-primary-active: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-red-100);
+    --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-red-200);
+    --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+    --fsds-semantic-shape-card-elevation-near: var(--fsds-core-elevation-level-1);
+    --fsds-semantic-shape-card-elevation-default: var(--fsds-core-elevation-level-2);
+    --fsds-semantic-shape-card-elevation-far: var(--fsds-core-elevation-level-3);
+    --fsds-semantic-shape-card-elevation-none: var(--fsds-core-elevation-level-0);
+    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
+    --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
+    --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
+    --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
+    --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
+    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-06);
+    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-05);
+    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-07);
+    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium1);
+    --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
+    --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
+    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+  }
+
+  .light[data-brand="default"], .light [data-brand="default"] {
+    --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-600);
+    --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-red-200);
+    --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-300);
+    --fsds-semantic-color-border-hover: var(--fsds-core-color-palette-red-300);
+    --fsds-semantic-color-border-focus: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-border-light: var(--fsds-core-color-palette-red-100);
+    --fsds-semantic-color-border-primary: var(--fsds-core-color-palette-neutral-300);
+    --fsds-semantic-color-navigation-foreground-active: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-action-background-primary-default: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-action-background-primary-hover: var(--fsds-core-color-palette-red-600);
+    --fsds-semantic-color-action-background-primary-active: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
+    --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-red-100);
+    --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-red-200);
+    --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+    --fsds-semantic-shape-card-elevation-near: var(--fsds-core-elevation-level-1);
+    --fsds-semantic-shape-card-elevation-default: var(--fsds-core-elevation-level-2);
+    --fsds-semantic-shape-card-elevation-far: var(--fsds-core-elevation-level-3);
+    --fsds-semantic-shape-card-elevation-none: var(--fsds-core-elevation-level-0);
+    --fsds-semantic-shape-element-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-button-radius: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-badge-radius: var(--fsds-core-shape-radius-full);
+    --fsds-semantic-shape-input-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-input-border-default-width: var(--fsds-core-shape-border-width-hairline);
+    --fsds-semantic-shape-input-border-default-style: var(--fsds-core-shape-border-style-solid);
+    --fsds-semantic-shape-input-border-focus-width: var(--fsds-core-shape-border-width-thick);
+    --fsds-semantic-shape-field-radius-default: var(--fsds-core-shape-radius-03);
+    --fsds-semantic-shape-field-border-default-width: var(--fsds-core-shape-border-width-hairline);
+    --fsds-semantic-shape-field-border-focus-width: var(--fsds-core-shape-border-width-thick);
+    --fsds-semantic-spacing-component-padding: var(--fsds-core-spacing-size-06);
+    --fsds-semantic-spacing-component-gap: var(--fsds-core-spacing-size-05);
+    --fsds-semantic-spacing-card-padding: var(--fsds-core-spacing-size-07);
+    --fsds-semantic-motion-interaction-duration: var(--fsds-core-motion-duration-medium1);
+    --fsds-semantic-motion-interaction-easing: var(--fsds-core-motion-easing-standard);
+    --fsds-semantic-typography-body-font-weight: var(--fsds-core-typography-weight-regular);
+    --fsds-semantic-typography-heading-font-weight: var(--fsds-core-typography-weight-medium);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    [data-brand="default"] {
+      --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-400);
+      --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-400);
+      --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-300);
+      --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-red-500);
+      --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-red-200);
+      --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-400);
+      --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-red-700);
+      --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-red-400);
+      --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-600);
+      --fsds-semantic-color-border-hover: var(--fsds-core-color-palette-red-500);
+      --fsds-semantic-color-border-focus: var(--fsds-core-color-palette-red-400);
+      --fsds-semantic-color-border-light: var(--fsds-core-color-palette-red-700);
+      --fsds-semantic-color-border-primary: var(--fsds-core-color-palette-neutral-500);
+      --fsds-semantic-color-navigation-foreground-active: var(--fsds-core-color-palette-red-400);
+      --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-500);
+      --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-red-800);
+      --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-red-700);
+      --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-red-500);
+      --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+    }
+  }
+
+  .dark[data-brand="default"], .dark [data-brand="default"] {
+    --fsds-semantic-color-foreground-accent: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-foreground-link: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-red-300);
+    --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-red-200);
+    --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-600);
+    --fsds-semantic-color-border-hover: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-color-border-focus: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-border-light: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-color-border-primary: var(--fsds-core-color-palette-neutral-500);
+    --fsds-semantic-color-navigation-foreground-active: var(--fsds-core-color-palette-red-400);
+    --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-shape-card-border-light: var(--fsds-core-color-palette-red-800);
+    --fsds-semantic-shape-card-border-medium: var(--fsds-core-color-palette-red-700);
+    --fsds-semantic-shape-card-border-dark: var(--fsds-core-color-palette-red-500);
+    --fsds-semantic-shape-card-border-transparent: var(--fsds-core-color-mode-transparent);
+  }
+
+}

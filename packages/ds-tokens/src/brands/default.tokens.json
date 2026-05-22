@@ -1,0 +1,374 @@
+{
+  "$brand": {
+    "name": "default",
+    "description": "Default brand theme with red/coral accents - the current site identity",
+    "accent": "red",
+    "density": "default"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.red.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.600}",
+          "fsds.dark": "{color.palette.red.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.400}",
+          "fsds.dark": "{color.palette.red.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.700}",
+          "fsds.dark": "{color.palette.red.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.200}",
+          "fsds.dark": "{color.palette.red.700}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default input border - simple neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.red.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.300}",
+          "fsds.dark": "{color.palette.red.500}"
+        },
+        "$description": "Input hover border - warmer red"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Input focus border - bold red accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.red.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.100}",
+          "fsds.dark": "{color.palette.red.700}"
+        },
+        "$description": "Light input border - very subtle red"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Primary input border - neutral"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.red.500}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.500}",
+            "fsds.dark": "{color.palette.red.400}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.500}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.red.600}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.red.700}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.500}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.red.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.400}",
+          "fsds.dark": "{color.palette.red.500}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.03}",
+          "$description": "Medium radius (8px) - balanced, approachable"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Card border radius (16px)"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.red.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.100}",
+            "fsds.dark": "{color.palette.red.800}"
+          },
+          "$description": "Light card border - very subtle red"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.red.200}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.200}",
+            "fsds.dark": "{color.palette.red.700}"
+          },
+          "$description": "Medium card border - subtle red"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.red.400}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.400}",
+            "fsds.dark": "{color.palette.red.500}"
+          },
+          "$description": "Dark card border - visible red"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - no border"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Near elevation - subtle shadow"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Default elevation - standard shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.3}",
+          "$description": "Far elevation - prominent shadow"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - flat cards"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Internal element radius (8px) - nests inside cards"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Button radius (8px)"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}",
+        "$description": "Badge/chip radius (pill)"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.03}",
+          "$description": "Input border radius - balanced, approachable (8px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input border width - standard (1px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input focus border width - emphasized (2px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.03}",
+          "$description": "Field border radius - balanced (8px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field border width - standard (1px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field focus border width - emphasized (2px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "Comfortable component padding (16px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.05}",
+        "$description": "Comfortable component gap (12px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.07}",
+        "$description": "Card padding (24px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.medium1}",
+        "$description": "Standard transition speed (250ms)"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.standard}",
+        "$description": "Standard easing curve"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.regular}",
+        "$description": "Regular body weight (400)"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.medium}",
+        "$description": "Medium heading weight (500)"
+      }
+    }
+  }
+}

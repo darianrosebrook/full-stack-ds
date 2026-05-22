@@ -94,11 +94,18 @@ function dotPathToNewVarName(dotPath: string): string {
 
 /**
  * Convert a dot-notation resolvesTo path to the OLD CSS custom-property name
- * (without leading `--`, no prefix).
- *   "semantic.color.foreground.primary" → "semantic-color-foreground-primary"
+ * (without leading `--`).
+ *
+ * NOTE: the old surface used to have no project prefix, but as of commit
+ * 8df5564 ("tokens: regen tokens with fsds name in component css") the old
+ * surface was regenerated with the same `--fsds-` prefix as the new one. So
+ * old/new now share a naming convention. This function is kept distinct from
+ * `dotPathToNewVarName` so a future divergence can be expressed without
+ * threading another flag.
+ *   "semantic.color.foreground.primary" → "fsds-semantic-color-foreground-primary"
  */
 function dotPathToOldVarName(dotPath: string): string {
-  return dotPath.replace(/\./g, "-");
+  return "fsds-" + dotPath.replace(/\./g, "-");
 }
 
 // ---------------------------------------------------------------------------
@@ -184,7 +191,7 @@ console.log();
 console.log("=".repeat(72));
 console.log("  Section A: Contract resolvesTo refs vs OLD token surface");
 console.log(
-  "  (old vars have no prefix; e.g. --fsds-semantic-color-foreground-primary)",
+  "  (old surface as of commit 8df5564 shares the --fsds- prefix)",
 );
 console.log("=".repeat(72));
 console.log();
@@ -229,12 +236,13 @@ if (sectionAMissing.length === 0) {
 console.log();
 
 // ---------------------------------------------------------------------------
-// Section B: OLD vars vs NEW vars (prefix-shifted)
+// Section B: OLD vars vs NEW vars
+// Both surfaces share the --fsds- prefix, so the comparison is direct.
 // ---------------------------------------------------------------------------
 
 console.log("=".repeat(72));
-console.log("  Section B: OLD vars vs NEW vars (prefix-shifted)");
-console.log("  (--fsds-core-foo → --fsds-core-foo)");
+console.log("  Section B: OLD vars vs NEW vars");
+console.log("  (direct name comparison — both surfaces use --fsds- prefix)");
 console.log("=".repeat(72));
 console.log();
 
@@ -243,8 +251,7 @@ if (newVars === null) {
 } else {
   const sectionBMissing: string[] = [];
   for (const oldName of oldVars) {
-    const expectedNewName = "fsds-" + oldName;
-    if (!newVars.has(expectedNewName)) {
+    if (!newVars.has(oldName)) {
       sectionBMissing.push(oldName);
     }
   }
@@ -265,16 +272,14 @@ if (newVars === null) {
   console.log();
 
   if (sectionBMissing.length === 0) {
-    console.log(
-      "  All old vars have a prefix-shifted counterpart in the new surface.",
-    );
+    console.log("  All old vars have a counterpart in the new surface.");
   } else {
     const preview = sectionBMissing.slice(0, 20);
     console.log(
-      `  First ${preview.length} old vars with no new counterpart (of ${sectionBMissing.length}):`,
+      `  First ${preview.length} old vars missing from new (of ${sectionBMissing.length}):`,
     );
     for (const name of preview) {
-      console.log(`    --${name}  →  missing --fsds-${name}`);
+      console.log(`    --${name}`);
     }
     if (sectionBMissing.length > 20) {
       console.log(`    ... and ${sectionBMissing.length - 20} more`);
