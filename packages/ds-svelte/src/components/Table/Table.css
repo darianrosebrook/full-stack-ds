@@ -1,49 +1,35 @@
+@import "./Table.tokens.css";
+
 /* @generated:start styles */
 .table {
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  border-color: var(--fsds-semantic-color-border-light, #fceaea);
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-  gap: var(--fsds-core-spacing-size-02, 2px);
-  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
-  font-size: var(--fsds-semantic-typography-body-04, 12px);
-  line-height: var(--fsds-semantic-typography-line-height-normal, 1.5);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+  color: var(--fsds-table-color-textMuted);
+  border-color: var(--fsds-table-color-border);
+  background-color: var(--fsds-table-color-background-footer);
+  border-width: var(--fsds-table-border-width);
+  gap: var(--fsds-table-spacing-sortGap);
+  border-radius: var(--fsds-table-size-radius);
+  font-size: var(--fsds-table-text-sizeCaption);
+  line-height: var(--fsds-table-text-lineHeight);
+  font-weight: var(--fsds-table-text-weightFooter);
   /* --fsds-core-spacing-size-03: 4px; */
   /* --fsds-core-spacing-size-02: 2px; */
   /* --fsds-core-spacing-size-04: 8px; */
   /* --fsds-semantic-control-size-md-height: 32px; */
+
+  &:hover {
+    background-color: var(--fsds-table-color-background-hover);
+  }
+
+  &:focus-visible {
+    /* --fsds-core-shape-border-width-thick: 2px; */
+    /* --fsds-semantic-color-border-accent: #d9292b; */
+    /* --fsds-core-spacing-size-01: 1px; */
+  }
+
+  &[aria-selected="true"] {
+    background-color: var(--fsds-table-color-background-selected);
+  }
 }
-
-.table:hover {
-  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
-}
-
-.table:focus-visible {
-  /* --fsds-core-shape-border-width-thick: 2px; */
-  /* --fsds-semantic-color-border-accent: #d9292b; */
-  /* --fsds-core-spacing-size-01: 1px; */
-}
-
-.table[aria-selected="true"] {
-  background-color: var(--fsds-semantic-color-background-accent, #d9292b);
-}
-
-.table__container {}
-
-.table__caption {}
-
-.table__head {}
-
-.table__body {}
-
-.table__footer {}
-
-.table__row {}
-
-.table__header {}
-
-.table__cell {}
 /* @generated:end */
 
 /* @custom:start overrides */

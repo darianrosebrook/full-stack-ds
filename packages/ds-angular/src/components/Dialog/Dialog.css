@@ -1,61 +1,50 @@
+@import "./Dialog.tokens.css";
+
 /* @generated:start styles */
 .dialog {
-  background-color: var(--fsds-semantic-color-overlay-scrim, #00000066);
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  border-color: var(--fsds-semantic-color-border-subtle, #cecece);
-  border-radius: var(--fsds-core-shape-radius-large, 16px);
-  padding: var(--fsds-core-spacing-size-07, 24px);
-  gap: var(--fsds-core-spacing-size-03, 4px);
-  line-height: var(--fsds-semantic-typography-line-height-heading, 1);
-  /* --dialog-size-sm-width: ; */
-  /* --dialog-size-sm-maxWidth: ; */
-  /* --dialog-size-md-width: ; */
-  /* --dialog-size-md-maxWidth: ; */
-  /* --dialog-size-lg-width: ; */
-  /* --dialog-size-lg-maxWidth: ; */
-  /* --dialog-size-xl-width: ; */
-  /* --dialog-size-xl-maxWidth: ; */
-  /* --dialog-size-full-width: ; */
-  /* --dialog-size-full-height: ; */
+  background-color: var(--fsds-dialog-color-background-backdrop);
+  color: var(--fsds-dialog-color-foreground-secondary);
+  border-color: var(--fsds-dialog-color-border-default);
+  border-radius: var(--fsds-dialog-size-radius-default);
+  padding: var(--fsds-dialog-spacing-body-paddingRight);
+  gap: var(--fsds-dialog-spacing-footer-gap);
+  line-height: var(--fsds-dialog-typography-title-lineHeight);
+  /* --fsds-dialog-size-md-width: ; */
+  /* --fsds-dialog-size-md-maxWidth: ; */
   /* --fsds-core-spacing-size-08: 32px; */
   /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
   /* --fsds-semantic-typography-heading-04: 18px; */
   /* --fsds-semantic-typography-font-weight-bold: 700; */
+
+  &--sm {
+    /* --fsds-dialog-size-sm-width: ; */
+    /* --fsds-dialog-size-sm-maxWidth: ; */
+  }
+
+  &--md {
+    /* --fsds-dialog-size-md-width: ; */
+    /* --fsds-dialog-size-md-maxWidth: ; */
+  }
+
+  &--lg {
+    /* --fsds-dialog-size-lg-width: ; */
+    /* --fsds-dialog-size-lg-maxWidth: ; */
+  }
+
+  &--xl {
+    /* --fsds-dialog-size-xl-width: ; */
+    /* --fsds-dialog-size-xl-maxWidth: ; */
+  }
+
+  &--full {
+    /* --fsds-dialog-size-full-width: ; */
+    /* --fsds-dialog-size-full-height: ; */
+  }
+
+  &:hover {
+    background-color: var(--fsds-dialog-color-background-hover);
+  }
 }
-
-.dialog--sm {}
-
-.dialog--md {}
-
-.dialog--lg {}
-
-.dialog--xl {}
-
-.dialog--full {}
-
-.dialog:hover {
-  background-color: var(--fsds-semantic-color-background-hover, #cecece);
-}
-
-.dialog:focus-visible {}
-
-.dialog:active {}
-
-.dialog--leaving {}
-
-.dialog__backdrop {}
-
-.dialog__modal {}
-
-.dialog__header {}
-
-.dialog__title {}
-
-.dialog__body {}
-
-.dialog__footer {}
-
-.dialog__closeButton {}
 /* @generated:end */
 
 /* @custom:start overrides */

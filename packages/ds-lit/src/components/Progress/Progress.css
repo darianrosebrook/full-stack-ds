@@ -1,37 +1,19 @@
+@import "./Progress.tokens.css";
+
 /* @generated:start styles */
 .progress {
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  gap: var(--fsds-core-spacing-size-02, 2px);
-  transition-duration: var(--fsds-core-motion-duration-extra-long1, 1500ms);
+  color: var(--fsds-progress-color-text-default);
+  gap: var(--fsds-progress-spacing-gap);
+  transition-duration: var(--fsds-progress-motion-duration-indeterminate);
+
+  &__track {
+    background-color: var(--fsds-progress-color-track-background);
+  }
+
+  &__fill {
+    background-color: var(--fsds-progress-color-fill-info);
+  }
 }
-
-.progress--linear {}
-
-.progress--circular {}
-
-.progress--sm {}
-
-.progress--md {}
-
-.progress--lg {}
-
-.progress--info {}
-
-.progress--success {}
-
-.progress--warning {}
-
-.progress--danger {}
-
-.progress__track {
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-}
-
-.progress__fill {
-  background-color: var(--fsds-semantic-color-status-info, #0a65fe);
-}
-
-.progress__value {}
 /* @generated:end */
 
 /* @custom:start overrides */

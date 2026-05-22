@@ -1,51 +1,27 @@
+@import "./Switch.tokens.css";
+
 /* @generated:start styles */
 .switch {
-  --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
-  --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-  --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
-  --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
-  --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
-  --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
   background-color: var(--fsds-switch-color-thumb-background-default);
   width: var(--fsds-switch-size-md-track-width);
   height: var(--fsds-switch-size-md-track-height);
   border-radius: var(--fsds-switch-size-md-track-radius);
   transition-duration: var(--fsds-switch-motion-duration);
+
+  &--md {
+    width: var(--fsds-switch-size-md-track-width);
+    height: var(--fsds-switch-size-md-track-height);
+    border-radius: var(--fsds-switch-size-md-track-radius);
+  }
+
+  &:disabled {
+    background-color: var(--fsds-switch-color-track-background-disabled);
+  }
+
+  &:checked {
+    background-color: var(--fsds-switch-color-thumb-background-checked);
+  }
 }
-
-.switch--sm {}
-
-.switch--md {
-  --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
-  --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
-  --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
-  width: var(--fsds-switch-size-md-track-width);
-  height: var(--fsds-switch-size-md-track-height);
-  border-radius: var(--fsds-switch-size-md-track-radius);
-}
-
-.switch--lg {}
-
-.switch:hover {}
-
-.switch:focus-visible {}
-
-.switch:disabled {
-  --fsds-switch-color-track-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
-  background-color: var(--fsds-switch-color-track-background-disabled);
-}
-
-.switch:checked {
-  --fsds-switch-color-track-background-checked: var(--fsds-semantic-color-foreground-accent, #d9292b);
-  --fsds-switch-color-thumb-background-checked: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-  background-color: var(--fsds-switch-color-thumb-background-checked);
-}
-
-.switch__track {}
-
-.switch__thumb {}
-
-.switch__input {}
 /* @generated:end */
 
 /* @custom:start overrides */

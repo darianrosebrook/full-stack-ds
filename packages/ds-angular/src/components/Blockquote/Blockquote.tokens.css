@@ -1,0 +1,13 @@
+/* @generated:start tokens */
+.blockquote {
+  --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+  --fsds-blockquote-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+  --fsds-blockquote-size-padding-default: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-blockquote-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

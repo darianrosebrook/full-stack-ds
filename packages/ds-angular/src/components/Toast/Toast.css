@@ -1,9 +1,11 @@
+@import "./Toast.tokens.css";
+
 /* @generated:start styles */
 .toast {
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
-  box-shadow: var(--fsds-semantic-elevation-surface-raised, none);
-  padding: var(--fsds-core-spacing-size-05, 12px);
-  gap: var(--fsds-core-spacing-size-04, 8px);
+  border-radius: var(--fsds-toast-surface-radius);
+  box-shadow: var(--fsds-toast-surface-shadow);
+  padding: var(--fsds-toast-spacing-padding);
+  gap: var(--fsds-toast-spacing-stackGap);
   /* --fsds-semantic-color-background-secondary: #efefef; */
   /* --fsds-semantic-color-border-subtle: #cecece; */
   /* --fsds-semantic-color-foreground-primary: #141414; */
@@ -14,46 +16,10 @@
   /* --fsds-semantic-color-status-success: #487e1e; */
   /* --fsds-semantic-color-status-warning: #ac5c00; */
   /* --fsds-semantic-color-status-danger: #d9292b; */
-  /* --toast-size-maxWidth: ; */
+  /* --fsds-toast-size-maxWidth: ; */
   /* --fsds-core-motion-duration-short: 150ms; */
   /* --fsds-core-motion-duration-short: 150ms; */
 }
-
-.toast--info {}
-
-.toast--success {}
-
-.toast--warning {}
-
-.toast--error {}
-
-.toast--polite {}
-
-.toast--assertive {}
-
-.toast:hover {}
-
-.toast:focus-visible {}
-
-.toast--entering {}
-
-.toast--visible {}
-
-.toast--leaving {}
-
-.toast__viewport {}
-
-.toast__item {}
-
-.toast__title {}
-
-.toast__description {}
-
-.toast__row {}
-
-.toast__action {}
-
-.toast__close {}
 /* @generated:end */
 
 /* @custom:start overrides */

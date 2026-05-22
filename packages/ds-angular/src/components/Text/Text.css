@@ -1,86 +1,22 @@
+@import "./Text.tokens.css";
+
 /* @generated:start styles */
 .text {
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  line-height: var(--fsds-semantic-typography-line-height-body, 1.5);
+  color: var(--fsds-text-color-foreground-secondary);
+  line-height: var(--fsds-text-typography-lineHeight-body);
   /* --fsds-semantic-typography-font-weight-light: 300; */
   /* --fsds-semantic-typography-font-weight-regular: 400; */
   /* --fsds-semantic-typography-font-weight-medium: 500; */
   /* --fsds-semantic-typography-font-weight-bold: 700; */
+
+  &--error {
+    color: var(--fsds-text-color-foreground-danger);
+  }
+
+  &--success {
+    color: var(--fsds-text-color-foreground-success);
+  }
 }
-
-.text--display {}
-
-.text--headline {}
-
-.text--title {}
-
-.text--body {}
-
-.text--caption {}
-
-.text--overline {}
-
-.text--code {}
-
-.text--xs {}
-
-.text--sm {}
-
-.text--md {}
-
-.text--lg {}
-
-.text--xl {}
-
-.text--2xl {}
-
-.text--3xl {}
-
-.text--light {}
-
-.text--normal {}
-
-.text--medium {}
-
-.text--semibold {}
-
-.text--bold {}
-
-.text--left {}
-
-.text--center {}
-
-.text--right {}
-
-.text--justify {}
-
-.text--none {}
-
-.text--uppercase {}
-
-.text--lowercase {}
-
-.text--capitalize {}
-
-.text--error {
-  color: var(--fsds-semantic-color-foreground-danger, #d9292b);
-}
-
-.text--success {
-  color: var(--fsds-semantic-color-foreground-success, #487e1e);
-}
-
-.text__headline {}
-
-.text__title {}
-
-.text__body {}
-
-.text__caption {}
-
-.text__overline {}
-
-.text__code {}
 /* @generated:end */
 
 /* @custom:start overrides */

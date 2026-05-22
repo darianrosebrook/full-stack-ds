@@ -1,0 +1,16 @@
+/* @generated:start tokens */
+.badge {
+  --fsds-badge-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+  --fsds-badge-color-background-info: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+  --fsds-badge-color-background-success: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+  --fsds-badge-color-background-warning: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+  --fsds-badge-color-background-danger: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+  --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-badge-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+  --fsds-badge-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

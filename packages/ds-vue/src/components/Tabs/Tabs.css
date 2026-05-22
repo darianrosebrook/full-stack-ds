@@ -1,38 +1,24 @@
+@import "./Tabs.tokens.css";
+
 /* @generated:start styles */
 .tabs {
-  gap: var(--fsds-core-spacing-size-06, 16px);
-  padding: var(--fsds-core-spacing-size-04, 8px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  gap: var(--fsds-tabs-spacing-panelGap);
+  padding: var(--fsds-tabs-spacing-padding);
+  border-radius: var(--fsds-tabs-shape-radius);
   /* --fsds-semantic-color-foreground-primary: #141414; */
   /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
   /* --fsds-semantic-color-border-accent: #d9292b; */
   /* --fsds-core-motion-duration-short: 150ms; */
+
+  &:hover {
+    /* --fsds-semantic-color-background-hover: #cecece; */
+    /* --fsds-semantic-color-foreground-primary: #141414; */
+  }
+
+  &:focus-visible {
+    /* --fsds-semantic-color-border-accent: #d9292b; */
+  }
 }
-
-.tabs--horizontal {}
-
-.tabs--vertical {}
-
-.tabs--automatic {}
-
-.tabs--manual {}
-
-.tabs:hover {
-  /* --fsds-semantic-color-background-hover: #cecece; */
-  /* --fsds-semantic-color-foreground-primary: #141414; */
-}
-
-.tabs:focus-visible {
-  /* --fsds-semantic-color-border-accent: #d9292b; */
-}
-
-.tabs__list {}
-
-.tabs__tab {}
-
-.tabs__indicator {}
-
-.tabs__panel {}
 /* @generated:end */
 
 /* @custom:start overrides */

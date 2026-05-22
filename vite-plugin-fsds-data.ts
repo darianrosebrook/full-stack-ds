@@ -95,9 +95,29 @@ async function gatherComponentSources(rootDir: string, componentName: string): P
       if (entry.isDirectory()) continue;
       const filename = entry.name;
       if (filename.endsWith(".css")) {
+        // Inline the .tokens.css sibling into <Component>.css so the
+        // preview iframe sees both halves of the two-hop indirection
+        // (TOKENS-WORKSTREAM-STEP-06A-III). The .css file has an
+        // `@import "./<Component>.tokens.css";` line at the top; the
+        // iframe inlines CSS text without a base URL, so that import
+        // would fail. Resolving it here gives the iframe a single
+        // self-contained stylesheet.
         if (filename === `${componentName}.css`) {
           const file = await tryFile(compDir, filename);
-          if (file) slot.css = file;
+          if (file) {
+            const tokens = await tryFile(compDir, `${componentName}.tokens.css`);
+            if (tokens) {
+              slot.css = {
+                ...file,
+                code: `${tokens.code}\n${file.code.replace(
+                  new RegExp(`@import\\s+["']\\./${componentName}\\.tokens\\.css["'];?\\s*\\n?`),
+                  "",
+                )}`,
+              };
+            } else {
+              slot.css = file;
+            }
+          }
         }
         continue;
       }

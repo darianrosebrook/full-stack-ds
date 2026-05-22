@@ -9,7 +9,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { emitCss } from "../../css.js";
+import { emitCss, emitTokensCss } from "../../css.js";
 import type {
   EmitOptions,
   FrameworkEmitter,
@@ -40,6 +40,7 @@ export function createReactEmitter(
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       const tsx = generateReactComponentSource(ir, stackImportRelative);
       const css = emitCss(ir);
+      const tokensCss = emitTokensCss(ir);
       return [
         {
           relativePath: `${ir.name}/${ir.name}.tsx`,
@@ -49,6 +50,13 @@ export function createReactEmitter(
         {
           relativePath: `${ir.name}/${ir.name}.css`,
           contents: css,
+          preservable: true,
+        },
+        {
+          // Two-hop indirection slot declarations. Imported by .css
+          // at the top of the file; brands/themes override slots here.
+          relativePath: `${ir.name}/${ir.name}.tokens.css`,
+          contents: tokensCss,
           preservable: true,
         },
       ];

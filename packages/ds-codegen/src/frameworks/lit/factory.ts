@@ -11,7 +11,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { emitCss } from "../../css.js";
+import { emitCss, emitTokensCss } from "../../css.js";
 import type {
   EmitOptions,
   FrameworkEmitter,
@@ -36,16 +36,26 @@ export function createLitEmitter(): FrameworkEmitter {
       // F-2C-3: Presence-surface family — emits a single component
       // file containing three LitElement classes (root, Trigger,
       // Content) plus customElements.define calls.
+      // Lit-specific note: the `static styles = css`…`` template literal
+      // in component-source does NOT resolve @import, so the .css file
+      // is currently emit-only (consumers must adopt it via a CSSStyleSheet
+      // construction step we haven't built). The .tokens.css ships alongside
+      // for consistency with React/Vue/Svelte/Angular; both become consumable
+      // when the Lit import-resolution open question is resolved (plan-doc
+      // 6b "Open question — Lit's @import resolution").
       if (isSurfaceComponent(ir)) {
         const surfaceFiles = generateLitSurfaceFiles(ir);
         const css = emitCss(ir);
+        const tokensCss = emitTokensCss(ir);
         return [
           { relativePath: `${ir.name}/${ir.name}.ts`, contents: surfaceFiles.componentFile, preservable: true },
           { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.tokens.css`, contents: tokensCss, preservable: true },
         ];
       }
       const source = generateLitComponentSource(ir);
       const css = emitCss(ir);
+      const tokensCss = emitTokensCss(ir);
       return [
         {
           relativePath: `${ir.name}/${ir.name}.ts`,
@@ -55,6 +65,11 @@ export function createLitEmitter(): FrameworkEmitter {
         {
           relativePath: `${ir.name}/${ir.name}.css`,
           contents: css,
+          preservable: true,
+        },
+        {
+          relativePath: `${ir.name}/${ir.name}.tokens.css`,
+          contents: tokensCss,
           preservable: true,
         },
       ];

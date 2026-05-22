@@ -1,44 +1,26 @@
+@import "./Chip.tokens.css";
+
 /* @generated:start styles */
 .chip {
-  background-color: var(--fsds-semantic-color-action-background-secondary-default, #fafafa);
-  color: var(--fsds-semantic-color-action-foreground-secondary-default, #141414);
-  border-color: var(--fsds-semantic-color-action-border-secondary-default, #aeaeae);
-  padding: var(--fsds-core-spacing-size-02, 2px);
-  gap: var(--fsds-core-spacing-size-02, 2px);
-  border-radius: var(--fsds-core-shape-radius-full, 9999px);
-  font-size: var(--fsds-semantic-typography-body-04, 12px);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
-  transition-duration: var(--fsds-core-motion-duration-short, 150ms);
+  background-color: var(--fsds-chip-color-background-default);
+  color: var(--fsds-chip-color-foreground-default);
+  border-color: var(--fsds-chip-color-border-default);
+  padding: var(--fsds-chip-size-padding-vertical);
+  gap: var(--fsds-chip-size-gap);
+  border-radius: var(--fsds-chip-size-radius);
+  font-size: var(--fsds-chip-text-size);
+  font-weight: var(--fsds-chip-text-weight);
+  transition-duration: var(--fsds-chip-motion-duration-fast);
   /* --fsds-core-shape-border-width-hairline: 1px; */
+
+  &:hover {
+    background-color: var(--fsds-chip-color-background-hover);
+  }
+
+  &:active {
+    background-color: var(--fsds-chip-color-background-active);
+  }
 }
-
-.chip--default {}
-
-.chip--selected {}
-
-.chip--dismissible {}
-
-.chip--small {}
-
-.chip--medium {}
-
-.chip--large {}
-
-.chip:hover {
-  background-color: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
-}
-
-.chip:focus-visible {}
-
-.chip:active {
-  background-color: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
-}
-
-.chip:disabled {}
-
-.chip__icon {}
-
-.chip__text {}
 /* @generated:end */
 
 /* @custom:start overrides */

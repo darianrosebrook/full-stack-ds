@@ -1,0 +1,13 @@
+/* @generated:start tokens */
+.field {
+  --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
+  --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

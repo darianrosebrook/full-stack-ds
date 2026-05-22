@@ -1,54 +1,24 @@
+@import "./Card.tokens.css";
+
 /* @generated:start styles */
 .card {
-  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
-  border-color: var(--fsds-semantic-color-border-light, #fceaea);
-  color: var(--fsds-semantic-color-foreground-link, #d9292b);
-  padding: var(--fsds-core-spacing-size-06, 16px);
-  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
-  gap: var(--fsds-core-spacing-size-03, 4px);
-  line-height: var(--fsds-semantic-typography-line-height-normal, 1.5);
+  background-color: var(--fsds-card-color-background-default);
+  border-color: var(--fsds-card-color-border-default);
+  color: var(--fsds-card-color-foreground-link);
+  padding: var(--fsds-card-size-padding-default);
+  border-radius: var(--fsds-card-size-radius-default);
+  gap: var(--fsds-card-size-gap-default);
+  line-height: var(--fsds-card-typography-lineHeight-normal);
+
+  &:hover {
+    background-color: var(--fsds-card-color-background-hover);
+  }
+
+  &__badge {
+    background-color: var(--fsds-card-color-badge-accent-background);
+    color: var(--fsds-card-color-badge-accent-foreground);
+  }
 }
-
-.card--completed {}
-
-.card--in-progress {}
-
-.card--planned {}
-
-.card--deprecated {}
-
-.card--category {}
-
-.card--complexity {}
-
-.card:hover {
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-}
-
-.card:focus-visible {}
-
-.card:active {}
-
-.card__header {}
-
-.card__media {}
-
-.card__content {}
-
-.card__footer {}
-
-.card__actions {}
-
-.card__badge {
-  background-color: var(--fsds-semantic-color-background-accent, #d9292b);
-  color: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-}
-
-.card__description {}
-
-.card__link {}
-
-.card__note {}
 /* @generated:end */
 
 /* @custom:start overrides */

@@ -1,0 +1,28 @@
+/* @generated:start tokens */
+.table {
+  --fsds-table-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-table-color-textMuted: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-table-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+  --fsds-table-color-background-footer: var(--fsds-semantic-color-background-secondary, #efefef);
+  --fsds-table-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  --fsds-table-spacing-sortGap: var(--fsds-core-spacing-size-02, 2px);
+  --fsds-table-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-table-text-size: var(--fsds-semantic-typography-body-03, 14px);
+  --fsds-table-text-lineHeight: var(--fsds-semantic-typography-line-height-normal, 1.5);
+  --fsds-table-text-sizeCaption: var(--fsds-semantic-typography-body-04, 12px);
+  --fsds-table-text-weightHead: var(--fsds-semantic-typography-font-weight-bold, 700);
+  --fsds-table-text-weightFooter: var(--fsds-semantic-typography-font-weight-medium, 500);
+
+  &:hover {
+    --fsds-table-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+  }
+
+  &[aria-selected="true"] {
+    --fsds-table-color-background-selected: var(--fsds-semantic-color-background-accent, #d9292b);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

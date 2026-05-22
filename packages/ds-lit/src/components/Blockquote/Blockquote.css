@@ -1,26 +1,16 @@
+@import "./Blockquote.tokens.css";
+
 /* @generated:start styles */
 .blockquote {
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
-  padding: var(--fsds-core-spacing-size-05, 12px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  color: var(--fsds-blockquote-color-foreground-primary);
+  background-color: var(--fsds-blockquote-color-background-default);
+  border-color: var(--fsds-blockquote-color-border-default);
+  padding: var(--fsds-blockquote-size-padding-default);
+  border-radius: var(--fsds-blockquote-size-radius-default);
   /* --fsds-semantic-typography-font-style-italic: italic; */
   /* --fsds-semantic-typography-font-weight-medium: 500; */
   /* --fsds-core-shape-border-width-thick: 2px; */
 }
-
-.blockquote--default {}
-
-.blockquote--bordered {}
-
-.blockquote--highlighted {}
-
-.blockquote--sm {}
-
-.blockquote--md {}
-
-.blockquote--lg {}
 /* @generated:end */
 
 /* @custom:start overrides */

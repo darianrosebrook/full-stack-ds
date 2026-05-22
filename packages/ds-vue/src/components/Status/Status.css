@@ -1,27 +1,15 @@
+@import "./Status.tokens.css";
+
 /* @generated:start styles */
 .status {
-  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
-  color: var(--fsds-semantic-color-foreground-primary, #141414);
-  border-color: var(--fsds-semantic-color-border-primary, #f29495);
-  border-radius: var(--fsds-core-shape-radius-full, 9999px);
-  padding: var(--fsds-core-spacing-size-04, 8px);
-  line-height: var(--fsds-semantic-typography-line-height-collapse, 1);
+  background-color: var(--fsds-status-color-background-default);
+  color: var(--fsds-status-color-foreground-primary);
+  border-color: var(--fsds-status-color-border-default);
+  border-radius: var(--fsds-status-size-radius-default);
+  padding: var(--fsds-status-size-padding-default);
+  line-height: var(--fsds-status-typography-lineHeight);
   /* --fsds-core-shape-border-width-hairline: 1px; */
 }
-
-.status--info {}
-
-.status--success {}
-
-.status--warning {}
-
-.status--danger {}
-
-.status--error {}
-
-.status__icon {}
-
-.status__label {}
 /* @generated:end */
 
 /* @custom:start overrides */

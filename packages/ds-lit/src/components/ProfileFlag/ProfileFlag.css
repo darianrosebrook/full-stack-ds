@@ -1,15 +1,17 @@
+@import "./ProfileFlag.tokens.css";
+
 /* @generated:start styles */
 .profile-flag {
-  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
-  border-color: var(--fsds-semantic-color-border-light, #fceaea);
-  color: var(--fsds-semantic-color-foreground-primary, #141414);
-  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
-  gap: var(--fsds-core-spacing-size-03, 4px);
-  padding: var(--fsds-core-spacing-size-06, 16px);
-}
+  background-color: var(--fsds-profileFlag-color-background-default);
+  border-color: var(--fsds-profileFlag-color-border-default);
+  color: var(--fsds-profileFlag-color-foreground-primary);
+  border-radius: var(--fsds-profileFlag-size-radius-default);
+  gap: var(--fsds-profileFlag-spacing-gap-default);
+  padding: var(--fsds-profileFlag-spacing-padding-right);
 
-.profile-flag:hover {
-  border-color: var(--fsds-semantic-color-border-bold, #8f8f8f);
+  &:hover {
+    border-color: var(--fsds-profileFlag-color-border-hover);
+  }
 }
 /* @generated:end */
 

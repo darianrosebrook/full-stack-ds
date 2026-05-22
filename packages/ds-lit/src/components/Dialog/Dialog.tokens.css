@@ -1,0 +1,22 @@
+/* @generated:start tokens */
+.dialog {
+  --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+  --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
+  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+  --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+  --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+
+  &:hover {
+    --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

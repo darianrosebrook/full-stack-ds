@@ -1,13 +1,13 @@
+@import "./Shuttle.tokens.css";
+
 /* @generated:start styles */
 .shuttle {
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
-  padding: var(--fsds-core-spacing-size-07, 24px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  background-color: var(--fsds-shuttle-color-background-default);
+  color: var(--fsds-shuttle-color-foreground-secondary);
+  border-color: var(--fsds-shuttle-color-border-accent);
+  padding: var(--fsds-shuttle-size-padding-default);
+  border-radius: var(--fsds-shuttle-size-radius-default);
 }
-
-.shuttle__item {}
 /* @generated:end */
 
 /* @custom:start overrides */

@@ -1,45 +1,15 @@
+@import "./Skeleton.tokens.css";
+
 /* @generated:start styles */
 .skeleton {
-  border-radius: var(--fsds-core-shape-radius-04, 16px);
-  gap: var(--fsds-core-spacing-size-07, 24px);
-  transition-duration: var(--fsds-core-motion-duration-long, 400ms);
-  transition-timing-function: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  border-radius: var(--fsds-skeleton-radius-lg);
+  gap: var(--fsds-skeleton-gap-lg);
+  transition-duration: var(--fsds-skeleton-anim-duration);
+  transition-timing-function: var(--fsds-skeleton-anim-easing);
   /* --fsds-semantic-color-background-secondary: #efefef; */
   /* --fsds-semantic-color-background-highlight: #f7c1c2; */
   /* --fsds-semantic-color-background-secondary: #efefef; */
 }
-
-.skeleton--block {}
-
-.skeleton--text {}
-
-.skeleton--avatar {}
-
-.skeleton--media {}
-
-.skeleton--dataviz {}
-
-.skeleton--actions {}
-
-.skeleton--shimmer {}
-
-.skeleton--wipe {}
-
-.skeleton--pulse {}
-
-.skeleton--none {}
-
-.skeleton--compact {}
-
-.skeleton--regular {}
-
-.skeleton--spacious {}
-
-.skeleton__stack {}
-
-.skeleton__row {}
-
-.skeleton__shape {}
 /* @generated:end */
 
 /* @custom:start overrides */

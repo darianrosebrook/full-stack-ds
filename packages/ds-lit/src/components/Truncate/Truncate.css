@@ -1,22 +1,16 @@
+@import "./Truncate.tokens.css";
+
 /* @generated:start styles */
 .truncate {
-  color: var(--fsds-semantic-color-foreground-link, #d9292b);
-  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  color: var(--fsds-truncate-color-foreground-link);
+  background-color: var(--fsds-truncate-color-background-primary);
   /* --fsds-semantic-typography-font-weight-medium: 500; */
   /* --fsds-core-spacing-size-02: 2px; */
+
+  &:hover {
+    color: var(--fsds-truncate-color-foreground-linkHover);
+  }
 }
-
-.truncate:hover {
-  color: var(--fsds-semantic-color-foreground-link-hover, #ae0001);
-}
-
-.truncate:focus-visible {}
-
-.truncate[aria-expanded="true"] {}
-
-.truncate__content {}
-
-.truncate__toggle {}
 /* @generated:end */
 
 /* @custom:start overrides */

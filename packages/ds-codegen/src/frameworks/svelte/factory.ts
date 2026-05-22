@@ -14,7 +14,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { emitCss } from "../../css.js";
+import { emitCss, emitTokensCss } from "../../css.js";
 import type {
   EmitOptions,
   FrameworkEmitter,
@@ -47,15 +47,18 @@ export function createSvelteEmitter(): FrameworkEmitter {
       if (isSurfaceComponent(ir)) {
         const surfaceFiles = generateSvelteSurfaceFiles(ir);
         const css = emitCss(ir);
+        const tokensCss = emitTokensCss(ir);
         return [
           { relativePath: `${ir.name}/${ir.name}.svelte`, contents: surfaceFiles.rootSfc, preservable: true },
           { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.tokens.css`, contents: tokensCss, preservable: true },
           { relativePath: `${ir.name}/${ir.name}Trigger.svelte`, contents: surfaceFiles.triggerSfc, preservable: true },
           { relativePath: `${ir.name}/${ir.name}Content.svelte`, contents: surfaceFiles.contentSfc, preservable: true },
         ];
       }
       const sfc = generateSvelteComponentSource(ir);
       const css = emitCss(ir);
+      const tokensCss = emitTokensCss(ir);
       const files: GeneratedFile[] = [
         {
           relativePath: `${ir.name}/${ir.name}.svelte`,
@@ -65,6 +68,11 @@ export function createSvelteEmitter(): FrameworkEmitter {
         {
           relativePath: `${ir.name}/${ir.name}.css`,
           contents: css,
+          preservable: true,
+        },
+        {
+          relativePath: `${ir.name}/${ir.name}.tokens.css`,
+          contents: tokensCss,
           preservable: true,
         },
       ];

@@ -1,0 +1,25 @@
+/* @generated:start tokens */
+.toggle-switch {
+  --fsds-toggleSwitch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+  --fsds-toggleSwitch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-toggleSwitch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+  --fsds-toggleSwitch-border-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+  --fsds-toggleSwitch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
+
+  &:hover {
+    --fsds-toggleSwitch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+  }
+
+  &:disabled {
+    --fsds-toggleSwitch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+  }
+
+  &:checked {
+    --fsds-toggleSwitch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

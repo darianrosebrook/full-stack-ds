@@ -1,28 +1,18 @@
+@import "./TextField.tokens.css";
+
 /* @generated:start styles */
 .text-field {
-  gap: var(--fsds-core-spacing-size-04, 8px);
-  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
-  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  gap: var(--fsds-textfield-spacing-gap);
+  border-width: var(--fsds-textfield-border-width);
+  border-radius: var(--fsds-textfield-border-radius);
+  color: var(--fsds-textfield-color-input-text);
   /* --fsds-semantic-color-foreground-tertiary: #717171; */
+
+  &--invalid {
+    border-color: var(--fsds-textfield-color-input-borderError);
+    color: var(--fsds-textfield-color-error);
+  }
 }
-
-.text-field:focus-visible {}
-
-.text-field:disabled {}
-
-.text-field--invalid {
-  border-color: var(--fsds-semantic-color-status-danger, #d9292b);
-  color: var(--fsds-semantic-color-foreground-danger, #d9292b);
-}
-
-.text-field__label {}
-
-.text-field__field {}
-
-.text-field__description {}
-
-.text-field__error {}
 /* @generated:end */
 
 /* @custom:start overrides */

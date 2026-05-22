@@ -1,23 +1,21 @@
+@import "./Input.tokens.css";
+
 /* @generated:start styles */
 .input {
-  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
-  color: var(--fsds-semantic-color-foreground-primary, #141414);
-  border-color: var(--fsds-semantic-color-border-default, #aeaeae);
-  min-height: var(--fsds-semantic-control-size-lg-height, 48px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
-  padding: var(--fsds-core-spacing-size-05, 12px);
-}
+  background-color: var(--fsds-input-color-bg-default);
+  color: var(--fsds-input-color-text-default);
+  border-color: var(--fsds-input-color-border-default);
+  min-height: var(--fsds-input-size-height-default);
+  border-radius: var(--fsds-input-size-radius-default);
+  padding: var(--fsds-input-space-inline-default);
 
-.input:hover {}
+  &:focus-visible {
+    border-color: var(--fsds-input-color-focus-default);
+  }
 
-.input:focus-visible {
-  border-color: var(--fsds-semantic-color-border-focus, #d9292b);
-}
-
-.input:disabled {}
-
-.input--invalid {
-  border-color: var(--fsds-semantic-color-border-danger, #ae0001);
+  &--invalid {
+    border-color: var(--fsds-input-color-invalid-default);
+  }
 }
 /* @generated:end */
 

@@ -16,7 +16,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { emitCss } from "../../css.js";
+import { emitCss, emitTokensCss } from "../../css.js";
 import type {
   EmitOptions,
   FrameworkEmitter,
@@ -45,9 +45,11 @@ export function createAngularEmitter(): FrameworkEmitter {
       if (isSurfaceComponent(ir)) {
         const surfaceFiles = generateAngularSurfaceFiles(ir);
         const css = emitCss(ir);
+        const tokensCss = emitTokensCss(ir);
         return [
           { relativePath: `${ir.name}/${ir.name}.component.ts`, contents: surfaceFiles.rootComponent, preservable: true },
           { relativePath: `${ir.name}/${ir.name}.css`, contents: css, preservable: true },
+          { relativePath: `${ir.name}/${ir.name}.tokens.css`, contents: tokensCss, preservable: true },
           { relativePath: `${ir.name}/${ir.name}Trigger.component.ts`, contents: surfaceFiles.triggerComponent, preservable: true },
           { relativePath: `${ir.name}/${ir.name}Trigger.directive.ts`, contents: surfaceFiles.triggerDirective, preservable: true },
           { relativePath: `${ir.name}/${ir.name}Content.component.ts`, contents: surfaceFiles.contentComponent, preservable: true },
@@ -55,6 +57,7 @@ export function createAngularEmitter(): FrameworkEmitter {
       }
       const component = generateAngularComponentSource(ir);
       const css = emitCss(ir);
+      const tokensCss = emitTokensCss(ir);
       const files: GeneratedFile[] = [
         {
           relativePath: `${ir.name}/${ir.name}.component.ts`,
@@ -64,6 +67,11 @@ export function createAngularEmitter(): FrameworkEmitter {
         {
           relativePath: `${ir.name}/${ir.name}.css`,
           contents: css,
+          preservable: true,
+        },
+        {
+          relativePath: `${ir.name}/${ir.name}.tokens.css`,
+          contents: tokensCss,
           preservable: true,
         },
       ];

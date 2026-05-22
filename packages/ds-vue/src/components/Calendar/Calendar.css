@@ -1,42 +1,18 @@
+@import "./Calendar.tokens.css";
+
 /* @generated:start styles */
 .calendar {
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
-  padding: var(--fsds-core-spacing-size-07, 24px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  background-color: var(--fsds-calendar-color-background-default);
+  color: var(--fsds-calendar-color-foreground-secondary);
+  border-color: var(--fsds-calendar-color-border-accent);
+  padding: var(--fsds-calendar-size-padding-default);
+  border-radius: var(--fsds-calendar-size-radius-default);
   /* --fsds-semantic-elevation-default: none; */
+
+  &:hover {
+    /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
+  }
 }
-
-.calendar--single {}
-
-.calendar--range {}
-
-.calendar:hover {
-  /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
-}
-
-.calendar:focus-visible {}
-
-.calendar[aria-selected="true"] {}
-
-.calendar:disabled {}
-
-.calendar--today {}
-
-.calendar--outsideMonth {}
-
-.calendar__header {}
-
-.calendar__nav {}
-
-.calendar__grid {}
-
-.calendar__cell {}
-
-.calendar__day {}
-
-.calendar__caption {}
 /* @generated:end */
 
 /* @custom:start overrides */

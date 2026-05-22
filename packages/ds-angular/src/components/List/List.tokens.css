@@ -1,0 +1,11 @@
+/* @generated:start tokens */
+.list {
+  --fsds-list-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-list-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-list-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

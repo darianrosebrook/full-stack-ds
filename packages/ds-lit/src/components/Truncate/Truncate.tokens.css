@@ -1,0 +1,14 @@
+/* @generated:start tokens */
+.truncate {
+  --fsds-truncate-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
+  --fsds-truncate-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
+
+  &:hover {
+    --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-color-foreground-link-hover, #ae0001);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

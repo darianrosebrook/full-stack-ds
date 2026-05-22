@@ -1,0 +1,27 @@
+/* @generated:start tokens */
+.accordion {
+  --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+  --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-accordion-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  --fsds-accordion-border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  --fsds-accordion-border-radius: var(--fsds-core-shape-radius-small, 4px);
+  --fsds-accordion-spacing-gap: var(--fsds-core-spacing-size-07, 24px);
+  --fsds-accordion-spacing-paddingX: var(--fsds-core-spacing-size-00, 0px);
+  --fsds-accordion-spacing-paddingY: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-accordion-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+  --fsds-accordion-text-size: var(--fsds-semantic-typography-body-02, 16px);
+  --fsds-accordion-text-lineHeight: var(--fsds-semantic-typography-line-height-normal, 1.5);
+  --fsds-accordion-text-sizeContent: var(--fsds-semantic-typography-body-03, 14px);
+  --fsds-accordion-text-lineHeightContent: var(--fsds-semantic-typography-line-height-loose, 1.8);
+  --fsds-accordion-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+
+  &:hover {
+    --fsds-accordion-color-textHover: var(--fsds-semantic-interaction-text-hover, #555555);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

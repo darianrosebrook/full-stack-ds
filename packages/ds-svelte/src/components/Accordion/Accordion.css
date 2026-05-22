@@ -1,50 +1,28 @@
+@import "./Accordion.tokens.css";
+
 /* @generated:start styles */
 .accordion {
-  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-  border-color: var(--fsds-semantic-color-border-light, #fceaea);
-  border-radius: var(--fsds-core-shape-radius-small, 4px);
-  gap: var(--fsds-core-spacing-size-07, 24px);
-  padding: var(--fsds-core-spacing-size-04, 8px);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
-  font-size: var(--fsds-semantic-typography-body-03, 14px);
-  line-height: var(--fsds-semantic-typography-line-height-loose, 1.8);
-  opacity: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+  background-color: var(--fsds-accordion-color-background-hover);
+  color: var(--fsds-accordion-color-textSecondary);
+  border-width: var(--fsds-accordion-border-width);
+  border-color: var(--fsds-accordion-border-color);
+  border-radius: var(--fsds-accordion-border-radius);
+  gap: var(--fsds-accordion-spacing-gap);
+  padding: var(--fsds-accordion-spacing-paddingY);
+  font-weight: var(--fsds-accordion-text-weight);
+  font-size: var(--fsds-accordion-text-sizeContent);
+  line-height: var(--fsds-accordion-text-lineHeightContent);
+  opacity: var(--fsds-accordion-opacity-disabled);
   /* --fsds-semantic-color-foreground-tertiary: #717171; */
   /* --fsds-core-spacing-size-04: 8px; */
   /* --fsds-core-shape-border-width-thick: 2px; */
   /* --fsds-semantic-color-border-accent: #d9292b; */
   /* --fsds-core-spacing-size-01: 1px; */
+
+  &:hover {
+    color: var(--fsds-accordion-color-textHover);
+  }
 }
-
-.accordion--single {}
-
-.accordion--multiple {}
-
-.accordion:hover {
-  color: var(--fsds-semantic-interaction-text-hover, #555555);
-}
-
-.accordion:focus-visible {}
-
-.accordion:disabled {}
-
-.accordion--open {}
-
-.accordion--closed {}
-
-.accordion__item {}
-
-.accordion__trigger {}
-
-.accordion__header {}
-
-.accordion__chevron {}
-
-.accordion__content {}
-
-.accordion__contentInner {}
 /* @generated:end */
 
 /* @custom:start overrides */

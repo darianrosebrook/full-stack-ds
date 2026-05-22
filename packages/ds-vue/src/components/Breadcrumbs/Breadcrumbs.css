@@ -1,29 +1,19 @@
+@import "./Breadcrumbs.tokens.css";
+
 /* @generated:start styles */
 .breadcrumbs {
-  color: var(--fsds-semantic-color-foreground-tertiary, #717171);
-  background-color: var(--fsds-semantic-color-background-elevated, #ffffff);
-  border-color: var(--fsds-semantic-color-border-subtle, #cecece);
-  line-height: var(--fsds-semantic-typography-line-height-collapse, 1);
-  border-radius: var(--fsds-core-shape-radius-small, 4px);
-  gap: var(--fsds-core-spacing-size-03, 4px);
-  padding: var(--fsds-core-spacing-size-03, 4px);
+  color: var(--fsds-breadcrumbs-color-foreground-tertiary);
+  background-color: var(--fsds-breadcrumbs-color-background-elevated);
+  border-color: var(--fsds-breadcrumbs-color-border-subtle);
+  line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
+  border-radius: var(--fsds-breadcrumbs-shape-radius-small);
+  gap: var(--fsds-breadcrumbs-spacing-gap-small);
+  padding: var(--fsds-breadcrumbs-spacing-padding-small);
+
+  &:focus-visible {
+    outline-color: var(--fsds-breadcrumbs-color-focus);
+  }
 }
-
-.breadcrumbs:hover {}
-
-.breadcrumbs:focus-visible {
-  outline-color: var(--fsds-semantic-color-border-accent, #d9292b);
-}
-
-.breadcrumbs__list {}
-
-.breadcrumbs__link {}
-
-.breadcrumbs__current {}
-
-.breadcrumbs__separator {}
-
-.breadcrumbs__overflow {}
 /* @generated:end */
 
 /* @custom:start overrides */

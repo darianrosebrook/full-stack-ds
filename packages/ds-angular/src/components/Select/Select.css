@@ -1,73 +1,53 @@
+@import "./Select.tokens.css";
+
 /* @generated:start styles */
 .select {
-  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
-  color: var(--fsds-semantic-color-foreground-primary, #141414);
-  border-color: var(--fsds-semantic-color-border-primary, #f29495);
-  padding: var(--fsds-core-spacing-size-03, 4px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
-  font-size: var(--fsds-semantic-typography-body-02, 16px);
-  line-height: var(--fsds-semantic-typography-line-height-body, 1.5);
+  background-color: var(--fsds-select-color-background-default);
+  color: var(--fsds-select-color-foreground-default);
+  border-color: var(--fsds-select-color-border-default);
+  padding: var(--fsds-select-size-padding-default);
+  border-radius: var(--fsds-select-size-radius-default);
+  font-size: var(--fsds-select-font-size-default);
+  line-height: var(--fsds-select-font-lineHeight-default);
   /* --fsds-semantic-color-foreground-secondary: #555555; */
   /* --fsds-semantic-color-foreground-placeholder: #8f8f8f; */
   /* --fsds-core-shape-border-width-hairline: 1px; */
-  /* --fsds-semantic-control-size-sm-height: 24px; */
   /* --fsds-semantic-control-size-md-height: 32px; */
-  /* --fsds-semantic-control-size-lg-height: 48px; */
+
+  &--sm {
+    /* --fsds-semantic-control-size-sm-height: 24px; */
+  }
+
+  &--md {
+    /* --fsds-semantic-control-size-md-height: 32px; */
+  }
+
+  &--lg {
+    /* --fsds-semantic-control-size-lg-height: 48px; */
+  }
+
+  &:hover {
+    background-color: var(--fsds-select-color-background-hover);
+    color: var(--fsds-select-color-foreground-hover);
+    border-color: var(--fsds-select-color-border-hover);
+  }
+
+  &:disabled {
+    background-color: var(--fsds-select-color-background-disabled);
+    color: var(--fsds-select-color-foreground-disabled);
+    border-color: var(--fsds-select-color-border-disabled);
+  }
+
+  &--open {
+    border-color: var(--fsds-select-color-border-isOpen);
+    /* --fsds-semantic-color-foreground-accent: #d9292b; */
+  }
+
+  &[aria-selected="true"] {
+    background-color: var(--fsds-select-color-background-selected);
+    color: var(--fsds-select-color-foreground-selected);
+  }
 }
-
-.select--sm {}
-
-.select--md {}
-
-.select--lg {}
-
-.select--bottom {}
-
-.select--top {}
-
-.select--auto {}
-
-.select:hover {
-  background-color: var(--fsds-semantic-color-background-hover, #cecece);
-  color: var(--fsds-semantic-color-foreground-hover, #3a3a3a);
-  border-color: var(--fsds-semantic-color-border-bold, #8f8f8f);
-}
-
-.select:focus-visible {}
-
-.select:active {}
-
-.select:disabled {
-  background-color: var(--fsds-semantic-color-background-disabled, #cecece);
-  color: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-  border-color: var(--fsds-semantic-color-border-disabled, #cecece);
-}
-
-.select--open {
-  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
-  /* --fsds-semantic-color-foreground-accent: #d9292b; */
-}
-
-.select--closed {}
-
-.select[aria-selected="true"] {
-  background-color: var(--fsds-semantic-color-background-highlight, #f7c1c2);
-  color: var(--fsds-semantic-color-foreground-accent, #d9292b);
-}
-
-.select__trigger {}
-
-.select__content {}
-
-.select__search {}
-
-.select__options {}
-
-.select__option {}
-
-.select__check {}
-
-.select__emptyState {}
 /* @generated:end */
 
 /* @custom:start overrides */

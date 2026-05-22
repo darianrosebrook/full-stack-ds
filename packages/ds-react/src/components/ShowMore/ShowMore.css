@@ -1,20 +1,14 @@
+@import "./ShowMore.tokens.css";
+
 /* @generated:start styles */
 .show-more {
-  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
-  color: var(--fsds-semantic-color-foreground-secondary, #555555);
-  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
-  padding: var(--fsds-core-spacing-size-07, 24px);
-  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  background-color: var(--fsds-showmore-color-background-default);
+  color: var(--fsds-showmore-color-foreground-secondary);
+  border-color: var(--fsds-showmore-color-border-accent);
+  padding: var(--fsds-showmore-size-padding-default);
+  border-radius: var(--fsds-showmore-size-radius-default);
   /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
 }
-
-.show-more[aria-expanded="true"] {}
-
-.show-more--collapsed {}
-
-.show-more__content {}
-
-.show-more__trigger {}
 /* @generated:end */
 
 /* @custom:start overrides */

@@ -1,0 +1,24 @@
+/* @generated:start tokens */
+.links {
+  --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-links-color-underline-default: var(--fsds-semantic-color-border-light, #fceaea);
+  --fsds-links-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
+  --fsds-links-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
+
+  &:hover {
+    --fsds-links-color-foreground-hover: var(--fsds-semantic-interaction-text-hover, #555555);
+  }
+
+  &--visited {
+    --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
+  }
+
+  &:disabled {
+    --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

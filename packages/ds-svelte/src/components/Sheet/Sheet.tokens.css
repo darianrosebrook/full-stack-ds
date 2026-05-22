@@ -1,0 +1,25 @@
+/* @generated:start tokens */
+.sheet {
+  --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+  --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+  --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+  --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+  --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+  --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+  --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+
+  &:hover {
+    --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

@@ -1,0 +1,13 @@
+/* @generated:start tokens */
+.toast {
+  --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
+  --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+  --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

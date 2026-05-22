@@ -1,0 +1,22 @@
+/* @generated:start tokens */
+.walkthrough {
+  --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+  --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+  --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+  --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+
+  &__controls {
+    --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+  }
+
+  &__dots {
+    --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

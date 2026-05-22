@@ -1,0 +1,29 @@
+/* @generated:start tokens */
+.switch {
+  --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
+  --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+  --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
+  --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
+  --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
+  --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
+
+  &--md {
+    --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
+    --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
+    --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
+  }
+
+  &:disabled {
+    --fsds-switch-color-track-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+  }
+
+  &:checked {
+    --fsds-switch-color-track-background-checked: var(--fsds-semantic-color-foreground-accent, #d9292b);
+    --fsds-switch-color-thumb-background-checked: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

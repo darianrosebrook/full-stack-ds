@@ -1,3 +1,5 @@
+@import "./Divider.tokens.css";
+
 /* @generated:start styles */
 .divider {
   /* --fsds-semantic-color-border-light: #fceaea; */
@@ -7,10 +9,6 @@
   /* --fsds-core-shape-border-width-hairline: 1px; */
   /* --fsds-core-spacing-size-04: 8px; */
 }
-
-.divider--horizontal {}
-
-.divider--vertical {}
 /* @generated:end */
 
 /* @custom:start overrides */

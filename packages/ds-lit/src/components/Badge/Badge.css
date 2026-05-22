@@ -1,38 +1,12 @@
+@import "./Badge.tokens.css";
+
 /* @generated:start styles */
 .badge {
-  background-color: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-  color: var(--fsds-semantic-color-foreground-primary, #141414);
-  border-color: var(--fsds-semantic-color-border-light, #fceaea);
-  gap: var(--fsds-core-spacing-size-02, 2px);
+  background-color: var(--fsds-badge-color-background-danger);
+  color: var(--fsds-badge-color-foreground-primary);
+  border-color: var(--fsds-badge-color-border-default);
+  gap: var(--fsds-badge-spacing-gap);
 }
-
-.badge--default {}
-
-.badge--status {}
-
-.badge--counter {}
-
-.badge--tag {}
-
-.badge--info {}
-
-.badge--success {}
-
-.badge--warning {}
-
-.badge--danger {}
-
-.badge--sm {}
-
-.badge--md {}
-
-.badge--lg {}
-
-.badge:hover {}
-
-.badge__icon {}
-
-.badge__content {}
 /* @generated:end */
 
 /* @custom:start overrides */

@@ -1,0 +1,19 @@
+/* @generated:start tokens */
+.progress {
+  --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-progress-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
+  --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
+
+  &__track {
+    --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
+  }
+
+  &__fill {
+    --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
+  }
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */
