@@ -49,18 +49,100 @@ export class WalkthroughElement extends LitElement {
     }
     
     .walkthrough {
-      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-walkthrough-surface-bg);
+      border-color: var(--fsds-walkthrough-surface-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
     }
     
+    .walkthrough__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-walkthrough-description-marginTop);
+    }
+    
+    .walkthrough__title {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-title-fontSize);
+      font-weight: var(--fsds-walkthrough-title-fontWeight);
+      color: var(--fsds-walkthrough-title-color);
+    }
+    
+    .walkthrough__description {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-description-fontSize);
+      color: var(--fsds-walkthrough-description-color);
+      line-height: 1.5;
+    }
+    
     .walkthrough__controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       gap: var(--fsds-walkthrough-controls-gap);
+      margin-top: var(--fsds-walkthrough-controls-marginTop);
+      border-top-color: var(--fsds-walkthrough-surface-border);
+      border-top-style: solid;
+      border-top-width: 1px;
+      padding-top: var(--fsds-walkthrough-controls-marginTop);
+    }
+    
+    .walkthrough__skip {
+      background: transparent;
+      border: none;
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+      padding: 0;
+      margin-right: auto;
+    }
+    
+    .walkthrough__prev {
+      background-color: var(--fsds-walkthrough-button-secondary-bg);
+      border-color: var(--fsds-walkthrough-button-secondary-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+    }
+    
+    .walkthrough__next {
+      background-color: var(--fsds-walkthrough-button-primary-bg);
+      border: none;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-primary-color);
+      cursor: pointer;
     }
     
     .walkthrough__dots {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       gap: var(--fsds-walkthrough-dots-gap);
+    }
+    
+    .walkthrough__dot {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--fsds-walkthrough-dots-idle);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    
+    .walkthrough__counter {
+      color: var(--fsds-walkthrough-description-color);
+      font-size: var(--fsds-walkthrough-description-fontSize);
     }
   `;
 
@@ -143,18 +225,100 @@ export class WalkthroughContentElement extends LitElement {
     }
     
     .walkthrough {
-      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-walkthrough-surface-bg);
+      border-color: var(--fsds-walkthrough-surface-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
     }
     
+    .walkthrough__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-walkthrough-description-marginTop);
+    }
+    
+    .walkthrough__title {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-title-fontSize);
+      font-weight: var(--fsds-walkthrough-title-fontWeight);
+      color: var(--fsds-walkthrough-title-color);
+    }
+    
+    .walkthrough__description {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-description-fontSize);
+      color: var(--fsds-walkthrough-description-color);
+      line-height: 1.5;
+    }
+    
     .walkthrough__controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       gap: var(--fsds-walkthrough-controls-gap);
+      margin-top: var(--fsds-walkthrough-controls-marginTop);
+      border-top-color: var(--fsds-walkthrough-surface-border);
+      border-top-style: solid;
+      border-top-width: 1px;
+      padding-top: var(--fsds-walkthrough-controls-marginTop);
+    }
+    
+    .walkthrough__skip {
+      background: transparent;
+      border: none;
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+      padding: 0;
+      margin-right: auto;
+    }
+    
+    .walkthrough__prev {
+      background-color: var(--fsds-walkthrough-button-secondary-bg);
+      border-color: var(--fsds-walkthrough-button-secondary-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+    }
+    
+    .walkthrough__next {
+      background-color: var(--fsds-walkthrough-button-primary-bg);
+      border: none;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-primary-color);
+      cursor: pointer;
     }
     
     .walkthrough__dots {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       gap: var(--fsds-walkthrough-dots-gap);
+    }
+    
+    .walkthrough__dot {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--fsds-walkthrough-dots-idle);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    
+    .walkthrough__counter {
+      color: var(--fsds-walkthrough-description-color);
+      font-size: var(--fsds-walkthrough-description-fontSize);
     }
   `;
 
@@ -195,18 +359,100 @@ export class WalkthroughTitleElement extends LitElement {
     }
     
     .walkthrough {
-      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-walkthrough-surface-bg);
+      border-color: var(--fsds-walkthrough-surface-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
     }
     
+    .walkthrough__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-walkthrough-description-marginTop);
+    }
+    
+    .walkthrough__title {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-title-fontSize);
+      font-weight: var(--fsds-walkthrough-title-fontWeight);
+      color: var(--fsds-walkthrough-title-color);
+    }
+    
+    .walkthrough__description {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-description-fontSize);
+      color: var(--fsds-walkthrough-description-color);
+      line-height: 1.5;
+    }
+    
     .walkthrough__controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       gap: var(--fsds-walkthrough-controls-gap);
+      margin-top: var(--fsds-walkthrough-controls-marginTop);
+      border-top-color: var(--fsds-walkthrough-surface-border);
+      border-top-style: solid;
+      border-top-width: 1px;
+      padding-top: var(--fsds-walkthrough-controls-marginTop);
+    }
+    
+    .walkthrough__skip {
+      background: transparent;
+      border: none;
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+      padding: 0;
+      margin-right: auto;
+    }
+    
+    .walkthrough__prev {
+      background-color: var(--fsds-walkthrough-button-secondary-bg);
+      border-color: var(--fsds-walkthrough-button-secondary-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+    }
+    
+    .walkthrough__next {
+      background-color: var(--fsds-walkthrough-button-primary-bg);
+      border: none;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-primary-color);
+      cursor: pointer;
     }
     
     .walkthrough__dots {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       gap: var(--fsds-walkthrough-dots-gap);
+    }
+    
+    .walkthrough__dot {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--fsds-walkthrough-dots-idle);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    
+    .walkthrough__counter {
+      color: var(--fsds-walkthrough-description-color);
+      font-size: var(--fsds-walkthrough-description-fontSize);
     }
   `;
 
@@ -247,18 +493,100 @@ export class WalkthroughDescriptionElement extends LitElement {
     }
     
     .walkthrough {
-      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-walkthrough-surface-bg);
+      border-color: var(--fsds-walkthrough-surface-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
       gap: var(--fsds-walkthrough-dots-gap);
     }
     
+    .walkthrough__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-walkthrough-description-marginTop);
+    }
+    
+    .walkthrough__title {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-title-fontSize);
+      font-weight: var(--fsds-walkthrough-title-fontWeight);
+      color: var(--fsds-walkthrough-title-color);
+    }
+    
+    .walkthrough__description {
+      margin: 0;
+      font-size: var(--fsds-walkthrough-description-fontSize);
+      color: var(--fsds-walkthrough-description-color);
+      line-height: 1.5;
+    }
+    
     .walkthrough__controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       gap: var(--fsds-walkthrough-controls-gap);
+      margin-top: var(--fsds-walkthrough-controls-marginTop);
+      border-top-color: var(--fsds-walkthrough-surface-border);
+      border-top-style: solid;
+      border-top-width: 1px;
+      padding-top: var(--fsds-walkthrough-controls-marginTop);
+    }
+    
+    .walkthrough__skip {
+      background: transparent;
+      border: none;
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+      padding: 0;
+      margin-right: auto;
+    }
+    
+    .walkthrough__prev {
+      background-color: var(--fsds-walkthrough-button-secondary-bg);
+      border-color: var(--fsds-walkthrough-button-secondary-border);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-secondary-color);
+      cursor: pointer;
+    }
+    
+    .walkthrough__next {
+      background-color: var(--fsds-walkthrough-button-primary-bg);
+      border: none;
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      color: var(--fsds-walkthrough-button-primary-color);
+      cursor: pointer;
     }
     
     .walkthrough__dots {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       gap: var(--fsds-walkthrough-dots-gap);
+    }
+    
+    .walkthrough__dot {
+      display: block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--fsds-walkthrough-dots-idle);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    
+    .walkthrough__counter {
+      color: var(--fsds-walkthrough-description-color);
+      font-size: var(--fsds-walkthrough-description-fontSize);
     }
   `;
 

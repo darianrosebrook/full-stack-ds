@@ -20,11 +20,21 @@
     },
     "padding": {
       "resolvesTo": "breadcrumbs.spacing.padding.small"
-    }
+    },
+    "display": { "literal": "block", "platforms": ["web"] }
   },
   "focus": {
     "outline-color": {
       "resolvesTo": "breadcrumbs.color.focus"
     }
+  },
+  "list": {
+    "list-style": { "literal": "none", "platforms": ["web"] },
+    "padding": { "literal": "0", "platforms": ["web"] },
+    "margin": { "literal": "0", "platforms": ["web"] },
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "flex-wrap": { "literal": "wrap", "platforms": ["web"] },
+    "gap": { "resolvesTo": "breadcrumbs.spacing.gap.default" }
   }
 }

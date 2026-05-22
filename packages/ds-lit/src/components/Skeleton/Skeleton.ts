@@ -39,10 +39,25 @@ export class SkeletonElement extends LitElement {
     }
     
     .skeleton {
+      display: block;
+      background-color: var(--fsds-skeleton-color-base);
       border-radius: var(--fsds-skeleton-radius-lg);
       gap: var(--fsds-skeleton-gap-lg);
       transition-duration: var(--fsds-skeleton-anim-duration);
       transition-timing-function: var(--fsds-skeleton-anim-easing);
+      animation: skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+    }
+    
+    @keyframes skeleton-shimmer {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      100% {
+        opacity: 1;
+      }
     }
   `;
 

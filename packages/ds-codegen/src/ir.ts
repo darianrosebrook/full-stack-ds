@@ -1249,6 +1249,12 @@ export function expandStylesKey(key: string, prefix: string): string {
     (key.startsWith("--") && key.includes(" "));
 
   if (isCompound) return expandComplexSelector(key, prefix);
+  // Already-qualified single-segment selectors (start with `.`, `#`, or
+  // `*`) pass through verbatim. e.g. `.avatar--small` from the author
+  // should emit as `.avatar--small`, NOT `.avatar__.avatar--small`.
+  if (key.startsWith(".") || key.startsWith("#") || key.startsWith("*")) {
+    return key;
+  }
   if (key.startsWith("--")) return `.${prefix}${key}`;
   if (key.startsWith(":") || key.startsWith("[")) return `.${prefix}${key}`;
   if (key.startsWith("__")) return `.${prefix}${key}`;

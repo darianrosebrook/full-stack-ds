@@ -158,6 +158,19 @@
     ],
     "keyboard": []
   },
+  "keyframes": {
+    "skeleton-shimmer": {
+      "0%": {
+        "opacity": "1"
+      },
+      "50%": {
+        "opacity": "0.5"
+      },
+      "100%": {
+        "opacity": "1"
+      }
+    }
+  },
   "a2ui": {
     "category": "display",
     "usageHints": [

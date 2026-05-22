@@ -45,10 +45,21 @@ export class BreadcrumbsElement extends LitElement {
       border-radius: var(--fsds-breadcrumbs-shape-radius-small);
       gap: var(--fsds-breadcrumbs-spacing-gap-small);
       padding: var(--fsds-breadcrumbs-spacing-padding-small);
+      display: block;
     
       &:focus-visible {
         outline-color: var(--fsds-breadcrumbs-color-focus);
       }
+    }
+    
+    .breadcrumbs__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--fsds-breadcrumbs-spacing-gap-default);
     }
   `;
 
@@ -101,10 +112,21 @@ export class BreadcrumbsListElement extends LitElement {
       border-radius: var(--fsds-breadcrumbs-shape-radius-small);
       gap: var(--fsds-breadcrumbs-spacing-gap-small);
       padding: var(--fsds-breadcrumbs-spacing-padding-small);
+      display: block;
     
       &:focus-visible {
         outline-color: var(--fsds-breadcrumbs-color-focus);
       }
+    }
+    
+    .breadcrumbs__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--fsds-breadcrumbs-spacing-gap-default);
     }
   `;
 

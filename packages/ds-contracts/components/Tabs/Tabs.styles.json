@@ -1,5 +1,13 @@
 {
   "root": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
     "gap": {
       "resolvesTo": "tabs.spacing.panelGap"
     },
@@ -8,6 +16,129 @@
     },
     "border-radius": {
       "resolvesTo": "tabs.shape.radius"
+    }
+  },
+  "list": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "row",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "resolvesTo": "tabs.spacing.gap"
+    },
+    "border-bottom-color": {
+      "resolvesTo": "tabs.color.indicator"
+    },
+    "border-bottom-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-bottom-width": {
+      "literal": "1px",
+      "platforms": ["web"]
+    },
+    "position": {
+      "literal": "relative",
+      "platforms": ["web"]
+    }
+  },
+  "tab": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "resolvesTo": "tabs.spacing.padding"
+    },
+    "color": {
+      "resolvesTo": "tabs.color.fg"
+    },
+    "background": {
+      "literal": "transparent",
+      "platforms": ["web"]
+    },
+    "border": {
+      "literal": "none",
+      "platforms": ["web"]
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": ["web"]
+    },
+    "position": {
+      "literal": "relative",
+      "platforms": ["web"]
+    }
+  },
+  ".tabs__tab:hover": {
+    "color": {
+      "resolvesTo": "tabs.color.hover.fg"
+    },
+    "background-color": {
+      "resolvesTo": "tabs.color.hover.bg"
+    }
+  },
+  "tab--active": {
+    "color": {
+      "resolvesTo": "tabs.color.active-fg"
+    },
+    "background-color": {
+      "resolvesTo": "tabs.color.active-bg"
+    }
+  },
+  ".tabs__tab:disabled": {
+    "color": {
+      "resolvesTo": "tabs.color.disabled-fg"
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": ["web"]
+    }
+  },
+  "indicator": {
+    "position": {
+      "literal": "absolute",
+      "platforms": ["web"]
+    },
+    "bottom": {
+      "literal": "-1px",
+      "platforms": ["web"]
+    },
+    "left": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "right": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "height": {
+      "literal": "2px",
+      "platforms": ["web"]
+    },
+    "background-color": {
+      "resolvesTo": "tabs.color.indicator"
+    },
+    "transition": {
+      "literal": "transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease",
+      "platforms": ["web"]
+    }
+  },
+  "panel": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "resolvesTo": "tabs.spacing.padding"
     }
   }
 }

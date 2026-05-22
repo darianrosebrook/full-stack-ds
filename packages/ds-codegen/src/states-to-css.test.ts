@@ -96,6 +96,28 @@ describe("computeCssBlocks: styles.json key -> CSS selector", () => {
 
     expect(selectors).toContain(":has(.x__input:checked) .x__track");
   });
+
+  it("passes already-qualified single-segment selectors (start with `.`) through verbatim", () => {
+    // Regression for the `expandStylesKey` bug Round 3 surfaced:
+    // a single-segment key like `.x--small` was treated as a bare
+    // anatomy part and emitted as `.x__.x--small` instead of `.x--small`.
+    // Already-qualified selectors (start with `.`, `#`, or `*`) must
+    // pass through untouched.
+    const contract = makeContract({
+      variants: { size: ["small", "medium"] },
+      styles: {
+        ".x--small": { width: { literal: "24px", platforms: ["web"] } },
+        ".x--medium": { width: { literal: "32px", platforms: ["web"] } },
+      },
+    });
+    const blocks = computeCssBlocks(contract, "x");
+    const selectors = blocks.map((b) => b.selector);
+
+    expect(selectors).toContain(".x--small");
+    expect(selectors).toContain(".x--medium");
+    expect(selectors).not.toContain(".x__.x--small");
+    expect(selectors).not.toContain(".x__.x--medium");
+  });
 });
 
 describe("computeCssBlocks: tokens.json -> slot declarations on root", () => {

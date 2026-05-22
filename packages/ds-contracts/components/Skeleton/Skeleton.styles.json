@@ -1,5 +1,12 @@
 {
   "root": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "background-color": {
+      "resolvesTo": "skeleton.color.base"
+    },
     "border-radius": {
       "resolvesTo": "skeleton.radius.lg"
     },
@@ -11,6 +18,10 @@
     },
     "transition-timing-function": {
       "resolvesTo": "skeleton.anim.easing"
+    },
+    "animation": {
+      "literal": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
+      "platforms": ["web"]
     }
   }
 }

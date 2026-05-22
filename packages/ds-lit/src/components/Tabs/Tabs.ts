@@ -59,9 +59,62 @@ export class TabsElement extends LitElement {
     }
     
     .tabs {
+      display: flex;
+      flex-direction: column;
       gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
+    }
+    
+    .tabs__list {
+      display: flex;
+      flex-direction: row;
+      gap: var(--fsds-tabs-spacing-gap);
+      border-bottom-color: var(--fsds-tabs-color-indicator);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      position: relative;
+    }
+    
+    .tabs__tab {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--fsds-tabs-spacing-padding);
+      color: var(--fsds-tabs-color-fg);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .tabs__tab:hover {
+      color: var(--fsds-tabs-color-hover-fg);
+      background-color: var(--fsds-tabs-color-hover-bg);
+    }
+    
+    .tabs__tab--active {
+      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg);
+    }
+    
+    .tabs__tab:disabled {
+      color: var(--fsds-tabs-color-disabled-fg);
+      cursor: not-allowed;
+    }
+    
+    .tabs__indicator {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--fsds-tabs-color-indicator);
+      transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
+    }
+    
+    .tabs__panel {
+      display: block;
+      padding: var(--fsds-tabs-spacing-padding);
     }
   `;
 
@@ -152,9 +205,62 @@ export class TabsListElement extends LitElement {
     }
     
     .tabs {
+      display: flex;
+      flex-direction: column;
       gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
+    }
+    
+    .tabs__list {
+      display: flex;
+      flex-direction: row;
+      gap: var(--fsds-tabs-spacing-gap);
+      border-bottom-color: var(--fsds-tabs-color-indicator);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      position: relative;
+    }
+    
+    .tabs__tab {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--fsds-tabs-spacing-padding);
+      color: var(--fsds-tabs-color-fg);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .tabs__tab:hover {
+      color: var(--fsds-tabs-color-hover-fg);
+      background-color: var(--fsds-tabs-color-hover-bg);
+    }
+    
+    .tabs__tab--active {
+      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg);
+    }
+    
+    .tabs__tab:disabled {
+      color: var(--fsds-tabs-color-disabled-fg);
+      cursor: not-allowed;
+    }
+    
+    .tabs__indicator {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--fsds-tabs-color-indicator);
+      transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
+    }
+    
+    .tabs__panel {
+      display: block;
+      padding: var(--fsds-tabs-spacing-padding);
     }
   `;
 
@@ -241,9 +347,62 @@ export class TabsTabElement extends LitElement {
     }
     
     .tabs {
+      display: flex;
+      flex-direction: column;
       gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
+    }
+    
+    .tabs__list {
+      display: flex;
+      flex-direction: row;
+      gap: var(--fsds-tabs-spacing-gap);
+      border-bottom-color: var(--fsds-tabs-color-indicator);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      position: relative;
+    }
+    
+    .tabs__tab {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--fsds-tabs-spacing-padding);
+      color: var(--fsds-tabs-color-fg);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .tabs__tab:hover {
+      color: var(--fsds-tabs-color-hover-fg);
+      background-color: var(--fsds-tabs-color-hover-bg);
+    }
+    
+    .tabs__tab--active {
+      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg);
+    }
+    
+    .tabs__tab:disabled {
+      color: var(--fsds-tabs-color-disabled-fg);
+      cursor: not-allowed;
+    }
+    
+    .tabs__indicator {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--fsds-tabs-color-indicator);
+      transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
+    }
+    
+    .tabs__panel {
+      display: block;
+      padding: var(--fsds-tabs-spacing-padding);
     }
   `;
 
@@ -320,9 +479,62 @@ export class TabsPanelElement extends LitElement {
     }
     
     .tabs {
+      display: flex;
+      flex-direction: column;
       gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
+    }
+    
+    .tabs__list {
+      display: flex;
+      flex-direction: row;
+      gap: var(--fsds-tabs-spacing-gap);
+      border-bottom-color: var(--fsds-tabs-color-indicator);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      position: relative;
+    }
+    
+    .tabs__tab {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--fsds-tabs-spacing-padding);
+      color: var(--fsds-tabs-color-fg);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .tabs__tab:hover {
+      color: var(--fsds-tabs-color-hover-fg);
+      background-color: var(--fsds-tabs-color-hover-bg);
+    }
+    
+    .tabs__tab--active {
+      color: var(--fsds-tabs-color-active-fg);
+      background-color: var(--fsds-tabs-color-active-bg);
+    }
+    
+    .tabs__tab:disabled {
+      color: var(--fsds-tabs-color-disabled-fg);
+      cursor: not-allowed;
+    }
+    
+    .tabs__indicator {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--fsds-tabs-color-indicator);
+      transition: transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease;
+    }
+    
+    .tabs__panel {
+      display: block;
+      padding: var(--fsds-tabs-spacing-padding);
     }
   `;
 
