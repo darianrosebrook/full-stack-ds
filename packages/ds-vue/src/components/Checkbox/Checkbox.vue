@@ -61,5 +61,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <input :class="classNames" type="checkbox" :checked="behavior.checked.value" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :disabled="props.disabled" role="checkbox" :data-testid="props['data-testid']" />
+  <input :class="classNames" type="checkbox" @change="(e) => behavior.setChecked((e.target as HTMLInputElement).checked)" :checked="behavior.checked.value" :disabled="props.disabled" role="checkbox" :data-testid="props['data-testid']" />
 </template>

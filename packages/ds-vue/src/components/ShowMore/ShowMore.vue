@@ -63,7 +63,7 @@ const classNames = computed(() => [
     <div :class="'show-more__content'">
       <slot />
     </div>
-    <button :class="'show-more__trigger'" type="button" :aria-expanded="behavior.expanded.value" @click="() => behavior.setExpanded(!behavior.expanded.value)">
+    <button :class="'show-more__trigger'" type="button" @click="() => behavior.setExpanded(!behavior.expanded.value)" :aria-expanded="behavior.expanded.value">
       {{ props.showMoreLabel }}
     </button>
   </div>

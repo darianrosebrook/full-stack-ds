@@ -66,7 +66,7 @@ const classNames = computed(() => [
     <label v-if="props.label" :class="'text-field__label'">
       <slot />
     </label>
-    <input :class="'text-field__field'" :type="props.type" :value="behavior.value.value" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-describedby="props.ariaDescribedby" />
+    <input :class="'text-field__field'" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :type="props.type" :value="behavior.value.value" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-describedby="props.ariaDescribedby" />
     <span v-if="props.description" :class="'text-field__description'">
       <slot />
     </span>

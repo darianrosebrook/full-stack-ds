@@ -166,12 +166,14 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
     });
   });
 
-  describe.skip("Vue", () => {
+  describe("Vue", () => {
     const src = generateVueComponentSource(ir);
 
     it("renders content binding as `{{ prop }}` interpolation, not as `:content`", () => {
       expect(src).not.toMatch(/<span[^>]*\s:content=/);
-      expect(src).toMatch(/<span[^>]*>\{\{\s*props\.icon\s*\}\}<\/span>/);
+      // Vue emits the interpolation on its own line inside the span,
+      // not inline. Tolerant of whitespace.
+      expect(src).toMatch(/<span[^>]*>[\s\S]*?\{\{\s*props\.icon\s*\}\}[\s\S]*?<\/span>/);
     });
 
     it("renders event binding as `@click=\"props.onDismiss?.()\"`", () => {

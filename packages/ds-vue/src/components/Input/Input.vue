@@ -59,5 +59,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <input :class="classNames" :value="behavior.value.value" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" role="textbox" :data-testid="props['data-testid']" />
+  <input :class="classNames" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :value="behavior.value.value" :disabled="props.disabled" :aria-invalid="props.invalid" :type="props.type" role="textbox" :data-testid="props['data-testid']" />
 </template>

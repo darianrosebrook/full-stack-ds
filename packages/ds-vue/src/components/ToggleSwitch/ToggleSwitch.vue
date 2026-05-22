@@ -60,5 +60,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <button :class="classNames" type="button" :aria-checked="behavior.checked.value" :aria-label="props.ariaLabel" :aria-describedby="props.ariaDescribedby" :disabled="props.disabled" @click="() => behavior.setChecked(!behavior.checked.value)" role="switch" :data-testid="props['data-testid']"></button>
+  <button :class="classNames" type="button" @click="() => behavior.setChecked(!behavior.checked.value)" :aria-checked="behavior.checked.value" :aria-label="props.ariaLabel" :aria-describedby="props.ariaDescribedby" :disabled="props.disabled" role="switch" :data-testid="props['data-testid']"></button>
 </template>

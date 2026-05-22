@@ -1040,11 +1040,38 @@ function renderVueDomNode(
   // textContent bindings render as a `{{ ... }}` interpolation inside the
   // element body, not as a template attribute.
   const textChildren: string[] = [];
+
+  // IR-DOM-BINDING-CAPABILITY-01: the new `content` field is the
+  // canonical inner-content binding. Lower via the same Vue
+  // interpolation path the legacy textContent uses.
+  if (node.content) {
+    const interpolated = renderVueTextContent(node.content, ctx);
+    if (interpolated !== null) textChildren.push(interpolated);
+  }
+
+  // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Vue's
+  // `@eventname="..."` syntax. For `prop:X` emit `@click="props.X?.()"`
+  // — the optional-chain call invokes the prop when set and is a silent
+  // no-op when undefined. Channel events delegate to the existing
+  // channel-handler logic.
+  for (const [eventName, expr] of Object.entries(node.events)) {
+    const rendered = renderVueEvent(eventName, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   for (const [key, expr] of Object.entries(node.bindings)) {
-    if (key === "textContent") {
-      const interpolated = renderVueTextContent(expr, ctx);
-      if (interpolated !== null) textChildren.push(interpolated);
+    if (key === "textContent" || key === "children") {
+      if (!node.content) {
+        const interpolated = renderVueTextContent(expr, ctx);
+        if (interpolated !== null) textChildren.push(interpolated);
+      }
       continue;
+    }
+    // Dual-pathway dedup for events.
+    if (/^on[A-Z]/.test(key)) {
+      const evt = key.slice(2).toLowerCase();
+      if (node.events[evt]) continue;
     }
     const rendered = renderVueBinding(vueAttrName(key), expr, ctx);
     if (rendered === null) continue;
@@ -1248,6 +1275,31 @@ function renderVueBinding(
 function vueAttrName(name: string): string {
   if (name === "htmlFor") return "for";
   return name;
+}
+
+/**
+ * Lower an entry from `node.events` into Vue's `@eventname="..."` form.
+ * For `prop:X` returns `@click="props.X?.()"` — the optional-chain
+ * invokes the callback when set and is a silent no-op when undefined.
+ * Channel events delegate to the channel-handler logic in
+ * renderVueBinding by re-deriving the synthetic JSX-attr name.
+ */
+function renderVueEvent(
+  eventName: string,
+  expr: BindingExpression,
+  ctx: VueRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `@${eventName}="props.${propAccess(expr.prop)}?.()"`;
+    case "literal":
+      // Rare. Inline as a string handler.
+      return `@${eventName}="${escapeAttrString(expr.value)}"`;
+    case "channel": {
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderVueBinding(jsxAttr, expr, ctx);
+    }
+  }
 }
 
 function mapJsxEventToVue(attr: string): string {
