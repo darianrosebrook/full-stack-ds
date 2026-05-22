@@ -62,6 +62,7 @@ import {
 import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
 import { validateContractTokens } from "./validation/tokens.js";
+import { validateContractEmittedCss } from "./validation/contract-tokens.js";
 import {
   detectOrphans,
   executeOrphanRemoval,
@@ -386,19 +387,22 @@ function main(): void {
     // from INVALID so operators can tell "fails JSON Schema" from
     // "fails cross-field invariants".
     //
-    // Two passes contribute issues:
+    // Three passes contribute issues:
     //   1. validateContractSemantics — intra-contract cross-field rules
     //   2. validateContractTokens — every resolvesTo path must exist in
     //      the composed token graph (packages/ds-tokens/generated/
-    //      composed.tokens.json). This catches the failure mode that
-    //      TOKENS-WORKSTREAM-STEP-05's byte-compare gate caught one-shot,
-    //      now permanent.
-    // Both pass results merge — one DRIFT line per failing contract
-    // with all issues from both validators concatenated.
+    //      composed.tokens.json). Catches contract↔graph drift.
+    //   3. validateContractEmittedCss — emitted <Component>.tokens.css per
+    //      framework matches what the codegen would emit right now. Catches
+    //      "edited the contract but didn't regen" / "hand-edited the CSS
+    //      out of contract truth" drift.
+    // All three pass results merge — one DRIFT line per failing contract
+    // with all issues from all three validators concatenated.
     if (args.checkSemantics) {
       const driftIssues = [
         ...validateContractSemantics(result.value),
         ...validateContractTokens(result.value),
+        ...validateContractEmittedCss(result.value),
       ];
       if (driftIssues.length > 0) {
         console.error(`DRIFT    ${file}`);
