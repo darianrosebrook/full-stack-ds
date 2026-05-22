@@ -1,0 +1,85 @@
+{
+  "$density": {
+    "name": "tight",
+    "description": "Tight spacing density - 2px/4px base for dense data, mobile, small components",
+    "base": "2px"
+  },
+  "spacing": {
+    "padding": {
+      "container": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.lg}",
+        "$description": "Container padding (8px) - tight density"
+      },
+      "card": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.sm}",
+        "$description": "Card padding (4px) - tight density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.sm}",
+        "$description": "Component padding (4px) - tight density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.xl}",
+        "$description": "Section padding (12px) - tight density"
+      },
+      "page": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.2xl}",
+        "$description": "Page padding (16px) - tight density"
+      }
+    },
+    "gap": {
+      "grid": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.sm}",
+        "$description": "Grid gap (4px) - tight density"
+      },
+      "gridLarge": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.xl}",
+        "$description": "Large grid gap (12px) - tight density"
+      },
+      "gridMedium": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.lg}",
+        "$description": "Medium grid gap (8px) - tight density"
+      },
+      "gridSmall": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.xs}",
+        "$description": "Small grid gap (2px) - tight density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.xs}",
+        "$description": "Component gap (2px) - tight density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.xl}",
+        "$description": "Section gap (12px) - tight density"
+      },
+      "stack": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.sm}",
+        "$description": "Stack gap (4px) - tight density"
+      }
+    },
+    "margin": {
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.sm}",
+        "$description": "Component margin (4px) - tight density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.tight.xl}",
+        "$description": "Section margin (12px) - tight density"
+      }
+    }
+  }
+}

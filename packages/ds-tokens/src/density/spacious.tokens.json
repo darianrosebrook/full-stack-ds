@@ -1,0 +1,85 @@
+{
+  "$density": {
+    "name": "spacious",
+    "description": "Spacious spacing density - 8px/12px+ for hero sections, landing pages, high readability",
+    "base": "16px"
+  },
+  "spacing": {
+    "padding": {
+      "container": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.md}",
+        "$description": "Container padding (48px) - spacious density"
+      },
+      "card": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.sm}",
+        "$description": "Card padding (32px) - spacious density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.sm}",
+        "$description": "Component padding (32px) - spacious density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.lg}",
+        "$description": "Section padding (64px) - spacious density"
+      },
+      "page": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.xl}",
+        "$description": "Page padding (80px) - spacious density"
+      }
+    },
+    "gap": {
+      "grid": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.sm}",
+        "$description": "Grid gap (32px) - spacious density"
+      },
+      "gridLarge": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.xl}",
+        "$description": "Large grid gap (80px) - spacious density"
+      },
+      "gridMedium": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.md}",
+        "$description": "Medium grid gap (48px) - spacious density"
+      },
+      "gridSmall": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.xs}",
+        "$description": "Small grid gap (16px) - spacious density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.xs}",
+        "$description": "Component gap (16px) - spacious density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.lg}",
+        "$description": "Section gap (64px) - spacious density"
+      },
+      "stack": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.sm}",
+        "$description": "Stack gap (32px) - spacious density"
+      }
+    },
+    "margin": {
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.sm}",
+        "$description": "Component margin (32px) - spacious density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.spacious.lg}",
+        "$description": "Section margin (64px) - spacious density"
+      }
+    }
+  }
+}

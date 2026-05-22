@@ -1,0 +1,85 @@
+{
+  "$density": {
+    "name": "default",
+    "description": "Default spacing density - 8px linear for standard form layout, card content, UI padding",
+    "base": "8px"
+  },
+  "spacing": {
+    "padding": {
+      "container": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.md}",
+        "$description": "Container padding (24px) - default density"
+      },
+      "card": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Card padding (16px) - default density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Component padding (16px) - default density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.lg}",
+        "$description": "Section padding (32px) - default density"
+      },
+      "page": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xl}",
+        "$description": "Page padding (40px) - default density"
+      }
+    },
+    "gap": {
+      "grid": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Grid gap (16px) - default density"
+      },
+      "gridLarge": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xl}",
+        "$description": "Large grid gap (40px) - default density"
+      },
+      "gridMedium": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.md}",
+        "$description": "Medium grid gap (24px) - default density"
+      },
+      "gridSmall": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xs}",
+        "$description": "Small grid gap (8px) - default density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xs}",
+        "$description": "Component gap (8px) - default density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.lg}",
+        "$description": "Section gap (32px) - default density"
+      },
+      "stack": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Stack gap (16px) - default density"
+      }
+    },
+    "margin": {
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Component margin (16px) - default density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.lg}",
+        "$description": "Section margin (32px) - default density"
+      }
+    }
+  }
+}

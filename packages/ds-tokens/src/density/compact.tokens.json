@@ -1,0 +1,85 @@
+{
+  "$density": {
+    "name": "compact",
+    "description": "Compact spacing density - 4px linear for data grids, tables, toolbars, sidebar items",
+    "base": "4px"
+  },
+  "spacing": {
+    "padding": {
+      "container": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.lg}",
+        "$description": "Container padding (16px) - compact density"
+      },
+      "card": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.sm}",
+        "$description": "Card padding (8px) - compact density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.sm}",
+        "$description": "Component padding (8px) - compact density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.xl}",
+        "$description": "Section padding (20px) - compact density"
+      },
+      "page": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.2xl}",
+        "$description": "Page padding (24px) - compact density"
+      }
+    },
+    "gap": {
+      "grid": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.sm}",
+        "$description": "Grid gap (8px) - compact density"
+      },
+      "gridLarge": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.xl}",
+        "$description": "Large grid gap (20px) - compact density"
+      },
+      "gridMedium": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.md}",
+        "$description": "Medium grid gap (12px) - compact density"
+      },
+      "gridSmall": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.xs}",
+        "$description": "Small grid gap (4px) - compact density"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.xs}",
+        "$description": "Component gap (4px) - compact density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.xl}",
+        "$description": "Section gap (20px) - compact density"
+      },
+      "stack": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.sm}",
+        "$description": "Stack gap (8px) - compact density"
+      }
+    },
+    "margin": {
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.sm}",
+        "$description": "Component margin (8px) - compact density"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.compact.xl}",
+        "$description": "Section margin (20px) - compact density"
+      }
+    }
+  }
+}

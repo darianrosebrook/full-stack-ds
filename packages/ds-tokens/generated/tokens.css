@@ -1526,3 +1526,143 @@
   }
 
 }
+
+@layer density {
+
+  [data-density="compact"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-compact-lg);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-compact-xl);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-compact-2xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-compact-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-compact-md);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-compact-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-compact-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-compact-xl);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-compact-xl);
+  }
+
+  .light[data-density="compact"], .light [data-density="compact"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-compact-lg);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-compact-xl);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-compact-2xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-compact-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-compact-md);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-compact-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-compact-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-compact-xl);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-compact-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-compact-xl);
+  }
+
+  [data-density="default"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-default-md);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-default-lg);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-default-xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-default-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-default-md);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-default-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-default-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-default-lg);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-default-lg);
+  }
+
+  .light[data-density="default"], .light [data-density="default"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-default-md);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-default-lg);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-default-xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-default-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-default-md);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-default-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-default-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-default-lg);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-default-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-default-lg);
+  }
+
+  [data-density="spacious"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-spacious-md);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-spacious-lg);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-spacious-xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-spacious-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-spacious-md);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-spacious-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-spacious-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-spacious-lg);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-spacious-lg);
+  }
+
+  .light[data-density="spacious"], .light [data-density="spacious"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-spacious-md);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-spacious-lg);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-spacious-xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-spacious-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-spacious-md);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-spacious-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-spacious-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-spacious-lg);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-spacious-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-spacious-lg);
+  }
+
+  [data-density="tight"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-tight-lg);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-tight-xl);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-tight-2xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-tight-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-tight-lg);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-tight-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-tight-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-tight-xl);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-tight-xl);
+  }
+
+  .light[data-density="tight"], .light [data-density="tight"] {
+    --fsds-semantic-spacing-padding-container: var(--fsds-spacing-density-tight-lg);
+    --fsds-semantic-spacing-padding-card: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-padding-component: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-padding-section: var(--fsds-spacing-density-tight-xl);
+    --fsds-semantic-spacing-padding-page: var(--fsds-spacing-density-tight-2xl);
+    --fsds-semantic-spacing-gap-grid: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-gap-grid-large: var(--fsds-spacing-density-tight-xl);
+    --fsds-semantic-spacing-gap-grid-medium: var(--fsds-spacing-density-tight-lg);
+    --fsds-semantic-spacing-gap-grid-small: var(--fsds-spacing-density-tight-xs);
+    --fsds-semantic-spacing-gap-component: var(--fsds-spacing-density-tight-xs);
+    --fsds-semantic-spacing-gap-section: var(--fsds-spacing-density-tight-xl);
+    --fsds-semantic-spacing-gap-stack: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-margin-component: var(--fsds-spacing-density-tight-sm);
+    --fsds-semantic-spacing-margin-section: var(--fsds-spacing-density-tight-xl);
+  }
+
+}
