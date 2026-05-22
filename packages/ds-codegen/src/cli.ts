@@ -61,6 +61,7 @@ import {
 } from "./validation/emission-manifest-path.js";
 import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
+import { validateContractTokens } from "./validation/tokens.js";
 import {
   detectOrphans,
   executeOrphanRemoval,
@@ -384,11 +385,24 @@ function main(): void {
     // requested (--check-semantics). Surfaced as DRIFT separately
     // from INVALID so operators can tell "fails JSON Schema" from
     // "fails cross-field invariants".
+    //
+    // Two passes contribute issues:
+    //   1. validateContractSemantics — intra-contract cross-field rules
+    //   2. validateContractTokens — every resolvesTo path must exist in
+    //      the composed token graph (packages/ds-tokens/generated/
+    //      composed.tokens.json). This catches the failure mode that
+    //      TOKENS-WORKSTREAM-STEP-05's byte-compare gate caught one-shot,
+    //      now permanent.
+    // Both pass results merge — one DRIFT line per failing contract
+    // with all issues from both validators concatenated.
     if (args.checkSemantics) {
-      const semIssues = validateContractSemantics(result.value);
-      if (semIssues.length > 0) {
+      const driftIssues = [
+        ...validateContractSemantics(result.value),
+        ...validateContractTokens(result.value),
+      ];
+      if (driftIssues.length > 0) {
         console.error(`DRIFT    ${file}`);
-        console.error(formatIssues(semIssues));
+        console.error(formatIssues(driftIssues));
         hasErrors = true;
       } else {
         console.log(`  VALID  ${file}`);
