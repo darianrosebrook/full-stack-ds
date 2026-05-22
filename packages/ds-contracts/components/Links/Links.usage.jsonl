@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Links composition (auto-seeded; replace with curated example).","tree":{"fsds.Links":{}}}
+{"name":"default","description":"Inline hyperlink within body copy navigating to a documentation page.","tree":{"fsds.Links":{"props":{"href":"/docs/getting-started","size":"medium","children":"Read the getting started guide"}}}}
+{"name":"external-link","description":"External link opening in a new tab with appropriate rel attributes.","tree":{"fsds.Links":{"props":{"href":"https://github.com/your-org/design-system","target":"_blank","rel":"noopener noreferrer","size":"medium","children":"View on GitHub"}}}}

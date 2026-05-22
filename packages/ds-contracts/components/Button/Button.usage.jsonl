@@ -1,1 +1,3 @@
-{"name":"default","description":"Default Button composition (auto-seeded; replace with curated example).","tree":{"fsds.Button":{"slots":{"spinner":{"fsds.Text":{"props":{"children":"spinner"}}},"loadingText":{"fsds.Text":{"props":{"children":"loadingText"}}}}}}}
+{"name":"default","description":"Primary call-to-action button for the most important action in a view.","tree":{"fsds.Button":{"props":{"variant":"primary","size":"medium","children":"Get started"}}}}
+{"name":"destructive","description":"Destructive variant for irreversible actions such as deleting a record.","tree":{"fsds.Button":{"props":{"variant":"destructive","size":"medium","children":"Delete account"}}}}
+{"name":"icon-only","description":"Ghost icon-only button with an accessible aria-label for toolbar actions.","tree":{"fsds.Button":{"props":{"variant":"ghost","size":"small","ariaLabel":"Close panel","children":{"fsds.Icon":{"props":{"icon":"x","width":16,"height":16}}}}}}}

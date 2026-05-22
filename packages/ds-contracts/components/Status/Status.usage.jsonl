@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Status composition (auto-seeded; replace with curated example).","tree":{"fsds.Status":{"slots":{"icon":{"fsds.Text":{"props":{"children":"icon"}}},"label":{"fsds.Text":{"props":{"children":"label"}}}}}}}
+{"name":"default","description":"Success status indicator shown after a task completes, using the success intent for icon and color.","tree":{"fsds.Status":{"props":{"status":"success"}}}}
+{"name":"warning","description":"Warning status badge signaling a degraded service condition.","tree":{"fsds.Status":{"props":{"status":"warning"}}}}

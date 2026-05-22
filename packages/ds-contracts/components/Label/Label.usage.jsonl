@@ -1,1 +1,1 @@
-{"name":"default","description":"Default Label composition (auto-seeded; replace with curated example).","tree":{"fsds.Label":{}}}
+{"name":"default","description":"Form label associated with an input field via htmlFor.","tree":{"fsds.Label":{"props":{"htmlFor":"email-input","children":"Email address"}}}}

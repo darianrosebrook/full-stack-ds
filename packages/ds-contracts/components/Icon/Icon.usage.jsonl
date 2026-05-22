@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Icon composition (auto-seeded; replace with curated example).","tree":{"fsds.Icon":{}}}
+{"name":"default","description":"Decorative check icon at default 20x20 size.","tree":{"fsds.Icon":{"props":{"icon":"check","width":20,"height":20}}}}
+{"name":"large-warning","description":"Warning icon scaled to 24px for use in alert banners.","tree":{"fsds.Icon":{"props":{"icon":"triangle-alert","width":24,"height":24}}}}

@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Avatar composition (auto-seeded; replace with curated example).","tree":{"fsds.Avatar":{"slots":{"image":{"fsds.Text":{"props":{"children":"image"}}},"initials":{"fsds.Text":{"props":{"children":"initials"}}},"status":{"fsds.Text":{"props":{"children":"status"}}}}}}}
+{"name":"default","description":"Avatar with a photo source and accessible name for use in a comment thread.","tree":{"fsds.Avatar":{"props":{"src":"https://example.com/avatars/jordan.jpg","name":"Jordan Rivera","priority":false}}}}
+{"name":"initials-fallback","description":"Avatar without a photo that falls back to initials, shown at large size.","tree":{"fsds.Avatar":{"props":{"name":"Alex Nguyen"}}}}

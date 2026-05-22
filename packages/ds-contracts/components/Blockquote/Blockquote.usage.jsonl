@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Blockquote composition (auto-seeded; replace with curated example).","tree":{"fsds.Blockquote":{}}}
+{"name":"default","description":"Default blockquote with a short testimonial passage.","tree":{"fsds.Blockquote":{"props":{"variant":"default","size":"md","children":"Design is not just what it looks like and feels like. Design is how it works."}}}}
+{"name":"bordered-with-citation","description":"Bordered variant with a cite URL linking back to the source document.","tree":{"fsds.Blockquote":{"props":{"variant":"bordered","size":"lg","cite":"https://fortune.com/2003/11/11/steve-jobs-the-next-insanely-great-thing/","children":"Creativity is just connecting things."}}}}

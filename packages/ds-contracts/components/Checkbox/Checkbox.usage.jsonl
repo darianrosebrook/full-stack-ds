@@ -1,1 +1,3 @@
-{"name":"default","description":"Default Checkbox composition (auto-seeded; replace with curated example).","tree":{"fsds.Checkbox":{"slots":{"input":{"fsds.Text":{"props":{"children":"input"}}},"indicator":{"fsds.Text":{"props":{"children":"indicator"}}}}}}}
+{"name":"default","description":"Unchecked checkbox for a terms-of-service agreement in a form.","tree":{"fsds.Checkbox":{"props":{"name":"terms","value":"accepted","size":"md"}}}}
+{"name":"checked","description":"Pre-checked controlled state, commonly used in settings forms where the feature is enabled by default.","tree":{"fsds.Checkbox":{"props":{"checked":true,"name":"marketing-emails","value":"on","size":"md"}}}}
+{"name":"indeterminate","description":"Indeterminate state for a parent checkbox where some but not all child items are selected.","tree":{"fsds.Checkbox":{"props":{"indeterminate":true,"size":"md"}}}}

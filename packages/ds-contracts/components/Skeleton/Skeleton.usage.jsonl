@@ -1,1 +1,3 @@
-{"name":"default","description":"Default Skeleton composition (auto-seeded; replace with curated example).","tree":{"fsds.Skeleton":{"slots":{"stack":{"fsds.Text":{"props":{"children":"stack"}}},"row":{"fsds.Text":{"props":{"children":"row"}}},"shape":{"fsds.Text":{"props":{"children":"shape"}}}}}}}
+{"name":"default","description":"Text-variant skeleton mimicking a two-to-four line paragraph while article content loads.","tree":{"fsds.Skeleton":{"props":{"variant":"text","lines":3,"animate":"shimmer","density":"regular"}}}}
+{"name":"avatar","description":"Circular avatar-shaped skeleton placeholder for a user profile image.","tree":{"fsds.Skeleton":{"props":{"variant":"avatar","animate":"pulse","radius":"lg"}}}}
+{"name":"media","description":"16:9 media skeleton for a video thumbnail with shimmer animation.","tree":{"fsds.Skeleton":{"props":{"variant":"media","aspectRatio":"16/9","animate":"shimmer"}}}}

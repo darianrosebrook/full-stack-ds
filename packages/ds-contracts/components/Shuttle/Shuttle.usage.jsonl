@@ -1,1 +1,1 @@
-{"name":"default","description":"Default Shuttle composition (auto-seeded; replace with curated example).","tree":{"fsds.Shuttle":{"slots":{"item":{"fsds.Text":{"props":{"children":"item"}}}}}}}
+{"name":"default","description":"Shuttle for assigning team members to a project by moving them between available and selected lists.","tree":{"fsds.Shuttle":{"props":{"ariaLabel":"Assign team members"},"slots":{"item":{"fsds.Text":{"props":{"variant":"body","children":"Alice Johnson"}}}}}}}

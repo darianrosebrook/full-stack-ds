@@ -1,1 +1,3 @@
-{"name":"default","description":"Default Badge composition (auto-seeded; replace with curated example).","tree":{"fsds.Badge":{"slots":{"icon":{"fsds.Text":{"props":{"children":"icon"}}},"content":{"fsds.Text":{"props":{"children":"content"}}}}}}}
+{"name":"default","description":"Default label badge showing a category tag.","tree":{"fsds.Badge":{"props":{"variant":"default","size":"md","children":"New"}}}}
+{"name":"status-success","description":"Status badge with success intent to indicate a passing check.","tree":{"fsds.Badge":{"props":{"variant":"status","intent":"success","showStatusIcon":true,"children":"Passing"}}}}
+{"name":"counter","description":"Counter badge displaying an unread notification count.","tree":{"fsds.Badge":{"props":{"variant":"counter","size":"sm","children":"12"}}}}

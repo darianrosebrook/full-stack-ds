@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Switch composition (auto-seeded; replace with curated example).","tree":{"fsds.Switch":{"slots":{"track":{"fsds.Text":{"props":{"children":"track"}}},"thumb":{"fsds.Text":{"props":{"children":"thumb"}}},"input":{"fsds.Text":{"props":{"children":"input"}}}}}}}
+{"name":"default","description":"Uncontrolled switch for enabling dark mode, off by default.","tree":{"fsds.Switch":{"props":{"name":"dark-mode","size":"md","defaultChecked":false}}}}
+{"name":"checked-on","description":"Pre-enabled switch for a setting that is active by default, such as email notifications.","tree":{"fsds.Switch":{"props":{"checked":true,"name":"email-notifications","size":"md"}}}}

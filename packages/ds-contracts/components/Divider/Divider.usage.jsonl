@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Divider composition (auto-seeded; replace with curated example).","tree":{"fsds.Divider":{}}}
+{"name":"default","description":"Horizontal decorative rule between content sections.","tree":{"fsds.Divider":{"props":{"orientation":"horizontal","decorative":true}}}}
+{"name":"vertical-separator","description":"Vertical divider for separating inline items such as toolbar actions.","tree":{"fsds.Divider":{"props":{"orientation":"vertical","decorative":false}}}}

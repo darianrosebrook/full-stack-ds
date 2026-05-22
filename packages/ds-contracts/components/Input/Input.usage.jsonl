@@ -1,1 +1,2 @@
-{"name":"default","description":"Default Input composition (auto-seeded; replace with curated example).","tree":{"fsds.Input":{}}}
+{"name":"default","description":"Basic text input with a placeholder, the most common standalone usage.","tree":{"fsds.Input":{"props":{"type":"text","placeholder":"Enter your email","name":"email"}}}}
+{"name":"invalid","description":"Error state input used after form validation fails, applying error styling and aria-invalid.","tree":{"fsds.Input":{"props":{"type":"email","placeholder":"Email address","name":"email","invalid":true,"required":true}}}}
