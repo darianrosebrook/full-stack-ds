@@ -147,10 +147,6 @@
     ],
     "keyboard": []
   },
-  "usage": {
-    "example": "<Input\n  label=\"Full Name\"\n  value={name}\n  onChange={(e) => setName(e.target.value)}\n  placeholder=\"Jane Doe\"\n  helperText=\"Enter your legal name\"\n/>",
-    "hookExample": "const { value, getInputProps, getLabelProps } = useInput({\n  initialValue: '',\n  label: 'Email',\n  onChange: (e) => console.log(e.target.value)\n});"
-  },
   "a2ui": {
     "category": "form-field",
     "usageHints": [

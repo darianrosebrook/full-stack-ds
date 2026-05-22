@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Progress composition (auto-seeded; replace with curated example).","tree":{"fsds.Progress":{"slots":{"track":{"fsds.Text":{"props":{"children":"track"}}},"fill":{"fsds.Text":{"props":{"children":"fill"}}},"value":{"fsds.Text":{"props":{"children":"value"}}}}}}}

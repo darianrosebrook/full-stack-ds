@@ -74,9 +74,6 @@
     ],
     "keyboard": []
   },
-  "usage": {
-    "example": "<Icon type=\"Success\" size=\"small\" />\n<Icon type=\"Error\" />"
-  },
   "a2ui": {
     "category": "display",
     "usageHints": [

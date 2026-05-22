@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Checkbox composition (auto-seeded; replace with curated example).","tree":{"fsds.Checkbox":{"slots":{"input":{"fsds.Text":{"props":{"children":"input"}}},"indicator":{"fsds.Text":{"props":{"children":"indicator"}}}}}}}

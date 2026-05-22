@@ -181,10 +181,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<Checkbox\n  checked={checked}\n  onChange={(e) => setChecked(e.target.checked)}\n  label=\"Subscribe to newsletter\"\n  name=\"subscribe\"\n  helperText=\"We'll send you weekly updates\"\n  errorText={errors.subscribe}\n/>",
-    "hookExample": "const { checked, getInputProps, getLabelProps } = useCheckbox({\n  defaultChecked: false,\n  onChange: (e) => console.log(e.target.checked)\n});\n\nreturn (\n  <label {...getLabelProps()}>\n    <input {...getInputProps()} />\n    <span>Label text</span>\n  </label>\n);"
-  },
   "a2ui": {
     "category": "form-field",
     "usageHints": [

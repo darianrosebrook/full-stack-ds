@@ -57,9 +57,6 @@
     "labeling": [],
     "keyboard": []
   },
-  "usage": {
-    "example": "<Label htmlFor=\"email\">Email address</Label>\n<input id=\"email\" type=\"email\" />"
-  },
   "a2ui": {
     "category": "form-field",
     "usageHints": [

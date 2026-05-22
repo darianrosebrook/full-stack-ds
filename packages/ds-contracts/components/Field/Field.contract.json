@@ -242,9 +242,6 @@
     ],
     "keyboard": []
   },
-  "usage": {
-    "example": "<Field label=\"Name\" helpText=\"Enter your full name\" error={errors.name}>\n  <Input name=\"name\" value={name} onChange={setName} />\n</Field>"
-  },
   "a2ui": {
     "category": "layout",
     "usageHints": [

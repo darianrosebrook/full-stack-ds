@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Avatar composition (auto-seeded; replace with curated example).","tree":{"fsds.Avatar":{"slots":{"image":{"fsds.Text":{"props":{"children":"image"}}},"initials":{"fsds.Text":{"props":{"children":"initials"}}},"status":{"fsds.Text":{"props":{"children":"status"}}}}}}}

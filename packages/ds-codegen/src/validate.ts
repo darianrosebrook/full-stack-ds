@@ -38,6 +38,14 @@ export interface ContractValidator {
    * — but when present they must match `component.tokens.schema.json`.
    */
   validateTokens(tokens: unknown): ValidationResult<Record<string, unknown>>;
+  /**
+   * Validate a single JSONL line from a `<Name>.usage.jsonl` sidecar against
+   * `component.usage.schema.json`. Each line is one example. Cross-component
+   * ref validation (props/slots exist on target contract) lives in a separate
+   * pass that needs the full contract registry; this schema check only
+   * enforces shape.
+   */
+  validateUsageLine(line: unknown): ValidationResult<Record<string, unknown>>;
 }
 
 export interface ContractValidatorPaths {
@@ -45,6 +53,7 @@ export interface ContractValidatorPaths {
   componentSchemaPath?: string;
   primitiveSchemaPath?: string;
   tokensSchemaPath?: string;
+  usageSchemaPath?: string;
 }
 
 const DEFAULT_COMPONENT_SCHEMA = "component.contract.schema.json";
@@ -53,6 +62,7 @@ const DEFAULT_PRIMITIVE_SCHEMA = path.join(
   "primitive.contract.schema.json",
 );
 const DEFAULT_TOKENS_SCHEMA = "component.tokens.schema.json";
+const DEFAULT_USAGE_SCHEMA = "component.usage.schema.json";
 
 /**
  * Build a validator that loads schemas from a contracts root directory.
@@ -74,8 +84,12 @@ export function createContractValidator(
     paths.contractsRoot,
     paths.tokensSchemaPath ?? DEFAULT_TOKENS_SCHEMA,
   );
+  const usageSchemaPath = path.resolve(
+    paths.contractsRoot,
+    paths.usageSchemaPath ?? DEFAULT_USAGE_SCHEMA,
+  );
 
-  for (const p of [componentSchemaPath, primitiveSchemaPath, tokensSchemaPath]) {
+  for (const p of [componentSchemaPath, primitiveSchemaPath, tokensSchemaPath, usageSchemaPath]) {
     if (!fs.existsSync(p)) {
       throw new Error(`Schema file not found: ${p}`);
     }
@@ -91,6 +105,9 @@ export function createContractValidator(
   const validateTokensFn = ajv.compile(
     JSON.parse(fs.readFileSync(tokensSchemaPath, "utf-8")),
   );
+  const validateUsageLineFn = ajv.compile(
+    JSON.parse(fs.readFileSync(usageSchemaPath, "utf-8")),
+  );
 
   return {
     validateComponent(contract) {
@@ -101,6 +118,9 @@ export function createContractValidator(
     },
     validateTokens(tokens) {
       return runValidation<Record<string, unknown>>(validateTokensFn, tokens);
+    },
+    validateUsageLine(line) {
+      return runValidation<Record<string, unknown>>(validateUsageLineFn, line);
     },
   };
 }

@@ -363,10 +363,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<Tabs initialActiveTab={0} onChange={setTab}>\n  <TabList>\n    <Tab>Tab 1</Tab>\n    <Tab>Tab 2</Tab>\n  </TabList>\n  <TabPanels>\n    <TabPanel>Content 1</TabPanel>\n    <TabPanel>Content 2</TabPanel>\n  </TabPanels>\n</Tabs>",
-    "hookExample": "const tabs = useTabs({ tabCount: 3 });\n\nreturn (\n  <div>\n    <div {...tabs.getTabListProps()}>\n      {['Tab 1', 'Tab 2', 'Tab 3'].map((label, i) => (\n        <button key={i} {...tabs.getTabProps(i)}>{label}</button>\n      ))}\n    </div>\n    {['Content 1', 'Content 2', 'Content 3'].map((content, i) => (\n      <div key={i} {...tabs.getTabPanelProps(i)}>{content}</div>\n    ))}\n  </div>\n);"
-  },
   "a2ui": {
     "category": "navigation",
     "usageHints": [

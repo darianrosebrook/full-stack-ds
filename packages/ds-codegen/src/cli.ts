@@ -18,7 +18,12 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import type { ComponentContract } from "./contract.js";
-import { findComponentTokens, listComponentContracts } from "./contracts-fs.js";
+import {
+  findComponentTokens,
+  findComponentUsage,
+  listComponentContracts,
+  type DiscoveredContract,
+} from "./contracts-fs.js";
 import {
   type FrameworkEmitter,
   type GeneratedFile,
@@ -64,6 +69,10 @@ import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
 import { validateContractTokens } from "./validation/tokens.js";
 import { validateContractEmittedCss } from "./validation/contract-tokens.js";
+import {
+  parseUsageJsonl,
+  validateUsageLine as validateUsageLineCrossRefs,
+} from "./validation/usage.js";
 import {
   detectOrphans,
   executeOrphanRemoval,
@@ -207,6 +216,14 @@ interface CliArgs {
    * non-breaking; opt-in via `pnpm run generate:check`.
    */
   checkSemantics: boolean;
+  /**
+   * When set with --validate, also schema-validate every component's
+   * `<Name>.usage.jsonl` and then resolve `fsds.*` refs against the
+   * contract registry, checking that referenced props and slots are real.
+   * Off by default; runs independently of --check-semantics so usage drift
+   * fails on its own surface.
+   */
+  checkUsage: boolean;
   dryRun: boolean;
   testsOnly: boolean;
   force: boolean;
@@ -230,6 +247,7 @@ interface CliArgs {
 function parseArgs(argv: string[]): CliArgs {
   const validateOnly = argv.includes("--validate");
   const checkSemantics = argv.includes("--check-semantics");
+  const checkUsage = argv.includes("--check-usage");
   const dryRun = argv.includes("--dry-run");
   const testsOnly = argv.includes("--tests-only");
   const force = argv.includes("--force");
@@ -268,6 +286,7 @@ function parseArgs(argv: string[]): CliArgs {
   return {
     validateOnly,
     checkSemantics,
+    checkUsage,
     dryRun,
     testsOnly,
     force,
@@ -443,6 +462,11 @@ function main(): void {
   console.log(
     `\nValidation: ${validContracts.length}/${filtered.length} component contract(s) passed.`,
   );
+
+  if (args.checkUsage) {
+    const usageHadErrors = runUsageValidation(filtered, validContracts, validator);
+    if (usageHadErrors) hasErrors = true;
+  }
 
   if (hasErrors) {
     console.error("\nFix validation errors before generating.");
@@ -1047,6 +1071,101 @@ function writeBarrel(binding: TargetBinding): void {
   console.log(
     `\n  BARREL  ${path.relative(cwd, barrelPath)} (${componentIds.length} components)`,
   );
+}
+
+/**
+ * Validate every component's usage JSONL sidecar. Two passes per line:
+ *   1. Ajv schema check (validateUsageLine).
+ *   2. Cross-contract resolution (validateUsageLineCrossRefs) — fsds.* refs
+ *      exist, props/slots match the target contract.
+ *
+ * Returns true when any errors were found. Output mirrors the per-contract
+ * loop: "VALID  <file>" / "INVALID <file>" lines, then a summary count.
+ */
+function runUsageValidation(
+  contracts: readonly DiscoveredContract[],
+  validContracts: readonly ContractInput[],
+  validator: ContractValidator,
+): boolean {
+  console.log("\nUsage validation:");
+
+  // Registry: contract name -> ComponentContract. Only contracts that passed
+  // schema validation are eligible to be referenced from usage trees.
+  const contractsByName = new Map<string, ComponentContract>();
+  for (const v of validContracts) {
+    contractsByName.set(v.contract.name, v.contract);
+  }
+  const ctx = { contracts: contractsByName };
+
+  let hadErrors = false;
+  let totalFiles = 0;
+  let totalLines = 0;
+
+  for (const entry of contracts) {
+    const usage = findComponentUsage(entry);
+    if (!usage) continue; // No sidecar — supported, skip silently.
+    totalFiles++;
+
+    const text = fs.readFileSync(usage.absPath, "utf-8");
+    const lines = parseUsageJsonl(text);
+    if (lines.length === 0) {
+      console.log(`  EMPTY  ${usage.filename}`);
+      continue;
+    }
+
+    let fileHasErrors = false;
+    const seenNames = new Set<string>();
+
+    for (const { lineNumber, raw, parseError } of lines) {
+      totalLines++;
+      if (parseError) {
+        console.error(`INVALID  ${usage.filename}#L${lineNumber}: JSON parse error — ${parseError}`);
+        fileHasErrors = true;
+        continue;
+      }
+      const schemaResult = validator.validateUsageLine(raw);
+      if (!schemaResult.ok) {
+        console.error(`INVALID  ${usage.filename}#L${lineNumber}:`);
+        console.error(formatIssues(schemaResult.issues));
+        fileHasErrors = true;
+        continue;
+      }
+      const line = schemaResult.value as unknown as {
+        name: string;
+        tree: Record<string, unknown>;
+      };
+      if (seenNames.has(line.name)) {
+        console.error(
+          `INVALID  ${usage.filename}#L${lineNumber}: duplicate example name "${line.name}"`,
+        );
+        fileHasErrors = true;
+        continue;
+      }
+      seenNames.add(line.name);
+
+      const crossRefIssues = validateUsageLineCrossRefs(
+        line as Parameters<typeof validateUsageLineCrossRefs>[0],
+        { file: usage.relPath, lineNumber, exampleName: line.name },
+        ctx,
+      );
+      if (crossRefIssues.length > 0) {
+        console.error(`INVALID  ${usage.filename}#L${lineNumber}:`);
+        console.error(formatIssues(crossRefIssues));
+        fileHasErrors = true;
+      }
+    }
+
+    if (!fileHasErrors) {
+      console.log(`  VALID  ${usage.filename} (${lines.length} example(s))`);
+    } else {
+      hadErrors = true;
+    }
+  }
+
+  console.log(
+    `\nUsage: ${totalFiles} sidecar(s), ${totalLines} example(s) checked.`,
+  );
+  return hadErrors;
 }
 
 /**

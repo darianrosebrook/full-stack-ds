@@ -216,9 +216,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<Tooltip content=\"This is a tooltip\" placement=\"top\">\n  <button>Hover me</button>\n</Tooltip>"
-  },
   "a2ui": {
     "category": "overlay",
     "usageHints": [

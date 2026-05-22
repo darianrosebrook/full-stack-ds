@@ -371,9 +371,6 @@
       }
     ]
   },
-  "usage": {
-    "hookExample": "const { openness, setOpenness, panelRef, renderInPortal } = useSheet({\n  defaultOpen: false,\n  onOpenChange: (next) => console.log('Sheet open?', next),\n});"
-  },
   "a2ui": {
     "category": "overlay",
     "usageHints": [

@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Popover composition (auto-seeded; replace with curated example).","tree":{"fsds.Popover":{"slots":{"trigger":{"fsds.Text":{"props":{"children":"trigger"}}},"content":{"fsds.Text":{"props":{"children":"content"}}}}}}}

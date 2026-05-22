@@ -1,0 +1,1 @@
+{"name":"default","description":"Default TextField composition (auto-seeded; replace with curated example).","tree":{"fsds.TextField":{"slots":{"label":{"fsds.Text":{"props":{"children":"label"}}},"field":{"fsds.Text":{"props":{"children":"field"}}},"description":{"fsds.Text":{"props":{"children":"description"}}},"error":{"fsds.Text":{"props":{"children":"error"}}}}}}}

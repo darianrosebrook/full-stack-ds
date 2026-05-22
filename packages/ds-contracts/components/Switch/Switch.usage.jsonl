@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Switch composition (auto-seeded; replace with curated example).","tree":{"fsds.Switch":{"slots":{"track":{"fsds.Text":{"props":{"children":"track"}}},"thumb":{"fsds.Text":{"props":{"children":"thumb"}}},"input":{"fsds.Text":{"props":{"children":"input"}}}}}}}

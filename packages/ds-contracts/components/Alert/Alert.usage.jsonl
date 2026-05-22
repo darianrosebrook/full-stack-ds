@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Alert composition (auto-seeded; replace with curated example).","tree":{"fsds.Alert":{"slots":{"icon":{"fsds.Text":{"props":{"children":"icon"}}},"body":{"fsds.Text":{"props":{"children":"body"}}},"title":{"fsds.Text":{"props":{"children":"title"}}},"dismiss":{"fsds.Text":{"props":{"children":"dismiss"}}}}}}}

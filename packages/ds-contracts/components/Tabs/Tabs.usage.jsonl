@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Tabs composition (auto-seeded; replace with curated example).","tree":{"fsds.Tabs":{"slots":{"list":{"fsds.Text":{"props":{"children":"list"}}},"tab":{"fsds.Text":{"props":{"children":"tab"}}},"indicator":{"fsds.Text":{"props":{"children":"indicator"}}},"panel":{"fsds.Text":{"props":{"children":"panel"}}}}}}}

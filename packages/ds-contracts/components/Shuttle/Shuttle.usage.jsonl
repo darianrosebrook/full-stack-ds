@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Shuttle composition (auto-seeded; replace with curated example).","tree":{"fsds.Shuttle":{"slots":{"item":{"fsds.Text":{"props":{"children":"item"}}}}}}}

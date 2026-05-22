@@ -113,9 +113,6 @@
     ],
     "keyboard": []
   },
-  "usage": {
-    "example": "<Card variant=\"small\">\n  <CardHeader>\n    <CardTitle>Project Update</CardTitle>\n    <CardDescription>Latest status report</CardDescription>\n  </CardHeader>\n  <CardContent>\n    <p>Everything is on track for the Q2 release.</p>\n  </CardContent>\n  <CardFooter>\n    <Button kind=\"primary\">View Details</Button>\n  </CardFooter>\n</Card>"
-  },
   "a2ui": {
     "category": "display",
     "usageHints": [

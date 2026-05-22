@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Badge composition (auto-seeded; replace with curated example).","tree":{"fsds.Badge":{"slots":{"icon":{"fsds.Text":{"props":{"children":"icon"}}},"content":{"fsds.Text":{"props":{"children":"content"}}}}}}}

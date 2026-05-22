@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Button composition (auto-seeded; replace with curated example).","tree":{"fsds.Button":{"slots":{"spinner":{"fsds.Text":{"props":{"children":"spinner"}}},"loadingText":{"fsds.Text":{"props":{"children":"loadingText"}}}}}}}

@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Spinner composition (auto-seeded; replace with curated example).","tree":{"fsds.Spinner":{"slots":{"visual":{"fsds.Text":{"props":{"children":"visual"}}}}}}}

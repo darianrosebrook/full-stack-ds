@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Image composition (auto-seeded; replace with curated example).","tree":{"fsds.Image":{"slots":{"img":{"fsds.Text":{"props":{"children":"img"}}},"placeholder":{"fsds.Text":{"props":{"children":"placeholder"}}},"errorState":{"fsds.Text":{"props":{"children":"errorState"}}}}}}}

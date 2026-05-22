@@ -1,0 +1,1 @@
+{"name":"default","description":"Default OTP composition (auto-seeded; replace with curated example).","tree":{"fsds.OTP":{"slots":{"group":{"fsds.Text":{"props":{"children":"group"}}},"field":{"fsds.Text":{"props":{"children":"field"}}},"separator":{"fsds.Text":{"props":{"children":"separator"}}}}}}}

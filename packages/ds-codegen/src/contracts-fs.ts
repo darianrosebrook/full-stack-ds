@@ -87,3 +87,29 @@ export function findComponentTokens(contract: DiscoveredContract): DiscoveredTok
     absPath,
   };
 }
+
+export interface DiscoveredUsage {
+  filename: string;
+  relPath: string;
+  absPath: string;
+}
+
+/**
+ * Locate the usage JSONL sidecar (`<Name>.usage.jsonl`) for a component.
+ * Returns `null` when no sidecar exists — supported, not an error.
+ *
+ * The usage sidecar is documentation-fidelity composition examples, not a
+ * rendering specification. Validators check refs/props/slots; the codegen
+ * itself does not consume the sidecar to emit source.
+ */
+export function findComponentUsage(contract: DiscoveredContract): DiscoveredUsage | null {
+  const folder = path.dirname(contract.absPath);
+  const filename = `${contract.name}.usage.jsonl`;
+  const absPath = path.join(folder, filename);
+  if (!fs.existsSync(absPath)) return null;
+  return {
+    filename,
+    relPath: path.join(path.dirname(contract.relPath), filename),
+    absPath,
+  };
+}

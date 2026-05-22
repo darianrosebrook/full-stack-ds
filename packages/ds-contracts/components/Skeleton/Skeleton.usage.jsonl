@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Skeleton composition (auto-seeded; replace with curated example).","tree":{"fsds.Skeleton":{"slots":{"stack":{"fsds.Text":{"props":{"children":"stack"}}},"row":{"fsds.Text":{"props":{"children":"row"}}},"shape":{"fsds.Text":{"props":{"children":"shape"}}}}}}}

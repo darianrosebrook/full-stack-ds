@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Truncate composition (auto-seeded; replace with curated example).","tree":{"fsds.Truncate":{"slots":{"content":{"fsds.Text":{"props":{"children":"content"}}},"toggle":{"fsds.Text":{"props":{"children":"toggle"}}}}}}}

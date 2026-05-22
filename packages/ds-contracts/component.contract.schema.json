@@ -309,9 +309,6 @@
     "a11y": {
       "$ref": "#/$defs/a11y"
     },
-    "usage": {
-      "$ref": "#/$defs/usage"
-    },
     "a2ui": {
       "$ref": "#/$defs/a2uiContract",
       "description": "Agent-facing authoring metadata. Keep lean — the runtime deriver pulls props, enum, default, events, form from the existing contract blocks."
@@ -1157,15 +1154,6 @@
           ],
           "description": "ARIA Authoring Practices Guide pattern name (e.g. \"accordion\", \"dialog\", \"combobox\"). Helps agent tooling and a11y review route to the correct interaction expectations. Nullable to make explicit absence distinguishable from forgotten field."
         }
-      }
-    },
-    "usage": {
-      "type": "object",
-      "description": "Code examples showing how to consume the component.",
-      "additionalProperties": false,
-      "properties": {
-        "example": { "type": "string" },
-        "hookExample": { "type": "string" }
       }
     },
     "a2uiContract": {

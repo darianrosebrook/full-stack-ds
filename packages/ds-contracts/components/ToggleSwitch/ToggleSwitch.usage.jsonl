@@ -1,0 +1,1 @@
+{"name":"default","description":"Default ToggleSwitch composition (auto-seeded; replace with curated example).","tree":{"fsds.ToggleSwitch":{"slots":{"label":{"fsds.Text":{"props":{"children":"label"}}},"input":{"fsds.Text":{"props":{"children":"input"}}}}}}}

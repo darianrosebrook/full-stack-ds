@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Chip composition (auto-seeded; replace with curated example).","tree":{"fsds.Chip":{"slots":{"icon":{"fsds.Text":{"props":{"children":"icon"}}},"text":{"fsds.Text":{"props":{"children":"text"}}}}}}}

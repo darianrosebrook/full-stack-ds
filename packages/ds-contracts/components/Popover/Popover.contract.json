@@ -252,9 +252,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<Popover open={open} onOpenChange={setOpen} placement=\"bottom\">\n  <PopoverTrigger>\n    <Button>Open menu</Button>\n  </PopoverTrigger>\n  <PopoverContent>\n    <div>Menu content</div>\n  </PopoverContent>\n</Popover>"
-  },
   "a2ui": {
     "category": "overlay",
     "usageHints": [

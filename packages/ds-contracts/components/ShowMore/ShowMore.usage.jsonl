@@ -1,0 +1,1 @@
+{"name":"default","description":"Default ShowMore composition (auto-seeded; replace with curated example).","tree":{"fsds.ShowMore":{"slots":{"content":{"fsds.Text":{"props":{"children":"content"}}},"trigger":{"fsds.Text":{"props":{"children":"trigger"}}}}}}}

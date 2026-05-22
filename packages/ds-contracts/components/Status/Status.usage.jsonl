@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Status composition (auto-seeded; replace with curated example).","tree":{"fsds.Status":{"slots":{"icon":{"fsds.Text":{"props":{"children":"icon"}}},"label":{"fsds.Text":{"props":{"children":"label"}}}}}}}

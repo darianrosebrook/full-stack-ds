@@ -248,10 +248,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<Accordion headingLevel={3} isMultiOpen={false}>\n  <AccordionSection id=\"section-1\">\n    <AccordionHeader>Section 1</AccordionHeader>\n    <AccordionPanel>Content 1</AccordionPanel>\n  </AccordionSection>\n</Accordion>",
-    "hookExample": "const accordion = useAccordion({ isMultiOpen: false });\n\nreturn (\n  <div>\n    {sections.map((section, index) => (\n      <div key={section.id}>\n        <button {...accordion.getHeaderProps(section.id, index)}>\n          {section.title}\n        </button>\n        <div {...accordion.getPanelProps(section.id, index)}>\n          {section.content}\n        </div>\n      </div>\n    ))}\n  </div>\n);"
-  },
   "a2ui": {
     "category": "navigation",
     "usageHints": [

@@ -1,0 +1,1 @@
+{"name":"default","description":"Default Tooltip composition (auto-seeded; replace with curated example).","tree":{"fsds.Tooltip":{"slots":{"trigger":{"fsds.Text":{"props":{"children":"trigger"}}},"content":{"fsds.Text":{"props":{"children":"content"}}}}}}}

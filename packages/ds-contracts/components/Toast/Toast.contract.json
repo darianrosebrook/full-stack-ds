@@ -261,10 +261,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<ToastProvider>\n  <ToastViewport />\n  <Toast open={open} onOpenChange={setOpen} variant=\"success\">\n    <ToastTitle>Saved</ToastTitle>\n    <ToastDescription>Your changes have been saved.</ToastDescription>\n    <ToastClose />\n  </Toast>\n</ToastProvider>",
-    "hookExample": "const { toast } = useToast();\ntoast({ title: 'Saved', variant: 'success' });"
-  },
   "a2ui": {
     "category": "overlay",
     "usageHints": [

@@ -316,10 +316,6 @@
       }
     ]
   },
-  "usage": {
-    "example": "<Calendar\n  value={date}\n  onChange={setDate}\n  mode=\"single\"\n/>",
-    "hookExample": "const { value, setValue } = useCalendar({\n  defaultValue: new Date(),\n  onChange: (date) => console.log('Selected:', date),\n});"
-  },
   "a2ui": {
     "category": "form-field",
     "usageHints": [

@@ -103,9 +103,6 @@
     "labeling": [],
     "keyboard": []
   },
-  "usage": {
-    "example": "<Link href=\"https://example.com\">\n  I am a link\n</Link>\n\n<Link href=\"/support\" target=\"_blank\">\n  Take me to the support pages.\n</Link>"
-  },
   "a2ui": {
     "category": "navigation",
     "usageHints": [

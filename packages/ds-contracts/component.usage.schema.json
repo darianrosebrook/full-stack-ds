@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "component.usage.schema.json",
+  "title": "Component Usage Example (one JSONL line)",
+  "description": "A single composition example for a component. Each line of a {Name}.usage.jsonl file conforms to this schema. Lines are independent: adding a new example does not edit surrounding examples. Cross-component references use the `fsds.<ContractName>` namespace, validated against the contract registry by the codegen's usage validator (refs + props + slots are checked there, not here — this schema only enforces shape).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "tree"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Stable identifier for this example, unique within the file. Used as the example's anchor in docs and as a stable handle for tests. Suggested: kebab-case (e.g. \"default\", \"with-trigger\", \"compact-with-icon\").",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional human-readable description of what this example demonstrates."
+    },
+    "tree": {
+      "$ref": "#/$defs/treeNode",
+      "description": "Root of the composition tree. Single component reference at the top, with optional props and slots populated by nested trees."
+    }
+  },
+  "$defs": {
+    "treeNode": {
+      "type": "object",
+      "description": "A composition tree node: exactly one top-level key matching `fsds.<ContractName>`, whose value declares the props and slots used at this position. The single-key shape mirrors the dot-notation refs already used by tokens (`{semantic.color.foreground.primary}`).",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "patternProperties": {
+        "^fsds\\.[A-Z][A-Za-z0-9]*$": {
+          "$ref": "#/$defs/nodeBody"
+        }
+      },
+      "additionalProperties": false
+    },
+    "nodeBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "props": {
+          "type": "object",
+          "description": "Prop name -> literal value. Keys must match real prop names on the referenced contract (enforced by the usage validator, not by this schema). Values are literals only — no expressions, no event handlers. `children` may be a string, a treeNode, or an array of strings/treeNodes for mixed-content children.",
+          "additionalProperties": {
+            "$ref": "#/$defs/propValue"
+          }
+        },
+        "slots": {
+          "type": "object",
+          "description": "Slot name -> child tree node. Keys must match anatomy parts on the referenced contract (enforced by the usage validator, not by this schema).",
+          "additionalProperties": {
+            "$ref": "#/$defs/treeNode"
+          }
+        }
+      }
+    },
+    "propValue": {
+      "description": "A literal prop value (string, number, boolean, or null) — OR, for the `children` prop only, a treeNode or array of treeNodes/strings. Schema cannot enforce the children-specific shape per prop name, so we accept the union and let the usage validator narrow.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "boolean" },
+        { "type": "null" },
+        { "$ref": "#/$defs/treeNode" },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              { "$ref": "#/$defs/treeNode" }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
