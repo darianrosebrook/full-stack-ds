@@ -84,7 +84,7 @@ function formatDecls(
 }
 
 /**
- * Format a block's comments (already raw `/* … *​/` strings) as indented lines.
+ * Format a block's comments (already raw block-comment strings) as indented lines.
  */
 function formatComments(comments: string[] | undefined, indent: string): string[] {
   if (!comments?.length) return [];
