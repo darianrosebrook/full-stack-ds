@@ -1,7 +1,50 @@
 {
   "root": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
     "gap": {
       "resolvesTo": "text-field.spacing.gap"
+    }
+  },
+  "label": {
+    "display": {
+      "literal": "inline-block",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "literal": "0.875rem",
+      "platforms": ["web"]
+    },
+    "font-weight": {
+      "literal": "500",
+      "platforms": ["web"]
+    },
+    "color": {
+      "resolvesTo": "text-field.color.input.text"
+    }
+  },
+  "field": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": ["web"]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": ["web"]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
     },
     "border-width": {
       "resolvesTo": "text-field.border.width"
@@ -11,14 +54,65 @@
     },
     "color": {
       "resolvesTo": "text-field.color.input.text"
+    },
+    "font-size": {
+      "literal": "1rem",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "literal": "8px 12px",
+      "platforms": ["web"]
     }
   },
-  "invalid": {
-    "border-color": {
-      "resolvesTo": "text-field.color.input.borderError"
+  "description": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "literal": "0.875em",
+      "platforms": ["web"]
+    },
+    "color": {
+      "resolvesTo": "text-field.color.input.text"
+    }
+  },
+  "error": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "literal": "0.875em",
+      "platforms": ["web"]
     },
     "color": {
       "resolvesTo": "text-field.color.error"
+    }
+  },
+  ".text-field__field:focus-visible": {
+    "outline": {
+      "literal": "2px solid",
+      "platforms": ["web"]
+    },
+    "outline-offset": {
+      "literal": "2px",
+      "platforms": ["web"]
+    }
+  },
+  ".text-field--invalid .text-field__field": {
+    "border-color": {
+      "resolvesTo": "text-field.color.input.borderError"
+    }
+  },
+  ".text-field__field:disabled": {
+    "opacity": {
+      "literal": "0.5",
+      "platforms": ["web"]
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": ["web"]
     }
   }
 }

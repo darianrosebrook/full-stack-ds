@@ -33,13 +33,10 @@ export class ImageElement extends LitElement {
     }
     
     .image {
+      display: block;
+      max-width: 100%;
       background-color: var(--fsds-image-color-background-default);
       color: var(--fsds-image-color-foreground-primary);
-    }
-    
-    .image__error {
-      background-color: var(--fsds-image-color-background-error);
-      color: var(--fsds-image-color-foreground-error);
     }
   `;
 

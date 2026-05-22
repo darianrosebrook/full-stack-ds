@@ -1,16 +1,73 @@
 {
   "root": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "justify-content": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "overflow": {
+      "literal": "hidden",
+      "platforms": ["web"]
+    },
+    "position": {
+      "literal": "relative",
+      "platforms": ["web"]
+    },
     "border-radius": {
-      "resolvesTo": "avatar.size.radius.small"
+      "resolvesTo": "avatar.size.radius.default"
     },
     "background-color": {
-      "resolvesTo": "avatar.color.background.inverse"
+      "resolvesTo": "avatar.color.background.default"
     },
     "color": {
       "resolvesTo": "avatar.color.foreground.primary"
     },
     "border-color": {
       "resolvesTo": "avatar.color.border.default"
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "avatar.size.border.default"
+    },
+    "width": {
+      "resolvesTo": "avatar.size.default"
+    },
+    "height": {
+      "resolvesTo": "avatar.size.default"
+    },
+    "font-weight": {
+      "resolvesTo": "avatar.typography.fontWeight.medium"
+    },
+    "font-family": {
+      "resolvesTo": "avatar.typography.fontFamily.sans"
+    }
+  },
+  "image": {
+    "width": {
+      "literal": "100%",
+      "platforms": ["web"]
+    },
+    "height": {
+      "literal": "100%",
+      "platforms": ["web"]
+    },
+    "object-fit": {
+      "literal": "cover",
+      "platforms": ["web"]
+    },
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
     }
   }
 }

@@ -32,15 +32,54 @@ export class TextFieldElement extends LitElement {
     }
     
     .text-field {
+      display: flex;
+      flex-direction: column;
       gap: var(--fsds-text-field-spacing-gap);
-      border-width: var(--fsds-text-field-border-width);
-      border-radius: var(--fsds-text-field-border-radius);
+    }
+    
+    .text-field__label {
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 500;
       color: var(--fsds-text-field-color-input-text);
     }
     
-    .text-field__invalid {
-      border-color: var(--fsds-text-field-color-input-borderError);
+    .text-field__field {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: var(--fsds-text-field-border-width);
+      border-radius: var(--fsds-text-field-border-radius);
+      color: var(--fsds-text-field-color-input-text);
+      font-size: 1rem;
+      padding: 8px 12px;
+    }
+    
+    .text-field__description {
+      display: block;
+      font-size: 0.875em;
+      color: var(--fsds-text-field-color-input-text);
+    }
+    
+    .text-field__error {
+      display: block;
+      font-size: 0.875em;
       color: var(--fsds-text-field-color-error);
+    }
+    
+    .text-field__field:focus-visible {
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .text-field--invalid .text-field__field {
+      border-color: var(--fsds-text-field-color-input-borderError);
+    }
+    
+    .text-field__field:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   `;
 
@@ -113,15 +152,54 @@ export class TextFieldDescriptionElement extends LitElement {
     }
     
     .text-field {
+      display: flex;
+      flex-direction: column;
       gap: var(--fsds-text-field-spacing-gap);
-      border-width: var(--fsds-text-field-border-width);
-      border-radius: var(--fsds-text-field-border-radius);
+    }
+    
+    .text-field__label {
+      display: inline-block;
+      font-size: 0.875rem;
+      font-weight: 500;
       color: var(--fsds-text-field-color-input-text);
     }
     
-    .text-field__invalid {
-      border-color: var(--fsds-text-field-color-input-borderError);
+    .text-field__field {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: var(--fsds-text-field-border-width);
+      border-radius: var(--fsds-text-field-border-radius);
+      color: var(--fsds-text-field-color-input-text);
+      font-size: 1rem;
+      padding: 8px 12px;
+    }
+    
+    .text-field__description {
+      display: block;
+      font-size: 0.875em;
+      color: var(--fsds-text-field-color-input-text);
+    }
+    
+    .text-field__error {
+      display: block;
+      font-size: 0.875em;
       color: var(--fsds-text-field-color-error);
+    }
+    
+    .text-field__field:focus-visible {
+      outline: 2px solid;
+      outline-offset: 2px;
+    }
+    
+    .text-field--invalid .text-field__field {
+      border-color: var(--fsds-text-field-color-input-borderError);
+    }
+    
+    .text-field__field:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   `;
 

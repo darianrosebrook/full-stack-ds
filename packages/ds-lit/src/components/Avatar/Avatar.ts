@@ -38,10 +38,28 @@ export class AvatarElement extends LitElement {
     }
     
     .avatar {
-      border-radius: var(--fsds-avatar-size-radius-small);
-      background-color: var(--fsds-avatar-color-background-inverse);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      border-radius: var(--fsds-avatar-size-radius-default);
+      background-color: var(--fsds-avatar-color-background-default);
       color: var(--fsds-avatar-color-foreground-primary);
       border-color: var(--fsds-avatar-color-border-default);
+      border-style: solid;
+      border-width: var(--fsds-avatar-size-border-default);
+      width: var(--fsds-avatar-size-default);
+      height: var(--fsds-avatar-size-default);
+      font-weight: var(--fsds-avatar-typography-fontWeight-medium);
+      font-family: var(--fsds-avatar-typography-fontFamily-sans);
+    }
+    
+    .avatar__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
   `;
 

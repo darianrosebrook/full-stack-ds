@@ -1,24 +1,99 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "otp.color.background.default"
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
     },
-    "color": {
-      "resolvesTo": "otp.color.foreground.secondary"
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "literal": "8px",
+      "platforms": ["web"]
+    }
+  },
+  "group": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "literal": "4px",
+      "platforms": ["web"]
+    }
+  },
+  "field": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "width": {
+      "literal": "40px",
+      "platforms": ["web"]
+    },
+    "height": {
+      "literal": "40px",
+      "platforms": ["web"]
+    },
+    "text-align": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "literal": "1rem",
+      "platforms": ["web"]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": ["web"]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "literal": "1px",
+      "platforms": ["web"]
+    },
+    "border-radius": {
+      "resolvesTo": "otp.size.radius.default"
     },
     "border-color": {
       "resolvesTo": "otp.color.border.default"
     },
-    "padding": {
-      "resolvesTo": "otp.size.padding.default"
+    "background-color": {
+      "resolvesTo": "otp.color.background.default"
     },
-    "border-radius": {
-      "resolvesTo": "otp.size.radius.default"
+    "color": {
+      "resolvesTo": "otp.color.foreground.primary"
     }
   },
-  "focus": {
+  ".otp__field:focus-visible": {
     "border-color": {
       "resolvesTo": "otp.color.border.accent"
+    },
+    "outline": {
+      "literal": "2px solid",
+      "platforms": ["web"]
+    },
+    "outline-offset": {
+      "literal": "2px",
+      "platforms": ["web"]
+    }
+  },
+  ".otp__field:disabled": {
+    "opacity": {
+      "literal": "0.5",
+      "platforms": ["web"]
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": ["web"]
     }
   }
 }
