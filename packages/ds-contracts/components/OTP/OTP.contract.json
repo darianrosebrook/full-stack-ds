@@ -7,8 +7,7 @@
     "parts": [
       "root",
       "group",
-      "field",
-      "separator"
+      "field"
     ],
     "dom": {
       "tag": "div",
@@ -159,10 +158,6 @@
     "field": {
       "required": true,
       "selector": "[data-slot=\"otp-field\"]"
-    },
-    "separator": {
-      "required": false,
-      "selector": "[data-slot=\"otp-separator\"]"
     }
   },
   "ssr": {
