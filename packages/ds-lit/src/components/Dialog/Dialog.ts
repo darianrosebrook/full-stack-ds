@@ -49,17 +49,126 @@ export class DialogElement extends LitElement {
     }
     
     .dialog {
-      background-color: var(--fsds-dialog-color-background-backdrop);
-      color: var(--fsds-dialog-color-foreground-secondary);
-      border-color: var(--fsds-dialog-color-border-default);
-      border-radius: var(--fsds-dialog-size-radius-default);
-      padding: var(--fsds-dialog-spacing-body-paddingRight);
-      gap: var(--fsds-dialog-spacing-footer-gap);
-      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
     
-      &:hover {
-        background-color: var(--fsds-dialog-color-background-hover);
-      }
+    .dialog__backdrop {
+      position: absolute;
+      inset: 0;
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      pointer-events: auto;
+    }
+    
+    .dialog__modal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-dialog-color-background-default);
+      color: var(--fsds-dialog-color-foreground-default);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-dialog-size-radius-default);
+      box-shadow: var(--fsds-dialog-elevation-default);
+      width: var(--fsds-dialog-size-md-width);
+      max-width: var(--fsds-dialog-size-md-maxWidth);
+      max-height: 90vh;
+      pointer-events: auto;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    .dialog__header {
+      display: flex;
+      align-items: center;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-bottom-color: var(--fsds-dialog-color-border-default);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    
+    .dialog__title {
+      margin: 0;
+      font-size: var(--fsds-dialog-typography-title-fontSize);
+      font-weight: var(--fsds-dialog-typography-title-fontWeight);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      color: var(--fsds-dialog-color-foreground-default);
+    }
+    
+    .dialog__body {
+      flex: 1 1 auto;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      overflow-y: auto;
+    }
+    
+    .dialog__footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-top-color: var(--fsds-dialog-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .dialog__closeButton {
+      position: absolute;
+      top: var(--fsds-dialog-spacing-header-paddingTop);
+      right: var(--fsds-dialog-spacing-body-paddingRight);
+      width: var(--fsds-dialog-size-closeButton-size);
+      height: var(--fsds-dialog-size-closeButton-size);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--fsds-dialog-color-foreground-secondary);
+      cursor: pointer;
+    }
+    
+    .dialog__closeButton:hover {
+      background-color: var(--fsds-dialog-color-background-hover);
+    }
+    
+    .dialog--sm .dialog__modal {
+      width: var(--fsds-dialog-size-sm-width);
+      max-width: var(--fsds-dialog-size-sm-maxWidth);
+    }
+    
+    .dialog--lg .dialog__modal {
+      width: var(--fsds-dialog-size-lg-width);
+      max-width: var(--fsds-dialog-size-lg-maxWidth);
+    }
+    
+    .dialog--xl .dialog__modal {
+      width: var(--fsds-dialog-size-xl-width);
+      max-width: var(--fsds-dialog-size-xl-maxWidth);
+    }
+    
+    .dialog--full .dialog__modal {
+      width: var(--fsds-dialog-size-full-width);
+      height: var(--fsds-dialog-size-full-height);
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
     }
   `;
 
@@ -162,17 +271,126 @@ export class DialogHeaderElement extends LitElement {
     }
     
     .dialog {
-      background-color: var(--fsds-dialog-color-background-backdrop);
-      color: var(--fsds-dialog-color-foreground-secondary);
-      border-color: var(--fsds-dialog-color-border-default);
-      border-radius: var(--fsds-dialog-size-radius-default);
-      padding: var(--fsds-dialog-spacing-body-paddingRight);
-      gap: var(--fsds-dialog-spacing-footer-gap);
-      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
     
-      &:hover {
-        background-color: var(--fsds-dialog-color-background-hover);
-      }
+    .dialog__backdrop {
+      position: absolute;
+      inset: 0;
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      pointer-events: auto;
+    }
+    
+    .dialog__modal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-dialog-color-background-default);
+      color: var(--fsds-dialog-color-foreground-default);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-dialog-size-radius-default);
+      box-shadow: var(--fsds-dialog-elevation-default);
+      width: var(--fsds-dialog-size-md-width);
+      max-width: var(--fsds-dialog-size-md-maxWidth);
+      max-height: 90vh;
+      pointer-events: auto;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    .dialog__header {
+      display: flex;
+      align-items: center;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-bottom-color: var(--fsds-dialog-color-border-default);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    
+    .dialog__title {
+      margin: 0;
+      font-size: var(--fsds-dialog-typography-title-fontSize);
+      font-weight: var(--fsds-dialog-typography-title-fontWeight);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      color: var(--fsds-dialog-color-foreground-default);
+    }
+    
+    .dialog__body {
+      flex: 1 1 auto;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      overflow-y: auto;
+    }
+    
+    .dialog__footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-top-color: var(--fsds-dialog-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .dialog__closeButton {
+      position: absolute;
+      top: var(--fsds-dialog-spacing-header-paddingTop);
+      right: var(--fsds-dialog-spacing-body-paddingRight);
+      width: var(--fsds-dialog-size-closeButton-size);
+      height: var(--fsds-dialog-size-closeButton-size);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--fsds-dialog-color-foreground-secondary);
+      cursor: pointer;
+    }
+    
+    .dialog__closeButton:hover {
+      background-color: var(--fsds-dialog-color-background-hover);
+    }
+    
+    .dialog--sm .dialog__modal {
+      width: var(--fsds-dialog-size-sm-width);
+      max-width: var(--fsds-dialog-size-sm-maxWidth);
+    }
+    
+    .dialog--lg .dialog__modal {
+      width: var(--fsds-dialog-size-lg-width);
+      max-width: var(--fsds-dialog-size-lg-maxWidth);
+    }
+    
+    .dialog--xl .dialog__modal {
+      width: var(--fsds-dialog-size-xl-width);
+      max-width: var(--fsds-dialog-size-xl-maxWidth);
+    }
+    
+    .dialog--full .dialog__modal {
+      width: var(--fsds-dialog-size-full-width);
+      height: var(--fsds-dialog-size-full-height);
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
     }
   `;
 
@@ -215,17 +433,126 @@ export class DialogTitleElement extends LitElement {
     }
     
     .dialog {
-      background-color: var(--fsds-dialog-color-background-backdrop);
-      color: var(--fsds-dialog-color-foreground-secondary);
-      border-color: var(--fsds-dialog-color-border-default);
-      border-radius: var(--fsds-dialog-size-radius-default);
-      padding: var(--fsds-dialog-spacing-body-paddingRight);
-      gap: var(--fsds-dialog-spacing-footer-gap);
-      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
     
-      &:hover {
-        background-color: var(--fsds-dialog-color-background-hover);
-      }
+    .dialog__backdrop {
+      position: absolute;
+      inset: 0;
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      pointer-events: auto;
+    }
+    
+    .dialog__modal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-dialog-color-background-default);
+      color: var(--fsds-dialog-color-foreground-default);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-dialog-size-radius-default);
+      box-shadow: var(--fsds-dialog-elevation-default);
+      width: var(--fsds-dialog-size-md-width);
+      max-width: var(--fsds-dialog-size-md-maxWidth);
+      max-height: 90vh;
+      pointer-events: auto;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    .dialog__header {
+      display: flex;
+      align-items: center;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-bottom-color: var(--fsds-dialog-color-border-default);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    
+    .dialog__title {
+      margin: 0;
+      font-size: var(--fsds-dialog-typography-title-fontSize);
+      font-weight: var(--fsds-dialog-typography-title-fontWeight);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      color: var(--fsds-dialog-color-foreground-default);
+    }
+    
+    .dialog__body {
+      flex: 1 1 auto;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      overflow-y: auto;
+    }
+    
+    .dialog__footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-top-color: var(--fsds-dialog-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .dialog__closeButton {
+      position: absolute;
+      top: var(--fsds-dialog-spacing-header-paddingTop);
+      right: var(--fsds-dialog-spacing-body-paddingRight);
+      width: var(--fsds-dialog-size-closeButton-size);
+      height: var(--fsds-dialog-size-closeButton-size);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--fsds-dialog-color-foreground-secondary);
+      cursor: pointer;
+    }
+    
+    .dialog__closeButton:hover {
+      background-color: var(--fsds-dialog-color-background-hover);
+    }
+    
+    .dialog--sm .dialog__modal {
+      width: var(--fsds-dialog-size-sm-width);
+      max-width: var(--fsds-dialog-size-sm-maxWidth);
+    }
+    
+    .dialog--lg .dialog__modal {
+      width: var(--fsds-dialog-size-lg-width);
+      max-width: var(--fsds-dialog-size-lg-maxWidth);
+    }
+    
+    .dialog--xl .dialog__modal {
+      width: var(--fsds-dialog-size-xl-width);
+      max-width: var(--fsds-dialog-size-xl-maxWidth);
+    }
+    
+    .dialog--full .dialog__modal {
+      width: var(--fsds-dialog-size-full-width);
+      height: var(--fsds-dialog-size-full-height);
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
     }
   `;
 
@@ -268,17 +595,126 @@ export class DialogBodyElement extends LitElement {
     }
     
     .dialog {
-      background-color: var(--fsds-dialog-color-background-backdrop);
-      color: var(--fsds-dialog-color-foreground-secondary);
-      border-color: var(--fsds-dialog-color-border-default);
-      border-radius: var(--fsds-dialog-size-radius-default);
-      padding: var(--fsds-dialog-spacing-body-paddingRight);
-      gap: var(--fsds-dialog-spacing-footer-gap);
-      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
     
-      &:hover {
-        background-color: var(--fsds-dialog-color-background-hover);
-      }
+    .dialog__backdrop {
+      position: absolute;
+      inset: 0;
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      pointer-events: auto;
+    }
+    
+    .dialog__modal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-dialog-color-background-default);
+      color: var(--fsds-dialog-color-foreground-default);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-dialog-size-radius-default);
+      box-shadow: var(--fsds-dialog-elevation-default);
+      width: var(--fsds-dialog-size-md-width);
+      max-width: var(--fsds-dialog-size-md-maxWidth);
+      max-height: 90vh;
+      pointer-events: auto;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    .dialog__header {
+      display: flex;
+      align-items: center;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-bottom-color: var(--fsds-dialog-color-border-default);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    
+    .dialog__title {
+      margin: 0;
+      font-size: var(--fsds-dialog-typography-title-fontSize);
+      font-weight: var(--fsds-dialog-typography-title-fontWeight);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      color: var(--fsds-dialog-color-foreground-default);
+    }
+    
+    .dialog__body {
+      flex: 1 1 auto;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      overflow-y: auto;
+    }
+    
+    .dialog__footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-top-color: var(--fsds-dialog-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .dialog__closeButton {
+      position: absolute;
+      top: var(--fsds-dialog-spacing-header-paddingTop);
+      right: var(--fsds-dialog-spacing-body-paddingRight);
+      width: var(--fsds-dialog-size-closeButton-size);
+      height: var(--fsds-dialog-size-closeButton-size);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--fsds-dialog-color-foreground-secondary);
+      cursor: pointer;
+    }
+    
+    .dialog__closeButton:hover {
+      background-color: var(--fsds-dialog-color-background-hover);
+    }
+    
+    .dialog--sm .dialog__modal {
+      width: var(--fsds-dialog-size-sm-width);
+      max-width: var(--fsds-dialog-size-sm-maxWidth);
+    }
+    
+    .dialog--lg .dialog__modal {
+      width: var(--fsds-dialog-size-lg-width);
+      max-width: var(--fsds-dialog-size-lg-maxWidth);
+    }
+    
+    .dialog--xl .dialog__modal {
+      width: var(--fsds-dialog-size-xl-width);
+      max-width: var(--fsds-dialog-size-xl-maxWidth);
+    }
+    
+    .dialog--full .dialog__modal {
+      width: var(--fsds-dialog-size-full-width);
+      height: var(--fsds-dialog-size-full-height);
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
     }
   `;
 
@@ -321,17 +757,126 @@ export class DialogFooterElement extends LitElement {
     }
     
     .dialog {
-      background-color: var(--fsds-dialog-color-background-backdrop);
-      color: var(--fsds-dialog-color-foreground-secondary);
-      border-color: var(--fsds-dialog-color-border-default);
-      border-radius: var(--fsds-dialog-size-radius-default);
-      padding: var(--fsds-dialog-spacing-body-paddingRight);
-      gap: var(--fsds-dialog-spacing-footer-gap);
-      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
     
-      &:hover {
-        background-color: var(--fsds-dialog-color-background-hover);
-      }
+    .dialog__backdrop {
+      position: absolute;
+      inset: 0;
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      pointer-events: auto;
+    }
+    
+    .dialog__modal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--fsds-dialog-color-background-default);
+      color: var(--fsds-dialog-color-foreground-default);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-style: solid;
+      border-width: 1px;
+      border-radius: var(--fsds-dialog-size-radius-default);
+      box-shadow: var(--fsds-dialog-elevation-default);
+      width: var(--fsds-dialog-size-md-width);
+      max-width: var(--fsds-dialog-size-md-maxWidth);
+      max-height: 90vh;
+      pointer-events: auto;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    .dialog__header {
+      display: flex;
+      align-items: center;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-bottom-color: var(--fsds-dialog-color-border-default);
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+    }
+    
+    .dialog__title {
+      margin: 0;
+      font-size: var(--fsds-dialog-typography-title-fontSize);
+      font-weight: var(--fsds-dialog-typography-title-fontWeight);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      color: var(--fsds-dialog-color-foreground-default);
+    }
+    
+    .dialog__body {
+      flex: 1 1 auto;
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      overflow-y: auto;
+    }
+    
+    .dialog__footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      padding-top: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-right: var(--fsds-dialog-spacing-body-paddingRight);
+      padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
+      padding-left: var(--fsds-dialog-spacing-body-paddingRight);
+      border-top-color: var(--fsds-dialog-color-border-default);
+      border-top-style: solid;
+      border-top-width: 1px;
+    }
+    
+    .dialog__closeButton {
+      position: absolute;
+      top: var(--fsds-dialog-spacing-header-paddingTop);
+      right: var(--fsds-dialog-spacing-body-paddingRight);
+      width: var(--fsds-dialog-size-closeButton-size);
+      height: var(--fsds-dialog-size-closeButton-size);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      border: 0;
+      border-radius: 9999px;
+      color: var(--fsds-dialog-color-foreground-secondary);
+      cursor: pointer;
+    }
+    
+    .dialog__closeButton:hover {
+      background-color: var(--fsds-dialog-color-background-hover);
+    }
+    
+    .dialog--sm .dialog__modal {
+      width: var(--fsds-dialog-size-sm-width);
+      max-width: var(--fsds-dialog-size-sm-maxWidth);
+    }
+    
+    .dialog--lg .dialog__modal {
+      width: var(--fsds-dialog-size-lg-width);
+      max-width: var(--fsds-dialog-size-lg-maxWidth);
+    }
+    
+    .dialog--xl .dialog__modal {
+      width: var(--fsds-dialog-size-xl-width);
+      max-width: var(--fsds-dialog-size-xl-maxWidth);
+    }
+    
+    .dialog--full .dialog__modal {
+      width: var(--fsds-dialog-size-full-width);
+      height: var(--fsds-dialog-size-full-height);
+      max-width: 100vw;
+      max-height: 100vh;
+      border-radius: 0;
     }
   `;
 

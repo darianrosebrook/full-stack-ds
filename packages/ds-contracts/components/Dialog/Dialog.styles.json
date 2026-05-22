@@ -1,30 +1,112 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "dialog.color.background.backdrop"
-    },
-    "color": {
-      "resolvesTo": "dialog.color.foreground.secondary"
-    },
-    "border-color": {
-      "resolvesTo": "dialog.color.border.default"
-    },
-    "border-radius": {
-      "resolvesTo": "dialog.size.radius.default"
-    },
-    "padding": {
-      "resolvesTo": "dialog.spacing.body.paddingRight"
-    },
-    "gap": {
-      "resolvesTo": "dialog.spacing.footer.gap"
-    },
-    "line-height": {
-      "resolvesTo": "dialog.typography.title.lineHeight"
-    }
+    "position": { "literal": "fixed", "platforms": ["web"] },
+    "inset": { "literal": "0", "platforms": ["web"] },
+    "z-index": { "literal": "1000", "platforms": ["web"] },
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "pointer-events": { "literal": "none", "platforms": ["web"] }
   },
-  "hover": {
-    "background-color": {
-      "resolvesTo": "dialog.color.background.hover"
-    }
+  "backdrop": {
+    "position": { "literal": "absolute", "platforms": ["web", "ios", "android"] },
+    "inset": { "literal": "0", "platforms": ["web"] },
+    "background-color": { "resolvesTo": "dialog.color.background.backdrop" },
+    "pointer-events": { "literal": "auto", "platforms": ["web"] }
+  },
+  "modal": {
+    "position": { "literal": "relative", "platforms": ["web", "ios", "android"] },
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "flex-direction": { "literal": "column", "platforms": ["web"] },
+    "background-color": { "resolvesTo": "dialog.color.background.default" },
+    "color": { "resolvesTo": "dialog.color.foreground.default" },
+    "border-color": { "resolvesTo": "dialog.color.border.default" },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "border-width": { "literal": "1px", "platforms": ["web", "ios", "android"] },
+    "border-radius": { "resolvesTo": "dialog.size.radius.default" },
+    "box-shadow": { "resolvesTo": "dialog.elevation.default" },
+    "width": { "resolvesTo": "dialog.size.md.width" },
+    "max-width": { "resolvesTo": "dialog.size.md.maxWidth" },
+    "max-height": { "literal": "90vh", "platforms": ["web"] },
+    "pointer-events": { "literal": "auto", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "overflow": { "literal": "hidden", "platforms": ["web"] }
+  },
+  "header": {
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "padding-top": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "padding-right": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "padding-bottom": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "padding-left": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "border-bottom-color": { "resolvesTo": "dialog.color.border.default" },
+    "border-bottom-style": { "literal": "solid", "platforms": ["web"] },
+    "border-bottom-width": { "literal": "1px", "platforms": ["web", "ios", "android"] }
+  },
+  "title": {
+    "margin": { "literal": "0", "platforms": ["web"] },
+    "font-size": { "resolvesTo": "dialog.typography.title.fontSize" },
+    "font-weight": { "resolvesTo": "dialog.typography.title.fontWeight" },
+    "line-height": { "resolvesTo": "dialog.typography.title.lineHeight" },
+    "color": { "resolvesTo": "dialog.color.foreground.default" }
+  },
+  "body": {
+    "flex": { "literal": "1 1 auto", "platforms": ["web"] },
+    "padding-top": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "padding-right": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "padding-bottom": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "padding-left": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "color": { "resolvesTo": "dialog.color.foreground.secondary" },
+    "overflow-y": { "literal": "auto", "platforms": ["web"] }
+  },
+  "footer": {
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "justify-content": { "literal": "flex-end", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "gap": { "resolvesTo": "dialog.spacing.footer.gap" },
+    "padding-top": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "padding-right": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "padding-bottom": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "padding-left": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "border-top-color": { "resolvesTo": "dialog.color.border.default" },
+    "border-top-style": { "literal": "solid", "platforms": ["web"] },
+    "border-top-width": { "literal": "1px", "platforms": ["web", "ios", "android"] }
+  },
+  "closeButton": {
+    "position": { "literal": "absolute", "platforms": ["web"] },
+    "top": { "resolvesTo": "dialog.spacing.header.paddingTop" },
+    "right": { "resolvesTo": "dialog.spacing.body.paddingRight" },
+    "width": { "resolvesTo": "dialog.size.closeButton.size" },
+    "height": { "resolvesTo": "dialog.size.closeButton.size" },
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "background-color": { "literal": "transparent", "platforms": ["web"] },
+    "border": { "literal": "0", "platforms": ["web"] },
+    "border-radius": { "literal": "9999px", "platforms": ["web"] },
+    "color": { "resolvesTo": "dialog.color.foreground.secondary" },
+    "cursor": { "literal": "pointer", "platforms": ["web"] }
+  },
+  ".dialog__closeButton:hover": {
+    "background-color": { "resolvesTo": "dialog.color.background.hover" }
+  },
+  ".dialog--sm .dialog__modal": {
+    "width": { "resolvesTo": "dialog.size.sm.width" },
+    "max-width": { "resolvesTo": "dialog.size.sm.maxWidth" }
+  },
+  ".dialog--lg .dialog__modal": {
+    "width": { "resolvesTo": "dialog.size.lg.width" },
+    "max-width": { "resolvesTo": "dialog.size.lg.maxWidth" }
+  },
+  ".dialog--xl .dialog__modal": {
+    "width": { "resolvesTo": "dialog.size.xl.width" },
+    "max-width": { "resolvesTo": "dialog.size.xl.maxWidth" }
+  },
+  ".dialog--full .dialog__modal": {
+    "width": { "resolvesTo": "dialog.size.full.width" },
+    "height": { "resolvesTo": "dialog.size.full.height" },
+    "max-width": { "literal": "100vw", "platforms": ["web"] },
+    "max-height": { "literal": "100vh", "platforms": ["web"] },
+    "border-radius": { "literal": "0", "platforms": ["web"] }
   }
 }
