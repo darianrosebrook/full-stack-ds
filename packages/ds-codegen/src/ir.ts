@@ -209,6 +209,27 @@ export interface RootSemanticsIR {
   labeling: string[];
   /** Keyboard interactions declared in the a11y block. */
   keyboard: NonNullable<ComponentContract["a11y"]>["keyboard"];
+  /**
+   * When set, the root tag is driven at runtime by a styled prop whose value
+   * is one of the allowed HTML tag names. Derived when a styled prop's type
+   * is a `union` alias and every value is a recognized HTML tag name (so
+   * `as: "ul" | "ol" | "dl"` qualifies but `variant: "primary" | "ghost"`
+   * does not).
+   *
+   * Emitters consume this to render a polymorphic root element (React:
+   * `const RootTag = as ?? "<default>"; <RootTag>`; Vue: `<component :is>`;
+   * etc.) instead of a hardcoded tag from `element`.
+   */
+  polymorphicTagProp:
+    | {
+        /** Styled prop name driving the root tag. */
+        propName: string;
+        /** HTML tags allowed by the prop's union type. */
+        allowedTags: string[];
+        /** Default tag (from `element`) used when the prop is undefined. */
+        defaultTag: string;
+      }
+    | undefined;
 }
 
 export interface UnresolvedTypeRefIR {
@@ -411,6 +432,73 @@ export interface ComponentIR {
 }
 
 // ---------------------------------------------------------------------------
+// Polymorphic-root detection
+// ---------------------------------------------------------------------------
+
+/**
+ * HTML tag names a polymorphic-root prop is allowed to take. Not exhaustive —
+ * just the tags we'd reasonably expect in `as` unions today (list elements,
+ * sectioning, phrasing). Adding to this set is safe; emitters only branch
+ * on whether *all* of a union's values are members.
+ */
+const POLYMORPHIC_ROOT_TAGS = new Set<string>([
+  "div",
+  "span",
+  "p",
+  "section",
+  "article",
+  "aside",
+  "header",
+  "footer",
+  "main",
+  "nav",
+  "ul",
+  "ol",
+  "dl",
+  "li",
+  "dt",
+  "dd",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "blockquote",
+  "figure",
+  "figcaption",
+]);
+
+/**
+ * Derive the polymorphic-tag prop, if any. Authority is structural: a
+ * styled prop whose type alias is a string-union of recognized HTML tag
+ * names qualifies. The rule does NOT branch on prop name — a prop called
+ * `variant: "primary" | "ghost"` correctly returns undefined because its
+ * values aren't HTML tags.
+ */
+function derivePolymorphicTagProp(
+  styledProps: ResolvedPropIR[],
+  types: Record<string, ContractTypeDef> | undefined,
+  defaultTag: string,
+): RootSemanticsIR["polymorphicTagProp"] {
+  if (!types) return undefined;
+  for (const prop of styledProps) {
+    const def = types[prop.type];
+    if (!def || def.kind !== "union") continue;
+    const values = def.values;
+    if (!Array.isArray(values) || values.length === 0) continue;
+    if (!values.every((v): v is string => typeof v === "string")) continue;
+    if (!values.every((v) => POLYMORPHIC_ROOT_TAGS.has(v))) continue;
+    return {
+      propName: prop.name,
+      allowedTags: values,
+      defaultTag,
+    };
+  }
+  return undefined;
+}
+
+// ---------------------------------------------------------------------------
 // Builders
 // ---------------------------------------------------------------------------
 
@@ -460,6 +548,17 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
     validateDomBindings(dom, behavior.normalizedChannels, styledProps, contract.name);
   }
 
+  // The polymorphic-as default tag comes from the contract's dom-tree root
+  // (when present) rather than the a11y-role-derived rootElement, because
+  // contracts like List declare the semantic tag via anatomy.dom.tag without
+  // setting a role. Falls back to rootElement when no dom tree is authored.
+  const polymorphicDefaultTag = dom?.tag ?? rootElement;
+  const polymorphicTagProp = derivePolymorphicTagProp(
+    styledProps,
+    contract.types,
+    polymorphicDefaultTag,
+  );
+
   return {
     name: contract.name,
     cssPrefix,
@@ -478,6 +577,7 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
       effectiveRole,
       labeling: contract.a11y?.labeling ?? [],
       keyboard: contract.a11y?.keyboard,
+      polymorphicTagProp,
     },
     cssBlocks,
     keyframes,

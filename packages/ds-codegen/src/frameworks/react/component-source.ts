@@ -1159,6 +1159,22 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     ? `set${capitalize(booleanChannel.name)}`
     : undefined;
 
+  // Polymorphic-root prop: when the contract declares a styled prop whose
+  // union type is HTML tag names, emit a `const As = as ?? "<default>"` line
+  // and pass the alias through the render context so the root tag becomes
+  // `<As ...>` instead of the literal `<ul>`.
+  const polyTag = ir.root.polymorphicTagProp;
+  let rootTagOverride: string | undefined;
+  if (polyTag) {
+    // Capitalized JSX identifier (React treats lowercase identifiers as
+    // intrinsic tags). For an `as` prop, this becomes `As`.
+    rootTagOverride = capitalize(polyTag.propName);
+    lines.push(
+      `  const ${rootTagOverride} = ${polyTag.propName} ?? "${polyTag.defaultTag}";`,
+    );
+    lines.push(``);
+  }
+
   const renderCtx: ReactRenderContext = {
     classRecipe: classRecipe.base,
     channelByName,
@@ -1167,6 +1183,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     overlayClickEnabledProp: overlayClickTrigger?.enabledByProp,
     forwardAriaLabel: hasDialogNode,
     rootRole: ir.root.effectiveRole,
+    rootTagOverride,
   };
 
   // When the root has an if-guard, render the conditional at the return
@@ -1217,6 +1234,13 @@ interface ReactRenderContext {
    * which always emits `role={effectiveRole}` on the root.
    */
   rootRole?: string;
+  /**
+   * When set on the root-level call, the outermost element's tag is rendered
+   * as this JSX identifier (e.g. `As`) instead of the literal node.tag. Used
+   * to realize a contract-declared polymorphic-as prop. Inner recursive calls
+   * MUST clear this — only the root node should use it.
+   */
+  rootTagOverride?: string;
 }
 
 /**
@@ -1373,8 +1397,13 @@ function renderReactDomNode(
   const allChildren = [...textChildLines, ...renderedChildren];
 
   // Self-closing vs open tag
-  const tag = node.tag;
-  const isVoidEl = VOID_HTML_ELEMENTS.has(tag);
+  // When emitting the root node and the contract declared a polymorphic
+  // root prop, swap the literal HTML tag for the JSX variable identifier.
+  // Inner calls (isRoot=false) ignore the override.
+  const tag = ctx.isRoot && ctx.rootTagOverride
+    ? ctx.rootTagOverride
+    : node.tag;
+  const isVoidEl = VOID_HTML_ELEMENTS.has(node.tag);
 
   let body: string;
   if (allChildren.length === 0 && isVoidEl) {
