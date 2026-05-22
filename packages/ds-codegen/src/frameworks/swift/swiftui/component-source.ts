@@ -210,16 +210,18 @@ function emitSizeAccessor(
   const sizeDef = ir.definedTypes[sizeTypeName];
   if (!sizeDef?.values) return;
 
-  // Round-2 honors only the md token (gap 1a deferred). sm/lg fall
-  // through to md's dimension. When gap 1a lands, this accessor will
-  // read distinct per-variant tokens.
-  const mdToken = findSizeToken(ir, "md", dimension);
-  const mdValue = parsePxFallback(mdToken);
+  // Round-2 honors only the md token (gap 1a deferred). When gap 1a lands,
+  // each variant's own token populates and the per-variant lookup picks
+  // each up distinctly. Until then, missing variants fall through to md
+  // so SwiftUI doesn't ship a 0-sized track.
+  const mdValue = parsePxFallback(findSizeToken(ir, "md", dimension));
 
   lines.push(`${INDENT}private var ${accessorName}: CGFloat {`);
   lines.push(`${INDENT}${INDENT}switch size {`);
   for (const value of sizeDef.values) {
-    lines.push(`${INDENT}${INDENT}case .${value}: return ${mdValue}`);
+    const variantToken = findSizeToken(ir, value, dimension);
+    const px = variantToken ? parsePxFallback(variantToken) : mdValue;
+    lines.push(`${INDENT}${INDENT}case .${value}: return ${px}`);
   }
   lines.push(`${INDENT}${INDENT}}`);
   lines.push(`${INDENT}}`);
@@ -244,23 +246,26 @@ function findSizeTypeName(ir: ComponentIR): string | undefined {
 
 /**
  * Look up the px fallback for a `<componentSlug>.size.<variant>.track.<dimension>`
- * token in the contract's tokens.root block. Returns undefined when the
- * token is absent.
+ * token. After TOKENS-WORKSTREAM-STEP-06A-II, the IR's cssBlocks declare
+ * a per-variant slot like
+ *
+ *   "--fsds-switch-size-md-track-width": "var(--fsds-core-spacing-size-09, 48px)"
+ *
+ * The inner var() arg is the fallback. We match by the slot's custom-property
+ * name (which embeds the variant), so this resolves per-variant even when
+ * the IR carries entries for sm/md/lg simultaneously. Returns undefined when
+ * the slot for that variant/dimension isn't present (gap 1a still pending
+ * for Switch — only md is currently authored).
  */
 function findSizeToken(
   ir: ComponentIR,
   variant: string,
   dimension: "width" | "height",
 ): string | undefined {
-  const cssBlocks = ir.cssBlocks;
-  for (const block of cssBlocks) {
-    const decl = block.declarations[dimension];
-    if (decl && decl.includes(`spacing-size`)) {
-      // Heuristic: pick the dimension declaration that matches the
-      // expected token path. Round-2 only supports md; sm/lg fallthrough.
-      void variant;
-      return decl;
-    }
+  const slotName = `--fsds-${ir.cssPrefix}-size-${variant}-track-${dimension}`;
+  for (const block of ir.cssBlocks) {
+    const slotValue = block.declarations[slotName];
+    if (typeof slotValue === "string") return slotValue;
   }
   return undefined;
 }

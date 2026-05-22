@@ -56,7 +56,12 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
     expect(selectors).toContain(".x--loading");
   });
 
-  it("applies tokens.<state> to the resulting selector", () => {
+  it("applies tokens.<state> to the resulting selector using two-hop indirection", () => {
+    // After 6a-ii, a structured TokenResolution emits TWO declarations:
+    // a component-scoped slot that carries the global+fallback, and the
+    // property reference that consumes the slot. The slot insulates
+    // consumers from naming changes in the global graph and gives brands
+    // a per-component override point.
     const contract: ComponentContract = {
       ...makeContract(["default", "hover"]),
       tokens: {
@@ -75,10 +80,39 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
     const hoverBlock = blocks.find((b) => b.selector === ".x:hover");
 
     expect(hoverBlock).toBeDefined();
-    // A resolvesTo token with `property` writes a real declaration.
+    // Slot declaration (with inner fallback) AND property consumer (no fallback).
     expect(hoverBlock?.declarations).toEqual({
-      color: "var(--fsds-semantic-color-fg, red)",
+      "--fsds-x-color-fg": "var(--fsds-semantic-color-fg, red)",
+      color: "var(--fsds-x-color-fg)",
     });
+  });
+
+  it("does NOT emit a phantom indirection for a token without `property`", () => {
+    // 6a-ii falsification: a TokenResolution without a `property` field
+    // continues to produce only a comment, not a slot declaration that
+    // nothing consumes. (A slot with no consumer would be dead weight
+    // in the output.)
+    const contract: ComponentContract = {
+      ...makeContract(["default"]),
+      tokens: {
+        root: {
+          "x.color.future": {
+            resolvesTo: "semantic.color.future",
+            fallback: "magenta",
+            // no `property` — design intent not yet bound to CSS
+            layer: "semantic",
+          },
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "x");
+    const rootBlock = blocks.find((b) => b.selector === ".x");
+
+    expect(rootBlock?.declarations).toEqual({});
+    // The intent is preserved as a comment so designers can promote it later.
+    expect(rootBlock?.comments).toEqual([
+      "/* --fsds-semantic-color-future: magenta; */",
+    ]);
   });
 
   // -------- Variant-keyed token routing (Gap 1b fix, TOKENS-WORKSTREAM-STEP-06A-I) --------
@@ -138,21 +172,30 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
     const byKey = Object.fromEntries(blocks.map((b) => [b.selector, b]));
 
     // Base selector: gets the default variant (md) PLUS the non-variant root token.
+    // Each TokenResolution emits two declarations: the component-scoped slot
+    // declaration (with the global+fallback inside) and the property reference
+    // that consumes the slot.
     expect(byKey[".switch"]?.declarations).toEqual({
-      width: "var(--fsds-core-spacing-size-09, 48px)",
-      "background-color": "var(--fsds-semantic-color-background-tertiary, #cecece)",
+      "--fsds-switch-size-md-track-width": "var(--fsds-core-spacing-size-09, 48px)",
+      width: "var(--fsds-switch-size-md-track-width)",
+      "--fsds-switch-color-track-background-default":
+        "var(--fsds-semantic-color-background-tertiary, #cecece)",
+      "background-color": "var(--fsds-switch-color-track-background-default)",
     });
-    // Default modifier: same as base (redundant but consistent).
+    // Default modifier: same shape as base (redundant but consistent).
     expect(byKey[".switch--md"]?.declarations).toEqual({
-      width: "var(--fsds-core-spacing-size-09, 48px)",
+      "--fsds-switch-size-md-track-width": "var(--fsds-core-spacing-size-09, 48px)",
+      width: "var(--fsds-switch-size-md-track-width)",
     });
-    // sm modifier: only the sm entry.
+    // sm modifier: only the sm slot + width.
     expect(byKey[".switch--sm"]?.declarations).toEqual({
-      width: "var(--fsds-core-spacing-size-07, 24px)",
+      "--fsds-switch-size-sm-track-width": "var(--fsds-core-spacing-size-07, 24px)",
+      width: "var(--fsds-switch-size-sm-track-width)",
     });
-    // lg modifier: only the lg entry.
+    // lg modifier: only the lg slot + width.
     expect(byKey[".switch--lg"]?.declarations).toEqual({
-      width: "var(--fsds-core-spacing-size-10, 64px)",
+      "--fsds-switch-size-lg-track-width": "var(--fsds-core-spacing-size-10, 64px)",
+      width: "var(--fsds-switch-size-lg-track-width)",
     });
   });
 
@@ -184,7 +227,9 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
     const byKey = Object.fromEntries(blocks.map((b) => [b.selector, b]));
 
     expect(byKey[".checkbox"]?.declarations).toEqual({
-      "background-color": "var(--fsds-semantic-color-background-primary, #ffffff)",
+      "--fsds-checkbox-color-background":
+        "var(--fsds-semantic-color-background-primary, #ffffff)",
+      "background-color": "var(--fsds-checkbox-color-background)",
     });
     expect(byKey[".checkbox--sm"]?.declarations).toEqual({});
     expect(byKey[".checkbox--md"]?.declarations).toEqual({});
@@ -214,7 +259,9 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
     const byKey = Object.fromEntries(blocks.map((b) => [b.selector, b]));
 
     expect(byKey[".switch"]?.declarations).toEqual({
-      color: "var(--fsds-semantic-color-foreground-muted, #888)",
+      "--fsds-switch-tone-subtle-color":
+        "var(--fsds-semantic-color-foreground-muted, #888)",
+      color: "var(--fsds-switch-tone-subtle-color)",
     });
     // `tone-subtle` is NOT a modifier; we did not invent one.
     expect(byKey[".switch--subtle"]).toBeUndefined();

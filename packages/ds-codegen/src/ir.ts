@@ -1458,26 +1458,78 @@ function renderTokens(
   }
 
   if (typeof raw === "object") {
+    // Two-hop indirection (TOKENS-WORKSTREAM-STEP-06A-II):
+    //   For each structured TokenResolution with a `property`, emit TWO
+    //   declarations on the same block:
+    //     1. `--fsds-{slug(name)}: var(--fsds-{slug(resolvesTo)}, {fallback});`
+    //        The component-scoped indirection slot. Fallback inside the
+    //        inner var() preserves the safety net at the slot boundary.
+    //     2. `{property}: var(--fsds-{slug(name)});`
+    //        The property consumes the slot, no second arg. A brand can
+    //        override the slot or the global token; either way the
+    //        consumer doesn't have to know.
+    //
+    // Two passes so ALL slot declarations precede the property references
+    // in CSS output. A single pass would interleave slot/property/slot/...
+    // and — for contracts that author two TokenResolutions onto the same
+    // CSS property (e.g. switch.color.track.background and
+    // switch.color.thumb.background both targeting `background-color`) —
+    // would produce confusing output where the property reference shows
+    // up textually before its slot's declaration. With two passes, the
+    // CSS reads:
+    //
+    //   .switch {
+    //     --fsds-switch-color-track-background-default: var(--fsds-..., #cecece);
+    //     --fsds-switch-color-thumb-background-default: var(--fsds-..., #ffffff);
+    //     background-color: var(--fsds-switch-color-thumb-background-default);  /* last-writer-wins */
+    //   }
+    //
+    // The last-writer-wins on `background-color` is a contract-authoring
+    // issue (two tokens fighting over one CSS property in one selector)
+    // surfaced by the validator workstream — not something renderTokens
+    // can resolve. Emitting both slots makes the loss visible: a brand
+    // override on either slot still gets to declare its preference.
+    //
+    // Entries without `property` produce only a CSS comment shim. A slot
+    // declaration with no consumer would be dead weight; we won't emit
+    // one (6a-ii falsification clause).
     const declarations: Record<string, string> = {};
     const comments: string[] = [];
-    for (const [name, value] of Object.entries(raw as Record<string, unknown>)) {
+    const entries = Object.entries(raw as Record<string, unknown>);
+
+    // Pass 1: slot declarations and legacy comments (no property refs yet).
+    for (const [name, value] of entries) {
       if (typeof value === "string") {
         // Mixed-map shape: legacy entry that still needs migration.
         comments.push(`/* --${tokenSlug(value)}: ; */`);
         continue;
       }
       if (isTokenResolution(value)) {
-        const customProp = `--${tokenSlug(value.resolvesTo)}`;
+        const slotProp = `--${tokenSlug(name)}`;
+        const globalRef = `--${tokenSlug(value.resolvesTo)}`;
         if (value.property) {
-          declarations[value.property] = `var(${customProp}, ${value.fallback})`;
+          declarations[slotProp] = `var(${globalRef}, ${value.fallback})`;
         } else {
-          comments.push(`/* ${customProp}: ${value.fallback}; */`);
+          // Without a `property`, slot has no consumer — keep the intent
+          // as a comment that designers can promote later.
+          comments.push(`/* ${globalRef}: ${value.fallback}; */`);
         }
       } else {
-        // Unknown shape (probably nested) — fall back to a comment.
         comments.push(`/* --${tokenSlug(name)}: ; */`);
       }
     }
+
+    // Pass 2: property references (last-writer-wins on conflict).
+    for (const [name, value] of entries) {
+      if (
+        isTokenResolution(value) &&
+        value.property &&
+        typeof value.property === "string"
+      ) {
+        declarations[value.property] = `var(--${tokenSlug(name)})`;
+      }
+    }
+
     return { declarations, comments };
   }
 
