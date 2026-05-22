@@ -38,11 +38,27 @@ export class SwitchElement extends LitElement {
       --fsds-switch-size-md-track-padding: var(--fsds-core-spacing-size-01, 2px);
       --fsds-switch-size-md-thumb-size: var(--fsds-core-spacing-size-06, 20px);
       --fsds-switch-size-md-thumb-height: var(--fsds-core-spacing-size-06, 20px);
+      --fsds-switch-size-sm-track-width: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-switch-size-sm-track-height: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-switch-size-sm-track-radius: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-switch-size-sm-track-padding: var(--fsds-core-spacing-size-01, 2px);
+      --fsds-switch-size-sm-thumb-size: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-switch-size-sm-thumb-height: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-switch-size-lg-track-width: var(--fsds-core-spacing-size-10, 64px);
+      --fsds-switch-size-lg-track-height: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-switch-size-lg-track-radius: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-switch-size-lg-track-padding: var(--fsds-core-spacing-size-01, 2px);
+      --fsds-switch-size-lg-thumb-size: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-switch-size-lg-thumb-height: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-switch-size-sm-thumb-translate-off: 0;
+      --fsds-switch-size-sm-thumb-translate-on: 16px;
+      --fsds-switch-size-md-thumb-translate-off: 0;
+      --fsds-switch-size-md-thumb-translate-on: 24px;
+      --fsds-switch-size-lg-thumb-translate-off: 0;
+      --fsds-switch-size-lg-thumb-translate-on: 36px;
     }
     
     .switch {
-      transition-duration: var(--fsds-switch-motion-duration);
-      transition-timing-function: var(--fsds-switch-motion-easing);
       display: inline-flex;
       align-items: center;
       cursor: pointer;
@@ -50,6 +66,7 @@ export class SwitchElement extends LitElement {
     }
     
     .switch__track {
+      transition: background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing);
       background-color: var(--fsds-switch-color-track-background-default);
       border-color: var(--fsds-switch-color-track-border-default);
       width: var(--fsds-switch-size-md-track-width);
@@ -64,12 +81,14 @@ export class SwitchElement extends LitElement {
     }
     
     .switch__thumb {
+      transition: translate var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing), background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing);
       background-color: var(--fsds-switch-color-thumb-background-default);
       box-shadow: var(--fsds-switch-color-thumb-shadow-default);
       width: var(--fsds-switch-size-md-thumb-size);
       height: var(--fsds-switch-size-md-thumb-height);
       top: var(--fsds-switch-size-md-track-padding);
       left: var(--fsds-switch-size-md-track-padding);
+      translate: var(--fsds-switch-size-md-thumb-translate-off);
       display: block;
       position: absolute;
       border-radius: 50%;
@@ -95,10 +114,49 @@ export class SwitchElement extends LitElement {
     
     :has(.switch__input:checked) .switch__thumb {
       background-color: var(--fsds-switch-color-thumb-background-checked);
+      translate: var(--fsds-switch-size-md-thumb-translate-on);
     }
     
     :has(.switch__input:disabled) .switch__track {
       background-color: var(--fsds-switch-color-track-background-disabled);
+    }
+    
+    .switch--sm .switch__track {
+      width: var(--fsds-switch-size-sm-track-width);
+      height: var(--fsds-switch-size-sm-track-height);
+      border-radius: var(--fsds-switch-size-sm-track-radius);
+      padding: var(--fsds-switch-size-sm-track-padding);
+    }
+    
+    .switch--sm .switch__thumb {
+      width: var(--fsds-switch-size-sm-thumb-size);
+      height: var(--fsds-switch-size-sm-thumb-height);
+      top: var(--fsds-switch-size-sm-track-padding);
+      left: var(--fsds-switch-size-sm-track-padding);
+      translate: var(--fsds-switch-size-sm-thumb-translate-off);
+    }
+    
+    .switch--sm:has(.switch__input:checked) .switch__thumb {
+      translate: var(--fsds-switch-size-sm-thumb-translate-on);
+    }
+    
+    .switch--lg .switch__track {
+      width: var(--fsds-switch-size-lg-track-width);
+      height: var(--fsds-switch-size-lg-track-height);
+      border-radius: var(--fsds-switch-size-lg-track-radius);
+      padding: var(--fsds-switch-size-lg-track-padding);
+    }
+    
+    .switch--lg .switch__thumb {
+      width: var(--fsds-switch-size-lg-thumb-size);
+      height: var(--fsds-switch-size-lg-thumb-height);
+      top: var(--fsds-switch-size-lg-track-padding);
+      left: var(--fsds-switch-size-lg-track-padding);
+      translate: var(--fsds-switch-size-lg-thumb-translate-off);
+    }
+    
+    .switch--lg:has(.switch__input:checked) .switch__thumb {
+      translate: var(--fsds-switch-size-lg-thumb-translate-on);
     }
   `;
 

@@ -70,17 +70,17 @@ public struct Switch: View {
 
     private var trackWidth: CGFloat {
         switch size {
-        case .sm: return 48
+        case .sm: return 32
         case .md: return 48
-        case .lg: return 48
+        case .lg: return 64
         }
     }
 
     private var trackHeight: CGFloat {
         switch size {
-        case .sm: return 24
+        case .sm: return 16
         case .md: return 24
-        case .lg: return 24
+        case .lg: return 32
         }
     }
 }

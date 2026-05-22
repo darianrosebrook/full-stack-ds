@@ -55,22 +55,51 @@ change."
 All four targets had to hand-pick `36/18` for `sm` and `60/30` for `lg`
 because `contract.tokens.root` only contains `switch.size.md.*` entries.
 
-#### Gap 1a — Contract data (pending)
+#### Gap 1a — Contract data — RESOLVED via post-convergence authoring
 
-The contract declares `variants.size = [sm, md, lg]` (line 110-115) but
-only ships tokens for the middle variant. The schema already supports
-`switch.size.sm.track.width` / `switch.size.lg.track.width` keys — they
-are simply absent.
+The contract declares `variants.size = [sm, md, lg]` but only shipped
+tokens for `md`. After the convergence dissolved the gating with Gap 1b,
+adding the missing slots became pure authoring work.
 
-**Status:** identified, not yet patched. A direct edit was attempted
-mid-round but **reverted** when it surfaced gap 1b (below) as a
-behavior regression on the existing React emitter. The data fix is
-correct in isolation but cannot land alone without regressing every
-existing consumer.
+**Resolution:** `Switch.tokens.json` now declares the full sm/md/lg
+slot pool (12 new slots across the two non-default variants):
 
-**Proposal:** populate `switch.size.sm.*` and `switch.size.lg.*` token
-entries in `Switch.contract.json` *as part of the same change that
-fixes gap 1b*.
+- `switch.size.sm.{track.width=32px, track.height=16px, track.radius, track.padding, thumb.size=12px, thumb.height=12px}`
+- `switch.size.lg.{track.width=64px, track.height=32px, track.radius, track.padding, thumb.size=24px, thumb.height=24px}`
+
+Each backed by the existing `core.spacing.size.*` graph entries
+(no new global tokens needed). `Switch.styles.json` consumes them via
+two new variant-scoped compound selectors per variant:
+
+```jsonc
+".switch--sm .switch__track": { "width": { "resolvesTo": "switch.size.sm.track.width" }, ... },
+".switch--sm .switch__thumb": { "width": { "resolvesTo": "switch.size.sm.thumb.size" }, ... }
+```
+
+Per the convergence doctrine, the IR has no special-case path for
+variant-conditional consumption — the author writes the compound
+selector verbatim, `expandComplexSelector` preserves the already-
+qualified `.switch--sm` segment, and the cascade applies the override
+to the correct variant.
+
+**Evidence (`Switch.swiftui.generated.swift` golden after regen):**
+
+```swift
+private var trackWidth: CGFloat {
+    switch size {
+    case .sm: return 32
+    case .md: return 48
+    case .lg: return 64
+    }
+}
+```
+
+`findSizeToken(ir, "<variant>", "<dimension>")` now returns distinct
+slot values for each variant. Before the slots existed, Swift fell
+through to `mdValue` (48/48/48 across all three). After the slots
+land, the non-web emitter consumes them transparently — proving the
+cross-platform lookup contract held through the contract-data
+extension.
 
 #### Gap 1b — Latent CSS emitter bug — RESOLVED via convergence
 
@@ -502,7 +531,7 @@ the `input` key, each declaration as a `literal` styleEntry with
 `platforms: ["web"]` so non-web emitters skip it natively. No IR-side
 recipe needed; the doctrine is "declarative authoring, dumb IR."
 
-### Gap 9 — Per-state property override (translate.off → translate.on)
+### Gap 9 — Per-state property override (translate.off → translate.on) — RESOLVED via convergence
 
 **Where:** `Switch.css` `.switch__thumb { translate: var(--fsds-switch-size-md-thumb-translate-off) }`
 in the resting state and `.switch:has(.switch__input:checked) .switch__thumb
@@ -521,7 +550,36 @@ property reference is emitted under the qualifier selector. Adjacent
 to Gap 7 — would benefit from sharing the same `:has(input:state)`
 rewrite path.
 
-### Gap 10 — Transition shorthand combining a tokenized duration with a property list
+**Resolution (tokens/styles convergence):** the proposal's "tuple
+property field" became unnecessary. After the convergence, slots
+declare CSS custom properties without binding to any property; the
+consumer side decides which selector consumes which slot. So:
+
+- `Switch.tokens.json` declares six new literal slots:
+  `switch.size.{sm,md,lg}.thumb.translate.{off,on}` with values
+  `{0, 16px, 24px, 36px}` (off=0 always; on=track.width − thumb.size −
+  2·padding per variant).
+- `Switch.styles.json` consumes them under two selector keys per
+  variant: `.switch__thumb` (default md.off), `.switch--sm .switch__thumb`
+  (sm.off), `.switch--lg .switch__thumb` (lg.off). Plus three
+  compound selectors for the checked state:
+  `:has(.switch__input:checked) .switch__thumb` (md.on),
+  `.switch--sm:has(.switch__input:checked) .switch__thumb` (sm.on),
+  `.switch--lg:has(.switch__input:checked) .switch__thumb` (lg.on).
+
+**Evidence (runtime computed style after a click in React preview):**
+
+```
+input.checked === true
+.switch__thumb { translate: 16px }  // .switch--sm:has(.switch__input:checked) .switch__thumb wins
+.switch__thumb { background-color: rgb(255, 255, 255) }  // thumb.background.checked
+.switch__track { background-color: rgb(217, 41, 43) }   // track.background.checked (#d9292b)
+```
+
+The cascade resolves the variant-modifier × `:has()` compound to the
+correct slot for the current size. No IR change required.
+
+### Gap 10 — Transition shorthand combining a tokenized duration with a property list — RESOLVED via convergence
 
 **Where:** `Switch.css` `.switch__track { transition: background-color
 var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing); }`
@@ -539,6 +597,52 @@ easing: <slot> }` per part. The emitter builds the shorthand from
 the listed properties + the resolved slot values. Smaller than
 Gap 9 if implemented after it (state-aware transitions become a
 follow-up).
+
+**Resolution (tokens/styles convergence):** the proposal's "motion
+contract section" became unnecessary. Under the convergence:
+
+- `Switch.tokens.json` keeps the existing slots `switch.motion.duration`
+  and `switch.motion.easing` (backed by `semantic.motion.interaction.press.*`).
+  No new graph entries needed.
+- The transition shorthand is authored as a `literal` styleEntry whose
+  value contains `var()` references to those slots. The literal lives
+  in two selector blocks:
+
+  ```jsonc
+  "track": {
+    "transition": {
+      "literal": "background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing)",
+      "platforms": ["web"]
+    }, ...
+  },
+  "thumb": {
+    "transition": {
+      "literal": "translate var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing), background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing)",
+      "platforms": ["web"]
+    }, ...
+  }
+  ```
+
+  The literal-with-var pattern is what makes per-property-list timing
+  authorable without an IR-level concept. The literal value can contain
+  `var()` because slots are CSS custom properties already.
+
+- The old `transition-duration` + `transition-timing-function` consumers
+  on `.switch` root were removed — separate properties without a
+  `transition-property` had no useful effect.
+
+**Evidence (runtime computed style):**
+
+```
+.switch__thumb { transition: translate 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+                              background-color 0.1s cubic-bezier(0.4, 0, 0.2, 1) }
+.switch__track { transition: background-color 0.1s cubic-bezier(0.4, 0, 0.2, 1) }
+```
+
+Both properties animate with the same tokenized duration/easing.
+`semantic.motion.interaction.press.duration` resolves to 100ms and
+easing to the standard cubic-bezier — confirming the cascade chain
+slot→consumer→shorthand works end-to-end.
 
 ## Pass/fail verdict for round 1-web
 
@@ -558,13 +662,18 @@ expansion in `computeCssBlocks`, additional fields on tokenResolution).
 3. ~~**Gap 8** (sr-only recipe).~~ **Done** via the convergence —
    authored as 8 `literal` styleEntries with `platforms: ["web"]`
    under styles.json's `input` key.
-4. **Gaps 1a, 9, 10** remain open. All three are contract-authoring
-   follow-ups — extending Switch's tokens.json with more slots
-   (`switch.size.{sm,lg}.*`, `switch.motion.thumb.translate.{off,on}`)
-   and adding consumer entries in styles.json. The IR has no work to
-   do for any of them; the convergence's structural-honesty doctrine
-   is "the contract is the source of truth."
-5. **Round 2-web** — author Checkbox + Dialog goldens to surface gaps
+4. ~~**Gaps 1a, 9, 10.**~~ **Done** via post-convergence authoring.
+   Each was contract-authoring work the convergence enabled but did
+   not strictly include: Gap 1a added 12 sm/lg slots + 2 variant-
+   scoped compound selectors per variant; Gap 9 added 6 translate
+   literal slots + 6 variant×state compound selectors; Gap 10
+   replaced two unused timing properties with two `transition`
+   shorthand literals containing slot `var()` references. None
+   required IR changes — the convergence's "contract is the source
+   of truth" doctrine held through all three.
+5. **All Switch gaps are closed.** Switch is now a fully-authored
+   reference component for the convergence shape.
+6. **Round 2-web** — author Checkbox + Dialog goldens to surface gaps
    that Switch alone can't reveal (indeterminate state; backdrop +
    portal; multi-part header/body/footer). Repeat the gap-driven
    widening loop.
