@@ -123,8 +123,30 @@ export interface DomNodeIR {
   part: string | undefined;
   /** Static attribute values (e.g. `{ type: "checkbox", "aria-hidden": "true" }`). */
   attrs: Record<string, string>;
-  /** Dynamic bindings keyed by attribute or event name (e.g. `onChange`, `disabled`). */
+  /**
+   * Dynamic *attribute* bindings keyed by attribute name (`aria-label`,
+   * `disabled`, `src`). Each emitter lowers to its attribute syntax.
+   * Events and content are deliberately NOT mixed in here — see `events`
+   * and `content` fields. The old practice of writing `bindings.onClick`
+   * or `bindings.children` was never portable across all five emitters.
+   */
   bindings: Record<string, BindingExpression>;
+  /**
+   * Event bindings keyed by unprefixed event name (`click`, `input`,
+   * `change`, ...). Emitters lower per framework idiom. Distinct from
+   * attribute bindings because every framework spells events differently
+   * (React `onX`, Vue `@x`, Svelte `on:x`, Angular `(x)`, Lit `@x`) and
+   * because Angular's template parser actively rejects event-shaped
+   * attribute bindings.
+   */
+  events: Record<string, BindingExpression>;
+  /**
+   * Single inner-content binding. When set, the element renders the
+   * resolved value as its content (interpolation/expression, not a
+   * `children`-prop attribute). Mutually exclusive with `children` on
+   * the same node — `parseDomNode` rejects nodes that set both.
+   */
+  content: BindingExpression | undefined;
   children: DomNodeIR[];
   /** Prop guard. `"children"` is special: renders only when consumer-provided children exist. */
   ifProp: string | undefined;
@@ -736,11 +758,69 @@ function buildDomTree(contract: ComponentContract): DomNodeIR | undefined {
 }
 
 function parseDomNode(node: ContractDomNode): DomNodeIR {
+  // Authors interact with three sibling fields:
+  //   bindings — attribute bindings (aria-label, disabled, src, …)
+  //   events   — event-handler bindings (keyed by unprefixed event name)
+  //   content  — single inner-content binding
+  //
+  // `bindings.textContent` and `bindings.children` are historical sugar for
+  // content bindings; translate them into the new `content` field so old
+  // contracts keep working without per-emitter special cases. Event-shaped
+  // keys in `bindings` are an authoring bug — they appear to work on React
+  // (JSX accepts arbitrary props) but break Angular and Lit. Reject them
+  // here with a clear message rather than let the bad shape leak into
+  // per-framework output.
   const bindings: Record<string, BindingExpression> = {};
+  const eventsFromBindings: Record<string, BindingExpression> = {};
+  let contentFromBindings: BindingExpression | undefined;
   if (node.bindings) {
     for (const [attr, expr] of Object.entries(node.bindings)) {
+      if (/^on[A-Z]/.test(attr)) {
+        // Legacy authoring path: contracts that wrote `bindings.onClick`
+        // get auto-translated to `events.click` so existing fixtures and
+        // older contracts keep working. The raw binding entry is also
+        // retained on `bindings` so emitters still reading the legacy
+        // location see the same value during the step-4 migration.
+        // Once every emitter reads from `events`, drop the bindings copy.
+        const eventName = attr.slice(2).toLowerCase();
+        eventsFromBindings[eventName] = parseBindingExpression(expr);
+        bindings[attr] = parseBindingExpression(expr);
+        continue;
+      }
+      if (attr === "children" || attr === "textContent") {
+        // Same dual-pathway pattern for content bindings. Translate to
+        // the new content field but keep the raw entry until every
+        // emitter migrates to reading `content`.
+        contentFromBindings = parseBindingExpression(expr);
+        bindings[attr] = parseBindingExpression(expr);
+        continue;
+      }
       bindings[attr] = parseBindingExpression(expr);
     }
+  }
+  const events: Record<string, BindingExpression> = { ...eventsFromBindings };
+  if (node.events) {
+    for (const [evt, expr] of Object.entries(node.events)) {
+      events[evt] = parseBindingExpression(expr);
+    }
+  }
+  const children = (node.children ?? []).map(parseDomNode);
+  const explicitContent =
+    node.content !== undefined ? parseBindingExpression(node.content) : undefined;
+  if (explicitContent !== undefined && contentFromBindings !== undefined) {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `\`content\` is set both as a top-level field and as bindings.{children,textContent}. ` +
+        `Pick one — prefer the top-level \`content\`.`,
+    );
+  }
+  const content = explicitContent ?? contentFromBindings;
+  if (content !== undefined && children.length > 0) {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `\`content\` and \`children\` are mutually exclusive on the same node. ` +
+        `Wrap the content value in its own child node if you need both.`,
+    );
   }
   return {
     tag: node.tag,
@@ -750,7 +830,9 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     part: node.part,
     attrs: node.attrs ?? {},
     bindings,
-    children: (node.children ?? []).map(parseDomNode),
+    events,
+    content,
+    children,
     ...parseIfGuard(node.if),
   };
 }

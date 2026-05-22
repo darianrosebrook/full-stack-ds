@@ -111,14 +111,49 @@ export interface ContractDomNode {
   /** Static attribute values that appear verbatim in the rendered output. */
   attrs?: Record<string, string>;
   /**
-   * Dynamic bindings keyed by attribute or event name. Framework emitters
-   * map these into idiomatic syntax (React `onChange={...}`, Vue
-   * `@change="..."`, Angular `(change)="..."`, Lit `@change=${...}`,
-   * Svelte `onchange={...}`).
+   * Dynamic attribute bindings. Keyed by attribute name (e.g. `aria-label`,
+   * `disabled`, `src`). Lower to framework-idiomatic attribute syntax
+   * (React JSX prop, Vue `:attr="..."`, Angular `[attr]="..."`, Lit
+   * `?attr=${...}`, Svelte `attr={...}`).
+   *
+   * Event handlers and content/children do NOT belong here — use the
+   * sibling `events` and `content` fields. Older contracts that smuggled
+   * `onClick` or `children` through `bindings` were never portable: they
+   * happened to work on React/Vue (because JSX/Vue accept arbitrary
+   * props) but Angular's template parser and Lit's binding model reject
+   * them. Authoring them as separate fields gives each emitter the
+   * information it needs to lower into the right idiom.
    */
   bindings?: Record<string, string>;
   /**
-   * Optional child nodes. Empty/absent for leaf elements.
+   * Event bindings keyed by *unprefixed* event name (`"click"`, `"input"`,
+   * `"change"`, ...). Each emitter lowers to its framework idiom:
+   *   React  → `onClick={prop}`
+   *   Vue    → `@click="prop?.()"`
+   *   Svelte → `on:click={prop}`
+   *   Angular→ `(click)="prop && prop()"`
+   *   Lit    → `@click=${this.prop}`
+   * Values use the same `prop:`/`channel:`/`literal:` grammar as `bindings`.
+   * Channel value strategies for event handlers reuse the existing
+   * `channel:<name>.onChange` semantics.
+   */
+  events?: Record<string, string>;
+  /**
+   * Single inner-content binding. Emitters lower to the framework's
+   * "render this value as the element's content" idiom:
+   *   React  → `<span>{prop}</span>`
+   *   Vue    → `<span>{{ prop }}</span>` (interpolation; safe for ReactNode-typed props that resolve to renderable values)
+   *   Svelte → `<span>{prop}</span>`
+   *   Angular→ `<span>{{ prop }}</span>`
+   *   Lit    → `<span>${this.prop}</span>`
+   * Mutually exclusive with `children` on the same node: if you want a
+   * prop's value to appear *between* other children, wrap it in its own
+   * `tag: "span" content: "prop:..."` child.
+   */
+  content?: string;
+  /**
+   * Optional child nodes. Empty/absent for leaf elements. Mutually
+   * exclusive with `content` on the same node — see `content` field.
    */
   children?: ContractDomNode[];
   /**

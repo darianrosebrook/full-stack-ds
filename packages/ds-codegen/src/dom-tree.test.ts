@@ -93,6 +93,8 @@ describe("buildDomTree (via buildComponentIR)", () => {
       part: "wrapper",
       attrs: { class: "switch__wrapper" },
       bindings: {},
+      events: {},
+      content: undefined,
       children: [],
       ifProp: undefined,
       ifNegated: false,
@@ -144,6 +146,8 @@ describe("buildDomTree (via buildComponentIR)", () => {
       part: "wrapper",
       attrs: {},
       bindings: {},
+      events: {},
+      content: undefined,
       children: [
         {
           tag: "input",
@@ -152,9 +156,16 @@ describe("buildDomTree (via buildComponentIR)", () => {
           attrs: { type: "checkbox", role: "switch" },
           bindings: {
             checked: { kind: "channel", channel: "checked", field: "value" },
+            // Legacy `bindings.onChange` is kept on bindings (back-compat
+            // for emitters still reading from the old location) AND
+            // surfaced on events.change (canonical post-capability shape).
             onChange: { kind: "channel", channel: "checked", field: "onChange" },
             disabled: { kind: "prop", prop: "disabled" },
           },
+          events: {
+            change: { kind: "channel", channel: "checked", field: "onChange" },
+          },
+          content: undefined,
           children: [],
           ifProp: undefined,
           ifNegated: false,
@@ -165,6 +176,8 @@ describe("buildDomTree (via buildComponentIR)", () => {
           part: undefined,
           attrs: {},
           bindings: {},
+          events: {},
+          content: undefined,
           children: [],
           ifProp: undefined,
           ifNegated: false,
