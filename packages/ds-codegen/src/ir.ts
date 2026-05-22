@@ -1250,7 +1250,7 @@ export function expandComplexSelector(key: string, prefix: string): string {
       // specified by the author and must not be re-qualified with the
       // BEM prefix. This includes `:has(.x__input:checked)`, `.x__track`,
       // `[aria-pressed="true"]`, etc.
-      if (/^[.:#*\[]/.test(trimmed)) return segment;
+      if (/^[.:#*[]/.test(trimmed)) return segment;
       if (trimmed.startsWith("--")) return `.${prefix}${trimmed}`;
       if (trimmed.startsWith("__")) return `.${prefix}${trimmed}`;
       const match = trimmed.match(/^([a-zA-Z][\w-]*)([:[\s].*)?$/);
