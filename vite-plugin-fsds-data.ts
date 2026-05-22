@@ -166,10 +166,15 @@ export async function buildBundle(rootDir: string) {
   const schemaText = await safeRead(path.join(contractsDir, "component.contract.schema.json"));
   const schema = schemaText ? JSON.parse(schemaText) : null;
 
-  const tokensDir = path.join(contractsDir, "tokens");
+  // Token surface comes from @full-stack-ds/tokens now — single generated CSS
+  // file with @layer core/semantic/theme/brand/density. vars.css stays under
+  // ds-contracts/tokens/ because it carries scroll-driven animation primitives
+  // (--cursor-*, --mouse-*) and Next.js font CSS-var bridges, not design tokens.
+  const tokensDir = path.join(rootDir, "packages", "ds-tokens", "generated");
+  const runtimeVarsDir = path.join(contractsDir, "tokens");
   const tokensCss = [
-    await safeRead(path.join(tokensDir, "designTokens.css")),
-    await safeRead(path.join(tokensDir, "vars.css")),
+    await safeRead(path.join(tokensDir, "tokens.css")),
+    await safeRead(path.join(runtimeVarsDir, "vars.css")),
   ]
     .filter((s): s is string => Boolean(s))
     .join("\n");

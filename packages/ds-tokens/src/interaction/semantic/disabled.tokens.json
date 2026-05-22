@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "disabled": {
+      "opacity": {
+        "$type": "number",
+        "$value": "{interaction.disabled.opacity}",
+        "$description": "Semantic alias for the disabled-state opacity. Resolves to the core interaction.disabled.opacity primitive (0.5). Contracts reference this semantic path; core path is the underlying primitive."
+      }
+    }
+  }
+}

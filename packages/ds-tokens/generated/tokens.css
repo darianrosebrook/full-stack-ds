@@ -305,6 +305,8 @@
   --fsds-core-shape-radius-04: 16px;
   --fsds-core-shape-radius-05: 32px;
   --fsds-core-shape-radius-full: 9999px;
+  --fsds-core-shape-radius-small: var(--fsds-core-shape-radius-02);
+  --fsds-core-shape-radius-large: var(--fsds-core-shape-radius-04);
   --fsds-core-spacing-density-tight-xs: 2px;
   --fsds-core-spacing-density-tight-sm: 4px;
   --fsds-core-spacing-density-tight-md: 6px;
@@ -395,6 +397,7 @@
 
 @layer semantic {
   :root {
+  --fsds-semantic-color-overlay-scrim: #00000066;
   --fsds-semantic-color-overlay-scrim-weak: #0000003d;
   --fsds-semantic-color-overlay-scrim-medium: #00000066;
   --fsds-semantic-color-overlay-scrim-strong: #000000a3;
@@ -433,6 +436,7 @@
   --fsds-semantic-elevation-none: none;
   --fsds-semantic-elevation-surface-raised: var(--fsds-core-elevation-level-1);
   --fsds-semantic-elevation-surface-floating: var(--fsds-core-elevation-level-2);
+  --fsds-semantic-interaction-disabled-opacity: var(--fsds-semantic-interaction-disabled-opacity);
   --fsds-semantic-link-decoration-offset: 2px;
   --fsds-semantic-link-decoration-thickness: 1px;
   --fsds-semantic-motion-icon-scale-enter: var(--fsds-core-scale-080);
@@ -488,6 +492,12 @@
   --fsds-semantic-shape-radius-default: var(--fsds-core-shape-radius-02);
   --fsds-semantic-skeleton-shine-duration: var(--fsds-core-motion-duration-medium3);
   --fsds-semantic-spacing-density-mode: default;
+  --fsds-semantic-spacing-density-compact-xs: var(--fsds-core-spacing-density-compact-xs);
+  --fsds-semantic-spacing-density-compact-sm: var(--fsds-core-spacing-density-compact-sm);
+  --fsds-semantic-spacing-density-compact-md: var(--fsds-core-spacing-density-compact-md);
+  --fsds-semantic-spacing-density-compact-lg: var(--fsds-core-spacing-density-compact-lg);
+  --fsds-semantic-spacing-density-compact-xl: var(--fsds-core-spacing-density-compact-xl);
+  --fsds-semantic-spacing-density-compact-2xl: var(--fsds-core-spacing-density-compact-2xl);
   --fsds-semantic-spacing-gap-grid: var(--fsds-core-spacing-density-default-sm);
   --fsds-semantic-spacing-gap-grid-large: var(--fsds-core-spacing-density-default-xl);
   --fsds-semantic-spacing-gap-grid-medium: var(--fsds-core-spacing-density-default-md);

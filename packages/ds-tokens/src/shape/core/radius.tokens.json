@@ -57,6 +57,16 @@
           "value": 9999,
           "unit": "px"
         }
+      },
+      "small": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Named alias for shape.radius.02 (4px). Retained at core tier so contracts referencing core.shape.radius.small resolve. semantic.shape.radius.small is the canonical semantic alias and uses the same value."
+      },
+      "large": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Named alias for shape.radius.04 (16px). Retained at core tier so contracts referencing core.shape.radius.large resolve. semantic.shape.radius.large is the canonical semantic alias and uses the same value."
       }
     }
   }

@@ -3,45 +3,56 @@
   "color": {
     "overlay": {
       "scrim": {
-        "weak": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.24
-          },
-          "$description": "Light overlay scrim"
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.4
         },
-        "medium": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.4
-          },
-          "$description": "Medium overlay scrim"
+        "$description": "Default overlay scrim (medium weight, 40% black). Used by Dialog and other surfaces that need a single canonical scrim. Weighted variants live as siblings."
+      },
+      "scrimWeak": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.24
         },
-        "strong": {
-          "$type": "color",
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.64
-          },
-          "$description": "Strong overlay scrim"
-        }
+        "$description": "Light overlay scrim"
+      },
+      "scrimMedium": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.4
+        },
+        "$description": "Medium overlay scrim (canonical default — same value as bare 'scrim')"
+      },
+      "scrimStrong": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.64
+        },
+        "$description": "Strong overlay scrim"
       }
     }
   }

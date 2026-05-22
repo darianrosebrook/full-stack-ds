@@ -15,6 +15,6 @@
   --trans-content: -20vh;
 
   /* Font Variables (mapped to Next.js font loading) */
-  --semantic-font-inter: var(--font-inter);
-  --semantic-font-nohemi: var(--font-nohemi);
+  --fsds-semantic-font-inter: var(--font-inter);
+  --fsds-semantic-font-nohemi: var(--font-nohemi);
 }
