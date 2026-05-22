@@ -131,7 +131,13 @@ export type UsageTreeNode = {
 
 export interface UsageNodeBody {
   props?: Record<string, UsagePropValue>;
-  slots?: Record<string, UsageTreeNode>;
+  /**
+   * Slot content keyed by anatomy part. Most slots hold a sub-tree (another
+   * component composed in); slots that naturally hold flat text (description,
+   * label, simple trigger labels) may use a string directly to avoid wrapping
+   * everything in a no-op fsds.Text.
+   */
+  slots?: Record<string, UsageTreeNode | string>;
 }
 
 export type UsagePropValue =

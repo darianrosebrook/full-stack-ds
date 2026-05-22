@@ -60,24 +60,39 @@ function renderResolved(
     }
   }
 
-  // Slots: try compound resolution first; if neither static-property nor
-  // sibling-export form exists, pass through as a named JSX prop. Static-
-  // property and sibling-export slots become JSX children of the root.
+  // Slots: try to resolve the slot name to a real React surface in this order:
+  //   1. Root[CapitalizedSlot] — static-property compound (Popover.Trigger).
+  //   2. <RootName><CapitalizedSlot> — sibling-export compound (CardHeader).
+  //   3. Inline child — append the rendered tree to children directly.
+  //
+  // The inline-child fallback exists because not every anatomy part has a
+  // matching React surface: anatomy is the contract's semantic description,
+  // and the React implementation may collapse multiple semantic parts into
+  // one element or expose only a subset as compounds. Spreading unrecognized
+  // slots as JSX props (the old fallback) leaked their values onto the root
+  // element as DOM attributes — visible junk in the dev tools and broken
+  // behavior at runtime. Inlining the child is the safe default: the content
+  // still appears in the document; only the semantic-slot wrapper is lost.
   const slotChildren: ReactNode[] = [];
   if (body.slots) {
     for (const [slotName, child] of Object.entries(body.slots)) {
       const SlotComponent = resolveSlot(ref, slotName);
-      const childNode = renderUsageTree(child);
+      const childNode: ReactNode =
+        typeof child === "string" ? child : renderUsageTree(child, slotName);
       if (SlotComponent) {
         slotChildren.push(
           createElement(SlotComponent, { key: slotName }, childNode),
         );
       } else {
-        // Last-resort fallback: render as a named JSX prop. Some components
-        // genuinely accept slots-as-props (legacy from before compound parts
-        // were standardized). The validator already guarantees the slot name
-        // matches an anatomy part, so this never injects a stray prop.
-        props[slotName] = childNode;
+        // Inline as-is. For strings we wrap in a Fragment so React can key it
+        // alongside its slot siblings without a host element.
+        slotChildren.push(
+          typeof child === "string" ? (
+            <Fragment key={slotName}>{child}</Fragment>
+          ) : (
+            childNode
+          ),
+        );
       }
     }
   }

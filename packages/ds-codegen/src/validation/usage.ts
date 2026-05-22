@@ -25,7 +25,8 @@ interface TreeNode {
 
 interface NodeBody {
   props?: Record<string, PropValue>;
-  slots?: Record<string, TreeNode>;
+  /** Slots may hold sub-trees OR plain strings for naturally-text slots. */
+  slots?: Record<string, TreeNode | string>;
 }
 
 type PropValue = string | number | boolean | null | TreeNode | (string | TreeNode)[];
@@ -126,7 +127,10 @@ function walkTreeNode(
           message: `${sourcePrefix}: slot "${slotName}" is not an anatomy part on ${compName}`,
         });
       }
-      walkTreeNode(child, `${pointer}/slots/${slotName}`, sourcePrefix, ctx, issues);
+      // Strings need no cross-contract resolution; only tree nodes recurse.
+      if (typeof child === "object" && child !== null) {
+        walkTreeNode(child, `${pointer}/slots/${slotName}`, sourcePrefix, ctx, issues);
+      }
     }
   }
 }

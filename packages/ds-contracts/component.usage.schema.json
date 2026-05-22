@@ -48,9 +48,12 @@
         },
         "slots": {
           "type": "object",
-          "description": "Slot name -> child tree node. Keys must match anatomy parts on the referenced contract (enforced by the usage validator, not by this schema).",
+          "description": "Slot name -> child content. The child may be a tree node (the typical case — another component composed into the slot) OR a plain string (for slots that naturally hold flat text, like description or label). Keys must match anatomy parts on the referenced contract (enforced by the usage validator, not by this schema).",
           "additionalProperties": {
-            "$ref": "#/$defs/treeNode"
+            "oneOf": [
+              { "$ref": "#/$defs/treeNode" },
+              { "type": "string" }
+            ]
           }
         }
       }
