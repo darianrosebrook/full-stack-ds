@@ -41,6 +41,7 @@ docs/
   normal-form.md                         # The seven properties of compositional systems
   presence-surfaces.md                   # Tooltips/popovers/dialogs/menus family doctrine
   states-to-css.md                       # Contract states → CSS selectors
+  tokens-architecture.md                 # Design token graph + cascade + drift gate
   specifications/
     document_governance.md               # Frontmatter + location rules (enforced advisory)
   archive/                               # Frozen historical docs (exempt)
