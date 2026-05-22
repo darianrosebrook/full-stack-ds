@@ -1,4 +1,5 @@
 import { Fragment, useMemo, useState } from "react";
+import { NavList, NavListItem, Input, Badge } from "@full-stack-ds/react";
 import type { Bundle, ComponentBundle } from "../types/data";
 import { buildHref, type Route } from "../router";
 
@@ -36,54 +37,64 @@ export function Sidebar({ bundle, route }: SidebarProps) {
   return (
     <aside className="app-sidebar">
       <div className="sidebar-search">
-        <input
+        <Input
           type="search"
           placeholder="Filter components…"
           aria-label="Filter components"
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={setFilter}
         />
       </div>
-      <ul className="sidebar-list">
-        <li>
+      <NavList ariaLabel="Showcase sections" className="sidebar-navlist">
+        <NavListItem className="sidebar-item-host">
           <a
             className={`sidebar-item${route.kind === "home" ? " sidebar-item--active" : ""}`}
             href={buildHref({ kind: "home" })}
+            aria-current={route.kind === "home" ? "page" : undefined}
           >
             <span>Overview</span>
           </a>
-        </li>
-        <li>
+        </NavListItem>
+        <NavListItem className="sidebar-item-host">
           <a
             className={`sidebar-item${route.kind === "architecture" ? " sidebar-item--active" : ""}`}
             href={buildHref({ kind: "architecture" })}
+            aria-current={route.kind === "architecture" ? "page" : undefined}
           >
             <span>Architecture</span>
           </a>
-        </li>
-        <li>
+        </NavListItem>
+        <NavListItem className="sidebar-item-host">
           <a
             className={`sidebar-item${route.kind === "tokens" ? " sidebar-item--active" : ""}`}
             href={buildHref({ kind: "tokens" })}
+            aria-current={route.kind === "tokens" ? "page" : undefined}
           >
             <span>Tokens</span>
-            <span className="sidebar-badge">{bundle.components.length}</span>
+            <Badge variant="counter" size="sm">
+              {bundle.components.length}
+            </Badge>
           </a>
-        </li>
+        </NavListItem>
 
         {bundle.primitives.length > 0 && (
           <>
-            <li className="sidebar-group">Foundations</li>
+            <li className="sidebar-group">
+              Foundations
+            </li>
             {bundle.primitives.map((p) => (
-              <li key={p.name}>
+              <NavListItem key={p.name} className="sidebar-item-host">
                 <a
                   className={`sidebar-item${activePrimitive === p.name ? " sidebar-item--active" : ""}`}
                   href={buildHref({ kind: "primitive", name: p.name })}
+                  aria-current={activePrimitive === p.name ? "page" : undefined}
                 >
                   <span>{p.name}</span>
-                  <span className="sidebar-badge">primitive</span>
+                  <Badge variant="tag" size="sm">
+                    primitive
+                  </Badge>
                 </a>
-              </li>
+              </NavListItem>
             ))}
           </>
         )}
@@ -93,24 +104,27 @@ export function Sidebar({ bundle, route }: SidebarProps) {
           if (!items || items.length === 0) return null;
           return (
             <Fragment key={layer}>
-              <li className="sidebar-group">{LAYER_LABEL[layer]}</li>
+              <li className="sidebar-group">
+                {LAYER_LABEL[layer]}
+              </li>
               {items.map((c) => (
-                <li key={c.name}>
+                <NavListItem key={c.name} className="sidebar-item-host">
                   <a
                     className={`sidebar-item${activeComponent === c.name ? " sidebar-item--active" : ""}`}
                     href={buildHref({ kind: "component", name: c.name, tab: "design" })}
+                    aria-current={activeComponent === c.name ? "page" : undefined}
                   >
                     <span>{c.name}</span>
-                    <span className="sidebar-badge">
+                    <Badge variant="counter" size="sm">
                       {Object.keys(c.sources).length}/5
-                    </span>
+                    </Badge>
                   </a>
-                </li>
+                </NavListItem>
               ))}
             </Fragment>
           );
         })}
-      </ul>
+      </NavList>
     </aside>
   );
 }

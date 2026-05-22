@@ -1,3 +1,4 @@
+import { Links } from "@full-stack-ds/react";
 import type { ComponentBundle } from "../types/data";
 import type { Route } from "../router";
 import { buildHref } from "../router";
@@ -25,20 +26,21 @@ export function DesignView({ component }: DesignViewProps) {
         {component.contract.description ?? "Component contract."}
       </p>
 
-      <div className="tabs">
-        <a
+      <nav className="tabs" aria-label="View mode">
+        <Links
           className="tab tab--active"
           href={buildHref({ kind: "component", name: component.name, tab: "design" })}
+          aria-current="page"
         >
           Design
-        </a>
-        <a
+        </Links>
+        <Links
           className="tab"
           href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
         >
           Developer
-        </a>
-      </div>
+        </Links>
+      </nav>
 
       {hasUsage ? (
         <section className="section">

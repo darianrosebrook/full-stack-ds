@@ -1,3 +1,4 @@
+import { Chip, Button } from "@full-stack-ds/react";
 import type { ComponentBundle } from "../types/data";
 import type { TraceSelection } from "../trace/types";
 import { JsonTreeViewer } from "../components/JsonTreeViewer";
@@ -20,23 +21,18 @@ export function TracePanel({ component, selection, onClear }: TracePanelProps) {
       <h3 className="trace-title">Contract</h3>
       {selection ? (
         <div style={{ marginBottom: "var(--space-5)", fontSize: "var(--fs-200)" }}>
-          <div className="chip chip--accent chip--mono" style={{ marginBottom: "var(--space-3)" }}>
+          <Chip size="small" variant="selected" className="chip--mono" style={{ marginBottom: "var(--space-3)" }}>
             {selection.hit.kind}
-          </div>
+          </Chip>
           <div style={{ color: "var(--fg-default)", marginBottom: "var(--space-2)" }}>
             {selection.hit.explanation}
           </div>
           <code style={{ display: "block", color: "var(--fg-muted)", fontSize: "var(--fs-100)", marginBottom: "var(--space-3)" }}>
             {selection.hit.contractPath}
           </code>
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={onClear}
-            style={{ width: "auto", padding: "var(--space-2) var(--space-3)", fontSize: "var(--fs-100)", border: "1px solid var(--border-default)" }}
-          >
+          <Button variant="ghost" size="small" onClick={onClear}>
             Clear selection
-          </button>
+          </Button>
         </div>
       ) : (
         <p className="muted" style={{ fontSize: "var(--fs-200)", marginTop: 0 }}>

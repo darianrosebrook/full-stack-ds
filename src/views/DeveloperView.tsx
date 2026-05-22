@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Links, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
 import type { Route } from "../router";
 import { buildHref } from "../router";
@@ -57,46 +58,50 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
         click any to see the contract path in the panel on the right.
       </p>
 
-      <div className="tabs">
-        <a
+      <nav className="tabs" aria-label="View mode">
+        <Links
           className="tab"
           href={buildHref({ kind: "component", name: component.name, tab: "design" })}
         >
           Design
-        </a>
-        <a
+        </Links>
+        <Links
           className="tab tab--active"
           href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
+          aria-current="page"
         >
           Developer
-        </a>
-      </div>
+        </Links>
+      </nav>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "var(--space-7) 0 var(--space-5)" }}>
-        <div className="fw-tabs" role="tablist" aria-label="Target framework">
-          {FRAMEWORK_TABS.map((t) => {
-            const available = availableFrameworks.includes(t.key);
-            return (
-              <button
-                key={t.key}
-                type="button"
-                role="tab"
-                aria-selected={framework === t.key}
-                disabled={!available}
-                className={`fw-tab${framework === t.key ? " fw-tab--active" : ""}`}
-                onClick={() => {
-                  setFramework(t.key);
-                  onTrace(null);
-                }}
-                style={{ opacity: available ? 1 : 0.4 }}
-                title={available ? t.label : `No ${t.label} source generated`}
-              >
-                <span className={`lang-dot ${t.dot}`} />
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
+        <Tabs
+          appearance="pills"
+          value={framework}
+          onValueChange={(next) => {
+            setFramework(next as Framework);
+            onTrace(null);
+          }}
+          aria-label="Target framework"
+          className="fw-tabs"
+        >
+          <TabsList>
+            {FRAMEWORK_TABS.map((t) => {
+              const available = availableFrameworks.includes(t.key);
+              return (
+                <TabsTab
+                  key={t.key}
+                  value={t.key}
+                  disabled={!available}
+                  className="fw-tab"
+                >
+                  <span className={`lang-dot ${t.dot}`} />
+                  {t.label}
+                </TabsTab>
+              );
+            })}
+          </TabsList>
+        </Tabs>
         <span className="muted" style={{ fontSize: "var(--fs-200)" }}>
           {traceIndex.hits.length} traced region{traceIndex.hits.length === 1 ? "" : "s"}
         </span>

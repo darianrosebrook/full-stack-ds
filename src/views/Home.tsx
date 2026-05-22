@@ -1,3 +1,4 @@
+import { Card, Stat, Chip } from "@full-stack-ds/react";
 import type { Bundle } from "../types/data";
 import { buildHref } from "../router";
 
@@ -66,19 +67,19 @@ export function Home({ bundle }: HomeProps) {
 
       <div className="home-stats">
         <div className="home-stat">
-          <div className="home-stat-value">{componentCount}</div>
+          <Stat size="lg">{componentCount}</Stat>
           <div className="home-stat-label">Components</div>
         </div>
         <div className="home-stat">
-          <div className="home-stat-value">5</div>
+          <Stat size="lg">5</Stat>
           <div className="home-stat-label">Target frameworks</div>
         </div>
         <div className="home-stat">
-          <div className="home-stat-value">{totalSources}</div>
+          <Stat size="lg">{totalSources}</Stat>
           <div className="home-stat-label">Generated files indexed</div>
         </div>
         <div className="home-stat">
-          <div className="home-stat-value">{tokenCount}</div>
+          <Stat size="lg">{tokenCount}</Stat>
           <div className="home-stat-label">Design tokens declared</div>
         </div>
       </div>
@@ -96,7 +97,7 @@ export function Home({ bundle }: HomeProps) {
           }}
         >
           {FRAMEWORK_LABELS.map((fw) => (
-            <div key={fw.key} className="card card--inset">
+            <Card key={fw.key} density="inset">
               <div
                 style={{
                   display: "flex",
@@ -131,7 +132,7 @@ export function Home({ bundle }: HomeProps) {
                 {fw.key === "angular" && "Standalone components + signals."}
                 {fw.key === "lit" && "Lit 3 with reactive controllers."}
               </p>
-            </div>
+            </Card>
           ))}
         </div>
         <header className="section-header">
@@ -146,7 +147,7 @@ export function Home({ bundle }: HomeProps) {
           }}
         >
           {NON_WEB_LABELS.map((fw) => (
-            <div key={fw.key} className="card card--inset">
+            <Card key={fw.key} density="inset">
               <div
                 style={{
                   display: "flex",
@@ -180,7 +181,7 @@ export function Home({ bundle }: HomeProps) {
                 {fw.key === "uikit" && "UIControl subclass + target/action."}
                 {fw.key === "jetpack-compose" && "@Composable, hoisted state."}
               </p>
-            </div>
+            </Card>
           ))}
         </div>
       </section>
@@ -226,7 +227,7 @@ export function Home({ bundle }: HomeProps) {
                 }}
               >
                 <strong>{c.name}</strong>
-                <span className="chip">{c.contract.layer}</span>
+                <Chip size="small">{c.contract.layer}</Chip>
               </div>
               <p
                 className="muted"

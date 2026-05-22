@@ -1,3 +1,4 @@
+import { Card } from "@full-stack-ds/react";
 import type { A11y } from "../../types/data";
 
 interface A11yPanelProps {
@@ -13,7 +14,7 @@ export function A11yPanel({ a11y }: A11yPanelProps) {
         gap: "var(--space-5)",
       }}
     >
-      <div className="card card--inset">
+      <Card density="inset">
         <h3 style={{ marginTop: 0, marginBottom: "var(--space-3)", fontSize: "var(--fs-300)" }}>Semantics</h3>
         <dl style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "var(--space-3) var(--space-5)", margin: 0, fontSize: "var(--fs-200)" }}>
           <dt className="muted">Role</dt>
@@ -40,9 +41,9 @@ export function A11yPanel({ a11y }: A11yPanelProps) {
             ))}
           </ul>
         )}
-      </div>
+      </Card>
 
-      <div className="card card--inset">
+      <Card density="inset">
         <h3 style={{ marginTop: 0, marginBottom: "var(--space-3)", fontSize: "var(--fs-300)" }}>Keyboard</h3>
         {a11y.keyboard && a11y.keyboard.length > 0 ? (
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--fs-200)" }}>
@@ -65,7 +66,7 @@ export function A11yPanel({ a11y }: A11yPanelProps) {
         ) : (
           <span className="subtle">No declared keyboard interactions.</span>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ToggleSwitch } from "@full-stack-ds/react";
 
 export function Header() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -14,6 +15,8 @@ export function Header() {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("fsds-theme", theme);
   }, [theme]);
+
+  const isDark = theme === "dark";
 
   return (
     <header className="app-header">
@@ -34,44 +37,14 @@ export function Header() {
         >
           <GithubIcon />
         </a>
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-          aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-          title="Toggle theme"
-        >
-          {theme === "light" ? <MoonIcon /> : <SunIcon />}
-        </button>
+        <ToggleSwitch
+          size="small"
+          checked={isDark}
+          onChange={(next) => setTheme(next ? "dark" : "light")}
+          ariaLabel={`Switch to ${isDark ? "light" : "dark"} mode`}
+        />
       </div>
     </header>
-  );
-}
-
-function MoonIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <path
-        d="M13.5 9.5A5.5 5.5 0 016.5 2.5a5.5 5.5 0 107 7z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SunIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="8" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" />
-      <path
-        d="M8 1.5v1.8M8 12.7v1.8M14.5 8h-1.8M3.3 8H1.5M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3M12.6 12.6l-1.3-1.3M4.7 4.7L3.4 3.4"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }
 
