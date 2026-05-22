@@ -1,42 +1,74 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "accordion.color.background.hover"
-    },
-    "color": {
-      "resolvesTo": "accordion.color.textSecondary"
-    },
-    "border-width": {
-      "resolvesTo": "accordion.border.width"
-    },
-    "border-color": {
-      "resolvesTo": "accordion.border.color"
-    },
-    "border-radius": {
-      "resolvesTo": "accordion.border.radius"
-    },
-    "gap": {
-      "resolvesTo": "accordion.spacing.gap"
-    },
-    "padding": {
-      "resolvesTo": "accordion.spacing.paddingY"
-    },
-    "font-weight": {
-      "resolvesTo": "accordion.text.weight"
-    },
-    "font-size": {
-      "resolvesTo": "accordion.text.sizeContent"
-    },
-    "line-height": {
-      "resolvesTo": "accordion.text.lineHeightContent"
-    },
-    "opacity": {
-      "resolvesTo": "accordion.opacity.disabled"
-    }
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "flex-direction": { "literal": "column", "platforms": ["web"] },
+    "border-color": { "resolvesTo": "accordion.border.color" },
+    "border-radius": { "resolvesTo": "accordion.border.radius" },
+    "gap": { "resolvesTo": "accordion.spacing.gap" },
+    "font-size": { "resolvesTo": "accordion.text.sizeContent" },
+    "line-height": { "resolvesTo": "accordion.text.lineHeightContent" }
   },
-  "hover": {
-    "color": {
-      "resolvesTo": "accordion.color.textHover"
-    }
+  "item": {
+    "background-color": { "literal": "transparent", "platforms": ["web"] },
+    "border-color": { "resolvesTo": "accordion.border.color" },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "border-width": { "literal": "1px", "platforms": ["web"] },
+    "border-radius": { "resolvesTo": "accordion.border.radius" },
+    "overflow": { "literal": "hidden", "platforms": ["web"] }
+  },
+  "header": {
+    "margin": { "literal": "0", "platforms": ["web"] }
+  },
+  "trigger": {
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "space-between", "platforms": ["web"] },
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "padding": { "resolvesTo": "accordion.spacing.paddingY" },
+    "background": { "literal": "transparent", "platforms": ["web"] },
+    "border": { "literal": "0", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "font-size": { "resolvesTo": "accordion.text.size" },
+    "font-weight": { "resolvesTo": "accordion.text.weight" },
+    "color": { "resolvesTo": "accordion.color.text" },
+    "text-align": { "literal": "left", "platforms": ["web"] },
+    "line-height": { "resolvesTo": "accordion.text.lineHeight" }
+  },
+  ".accordion__trigger:hover": {
+    "background-color": { "resolvesTo": "accordion.color.background.hover" },
+    "color": { "resolvesTo": "accordion.color.textHover" }
+  },
+  ".accordion__trigger:focus-visible": {
+    "outline-width": { "resolvesTo": "accordion.focus.width" },
+    "outline-color": { "resolvesTo": "accordion.focus.color" },
+    "outline-offset": { "resolvesTo": "accordion.focus.offset" },
+    "outline-style": { "literal": "solid", "platforms": ["web"] }
+  },
+  "chevron": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "width": { "resolvesTo": "accordion.icon.size" },
+    "height": { "resolvesTo": "accordion.icon.size" },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "transition": { "literal": "transform 200ms ease", "platforms": ["web"] },
+    "color": { "resolvesTo": "accordion.color.icon" }
+  },
+  ".accordion__trigger[aria-expanded=\"true\"] .accordion__chevron": {
+    "transform": { "literal": "rotate(180deg)", "platforms": ["web"] }
+  },
+  "content": {
+    "display": { "literal": "block", "platforms": ["web"] },
+    "overflow": { "literal": "hidden", "platforms": ["web"] }
+  },
+  "contentInner": {
+    "padding": { "resolvesTo": "accordion.spacing.paddingY" },
+    "color": { "resolvesTo": "accordion.color.textSecondary" },
+    "font-size": { "resolvesTo": "accordion.text.sizeContent" },
+    "line-height": { "resolvesTo": "accordion.text.lineHeightContent" }
+  },
+  ".accordion--disabled": {
+    "opacity": { "resolvesTo": "accordion.opacity.disabled" },
+    "pointer-events": { "literal": "none", "platforms": ["web"] }
   }
 }

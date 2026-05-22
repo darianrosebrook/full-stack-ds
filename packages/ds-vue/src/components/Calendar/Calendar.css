@@ -3,9 +3,74 @@
 /* @generated:start styles */
 .calendar {
   background-color: var(--fsds-calendar-color-background-default);
-  color: var(--fsds-calendar-color-foreground-secondary);
-  border-color: var(--fsds-calendar-color-border-accent);
+  color: var(--fsds-calendar-color-foreground-primary);
+  border-color: var(--fsds-calendar-color-border-default);
+  border-width: 1px;
+  border-style: solid;
   padding: var(--fsds-calendar-size-padding-default);
+  border-radius: var(--fsds-calendar-size-radius-default);
+  display: block;
+  box-sizing: border-box;
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--fsds-calendar-size-padding-default);
+}
+
+.calendar__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--fsds-calendar-color-foreground-primary);
+}
+
+.calendar__caption {
+  font-weight: 600;
+  color: var(--fsds-calendar-color-foreground-primary);
+}
+
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: var(--fsds-calendar-size-radius-default);
+  padding: 0;
+}
+
+.calendar__cell:hover {
+  background-color: var(--fsds-calendar-color-background-default);
+}
+
+.calendar__cell[aria-selected="true"] {
+  background-color: var(--fsds-calendar-color-border-accent);
+  color: #ffffff;
+}
+
+.calendar__day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
   border-radius: var(--fsds-calendar-size-radius-default);
 }
 /* @generated:end */

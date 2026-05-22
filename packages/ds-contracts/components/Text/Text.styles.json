@@ -1,11 +1,36 @@
 {
   "root": {
     "color": {
-      "resolvesTo": "text.color.foreground.secondary"
+      "resolvesTo": "text.color.foreground.primary"
     },
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body"
-    }
+    },
+    "margin": { "literal": "0", "platforms": ["web"] }
+  },
+  "title": {
+    "font-weight": {
+      "resolvesTo": "text.typography.fontWeight.bold"
+    },
+    "line-height": {
+      "resolvesTo": "text.typography.lineHeight.heading"
+    },
+    "color": {
+      "resolvesTo": "text.color.foreground.primary"
+    },
+    "margin": { "literal": "0", "platforms": ["web"] }
+  },
+  "body": {
+    "font-weight": {
+      "resolvesTo": "text.typography.fontWeight.regular"
+    },
+    "line-height": {
+      "resolvesTo": "text.typography.lineHeight.body"
+    },
+    "color": {
+      "resolvesTo": "text.color.foreground.secondary"
+    },
+    "margin": { "literal": "0", "platforms": ["web"] }
   },
   "error": {
     "color": {

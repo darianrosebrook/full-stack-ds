@@ -1,36 +1,48 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "alert.color.background.danger"
-    },
-    "color": {
-      "resolvesTo": "alert.color.foreground.danger"
-    },
-    "border-color": {
-      "resolvesTo": "alert.color.border.danger"
-    },
-    "padding": {
-      "resolvesTo": "alert.size.padding"
-    },
-    "border-radius": {
-      "resolvesTo": "alert.size.radius"
-    },
-    "gap": {
-      "resolvesTo": "alert.spacing.gap"
-    },
-    "font-size": {
-      "resolvesTo": "alert.text.size"
-    },
-    "font-weight": {
-      "resolvesTo": "alert.text.weight"
-    }
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "flex-start", "platforms": ["web"] },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "border-width": { "literal": "1px", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "background-color": { "resolvesTo": "alert.color.background.danger" },
+    "color": { "resolvesTo": "alert.color.foreground.danger" },
+    "border-color": { "resolvesTo": "alert.color.border.danger" },
+    "padding": { "resolvesTo": "alert.size.padding" },
+    "border-radius": { "resolvesTo": "alert.size.radius" },
+    "gap": { "resolvesTo": "alert.spacing.gap" },
+    "font-size": { "resolvesTo": "alert.text.size" },
+    "font-weight": { "resolvesTo": "alert.text.weight" }
+  },
+  "body": {
+    "flex": { "literal": "1 1 auto", "platforms": ["web"] },
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "flex-direction": { "literal": "column", "platforms": ["web"] },
+    "gap": { "resolvesTo": "alert.spacing.gap" }
   },
   "title": {
-    "font-weight": {
-      "resolvesTo": "alert.typography.title.fontWeight"
-    },
-    "font-size": {
-      "resolvesTo": "alert.typography.title.fontSize"
-    }
+    "margin": { "literal": "0", "platforms": ["web"] },
+    "font-weight": { "resolvesTo": "alert.typography.title.fontWeight" },
+    "font-size": { "resolvesTo": "alert.typography.title.fontSize" }
+  },
+  ".alert--info": {
+    "background-color": { "resolvesTo": "alert.color.background.info" },
+    "color": { "resolvesTo": "alert.color.foreground.info" },
+    "border-color": { "resolvesTo": "alert.color.border.info" }
+  },
+  ".alert--success": {
+    "background-color": { "resolvesTo": "alert.color.background.success" },
+    "color": { "resolvesTo": "alert.color.foreground.success" },
+    "border-color": { "resolvesTo": "alert.color.border.success" }
+  },
+  ".alert--warning": {
+    "background-color": { "resolvesTo": "alert.color.background.warning" },
+    "color": { "resolvesTo": "alert.color.foreground.warning" },
+    "border-color": { "resolvesTo": "alert.color.border.warning" }
+  },
+  ".alert--danger": {
+    "background-color": { "resolvesTo": "alert.color.background.danger" },
+    "color": { "resolvesTo": "alert.color.foreground.danger" },
+    "border-color": { "resolvesTo": "alert.color.border.danger" }
   }
 }

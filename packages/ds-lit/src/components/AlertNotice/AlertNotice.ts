@@ -48,6 +48,11 @@ export class AlertNoticeElement extends LitElement {
     }
     
     .alert-notice {
+      display: flex;
+      align-items: flex-start;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
       background-color: var(--fsds-alert-notice-color-background-danger);
       color: var(--fsds-alert-notice-color-foreground-danger);
       border-color: var(--fsds-alert-notice-color-border-danger);
@@ -58,9 +63,41 @@ export class AlertNoticeElement extends LitElement {
       font-weight: var(--fsds-alert-notice-text-weight);
     }
     
+    .alert-notice__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-alert-notice-spacing-gap);
+    }
+    
     .alert-notice__title {
+      margin: 0;
       font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
       font-size: var(--fsds-alert-notice-typography-title-fontSize);
+    }
+    
+    .alert-notice--info {
+      background-color: var(--fsds-alert-notice-color-background-info);
+      color: var(--fsds-alert-notice-color-foreground-info);
+      border-color: var(--fsds-alert-notice-color-border-info);
+    }
+    
+    .alert-notice--success {
+      background-color: var(--fsds-alert-notice-color-background-success);
+      color: var(--fsds-alert-notice-color-foreground-success);
+      border-color: var(--fsds-alert-notice-color-border-success);
+    }
+    
+    .alert-notice--warning {
+      background-color: var(--fsds-alert-notice-color-background-warning);
+      color: var(--fsds-alert-notice-color-foreground-warning);
+      border-color: var(--fsds-alert-notice-color-border-warning);
+    }
+    
+    .alert-notice--error {
+      background-color: var(--fsds-alert-notice-color-background-danger);
+      color: var(--fsds-alert-notice-color-foreground-danger);
+      border-color: var(--fsds-alert-notice-color-border-danger);
     }
   `;
 
@@ -114,6 +151,11 @@ export class AlertNoticeBodyElement extends LitElement {
     }
     
     .alert-notice {
+      display: flex;
+      align-items: flex-start;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
       background-color: var(--fsds-alert-notice-color-background-danger);
       color: var(--fsds-alert-notice-color-foreground-danger);
       border-color: var(--fsds-alert-notice-color-border-danger);
@@ -124,9 +166,41 @@ export class AlertNoticeBodyElement extends LitElement {
       font-weight: var(--fsds-alert-notice-text-weight);
     }
     
+    .alert-notice__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-alert-notice-spacing-gap);
+    }
+    
     .alert-notice__title {
+      margin: 0;
       font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
       font-size: var(--fsds-alert-notice-typography-title-fontSize);
+    }
+    
+    .alert-notice--info {
+      background-color: var(--fsds-alert-notice-color-background-info);
+      color: var(--fsds-alert-notice-color-foreground-info);
+      border-color: var(--fsds-alert-notice-color-border-info);
+    }
+    
+    .alert-notice--success {
+      background-color: var(--fsds-alert-notice-color-background-success);
+      color: var(--fsds-alert-notice-color-foreground-success);
+      border-color: var(--fsds-alert-notice-color-border-success);
+    }
+    
+    .alert-notice--warning {
+      background-color: var(--fsds-alert-notice-color-background-warning);
+      color: var(--fsds-alert-notice-color-foreground-warning);
+      border-color: var(--fsds-alert-notice-color-border-warning);
+    }
+    
+    .alert-notice--error {
+      background-color: var(--fsds-alert-notice-color-background-danger);
+      color: var(--fsds-alert-notice-color-foreground-danger);
+      border-color: var(--fsds-alert-notice-color-border-danger);
     }
   `;
 
@@ -166,6 +240,11 @@ export class AlertNoticeTitleElement extends LitElement {
     }
     
     .alert-notice {
+      display: flex;
+      align-items: flex-start;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
       background-color: var(--fsds-alert-notice-color-background-danger);
       color: var(--fsds-alert-notice-color-foreground-danger);
       border-color: var(--fsds-alert-notice-color-border-danger);
@@ -176,9 +255,41 @@ export class AlertNoticeTitleElement extends LitElement {
       font-weight: var(--fsds-alert-notice-text-weight);
     }
     
+    .alert-notice__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-alert-notice-spacing-gap);
+    }
+    
     .alert-notice__title {
+      margin: 0;
       font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
       font-size: var(--fsds-alert-notice-typography-title-fontSize);
+    }
+    
+    .alert-notice--info {
+      background-color: var(--fsds-alert-notice-color-background-info);
+      color: var(--fsds-alert-notice-color-foreground-info);
+      border-color: var(--fsds-alert-notice-color-border-info);
+    }
+    
+    .alert-notice--success {
+      background-color: var(--fsds-alert-notice-color-background-success);
+      color: var(--fsds-alert-notice-color-foreground-success);
+      border-color: var(--fsds-alert-notice-color-border-success);
+    }
+    
+    .alert-notice--warning {
+      background-color: var(--fsds-alert-notice-color-background-warning);
+      color: var(--fsds-alert-notice-color-foreground-warning);
+      border-color: var(--fsds-alert-notice-color-border-warning);
+    }
+    
+    .alert-notice--error {
+      background-color: var(--fsds-alert-notice-color-background-danger);
+      color: var(--fsds-alert-notice-color-foreground-danger);
+      border-color: var(--fsds-alert-notice-color-border-danger);
     }
   `;
 

@@ -49,6 +49,11 @@ export class AlertElement extends LitElement {
     }
     
     .alert {
+      display: flex;
+      align-items: flex-start;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
       background-color: var(--fsds-alert-color-background-danger);
       color: var(--fsds-alert-color-foreground-danger);
       border-color: var(--fsds-alert-color-border-danger);
@@ -59,9 +64,41 @@ export class AlertElement extends LitElement {
       font-weight: var(--fsds-alert-text-weight);
     }
     
+    .alert__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-alert-spacing-gap);
+    }
+    
     .alert__title {
+      margin: 0;
       font-weight: var(--fsds-alert-typography-title-fontWeight);
       font-size: var(--fsds-alert-typography-title-fontSize);
+    }
+    
+    .alert--info {
+      background-color: var(--fsds-alert-color-background-info);
+      color: var(--fsds-alert-color-foreground-info);
+      border-color: var(--fsds-alert-color-border-info);
+    }
+    
+    .alert--success {
+      background-color: var(--fsds-alert-color-background-success);
+      color: var(--fsds-alert-color-foreground-success);
+      border-color: var(--fsds-alert-color-border-success);
+    }
+    
+    .alert--warning {
+      background-color: var(--fsds-alert-color-background-warning);
+      color: var(--fsds-alert-color-foreground-warning);
+      border-color: var(--fsds-alert-color-border-warning);
+    }
+    
+    .alert--danger {
+      background-color: var(--fsds-alert-color-background-danger);
+      color: var(--fsds-alert-color-foreground-danger);
+      border-color: var(--fsds-alert-color-border-danger);
     }
   `;
 
@@ -116,6 +153,11 @@ export class AlertBodyElement extends LitElement {
     }
     
     .alert {
+      display: flex;
+      align-items: flex-start;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
       background-color: var(--fsds-alert-color-background-danger);
       color: var(--fsds-alert-color-foreground-danger);
       border-color: var(--fsds-alert-color-border-danger);
@@ -126,9 +168,41 @@ export class AlertBodyElement extends LitElement {
       font-weight: var(--fsds-alert-text-weight);
     }
     
+    .alert__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-alert-spacing-gap);
+    }
+    
     .alert__title {
+      margin: 0;
       font-weight: var(--fsds-alert-typography-title-fontWeight);
       font-size: var(--fsds-alert-typography-title-fontSize);
+    }
+    
+    .alert--info {
+      background-color: var(--fsds-alert-color-background-info);
+      color: var(--fsds-alert-color-foreground-info);
+      border-color: var(--fsds-alert-color-border-info);
+    }
+    
+    .alert--success {
+      background-color: var(--fsds-alert-color-background-success);
+      color: var(--fsds-alert-color-foreground-success);
+      border-color: var(--fsds-alert-color-border-success);
+    }
+    
+    .alert--warning {
+      background-color: var(--fsds-alert-color-background-warning);
+      color: var(--fsds-alert-color-foreground-warning);
+      border-color: var(--fsds-alert-color-border-warning);
+    }
+    
+    .alert--danger {
+      background-color: var(--fsds-alert-color-background-danger);
+      color: var(--fsds-alert-color-foreground-danger);
+      border-color: var(--fsds-alert-color-border-danger);
     }
   `;
 
@@ -169,6 +243,11 @@ export class AlertTitleElement extends LitElement {
     }
     
     .alert {
+      display: flex;
+      align-items: flex-start;
+      border-style: solid;
+      border-width: 1px;
+      box-sizing: border-box;
       background-color: var(--fsds-alert-color-background-danger);
       color: var(--fsds-alert-color-foreground-danger);
       border-color: var(--fsds-alert-color-border-danger);
@@ -179,9 +258,41 @@ export class AlertTitleElement extends LitElement {
       font-weight: var(--fsds-alert-text-weight);
     }
     
+    .alert__body {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--fsds-alert-spacing-gap);
+    }
+    
     .alert__title {
+      margin: 0;
       font-weight: var(--fsds-alert-typography-title-fontWeight);
       font-size: var(--fsds-alert-typography-title-fontSize);
+    }
+    
+    .alert--info {
+      background-color: var(--fsds-alert-color-background-info);
+      color: var(--fsds-alert-color-foreground-info);
+      border-color: var(--fsds-alert-color-border-info);
+    }
+    
+    .alert--success {
+      background-color: var(--fsds-alert-color-background-success);
+      color: var(--fsds-alert-color-foreground-success);
+      border-color: var(--fsds-alert-color-border-success);
+    }
+    
+    .alert--warning {
+      background-color: var(--fsds-alert-color-background-warning);
+      color: var(--fsds-alert-color-foreground-warning);
+      border-color: var(--fsds-alert-color-border-warning);
+    }
+    
+    .alert--danger {
+      background-color: var(--fsds-alert-color-background-danger);
+      color: var(--fsds-alert-color-foreground-danger);
+      border-color: var(--fsds-alert-color-border-danger);
     }
   `;
 

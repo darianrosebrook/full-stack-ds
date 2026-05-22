@@ -45,15 +45,15 @@ export class TableElement extends LitElement {
     }
     
     .table {
-      color: var(--fsds-table-color-textMuted);
+      color: var(--fsds-table-color-text);
       border-color: var(--fsds-table-color-border);
-      background-color: var(--fsds-table-color-background-footer);
       border-width: var(--fsds-table-border-width);
-      gap: var(--fsds-table-spacing-sortGap);
       border-radius: var(--fsds-table-size-radius);
-      font-size: var(--fsds-table-text-sizeCaption);
+      font-size: var(--fsds-table-text-size);
       line-height: var(--fsds-table-text-lineHeight);
-      font-weight: var(--fsds-table-text-weightFooter);
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-table-color-background-hover);
@@ -62,6 +62,38 @@ export class TableElement extends LitElement {
       &[aria-selected="true"] {
         background-color: var(--fsds-table-color-background-selected);
       }
+    }
+    
+    .table__body {
+      display: table-row-group;
+    }
+    
+    .table__footer {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightFooter);
+      display: flex;
+      align-items: center;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-top-width: var(--fsds-table-border-width);
+      border-top-color: var(--fsds-table-color-border);
+      border-top-style: solid;
+    }
+    
+    .table__header {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightHead);
+      color: var(--fsds-table-color-text);
+      display: block;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-bottom-width: var(--fsds-table-border-width);
+      border-bottom-color: var(--fsds-table-color-border);
+      border-bottom-style: solid;
     }
   `;
 
@@ -105,15 +137,15 @@ export class TableBodyElement extends LitElement {
     }
     
     .table {
-      color: var(--fsds-table-color-textMuted);
+      color: var(--fsds-table-color-text);
       border-color: var(--fsds-table-color-border);
-      background-color: var(--fsds-table-color-background-footer);
       border-width: var(--fsds-table-border-width);
-      gap: var(--fsds-table-spacing-sortGap);
       border-radius: var(--fsds-table-size-radius);
-      font-size: var(--fsds-table-text-sizeCaption);
+      font-size: var(--fsds-table-text-size);
       line-height: var(--fsds-table-text-lineHeight);
-      font-weight: var(--fsds-table-text-weightFooter);
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-table-color-background-hover);
@@ -122,6 +154,38 @@ export class TableBodyElement extends LitElement {
       &[aria-selected="true"] {
         background-color: var(--fsds-table-color-background-selected);
       }
+    }
+    
+    .table__body {
+      display: table-row-group;
+    }
+    
+    .table__footer {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightFooter);
+      display: flex;
+      align-items: center;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-top-width: var(--fsds-table-border-width);
+      border-top-color: var(--fsds-table-color-border);
+      border-top-style: solid;
+    }
+    
+    .table__header {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightHead);
+      color: var(--fsds-table-color-text);
+      display: block;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-bottom-width: var(--fsds-table-border-width);
+      border-bottom-color: var(--fsds-table-color-border);
+      border-bottom-style: solid;
     }
   `;
 
@@ -160,15 +224,15 @@ export class TableFooterElement extends LitElement {
     }
     
     .table {
-      color: var(--fsds-table-color-textMuted);
+      color: var(--fsds-table-color-text);
       border-color: var(--fsds-table-color-border);
-      background-color: var(--fsds-table-color-background-footer);
       border-width: var(--fsds-table-border-width);
-      gap: var(--fsds-table-spacing-sortGap);
       border-radius: var(--fsds-table-size-radius);
-      font-size: var(--fsds-table-text-sizeCaption);
+      font-size: var(--fsds-table-text-size);
       line-height: var(--fsds-table-text-lineHeight);
-      font-weight: var(--fsds-table-text-weightFooter);
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-table-color-background-hover);
@@ -177,6 +241,38 @@ export class TableFooterElement extends LitElement {
       &[aria-selected="true"] {
         background-color: var(--fsds-table-color-background-selected);
       }
+    }
+    
+    .table__body {
+      display: table-row-group;
+    }
+    
+    .table__footer {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightFooter);
+      display: flex;
+      align-items: center;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-top-width: var(--fsds-table-border-width);
+      border-top-color: var(--fsds-table-color-border);
+      border-top-style: solid;
+    }
+    
+    .table__header {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightHead);
+      color: var(--fsds-table-color-text);
+      display: block;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-bottom-width: var(--fsds-table-border-width);
+      border-bottom-color: var(--fsds-table-color-border);
+      border-bottom-style: solid;
     }
   `;
 
@@ -215,15 +311,15 @@ export class TableHeaderElement extends LitElement {
     }
     
     .table {
-      color: var(--fsds-table-color-textMuted);
+      color: var(--fsds-table-color-text);
       border-color: var(--fsds-table-color-border);
-      background-color: var(--fsds-table-color-background-footer);
       border-width: var(--fsds-table-border-width);
-      gap: var(--fsds-table-spacing-sortGap);
       border-radius: var(--fsds-table-size-radius);
-      font-size: var(--fsds-table-text-sizeCaption);
+      font-size: var(--fsds-table-text-size);
       line-height: var(--fsds-table-text-lineHeight);
-      font-weight: var(--fsds-table-text-weightFooter);
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-table-color-background-hover);
@@ -232,6 +328,38 @@ export class TableHeaderElement extends LitElement {
       &[aria-selected="true"] {
         background-color: var(--fsds-table-color-background-selected);
       }
+    }
+    
+    .table__body {
+      display: table-row-group;
+    }
+    
+    .table__footer {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightFooter);
+      display: flex;
+      align-items: center;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-top-width: var(--fsds-table-border-width);
+      border-top-color: var(--fsds-table-color-border);
+      border-top-style: solid;
+    }
+    
+    .table__header {
+      background-color: var(--fsds-table-color-background-footer);
+      font-weight: var(--fsds-table-text-weightHead);
+      color: var(--fsds-table-color-text);
+      display: block;
+      padding-left: var(--fsds-table-spacing-cellX);
+      padding-right: var(--fsds-table-spacing-cellX);
+      padding-top: var(--fsds-table-spacing-cellY);
+      padding-bottom: var(--fsds-table-spacing-cellY);
+      border-bottom-width: var(--fsds-table-border-width);
+      border-bottom-color: var(--fsds-table-color-border);
+      border-bottom-style: solid;
     }
   `;
 

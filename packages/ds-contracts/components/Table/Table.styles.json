@@ -1,32 +1,89 @@
 {
   "root": {
     "color": {
-      "resolvesTo": "table.color.textMuted"
+      "resolvesTo": "table.color.text"
     },
     "border-color": {
       "resolvesTo": "table.color.border"
     },
-    "background-color": {
-      "resolvesTo": "table.color.background.footer"
-    },
     "border-width": {
       "resolvesTo": "table.border.width"
-    },
-    "gap": {
-      "resolvesTo": "table.spacing.sortGap"
     },
     "border-radius": {
       "resolvesTo": "table.size.radius"
     },
     "font-size": {
-      "resolvesTo": "table.text.sizeCaption"
+      "resolvesTo": "table.text.size"
     },
     "line-height": {
       "resolvesTo": "table.text.lineHeight"
     },
+    "display": { "literal": "block", "platforms": ["web"] },
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] }
+  },
+  "body": {
+    "display": { "literal": "table-row-group", "platforms": ["web"] }
+  },
+  "footer": {
+    "background-color": {
+      "resolvesTo": "table.color.background.footer"
+    },
     "font-weight": {
       "resolvesTo": "table.text.weightFooter"
-    }
+    },
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "padding-left": {
+      "resolvesTo": "table.spacing.cellX"
+    },
+    "padding-right": {
+      "resolvesTo": "table.spacing.cellX"
+    },
+    "padding-top": {
+      "resolvesTo": "table.spacing.cellY"
+    },
+    "padding-bottom": {
+      "resolvesTo": "table.spacing.cellY"
+    },
+    "border-top-width": {
+      "resolvesTo": "table.border.width"
+    },
+    "border-top-color": {
+      "resolvesTo": "table.color.border"
+    },
+    "border-top-style": { "literal": "solid", "platforms": ["web"] }
+  },
+  "header": {
+    "background-color": {
+      "resolvesTo": "table.color.background.footer"
+    },
+    "font-weight": {
+      "resolvesTo": "table.text.weightHead"
+    },
+    "color": {
+      "resolvesTo": "table.color.text"
+    },
+    "display": { "literal": "block", "platforms": ["web"] },
+    "padding-left": {
+      "resolvesTo": "table.spacing.cellX"
+    },
+    "padding-right": {
+      "resolvesTo": "table.spacing.cellX"
+    },
+    "padding-top": {
+      "resolvesTo": "table.spacing.cellY"
+    },
+    "padding-bottom": {
+      "resolvesTo": "table.spacing.cellY"
+    },
+    "border-bottom-width": {
+      "resolvesTo": "table.border.width"
+    },
+    "border-bottom-color": {
+      "resolvesTo": "table.color.border"
+    },
+    "border-bottom-style": { "literal": "solid", "platforms": ["web"] }
   },
   "hover": {
     "background-color": {

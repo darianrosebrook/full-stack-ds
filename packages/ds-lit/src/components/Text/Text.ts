@@ -38,8 +38,23 @@ export class TextElement extends LitElement {
     }
     
     .text {
-      color: var(--fsds-text-color-foreground-secondary);
+      color: var(--fsds-text-color-foreground-primary);
       line-height: var(--fsds-text-typography-lineHeight-body);
+      margin: 0;
+    }
+    
+    .text__title {
+      font-weight: var(--fsds-text-typography-fontWeight-bold);
+      line-height: var(--fsds-text-typography-lineHeight-heading);
+      color: var(--fsds-text-color-foreground-primary);
+      margin: 0;
+    }
+    
+    .text__body {
+      font-weight: var(--fsds-text-typography-fontWeight-regular);
+      line-height: var(--fsds-text-typography-lineHeight-body);
+      color: var(--fsds-text-color-foreground-secondary);
+      margin: 0;
     }
     
     .text__error {
@@ -94,8 +109,23 @@ export class TextTitleElement extends LitElement {
     }
     
     .text {
-      color: var(--fsds-text-color-foreground-secondary);
+      color: var(--fsds-text-color-foreground-primary);
       line-height: var(--fsds-text-typography-lineHeight-body);
+      margin: 0;
+    }
+    
+    .text__title {
+      font-weight: var(--fsds-text-typography-fontWeight-bold);
+      line-height: var(--fsds-text-typography-lineHeight-heading);
+      color: var(--fsds-text-color-foreground-primary);
+      margin: 0;
+    }
+    
+    .text__body {
+      font-weight: var(--fsds-text-typography-fontWeight-regular);
+      line-height: var(--fsds-text-typography-lineHeight-body);
+      color: var(--fsds-text-color-foreground-secondary);
+      margin: 0;
     }
     
     .text__error {
@@ -131,8 +161,23 @@ export class TextBodyElement extends LitElement {
     }
     
     .text {
-      color: var(--fsds-text-color-foreground-secondary);
+      color: var(--fsds-text-color-foreground-primary);
       line-height: var(--fsds-text-typography-lineHeight-body);
+      margin: 0;
+    }
+    
+    .text__title {
+      font-weight: var(--fsds-text-typography-fontWeight-bold);
+      line-height: var(--fsds-text-typography-lineHeight-heading);
+      color: var(--fsds-text-color-foreground-primary);
+      margin: 0;
+    }
+    
+    .text__body {
+      font-weight: var(--fsds-text-typography-fontWeight-regular);
+      line-height: var(--fsds-text-typography-lineHeight-body);
+      color: var(--fsds-text-color-foreground-secondary);
+      margin: 0;
     }
     
     .text__error {
