@@ -5,7 +5,9 @@ export function Header() {
     if (typeof window === "undefined") return "light";
     const stored = localStorage.getItem("fsds-theme");
     if (stored === "dark" || stored === "light") return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   });
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function Header() {
       <div className="header-actions">
         <a
           className="icon-btn"
-          href="https://github.com/darianrosebrook"
+          href="https://github.com/darianrosebrook/full-stack-ds"
           target="_blank"
           rel="noreferrer"
           aria-label="Source repository"
@@ -75,7 +77,13 @@ function SunIcon() {
 
 function GithubIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"

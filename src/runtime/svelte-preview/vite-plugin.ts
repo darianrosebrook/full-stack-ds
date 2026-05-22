@@ -41,6 +41,14 @@ function parseVirtualEntryId(id: string) {
   return { componentName: match[1] };
 }
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function renderPropsLiteral(component: ComponentBundle): string {
   const props = defaultPropsFromContract(component);
   const entries = Object.entries(props).map(([k, v]) => {
@@ -58,22 +66,22 @@ function buildEntrySource(componentName: string, bundle: Awaited<ReturnType<type
   const absImport = `/packages/ds-svelte/src/components/${componentName}/${componentName}.svelte`;
   const child = childLabel(component);
   const propsLit = renderPropsLiteral(component);
-  // Svelte 5's mount() takes props + an optional `children` Snippet. The
-  // closest analogue to React/Vue's "child text" here is a default slot
-  // assigned via the children prop; for components whose root is a void or
-  // graphic element we just omit it.
-  //
-  // We can't construct a Snippet from a string at runtime without compiling
-  // a template — but most components in this DS that take a children slot
-  // accept it via the conventional `children` prop name. For demo purposes
-  // we set children to a tiny function that returns the text via Svelte's
-  // text helper. If that breaks for a given component the visible failure
-  // mode is "no inner text" which is acceptable for a demo.
+  // Svelte 5's mount() takes props + an optional `children` Snippet. A plain
+  // `() => "text"` is not a Snippet — Svelte's `{@render children?.()}` calls
+  // it but discards the return value, so the text never lands in the DOM.
+  // createRawSnippet lets us synthesize a real Snippet from an HTML string at
+  // runtime without compiling a .svelte template. The render function must
+  // return HTML wrapping a single element (Svelte warns otherwise via
+  // invalid_raw_snippet_render), so we wrap the demo text in a <span>.
+  const importLine = child
+    ? `import { mount, createRawSnippet } from "svelte";`
+    : `import { mount } from "svelte";`;
+  const childHtml = child ? `<span>${escapeHtml(child)}</span>` : "";
   const propsArg = child
-    ? `{ ...${propsLit}, children: () => ${JSON.stringify(child)} }`
+    ? `{ ...${propsLit}, children: createRawSnippet(() => ({ render: () => ${JSON.stringify(childHtml)} })) }`
     : propsLit;
   return `import Component from ${JSON.stringify(absImport)};
-import { mount } from "svelte";
+${importLine}
 
 const target = document.getElementById("root");
 if (!target) throw new Error("fsds-svelte-preview: #root missing from shell");
