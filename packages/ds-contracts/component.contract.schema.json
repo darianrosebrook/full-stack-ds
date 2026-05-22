@@ -335,12 +335,21 @@
         "bindings": {
           "type": "object",
           "additionalProperties": { "type": "string" },
-          "description": "Dynamic bindings keyed by attribute or event name. Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\"."
+          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\". Event handlers belong under `events`; inner content under `content`. Legacy authoring with `bindings.onX` or `bindings.children`/`bindings.textContent` is auto-translated by the IR builder but new contracts should use the canonical fields."
+        },
+        "events": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Event handlers keyed by *unprefixed* event name (`click`, `input`, `change`, `keydown`, ...). Values use the same binding-expression mini-language as `bindings`. Each framework emitter lowers to its idiom: React `onClick={...}`, Vue `@click=\"...\"`, Svelte `on:click={...}`, Angular `(click)=\"...\"`, Lit `@click=${...}`. Distinct from attribute bindings because Angular and Lit reject event-shaped attribute bindings."
+        },
+        "content": {
+          "type": "string",
+          "description": "Single inner-content binding (one binding expression). Lowers to the framework's content-projection idiom (React `{prop}`, Vue/Angular `{{ prop }}`, Svelte `{prop}`, Lit `${this.prop}`). Mutually exclusive with `children` on the same node — wrap a content value in its own child if you need both."
         },
         "children": {
           "type": "array",
           "items": { "$ref": "#/$defs/domNode" },
-          "description": "Child nodes. Empty/absent for leaf elements."
+          "description": "Child nodes. Empty/absent for leaf elements. Mutually exclusive with `content` on the same node."
         },
         "if": {
           "type": "string",
