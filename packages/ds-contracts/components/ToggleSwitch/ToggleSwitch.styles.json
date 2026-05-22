@@ -1,5 +1,7 @@
 {
   "root": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.default"
     },
@@ -14,14 +16,18 @@
     },
     "transition-duration": {
       "resolvesTo": "toggle-switch.motion.duration.fast"
-    }
+    },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "border-width": { "literal": "1px", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.hover"
     }
   },
-  "checked": {
+  "[aria-checked=\"true\"]": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.checked"
     }
@@ -29,6 +35,7 @@
   "disabled": {
     "background-color": {
       "resolvesTo": "toggle-switch.color.background.disabled"
-    }
+    },
+    "cursor": { "literal": "not-allowed", "platforms": ["web"] }
   }
 }

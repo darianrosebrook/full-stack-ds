@@ -57,6 +57,24 @@ export class ChipElement extends LitElement {
         background-color: var(--fsds-chip-color-background-active);
       }
     }
+    
+    .chip__icon {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      margin-inline-end: 2px;
+    }
+    
+    .chip__text {
+      display: inline-block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: var(--fsds-chip-text-size);
+      font-weight: var(--fsds-chip-text-weight);
+    }
   `;
 
   @property({ attribute: false }) type?: ChipType;

@@ -37,6 +37,14 @@ export class ShuttleElement extends LitElement {
       padding: var(--fsds-shuttle-size-padding-default);
       border-radius: var(--fsds-shuttle-size-radius-default);
     }
+    
+    .shuttle__item {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      color: var(--fsds-shuttle-color-foreground-primary);
+      cursor: pointer;
+    }
   `;
 
   @property({ attribute: 'aria-label', reflect: true })
@@ -72,6 +80,14 @@ export class ShuttleItemElement extends LitElement {
       border-color: var(--fsds-shuttle-color-border-accent);
       padding: var(--fsds-shuttle-size-padding-default);
       border-radius: var(--fsds-shuttle-size-radius-default);
+    }
+    
+    .shuttle__item {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      color: var(--fsds-shuttle-color-foreground-primary);
+      cursor: pointer;
     }
   `;
 

@@ -11,5 +11,21 @@
   },
   "fill": {
     "background-color": { "resolvesTo": "progress.color.fill.info" }
+  },
+  "value": {
+    "display": {
+      "literal": "inline-block",
+      "platforms": ["web"]
+    },
+    "color": {
+      "resolvesTo": "progress.color.text.default"
+    },
+    "font-size": {
+      "literal": "0.875em",
+      "platforms": ["web"]
+    },
+    "margin-left": {
+      "resolvesTo": "progress.spacing.gap"
+    }
   }
 }

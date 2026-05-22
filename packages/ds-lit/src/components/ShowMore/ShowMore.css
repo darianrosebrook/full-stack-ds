@@ -8,6 +8,21 @@
   padding: var(--fsds-show-more-size-padding-default);
   border-radius: var(--fsds-show-more-size-radius-default);
 }
+
+.show-more__content {
+  overflow: hidden;
+  display: block;
+}
+
+.show-more__trigger {
+  display: inline-flex;
+  align-items: center;
+  color: var(--fsds-show-more-color-foreground-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
 /* @generated:end */
 
 /* @custom:start overrides */

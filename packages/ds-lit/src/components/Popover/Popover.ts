@@ -54,6 +54,24 @@ export class PopoverElement extends LitElement {
       position: relative;
       display: inline-block;
     }
+    
+    .popover__trigger {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .popover__content {
+      background-color: var(--fsds-popover-color-background-content);
+      border-color: var(--fsds-popover-color-border-accent);
+      border-radius: var(--fsds-popover-size-radius-default);
+      padding: var(--fsds-popover-size-padding-default);
+      gap: var(--fsds-popover-size-gap-default);
+      box-shadow: var(--fsds-popover-elevation-default);
+      display: inline-block;
+      border-style: solid;
+      border-width: 1px;
+    }
   `;
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
@@ -177,6 +195,24 @@ export class PopoverTriggerElement extends LitElement {
       position: relative;
       display: inline-block;
     }
+    
+    .popover__trigger {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .popover__content {
+      background-color: var(--fsds-popover-color-background-content);
+      border-color: var(--fsds-popover-color-border-accent);
+      border-radius: var(--fsds-popover-size-radius-default);
+      padding: var(--fsds-popover-size-padding-default);
+      gap: var(--fsds-popover-size-gap-default);
+      box-shadow: var(--fsds-popover-elevation-default);
+      display: inline-block;
+      border-style: solid;
+      border-width: 1px;
+    }
   `;
   private _ctx = new ContextConsumerController<PopoverSurfaceContext>(this, PopoverSurface_CTX);
   /** The element currently registered as the surface anchor.
@@ -280,6 +316,24 @@ export class PopoverContentElement extends LitElement {
       box-shadow: var(--fsds-popover-elevation-default);
       position: relative;
       display: inline-block;
+    }
+    
+    .popover__trigger {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .popover__content {
+      background-color: var(--fsds-popover-color-background-content);
+      border-color: var(--fsds-popover-color-border-accent);
+      border-radius: var(--fsds-popover-size-radius-default);
+      padding: var(--fsds-popover-size-padding-default);
+      gap: var(--fsds-popover-size-gap-default);
+      box-shadow: var(--fsds-popover-elevation-default);
+      display: inline-block;
+      border-style: solid;
+      border-width: 1px;
     }
   `;
 

@@ -6,5 +6,40 @@
     "transition-duration": {
       "resolvesTo": "spinner.anim.duration"
     }
+  },
+  "visual": {
+    "display": {
+      "literal": "inline-block",
+      "platforms": ["web"]
+    },
+    "width": {
+      "literal": "1em",
+      "platforms": ["web"]
+    },
+    "height": {
+      "literal": "1em",
+      "platforms": ["web"]
+    },
+    "border-radius": {
+      "literal": "50%",
+      "platforms": ["web"]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "spinner.thickness.regular"
+    },
+    "border-color": {
+      "resolvesTo": "spinner.color.track"
+    },
+    "border-top-color": {
+      "resolvesTo": "spinner.color.accent"
+    },
+    "animation": {
+      "literal": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite",
+      "platforms": ["web"]
+    }
   }
 }

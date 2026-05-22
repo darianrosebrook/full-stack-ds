@@ -33,22 +33,29 @@ export class ToggleSwitchElement extends LitElement {
     }
     
     .toggle-switch {
+      display: inline-flex;
+      align-items: center;
       background-color: var(--fsds-toggle-switch-color-background-default);
       color: var(--fsds-toggle-switch-color-foreground-default);
       border-color: var(--fsds-toggle-switch-color-border-default);
       border-radius: var(--fsds-toggle-switch-border-radius-default);
       transition-duration: var(--fsds-toggle-switch-motion-duration-fast);
+      border-style: solid;
+      border-width: 1px;
+      cursor: pointer;
+      box-sizing: border-box;
     
       &:hover {
         background-color: var(--fsds-toggle-switch-color-background-hover);
       }
     
-      &:checked {
+      &[aria-checked="true"] {
         background-color: var(--fsds-toggle-switch-color-background-checked);
       }
     
       &:disabled {
         background-color: var(--fsds-toggle-switch-color-background-disabled);
+        cursor: not-allowed;
       }
     }
   `;

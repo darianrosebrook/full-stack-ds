@@ -37,6 +37,20 @@ export class StatusElement extends LitElement {
       padding: var(--fsds-status-size-padding-default);
       line-height: var(--fsds-status-typography-lineHeight);
     }
+    
+    .status__icon {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      margin-right: 4px;
+    }
+    
+    .status__label {
+      display: inline-block;
+      color: var(--fsds-status-color-foreground-primary);
+    }
   `;
 
   @property({ attribute: false }) status!: StatusIntent;

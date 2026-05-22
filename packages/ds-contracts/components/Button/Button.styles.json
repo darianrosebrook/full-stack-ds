@@ -53,5 +53,16 @@
     "color": {
       "resolvesTo": "button.color.foreground.disabled"
     }
+  },
+  "spinner": {
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "width": { "literal": "1em", "platforms": ["web"] },
+    "height": { "literal": "1em", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "animation": { "literal": "spin 1s linear infinite", "platforms": ["web"] }
+  },
+  "loadingText": {
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "opacity": { "literal": "0.7", "platforms": ["web"] }
   }
 }

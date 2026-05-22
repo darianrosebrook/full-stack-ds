@@ -69,6 +69,28 @@ export class ButtonElement extends LitElement {
         color: var(--fsds-button-color-foreground-disabled);
       }
     }
+    
+    .button__spinner {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      flex-shrink: 0;
+      animation: spin 1s linear infinite;
+    }
+    
+    .button__loadingText {
+      display: inline-block;
+      opacity: 0.7;
+    }
+    
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
   `;
 
   @property({ attribute: false }) size?: ButtonSize = "medium";

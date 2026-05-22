@@ -43,6 +43,13 @@ export class ProgressElement extends LitElement {
     .progress__fill {
       background-color: var(--fsds-progress-color-fill-info);
     }
+    
+    .progress__value {
+      display: inline-block;
+      color: var(--fsds-progress-color-text-default);
+      font-size: 0.875em;
+      margin-left: var(--fsds-progress-spacing-gap);
+    }
   `;
 
   @property({ type: Number }) value?: number;

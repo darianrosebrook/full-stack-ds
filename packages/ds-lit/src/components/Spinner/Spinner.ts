@@ -39,6 +39,27 @@ export class SpinnerElement extends LitElement {
       gap: var(--fsds-spinner-dots-gap);
       transition-duration: var(--fsds-spinner-anim-duration);
     }
+    
+    .spinner__visual {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: var(--fsds-spinner-thickness-regular);
+      border-color: var(--fsds-spinner-color-track);
+      border-top-color: var(--fsds-spinner-color-accent);
+      animation: spin var(--fsds-spinner-anim-duration, 800ms) linear infinite;
+    }
+    
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
   `;
 
   @property({ attribute: false }) size?: SpinnerSize;

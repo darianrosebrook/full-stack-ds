@@ -33,10 +33,24 @@ export class BadgeElement extends LitElement {
     }
     
     .badge {
-      background-color: var(--fsds-badge-color-background-danger);
+      background-color: var(--fsds-badge-color-background-default);
       color: var(--fsds-badge-color-foreground-primary);
       border-color: var(--fsds-badge-color-border-default);
       gap: var(--fsds-badge-spacing-gap);
+    }
+    
+    .badge__icon {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      margin-inline-end: 2px;
+    }
+    
+    .badge__content {
+      display: inline-block;
+      white-space: nowrap;
     }
   `;
 
@@ -84,10 +98,24 @@ export class BadgeContentElement extends LitElement {
     }
     
     .badge {
-      background-color: var(--fsds-badge-color-background-danger);
+      background-color: var(--fsds-badge-color-background-default);
       color: var(--fsds-badge-color-foreground-primary);
       border-color: var(--fsds-badge-color-border-default);
       gap: var(--fsds-badge-spacing-gap);
+    }
+    
+    .badge__icon {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      margin-inline-end: 2px;
+    }
+    
+    .badge__content {
+      display: inline-block;
+      white-space: nowrap;
     }
   `;
 

@@ -1,26 +1,41 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "checkbox.color.background.default"
-    },
-    "border-color": { "resolvesTo": "checkbox.color.border.default" },
-    "border-width": { "resolvesTo": "checkbox.border.width" },
-    "border-radius": { "resolvesTo": "checkbox.border.radius" },
-    "transition-duration": {
-      "resolvesTo": "checkbox.transition.duration"
-    }
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] }
   },
-  "hover": {
+  ".checkbox:hover .checkbox__indicator": {
     "border-color": { "resolvesTo": "checkbox.color.border.hover" }
   },
-  "checked": {
-    "background-color": {
-      "resolvesTo": "checkbox.color.background.checked"
-    }
+  "input": {
+    "position": { "literal": "absolute", "platforms": ["web"] },
+    "width": { "literal": "1px", "platforms": ["web"] },
+    "height": { "literal": "1px", "platforms": ["web"] },
+    "padding": { "literal": "0", "platforms": ["web"] },
+    "margin": { "literal": "-1px", "platforms": ["web"] },
+    "overflow": { "literal": "hidden", "platforms": ["web"] },
+    "clip": { "literal": "rect(0, 0, 0, 0)", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] },
+    "border": { "literal": "0", "platforms": ["web"] }
   },
-  "disabled": {
-    "background-color": {
-      "resolvesTo": "checkbox.color.background.disabled"
-    }
+  "indicator": {
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "position": { "literal": "relative", "platforms": ["web", "ios", "android"] },
+    "width": { "literal": "16px", "platforms": ["web", "ios", "android"] },
+    "height": { "literal": "16px", "platforms": ["web", "ios", "android"] },
+    "border-radius": { "resolvesTo": "checkbox.border.radius" },
+    "border-color": { "resolvesTo": "checkbox.color.border.default" },
+    "background-color": { "resolvesTo": "checkbox.color.background.default" },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "border-width": { "resolvesTo": "checkbox.border.width" },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "transition-duration": { "resolvesTo": "checkbox.transition.duration" }
+  },
+  ":has(.checkbox__input:checked) .checkbox__indicator": {
+    "background-color": { "resolvesTo": "checkbox.color.background.checked" },
+    "border-color": { "resolvesTo": "checkbox.color.background.checked" }
+  },
+  ":has(.checkbox__input:disabled) .checkbox__indicator": {
+    "background-color": { "resolvesTo": "checkbox.color.background.disabled" }
   }
 }

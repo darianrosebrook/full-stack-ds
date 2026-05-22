@@ -39,6 +39,21 @@ export class ShowMoreElement extends LitElement {
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
+    
+    .show-more__content {
+      overflow: hidden;
+      display: block;
+    }
+    
+    .show-more__trigger {
+      display: inline-flex;
+      align-items: center;
+      color: var(--fsds-show-more-color-foreground-primary);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
   `;
 
   @property({ type: Boolean }) expanded?: boolean;
@@ -98,6 +113,21 @@ export class ShowMoreContentElement extends LitElement {
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
+    
+    .show-more__content {
+      overflow: hidden;
+      display: block;
+    }
+    
+    .show-more__trigger {
+      display: inline-flex;
+      align-items: center;
+      color: var(--fsds-show-more-color-foreground-primary);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
   `;
 
   override render() {
@@ -127,6 +157,21 @@ export class ShowMoreTriggerElement extends LitElement {
       border-color: var(--fsds-show-more-color-border-accent);
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
+    }
+    
+    .show-more__content {
+      overflow: hidden;
+      display: block;
+    }
+    
+    .show-more__trigger {
+      display: inline-flex;
+      align-items: center;
+      color: var(--fsds-show-more-color-foreground-primary);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
     }
   `;
 

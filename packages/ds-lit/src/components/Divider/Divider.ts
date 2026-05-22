@@ -27,6 +27,29 @@ export class DividerElement extends LitElement {
       --fsds-divider-size-thicknessThick: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-divider-spacing-margin: var(--fsds-core-spacing-size-04, 8px);
     }
+    
+    .divider {
+      display: block;
+      width: 100%;
+      border-top-color: var(--fsds-divider-color-default);
+      border-top-style: solid;
+      border-top-width: var(--fsds-divider-size-thickness);
+      margin-top: var(--fsds-divider-spacing-margin);
+      margin-bottom: var(--fsds-divider-spacing-margin);
+    }
+    
+    .divider--vertical {
+      width: 1px;
+      height: auto;
+      border-top: none;
+      border-left-color: var(--fsds-divider-color-default);
+      border-left-style: solid;
+      border-left-width: var(--fsds-divider-size-thickness);
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: var(--fsds-divider-spacing-margin);
+      margin-right: var(--fsds-divider-spacing-margin);
+    }
   `;
 
   @property({ attribute: false }) orientation?: "horizontal" | "vertical";

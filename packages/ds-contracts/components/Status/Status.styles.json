@@ -18,5 +18,17 @@
     "line-height": {
       "resolvesTo": "status.typography.lineHeight"
     }
+  },
+  "icon": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "width": { "literal": "1em", "platforms": ["web"] },
+    "height": { "literal": "1em", "platforms": ["web"] },
+    "margin-right": { "literal": "4px", "platforms": ["web"] }
+  },
+  "label": {
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "color": { "resolvesTo": "status.color.foreground.primary" }
   }
 }

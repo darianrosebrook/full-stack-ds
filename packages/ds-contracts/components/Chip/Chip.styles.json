@@ -37,5 +37,21 @@
     "background-color": {
       "resolvesTo": "chip.color.background.active"
     }
+  },
+  "icon": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "width": { "literal": "1em", "platforms": ["web"] },
+    "height": { "literal": "1em", "platforms": ["web"] },
+    "margin-inline-end": { "literal": "2px", "platforms": ["web"] }
+  },
+  "text": {
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] },
+    "text-overflow": { "literal": "ellipsis", "platforms": ["web"] },
+    "overflow": { "literal": "hidden", "platforms": ["web"] },
+    "font-size": { "resolvesTo": "chip.text.size" },
+    "font-weight": { "resolvesTo": "chip.text.weight" }
   }
 }

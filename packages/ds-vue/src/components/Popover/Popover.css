@@ -11,6 +11,24 @@
   position: relative;
   display: inline-block;
 }
+
+.popover__trigger {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.popover__content {
+  background-color: var(--fsds-popover-color-background-content);
+  border-color: var(--fsds-popover-color-border-accent);
+  border-radius: var(--fsds-popover-size-radius-default);
+  padding: var(--fsds-popover-size-padding-default);
+  gap: var(--fsds-popover-size-gap-default);
+  box-shadow: var(--fsds-popover-elevation-default);
+  display: inline-block;
+  border-style: solid;
+  border-width: 1px;
+}
 /* @generated:end */
 
 /* @custom:start overrides */

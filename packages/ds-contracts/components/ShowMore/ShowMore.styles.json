@@ -15,5 +15,18 @@
     "border-radius": {
       "resolvesTo": "show-more.size.radius.default"
     }
+  },
+  "content": {
+    "overflow": { "literal": "hidden", "platforms": ["web"] },
+    "display": { "literal": "block", "platforms": ["web"] }
+  },
+  "trigger": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "color": { "resolvesTo": "show-more.color.foreground.primary" },
+    "background": { "literal": "none", "platforms": ["web"] },
+    "border": { "literal": "none", "platforms": ["web"] },
+    "padding": { "literal": "0", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] }
   }
 }

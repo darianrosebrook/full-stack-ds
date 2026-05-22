@@ -47,13 +47,25 @@ export class TooltipElement extends LitElement {
     }
     
     .tooltip {
+      display: inline-block;
+    }
+    
+    .tooltip__trigger {
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .tooltip__content {
       background-color: var(--fsds-tooltip-color-background-default);
       color: var(--fsds-tooltip-color-foreground-default);
       border-color: var(--fsds-tooltip-color-border-default);
-      padding: var(--fsds-tooltip-size-padding-x);
       border-radius: var(--fsds-tooltip-size-radius-default);
+      padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
-      font-size: var(--fsds-tooltip-typography-fontSize);
+      font-size: 0.875em;
+      display: inline-block;
+      border-style: solid;
+      border-width: 1px;
     }
   `;
   @property({ type: Boolean }) open?: boolean;
@@ -170,13 +182,25 @@ export class TooltipTriggerElement extends LitElement {
     }
     
     .tooltip {
+      display: inline-block;
+    }
+    
+    .tooltip__trigger {
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .tooltip__content {
       background-color: var(--fsds-tooltip-color-background-default);
       color: var(--fsds-tooltip-color-foreground-default);
       border-color: var(--fsds-tooltip-color-border-default);
-      padding: var(--fsds-tooltip-size-padding-x);
       border-radius: var(--fsds-tooltip-size-radius-default);
+      padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
-      font-size: var(--fsds-tooltip-typography-fontSize);
+      font-size: 0.875em;
+      display: inline-block;
+      border-style: solid;
+      border-width: 1px;
     }
   `;
   private _ctx = new ContextConsumerController<TooltipSurfaceContext>(this, TooltipSurface_CTX);
@@ -275,13 +299,25 @@ export class TooltipContentElement extends LitElement {
     }
     
     .tooltip {
+      display: inline-block;
+    }
+    
+    .tooltip__trigger {
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .tooltip__content {
       background-color: var(--fsds-tooltip-color-background-default);
       color: var(--fsds-tooltip-color-foreground-default);
       border-color: var(--fsds-tooltip-color-border-default);
-      padding: var(--fsds-tooltip-size-padding-x);
       border-radius: var(--fsds-tooltip-size-radius-default);
+      padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
-      font-size: var(--fsds-tooltip-typography-fontSize);
+      font-size: 0.875em;
+      display: inline-block;
+      border-style: solid;
+      border-width: 1px;
     }
   `;
 
