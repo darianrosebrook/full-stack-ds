@@ -9,7 +9,28 @@ import type {
   Framework,
   PrimitiveBundle,
   SourceFile,
+  UsageLine,
 } from "./src/types/data";
+
+/**
+ * Parse a `<Name>.usage.jsonl` file. One example per line; blank lines are
+ * skipped. Malformed lines are dropped (the codegen's validator is the
+ * authoritative gate — by the time the showcase reads these files in dev,
+ * the gate has already filtered out bad input upstream).
+ */
+function parseUsageJsonl(text: string): UsageLine[] {
+  const out: UsageLine[] = [];
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (trimmed === "") continue;
+    try {
+      out.push(JSON.parse(line) as UsageLine);
+    } catch {
+      // Skip; validator surfaces malformed lines elsewhere.
+    }
+  }
+  return out;
+}
 
 const FRAMEWORKS: Framework[] = ["react", "vue", "svelte", "angular", "lit"];
 
@@ -179,9 +200,17 @@ function inferLayerOrder(layer: string): number {
 
 export async function buildBundle(rootDir: string) {
   const contractsDir = path.join(rootDir, "packages", "ds-contracts");
-  const contractFiles = (await readdir(contractsDir))
-    .filter((f) => f.endsWith(".contract.json"))
-    .sort();
+  const componentsDir = path.join(contractsDir, "components");
+  // Each component lives in components/<Name>/ with <Name>.contract.json,
+  // <Name>.tokens.json, and <Name>.usage.jsonl as sidecars. Walk the folder
+  // list (not a flat *.contract.json glob) so missing sidecars are
+  // distinguishable from missing folders.
+  const componentFolders = existsSync(componentsDir)
+    ? (await readdir(componentsDir, { withFileTypes: true }))
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name)
+        .sort()
+    : [];
 
   const schemaText = await safeRead(path.join(contractsDir, "component.contract.schema.json"));
   const schema = schemaText ? JSON.parse(schemaText) : null;
@@ -200,8 +229,9 @@ export async function buildBundle(rootDir: string) {
     .join("\n");
 
   const components: ComponentBundle[] = [];
-  for (const file of contractFiles) {
-    const full = path.join(contractsDir, file);
+  for (const folder of componentFolders) {
+    const contractFile = `${folder}.contract.json`;
+    const full = path.join(componentsDir, folder, contractFile);
     const text = await safeRead(full);
     if (!text) continue;
     let contract: ComponentContract;
@@ -214,13 +244,32 @@ export async function buildBundle(rootDir: string) {
     } catch {
       continue;
     }
-    const name = contract.name ?? file.replace(".contract.json", "");
+    const name = contract.name ?? folder;
     const sources = await gatherComponentSources(rootDir, name);
+
+    // Tokens sidecar: optional. Attached to the contract object so downstream
+    // consumers (showcase, codegen) can read contract.tokens as they always have.
+    const tokensSidecarPath = path.join(componentsDir, folder, `${folder}.tokens.json`);
+    const tokensText = await safeRead(tokensSidecarPath);
+    if (tokensText) {
+      try {
+        (contract as { tokens?: unknown }).tokens = JSON.parse(tokensText);
+      } catch {
+        // Schema validator catches malformed sidecars upstream; ignore here.
+      }
+    }
+
+    // Usage sidecar: optional JSONL of curated composition examples.
+    const usagePath = path.join(componentsDir, folder, `${folder}.usage.jsonl`);
+    const usageText = await safeRead(usagePath);
+    const usage = usageText ? parseUsageJsonl(usageText) : [];
+
     components.push({
       name,
       contract,
       contractPath: path.relative(rootDir, full),
       sources,
+      usage,
     });
   }
 

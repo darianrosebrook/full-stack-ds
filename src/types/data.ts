@@ -112,11 +112,53 @@ export interface ComponentContract {
   compoundParts?: unknown;
 }
 
+/**
+ * A composition tree node from a `<Name>.usage.jsonl` line.
+ *
+ * Each node has exactly one `fsds.<ContractName>` key (the cross-component
+ * reference). The value carries `props` (literals matching the target
+ * contract's declared props) and `slots` (sub-trees keyed by anatomy parts).
+ * `children` may be a string, a sub-tree, or an array of either — handled
+ * uniformly as `props.children`.
+ *
+ * Schema lives at `packages/ds-contracts/component.usage.schema.json`;
+ * cross-contract resolution (ref/props/slot existence) is enforced by the
+ * codegen's `--check-usage` pass before the JSONL reaches the showcase.
+ */
+export type UsageTreeNode = {
+  [fsdsRef: string]: UsageNodeBody;
+};
+
+export interface UsageNodeBody {
+  props?: Record<string, UsagePropValue>;
+  slots?: Record<string, UsageTreeNode>;
+}
+
+export type UsagePropValue =
+  | string
+  | number
+  | boolean
+  | null
+  | UsageTreeNode
+  | Array<string | UsageTreeNode>;
+
+export interface UsageLine {
+  name: string;
+  description?: string;
+  tree: UsageTreeNode;
+}
+
 export interface ComponentBundle {
   name: string;
   contract: ComponentContract;
   contractPath: string;
   sources: Partial<Record<Framework, ComponentSources>>;
+  /**
+   * Curated composition examples loaded from `<Name>.usage.jsonl`. One entry
+   * per line. Empty array when no sidecar exists; downstream renderers should
+   * treat that as "no examples to show" without erroring.
+   */
+  usage: UsageLine[];
 }
 
 export interface PrimitiveBundle {
