@@ -23,6 +23,8 @@ export interface AlertProps {
   intent?: AlertIntent;
   level?: AlertLevel;
   dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   icon?: ReactNode;
   className?: string;
   "data-testid"?: string;
@@ -78,6 +80,8 @@ export function Alert({
   "data-testid": testId,
   children,
   dismissible,
+  onDismiss,
+  dismissLabel = "Dismiss",
   icon,
   ...rest
 }: AlertProps) {

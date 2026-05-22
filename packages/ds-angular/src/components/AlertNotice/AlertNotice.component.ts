@@ -29,6 +29,7 @@ export class AlertNoticeComponent {
   @Input() status?: AlertNoticeStatus;
   @Input() level?: AlertNoticeLevel;
   @Input() dismissible?: boolean;
+  @Input() dismissLabel?: string = "Dismiss";
   @Input() icon?: unknown;
 
   classes(): string {

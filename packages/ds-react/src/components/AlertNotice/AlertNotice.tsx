@@ -23,6 +23,8 @@ export interface AlertNoticeProps {
   status?: AlertNoticeStatus;
   level?: AlertNoticeLevel;
   dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   icon?: ReactNode;
   className?: string;
   "data-testid"?: string;
@@ -78,6 +80,8 @@ export function AlertNotice({
   "data-testid": testId,
   children,
   dismissible,
+  onDismiss,
+  dismissLabel = "Dismiss",
   icon,
   ...rest
 }: AlertNoticeProps) {

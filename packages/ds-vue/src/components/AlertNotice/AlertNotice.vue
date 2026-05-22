@@ -22,6 +22,8 @@ interface Props {
   status?: AlertNoticeStatus;
   level?: AlertNoticeLevel;
   dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   icon?: unknown;
   class?: string;
   "data-testid"?: string;
@@ -29,7 +31,9 @@ interface Props {
 // @generated:end
 
 // @generated:start defineProps
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  dismissLabel: "Dismiss",
+});
 // @generated:end
 
 // @generated:start classes

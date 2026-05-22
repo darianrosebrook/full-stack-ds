@@ -21,12 +21,14 @@ interface Props {
   status?: AlertNoticeStatus;
   level?: AlertNoticeLevel;
   dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   icon?: unknown;
   class?: string;
   children?: import('svelte').Snippet;
 }
 
-let { status, level, dismissible, icon, class: className, children }: Props = $props();
+let { status, level, dismissible, onDismiss, dismissLabel = "Dismiss", icon, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes

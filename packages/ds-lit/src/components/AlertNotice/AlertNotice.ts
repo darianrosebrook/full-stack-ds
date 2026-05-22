@@ -107,6 +107,8 @@ export class AlertNoticeElement extends LitElement {
   level?: AlertNoticeLevel;
   @property({ type: Boolean })
   dismissible?: boolean;
+  @property({ type: String })
+  dismissLabel?: string = "Dismiss";
   @property({ attribute: false })
   icon?: unknown;
 

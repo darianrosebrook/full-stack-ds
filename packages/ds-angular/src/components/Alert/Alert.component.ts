@@ -29,6 +29,7 @@ export class AlertComponent {
   @Input() intent?: AlertIntent;
   @Input() level?: AlertLevel;
   @Input() dismissible?: boolean;
+  @Input() dismissLabel?: string = "Dismiss";
   @Input() icon?: unknown;
 
   classes(): string {

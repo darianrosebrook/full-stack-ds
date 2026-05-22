@@ -32,6 +32,17 @@
           "description": "Whether the alert can be dismissed by the user"
         },
         {
+          "name": "onDismiss",
+          "type": "() => void",
+          "description": "Called when the user clicks the dismiss control. Required surface for `dismissible`; consumers handle removing/hiding the alert."
+        },
+        {
+          "name": "dismissLabel",
+          "type": "string",
+          "description": "Accessible label for the dismiss control. Defaults to \"Dismiss\".",
+          "default": "Dismiss"
+        },
+        {
           "name": "icon",
           "type": "ReactNode",
           "description": "Optional icon node rendered before the alert content"
