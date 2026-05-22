@@ -689,6 +689,13 @@
               "description": "ARIA attributes the implementation must set on this part (e.g. \"aria-expanded\", \"aria-selected\")."
             }
           }
+        },
+        "collapsibleTo": {
+          "type": "string",
+          "description": "Declares that this part's purpose is fully served by a target's native primitive on platforms that ship one. Emitters consult a per-target intent-to-primitive table: targets with a mapping collapse the part into the native primitive; targets without one render the full multi-part anatomy. Web emitters ignore this field. The vocabulary is closed — add new intents in lockstep with the emitters that consume them.",
+          "enum": [
+            "native-toggle-affordance"
+          ]
         }
       }
     },

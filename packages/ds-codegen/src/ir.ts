@@ -17,6 +17,7 @@
 import type {
   ComponentContract,
   ContractChannel,
+  ContractCollapseIntent,
   ContractDismissal,
   ContractDismissalTrigger,
   ContractDomNode,
@@ -501,6 +502,32 @@ export function hasChildrenPlaceholder(ir: ComponentIR): boolean {
     if (node.children) stack.push(...node.children);
   }
   return false;
+}
+
+/**
+ * Group anatomy parts by their declared collapse intent.
+ *
+ * Returns a map keyed by `ContractCollapseIntent` (e.g.
+ * `native-toggle-affordance`) whose values are the part names that share
+ * that intent. Parts without `details.collapsibleTo` are omitted.
+ *
+ * Each non-web emitter consults this map plus its own intent→primitive
+ * table to decide whether to collapse the multi-part anatomy into a
+ * single native primitive. Web emitters can ignore the result — the
+ * `anatomy.dom` tree is the authoritative shape for them.
+ */
+export function collectCollapseIntents(
+  ir: ComponentIR,
+): Map<ContractCollapseIntent, string[]> {
+  const result = new Map<ContractCollapseIntent, string[]>();
+  for (const part of ir.parts) {
+    const intent = part.details?.collapsibleTo;
+    if (!intent) continue;
+    const existing = result.get(intent) ?? [];
+    existing.push(part.name);
+    result.set(intent, existing);
+  }
+  return result;
 }
 
 // ---------------------------------------------------------------------------

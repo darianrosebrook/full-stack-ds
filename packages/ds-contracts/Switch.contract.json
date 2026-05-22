@@ -10,6 +10,16 @@
       "thumb",
       "input"
     ],
+    "details": {
+      "track": {
+        "role": "decoration",
+        "collapsibleTo": "native-toggle-affordance"
+      },
+      "thumb": {
+        "role": "decoration",
+        "collapsibleTo": "native-toggle-affordance"
+      }
+    },
     "dom": {
       "tag": "label",
       "part": "root",

@@ -50,6 +50,13 @@ export interface ContractStateDimension {
   exclusive?: boolean;
 }
 
+/**
+ * Closed vocabulary of native-primitive intents a part may collapse into.
+ * Seeded with only the intents actually consumed by emitters; widen in
+ * lockstep with new emitter mappings.
+ */
+export type ContractCollapseIntent = 'native-toggle-affordance';
+
 export interface ContractPartDetails {
   description?: string;
   role?: string;
@@ -58,6 +65,13 @@ export interface ContractPartDetails {
   interactive?: boolean;
   portalTarget?: boolean;
   aria?: { role?: string; attributes?: string[] };
+  /**
+   * Declares that this part's purpose is fully served by a target's native
+   * primitive on platforms that ship one. Emitters consult a per-target
+   * intent→primitive table; targets without a mapping render the full
+   * multi-part anatomy. Web emitters ignore this field.
+   */
+  collapsibleTo?: ContractCollapseIntent;
 }
 
 /**
