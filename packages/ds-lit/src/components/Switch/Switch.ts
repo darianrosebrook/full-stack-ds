@@ -58,6 +58,10 @@ export class SwitchElement extends LitElement {
     .switch {
       transition-duration: var(--fsds-switch-motion-duration);
       transition-timing-function: var(--fsds-switch-motion-easing);
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
     
       &:disabled {
         background-color: var(--fsds-switch-color-track-background-disabled);
@@ -75,6 +79,11 @@ export class SwitchElement extends LitElement {
       height: var(--fsds-switch-size-md-track-height);
       border-radius: var(--fsds-switch-size-md-track-radius);
       padding: var(--fsds-switch-size-md-track-padding);
+      display: inline-block;
+      position: relative;
+      box-sizing: border-box;
+      border-style: solid;
+      border-width: 1px;
     }
     
     .switch__thumb {
@@ -82,10 +91,25 @@ export class SwitchElement extends LitElement {
       box-shadow: var(--fsds-switch-color-thumb-shadow-default);
       width: var(--fsds-switch-size-md-thumb-size);
       height: var(--fsds-switch-size-md-thumb-height);
+      display: block;
+      position: absolute;
+      top: var(--fsds-switch-size-md-track-padding);
+      left: var(--fsds-switch-size-md-track-padding);
+      border-radius: 50%;
+      box-sizing: border-box;
     }
     
     .switch__input {
       outline-color: var(--fsds-switch-color-input-outline-focus);
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
   `;
 

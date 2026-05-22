@@ -282,6 +282,119 @@ describe("computeCssBlocks: contract.states -> CSS selectors", () => {
 
     expect(focusBlocks).toHaveLength(1);
   });
+
+  /**
+   * Gap 6 — Layout primitives via `contract.styles.<part>` must merge with
+   * `contract.tokens.<part>`, not replace it. Without this, authoring
+   * structural CSS (display, position, box-sizing) on a part would silently
+   * drop the part's tokenized theming (background-color, width via slot, etc.).
+   * See packages/ds-codegen/__golden__/Switch/Switch.traceability.md Gap 6.
+   */
+  it("merges styles.<part> with tokens.<part> when both target the same part", () => {
+    const contract: ComponentContract = {
+      name: "Switch",
+      cssPrefix: "switch",
+      anatomy: { parts: ["root", "track"] },
+      states: ["default"],
+      props: { styled: { members: [] } },
+      tokens: {
+        root: {},
+        track: {
+          "switch.color.track.bg": {
+            resolvesTo: "semantic.color.background.tertiary",
+            fallback: "#cecece",
+            property: "background-color",
+          },
+        },
+      },
+      styles: {
+        track: {
+          display: "inline-block",
+          position: "relative",
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "switch");
+    const trackBlocks = blocks.filter((b) => b.selector === ".switch__track");
+
+    // Both the tokens-derived slot+property and the styles-authored layout
+    // primitives must coexist in a single .switch__track block.
+    expect(trackBlocks).toHaveLength(1);
+    expect(trackBlocks[0].declarations).toMatchObject({
+      // From tokens.track (two-hop indirection):
+      "--fsds-switch-color-track-bg":
+        "var(--fsds-semantic-color-background-tertiary, #cecece)",
+      "background-color": "var(--fsds-switch-color-track-bg)",
+      // From styles.track:
+      display: "inline-block",
+      position: "relative",
+    });
+  });
+
+  it("emits a styles.<part> block even when tokens.<part> is absent", () => {
+    const contract: ComponentContract = {
+      name: "Switch",
+      cssPrefix: "switch",
+      anatomy: { parts: ["root", "input"] },
+      states: ["default"],
+      props: { styled: { members: [] } },
+      styles: {
+        input: {
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "switch");
+    const inputBlocks = blocks.filter((b) => b.selector === ".switch__input");
+
+    expect(inputBlocks).toHaveLength(1);
+    expect(inputBlocks[0].declarations).toEqual({
+      position: "absolute",
+      width: "1px",
+      height: "1px",
+    });
+  });
+
+  it("authored styles override token-emitted properties when both target the same property", () => {
+    // E.g., the contract's `tokens.thumb` declares `border-radius: var(slot)`
+    // but the author wants a literal `border-radius: 50%` for a circular knob
+    // independent of any theme. `styles` wins per the existing root-merge
+    // doctrine: "authored styles win when both target the same property".
+    const contract: ComponentContract = {
+      name: "Switch",
+      cssPrefix: "switch",
+      anatomy: { parts: ["root", "thumb"] },
+      states: ["default"],
+      props: { styled: { members: [] } },
+      tokens: {
+        root: {},
+        thumb: {
+          "switch.shape.thumb.radius": {
+            resolvesTo: "core.shape.radius.medium",
+            fallback: "8px",
+            property: "border-radius",
+          },
+        },
+      },
+      styles: {
+        thumb: {
+          "border-radius": "50%",
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "switch");
+    const thumbBlocks = blocks.filter((b) => b.selector === ".switch__thumb");
+
+    expect(thumbBlocks).toHaveLength(1);
+    // Slot declaration still emitted (so brands can override the slot).
+    expect(thumbBlocks[0].declarations["--fsds-switch-shape-thumb-radius"]).toBe(
+      "var(--fsds-core-shape-radius-medium, 8px)",
+    );
+    // But the property consumer is the author's literal, not var(slot).
+    expect(thumbBlocks[0].declarations["border-radius"]).toBe("50%");
+  });
 });
 
 function makeContract(states: string[]): ComponentContract {

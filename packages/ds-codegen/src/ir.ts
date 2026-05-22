@@ -1221,6 +1221,12 @@ export function computeCssBlocks(
     if (rootIncludes(key)) rootMergedTokens[key] = value;
   }
 
+  // Track which `styles.<key>` entries have been consumed by an
+  // anatomy-derived block. Anything left over at the end is a compound /
+  // arbitrary selector authored by hand (e.g. `__header > __title`) and
+  // gets emitted as its own flat block.
+  const consumedStyleKeys = new Set<string>();
+
   // Root block first; always emitted (even if empty) for stable ordering.
   // Token declarations are merged BEFORE styled values so authored styles
   // win when both target the same property (intentional: codegen output
@@ -1231,13 +1237,7 @@ export function computeCssBlocks(
     declarations: { ...rootTokenRender.declarations, ...(styles.root ?? {}) },
     comments: rootTokenRender.comments,
   });
-
-  for (const [key, declarations] of Object.entries(styles)) {
-    if (key === "root") continue;
-    const selector = expandStylesKey(key, cssPrefix);
-    blocks.push({ selector, declarations });
-    emitted.add(selector);
-  }
+  if (styles.root) consumedStyleKeys.add("root");
 
   for (const [dim, values] of Object.entries(variants)) {
     for (const val of values) {
@@ -1256,7 +1256,18 @@ export function computeCssBlocks(
         ...(partitionedVariantTokens ?? {}),
       };
       const { declarations, comments } = renderTokens(mergedVariantTokens);
-      blocks.push({ selector: sel, declarations, comments });
+      // Merge `styles.--<val>` onto the variant block (authored styles win
+      // on property collision, same doctrine as the root merge).
+      const styleKey = `--${val}`;
+      const variantStyles = (styles as Record<string, Record<string, string>>)[
+        styleKey
+      ];
+      if (variantStyles) consumedStyleKeys.add(styleKey);
+      blocks.push({
+        selector: sel,
+        declarations: { ...declarations, ...(variantStyles ?? {}) },
+        comments,
+      });
       emitted.add(sel);
     }
   }
@@ -1272,7 +1283,16 @@ export function computeCssBlocks(
     // (mirrors how variants and parts pick up their own token block).
     const stateTokens = (tokens as Record<string, unknown>)[state];
     const { declarations, comments } = renderTokens(stateTokens);
-    blocks.push({ selector: sel, declarations, comments });
+    // Merge `styles.<state>` (authored styles win on property collision).
+    const stateStyles = (styles as Record<string, Record<string, string>>)[
+      state
+    ];
+    if (stateStyles) consumedStyleKeys.add(state);
+    blocks.push({
+      selector: sel,
+      declarations: { ...declarations, ...(stateStyles ?? {}) },
+      comments,
+    });
     emitted.add(sel);
   }
 
@@ -1282,7 +1302,29 @@ export function computeCssBlocks(
     if (emitted.has(sel)) continue;
     const partTokens = (tokens as Record<string, unknown>)[part];
     const { declarations, comments } = renderTokens(partTokens);
-    blocks.push({ selector: sel, declarations, comments });
+    // Merge `styles.<part>` (authored styles win on property collision).
+    // This is the Gap 6 path: contracts can declare layout primitives
+    // (display, position, box-sizing) on a part without dropping the
+    // tokenized theming for the same part.
+    const partStyles = (styles as Record<string, Record<string, string>>)[part];
+    if (partStyles) consumedStyleKeys.add(part);
+    blocks.push({
+      selector: sel,
+      declarations: { ...declarations, ...(partStyles ?? {}) },
+      comments,
+    });
+  }
+
+  // Any styles entry that wasn't consumed by a known root / variant /
+  // state / part block is treated as a hand-authored selector key
+  // (compound BEM, pseudo-element, arbitrary attribute selector, etc.)
+  // and emitted as its own flat block.
+  for (const [key, declarations] of Object.entries(styles)) {
+    if (consumedStyleKeys.has(key)) continue;
+    const selector = expandStylesKey(key, cssPrefix);
+    if (emitted.has(selector)) continue;
+    blocks.push({ selector, declarations });
+    emitted.add(selector);
   }
 
   const focusSel = `.${cssPrefix}:focus-visible`;
