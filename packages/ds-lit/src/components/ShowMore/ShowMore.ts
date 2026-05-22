@@ -58,10 +58,10 @@ export class ShowMoreElement extends LitElement {
 
   @property({ type: Boolean }) expanded?: boolean;
   @property({ type: Boolean }) defaultExpanded?: boolean;
+  @property({ attribute: false }) onExpandedChange?: (expanded: boolean) => void;
   @property({ type: Number }) maxLines?: number = 3;
   @property({ type: String }) showMoreLabel?: string = "Show more";
   @property({ type: String }) showLessLabel?: string = "Show less";
-  @property({ attribute: false }) onExpandedChange?: (value: boolean) => void;
 
   private behavior = new ShowMoreBehavior(this, {
     expanded: () => this.expanded,

@@ -53,6 +53,8 @@ export class ShuttleElement extends LitElement {
   value?: string[];
   @property({ attribute: false })
   defaultValue?: string[];
+  @property({ attribute: false })
+  onValueChange?: (value: string[]) => void;
 
   override render() {
     return html`<fsds-stack role="listbox" class="shuttle"><slot></slot></fsds-stack>`;

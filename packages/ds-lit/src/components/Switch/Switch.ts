@@ -162,11 +162,11 @@ export class SwitchElement extends LitElement {
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
+  @property({ attribute: false }) onChange?: (checked: boolean) => void;
   @property({ type: String }) size?: SwitchSize = "md";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: String }) name?: string;
   @property({ type: String }) value?: string;
-  @property({ attribute: false }) onChange?: (value: boolean) => void;
 
   private behavior = new SwitchBehavior(this, {
     checked: () => this.checked,

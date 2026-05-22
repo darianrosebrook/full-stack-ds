@@ -73,11 +73,12 @@ export class OTPElement extends LitElement {
   @property({ type: Number }) length?: number = 6;
   @property({ type: String }) value?: string;
   @property({ type: String }) defaultValue?: string;
+  @property({ attribute: false }) onChange?: (value: string) => void;
+  @property({ attribute: false }) onComplete?: (value: string) => void;
   @property({ type: String }) mode?: OTPMode = "numeric";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) readOnly?: boolean;
   @property({ type: String }) label?: string = "One-time password";
-  @property({ attribute: false }) onChange?: (value: string) => void;
 
   private behavior = new OTPBehavior(this, {
     value: () => this.value,

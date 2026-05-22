@@ -144,6 +144,8 @@ export class TabsElement extends LitElement {
   value?: string;
   @property({ type: String })
   defaultValue?: string;
+  @property({ attribute: false })
+  onValueChange?: (value: string) => void;
   @property({ type: String })
   orientation?: TabsOrientation = "horizontal";
   @property({ type: String })
@@ -156,7 +158,6 @@ export class TabsElement extends LitElement {
   unmountInactive?: boolean;
   @property({ type: String })
   idBase?: string;
-  @property({ attribute: false }) onValueChange?: (value: string) => void;
 
   private behavior = new TabsBehavior(this, {
     value: () => this.value,

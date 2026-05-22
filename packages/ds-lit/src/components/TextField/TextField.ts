@@ -89,12 +89,12 @@ export class TextFieldElement extends LitElement {
   @property({ type: String }) type?: string;
   @property({ type: String }) value?: string;
   @property({ type: String }) defaultValue?: string;
+  @property({ attribute: false }) onChange?: (value: string) => void;
   @property({ type: Boolean }) invalid?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) required?: boolean;
   @property({ type: String }) name?: string;
   @property({ type: String }) ariaDescribedby?: string;
-  @property({ attribute: false }) onChange?: (value: string) => void;
 
   private behavior = new TextFieldBehavior(this, {
     value: () => this.value,

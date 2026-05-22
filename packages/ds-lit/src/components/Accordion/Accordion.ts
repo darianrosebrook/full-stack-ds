@@ -131,9 +131,9 @@ export class AccordionElement extends LitElement {
   @property({ type: String }) type?: AccordionType = "single";
   @property({ attribute: false }) value?: string | string[];
   @property({ attribute: false }) defaultValue?: string | string[];
+  @property({ attribute: false }) onValueChange?: (value: string | string[]) => void;
   @property({ type: Boolean }) collapsible?: boolean = false;
   @property({ type: Boolean }) disabled?: boolean;
-  @property({ attribute: false }) onValueChange?: (value: string | string[]) => void;
 
   private behavior = new AccordionBehavior(this, {
     value: () => this.value,

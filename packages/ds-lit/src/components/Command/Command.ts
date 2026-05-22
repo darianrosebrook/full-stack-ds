@@ -208,15 +208,15 @@ export class CommandElement extends LitElement {
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
+  @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: String }) search?: string;
   @property({ type: String }) defaultSearch?: string;
+  @property({ attribute: false }) onSearchChange?: (value: string) => void;
   @property({ type: String }) placeholder?: string = "Search...";
   @property({ type: String }) emptyMessage?: string = "No results found.";
   @property({ type: String }) label?: string = "Command palette";
   @property({ type: Boolean }) shouldFilter?: boolean = true;
   @property({ attribute: false }) filter?: ((value: string, search: string) => number) | undefined;
-  @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
-  @property({ attribute: false }) onSearchChange?: (value: string) => void;
 
   private behavior = new CommandBehavior(this, {
     open: () => this.open,

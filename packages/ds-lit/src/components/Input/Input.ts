@@ -53,12 +53,12 @@ export class InputElement extends LitElement {
   @property({ type: String }) type?: string;
   @property({ type: String }) value?: string;
   @property({ type: String }) defaultValue?: string;
+  @property({ attribute: false }) onChange?: (value: string) => void;
   @property({ type: String }) placeholder?: string;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: Boolean }) invalid?: boolean;
   @property({ type: Boolean }) required?: boolean;
   @property({ type: String }) name?: string;
-  @property({ attribute: false }) onChange?: (value: string) => void;
 
   private behavior = new InputBehavior(this, {
     value: () => this.value,

@@ -421,12 +421,21 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
       continue;
     }
     const litPropType = litPropertyType(p.type, ir.definedTypes);
-    if (litPropType === null) continue;
     const t = applyLitTypeRename(litType(p.type), rename);
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     const defaultPart =
       p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
-    lines.push(`  @property(${litPropertyDecoratorOptions(litPropType)})`);
+    // litPropertyType returns null for function-typed and other non-
+    // attribute-reflectable props. Emit them with `attribute: false`
+    // rather than dropping them entirely — callbacks like onDismiss must
+    // exist on the element class so consumers can set them via JS and so
+    // event bindings in render (`@click=${this.onDismiss}`) typecheck.
+    // Pre-IR-DOM-BINDING-CAPABILITY-01 these were silently dropped.
+    const decoratorOptions =
+      litPropType === null
+        ? "{ attribute: false }"
+        : litPropertyDecoratorOptions(litPropType);
+    lines.push(`  @property(${decoratorOptions})`);
     lines.push(`  ${propName}?: ${t}${defaultPart};`);
     declared.add(p.name);
   }
@@ -1271,8 +1280,24 @@ function generateLitDomTreePropertyDecl(
   rename: { from: string; to: string } | null = null,
   definedTypes?: Record<string, ContractTypeDef>,
 ): string | null {
-  const skipEventHandler = /=>\s*(void|never)|EventHandler/.test(p.type);
-  if (skipEventHandler) return null;
+  // Function-typed props (callbacks like `onDismiss?: () => void`) need to
+  // exist on the Lit element class so renderLitBinding can reference
+  // `this.onDismiss` from `@click=${this.onDismiss}`. Without this they
+  // were silently dropped — IR-DOM-BINDING-CAPABILITY-01 surfaced the gap
+  // when Alert/AlertNotice tried to project a dismiss button.
+  //
+  // Always emit them as `@property({ attribute: false })`: function values
+  // can never round-trip through HTML attributes, so attribute reflection
+  // makes no sense, but the property still must be declared so consumer
+  // code can set it via JS (`el.onDismiss = handler`) and so lit-analyzer
+  // does not flag the render reference as an undeclared property access.
+  const isFunctionType =
+    /=>\s*(void|never|[A-Za-z])/.test(p.type) || /EventHandler/.test(p.type);
+  if (isFunctionType) {
+    const propType = applyLitTypeRename(litType(p.type), rename);
+    const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
+    return `  @property({ attribute: false }) ${propName}?: ${propType};`;
+  }
   if (ARIA_MIXIN_NAMES.has(p.name)) {
     return [
       `  @property({ attribute: '${ariaCamelToKebab(p.name)}', reflect: true })`,

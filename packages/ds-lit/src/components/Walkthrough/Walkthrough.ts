@@ -149,12 +149,14 @@ export class WalkthroughElement extends LitElement {
   @property({ attribute: false }) steps?: WalkthroughStepSpec[];
   @property({ type: Number }) index?: number;
   @property({ type: Number }) defaultIndex?: number = 0;
+  @property({ attribute: false }) onStepChange?: (index: number) => void;
+  @property({ attribute: false }) onComplete?: () => void;
+  @property({ attribute: false }) onSkip?: () => void;
   @property({ type: String }) label?: string = "Feature tour";
   @property({ type: String }) storageKey?: string;
   @property({ type: Boolean }) autoStart?: boolean = false;
   @property({ type: Boolean }) closeOnOutsideClick?: boolean = false;
   @property({ type: String }) placement?: WalkthroughPlacement = "auto";
-  @property({ attribute: false }) onStepChange?: (value: number) => void;
 
   private behavior = new WalkthroughBehavior(this, {
     index: () => this.index,

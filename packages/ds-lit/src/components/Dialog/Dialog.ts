@@ -174,6 +174,7 @@ export class DialogElement extends LitElement {
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
+  @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: Boolean }) modal?: boolean = true;
   @property({ type: String }) size?: DialogSize = "md";
   @property({ type: Boolean }) dismissible?: boolean = true;
@@ -181,7 +182,6 @@ export class DialogElement extends LitElement {
   @property({ type: Boolean }) closeOnBackdropClick?: boolean = true;
   @property({ type: String }) initialFocus?: string;
   @property({ type: String }) returnFocus?: string;
-  @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
 
   private behavior = new DialogBehavior(this, {
     open: () => this.open,

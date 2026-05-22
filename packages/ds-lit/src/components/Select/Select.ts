@@ -173,16 +173,16 @@ export class SelectElement extends LitElement {
   @property({ attribute: false }) options!: SelectOption[];
   @property({ attribute: false }) value?: string | string[];
   @property({ attribute: false }) defaultValue?: string | string[];
+  @property({ attribute: false }) onChange?: (value: string | string[]) => void;
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
+  @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: Boolean }) multiple?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: String }) size?: SelectSize = "md";
   @property({ attribute: false }) filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   @property({ type: Boolean }) searchable?: boolean;
   @property({ type: Boolean }) empty?: boolean;
-  @property({ attribute: false }) onChange?: (value: string | string[]) => void;
-  @property({ attribute: false }) onOpenChange?: (value: boolean) => void;
   @property() position?: string;
 
   private behavior = new SelectBehavior(this, {

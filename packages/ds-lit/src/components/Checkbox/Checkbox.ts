@@ -80,11 +80,11 @@ export class CheckboxElement extends LitElement {
   @property({ type: String }) size?: CheckboxSize = "md";
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
+  @property({ attribute: false }) onChange?: (checked: boolean) => void;
   @property({ type: Boolean }) indeterminate?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
   @property({ type: String }) name?: string;
   @property({ type: String }) value?: string;
-  @property({ attribute: false }) onChange?: (value: boolean) => void;
 
   private behavior = new CheckboxBehavior(this, {
     checked: () => this.checked,

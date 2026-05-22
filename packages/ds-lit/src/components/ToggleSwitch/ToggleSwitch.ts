@@ -62,12 +62,12 @@ export class ToggleSwitchElement extends LitElement {
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;
+  @property({ attribute: false }) onChange?: (checked: boolean) => void;
   @property({ type: String }) size?: ToggleSwitchSize = "medium";
   @property({ type: Boolean }) disabled?: boolean;
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
   @property({ type: String }) ariaDescribedby?: string;
-  @property({ attribute: false }) onChange?: (value: boolean) => void;
 
   private behavior = new ToggleSwitchBehavior(this, {
     checked: () => this.checked,
