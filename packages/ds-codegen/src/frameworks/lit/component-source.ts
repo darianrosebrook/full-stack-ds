@@ -585,15 +585,34 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
   lines.push(`export class ${className} extends LitElement {`);
   lines.push(...litStaticStylesLine(ir));
   lines.push(``);
-  lines.push(`  @property() value?: string;`);
-  lines.push(`  @property() defaultValue?: string;`);
-  lines.push(`  @property() orientation?: "horizontal" | "vertical" = "horizontal";`);
-  lines.push(`  @property() activationMode?: "automatic" | "manual" = "automatic";`);
-  lines.push(`  @property({ type: Boolean }) loop?: boolean = true;`);
-  lines.push(`  @property({ type: Boolean }) unmountInactive?: boolean;`);
-  lines.push(`  @property() idBase?: string;`);
-  lines.push(`  @property({ attribute: false }) onValueChange?: (value: string) => void;`);
-  lines.push(``);
+  // Property declarations come from the IR so any variant added to the
+  // contract (e.g. appearance) emits a real @property and lands in the
+  // BEM class composition below. Hardcoding the prop list here would
+  // silently drop new variants — see #20.
+  const propLines = generatePropertyDeclarations(ir);
+  // generatePropertyDeclarations skips function-typed props (channel
+  // callbacks like onValueChange). For the compound-state-container
+  // path, emit them explicitly so consumers can listen.
+  const rename = litAliasRename(ir);
+  const declaredNames = new Set(
+    propLines
+      .filter((line) => line.includes(":") && !line.startsWith("  @"))
+      .map((line) => line.trim().match(/^([_a-zA-Z][\w]*)\??:/)?.[1] ?? "")
+      .filter(Boolean),
+  );
+  const channelLines: string[] = [];
+  for (const ch of ir.behavior.normalizedChannels) {
+    if (declaredNames.has(ch.changeHandlerProp)) continue;
+    const t = applyLitTypeRename(ch.valueType ?? "unknown", rename);
+    channelLines.push(
+      `  @property({ attribute: false }) ${ch.changeHandlerProp}?: (value: ${t}) => void;`,
+    );
+  }
+  if (propLines.length > 0 || channelLines.length > 0) {
+    lines.push(...propLines);
+    lines.push(...channelLines);
+    lines.push(``);
+  }
   lines.push(`  private behavior = new ${ir.name}Behavior(this, {`);
   lines.push(`    value: () => this.value,`);
   lines.push(`    defaultValue: this.defaultValue,`);
@@ -642,12 +661,26 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
   lines.push(`    });`);
   lines.push(`  }`);
   lines.push(``);
+  // Class composition is derived from the IR's classRecipe so that any
+  // variant declared in the contract (orientation, activationMode,
+  // appearance, …) automatically appears in the rendered class list.
+  const hasClassMap =
+    ir.classRecipe.valueModifiers.length > 0 ||
+    ir.classRecipe.booleanModifiers.length > 0;
+
   lines.push(`  override render() {`);
-  lines.push(`    const cssBase = "${cssBase}";`);
-  lines.push(`    const orientation = this.orientation ?? "horizontal";`);
-  lines.push(`    const activationMode = this.activationMode ?? "automatic";`);
-  lines.push(`    const classes = [cssBase, \`\${cssBase}--\${orientation}\`, \`\${cssBase}--\${activationMode}\`].join(" ");`);
-  lines.push(`    return html\`<div class="\${classes}"><slot></slot></div>\`;`);
+  if (hasClassMap) {
+    lines.push(`    const classes = {`);
+    lines.push(generateClassMapObject(ir));
+    lines.push(`    };`);
+    lines.push(
+      `    return html\`<div class=\${classMap(classes)}><slot></slot></div>\`;`,
+    );
+  } else {
+    lines.push(
+      `    return html\`<div class="${cssBase}"><slot></slot></div>\`;`,
+    );
+  }
   lines.push(`  }`);
   lines.push(`}`);
   lines.push(``);
