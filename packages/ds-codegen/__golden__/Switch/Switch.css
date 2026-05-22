@@ -1,60 +1,44 @@
-/* Hand-authored golden output. Not generated.
- * See ../README.md for annotation conventions.
- *
- * This file represents what `pnpm run generate -- --target=react Switch`
- * SHOULD produce as `packages/ds-react/src/components/Switch/Switch.css`
- * once all gaps below are resolved. The Vue / Svelte / Angular emitters
- * produce a byte-identical file in their own packages. Lit inlines this
- * content (concatenated with Switch.tokens.css) into the LitElement's
- * `static override styles = css\`…\`` block.
- *
- * Visible-pill design:
- *   - label.switch is an inline-flex wrapper sized to its track.
- *   - input.switch__input is visually hidden (sr-only) but takes
- *     pointer events so the label/track/thumb stay interactive.
- *   - span.switch__track is the visible pill — `position: relative` so
- *     the thumb can be `position: absolute` inside it.
- *   - span.switch__thumb is the moving knob, translated horizontally
- *     by the checked-state rule below.
- */
-
 @import "./Switch.tokens.css";
 
 /* @generated:start styles */
-
-/* SRC: contract.cssPrefix=switch + contract.anatomy.parts[0]=root */
 .switch {
-  /* SRC: contract.tokens.root["switch.motion.duration"].property=transition-duration */
-  /* SRC: ir.renderTokens — pass 2 emits the property reference */
   transition-duration: var(--fsds-switch-motion-duration);
-  /* SRC: contract.tokens.root["switch.motion.easing"].property=transition-timing-function */
   transition-timing-function: var(--fsds-switch-motion-easing);
-
-  /* GAP 6: layout primitives. None of these properties resolve through a
-     token (there's no `display` / `position` token in the graph and even
-     if there were, this isn't a theming concern — it's structural CSS
-     that's required for the component to function correctly regardless
-     of theme). They belong in `contract.styles.root`, which is currently
-     `null` on every contract in the repo. The IR's `computeCssBlocks`
-     does iterate `contract.styles` (ir.ts:1235) and would emit them as
-     property declarations on the root selector — so closing this gap is
-     purely contract authoring + a schema decision: do we allow raw
-     `property: value` pairs under `contract.styles.<part>`, or do we
-     require every property to route through a token?
-     See traceability gap #6. */
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   position: relative;
 }
 
-/* GAP 8: the input is visually hidden but keeps pointer & focus semantics.
-   This is a well-known "screen-reader only" pattern. Like GAP 6, the
-   declarations are layout primitives that belong in contract.styles.input.
-   SRC for the technique: WCAG SC 1.3.1 + the contract's
-   a11y.labeling=["aria-checked"] which requires the input to receive
-   keyboard focus. See traceability gap #8. */
+.switch__track {
+  background-color: var(--fsds-switch-color-track-background-default);
+  border-color: var(--fsds-switch-color-track-border-default);
+  width: var(--fsds-switch-size-md-track-width);
+  height: var(--fsds-switch-size-md-track-height);
+  border-radius: var(--fsds-switch-size-md-track-radius);
+  padding: var(--fsds-switch-size-md-track-padding);
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.switch__thumb {
+  background-color: var(--fsds-switch-color-thumb-background-default);
+  box-shadow: var(--fsds-switch-color-thumb-shadow-default);
+  width: var(--fsds-switch-size-md-thumb-size);
+  height: var(--fsds-switch-size-md-thumb-height);
+  top: var(--fsds-switch-size-md-track-padding);
+  left: var(--fsds-switch-size-md-track-padding);
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
 .switch__input {
+  outline-color: var(--fsds-switch-color-input-outline-focus);
   position: absolute;
   width: 1px;
   height: 1px;
@@ -64,108 +48,19 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-  /* SRC: contract.tokens.input["switch.color.input.outline.focus"].property=outline-color */
-  outline-color: var(--fsds-switch-color-input-outline-focus);
 }
 
-/* SRC: contract.anatomy.parts[1]=track → BEM child */
-.switch__track {
-  /* SRC: contract.tokens.track["switch.color.track.background.default"].property=background-color */
-  background-color: var(--fsds-switch-color-track-background-default);
-  /* SRC: contract.tokens.track["switch.color.track.border.default"].property=border-color */
-  border-color: var(--fsds-switch-color-track-border-default);
-  /* SRC: contract.tokens.track["switch.size.md.track.width"].property=width */
-  width: var(--fsds-switch-size-md-track-width);
-  /* SRC: contract.tokens.track["switch.size.md.track.height"].property=height */
-  height: var(--fsds-switch-size-md-track-height);
-  /* SRC: contract.tokens.track["switch.size.md.track.radius"].property=border-radius */
-  border-radius: var(--fsds-switch-size-md-track-radius);
-  /* SRC: contract.tokens.track["switch.size.md.track.padding"].property=padding */
-  padding: var(--fsds-switch-size-md-track-padding);
-
-  /* GAP 6: structural layout — track is the positioning context for the
-     thumb (which is `position: absolute` inside it) and must be
-     `display: inline-block` to honor width/height. Same authoring
-     home as the .switch layout primitives above. */
-  display: inline-block;
-  position: relative;
-  box-sizing: border-box;
-  border-style: solid;
-  border-width: 1px;
-  /* GAP 10: transition shorthand combining a tokenized duration with a
-     non-tokenized property list. The current renderTokens path emits one
-     property per slot; it has no shape for "apply this duration to a
-     curated list of properties." Could be a token whose `property` is
-     `transition` and whose value is built from sibling slots, but that's
-     a new render mode. See traceability gap #10. */
-  transition: background-color var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing);
-}
-
-/* SRC: contract.anatomy.parts[2]=thumb → BEM child */
-.switch__thumb {
-  /* SRC: contract.tokens.thumb["switch.color.thumb.background.default"].property=background-color */
-  background-color: var(--fsds-switch-color-thumb-background-default);
-  /* SRC: contract.tokens.thumb["switch.color.thumb.shadow.default"].property=box-shadow */
-  box-shadow: var(--fsds-switch-color-thumb-shadow-default);
-  /* SRC: contract.tokens.thumb["switch.size.md.thumb.size"].property=width */
-  width: var(--fsds-switch-size-md-thumb-size);
-  /* SRC: contract.tokens.thumb["switch.size.md.thumb.height"].property=height */
-  height: var(--fsds-switch-size-md-thumb-height);
-
-  /* GAP 6: layout primitives — thumb is `position: absolute` so it can
-     slide via `translate` inside the track's positioning context. Same
-     authoring home as the others. */
-  display: block;
-  position: absolute;
-  top: var(--fsds-switch-size-md-track-padding);
-  left: var(--fsds-switch-size-md-track-padding);
-  border-radius: 50%;
-  box-sizing: border-box;
-  /* SRC: contract.tokens.thumb["switch.size.md.thumb.translate.off"].property=translate */
-  translate: var(--fsds-switch-size-md-thumb-translate-off);
-  /* GAP 10: transition shorthand for the moving thumb. Same as track. */
-  transition: translate var(--fsds-switch-motion-duration) var(--fsds-switch-motion-easing),
-              background-color var(--fsds-switch-motion-duration);
-}
-
-/* GAP 7: state-on-part. The contract's `tokens.checked` block declares
-   `switch.color.track.background.checked` and `switch.color.thumb.background.checked`,
-   but the IR emits them as `.switch:checked { background-color: var(...) }`
-   on the LABEL (which has no :checked pseudo). Each declaration must
-   instead target the part it belongs to, qualified by the input's state.
-   See traceability gap #7 for the proposed IR change. */
-.switch:has(.switch__input:checked) .switch__track {
+:has(.switch__input:checked) .switch__track {
   background-color: var(--fsds-switch-color-track-background-checked);
 }
-.switch:has(.switch__input:checked) .switch__thumb {
+
+:has(.switch__input:checked) .switch__thumb {
   background-color: var(--fsds-switch-color-thumb-background-checked);
-  /* SRC: contract.tokens.thumb["switch.size.md.thumb.translate.on"].property=translate */
-  /* GAP 9: per-state property value. `translate.on` is in the thumb slot
-     block, but consumption needs to override the resting `translate` from
-     above. The current IR has no shape for "this slot is the value of
-     property X when state Y is active." See traceability gap #9. */
-  translate: var(--fsds-switch-size-md-thumb-translate-on);
 }
 
-/* GAP 7 (continued): disabled state. */
-.switch:has(.switch__input:disabled) {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-.switch:has(.switch__input:disabled) .switch__track {
+:has(.switch__input:disabled) .switch__track {
   background-color: var(--fsds-switch-color-track-background-disabled);
 }
-
-/* SRC: contract.a11y.labeling=["aria-checked"] requires a visible focus indicator. */
-/* SRC: contract.tokens.input["switch.color.input.outline.focus"] */
-/* GAP 7 (continued): focus ring should land on the track when the (hidden)
-   input gains keyboard focus, not on the input itself (which is visually
-   hidden). */
-.switch:has(.switch__input:focus-visible) .switch__track {
-  outline: 2px solid var(--fsds-switch-color-input-outline-focus);
-  outline-offset: 2px;
-}
-
 /* @generated:end */
 
 /* @custom:start overrides */

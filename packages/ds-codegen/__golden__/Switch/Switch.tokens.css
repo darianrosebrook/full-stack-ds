@@ -1,95 +1,22 @@
-/* Hand-authored golden output. Not generated.
- * See ../README.md for annotation conventions.
- *
- * This file represents what `pnpm run generate -- --target=react Switch`
- * SHOULD produce as `packages/ds-react/src/components/Switch/Switch.tokens.css`
- * once all gaps below are resolved. The four other web frameworks
- * (Vue, Svelte, Angular, Lit) consume the same content — Lit inlines
- * it inside `static override styles = css\`…\``, the others import
- * the sibling file from `<Component>.css`.
- *
- * Annotations use `/* SRC: <fact> */` immediately above the line they
- * justify. Lines without a SRC comment are CSS structural syntax
- * (braces, blank lines, the `/* @generated:start */` markers) that
- * carry no contract or IR fact.
- */
-
 /* @generated:start tokens */
-
-/* SRC: contract.cssPrefix=switch + contract.anatomy.parts[0]=root → base selector */
 .switch {
-  /* SRC: contract.tokens.root["switch.motion.duration"] */
-  /* SRC: ir.renderTokens — pass 1 emits the slot declaration */
   --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
-  /* SRC: contract.tokens.root["switch.motion.easing"] */
   --fsds-switch-motion-easing: var(--fsds-semantic-motion-interaction-press-easing, ease-out);
-}
-
-/* SRC: contract.cssPrefix=switch + contract.anatomy.parts[1]=track → BEM child selector */
-/* SRC: codegen-fix (css.ts toNestedSelector refuses `--` / `__` remainders, so this emits as a flat sibling rule, not as a `&__track` nest). */
-.switch__track {
-  /* SRC: contract.tokens.track["switch.color.track.background.default"] */
   --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
-  /* SRC: contract.tokens.track["switch.color.track.border.default"] */
-  --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #aeaeae);
-  /* SRC: contract.tokens.track["switch.size.md.track.width"], layer=core */
-  --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
-  /* SRC: contract.tokens.track["switch.size.md.track.height"] */
-  --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
-  /* SRC: contract.tokens.track["switch.size.md.track.radius"] */
-  --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
-  /* SRC: contract.tokens.track["switch.size.md.track.padding"] */
-  --fsds-switch-size-md-track-padding: var(--fsds-core-spacing-size-01, 2px);
-}
-
-/* SRC: contract.anatomy.parts[2]=thumb → BEM child */
-.switch__thumb {
-  /* SRC: contract.tokens.thumb["switch.color.thumb.background.default"] */
-  --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-  /* SRC: contract.tokens.thumb["switch.color.thumb.shadow.default"] */
-  --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0, 0, 0, 0.1));
-  /* SRC: contract.tokens.thumb["switch.size.md.thumb.size"] (width) */
-  --fsds-switch-size-md-thumb-size: var(--fsds-core-spacing-size-06, 20px);
-  /* SRC: contract.tokens.thumb["switch.size.md.thumb.height"] */
-  --fsds-switch-size-md-thumb-height: var(--fsds-core-spacing-size-06, 20px);
-  /* GAP 9: translate.off / translate.on slot pair — the thumb's resting and
-     activated x-offset. The current schema has no slot dedicated to a
-     property whose VALUE is derived per-state. Authoring two slots
-     (`switch.size.md.thumb.translate.off`, `…translate.on`) is fine, but
-     consumption requires a `:has(input:checked)` rewrite of `translate`.
-     See traceability gap #9. */
-  --fsds-switch-size-md-thumb-translate-off: 0;
-  --fsds-switch-size-md-thumb-translate-on: 24px;
-}
-
-/* SRC: contract.anatomy.parts[3]=input → BEM child */
-.switch__input {
-  /* SRC: contract.tokens.input["switch.color.input.outline.focus"] */
-  --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #d9292b);
-}
-
-/* SRC: contract.tokens.checked — currently emits as `.switch:checked` (pseudo on root). */
-/* GAP 7: `:checked` is a pseudo-class on form controls (input.switch__input),
-   NOT on the label.switch root. This selector never matches. The IR needs
-   to recognize that for components whose root is a non-form-control wrapper,
-   state qualifiers must target via `:has(input:state)` instead of `:state`.
-   See traceability gap #7. */
-.switch:has(.switch__input:checked) .switch__track {
-  /* SRC: contract.tokens.checked["switch.color.track.background.checked"] */
   --fsds-switch-color-track-background-checked: var(--fsds-semantic-color-foreground-accent, #d9292b);
-}
-.switch:has(.switch__input:checked) .switch__thumb {
-  /* SRC: contract.tokens.checked["switch.color.thumb.background.checked"] */
-  --fsds-switch-color-thumb-background-checked: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-}
-
-/* SRC: contract.tokens.disabled */
-/* GAP 7 (continued): same issue as :checked — label has no :disabled pseudo. */
-.switch:has(.switch__input:disabled) .switch__track {
-  /* SRC: contract.tokens.disabled["switch.color.track.background.disabled"] */
   --fsds-switch-color-track-background-disabled: var(--fsds-semantic-color-background-disabled, #efefef);
+  --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #aeaeae);
+  --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+  --fsds-switch-color-thumb-background-checked: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+  --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0, 0, 0, 0.1));
+  --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #d9292b);
+  --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
+  --fsds-switch-size-md-track-height: var(--fsds-core-spacing-size-07, 24px);
+  --fsds-switch-size-md-track-radius: var(--fsds-core-shape-radius-full, 9999px);
+  --fsds-switch-size-md-track-padding: var(--fsds-core-spacing-size-01, 2px);
+  --fsds-switch-size-md-thumb-size: var(--fsds-core-spacing-size-06, 20px);
+  --fsds-switch-size-md-thumb-height: var(--fsds-core-spacing-size-06, 20px);
 }
-
 /* @generated:end */
 
 /* @custom:start overrides */

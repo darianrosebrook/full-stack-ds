@@ -72,7 +72,7 @@ existing consumer.
 entries in `Switch.contract.json` *as part of the same change that
 fixes gap 1b*.
 
-#### Gap 1b — Latent CSS emitter bug (discovered during gap 1a attempt)
+#### Gap 1b — Latent CSS emitter bug — RESOLVED via convergence
 
 The CSS emitter (`packages/ds-codegen/src/css.ts`) does not understand
 that `tokens.root["switch.size.<variant>.*"]` is *variant-keyed*. When
@@ -111,6 +111,18 @@ for Switch + Checkbox.
 **Combined gating:** gap 1a and 1b must land together — 1a without
 1b ships a regression, 1b without 1a is unverifiable because Switch
 is the only contract that would exercise the fixed path.
+
+**Resolution (tokens/styles convergence):** the structural premise of
+1b — "the emitter must recognize variant-keyed token names and route
+them to BEM modifiers" — is gone. Variant-conditional consumption is
+now author-explicit in styles.json under `--sm` / `--md` / `--lg`
+selector keys. `partitionVariantKeyedRootTokens` and its four
+regression tests were deleted in the IR refactor (commit `dc11948`).
+The combined gating with 1a is also gone: shipping `sm`/`lg` slots
+now just adds entries to tokens.json + per-variant consumers in
+styles.json, and the emitter has no special path to break. Gap 1a
+remains a component-authoring follow-up (Switch still ships only
+`md` size slots).
 
 ### Gap 2 — Anatomy collapse on platforms with native Toggle (RESOLVED)
 
@@ -281,7 +293,7 @@ Particularly load-bearing IR facts that held up under web translation:
 
 ## Web gaps (gap numbering continues from non-web round 1)
 
-### Gap 6 — Layout primitives have no contract home — RESOLVED in commit 85cdf56
+### Gap 6 — Layout primitives have no contract home — RESOLVED via convergence
 
 **Where:** `Switch.css` lines for `display: inline-flex` on `.switch`,
 `display: inline-block` + `position: relative` + `box-sizing` on
@@ -335,26 +347,47 @@ track/thumb being absolutely positioned is the canonical example).
 Estimated <10 contracts will gain a `styles` block; the other 35+
 keep `styles: null`.
 
-**Resolution (2026-05-22, commit `85cdf56`):**
+**Resolution (2026-05-22, commit `85cdf56` — initial; superseded by the convergence):**
 
-- `computeCssBlocks` refactored: each anatomy-derived block (root,
-  variant, state, part) now consults `styles.<key>` and merges it onto
-  its own declarations, preserving the "authored styles win on property
-  collision" doctrine. The earlier standalone `styles` loop is replaced
-  by a final pass that emits only `styles` entries which didn't match
-  any anatomy-derived key (compound selectors, pseudo-elements).
-- Switch contract authored `styles.root` / `styles.input` /
-  `styles.track` / `styles.thumb` with the layout primitives the
-  golden required (~22 declarations total).
-- Three regression tests in `states-to-css.test.ts` lock in:
-  (1) `styles.<part>` + `tokens.<part>` coexist in one block,
-  (2) `styles.<part>` alone emits correctly,
-  (3) authored property overrides token-emitted property while
-  preserving the slot declaration for brand override.
-- Visual verification: Switch now renders as a visible pill in
-  React + Lit previews (matches design intent for the first time).
+The first fix added an inline `styles` field to the contract and a
+Gap-6 merge pass to `computeCssBlocks`. That approach was correct for
+unblocking Switch but smuggled web-only semantics (`var(...)`, CSS
+keyword literals like `display: inline-flex`) into a structure the
+Swift / Compose / RN emitters also consume.
 
-### Gap 7 — State-on-part transformation
+**Resolution (2026-05-22, tokens/styles convergence,
+PLAN-TOKENS-STYLES-CONVERGENCE-001):**
+
+- `<Name>.tokens.json` flattened to a slot pool — every entry declares
+  a single CSS custom property on the component's root selector via
+  `var(--<global>, <fallback>)`. The flat shape matches the
+  hand-authored `[data-qds-component="…"]` pattern in qualtrics's
+  styled/ implementation verbatim.
+- `<Name>.styles.json` (new sidecar) carries consumer-side declarations
+  keyed by selector → property → `styleEntry`. `styleEntry` is either
+  `{ resolvesTo: <slot-or-global> }` (slot reference; the cascade
+  delivers the var()) or `{ literal: <css-value>, platforms: [...] }`
+  (target-filtered hardcoded value). Layout literals are now first-class
+  and explicitly scoped to platforms (`display: inline-flex` lives
+  under `platforms: ["web"]`; `position: relative` ships to all three).
+- `computeCssBlocks` rewritten end-to-end: root block = slot declarations
+  + `styles.root` consumers; every other selector key in styles.json
+  becomes its own block via `expandStylesKey`. The Gap-6 merge pass
+  and the inline `contract.styles` field are both gone.
+- Switch's contract authored: 16 slots in tokens.json + 6 selectors in
+  styles.json (root, track, thumb, input, and three compound `:has()`
+  state-on-part selectors that resolve Gap 7 simultaneously).
+- New validators (`validateContractStyles`,
+  `validateStylesSelectorCollisions`) prevent regression — every
+  `resolvesTo` must name a real slot or a real graph entry, and no
+  two styles.json keys may alias to the same CSS selector.
+- Visual verification: Switch renders byte-identical in React + Lit
+  previews. The Swift `findSizeToken(ir, "md", "width")` lookup still
+  works without code changes because `--fsds-switch-size-md-track-width`
+  is on the root selector — exactly where it was before, but no longer
+  duplicated across part blocks.
+
+### Gap 7 — State-on-part transformation — RESOLVED via convergence
 
 **Where:** `Switch.css` lines that read `.switch:has(.switch__input:checked)
 .switch__track { background-color: var(...) }`. The current emitter
@@ -409,7 +442,37 @@ It always builds `.<prefix><pseudo>`, never `.<prefix>:has(<inner>:<pseudo>)`.
 applies to Darian's doctrine — they hand-author this pattern
 in styled/ today; we'd be encoding it structurally.
 
-### Gap 8 — Visually-hidden input pattern
+**Resolution (tokens/styles convergence):**
+
+The proposal's "magic IR rewrite" (proposal 1: infer `:has(formControl:state)`
+selectors from anatomy.dom) is replaced by *explicit authoring*. Under
+the new shape, the author writes the compound selector verbatim as a
+top-level key in styles.json:
+
+```jsonc
+{
+  ":has(.switch__input:checked) .switch__track": {
+    "background-color": { "resolvesTo": "switch.color.track.background.checked" }
+  }
+}
+```
+
+`expandComplexSelector` (`ir.ts:1239`) was updated to preserve segments
+that start with `.`, `:`, `[`, `#`, `*` verbatim, so the `:has()` pseudo
+passes through untouched. The contract no longer has to declare
+`anatomy.formControl`, and the IR no longer infers DOM relationships.
+The trade-off: more authoring verbosity (one selector key per
+state-on-part combination), less IR magic. We chose verbosity — the
+contract is the source of truth, and the IR shouldn't be guessing DOM
+structure from anatomy names.
+
+Switch authored three such compound selectors in styles.json:
+`:has(.switch__input:checked) .switch__track`,
+`:has(.switch__input:checked) .switch__thumb`,
+`:has(.switch__input:disabled) .switch__track`. All three emit
+correctly into Switch.css.
+
+### Gap 8 — Visually-hidden input pattern — RESOLVED via convergence
 
 **Where:** `Switch.css` `.switch__input { position: absolute; width: 1px;
 height: 1px; clip: rect(0,0,0,0); … }`. This is the canonical
@@ -432,6 +495,12 @@ specializes Gap 6. Either:
    (string-keyed shortcut).
 
 Recommend (1) for now; revisit (2) once Checkbox and OTP also need it.
+
+**Resolution (tokens/styles convergence):** option (1) chosen and shipped.
+Switch's styles.json authors the 8-declaration recipe verbatim under
+the `input` key, each declaration as a `literal` styleEntry with
+`platforms: ["web"]` so non-web emitters skip it natively. No IR-side
+recipe needed; the doctrine is "declarative authoring, dumb IR."
 
 ### Gap 9 — Per-state property override (translate.off → translate.on)
 
@@ -480,18 +549,53 @@ expansion in `computeCssBlocks`, additional fields on tokenResolution).
 
 ## Suggested next moves for round 1-web
 
-1. ~~**Resolve Gap 6 first.**~~ **Done** in commit `85cdf56`. The
-   merge refactor in `computeCssBlocks` plus Switch's authored
-   `styles` block landed together and produced a visible pill in
-   React + Lit previews.
-2. **Now Gap 7.** State-on-part is the largest functional gap (the
-   switch can't visually toggle without it) and the change is
-   well-bounded (one new contract field, two IR rewrites). Should be
-   one focused commit with regression tests against Switch, Checkbox,
-   and ToggleSwitch.
-3. **Gaps 8, 9, 10** in order — each smaller than 7, each unblocks
-   one more part of the golden's full surface.
-4. **Round 2-web** — author Checkbox + Dialog goldens to surface gaps
+1. ~~**Resolve Gap 6 first.**~~ **Done** via the tokens/styles
+   convergence — initial fix in commit `85cdf56` was structurally
+   superseded by the convergence work.
+2. ~~**Then Gap 7.**~~ **Done** via the convergence — compound
+   `:has(.switch__input:state) .switch__part` selectors are
+   author-explicit in styles.json; no IR rewrite needed.
+3. ~~**Gap 8** (sr-only recipe).~~ **Done** via the convergence —
+   authored as 8 `literal` styleEntries with `platforms: ["web"]`
+   under styles.json's `input` key.
+4. **Gaps 1a, 9, 10** remain open. All three are contract-authoring
+   follow-ups — extending Switch's tokens.json with more slots
+   (`switch.size.{sm,lg}.*`, `switch.motion.thumb.translate.{off,on}`)
+   and adding consumer entries in styles.json. The IR has no work to
+   do for any of them; the convergence's structural-honesty doctrine
+   is "the contract is the source of truth."
+5. **Round 2-web** — author Checkbox + Dialog goldens to surface gaps
    that Switch alone can't reveal (indeterminate state; backdrop +
    portal; multi-part header/body/footer). Repeat the gap-driven
    widening loop.
+
+## Convergence doctrine (2026-05-22)
+
+The tokens/styles convergence (PLAN-TOKENS-STYLES-CONVERGENCE-001)
+inverted the qualtrics-vs-ours authoring model. They author
+`<Name>.tokens.css` and `<Name>.css` by hand and use a contract.json
+only when one exists; we author `<Name>.tokens.json` and
+`<Name>.styles.json` and emit the CSS. The destination converges
+because the destination is what's *structurally honest* about
+component-scoped theming on the web — slots declared once on the root
+selector, consumers reading them via the cascade, layout literals
+filtered by platform.
+
+Implications visible in this golden:
+
+- **Slots are pure indirection.** A slot doesn't know which property
+  consumes it (that's styles.json's concern), only which global token
+  it backs. Brands can override the slot OR the global; either way
+  the consumer doesn't have to know.
+- **Consumers are property-keyed.** Two declarations for the same
+  property under the same selector are structurally impossible
+  (JSON-object semantics reject duplicate keys). Last-writer-wins via
+  the cascade no longer exists at the contract layer.
+- **No emitter magic for state-on-part or compound selectors.** The
+  author writes them verbatim. The IR's only job is to pass them
+  through `expandStylesKey` (which qualifies bare identifiers with
+  the BEM prefix) and emit them as flat selector blocks.
+- **`platforms` array gates literals.** Web-only CSS keywords
+  (`display: inline-flex`, `cursor: pointer`) stay scoped to the web
+  target; portable concepts (color slots, sizes) reach all platforms.
+  This is the structural seam non-web emitters need.
