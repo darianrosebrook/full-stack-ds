@@ -95,6 +95,7 @@ describe("buildDomTree (via buildComponentIR)", () => {
       bindings: {},
       children: [],
       ifProp: undefined,
+      ifNegated: false,
     });
   });
 
@@ -156,6 +157,7 @@ describe("buildDomTree (via buildComponentIR)", () => {
           },
           children: [],
           ifProp: undefined,
+          ifNegated: false,
         },
         {
           tag: "slot",
@@ -165,9 +167,11 @@ describe("buildDomTree (via buildComponentIR)", () => {
           bindings: {},
           children: [],
           ifProp: undefined,
+          ifNegated: false,
         },
       ],
       ifProp: undefined,
+      ifNegated: false,
     });
   });
 

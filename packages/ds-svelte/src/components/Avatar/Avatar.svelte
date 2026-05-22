@@ -34,4 +34,8 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="img"></div>
+<div class={classes} aria-label={name} role="img">
+  {#if src}
+  <img class={'avatar__image'} src={src} alt="" />
+  {/if}
+</div>

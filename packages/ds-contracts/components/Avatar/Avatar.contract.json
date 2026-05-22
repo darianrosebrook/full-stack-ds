@@ -12,7 +12,21 @@
     ],
     "dom": {
       "tag": "div",
-      "part": "root"
+      "part": "root",
+      "bindings": {
+        "aria-label": "prop:name"
+      },
+      "children": [
+        {
+          "tag": "img",
+          "part": "image",
+          "if": "src",
+          "bindings": {
+            "src": "prop:src",
+            "alt": "literal:"
+          }
+        }
+      ]
     }
   },
   "props": {

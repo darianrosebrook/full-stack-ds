@@ -344,7 +344,7 @@
         },
         "if": {
           "type": "string",
-          "description": "Truthy-prop guard. Special value \"children\" renders only when consumer-provided children exist."
+          "description": "Render guard. \"<prop>\" renders when prop is truthy; \"!<prop>\" renders when prop is FALSY; \"children\" renders when consumer-provided children exist."
         }
       }
     },

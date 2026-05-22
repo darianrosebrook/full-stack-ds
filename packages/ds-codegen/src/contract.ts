@@ -122,9 +122,12 @@ export interface ContractDomNode {
    */
   children?: ContractDomNode[];
   /**
-   * Truthy-prop guard. When set, the node renders only if the named prop
-   * resolves truthy at runtime. Special values:
-   * - `"children"` — render only when consumer-provided children exist.
+   * Render guard. Two shapes:
+   * - `"<prop>"`  — render only when the named prop is truthy
+   * - `"!<prop>"` — render only when the named prop is FALSY (e.g. for
+   *   fallback elements that show when an optional input is absent)
+   * - `"children"` — special: render only when consumer-provided
+   *   children exist.
    */
   if?: string;
 }

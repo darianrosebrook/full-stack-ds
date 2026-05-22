@@ -126,8 +126,10 @@ export interface DomNodeIR {
   /** Dynamic bindings keyed by attribute or event name (e.g. `onChange`, `disabled`). */
   bindings: Record<string, BindingExpression>;
   children: DomNodeIR[];
-  /** Truthy-prop guard. `"children"` is special: renders only when consumer-provided children exist. */
+  /** Prop guard. `"children"` is special: renders only when consumer-provided children exist. */
   ifProp: string | undefined;
+  /** When true, the guard fires when `ifProp` is FALSY (i.e. `if: "!src"`). Emitters render `!prop && ...`. */
+  ifNegated: boolean;
 }
 
 export interface ResolvedPropIR {
@@ -649,8 +651,31 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     attrs: node.attrs ?? {},
     bindings,
     children: (node.children ?? []).map(parseDomNode),
-    ifProp: node.if,
+    ...parseIfGuard(node.if),
   };
+}
+
+/**
+ * Parse the contract's `if` field into `{ ifProp, ifNegated }`. Supports two
+ * shapes:
+ *   - `"src"`      → `{ ifProp: "src",      ifNegated: false }`  (existing)
+ *   - `"!src"`     → `{ ifProp: "src",      ifNegated: true  }`  (new)
+ *   - `"children"` → `{ ifProp: "children", ifNegated: false }`  (special placeholder)
+ *   - undefined    → `{ ifProp: undefined,  ifNegated: false }`
+ *
+ * Why negation lives here, not as a general expression: the contract's
+ * render-guard grammar is deliberately minimal so all five emitter ports
+ * (React, Vue, Svelte, Angular, Lit) share one trivial code path. `!` is
+ * symmetric — every framework knows how to negate a boolean. Going further
+ * (`&&`, `||`, equality) would force the IR to carry an expression tree
+ * and each emitter to walk it. Not worth it for current contract needs.
+ */
+function parseIfGuard(value: string | undefined): { ifProp: string | undefined; ifNegated: boolean } {
+  if (!value) return { ifProp: undefined, ifNegated: false };
+  if (value.startsWith("!")) {
+    return { ifProp: value.slice(1), ifNegated: true };
+  }
+  return { ifProp: value, ifNegated: false };
 }
 
 /**

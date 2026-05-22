@@ -1182,9 +1182,11 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
       guard = matchingChannel ? matchingChannel.name : ir.dom.ifProp;
     }
     // Render the body without the if-guard (we handle it at this level).
-    const unguarded: DomNodeIR = { ...ir.dom, ifProp: undefined };
+    const unguarded: DomNodeIR = { ...ir.dom, ifProp: undefined, ifNegated: false };
     const treeJsx = renderReactDomNode(unguarded, renderCtx, 4);
-    lines.push(`  if (!${guard}) return null;`);
+    // ifNegated flips the early-return: with !src, render when src is falsy.
+    const returnNullWhen = ir.dom.ifNegated ? guard : `!${guard}`;
+    lines.push(`  if (${returnNullWhen}) return null;`);
     lines.push(`  return (`);
     lines.push(treeJsx);
     lines.push(`  );`);
@@ -1400,7 +1402,8 @@ function renderReactDomNode(
       );
       guard = matchingChannel ? matchingChannel.name : node.ifProp;
     }
-    return `${pad}{${guard} && (\n${body.replace(/^/gm, "  ")}\n${pad})}`;
+    const condition = node.ifNegated ? `!${guard}` : guard;
+    return `${pad}{${condition} && (\n${body.replace(/^/gm, "  ")}\n${pad})}`;
   }
 
   return body;

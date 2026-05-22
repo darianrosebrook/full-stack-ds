@@ -1109,7 +1109,8 @@ function renderVueDomNode(
         ? `behavior.${matchingChannel.name}.value`
         : `props.${propAccess(ifGuard)}`;
     }
-    attrs.unshift(`v-if="${expr}"`);
+    const finalExpr = node.ifNegated ? `!${expr}` : expr;
+    attrs.unshift(`v-if="${finalExpr}"`);
   }
 
   const childCtx: VueRenderContext = { ...ctx, isRoot: false };

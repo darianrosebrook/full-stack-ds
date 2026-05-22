@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgIf } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -19,8 +19,12 @@ import { NgClass } from "@angular/common";
 @Component({
   selector: "fsds-avatar",
   standalone: true,
-  imports: [NgClass],
-  template: `<div [ngClass]="classes()"></div>`,
+  imports: [NgClass, NgIf],
+  template: `<div [ngClass]="classes()" [attr.aria-label]="name">
+  <ng-container *ngIf="src">
+    <img [ngClass]="'avatar__image'" [src]="src" alt="" />
+  </ng-container>
+</div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {

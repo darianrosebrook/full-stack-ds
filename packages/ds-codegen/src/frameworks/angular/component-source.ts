@@ -1159,8 +1159,9 @@ function renderAngularDomNode(
     const expr = matchingChannel
       ? `behavior.${matchingChannel.name}()`
       : ifWrap;
+    const condition = node.ifNegated ? `!${expr}` : expr;
     return [
-      `${pad}<ng-container *ngIf="${expr}">`,
+      `${pad}<ng-container *ngIf="${condition}">`,
       body.replace(/^/gm, "  "),
       `${pad}</ng-container>`,
     ].join("\n");

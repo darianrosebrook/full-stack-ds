@@ -214,6 +214,7 @@ function generateCompoundStateContainerTest(ir: ComponentIR): string {
   lines.push(`      "label",`);
   lines.push(`      "link-name",`);
   lines.push(`      "region",`);
+  lines.push(`      "role-img-alt",`);
   lines.push(`      "summary-name",`);
   lines.push(`    ]);`);
   lines.push(`    const unexpectedViolations = results.violations.filter(`);
@@ -609,6 +610,7 @@ export function generateLitTest(ir: ComponentIR): string {
   lines.push(`      "label",`);
   lines.push(`      "link-name",`);
   lines.push(`      "region",`);
+  lines.push(`      "role-img-alt",`);
   lines.push(`      "summary-name",`);
   lines.push(`    ]);`);
   lines.push(`    const unexpectedViolations = results.violations.filter(`);

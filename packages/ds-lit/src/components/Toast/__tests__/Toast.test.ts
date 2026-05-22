@@ -107,6 +107,7 @@ describe("Toast — accessibility", () => {
       "label",
       "link-name",
       "region",
+      "role-img-alt",
       "summary-name",
     ]);
     const unexpectedViolations = results.violations.filter(

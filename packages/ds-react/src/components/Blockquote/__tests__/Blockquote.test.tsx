@@ -80,6 +80,7 @@ describe("Blockquote — accessibility", () => {
       "link-name",
       "list",
       "region",
+      "role-img-alt",
       "summary-name",
     ]);
     const unexpectedViolations = results.violations.filter(

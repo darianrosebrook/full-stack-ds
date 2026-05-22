@@ -1061,7 +1061,8 @@ function renderSvelteDomNode(
         ? `${ctx.hookVar}.${matchingChannel.name}`
         : jsAccessorFor(node.ifProp);
     }
-    return [`${pad}{#if ${expr}}`, body, `${pad}{/if}`].join("\n");
+    const condition = node.ifNegated ? `!${expr}` : expr;
+    return [`${pad}{#if ${condition}}`, body, `${pad}{/if}`].join("\n");
   }
   return body;
 }

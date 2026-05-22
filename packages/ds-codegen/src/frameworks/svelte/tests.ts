@@ -189,6 +189,7 @@ export function generateSvelteTest(ir: ComponentIR): string {
   lines.push(`      "link-name",`);
   lines.push(`      "list",`);
   lines.push(`      "region",`);
+  lines.push(`      "role-img-alt",`);
   lines.push(`      "summary-name",`);
   lines.push(`    ]);`);
   lines.push(`    const unexpectedViolations = results.violations.filter(`);

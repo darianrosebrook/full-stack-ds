@@ -1369,7 +1369,8 @@ function renderLitDomNode(
     const expr = matchingChannel
       ? `this.behavior.${matchingChannel.name}`
       : `this.${node.ifProp}`;
-    return `${pad}\${${expr} ? html\`\n${body}\n${pad}\` : nothing}`;
+    const condition = node.ifNegated ? `!${expr}` : expr;
+    return `${pad}\${${condition} ? html\`\n${body}\n${pad}\` : nothing}`;
   }
   return body;
 }
