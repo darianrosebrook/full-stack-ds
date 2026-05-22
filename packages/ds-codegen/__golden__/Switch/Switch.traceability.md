@@ -48,21 +48,69 @@ Each gap is followed by a proposal. The proposals are listed in order
 from "smallest change that unblocks round 2" to "larger contract or IR
 change."
 
-### Gap 1 — Size tokens shipped only for `md`
+### Gap 1 — Size tokens shipped only for `md` (split: 1a data + 1b emitter)
 
 **Where:** SwiftUI `trackWidth`/`trackHeight` helpers; UIKit
 `intrinsicContentSize`; RN `styles.root_{size}`; Compose `when (size)`.
 All four targets had to hand-pick `36/18` for `sm` and `60/30` for `lg`
 because `contract.tokens.root` only contains `switch.size.md.*` entries.
 
-**Why it's a gap:** the contract declares `variants.size = [sm, md, lg]`
-(line 110-115) but only ships tokens for the middle variant. Round 1
-revealed this as a *contract data* gap, not an IR gap — the schema
-already supports `switch.size.sm.track.width` / `switch.size.lg.track.width`
-keys. They're simply absent.
+#### Gap 1a — Contract data (pending)
+
+The contract declares `variants.size = [sm, md, lg]` (line 110-115) but
+only ships tokens for the middle variant. The schema already supports
+`switch.size.sm.track.width` / `switch.size.lg.track.width` keys — they
+are simply absent.
+
+**Status:** identified, not yet patched. A direct edit was attempted
+mid-round but **reverted** when it surfaced gap 1b (below) as a
+behavior regression on the existing React emitter. The data fix is
+correct in isolation but cannot land alone without regressing every
+existing consumer.
 
 **Proposal:** populate `switch.size.sm.*` and `switch.size.lg.*` token
-entries in `Switch.contract.json` before round 2. No code changes needed.
+entries in `Switch.contract.json` *as part of the same change that
+fixes gap 1b*.
+
+#### Gap 1b — Latent CSS emitter bug (discovered during gap 1a attempt)
+
+The CSS emitter (`packages/ds-codegen/src/css.ts`) does not understand
+that `tokens.root["switch.size.<variant>.*"]` is *variant-keyed*. When
+the contract was edited to ship `sm`/`md`/`lg` token entries, the
+emitter flattened all three into the base `.switch` selector — picking
+whichever entry came last alphabetically. Concretely:
+
+```diff
+ .switch {
+-  width: var(--core-spacing-size-09, 48px);    /* md (correct default) */
+-  height: var(--core-spacing-size-07, 24px);
++  width: var(--core-spacing-size-10, 64px);    /* lg (regression) */
++  height: var(--core-spacing-size-08, 32px);
+ }
+```
+
+The base `.switch` selector should reflect the *default* variant
+(`md`, per `contract.props.styled.members[name=size].default`), with
+`sm` and `lg` scoped to `.switch--sm` / `.switch--lg` modifier
+selectors. The bug was latent because Switch was the only contract
+shipping per-size tokens *and* only shipped them for one variant.
+
+**Why this is broader than Switch:** Checkbox declares
+`variants.size=[sm,md,lg]` but ships *no* per-size tokens at all —
+so the bug is latent across the codebase. Any future component that
+ships per-variant size tokens would hit it.
+
+**Proposal:** the emitter needs to recognize variant-keyed token names
+(pattern: `<componentSlug>.<variantName>.<variantValue>.<rest>`) and
+scope them to the corresponding BEM modifier selector. This is a
+focused refactor in `css.ts` (the IR already carries enough info via
+`contract.variants` + the token key structure to detect this). Out of
+scope for round 1; should land as its own PR with regression coverage
+for Switch + Checkbox.
+
+**Combined gating:** gap 1a and 1b must land together — 1a without
+1b ships a regression, 1b without 1a is unverifiable because Switch
+is the only contract that would exercise the fixed path.
 
 ### Gap 2 — Anatomy collapse on platforms with native Toggle
 
@@ -166,28 +214,33 @@ the right home for that.
 ## Pass/fail verdict for round 1
 
 **Pass.** Every line in every golden file classifies into one of the
-five allowed fact prefixes (or an explicitly-tracked `GAP`). The four
-gaps are:
+five allowed fact prefixes (or an explicitly-tracked `GAP`). The gaps
+are:
 
-- Gap 1 — fixable in contract data alone, no schema change.
+- Gap 1a — contract data fix (sm/lg tokens for Switch). Pending.
+- Gap 1b — latent CSS emitter bug discovered while attempting 1a:
+  variant-keyed tokens flatten into the base selector. Must land
+  alongside 1a.
 - Gap 2 — needs an optional `anatomy.collapsibleTo` schema/IR addition.
 - Gap 3 — pure emitter-side framework-grammar rule, no upstream change.
 - Gap 4 — documentation-only, no schema/IR change.
 - Gap 5 — separable token-emission workstream, no per-component-emitter
   change.
 
-Of those, only Gap 2 requires upstream work before round 2. Round 2
-(implement one emitter for Switch on one target — proposal: SwiftUI)
-is justified.
+Of those, only Gap 2 requires upstream work before round 2 *for the
+non-web targets*. Gaps 1a/1b are real but affect the existing React
+emitter, not the round-2 SwiftUI work — round 2 can proceed in
+parallel with a focused 1a+1b PR.
 
 ## Suggested next moves
 
-1. **Resolve Gap 1** in `Switch.contract.json` — add `sm` and `lg` size
-   tokens.
-2. **Decide on Gap 2** — either implement `anatomy.collapsibleTo` now
-   (small, ~30 lines in schema + ir.ts + a per-target lookup table),
-   or accept that UIKit will look anomalous because it can't collapse.
-3. **Begin round 2** — implement `generateSwiftUIComponentSource` for
+1. **Resolve Gap 2** — implement `anatomy.collapsibleTo` (small, ~30
+   lines in schema + ir.ts + a per-target lookup table). This is the
+   only blocker for round 2.
+2. **Begin round 2** — implement `generateSwiftUIComponentSource` for
    Switch only. Use `Switch.swiftui.swift` as the snapshot target.
    The first invocation that produces byte-identical output is the
    round-2 pass condition.
+3. **Address Gap 1a + 1b in a focused PR** — separable from round 2,
+   needs regression coverage for the CSS emitter against variant-keyed
+   tokens (Switch + Checkbox).
