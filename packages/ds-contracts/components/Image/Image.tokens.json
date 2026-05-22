@@ -1,0 +1,40 @@
+{
+  "root": {
+    "image.color.background.default": {
+      "resolvesTo": "semantic.color.background.secondary",
+      "fallback": "#efefef",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "image.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "image.size.icon": {
+      "resolvesTo": "core.spacing.size.08",
+      "fallback": "32px",
+      "layer": "core"
+    },
+    "image.typography.error.fontSize": {
+      "resolvesTo": "semantic.typography.body.04",
+      "fallback": "12px",
+      "layer": "semantic"
+    }
+  },
+  "error": {
+    "image.color.background.error": {
+      "resolvesTo": "semantic.color.background.danger.subtle",
+      "fallback": "#fceaea",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "image.color.foreground.error": {
+      "resolvesTo": "semantic.color.foreground.danger",
+      "fallback": "#d9292b",
+      "property": "color",
+      "layer": "semantic"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -16,14 +16,25 @@ function repoRoot(): string {
   return resolve(__dirname, "../../../../../..");
 }
 
+/**
+ * Load a component contract along with its tokens sidecar (if any), returning
+ * the merged shape `buildComponentIR` expects. Mirrors the CLI's load order:
+ * contract first, then sidecar attached as `contract.tokens`.
+ */
 function loadContract(name: string): unknown {
-  const path = resolve(
+  const folder = resolve(
     repoRoot(),
     "packages/ds-contracts/components",
     name,
-    `${name}.contract.json`,
   );
-  return JSON.parse(readFileSync(path, "utf8"));
+  const contract = JSON.parse(
+    readFileSync(resolve(folder, `${name}.contract.json`), "utf8"),
+  ) as { tokens?: unknown };
+  const tokensPath = resolve(folder, `${name}.tokens.json`);
+  if (existsSync(tokensPath)) {
+    contract.tokens = JSON.parse(readFileSync(tokensPath, "utf8"));
+  }
+  return contract;
 }
 
 function loadGolden(relative: string): string {

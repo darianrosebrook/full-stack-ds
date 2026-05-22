@@ -1,0 +1,52 @@
+{
+  "root": {
+    "links.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "links.color.underline.default": {
+      "resolvesTo": "semantic.color.border.light",
+      "fallback": "#fceaea",
+      "property": "text-decoration-color",
+      "layer": "semantic"
+    },
+    "links.spacing.gap.default": {
+      "resolvesTo": "core.spacing.size.02",
+      "fallback": "2px",
+      "property": "gap",
+      "layer": "core"
+    },
+    "links.motion.duration.fast": {
+      "resolvesTo": "core.motion.duration.short",
+      "fallback": "150ms",
+      "property": "transition-duration",
+      "layer": "core"
+    }
+  },
+  "hover": {
+    "links.color.foreground.hover": {
+      "resolvesTo": "semantic.interaction.text.hover",
+      "fallback": "#555555",
+      "property": "color",
+      "layer": "semantic"
+    }
+  },
+  "visited": {
+    "links.color.foreground.visited": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555",
+      "property": "color",
+      "layer": "semantic"
+    }
+  },
+  "disabled": {
+    "links.color.foreground.disabled": {
+      "resolvesTo": "semantic.color.foreground.disabled",
+      "fallback": "#aeaeae",
+      "property": "color",
+      "layer": "semantic"
+    }
+  }
+}

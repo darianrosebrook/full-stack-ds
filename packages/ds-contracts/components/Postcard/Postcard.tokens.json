@@ -1,0 +1,153 @@
+{
+  "root": {
+    "postcard.color.background.default": {
+      "resolvesTo": "semantic.color.background.primary",
+      "fallback": "#ffffff",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "postcard.color.border.default": {
+      "resolvesTo": "semantic.color.border.light",
+      "fallback": "#fceaea",
+      "property": "border-color",
+      "layer": "semantic"
+    },
+    "postcard.color.border.accent": {
+      "resolvesTo": "semantic.color.border.accent",
+      "fallback": "#d9292b",
+      "property": "border-color",
+      "layer": "semantic"
+    },
+    "postcard.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "postcard.color.foreground.secondary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "postcard.size.padding.default": {
+      "resolvesTo": "core.spacing.size.06",
+      "fallback": "16px",
+      "property": "padding",
+      "layer": "core"
+    },
+    "postcard.size.radius.default": {
+      "resolvesTo": "semantic.shape.control.radius.default",
+      "fallback": "8px",
+      "property": "border-radius",
+      "layer": "semantic"
+    },
+    "postcard.size.radius.full": {
+      "resolvesTo": "core.shape.radius.full",
+      "fallback": "9999px",
+      "property": "border-radius",
+      "layer": "core"
+    },
+    "postcard.size.gap.default": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px",
+      "property": "gap",
+      "layer": "core"
+    },
+    "postcard.size.gap.small": {
+      "resolvesTo": "core.spacing.size.03",
+      "fallback": "4px",
+      "property": "gap",
+      "layer": "core"
+    },
+    "postcard.size.border.default": {
+      "resolvesTo": "core.shape.border.width.hairline",
+      "fallback": "1px",
+      "layer": "core"
+    },
+    "postcard.typography.displayName.fontSize": {
+      "resolvesTo": "semantic.typography.body.02",
+      "fallback": "16px",
+      "layer": "semantic"
+    },
+    "postcard.typography.displayName.fontWeight": {
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "fallback": "500",
+      "layer": "semantic"
+    },
+    "postcard.typography.handle.fontSize": {
+      "resolvesTo": "semantic.typography.body.03",
+      "fallback": "14px",
+      "layer": "semantic"
+    },
+    "postcard.typography.content.fontSize": {
+      "resolvesTo": "semantic.typography.body.02",
+      "fallback": "16px",
+      "layer": "semantic"
+    },
+    "postcard.typography.content.lineHeight": {
+      "resolvesTo": "semantic.typography.line.height.body",
+      "fallback": "1.5",
+      "property": "line-height",
+      "layer": "semantic"
+    },
+    "postcard.typography.footer.fontSize": {
+      "resolvesTo": "semantic.typography.body.03",
+      "fallback": "14px",
+      "layer": "semantic"
+    }
+  },
+  "hover": {
+    "postcard.color.background.hover": {
+      "resolvesTo": "semantic.color.background.secondary",
+      "fallback": "#efefef",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "postcard.color.border.hover": {
+      "resolvesTo": "semantic.color.border.bold",
+      "fallback": "#8f8f8f",
+      "property": "border-color",
+      "layer": "semantic"
+    }
+  },
+  "displayName": {
+    "postcard.typography.displayName.fontSize": {
+      "resolvesTo": "semantic.typography.body.02",
+      "fallback": "16px",
+      "layer": "semantic"
+    },
+    "postcard.typography.displayName.fontWeight": {
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "fallback": "500",
+      "layer": "semantic"
+    }
+  },
+  "handle": {
+    "postcard.typography.handle.fontSize": {
+      "resolvesTo": "semantic.typography.body.03",
+      "fallback": "14px",
+      "layer": "semantic"
+    }
+  },
+  "content": {
+    "postcard.typography.content.fontSize": {
+      "resolvesTo": "semantic.typography.body.02",
+      "fallback": "16px",
+      "layer": "semantic"
+    },
+    "postcard.typography.content.lineHeight": {
+      "resolvesTo": "semantic.typography.line.height.body",
+      "fallback": "1.5",
+      "property": "line-height",
+      "layer": "semantic"
+    }
+  },
+  "footer": {
+    "postcard.typography.footer.fontSize": {
+      "resolvesTo": "semantic.typography.body.03",
+      "fallback": "14px",
+      "layer": "semantic"
+    }
+  }
+}

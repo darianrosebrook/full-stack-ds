@@ -1,0 +1,64 @@
+{
+  "root": {
+    "text.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "text.color.foreground.secondary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "text.typography.fontWeight.light": {
+      "resolvesTo": "semantic.typography.font.weight.light",
+      "fallback": "300",
+      "layer": "semantic"
+    },
+    "text.typography.fontWeight.regular": {
+      "resolvesTo": "semantic.typography.font.weight.regular",
+      "fallback": "400",
+      "layer": "semantic"
+    },
+    "text.typography.fontWeight.medium": {
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "fallback": "500",
+      "layer": "semantic"
+    },
+    "text.typography.fontWeight.bold": {
+      "resolvesTo": "semantic.typography.font.weight.bold",
+      "fallback": "700",
+      "layer": "semantic"
+    },
+    "text.typography.lineHeight.heading": {
+      "resolvesTo": "semantic.typography.line.height.heading",
+      "fallback": "1",
+      "property": "line-height",
+      "layer": "semantic"
+    },
+    "text.typography.lineHeight.body": {
+      "resolvesTo": "semantic.typography.line.height.body",
+      "fallback": "1.5",
+      "property": "line-height",
+      "layer": "semantic"
+    }
+  },
+  "error": {
+    "text.color.foreground.danger": {
+      "resolvesTo": "semantic.color.foreground.danger",
+      "fallback": "#d9292b",
+      "property": "color",
+      "layer": "semantic"
+    }
+  },
+  "success": {
+    "text.color.foreground.success": {
+      "resolvesTo": "semantic.color.foreground.success",
+      "fallback": "#487e1e",
+      "property": "color",
+      "layer": "semantic"
+    }
+  }
+}

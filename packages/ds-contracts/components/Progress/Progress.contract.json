@@ -137,44 +137,6 @@
   "states": [
     "default"
   ],
-  "tokens": {
-    "root": {
-      "progress.color.text.default": {
-        "resolvesTo": "semantic.color.foreground.secondary",
-        "fallback": "#555555",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "progress.spacing.gap": {
-        "resolvesTo": "core.spacing.size.02",
-        "fallback": "2px",
-        "property": "gap",
-        "layer": "core"
-      },
-      "progress.motion.duration.indeterminate": {
-        "resolvesTo": "core.motion.duration.extra.long1",
-        "fallback": "1500ms",
-        "property": "transition-duration",
-        "layer": "core"
-      }
-    },
-    "track": {
-      "progress.color.track.background": {
-        "resolvesTo": "semantic.color.background.secondary",
-        "fallback": "#efefef",
-        "property": "background-color",
-        "layer": "semantic"
-      }
-    },
-    "fill": {
-      "progress.color.fill.info": {
-        "resolvesTo": "semantic.color.status.info",
-        "fallback": "#0a65fe",
-        "property": "background-color",
-        "layer": "semantic"
-      }
-    }
-  },
   "slots": {
     "root": {
       "required": true,

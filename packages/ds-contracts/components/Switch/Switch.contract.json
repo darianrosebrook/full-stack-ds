@@ -131,68 +131,6 @@
     "disabled",
     "checked"
   ],
-  "tokens": {
-    "root": {
-      "switch.color.track.background.default": {
-        "resolvesTo": "semantic.color.background.tertiary",
-        "fallback": "#cecece",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "switch.color.thumb.background.default": {
-        "resolvesTo": "semantic.color.background.primary",
-        "fallback": "#ffffff",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "switch.size.md.track.width": {
-        "resolvesTo": "core.spacing.size.09",
-        "fallback": "48px",
-        "property": "width",
-        "layer": "core"
-      },
-      "switch.size.md.track.height": {
-        "resolvesTo": "core.spacing.size.07",
-        "fallback": "24px",
-        "property": "height",
-        "layer": "core"
-      },
-      "switch.size.md.track.radius": {
-        "resolvesTo": "core.shape.radius.full",
-        "fallback": "9999px",
-        "property": "border-radius",
-        "layer": "core"
-      },
-      "switch.motion.duration": {
-        "resolvesTo": "semantic.motion.interaction.press.duration",
-        "fallback": "100ms",
-        "property": "transition-duration",
-        "layer": "semantic"
-      }
-    },
-    "checked": {
-      "switch.color.track.background.checked": {
-        "resolvesTo": "semantic.color.foreground.accent",
-        "fallback": "#d9292b",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "switch.color.thumb.background.checked": {
-        "resolvesTo": "semantic.color.foreground.on.brand",
-        "fallback": "#ffffff",
-        "property": "background-color",
-        "layer": "semantic"
-      }
-    },
-    "disabled": {
-      "switch.color.track.background.disabled": {
-        "resolvesTo": "semantic.color.background.disabled",
-        "fallback": "#cecece",
-        "property": "background-color",
-        "layer": "semantic"
-      }
-    }
-  },
   "form": {
     "participates": true,
     "inputType": "checkbox",

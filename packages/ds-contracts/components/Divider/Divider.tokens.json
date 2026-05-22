@@ -1,0 +1,34 @@
+{
+  "root": {
+    "divider.color.default": {
+      "resolvesTo": "semantic.color.border.light",
+      "fallback": "#fceaea",
+      "layer": "semantic"
+    },
+    "divider.color.subtle": {
+      "resolvesTo": "semantic.color.border.subtle",
+      "fallback": "#cecece",
+      "layer": "semantic"
+    },
+    "divider.color.muted": {
+      "resolvesTo": "semantic.color.border.light",
+      "fallback": "#fceaea",
+      "layer": "semantic"
+    },
+    "divider.size.thickness": {
+      "resolvesTo": "core.shape.border.width.hairline",
+      "fallback": "1px",
+      "layer": "core"
+    },
+    "divider.size.thicknessThick": {
+      "resolvesTo": "core.shape.border.width.hairline",
+      "fallback": "1px",
+      "layer": "core"
+    },
+    "divider.spacing.margin": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px",
+      "layer": "core"
+    }
+  }
+}

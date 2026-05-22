@@ -32,12 +32,19 @@ export type ValidationResult<T> = ValidationSuccess<T> | ValidationFailure;
 export interface ContractValidator {
   validateComponent(contract: unknown): ValidationResult<ComponentContract>;
   validatePrimitive(primitive: unknown): ValidationResult<unknown>;
+  /**
+   * Validate a component's tokens sidecar (`<Name>.tokens.json`). Sidecars
+   * are optional — components without one return early at the loader level
+   * — but when present they must match `component.tokens.schema.json`.
+   */
+  validateTokens(tokens: unknown): ValidationResult<Record<string, unknown>>;
 }
 
 export interface ContractValidatorPaths {
   contractsRoot: string;
   componentSchemaPath?: string;
   primitiveSchemaPath?: string;
+  tokensSchemaPath?: string;
 }
 
 const DEFAULT_COMPONENT_SCHEMA = "component.contract.schema.json";
@@ -45,6 +52,7 @@ const DEFAULT_PRIMITIVE_SCHEMA = path.join(
   "primitives",
   "primitive.contract.schema.json",
 );
+const DEFAULT_TOKENS_SCHEMA = "component.tokens.schema.json";
 
 /**
  * Build a validator that loads schemas from a contracts root directory.
@@ -62,8 +70,12 @@ export function createContractValidator(
     paths.contractsRoot,
     paths.primitiveSchemaPath ?? DEFAULT_PRIMITIVE_SCHEMA,
   );
+  const tokensSchemaPath = path.resolve(
+    paths.contractsRoot,
+    paths.tokensSchemaPath ?? DEFAULT_TOKENS_SCHEMA,
+  );
 
-  for (const p of [componentSchemaPath, primitiveSchemaPath]) {
+  for (const p of [componentSchemaPath, primitiveSchemaPath, tokensSchemaPath]) {
     if (!fs.existsSync(p)) {
       throw new Error(`Schema file not found: ${p}`);
     }
@@ -76,6 +88,9 @@ export function createContractValidator(
   const validatePrimitiveFn = ajv.compile(
     JSON.parse(fs.readFileSync(primitiveSchemaPath, "utf-8")),
   );
+  const validateTokensFn = ajv.compile(
+    JSON.parse(fs.readFileSync(tokensSchemaPath, "utf-8")),
+  );
 
   return {
     validateComponent(contract) {
@@ -83,6 +98,9 @@ export function createContractValidator(
     },
     validatePrimitive(primitive) {
       return runValidation<unknown>(validatePrimitiveFn, primitive);
+    },
+    validateTokens(tokens) {
+      return runValidation<Record<string, unknown>>(validateTokensFn, tokens);
     },
   };
 }

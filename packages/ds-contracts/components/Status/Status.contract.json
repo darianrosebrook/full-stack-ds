@@ -69,51 +69,6 @@
   "states": [
     "default"
   ],
-  "tokens": {
-    "root": {
-      "status.color.background.default": {
-        "resolvesTo": "semantic.color.background.primary",
-        "fallback": "#ffffff",
-        "property": "background-color",
-        "layer": "semantic"
-      },
-      "status.color.foreground.primary": {
-        "resolvesTo": "semantic.color.foreground.primary",
-        "fallback": "#141414",
-        "property": "color",
-        "layer": "semantic"
-      },
-      "status.color.border.default": {
-        "resolvesTo": "semantic.color.border.primary",
-        "fallback": "#f29495",
-        "property": "border-color",
-        "layer": "semantic"
-      },
-      "status.size.radius.default": {
-        "resolvesTo": "core.shape.radius.full",
-        "fallback": "9999px",
-        "property": "border-radius",
-        "layer": "core"
-      },
-      "status.size.padding.default": {
-        "resolvesTo": "core.spacing.size.04",
-        "fallback": "8px",
-        "property": "padding",
-        "layer": "core"
-      },
-      "status.size.border.default": {
-        "resolvesTo": "core.shape.border.width.hairline",
-        "fallback": "1px",
-        "layer": "core"
-      },
-      "status.typography.lineHeight": {
-        "resolvesTo": "semantic.typography.line.height.collapse",
-        "fallback": "1",
-        "property": "line-height",
-        "layer": "semantic"
-      }
-    }
-  },
   "slots": {
     "root": {
       "required": true,

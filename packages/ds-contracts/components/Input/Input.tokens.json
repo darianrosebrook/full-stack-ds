@@ -1,0 +1,56 @@
+{
+  "root": {
+    "input.color.bg.default": {
+      "resolvesTo": "semantic.color.background.primary",
+      "fallback": "#ffffff",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "input.color.text.default": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "input.color.border.default": {
+      "resolvesTo": "semantic.color.border.default",
+      "fallback": "#aeaeae",
+      "property": "border-color",
+      "layer": "semantic"
+    },
+    "input.size.height.default": {
+      "resolvesTo": "semantic.control.size.lg.height",
+      "fallback": "48px",
+      "property": "min-height",
+      "layer": "semantic"
+    },
+    "input.size.radius.default": {
+      "resolvesTo": "core.shape.radius.medium",
+      "fallback": "8px",
+      "property": "border-radius",
+      "layer": "core"
+    },
+    "input.space.inline.default": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px",
+      "property": "padding",
+      "layer": "core"
+    }
+  },
+  "focus": {
+    "input.color.focus.default": {
+      "resolvesTo": "semantic.color.border.focus",
+      "fallback": "#d9292b",
+      "property": "border-color",
+      "layer": "semantic"
+    }
+  },
+  "invalid": {
+    "input.color.invalid.default": {
+      "resolvesTo": "semantic.color.border.danger",
+      "fallback": "#ae0001",
+      "property": "border-color",
+      "layer": "semantic"
+    }
+  }
+}

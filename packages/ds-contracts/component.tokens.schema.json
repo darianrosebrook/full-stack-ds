@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "component.tokens.schema.json",
+  "title": "Component Tokens Sidecar",
+  "description": "Token resolutions for a single component, lifted verbatim out of the legacy inline `tokens` field on the component contract. Top-level keys are anatomy parts (root, image, ...) or state pseudo-parts (hover, active, focus). Leaf values follow the same shape as before the sidecar split: either a tokenResolution object, a flat string array (legacy), or a nested tokenValue.",
+  "type": "object",
+  "additionalProperties": {
+    "$ref": "#/$defs/tokenValue"
+  },
+  "$defs": {
+    "tokenResolution": {
+      "type": "object",
+      "description": "Structured resolution for a single token: either backs to a semantic token via `resolvesTo` + `fallback`, or carries a literal CSS value via `literal`. Hardcoded values (e.g. \"0px\") that are intentionally not token-backed should use `literal` instead of being smuggled into `resolvesTo`.",
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["resolvesTo", "fallback"],
+          "description": "Token reference — resolves via the token graph at runtime via var(--<resolvesTo>, <fallback>)."
+        },
+        {
+          "required": ["literal"],
+          "description": "Literal CSS value — not a token reference. Use this for intentional hardcodes that should NOT be themable (e.g. \"0px\" spacing, internal animation easings)."
+        }
+      ],
+      "properties": {
+        "resolvesTo": {
+          "type": "string",
+          "description": "Semantic-token name referenced by var(--<tokenName>, ...) in the component's .tokens.css, without the -- prefix."
+        },
+        "fallback": {
+          "type": "string",
+          "description": "Hardcoded fallback value — the second argument passed to var() in .tokens.css. Brand-agnostic default and safety net when the semantic token is missing."
+        },
+        "literal": {
+          "type": "string",
+          "description": "Hardcoded CSS value used when the token is intentionally not backed by a graph reference. Mutually exclusive with `resolvesTo`+`fallback`."
+        },
+        "property": {
+          "type": "string",
+          "description": "CSS property this token drives (e.g. \"background-color\", \"border-radius\"). Optional but strongly encouraged for non-CSS implementers."
+        },
+        "layer": {
+          "type": "string",
+          "enum": ["core", "semantic", "brand", "density"],
+          "description": "Expected resolution layer for resolvesTo. Defaults to \"semantic\".",
+          "default": "semantic"
+        }
+      }
+    },
+    "tokenValue": {
+      "description": "Token value in one of three forms: (1) legacy flat string array of token names, (2) structured resolution map whose keys are token names and values are tokenResolution objects (or strings for unresolved entries), (3) nested object whose values are tokenValue (for variant-scoped tokens). Uses anyOf because a TokenResolution object's structure overlaps with the structured-map shape; ambiguous matches are not a validation error.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Legacy form: flat list of token names."
+        },
+        {
+          "type": "object",
+          "description": "Structured resolution map: each key is a token name and each value declares the full var() resolution. String values are legacy entries (still rendered as comment shims) — useful for mixed maps where some tokens are resolved and others remain to be migrated.",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              { "$ref": "#/$defs/tokenResolution" },
+              { "type": "string" }
+            ]
+          }
+        },
+        {
+          "type": "object",
+          "description": "Variant-scoped nesting: keys are variant names or anatomy sub-parts; values recurse as tokenValue.",
+          "additionalProperties": {
+            "$ref": "#/$defs/tokenValue"
+          }
+        }
+      ]
+    }
+  }
+}

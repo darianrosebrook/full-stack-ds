@@ -1,0 +1,102 @@
+{
+  "root": {
+    "button.color.background.default": {
+      "resolvesTo": "semantic.color.action.background.primary.default",
+      "fallback": "#d9292b",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.inverse",
+      "fallback": "#fafafa",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "button.color.border.default": {
+      "resolvesTo": "semantic.color.border.light",
+      "fallback": "#fceaea",
+      "property": "border-color",
+      "layer": "semantic"
+    },
+    "button.size.gap.default": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px",
+      "property": "gap",
+      "layer": "core"
+    },
+    "button.size.radius": {
+      "resolvesTo": "core.shape.radius.full",
+      "fallback": "9999px",
+      "property": "border-radius",
+      "layer": "core"
+    },
+    "button.size.border": {
+      "resolvesTo": "core.shape.border.width.hairline",
+      "fallback": "1px",
+      "property": "border-width",
+      "layer": "core"
+    },
+    "button.text.weight": {
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "fallback": "500",
+      "property": "font-weight",
+      "layer": "semantic"
+    },
+    "button.motion.duration.fast": {
+      "resolvesTo": "core.motion.duration.short",
+      "fallback": "150ms",
+      "property": "transition-duration",
+      "layer": "core"
+    },
+    "button.motion.easing.standard": {
+      "resolvesTo": "core.motion.easing.standard",
+      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "property": "transition-timing-function",
+      "layer": "core"
+    }
+  },
+  "hover": {
+    "button.color.background.hover": {
+      "resolvesTo": "semantic.interaction.background.hover",
+      "fallback": "#efefef",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "button.color.border.hover": {
+      "resolvesTo": "semantic.interaction.border.hover",
+      "fallback": "#8f8f8f",
+      "property": "border-color",
+      "layer": "semantic"
+    }
+  },
+  "active": {
+    "button.color.background.active": {
+      "resolvesTo": "semantic.interaction.background.active",
+      "fallback": "#cecece",
+      "property": "background-color",
+      "layer": "semantic"
+    }
+  },
+  "focus": {
+    "button.color.border.focus": {
+      "resolvesTo": "semantic.color.border.accent",
+      "fallback": "#d9292b",
+      "property": "border-color",
+      "layer": "semantic"
+    }
+  },
+  "disabled": {
+    "button.color.background.disabled": {
+      "resolvesTo": "semantic.color.action.background.primary.disabled",
+      "fallback": "#cecece",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "button.color.foreground.disabled": {
+      "resolvesTo": "semantic.color.foreground.disabled",
+      "fallback": "#aeaeae",
+      "property": "color",
+      "layer": "semantic"
+    }
+  }
+}

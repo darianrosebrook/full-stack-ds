@@ -18,7 +18,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import type { ComponentContract } from "./contract.js";
-import { listComponentContracts } from "./contracts-fs.js";
+import { findComponentTokens, listComponentContracts } from "./contracts-fs.js";
 import {
   type FrameworkEmitter,
   type GeneratedFile,
@@ -379,6 +379,23 @@ function main(): void {
       console.error(formatIssues(result.issues));
       hasErrors = true;
       continue;
+    }
+
+    // Attach tokens from the sidecar (if any) onto the in-memory contract
+    // before IR/emit. Downstream code reads `contract.tokens` as it always
+    // has; the sidecar is purely a source-of-truth split. A missing sidecar
+    // means this component has no tokens — that is supported, not an error.
+    const tokensEntry = findComponentTokens(entry);
+    if (tokensEntry) {
+      const tokensRaw = JSON.parse(fs.readFileSync(tokensEntry.absPath, "utf-8"));
+      const tokensResult = validator.validateTokens(tokensRaw);
+      if (!tokensResult.ok) {
+        console.error(`INVALID  ${tokensEntry.filename}`);
+        console.error(formatIssues(tokensResult.issues));
+        hasErrors = true;
+        continue;
+      }
+      (result.value as { tokens?: unknown }).tokens = tokensResult.value;
     }
 
     // Beyond-schema semantic checks run only when explicitly
@@ -1054,24 +1071,28 @@ function startWatch(
     componentsRoot,
     { persistent: true, recursive: true },
     (event, filename) => {
-      if (!filename?.endsWith(".contract.json")) return;
+      if (!filename) return;
       if (event !== "change" && event !== "rename") return;
-      // With recursive:true, filename arrives as e.g. "Button/Button.contract.json".
-      // Reject anything that doesn't match the <Name>/<Name>.contract.json shape so
-      // editor temp files (e.g. ".#Button.contract.json") and stray top-level files
-      // don't trigger regen.
+      // With recursive:true, filename arrives as e.g. "Button/Button.contract.json"
+      // or "Button/Button.tokens.json". Accept either; reject editor temp files
+      // and stray top-level files. Coalesce both into a single component-keyed
+      // debounce entry so a contract+sidecar edit in one save triggers a single
+      // re-emit.
       const parts = filename.split(path.sep);
       if (parts.length !== 2) return;
       const [folder, leaf] = parts;
-      if (leaf !== `${folder}.contract.json`) return;
+      const isContract = leaf === `${folder}.contract.json`;
+      const isTokens = leaf === `${folder}.tokens.json`;
+      if (!isContract && !isTokens) return;
 
-      const existing = debounce.get(filename);
+      const componentName = folder;
+      const existing = debounce.get(componentName);
       if (existing) clearTimeout(existing);
       debounce.set(
-        filename,
+        componentName,
         setTimeout(() => {
-          debounce.delete(filename);
-          watchHandleChange(filename, args, requestedTargets, registry, validator);
+          debounce.delete(componentName);
+          watchHandleChange(componentName, args, requestedTargets, registry, validator);
         }, 150),
       );
     },
@@ -1079,43 +1100,66 @@ function startWatch(
 }
 
 function watchHandleChange(
-  filename: string,
+  componentName: string,
   args: CliArgs,
   requestedTargets: TargetId[],
   registry: TargetRegistry,
   validator: ContractValidator,
 ): void {
-  const filePath = path.join(CONTRACTS_DIR, "components", filename);
+  const folder = path.join(CONTRACTS_DIR, "components", componentName);
+  const contractFilename = `${componentName}.contract.json`;
+  const filePath = path.join(folder, contractFilename);
   if (!fs.existsSync(filePath)) {
-    console.log(`\n[watch] ${filename} removed — skipping.`);
+    console.log(`\n[watch] ${componentName} removed — skipping.`);
     return;
   }
-
-  // filename is "<Name>/<Name>.contract.json"; the component name is the folder.
-  const componentName = filename.split(path.sep)[0];
 
   // If a names filter was set, only process matching contracts.
   if (args.names.length > 0 && !args.names.includes(componentName)) return;
 
-  console.log(`\n[watch] ${filename} changed — regenerating ${componentName}...`);
+  console.log(`\n[watch] ${componentName} changed — regenerating...`);
 
   let raw: unknown;
   try {
     raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   } catch (err: unknown) {
     if ((err as NodeJS.ErrnoException)?.code === "ENOENT") {
-      console.log(`[watch] ${filename} disappeared mid-read — skipping.`);
+      console.log(`[watch] ${contractFilename} disappeared mid-read — skipping.`);
       return;
     }
-    console.error(`[watch] JSON parse error in ${filename} — skipping.`);
+    console.error(`[watch] JSON parse error in ${contractFilename} — skipping.`);
     return;
   }
 
   const result = validator.validateComponent(raw);
   if (!result.ok) {
-    console.error(`[watch] INVALID ${filename}:`);
+    console.error(`[watch] INVALID ${contractFilename}:`);
     console.error(formatIssues(result.issues));
     return;
+  }
+
+  // Attach tokens from sibling sidecar — missing file means zero tokens.
+  const tokensPath = path.join(
+    CONTRACTS_DIR,
+    "components",
+    componentName,
+    `${componentName}.tokens.json`,
+  );
+  if (fs.existsSync(tokensPath)) {
+    let tokensRaw: unknown;
+    try {
+      tokensRaw = JSON.parse(fs.readFileSync(tokensPath, "utf-8"));
+    } catch {
+      console.error(`[watch] JSON parse error in ${componentName}.tokens.json — skipping.`);
+      return;
+    }
+    const tokensResult = validator.validateTokens(tokensRaw);
+    if (!tokensResult.ok) {
+      console.error(`[watch] INVALID ${componentName}.tokens.json:`);
+      console.error(formatIssues(tokensResult.issues));
+      return;
+    }
+    (result.value as { tokens?: unknown }).tokens = tokensResult.value;
   }
 
   const ir = buildComponentIR(result.value);

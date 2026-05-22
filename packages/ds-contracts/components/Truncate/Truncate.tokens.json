@@ -1,0 +1,34 @@
+{
+  "root": {
+    "truncate.color.foreground.link": {
+      "resolvesTo": "semantic.color.foreground.link",
+      "fallback": "#d9292b",
+      "property": "color",
+      "layer": "semantic"
+    },
+    "truncate.color.background.primary": {
+      "resolvesTo": "semantic.color.background.primary",
+      "fallback": "#ffffff",
+      "property": "background-color",
+      "layer": "semantic"
+    },
+    "truncate.typography.fontWeight": {
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "fallback": "500",
+      "layer": "semantic"
+    },
+    "truncate.spacing.toggle": {
+      "resolvesTo": "core.spacing.size.02",
+      "fallback": "2px",
+      "layer": "core"
+    }
+  },
+  "hover": {
+    "truncate.color.foreground.linkHover": {
+      "resolvesTo": "semantic.link.hover.text",
+      "fallback": "#ae0001",
+      "property": "color",
+      "layer": "semantic"
+    }
+  }
+}

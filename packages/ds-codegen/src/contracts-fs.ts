@@ -50,3 +50,40 @@ export function listComponentContracts(contractsRoot: string): DiscoveredContrac
   result.sort((a, b) => a.name.localeCompare(b.name));
   return result;
 }
+
+export interface DiscoveredTokens {
+  /** Bare filename, e.g. "Button.tokens.json". */
+  filename: string;
+  /** Path relative to the contracts root. */
+  relPath: string;
+  /** Absolute filesystem path. */
+  absPath: string;
+}
+
+/**
+ * Locate the tokens sidecar (`<Name>.tokens.json`) that sits next to a
+ * component contract. Returns `null` when no sidecar exists — that is a
+ * supported state, NOT an error: it means the component has zero tokens.
+ *
+ * Why no warning / no fail when missing:
+ *   - The contract schema forbids inline `tokens`, so the sidecar is the
+ *     only place tokens can live. Absent sidecar = empty token set.
+ *   - Components without themable surface (e.g. pure layout primitives)
+ *     legitimately have no tokens. A warning would be noise.
+ *   - Downstream IR/CSS code already treats an empty token map as a no-op.
+ *
+ * If a "completeness lint" is ever wanted (contract has anatomy parts but
+ * no sidecar → suspicious), add it as a separate `--check-semantics` rule.
+ * Do NOT bolt it onto this loader.
+ */
+export function findComponentTokens(contract: DiscoveredContract): DiscoveredTokens | null {
+  const folder = path.dirname(contract.absPath);
+  const filename = `${contract.name}.tokens.json`;
+  const absPath = path.join(folder, filename);
+  if (!fs.existsSync(absPath)) return null;
+  return {
+    filename,
+    relPath: path.join(path.dirname(contract.relPath), filename),
+    absPath,
+  };
+}
