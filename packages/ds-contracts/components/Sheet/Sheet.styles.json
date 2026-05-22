@@ -1,0 +1,39 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "sheet.color.background"
+    },
+    "border-color": {
+      "resolvesTo": "sheet.color.border"
+    },
+    "color": {
+      "resolvesTo": "sheet.color.textDescription"
+    },
+    "border-width": {
+      "resolvesTo": "sheet.border.width"
+    },
+    "border-radius": {
+      "resolvesTo": "sheet.border.radius"
+    },
+    "padding": {
+      "resolvesTo": "sheet.spacing.padding"
+    },
+    "gap": {
+      "resolvesTo": "sheet.spacing.gap"
+    },
+    "font-size": {
+      "resolvesTo": "sheet.text.sizeTitle"
+    },
+    "font-weight": {
+      "resolvesTo": "sheet.text.weightTitle"
+    },
+    "box-shadow": {
+      "resolvesTo": "sheet.shadow"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "sheet.color.backgroundHover"
+    }
+  }
+}

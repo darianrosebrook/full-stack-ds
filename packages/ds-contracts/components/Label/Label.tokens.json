@@ -1,21 +1,17 @@
 {
-  "root": {
-    "label.color.text.default": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "label.typo.weight.default": {
-      "resolvesTo": "semantic.typography.font.weight.medium",
-      "fallback": "500",
-      "layer": "semantic"
-    },
-    "label.typo.lineHeight.default": {
-      "resolvesTo": "semantic.typography.line.height.tight",
-      "fallback": "1.2",
-      "property": "line-height",
-      "layer": "semantic"
-    }
+  "label.color.text.default": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "label.typo.weight.default": {
+    "resolvesTo": "semantic.typography.font.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
+  },
+  "label.typo.lineHeight.default": {
+    "resolvesTo": "semantic.typography.line.height.tight",
+    "fallback": "1.2",
+    "layer": "semantic"
   }
 }

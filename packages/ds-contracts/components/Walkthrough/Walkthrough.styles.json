@@ -1,0 +1,26 @@
+{
+  "root": {
+    "border-radius": {
+      "resolvesTo": "walkthrough.button.primary.radius"
+    },
+    "box-shadow": {
+      "resolvesTo": "walkthrough.surface.shadow"
+    },
+    "padding": {
+      "resolvesTo": "walkthrough.surface.padding"
+    },
+    "gap": {
+      "resolvesTo": "walkthrough.dots.gap"
+    }
+  },
+  "controls": {
+    "gap": {
+      "resolvesTo": "walkthrough.controls.gap"
+    }
+  },
+  "dots": {
+    "gap": {
+      "resolvesTo": "walkthrough.dots.gap"
+    }
+  }
+}

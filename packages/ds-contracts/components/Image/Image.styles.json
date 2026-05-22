@@ -1,0 +1,18 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "image.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "image.color.foreground.primary"
+    }
+  },
+  "error": {
+    "background-color": {
+      "resolvesTo": "image.color.background.error"
+    },
+    "color": {
+      "resolvesTo": "image.color.foreground.error"
+    }
+  }
+}

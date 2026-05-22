@@ -1,0 +1,57 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "button.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "button.color.foreground.default"
+    },
+    "border-color": {
+      "resolvesTo": "button.color.border.default"
+    },
+    "gap": {
+      "resolvesTo": "button.size.gap.default"
+    },
+    "border-radius": {
+      "resolvesTo": "button.size.radius"
+    },
+    "border-width": {
+      "resolvesTo": "button.size.border"
+    },
+    "font-weight": {
+      "resolvesTo": "button.text.weight"
+    },
+    "transition-duration": {
+      "resolvesTo": "button.motion.duration.fast"
+    },
+    "transition-timing-function": {
+      "resolvesTo": "button.motion.easing.standard"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "button.color.background.hover"
+    },
+    "border-color": {
+      "resolvesTo": "button.color.border.hover"
+    }
+  },
+  "active": {
+    "background-color": {
+      "resolvesTo": "button.color.background.active"
+    }
+  },
+  "focus": {
+    "border-color": {
+      "resolvesTo": "button.color.border.focus"
+    }
+  },
+  "disabled": {
+    "background-color": {
+      "resolvesTo": "button.color.background.disabled"
+    },
+    "color": {
+      "resolvesTo": "button.color.foreground.disabled"
+    }
+  }
+}

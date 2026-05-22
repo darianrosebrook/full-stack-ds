@@ -1,0 +1,16 @@
+{
+  "root": {
+    "border-radius": {
+      "resolvesTo": "avatar.size.radius.small"
+    },
+    "background-color": {
+      "resolvesTo": "avatar.color.background.inverse"
+    },
+    "color": {
+      "resolvesTo": "avatar.color.foreground.primary"
+    },
+    "border-color": {
+      "resolvesTo": "avatar.color.border.default"
+    }
+  }
+}

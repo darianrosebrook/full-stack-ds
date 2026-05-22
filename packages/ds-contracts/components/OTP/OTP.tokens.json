@@ -1,48 +1,37 @@
 {
-  "root": {
-    "otp.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "otp.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "otp.color.foreground.secondary": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "otp.color.border.default": {
-      "resolvesTo": "semantic.color.border.light",
-      "fallback": "#fceaea",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "otp.size.padding.default": {
-      "resolvesTo": "core.spacing.size.07",
-      "fallback": "24px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "otp.size.radius.default": {
-      "resolvesTo": "core.shape.radius.medium",
-      "fallback": "8px",
-      "property": "border-radius",
-      "layer": "core"
-    }
+  "otp.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
   },
-  "focus": {
-    "otp.color.border.accent": {
-      "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b",
-      "property": "border-color",
-      "layer": "semantic"
-    }
+  "otp.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "otp.color.foreground.secondary": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "otp.color.border.default": {
+    "resolvesTo": "semantic.color.border.light",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "otp.size.padding.default": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "otp.size.radius.default": {
+    "resolvesTo": "core.shape.radius.medium",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "otp.color.border.accent": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
   }
 }

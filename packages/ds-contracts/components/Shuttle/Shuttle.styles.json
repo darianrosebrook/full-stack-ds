@@ -1,0 +1,19 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "shuttle.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "shuttle.color.foreground.secondary"
+    },
+    "border-color": {
+      "resolvesTo": "shuttle.color.border.accent"
+    },
+    "padding": {
+      "resolvesTo": "shuttle.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "shuttle.size.radius.default"
+    }
+  }
+}

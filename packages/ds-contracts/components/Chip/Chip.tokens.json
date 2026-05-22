@@ -1,85 +1,67 @@
 {
-  "root": {
-    "chip.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.secondary.default",
-      "fallback": "#fafafa",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "chip.color.foreground.default": {
-      "resolvesTo": "semantic.color.action.foreground.secondary.default",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "chip.color.border.default": {
-      "resolvesTo": "semantic.color.action.border.secondary.default",
-      "fallback": "#aeaeae",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "chip.size.padding.horizontal": {
-      "resolvesTo": "core.spacing.size.04",
-      "fallback": "8px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "chip.size.padding.vertical": {
-      "resolvesTo": "core.spacing.size.02",
-      "fallback": "2px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "chip.size.gap": {
-      "resolvesTo": "core.spacing.size.02",
-      "fallback": "2px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "chip.size.radius": {
-      "resolvesTo": "core.shape.radius.full",
-      "fallback": "9999px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "chip.size.border": {
-      "resolvesTo": "core.shape.border.width.hairline",
-      "fallback": "1px",
-      "layer": "core"
-    },
-    "chip.text.size": {
-      "resolvesTo": "semantic.typography.body.04",
-      "fallback": "12px",
-      "property": "font-size",
-      "layer": "semantic"
-    },
-    "chip.text.weight": {
-      "resolvesTo": "semantic.typography.font.weight.medium",
-      "fallback": "500",
-      "property": "font-weight",
-      "layer": "semantic"
-    },
-    "chip.motion.duration.fast": {
-      "resolvesTo": "core.motion.duration.short",
-      "fallback": "150ms",
-      "property": "transition-duration",
-      "layer": "core"
-    }
+  "chip.color.background.default": {
+    "resolvesTo": "semantic.color.action.background.secondary.default",
+    "fallback": "#fafafa",
+    "layer": "semantic"
   },
-  "hover": {
-    "chip.color.background.hover": {
-      "resolvesTo": "semantic.color.action.background.secondary.hover",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "chip.color.foreground.default": {
+    "resolvesTo": "semantic.color.action.foreground.secondary.default",
+    "fallback": "#141414",
+    "layer": "semantic"
   },
-  "active": {
-    "chip.color.background.active": {
-      "resolvesTo": "semantic.color.action.background.secondary.active",
-      "fallback": "#cecece",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "chip.color.border.default": {
+    "resolvesTo": "semantic.color.action.border.secondary.default",
+    "fallback": "#aeaeae",
+    "layer": "semantic"
+  },
+  "chip.size.padding.horizontal": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "chip.size.padding.vertical": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "2px",
+    "layer": "core"
+  },
+  "chip.size.gap": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "2px",
+    "layer": "core"
+  },
+  "chip.size.radius": {
+    "resolvesTo": "core.shape.radius.full",
+    "fallback": "9999px",
+    "layer": "core"
+  },
+  "chip.size.border": {
+    "resolvesTo": "core.shape.border.width.hairline",
+    "fallback": "1px",
+    "layer": "core"
+  },
+  "chip.text.size": {
+    "resolvesTo": "semantic.typography.body.04",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "chip.text.weight": {
+    "resolvesTo": "semantic.typography.font.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
+  },
+  "chip.motion.duration.fast": {
+    "resolvesTo": "core.motion.duration.short",
+    "fallback": "150ms",
+    "layer": "core"
+  },
+  "chip.color.background.hover": {
+    "resolvesTo": "semantic.color.action.background.secondary.hover",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "chip.color.background.active": {
+    "resolvesTo": "semantic.color.action.background.secondary.active",
+    "fallback": "#cecece",
+    "layer": "semantic"
   }
 }

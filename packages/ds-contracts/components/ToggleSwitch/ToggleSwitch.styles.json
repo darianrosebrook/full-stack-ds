@@ -1,0 +1,34 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "toggleSwitch.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "toggleSwitch.color.foreground.default"
+    },
+    "border-color": {
+      "resolvesTo": "toggleSwitch.color.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "toggleSwitch.border.radius.default"
+    },
+    "transition-duration": {
+      "resolvesTo": "toggleSwitch.motion.duration.fast"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "toggleSwitch.color.background.hover"
+    }
+  },
+  "checked": {
+    "background-color": {
+      "resolvesTo": "toggleSwitch.color.background.checked"
+    }
+  },
+  "disabled": {
+    "background-color": {
+      "resolvesTo": "toggleSwitch.color.background.disabled"
+    }
+  }
+}

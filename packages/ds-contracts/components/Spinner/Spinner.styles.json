@@ -1,0 +1,10 @@
+{
+  "root": {
+    "gap": {
+      "resolvesTo": "spinner.dots.gap"
+    },
+    "transition-duration": {
+      "resolvesTo": "spinner.anim.duration"
+    }
+  }
+}

@@ -1,37 +1,32 @@
 {
-  "root": {
-    "list.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "list.color.border.default": {
-      "resolvesTo": "semantic.color.border.subtle",
-      "fallback": "#cecece",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "list.size.padding.default": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "16px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "list.spacing.sm": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px",
-      "layer": "core"
-    },
-    "list.spacing.md": {
-      "resolvesTo": "core.spacing.size.05",
-      "fallback": "12px",
-      "layer": "core"
-    },
-    "list.spacing.lg": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "16px",
-      "layer": "core"
-    }
+  "list.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "list.color.border.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
+  "list.size.padding.default": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "list.spacing.sm": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "list.spacing.md": {
+    "resolvesTo": "core.spacing.size.05",
+    "fallback": "12px",
+    "layer": "core"
+  },
+  "list.spacing.lg": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
   }
 }

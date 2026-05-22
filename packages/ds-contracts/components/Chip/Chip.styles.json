@@ -1,0 +1,41 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "chip.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "chip.color.foreground.default"
+    },
+    "border-color": {
+      "resolvesTo": "chip.color.border.default"
+    },
+    "padding": {
+      "resolvesTo": "chip.size.padding.vertical"
+    },
+    "gap": {
+      "resolvesTo": "chip.size.gap"
+    },
+    "border-radius": {
+      "resolvesTo": "chip.size.radius"
+    },
+    "font-size": {
+      "resolvesTo": "chip.text.size"
+    },
+    "font-weight": {
+      "resolvesTo": "chip.text.weight"
+    },
+    "transition-duration": {
+      "resolvesTo": "chip.motion.duration.fast"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "chip.color.background.hover"
+    }
+  },
+  "active": {
+    "background-color": {
+      "resolvesTo": "chip.color.background.active"
+    }
+  }
+}

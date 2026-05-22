@@ -1,0 +1,60 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "select.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "select.color.foreground.default"
+    },
+    "border-color": {
+      "resolvesTo": "select.color.border.default"
+    },
+    "padding": {
+      "resolvesTo": "select.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "select.size.radius.default"
+    },
+    "font-size": {
+      "resolvesTo": "select.font.size.default"
+    },
+    "line-height": {
+      "resolvesTo": "select.font.lineHeight.default"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "select.color.background.hover"
+    },
+    "color": {
+      "resolvesTo": "select.color.foreground.hover"
+    },
+    "border-color": {
+      "resolvesTo": "select.color.border.hover"
+    }
+  },
+  "disabled": {
+    "background-color": {
+      "resolvesTo": "select.color.background.disabled"
+    },
+    "color": {
+      "resolvesTo": "select.color.foreground.disabled"
+    },
+    "border-color": {
+      "resolvesTo": "select.color.border.disabled"
+    }
+  },
+  "open": {
+    "border-color": {
+      "resolvesTo": "select.color.border.isOpen"
+    }
+  },
+  "selected": {
+    "background-color": {
+      "resolvesTo": "select.color.background.selected"
+    },
+    "color": {
+      "resolvesTo": "select.color.foreground.selected"
+    }
+  }
+}

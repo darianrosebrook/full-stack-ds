@@ -1,47 +1,37 @@
 {
-  "root": {
-    "textfield.spacing.gap": {
-      "resolvesTo": "core.spacing.size.04",
-      "fallback": "8px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "textfield.border.width": {
-      "resolvesTo": "core.shape.border.width.hairline",
-      "fallback": "1px",
-      "property": "border-width",
-      "layer": "core"
-    },
-    "textfield.border.radius": {
-      "resolvesTo": "core.shape.radius.medium",
-      "fallback": "8px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "textfield.color.input.text": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "textfield.color.input.placeholder": {
-      "resolvesTo": "semantic.color.foreground.tertiary",
-      "fallback": "#717171",
-      "layer": "semantic"
-    }
+  "textfield.spacing.gap": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
   },
-  "invalid": {
-    "textfield.color.input.borderError": {
-      "resolvesTo": "semantic.color.status.danger",
-      "fallback": "#d9292b",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "textfield.color.error": {
-      "resolvesTo": "semantic.color.foreground.danger",
-      "fallback": "#d9292b",
-      "property": "color",
-      "layer": "semantic"
-    }
+  "textfield.border.width": {
+    "resolvesTo": "core.shape.border.width.hairline",
+    "fallback": "1px",
+    "layer": "core"
+  },
+  "textfield.border.radius": {
+    "resolvesTo": "core.shape.radius.medium",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "textfield.color.input.text": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "textfield.color.input.placeholder": {
+    "resolvesTo": "semantic.color.foreground.tertiary",
+    "fallback": "#717171",
+    "layer": "semantic"
+  },
+  "textfield.color.input.borderError": {
+    "resolvesTo": "semantic.color.status.danger",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "textfield.color.error": {
+    "resolvesTo": "semantic.color.foreground.danger",
+    "fallback": "#d9292b",
+    "layer": "semantic"
   }
 }

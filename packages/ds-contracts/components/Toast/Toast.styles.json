@@ -1,0 +1,16 @@
+{
+  "root": {
+    "border-radius": {
+      "resolvesTo": "toast.surface.radius"
+    },
+    "box-shadow": {
+      "resolvesTo": "toast.surface.shadow"
+    },
+    "padding": {
+      "resolvesTo": "toast.spacing.padding"
+    },
+    "gap": {
+      "resolvesTo": "toast.spacing.stackGap"
+    }
+  }
+}

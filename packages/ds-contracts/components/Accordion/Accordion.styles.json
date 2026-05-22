@@ -1,0 +1,42 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "accordion.color.background.hover"
+    },
+    "color": {
+      "resolvesTo": "accordion.color.textSecondary"
+    },
+    "border-width": {
+      "resolvesTo": "accordion.border.width"
+    },
+    "border-color": {
+      "resolvesTo": "accordion.border.color"
+    },
+    "border-radius": {
+      "resolvesTo": "accordion.border.radius"
+    },
+    "gap": {
+      "resolvesTo": "accordion.spacing.gap"
+    },
+    "padding": {
+      "resolvesTo": "accordion.spacing.paddingY"
+    },
+    "font-weight": {
+      "resolvesTo": "accordion.text.weight"
+    },
+    "font-size": {
+      "resolvesTo": "accordion.text.sizeContent"
+    },
+    "line-height": {
+      "resolvesTo": "accordion.text.lineHeightContent"
+    },
+    "opacity": {
+      "resolvesTo": "accordion.opacity.disabled"
+    }
+  },
+  "hover": {
+    "color": {
+      "resolvesTo": "accordion.color.textHover"
+    }
+  }
+}

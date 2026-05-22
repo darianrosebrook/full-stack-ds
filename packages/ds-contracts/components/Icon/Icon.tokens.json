@@ -1,16 +1,12 @@
 {
-  "root": {
-    "icon.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "icon.size.padding.default": {
-      "resolvesTo": "core.spacing.size.01",
-      "fallback": "1px",
-      "property": "padding",
-      "layer": "core"
-    }
+  "icon.color.foreground.default": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "icon.size.padding.default": {
+    "resolvesTo": "core.spacing.size.01",
+    "fallback": "1px",
+    "layer": "core"
   }
 }

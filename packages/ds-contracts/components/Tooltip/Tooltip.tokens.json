@@ -1,50 +1,40 @@
 {
-  "root": {
-    "tooltip.color.background.default": {
-      "resolvesTo": "semantic.color.background.inverse",
-      "fallback": "#141414",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "tooltip.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.inverse",
-      "fallback": "#fafafa",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "tooltip.color.border.default": {
-      "resolvesTo": "semantic.color.border.subtle",
-      "fallback": "#cecece",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "tooltip.size.padding.y": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "tooltip.size.padding.x": {
-      "resolvesTo": "core.spacing.size.04",
-      "fallback": "8px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "tooltip.size.radius.default": {
-      "resolvesTo": "core.shape.radius.small",
-      "fallback": "4px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "tooltip.size.maxWidth": {
-      "literal": "200px",
-      "property": "max-width"
-    },
-    "tooltip.typography.fontSize": {
-      "resolvesTo": "semantic.typography.caption.01",
-      "fallback": "14px",
-      "property": "font-size",
-      "layer": "semantic"
-    }
+  "tooltip.color.background.default": {
+    "resolvesTo": "semantic.color.background.inverse",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "tooltip.color.foreground.default": {
+    "resolvesTo": "semantic.color.foreground.inverse",
+    "fallback": "#fafafa",
+    "layer": "semantic"
+  },
+  "tooltip.color.border.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
+  "tooltip.size.padding.y": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "tooltip.size.padding.x": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "tooltip.size.radius.default": {
+    "resolvesTo": "core.shape.radius.small",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "tooltip.size.maxWidth": {
+    "literal": "200px"
+  },
+  "tooltip.typography.fontSize": {
+    "resolvesTo": "semantic.typography.caption.01",
+    "fallback": "14px",
+    "layer": "semantic"
   }
 }

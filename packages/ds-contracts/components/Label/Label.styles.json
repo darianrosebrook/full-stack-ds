@@ -1,0 +1,10 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "label.color.text.default"
+    },
+    "line-height": {
+      "resolvesTo": "label.typo.lineHeight.default"
+    }
+  }
+}

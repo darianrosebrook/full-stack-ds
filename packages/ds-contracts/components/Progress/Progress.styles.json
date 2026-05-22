@@ -1,0 +1,15 @@
+{
+  "root": {
+    "color": { "resolvesTo": "progress.color.text.default" },
+    "gap": { "resolvesTo": "progress.spacing.gap" },
+    "transition-duration": {
+      "resolvesTo": "progress.motion.duration.indeterminate"
+    }
+  },
+  "track": {
+    "background-color": { "resolvesTo": "progress.color.track.background" }
+  },
+  "fill": {
+    "background-color": { "resolvesTo": "progress.color.fill.info" }
+  }
+}

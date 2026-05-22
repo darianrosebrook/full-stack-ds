@@ -1,146 +1,117 @@
 {
-  "root": {
-    "card.color.background.default": {
-      "resolvesTo": "semantic.color.background.primary",
-      "fallback": "#ffffff",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.border.default": {
-      "resolvesTo": "semantic.color.border.light",
-      "fallback": "#fceaea",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "card.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.foreground.secondary": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.foreground.link": {
-      "resolvesTo": "semantic.color.foreground.link",
-      "fallback": "#d9292b",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.size.padding.default": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "16px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "card.size.radius.default": {
-      "resolvesTo": "semantic.shape.control.radius.default",
-      "fallback": "8px",
-      "property": "border-radius",
-      "layer": "semantic"
-    },
-    "card.size.gap.default": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "card.typography.lineHeight.heading": {
-      "resolvesTo": "semantic.typography.line.height.heading",
-      "fallback": "1",
-      "property": "line-height",
-      "layer": "semantic"
-    },
-    "card.typography.lineHeight.normal": {
-      "resolvesTo": "semantic.typography.line.height.normal",
-      "fallback": "1.5",
-      "property": "line-height",
-      "layer": "semantic"
-    }
+  "card.color.background.default": {
+    "resolvesTo": "semantic.color.background.primary",
+    "fallback": "#ffffff",
+    "layer": "semantic"
   },
-  "hover": {
-    "card.color.background.hover": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "card.color.border.default": {
+    "resolvesTo": "semantic.color.border.light",
+    "fallback": "#fceaea",
+    "layer": "semantic"
   },
-  "badge": {
-    "card.color.badge.success.background": {
-      "resolvesTo": "semantic.color.background.success.subtle",
-      "fallback": "#e4f2e0",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.badge.success.foreground": {
-      "resolvesTo": "semantic.color.foreground.on.success.subtle",
-      "fallback": "#234104",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.badge.warning.background": {
-      "resolvesTo": "semantic.color.background.warning.subtle",
-      "fallback": "#ffedcc",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.badge.warning.foreground": {
-      "resolvesTo": "semantic.color.foreground.on.warning.subtle",
-      "fallback": "#593000",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.badge.info.background": {
-      "resolvesTo": "semantic.color.background.info.subtle",
-      "fallback": "#d9f3fe",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.badge.info.foreground": {
-      "resolvesTo": "semantic.color.foreground.on.info.subtle",
-      "fallback": "#002d99",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.badge.error.background": {
-      "resolvesTo": "semantic.color.background.danger.subtle",
-      "fallback": "#fceaea",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.badge.error.foreground": {
-      "resolvesTo": "semantic.color.foreground.on.danger.subtle",
-      "fallback": "#7b0000",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.badge.neutral.background": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.badge.neutral.foreground": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "card.color.badge.accent.background": {
-      "resolvesTo": "semantic.color.background.accent",
-      "fallback": "#d9292b",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "card.color.badge.accent.foreground": {
-      "resolvesTo": "semantic.color.foreground.on.brand",
-      "fallback": "#ffffff",
-      "property": "color",
-      "layer": "semantic"
-    }
+  "card.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "card.color.foreground.secondary": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "card.color.foreground.link": {
+    "resolvesTo": "semantic.color.foreground.link",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "card.size.padding.default": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "card.size.radius.default": {
+    "resolvesTo": "semantic.shape.control.radius.default",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "card.size.gap.default": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "card.typography.lineHeight.heading": {
+    "resolvesTo": "semantic.typography.line.height.heading",
+    "fallback": "1",
+    "layer": "semantic"
+  },
+  "card.typography.lineHeight.normal": {
+    "resolvesTo": "semantic.typography.line.height.normal",
+    "fallback": "1.5",
+    "layer": "semantic"
+  },
+  "card.color.background.hover": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "card.color.badge.success.background": {
+    "resolvesTo": "semantic.color.background.success.subtle",
+    "fallback": "#e4f2e0",
+    "layer": "semantic"
+  },
+  "card.color.badge.success.foreground": {
+    "resolvesTo": "semantic.color.foreground.on.success.subtle",
+    "fallback": "#234104",
+    "layer": "semantic"
+  },
+  "card.color.badge.warning.background": {
+    "resolvesTo": "semantic.color.background.warning.subtle",
+    "fallback": "#ffedcc",
+    "layer": "semantic"
+  },
+  "card.color.badge.warning.foreground": {
+    "resolvesTo": "semantic.color.foreground.on.warning.subtle",
+    "fallback": "#593000",
+    "layer": "semantic"
+  },
+  "card.color.badge.info.background": {
+    "resolvesTo": "semantic.color.background.info.subtle",
+    "fallback": "#d9f3fe",
+    "layer": "semantic"
+  },
+  "card.color.badge.info.foreground": {
+    "resolvesTo": "semantic.color.foreground.on.info.subtle",
+    "fallback": "#002d99",
+    "layer": "semantic"
+  },
+  "card.color.badge.error.background": {
+    "resolvesTo": "semantic.color.background.danger.subtle",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "card.color.badge.error.foreground": {
+    "resolvesTo": "semantic.color.foreground.on.danger.subtle",
+    "fallback": "#7b0000",
+    "layer": "semantic"
+  },
+  "card.color.badge.neutral.background": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "card.color.badge.neutral.foreground": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "card.color.badge.accent.background": {
+    "resolvesTo": "semantic.color.background.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "card.color.badge.accent.foreground": {
+    "resolvesTo": "semantic.color.foreground.on.brand",
+    "fallback": "#ffffff",
+    "layer": "semantic"
   }
 }

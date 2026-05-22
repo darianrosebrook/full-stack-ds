@@ -1,0 +1,30 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "breadcrumbs.color.foreground.tertiary"
+    },
+    "background-color": {
+      "resolvesTo": "breadcrumbs.color.background.elevated"
+    },
+    "border-color": {
+      "resolvesTo": "breadcrumbs.color.border.subtle"
+    },
+    "line-height": {
+      "resolvesTo": "breadcrumbs.typography.lineHeight.collapse"
+    },
+    "border-radius": {
+      "resolvesTo": "breadcrumbs.shape.radius.small"
+    },
+    "gap": {
+      "resolvesTo": "breadcrumbs.spacing.gap.small"
+    },
+    "padding": {
+      "resolvesTo": "breadcrumbs.spacing.padding.small"
+    }
+  },
+  "focus": {
+    "outline-color": {
+      "resolvesTo": "breadcrumbs.color.focus"
+    }
+  }
+}

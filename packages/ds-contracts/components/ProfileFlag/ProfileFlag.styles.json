@@ -1,0 +1,27 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "profileFlag.color.background.default"
+    },
+    "border-color": {
+      "resolvesTo": "profileFlag.color.border.default"
+    },
+    "color": {
+      "resolvesTo": "profileFlag.color.foreground.primary"
+    },
+    "border-radius": {
+      "resolvesTo": "profileFlag.size.radius.default"
+    },
+    "gap": {
+      "resolvesTo": "profileFlag.spacing.gap.default"
+    },
+    "padding": {
+      "resolvesTo": "profileFlag.spacing.padding.right"
+    }
+  },
+  "hover": {
+    "border-color": {
+      "resolvesTo": "profileFlag.color.border.hover"
+    }
+  }
+}

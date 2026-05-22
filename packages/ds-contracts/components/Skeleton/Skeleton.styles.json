@@ -1,0 +1,16 @@
+{
+  "root": {
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.lg"
+    },
+    "gap": {
+      "resolvesTo": "skeleton.gap.lg"
+    },
+    "transition-duration": {
+      "resolvesTo": "skeleton.anim.duration"
+    },
+    "transition-timing-function": {
+      "resolvesTo": "skeleton.anim.easing"
+    }
+  }
+}

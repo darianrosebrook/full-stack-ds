@@ -1,0 +1,30 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "dialog.color.background.backdrop"
+    },
+    "color": {
+      "resolvesTo": "dialog.color.foreground.secondary"
+    },
+    "border-color": {
+      "resolvesTo": "dialog.color.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "dialog.size.radius.default"
+    },
+    "padding": {
+      "resolvesTo": "dialog.spacing.body.paddingRight"
+    },
+    "gap": {
+      "resolvesTo": "dialog.spacing.footer.gap"
+    },
+    "line-height": {
+      "resolvesTo": "dialog.typography.title.lineHeight"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "dialog.color.background.hover"
+    }
+  }
+}

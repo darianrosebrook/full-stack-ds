@@ -1,110 +1,82 @@
 {
-  "root": {
-    "switch.motion.duration": {
-      "resolvesTo": "semantic.motion.interaction.press.duration",
-      "fallback": "100ms",
-      "property": "transition-duration",
-      "layer": "semantic"
-    },
-    "switch.motion.easing": {
-      "resolvesTo": "semantic.motion.interaction.press.easing",
-      "fallback": "ease-out",
-      "property": "transition-timing-function",
-      "layer": "semantic"
-    }
+  "switch.motion.duration": {
+    "resolvesTo": "semantic.motion.interaction.press.duration",
+    "fallback": "100ms",
+    "layer": "semantic"
   },
-  "track": {
-    "switch.color.track.background.default": {
-      "resolvesTo": "semantic.color.background.tertiary",
-      "fallback": "#cecece",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "switch.color.track.border.default": {
-      "resolvesTo": "semantic.color.border.subtle",
-      "fallback": "#aeaeae",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "switch.size.md.track.width": {
-      "resolvesTo": "core.spacing.size.09",
-      "fallback": "48px",
-      "property": "width",
-      "layer": "core"
-    },
-    "switch.size.md.track.height": {
-      "resolvesTo": "core.spacing.size.07",
-      "fallback": "24px",
-      "property": "height",
-      "layer": "core"
-    },
-    "switch.size.md.track.radius": {
-      "resolvesTo": "core.shape.radius.full",
-      "fallback": "9999px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "switch.size.md.track.padding": {
-      "resolvesTo": "core.spacing.size.01",
-      "fallback": "2px",
-      "property": "padding",
-      "layer": "core"
-    }
+  "switch.motion.easing": {
+    "resolvesTo": "semantic.motion.interaction.press.easing",
+    "fallback": "ease-out",
+    "layer": "semantic"
   },
-  "thumb": {
-    "switch.color.thumb.background.default": {
-      "resolvesTo": "semantic.color.background.primary",
-      "fallback": "#ffffff",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "switch.color.thumb.shadow.default": {
-      "resolvesTo": "semantic.elevation.surface.raised",
-      "fallback": "0 1px 2px rgba(0, 0, 0, 0.1)",
-      "property": "box-shadow",
-      "layer": "semantic"
-    },
-    "switch.size.md.thumb.size": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "20px",
-      "property": "width",
-      "layer": "core"
-    },
-    "switch.size.md.thumb.height": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "20px",
-      "property": "height",
-      "layer": "core"
-    }
+  "switch.color.track.background.default": {
+    "resolvesTo": "semantic.color.background.tertiary",
+    "fallback": "#cecece",
+    "layer": "semantic"
   },
-  "input": {
-    "switch.color.input.outline.focus": {
-      "resolvesTo": "semantic.color.border.focus",
-      "fallback": "#d9292b",
-      "property": "outline-color",
-      "layer": "semantic"
-    }
+  "switch.color.track.background.checked": {
+    "resolvesTo": "semantic.color.foreground.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
   },
-  "checked": {
-    "switch.color.track.background.checked": {
-      "resolvesTo": "semantic.color.foreground.accent",
-      "fallback": "#d9292b",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "switch.color.thumb.background.checked": {
-      "resolvesTo": "semantic.color.foreground.on.brand",
-      "fallback": "#ffffff",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "switch.color.track.background.disabled": {
+    "resolvesTo": "semantic.color.background.disabled",
+    "fallback": "#efefef",
+    "layer": "semantic"
   },
-  "disabled": {
-    "switch.color.track.background.disabled": {
-      "resolvesTo": "semantic.color.background.disabled",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "switch.color.track.border.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#aeaeae",
+    "layer": "semantic"
+  },
+  "switch.color.thumb.background.default": {
+    "resolvesTo": "semantic.color.background.primary",
+    "fallback": "#ffffff",
+    "layer": "semantic"
+  },
+  "switch.color.thumb.background.checked": {
+    "resolvesTo": "semantic.color.foreground.on.brand",
+    "fallback": "#ffffff",
+    "layer": "semantic"
+  },
+  "switch.color.thumb.shadow.default": {
+    "resolvesTo": "semantic.elevation.surface.raised",
+    "fallback": "0 1px 2px rgba(0, 0, 0, 0.1)",
+    "layer": "semantic"
+  },
+  "switch.color.input.outline.focus": {
+    "resolvesTo": "semantic.color.border.focus",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "switch.size.md.track.width": {
+    "resolvesTo": "core.spacing.size.09",
+    "fallback": "48px",
+    "layer": "core"
+  },
+  "switch.size.md.track.height": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "switch.size.md.track.radius": {
+    "resolvesTo": "core.shape.radius.full",
+    "fallback": "9999px",
+    "layer": "core"
+  },
+  "switch.size.md.track.padding": {
+    "resolvesTo": "core.spacing.size.01",
+    "fallback": "2px",
+    "layer": "core"
+  },
+  "switch.size.md.thumb.size": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "20px",
+    "layer": "core"
+  },
+  "switch.size.md.thumb.height": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "20px",
+    "layer": "core"
   }
 }

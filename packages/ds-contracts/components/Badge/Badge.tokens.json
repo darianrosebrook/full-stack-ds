@@ -1,52 +1,42 @@
 {
-  "root": {
-    "badge.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "badge.color.background.info": {
-      "resolvesTo": "semantic.color.background.info.subtle",
-      "fallback": "#d9f3fe",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "badge.color.background.success": {
-      "resolvesTo": "semantic.color.background.success.subtle",
-      "fallback": "#e4f2e0",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "badge.color.background.warning": {
-      "resolvesTo": "semantic.color.background.warning.subtle",
-      "fallback": "#ffedcc",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "badge.color.background.danger": {
-      "resolvesTo": "semantic.color.background.danger.subtle",
-      "fallback": "#fceaea",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "badge.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "badge.color.border.default": {
-      "resolvesTo": "semantic.color.border.light",
-      "fallback": "#fceaea",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "badge.spacing.gap": {
-      "resolvesTo": "core.spacing.size.02",
-      "fallback": "2px",
-      "property": "gap",
-      "layer": "core"
-    }
+  "badge.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "badge.color.background.info": {
+    "resolvesTo": "semantic.color.background.info.subtle",
+    "fallback": "#d9f3fe",
+    "layer": "semantic"
+  },
+  "badge.color.background.success": {
+    "resolvesTo": "semantic.color.background.success.subtle",
+    "fallback": "#e4f2e0",
+    "layer": "semantic"
+  },
+  "badge.color.background.warning": {
+    "resolvesTo": "semantic.color.background.warning.subtle",
+    "fallback": "#ffedcc",
+    "layer": "semantic"
+  },
+  "badge.color.background.danger": {
+    "resolvesTo": "semantic.color.background.danger.subtle",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "badge.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "badge.color.border.default": {
+    "resolvesTo": "semantic.color.border.light",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "badge.spacing.gap": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "2px",
+    "layer": "core"
   }
 }

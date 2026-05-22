@@ -1,0 +1,22 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "status.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "status.color.foreground.primary"
+    },
+    "border-color": {
+      "resolvesTo": "status.color.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "status.size.radius.default"
+    },
+    "padding": {
+      "resolvesTo": "status.size.padding.default"
+    },
+    "line-height": {
+      "resolvesTo": "status.typography.lineHeight"
+    }
+  }
+}

@@ -1,80 +1,72 @@
 {
-  "root": {
-    "avatar.size.small": {
-      "resolvesTo": "core.spacing.size.05",
-      "fallback": "12px",
-      "layer": "core"
-    },
-    "avatar.size.default": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "16px",
-      "layer": "core"
-    },
-    "avatar.size.medium": {
-      "resolvesTo": "core.spacing.size.08",
-      "fallback": "32px",
-      "layer": "core"
-    },
-    "avatar.size.large": {
-      "resolvesTo": "core.spacing.size.10",
-      "fallback": "64px",
-      "layer": "core"
-    },
-    "avatar.size.status": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px",
-      "layer": "core"
-    },
-    "avatar.size.radius.default": {
-      "resolvesTo": "core.shape.radius.full",
-      "fallback": "9999px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "avatar.size.radius.small": {
-      "resolvesTo": "core.shape.radius.small",
-      "fallback": "4px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "avatar.size.border.default": {
-      "resolvesTo": "core.shape.border.width.hairline",
-      "fallback": "1px",
-      "layer": "core"
-    },
-    "avatar.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "avatar.color.background.inverse": {
-      "resolvesTo": "semantic.color.background.inverse",
-      "fallback": "#141414",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "avatar.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "avatar.color.border.default": {
-      "resolvesTo": "semantic.color.border.light",
-      "fallback": "#fceaea",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "avatar.typography.fontWeight.medium": {
-      "resolvesTo": "core.typography.weight.medium",
-      "fallback": "500",
-      "layer": "core"
-    },
-    "avatar.typography.fontFamily.sans": {
-      "resolvesTo": "core.typography.font.family.sans",
-      "fallback": "\"Inter\", sans-serif",
-      "layer": "core"
-    }
+  "avatar.size.small": {
+    "resolvesTo": "core.spacing.size.05",
+    "fallback": "12px",
+    "layer": "core"
+  },
+  "avatar.size.default": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "avatar.size.medium": {
+    "resolvesTo": "core.spacing.size.08",
+    "fallback": "32px",
+    "layer": "core"
+  },
+  "avatar.size.large": {
+    "resolvesTo": "core.spacing.size.10",
+    "fallback": "64px",
+    "layer": "core"
+  },
+  "avatar.size.status": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "avatar.size.radius.default": {
+    "resolvesTo": "core.shape.radius.full",
+    "fallback": "9999px",
+    "layer": "core"
+  },
+  "avatar.size.radius.small": {
+    "resolvesTo": "core.shape.radius.small",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "avatar.size.border.default": {
+    "resolvesTo": "core.shape.border.width.hairline",
+    "fallback": "1px",
+    "layer": "core"
+  },
+  "avatar.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "avatar.color.background.inverse": {
+    "resolvesTo": "semantic.color.background.inverse",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "avatar.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "avatar.color.border.default": {
+    "resolvesTo": "semantic.color.border.light",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "avatar.typography.fontWeight.medium": {
+    "resolvesTo": "core.typography.weight.medium",
+    "fallback": "500",
+    "layer": "core"
+  },
+  "avatar.typography.fontFamily.sans": {
+    "resolvesTo": "core.typography.font.family.sans",
+    "fallback": "\"Inter\", sans-serif",
+    "layer": "core"
   }
 }

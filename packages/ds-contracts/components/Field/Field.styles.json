@@ -1,0 +1,13 @@
+{
+  "root": {
+    "gap": {
+      "resolvesTo": "field.gap.meta"
+    },
+    "border-radius": {
+      "resolvesTo": "field.radius"
+    },
+    "border-color": {
+      "resolvesTo": "field.color.borderBold"
+    }
+  }
+}

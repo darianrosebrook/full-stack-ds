@@ -1,49 +1,42 @@
 {
-  "root": {
-    "blockquote.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "blockquote.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "blockquote.color.border.default": {
-      "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "blockquote.typography.fontStyle": {
-      "resolvesTo": "semantic.typography.font.style.italic",
-      "fallback": "italic",
-      "layer": "semantic"
-    },
-    "blockquote.typography.fontWeight": {
-      "resolvesTo": "semantic.typography.font.weight.medium",
-      "fallback": "500",
-      "layer": "semantic"
-    },
-    "blockquote.size.padding.default": {
-      "resolvesTo": "core.spacing.size.05",
-      "fallback": "12px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "blockquote.size.radius.default": {
-      "resolvesTo": "core.shape.radius.medium",
-      "fallback": "8px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "blockquote.size.border.thick": {
-      "resolvesTo": "core.shape.border.width.thick",
-      "fallback": "2px",
-      "layer": "core"
-    }
+  "blockquote.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "blockquote.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "blockquote.color.border.default": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "blockquote.typography.fontStyle": {
+    "resolvesTo": "semantic.typography.font.style.italic",
+    "fallback": "italic",
+    "layer": "semantic"
+  },
+  "blockquote.typography.fontWeight": {
+    "resolvesTo": "semantic.typography.font.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
+  },
+  "blockquote.size.padding.default": {
+    "resolvesTo": "core.spacing.size.05",
+    "fallback": "12px",
+    "layer": "core"
+  },
+  "blockquote.size.radius.default": {
+    "resolvesTo": "core.shape.radius.medium",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "blockquote.size.border.thick": {
+    "resolvesTo": "core.shape.border.width.thick",
+    "fallback": "2px",
+    "layer": "core"
   }
 }

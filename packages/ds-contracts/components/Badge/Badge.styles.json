@@ -1,0 +1,16 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "badge.color.background.danger"
+    },
+    "color": {
+      "resolvesTo": "badge.color.foreground.primary"
+    },
+    "border-color": {
+      "resolvesTo": "badge.color.border.default"
+    },
+    "gap": {
+      "resolvesTo": "badge.spacing.gap"
+    }
+  }
+}

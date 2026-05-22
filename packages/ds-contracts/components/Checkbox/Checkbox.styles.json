@@ -1,0 +1,26 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "checkbox.color.background.default"
+    },
+    "border-color": { "resolvesTo": "checkbox.color.border.default" },
+    "border-width": { "resolvesTo": "checkbox.border.width" },
+    "border-radius": { "resolvesTo": "checkbox.border.radius" },
+    "transition-duration": {
+      "resolvesTo": "checkbox.transition.duration"
+    }
+  },
+  "hover": {
+    "border-color": { "resolvesTo": "checkbox.color.border.hover" }
+  },
+  "checked": {
+    "background-color": {
+      "resolvesTo": "checkbox.color.background.checked"
+    }
+  },
+  "disabled": {
+    "background-color": {
+      "resolvesTo": "checkbox.color.background.disabled"
+    }
+  }
+}

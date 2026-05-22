@@ -1,0 +1,25 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "tooltip.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "tooltip.color.foreground.default"
+    },
+    "border-color": {
+      "resolvesTo": "tooltip.color.border.default"
+    },
+    "padding": {
+      "resolvesTo": "tooltip.size.padding.x"
+    },
+    "border-radius": {
+      "resolvesTo": "tooltip.size.radius.default"
+    },
+    "max-width": {
+      "resolvesTo": "tooltip.size.maxWidth"
+    },
+    "font-size": {
+      "resolvesTo": "tooltip.typography.fontSize"
+    }
+  }
+}

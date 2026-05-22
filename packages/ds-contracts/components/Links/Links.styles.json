@@ -1,0 +1,31 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "links.color.foreground.default"
+    },
+    "text-decoration-color": {
+      "resolvesTo": "links.color.underline.default"
+    },
+    "gap": {
+      "resolvesTo": "links.spacing.gap.default"
+    },
+    "transition-duration": {
+      "resolvesTo": "links.motion.duration.fast"
+    }
+  },
+  "hover": {
+    "color": {
+      "resolvesTo": "links.color.foreground.hover"
+    }
+  },
+  "visited": {
+    "color": {
+      "resolvesTo": "links.color.foreground.visited"
+    }
+  },
+  "disabled": {
+    "color": {
+      "resolvesTo": "links.color.foreground.disabled"
+    }
+  }
+}

@@ -1,39 +1,32 @@
 {
-  "root": {
-    "popover.size.padding.default": {
-      "resolvesTo": "core.spacing.size.06",
-      "fallback": "16px",
-      "property": "padding",
-      "layer": "core"
-    },
-    "popover.size.radius.default": {
-      "resolvesTo": "semantic.shape.control.radius.default",
-      "fallback": "8px",
-      "property": "border-radius",
-      "layer": "semantic"
-    },
-    "popover.size.gap.default": {
-      "resolvesTo": "core.spacing.size.04",
-      "fallback": "8px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "popover.color.background.content": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "popover.color.border.accent": {
-      "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "popover.elevation.default": {
-      "resolvesTo": "semantic.elevation.default",
-      "fallback": "0 2px 8px rgba(0,0,0,0.12)",
-      "layer": "semantic"
-    }
+  "popover.size.padding.default": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "popover.size.radius.default": {
+    "resolvesTo": "semantic.shape.control.radius.default",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "popover.size.gap.default": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "popover.color.background.content": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "popover.color.border.accent": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "popover.elevation.default": {
+    "resolvesTo": "semantic.elevation.default",
+    "fallback": "0 2px 8px rgba(0,0,0,0.12)",
+    "layer": "semantic"
   }
 }

@@ -1,67 +1,57 @@
 {
-  "root": {
-    "skeleton.color.base": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "layer": "semantic"
-    },
-    "skeleton.color.highlight": {
-      "resolvesTo": "semantic.color.background.highlight",
-      "fallback": "#f7c1c2",
-      "layer": "semantic"
-    },
-    "skeleton.color.static": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "layer": "semantic"
-    },
-    "skeleton.radius.sm": {
-      "resolvesTo": "core.shape.radius.02",
-      "fallback": "4px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "skeleton.radius.md": {
-      "resolvesTo": "core.shape.radius.03",
-      "fallback": "8px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "skeleton.radius.lg": {
-      "resolvesTo": "core.shape.radius.04",
-      "fallback": "16px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "skeleton.gap.sm": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "skeleton.gap.md": {
-      "resolvesTo": "core.spacing.size.05",
-      "fallback": "12px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "skeleton.gap.lg": {
-      "resolvesTo": "core.spacing.size.07",
-      "fallback": "24px",
-      "property": "gap",
-      "layer": "core"
-    },
-    "skeleton.anim.duration": {
-      "resolvesTo": "core.motion.duration.long",
-      "fallback": "400ms",
-      "property": "transition-duration",
-      "layer": "core"
-    },
-    "skeleton.anim.easing": {
-      "resolvesTo": "core.motion.easing.standard",
-      "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
-      "property": "transition-timing-function",
-      "layer": "core"
-    }
+  "skeleton.color.base": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "skeleton.color.highlight": {
+    "resolvesTo": "semantic.color.background.highlight",
+    "fallback": "#f7c1c2",
+    "layer": "semantic"
+  },
+  "skeleton.color.static": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "skeleton.radius.sm": {
+    "resolvesTo": "core.shape.radius.02",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "skeleton.radius.md": {
+    "resolvesTo": "core.shape.radius.03",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "skeleton.radius.lg": {
+    "resolvesTo": "core.shape.radius.04",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "skeleton.gap.sm": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "skeleton.gap.md": {
+    "resolvesTo": "core.spacing.size.05",
+    "fallback": "12px",
+    "layer": "core"
+  },
+  "skeleton.gap.lg": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "skeleton.anim.duration": {
+    "resolvesTo": "core.motion.duration.long",
+    "fallback": "400ms",
+    "layer": "core"
+  },
+  "skeleton.anim.easing": {
+    "resolvesTo": "core.motion.easing.standard",
+    "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "layer": "core"
   }
 }

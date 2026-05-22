@@ -1,0 +1,38 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "card.color.background.default"
+    },
+    "border-color": {
+      "resolvesTo": "card.color.border.default"
+    },
+    "color": {
+      "resolvesTo": "card.color.foreground.link"
+    },
+    "padding": {
+      "resolvesTo": "card.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "card.size.radius.default"
+    },
+    "gap": {
+      "resolvesTo": "card.size.gap.default"
+    },
+    "line-height": {
+      "resolvesTo": "card.typography.lineHeight.normal"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "card.color.background.hover"
+    }
+  },
+  "badge": {
+    "background-color": {
+      "resolvesTo": "card.color.badge.accent.background"
+    },
+    "color": {
+      "resolvesTo": "card.color.badge.accent.foreground"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "otp.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "otp.color.foreground.secondary"
+    },
+    "border-color": {
+      "resolvesTo": "otp.color.border.default"
+    },
+    "padding": {
+      "resolvesTo": "otp.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "otp.size.radius.default"
+    }
+  },
+  "focus": {
+    "border-color": {
+      "resolvesTo": "otp.color.border.accent"
+    }
+  }
+}

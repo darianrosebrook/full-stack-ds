@@ -1,0 +1,41 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "table.color.textMuted"
+    },
+    "border-color": {
+      "resolvesTo": "table.color.border"
+    },
+    "background-color": {
+      "resolvesTo": "table.color.background.footer"
+    },
+    "border-width": {
+      "resolvesTo": "table.border.width"
+    },
+    "gap": {
+      "resolvesTo": "table.spacing.sortGap"
+    },
+    "border-radius": {
+      "resolvesTo": "table.size.radius"
+    },
+    "font-size": {
+      "resolvesTo": "table.text.sizeCaption"
+    },
+    "line-height": {
+      "resolvesTo": "table.text.lineHeight"
+    },
+    "font-weight": {
+      "resolvesTo": "table.text.weightFooter"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "table.color.background.hover"
+    }
+  },
+  "selected": {
+    "background-color": {
+      "resolvesTo": "table.color.background.selected"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "postcard.color.background.default"
+    },
+    "border-color": {
+      "resolvesTo": "postcard.color.border.accent"
+    },
+    "color": {
+      "resolvesTo": "postcard.color.foreground.secondary"
+    },
+    "padding": {
+      "resolvesTo": "postcard.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "postcard.size.radius.full"
+    },
+    "gap": {
+      "resolvesTo": "postcard.size.gap.small"
+    },
+    "line-height": {
+      "resolvesTo": "postcard.typography.content.lineHeight"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "postcard.color.background.hover"
+    },
+    "border-color": {
+      "resolvesTo": "postcard.color.border.hover"
+    }
+  },
+  "content": {
+    "line-height": {
+      "resolvesTo": "postcard.typography.content.lineHeight"
+    }
+  }
+}

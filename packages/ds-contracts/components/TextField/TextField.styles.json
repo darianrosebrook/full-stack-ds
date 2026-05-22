@@ -1,0 +1,24 @@
+{
+  "root": {
+    "gap": {
+      "resolvesTo": "textfield.spacing.gap"
+    },
+    "border-width": {
+      "resolvesTo": "textfield.border.width"
+    },
+    "border-radius": {
+      "resolvesTo": "textfield.border.radius"
+    },
+    "color": {
+      "resolvesTo": "textfield.color.input.text"
+    }
+  },
+  "invalid": {
+    "border-color": {
+      "resolvesTo": "textfield.color.input.borderError"
+    },
+    "color": {
+      "resolvesTo": "textfield.color.error"
+    }
+  }
+}

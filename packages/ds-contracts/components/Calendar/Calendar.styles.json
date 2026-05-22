@@ -1,0 +1,19 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "calendar.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "calendar.color.foreground.secondary"
+    },
+    "border-color": {
+      "resolvesTo": "calendar.color.border.accent"
+    },
+    "padding": {
+      "resolvesTo": "calendar.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "calendar.size.radius.default"
+    }
+  }
+}

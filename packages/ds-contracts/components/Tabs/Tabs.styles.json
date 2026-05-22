@@ -1,0 +1,13 @@
+{
+  "root": {
+    "gap": {
+      "resolvesTo": "tabs.spacing.panelGap"
+    },
+    "padding": {
+      "resolvesTo": "tabs.spacing.padding"
+    },
+    "border-radius": {
+      "resolvesTo": "tabs.shape.radius"
+    }
+  }
+}

@@ -1,58 +1,42 @@
 {
-  "root": {
-    "toggleSwitch.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "toggleSwitch.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414",
-      "property": "color",
-      "layer": "semantic"
-    },
-    "toggleSwitch.color.border.default": {
-      "resolvesTo": "semantic.color.border.light",
-      "fallback": "#fceaea",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "toggleSwitch.border.radius.default": {
-      "resolvesTo": "core.shape.radius.full",
-      "fallback": "9999px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "toggleSwitch.motion.duration.fast": {
-      "resolvesTo": "core.motion.duration.short",
-      "fallback": "150ms",
-      "property": "transition-duration",
-      "layer": "core"
-    }
+  "toggleSwitch.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
   },
-  "hover": {
-    "toggleSwitch.color.background.hover": {
-      "resolvesTo": "semantic.interaction.background.hover",
-      "fallback": "#efefef",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "toggleSwitch.color.foreground.default": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
   },
-  "checked": {
-    "toggleSwitch.color.background.checked": {
-      "resolvesTo": "semantic.color.action.background.primary.default",
-      "fallback": "#d9292b",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "toggleSwitch.color.border.default": {
+    "resolvesTo": "semantic.color.border.light",
+    "fallback": "#fceaea",
+    "layer": "semantic"
   },
-  "disabled": {
-    "toggleSwitch.color.background.disabled": {
-      "resolvesTo": "semantic.color.background.disabled",
-      "fallback": "#cecece",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "toggleSwitch.border.radius.default": {
+    "resolvesTo": "core.shape.radius.full",
+    "fallback": "9999px",
+    "layer": "core"
+  },
+  "toggleSwitch.motion.duration.fast": {
+    "resolvesTo": "core.motion.duration.short",
+    "fallback": "150ms",
+    "layer": "core"
+  },
+  "toggleSwitch.color.background.hover": {
+    "resolvesTo": "semantic.interaction.background.hover",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "toggleSwitch.color.background.checked": {
+    "resolvesTo": "semantic.color.action.background.primary.default",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "toggleSwitch.color.background.disabled": {
+    "resolvesTo": "semantic.color.background.disabled",
+    "fallback": "#cecece",
+    "layer": "semantic"
   }
 }

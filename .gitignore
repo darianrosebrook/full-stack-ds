@@ -3,6 +3,10 @@ dist/
 *.tsbuildinfo
 .svelte-kit/
 
+# One-shot migration helper for PLAN-TOKENS-STYLES-CONVERGENCE-001.
+# Not committed tooling; delete after the convergence lands.
+scripts/migrate-tokens-to-styles.mjs
+
 # Dependencies
 node_modules/
 

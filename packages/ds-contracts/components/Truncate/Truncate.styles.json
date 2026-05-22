@@ -1,0 +1,15 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "truncate.color.foreground.link"
+    },
+    "background-color": {
+      "resolvesTo": "truncate.color.background.primary"
+    }
+  },
+  "hover": {
+    "color": {
+      "resolvesTo": "truncate.color.foreground.linkHover"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "list.color.foreground.primary"
+    },
+    "border-color": {
+      "resolvesTo": "list.color.border.default"
+    },
+    "padding": {
+      "resolvesTo": "list.size.padding.default"
+    }
+  }
+}

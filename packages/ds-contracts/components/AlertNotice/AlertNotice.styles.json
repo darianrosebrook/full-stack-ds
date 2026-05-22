@@ -1,0 +1,36 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "alertnotice.color.background.danger"
+    },
+    "color": {
+      "resolvesTo": "alertnotice.color.foreground.danger"
+    },
+    "border-color": {
+      "resolvesTo": "alertnotice.color.border.danger"
+    },
+    "padding": {
+      "resolvesTo": "alertnotice.size.padding"
+    },
+    "border-radius": {
+      "resolvesTo": "alertnotice.size.radius"
+    },
+    "gap": {
+      "resolvesTo": "alertnotice.spacing.gap"
+    },
+    "font-size": {
+      "resolvesTo": "alertnotice.text.size"
+    },
+    "font-weight": {
+      "resolvesTo": "alertnotice.text.weight"
+    }
+  },
+  "title": {
+    "font-weight": {
+      "resolvesTo": "alertnotice.typography.title.fontWeight"
+    },
+    "font-size": {
+      "resolvesTo": "alertnotice.typography.title.fontSize"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "icon.color.foreground.default"
+    },
+    "padding": {
+      "resolvesTo": "icon.size.padding.default"
+    }
+  }
+}

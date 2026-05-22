@@ -1,58 +1,42 @@
 {
-  "root": {
-    "checkbox.color.background.default": {
-      "resolvesTo": "semantic.color.background.primary",
-      "fallback": "#ffffff",
-      "property": "background-color",
-      "layer": "semantic"
-    },
-    "checkbox.color.border.default": {
-      "resolvesTo": "semantic.color.border.default",
-      "fallback": "#aeaeae",
-      "property": "border-color",
-      "layer": "semantic"
-    },
-    "checkbox.border.width": {
-      "resolvesTo": "core.shape.border.width.hairline",
-      "fallback": "1px",
-      "property": "border-width",
-      "layer": "core"
-    },
-    "checkbox.border.radius": {
-      "resolvesTo": "core.shape.radius.small",
-      "fallback": "4px",
-      "property": "border-radius",
-      "layer": "core"
-    },
-    "checkbox.transition.duration": {
-      "resolvesTo": "core.motion.duration.short",
-      "fallback": "150ms",
-      "property": "transition-duration",
-      "layer": "core"
-    }
+  "checkbox.color.background.default": {
+    "resolvesTo": "semantic.color.background.primary",
+    "fallback": "#ffffff",
+    "layer": "semantic"
   },
-  "hover": {
-    "checkbox.color.border.hover": {
-      "resolvesTo": "semantic.color.border.hover",
-      "fallback": "#f29495",
-      "property": "border-color",
-      "layer": "semantic"
-    }
+  "checkbox.color.border.default": {
+    "resolvesTo": "semantic.color.border.default",
+    "fallback": "#aeaeae",
+    "layer": "semantic"
   },
-  "checked": {
-    "checkbox.color.background.checked": {
-      "resolvesTo": "semantic.color.action.background.primary.default",
-      "fallback": "#d9292b",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "checkbox.border.width": {
+    "resolvesTo": "core.shape.border.width.hairline",
+    "fallback": "1px",
+    "layer": "core"
   },
-  "disabled": {
-    "checkbox.color.background.disabled": {
-      "resolvesTo": "semantic.color.background.disabled",
-      "fallback": "#cecece",
-      "property": "background-color",
-      "layer": "semantic"
-    }
+  "checkbox.border.radius": {
+    "resolvesTo": "core.shape.radius.small",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "checkbox.transition.duration": {
+    "resolvesTo": "core.motion.duration.short",
+    "fallback": "150ms",
+    "layer": "core"
+  },
+  "checkbox.color.border.hover": {
+    "resolvesTo": "semantic.color.border.hover",
+    "fallback": "#f29495",
+    "layer": "semantic"
+  },
+  "checkbox.color.background.checked": {
+    "resolvesTo": "semantic.color.action.background.primary.default",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "checkbox.color.background.disabled": {
+    "resolvesTo": "semantic.color.background.disabled",
+    "fallback": "#cecece",
+    "layer": "semantic"
   }
 }

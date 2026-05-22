@@ -1,0 +1,18 @@
+{
+  "root": {
+    "padding": { "resolvesTo": "popover.size.padding.default" },
+    "border-radius": { "resolvesTo": "popover.size.radius.default" },
+    "gap": { "resolvesTo": "popover.size.gap.default" },
+    "background-color": { "resolvesTo": "popover.color.background.content" },
+    "border-color": { "resolvesTo": "popover.color.border.accent" },
+    "box-shadow": { "resolvesTo": "popover.elevation.default" },
+    "position": {
+      "literal": "relative",
+      "platforms": ["web", "ios", "android"]
+    },
+    "display": {
+      "literal": "inline-block",
+      "platforms": ["web"]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "command.color.background"
+    },
+    "border-color": {
+      "resolvesTo": "command.color.borderLight"
+    },
+    "color": {
+      "resolvesTo": "command.color.textMuted"
+    },
+    "border-width": {
+      "resolvesTo": "command.border.width"
+    },
+    "border-radius": {
+      "resolvesTo": "command.border.radius"
+    },
+    "padding": {
+      "resolvesTo": "command.spacing.dialogPadding"
+    },
+    "font-size": {
+      "resolvesTo": "command.text.sizeSmall"
+    },
+    "box-shadow": {
+      "resolvesTo": "command.shadow"
+    },
+    "opacity": {
+      "resolvesTo": "command.opacity.disabled"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "command.color.backgroundHover"
+    }
+  }
+}

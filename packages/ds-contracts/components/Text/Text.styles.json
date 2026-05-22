@@ -1,0 +1,20 @@
+{
+  "root": {
+    "color": {
+      "resolvesTo": "text.color.foreground.secondary"
+    },
+    "line-height": {
+      "resolvesTo": "text.typography.lineHeight.body"
+    }
+  },
+  "error": {
+    "color": {
+      "resolvesTo": "text.color.foreground.danger"
+    }
+  },
+  "success": {
+    "color": {
+      "resolvesTo": "text.color.foreground.success"
+    }
+  }
+}

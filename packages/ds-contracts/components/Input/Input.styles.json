@@ -1,0 +1,32 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "input.color.bg.default"
+    },
+    "color": {
+      "resolvesTo": "input.color.text.default"
+    },
+    "border-color": {
+      "resolvesTo": "input.color.border.default"
+    },
+    "min-height": {
+      "resolvesTo": "input.size.height.default"
+    },
+    "border-radius": {
+      "resolvesTo": "input.size.radius.default"
+    },
+    "padding": {
+      "resolvesTo": "input.space.inline.default"
+    }
+  },
+  "focus": {
+    "border-color": {
+      "resolvesTo": "input.color.focus.default"
+    }
+  },
+  "invalid": {
+    "border-color": {
+      "resolvesTo": "input.color.invalid.default"
+    }
+  }
+}

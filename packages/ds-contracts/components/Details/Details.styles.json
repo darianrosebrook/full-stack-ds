@@ -1,0 +1,33 @@
+{
+  "root": {
+    "padding": {
+      "resolvesTo": "details.size.padding.default"
+    },
+    "border-radius": {
+      "resolvesTo": "details.size.radius.default"
+    },
+    "background-color": {
+      "resolvesTo": "details.color.background.default"
+    },
+    "color": {
+      "resolvesTo": "details.color.foreground.secondary"
+    },
+    "border-color": {
+      "resolvesTo": "details.color.border.accent"
+    },
+    "gap": {
+      "resolvesTo": "details.spacing.gap.default"
+    },
+    "line-height": {
+      "resolvesTo": "details.typography.lineHeight.body"
+    }
+  },
+  "hover": {
+    "background-color": {
+      "resolvesTo": "details.color.background.hover"
+    },
+    "border-color": {
+      "resolvesTo": "details.color.border.hover"
+    }
+  }
+}
