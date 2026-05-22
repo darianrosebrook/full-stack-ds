@@ -389,6 +389,30 @@ function writeHumanSummary(report: RailReport): void {
       `${fw.padEnd(9)}  ${r.status.padEnd(6)}  ${durationStr}  ${checks}  ${artifactStr}\n`,
     );
   }
+  // Surface per-framework diagnostic lines (truncated captures of the
+  // underlying tsc / ngc / svelte-check / vue-tsc stderr) right after
+  // the summary table. Without this, CI logs only show "<fw>: fail
+  // (N ms)" with the JSON dump below — and the JSON often gets visually
+  // truncated by GitHub's log viewer, hiding the actual TS error. Adding
+  // the diagnostics here means the operator sees the error in the same
+  // place they see the status.
+  const failingFrameworks = (
+    Object.keys(report.frameworks) as FrameworkId[]
+  ).filter((fw) => report.frameworks[fw].status === "fail");
+  if (failingFrameworks.length > 0) {
+    w("\nPer-framework diagnostics (failing frameworks only):\n");
+    for (const fw of failingFrameworks) {
+      const r = report.frameworks[fw];
+      if (r.diagnostics.length === 0) {
+        w(`  ${fw}: (no diagnostics captured)\n`);
+        continue;
+      }
+      w(`  ${fw}:\n`);
+      for (const line of r.diagnostics) {
+        w(`    ${line}\n`);
+      }
+    }
+  }
   if (report.scopedProjection) {
     const sp = report.scopedProjection;
     w("\nChanged artifact scope (reviewer projection; rail still admitted full workspace):\n");
