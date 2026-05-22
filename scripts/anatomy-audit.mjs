@@ -244,11 +244,12 @@ for (const r of rows) {
 
 const contractFull = rows.filter((r) => r.contractCoverage === 100).length;
 const renderedFull = rows.filter((r) => r.renderedCoverage === 100).length;
+const total = rows.length;
 console.log(
-  `\nContract-anatomy coverage: ${contractFull}/45 fully styled.`,
+  `\nContract-anatomy coverage: ${contractFull}/${total} fully styled.`,
 );
 console.log(
-  `Rendered-DOM coverage:     ${renderedFull}/45 fully styled.`,
+  `Rendered-DOM coverage:     ${renderedFull}/${total} fully styled.`,
 );
 console.log(
   `\nRealization mismatches: ${rows.filter((r) => r.declaredNotRendered.length > 0).length}` +

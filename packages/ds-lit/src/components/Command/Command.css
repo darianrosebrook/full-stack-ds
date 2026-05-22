@@ -2,19 +2,167 @@
 
 /* @generated:start styles */
 .command {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+  pointer-events: none;
+}
+
+.command__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--fsds-command-color-overlay);
+  pointer-events: auto;
+}
+
+.command__dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--fsds-command-size-maxWidth);
+  max-height: var(--fsds-command-size-maxHeight);
   background-color: var(--fsds-command-color-background);
-  border-color: var(--fsds-command-color-borderLight);
-  color: var(--fsds-command-color-textMuted);
+  color: var(--fsds-command-color-text);
+  border-color: var(--fsds-command-color-border);
+  border-style: solid;
   border-width: var(--fsds-command-border-width);
   border-radius: var(--fsds-command-border-radius);
-  padding: var(--fsds-command-spacing-dialogPadding);
-  font-size: var(--fsds-command-text-sizeSmall);
   box-shadow: var(--fsds-command-shadow);
-  opacity: var(--fsds-command-opacity-disabled);
+  overflow: hidden;
+  pointer-events: auto;
+  box-sizing: border-box;
+}
 
-  &:hover {
-    background-color: var(--fsds-command-color-backgroundHover);
-  }
+.command__inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--fsds-command-spacing-dialogPadding);
+  border-bottom-color: var(--fsds-command-color-borderLight);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+.command__searchIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--fsds-command-size-icon);
+  height: var(--fsds-command-size-icon);
+  color: var(--fsds-command-color-textMuted);
+}
+
+.command__input {
+  flex: 1 1 auto;
+  background: transparent;
+  border: 0;
+  outline: none;
+  padding: 0;
+  color: var(--fsds-command-color-text);
+  font-size: var(--fsds-command-text-size);
+  font-family: inherit;
+}
+
+.command__list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 4px 0;
+  margin: 0;
+  list-style: none;
+}
+
+.command__empty {
+  display: block;
+  padding: var(--fsds-command-spacing-dialogPadding);
+  text-align: center;
+  color: var(--fsds-command-color-textMuted);
+  font-size: var(--fsds-command-text-sizeSmall);
+}
+
+.command__group {
+  display: block;
+}
+
+.command__groupHeading {
+  display: block;
+  padding: 8px 12px 4px;
+  color: var(--fsds-command-color-textMuted);
+  font-size: var(--fsds-command-text-sizeSmall);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.command__groupItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.command__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: var(--fsds-command-color-text);
+  cursor: pointer;
+  border-radius: var(--fsds-command-border-radius);
+}
+
+.command__item:hover {
+  background-color: var(--fsds-command-color-backgroundHover);
+}
+
+.command__item[aria-selected="true"] {
+  background-color: var(--fsds-command-color-backgroundHover);
+  color: var(--fsds-command-color-text);
+}
+
+.command__itemIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--fsds-command-size-icon);
+  height: var(--fsds-command-size-icon);
+  color: var(--fsds-command-color-textMuted);
+}
+
+.command__itemContent {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.command__itemLabel {
+  display: block;
+  color: var(--fsds-command-color-text);
+  font-size: var(--fsds-command-text-size);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command__itemDescription {
+  display: block;
+  color: var(--fsds-command-color-textMuted);
+  font-size: var(--fsds-command-text-sizeSmall);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.command__separator {
+  display: block;
+  height: 1px;
+  margin: 4px 8px;
+  background-color: var(--fsds-command-color-borderLight);
 }
 /* @generated:end */
 
