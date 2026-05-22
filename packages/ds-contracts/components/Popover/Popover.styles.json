@@ -15,12 +15,12 @@
       "platforms": ["web"]
     }
   },
-  "trigger": {
+  ".popover [data-popover-trigger]": {
     "display": { "literal": "inline-flex", "platforms": ["web"] },
     "align-items": { "literal": "center", "platforms": ["web"] },
     "cursor": { "literal": "pointer", "platforms": ["web"] }
   },
-  "content": {
+  ".popover [data-popover-content]": {
     "background-color": { "resolvesTo": "popover.color.background.content" },
     "border-color": { "resolvesTo": "popover.color.border.accent" },
     "border-radius": { "resolvesTo": "popover.size.radius.default" },

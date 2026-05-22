@@ -55,13 +55,13 @@ export class PopoverElement extends LitElement {
       display: inline-block;
     }
     
-    .popover__trigger {
+    .popover [data-popover-trigger] {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
     }
     
-    .popover__content {
+    .popover [data-popover-content] {
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
       border-radius: var(--fsds-popover-size-radius-default);
@@ -196,13 +196,13 @@ export class PopoverTriggerElement extends LitElement {
       display: inline-block;
     }
     
-    .popover__trigger {
+    .popover [data-popover-trigger] {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
     }
     
-    .popover__content {
+    .popover [data-popover-content] {
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
       border-radius: var(--fsds-popover-size-radius-default);
@@ -318,13 +318,13 @@ export class PopoverContentElement extends LitElement {
       display: inline-block;
     }
     
-    .popover__trigger {
+    .popover [data-popover-trigger] {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
     }
     
-    .popover__content {
+    .popover [data-popover-content] {
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
       border-radius: var(--fsds-popover-size-radius-default);
