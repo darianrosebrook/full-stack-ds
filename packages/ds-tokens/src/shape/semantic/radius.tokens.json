@@ -1,0 +1,45 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "shape": {
+    "radius": {
+      "full": {
+        "$type": "dimension",
+        "$value": {
+          "value": 9999,
+          "unit": "px"
+        }
+      },
+      "extraLarge": {
+        "$type": "dimension",
+        "$value": "{shape.radius.05}"
+      },
+      "large": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}"
+      },
+      "medium": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}"
+      },
+      "small": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}"
+      },
+      "extraSmall": {
+        "$type": "dimension",
+        "$value": "{shape.radius.01}"
+      },
+      "none": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        }
+      },
+      "default": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}"
+      }
+    }
+  }
+}

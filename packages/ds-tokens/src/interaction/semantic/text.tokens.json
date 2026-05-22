@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "text": {
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.600}"
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{color.mode.dark}"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}"
+      }
+    }
+  }
+}

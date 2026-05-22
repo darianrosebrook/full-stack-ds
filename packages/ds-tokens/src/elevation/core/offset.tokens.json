@@ -1,0 +1,21 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "offset": {
+      "y1": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        }
+      },
+      "y2": {
+        "$type": "dimension",
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

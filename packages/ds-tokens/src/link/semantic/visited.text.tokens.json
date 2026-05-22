@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "link": {
+    "visited.text": {
+      "$type": "color",
+      "$value": "{color.palette.blue.700}"
+    }
+  }
+}

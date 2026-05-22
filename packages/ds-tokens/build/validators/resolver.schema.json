@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://darianrosebrook.com/ui/designTokens/resolver.schema.json",
+  "title": "Design Tokens Resolver Module Schema",
+  "description": "JSON schema for validating resolver documents according to the W3C Design Tokens Community Group Resolver Module 2025.10 specification",
+  "type": "object",
+  "required": ["version", "resolutionOrder"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "A short, human-readable name for the document"
+    },
+    "version": {
+      "type": "string",
+      "const": "2025-10-01",
+      "description": "Version of the resolver specification. Must be '2025-10-01'"
+    },
+    "description": {
+      "type": "string",
+      "description": "A human-readable description for this document"
+    },
+    "sets": {
+      "type": "object",
+      "description": "Definition of sets (collections of design tokens)",
+      "additionalProperties": {
+        "$ref": "#/$defs/set"
+      }
+    },
+    "modifiers": {
+      "type": "object",
+      "description": "Definition of modifiers (contexts for different values)",
+      "additionalProperties": {
+        "$ref": "#/$defs/modifier"
+      }
+    },
+    "resolutionOrder": {
+      "type": "array",
+      "description": "Order of sets and modifiers to apply during resolution",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/referenceObject"
+          },
+          {
+            "$ref": "#/$defs/set"
+          },
+          {
+            "$ref": "#/$defs/modifier"
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "$defs": {
+      "type": "object",
+      "description": "Optional definitions for bundling (JSON Schema $defs)",
+      "additionalProperties": true
+    },
+    "$extensions": {
+      "type": "object",
+      "description": "Custom extensions",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "referenceObject": {
+      "type": "object",
+      "required": ["$ref"],
+      "properties": {
+        "$ref": {
+          "type": "string",
+          "description": "JSON Pointer reference (e.g., '#/sets/foundation' or 'foundation/colors.json')"
+        }
+      },
+      "additionalProperties": false
+    },
+    "set": {
+      "type": "object",
+      "required": ["sources"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "description": "Array of reference objects or inline token objects",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/referenceObject"
+              },
+              {
+                "type": "object",
+                "description": "Inline token object"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the set"
+        }
+      },
+      "additionalProperties": false
+    },
+    "modifier": {
+      "type": "object",
+      "required": ["contexts"],
+      "properties": {
+        "contexts": {
+          "type": "object",
+          "description": "Map of context names to context definitions",
+          "additionalProperties": {
+            "$ref": "#/$defs/modifierContext"
+          },
+          "minProperties": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the modifier"
+        },
+        "default": {
+          "type": "string",
+          "description": "Default context value"
+        },
+        "resolutionCount": {
+          "type": "number",
+          "description": "Number of contexts to resolve",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "modifierContext": {
+      "type": "object",
+      "required": ["sources"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "description": "Array of reference objects or inline token objects for this context",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/referenceObject"
+              },
+              {
+                "type": "object",
+                "description": "Inline token object"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the context"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "stagger": {
+      "xs": {
+        "$type": "duration",
+        "$value": "17ms",
+        "$description": "1 frame stagger"
+      },
+      "sm": {
+        "$type": "duration",
+        "$value": "30ms",
+        "$description": "Small stagger for list items"
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": "40ms",
+        "$description": "Slow stagger — between sm and md, for deliberate sequencing"
+      },
+      "md": {
+        "$type": "duration",
+        "$value": "60ms",
+        "$description": "Medium stagger for cards"
+      },
+      "lg": {
+        "$type": "duration",
+        "$value": "100ms",
+        "$description": "Large stagger for sections"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "keyframes": {
+      "fadeIn": {
+        "$type": "string",
+        "$value": "fadeIn",
+        "$description": "Standard fade in animation"
+      },
+      "slideUp": {
+        "$type": "string",
+        "$value": "slideUp",
+        "$description": "Slide up from bottom"
+      },
+      "scaleIn": {
+        "$type": "string",
+        "$value": "scaleIn",
+        "$description": "Scale in from center"
+      },
+      "pulse": {
+        "$type": "string",
+        "$value": "pulse",
+        "$description": "Subtle pulse for loading states"
+      }
+    }
+  }
+}

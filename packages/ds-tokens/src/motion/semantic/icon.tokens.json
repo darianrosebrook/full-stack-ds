@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "icon": {
+      "scale": {
+        "enter": {
+          "$type": "number",
+          "$value": "{scale.080}",
+          "$description": "Icon initial scale when entering (grows to full size)"
+        },
+        "exit": {
+          "$type": "number",
+          "$value": "{scale.080}",
+          "$description": "Icon final scale when exiting (shrinks from full size)"
+        }
+      }
+    }
+  }
+}

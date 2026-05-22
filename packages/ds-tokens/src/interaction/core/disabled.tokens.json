@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "disabled": {
+      "opacity": {
+        "$type": "number",
+        "$value": 0.5,
+        "$description": "Opacity for disabled interactive elements"
+      }
+    }
+  }
+}

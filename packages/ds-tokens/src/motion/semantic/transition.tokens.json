@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "transition": {
+      "scale": {
+        "identity": {
+          "$type": "number",
+          "$value": "{scale.100}",
+          "$description": "No-op scale — base / resting state"
+        },
+        "zoom": {
+          "$type": "number",
+          "$value": "{scale.105}",
+          "$description": "Zoom-in entrance scale"
+        },
+        "shrink": {
+          "$type": "number",
+          "$value": "{scale.095}",
+          "$description": "Shrink-out exit scale"
+        }
+      }
+    }
+  }
+}

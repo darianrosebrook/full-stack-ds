@@ -1,0 +1,21 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "blur": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 3,
+          "unit": "px"
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "background": {
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        },
+        "$description": "Secondary action hover state"
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Secondary action active state"
+      },
+      "selected": {
+        "$type": "color",
+        "$value": "{color.palette.blue.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.200}",
+          "fsds.dark": "{color.palette.blue.800}"
+        },
+        "$description": "Highlight background for selections"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Primary action disabled state"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "skeleton": {
+    "foreground": {
+      "$type": "color",
+      "$value": "{color.palette.neutral.200}",
+      "$description": "Skeleton loading shimmer"
+    }
+  }
+}

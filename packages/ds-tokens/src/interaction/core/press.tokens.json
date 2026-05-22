@@ -1,0 +1,16 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "press": {
+      "scale": {
+        "$type": "number",
+        "$value": 0.98,
+        "$description": "Scale factor for pressed elements"
+      },
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.instant}"
+      }
+    }
+  }
+}

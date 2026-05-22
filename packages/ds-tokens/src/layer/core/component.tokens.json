@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "layer": {
+    "component": {
+      "$type": "number",
+      "$value": 50,
+      "$description": "Component-level z-index for overlays within a layout"
+    }
+  }
+}

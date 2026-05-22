@@ -1,0 +1,85 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "spacing": {
+    "size": {
+      "10": {
+        "$value": {
+          "value": 64,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "$type": "dimension",
+      "00": {
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "01": {
+        "$value": {
+          "value": 1,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "02": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "03": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "04": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "05": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "06": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "07": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "08": {
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      },
+      "09": {
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$type": "dimension"
+      }
+    }
+  }
+}

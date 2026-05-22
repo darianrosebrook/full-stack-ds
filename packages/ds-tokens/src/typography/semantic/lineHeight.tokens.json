@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "lineHeight": {
+      "body": {
+        "$type": "number",
+        "$value": 1.5
+      },
+      "collapse": {
+        "$type": "number",
+        "$value": 1
+      },
+      "heading": {
+        "$type": "number",
+        "$value": 1
+      },
+      "loose": {
+        "$type": "number",
+        "$value": 1.8
+      },
+      "normal": {
+        "$type": "number",
+        "$value": 1.5
+      },
+      "tight": {
+        "$type": "number",
+        "$value": 1.2
+      }
+    }
+  }
+}

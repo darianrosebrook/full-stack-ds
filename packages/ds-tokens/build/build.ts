@@ -1,15 +1,21 @@
+#!/usr/bin/env node
 /**
- * @full-stack-ds/tokens — build pipeline (stub, step 1)
+ * @full-stack-ds/tokens — top-level build entry.
  *
- * This stub validates whatever DTCG-format token files live under `core/`.
- * Subsequent steps add: compose → deprecation-check → brand emit → global CSS
- * emit → bridge artifacts → types → CDN artifacts.
+ * Two modes:
+ *   --validate-only  Walks `src/**\/*.tokens.json`, validates each against the
+ *                    strict W3C DTCG schema, exits 1 on any failure.
+ *   (default)        Delegates to `runners/build.ts` which runs compose →
+ *                    global CSS → TypeScript types.
+ *
+ * The `--prefix` flag is accepted for invocation parity but the CSS-var
+ * prefix is settled at `tokenPathToCSSVar` in core/index.ts (currently `--fsds-`).
+ * To change it system-wide, edit that default — flag-injection at build time
+ * would have to thread through every emitter and isn't worth the surface area.
  *
  * Invocation:
  *   pnpm -F @full-stack-ds/tokens build
- *   tsx build/build.ts --prefix=fsds [--validate-only]
- *
- * Exit code 1 on any validation failure.
+ *   pnpm -F @full-stack-ds/tokens validate
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -21,21 +27,19 @@ import {
   type ValidationResult,
 } from "./w3c/w3c-index.js";
 
-// Load schemas via fs (resolveJsonModule won't reach .json next to .ts cleanly across runners)
 const HERE = fileURLToPath(new URL(".", import.meta.url));
 const PACKAGE_ROOT = join(HERE, "..");
-const CORE_DIR = join(PACKAGE_ROOT, "core");
+const SRC_DIR = join(PACKAGE_ROOT, "src");
 
-interface BuildOptions {
-  prefix: string;
+interface CliOptions {
   validateOnly: boolean;
 }
 
-function parseArgs(argv: string[]): BuildOptions {
-  const opts: BuildOptions = { prefix: "fsds", validateOnly: false };
+function parseArgs(argv: string[]): CliOptions {
+  const opts: CliOptions = { validateOnly: false };
   for (const arg of argv) {
-    if (arg.startsWith("--prefix=")) opts.prefix = arg.slice("--prefix=".length);
-    else if (arg === "--validate-only") opts.validateOnly = true;
+    if (arg === "--validate-only") opts.validateOnly = true;
+    // --prefix=… is accepted (and ignored) for backward-compat with prior scripts
   }
   return opts;
 }
@@ -78,34 +82,46 @@ function reportResult(file: string, result: ValidationResult): void {
   }
 }
 
-function main(): void {
-  const opts = parseArgs(process.argv.slice(2));
-  console.log(`@full-stack-ds/tokens — build (prefix=${opts.prefix})`);
-
+async function runValidate(): Promise<void> {
+  console.log(`@full-stack-ds/tokens — validate`);
   setDefaultSchema(loadStrictSchema());
 
-  const files = findTokenFiles(CORE_DIR);
+  const files = findTokenFiles(SRC_DIR);
   if (files.length === 0) {
-    console.log("  (no DTCG token files found under core/; validator pass is a no-op)");
+    console.log(
+      "  (no DTCG token files found under src/; validator pass is a no-op)",
+    );
     console.log("Done. 0 file(s) validated.");
     return;
   }
 
   let failed = 0;
   for (const file of files) {
-    const result = validateDesignTokensFromFile(file);
+    const result = await validateDesignTokensFromFile(file);
     reportResult(file, result);
     if (!result.isValid) failed += 1;
   }
   console.log(
-    `\nDone. ${files.length - failed}/${files.length} file(s) passed validation.`
+    `\nDone. ${files.length - failed}/${files.length} file(s) passed validation.`,
   );
-
   if (failed > 0) process.exit(1);
-
-  if (opts.validateOnly) return;
-
-  // Future steps land here: compose, brand emit, global CSS, types.
 }
 
-main();
+async function runBuild(): Promise<void> {
+  // Lazy import keeps validate-only fast and avoids loading the generator chain
+  // for a path that only touches the W3C validator.
+  const { buildTokens } = await import("./runners/build.js");
+  const success = await buildTokens(false); // non-incremental for now; incremental cache lives under .cache/
+  if (!success) process.exit(1);
+}
+
+async function main(): Promise<void> {
+  const opts = parseArgs(process.argv.slice(2));
+  if (opts.validateOnly) {
+    await runValidate();
+    return;
+  }
+  await runBuild();
+}
+
+void main();

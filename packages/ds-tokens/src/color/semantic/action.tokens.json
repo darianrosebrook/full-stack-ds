@@ -1,0 +1,154 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.brand.primary.500}",
+            "$description": "Primary action background"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.brand.primary.600}",
+            "$description": "Primary action hover state"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.brand.primary.700}",
+            "$description": "Primary action active state"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.200}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.200}",
+              "fsds.dark": "{color.palette.neutral.700}"
+            },
+            "$description": "Primary action disabled state"
+          }
+        },
+        "secondary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.mode.light}",
+            "$extensions": {
+              "fsds.light": "{color.mode.light}",
+              "fsds.dark": "{color.mode.dark}"
+            },
+            "$description": "Secondary action background"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.100}",
+              "fsds.dark": "{color.palette.neutral.800}"
+            },
+            "$description": "Secondary action hover state"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.200}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.200}",
+              "fsds.dark": "{color.palette.neutral.700}"
+            },
+            "$description": "Secondary action active state"
+          }
+        },
+        "danger": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.500}",
+            "$description": "Destructive action background"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.red.600}",
+            "$description": "Destructive action hover state"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.red.700}",
+            "$description": "Destructive action active state"
+          }
+        }
+      },
+      "foreground": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.mode.white}",
+            "$description": "Primary action text"
+          },
+          "disabled": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.400}",
+            "$description": "Primary action disabled text"
+          }
+        },
+        "secondary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.mode.dark}",
+            "$extensions": {
+              "fsds.light": "{color.mode.dark}",
+              "fsds.dark": "{color.mode.light}"
+            },
+            "$description": "Secondary action text"
+          }
+        },
+        "danger": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.mode.white}",
+            "$description": "Destructive action text"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.brand.primary.500}",
+            "$description": "Primary action border"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.brand.primary.400}",
+            "$description": "Primary action focus ring"
+          }
+        },
+        "secondary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.300}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.300}",
+              "fsds.dark": "{color.palette.neutral.600}"
+            },
+            "$description": "Secondary action border"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.400}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.400}",
+              "fsds.dark": "{color.palette.neutral.500}"
+            },
+            "$description": "Secondary action border hover"
+          }
+        },
+        "danger": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.500}",
+            "$description": "Destructive action border"
+          }
+        }
+      }
+    }
+  }
+}

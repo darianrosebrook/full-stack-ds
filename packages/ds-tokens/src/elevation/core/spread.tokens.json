@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "spread": {
+      "none": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

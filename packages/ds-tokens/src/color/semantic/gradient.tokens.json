@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "gradient": {
+      "brand": {
+        "primary": {
+          "$type": "gradient",
+          "$value": "{color.palette.brand.primary.400}",
+          "$description": "Primary brand gradient"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default border color"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Subtle border color"
+      },
+      "bold": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Bold border color"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Disabled border color"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Light border color"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Primary border color"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Hover border color"
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Accent border color"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.brand.primary.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.brand.primary.500}",
+          "fsds.dark": "{color.palette.brand.primary.400}"
+        },
+        "$description": "Focus border color"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{color.palette.red.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.600}",
+          "fsds.dark": "{color.palette.red.500}"
+        },
+        "$description": "Danger border color"
+      },
+      "info": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.600}",
+          "fsds.dark": "{color.palette.blue.500}"
+        },
+        "$description": "Info border color"
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.mode.white}",
+        "$extensions": {
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.white}"
+        },
+        "$description": "Border color for elements on colored backgrounds"
+      },
+      "success": {
+        "$type": "color",
+        "$value": "{color.palette.green.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.600}",
+          "fsds.dark": "{color.palette.green.500}"
+        },
+        "$description": "Success border color"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.500}"
+        },
+        "$description": "Warning border color"
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Strong border color for emphasis"
+      }
+    }
+  }
+}

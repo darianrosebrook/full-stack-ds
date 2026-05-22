@@ -1,0 +1,76 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "navigation": {
+      "background": {
+        "primary": {
+          "$type": "color",
+          "$value": "{color.mode.light}",
+          "$extensions": {
+            "fsds.light": "{color.mode.light}",
+            "fsds.dark": "{color.mode.dark}"
+          },
+          "$description": "Primary navigation background"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.100}",
+            "fsds.dark": "{color.palette.neutral.800}"
+          },
+          "$description": "Secondary navigation background"
+        }
+      },
+      "foreground": {
+        "primary": {
+          "$type": "color",
+          "$value": "{color.mode.dark}",
+          "$extensions": {
+            "fsds.light": "{color.mode.dark}",
+            "fsds.dark": "{color.mode.light}"
+          },
+          "$description": "Primary navigation text"
+        },
+        "secondary": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.600}",
+            "fsds.dark": "{color.palette.neutral.300}"
+          },
+          "$description": "Secondary navigation text"
+        },
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.red.500}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.500}",
+            "fsds.dark": "{color.palette.red.400}"
+          },
+          "$description": "Active navigation item"
+        },
+        "hover": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.700}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.700}",
+            "fsds.dark": "{color.palette.neutral.300}"
+          },
+          "$description": "Navigation item hover state"
+        }
+      },
+      "border": {
+        "primary": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.300}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.300}",
+            "fsds.dark": "{color.palette.neutral.600}"
+          },
+          "$description": "Navigation border"
+        }
+      }
+    }
+  }
+}

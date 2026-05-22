@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "semanticFamily": {
+      "heading": {
+        "$type": "fontFamily",
+        "$value": "{typography.fontFamily.inter}"
+      },
+      "body": {
+        "$type": "fontFamily",
+        "$value": "{typography.fontFamily.inter}"
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": "{typography.fontFamily.monaspace}"
+      },
+      "serif": {
+        "$type": "fontFamily",
+        "$value": "{typography.fontFamily.newsreader}"
+      }
+    }
+  }
+}

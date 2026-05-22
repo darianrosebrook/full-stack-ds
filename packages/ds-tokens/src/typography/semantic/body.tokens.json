@@ -1,0 +1,66 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "body": {
+      "01": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.5}"
+      },
+      "02": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.4}"
+      },
+      "03": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.3}"
+      },
+      "04": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.2}"
+      },
+      "default": {
+        "fontFamily": {
+          "$type": "fontFamily",
+          "$value": "{typography.fontFamily.inter}"
+        },
+        "fontWeight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}"
+        },
+        "fontSize": {
+          "$type": "dimension",
+          "$value": "{typography.ramp.4}"
+        },
+        "lineHeight": {
+          "$type": "number",
+          "$value": 1.5
+        },
+        "letterSpacing": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "rem"
+          }
+        }
+      },
+      "small": {
+        "fontFamily": {
+          "$type": "fontFamily",
+          "$value": "{typography.fontFamily.inter}"
+        },
+        "fontWeight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}"
+        },
+        "fontSize": {
+          "$type": "dimension",
+          "$value": "{typography.ramp.3}"
+        },
+        "lineHeight": {
+          "$type": "number",
+          "$value": 1.5
+        }
+      }
+    }
+  }
+}

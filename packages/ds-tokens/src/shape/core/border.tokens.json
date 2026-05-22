@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "shape": {
+    "border": {
+      "width": {
+        "hairline": {
+          "$type": "borderWidth",
+          "$value": "1px"
+        },
+        "thick": {
+          "$type": "borderWidth",
+          "$value": "2px"
+        }
+      },
+      "style": {
+        "solid": {
+          "$type": "borderStyle",
+          "$value": "solid"
+        },
+        "dashed": {
+          "$type": "borderStyle",
+          "$value": "dashed"
+        },
+        "dotted": {
+          "$type": "borderStyle",
+          "$value": "dotted"
+        }
+      }
+    }
+  }
+}

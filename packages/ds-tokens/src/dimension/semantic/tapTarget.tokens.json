@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "dimension": {
+    "tapTarget": {
+      "min": {
+        "$type": "dimension",
+        "$value": "{dimension.tapTargetMin}"
+      },
+      "large": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "Large tap target size for better accessibility"
+      }
+    }
+  }
+}

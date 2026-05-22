@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "layer": {
+    "max": {
+      "$type": "number",
+      "$value": 9999,
+      "$description": "Maximum z-index for top-of-stack elements"
+    }
+  }
+}

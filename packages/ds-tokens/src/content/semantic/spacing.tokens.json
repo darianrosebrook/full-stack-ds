@@ -1,0 +1,17 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "content": {
+    "spacing": {
+      "paragraph": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Space between paragraphs"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.size.08}",
+        "$description": "Space between content sections"
+      }
+    }
+  }
+}

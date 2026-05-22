@@ -5,4 +5,10 @@
 # regenerable scratch.
 dist/
 generated/.cache/
+# Incremental-build hash cache written by build/core/cache.ts (file-hashes.json).
+# Per-clone state, not part of the source-of-truth.
+.cache/
+# Composed-tree intermediate (compose.ts → global.ts handoff). Regenerable; not
+# tracked, since it'd churn on every build.
+generated/composed.tokens.json
 *.tsbuildinfo

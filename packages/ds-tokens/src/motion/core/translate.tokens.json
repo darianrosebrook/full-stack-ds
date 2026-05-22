@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "translate": {
+      "$type": "string",
+      "none": {
+        "$type": "string",
+        "$value": "0px",
+        "$description": "No translation"
+      },
+      "sm": {
+        "$type": "string",
+        "$value": "10px",
+        "$description": "Small translate offset"
+      },
+      "md": {
+        "$type": "string",
+        "$value": "20px",
+        "$description": "Medium translate offset"
+      }
+    }
+  }
+}

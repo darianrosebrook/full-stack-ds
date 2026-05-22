@@ -1,0 +1,52 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "status": {
+      "info": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.500}",
+          "fsds.dark": "{color.palette.blue.400}"
+        },
+        "$description": "Info status color"
+      },
+      "success": {
+        "$type": "color",
+        "$value": "{color.palette.green.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.500}",
+          "fsds.dark": "{color.palette.green.400}"
+        },
+        "$description": "Success status color"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{color.palette.orange.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.500}",
+          "fsds.dark": "{color.palette.orange.400}"
+        },
+        "$description": "Warning status color"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Danger status color"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.brand.primary.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.brand.primary.400}",
+          "fsds.dark": "{color.palette.brand.primary.500}"
+        },
+        "$description": "Highlight status color"
+      }
+    }
+  }
+}

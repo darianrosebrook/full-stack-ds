@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "content": {
+    "maxWidth": {
+      "prose": {
+        "$type": "dimension",
+        "$value": {
+          "value": 520,
+          "unit": "px"
+        },
+        "$description": "Optimal reading width for body text"
+      },
+      "narrow": {
+        "$type": "dimension",
+        "$value": {
+          "value": 360,
+          "unit": "px"
+        },
+        "$description": "Narrow content for captions and asides"
+      },
+      "wide": {
+        "$type": "dimension",
+        "$value": {
+          "value": 600,
+          "unit": "px"
+        },
+        "$description": "Wide content for technical documentation"
+      }
+    }
+  }
+}

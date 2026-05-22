@@ -1,0 +1,207 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "spacing": {
+    "density": {
+      "tight": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 2,
+            "unit": "px"
+          },
+          "$description": "Tight density - extra small (2px)"
+        },
+        "sm": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          },
+          "$description": "Tight density - small (4px)"
+        },
+        "md": {
+          "$type": "dimension",
+          "$value": {
+            "value": 6,
+            "unit": "px"
+          },
+          "$description": "Tight density - medium (6px)"
+        },
+        "lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          },
+          "$description": "Tight density - large (8px)"
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$description": "Tight density - extra large (12px)"
+        },
+        "2xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "Tight density - 2x large (16px)"
+        }
+      },
+      "compact": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          },
+          "$description": "Compact density - extra small (4px)"
+        },
+        "sm": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          },
+          "$description": "Compact density - small (8px)"
+        },
+        "md": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$description": "Compact density - medium (12px)"
+        },
+        "lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "Compact density - large (16px)"
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Compact density - extra large (20px)"
+        },
+        "2xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$description": "Compact density - 2x large (24px)"
+        }
+      },
+      "default": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          },
+          "$description": "Default density - extra small (8px)"
+        },
+        "sm": {
+          "$type": "dimension",
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "Default density - small (16px)"
+        },
+        "md": {
+          "$type": "dimension",
+          "$value": {
+            "value": 24,
+            "unit": "px"
+          },
+          "$description": "Default density - medium (24px)"
+        },
+        "lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$description": "Default density - large (32px)"
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 40,
+            "unit": "px"
+          },
+          "$description": "Default density - extra large (40px)"
+        },
+        "2xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 48,
+            "unit": "px"
+          },
+          "$description": "Default density - 2x large (48px)"
+        }
+      },
+      "spacious": {
+        "xs": {
+          "$type": "dimension",
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$description": "Spacious density - extra small (12px)"
+        },
+        "sm": {
+          "$type": "dimension",
+          "$value": {
+            "value": 20,
+            "unit": "px"
+          },
+          "$description": "Spacious density - small (20px)"
+        },
+        "md": {
+          "$type": "dimension",
+          "$value": {
+            "value": 32,
+            "unit": "px"
+          },
+          "$description": "Spacious density - medium (32px)"
+        },
+        "lg": {
+          "$type": "dimension",
+          "$value": {
+            "value": 40,
+            "unit": "px"
+          },
+          "$description": "Spacious density - large (40px)"
+        },
+        "xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 56,
+            "unit": "px"
+          },
+          "$description": "Spacious density - extra large (56px)"
+        },
+        "2xl": {
+          "$type": "dimension",
+          "$value": {
+            "value": 64,
+            "unit": "px"
+          },
+          "$description": "Spacious density - 2x large (64px)"
+        }
+      }
+    }
+  }
+}

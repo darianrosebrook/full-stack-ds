@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "dimension": {
+    "minTarget": {
+      "$type": "dimension",
+      "$value": "{dimension.tapTargetMin}"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "selection": {
+      "background": {
+        "$type": "color",
+        "$value": "{color.palette.blue.200}"
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.mode.dark}"
+      }
+    }
+  }
+}

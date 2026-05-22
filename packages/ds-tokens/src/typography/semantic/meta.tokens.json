@@ -1,0 +1,43 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "meta": {
+      "caption": {
+        "fontFamily": {
+          "$type": "fontFamily",
+          "$value": "{typography.fontFamily.inter}"
+        },
+        "fontWeight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}"
+        },
+        "fontSize": {
+          "$type": "dimension",
+          "$value": "{typography.ramp.2}"
+        },
+        "lineHeight": {
+          "$type": "number",
+          "$value": 1.5
+        }
+      },
+      "legal": {
+        "fontFamily": {
+          "$type": "fontFamily",
+          "$value": "{typography.fontFamily.inter}"
+        },
+        "fontWeight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}"
+        },
+        "fontSize": {
+          "$type": "dimension",
+          "$value": "{typography.ramp.2}"
+        },
+        "lineHeight": {
+          "$type": "number",
+          "$value": 1.8
+        }
+      }
+    }
+  }
+}

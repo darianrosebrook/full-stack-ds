@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "content": {
+    "maxWidth": {
+      "article": {
+        "$type": "dimension",
+        "$value": "{content.maxWidth.prose}",
+        "$description": "Article content width"
+      },
+      "sidebar": {
+        "$type": "dimension",
+        "$value": "{content.maxWidth.narrow}",
+        "$description": "Sidebar content width"
+      },
+      "documentation": {
+        "$type": "dimension",
+        "$value": "{content.maxWidth.wide}",
+        "$description": "Technical documentation width"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "letterSpacing": {
+      "normal": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0,
+          "unit": "rem"
+        }
+      },
+      "tight": {
+        "$type": "dimension",
+        "$value": {
+          "value": -0.018,
+          "unit": "rem"
+        }
+      },
+      "wide": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.018,
+          "unit": "rem"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "opacity": {
+      "50": {
+        "$type": "number",
+        "$value": 0.5
+      }
+    }
+  }
+}

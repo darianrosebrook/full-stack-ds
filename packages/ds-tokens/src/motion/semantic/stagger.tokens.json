@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "stagger": {
+      "list": {
+        "$type": "duration",
+        "$value": "{motion.stagger.sm}",
+        "$description": "Stagger for list item animations"
+      },
+      "card": {
+        "$type": "duration",
+        "$value": "{motion.stagger.md}",
+        "$description": "Stagger for card grid animations"
+      },
+      "section": {
+        "$type": "duration",
+        "$value": "{motion.stagger.lg}",
+        "$description": "Stagger for section reveals"
+      }
+    }
+  }
+}

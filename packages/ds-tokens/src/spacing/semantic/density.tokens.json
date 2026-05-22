@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "spacing": {
+    "density": {
+      "mode": {
+        "$type": "string",
+        "$value": "default",
+        "$description": "Active spacing density mode (tight, compact, default, spacious)"
+      }
+    }
+  }
+}

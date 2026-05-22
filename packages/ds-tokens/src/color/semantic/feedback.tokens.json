@@ -1,0 +1,181 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "feedback": {
+      "background": {
+        "success": {
+          "strong": {
+            "$type": "color",
+            "$value": "{color.palette.green.600}",
+            "$description": "Strong success background"
+          },
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.green.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.green.100}",
+              "fsds.dark": "{color.palette.green.800}"
+            },
+            "$description": "Subtle success background"
+          }
+        },
+        "warning": {
+          "strong": {
+            "$type": "color",
+            "$value": "{color.palette.orange.400}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.400}",
+              "fsds.dark": "{color.palette.orange.600}"
+            },
+            "$description": "Strong warning background"
+          },
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.orange.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.100}",
+              "fsds.dark": "{color.palette.orange.800}"
+            },
+            "$description": "Subtle warning background"
+          }
+        },
+        "danger": {
+          "strong": {
+            "$type": "color",
+            "$value": "{color.palette.red.600}",
+            "$description": "Strong danger background"
+          },
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.red.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.red.100}",
+              "fsds.dark": "{color.palette.red.800}"
+            },
+            "$description": "Subtle danger background"
+          }
+        },
+        "info": {
+          "strong": {
+            "$type": "color",
+            "$value": "{color.palette.blue.600}",
+            "$description": "Strong info background"
+          },
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.blue.100}",
+            "$extensions": {
+              "fsds.light": "{color.palette.blue.100}",
+              "fsds.dark": "{color.palette.blue.800}"
+            },
+            "$description": "Subtle info background"
+          }
+        }
+      },
+      "foreground": {
+        "success": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.green.500}",
+            "$extensions": {
+              "fsds.light": "{color.palette.green.500}",
+              "fsds.dark": "{color.palette.green.400}"
+            },
+            "$description": "Success text color"
+          },
+          "onSubtle": {
+            "$type": "color",
+            "$value": "{color.palette.green.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.green.700}",
+              "fsds.dark": "{color.palette.green.200}"
+            },
+            "$description": "Success text on subtle background"
+          }
+        },
+        "warning": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.orange.500}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.500}",
+              "fsds.dark": "{color.palette.orange.400}"
+            },
+            "$description": "Warning text color"
+          },
+          "onSubtle": {
+            "$type": "color",
+            "$value": "{color.palette.orange.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.700}",
+              "fsds.dark": "{color.palette.orange.200}"
+            },
+            "$description": "Warning text on subtle background"
+          }
+        },
+        "danger": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.500}",
+            "$extensions": {
+              "fsds.light": "{color.palette.red.500}",
+              "fsds.dark": "{color.palette.red.400}"
+            },
+            "$description": "Danger text color"
+          },
+          "onSubtle": {
+            "$type": "color",
+            "$value": "{color.palette.red.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.red.700}",
+              "fsds.dark": "{color.palette.red.200}"
+            },
+            "$description": "Danger text on subtle background"
+          }
+        },
+        "info": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.blue.500}",
+            "$extensions": {
+              "fsds.light": "{color.palette.blue.500}",
+              "fsds.dark": "{color.palette.blue.400}"
+            },
+            "$description": "Info text color"
+          },
+          "onSubtle": {
+            "$type": "color",
+            "$value": "{color.palette.blue.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.blue.700}",
+              "fsds.dark": "{color.palette.blue.200}"
+            },
+            "$description": "Info text on subtle background"
+          }
+        }
+      },
+      "border": {
+        "success": {
+          "$type": "color",
+          "$value": "{color.palette.green.600}",
+          "$description": "Success border color"
+        },
+        "warning": {
+          "$type": "color",
+          "$value": "{color.palette.orange.600}",
+          "$description": "Warning border color"
+        },
+        "danger": {
+          "$type": "color",
+          "$value": "{color.palette.red.600}",
+          "$description": "Danger border color"
+        },
+        "info": {
+          "$type": "color",
+          "$value": "{color.palette.blue.600}",
+          "$description": "Info border color"
+        }
+      }
+    }
+  }
+}

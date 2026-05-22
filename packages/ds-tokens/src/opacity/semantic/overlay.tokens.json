@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "opacity": {
+    "overlay": {
+      "$type": "number",
+      "$value": "{opacity.600}"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "layer": {
+    "aboveDropdown": {
+      "$type": "number",
+      "$value": 1001,
+      "$description": "One layer above dropdowns, below overlay"
+    }
+  }
+}

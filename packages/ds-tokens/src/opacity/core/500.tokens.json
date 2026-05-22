@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "opacity": {
+    "500": {
+      "$value": 0.32,
+      "$description": "High transparency.",
+      "$type": "number"
+    },
+    "$type": "number",
+    "$description": "Opacity values for transparency."
+  }
+}

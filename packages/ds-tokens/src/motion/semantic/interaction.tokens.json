@@ -1,0 +1,120 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "interaction": {
+      "press": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{motion.duration.instant}",
+          "$description": "Immediate feedback for button presses"
+        },
+        "easing": {
+          "$type": "cubicBezier",
+          "$value": "{motion.easing.standard}"
+        },
+        "scale": {
+          "$type": "number",
+          "$value": 0.98,
+          "$description": "Subtle scale down for press feedback"
+        }
+      },
+      "hover": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{motion.duration.short2}",
+          "$description": "Quick hover state transitions"
+        },
+        "easing": {
+          "$type": "cubicBezier",
+          "$value": "{motion.easing.quick.enter}"
+        }
+      },
+      "focus": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{motion.duration.short3}",
+          "$description": "Focus ring appearance"
+        },
+        "easing": {
+          "$type": "cubicBezier",
+          "$value": "{motion.easing.soft.enter}"
+        }
+      },
+      "enter": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{motion.duration.medium1}",
+          "$description": "Standard enter animations"
+        },
+        "easing": {
+          "$type": "cubicBezier",
+          "$value": "{motion.easing.soft.enter}"
+        }
+      },
+      "exit": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{motion.duration.short3}",
+          "$description": "Quick exit animations"
+        },
+        "easing": {
+          "$type": "cubicBezier",
+          "$value": "{motion.easing.quick.exit}"
+        }
+      },
+      "modal": {
+        "enter": {
+          "duration": {
+            "$type": "duration",
+            "$value": "{motion.duration.medium2}",
+            "$description": "Modal entrance - comfortable timing"
+          },
+          "easing": {
+            "$type": "cubicBezier",
+            "$value": "{motion.easing.soft.enter}"
+          }
+        },
+        "exit": {
+          "duration": {
+            "$type": "duration",
+            "$value": "{motion.duration.medium1}",
+            "$description": "Modal exit - slightly faster"
+          },
+          "easing": {
+            "$type": "cubicBezier",
+            "$value": "{motion.easing.soft.exit}"
+          }
+        }
+      },
+      "tooltip": {
+        "enter": {
+          "duration": {
+            "$type": "duration",
+            "$value": "{motion.duration.short3}",
+            "$description": "Quick tooltip appearance"
+          },
+          "easing": {
+            "$type": "cubicBezier",
+            "$value": "{motion.easing.quick.enter}"
+          },
+          "delay": {
+            "$type": "duration",
+            "$value": "{motion.delay.medium}",
+            "$description": "Delay before showing tooltip"
+          }
+        },
+        "exit": {
+          "duration": {
+            "$type": "duration",
+            "$value": "{motion.duration.short1}",
+            "$description": "Immediate tooltip disappearance"
+          },
+          "easing": {
+            "$type": "cubicBezier",
+            "$value": "{motion.easing.quick.exit}"
+          }
+        }
+      }
+    }
+  }
+}

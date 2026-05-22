@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "default": {
+      "$type": "shadow",
+      "$value": "{elevation.level.1}"
+    }
+  }
+}

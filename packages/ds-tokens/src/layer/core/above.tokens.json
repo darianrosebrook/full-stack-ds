@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "layer": {
+    "above": {
+      "$type": "number",
+      "$value": 51,
+      "$description": "One layer above component overlays"
+    }
+  }
+}

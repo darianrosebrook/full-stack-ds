@@ -1,0 +1,91 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "syntax": {
+      "plain": {
+        "$type": "color",
+        "$value": "{color.mode.dark}",
+        "$extensions": {
+          "fsds.light": "{color.mode.dark}",
+          "fsds.dark": "{color.mode.dark}"
+        },
+        "$description": "Plain syntax text"
+      },
+      "comment": {
+        "color": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.500}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.500}",
+            "fsds.dark": "{color.palette.neutral.500}"
+          },
+          "$description": "Comment syntax color"
+        },
+        "fontStyle": "italic"
+      },
+      "keyword": {
+        "$type": "color",
+        "$value": "{color.feedback.foreground.info.default}",
+        "$extensions": {
+          "fsds.light": "{color.feedback.foreground.info.default}",
+          "fsds.dark": "{color.feedback.foreground.info.default}"
+        },
+        "$description": "Keyword syntax color"
+      },
+      "definition": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.500}"
+        },
+        "$description": "Definition syntax color"
+      },
+      "punctuation": {
+        "$type": "color",
+        "$value": "{color.feedback.foreground.info.default}",
+        "$extensions": {
+          "fsds.light": "{color.feedback.foreground.info.default}",
+          "fsds.dark": "{color.feedback.foreground.info.default}"
+        },
+        "$description": "Punctuation syntax color"
+      },
+      "property": {
+        "$type": "color",
+        "$value": "{color.feedback.foreground.warning.default}",
+        "$extensions": {
+          "fsds.light": "{color.feedback.foreground.warning.default}",
+          "fsds.dark": "{color.feedback.foreground.warning.default}"
+        },
+        "$description": "Property syntax color"
+      },
+      "tag": {
+        "$type": "color",
+        "$value": "{color.feedback.foreground.danger.default}",
+        "$extensions": {
+          "fsds.light": "{color.feedback.foreground.danger.default}",
+          "fsds.dark": "{color.feedback.foreground.danger.default}"
+        },
+        "$description": "Tag syntax color"
+      },
+      "static": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.500}"
+        },
+        "$description": "Static syntax color"
+      },
+      "string": {
+        "$type": "color",
+        "$value": "{color.palette.blue.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.700}",
+          "fsds.dark": "{color.palette.blue.400}"
+        },
+        "$description": "String syntax color"
+      }
+    }
+  }
+}

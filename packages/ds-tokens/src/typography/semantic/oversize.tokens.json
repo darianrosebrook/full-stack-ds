@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "oversize": {
+      "01": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.16}"
+      },
+      "02": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.15}"
+      },
+      "03": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.14}"
+      },
+      "04": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.13}"
+      }
+    }
+  }
+}

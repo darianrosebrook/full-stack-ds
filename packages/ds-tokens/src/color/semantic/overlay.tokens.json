@@ -1,0 +1,48 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "overlay": {
+      "scrim": {
+        "weak": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.24
+          },
+          "$description": "Light overlay scrim"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.4
+          },
+          "$description": "Medium overlay scrim"
+        },
+        "strong": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.64
+          },
+          "$description": "Strong overlay scrim"
+        }
+      }
+    }
+  }
+}

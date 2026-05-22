@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "spacing": {
+    "gap": {
+      "grid": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Grid gap - maps to density mode"
+      },
+      "gridLarge": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xl}",
+        "$description": "Large grid gap - maps to density mode"
+      },
+      "gridMedium": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.md}",
+        "$description": "Medium grid gap - maps to density mode"
+      },
+      "gridSmall": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xs}",
+        "$description": "Small grid gap - maps to density mode"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xs}",
+        "$description": "Component gap - maps to density mode"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.lg}",
+        "$description": "Section gap - maps to density mode"
+      },
+      "stack": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Stack gap (vertical spacing) - maps to density mode"
+      }
+    }
+  }
+}

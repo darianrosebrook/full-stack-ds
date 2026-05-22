@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "delay": {
+      "none": {
+        "$type": "duration",
+        "$value": "0ms",
+        "$description": "No delay"
+      },
+      "short": {
+        "$type": "duration",
+        "$value": "50ms",
+        "$description": "Short delay for sequenced animations"
+      },
+      "medium": {
+        "$type": "duration",
+        "$value": "100ms",
+        "$description": "Medium delay"
+      },
+      "long": {
+        "$type": "duration",
+        "$value": "150ms",
+        "$description": "Long delay for dramatic effect"
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "duration": {
+      "instant": {
+        "$type": "duration",
+        "$value": "100ms",
+        "$description": "Instant feedback duration"
+      },
+      "short1": {
+        "$type": "duration",
+        "$value": "50ms",
+        "$description": "Micro-interactions and quick transitions"
+      },
+      "short2": {
+        "$type": "duration",
+        "$value": "83ms",
+        "$description": "5 frames - subtle hover effects"
+      },
+      "short3": {
+        "$type": "duration",
+        "$value": "167ms",
+        "$description": "10 frames - standard hover/focus transitions"
+      },
+      "short": {
+        "$type": "duration",
+        "$value": "150ms",
+        "$description": "Short transition duration"
+      },
+      "medium": {
+        "$type": "duration",
+        "$value": "250ms",
+        "$description": "Medium transition duration"
+      },
+      "medium1": {
+        "$type": "duration",
+        "$value": "250ms",
+        "$description": "Standard transition duration"
+      },
+      "medium2": {
+        "$type": "duration",
+        "$value": "333ms",
+        "$description": "20 frames - comfortable transitions"
+      },
+      "medium3": {
+        "$type": "duration",
+        "$value": "500ms",
+        "$description": "Noticeable transitions"
+      },
+      "long": {
+        "$type": "duration",
+        "$value": "400ms",
+        "$description": "Long transition duration"
+      },
+      "long1": {
+        "$type": "duration",
+        "$value": "667ms",
+        "$description": "40 frames - deliberate transitions"
+      },
+      "long2": {
+        "$type": "duration",
+        "$value": "833ms",
+        "$description": "50 frames - slow transitions"
+      },
+      "long3": {
+        "$type": "duration",
+        "$value": "1000ms",
+        "$description": "Full second - very slow transitions"
+      },
+      "medium0": {
+        "$type": "duration",
+        "$value": "300ms",
+        "$description": "Pre-long - common transition speed between medium and long"
+      },
+      "long0": {
+        "$type": "duration",
+        "$value": "600ms",
+        "$description": "Post-long - common transition speed between long and long1"
+      },
+      "extraLong1": {
+        "$type": "duration",
+        "$value": "1500ms",
+        "$description": "Extra long - indeterminate loaders, complex entrance sequences"
+      }
+    }
+  }
+}

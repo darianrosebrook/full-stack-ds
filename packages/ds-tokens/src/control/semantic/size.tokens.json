@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "control": {
+    "size": {
+      "sm": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{spacing.size.07}"
+        },
+        "paddingX": {
+          "$type": "dimension",
+          "$value": "{spacing.size.03}"
+        },
+        "paddingY": {
+          "$type": "dimension",
+          "$value": "{spacing.size.02}"
+        }
+      },
+      "md": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{spacing.size.08}"
+        },
+        "paddingX": {
+          "$type": "dimension",
+          "$value": "{spacing.size.04}"
+        },
+        "paddingY": {
+          "$type": "dimension",
+          "$value": "{spacing.size.03}"
+        }
+      },
+      "lg": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{spacing.size.09}"
+        },
+        "paddingX": {
+          "$type": "dimension",
+          "$value": "{spacing.size.06}"
+        },
+        "paddingY": {
+          "$type": "dimension",
+          "$value": "{spacing.size.04}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "overlay": {
+    "scrimWeak": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0,
+          0
+        ],
+        "alpha": 0.24
+      },
+      "$extensions": {
+        "fsds.light": "rgba(0,0,0,0.24)",
+        "fsds.dark": "rgba(0,0,0,0.40)"
+      },
+      "$description": "Weak overlay scrim"
+    }
+  }
+}

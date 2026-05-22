@@ -1,0 +1,17 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "spacing": {
+    "margin": {
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Component margin - maps to density mode"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.lg}",
+        "$description": "Section margin - maps to density mode"
+      }
+    }
+  }
+}

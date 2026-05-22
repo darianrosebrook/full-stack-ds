@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "icon": {
+    "strokeWidth": {
+      "default": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.5,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "datavis": {
+    "gridline": {
+      "major": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}"
+      },
+      "minor": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}"
+      }
+    }
+  }
+}

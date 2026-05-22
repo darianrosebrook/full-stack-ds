@@ -1,0 +1,25 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "focus": {
+      "ringWidth": {
+        "$type": "borderWidth",
+        "$value": "2px",
+        "$description": "Focus ring thickness"
+      },
+      "ringOffset": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        },
+        "$description": "Space between element and focus ring"
+      },
+      "ringOpacity": {
+        "$type": "number",
+        "$value": 0.5,
+        "$description": "Focus ring transparency"
+      }
+    }
+  }
+}

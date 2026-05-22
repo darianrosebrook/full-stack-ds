@@ -1,0 +1,18 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "focus": {
+    "ring": {
+      "$description": "Focus ring styling for accessibility and interactive elements.",
+      "$type": "composition",
+      "$value": {
+        "border": {
+          "width": "{interaction.focus.ringWidth}",
+          "style": "solid",
+          "color": "{color.palette.red.500}"
+        },
+        "offset": "{interaction.focus.ringOffset}",
+        "opacity": "{interaction.focus.ringOpacity}"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "border": {
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Secondary action border hover"
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}"
+      }
+    }
+  }
+}

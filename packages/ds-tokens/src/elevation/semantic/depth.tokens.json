@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "depth": {
+      "$type": "number",
+      "$value": "{elevation.depth.0}"
+    }
+  }
+}

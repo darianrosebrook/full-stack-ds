@@ -1,0 +1,222 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "background": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.mode.white}",
+        "$extensions": {
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.black}"
+        },
+        "$description": "Primary background color"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        },
+        "$description": "Secondary background color"
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Tertiary background color"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.200}",
+          "fsds.dark": "{color.palette.red.700}"
+        },
+        "$description": "Highlight background color"
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Accent background color"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Hover background color"
+      },
+      "dangerStrong": {
+        "$type": "color",
+        "$value": "{color.palette.red.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.600}",
+          "fsds.dark": "{color.palette.red.500}"
+        },
+        "$description": "Strong danger background color"
+      },
+      "dangerSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.red.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.100}",
+          "fsds.dark": "{color.palette.red.800}"
+        },
+        "$description": "Subtle danger background color"
+      },
+      "elevated": {
+        "$type": "color",
+        "$value": "{color.mode.white}",
+        "$extensions": {
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.dark}"
+        },
+        "$description": "Elevated background color for cards and modals"
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.brand.primary.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.brand.primary.500}",
+          "fsds.dark": "{color.palette.brand.primary.400}"
+        },
+        "$description": "Brand background color"
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.background.primary}",
+        "$extensions": {
+          "fsds.light": "{color.background.primary}",
+          "fsds.dark": "{color.background.primary}"
+        },
+        "$description": "Background color for elements on colored backgrounds"
+      },
+      "imageOverlay": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.5
+        },
+        "$extensions": {
+          "fsds.light": "rgba(0, 0, 0, 0.5)",
+          "fsds.dark": "rgba(0, 0, 0, 0.7)"
+        },
+        "$description": "Image overlay background color"
+      },
+      "infoStrong": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.600}",
+          "fsds.dark": "{color.palette.blue.500}"
+        },
+        "$description": "Strong info background color"
+      },
+      "infoSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.blue.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.100}",
+          "fsds.dark": "{color.palette.blue.800}"
+        },
+        "$description": "Subtle info background color"
+      },
+      "successStrong": {
+        "$type": "color",
+        "$value": "{color.palette.green.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.600}",
+          "fsds.dark": "{color.palette.green.500}"
+        },
+        "$description": "Strong success background color"
+      },
+      "successSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.green.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.100}",
+          "fsds.dark": "{color.palette.green.800}"
+        },
+        "$description": "Subtle success background color"
+      },
+      "warningStrong": {
+        "$type": "color",
+        "$value": "{color.palette.orange.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
+        },
+        "$description": "Strong warning background color"
+      },
+      "warningSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.orange.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.100}",
+          "fsds.dark": "{color.palette.orange.800}"
+        },
+        "$description": "Subtle warning background color"
+      },
+      "active": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Active state background color"
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Disabled state background color"
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        },
+        "$description": "Placeholder background color"
+      },
+      "readOnly": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        },
+        "$description": "Read-only background color"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.mode.dark}",
+        "$extensions": {
+          "fsds.light": "{color.mode.dark}",
+          "fsds.dark": "{color.mode.light}"
+        },
+        "$description": "Inverse background color (opposite of primary)"
+      }
+    }
+  }
+}

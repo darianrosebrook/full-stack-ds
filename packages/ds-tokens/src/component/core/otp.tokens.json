@@ -1,0 +1,57 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "component": {
+    "otp": {
+      "field": {
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.02}"
+        },
+        "minWidth": {
+          "$type": "dimension",
+          "$value": {
+            "value": 48,
+            "unit": "px"
+          }
+        },
+        "height": {
+          "$type": "dimension",
+          "$value": {
+            "value": 48,
+            "unit": "px"
+          }
+        },
+        "fontSize": {
+          "$type": "dimension",
+          "$value": "{typography.ramp.4}"
+        },
+        "fontWeight": {
+          "$type": "fontWeight",
+          "$value": "{typography.fontWeight.medium}"
+        },
+        "radius": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}"
+        }
+      },
+      "color": {
+        "text": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.600}"
+        },
+        "bg": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}"
+        },
+        "border": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}"
+        },
+        "focus": {
+          "$type": "color",
+          "$value": "{color.palette.red.500}"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "spacing": {
+    "padding": {
+      "container": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.md}",
+        "$description": "Container padding - maps to density mode"
+      },
+      "card": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Card padding - maps to density mode"
+      },
+      "component": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.sm}",
+        "$description": "Component padding - maps to density mode"
+      },
+      "section": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.lg}",
+        "$description": "Section padding - maps to density mode"
+      },
+      "page": {
+        "$type": "dimension",
+        "$value": "{spacing.density.default.xl}",
+        "$description": "Page padding - maps to density mode"
+      }
+    }
+  }
+}

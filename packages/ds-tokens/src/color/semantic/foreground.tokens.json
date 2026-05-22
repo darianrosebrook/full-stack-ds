@@ -1,0 +1,290 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "foreground": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.mode.dark}",
+        "$extensions": {
+          "fsds.light": "{color.mode.dark}",
+          "fsds.dark": "{color.mode.light}"
+        },
+        "$description": "Primary foreground color"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.600}",
+          "fsds.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Secondary foreground color"
+      },
+      "tertiary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.400}"
+        },
+        "$description": "Tertiary foreground color"
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Accent foreground color"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Danger foreground color"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Hover foreground color"
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.400}"
+        },
+        "$description": "Link foreground color"
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.red.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.600}",
+          "fsds.dark": "{color.palette.red.300}"
+        },
+        "$description": "Link hover foreground color"
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.400}",
+          "fsds.dark": "{color.palette.red.500}"
+        },
+        "$description": "Link visited foreground color"
+      },
+      "onBrand": {
+        "$type": "color",
+        "$value": "{color.mode.white}",
+        "$extensions": {
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.white}"
+        },
+        "$description": "Foreground color for text on brand backgrounds"
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.foreground.primary}",
+        "$extensions": {
+          "fsds.light": "{color.foreground.primary}",
+          "fsds.dark": "{color.foreground.primary}"
+        },
+        "$description": "Foreground color for text on colored backgrounds"
+      },
+      "info": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.500}",
+          "fsds.dark": "{color.palette.blue.400}"
+        },
+        "$description": "Info foreground color"
+      },
+      "success": {
+        "$type": "color",
+        "$value": "{color.palette.green.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.500}",
+          "fsds.dark": "{color.palette.green.400}"
+        },
+        "$description": "Success foreground color"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{color.palette.orange.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.500}",
+          "fsds.dark": "{color.palette.orange.400}"
+        },
+        "$description": "Warning foreground color"
+      },
+      "onDangerSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.red.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.700}",
+          "fsds.dark": "{color.palette.red.300}"
+        },
+        "$description": "Foreground color on subtle danger backgrounds"
+      },
+      "onInfoSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.blue.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.blue.700}",
+          "fsds.dark": "{color.palette.blue.300}"
+        },
+        "$description": "Foreground color on subtle info backgrounds"
+      },
+      "onSuccessSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.green.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.700}",
+          "fsds.dark": "{color.palette.green.300}"
+        },
+        "$description": "Foreground color on subtle success backgrounds"
+      },
+      "onWarningSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.orange.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.700}",
+          "fsds.dark": "{color.palette.orange.300}"
+        },
+        "$description": "Foreground color on subtle warning backgrounds"
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.700}",
+          "fsds.dark": "{color.palette.red.200}"
+        },
+        "$description": "Highlight foreground color"
+      },
+      "syntax": {
+        "plain": {
+          "$type": "color",
+          "$value": "{color.foreground.primary}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.primary}",
+            "fsds.dark": "{color.foreground.primary}"
+          },
+          "$description": "Plain text in syntax highlighting"
+        },
+        "comment": {
+          "color": {
+            "$type": "color",
+            "$value": "{color.foreground.tertiary}",
+            "$extensions": {
+              "fsds.light": "{color.foreground.tertiary}",
+              "fsds.dark": "{color.foreground.tertiary}"
+            },
+            "$description": "Comment color in syntax highlighting"
+          }
+        },
+        "keyword": {
+          "$type": "color",
+          "$value": "{color.foreground.info}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.info}",
+            "fsds.dark": "{color.foreground.info}"
+          },
+          "$description": "Keyword color in syntax highlighting"
+        },
+        "definition": {
+          "$type": "color",
+          "$value": "{color.foreground.accent}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.accent}",
+            "fsds.dark": "{color.foreground.accent}"
+          },
+          "$description": "Definition color in syntax highlighting"
+        },
+        "punctuation": {
+          "$type": "color",
+          "$value": "{color.foreground.info}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.info}",
+            "fsds.dark": "{color.foreground.info}"
+          },
+          "$description": "Punctuation color in syntax highlighting"
+        },
+        "property": {
+          "$type": "color",
+          "$value": "{color.foreground.warning}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.warning}",
+            "fsds.dark": "{color.foreground.warning}"
+          },
+          "$description": "Property color in syntax highlighting"
+        },
+        "tag": {
+          "$type": "color",
+          "$value": "{color.foreground.danger}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.danger}",
+            "fsds.dark": "{color.foreground.danger}"
+          },
+          "$description": "Tag color in syntax highlighting"
+        },
+        "static": {
+          "$type": "color",
+          "$value": "{color.foreground.accent}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.accent}",
+            "fsds.dark": "{color.foreground.accent}"
+          },
+          "$description": "Static color in syntax highlighting"
+        },
+        "string": {
+          "$type": "color",
+          "$value": "{color.foreground.highlight}",
+          "$extensions": {
+            "fsds.light": "{color.foreground.highlight}",
+            "fsds.dark": "{color.foreground.highlight}"
+          },
+          "$description": "String color in syntax highlighting"
+        }
+      },
+      "disabled": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Disabled foreground color"
+      },
+      "placeholder": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Placeholder text color"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.mode.light}",
+        "$extensions": {
+          "fsds.light": "{color.mode.light}",
+          "fsds.dark": "{color.mode.dark}"
+        },
+        "$description": "Inverse foreground color (opposite of primary)"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "component": {
+    "pagination": {
+      "gap": {
+        "x": {
+          "$type": "dimension",
+          "$value": "{spacing.size.02}"
+        }
+      },
+      "minSize": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "depth": {
+      "0": {
+        "$type": "number",
+        "$value": 0
+      },
+      "1": {
+        "$value": 8,
+        "$type": "number"
+      },
+      "2": {
+        "$value": 16,
+        "$type": "number"
+      },
+      "3": {
+        "$value": 32,
+        "$type": "number"
+      },
+      "4": {
+        "$value": 64,
+        "$type": "number"
+      },
+      "$type": "number"
+    }
+  }
+}

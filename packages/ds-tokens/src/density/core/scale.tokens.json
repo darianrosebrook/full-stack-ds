@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "density": {
+    "scale": {
+      "compact": {
+        "$type": "number",
+        "$value": 0.875
+      },
+      "comfortable": {
+        "$type": "number",
+        "$value": 1
+      },
+      "spacious": {
+        "$type": "number",
+        "$value": 1.125
+      }
+    }
+  }
+}

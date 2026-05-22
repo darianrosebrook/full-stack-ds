@@ -1,0 +1,61 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "easing": {
+      "standard": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "$description": "Standard easing for most transitions"
+      },
+      "emphasizedIn": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.2, 0, 0, 1)",
+        "$description": "Emphasized in easing - sharp start"
+      },
+      "emphasizedOut": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "$description": "Emphasized out easing - sharp end"
+      },
+      "quick": {
+        "enter": {
+          "$type": "cubicBezier",
+          "$value": "cubic-bezier(0, 0, 0.1, 1)",
+          "$description": "Quick enter - sharp start, smooth end"
+        },
+        "exit": {
+          "$type": "cubicBezier",
+          "$value": "cubic-bezier(1, 0, 1, 1)",
+          "$description": "Quick exit - smooth start, sharp end"
+        }
+      },
+      "soft": {
+        "enter": {
+          "$type": "cubicBezier",
+          "$value": "cubic-bezier(0, 0, 0.7, 1)",
+          "$description": "Soft enter - gentle acceleration"
+        },
+        "exit": {
+          "$type": "cubicBezier",
+          "$value": "cubic-bezier(0.3, 0, 1, 1)",
+          "$description": "Soft exit - gentle deceleration"
+        }
+      },
+      "continuous": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.3, 0, 0.7, 1)",
+        "$description": "Continuous motion - smooth throughout"
+      },
+      "bounce": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0.3, 0, 0.1, 1.25)",
+        "$description": "Bounce effect - slight overshoot"
+      },
+      "linear": {
+        "$type": "cubicBezier",
+        "$value": "cubic-bezier(0, 0, 1, 1)",
+        "$description": "Linear motion - constant speed"
+      }
+    }
+  }
+}

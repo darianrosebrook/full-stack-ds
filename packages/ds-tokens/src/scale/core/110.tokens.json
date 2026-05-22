@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "scale": {
+    "110": {
+      "$type": "number",
+      "$value": 1.1
+    }
+  }
+}

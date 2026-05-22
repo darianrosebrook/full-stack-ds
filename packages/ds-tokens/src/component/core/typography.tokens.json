@@ -1,0 +1,17 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "component": {
+    "typography": {
+      "variation": {
+        "wghtHeading": {
+          "$type": "number",
+          "$value": 700
+        },
+        "wdthResponsive": {
+          "$type": "number",
+          "$value": 100
+        }
+      }
+    }
+  }
+}

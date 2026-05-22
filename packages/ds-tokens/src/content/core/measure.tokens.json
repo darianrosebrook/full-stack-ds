@@ -1,0 +1,23 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "content": {
+    "measure": {
+      "comfortable": {
+        "$type": "dimension",
+        "$value": {
+          "value": 480,
+          "unit": "px"
+        },
+        "$description": "Comfortable reading measure"
+      },
+      "compact": {
+        "$type": "dimension",
+        "$value": {
+          "value": 360,
+          "unit": "px"
+        },
+        "$description": "Compact measure for sidebars"
+      }
+    }
+  }
+}

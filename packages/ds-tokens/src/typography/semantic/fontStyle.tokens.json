@@ -1,0 +1,17 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "fontStyle": {
+      "italic": {
+        "$type": "string",
+        "$value": "italic",
+        "$description": "Italic font style for emphasis, quotes, and decorative text"
+      },
+      "normal": {
+        "$type": "string",
+        "$value": "normal",
+        "$description": "Normal (upright) font style"
+      }
+    }
+  }
+}

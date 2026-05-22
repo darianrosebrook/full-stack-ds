@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "heading": {
+      "01": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.8}"
+      },
+      "02": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.7}"
+      },
+      "03": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.6}"
+      },
+      "04": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.5}"
+      },
+      "05": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.4}"
+      },
+      "06": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.3}"
+      }
+    }
+  }
+}

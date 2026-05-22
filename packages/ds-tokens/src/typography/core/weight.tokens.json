@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "weight": {
+      "thin": {
+        "$type": "fontWeight",
+        "$value": 100
+      },
+      "light": {
+        "$type": "fontWeight",
+        "$value": 300
+      },
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500
+      },
+      "bold": {
+        "$type": "fontWeight",
+        "$value": 700
+      },
+      "black": {
+        "$type": "fontWeight",
+        "$value": 900
+      }
+    }
+  }
+}

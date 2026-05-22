@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "button": {
+      "01": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.5}"
+      },
+      "02": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.4}"
+      },
+      "03": {
+        "$type": "dimension",
+        "$value": "{typography.ramp.3}"
+      }
+    }
+  }
+}

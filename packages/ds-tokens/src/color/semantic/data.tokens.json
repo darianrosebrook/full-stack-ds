@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "color": {
+    "data": {
+      "trend": {
+        "default": {
+          "$type": "color",
+          "$value": "{color.palette.blue.400}",
+          "$description": "Default trend indicator"
+        },
+        "up": {
+          "$type": "color",
+          "$value": "{color.palette.green.500}",
+          "$description": "Positive trend indicator"
+        },
+        "down": {
+          "$type": "color",
+          "$value": "{color.palette.red.500}",
+          "$description": "Negative trend indicator"
+        },
+        "neutral": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.500}",
+          "$description": "Neutral trend indicator"
+        }
+      }
+    }
+  }
+}

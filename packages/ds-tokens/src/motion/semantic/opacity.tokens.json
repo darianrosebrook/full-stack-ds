@@ -1,0 +1,31 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "opacity": {
+      "overlay": {
+        "light": {
+          "$type": "number",
+          "$value": 0.6,
+          "$description": "Light page-transition overlay opacity"
+        },
+        "heavy": {
+          "$type": "number",
+          "$value": 0.9,
+          "$description": "Heavy page-transition overlay opacity"
+        }
+      },
+      "content": {
+        "default": {
+          "$type": "number",
+          "$value": 1,
+          "$description": "Fully visible content"
+        },
+        "fade": {
+          "$type": "number",
+          "$value": 0.7,
+          "$description": "Faded content during page transition"
+        }
+      }
+    }
+  }
+}

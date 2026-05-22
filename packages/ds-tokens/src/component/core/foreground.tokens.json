@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "component": {
+    "foreground": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.mode.dark}"
+      }
+    }
+  }
+}

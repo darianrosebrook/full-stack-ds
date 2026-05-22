@@ -1,0 +1,10 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "skeleton": {
+    "background": {
+      "$type": "color",
+      "$value": "{color.palette.neutral.100}",
+      "$description": "Skeleton loading background"
+    }
+  }
+}

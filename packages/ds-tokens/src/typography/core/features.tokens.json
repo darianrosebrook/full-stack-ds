@@ -1,0 +1,15 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "typography": {
+    "features": {
+      "tabularNums": {
+        "$type": "string",
+        "$value": "'tnum' on"
+      },
+      "liningNums": {
+        "$type": "string",
+        "$value": "'lnum' on"
+      }
+    }
+  }
+}

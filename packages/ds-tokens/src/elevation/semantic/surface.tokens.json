@@ -1,0 +1,15 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "elevation": {
+    "surface": {
+      "raised": {
+        "$type": "shadow",
+        "$value": "{elevation.level.1}"
+      },
+      "floating": {
+        "$type": "shadow",
+        "$value": "{elevation.level.2}"
+      }
+    }
+  }
+}

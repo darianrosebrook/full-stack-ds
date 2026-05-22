@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "focus": {
+    "ringOffset": {
+      "$type": "dimension",
+      "$value": "{spacing.size.02}",
+      "$extensions": {
+        "fsds.light": "{spacing.size.02}",
+        "fsds.dark": "{spacing.size.02}"
+      },
+      "$description": "Focus ring offset distance"
+    }
+  }
+}
