@@ -1,22 +1,24 @@
 {
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "overlay": {
-    "scrimDialog": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0,
-          0,
-          0
-        ],
-        "alpha": 0.6
-      },
-      "$extensions": {
-        "fsds.light": "rgba(0,0,0,0.60)",
-        "fsds.dark": "rgba(0,0,0,0.80)"
-      },
-      "$description": "Backdrop scrim for dialog and command palette overlays"
+    "scrim": {
+      "dialog": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.6
+        },
+        "$extensions": {
+          "fsds.light": "rgba(0,0,0,0.60)",
+          "fsds.dark": "rgba(0,0,0,0.80)"
+        },
+        "$description": "Backdrop scrim for dialog and command palette overlays"
+      }
     }
   }
 }

@@ -3,39 +3,47 @@
   "typography": {
     "meta": {
       "caption": {
-        "fontFamily": {
-          "$type": "fontFamily",
-          "$value": "{typography.fontFamily.inter}"
+        "font": {
+          "family": {
+            "$type": "fontFamily",
+            "$value": "{typography.font.family.inter}"
+          },
+          "weight": {
+            "$type": "fontWeight",
+            "$value": "{typography.weight.medium}"
+          },
+          "size": {
+            "$type": "dimension",
+            "$value": "{typography.ramp.2}"
+          }
         },
-        "fontWeight": {
-          "$type": "fontWeight",
-          "$value": "{typography.weight.medium}"
-        },
-        "fontSize": {
-          "$type": "dimension",
-          "$value": "{typography.ramp.2}"
-        },
-        "lineHeight": {
-          "$type": "number",
-          "$value": 1.5
+        "line": {
+          "height": {
+            "$type": "number",
+            "$value": 1.5
+          }
         }
       },
       "legal": {
-        "fontFamily": {
-          "$type": "fontFamily",
-          "$value": "{typography.fontFamily.inter}"
+        "font": {
+          "family": {
+            "$type": "fontFamily",
+            "$value": "{typography.font.family.inter}"
+          },
+          "weight": {
+            "$type": "fontWeight",
+            "$value": "{typography.weight.regular}"
+          },
+          "size": {
+            "$type": "dimension",
+            "$value": "{typography.ramp.2}"
+          }
         },
-        "fontWeight": {
-          "$type": "fontWeight",
-          "$value": "{typography.weight.regular}"
-        },
-        "fontSize": {
-          "$type": "dimension",
-          "$value": "{typography.ramp.2}"
-        },
-        "lineHeight": {
-          "$type": "number",
-          "$value": 1.8
+        "line": {
+          "height": {
+            "$type": "number",
+            "$value": 1.8
+          }
         }
       }
     }

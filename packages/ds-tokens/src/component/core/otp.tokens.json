@@ -21,13 +21,15 @@
             "unit": "px"
           }
         },
-        "fontSize": {
-          "$type": "dimension",
-          "$value": "{typography.ramp.4}"
-        },
-        "fontWeight": {
-          "$type": "fontWeight",
-          "$value": "{typography.fontWeight.medium}"
+        "font": {
+          "size": {
+            "$type": "dimension",
+            "$value": "{typography.ramp.4}"
+          },
+          "weight": {
+            "$type": "fontWeight",
+            "$value": "{typography.weight.medium}"
+          }
         },
         "radius": {
           "$type": "dimension",

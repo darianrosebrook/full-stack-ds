@@ -357,17 +357,21 @@
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.regular}",
-        "$description": "Regular body weight (400)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular body weight (400)"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.medium}",
-        "$description": "Medium heading weight (500)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}",
+          "$description": "Medium heading weight (500)"
+        }
       }
     }
   }

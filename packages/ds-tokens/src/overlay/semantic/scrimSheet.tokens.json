@@ -1,22 +1,24 @@
 {
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "overlay": {
-    "scrimSheet": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0,
-          0,
-          0
-        ],
-        "alpha": 0.5
-      },
-      "$extensions": {
-        "fsds.light": "rgba(0,0,0,0.50)",
-        "fsds.dark": "rgba(0,0,0,0.70)"
-      },
-      "$description": "Backdrop scrim for sheet and drawer components"
+    "scrim": {
+      "sheet": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.5
+        },
+        "$extensions": {
+          "fsds.light": "rgba(0,0,0,0.50)",
+          "fsds.dark": "rgba(0,0,0,0.70)"
+        },
+        "$description": "Backdrop scrim for sheet and drawer components"
+      }
     }
   }
 }

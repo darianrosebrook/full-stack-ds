@@ -1,26 +1,28 @@
 {
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "typography": {
-    "letterSpacing": {
-      "tight": {
-        "$type": "dimension",
-        "$value": {
-          "value": -0.018,
-          "unit": "rem"
-        }
-      },
-      "normal": {
-        "$type": "dimension",
-        "$value": {
-          "value": 0,
-          "unit": "rem"
-        }
-      },
-      "wide": {
-        "$type": "dimension",
-        "$value": {
-          "value": 0.018,
-          "unit": "rem"
+    "letter": {
+      "spacing": {
+        "tight": {
+          "$type": "dimension",
+          "$value": {
+            "value": -0.018,
+            "unit": "rem"
+          }
+        },
+        "normal": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0,
+            "unit": "rem"
+          }
+        },
+        "wide": {
+          "$type": "dimension",
+          "$value": {
+            "value": 0.018,
+            "unit": "rem"
+          }
         }
       }
     }

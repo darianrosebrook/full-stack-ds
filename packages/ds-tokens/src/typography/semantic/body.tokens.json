@@ -19,46 +19,56 @@
         "$value": "{typography.ramp.2}"
       },
       "default": {
-        "fontFamily": {
-          "$type": "fontFamily",
-          "$value": "{typography.fontFamily.inter}"
+        "font": {
+          "family": {
+            "$type": "fontFamily",
+            "$value": "{typography.font.family.inter}"
+          },
+          "weight": {
+            "$type": "fontWeight",
+            "$value": "{typography.weight.regular}"
+          },
+          "size": {
+            "$type": "dimension",
+            "$value": "{typography.ramp.4}"
+          }
         },
-        "fontWeight": {
-          "$type": "fontWeight",
-          "$value": "{typography.weight.regular}"
+        "line": {
+          "height": {
+            "$type": "number",
+            "$value": 1.5
+          }
         },
-        "fontSize": {
-          "$type": "dimension",
-          "$value": "{typography.ramp.4}"
-        },
-        "lineHeight": {
-          "$type": "number",
-          "$value": 1.5
-        },
-        "letterSpacing": {
-          "$type": "dimension",
-          "$value": {
-            "value": 0,
-            "unit": "rem"
+        "letter": {
+          "spacing": {
+            "$type": "dimension",
+            "$value": {
+              "value": 0,
+              "unit": "rem"
+            }
           }
         }
       },
       "small": {
-        "fontFamily": {
-          "$type": "fontFamily",
-          "$value": "{typography.fontFamily.inter}"
+        "font": {
+          "family": {
+            "$type": "fontFamily",
+            "$value": "{typography.font.family.inter}"
+          },
+          "weight": {
+            "$type": "fontWeight",
+            "$value": "{typography.weight.regular}"
+          },
+          "size": {
+            "$type": "dimension",
+            "$value": "{typography.ramp.3}"
+          }
         },
-        "fontWeight": {
-          "$type": "fontWeight",
-          "$value": "{typography.weight.regular}"
-        },
-        "fontSize": {
-          "$type": "dimension",
-          "$value": "{typography.ramp.3}"
-        },
-        "lineHeight": {
-          "$type": "number",
-          "$value": 1.5
+        "line": {
+          "height": {
+            "$type": "number",
+            "$value": 1.5
+          }
         }
       }
     }

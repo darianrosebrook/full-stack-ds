@@ -4,7 +4,7 @@
   --fsds-truncate-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
 
   &:hover {
-    --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-color-foreground-link-hover, #ae0001);
+    --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
   }
 }
 /* @generated:end */

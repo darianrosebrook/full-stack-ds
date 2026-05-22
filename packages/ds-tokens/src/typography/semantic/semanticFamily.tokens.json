@@ -4,19 +4,19 @@
     "semanticFamily": {
       "heading": {
         "$type": "fontFamily",
-        "$value": "{typography.fontFamily.inter}"
+        "$value": "{typography.font.family.inter}"
       },
       "body": {
         "$type": "fontFamily",
-        "$value": "{typography.fontFamily.inter}"
+        "$value": "{typography.font.family.inter}"
       },
       "mono": {
         "$type": "fontFamily",
-        "$value": "{typography.fontFamily.monaspace}"
+        "$value": "{typography.font.family.monaspace}"
       },
       "serif": {
         "$type": "fontFamily",
-        "$value": "{typography.fontFamily.newsreader}"
+        "$value": "{typography.font.family.newsreader}"
       }
     }
   }

@@ -77,10 +77,12 @@
         "$value": "600ms",
         "$description": "Post-long - common transition speed between long and long1"
       },
-      "extraLong1": {
-        "$type": "duration",
-        "$value": "1500ms",
-        "$description": "Extra long - indeterminate loaders, complex entrance sequences"
+      "extra": {
+        "long1": {
+          "$type": "duration",
+          "$value": "1500ms",
+          "$description": "Extra long - indeterminate loaders, complex entrance sequences"
+        }
       }
     }
   }

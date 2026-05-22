@@ -122,7 +122,7 @@
     },
     "hover": {
       "truncate.color.foreground.linkHover": {
-        "resolvesTo": "semantic.color.foreground.link.hover",
+        "resolvesTo": "semantic.link.hover.text",
         "fallback": "#ae0001",
         "property": "color",
         "layer": "semantic"

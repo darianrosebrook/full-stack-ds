@@ -1,22 +1,24 @@
 {
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "overlay": {
-    "scrimStrong": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0,
-          0,
-          0
-        ],
-        "alpha": 0.64
-      },
-      "$extensions": {
-        "fsds.light": "rgba(0,0,0,0.64)",
-        "fsds.dark": "rgba(0,0,0,0.80)"
-      },
-      "$description": "Strong overlay scrim"
+    "scrim": {
+      "strong": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0.64
+        },
+        "$extensions": {
+          "fsds.light": "rgba(0,0,0,0.64)",
+          "fsds.dark": "rgba(0,0,0,0.80)"
+        },
+        "$description": "Strong overlay scrim"
+      }
     }
   }
 }

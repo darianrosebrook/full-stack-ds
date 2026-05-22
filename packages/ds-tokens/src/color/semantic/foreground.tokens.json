@@ -83,14 +83,60 @@
         },
         "$description": "Link visited foreground color"
       },
-      "onBrand": {
-        "$type": "color",
-        "$value": "{color.mode.white}",
-        "$extensions": {
-          "fsds.light": "{color.mode.white}",
-          "fsds.dark": "{color.mode.white}"
+      "on": {
+        "brand": {
+          "$type": "color",
+          "$value": "{color.mode.white}",
+          "$extensions": {
+            "fsds.light": "{color.mode.white}",
+            "fsds.dark": "{color.mode.white}"
+          },
+          "$description": "Foreground color for text on brand backgrounds"
         },
-        "$description": "Foreground color for text on brand backgrounds"
+        "danger": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.red.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.red.700}",
+              "fsds.dark": "{color.palette.red.300}"
+            },
+            "$description": "Foreground color on subtle danger backgrounds"
+          }
+        },
+        "info": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.blue.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.blue.700}",
+              "fsds.dark": "{color.palette.blue.300}"
+            },
+            "$description": "Foreground color on subtle info backgrounds"
+          }
+        },
+        "success": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.green.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.green.700}",
+              "fsds.dark": "{color.palette.green.300}"
+            },
+            "$description": "Foreground color on subtle success backgrounds"
+          }
+        },
+        "warning": {
+          "subtle": {
+            "$type": "color",
+            "$value": "{color.palette.orange.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.orange.700}",
+              "fsds.dark": "{color.palette.orange.300}"
+            },
+            "$description": "Foreground color on subtle warning backgrounds"
+          }
+        }
       },
       "onColor": {
         "$type": "color",
@@ -127,42 +173,6 @@
           "fsds.dark": "{color.palette.orange.400}"
         },
         "$description": "Warning foreground color"
-      },
-      "onDangerSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.red.700}",
-        "$extensions": {
-          "fsds.light": "{color.palette.red.700}",
-          "fsds.dark": "{color.palette.red.300}"
-        },
-        "$description": "Foreground color on subtle danger backgrounds"
-      },
-      "onInfoSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.blue.700}",
-        "$extensions": {
-          "fsds.light": "{color.palette.blue.700}",
-          "fsds.dark": "{color.palette.blue.300}"
-        },
-        "$description": "Foreground color on subtle info backgrounds"
-      },
-      "onSuccessSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.green.700}",
-        "$extensions": {
-          "fsds.light": "{color.palette.green.700}",
-          "fsds.dark": "{color.palette.green.300}"
-        },
-        "$description": "Foreground color on subtle success backgrounds"
-      },
-      "onWarningSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.orange.700}",
-        "$extensions": {
-          "fsds.light": "{color.palette.orange.700}",
-          "fsds.dark": "{color.palette.orange.300}"
-        },
-        "$description": "Foreground color on subtle warning backgrounds"
       },
       "highlight": {
         "$type": "color",
@@ -255,7 +265,7 @@
             "fsds.light": "{color.foreground.highlight}",
             "fsds.dark": "{color.foreground.highlight}"
           },
-          "$description": "String color in syntax highlighting"
+          "$description": "Highlight color in syntax highlighting"
         }
       },
       "disabled": {

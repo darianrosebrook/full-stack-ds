@@ -56,23 +56,25 @@
         },
         "$description": "Hover background color"
       },
-      "dangerStrong": {
-        "$type": "color",
-        "$value": "{color.palette.red.600}",
-        "$extensions": {
-          "fsds.light": "{color.palette.red.600}",
-          "fsds.dark": "{color.palette.red.500}"
+      "danger": {
+        "strong": {
+          "$type": "color",
+          "$value": "{color.palette.red.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.600}",
+            "fsds.dark": "{color.palette.red.500}"
+          },
+          "$description": "Strong danger background color"
         },
-        "$description": "Strong danger background color"
-      },
-      "dangerSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.red.100}",
-        "$extensions": {
-          "fsds.light": "{color.palette.red.100}",
-          "fsds.dark": "{color.palette.red.800}"
-        },
-        "$description": "Subtle danger background color"
+        "subtle": {
+          "$type": "color",
+          "$value": "{color.palette.red.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.100}",
+            "fsds.dark": "{color.palette.red.800}"
+          },
+          "$description": "Subtle danger background color"
+        }
       },
       "elevated": {
         "$type": "color",
@@ -101,76 +103,84 @@
         },
         "$description": "Background color for elements on colored backgrounds"
       },
-      "imageOverlay": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "srgb",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0.5
-        },
-        "$extensions": {
-          "fsds.light": "rgba(0, 0, 0, 0.5)",
-          "fsds.dark": "rgba(0, 0, 0, 0.7)"
-        },
-        "$description": "Image overlay background color"
+      "image": {
+        "overlay": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.5
+          },
+          "$extensions": {
+            "fsds.light": "rgba(0, 0, 0, 0.5)",
+            "fsds.dark": "rgba(0, 0, 0, 0.7)"
+          },
+          "$description": "Image overlay background color"
+        }
       },
-      "infoStrong": {
-        "$type": "color",
-        "$value": "{color.palette.blue.600}",
-        "$extensions": {
-          "fsds.light": "{color.palette.blue.600}",
-          "fsds.dark": "{color.palette.blue.500}"
+      "info": {
+        "strong": {
+          "$type": "color",
+          "$value": "{color.palette.blue.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.blue.600}",
+            "fsds.dark": "{color.palette.blue.500}"
+          },
+          "$description": "Strong info background color"
         },
-        "$description": "Strong info background color"
+        "subtle": {
+          "$type": "color",
+          "$value": "{color.palette.blue.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.blue.100}",
+            "fsds.dark": "{color.palette.blue.800}"
+          },
+          "$description": "Subtle info background color"
+        }
       },
-      "infoSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.blue.100}",
-        "$extensions": {
-          "fsds.light": "{color.palette.blue.100}",
-          "fsds.dark": "{color.palette.blue.800}"
+      "success": {
+        "strong": {
+          "$type": "color",
+          "$value": "{color.palette.green.600}",
+          "$extensions": {
+            "fsds.light": "{color.palette.green.600}",
+            "fsds.dark": "{color.palette.green.500}"
+          },
+          "$description": "Strong success background color"
         },
-        "$description": "Subtle info background color"
+        "subtle": {
+          "$type": "color",
+          "$value": "{color.palette.green.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.green.100}",
+            "fsds.dark": "{color.palette.green.800}"
+          },
+          "$description": "Subtle success background color"
+        }
       },
-      "successStrong": {
-        "$type": "color",
-        "$value": "{color.palette.green.600}",
-        "$extensions": {
-          "fsds.light": "{color.palette.green.600}",
-          "fsds.dark": "{color.palette.green.500}"
+      "warning": {
+        "strong": {
+          "$type": "color",
+          "$value": "{color.palette.orange.400}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.400}",
+            "fsds.dark": "{color.palette.orange.500}"
+          },
+          "$description": "Strong warning background color"
         },
-        "$description": "Strong success background color"
-      },
-      "successSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.green.100}",
-        "$extensions": {
-          "fsds.light": "{color.palette.green.100}",
-          "fsds.dark": "{color.palette.green.800}"
-        },
-        "$description": "Subtle success background color"
-      },
-      "warningStrong": {
-        "$type": "color",
-        "$value": "{color.palette.orange.400}",
-        "$extensions": {
-          "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.500}"
-        },
-        "$description": "Strong warning background color"
-      },
-      "warningSubtle": {
-        "$type": "color",
-        "$value": "{color.palette.orange.100}",
-        "$extensions": {
-          "fsds.light": "{color.palette.orange.100}",
-          "fsds.dark": "{color.palette.orange.800}"
-        },
-        "$description": "Subtle warning background color"
+        "subtle": {
+          "$type": "color",
+          "$value": "{color.palette.orange.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.100}",
+            "fsds.dark": "{color.palette.orange.800}"
+          },
+          "$description": "Subtle warning background color"
+        }
       },
       "active": {
         "$type": "color",
