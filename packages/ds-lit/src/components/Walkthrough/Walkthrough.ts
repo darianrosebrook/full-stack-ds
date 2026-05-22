@@ -20,7 +20,71 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
 
 // @generated:start component
 export class WalkthroughElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .walkthrough {
+      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+    
+      &__controls {
+        --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      }
+    
+      &__dots {
+        --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      }
+    }
+    
+    .walkthrough {
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      box-shadow: var(--fsds-walkthrough-surface-shadow);
+      padding: var(--fsds-walkthrough-surface-padding);
+      gap: var(--fsds-walkthrough-dots-gap);
+      /* --fsds-semantic-color-background-secondary: #efefef; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-typography-heading-03: 20px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-typography-body-02: 16px; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-core-spacing-size-04: 8px; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-spacing-size-02: 2px; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
+      /* --fsds-core-color-mode-transparent: transparent; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+    
+      &__title {
+        /* --fsds-semantic-typography-heading-03: 20px; */
+        /* --fsds-semantic-typography-font-weight-bold: 700; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &__description {
+        /* --fsds-semantic-typography-body-02: 16px; */
+        /* --fsds-semantic-color-foreground-secondary: #555555; */
+      }
+    
+      &__controls {
+        gap: var(--fsds-walkthrough-controls-gap);
+      }
+    
+      &__dots {
+        gap: var(--fsds-walkthrough-dots-gap);
+        /* --fsds-core-spacing-size-02: 2px; */
+        /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+        /* --fsds-semantic-color-border-subtle: #cecece; */
+      }
+    }
+  `;
 
   @property({ attribute: false }) steps?: WalkthroughStepSpec[];
   @property({ type: Number }) index?: number;
@@ -72,7 +136,71 @@ export class WalkthroughElement extends LitElement {
 customElements.define('fsds-walkthrough', WalkthroughElement);
 
 export class WalkthroughContentElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .walkthrough {
+      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+    
+      &__controls {
+        --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      }
+    
+      &__dots {
+        --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      }
+    }
+    
+    .walkthrough {
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      box-shadow: var(--fsds-walkthrough-surface-shadow);
+      padding: var(--fsds-walkthrough-surface-padding);
+      gap: var(--fsds-walkthrough-dots-gap);
+      /* --fsds-semantic-color-background-secondary: #efefef; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-typography-heading-03: 20px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-typography-body-02: 16px; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-core-spacing-size-04: 8px; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-spacing-size-02: 2px; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
+      /* --fsds-core-color-mode-transparent: transparent; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+    
+      &__title {
+        /* --fsds-semantic-typography-heading-03: 20px; */
+        /* --fsds-semantic-typography-font-weight-bold: 700; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &__description {
+        /* --fsds-semantic-typography-body-02: 16px; */
+        /* --fsds-semantic-color-foreground-secondary: #555555; */
+      }
+    
+      &__controls {
+        gap: var(--fsds-walkthrough-controls-gap);
+      }
+    
+      &__dots {
+        gap: var(--fsds-walkthrough-dots-gap);
+        /* --fsds-core-spacing-size-02: 2px; */
+        /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+        /* --fsds-semantic-color-border-subtle: #cecece; */
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="walkthrough__content"><slot></slot></fsds-stack>`;
@@ -82,7 +210,71 @@ export class WalkthroughContentElement extends LitElement {
 customElements.define('fsds-walkthrough-content', WalkthroughContentElement);
 
 export class WalkthroughTitleElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .walkthrough {
+      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+    
+      &__controls {
+        --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      }
+    
+      &__dots {
+        --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      }
+    }
+    
+    .walkthrough {
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      box-shadow: var(--fsds-walkthrough-surface-shadow);
+      padding: var(--fsds-walkthrough-surface-padding);
+      gap: var(--fsds-walkthrough-dots-gap);
+      /* --fsds-semantic-color-background-secondary: #efefef; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-typography-heading-03: 20px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-typography-body-02: 16px; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-core-spacing-size-04: 8px; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-spacing-size-02: 2px; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
+      /* --fsds-core-color-mode-transparent: transparent; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+    
+      &__title {
+        /* --fsds-semantic-typography-heading-03: 20px; */
+        /* --fsds-semantic-typography-font-weight-bold: 700; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &__description {
+        /* --fsds-semantic-typography-body-02: 16px; */
+        /* --fsds-semantic-color-foreground-secondary: #555555; */
+      }
+    
+      &__controls {
+        gap: var(--fsds-walkthrough-controls-gap);
+      }
+    
+      &__dots {
+        gap: var(--fsds-walkthrough-dots-gap);
+        /* --fsds-core-spacing-size-02: 2px; */
+        /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+        /* --fsds-semantic-color-border-subtle: #cecece; */
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="h3" class="walkthrough__title"><slot></slot></fsds-stack>`;
@@ -92,7 +284,71 @@ export class WalkthroughTitleElement extends LitElement {
 customElements.define('fsds-walkthrough-title', WalkthroughTitleElement);
 
 export class WalkthroughDescriptionElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .walkthrough {
+      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+    
+      &__controls {
+        --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
+      }
+    
+      &__dots {
+        --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
+      }
+    }
+    
+    .walkthrough {
+      border-radius: var(--fsds-walkthrough-button-primary-radius);
+      box-shadow: var(--fsds-walkthrough-surface-shadow);
+      padding: var(--fsds-walkthrough-surface-padding);
+      gap: var(--fsds-walkthrough-dots-gap);
+      /* --fsds-semantic-color-background-secondary: #efefef; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-typography-heading-03: 20px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-typography-body-02: 16px; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-core-spacing-size-04: 8px; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-spacing-size-02: 2px; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+      /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
+      /* --fsds-core-color-mode-transparent: transparent; */
+      /* --fsds-semantic-color-foreground-secondary: #555555; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+    
+      &__title {
+        /* --fsds-semantic-typography-heading-03: 20px; */
+        /* --fsds-semantic-typography-font-weight-bold: 700; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &__description {
+        /* --fsds-semantic-typography-body-02: 16px; */
+        /* --fsds-semantic-color-foreground-secondary: #555555; */
+      }
+    
+      &__controls {
+        gap: var(--fsds-walkthrough-controls-gap);
+      }
+    
+      &__dots {
+        gap: var(--fsds-walkthrough-dots-gap);
+        /* --fsds-core-spacing-size-02: 2px; */
+        /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+        /* --fsds-semantic-color-border-subtle: #cecece; */
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="p" class="walkthrough__description"><slot></slot></fsds-stack>`;

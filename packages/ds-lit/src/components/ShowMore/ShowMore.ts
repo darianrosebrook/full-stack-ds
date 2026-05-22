@@ -19,7 +19,27 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 // @generated:start component
 export class ShowMoreElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .show-more {
+      --fsds-showmore-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-showmore-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-showmore-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-showmore-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .show-more {
+      background-color: var(--fsds-showmore-color-background-default);
+      color: var(--fsds-showmore-color-foreground-secondary);
+      border-color: var(--fsds-showmore-color-border-accent);
+      padding: var(--fsds-showmore-size-padding-default);
+      border-radius: var(--fsds-showmore-size-radius-default);
+      /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
+    }
+  `;
 
   @property({ type: Boolean }) expanded?: boolean;
   @property({ type: Boolean }) defaultExpanded?: boolean;
@@ -58,7 +78,27 @@ export class ShowMoreElement extends LitElement {
 customElements.define('fsds-show-more', ShowMoreElement);
 
 export class ShowMoreContentElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .show-more {
+      --fsds-showmore-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-showmore-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-showmore-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-showmore-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .show-more {
+      background-color: var(--fsds-showmore-color-background-default);
+      color: var(--fsds-showmore-color-foreground-secondary);
+      border-color: var(--fsds-showmore-color-border-accent);
+      padding: var(--fsds-showmore-size-padding-default);
+      border-radius: var(--fsds-showmore-size-radius-default);
+      /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="show-more__content"><slot></slot></fsds-stack>`;
@@ -68,7 +108,27 @@ export class ShowMoreContentElement extends LitElement {
 customElements.define('fsds-show-more-content', ShowMoreContentElement);
 
 export class ShowMoreTriggerElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .show-more {
+      --fsds-showmore-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-showmore-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-showmore-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-showmore-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-showmore-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-showmore-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-showmore-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .show-more {
+      background-color: var(--fsds-showmore-color-background-default);
+      color: var(--fsds-showmore-color-foreground-secondary);
+      border-color: var(--fsds-showmore-color-border-accent);
+      padding: var(--fsds-showmore-size-padding-default);
+      border-radius: var(--fsds-showmore-size-radius-default);
+      /* --fsds-semantic-color-background-image-overlay: rgba(0, 0, 0, 0.5); */
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="button" class="show-more__trigger"><slot></slot></fsds-stack>`;

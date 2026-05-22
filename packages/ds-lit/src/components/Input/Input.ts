@@ -19,7 +19,42 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 // @generated:start component
 export class InputElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .input {
+      --fsds-input-color-bg-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-input-color-text-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-input-color-border-default: var(--fsds-semantic-color-border-default, #aeaeae);
+      --fsds-input-size-height-default: var(--fsds-semantic-control-size-lg-height, 48px);
+      --fsds-input-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-input-space-inline-default: var(--fsds-core-spacing-size-05, 12px);
+    
+      &:focus-visible {
+        --fsds-input-color-focus-default: var(--fsds-semantic-color-border-focus, #d9292b);
+      }
+    
+      &--invalid {
+        --fsds-input-color-invalid-default: var(--fsds-semantic-color-border-danger, #ae0001);
+      }
+    }
+    
+    .input {
+      background-color: var(--fsds-input-color-bg-default);
+      color: var(--fsds-input-color-text-default);
+      border-color: var(--fsds-input-color-border-default);
+      min-height: var(--fsds-input-size-height-default);
+      border-radius: var(--fsds-input-size-radius-default);
+      padding: var(--fsds-input-space-inline-default);
+    
+      &:focus-visible {
+        border-color: var(--fsds-input-color-focus-default);
+      }
+    
+      &--invalid {
+        border-color: var(--fsds-input-color-invalid-default);
+      }
+    }
+  `;
 
   @property({ type: String }) type?: string;
   @property({ type: String }) value?: string;

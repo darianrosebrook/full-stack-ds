@@ -22,7 +22,40 @@ export type TextTransform = "none" | "uppercase" | "lowercase" | "capitalize";
 
 // @generated:start component
 export class TextElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .text {
+      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
+    
+      &--error {
+        --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      }
+    
+      &--success {
+        --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      }
+    }
+    
+    .text {
+      color: var(--fsds-text-color-foreground-secondary);
+      line-height: var(--fsds-text-typography-lineHeight-body);
+      /* --fsds-semantic-typography-font-weight-light: 300; */
+      /* --fsds-semantic-typography-font-weight-regular: 400; */
+      /* --fsds-semantic-typography-font-weight-medium: 500; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--error {
+        color: var(--fsds-text-color-foreground-danger);
+      }
+    
+      &--success {
+        color: var(--fsds-text-color-foreground-success);
+      }
+    }
+  `;
 
   @property({ attribute: false }) as?: TextAs;
   @property({ attribute: false }) variant?: TextVariant;
@@ -51,7 +84,40 @@ export class TextElement extends LitElement {
 customElements.define('fsds-text', TextElement);
 
 export class TextTitleElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .text {
+      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
+    
+      &--error {
+        --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      }
+    
+      &--success {
+        --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      }
+    }
+    
+    .text {
+      color: var(--fsds-text-color-foreground-secondary);
+      line-height: var(--fsds-text-typography-lineHeight-body);
+      /* --fsds-semantic-typography-font-weight-light: 300; */
+      /* --fsds-semantic-typography-font-weight-regular: 400; */
+      /* --fsds-semantic-typography-font-weight-medium: 500; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--error {
+        color: var(--fsds-text-color-foreground-danger);
+      }
+    
+      &--success {
+        color: var(--fsds-text-color-foreground-success);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="h3" class="text__title"><slot></slot></fsds-stack>`;
@@ -61,7 +127,40 @@ export class TextTitleElement extends LitElement {
 customElements.define('fsds-text-title', TextTitleElement);
 
 export class TextBodyElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .text {
+      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
+      --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
+    
+      &--error {
+        --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      }
+    
+      &--success {
+        --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+      }
+    }
+    
+    .text {
+      color: var(--fsds-text-color-foreground-secondary);
+      line-height: var(--fsds-text-typography-lineHeight-body);
+      /* --fsds-semantic-typography-font-weight-light: 300; */
+      /* --fsds-semantic-typography-font-weight-regular: 400; */
+      /* --fsds-semantic-typography-font-weight-medium: 500; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--error {
+        color: var(--fsds-text-color-foreground-danger);
+      }
+    
+      &--success {
+        color: var(--fsds-text-color-foreground-success);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="text__body"><slot></slot></fsds-stack>`;

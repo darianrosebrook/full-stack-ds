@@ -17,7 +17,32 @@ import { property } from 'lit/decorators.js';
 
 // @generated:start component
 export class AvatarElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .avatar {
+      --fsds-avatar-size-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-avatar-size-radius-small: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-avatar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-avatar-color-background-inverse: var(--fsds-semantic-color-background-inverse, #141414);
+      --fsds-avatar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-avatar-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+    }
+    
+    .avatar {
+      border-radius: var(--fsds-avatar-size-radius-small);
+      background-color: var(--fsds-avatar-color-background-inverse);
+      color: var(--fsds-avatar-color-foreground-primary);
+      border-color: var(--fsds-avatar-color-border-default);
+      /* --fsds-core-spacing-size-05: 12px; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-spacing-size-08: 32px; */
+      /* --fsds-core-spacing-size-10: 64px; */
+      /* --fsds-core-spacing-size-03: 4px; */
+      /* --fsds-core-shape-border-width-hairline: 1px; */
+      /* --fsds-core-typography-weight-medium: 500; */
+      /* --fsds-core-typography-font-family-sans: "Inter", sans-serif; */
+    }
+  `;
 
   @property({ type: String }) src?: string;
   @property({ type: String }) name!: string;

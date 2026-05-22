@@ -17,7 +17,27 @@ export type StatusIntent = "info" | "success" | "warning" | "danger" | "error";
 
 // @generated:start component
 export class StatusElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .status {
+      --fsds-status-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-status-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
+      --fsds-status-size-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-status-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-status-typography-lineHeight: var(--fsds-semantic-typography-line-height-collapse, 1);
+    }
+    
+    .status {
+      background-color: var(--fsds-status-color-background-default);
+      color: var(--fsds-status-color-foreground-primary);
+      border-color: var(--fsds-status-color-border-default);
+      border-radius: var(--fsds-status-size-radius-default);
+      padding: var(--fsds-status-size-padding-default);
+      line-height: var(--fsds-status-typography-lineHeight);
+      /* --fsds-core-shape-border-width-hairline: 1px; */
+    }
+  `;
 
   @property({ attribute: false }) status!: StatusIntent;
 

@@ -303,3 +303,49 @@ export function emitTokensCss(ir: ComponentIR): string {
 export function generateCSS(contract: ComponentContract): string {
   return emitCss(buildComponentIR(contract));
 }
+
+/**
+ * Produce the component's CSS text suitable for embedding inside a Lit
+ * `css\`…\`` tagged template literal. Returns the slot declarations
+ * (.tokens.css side) and property references (.css side) merged into
+ * one body, without `@import`, `@generated`/`@custom` markers, or the
+ * trailing custom-overrides empty block.
+ *
+ * Lit's shadow DOM means sibling `<Component>.css` / `<Component>.tokens.css`
+ * files cannot be loaded into the shadow root via `@import` — those files
+ * exist for documentation and audit parity with the other framework
+ * targets, while this string is what actually styles the rendered
+ * shadow tree at runtime.
+ */
+export function emitLitInlineCss(ir: ComponentIR): string {
+  const rootSelector = `.${ir.cssPrefix}`;
+
+  const tokensGroups = groupBlocksByRoot(ir.cssBlocks, rootSelector)
+    .map((g) => filterGroupedBlock(g, "slots"))
+    .map((g) => formatGroupedBlock(g))
+    .filter((s) => s.length > 0);
+
+  const propertyGroups = groupBlocksByRoot(ir.cssBlocks, rootSelector)
+    .map((g) => filterGroupedBlock(g, "properties"))
+    .map((g) => formatGroupedBlock(g))
+    .filter((s) => s.length > 0);
+
+  const keyframesBody = ir.keyframes.map(formatKeyframes).join("\n").trimEnd();
+
+  const parts: string[] = [];
+  if (tokensGroups.length > 0) parts.push(tokensGroups.join("\n\n"));
+  if (propertyGroups.length > 0) parts.push(propertyGroups.join("\n\n"));
+  if (keyframesBody) parts.push(keyframesBody);
+
+  return parts.join("\n\n").trimEnd();
+}
+
+/**
+ * Escape a CSS body for safe inclusion inside a Lit `css\`…\`` tagged
+ * template literal. Backticks and `${` would terminate the literal /
+ * inject an interpolation; nothing in our generated CSS legitimately
+ * needs either, so we escape defensively rather than asserting absence.
+ */
+export function escapeCssForLitTemplate(css: string): string {
+  return css.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
+}

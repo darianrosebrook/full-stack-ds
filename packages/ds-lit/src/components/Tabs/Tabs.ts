@@ -40,7 +40,34 @@ export { TABS_CTX };
 
 // @generated:start component
 export class TabsElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .tabs {
+      --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .tabs {
+      gap: var(--fsds-tabs-spacing-panelGap);
+      padding: var(--fsds-tabs-spacing-padding);
+      border-radius: var(--fsds-tabs-shape-radius);
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+      /* --fsds-core-motion-duration-short: 150ms; */
+    
+      &:hover {
+        /* --fsds-semantic-color-background-hover: #cecece; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &:focus-visible {
+        /* --fsds-semantic-color-border-accent: #d9292b; */
+      }
+    }
+  `;
 
   @property() value?: string;
   @property() defaultValue?: string;
@@ -110,7 +137,34 @@ export class TabsElement extends LitElement {
 customElements.define('fsds-tabs', TabsElement);
 
 export class TabsListElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .tabs {
+      --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .tabs {
+      gap: var(--fsds-tabs-spacing-panelGap);
+      padding: var(--fsds-tabs-spacing-padding);
+      border-radius: var(--fsds-tabs-shape-radius);
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+      /* --fsds-core-motion-duration-short: 150ms; */
+    
+      &:hover {
+        /* --fsds-semantic-color-background-hover: #cecece; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &:focus-visible {
+        /* --fsds-semantic-color-border-accent: #d9292b; */
+      }
+    }
+  `;
 
   private _ctx = new ContextConsumerController(this, TABS_CTX);
 
@@ -177,8 +231,32 @@ customElements.define('fsds-tabs-list', TabsListElement);
 export class TabsTabElement extends LitElement {
   // Host element IS the tab — ARIA attrs on the host, slot-only shadow.
   static override styles = css`
-    :host { display: inline-flex; cursor: pointer; }
-    :host([disabled]), :host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }
+    :host { display: inline-flex; cursor: pointer; } :host([disabled]), :host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }
+    .tabs {
+      --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .tabs {
+      gap: var(--fsds-tabs-spacing-panelGap);
+      padding: var(--fsds-tabs-spacing-padding);
+      border-radius: var(--fsds-tabs-shape-radius);
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+      /* --fsds-core-motion-duration-short: 150ms; */
+    
+      &:hover {
+        /* --fsds-semantic-color-background-hover: #cecece; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &:focus-visible {
+        /* --fsds-semantic-color-border-accent: #d9292b; */
+      }
+    }
   `;
 
   @property() value = "";
@@ -235,7 +313,34 @@ export class TabsTabElement extends LitElement {
 customElements.define('fsds-tabs-tab', TabsTabElement);
 
 export class TabsPanelElement extends LitElement {
-  static override styles = css`:host { display: block; } :host([hidden]) { display: none !important; }`;
+  static override styles = css`
+    :host { display: block; } :host([hidden]) { display: none !important; }
+    .tabs {
+      --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tabs-spacing-panelGap: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .tabs {
+      gap: var(--fsds-tabs-spacing-panelGap);
+      padding: var(--fsds-tabs-spacing-padding);
+      border-radius: var(--fsds-tabs-shape-radius);
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+      /* --fsds-core-motion-duration-short: 150ms; */
+    
+      &:hover {
+        /* --fsds-semantic-color-background-hover: #cecece; */
+        /* --fsds-semantic-color-foreground-primary: #141414; */
+      }
+    
+      &:focus-visible {
+        /* --fsds-semantic-color-border-accent: #d9292b; */
+      }
+    }
+  `;
 
   @property() value = "";
 

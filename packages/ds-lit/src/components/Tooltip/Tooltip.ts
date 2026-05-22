@@ -33,7 +33,28 @@ let _surfaceIdCounter = 0;
 
 // @generated:start root-class
 export class TooltipElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .tooltip {
+      --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
+      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+    }
+    
+    .tooltip {
+      background-color: var(--fsds-tooltip-color-background-default);
+      color: var(--fsds-tooltip-color-foreground-default);
+      border-color: var(--fsds-tooltip-color-border-default);
+      padding: var(--fsds-tooltip-size-padding-x);
+      border-radius: var(--fsds-tooltip-size-radius-default);
+      font-size: var(--fsds-tooltip-typography-fontSize);
+      /* --fsds-tooltip-size-maxWidth: ; */
+    }
+  `;
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
@@ -134,7 +155,28 @@ export class TooltipElement extends LitElement {
 
 // @generated:start trigger-class
 export class TooltipTriggerElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .tooltip {
+      --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
+      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+    }
+    
+    .tooltip {
+      background-color: var(--fsds-tooltip-color-background-default);
+      color: var(--fsds-tooltip-color-foreground-default);
+      border-color: var(--fsds-tooltip-color-border-default);
+      padding: var(--fsds-tooltip-size-padding-x);
+      border-radius: var(--fsds-tooltip-size-radius-default);
+      font-size: var(--fsds-tooltip-typography-fontSize);
+      /* --fsds-tooltip-size-maxWidth: ; */
+    }
+  `;
   private _ctx = new ContextConsumerController<TooltipSurfaceContext>(this, TooltipSurface_CTX);
   /** The element currently registered as the surface anchor.
    *  Either an element slotted by the consumer (host-adoption
@@ -217,7 +259,28 @@ export class TooltipTriggerElement extends LitElement {
 
 // @generated:start content-class
 export class TooltipContentElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .tooltip {
+      --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
+      --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+    }
+    
+    .tooltip {
+      background-color: var(--fsds-tooltip-color-background-default);
+      color: var(--fsds-tooltip-color-foreground-default);
+      border-color: var(--fsds-tooltip-color-border-default);
+      padding: var(--fsds-tooltip-size-padding-x);
+      border-radius: var(--fsds-tooltip-size-radius-default);
+      font-size: var(--fsds-tooltip-typography-fontSize);
+      /* --fsds-tooltip-size-maxWidth: ; */
+    }
+  `;
 
   private _ctx = new ContextConsumerController<TooltipSurfaceContext>(this, TooltipSurface_CTX);
   private _registered = false;

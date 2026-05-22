@@ -19,7 +19,33 @@ export type OTPMode = "numeric" | "alphanumeric";
 
 // @generated:start component
 export class OTPElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .otp {
+      --fsds-otp-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-otp-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-otp-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-otp-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-otp-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    
+      &:focus-visible {
+        --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      }
+    }
+    
+    .otp {
+      background-color: var(--fsds-otp-color-background-default);
+      color: var(--fsds-otp-color-foreground-secondary);
+      border-color: var(--fsds-otp-color-border-default);
+      padding: var(--fsds-otp-size-padding-default);
+      border-radius: var(--fsds-otp-size-radius-default);
+    
+      &:focus-visible {
+        border-color: var(--fsds-otp-color-border-accent);
+      }
+    }
+  `;
 
   @property({ type: Number }) length?: number = 6;
   @property({ type: String }) value?: string;
@@ -56,7 +82,33 @@ export class OTPElement extends LitElement {
 customElements.define('fsds-otp', OTPElement);
 
 export class OTPGroupElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .otp {
+      --fsds-otp-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-otp-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-otp-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-otp-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-otp-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-otp-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    
+      &:focus-visible {
+        --fsds-otp-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      }
+    }
+    
+    .otp {
+      background-color: var(--fsds-otp-color-background-default);
+      color: var(--fsds-otp-color-foreground-secondary);
+      border-color: var(--fsds-otp-color-border-default);
+      padding: var(--fsds-otp-size-padding-default);
+      border-radius: var(--fsds-otp-size-radius-default);
+    
+      &:focus-visible {
+        border-color: var(--fsds-otp-color-border-accent);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="otp__group"><slot></slot></fsds-stack>`;

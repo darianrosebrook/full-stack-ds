@@ -18,7 +18,48 @@ export type CheckboxSize = "sm" | "md" | "lg";
 
 // @generated:start component
 export class CheckboxElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .checkbox {
+      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-default, #aeaeae);
+      --fsds-checkbox-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-checkbox-border-radius: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-checkbox-transition-duration: var(--fsds-core-motion-duration-short, 150ms);
+    
+      &:hover {
+        --fsds-checkbox-color-border-hover: var(--fsds-semantic-color-border-hover, #f29495);
+      }
+    
+      &:disabled {
+        --fsds-checkbox-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+      }
+    
+      &:checked {
+        --fsds-checkbox-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      }
+    }
+    
+    .checkbox {
+      background-color: var(--fsds-checkbox-color-background-default);
+      border-color: var(--fsds-checkbox-color-border-default);
+      border-width: var(--fsds-checkbox-border-width);
+      border-radius: var(--fsds-checkbox-border-radius);
+      transition-duration: var(--fsds-checkbox-transition-duration);
+    
+      &:hover {
+        border-color: var(--fsds-checkbox-color-border-hover);
+      }
+    
+      &:disabled {
+        background-color: var(--fsds-checkbox-color-background-disabled);
+      }
+    
+      &:checked {
+        background-color: var(--fsds-checkbox-color-background-checked);
+      }
+    }
+  `;
 
   @property({ attribute: false }) size?: CheckboxSize = "md";
   @property({ type: Boolean }) checked?: boolean;

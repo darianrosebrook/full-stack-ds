@@ -19,7 +19,33 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 // @generated:start component
 export class TextFieldElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .text-field {
+      --fsds-textfield-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
+    
+      &--invalid {
+        --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
+        --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      }
+    }
+    
+    .text-field {
+      gap: var(--fsds-textfield-spacing-gap);
+      border-width: var(--fsds-textfield-border-width);
+      border-radius: var(--fsds-textfield-border-radius);
+      color: var(--fsds-textfield-color-input-text);
+      /* --fsds-semantic-color-foreground-tertiary: #717171; */
+    
+      &--invalid {
+        border-color: var(--fsds-textfield-color-input-borderError);
+        color: var(--fsds-textfield-color-error);
+      }
+    }
+  `;
 
   @property({ attribute: false }) label?: unknown;
   @property({ attribute: false }) description?: unknown;
@@ -77,7 +103,33 @@ export class TextFieldElement extends LitElement {
 customElements.define('fsds-text-field', TextFieldElement);
 
 export class TextFieldDescriptionElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .text-field {
+      --fsds-textfield-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-textfield-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-textfield-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-textfield-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
+    
+      &--invalid {
+        --fsds-textfield-color-input-borderError: var(--fsds-semantic-color-status-danger, #d9292b);
+        --fsds-textfield-color-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
+      }
+    }
+    
+    .text-field {
+      gap: var(--fsds-textfield-spacing-gap);
+      border-width: var(--fsds-textfield-border-width);
+      border-radius: var(--fsds-textfield-border-radius);
+      color: var(--fsds-textfield-color-input-text);
+      /* --fsds-semantic-color-foreground-tertiary: #717171; */
+    
+      &--invalid {
+        border-color: var(--fsds-textfield-color-input-borderError);
+        color: var(--fsds-textfield-color-error);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="p" class="text-field__description"><slot></slot></fsds-stack>`;

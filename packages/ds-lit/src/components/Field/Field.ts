@@ -18,7 +18,36 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
 
 // @generated:start component
 export class FieldElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .field {
+      --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
+      --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
+    }
+    
+    .field {
+      gap: var(--fsds-field-gap-meta);
+      border-radius: var(--fsds-field-radius);
+      border-color: var(--fsds-field-color-borderBold);
+      /* --fsds-semantic-spacing-density-compact-md: 12px; */
+      /* --fsds-semantic-spacing-density-compact-sm: 8px; */
+      /* --fsds-semantic-color-background-elevated: #ffffff; */
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-color-border-focus: #d9292b; */
+      /* --fsds-semantic-color-border-danger: #ae0001; */
+      /* --fsds-semantic-color-foreground-danger: #d9292b; */
+      /* --fsds-semantic-color-feedback-border-success: #336006; */
+      /* --fsds-core-spacing-size-03: 4px; */
+    
+      &__label {
+        /* --fsds-semantic-typography-body-small-font-size: 14px; */
+        /* --fsds-semantic-color-foreground-secondary: #555555; */
+      }
+    }
+  `;
 
   @property({ type: String }) name!: string;
   @property({ type: Boolean }) required?: boolean;
@@ -78,7 +107,36 @@ export class FieldElement extends LitElement {
 customElements.define('fsds-field', FieldElement);
 
 export class FieldHeaderElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .field {
+      --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
+      --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-field-color-borderBold: var(--fsds-semantic-color-border-bold, #8f8f8f);
+    }
+    
+    .field {
+      gap: var(--fsds-field-gap-meta);
+      border-radius: var(--fsds-field-radius);
+      border-color: var(--fsds-field-color-borderBold);
+      /* --fsds-semantic-spacing-density-compact-md: 12px; */
+      /* --fsds-semantic-spacing-density-compact-sm: 8px; */
+      /* --fsds-semantic-color-background-elevated: #ffffff; */
+      /* --fsds-semantic-color-foreground-primary: #141414; */
+      /* --fsds-semantic-color-border-focus: #d9292b; */
+      /* --fsds-semantic-color-border-danger: #ae0001; */
+      /* --fsds-semantic-color-foreground-danger: #d9292b; */
+      /* --fsds-semantic-color-feedback-border-success: #336006; */
+      /* --fsds-core-spacing-size-03: 4px; */
+    
+      &__label {
+        /* --fsds-semantic-typography-body-small-font-size: 14px; */
+        /* --fsds-semantic-color-foreground-secondary: #555555; */
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="header" class="field__header"><slot></slot></fsds-stack>`;

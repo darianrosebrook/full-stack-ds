@@ -19,7 +19,51 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
 
 // @generated:start component
 export class SheetElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
@@ -84,7 +128,51 @@ export class SheetElement extends LitElement {
 customElements.define('fsds-sheet', SheetElement);
 
 export class SheetContentElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="sheet__content"><slot></slot></fsds-stack>`;
@@ -94,7 +182,51 @@ export class SheetContentElement extends LitElement {
 customElements.define('fsds-sheet-content', SheetContentElement);
 
 export class SheetHeaderElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="header" class="sheet__header"><slot></slot></fsds-stack>`;
@@ -104,7 +236,51 @@ export class SheetHeaderElement extends LitElement {
 customElements.define('fsds-sheet-header', SheetHeaderElement);
 
 export class SheetTitleElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="h3" class="sheet__title"><slot></slot></fsds-stack>`;
@@ -114,7 +290,51 @@ export class SheetTitleElement extends LitElement {
 customElements.define('fsds-sheet-title', SheetTitleElement);
 
 export class SheetDescriptionElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="p" class="sheet__description"><slot></slot></fsds-stack>`;
@@ -124,7 +344,51 @@ export class SheetDescriptionElement extends LitElement {
 customElements.define('fsds-sheet-description', SheetDescriptionElement);
 
 export class SheetBodyElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="sheet__body"><slot></slot></fsds-stack>`;
@@ -134,7 +398,51 @@ export class SheetBodyElement extends LitElement {
 customElements.define('fsds-sheet-body', SheetBodyElement);
 
 export class SheetFooterElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .sheet {
+      --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textTitle: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-sheet-color-textDescription: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-sheet-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-sheet-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-sheet-spacing-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-sheet-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-sheet-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-sheet-text-sizeTitle: var(--fsds-semantic-typography-heading-06, 14px);
+      --fsds-sheet-text-weightTitle: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-sheet-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+    
+      &:hover {
+        --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .sheet {
+      background-color: var(--fsds-sheet-color-background);
+      border-color: var(--fsds-sheet-color-border);
+      color: var(--fsds-sheet-color-textDescription);
+      border-width: var(--fsds-sheet-border-width);
+      border-radius: var(--fsds-sheet-border-radius);
+      padding: var(--fsds-sheet-spacing-padding);
+      gap: var(--fsds-sheet-spacing-gap);
+      font-size: var(--fsds-sheet-text-sizeTitle);
+      font-weight: var(--fsds-sheet-text-weightTitle);
+      box-shadow: var(--fsds-sheet-shadow);
+      /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+      /* --fsds-sheet-size-width: ; */
+      /* --fsds-sheet-size-height: ; */
+      /* --fsds-core-spacing-size-06: 16px; */
+      /* --fsds-core-shape-border-width-thick: 2px; */
+      /* --fsds-semantic-color-border-accent: #d9292b; */
+    
+      &:hover {
+        background-color: var(--fsds-sheet-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="footer" variant="horizontal" class="sheet__footer"><slot></slot></fsds-stack>`;

@@ -19,7 +19,48 @@ export type ToggleSwitchSize = "small" | "medium" | "large";
 
 // @generated:start component
 export class ToggleSwitchElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .toggle-switch {
+      --fsds-toggleSwitch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toggleSwitch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-toggleSwitch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-toggleSwitch-border-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-toggleSwitch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
+    
+      &:hover {
+        --fsds-toggleSwitch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    
+      &:disabled {
+        --fsds-toggleSwitch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+      }
+    
+      &:checked {
+        --fsds-toggleSwitch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      }
+    }
+    
+    .toggle-switch {
+      background-color: var(--fsds-toggleSwitch-color-background-default);
+      color: var(--fsds-toggleSwitch-color-foreground-default);
+      border-color: var(--fsds-toggleSwitch-color-border-default);
+      border-radius: var(--fsds-toggleSwitch-border-radius-default);
+      transition-duration: var(--fsds-toggleSwitch-motion-duration-fast);
+    
+      &:hover {
+        background-color: var(--fsds-toggleSwitch-color-background-hover);
+      }
+    
+      &:disabled {
+        background-color: var(--fsds-toggleSwitch-color-background-disabled);
+      }
+    
+      &:checked {
+        background-color: var(--fsds-toggleSwitch-color-background-checked);
+      }
+    }
+  `;
 
   @property({ type: Boolean }) checked?: boolean;
   @property({ type: Boolean }) defaultChecked?: boolean;

@@ -19,7 +19,47 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 
 // @generated:start component
 export class CommandElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .command {
+      --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-command-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-command-color-textMuted: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-command-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-command-text-sizeSmall: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+    
+      &:hover {
+        --fsds-command-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .command {
+      background-color: var(--fsds-command-color-background);
+      border-color: var(--fsds-command-color-borderLight);
+      color: var(--fsds-command-color-textMuted);
+      border-width: var(--fsds-command-border-width);
+      border-radius: var(--fsds-command-border-radius);
+      padding: var(--fsds-command-spacing-dialogPadding);
+      font-size: var(--fsds-command-text-sizeSmall);
+      box-shadow: var(--fsds-command-shadow);
+      opacity: var(--fsds-command-opacity-disabled);
+      /* --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
+      /* --fsds-command-size-maxWidth: ; */
+      /* --fsds-command-size-maxHeight: ; */
+      /* --fsds-core-spacing-size-04: 8px; */
+    
+      &:hover {
+        background-color: var(--fsds-command-color-backgroundHover);
+      }
+    }
+  `;
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
@@ -102,7 +142,47 @@ export class CommandElement extends LitElement {
 customElements.define('fsds-command', CommandElement);
 
 export class CommandListElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .command {
+      --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-command-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-command-color-textMuted: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-command-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-command-text-sizeSmall: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+    
+      &:hover {
+        --fsds-command-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .command {
+      background-color: var(--fsds-command-color-background);
+      border-color: var(--fsds-command-color-borderLight);
+      color: var(--fsds-command-color-textMuted);
+      border-width: var(--fsds-command-border-width);
+      border-radius: var(--fsds-command-border-radius);
+      padding: var(--fsds-command-spacing-dialogPadding);
+      font-size: var(--fsds-command-text-sizeSmall);
+      box-shadow: var(--fsds-command-shadow);
+      opacity: var(--fsds-command-opacity-disabled);
+      /* --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
+      /* --fsds-command-size-maxWidth: ; */
+      /* --fsds-command-size-maxHeight: ; */
+      /* --fsds-core-spacing-size-04: 8px; */
+    
+      &:hover {
+        background-color: var(--fsds-command-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="ul" variant="horizontal" class="command__list"><slot></slot></fsds-stack>`;
@@ -112,7 +192,47 @@ export class CommandListElement extends LitElement {
 customElements.define('fsds-command-list', CommandListElement);
 
 export class CommandGroupElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .command {
+      --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-command-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-command-color-textMuted: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-command-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-command-text-sizeSmall: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+    
+      &:hover {
+        --fsds-command-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .command {
+      background-color: var(--fsds-command-color-background);
+      border-color: var(--fsds-command-color-borderLight);
+      color: var(--fsds-command-color-textMuted);
+      border-width: var(--fsds-command-border-width);
+      border-radius: var(--fsds-command-border-radius);
+      padding: var(--fsds-command-spacing-dialogPadding);
+      font-size: var(--fsds-command-text-sizeSmall);
+      box-shadow: var(--fsds-command-shadow);
+      opacity: var(--fsds-command-opacity-disabled);
+      /* --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
+      /* --fsds-command-size-maxWidth: ; */
+      /* --fsds-command-size-maxHeight: ; */
+      /* --fsds-core-spacing-size-04: 8px; */
+    
+      &:hover {
+        background-color: var(--fsds-command-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="command__group"><slot></slot></fsds-stack>`;
@@ -122,7 +242,47 @@ export class CommandGroupElement extends LitElement {
 customElements.define('fsds-command-group', CommandGroupElement);
 
 export class CommandItemElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .command {
+      --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-command-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-command-color-textMuted: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-command-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-command-text-sizeSmall: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-command-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+      --fsds-command-opacity-disabled: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+    
+      &:hover {
+        --fsds-command-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
+      }
+    }
+    
+    .command {
+      background-color: var(--fsds-command-color-background);
+      border-color: var(--fsds-command-color-borderLight);
+      color: var(--fsds-command-color-textMuted);
+      border-width: var(--fsds-command-border-width);
+      border-radius: var(--fsds-command-border-radius);
+      padding: var(--fsds-command-spacing-dialogPadding);
+      font-size: var(--fsds-command-text-sizeSmall);
+      box-shadow: var(--fsds-command-shadow);
+      opacity: var(--fsds-command-opacity-disabled);
+      /* --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
+      /* --fsds-command-size-maxWidth: ; */
+      /* --fsds-command-size-maxHeight: ; */
+      /* --fsds-core-spacing-size-04: 8px; */
+    
+      &:hover {
+        background-color: var(--fsds-command-color-backgroundHover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="li" class="command__item"><slot></slot></fsds-stack>`;

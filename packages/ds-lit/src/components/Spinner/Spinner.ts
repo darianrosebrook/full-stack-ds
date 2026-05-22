@@ -19,7 +19,26 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 
 // @generated:start component
 export class SpinnerElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .spinner {
+      --fsds-spinner-dots-gap: var(--fsds-core-spacing-size-04, 8px);
+    }
+    
+    .spinner {
+      gap: var(--fsds-spinner-dots-gap);
+      /* --fsds-spinner-size-xs: ; */
+      /* --fsds-spinner-size-sm: ; */
+      /* --fsds-spinner-size-md: ; */
+      /* --fsds-spinner-size-lg: ; */
+      /* --fsds-spinner-thickness-hairline: ; */
+      /* --fsds-spinner-thickness-regular: ; */
+      /* --fsds-spinner-thickness-bold: ; */
+      /* --fsds-semantic-color-background-accent: #d9292b; */
+      /* --fsds-semantic-color-border-subtle: #cecece; */
+      /* --fsds-spinner-anim-duration: ; */
+    }
+  `;
 
   @property({ attribute: false }) size?: SpinnerSize;
   @property({ attribute: false }) variant?: SpinnerVariant;

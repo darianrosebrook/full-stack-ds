@@ -36,13 +36,17 @@ export function createLitEmitter(): FrameworkEmitter {
       // F-2C-3: Presence-surface family — emits a single component
       // file containing three LitElement classes (root, Trigger,
       // Content) plus customElements.define calls.
-      // Lit-specific note: the `static styles = css`…`` template literal
-      // in component-source does NOT resolve @import, so the .css file
-      // is currently emit-only (consumers must adopt it via a CSSStyleSheet
-      // construction step we haven't built). The .tokens.css ships alongside
-      // for consistency with React/Vue/Svelte/Angular; both become consumable
-      // when the Lit import-resolution open question is resolved (plan-doc
-      // 6b "Open question — Lit's @import resolution").
+      // Lit-specific note: shadow DOM cannot consume sibling `.css` /
+      // `.tokens.css` files via `@import`, so the component's CSS is
+      // inlined into each LitElement's `static override styles = css\`…\``
+      // block at codegen time (see `emitLitInlineCss` in css.ts and
+      // `litStaticStylesLine` in component-source.ts). The `.css` and
+      // `.tokens.css` files still ship alongside for parity with the
+      // other framework targets and as the audit / documentation
+      // surface; the inlined block in the `.ts` class is the runtime
+      // authority. Component-scoped `--fsds-{component}-*` token slots
+      // inherit through the shadow boundary as normal, so consumer
+      // overrides via brand / density layers continue to work.
       if (isSurfaceComponent(ir)) {
         const surfaceFiles = generateLitSurfaceFiles(ir);
         const css = emitCss(ir);

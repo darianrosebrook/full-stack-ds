@@ -20,7 +20,36 @@ export type ProgressIntent = "info" | "success" | "warning" | "danger";
 
 // @generated:start component
 export class ProgressElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .progress {
+      --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-progress-spacing-gap: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
+    
+      &__track {
+        --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
+      }
+    
+      &__fill {
+        --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
+      }
+    }
+    
+    .progress {
+      color: var(--fsds-progress-color-text-default);
+      gap: var(--fsds-progress-spacing-gap);
+      transition-duration: var(--fsds-progress-motion-duration-indeterminate);
+    
+      &__track {
+        background-color: var(--fsds-progress-color-track-background);
+      }
+    
+      &__fill {
+        background-color: var(--fsds-progress-color-fill-info);
+      }
+    }
+  `;
 
   @property({ type: Number }) value?: number;
   @property({ attribute: false }) variant?: ProgressVariant;

@@ -47,6 +47,30 @@ import {
   type AnchoredSurfacePolicy,
   type PublicDismissalProp,
 } from "../../semantics.js";
+import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
+
+/**
+ * Build the inlined `static override styles` block for a surface
+ * sub-class. Mirrors the helper in `component-source.ts` — Lit's
+ * shadow DOM means the sibling `.css` file cannot be `@import`-ed,
+ * so the component's full CSS is inlined into the shadow at codegen.
+ */
+function surfaceStaticStylesLine(
+  ir: ComponentIR,
+  hostRule = ":host { display: contents; }",
+): string[] {
+  const componentCss = emitLitInlineCss(ir);
+  if (!componentCss) {
+    return [`  static override styles = css\`${hostRule}\`;`];
+  }
+  const escaped = escapeCssForLitTemplate(componentCss);
+  return [
+    `  static override styles = css\``,
+    `    ${hostRule}`,
+    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd() || "    "),
+    `  \`;`,
+  ];
+}
 
 export interface LitSurfaceFiles {
   componentFile: string;
@@ -165,7 +189,7 @@ interface RootCtx {
 }
 
 function emitRootClass(
-  _ir: ComponentIR,
+  ir: ComponentIR,
   surface: SurfaceIR,
   policy: AnchoredSurfacePolicy,
   c: RootCtx,
@@ -208,7 +232,7 @@ function emitRootClass(
   return [
     `// @generated:start root-class`,
     `export class ${name}Element extends LitElement {`,
-    `  static override styles = css\`:host { display: contents; }\`;`,
+    ...surfaceStaticStylesLine(ir),
     ``,
     `  @property({ type: Boolean }) open?: boolean;`,
     `  @property({ type: Boolean }) defaultOpen?: boolean;`,
@@ -336,7 +360,7 @@ interface TriggerCtx {
 }
 
 function emitTriggerClass(
-  _ir: ComponentIR,
+  ir: ComponentIR,
   surface: SurfaceIR,
   c: TriggerCtx,
 ): string {
@@ -374,7 +398,7 @@ function emitTriggerClass(
   return [
     `// @generated:start trigger-class`,
     `export class ${name}TriggerElement extends LitElement {`,
-    `  static override styles = css\`:host { display: contents; }\`;`,
+    ...surfaceStaticStylesLine(ir),
     ``,
     `  private _ctx = new ContextConsumerController<${name}SurfaceContext>(this, ${contextName}_CTX);`,
     ``,
@@ -480,7 +504,7 @@ interface ContentCtx {
 }
 
 function emitContentClass(
-  _ir: ComponentIR,
+  ir: ComponentIR,
   _surface: SurfaceIR,
   c: ContentCtx,
 ): string {
@@ -497,7 +521,7 @@ function emitContentClass(
   return [
     `// @generated:start content-class`,
     `export class ${name}ContentElement extends LitElement {`,
-    `  static override styles = css\`:host { display: contents; }\`;`,
+    ...surfaceStaticStylesLine(ir),
     ``,
     `  private _ctx = new ContextConsumerController<${name}SurfaceContext>(this, ${contextName}_CTX);`,
     `  private _registered = false;`,

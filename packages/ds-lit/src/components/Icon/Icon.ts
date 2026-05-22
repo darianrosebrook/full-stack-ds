@@ -17,7 +17,18 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 
 // @generated:start component
 export class IconElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .icon {
+      --fsds-icon-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-icon-size-padding-default: var(--fsds-core-spacing-size-01, 1px);
+    }
+    
+    .icon {
+      color: var(--fsds-icon-color-foreground-default);
+      padding: var(--fsds-icon-size-padding-default);
+    }
+  `;
 
   @property({ attribute: false }) icon!: IconDefinition;
   @property({ type: Number }) width?: number = 20;

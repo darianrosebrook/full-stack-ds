@@ -33,7 +33,25 @@ let _surfaceIdCounter = 0;
 
 // @generated:start root-class
 export class PopoverElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .popover {
+      --fsds-popover-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-popover-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+    }
+    
+    .popover {
+      padding: var(--fsds-popover-size-padding-default);
+      border-radius: var(--fsds-popover-size-radius-default);
+      gap: var(--fsds-popover-size-gap-default);
+      background-color: var(--fsds-popover-color-background-content);
+      border-color: var(--fsds-popover-color-border-accent);
+      /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+    }
+  `;
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
   @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
@@ -135,7 +153,25 @@ export class PopoverElement extends LitElement {
 
 // @generated:start trigger-class
 export class PopoverTriggerElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .popover {
+      --fsds-popover-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-popover-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+    }
+    
+    .popover {
+      padding: var(--fsds-popover-size-padding-default);
+      border-radius: var(--fsds-popover-size-radius-default);
+      gap: var(--fsds-popover-size-gap-default);
+      background-color: var(--fsds-popover-color-background-content);
+      border-color: var(--fsds-popover-color-border-accent);
+      /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+    }
+  `;
   private _ctx = new ContextConsumerController<PopoverSurfaceContext>(this, PopoverSurface_CTX);
   /** The element currently registered as the surface anchor.
    *  Either an element slotted by the consumer (host-adoption
@@ -218,7 +254,25 @@ export class PopoverTriggerElement extends LitElement {
 
 // @generated:start content-class
 export class PopoverContentElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .popover {
+      --fsds-popover-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-popover-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+    }
+    
+    .popover {
+      padding: var(--fsds-popover-size-padding-default);
+      border-radius: var(--fsds-popover-size-radius-default);
+      gap: var(--fsds-popover-size-gap-default);
+      background-color: var(--fsds-popover-color-background-content);
+      border-color: var(--fsds-popover-color-border-accent);
+      /* --fsds-semantic-elevation-default: 0 2px 8px rgba(0,0,0,0.12); */
+    }
+  `;
 
   private _ctx = new ContextConsumerController<PopoverSurfaceContext>(this, PopoverSurface_CTX);
   private _registered = false;

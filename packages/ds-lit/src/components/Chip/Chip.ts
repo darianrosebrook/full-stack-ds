@@ -20,7 +20,50 @@ export type ChipSize = "small" | "medium" | "large";
 
 // @generated:start component
 export class ChipElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .chip {
+      --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-default, #fafafa);
+      --fsds-chip-color-foreground-default: var(--fsds-semantic-color-action-foreground-secondary-default, #141414);
+      --fsds-chip-color-border-default: var(--fsds-semantic-color-action-border-secondary-default, #aeaeae);
+      --fsds-chip-size-padding-horizontal: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-chip-size-padding-vertical: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-chip-size-gap: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-chip-size-radius: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-chip-text-size: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-chip-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-chip-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
+    
+      &:hover {
+        --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
+      }
+    
+      &:active {
+        --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
+      }
+    }
+    
+    .chip {
+      background-color: var(--fsds-chip-color-background-default);
+      color: var(--fsds-chip-color-foreground-default);
+      border-color: var(--fsds-chip-color-border-default);
+      padding: var(--fsds-chip-size-padding-vertical);
+      gap: var(--fsds-chip-size-gap);
+      border-radius: var(--fsds-chip-size-radius);
+      font-size: var(--fsds-chip-text-size);
+      font-weight: var(--fsds-chip-text-weight);
+      transition-duration: var(--fsds-chip-motion-duration-fast);
+      /* --fsds-core-shape-border-width-hairline: 1px; */
+    
+      &:hover {
+        background-color: var(--fsds-chip-color-background-hover);
+      }
+    
+      &:active {
+        background-color: var(--fsds-chip-color-background-active);
+      }
+    }
+  `;
 
   @property({ attribute: false }) type?: ChipType;
   @property({ attribute: false }) variant?: ChipVariant;

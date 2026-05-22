@@ -19,7 +19,46 @@ export type LinkSize = "small" | "medium" | "large";
 
 // @generated:start component
 export class LinksElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .links {
+      --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-links-color-underline-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-links-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-links-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
+    
+      &:hover {
+        --fsds-links-color-foreground-hover: var(--fsds-semantic-interaction-text-hover, #555555);
+      }
+    
+      &--visited {
+        --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
+      }
+    
+      &:disabled {
+        --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
+      }
+    }
+    
+    .links {
+      color: var(--fsds-links-color-foreground-default);
+      text-decoration-color: var(--fsds-links-color-underline-default);
+      gap: var(--fsds-links-spacing-gap-default);
+      transition-duration: var(--fsds-links-motion-duration-fast);
+    
+      &:hover {
+        color: var(--fsds-links-color-foreground-hover);
+      }
+    
+      &--visited {
+        color: var(--fsds-links-color-foreground-visited);
+      }
+    
+      &:disabled {
+        color: var(--fsds-links-color-foreground-disabled);
+      }
+    }
+  `;
 
   @property({ type: String }) href?: string;
   @property({ attribute: false }) target?: LinkTarget;

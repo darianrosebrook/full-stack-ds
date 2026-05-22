@@ -36,9 +36,43 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { toKebab } from "../../contract.js";
+import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
 import {
   isCompoundStateContainer,
 } from "../react/hook-source.js";
+
+/**
+ * Build the `static override styles = css\`…\`;` line(s) for a Lit
+ * component. Inlines the component's own CSS (slots + property
+ * references) into the shadow root because shadow DOM cannot consume
+ * a sibling `.css` file via `@import`.
+ *
+ * `extraHostRules` is appended after the inlined component CSS for
+ * components whose host element needs structural styling beyond the
+ * default `:host { display: contents; }` (e.g. TabsTab using
+ * `display: inline-flex`).
+ *
+ * When the component has no generated CSS (helper-only classes like
+ * the Stack passthrough), falls back to the bare host rule.
+ */
+function litStaticStylesLine(
+  ir: ComponentIR,
+  hostRule = ":host { display: contents; }",
+  extraHostRules = "",
+): string[] {
+  const componentCss = emitLitInlineCss(ir);
+  const hostBody = [hostRule, extraHostRules].filter((s) => s.trim()).join(" ");
+  if (!componentCss) {
+    return [`  static override styles = css\`${hostBody}\`;`];
+  }
+  const escaped = escapeCssForLitTemplate(componentCss);
+  return [
+    `  static override styles = css\``,
+    `    ${hostBody}`,
+    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd() || "    "),
+    `  \`;`,
+  ];
+}
 
 /**
  * Map a TypeScript type string from React conventions to Lit-safe types via
@@ -432,7 +466,7 @@ function generateCompoundPartClass(
 
   return [
     `export class ${className} extends LitElement {`,
-    `  static override styles = css\`:host { display: contents; }\`;`,
+    ...litStaticStylesLine(ir),
     ``,
     `  override render() {`,
     `    return html\`<fsds-stack${asAttr}${variantAttr} class="${cssClass}"><slot></slot></fsds-stack>\`;`,
@@ -456,7 +490,7 @@ function generateClassBody(ir: ComponentIR): string {
     ir.classRecipe.booleanModifiers.length > 0;
 
   lines.push(`export class ${className} extends LitElement {`);
-  lines.push(`  static override styles = css\`:host { display: contents; }\`;`);
+  lines.push(...litStaticStylesLine(ir));
   lines.push(``);
 
   const propLines = generatePropertyDeclarations(ir);
@@ -549,7 +583,7 @@ function generateCompoundStateRootClass(ir: ComponentIR): string {
 
   const lines: string[] = [];
   lines.push(`export class ${className} extends LitElement {`);
-  lines.push(`  static override styles = css\`:host { display: contents; }\`;`);
+  lines.push(...litStaticStylesLine(ir));
   lines.push(``);
   lines.push(`  @property() value?: string;`);
   lines.push(`  @property() defaultValue?: string;`);
@@ -630,7 +664,7 @@ function generateTabsListClass(ir: ComponentIR): string {
 
   const lines: string[] = [];
   lines.push(`export class ${className} extends LitElement {`);
-  lines.push(`  static override styles = css\`:host { display: contents; }\`;`);
+  lines.push(...litStaticStylesLine(ir));
   lines.push(``);
   lines.push(`  private _ctx = new ContextConsumerController(this, TABS_CTX);`);
   lines.push(``);
@@ -710,10 +744,13 @@ function generateTabsTabClass(ir: ComponentIR): string {
   // The host renders only a <slot> — no nested interactive element.
   lines.push(`export class ${className} extends LitElement {`);
   lines.push(`  // Host element IS the tab — ARIA attrs on the host, slot-only shadow.`);
-  lines.push(`  static override styles = css\``);
-  lines.push(`    :host { display: inline-flex; cursor: pointer; }`);
-  lines.push(`    :host([disabled]), :host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }`);
-  lines.push(`  \`;`);
+  lines.push(
+    ...litStaticStylesLine(
+      ir,
+      ":host { display: inline-flex; cursor: pointer; }",
+      ':host([disabled]), :host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }',
+    ),
+  );
   lines.push(``);
   lines.push(`  @property() value = "";`);
   lines.push(`  @property({ type: Boolean }) disabled?: boolean;`);
@@ -784,7 +821,13 @@ function generateTabsPanelClass(ir: ComponentIR): string {
   // Like TabsTab, put role/id/aria-labelledby/tabindex on the HOST element so
   // aria-labelledby can resolve the tab id across the light DOM boundary.
   lines.push(`export class ${className} extends LitElement {`);
-  lines.push(`  static override styles = css\`:host { display: block; } :host([hidden]) { display: none !important; }\`;`);
+  lines.push(
+    ...litStaticStylesLine(
+      ir,
+      ":host { display: block; }",
+      ":host([hidden]) { display: none !important; }",
+    ),
+  );
   lines.push(``);
   lines.push(`  @property() value = "";`);
   lines.push(``);
@@ -978,7 +1021,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
 
   const lines: string[] = [];
   lines.push(`export class ${className} extends LitElement {`);
-  lines.push(`  static override styles = css\`:host { display: contents; }\`;`);
+  lines.push(...litStaticStylesLine(ir));
   lines.push(``);
 
   // Property declarations for every styled prop

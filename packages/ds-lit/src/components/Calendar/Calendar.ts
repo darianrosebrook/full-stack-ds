@@ -18,7 +18,31 @@ export type CalendarMode = "single" | "range";
 
 // @generated:start component
 export class CalendarElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .calendar {
+      --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-calendar-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .calendar {
+      background-color: var(--fsds-calendar-color-background-default);
+      color: var(--fsds-calendar-color-foreground-secondary);
+      border-color: var(--fsds-calendar-color-border-accent);
+      padding: var(--fsds-calendar-size-padding-default);
+      border-radius: var(--fsds-calendar-size-radius-default);
+      /* --fsds-semantic-elevation-default: none; */
+    
+      &:hover {
+        /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
+      }
+    }
+  `;
 
   @property({ attribute: false }) value?: Date | Date[] | null;
   @property({ attribute: false }) defaultValue?: Date | Date[] | null;
@@ -68,7 +92,31 @@ export class CalendarElement extends LitElement {
 customElements.define('fsds-calendar', CalendarElement);
 
 export class CalendarHeaderElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .calendar {
+      --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-calendar-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
+      --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+    }
+    
+    .calendar {
+      background-color: var(--fsds-calendar-color-background-default);
+      color: var(--fsds-calendar-color-foreground-secondary);
+      border-color: var(--fsds-calendar-color-border-accent);
+      padding: var(--fsds-calendar-size-padding-default);
+      border-radius: var(--fsds-calendar-size-radius-default);
+      /* --fsds-semantic-elevation-default: none; */
+    
+      &:hover {
+        /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="header" class="calendar__header"><slot></slot></fsds-stack>`;

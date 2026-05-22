@@ -18,7 +18,70 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 
 // @generated:start component
 export class DialogElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .dialog {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+    
+      &:hover {
+        --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      }
+    }
+    
+    .dialog {
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-radius: var(--fsds-dialog-size-radius-default);
+      padding: var(--fsds-dialog-spacing-body-paddingRight);
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+      /* --fsds-core-spacing-size-08: 32px; */
+      /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
+      /* --fsds-semantic-typography-heading-04: 18px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--sm {
+        /* --fsds-dialog-size-sm-width: ; */
+        /* --fsds-dialog-size-sm-maxWidth: ; */
+      }
+    
+      &--md {
+        /* --fsds-dialog-size-md-width: ; */
+        /* --fsds-dialog-size-md-maxWidth: ; */
+      }
+    
+      &--lg {
+        /* --fsds-dialog-size-lg-width: ; */
+        /* --fsds-dialog-size-lg-maxWidth: ; */
+      }
+    
+      &--xl {
+        /* --fsds-dialog-size-xl-width: ; */
+        /* --fsds-dialog-size-xl-maxWidth: ; */
+      }
+    
+      &--full {
+        /* --fsds-dialog-size-full-width: ; */
+        /* --fsds-dialog-size-full-height: ; */
+      }
+    
+      &:hover {
+        background-color: var(--fsds-dialog-color-background-hover);
+      }
+    }
+  `;
 
   @property({ type: Boolean }) open?: boolean;
   @property({ type: Boolean }) defaultOpen?: boolean;
@@ -88,7 +151,70 @@ export class DialogElement extends LitElement {
 customElements.define('fsds-dialog', DialogElement);
 
 export class DialogHeaderElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .dialog {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+    
+      &:hover {
+        --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      }
+    }
+    
+    .dialog {
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-radius: var(--fsds-dialog-size-radius-default);
+      padding: var(--fsds-dialog-spacing-body-paddingRight);
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+      /* --fsds-core-spacing-size-08: 32px; */
+      /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
+      /* --fsds-semantic-typography-heading-04: 18px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--sm {
+        /* --fsds-dialog-size-sm-width: ; */
+        /* --fsds-dialog-size-sm-maxWidth: ; */
+      }
+    
+      &--md {
+        /* --fsds-dialog-size-md-width: ; */
+        /* --fsds-dialog-size-md-maxWidth: ; */
+      }
+    
+      &--lg {
+        /* --fsds-dialog-size-lg-width: ; */
+        /* --fsds-dialog-size-lg-maxWidth: ; */
+      }
+    
+      &--xl {
+        /* --fsds-dialog-size-xl-width: ; */
+        /* --fsds-dialog-size-xl-maxWidth: ; */
+      }
+    
+      &--full {
+        /* --fsds-dialog-size-full-width: ; */
+        /* --fsds-dialog-size-full-height: ; */
+      }
+    
+      &:hover {
+        background-color: var(--fsds-dialog-color-background-hover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="header" class="dialog__header"><slot></slot></fsds-stack>`;
@@ -98,7 +224,70 @@ export class DialogHeaderElement extends LitElement {
 customElements.define('fsds-dialog-header', DialogHeaderElement);
 
 export class DialogTitleElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .dialog {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+    
+      &:hover {
+        --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      }
+    }
+    
+    .dialog {
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-radius: var(--fsds-dialog-size-radius-default);
+      padding: var(--fsds-dialog-spacing-body-paddingRight);
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+      /* --fsds-core-spacing-size-08: 32px; */
+      /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
+      /* --fsds-semantic-typography-heading-04: 18px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--sm {
+        /* --fsds-dialog-size-sm-width: ; */
+        /* --fsds-dialog-size-sm-maxWidth: ; */
+      }
+    
+      &--md {
+        /* --fsds-dialog-size-md-width: ; */
+        /* --fsds-dialog-size-md-maxWidth: ; */
+      }
+    
+      &--lg {
+        /* --fsds-dialog-size-lg-width: ; */
+        /* --fsds-dialog-size-lg-maxWidth: ; */
+      }
+    
+      &--xl {
+        /* --fsds-dialog-size-xl-width: ; */
+        /* --fsds-dialog-size-xl-maxWidth: ; */
+      }
+    
+      &--full {
+        /* --fsds-dialog-size-full-width: ; */
+        /* --fsds-dialog-size-full-height: ; */
+      }
+    
+      &:hover {
+        background-color: var(--fsds-dialog-color-background-hover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="h3" class="dialog__title"><slot></slot></fsds-stack>`;
@@ -108,7 +297,70 @@ export class DialogTitleElement extends LitElement {
 customElements.define('fsds-dialog-title', DialogTitleElement);
 
 export class DialogBodyElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .dialog {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+    
+      &:hover {
+        --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      }
+    }
+    
+    .dialog {
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-radius: var(--fsds-dialog-size-radius-default);
+      padding: var(--fsds-dialog-spacing-body-paddingRight);
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+      /* --fsds-core-spacing-size-08: 32px; */
+      /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
+      /* --fsds-semantic-typography-heading-04: 18px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--sm {
+        /* --fsds-dialog-size-sm-width: ; */
+        /* --fsds-dialog-size-sm-maxWidth: ; */
+      }
+    
+      &--md {
+        /* --fsds-dialog-size-md-width: ; */
+        /* --fsds-dialog-size-md-maxWidth: ; */
+      }
+    
+      &--lg {
+        /* --fsds-dialog-size-lg-width: ; */
+        /* --fsds-dialog-size-lg-maxWidth: ; */
+      }
+    
+      &--xl {
+        /* --fsds-dialog-size-xl-width: ; */
+        /* --fsds-dialog-size-xl-maxWidth: ; */
+      }
+    
+      &--full {
+        /* --fsds-dialog-size-full-width: ; */
+        /* --fsds-dialog-size-full-height: ; */
+      }
+    
+      &:hover {
+        background-color: var(--fsds-dialog-color-background-hover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack class="dialog__body"><slot></slot></fsds-stack>`;
@@ -118,7 +370,70 @@ export class DialogBodyElement extends LitElement {
 customElements.define('fsds-dialog-body', DialogBodyElement);
 
 export class DialogFooterElement extends LitElement {
-  static override styles = css`:host { display: contents; }`;
+  static override styles = css`
+    :host { display: contents; }
+    .dialog {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-spacing-header-paddingTop: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-dialog-spacing-body-paddingRight: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-dialog-spacing-footer-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
+    
+      &:hover {
+        --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+      }
+    }
+    
+    .dialog {
+      background-color: var(--fsds-dialog-color-background-backdrop);
+      color: var(--fsds-dialog-color-foreground-secondary);
+      border-color: var(--fsds-dialog-color-border-default);
+      border-radius: var(--fsds-dialog-size-radius-default);
+      padding: var(--fsds-dialog-spacing-body-paddingRight);
+      gap: var(--fsds-dialog-spacing-footer-gap);
+      line-height: var(--fsds-dialog-typography-title-lineHeight);
+      /* --fsds-dialog-size-md-width: ; */
+      /* --fsds-dialog-size-md-maxWidth: ; */
+      /* --fsds-core-spacing-size-08: 32px; */
+      /* --fsds-semantic-elevation-surface-floating: 0 8px 32px rgba(0,0,0,0.16); */
+      /* --fsds-semantic-typography-heading-04: 18px; */
+      /* --fsds-semantic-typography-font-weight-bold: 700; */
+    
+      &--sm {
+        /* --fsds-dialog-size-sm-width: ; */
+        /* --fsds-dialog-size-sm-maxWidth: ; */
+      }
+    
+      &--md {
+        /* --fsds-dialog-size-md-width: ; */
+        /* --fsds-dialog-size-md-maxWidth: ; */
+      }
+    
+      &--lg {
+        /* --fsds-dialog-size-lg-width: ; */
+        /* --fsds-dialog-size-lg-maxWidth: ; */
+      }
+    
+      &--xl {
+        /* --fsds-dialog-size-xl-width: ; */
+        /* --fsds-dialog-size-xl-maxWidth: ; */
+      }
+    
+      &--full {
+        /* --fsds-dialog-size-full-width: ; */
+        /* --fsds-dialog-size-full-height: ; */
+      }
+    
+      &:hover {
+        background-color: var(--fsds-dialog-color-background-hover);
+      }
+    }
+  `;
 
   override render() {
     return html`<fsds-stack as="footer" variant="horizontal" class="dialog__footer"><slot></slot></fsds-stack>`;
