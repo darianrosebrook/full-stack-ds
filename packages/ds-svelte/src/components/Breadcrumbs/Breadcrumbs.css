@@ -1,18 +1,18 @@
 /* @generated:start styles */
 .breadcrumbs {
-  color: var(--semantic-color-foreground-tertiary, #717171);
-  background-color: var(--semantic-color-background-elevated, #ffffff);
-  border-color: var(--semantic-color-border-subtle, #cecece);
-  line-height: var(--semantic-typography-line-height-collapse, 1);
-  border-radius: var(--core-shape-radius-small, 4px);
-  gap: var(--core-spacing-size-03, 4px);
-  padding: var(--core-spacing-size-03, 4px);
+  color: var(--fsds-semantic-color-foreground-tertiary, #717171);
+  background-color: var(--fsds-semantic-color-background-elevated, #ffffff);
+  border-color: var(--fsds-semantic-color-border-subtle, #cecece);
+  line-height: var(--fsds-semantic-typography-line-height-collapse, 1);
+  border-radius: var(--fsds-core-shape-radius-small, 4px);
+  gap: var(--fsds-core-spacing-size-03, 4px);
+  padding: var(--fsds-core-spacing-size-03, 4px);
 }
 
 .breadcrumbs:hover {}
 
 .breadcrumbs:focus-visible {
-  outline-color: var(--semantic-color-border-accent, #d9292b);
+  outline-color: var(--fsds-semantic-color-border-accent, #d9292b);
 }
 
 .breadcrumbs__list {}

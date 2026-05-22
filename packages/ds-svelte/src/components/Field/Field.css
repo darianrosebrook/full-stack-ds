@@ -1,17 +1,17 @@
 /* @generated:start styles */
 .field {
-  gap: var(--core-spacing-size-03, 4px);
-  border-radius: var(--semantic-shape-control-radius-default, 8px);
-  border-color: var(--semantic-color-border-bold, #8f8f8f);
-  /* --semantic-spacing-density-compact-md: 12px; */
-  /* --semantic-spacing-density-compact-sm: 8px; */
-  /* --semantic-color-background-elevated: #ffffff; */
-  /* --semantic-color-foreground-primary: #141414; */
-  /* --semantic-color-border-focus: #d9292b; */
-  /* --semantic-color-border-danger: #ae0001; */
-  /* --semantic-color-foreground-danger: #d9292b; */
-  /* --semantic-color-feedback-border-success: #336006; */
-  /* --core-spacing-size-03: 4px; */
+  gap: var(--fsds-core-spacing-size-03, 4px);
+  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  border-color: var(--fsds-semantic-color-border-bold, #8f8f8f);
+  /* --fsds-semantic-spacing-density-compact-md: 12px; */
+  /* --fsds-semantic-spacing-density-compact-sm: 8px; */
+  /* --fsds-semantic-color-background-elevated: #ffffff; */
+  /* --fsds-semantic-color-foreground-primary: #141414; */
+  /* --fsds-semantic-color-border-focus: #d9292b; */
+  /* --fsds-semantic-color-border-danger: #ae0001; */
+  /* --fsds-semantic-color-foreground-danger: #d9292b; */
+  /* --fsds-semantic-color-feedback-border-success: #336006; */
+  /* --fsds-core-spacing-size-03: 4px; */
 }
 
 .field--idle {}
@@ -27,8 +27,8 @@
 .field:disabled {}
 
 .field__label {
-  /* --semantic-typography-body-small-font-size: 14px; */
-  /* --semantic-color-foreground-secondary: #555555; */
+  /* --fsds-semantic-typography-body-small-font-size: 14px; */
+  /* --fsds-semantic-color-foreground-secondary: #555555; */
 }
 
 .field__header {}

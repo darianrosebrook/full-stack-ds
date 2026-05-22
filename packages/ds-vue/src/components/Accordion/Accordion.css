@@ -1,21 +1,21 @@
 /* @generated:start styles */
 .accordion {
-  background-color: var(--semantic-interaction-background-hover, #efefef);
-  color: var(--semantic-color-foreground-secondary, #555555);
-  border-width: var(--core-shape-border-width-hairline, 1px);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  border-radius: var(--core-shape-radius-small, 4px);
-  gap: var(--core-spacing-size-07, 24px);
-  padding: var(--core-spacing-size-04, 8px);
-  font-weight: var(--semantic-typography-font-weight-medium, 500);
-  font-size: var(--semantic-typography-body-03, 14px);
-  line-height: var(--semantic-typography-line-height-loose, 1.8);
-  opacity: var(--semantic-interaction-disabled-opacity, 0.5);
-  /* --semantic-color-foreground-tertiary: #717171; */
-  /* --core-spacing-size-04: 8px; */
-  /* --core-shape-border-width-thick: 2px; */
-  /* --semantic-color-border-accent: #d9292b; */
-  /* --core-spacing-size-01: 1px; */
+  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  border-radius: var(--fsds-core-shape-radius-small, 4px);
+  gap: var(--fsds-core-spacing-size-07, 24px);
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+  font-size: var(--fsds-semantic-typography-body-03, 14px);
+  line-height: var(--fsds-semantic-typography-line-height-loose, 1.8);
+  opacity: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+  /* --fsds-semantic-color-foreground-tertiary: #717171; */
+  /* --fsds-core-spacing-size-04: 8px; */
+  /* --fsds-core-shape-border-width-thick: 2px; */
+  /* --fsds-semantic-color-border-accent: #d9292b; */
+  /* --fsds-core-spacing-size-01: 1px; */
 }
 
 .accordion--single {}
@@ -23,7 +23,7 @@
 .accordion--multiple {}
 
 .accordion:hover {
-  color: var(--semantic-interaction-text-hover, #555555);
+  color: var(--fsds-semantic-interaction-text-hover, #555555);
 }
 
 .accordion:focus-visible {}

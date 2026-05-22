@@ -1,17 +1,17 @@
 /* @generated:start styles */
 .avatar {
-  border-radius: var(--core-shape-radius-small, 4px);
-  background-color: var(--semantic-color-background-inverse, #141414);
-  color: var(--semantic-color-foreground-primary, #141414);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  /* --core-spacing-size-05: 12px; */
-  /* --core-spacing-size-06: 16px; */
-  /* --core-spacing-size-08: 32px; */
-  /* --core-spacing-size-10: 64px; */
-  /* --core-spacing-size-03: 4px; */
-  /* --core-shape-border-width-hairline: 1px; */
-  /* --core-typography-weight-medium: 500; */
-  /* --core-typography-font-family-sans: "Inter", sans-serif; */
+  border-radius: var(--fsds-core-shape-radius-small, 4px);
+  background-color: var(--fsds-semantic-color-background-inverse, #141414);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  /* --fsds-core-spacing-size-05: 12px; */
+  /* --fsds-core-spacing-size-06: 16px; */
+  /* --fsds-core-spacing-size-08: 32px; */
+  /* --fsds-core-spacing-size-10: 64px; */
+  /* --fsds-core-spacing-size-03: 4px; */
+  /* --fsds-core-shape-border-width-hairline: 1px; */
+  /* --fsds-core-typography-weight-medium: 500; */
+  /* --fsds-core-typography-font-family-sans: "Inter", sans-serif; */
 }
 
 .avatar--small {}

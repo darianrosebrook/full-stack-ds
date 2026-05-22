@@ -1,10 +1,10 @@
 /* @generated:start styles */
 .switch {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  width: var(--core-spacing-size-09, 48px);
-  height: var(--core-spacing-size-07, 24px);
-  border-radius: var(--core-shape-radius-full, 9999px);
-  transition-duration: var(--semantic-motion-interaction-press-duration, 100ms);
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  width: var(--fsds-core-spacing-size-09, 48px);
+  height: var(--fsds-core-spacing-size-07, 24px);
+  border-radius: var(--fsds-core-shape-radius-full, 9999px);
+  transition-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
 }
 
 .switch--sm {}
@@ -18,11 +18,11 @@
 .switch:focus-visible {}
 
 .switch:disabled {
-  background-color: var(--semantic-color-background-disabled, #cecece);
+  background-color: var(--fsds-semantic-color-background-disabled, #cecece);
 }
 
 .switch:checked {
-  background-color: var(--semantic-color-foreground-on-brand, #ffffff);
+  background-color: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
 }
 
 .switch__track {}

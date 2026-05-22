@@ -1,8 +1,8 @@
 /* @generated:start styles */
 .progress {
-  color: var(--semantic-color-foreground-secondary, #555555);
-  gap: var(--core-spacing-size-02, 2px);
-  transition-duration: var(--core-motion-duration-extra-long1, 1500ms);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  gap: var(--fsds-core-spacing-size-02, 2px);
+  transition-duration: var(--fsds-core-motion-duration-extra-long1, 1500ms);
 }
 
 .progress--linear {}
@@ -24,11 +24,11 @@
 .progress--danger {}
 
 .progress__track {
-  background-color: var(--semantic-color-background-secondary, #efefef);
+  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
 }
 
 .progress__fill {
-  background-color: var(--semantic-color-status-info, #0a65fe);
+  background-color: var(--fsds-semantic-color-status-info, #0a65fe);
 }
 
 .progress__value {}

@@ -1,11 +1,11 @@
 /* @generated:start styles */
 .calendar {
-  background-color: var(--semantic-color-background-secondary, #efefef);
-  color: var(--semantic-color-foreground-secondary, #555555);
-  border-color: var(--semantic-color-border-accent, #d9292b);
-  padding: var(--core-spacing-size-07, 24px);
-  border-radius: var(--core-shape-radius-medium, 8px);
-  /* --semantic-elevation-default: none; */
+  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
+  padding: var(--fsds-core-spacing-size-07, 24px);
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  /* --fsds-semantic-elevation-default: none; */
 }
 
 .calendar--single {}
@@ -13,7 +13,7 @@
 .calendar--range {}
 
 .calendar:hover {
-  /* --semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
+  /* --fsds-semantic-elevation-surface-floating: 0 2px 8px rgba(0,0,0,0.12); */
 }
 
 .calendar:focus-visible {}

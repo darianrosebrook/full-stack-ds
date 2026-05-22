@@ -1,7 +1,7 @@
 /* @generated:start styles */
 .icon {
-  color: var(--semantic-color-foreground-primary, #141414);
-  padding: var(--core-spacing-size-01, 1px);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  padding: var(--fsds-core-spacing-size-01, 1px);
 }
 /* @generated:end */
 

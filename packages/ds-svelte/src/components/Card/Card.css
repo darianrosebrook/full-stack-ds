@@ -1,12 +1,12 @@
 /* @generated:start styles */
 .card {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  color: var(--semantic-color-foreground-link, #d9292b);
-  padding: var(--core-spacing-size-06, 16px);
-  border-radius: var(--semantic-shape-control-radius-default, 8px);
-  gap: var(--core-spacing-size-03, 4px);
-  line-height: var(--semantic-typography-line-height-normal, 1.5);
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  color: var(--fsds-semantic-color-foreground-link, #d9292b);
+  padding: var(--fsds-core-spacing-size-06, 16px);
+  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  gap: var(--fsds-core-spacing-size-03, 4px);
+  line-height: var(--fsds-semantic-typography-line-height-normal, 1.5);
 }
 
 .card--completed {}
@@ -22,7 +22,7 @@
 .card--complexity {}
 
 .card:hover {
-  background-color: var(--semantic-color-background-secondary, #efefef);
+  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
 }
 
 .card:focus-visible {}
@@ -40,8 +40,8 @@
 .card__actions {}
 
 .card__badge {
-  background-color: var(--semantic-color-background-accent, #d9292b);
-  color: var(--semantic-color-foreground-on-brand, #ffffff);
+  background-color: var(--fsds-semantic-color-background-accent, #d9292b);
+  color: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
 }
 
 .card__description {}

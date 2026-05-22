@@ -1,9 +1,9 @@
 /* @generated:start styles */
 .badge {
-  background-color: var(--semantic-color-background-danger-subtle, #fceaea);
-  color: var(--semantic-color-foreground-primary, #141414);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  gap: var(--core-spacing-size-02, 2px);
+  background-color: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  gap: var(--fsds-core-spacing-size-02, 2px);
 }
 
 .badge--default {}

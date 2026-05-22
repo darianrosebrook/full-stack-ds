@@ -1,14 +1,14 @@
 /* @generated:start styles */
 .button {
-  background-color: var(--semantic-color-action-background-primary-default, #d9292b);
-  color: var(--semantic-color-foreground-inverse, #fafafa);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  gap: var(--core-spacing-size-04, 8px);
-  border-radius: var(--core-shape-radius-full, 9999px);
-  border-width: var(--core-shape-border-width-hairline, 1px);
-  font-weight: var(--semantic-typography-font-weight-medium, 500);
-  transition-duration: var(--core-motion-duration-short, 150ms);
-  transition-timing-function: var(--core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  background-color: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+  color: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  border-radius: var(--fsds-core-shape-radius-full, 9999px);
+  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+  transition-duration: var(--fsds-core-motion-duration-short, 150ms);
+  transition-timing-function: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 .button--small {}
@@ -30,21 +30,21 @@
 .button--outline {}
 
 .button:hover {
-  background-color: var(--semantic-interaction-background-hover, #efefef);
-  border-color: var(--semantic-interaction-border-hover, #8f8f8f);
+  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
+  border-color: var(--fsds-semantic-interaction-border-hover, #8f8f8f);
 }
 
 .button:focus-visible {
-  border-color: var(--semantic-color-border-accent, #d9292b);
+  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
 }
 
 .button:active {
-  background-color: var(--semantic-interaction-background-active, #cecece);
+  background-color: var(--fsds-semantic-interaction-background-active, #cecece);
 }
 
 .button:disabled {
-  background-color: var(--semantic-color-action-background-primary-disabled, #cecece);
-  color: var(--semantic-color-foreground-disabled, #aeaeae);
+  background-color: var(--fsds-semantic-color-action-background-primary-disabled, #cecece);
+  color: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
 }
 
 .button__spinner {}

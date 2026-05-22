@@ -1,9 +1,9 @@
 /* @generated:start styles */
 .links {
-  color: var(--semantic-color-foreground-primary, #141414);
-  text-decoration-color: var(--semantic-color-border-light, #fceaea);
-  gap: var(--core-spacing-size-02, 2px);
-  transition-duration: var(--core-motion-duration-short, 150ms);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  text-decoration-color: var(--fsds-semantic-color-border-light, #fceaea);
+  gap: var(--fsds-core-spacing-size-02, 2px);
+  transition-duration: var(--fsds-core-motion-duration-short, 150ms);
 }
 
 .links--small {}
@@ -13,17 +13,17 @@
 .links--large {}
 
 .links:hover {
-  color: var(--semantic-interaction-text-hover, #555555);
+  color: var(--fsds-semantic-interaction-text-hover, #555555);
 }
 
 .links:focus-visible {}
 
 .links--visited {
-  color: var(--semantic-color-foreground-secondary, #555555);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
 }
 
 .links:disabled {
-  color: var(--semantic-color-foreground-disabled, #aeaeae);
+  color: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
 }
 /* @generated:end */
 

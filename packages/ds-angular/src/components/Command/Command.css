@@ -1,22 +1,22 @@
 /* @generated:start styles */
 .command {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  border-color: var(--semantic-color-border-subtle, #cecece);
-  color: var(--semantic-color-foreground-tertiary, #717171);
-  border-width: var(--core-shape-border-width-hairline, 1px);
-  border-radius: var(--core-shape-radius-medium, 8px);
-  padding: var(--core-spacing-size-04, 8px);
-  font-size: var(--semantic-typography-body-04, 12px);
-  box-shadow: var(--semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
-  opacity: var(--semantic-interaction-disabled-opacity, 0.5);
-  /* --semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  border-color: var(--fsds-semantic-color-border-subtle, #cecece);
+  color: var(--fsds-semantic-color-foreground-tertiary, #717171);
+  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  font-size: var(--fsds-semantic-typography-body-04, 12px);
+  box-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+  opacity: var(--fsds-semantic-interaction-disabled-opacity, 0.5);
+  /* --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60); */
   /* --command-size-maxWidth: ; */
   /* --command-size-maxHeight: ; */
-  /* --core-spacing-size-04: 8px; */
+  /* --fsds-core-spacing-size-04: 8px; */
 }
 
 .command:hover {
-  background-color: var(--semantic-interaction-background-hover, #efefef);
+  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
 }
 
 .command:disabled {}

@@ -1,12 +1,12 @@
 /* @generated:start styles */
 .status {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  color: var(--semantic-color-foreground-primary, #141414);
-  border-color: var(--semantic-color-border-primary, #f29495);
-  border-radius: var(--core-shape-radius-full, 9999px);
-  padding: var(--core-spacing-size-04, 8px);
-  line-height: var(--semantic-typography-line-height-collapse, 1);
-  /* --core-shape-border-width-hairline: 1px; */
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  border-color: var(--fsds-semantic-color-border-primary, #f29495);
+  border-radius: var(--fsds-core-shape-radius-full, 9999px);
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  line-height: var(--fsds-semantic-typography-line-height-collapse, 1);
+  /* --fsds-core-shape-border-width-hairline: 1px; */
 }
 
 .status--info {}

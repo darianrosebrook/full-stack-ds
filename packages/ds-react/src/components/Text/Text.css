@@ -1,11 +1,11 @@
 /* @generated:start styles */
 .text {
-  color: var(--semantic-color-foreground-secondary, #555555);
-  line-height: var(--semantic-typography-line-height-body, 1.5);
-  /* --semantic-typography-font-weight-light: 300; */
-  /* --semantic-typography-font-weight-regular: 400; */
-  /* --semantic-typography-font-weight-medium: 500; */
-  /* --semantic-typography-font-weight-bold: 700; */
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  line-height: var(--fsds-semantic-typography-line-height-body, 1.5);
+  /* --fsds-semantic-typography-font-weight-light: 300; */
+  /* --fsds-semantic-typography-font-weight-regular: 400; */
+  /* --fsds-semantic-typography-font-weight-medium: 500; */
+  /* --fsds-semantic-typography-font-weight-bold: 700; */
 }
 
 .text--display {}
@@ -63,11 +63,11 @@
 .text--capitalize {}
 
 .text--error {
-  color: var(--semantic-color-foreground-danger, #d9292b);
+  color: var(--fsds-semantic-color-foreground-danger, #d9292b);
 }
 
 .text--success {
-  color: var(--semantic-color-foreground-success, #487e1e);
+  color: var(--fsds-semantic-color-foreground-success, #487e1e);
 }
 
 .text__headline {}

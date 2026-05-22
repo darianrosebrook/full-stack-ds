@@ -1,10 +1,10 @@
 /* @generated:start styles */
 .otp {
-  background-color: var(--semantic-color-background-secondary, #efefef);
-  color: var(--semantic-color-foreground-secondary, #555555);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  padding: var(--core-spacing-size-07, 24px);
-  border-radius: var(--core-shape-radius-medium, 8px);
+  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  padding: var(--fsds-core-spacing-size-07, 24px);
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
 }
 
 .otp--numeric {}
@@ -12,7 +12,7 @@
 .otp--alphanumeric {}
 
 .otp:focus-visible {
-  border-color: var(--semantic-color-border-accent, #d9292b);
+  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
 }
 
 .otp:disabled {}

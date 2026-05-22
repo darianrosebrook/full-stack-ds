@@ -1,11 +1,11 @@
 /* @generated:start styles */
 .divider {
-  /* --semantic-color-border-light: #fceaea; */
-  /* --semantic-color-border-subtle: #cecece; */
-  /* --semantic-color-border-light: #fceaea; */
-  /* --core-shape-border-width-hairline: 1px; */
-  /* --core-shape-border-width-hairline: 1px; */
-  /* --core-spacing-size-04: 8px; */
+  /* --fsds-semantic-color-border-light: #fceaea; */
+  /* --fsds-semantic-color-border-subtle: #cecece; */
+  /* --fsds-semantic-color-border-light: #fceaea; */
+  /* --fsds-core-shape-border-width-hairline: 1px; */
+  /* --fsds-core-shape-border-width-hairline: 1px; */
+  /* --fsds-core-spacing-size-04: 8px; */
 }
 
 .divider--horizontal {}

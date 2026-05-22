@@ -1,12 +1,12 @@
 /* @generated:start styles */
 .skeleton {
-  border-radius: var(--core-shape-radius-04, 16px);
-  gap: var(--core-spacing-size-07, 24px);
-  transition-duration: var(--core-motion-duration-long, 400ms);
-  transition-timing-function: var(--core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
-  /* --semantic-color-background-secondary: #efefef; */
-  /* --semantic-color-background-highlight: #f7c1c2; */
-  /* --semantic-color-background-secondary: #efefef; */
+  border-radius: var(--fsds-core-shape-radius-04, 16px);
+  gap: var(--fsds-core-spacing-size-07, 24px);
+  transition-duration: var(--fsds-core-motion-duration-long, 400ms);
+  transition-timing-function: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  /* --fsds-semantic-color-background-secondary: #efefef; */
+  /* --fsds-semantic-color-background-highlight: #f7c1c2; */
+  /* --fsds-semantic-color-background-secondary: #efefef; */
 }
 
 .skeleton--block {}

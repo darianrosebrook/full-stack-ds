@@ -1,26 +1,26 @@
 /* @generated:start styles */
 .walkthrough {
-  border-radius: var(--core-shape-radius-medium, 8px);
-  box-shadow: var(--semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
-  padding: var(--core-spacing-size-08, 32px);
-  gap: var(--core-spacing-size-03, 4px);
-  /* --semantic-color-background-secondary: #efefef; */
-  /* --semantic-color-border-subtle: #cecece; */
-  /* --semantic-typography-heading-03: 20px; */
-  /* --semantic-typography-font-weight-bold: 700; */
-  /* --semantic-color-foreground-primary: #141414; */
-  /* --semantic-typography-body-02: 16px; */
-  /* --semantic-color-foreground-secondary: #555555; */
-  /* --core-spacing-size-04: 8px; */
-  /* --core-spacing-size-06: 16px; */
-  /* --core-spacing-size-02: 2px; */
-  /* --semantic-color-action-background-primary-default: #d9292b; */
-  /* --semantic-color-border-subtle: #cecece; */
-  /* --semantic-color-action-background-primary-default: #d9292b; */
-  /* --semantic-color-action-foreground-primary-default: #ffffff; */
-  /* --core-color-mode-transparent: transparent; */
-  /* --semantic-color-foreground-secondary: #555555; */
-  /* --semantic-color-border-subtle: #cecece; */
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  box-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+  padding: var(--fsds-core-spacing-size-08, 32px);
+  gap: var(--fsds-core-spacing-size-03, 4px);
+  /* --fsds-semantic-color-background-secondary: #efefef; */
+  /* --fsds-semantic-color-border-subtle: #cecece; */
+  /* --fsds-semantic-typography-heading-03: 20px; */
+  /* --fsds-semantic-typography-font-weight-bold: 700; */
+  /* --fsds-semantic-color-foreground-primary: #141414; */
+  /* --fsds-semantic-typography-body-02: 16px; */
+  /* --fsds-semantic-color-foreground-secondary: #555555; */
+  /* --fsds-core-spacing-size-04: 8px; */
+  /* --fsds-core-spacing-size-06: 16px; */
+  /* --fsds-core-spacing-size-02: 2px; */
+  /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+  /* --fsds-semantic-color-border-subtle: #cecece; */
+  /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+  /* --fsds-semantic-color-action-foreground-primary-default: #ffffff; */
+  /* --fsds-core-color-mode-transparent: transparent; */
+  /* --fsds-semantic-color-foreground-secondary: #555555; */
+  /* --fsds-semantic-color-border-subtle: #cecece; */
 }
 
 .walkthrough--top {}
@@ -40,18 +40,18 @@
 .walkthrough__content {}
 
 .walkthrough__title {
-  /* --semantic-typography-heading-03: 20px; */
-  /* --semantic-typography-font-weight-bold: 700; */
-  /* --semantic-color-foreground-primary: #141414; */
+  /* --fsds-semantic-typography-heading-03: 20px; */
+  /* --fsds-semantic-typography-font-weight-bold: 700; */
+  /* --fsds-semantic-color-foreground-primary: #141414; */
 }
 
 .walkthrough__description {
-  /* --semantic-typography-body-02: 16px; */
-  /* --semantic-color-foreground-secondary: #555555; */
+  /* --fsds-semantic-typography-body-02: 16px; */
+  /* --fsds-semantic-color-foreground-secondary: #555555; */
 }
 
 .walkthrough__controls {
-  gap: var(--core-spacing-size-05, 12px);
+  gap: var(--fsds-core-spacing-size-05, 12px);
 }
 
 .walkthrough__skip {}
@@ -61,10 +61,10 @@
 .walkthrough__next {}
 
 .walkthrough__dots {
-  gap: var(--core-spacing-size-03, 4px);
-  /* --core-spacing-size-02: 2px; */
-  /* --semantic-color-action-background-primary-default: #d9292b; */
-  /* --semantic-color-border-subtle: #cecece; */
+  gap: var(--fsds-core-spacing-size-03, 4px);
+  /* --fsds-core-spacing-size-02: 2px; */
+  /* --fsds-semantic-color-action-background-primary-default: #d9292b; */
+  /* --fsds-semantic-color-border-subtle: #cecece; */
 }
 
 .walkthrough__dot {}

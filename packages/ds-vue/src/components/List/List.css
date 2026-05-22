@@ -1,11 +1,11 @@
 /* @generated:start styles */
 .list {
-  color: var(--semantic-color-foreground-primary, #141414);
-  border-color: var(--semantic-color-border-subtle, #cecece);
-  padding: var(--core-spacing-size-06, 16px);
-  /* --core-spacing-size-03: 4px; */
-  /* --core-spacing-size-05: 12px; */
-  /* --core-spacing-size-06: 16px; */
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  border-color: var(--fsds-semantic-color-border-subtle, #cecece);
+  padding: var(--fsds-core-spacing-size-06, 16px);
+  /* --fsds-core-spacing-size-03: 4px; */
+  /* --fsds-core-spacing-size-05: 12px; */
+  /* --fsds-core-spacing-size-06: 16px; */
 }
 
 .list--ul {}

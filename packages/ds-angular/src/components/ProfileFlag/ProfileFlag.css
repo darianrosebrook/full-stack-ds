@@ -1,15 +1,15 @@
 /* @generated:start styles */
 .profile-flag {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  color: var(--semantic-color-foreground-primary, #141414);
-  border-radius: var(--semantic-shape-control-radius-default, 8px);
-  gap: var(--core-spacing-size-03, 4px);
-  padding: var(--core-spacing-size-06, 16px);
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  gap: var(--fsds-core-spacing-size-03, 4px);
+  padding: var(--fsds-core-spacing-size-06, 16px);
 }
 
 .profile-flag:hover {
-  border-color: var(--semantic-color-border-bold, #8f8f8f);
+  border-color: var(--fsds-semantic-color-border-bold, #8f8f8f);
 }
 /* @generated:end */
 

@@ -1,6 +1,6 @@
 /* @generated:start styles */
 .spinner {
-  gap: var(--core-spacing-size-04, 8px);
+  gap: var(--fsds-core-spacing-size-04, 8px);
   /* --spinner-size-xs: ; */
   /* --spinner-size-sm: ; */
   /* --spinner-size-md: ; */
@@ -8,8 +8,8 @@
   /* --spinner-thickness-hairline: ; */
   /* --spinner-thickness-regular: ; */
   /* --spinner-thickness-bold: ; */
-  /* --semantic-color-background-accent: #d9292b; */
-  /* --semantic-color-border-subtle: #cecece; */
+  /* --fsds-semantic-color-background-accent: #d9292b; */
+  /* --fsds-semantic-color-border-subtle: #cecece; */
   /* --spinner-anim-duration: ; */
 }
 

@@ -1,18 +1,18 @@
 /* @generated:start styles */
 .select {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  color: var(--semantic-color-foreground-primary, #141414);
-  border-color: var(--semantic-color-border-primary, #f29495);
-  padding: var(--core-spacing-size-03, 4px);
-  border-radius: var(--core-shape-radius-medium, 8px);
-  font-size: var(--semantic-typography-body-02, 16px);
-  line-height: var(--semantic-typography-line-height-body, 1.5);
-  /* --semantic-color-foreground-secondary: #555555; */
-  /* --semantic-color-foreground-placeholder: #8f8f8f; */
-  /* --core-shape-border-width-hairline: 1px; */
-  /* --semantic-control-size-sm-height: 24px; */
-  /* --semantic-control-size-md-height: 32px; */
-  /* --semantic-control-size-lg-height: 48px; */
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  border-color: var(--fsds-semantic-color-border-primary, #f29495);
+  padding: var(--fsds-core-spacing-size-03, 4px);
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  font-size: var(--fsds-semantic-typography-body-02, 16px);
+  line-height: var(--fsds-semantic-typography-line-height-body, 1.5);
+  /* --fsds-semantic-color-foreground-secondary: #555555; */
+  /* --fsds-semantic-color-foreground-placeholder: #8f8f8f; */
+  /* --fsds-core-shape-border-width-hairline: 1px; */
+  /* --fsds-semantic-control-size-sm-height: 24px; */
+  /* --fsds-semantic-control-size-md-height: 32px; */
+  /* --fsds-semantic-control-size-lg-height: 48px; */
 }
 
 .select--sm {}
@@ -28,9 +28,9 @@
 .select--auto {}
 
 .select:hover {
-  background-color: var(--semantic-color-background-hover, #cecece);
-  color: var(--semantic-color-foreground-hover, #3a3a3a);
-  border-color: var(--semantic-color-border-bold, #8f8f8f);
+  background-color: var(--fsds-semantic-color-background-hover, #cecece);
+  color: var(--fsds-semantic-color-foreground-hover, #3a3a3a);
+  border-color: var(--fsds-semantic-color-border-bold, #8f8f8f);
 }
 
 .select:focus-visible {}
@@ -38,21 +38,21 @@
 .select:active {}
 
 .select:disabled {
-  background-color: var(--semantic-color-background-disabled, #cecece);
-  color: var(--semantic-color-foreground-disabled, #aeaeae);
-  border-color: var(--semantic-color-border-disabled, #cecece);
+  background-color: var(--fsds-semantic-color-background-disabled, #cecece);
+  color: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
+  border-color: var(--fsds-semantic-color-border-disabled, #cecece);
 }
 
 .select--open {
-  border-color: var(--semantic-color-border-accent, #d9292b);
-  /* --semantic-color-foreground-accent: #d9292b; */
+  border-color: var(--fsds-semantic-color-border-accent, #d9292b);
+  /* --fsds-semantic-color-foreground-accent: #d9292b; */
 }
 
 .select--closed {}
 
 .select[aria-selected="true"] {
-  background-color: var(--semantic-color-background-highlight, #f7c1c2);
-  color: var(--semantic-color-foreground-accent, #d9292b);
+  background-color: var(--fsds-semantic-color-background-highlight, #f7c1c2);
+  color: var(--fsds-semantic-color-foreground-accent, #d9292b);
 }
 
 .select__trigger {}

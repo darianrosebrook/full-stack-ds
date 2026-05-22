@@ -1,9 +1,9 @@
 /* @generated:start styles */
 .image {
-  background-color: var(--semantic-color-background-secondary, #efefef);
-  color: var(--semantic-color-foreground-primary, #141414);
-  /* --core-spacing-size-08: 32px; */
-  /* --semantic-typography-body-04: 12px; */
+  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
+  color: var(--fsds-semantic-color-foreground-primary, #141414);
+  /* --fsds-core-spacing-size-08: 32px; */
+  /* --fsds-semantic-typography-body-04: 12px; */
 }
 
 .image--xs {}
@@ -23,8 +23,8 @@
 .image--loading {}
 
 .image--error {
-  background-color: var(--semantic-color-background-danger-subtle, #fceaea);
-  color: var(--semantic-color-foreground-danger, #d9292b);
+  background-color: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+  color: var(--fsds-semantic-color-foreground-danger, #d9292b);
 }
 
 .image__img {}

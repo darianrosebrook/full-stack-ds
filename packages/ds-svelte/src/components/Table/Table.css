@@ -1,32 +1,32 @@
 /* @generated:start styles */
 .table {
-  color: var(--semantic-color-foreground-secondary, #555555);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  background-color: var(--semantic-color-background-secondary, #efefef);
-  border-width: var(--core-shape-border-width-hairline, 1px);
-  gap: var(--core-spacing-size-02, 2px);
-  border-radius: var(--semantic-shape-control-radius-default, 8px);
-  font-size: var(--semantic-typography-body-04, 12px);
-  line-height: var(--semantic-typography-line-height-normal, 1.5);
-  font-weight: var(--semantic-typography-font-weight-medium, 500);
-  /* --core-spacing-size-03: 4px; */
-  /* --core-spacing-size-02: 2px; */
-  /* --core-spacing-size-04: 8px; */
-  /* --semantic-control-size-md-height: 32px; */
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  background-color: var(--fsds-semantic-color-background-secondary, #efefef);
+  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  gap: var(--fsds-core-spacing-size-02, 2px);
+  border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
+  font-size: var(--fsds-semantic-typography-body-04, 12px);
+  line-height: var(--fsds-semantic-typography-line-height-normal, 1.5);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+  /* --fsds-core-spacing-size-03: 4px; */
+  /* --fsds-core-spacing-size-02: 2px; */
+  /* --fsds-core-spacing-size-04: 8px; */
+  /* --fsds-semantic-control-size-md-height: 32px; */
 }
 
 .table:hover {
-  background-color: var(--semantic-interaction-background-hover, #efefef);
+  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
 }
 
 .table:focus-visible {
-  /* --core-shape-border-width-thick: 2px; */
-  /* --semantic-color-border-accent: #d9292b; */
-  /* --core-spacing-size-01: 1px; */
+  /* --fsds-core-shape-border-width-thick: 2px; */
+  /* --fsds-semantic-color-border-accent: #d9292b; */
+  /* --fsds-core-spacing-size-01: 1px; */
 }
 
 .table[aria-selected="true"] {
-  background-color: var(--semantic-color-background-accent, #d9292b);
+  background-color: var(--fsds-semantic-color-background-accent, #d9292b);
 }
 
 .table__container {}

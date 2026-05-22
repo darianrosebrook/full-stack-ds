@@ -1,12 +1,12 @@
 /* @generated:start styles */
 .tabs {
-  gap: var(--core-spacing-size-06, 16px);
-  padding: var(--core-spacing-size-04, 8px);
-  border-radius: var(--core-shape-radius-medium, 8px);
-  /* --semantic-color-foreground-primary: #141414; */
-  /* --semantic-color-foreground-disabled: #aeaeae; */
-  /* --semantic-color-border-accent: #d9292b; */
-  /* --core-motion-duration-short: 150ms; */
+  gap: var(--fsds-core-spacing-size-06, 16px);
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  /* --fsds-semantic-color-foreground-primary: #141414; */
+  /* --fsds-semantic-color-foreground-disabled: #aeaeae; */
+  /* --fsds-semantic-color-border-accent: #d9292b; */
+  /* --fsds-core-motion-duration-short: 150ms; */
 }
 
 .tabs--horizontal {}
@@ -18,12 +18,12 @@
 .tabs--manual {}
 
 .tabs:hover {
-  /* --semantic-color-background-hover: #cecece; */
-  /* --semantic-color-foreground-primary: #141414; */
+  /* --fsds-semantic-color-background-hover: #cecece; */
+  /* --fsds-semantic-color-foreground-primary: #141414; */
 }
 
 .tabs:focus-visible {
-  /* --semantic-color-border-accent: #d9292b; */
+  /* --fsds-semantic-color-border-accent: #d9292b; */
 }
 
 .tabs__list {}

@@ -1,21 +1,21 @@
 /* @generated:start styles */
 .sheet {
-  background-color: var(--semantic-color-background-primary, #ffffff);
-  border-color: var(--semantic-color-border-light, #fceaea);
-  color: var(--semantic-color-foreground-secondary, #555555);
-  border-width: var(--core-shape-border-width-hairline, 1px);
-  border-radius: var(--core-shape-radius-medium, 8px);
-  padding: var(--core-spacing-size-06, 16px);
-  gap: var(--core-spacing-size-04, 8px);
-  font-size: var(--semantic-typography-heading-06, 14px);
-  font-weight: var(--semantic-typography-font-weight-medium, 500);
-  box-shadow: var(--semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
-  /* --semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
+  background-color: var(--fsds-semantic-color-background-primary, #ffffff);
+  border-color: var(--fsds-semantic-color-border-light, #fceaea);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+  border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+  border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  padding: var(--fsds-core-spacing-size-06, 16px);
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  font-size: var(--fsds-semantic-typography-heading-06, 14px);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+  box-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
+  /* --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50); */
   /* --sheet-size-width: ; */
   /* --sheet-size-height: ; */
-  /* --core-spacing-size-06: 16px; */
-  /* --core-shape-border-width-thick: 2px; */
-  /* --semantic-color-border-accent: #d9292b; */
+  /* --fsds-core-spacing-size-06: 16px; */
+  /* --fsds-core-shape-border-width-thick: 2px; */
+  /* --fsds-semantic-color-border-accent: #d9292b; */
 }
 
 .sheet--top {}
@@ -27,7 +27,7 @@
 .sheet--left {}
 
 .sheet:hover {
-  background-color: var(--semantic-interaction-background-hover, #efefef);
+  background-color: var(--fsds-semantic-interaction-background-hover, #efefef);
 }
 
 .sheet:focus-visible {}
