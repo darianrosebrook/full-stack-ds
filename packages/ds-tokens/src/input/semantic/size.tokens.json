@@ -8,7 +8,7 @@
           "$value": "{control.size.sm.height}",
           "$description": "Input small height — matches action.size.small.height for visual alignment when inputs and buttons sit on the same row."
         },
-        "minHeight": {
+        "min-height": {
           "$type": "dimension",
           "$value": "{control.size.sm.height}",
           "$description": "Input small min-height."
@@ -35,7 +35,7 @@
           "$value": "{control.size.md.height}",
           "$description": "Input medium height — default size for form inputs."
         },
-        "minHeight": {
+        "min-height": {
           "$type": "dimension",
           "$value": "{control.size.md.height}",
           "$description": "Input medium min-height."
@@ -62,7 +62,7 @@
           "$value": "{control.size.lg.height}",
           "$description": "Input large height."
         },
-        "minHeight": {
+        "min-height": {
           "$type": "dimension",
           "$value": "{control.size.lg.height}",
           "$description": "Input large min-height."

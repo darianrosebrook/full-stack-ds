@@ -1879,12 +1879,12 @@
             "$description": "Action (button-like) small height — 28px at default density.",
             "$value": "24px"
           },
-          "minHeight": {
+          "min-height": {
             "$type": "dimension",
             "$description": "Action small min-height; matches height so content cannot collapse the control.",
             "$value": "24px"
           },
-          "minWidth": {
+          "min-width": {
             "$type": "dimension",
             "$description": "Action small min-width; square minimum so icon-only buttons stay tappable.",
             "$value": "24px"
@@ -1911,12 +1911,12 @@
             "$description": "Action medium height — 36px at default density. Default size for action components.",
             "$value": "32px"
           },
-          "minHeight": {
+          "min-height": {
             "$type": "dimension",
             "$description": "Action medium min-height; matches height.",
             "$value": "32px"
           },
-          "minWidth": {
+          "min-width": {
             "$type": "dimension",
             "$description": "Action medium min-width; square minimum.",
             "$value": "32px"
@@ -1943,12 +1943,12 @@
             "$description": "Action large height — 48px at default density.",
             "$value": "48px"
           },
-          "minHeight": {
+          "min-height": {
             "$type": "dimension",
             "$description": "Action large min-height; matches height.",
             "$value": "48px"
           },
-          "minWidth": {
+          "min-width": {
             "$type": "dimension",
             "$description": "Action large min-width; square minimum.",
             "$value": "48px"
@@ -3338,7 +3338,7 @@
             "$description": "Input small height — matches action.size.small.height for visual alignment when inputs and buttons sit on the same row.",
             "$value": "24px"
           },
-          "minHeight": {
+          "min-height": {
             "$type": "dimension",
             "$description": "Input small min-height.",
             "$value": "24px"
@@ -3365,7 +3365,7 @@
             "$description": "Input medium height — default size for form inputs.",
             "$value": "32px"
           },
-          "minHeight": {
+          "min-height": {
             "$type": "dimension",
             "$description": "Input medium min-height.",
             "$value": "32px"
@@ -3392,7 +3392,7 @@
             "$description": "Input large height.",
             "$value": "48px"
           },
-          "minHeight": {
+          "min-height": {
             "$type": "dimension",
             "$description": "Input large min-height.",
             "$value": "48px"
@@ -3945,7 +3945,7 @@
           "$description": "Surface inter-region gap — the vertical rhythm between header / body / footer regions when the surface is a vertical stack.",
           "$value": "8px"
         },
-        "minWidth": {
+        "min-width": {
           "$type": "dimension",
           "$description": "Surface minimum width — prevents the surface from collapsing to icon-width when content is sparse.",
           "$value": "64px"

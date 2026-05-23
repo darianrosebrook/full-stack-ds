@@ -1,4 +1,39 @@
 {
+  "box-model.padding-block-start": {
+    "resolvesTo": "semantic.action.size.medium.padding-block",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "box-model.padding-block-end": {
+    "resolvesTo": "semantic.action.size.medium.padding-block",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-start": {
+    "resolvesTo": "semantic.action.size.medium.padding-inline",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-end": {
+    "resolvesTo": "semantic.action.size.medium.padding-inline",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "box-model.gap": {
+    "resolvesTo": "semantic.action.size.medium.gap",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "box-model.min-height": {
+    "resolvesTo": "semantic.action.size.medium.min-height",
+    "fallback": "36px",
+    "layer": "semantic"
+  },
+  "box-model.min-width": {
+    "resolvesTo": "semantic.action.size.medium.min-width",
+    "fallback": "36px",
+    "layer": "semantic"
+  },
   "button.color.background.default": {
     "resolvesTo": "semantic.color.action.background.primary.default",
     "fallback": "#d9292b",

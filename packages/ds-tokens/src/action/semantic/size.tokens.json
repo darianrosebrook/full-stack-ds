@@ -8,12 +8,12 @@
           "$value": "{control.size.sm.height}",
           "$description": "Action (button-like) small height — 28px at default density."
         },
-        "minHeight": {
+        "min-height": {
           "$type": "dimension",
           "$value": "{control.size.sm.height}",
           "$description": "Action small min-height; matches height so content cannot collapse the control."
         },
-        "minWidth": {
+        "min-width": {
           "$type": "dimension",
           "$value": "{control.size.sm.height}",
           "$description": "Action small min-width; square minimum so icon-only buttons stay tappable."
@@ -40,12 +40,12 @@
           "$value": "{control.size.md.height}",
           "$description": "Action medium height — 36px at default density. Default size for action components."
         },
-        "minHeight": {
+        "min-height": {
           "$type": "dimension",
           "$value": "{control.size.md.height}",
           "$description": "Action medium min-height; matches height."
         },
-        "minWidth": {
+        "min-width": {
           "$type": "dimension",
           "$value": "{control.size.md.height}",
           "$description": "Action medium min-width; square minimum."
@@ -72,12 +72,12 @@
           "$value": "{control.size.lg.height}",
           "$description": "Action large height — 48px at default density."
         },
-        "minHeight": {
+        "min-height": {
           "$type": "dimension",
           "$value": "{control.size.lg.height}",
           "$description": "Action large min-height; matches height."
         },
-        "minWidth": {
+        "min-width": {
           "$type": "dimension",
           "$value": "{control.size.lg.height}",
           "$description": "Action large min-width; square minimum."

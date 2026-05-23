@@ -24,12 +24,12 @@ export class AlertElement extends LitElement {
     .alert {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-feedback-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-feedback-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -192,12 +192,12 @@ export class AlertBodyElement extends LitElement {
     .alert {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-feedback-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-feedback-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -337,12 +337,12 @@ export class AlertTitleElement extends LitElement {
     .alert {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-feedback-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-feedback-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;

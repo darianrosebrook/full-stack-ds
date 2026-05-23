@@ -17,7 +17,7 @@
         "$value": "{spacing.gap.component}",
         "$description": "Surface inter-region gap — the vertical rhythm between header / body / footer regions when the surface is a vertical stack."
       },
-      "minWidth": {
+      "min-width": {
         "$type": "dimension",
         "$value": "{spacing.size.10}",
         "$description": "Surface minimum width — prevents the surface from collapsing to icon-width when content is sparse."
