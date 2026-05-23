@@ -2,18 +2,24 @@
   "root": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-top-color": {
       "resolvesTo": "divider.color.default"
     },
     "border-top-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-top-width": {
       "resolvesTo": "divider.size.thickness"
@@ -28,33 +34,45 @@
   "--vertical": {
     "width": {
       "literal": "1px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "height": {
       "literal": "auto",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-top": {
       "literal": "none",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-left-color": {
       "resolvesTo": "divider.color.default"
     },
     "border-left-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-left-width": {
       "resolvesTo": "divider.size.thickness"
     },
     "margin-top": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "margin-bottom": {
       "literal": "0",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "margin-left": {
       "resolvesTo": "divider.spacing.margin"

@@ -62,17 +62,8 @@
   border: 0;
 }
 
-:has(.switch__input:checked) .switch__track {
-  background-color: var(--fsds-switch-color-track-background-checked);
-}
-
 :has(.switch__input:checked) .switch__thumb {
-  background-color: var(--fsds-switch-color-thumb-background-checked);
   translate: var(--fsds-switch-size-md-thumb-translate-on);
-}
-
-:has(.switch__input:disabled) .switch__track {
-  background-color: var(--fsds-switch-color-track-background-disabled);
 }
 
 .switch--sm .switch__track {

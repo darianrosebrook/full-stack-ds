@@ -2,23 +2,33 @@
   "root": {
     "display": {
       "literal": "inline-flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "align-items": {
       "literal": "center",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "justify-content": {
       "literal": "center",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "overflow": {
       "literal": "hidden",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "position": {
       "literal": "relative",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-radius": {
       "resolvesTo": "avatar.size.radius.default"
@@ -34,7 +44,9 @@
     },
     "border-style": {
       "literal": "solid",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "border-width": {
       "resolvesTo": "avatar.size.border.default"
@@ -55,19 +67,27 @@
   "image": {
     "width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "height": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "object-fit": {
       "literal": "cover",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

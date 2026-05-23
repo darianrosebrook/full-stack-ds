@@ -39,11 +39,6 @@
     "fallback": "#fceaea",
     "layer": "semantic"
   },
-  "postcard.color.border.accent": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
   "postcard.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
@@ -72,11 +67,6 @@
   "postcard.size.gap.default": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
-    "layer": "core"
-  },
-  "postcard.size.gap.small": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
     "layer": "core"
   },
   "postcard.size.border.default": {
@@ -112,16 +102,6 @@
   "postcard.typography.footer.fontSize": {
     "resolvesTo": "semantic.typography.body.03",
     "fallback": "14px",
-    "layer": "semantic"
-  },
-  "postcard.color.background.hover": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
-    "layer": "semantic"
-  },
-  "postcard.color.border.hover": {
-    "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#8f8f8f",
     "layer": "semantic"
   }
 }

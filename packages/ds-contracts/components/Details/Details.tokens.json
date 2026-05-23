@@ -39,11 +39,6 @@
     "fallback": "#f29495",
     "layer": "semantic"
   },
-  "details.color.border.accent": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
   "details.focus.ring.width": {
     "resolvesTo": "core.shape.border.width.thick",
     "fallback": "2px",
@@ -72,16 +67,6 @@
   "details.typography.fontWeight.medium": {
     "resolvesTo": "semantic.typography.font.weight.medium",
     "fallback": "500",
-    "layer": "semantic"
-  },
-  "details.color.background.hover": {
-    "resolvesTo": "semantic.color.background.hover",
-    "fallback": "#cecece",
-    "layer": "semantic"
-  },
-  "details.color.border.hover": {
-    "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#8f8f8f",
     "layer": "semantic"
   }
 }

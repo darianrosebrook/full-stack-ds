@@ -29,11 +29,6 @@
     "fallback": "12px",
     "layer": "semantic"
   },
-  "image.color.background.error": {
-    "resolvesTo": "semantic.color.background.danger.subtle",
-    "fallback": "#fceaea",
-    "layer": "semantic"
-  },
   "image.color.foreground.error": {
     "resolvesTo": "semantic.color.foreground.danger",
     "fallback": "#d9292b",

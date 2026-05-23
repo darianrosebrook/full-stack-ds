@@ -1,13 +1,53 @@
 {
   "root": {
-    "display": { "literal": "inline-flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "justify-content": { "literal": "center", "platforms": ["web"] },
-    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
-    "cursor": { "literal": "pointer", "platforms": ["web"] },
-    "border-style": { "literal": "solid", "platforms": ["web"] },
-    "white-space": { "literal": "nowrap", "platforms": ["web"] },
-    "user-select": { "literal": "none", "platforms": ["web"] },
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": [
+        "web"
+      ]
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": [
+        "web"
+      ]
+    },
+    "white-space": {
+      "literal": "nowrap",
+      "platforms": [
+        "web"
+      ]
+    },
+    "user-select": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
     "background-color": {
       "resolvesTo": "button.color.background.default"
     },
@@ -37,22 +77,54 @@
     }
   },
   "--small": {
-    "padding-block": { "resolvesTo": "button.size.padding-block.small" },
-    "padding-inline": { "resolvesTo": "button.size.padding-inline.small" },
-    "min-height": { "resolvesTo": "button.size.minHeight.small" },
-    "font-size": { "resolvesTo": "button.size.fontSize.small" }
+    "button.size.padding-block.medium": {
+      "resolvesTo": "core.spacing.size.03",
+      "fallback": "4px"
+    },
+    "button.size.padding-inline.medium": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "button.size.minHeight.medium": {
+      "resolvesTo": "core.dimension.actionMinHeightSmall",
+      "fallback": "28px"
+    },
+    "button.size.fontSize.medium": {
+      "resolvesTo": "core.typography.ramp.3",
+      "fallback": "0.875rem"
+    }
   },
   "--medium": {
-    "padding-block": { "resolvesTo": "button.size.padding-block.medium" },
-    "padding-inline": { "resolvesTo": "button.size.padding-inline.medium" },
-    "min-height": { "resolvesTo": "button.size.minHeight.medium" },
-    "font-size": { "resolvesTo": "button.size.fontSize.medium" }
+    "padding-block": {
+      "resolvesTo": "button.size.padding-block.medium"
+    },
+    "padding-inline": {
+      "resolvesTo": "button.size.padding-inline.medium"
+    },
+    "min-height": {
+      "resolvesTo": "button.size.minHeight.medium"
+    },
+    "font-size": {
+      "resolvesTo": "button.size.fontSize.medium"
+    }
   },
   "--large": {
-    "padding-block": { "resolvesTo": "button.size.padding-block.large" },
-    "padding-inline": { "resolvesTo": "button.size.padding-inline.large" },
-    "min-height": { "resolvesTo": "button.size.minHeight.large" },
-    "font-size": { "resolvesTo": "button.size.fontSize.large" }
+    "button.size.padding-block.medium": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "button.size.padding-inline.medium": {
+      "resolvesTo": "core.spacing.size.06",
+      "fallback": "16px"
+    },
+    "button.size.minHeight.medium": {
+      "resolvesTo": "core.dimension.actionMinHeightLarge",
+      "fallback": "48px"
+    },
+    "button.size.fontSize.medium": {
+      "resolvesTo": "core.typography.ramp.5",
+      "fallback": "1.125rem"
+    }
   },
   "--primary": {
     "button.color.background.default": {
@@ -66,65 +138,171 @@
     }
   },
   "--secondary": {
-    "background-color": { "resolvesTo": "button.color.background.secondary" },
-    "color": { "resolvesTo": "button.color.foreground.secondary" },
-    "border-color": { "resolvesTo": "button.color.border.secondary" }
+    "button.color.background.default": {
+      "resolvesTo": "semantic.color.action.background.secondary.default",
+      "fallback": "#ffffff"
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414"
+    },
+    "button.color.border.default": {
+      "resolvesTo": "semantic.color.border.default",
+      "fallback": "#8f8f8f"
+    }
   },
   "--tertiary": {
-    "background-color": { "resolvesTo": "button.color.background.tertiary" },
-    "color": { "resolvesTo": "button.color.foreground.tertiary" },
-    "border-color": { "resolvesTo": "button.color.border.tertiary" }
+    "button.color.background.default": {
+      "literal": "transparent",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ]
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414"
+    },
+    "button.color.border.default": {
+      "literal": "transparent",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ]
+    }
   },
   "--destructive": {
-    "background-color": { "resolvesTo": "button.color.background.destructive" },
-    "color": { "resolvesTo": "button.color.foreground.destructive" },
-    "border-color": { "resolvesTo": "button.color.border.destructive" }
+    "button.color.background.default": {
+      "resolvesTo": "semantic.color.action.background.danger.default",
+      "fallback": "#d9292b"
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.inverse",
+      "fallback": "#fafafa"
+    },
+    "button.color.border.default": {
+      "resolvesTo": "semantic.color.action.background.danger.default",
+      "fallback": "#d9292b"
+    }
   },
   "--ghost": {
-    "background-color": { "resolvesTo": "button.color.background.ghost" },
-    "color": { "resolvesTo": "button.color.foreground.ghost" },
-    "border-color": { "resolvesTo": "button.color.border.ghost" }
+    "button.color.background.default": {
+      "literal": "transparent",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ]
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414"
+    },
+    "button.color.border.default": {
+      "literal": "transparent",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ]
+    }
   },
   "--outline": {
-    "background-color": { "resolvesTo": "button.color.background.outline" },
-    "color": { "resolvesTo": "button.color.foreground.outline" },
-    "border-color": { "resolvesTo": "button.color.border.outline" }
+    "button.color.background.default": {
+      "literal": "transparent",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ]
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.primary",
+      "fallback": "#141414"
+    },
+    "button.color.border.default": {
+      "resolvesTo": "semantic.color.border.default",
+      "fallback": "#8f8f8f"
+    }
   },
   "hover": {
-    "background-color": {
-      "resolvesTo": "button.color.background.hover"
+    "button.color.background.default": {
+      "resolvesTo": "semantic.interaction.background.hover",
+      "fallback": "#efefef"
     },
-    "border-color": {
-      "resolvesTo": "button.color.border.hover"
+    "button.color.border.default": {
+      "resolvesTo": "semantic.interaction.border.hover",
+      "fallback": "#8f8f8f"
     }
   },
   "active": {
-    "background-color": {
-      "resolvesTo": "button.color.background.active"
+    "button.color.background.default": {
+      "resolvesTo": "semantic.interaction.background.active",
+      "fallback": "#cecece"
     }
   },
   "focus": {
-    "border-color": {
-      "resolvesTo": "button.color.border.focus"
+    "button.color.border.default": {
+      "resolvesTo": "semantic.color.border.accent",
+      "fallback": "#d9292b"
     }
   },
   "disabled": {
-    "background-color": {
-      "resolvesTo": "button.color.background.disabled"
+    "button.color.background.default": {
+      "resolvesTo": "semantic.color.action.background.primary.disabled",
+      "fallback": "#cecece"
     },
-    "color": {
-      "resolvesTo": "button.color.foreground.disabled"
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.disabled",
+      "fallback": "#aeaeae"
     }
   },
   "spinner": {
-    "display": { "literal": "inline-block", "platforms": ["web"] },
-    "width": { "literal": "1em", "platforms": ["web"] },
-    "height": { "literal": "1em", "platforms": ["web"] },
-    "flex-shrink": { "literal": "0", "platforms": ["web"] },
-    "animation": { "literal": "spin 1s linear infinite", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "width": {
+      "literal": "1em",
+      "platforms": [
+        "web"
+      ]
+    },
+    "height": {
+      "literal": "1em",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-shrink": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "animation": {
+      "literal": "spin 1s linear infinite",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "loadingText": {
-    "display": { "literal": "inline-block", "platforms": ["web"] },
-    "opacity": { "literal": "0.7", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "opacity": {
+      "literal": "0.7",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

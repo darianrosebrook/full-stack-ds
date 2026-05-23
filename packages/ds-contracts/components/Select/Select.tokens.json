@@ -94,52 +94,7 @@
     "fallback": "1.5",
     "layer": "semantic"
   },
-  "select.color.background.hover": {
-    "resolvesTo": "semantic.color.background.hover",
-    "fallback": "#cecece",
-    "layer": "semantic"
-  },
-  "select.color.foreground.hover": {
-    "resolvesTo": "semantic.color.foreground.hover",
-    "fallback": "#3a3a3a",
-    "layer": "semantic"
-  },
-  "select.color.border.hover": {
-    "resolvesTo": "semantic.color.border.bold",
-    "fallback": "#8f8f8f",
-    "layer": "semantic"
-  },
-  "select.color.background.disabled": {
-    "resolvesTo": "semantic.color.background.disabled",
-    "fallback": "#cecece",
-    "layer": "semantic"
-  },
-  "select.color.foreground.disabled": {
-    "resolvesTo": "semantic.color.foreground.disabled",
-    "fallback": "#aeaeae",
-    "layer": "semantic"
-  },
-  "select.color.border.disabled": {
-    "resolvesTo": "semantic.color.border.disabled",
-    "fallback": "#cecece",
-    "layer": "semantic"
-  },
-  "select.color.border.isOpen": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
   "select.color.icon.isOpen": {
-    "resolvesTo": "semantic.color.foreground.accent",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
-  "select.color.background.selected": {
-    "resolvesTo": "semantic.color.background.highlight",
-    "fallback": "#f7c1c2",
-    "layer": "semantic"
-  },
-  "select.color.foreground.selected": {
     "resolvesTo": "semantic.color.foreground.accent",
     "fallback": "#d9292b",
     "layer": "semantic"

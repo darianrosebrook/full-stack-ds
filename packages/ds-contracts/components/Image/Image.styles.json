@@ -2,11 +2,15 @@
   "root": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "max-width": {
       "literal": "100%",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
       "resolvesTo": "image.color.background.default"

@@ -1,9 +1,7 @@
 /* @generated:start tokens */
 :root {
   --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-  --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
   --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
   --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
   --fsds-dialog-size-sm-width: 400px;
@@ -24,7 +22,6 @@
   --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
   --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
   --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-  --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
 }
 
 .dialog {
@@ -42,6 +39,22 @@
   --fsds-box-model-height: auto;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
+}
+
+.dialog__backdrop {
+  --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+}
+
+.dialog__body {
+  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+}
+
+.dialog__closeButton {
+  --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+}
+
+.dialog__closeButton:hover {
+  --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
 }
 /* @generated:end */
 

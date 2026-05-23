@@ -14,15 +14,55 @@
     }
   },
   "icon": {
-    "display": { "literal": "inline-flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "flex-shrink": { "literal": "0", "platforms": ["web"] },
-    "width": { "literal": "1em", "platforms": ["web"] },
-    "height": { "literal": "1em", "platforms": ["web"] },
-    "margin-inline-end": { "literal": "2px", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "flex-shrink": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    },
+    "width": {
+      "literal": "1em",
+      "platforms": [
+        "web"
+      ]
+    },
+    "height": {
+      "literal": "1em",
+      "platforms": [
+        "web"
+      ]
+    },
+    "margin-inline-end": {
+      "literal": "2px",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "content": {
-    "display": { "literal": "inline-block", "platforms": ["web"] },
-    "white-space": { "literal": "nowrap", "platforms": ["web"] }
+    "display": {
+      "literal": "inline-block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "white-space": {
+      "literal": "nowrap",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

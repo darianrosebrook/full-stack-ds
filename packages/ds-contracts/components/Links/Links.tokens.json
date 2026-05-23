@@ -29,21 +29,6 @@
     "fallback": "150ms",
     "layer": "core"
   },
-  "links.color.foreground.hover": {
-    "resolvesTo": "semantic.interaction.text.hover",
-    "fallback": "#555555",
-    "layer": "semantic"
-  },
-  "links.color.foreground.visited": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
-    "layer": "semantic"
-  },
-  "links.color.foreground.disabled": {
-    "resolvesTo": "semantic.color.foreground.disabled",
-    "fallback": "#aeaeae",
-    "layer": "semantic"
-  },
   "links.focus.ring.width": {
     "resolvesTo": "semantic.focus.ring.width",
     "fallback": "2px",

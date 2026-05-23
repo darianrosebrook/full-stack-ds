@@ -36,9 +36,7 @@ export class DialogElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
@@ -59,7 +57,22 @@ export class DialogElement extends LitElement {
       --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .dialog__backdrop {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+    }
+    
+    .dialog__body {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton:hover {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
     
     .dialog {
@@ -86,7 +99,6 @@ export class DialogElement extends LitElement {
     .dialog__backdrop {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-dialog-color-background-backdrop);
       pointer-events: auto;
     }
     
@@ -135,7 +147,6 @@ export class DialogElement extends LitElement {
       padding-right: var(--fsds-dialog-spacing-body-paddingRight);
       padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
       padding-left: var(--fsds-dialog-spacing-body-paddingRight);
-      color: var(--fsds-dialog-color-foreground-secondary);
       overflow-y: auto;
     }
     
@@ -165,12 +176,7 @@ export class DialogElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-dialog-color-foreground-secondary);
       cursor: pointer;
-    }
-    
-    .dialog__closeButton:hover {
-      background-color: var(--fsds-dialog-color-background-hover);
     }
     
     .dialog--sm .dialog__modal {
@@ -283,9 +289,7 @@ export class DialogHeaderElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
@@ -306,7 +310,22 @@ export class DialogHeaderElement extends LitElement {
       --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .dialog__backdrop {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+    }
+    
+    .dialog__body {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton:hover {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
     
     .dialog {
@@ -333,7 +352,6 @@ export class DialogHeaderElement extends LitElement {
     .dialog__backdrop {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-dialog-color-background-backdrop);
       pointer-events: auto;
     }
     
@@ -382,7 +400,6 @@ export class DialogHeaderElement extends LitElement {
       padding-right: var(--fsds-dialog-spacing-body-paddingRight);
       padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
       padding-left: var(--fsds-dialog-spacing-body-paddingRight);
-      color: var(--fsds-dialog-color-foreground-secondary);
       overflow-y: auto;
     }
     
@@ -412,12 +429,7 @@ export class DialogHeaderElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-dialog-color-foreground-secondary);
       cursor: pointer;
-    }
-    
-    .dialog__closeButton:hover {
-      background-color: var(--fsds-dialog-color-background-hover);
     }
     
     .dialog--sm .dialog__modal {
@@ -470,9 +482,7 @@ export class DialogTitleElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
@@ -493,7 +503,22 @@ export class DialogTitleElement extends LitElement {
       --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .dialog__backdrop {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+    }
+    
+    .dialog__body {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton:hover {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
     
     .dialog {
@@ -520,7 +545,6 @@ export class DialogTitleElement extends LitElement {
     .dialog__backdrop {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-dialog-color-background-backdrop);
       pointer-events: auto;
     }
     
@@ -569,7 +593,6 @@ export class DialogTitleElement extends LitElement {
       padding-right: var(--fsds-dialog-spacing-body-paddingRight);
       padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
       padding-left: var(--fsds-dialog-spacing-body-paddingRight);
-      color: var(--fsds-dialog-color-foreground-secondary);
       overflow-y: auto;
     }
     
@@ -599,12 +622,7 @@ export class DialogTitleElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-dialog-color-foreground-secondary);
       cursor: pointer;
-    }
-    
-    .dialog__closeButton:hover {
-      background-color: var(--fsds-dialog-color-background-hover);
     }
     
     .dialog--sm .dialog__modal {
@@ -657,9 +675,7 @@ export class DialogBodyElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
@@ -680,7 +696,22 @@ export class DialogBodyElement extends LitElement {
       --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .dialog__backdrop {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+    }
+    
+    .dialog__body {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton:hover {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
     
     .dialog {
@@ -707,7 +738,6 @@ export class DialogBodyElement extends LitElement {
     .dialog__backdrop {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-dialog-color-background-backdrop);
       pointer-events: auto;
     }
     
@@ -756,7 +786,6 @@ export class DialogBodyElement extends LitElement {
       padding-right: var(--fsds-dialog-spacing-body-paddingRight);
       padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
       padding-left: var(--fsds-dialog-spacing-body-paddingRight);
-      color: var(--fsds-dialog-color-foreground-secondary);
       overflow-y: auto;
     }
     
@@ -786,12 +815,7 @@ export class DialogBodyElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-dialog-color-foreground-secondary);
       cursor: pointer;
-    }
-    
-    .dialog__closeButton:hover {
-      background-color: var(--fsds-dialog-color-background-hover);
     }
     
     .dialog--sm .dialog__modal {
@@ -844,9 +868,7 @@ export class DialogFooterElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-dialog-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
@@ -867,7 +889,22 @@ export class DialogFooterElement extends LitElement {
       --fsds-dialog-typography-title-fontSize: var(--fsds-semantic-typography-heading-04, 18px);
       --fsds-dialog-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-dialog-typography-title-lineHeight: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-dialog-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .dialog__backdrop {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-overlay-scrim, #00000066);
+    }
+    
+    .dialog__body {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton {
+      --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .dialog__closeButton:hover {
+      --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
     
     .dialog {
@@ -894,7 +931,6 @@ export class DialogFooterElement extends LitElement {
     .dialog__backdrop {
       position: absolute;
       inset: 0;
-      background-color: var(--fsds-dialog-color-background-backdrop);
       pointer-events: auto;
     }
     
@@ -943,7 +979,6 @@ export class DialogFooterElement extends LitElement {
       padding-right: var(--fsds-dialog-spacing-body-paddingRight);
       padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
       padding-left: var(--fsds-dialog-spacing-body-paddingRight);
-      color: var(--fsds-dialog-color-foreground-secondary);
       overflow-y: auto;
     }
     
@@ -973,12 +1008,7 @@ export class DialogFooterElement extends LitElement {
       background-color: transparent;
       border: 0;
       border-radius: 9999px;
-      color: var(--fsds-dialog-color-foreground-secondary);
       cursor: pointer;
-    }
-    
-    .dialog__closeButton:hover {
-      background-color: var(--fsds-dialog-color-background-hover);
     }
     
     .dialog--sm .dialog__modal {

@@ -1787,10 +1787,19 @@ function renderStyleBlock(
   const declarations: Record<string, string> = {};
   for (const [property, entry] of Object.entries(block)) {
     if (!entry || typeof entry !== "object") continue;
+    // Disambiguate property key vs slot-path key once per entry so both
+    // the `literal` and `resolvesTo` branches honor the same emission rule.
+    const isSlotKey = property.includes(".");
+    const outputKey = isSlotKey ? `--${tokenSlug(property)}` : property;
+
     if (typeof entry.literal === "string") {
       const platforms = entry.platforms ?? [];
       if (!platforms.includes(platformTarget)) continue;
-      declarations[property] = entry.literal;
+      // Slot-path key with literal: redefine the slot at this scope to
+      // a literal CSS value (e.g. `transparent` for ghost/tertiary
+      // variants). The literal flows straight through as the custom-
+      // property's value.
+      declarations[outputKey] = entry.literal;
       continue;
     }
     if (typeof entry.resolvesTo === "string") {
@@ -1801,15 +1810,7 @@ function renderStyleBlock(
         typeof entry.fallback === "string"
           ? `var(${ref}, ${entry.fallback})`
           : `var(${ref})`;
-      // Slot-path key: emit as custom-property redefinition. The output
-      // key becomes `--<slug>` (a CSS custom property) instead of the
-      // raw dotted path. Authors write `button.color.background.default`
-      // in styles.json; we emit `--fsds-button-color-background-default`.
-      if (property.includes(".")) {
-        declarations[`--${tokenSlug(property)}`] = value;
-        continue;
-      }
-      declarations[property] = value;
+      declarations[outputKey] = value;
     }
   }
   return declarations;

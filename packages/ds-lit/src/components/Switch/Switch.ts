@@ -39,11 +39,8 @@ export class SwitchElement extends LitElement {
       --fsds-switch-motion-duration: var(--fsds-semantic-motion-interaction-press-duration, 100ms);
       --fsds-switch-motion-easing: var(--fsds-semantic-motion-interaction-press-easing, ease-out);
       --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-tertiary, #cecece);
-      --fsds-switch-color-track-background-checked: var(--fsds-semantic-color-foreground-accent, #d9292b);
-      --fsds-switch-color-track-background-disabled: var(--fsds-semantic-color-background-disabled, #efefef);
       --fsds-switch-color-track-border-default: var(--fsds-semantic-color-border-subtle, #aeaeae);
       --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-switch-color-thumb-background-checked: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-switch-color-thumb-shadow-default: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0, 0, 0, 0.1));
       --fsds-switch-color-input-outline-focus: var(--fsds-semantic-color-border-focus, #d9292b);
       --fsds-switch-size-md-track-width: var(--fsds-core-spacing-size-09, 48px);
@@ -70,6 +67,18 @@ export class SwitchElement extends LitElement {
       --fsds-switch-size-md-thumb-translate-on: 24px;
       --fsds-switch-size-lg-thumb-translate-off: 0;
       --fsds-switch-size-lg-thumb-translate-on: 36px;
+    }
+    
+    :has(.switch__input:checked) .switch__track {
+      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d9292b);
+    }
+    
+    :has(.switch__input:checked) .switch__thumb {
+      --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+    }
+    
+    :has(.switch__input:disabled) .switch__track {
+      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #efefef);
     }
     
     .switch {
@@ -133,17 +142,8 @@ export class SwitchElement extends LitElement {
       border: 0;
     }
     
-    :has(.switch__input:checked) .switch__track {
-      background-color: var(--fsds-switch-color-track-background-checked);
-    }
-    
     :has(.switch__input:checked) .switch__thumb {
-      background-color: var(--fsds-switch-color-thumb-background-checked);
       translate: var(--fsds-switch-size-md-thumb-translate-on);
-    }
-    
-    :has(.switch__input:disabled) .switch__track {
-      background-color: var(--fsds-switch-color-track-background-disabled);
     }
     
     .switch--sm .switch__track {

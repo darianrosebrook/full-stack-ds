@@ -14,18 +14,21 @@
     }
   },
   "hover": {
-    "color": {
-      "resolvesTo": "links.color.foreground.hover"
+    "links.color.foreground.default": {
+      "resolvesTo": "semantic.interaction.text.hover",
+      "fallback": "#555555"
     }
   },
   "visited": {
-    "color": {
-      "resolvesTo": "links.color.foreground.visited"
+    "links.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "disabled": {
-    "color": {
-      "resolvesTo": "links.color.foreground.disabled"
+    "links.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.disabled",
+      "fallback": "#aeaeae"
     }
   },
   "focus": {

@@ -14,16 +14,6 @@
     "fallback": "#fceaea",
     "layer": "semantic"
   },
-  "divider.color.subtle": {
-    "resolvesTo": "semantic.color.border.subtle",
-    "fallback": "#cecece",
-    "layer": "semantic"
-  },
-  "divider.color.muted": {
-    "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
-    "layer": "semantic"
-  },
   "divider.size.thickness": {
     "resolvesTo": "core.shape.border.width.hairline",
     "fallback": "1px",

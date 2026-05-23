@@ -43,10 +43,5 @@
     "resolvesTo": "semantic.elevation.default",
     "fallback": "none",
     "layer": "semantic"
-  },
-  "calendar.elevation.hover": {
-    "resolvesTo": "semantic.elevation.surface.floating",
-    "fallback": "0 2px 8px rgba(0,0,0,0.12)",
-    "layer": "semantic"
   }
 }

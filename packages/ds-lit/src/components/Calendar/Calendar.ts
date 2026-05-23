@@ -43,7 +43,6 @@ export class CalendarElement extends LitElement {
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-default, none);
-      --fsds-calendar-elevation-hover: var(--fsds-semantic-elevation-surface-floating, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .calendar {
@@ -204,7 +203,6 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-default, none);
-      --fsds-calendar-elevation-hover: var(--fsds-semantic-elevation-surface-floating, 0 2px 8px rgba(0,0,0,0.12));
     }
     
     .calendar {

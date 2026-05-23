@@ -17,17 +17,11 @@
   border-radius: var(--fsds-details-size-radius-default);
   background-color: var(--fsds-details-color-background-default);
   color: var(--fsds-details-color-foreground-secondary);
-  border-color: var(--fsds-details-color-border-accent);
   line-height: var(--fsds-details-typography-lineHeight-body);
   display: block;
   border-style: solid;
   border-width: 1px;
   box-sizing: border-box;
-
-  &:hover {
-    background-color: var(--fsds-details-color-background-hover);
-    border-color: var(--fsds-details-color-border-hover);
-  }
 
   &[open] .details__icon {
     transform: rotate(180deg);
@@ -43,10 +37,6 @@
   padding: var(--fsds-details-size-padding-default);
   color: var(--fsds-details-color-foreground-primary);
   font-weight: var(--fsds-details-typography-fontWeight-medium);
-}
-
-.details__summary:hover {
-  background-color: var(--fsds-details-color-background-hover);
 }
 
 .details__summary:focus-visible {

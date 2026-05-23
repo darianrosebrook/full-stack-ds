@@ -25,7 +25,6 @@
 .dialog__backdrop {
   position: absolute;
   inset: 0;
-  background-color: var(--fsds-dialog-color-background-backdrop);
   pointer-events: auto;
 }
 
@@ -74,7 +73,6 @@
   padding-right: var(--fsds-dialog-spacing-body-paddingRight);
   padding-bottom: var(--fsds-dialog-spacing-header-paddingTop);
   padding-left: var(--fsds-dialog-spacing-body-paddingRight);
-  color: var(--fsds-dialog-color-foreground-secondary);
   overflow-y: auto;
 }
 
@@ -104,12 +102,7 @@
   background-color: transparent;
   border: 0;
   border-radius: 9999px;
-  color: var(--fsds-dialog-color-foreground-secondary);
   cursor: pointer;
-}
-
-.dialog__closeButton:hover {
-  background-color: var(--fsds-dialog-color-background-hover);
 }
 
 .dialog--sm .dialog__modal {

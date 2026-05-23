@@ -6,7 +6,7 @@
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
   padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-breadcrumbs-spacing-gap-small);
+  gap: var(--fsds-box-model-gap);
   width: var(--fsds-box-model-width);
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
@@ -17,8 +17,6 @@
   background-color: var(--fsds-breadcrumbs-color-background-elevated);
   border-color: var(--fsds-breadcrumbs-color-border-subtle);
   line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
-  border-radius: var(--fsds-breadcrumbs-shape-radius-small);
-  padding: var(--fsds-breadcrumbs-spacing-padding-small);
   display: block;
 
   &:focus-visible {

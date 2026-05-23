@@ -9,39 +9,14 @@
     "fallback": "16px",
     "layer": "semantic"
   },
-  "avatar.size.small": {
-    "resolvesTo": "core.spacing.size.05",
-    "fallback": "12px",
-    "layer": "core"
-  },
   "avatar.size.default": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",
     "layer": "core"
   },
-  "avatar.size.medium": {
-    "resolvesTo": "core.spacing.size.08",
-    "fallback": "32px",
-    "layer": "core"
-  },
-  "avatar.size.large": {
-    "resolvesTo": "core.spacing.size.10",
-    "fallback": "64px",
-    "layer": "core"
-  },
-  "avatar.size.status": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "avatar.size.radius.default": {
     "resolvesTo": "core.shape.radius.full",
     "fallback": "9999px",
-    "layer": "core"
-  },
-  "avatar.size.radius.small": {
-    "resolvesTo": "core.shape.radius.small",
-    "fallback": "4px",
     "layer": "core"
   },
   "avatar.size.border.default": {

@@ -40,13 +40,22 @@ export class CheckboxElement extends LitElement {
       --fsds-checkbox-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-checkbox-border-radius: var(--fsds-core-shape-radius-small, 4px);
       --fsds-checkbox-transition-duration: var(--fsds-core-motion-duration-short, 150ms);
-      --fsds-checkbox-color-border-hover: var(--fsds-semantic-color-border-hover, #f29495);
-      --fsds-checkbox-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
-      --fsds-checkbox-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
       --fsds-checkbox-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-checkbox-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
       --fsds-checkbox-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-checkbox-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+    
+      &:hover .checkbox__indicator {
+        --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-hover, #f29495);
+      }
+    }
+    
+    :has(.checkbox__input:checked) .checkbox__indicator {
+      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+    }
+    
+    :has(.checkbox__input:disabled) .checkbox__indicator {
+      --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #cecece);
     }
     
     .checkbox {
@@ -64,10 +73,6 @@ export class CheckboxElement extends LitElement {
       display: inline-flex;
       align-items: center;
       cursor: pointer;
-    
-      &:hover .checkbox__indicator {
-        border-color: var(--fsds-checkbox-color-border-hover);
-      }
     }
     
     .checkbox__input {
@@ -94,15 +99,6 @@ export class CheckboxElement extends LitElement {
       border-width: var(--fsds-checkbox-border-width);
       box-sizing: border-box;
       transition-duration: var(--fsds-checkbox-transition-duration);
-    }
-    
-    :has(.checkbox__input:checked) .checkbox__indicator {
-      background-color: var(--fsds-checkbox-color-background-checked);
-      border-color: var(--fsds-checkbox-color-background-checked);
-    }
-    
-    :has(.checkbox__input:disabled) .checkbox__indicator {
-      background-color: var(--fsds-checkbox-color-background-disabled);
     }
     
     :has(.checkbox__input:focus-visible) .checkbox__indicator {

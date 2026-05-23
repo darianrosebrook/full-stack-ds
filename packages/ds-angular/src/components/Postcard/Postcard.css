@@ -14,7 +14,6 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-postcard-color-background-default);
-  border-color: var(--fsds-postcard-color-border-accent);
   color: var(--fsds-postcard-color-foreground-secondary);
   padding: var(--fsds-postcard-size-padding-default);
   border-radius: var(--fsds-postcard-size-radius-default);
@@ -24,11 +23,6 @@
   border-style: solid;
   border-width: var(--fsds-postcard-size-border-default);
   box-sizing: border-box;
-
-  &:hover {
-    background-color: var(--fsds-postcard-color-background-hover);
-    border-color: var(--fsds-postcard-color-border-hover);
-  }
 }
 
 .postcard__content {
@@ -50,7 +44,6 @@
 .postcard__userInfo {
   display: flex;
   align-items: center;
-  gap: var(--fsds-postcard-size-gap-small);
   flex: 1 1 auto;
 }
 
@@ -91,7 +84,6 @@
 .postcard__stat {
   display: inline-flex;
   align-items: center;
-  gap: var(--fsds-postcard-size-gap-small);
   color: var(--fsds-postcard-color-foreground-secondary);
   font-size: var(--fsds-postcard-typography-footer-fontSize);
 }

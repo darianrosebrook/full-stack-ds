@@ -16,10 +16,6 @@
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-
-  &:hover .checkbox__indicator {
-    border-color: var(--fsds-checkbox-color-border-hover);
-  }
 }
 
 .checkbox__input {
@@ -46,15 +42,6 @@
   border-width: var(--fsds-checkbox-border-width);
   box-sizing: border-box;
   transition-duration: var(--fsds-checkbox-transition-duration);
-}
-
-:has(.checkbox__input:checked) .checkbox__indicator {
-  background-color: var(--fsds-checkbox-color-background-checked);
-  border-color: var(--fsds-checkbox-color-background-checked);
-}
-
-:has(.checkbox__input:disabled) .checkbox__indicator {
-  background-color: var(--fsds-checkbox-color-background-disabled);
 }
 
 :has(.checkbox__input:focus-visible) .checkbox__indicator {

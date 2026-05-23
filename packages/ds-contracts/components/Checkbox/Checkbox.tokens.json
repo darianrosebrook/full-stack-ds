@@ -54,21 +54,6 @@
     "fallback": "150ms",
     "layer": "core"
   },
-  "checkbox.color.border.hover": {
-    "resolvesTo": "semantic.color.border.hover",
-    "fallback": "#f29495",
-    "layer": "semantic"
-  },
-  "checkbox.color.background.checked": {
-    "resolvesTo": "semantic.color.action.background.primary.default",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
-  "checkbox.color.background.disabled": {
-    "resolvesTo": "semantic.color.background.disabled",
-    "fallback": "#cecece",
-    "layer": "semantic"
-  },
   "checkbox.focus.ring.width": {
     "resolvesTo": "semantic.focus.ring.width",
     "fallback": "2px",

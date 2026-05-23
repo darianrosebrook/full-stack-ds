@@ -34,19 +34,9 @@
     "fallback": "#ffffff",
     "layer": "semantic"
   },
-  "dialog.color.background.backdrop": {
-    "resolvesTo": "semantic.color.overlay.scrim",
-    "fallback": "#00000066",
-    "layer": "semantic"
-  },
   "dialog.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
-    "layer": "semantic"
-  },
-  "dialog.color.foreground.secondary": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
     "layer": "semantic"
   },
   "dialog.color.border.default": {
@@ -127,11 +117,6 @@
   "dialog.typography.title.lineHeight": {
     "resolvesTo": "semantic.typography.line.height.heading",
     "fallback": "1",
-    "layer": "semantic"
-  },
-  "dialog.color.background.hover": {
-    "resolvesTo": "semantic.color.background.hover",
-    "fallback": "#cecece",
     "layer": "semantic"
   }
 }

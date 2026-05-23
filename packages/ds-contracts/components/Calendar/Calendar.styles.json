@@ -9,58 +9,178 @@
     "border-color": {
       "resolvesTo": "calendar.color.border.default"
     },
-    "border-width": { "literal": "1px", "platforms": ["web"] },
-    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "border-width": {
+      "literal": "1px",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": [
+        "web"
+      ]
+    },
     "padding": {
       "resolvesTo": "calendar.size.padding.default"
     },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.default"
     },
-    "display": { "literal": "block", "platforms": ["web"] },
-    "box-sizing": { "literal": "border-box", "platforms": ["web"] }
+    "display": {
+      "literal": "block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "header": {
-    "display": { "literal": "flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "justify-content": { "literal": "space-between", "platforms": ["web"] },
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "space-between",
+      "platforms": [
+        "web"
+      ]
+    },
     "padding-bottom": {
       "resolvesTo": "calendar.size.padding.default"
     }
   },
   "nav": {
-    "display": { "literal": "inline-flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "justify-content": { "literal": "center", "platforms": ["web"] },
-    "background": { "literal": "transparent", "platforms": ["web"] },
-    "border": { "literal": "none", "platforms": ["web"] },
-    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "display": {
+      "literal": "inline-flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "background": {
+      "literal": "transparent",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": [
+        "web"
+      ]
+    },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary"
     }
   },
   "caption": {
-    "font-weight": { "literal": "600", "platforms": ["web"] },
+    "font-weight": {
+      "literal": "600",
+      "platforms": [
+        "web"
+      ]
+    },
     "color": {
       "resolvesTo": "calendar.color.foreground.primary"
     }
   },
   "grid": {
-    "display": { "literal": "grid", "platforms": ["web"] },
-    "grid-template-columns": { "literal": "repeat(7, 1fr)", "platforms": ["web"] },
-    "gap": { "literal": "2px", "platforms": ["web"] },
-    "width": { "literal": "100%", "platforms": ["web"] },
-    "border-collapse": { "literal": "collapse", "platforms": ["web"] }
+    "display": {
+      "literal": "grid",
+      "platforms": [
+        "web"
+      ]
+    },
+    "grid-template-columns": {
+      "literal": "repeat(7, 1fr)",
+      "platforms": [
+        "web"
+      ]
+    },
+    "gap": {
+      "literal": "2px",
+      "platforms": [
+        "web"
+      ]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border-collapse": {
+      "literal": "collapse",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "cell": {
-    "display": { "literal": "flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "justify-content": { "literal": "center", "platforms": ["web"] },
-    "aspect-ratio": { "literal": "1", "platforms": ["web"] },
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "aspect-ratio": {
+      "literal": "1",
+      "platforms": [
+        "web"
+      ]
+    },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.default"
     },
-    "padding": { "literal": "0", "platforms": ["web"] }
+    "padding": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   ".calendar__cell:hover": {
     "background-color": {
@@ -71,18 +191,68 @@
     "background-color": {
       "resolvesTo": "calendar.color.border.accent"
     },
-    "color": { "literal": "#ffffff", "platforms": ["web"] }
+    "color": {
+      "literal": "#ffffff",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "day": {
-    "display": { "literal": "flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
-    "justify-content": { "literal": "center", "platforms": ["web"] },
-    "width": { "literal": "100%", "platforms": ["web"] },
-    "height": { "literal": "100%", "platforms": ["web"] },
-    "background": { "literal": "transparent", "platforms": ["web"] },
-    "border": { "literal": "none", "platforms": ["web"] },
-    "cursor": { "literal": "pointer", "platforms": ["web"] },
-    "color": { "literal": "inherit", "platforms": ["web"] },
+    "display": {
+      "literal": "flex",
+      "platforms": [
+        "web"
+      ]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "justify-content": {
+      "literal": "center",
+      "platforms": [
+        "web"
+      ]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": [
+        "web"
+      ]
+    },
+    "height": {
+      "literal": "100%",
+      "platforms": [
+        "web"
+      ]
+    },
+    "background": {
+      "literal": "transparent",
+      "platforms": [
+        "web"
+      ]
+    },
+    "border": {
+      "literal": "none",
+      "platforms": [
+        "web"
+      ]
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "literal": "inherit",
+      "platforms": [
+        "web"
+      ]
+    },
     "border-radius": {
       "resolvesTo": "calendar.size.radius.default"
     }

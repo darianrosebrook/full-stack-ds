@@ -84,11 +84,6 @@
     "fallback": "1.5",
     "layer": "semantic"
   },
-  "card.color.background.hover": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
-    "layer": "semantic"
-  },
   "card.color.badge.success.background": {
     "resolvesTo": "semantic.color.background.success.subtle",
     "fallback": "#e4f2e0",

@@ -42,12 +42,9 @@ export class BreadcrumbsElement extends LitElement {
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
-      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-breadcrumbs-shape-radius-small: var(--fsds-core-shape-radius-small, 4px);
-      --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-breadcrumbs-spacing-gap-small: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-breadcrumbs-spacing-padding-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
@@ -56,7 +53,7 @@ export class BreadcrumbsElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-breadcrumbs-spacing-gap-small);
+      gap: var(--fsds-box-model-gap);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -67,8 +64,6 @@ export class BreadcrumbsElement extends LitElement {
       background-color: var(--fsds-breadcrumbs-color-background-elevated);
       border-color: var(--fsds-breadcrumbs-color-border-subtle);
       line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
-      border-radius: var(--fsds-breadcrumbs-shape-radius-small);
-      padding: var(--fsds-breadcrumbs-spacing-padding-small);
       display: block;
     
       &:focus-visible {
@@ -133,12 +128,9 @@ export class BreadcrumbsListElement extends LitElement {
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
-      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-breadcrumbs-shape-radius-small: var(--fsds-core-shape-radius-small, 4px);
-      --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-breadcrumbs-spacing-gap-small: var(--fsds-core-spacing-size-03, 4px);
-      --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-breadcrumbs-spacing-padding-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
     }
     
@@ -147,7 +139,7 @@ export class BreadcrumbsListElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-breadcrumbs-spacing-gap-small);
+      gap: var(--fsds-box-model-gap);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -158,8 +150,6 @@ export class BreadcrumbsListElement extends LitElement {
       background-color: var(--fsds-breadcrumbs-color-background-elevated);
       border-color: var(--fsds-breadcrumbs-color-border-subtle);
       line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
-      border-radius: var(--fsds-breadcrumbs-shape-radius-small);
-      padding: var(--fsds-breadcrumbs-spacing-padding-small);
       display: block;
     
       &:focus-visible {

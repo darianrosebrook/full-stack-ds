@@ -44,29 +44,14 @@
     "fallback": "8px",
     "layer": "core"
   },
-  "breadcrumbs.shape.radius.small": {
-    "resolvesTo": "core.shape.radius.small",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "breadcrumbs.spacing.gap.default": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",
     "layer": "core"
   },
-  "breadcrumbs.spacing.gap.small": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "breadcrumbs.spacing.padding.default": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",
-    "layer": "core"
-  },
-  "breadcrumbs.spacing.padding.small": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
     "layer": "core"
   },
   "breadcrumbs.color.focus": {
