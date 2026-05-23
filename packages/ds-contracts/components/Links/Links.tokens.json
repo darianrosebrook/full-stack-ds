@@ -1,4 +1,14 @@
 {
+  "box-model.width": {
+    "resolvesTo": "semantic.glyph.size.medium.extent",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.height": {
+    "resolvesTo": "semantic.glyph.size.medium.extent",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
   "links.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",

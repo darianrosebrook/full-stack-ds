@@ -1,4 +1,9 @@
 {
+  "box-model.gap": {
+    "resolvesTo": "semantic.structure.size.gap",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
   "list.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",

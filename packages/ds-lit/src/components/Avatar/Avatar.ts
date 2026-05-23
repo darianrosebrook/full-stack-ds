@@ -29,10 +29,10 @@ export class AvatarElement extends LitElement {
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
       --fsds-box-model-gap: 0;
-      --fsds-box-model-width: auto;
+      --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
-      --fsds-box-model-height: auto;
+      --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-avatar-size-small: var(--fsds-core-spacing-size-05, 12px);

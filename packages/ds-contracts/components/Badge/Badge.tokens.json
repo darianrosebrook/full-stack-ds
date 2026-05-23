@@ -1,4 +1,14 @@
 {
+  "box-model.width": {
+    "resolvesTo": "semantic.glyph.size.medium.extent",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.height": {
+    "resolvesTo": "semantic.glyph.size.medium.extent",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
   "badge.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",
     "fallback": "#efefef",

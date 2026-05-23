@@ -1,4 +1,9 @@
 {
+  "box-model.gap": {
+    "resolvesTo": "semantic.structure.size.gap",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
   "walkthrough.surface.bg": {
     "resolvesTo": "semantic.color.background.secondary",
     "fallback": "#efefef",

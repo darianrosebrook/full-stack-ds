@@ -1,4 +1,9 @@
 {
+  "box-model.gap": {
+    "resolvesTo": "semantic.structure.size.gap",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
   "accordion.color.background.hover": {
     "resolvesTo": "semantic.interaction.background.hover",
     "fallback": "#efefef",

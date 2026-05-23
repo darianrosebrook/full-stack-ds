@@ -52,7 +52,7 @@ export class TabsElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -254,7 +254,7 @@ export class TabsListElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -440,7 +440,7 @@ export class TabsTabElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -616,7 +616,7 @@ export class TabsPanelElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;

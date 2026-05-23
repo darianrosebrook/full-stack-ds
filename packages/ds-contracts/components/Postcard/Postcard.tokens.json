@@ -1,4 +1,34 @@
 {
+  "box-model.padding-block-start": {
+    "resolvesTo": "semantic.surface.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-block-end": {
+    "resolvesTo": "semantic.surface.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-start": {
+    "resolvesTo": "semantic.surface.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-end": {
+    "resolvesTo": "semantic.surface.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.gap": {
+    "resolvesTo": "semantic.surface.size.gap",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "box-model.min-width": {
+    "resolvesTo": "semantic.surface.size.min-width",
+    "fallback": "64px",
+    "layer": "semantic"
+  },
   "postcard.color.background.default": {
     "resolvesTo": "semantic.color.background.primary",
     "fallback": "#ffffff",

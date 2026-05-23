@@ -23,14 +23,14 @@ export class DialogElement extends LitElement {
     .dialog {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: 0;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
@@ -270,14 +270,14 @@ export class DialogHeaderElement extends LitElement {
     .dialog {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: 0;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
@@ -457,14 +457,14 @@ export class DialogTitleElement extends LitElement {
     .dialog {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: 0;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
@@ -644,14 +644,14 @@ export class DialogBodyElement extends LitElement {
     .dialog {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: 0;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
@@ -831,14 +831,14 @@ export class DialogFooterElement extends LitElement {
     .dialog {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: var(--fsds-semantic-surface-size-padding-block, 16px);
+      --fsds-box-model-padding-block-end: var(--fsds-semantic-surface-size-padding-block, 16px);
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-padding-inline-start: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-semantic-surface-size-padding-inline, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-surface-size-gap, 12px);
       --fsds-box-model-width: auto;
-      --fsds-box-model-min-width: 0;
+      --fsds-box-model-min-width: var(--fsds-semantic-surface-size-min-width, 64px);
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;

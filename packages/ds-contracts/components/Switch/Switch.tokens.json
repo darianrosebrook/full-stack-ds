@@ -1,4 +1,39 @@
 {
+  "box-model.padding-block-start": {
+    "resolvesTo": "semantic.action.size.medium.padding-block",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "box-model.padding-block-end": {
+    "resolvesTo": "semantic.action.size.medium.padding-block",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-start": {
+    "resolvesTo": "semantic.action.size.medium.padding-inline",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-end": {
+    "resolvesTo": "semantic.action.size.medium.padding-inline",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "box-model.gap": {
+    "resolvesTo": "semantic.action.size.medium.gap",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "box-model.min-height": {
+    "resolvesTo": "semantic.action.size.medium.min-height",
+    "fallback": "36px",
+    "layer": "semantic"
+  },
+  "box-model.min-width": {
+    "resolvesTo": "semantic.action.size.medium.min-width",
+    "fallback": "36px",
+    "layer": "semantic"
+  },
   "switch.motion.duration": {
     "resolvesTo": "semantic.motion.interaction.press.duration",
     "fallback": "100ms",
@@ -139,10 +174,22 @@
     "fallback": "24px",
     "layer": "core"
   },
-  "switch.size.sm.thumb.translate.off": { "literal": "0" },
-  "switch.size.sm.thumb.translate.on": { "literal": "16px" },
-  "switch.size.md.thumb.translate.off": { "literal": "0" },
-  "switch.size.md.thumb.translate.on": { "literal": "24px" },
-  "switch.size.lg.thumb.translate.off": { "literal": "0" },
-  "switch.size.lg.thumb.translate.on": { "literal": "36px" }
+  "switch.size.sm.thumb.translate.off": {
+    "literal": "0"
+  },
+  "switch.size.sm.thumb.translate.on": {
+    "literal": "16px"
+  },
+  "switch.size.md.thumb.translate.off": {
+    "literal": "0"
+  },
+  "switch.size.md.thumb.translate.on": {
+    "literal": "24px"
+  },
+  "switch.size.lg.thumb.translate.off": {
+    "literal": "0"
+  },
+  "switch.size.lg.thumb.translate.on": {
+    "literal": "36px"
+  }
 }

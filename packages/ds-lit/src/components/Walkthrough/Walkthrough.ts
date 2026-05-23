@@ -30,7 +30,7 @@ export class WalkthroughElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -232,7 +232,7 @@ export class WalkthroughContentElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -390,7 +390,7 @@ export class WalkthroughTitleElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
@@ -548,7 +548,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
+      --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;

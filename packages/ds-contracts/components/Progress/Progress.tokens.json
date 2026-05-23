@@ -1,4 +1,29 @@
 {
+  "box-model.padding-block-start": {
+    "resolvesTo": "semantic.feedback.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-block-end": {
+    "resolvesTo": "semantic.feedback.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-start": {
+    "resolvesTo": "semantic.feedback.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-end": {
+    "resolvesTo": "semantic.feedback.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.gap": {
+    "resolvesTo": "semantic.feedback.size.gap",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
   "progress.color.text.default": {
     "resolvesTo": "semantic.color.foreground.secondary",
     "fallback": "#555555",
