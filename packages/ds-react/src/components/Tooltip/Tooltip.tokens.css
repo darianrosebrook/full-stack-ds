@@ -8,6 +8,7 @@
   --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
   --fsds-tooltip-size-maxWidth: 200px;
   --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+  --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
 }
 /* @generated:end */
 

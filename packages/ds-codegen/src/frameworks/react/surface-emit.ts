@@ -73,21 +73,48 @@ function emitAnchoredSurfaceSource(
     ? `export type ${placementType} = ${placementValues.map((v) => `"${v}"`).join(" | ")};\n`
     : "";
 
+  // Positioning + portal are driven by the contract:
+  //   - surface.positioning.strategy === "anchored" → emit
+  //     useAnchoredPosition wiring on Content and apply position: fixed
+  //   - behavior.portal.enabled === true            → wrap Content in
+  //     createPortal targeting document.body
+  // Both flags are independent: a contract can opt into anchored
+  // positioning without portalling (the content stays in-tree but uses
+  // fixed positioning), though Popover and Tooltip enable both.
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalEnabled = ir.behavior.portal?.enabled === true;
+  const collision = surface.positioning?.collision ?? "flip-shift";
+
+  const reactImports = [
+    `type ReactNode`,
+    `type HTMLAttributes`,
+    `type ButtonHTMLAttributes`,
+    `type ReactElement`,
+    `type Ref`,
+    `Children`,
+    `cloneElement`,
+    `createContext`,
+    `isValidElement`,
+    `useContext`,
+  ];
+  const extraImportLines: string[] = [];
+  if (portalEnabled) {
+    // createPortal lives in react-dom, not react itself.
+    extraImportLines.push(`import { createPortal } from "react-dom";`);
+  }
+  if (positioningEnabled) {
+    extraImportLines.push(
+      `import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";`,
+    );
+  }
+
   const imports = [
     `import {`,
-    `  type ReactNode,`,
-    `  type HTMLAttributes,`,
-    `  type ButtonHTMLAttributes,`,
-    `  type ReactElement,`,
-    `  type Ref,`,
-    `  Children,`,
-    `  cloneElement,`,
-    `  createContext,`,
-    `  isValidElement,`,
-    `  useContext,`,
+    ...reactImports.map((line) => `  ${line},`),
     `} from "react";`,
     `import { useAnchoredSurface, type SurfaceTriggerHandlers } from "../../primitives/surfaces/useAnchoredSurface";`,
     `import { composeRefs, composeEventHandlers } from "../../primitives/surfaces/compose";`,
+    ...extraImportLines,
     `import "./${name}.css";`,
   ].join("\n");
 
@@ -135,6 +162,12 @@ export interface ${name}ContentProps extends HTMLAttributes<HTMLDivElement> {
 }`;
 
   // The compound context exposes the surface state to Trigger/Content.
+  // Positioning-aware contexts also carry the live anchor/content nodes
+  // and the resolved placement so Content can call useAnchoredPosition
+  // without re-implementing the registration plumbing.
+  const positioningContextLines = positioningEnabled
+    ? `\n  anchorEl: HTMLElement | null;\n  contentEl: HTMLElement | null;\n  placement: ${placementType} | undefined;`
+    : "";
   const contextBody = `interface ${name}ContextValue {
   open: boolean;
   contentId: string;
@@ -142,7 +175,7 @@ export interface ${name}ContentProps extends HTMLAttributes<HTMLDivElement> {
   registerAnchor: (node: HTMLElement | null) => void;
   registerAnchorRefOnly: (node: HTMLElement | null) => void;
   registerContent: (node: HTMLElement | null) => void;
-  getTriggerHandlers: () => SurfaceTriggerHandlers;
+  getTriggerHandlers: () => SurfaceTriggerHandlers;${positioningContextLines}
 }
 
 const ${name}Context = createContext<${name}ContextValue | null>(null);
@@ -220,7 +253,7 @@ ${destructuredCloseProps}
         registerAnchor: surface.registerAnchor,
         registerAnchorRefOnly: surface.registerAnchorRefOnly,
         registerContent: surface.registerContent,
-        getTriggerHandlers: surface.getTriggerHandlers,
+        getTriggerHandlers: surface.getTriggerHandlers,${positioningEnabled ? `\n        anchorEl: surface.anchorEl,\n        contentEl: surface.contentEl,\n        placement,` : ""}
       }}
     >
       <span className={classNames} data-testid={testId}>
@@ -369,22 +402,72 @@ function adoptChildAsTrigger({ child, ctx, ariaProps, rest }: AdoptChildArgs) {
   // `...rest`.
   const contentRoleAttr =
     contentRole !== null ? `\n      role="${contentRole}"` : "";
+
+  // Positioning + portal wiring on the Content subcomponent.
+  // - Positioning: call useAnchoredPosition with the anchor + content
+  //   nodes already tracked by the surface. The hook returns
+  //   { top, left, ready }; we apply fixed-position style on the div
+  //   and hide it (visibility) until first measurement to avoid a
+  //   flash at (0, 0). Passes collision strategy from the contract.
+  // - Portal: when enabled, wrap the div in createPortal(node, document.body).
+  //   Guard against SSR by checking typeof document; falls back to in-place
+  //   render server-side, which positioning hooks will correct on hydration.
+  const positioningHookCall = positioningEnabled
+    ? `\n  const position = useAnchoredPosition({
+    anchor: ctx.anchorEl,
+    content: ctx.contentEl,
+    open: ctx.open,
+    placement: ctx.placement ?? "auto",
+    collision: "${collision}",
+  });`
+    : "";
+  // Consumer style is spread first so our computed positioning wins.
+  // Destructure rest.style out into a named local so consumers can still
+  // pass style through (it merges with our computed top/left, with our
+  // values taking precedence). The remaining rest spread (sans style)
+  // attaches everything else verbatim.
+  const positioningStyleProp = positioningEnabled
+    ? `\n      style={{
+        ...consumerStyle,
+        position: "fixed",
+        top: \`\${position.top}px\`,
+        left: \`\${position.left}px\`,
+        visibility: position.ready ? "visible" : "hidden",
+      }}
+      data-placement={position.placement}`
+    : "";
+  const restSpread = positioningEnabled
+    ? "{...restWithoutStyle}"
+    : "{...rest}";
+  const restDestructure = positioningEnabled
+    ? `\n  const { style: consumerStyle, ...restWithoutStyle } = rest;`
+    : "";
+  const contentDiv = `<div
+      ref={(node) => ctx.registerContent(node)}
+      id={ctx.contentId}${contentRoleAttr}${positioningStyleProp}
+      data-${cssPrefix}-content=""
+      ${restSpread}
+    >
+      {children}
+    </div>`;
+  const portalWrappedContent = portalEnabled
+    ? `typeof document !== "undefined"
+    ? createPortal(
+        ${contentDiv.split("\n").map((line) => `    ${line}`).join("\n").trim()},
+        document.body,
+      )
+    : (
+        ${contentDiv.split("\n").map((line) => `    ${line}`).join("\n").trim()}
+      )`
+    : `(\n    ${contentDiv}\n  )`;
+
   const contentBody = `${name}.Content = function ${name}Content({
   children,
   ...rest
 }: ${name}ContentProps) {
-  const ctx = use${name}Context();
+  const ctx = use${name}Context();${positioningHookCall}${restDestructure}
   if (!ctx.open) return null;
-  return (
-    <div
-      ref={(node) => ctx.registerContent(node)}
-      id={ctx.contentId}${contentRoleAttr}
-      data-${cssPrefix}-content=""
-      {...rest}
-    >
-      {children}
-    </div>
-  );
+  return ${portalWrappedContent};
 };`;
 
   return [

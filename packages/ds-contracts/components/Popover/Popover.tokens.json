@@ -28,5 +28,10 @@
     "resolvesTo": "semantic.elevation.default",
     "fallback": "0 2px 8px rgba(0,0,0,0.12)",
     "layer": "semantic"
+  },
+  "popover.layer.content": {
+    "resolvesTo": "core.layer.dropdown",
+    "fallback": "1000",
+    "layer": "core"
   }
 }

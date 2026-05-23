@@ -6,6 +6,7 @@
   --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
   --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+  --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
 }
 /* @generated:end */
 

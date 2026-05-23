@@ -69,6 +69,17 @@ export interface UseAnchoredSurfaceResult {
    * via the standard `event.defaultPrevented` rule.
    */
   getTriggerHandlers: () => SurfaceTriggerHandlers;
+  /**
+   * Current anchor element, exposed as React state so positioning hooks
+   * (e.g. useAnchoredPosition) can react to it changing. Updates when
+   * registerAnchor / registerAnchorRefOnly is called.
+   */
+  anchorEl: HTMLElement | null;
+  /**
+   * Current content element, exposed as React state so positioning hooks
+   * can subscribe. Updates when registerContent is called.
+   */
+  contentEl: HTMLElement | null;
 }
 
 /**
@@ -144,6 +155,13 @@ export function useAnchoredSurface(
   const anchorNodeRef = useRef<HTMLElement | null>(null);
   const contentNodeRef = useRef<HTMLElement | null>(null);
 
+  // Mirrored as state so positioning hooks (useAnchoredPosition) can
+  // react to node identity changes. The refs above stay authoritative
+  // for the controller's listener wiring; state is purely a subscription
+  // surface for downstream React consumers.
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [contentEl, setContentEl] = useState<HTMLElement | null>(null);
+
   const remount = useCallback(() => {
     controllerRef.current?.setAnchor(anchorNodeRef.current);
     controllerRef.current?.setContent(contentNodeRef.current);
@@ -168,25 +186,38 @@ export function useAnchoredSurface(
     [setOpen, openTriggers, dismissal],
   );
 
+  // Ref-callback identity protection. React invokes ref callbacks on
+  // every commit even when the underlying DOM node hasn't changed; if
+  // we unmount+reinstall listeners on every call, a click that arrives
+  // during a commit (e.g. clicking a child input that toggles state
+  // and re-renders) can race with the document-level mousedown
+  // listener being torn down and replaced, causing outside-click
+  // dismissal to mis-fire. Bail out when the node identity matches.
   const registerAnchor = useCallback(
     (node: HTMLElement | null) => {
+      if (anchorNodeRef.current === node) return;
       ensureHandlerMode(false);
       anchorNodeRef.current = node;
+      setAnchorEl(node);
       remount();
     },
     [ensureHandlerMode, remount],
   );
   const registerAnchorRefOnly = useCallback(
     (node: HTMLElement | null) => {
+      if (anchorNodeRef.current === node) return;
       ensureHandlerMode(true);
       anchorNodeRef.current = node;
+      setAnchorEl(node);
       remount();
     },
     [ensureHandlerMode, remount],
   );
   const registerContent = useCallback(
     (node: HTMLElement | null) => {
+      if (contentNodeRef.current === node) return;
       contentNodeRef.current = node;
+      setContentEl(node);
       remount();
     },
     [remount],
@@ -263,6 +294,8 @@ export function useAnchoredSurface(
       registerAnchorRefOnly,
       registerContent,
       getTriggerHandlers,
+      anchorEl,
+      contentEl,
     }),
     [
       open,
@@ -274,6 +307,8 @@ export function useAnchoredSurface(
       registerAnchorRefOnly,
       registerContent,
       getTriggerHandlers,
+      anchorEl,
+      contentEl,
     ],
   );
 

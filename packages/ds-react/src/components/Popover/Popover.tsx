@@ -13,6 +13,8 @@ import {
 } from "react";
 import { useAnchoredSurface, type SurfaceTriggerHandlers } from "../../primitives/surfaces/useAnchoredSurface";
 import { composeRefs, composeEventHandlers } from "../../primitives/surfaces/compose";
+import { createPortal } from "react-dom";
+import { useAnchoredPosition } from "../../primitives/surfaces/useAnchoredPosition";
 import "./Popover.css";
 // @generated:end
 
@@ -69,6 +71,9 @@ interface PopoverContextValue {
   registerAnchorRefOnly: (node: HTMLElement | null) => void;
   registerContent: (node: HTMLElement | null) => void;
   getTriggerHandlers: () => SurfaceTriggerHandlers;
+  anchorEl: HTMLElement | null;
+  contentEl: HTMLElement | null;
+  placement: PopoverPlacement | undefined;
 }
 
 const PopoverContext = createContext<PopoverContextValue | null>(null);
@@ -134,6 +139,9 @@ export function Popover({
         registerAnchorRefOnly: surface.registerAnchorRefOnly,
         registerContent: surface.registerContent,
         getTriggerHandlers: surface.getTriggerHandlers,
+        anchorEl: surface.anchorEl,
+        contentEl: surface.contentEl,
+        placement,
       }}
     >
       <span className={classNames} data-testid={testId}>
@@ -253,17 +261,53 @@ Popover.Content = function PopoverContent({
   ...rest
 }: PopoverContentProps) {
   const ctx = usePopoverContext();
+  const position = useAnchoredPosition({
+    anchor: ctx.anchorEl,
+    content: ctx.contentEl,
+    open: ctx.open,
+    placement: ctx.placement ?? "auto",
+    collision: "flip-shift",
+  });
+  const { style: consumerStyle, ...restWithoutStyle } = rest;
   if (!ctx.open) return null;
-  return (
-    <div
-      ref={(node) => ctx.registerContent(node)}
-      id={ctx.contentId}
-      data-popover-content=""
-      {...rest}
-    >
-      {children}
-    </div>
-  );
+  return typeof document !== "undefined"
+    ? createPortal(
+        <div
+          ref={(node) => ctx.registerContent(node)}
+          id={ctx.contentId}
+          style={{
+            ...consumerStyle,
+            position: "fixed",
+            top: `${position.top}px`,
+            left: `${position.left}px`,
+            visibility: position.ready ? "visible" : "hidden",
+          }}
+          data-placement={position.placement}
+          data-popover-content=""
+          {...restWithoutStyle}
+        >
+          {children}
+        </div>,
+        document.body,
+      )
+    : (
+        <div
+          ref={(node) => ctx.registerContent(node)}
+          id={ctx.contentId}
+          style={{
+            ...consumerStyle,
+            position: "fixed",
+            top: `${position.top}px`,
+            left: `${position.left}px`,
+            visibility: position.ready ? "visible" : "hidden",
+          }}
+          data-placement={position.placement}
+          data-popover-content=""
+          {...restWithoutStyle}
+        >
+          {children}
+        </div>
+      );
 };
 // @generated:end
 

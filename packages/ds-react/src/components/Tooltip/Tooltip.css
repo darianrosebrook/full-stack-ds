@@ -17,6 +17,7 @@
   border-radius: var(--fsds-tooltip-size-radius-default);
   padding: var(--fsds-tooltip-size-padding-x);
   max-width: var(--fsds-tooltip-size-maxWidth);
+  z-index: var(--fsds-tooltip-layer-content);
   font-size: 0.875em;
   display: inline-block;
   border-style: solid;
@@ -25,5 +26,19 @@
 /* @generated:end */
 
 /* @custom:start overrides */
-
+/*
+ * Portaled tooltip content sits at document.body, escaping the
+ * `.tooltip` ancestor. Lift its slot declarations to :root so the
+ * BEM `.tooltip__content` rule above still resolves its tokens
+ * after the portal hop.
+ */
+:root {
+  --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
+  --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+  --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+  --fsds-tooltip-size-maxWidth: 200px;
+  --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
+}
 /* @custom:end */

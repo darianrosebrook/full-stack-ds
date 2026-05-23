@@ -13,6 +13,7 @@
     "border-radius": { "resolvesTo": "tooltip.size.radius.default" },
     "padding": { "resolvesTo": "tooltip.size.padding.x" },
     "max-width": { "resolvesTo": "tooltip.size.maxWidth" },
+    "z-index": { "resolvesTo": "tooltip.layer.content" },
     "font-size": { "literal": "0.875em", "platforms": ["web"] },
     "display": { "literal": "inline-block", "platforms": ["web"] },
     "border-style": { "literal": "solid", "platforms": ["web"] },

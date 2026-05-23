@@ -36,5 +36,10 @@
     "resolvesTo": "semantic.typography.caption.01",
     "fallback": "14px",
     "layer": "semantic"
+  },
+  "tooltip.layer.content": {
+    "resolvesTo": "core.layer.tooltip",
+    "fallback": "1800",
+    "layer": "core"
   }
 }
