@@ -38,7 +38,7 @@ export class AlertNoticeElement extends LitElement {
       --fsds-alert-notice-color-border-danger: var(--fsds-semantic-color-border-danger, #ae0001);
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
+      --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
       --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);
@@ -181,7 +181,7 @@ export class AlertNoticeBodyElement extends LitElement {
       --fsds-alert-notice-color-border-danger: var(--fsds-semantic-color-border-danger, #ae0001);
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
+      --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
       --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);
@@ -301,7 +301,7 @@ export class AlertNoticeTitleElement extends LitElement {
       --fsds-alert-notice-color-border-danger: var(--fsds-semantic-color-border-danger, #ae0001);
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-grid-small, 8px);
+      --fsds-alert-notice-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-text-weight: var(--fsds-semantic-typography-font-weight-regular, 400);
       --fsds-alert-notice-icon-size: var(--fsds-core-spacing-size-06, 16px);

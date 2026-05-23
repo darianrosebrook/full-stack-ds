@@ -10,12 +10,12 @@
     "layer": "semantic"
   },
   "stat.color.foreground.trend.up": {
-    "resolvesTo": "semantic.color.feedback.positive",
+    "resolvesTo": "semantic.color.feedback.foreground.success.default",
     "fallback": "#1f8a4c",
     "layer": "semantic"
   },
   "stat.color.foreground.trend.down": {
-    "resolvesTo": "semantic.color.feedback.negative",
+    "resolvesTo": "semantic.color.feedback.foreground.danger.default",
     "fallback": "#d9292b",
     "layer": "semantic"
   },
@@ -25,22 +25,22 @@
     "layer": "semantic"
   },
   "stat.size.value.sm": {
-    "resolvesTo": "semantic.typography.heading.size.sm",
+    "resolvesTo": "semantic.typography.heading.03",
     "fallback": "20px",
     "layer": "semantic"
   },
   "stat.size.value.md": {
-    "resolvesTo": "semantic.typography.heading.size.md",
+    "resolvesTo": "semantic.typography.heading.02",
     "fallback": "28px",
     "layer": "semantic"
   },
   "stat.size.value.lg": {
-    "resolvesTo": "semantic.typography.heading.size.lg",
+    "resolvesTo": "semantic.typography.heading.01",
     "fallback": "40px",
     "layer": "semantic"
   },
   "stat.size.label": {
-    "resolvesTo": "semantic.typography.caption.size.sm",
+    "resolvesTo": "semantic.typography.caption.02",
     "fallback": "12px",
     "layer": "semantic"
   },
@@ -50,12 +50,12 @@
     "layer": "core"
   },
   "stat.typography.weight.value": {
-    "resolvesTo": "semantic.typography.weight.bold",
+    "resolvesTo": "semantic.typography.font.weight.bold",
     "fallback": "700",
     "layer": "semantic"
   },
   "stat.typography.weight.label": {
-    "resolvesTo": "semantic.typography.weight.medium",
+    "resolvesTo": "semantic.typography.font.weight.medium",
     "fallback": "500",
     "layer": "semantic"
   }

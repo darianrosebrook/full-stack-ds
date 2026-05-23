@@ -226,6 +226,37 @@
           "fsds.dark": "{color.mode.light}"
         },
         "$description": "Inverse background color (opposite of primary)"
+      },
+      "transparent": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "alpha": 0
+        },
+        "$extensions": {
+          "fsds.light": "transparent",
+          "fsds.dark": "transparent"
+        },
+        "$description": "Fully transparent background — used for items that show only on hover/current state (NavList default, ghost buttons)."
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        },
+        "$description": "Subtle background tint — used for hover states on otherwise-transparent surfaces (NavList item hover)."
+      },
+      "accentSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.brand.primary.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.brand.primary.100}",
+          "fsds.dark": "{color.palette.brand.primary.800}"
+        },
+        "$description": "Subtle accent tint — used to mark current/selected items on otherwise-transparent surfaces (NavList current item)."
       }
     }
   }

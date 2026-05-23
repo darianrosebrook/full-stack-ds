@@ -21,20 +21,20 @@ export class NavListElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .nav-list {
-      --fsds-navlist-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-navlist-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-navlist-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-navlist-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
-      --fsds-navlist-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
-      --fsds-navlist-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
-      --fsds-navlist-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-navlist-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
-      --fsds-navlist-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-navlist-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-navlist-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
-      --fsds-navlist-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-navlist-size-fontSize-item: var(--fsds-semantic-typography-body-size-sm, 14px);
-      --fsds-navlist-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-size-xs, 11px);
+      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
+      --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
+      --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
+      --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
+      --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 11px);
     }
     
     .nav-list {
@@ -44,7 +44,7 @@ export class NavListElement extends LitElement {
     .nav-list__list {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-navlist-size-gap-list);
+      gap: var(--fsds-nav-list-size-gap-list);
       list-style: none;
       margin: 0;
       padding: 0;
@@ -52,7 +52,7 @@ export class NavListElement extends LitElement {
     
     .nav-list__item {
       display: block;
-      color: var(--fsds-navlist-color-foreground-default);
+      color: var(--fsds-nav-list-color-foreground-default);
     }
   `;
 
@@ -82,20 +82,20 @@ export class NavListListElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .nav-list {
-      --fsds-navlist-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-navlist-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-navlist-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-navlist-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
-      --fsds-navlist-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
-      --fsds-navlist-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
-      --fsds-navlist-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-navlist-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
-      --fsds-navlist-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-navlist-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-navlist-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
-      --fsds-navlist-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-navlist-size-fontSize-item: var(--fsds-semantic-typography-body-size-sm, 14px);
-      --fsds-navlist-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-size-xs, 11px);
+      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
+      --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
+      --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
+      --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
+      --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 11px);
     }
     
     .nav-list {
@@ -105,7 +105,7 @@ export class NavListListElement extends LitElement {
     .nav-list__list {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-navlist-size-gap-list);
+      gap: var(--fsds-nav-list-size-gap-list);
       list-style: none;
       margin: 0;
       padding: 0;
@@ -113,7 +113,7 @@ export class NavListListElement extends LitElement {
     
     .nav-list__item {
       display: block;
-      color: var(--fsds-navlist-color-foreground-default);
+      color: var(--fsds-nav-list-color-foreground-default);
     }
   `;
 
@@ -128,20 +128,20 @@ export class NavListItemElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .nav-list {
-      --fsds-navlist-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-navlist-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-navlist-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-navlist-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
-      --fsds-navlist-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
-      --fsds-navlist-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
-      --fsds-navlist-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-navlist-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
-      --fsds-navlist-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-navlist-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
-      --fsds-navlist-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
-      --fsds-navlist-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-navlist-size-fontSize-item: var(--fsds-semantic-typography-body-size-sm, 14px);
-      --fsds-navlist-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-size-xs, 11px);
+      --fsds-nav-list-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-nav-list-color-foreground-hover: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
+      --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+      --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
+      --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
+      --fsds-nav-list-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-nav-list-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-nav-list-size-gap-list: var(--fsds-core-spacing-size-01, 2px);
+      --fsds-nav-list-size-gap-group: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 11px);
     }
     
     .nav-list {
@@ -151,7 +151,7 @@ export class NavListItemElement extends LitElement {
     .nav-list__list {
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-navlist-size-gap-list);
+      gap: var(--fsds-nav-list-size-gap-list);
       list-style: none;
       margin: 0;
       padding: 0;
@@ -159,7 +159,7 @@ export class NavListItemElement extends LitElement {
     
     .nav-list__item {
       display: block;
-      color: var(--fsds-navlist-color-foreground-default);
+      color: var(--fsds-nav-list-color-foreground-default);
     }
   `;
 

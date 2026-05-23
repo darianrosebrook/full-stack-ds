@@ -8,7 +8,7 @@
 .nav-list__list {
   display: flex;
   flex-direction: column;
-  gap: var(--fsds-navlist-size-gap-list);
+  gap: var(--fsds-nav-list-size-gap-list);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -16,7 +16,7 @@
 
 .nav-list__item {
   display: block;
-  color: var(--fsds-navlist-color-foreground-default);
+  color: var(--fsds-nav-list-color-foreground-default);
 }
 /* @generated:end */
 

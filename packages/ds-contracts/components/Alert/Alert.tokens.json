@@ -85,7 +85,7 @@
     "layer": "semantic"
   },
   "alert.spacing.gap": {
-    "resolvesTo": "semantic.spacing.gap.grid.small",
+    "resolvesTo": "semantic.spacing.gap.gridSmall",
     "fallback": "8px",
     "layer": "semantic"
   },

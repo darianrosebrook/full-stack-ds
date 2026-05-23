@@ -2303,6 +2303,30 @@
             "light": "#141414",
             "dark": "#fafafa"
           }
+        },
+        "transparent": {
+          "$type": "color",
+          "$description": "Fully transparent background — used for items that show only on hover/current state (NavList default, ghost buttons).",
+          "$value": {
+            "light": "transparent",
+            "dark": "transparent"
+          }
+        },
+        "subtle": {
+          "$type": "color",
+          "$description": "Subtle background tint — used for hover states on otherwise-transparent surfaces (NavList item hover).",
+          "$value": {
+            "light": "#efefef",
+            "dark": "#212121"
+          }
+        },
+        "accentSubtle": {
+          "$type": "color",
+          "$description": "Subtle accent tint — used to mark current/selected items on otherwise-transparent surfaces (NavList current item).",
+          "$value": {
+            "light": "#d9f3fe",
+            "dark": "#001b5a"
+          }
         }
       },
       "border": {
