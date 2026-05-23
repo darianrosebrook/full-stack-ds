@@ -1,131 +1,303 @@
-import { useMemo, useState } from "react";
-import type { Bundle, TokenDefinition } from "../types/data";
-import { buildHref } from "../router";
+import { useEffect, useMemo, useState } from "react";
+import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
   bundle: Bundle;
 }
 
-interface TokenIndexEntry {
-  name: string;
-  definition: TokenDefinition;
-  components: string[];
-  groups: string[];
-}
+type LayerKey = FoundationToken["layer"];
+const LAYER_ORDER: LayerKey[] = ["core", "semantic", "brand"];
+const LAYER_LABEL: Record<LayerKey, string> = {
+  core: "Core",
+  semantic: "Semantic",
+  brand: "Brand",
+};
 
 function isColorish(val: string | undefined): boolean {
   if (!val) return false;
   return /^#|^rgb|^hsl|^var\(/.test(val);
 }
 
+function isReference(val: string | undefined): val is string {
+  return typeof val === "string" && /^\{[^}]+\}$/.test(val.trim());
+}
+
+function refTarget(val: string): string {
+  return val.trim().slice(1, -1);
+}
+
+/**
+ * Build a deterministic DOM id for a token row. Keep the path lossless (dots
+ * are valid in id attributes per HTML5) so anchor links from `{a.b.c}` work
+ * without any normalization.
+ */
+function anchorId(layer: LayerKey, path: string): string {
+  return `token-${layer}-${path}`;
+}
+
+/**
+ * Resolve a token reference `path` to a row id by checking, in order: the
+ * active brand, semantic, then core. Brand tokens often reference core
+ * palette entries; semantic tokens occasionally chain through other semantic
+ * entries; core is the terminal layer.
+ */
+function findAnchorForRef(
+  path: string,
+  index: { core: Set<string>; semantic: Set<string>; brand: Set<string> },
+): string | null {
+  if (index.brand.has(path)) return anchorId("brand", path);
+  if (index.semantic.has(path)) return anchorId("semantic", path);
+  if (index.core.has(path)) return anchorId("core", path);
+  return null;
+}
+
+interface RefLinkProps {
+  value: string;
+  index: { core: Set<string>; semantic: Set<string>; brand: Set<string> };
+}
+
+function RefLink({ value, index }: RefLinkProps) {
+  const target = refTarget(value);
+  const href = findAnchorForRef(target, index);
+  if (!href) {
+    return <span className="token-ref token-ref--unresolved">{value}</span>;
+  }
+  return (
+    <a className="token-ref" href={`#${href}`}>
+      {target}
+    </a>
+  );
+}
+
+interface ValueCellProps {
+  token: FoundationToken;
+  index: { core: Set<string>; semantic: Set<string>; brand: Set<string> };
+}
+
+function ValueCell({ token, index }: ValueCellProps) {
+  const v = token.value;
+  if (v == null) return <span className="muted">—</span>;
+  if (isReference(v)) {
+    return <RefLink value={v} index={index} />;
+  }
+  if (token.valueByMode && (token.valueByMode.light || token.valueByMode.dark)) {
+    const { light, dark } = token.valueByMode;
+    return (
+      <span className="token-value-modes">
+        {light && (
+          <span className="token-value-mode" title="light">
+            {isColorish(light) && <span className="token-swatch" style={{ background: light }} aria-hidden />}
+            <span className="token-value-text">{light}</span>
+          </span>
+        )}
+        {dark && (
+          <span className="token-value-mode" title="dark">
+            {isColorish(dark) && <span className="token-swatch" style={{ background: dark }} aria-hidden />}
+            <span className="token-value-text">{dark}</span>
+          </span>
+        )}
+      </span>
+    );
+  }
+  return (
+    <span className="token-value">
+      {isColorish(v) && <span className="token-swatch" style={{ background: v }} aria-hidden />}
+      <span className="token-value-text">{v}</span>
+    </span>
+  );
+}
+
 export function TokensView({ bundle }: TokensViewProps) {
   const [filter, setFilter] = useState("");
+  const [layers, setLayers] = useState<Record<LayerKey, boolean>>({
+    core: true,
+    semantic: true,
+    brand: true,
+  });
 
-  const tokens = useMemo<TokenIndexEntry[]>(() => {
-    const map = new Map<string, TokenIndexEntry>();
-    for (const c of bundle.components) {
-      const groups = c.contract.tokens ?? {};
-      for (const [group, defs] of Object.entries(groups)) {
-        for (const [name, def] of Object.entries(defs ?? {})) {
-          if (!map.has(name)) {
-            map.set(name, { name, definition: def, components: [], groups: [] });
-          }
-          const entry = map.get(name)!;
-          if (!entry.components.includes(c.name)) entry.components.push(c.name);
-          if (!entry.groups.includes(group)) entry.groups.push(group);
-        }
-      }
+  const brands = bundle.brandTokens ?? [];
+  const [brandId, setBrandId] = useState<string>(() => brands[0]?.id ?? "default");
+  const activeBrand = useMemo(
+    () => brands.find((b) => b.id === brandId) ?? brands[0],
+    [brands, brandId],
+  );
+
+  // Build the unified row set whenever the active brand changes. Core and
+  // semantic are stable across brand toggles; only the brand slice swaps.
+  const rows = useMemo<FoundationToken[]>(() => {
+    const out: FoundationToken[] = [];
+    for (const t of bundle.foundationTokens ?? []) out.push(t);
+    if (activeBrand) {
+      for (const t of activeBrand.tokens) out.push(t);
     }
-    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
-  }, [bundle]);
+    return out;
+  }, [bundle.foundationTokens, activeBrand]);
 
+  // Indices used by RefLink to resolve `{path}` references back to anchor ids.
+  // Built once per (foundation, active brand) pair; reused by every row.
+  const refIndex = useMemo(() => {
+    const idx = { core: new Set<string>(), semantic: new Set<string>(), brand: new Set<string>() };
+    for (const t of rows) idx[t.layer].add(t.path);
+    return idx;
+  }, [rows]);
+
+  // Filter pipeline: layer chips first (cheap), then text needle across path,
+  // value, description, and extension text. Case-insensitive substring match.
   const filtered = useMemo(() => {
     const needle = filter.trim().toLowerCase();
-    if (!needle) return tokens;
-    return tokens.filter(
-      (t) =>
-        t.name.toLowerCase().includes(needle) ||
-        (t.definition.resolvesTo ?? "").toLowerCase().includes(needle) ||
-        t.components.some((c) => c.toLowerCase().includes(needle)),
-    );
-  }, [tokens, filter]);
+    return rows.filter((t) => {
+      if (!layers[t.layer]) return false;
+      if (!needle) return true;
+      if (t.path.toLowerCase().includes(needle)) return true;
+      if ((t.value ?? "").toLowerCase().includes(needle)) return true;
+      if ((t.description ?? "").toLowerCase().includes(needle)) return true;
+      if (t.valueByMode) {
+        if ((t.valueByMode.light ?? "").toLowerCase().includes(needle)) return true;
+        if ((t.valueByMode.dark ?? "").toLowerCase().includes(needle)) return true;
+      }
+      return false;
+    });
+  }, [rows, layers, filter]);
+
+  // Group by layer so the table is broken into labelled sections, matching
+  // how the user picked the page shape (Core / Semantic / Brand bands).
+  const grouped = useMemo(() => {
+    const groups: Record<LayerKey, FoundationToken[]> = { core: [], semantic: [], brand: [] };
+    for (const t of filtered) groups[t.layer].push(t);
+    return groups;
+  }, [filtered]);
+
+  // When the user clicks an alias link, scrollIntoView is the browser's job —
+  // but we also want a visual flash so the jump destination is obvious.
+  // Listen for hashchange and toggle a class on the target row for ~1.5s.
+  useEffect(() => {
+    function flash() {
+      const hash = window.location.hash.slice(1);
+      if (!hash) return;
+      const el = document.getElementById(hash);
+      if (!el) return;
+      el.classList.add("token-row--flash");
+      window.setTimeout(() => el.classList.remove("token-row--flash"), 1500);
+    }
+    window.addEventListener("hashchange", flash);
+    flash(); // also flash on first mount if URL already has a token hash
+    return () => window.removeEventListener("hashchange", flash);
+  }, []);
+
+  const counts = {
+    core: rows.filter((r) => r.layer === "core").length,
+    semantic: rows.filter((r) => r.layer === "semantic").length,
+    brand: activeBrand?.tokens.length ?? 0,
+    total: rows.length,
+  };
 
   return (
     <div className="page">
       <p className="page-eyebrow">FOUNDATIONS</p>
       <h1 className="page-title">Design tokens</h1>
       <p className="page-lede">
-        {tokens.length} tokens declared across {bundle.components.length}{" "}
-        components. Tokens are the contract between visual design and emitted
-        CSS — every value resolves through a semantic layer before reaching a
-        component.
+        {counts.total.toLocaleString()} tokens across core, semantic, and the active brand —
+        {" "}{counts.core} core, {counts.semantic} semantic, {counts.brand} in{" "}
+        <code className="muted">{activeBrand?.name ?? "—"}</code>. Click any{" "}
+        <span className="token-ref token-ref--inline">{"{reference}"}</span> to jump to the row it
+        resolves to.
       </p>
 
-      <input
-        type="search"
-        placeholder="Filter tokens, references, or components…"
-        aria-label="Filter tokens, references, or components"
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        style={{
-          width: "100%",
-          padding: "var(--space-4) var(--space-5)",
-          marginBottom: "var(--space-5)",
-          border: "1px solid var(--border-default)",
-          borderRadius: "var(--radius-3)",
-          background: "var(--bg-surface)",
-          color: "var(--fg-default)",
-          font: "inherit",
-        }}
-      />
+      <div className="tokens-controls">
+        <input
+          type="search"
+          className="tokens-filter-input"
+          placeholder="Filter by name, value, or description…"
+          aria-label="Filter tokens"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
 
-      <div className="card">
+        <div className="tokens-layer-chips" role="group" aria-label="Token layers">
+          {LAYER_ORDER.map((l) => {
+            const active = layers[l];
+            return (
+              <button
+                key={l}
+                type="button"
+                className={`tokens-layer-chip ${active ? "is-active" : ""}`}
+                aria-pressed={active}
+                onClick={() => setLayers((prev) => ({ ...prev, [l]: !prev[l] }))}
+              >
+                <span className={`tokens-layer-dot tokens-layer-dot--${l}`} aria-hidden />
+                {LAYER_LABEL[l]}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="tokens-brand-bar" role="radiogroup" aria-label="Active brand">
+        <span className="tokens-brand-bar-label">Brand</span>
+        <div className="tokens-brand-pills">
+          {brands.map((b) => (
+            <button
+              key={b.id}
+              type="button"
+              role="radio"
+              aria-checked={b.id === brandId}
+              className={`tokens-brand-pill ${b.id === brandId ? "is-active" : ""}`}
+              onClick={() => setBrandId(b.id)}
+              title={b.description ?? b.name}
+            >
+              {b.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="card tokens-card">
         <table className="tokens-table">
           <thead>
             <tr>
               <th>Token</th>
-              <th>Resolves to</th>
-              <th>Fallback</th>
-              <th>Used by</th>
+              <th>Value</th>
+              <th>Type</th>
+              <th>Description</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((t) => (
-              <tr key={t.name}>
-                <td>{t.name}</td>
-                <td className="muted">{t.definition.resolvesTo ?? "—"}</td>
-                <td>
-                  {isColorish(t.definition.fallback) && (
-                    <span
-                      className="token-swatch"
-                      style={{ background: t.definition.fallback }}
-                      aria-hidden
-                    />
-                  )}
-                  {t.definition.fallback ?? "—"}
-                </td>
-                <td>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-2)" }}>
-                    {t.components.slice(0, 6).map((c) => (
-                      <a
-                        key={c}
-                        className="chip"
-                        href={buildHref({ kind: "component", name: c, tab: "design" })}
-                      >
-                        {c}
+            {LAYER_ORDER.flatMap((layer) => {
+              const items = grouped[layer];
+              if (!items.length) return [] as React.ReactNode[];
+              return [
+                <tr key={`hdr-${layer}`} className="tokens-section-row">
+                  <td colSpan={4}>
+                    <div className="tokens-section-row-inner">
+                      <span className={`tokens-layer-dot tokens-layer-dot--${layer}`} aria-hidden />
+                      <span className="tokens-section-title">{LAYER_LABEL[layer]}</span>
+                      {layer === "brand" && activeBrand && (
+                        <span className="muted">— {activeBrand.name}</span>
+                      )}
+                      <span className="muted tokens-section-count">{items.length}</span>
+                    </div>
+                  </td>
+                </tr>,
+                ...items.map((t) => (
+                  <tr key={`${layer}.${t.path}`} id={anchorId(layer, t.path)}>
+                    <td className="tokens-name-cell">
+                      <a className="tokens-name-anchor" href={`#${anchorId(layer, t.path)}`}>
+                        {t.path}
                       </a>
-                    ))}
-                    {t.components.length > 6 && (
-                      <span className="chip subtle">+{t.components.length - 6}</span>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                    </td>
+                    <td>
+                      <ValueCell token={t} index={refIndex} />
+                    </td>
+                    <td className="muted">{t.type ?? "—"}</td>
+                    <td className="muted tokens-desc-cell">{t.description ?? ""}</td>
+                  </tr>
+                )),
+              ];
+            })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={4} className="subtle" style={{ textAlign: "center", padding: "var(--space-8)" }}>
-                  No tokens match "{filter}".
+                <td colSpan={4} className="subtle tokens-empty">
+                  No tokens match {filter ? `"${filter}"` : "the current layer selection"}.
                 </td>
               </tr>
             )}

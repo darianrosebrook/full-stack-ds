@@ -663,11 +663,135 @@ button {
   color: var(--fg-default);
 }
 
-/* Tokens table */
+/* Tokens page */
+.tokens-controls {
+  display: flex;
+  gap: var(--space-4);
+  align-items: stretch;
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.tokens-filter-input {
+  flex: 1 1 280px;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-3);
+  background: var(--bg-surface);
+  color: var(--fg-default);
+  font: inherit;
+}
+
+.tokens-layer-chips {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.tokens-layer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-3);
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  color: var(--fg-subtle);
+  font: inherit;
+  font-size: var(--fs-100);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.tokens-layer-chip:hover {
+  border-color: var(--fg-subtle);
+  color: var(--fg-default);
+}
+
+.tokens-layer-chip.is-active {
+  background: var(--bg-subtle);
+  color: var(--fg-default);
+  border-color: var(--fg-subtle);
+}
+
+.tokens-layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.tokens-layer-dot--core {
+  background: var(--fg-subtle);
+}
+
+.tokens-layer-dot--semantic {
+  background: #5b8def;
+}
+
+.tokens-layer-dot--brand {
+  background: #d9292b;
+}
+
+.tokens-brand-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-3);
+  flex-wrap: wrap;
+}
+
+.tokens-brand-bar-label {
+  font-size: var(--fs-50);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-subtle);
+  font-weight: var(--fw-medium);
+}
+
+.tokens-brand-pills {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tokens-brand-pill {
+  padding: var(--space-2) var(--space-4);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background: var(--bg-surface);
+  color: var(--fg-subtle);
+  font: inherit;
+  font-size: var(--fs-100);
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.tokens-brand-pill:hover {
+  color: var(--fg-default);
+  border-color: var(--border-default);
+}
+
+.tokens-brand-pill.is-active {
+  background: var(--fg-default);
+  color: var(--bg-surface);
+  border-color: var(--fg-default);
+}
+
+.tokens-card {
+  padding: 0;
+  overflow: hidden;
+}
+
 .tokens-table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--fs-200);
+  table-layout: fixed;
 }
 
 .tokens-table th {
@@ -679,17 +803,90 @@ button {
   padding: var(--space-3) var(--space-4);
   background: var(--bg-subtle);
   border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
+
+.tokens-table th:nth-child(1) { width: 38%; }
+.tokens-table th:nth-child(2) { width: 28%; }
+.tokens-table th:nth-child(3) { width: 12%; }
+.tokens-table th:nth-child(4) { width: 22%; }
 
 .tokens-table td {
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
+  vertical-align: middle;
+  word-break: break-word;
 }
 
-.tokens-table td:first-child {
+.tokens-section-row td {
+  padding: 0;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-sans);
+}
+
+.tokens-section-row-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-50);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-subtle);
+}
+
+.tokens-section-title {
   color: var(--fg-default);
   font-weight: var(--fw-medium);
+}
+
+.tokens-section-count {
+  margin-left: auto;
+}
+
+.tokens-name-cell {
+  font-family: var(--font-mono);
+}
+
+.tokens-name-anchor {
+  color: var(--fg-default);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+
+.tokens-name-anchor:hover {
+  text-decoration: underline;
+}
+
+.tokens-desc-cell {
+  font-family: var(--font-sans);
+  font-size: var(--fs-100);
+}
+
+.tokens-empty {
+  text-align: center;
+  padding: var(--space-8);
+}
+
+.token-value,
+.token-value-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.token-value-modes {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.token-value-text {
+  font-family: var(--font-mono);
 }
 
 .token-swatch {
@@ -699,7 +896,48 @@ button {
   border: 1px solid var(--border-default);
   display: inline-block;
   vertical-align: middle;
-  margin-right: var(--space-3);
+  flex-shrink: 0;
+}
+
+.token-ref {
+  font-family: var(--font-mono);
+  color: var(--fg-default);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--border-default);
+  padding-bottom: 1px;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.token-ref:hover {
+  color: #5b8def;
+  border-bottom-color: #5b8def;
+}
+
+.token-ref--unresolved {
+  color: var(--fg-subtle);
+  border-bottom-style: dotted;
+  cursor: help;
+}
+
+.token-ref--inline {
+  border-bottom: none;
+  background: var(--bg-subtle);
+  padding: 1px 6px;
+  border-radius: var(--radius-2);
+  font-size: 0.9em;
+}
+
+@keyframes token-row-flash {
+  0%   { background: rgba(91, 141, 239, 0.18); }
+  100% { background: transparent; }
+}
+
+.token-row--flash > td {
+  animation: token-row-flash 1500ms ease-out;
+}
+
+.tokens-table tr:target > td {
+  background: rgba(91, 141, 239, 0.06);
 }
 
 /* A11y panel */
@@ -810,4 +1048,27 @@ button {
   border-radius: var(--radius-2);
   padding: 1px 4px;
   margin: -1px -4px;
+}
+
+/*
+ * Header appearance popover — theme-toggle row. Composes the fsds
+ * Button (ghost variant) into a full-width row that holds an
+ * icon + text label on the left and a Switch on the right.
+ * Overrides Button's default inline-flex/center to stretch the row
+ * across the popover width.
+ */
+.header-appearance-row.button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.header-appearance-row__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-300);
 }

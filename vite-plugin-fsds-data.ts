@@ -3,9 +3,11 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite";
 import type {
+  BrandTokenSet,
   ComponentBundle,
   ComponentContract,
   ComponentSources,
+  FoundationToken,
   Framework,
   PrimitiveBundle,
   SourceFile,
@@ -183,6 +185,130 @@ async function gatherPrimitiveSources(rootDir: string): Promise<PrimitiveBundle[
   return sources;
 }
 
+/**
+ * A leaf in a tokens JSON is any object with `$value` (it may also have
+ * `$type`, `$description`, `$extensions`). Branches are recursed into.
+ */
+type RawTokenNode = Record<string, unknown>;
+
+function isTokenLeaf(node: unknown): node is RawTokenNode {
+  return (
+    typeof node === "object" &&
+    node !== null &&
+    Object.prototype.hasOwnProperty.call(node, "$value")
+  );
+}
+
+function stringifyValue(value: unknown): { value?: string; valueByMode?: { light?: string; dark?: string } } {
+  if (value == null) return {};
+  if (typeof value === "string" || typeof value === "number") {
+    return { value: String(value) };
+  }
+  if (typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    // Resolved tokens may carry { light, dark } objects for mode-aware values.
+    if ("light" in obj || "dark" in obj) {
+      const light = obj.light != null ? String(obj.light) : undefined;
+      const dark = obj.dark != null ? String(obj.dark) : undefined;
+      return { value: light ?? dark, valueByMode: { light, dark } };
+    }
+    // W3C color object — fall back to JSON so the page can at least show it.
+    return { value: JSON.stringify(obj) };
+  }
+  return { value: String(value) };
+}
+
+function flattenTokens(
+  layer: FoundationToken["layer"],
+  root: unknown,
+  prefix: string[] = [],
+): FoundationToken[] {
+  const out: FoundationToken[] = [];
+  if (!root || typeof root !== "object") return out;
+  for (const [key, value] of Object.entries(root as Record<string, unknown>)) {
+    if (key.startsWith("$")) continue; // group-level metadata; skip
+    if (isTokenLeaf(value)) {
+      const leaf = value as RawTokenNode;
+      const { value: rendered, valueByMode } = stringifyValue(leaf.$value);
+      const entry: FoundationToken = {
+        layer,
+        path: [...prefix, key].join("."),
+      };
+      if (typeof leaf.$type === "string") entry.type = leaf.$type;
+      if (typeof leaf.$description === "string") entry.description = leaf.$description;
+      if (rendered !== undefined) entry.value = rendered;
+      if (valueByMode && (valueByMode.light || valueByMode.dark)) entry.valueByMode = valueByMode;
+      if (leaf.$extensions && typeof leaf.$extensions === "object") {
+        entry.extensions = leaf.$extensions as Record<string, unknown>;
+      }
+      out.push(entry);
+      continue;
+    }
+    if (value && typeof value === "object") {
+      out.push(...flattenTokens(layer, value, [...prefix, key]));
+    }
+  }
+  return out;
+}
+
+async function loadFoundationTokens(rootDir: string): Promise<FoundationToken[]> {
+  const resolvedPath = path.join(rootDir, "packages", "ds-tokens", "generated", "resolved.tokens.json");
+  const text = await safeRead(resolvedPath);
+  if (!text) return [];
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(text) as Record<string, unknown>;
+  } catch {
+    return [];
+  }
+  const out: FoundationToken[] = [];
+  if (parsed.core) out.push(...flattenTokens("core", parsed.core));
+  if (parsed.semantic) out.push(...flattenTokens("semantic", parsed.semantic));
+  return out.sort((a, b) => {
+    if (a.layer !== b.layer) return a.layer === "core" ? -1 : 1;
+    return a.path.localeCompare(b.path);
+  });
+}
+
+async function loadBrandTokens(rootDir: string): Promise<BrandTokenSet[]> {
+  const brandsDir = path.join(rootDir, "packages", "ds-tokens", "src", "brands");
+  if (!existsSync(brandsDir)) return [];
+  const entries = await readdir(brandsDir, { withFileTypes: true });
+  const sets: BrandTokenSet[] = [];
+  for (const e of entries) {
+    if (!e.isFile() || !e.name.endsWith(".tokens.json")) continue;
+    const id = e.name.replace(/\.tokens\.json$/, "");
+    const text = await safeRead(path.join(brandsDir, e.name));
+    if (!text) continue;
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(text) as Record<string, unknown>;
+    } catch {
+      continue;
+    }
+    const meta = (parsed.$brand ?? {}) as Record<string, unknown>;
+    // Strip $brand and $schema from the root before flattening so the meta
+    // block doesn't leak into the token list.
+    const { $brand: _b, $schema: _s, ...rest } = parsed;
+    void _b; void _s;
+    const tokens = flattenTokens("brand", rest);
+    sets.push({
+      id,
+      name: typeof meta.name === "string" ? meta.name : id,
+      description: typeof meta.description === "string" ? meta.description : undefined,
+      accent: typeof meta.accent === "string" ? meta.accent : undefined,
+      density: typeof meta.density === "string" ? meta.density : undefined,
+      tokens: tokens.sort((a, b) => a.path.localeCompare(b.path)),
+    });
+  }
+  // Surface `default` first, then alphabetical.
+  return sets.sort((a, b) => {
+    if (a.id === "default") return -1;
+    if (b.id === "default") return 1;
+    return a.id.localeCompare(b.id);
+  });
+}
+
 function inferLayerOrder(layer: string): number {
   switch (layer) {
     case "primitive":
@@ -291,7 +417,20 @@ export async function buildBundle(rootDir: string) {
     },
   ];
 
-  return { components, primitives, schema, tokensCss, generatedAt: Date.now() };
+  const [foundationTokens, brandTokens] = await Promise.all([
+    loadFoundationTokens(rootDir),
+    loadBrandTokens(rootDir),
+  ]);
+
+  return {
+    components,
+    primitives,
+    schema,
+    tokensCss,
+    foundationTokens,
+    brandTokens,
+    generatedAt: Date.now(),
+  };
 }
 
 export default function fsdsDataPlugin(): Plugin {
@@ -313,7 +452,7 @@ export default function fsdsDataPlugin(): Plugin {
       return `export default ${JSON.stringify(bundle)};\n`;
     },
     handleHotUpdate(ctx) {
-      if (!/packages\/(ds-contracts|ds-react|ds-vue|ds-svelte|ds-angular|ds-lit)\//.test(ctx.file)) {
+      if (!/packages\/(ds-contracts|ds-react|ds-vue|ds-svelte|ds-angular|ds-lit|ds-tokens)\//.test(ctx.file)) {
         return;
       }
       const mod = ctx.server.moduleGraph.getModuleById(RESOLVED_ID);

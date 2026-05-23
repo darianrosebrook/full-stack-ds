@@ -173,10 +173,47 @@ export interface PrimitiveBundle {
   sources: Partial<Record<Framework, SourceFile[]>>;
 }
 
+/**
+ * Flattened entry for one leaf node in a foundation or brand token JSON.
+ *
+ * Paths are dotted (e.g. `color.palette.red.500`, `color.foreground.accent`).
+ * `value` may be a CSS literal (`#d9292b`), a token reference (`{path.to.other}`),
+ * or undefined for branches that only carry `$extensions`. `valueByMode`
+ * captures the resolved light/dark split when present so the page can preview
+ * both without re-running the resolver.
+ */
+export interface FoundationToken {
+  layer: "core" | "semantic" | "brand";
+  /** Dotted path, no `core.`/`semantic.`/brand-name prefix. */
+  path: string;
+  type?: string;
+  description?: string;
+  /** Resolved CSS value, or a `{ref}` string if the source still references another token. */
+  value?: string;
+  /** When the resolved value differs by color mode (light/dark). */
+  valueByMode?: { light?: string; dark?: string };
+  /** Other extension keys mirrored verbatim so consumers can show palette/mode paths. */
+  extensions?: Record<string, unknown>;
+}
+
+export interface BrandTokenSet {
+  /** Brand id matching the filename stem (`default`, `ocean`, ...). */
+  id: string;
+  name: string;
+  description?: string;
+  accent?: string;
+  density?: string;
+  tokens: FoundationToken[];
+}
+
 export interface Bundle {
   components: ComponentBundle[];
   primitives: PrimitiveBundle[];
   schema: unknown;
   tokensCss: string;
+  /** Flat list of every leaf token under `core.*` and `semantic.*` from `resolved.tokens.json`. */
+  foundationTokens: FoundationToken[];
+  /** One entry per brand file under `packages/ds-tokens/src/brands/`. */
+  brandTokens: BrandTokenSet[];
   generatedAt: number;
 }
