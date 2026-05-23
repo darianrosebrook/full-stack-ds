@@ -213,6 +213,17 @@ The byte-compare script remains in the tree for re-running if the graph or contr
 | `@layer brand` | `src/brands/<id>.tokens.json` | `[data-brand="<id>"]` | Brand-identity overrides. Each brand redeclares the semantic tokens it wants to differ. Currently 1 brand (`default`, 47 overrides). |
 | `@layer density` | `src/density/<id>.tokens.json` | `[data-density="<id>"]` | Content-density overrides. Each density redeclares the semantic spacing tokens it wants to differ. Currently 4 densities (`tight`, `compact`, `default`, `spacious`, 14 overrides each). |
 
+### Adjacent: per-component slot pools
+
+Component-scoped CSS custom properties live alongside the global graph but are not part of it. Two pools exist:
+
+| Pool | Source | Selector | Authority |
+|---|---|---|---|
+| **Component-local slots** | `<Name>.tokens.json` | `.<cssPrefix>` | Per-component themable surface. Slot names are cssPrefix-namespaced (e.g. `--fsds-button-color-background-default`). Authors declare what slots exist per component; consumers override per instance. |
+| **Box-model primitive slots** | `box-model.primitive.schema.json` + `primitives/BoxModel.primitive.json` | `.<cssPrefix>` (every component) | Closed slot pool of 14 unscoped names (`--fsds-box-model-padding-inline-start`, etc.) automatically declared on every component's root with literal defaults. See [`ARCH-BOX-MODEL-PRIMITIVE-001`](./box-model-primitive.md). |
+
+Both pools may `resolvesTo` paths in the global graph above — they extend the cascade with per-component override surfaces rather than competing with it. The box-model pool is the universal floor (every component gets it); component-local slots are the per-component vocabulary.
+
 ## How to add a new token
 
 1. Pick the tier — `core` (primitive) or `semantic` (named alias of a primitive).
@@ -237,6 +248,7 @@ Same shape as a brand, but the file lands at `src/density/<id>.tokens.json` with
 ## Cross-references
 
 - [`docs/codegen-authority.md`](./codegen-authority.md) — codegen layer authority; tokens are framework-neutral and live outside the per-framework emitters, in line with that doc's "one emitter, not five" principle as applied to design tokens.
+- [`docs/box-model-primitive.md`](./box-model-primitive.md) — box-model slot pool. The 14-slot `--fsds-box-model-*` surface that every component inherits as a stable substrate for padding / gap / sizing. Sits adjacent to this doc: it defines a slot pool, not new global tokens, and its slots may `resolvesTo` paths in the graph this doc governs.
 - [`docs/normal-form.md`](./normal-form.md) — property-2 (framework-neutral IR) and property-5 (fail-loud linters) are realized here as the single-emitter pipeline and the `validateContractTokens` gate.
 - [`docs/admission-rail.md`](./admission-rail.md) — the rail's philosophy of "evidence is inspectable, claims are bounded" is the same philosophy this doc uses for the cutover provenance and the byte-compare gate.
 
