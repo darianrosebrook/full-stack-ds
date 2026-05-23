@@ -55,9 +55,15 @@
     "font-size": { "resolvesTo": "button.size.fontSize.large" }
   },
   "--primary": {
-    "background-color": { "resolvesTo": "button.color.background.primary" },
-    "color": { "resolvesTo": "button.color.foreground.primary" },
-    "border-color": { "resolvesTo": "button.color.border.primary" }
+    "button.color.background.default": {
+      "resolvesTo": "semantic.color.action.background.primary.default"
+    },
+    "button.color.foreground.default": {
+      "resolvesTo": "semantic.color.foreground.inverse"
+    },
+    "button.color.border.default": {
+      "resolvesTo": "semantic.color.action.background.primary.default"
+    }
   },
   "--secondary": {
     "background-color": { "resolvesTo": "button.color.background.secondary" },

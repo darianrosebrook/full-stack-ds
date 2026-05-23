@@ -60,6 +60,12 @@
   --fsds-button-color-foreground-outline: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-button-color-border-outline: var(--fsds-semantic-color-border-default, #8f8f8f);
 }
+
+.button--primary {
+  --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default);
+  --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse);
+  --fsds-button-color-border-default: var(--fsds-semantic-color-action-background-primary-default);
+}
 /* @generated:end */
 
 /* @custom:start overrides */

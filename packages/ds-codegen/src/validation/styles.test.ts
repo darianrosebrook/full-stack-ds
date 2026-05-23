@@ -151,6 +151,90 @@ describe("validateContractStyles — namespace rule", () => {
     });
     expect(validateContractStyles(contract)).toEqual([]);
   });
+
+  // ---- slot-path property keys (variant / state redirection) ----
+  it("passes when a slot-path property key names a declared component-local slot", () => {
+    _resetKnownTokenPathsCacheForTests(
+      new Set(["semantic.color.action.background.primary.default"]),
+    );
+    const contract = base({
+      tokens: {
+        "test.color.bg": { resolvesTo: "semantic.color.bg", fallback: "#fff" },
+      },
+      styles: {
+        "--primary": {
+          "test.color.bg": {
+            resolvesTo: "semantic.color.action.background.primary.default",
+          },
+        },
+      },
+    });
+    expect(validateContractStyles(contract)).toEqual([]);
+  });
+
+  it("flags a slot-path property key naming an undeclared component-local slot (typo gate)", () => {
+    _resetKnownTokenPathsCacheForTests(new Set());
+    const contract = base({
+      tokens: {
+        "test.color.bg": { resolvesTo: "semantic.color.bg", fallback: "#fff" },
+      },
+      styles: {
+        "--primary": {
+          "test.color.bgg": { resolvesTo: "semantic.color.bg" },
+        },
+      },
+    });
+    const issues = validateContractStyles(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0].message).toContain("redefines slot");
+    expect(issues[0].message).toContain("not declared");
+  });
+
+  it("passes when a slot-path property key names a box-model slot", () => {
+    _resetKnownTokenPathsCacheForTests(
+      new Set(["semantic.action.size.small.padding-block"]),
+    );
+    const contract = base({
+      styles: {
+        "--small": {
+          "box-model.padding-block-start": {
+            resolvesTo: "semantic.action.size.small.padding-block",
+          },
+        },
+      },
+    });
+    expect(validateContractStyles(contract)).toEqual([]);
+  });
+
+  it("flags a slot-path property key with an unknown box-model slot name", () => {
+    _resetKnownTokenPathsCacheForTests(new Set());
+    const contract = base({
+      styles: {
+        "--small": {
+          "box-model.padding-bloc-start": {
+            resolvesTo: "semantic.action.size.small.padding-block",
+          },
+        },
+      },
+    });
+    const issues = validateContractStyles(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0].message).toContain("redefines box-model slot");
+  });
+
+  it("flags a slot-path property key with a foreign namespace", () => {
+    _resetKnownTokenPathsCacheForTests(new Set());
+    const contract = base({
+      styles: {
+        "--primary": {
+          "other.color.bg": { resolvesTo: "semantic.color.bg" },
+        },
+      },
+    });
+    const issues = validateContractStyles(contract);
+    expect(issues).toHaveLength(1);
+    expect(issues[0].message).toContain("does not match the component's");
+  });
 });
 
 describe("validateStylesSelectorCollisions", () => {

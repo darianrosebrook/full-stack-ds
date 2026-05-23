@@ -1755,16 +1755,28 @@ function renderTokenSlots(
 /**
  * Render one selector's property → styleEntry map into CSS declarations.
  *
- * For each `(property, entry)` pair:
- *   - `entry.resolvesTo` → `<property>: var(--<tokenSlug(resolvesTo)>[, <fallback>]);`
- *     The slot is declared on root by `renderTokenSlots`; the cascade
- *     delivers it. Authoring a global-graph path (`core.*` / `semantic.*`)
- *     at a styles.json consumer site is unusual — supported but flagged
- *     by the validator (component-local slots are the doctrine).
- *   - `entry.literal` (+ `platforms`) → `<property>: <literal>;`, emitted
- *     only if `platformTarget` is in `platforms`. Required-array on
- *     literals: an entry that doesn't apply to the current target is
- *     silently dropped at this site (other emitters honor it).
+ * Two key shapes are supported:
+ *
+ * 1. **CSS property keys** (no dot, e.g. `background-color`, `padding-block-start`).
+ *    Emits a normal CSS declaration: `<property>: <resolved-value>;`. The
+ *    resolved value is either `var(--<tokenSlug(resolvesTo)>[, <fallback>])`
+ *    for `resolvesTo` entries or the verbatim literal for `literal` entries.
+ *
+ * 2. **Slot-path keys** (containing at least one `.`, e.g. `button.color.background.default`).
+ *    Emits a CSS custom-property REDEFINITION at this selector's scope:
+ *    `--<tokenSlug(slot-path)>: var(--<tokenSlug(resolvesTo)>[, <fallback>]);`.
+ *    The slot's consumer site (`.button { background-color: var(--fsds-button-color-background-default) }`)
+ *    is unchanged; only the resolution of the slot is re-pointed at this
+ *    selector's scope. Used for variant/state redirection — e.g.
+ *    `--primary` selector redefines `button.color.background.default` to
+ *    point at the primary semantic token.
+ *
+ * Disambiguation: CSS property names never contain `.` while slot paths
+ * always do (they're dotted by construction). The dot count IS the type
+ * tag; no separate field is needed.
+ *
+ * Literal entries with `platforms` arrays are dropped silently when the
+ * current target isn't in the array (other emitters honor it).
  */
 function renderStyleBlock(
   block: Record<string, StyleEntry> | undefined,
@@ -1785,10 +1797,19 @@ function renderStyleBlock(
       const platforms = entry.platforms;
       if (platforms && !platforms.includes(platformTarget)) continue;
       const ref = `--${tokenSlug(entry.resolvesTo)}`;
-      declarations[property] =
+      const value =
         typeof entry.fallback === "string"
           ? `var(${ref}, ${entry.fallback})`
           : `var(${ref})`;
+      // Slot-path key: emit as custom-property redefinition. The output
+      // key becomes `--<slug>` (a CSS custom property) instead of the
+      // raw dotted path. Authors write `button.color.background.default`
+      // in styles.json; we emit `--fsds-button-color-background-default`.
+      if (property.includes(".")) {
+        declarations[`--${tokenSlug(property)}`] = value;
+        continue;
+      }
+      declarations[property] = value;
     }
   }
   return declarations;

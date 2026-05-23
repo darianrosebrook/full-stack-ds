@@ -70,12 +70,6 @@
   font-size: var(--fsds-button-size-fontSize-large);
 }
 
-.button--primary {
-  background-color: var(--fsds-button-color-background-primary);
-  color: var(--fsds-button-color-foreground-primary);
-  border-color: var(--fsds-button-color-border-primary);
-}
-
 .button--secondary {
   background-color: var(--fsds-button-color-background-secondary);
   color: var(--fsds-button-color-foreground-secondary);

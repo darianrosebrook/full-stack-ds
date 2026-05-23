@@ -357,6 +357,44 @@ describe("renderStyleBlock: resolution and platform filtering", () => {
     // and the resulting empty block isn't emitted.
     expect(blocks.find((b) => b.selector === ".x__track")).toBeUndefined();
   });
+
+  it("emits a slot-path property key as a CSS custom-property redefinition", () => {
+    // A property key containing `.` (e.g. `x.color.bg`) is a variant /
+    // state redirection: it redefines the named slot at this selector's
+    // scope. The output key becomes the CSS custom property
+    // (`--fsds-x-color-bg`), not the raw dotted path.
+    const contract: ComponentContract = {
+      name: "X",
+      cssPrefix: "x",
+      anatomy: { parts: ["root"] },
+      props: { styled: { members: [] } },
+      tokens: {
+        "x.color.bg": {
+          resolvesTo: "semantic.color.background.primary",
+          fallback: "#fff",
+        },
+      },
+      styles: {
+        root: {
+          "background-color": { resolvesTo: "x.color.bg" },
+        },
+        "--primary": {
+          "x.color.bg": {
+            resolvesTo: "semantic.color.action.background.primary.default",
+          },
+        },
+      },
+    };
+    const blocks = computeCssBlocks(contract, "x");
+    const variant = blocks.find((b) => b.selector === ".x--primary");
+    expect(variant).toBeDefined();
+    // Slot-path key emitted as a custom-property redefinition, not as a
+    // CSS property named `x.color.bg` (which would be invalid CSS).
+    expect(variant?.declarations).toEqual({
+      "--fsds-x-color-bg":
+        "var(--fsds-semantic-color-action-background-primary-default)",
+    });
+  });
 });
 
 function makeContract(extra: Partial<ComponentContract>): ComponentContract {

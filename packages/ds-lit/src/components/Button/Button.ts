@@ -84,6 +84,12 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-border-outline: var(--fsds-semantic-color-border-default, #8f8f8f);
     }
     
+    .button--primary {
+      --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default);
+      --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse);
+      --fsds-button-color-border-default: var(--fsds-semantic-color-action-background-primary-default);
+    }
+    
     .button {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -151,12 +157,6 @@ export class ButtonElement extends LitElement {
       padding-inline: var(--fsds-button-size-padding-inline-large);
       min-height: var(--fsds-button-size-minHeight-large);
       font-size: var(--fsds-button-size-fontSize-large);
-    }
-    
-    .button--primary {
-      background-color: var(--fsds-button-color-background-primary);
-      color: var(--fsds-button-color-foreground-primary);
-      border-color: var(--fsds-button-color-border-primary);
     }
     
     .button--secondary {

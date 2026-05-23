@@ -53,6 +53,54 @@ export function validateContractStyles(
       block as Record<string, StyleEntry>,
     )) {
       if (!entry || typeof entry !== "object") continue;
+
+      // Slot-path property key: redefines a CSS custom property at this
+      // selector's scope (variant/state redirection). The KEY itself must
+      // name a real slot — either component-local (declared in this
+      // contract's tokens.json) or a box-model primitive slot. Typoed
+      // slot names silently no-op at runtime; this gate catches them at
+      // validate time. The `resolvesTo` value gets the same global-graph
+      // check the property-key path below applies — variant redirects
+      // almost always point at semantic.* / core.* tokens, occasionally
+      // at another component-local slot.
+      if (property.includes(".")) {
+        const keyFirstSegment = property.split(".")[0];
+        const keyPointer = `/styles/${escapePointerSegment(selectorKey)}/${escapePointerSegment(property)}`;
+        if (keyFirstSegment === "box-model") {
+          if (!boxModelSlots.has(property)) {
+            issues.push({
+              pointer: keyPointer,
+              message:
+                `redefines box-model slot "${property}" which is not in the ` +
+                `box-model primitive pool. Valid slots are declared in ` +
+                `packages/ds-contracts/box-model.primitive.schema.json.`,
+            });
+            continue;
+          }
+        } else if (keyFirstSegment === cssPrefix) {
+          if (!localSlots.has(property)) {
+            issues.push({
+              pointer: keyPointer,
+              message:
+                `redefines slot "${property}" which is not declared in ` +
+                `${contract.name}.tokens.json. Declare the slot in tokens.json, ` +
+                `or remove the redefinition.`,
+            });
+            continue;
+          }
+        } else {
+          issues.push({
+            pointer: keyPointer,
+            message:
+              `slot-path key "${property}" does not match the component's ` +
+              `cssPrefix ("${cssPrefix}") or the box-model namespace. Slot ` +
+              `redefinitions can only target slots declared by this component ` +
+              `or by the box-model primitive.`,
+          });
+          continue;
+        }
+      }
+
       const resolvesTo = entry.resolvesTo;
       if (typeof resolvesTo !== "string") continue;
       const firstSegment = resolvesTo.split(".")[0];
