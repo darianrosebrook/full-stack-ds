@@ -1,0 +1,383 @@
+{
+  "$brand": {
+    "name": "monochrome",
+    "description": "Neutral gray brand theme - minimal, focused, and clean",
+    "accent": "neutral",
+    "density": "tight"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.700}",
+          "design.paths.dark": "{color.palette.neutral.300}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.600}",
+          "design.paths.dark": "{color.palette.neutral.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.800}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.800}",
+          "design.paths.dark": "{color.palette.neutral.100}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.500}",
+          "design.paths.dark": "{color.palette.neutral.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.800}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.800}",
+          "design.paths.dark": "{color.palette.neutral.200}"
+        }
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.mode.dark}",
+        "$extensions": {
+          "design.paths.light": "{color.mode.dark}",
+          "design.paths.dark": "{color.mode.light}"
+        }
+      }
+
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.800}",
+          "design.paths.dark": "{color.palette.neutral.200}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.200}",
+          "design.paths.dark": "{color.palette.neutral.700}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.mode.transparent}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.500}",
+          "design.paths.dark": "{color.palette.neutral.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.400}",
+          "design.paths.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Default input border - crisp neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.500}",
+          "design.paths.dark": "{color.palette.neutral.400}"
+        },
+        "$description": "Input hover border - darker neutral"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.700}",
+          "design.paths.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Input focus border - high contrast neutral"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.300}",
+          "design.paths.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Light input border - subtle neutral"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.500}",
+          "design.paths.dark": "{color.palette.neutral.400}"
+        },
+        "$description": "Primary input border - medium neutral"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.800}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.neutral.800}",
+            "design.paths.dark": "{color.palette.neutral.100}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.800}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.800}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.800}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.700}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.neutral.600}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.600}",
+          "design.paths.dark": "{color.palette.neutral.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.none}",
+          "$description": "No radius (0px) - ultra-minimal, focused"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.none}",
+        "$description": "Card border radius (0px) - crisp, minimal"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.neutral.200}",
+            "design.paths.dark": "{color.palette.neutral.700}"
+          },
+          "$description": "Light card border - very subtle neutral"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.300}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.neutral.300}",
+            "design.paths.dark": "{color.palette.neutral.600}"
+          },
+          "$description": "Medium card border - subtle neutral"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.500}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.neutral.500}",
+            "design.paths.dark": "{color.palette.neutral.400}"
+          },
+          "$description": "Dark card border - visible neutral"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - no border, minimal"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "Near elevation - no shadow for minimal cards"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "Default elevation - flat, minimal"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Far elevation - subtle shadow only when needed"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - ultra-minimal, flat"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.none}",
+        "$description": "Internal element radius (0px) - sharp corners"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.none}",
+        "$description": "Button radius (0px) - sharp, minimal"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.none}",
+        "$description": "Badge/chip radius (0px) - angular"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.none}",
+          "$description": "Input border radius - sharp, minimal (0px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input border width - ultra-thin, minimal (1px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid, crisp"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input focus border width - thin, focused (1px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.none}",
+          "$description": "Field border radius - sharp corners (0px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field border width - minimal (1px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field focus border width - thin (1px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.03}",
+        "$description": "Ultra-dense component padding (4px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.02}",
+        "$description": "Ultra-dense component gap (2px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Card padding (8px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short1}",
+        "$description": "Ultra-quick transitions (50ms) - swift, efficient"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.linear}",
+        "$description": "Linear easing curve - direct, no-nonsense"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.regular}",
+        "$description": "Regular body weight (400)"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.medium}",
+        "$description": "Medium heading weight (500) - understated, minimal"
+      }
+    }
+  }
+}
