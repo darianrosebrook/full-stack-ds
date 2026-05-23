@@ -29,6 +29,11 @@ export class LinksElement extends LitElement {
       --fsds-links-color-foreground-hover: var(--fsds-semantic-interaction-text-hover, #555555);
       --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
+      --fsds-links-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-links-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-links-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-links-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+      --fsds-links-focus-ring-radius: var(--fsds-core-shape-radius-small, 2px);
     }
     
     .links {
@@ -43,6 +48,14 @@ export class LinksElement extends LitElement {
     
       &:disabled {
         color: var(--fsds-links-color-foreground-disabled);
+      }
+    
+      &:focus-visible {
+        outline-width: var(--fsds-links-focus-ring-width);
+        outline-color: var(--fsds-links-focus-ring-color);
+        outline-style: var(--fsds-links-focus-ring-style);
+        outline-offset: var(--fsds-links-focus-ring-offset);
+        border-radius: var(--fsds-links-focus-ring-radius);
       }
     }
     

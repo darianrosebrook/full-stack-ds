@@ -19,6 +19,13 @@
   &:active {
     background-color: var(--fsds-chip-color-background-active);
   }
+
+  &:focus-visible {
+    outline-width: var(--fsds-chip-focus-ring-width);
+    outline-color: var(--fsds-chip-focus-ring-color);
+    outline-style: var(--fsds-chip-focus-ring-style);
+    outline-offset: var(--fsds-chip-focus-ring-offset);
+  }
 }
 
 .chip__icon {

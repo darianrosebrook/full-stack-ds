@@ -37,5 +37,11 @@
   },
   ":has(.checkbox__input:disabled) .checkbox__indicator": {
     "background-color": { "resolvesTo": "checkbox.color.background.disabled" }
+  },
+  ":has(.checkbox__input:focus-visible) .checkbox__indicator": {
+    "outline-width": { "resolvesTo": "checkbox.focus.ring.width" },
+    "outline-color": { "resolvesTo": "checkbox.focus.ring.color" },
+    "outline-style": { "resolvesTo": "checkbox.focus.ring.style" },
+    "outline-offset": { "resolvesTo": "checkbox.focus.ring.offset" }
   }
 }

@@ -27,5 +27,22 @@
     "color": {
       "resolvesTo": "links.color.foreground.disabled"
     }
+  },
+  "focus": {
+    "outline-width": {
+      "resolvesTo": "links.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "links.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "links.focus.ring.style"
+    },
+    "outline-offset": {
+      "resolvesTo": "links.focus.ring.offset"
+    },
+    "border-radius": {
+      "resolvesTo": "links.focus.ring.radius"
+    }
   }
 }

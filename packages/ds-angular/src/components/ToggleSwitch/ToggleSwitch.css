@@ -26,6 +26,13 @@
     background-color: var(--fsds-toggle-switch-color-background-disabled);
     cursor: not-allowed;
   }
+
+  &:focus-visible {
+    outline-width: var(--fsds-toggle-switch-focus-ring-width);
+    outline-color: var(--fsds-toggle-switch-focus-ring-color);
+    outline-style: var(--fsds-toggle-switch-focus-ring-style);
+    outline-offset: var(--fsds-toggle-switch-focus-ring-offset);
+  }
 }
 /* @generated:end */
 

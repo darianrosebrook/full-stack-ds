@@ -14,6 +14,14 @@
   &:disabled {
     color: var(--fsds-links-color-foreground-disabled);
   }
+
+  &:focus-visible {
+    outline-width: var(--fsds-links-focus-ring-width);
+    outline-color: var(--fsds-links-focus-ring-color);
+    outline-style: var(--fsds-links-focus-ring-style);
+    outline-offset: var(--fsds-links-focus-ring-offset);
+    border-radius: var(--fsds-links-focus-ring-radius);
+  }
 }
 
 .links__visited {

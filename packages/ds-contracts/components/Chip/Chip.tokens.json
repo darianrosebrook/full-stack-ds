@@ -63,5 +63,25 @@
     "resolvesTo": "semantic.color.action.background.secondary.active",
     "fallback": "#cecece",
     "layer": "semantic"
+  },
+  "chip.focus.ring.width": {
+    "resolvesTo": "semantic.focus.ring.width",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "chip.focus.ring.color": {
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#0a65fe",
+    "layer": "semantic"
+  },
+  "chip.focus.ring.style": {
+    "resolvesTo": "semantic.focus.ring.style",
+    "fallback": "solid",
+    "layer": "semantic"
+  },
+  "chip.focus.ring.offset": {
+    "resolvesTo": "semantic.focus.ring.offset",
+    "fallback": "2px",
+    "layer": "semantic"
   }
 }

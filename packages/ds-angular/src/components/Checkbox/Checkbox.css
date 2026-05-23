@@ -45,6 +45,13 @@
 :has(.checkbox__input:disabled) .checkbox__indicator {
   background-color: var(--fsds-checkbox-color-background-disabled);
 }
+
+:has(.checkbox__input:focus-visible) .checkbox__indicator {
+  outline-width: var(--fsds-checkbox-focus-ring-width);
+  outline-color: var(--fsds-checkbox-focus-ring-color);
+  outline-style: var(--fsds-checkbox-focus-ring-style);
+  outline-offset: var(--fsds-checkbox-focus-ring-offset);
+}
 /* @generated:end */
 
 /* @custom:start overrides */

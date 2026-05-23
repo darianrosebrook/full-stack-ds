@@ -36,6 +36,10 @@ export class ChipElement extends LitElement {
       --fsds-chip-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
       --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
+      --fsds-chip-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-chip-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-chip-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-chip-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .chip {
@@ -55,6 +59,13 @@ export class ChipElement extends LitElement {
     
       &:active {
         background-color: var(--fsds-chip-color-background-active);
+      }
+    
+      &:focus-visible {
+        outline-width: var(--fsds-chip-focus-ring-width);
+        outline-color: var(--fsds-chip-focus-ring-color);
+        outline-style: var(--fsds-chip-focus-ring-style);
+        outline-offset: var(--fsds-chip-focus-ring-offset);
       }
     }
     

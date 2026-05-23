@@ -38,6 +38,20 @@
       "resolvesTo": "chip.color.background.active"
     }
   },
+  "focus": {
+    "outline-width": {
+      "resolvesTo": "chip.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "chip.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "chip.focus.ring.style"
+    },
+    "outline-offset": {
+      "resolvesTo": "chip.focus.ring.offset"
+    }
+  },
   "icon": {
     "display": { "literal": "inline-flex", "platforms": ["web"] },
     "align-items": { "literal": "center", "platforms": ["web"] },

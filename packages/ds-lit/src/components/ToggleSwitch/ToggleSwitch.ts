@@ -30,6 +30,10 @@ export class ToggleSwitchElement extends LitElement {
       --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-toggle-switch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-toggle-switch-color-background-disabled: var(--fsds-semantic-color-background-disabled, #cecece);
+      --fsds-toggle-switch-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+      --fsds-toggle-switch-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
+      --fsds-toggle-switch-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
+      --fsds-toggle-switch-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
     
     .toggle-switch {
@@ -56,6 +60,13 @@ export class ToggleSwitchElement extends LitElement {
       &:disabled {
         background-color: var(--fsds-toggle-switch-color-background-disabled);
         cursor: not-allowed;
+      }
+    
+      &:focus-visible {
+        outline-width: var(--fsds-toggle-switch-focus-ring-width);
+        outline-color: var(--fsds-toggle-switch-focus-ring-color);
+        outline-style: var(--fsds-toggle-switch-focus-ring-style);
+        outline-offset: var(--fsds-toggle-switch-focus-ring-offset);
       }
     }
   `;

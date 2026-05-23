@@ -37,5 +37,19 @@
       "resolvesTo": "toggle-switch.color.background.disabled"
     },
     "cursor": { "literal": "not-allowed", "platforms": ["web"] }
+  },
+  "focus": {
+    "outline-width": {
+      "resolvesTo": "toggle-switch.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "toggle-switch.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "toggle-switch.focus.ring.style"
+    },
+    "outline-offset": {
+      "resolvesTo": "toggle-switch.focus.ring.offset"
+    }
   }
 }

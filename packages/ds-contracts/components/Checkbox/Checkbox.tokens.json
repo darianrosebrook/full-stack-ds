@@ -38,5 +38,25 @@
     "resolvesTo": "semantic.color.background.disabled",
     "fallback": "#cecece",
     "layer": "semantic"
+  },
+  "checkbox.focus.ring.width": {
+    "resolvesTo": "semantic.focus.ring.width",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "checkbox.focus.ring.color": {
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#0a65fe",
+    "layer": "semantic"
+  },
+  "checkbox.focus.ring.style": {
+    "resolvesTo": "semantic.focus.ring.style",
+    "fallback": "solid",
+    "layer": "semantic"
+  },
+  "checkbox.focus.ring.offset": {
+    "resolvesTo": "semantic.focus.ring.offset",
+    "fallback": "2px",
+    "layer": "semantic"
   }
 }
