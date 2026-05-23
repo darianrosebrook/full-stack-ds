@@ -1,0 +1,17 @@
+{
+  "$schema": "../box-model.primitive.schema.json",
+  "box-model.padding": { "literal": "0" },
+  "box-model.padding-block": { "literal": "0" },
+  "box-model.padding-block-start": { "literal": "0" },
+  "box-model.padding-block-end": { "literal": "0" },
+  "box-model.padding-inline": { "literal": "0" },
+  "box-model.padding-inline-start": { "literal": "0" },
+  "box-model.padding-inline-end": { "literal": "0" },
+  "box-model.gap": { "literal": "0" },
+  "box-model.width": { "literal": "auto" },
+  "box-model.min-width": { "literal": "0" },
+  "box-model.max-width": { "literal": "none" },
+  "box-model.height": { "literal": "auto" },
+  "box-model.min-height": { "literal": "0" },
+  "box-model.max-height": { "literal": "none" }
+}

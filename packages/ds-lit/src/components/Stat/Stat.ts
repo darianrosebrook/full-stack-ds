@@ -21,6 +21,20 @@ export class StatElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .stat {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-stat-color-foreground-value: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-stat-color-foreground-label: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-stat-color-foreground-trend-up: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
@@ -36,6 +50,17 @@ export class StatElement extends LitElement {
     }
     
     .stat {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: block;
       color: var(--fsds-stat-color-foreground-value);
       font-size: var(--fsds-stat-size-value-md);

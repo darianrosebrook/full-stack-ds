@@ -23,6 +23,20 @@ export class ChipElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .chip {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-default, #fafafa);
       --fsds-chip-color-foreground-default: var(--fsds-semantic-color-action-foreground-secondary-default, #141414);
       --fsds-chip-color-border-default: var(--fsds-semantic-color-action-border-secondary-default, #aeaeae);
@@ -43,11 +57,21 @@ export class ChipElement extends LitElement {
     }
     
     .chip {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-chip-size-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-chip-color-background-default);
       color: var(--fsds-chip-color-foreground-default);
       border-color: var(--fsds-chip-color-border-default);
       padding: var(--fsds-chip-size-padding-vertical);
-      gap: var(--fsds-chip-size-gap);
       border-radius: var(--fsds-chip-size-radius);
       font-size: var(--fsds-chip-text-size);
       font-weight: var(--fsds-chip-text-weight);

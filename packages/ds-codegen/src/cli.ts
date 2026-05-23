@@ -17,7 +17,11 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import type { ComponentContract } from "./contract.js";
+import type { ComponentContract, TokenResolution } from "./contract.js";
+import {
+  mergeBoxModelDefaults,
+  partitionBoxModelTokens,
+} from "./box-model.js";
 import {
   findComponentStyles,
   findComponentTokens,
@@ -412,6 +416,12 @@ function main(): void {
     // sidecars are purely a source-of-truth split. A missing sidecar means
     // this component has no tokens / no styles — that is supported, not an
     // error.
+    //
+    // The box-model primitive's defaults are merged UNDER whatever the
+    // sidecar declares (component-authored `box-model.*` keys win), so
+    // every component gets the full box-model slot pool on its root
+    // selector even if the sidecar is missing entirely. See box-model.ts.
+    let authoredTokens: Record<string, TokenResolution> | undefined;
     const tokensEntry = findComponentTokens(entry);
     if (tokensEntry) {
       const tokensRaw = JSON.parse(fs.readFileSync(tokensEntry.absPath, "utf-8"));
@@ -422,8 +432,23 @@ function main(): void {
         hasErrors = true;
         continue;
       }
-      (result.value as { tokens?: unknown }).tokens = tokensResult.value;
+      // Partition: `box-model.*` keys must pass the strict box-model
+      // schema (closed slot enum + literal vocabulary); everything else
+      // is a component-local slot already accepted by validateTokens.
+      const partitioned = partitionBoxModelTokens(
+        tokensResult.value as Record<string, TokenResolution>,
+      );
+      const boxResult = validator.validateBoxModelTokens(partitioned.boxModel);
+      if (!boxResult.ok) {
+        console.error(`INVALID  ${tokensEntry.filename} (box-model)`);
+        console.error(formatIssues(boxResult.issues));
+        hasErrors = true;
+        continue;
+      }
+      authoredTokens = tokensResult.value as Record<string, TokenResolution>;
     }
+    (result.value as { tokens?: unknown }).tokens =
+      mergeBoxModelDefaults(authoredTokens);
     const stylesEntry = findComponentStyles(entry);
     if (stylesEntry) {
       const stylesRaw = JSON.parse(fs.readFileSync(stylesEntry.absPath, "utf-8"));
@@ -1303,6 +1328,7 @@ function watchHandleChange(
     relPath: path.join("components", componentName, contractFilename),
     absPath: filePath,
   };
+  let watchAuthoredTokens: Record<string, TokenResolution> | undefined;
   const tokensEntry = findComponentTokens(watchEntry);
   if (tokensEntry) {
     let tokensRaw: unknown;
@@ -1318,8 +1344,19 @@ function watchHandleChange(
       console.error(formatIssues(tokensResult.issues));
       return;
     }
-    (result.value as { tokens?: unknown }).tokens = tokensResult.value;
+    const partitioned = partitionBoxModelTokens(
+      tokensResult.value as Record<string, TokenResolution>,
+    );
+    const boxResult = validator.validateBoxModelTokens(partitioned.boxModel);
+    if (!boxResult.ok) {
+      console.error(`[watch] INVALID ${tokensEntry.filename} (box-model):`);
+      console.error(formatIssues(boxResult.issues));
+      return;
+    }
+    watchAuthoredTokens = tokensResult.value as Record<string, TokenResolution>;
   }
+  (result.value as { tokens?: unknown }).tokens =
+    mergeBoxModelDefaults(watchAuthoredTokens);
   const stylesEntry = findComponentStyles(watchEntry);
   if (stylesEntry) {
     let stylesRaw: unknown;

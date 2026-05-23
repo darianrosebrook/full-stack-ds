@@ -1,5 +1,19 @@
 /* @generated:start tokens */
 .tabs {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-padding-block: 0;
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-gap: 0;
+  --fsds-box-model-width: auto;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-max-width: none;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: 0;
+  --fsds-box-model-max-height: none;
   --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
   --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
   --fsds-tabs-spacing-pillPadding: 4px 10px;

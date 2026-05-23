@@ -2,6 +2,17 @@
 
 /* @generated:start styles */
 .alert-notice {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-alert-notice-spacing-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   display: flex;
   align-items: flex-start;
   border-style: solid;
@@ -12,7 +23,6 @@
   border-color: var(--fsds-alert-notice-color-border-danger);
   padding: var(--fsds-alert-notice-size-padding);
   border-radius: var(--fsds-alert-notice-size-radius);
-  gap: var(--fsds-alert-notice-spacing-gap);
   font-size: var(--fsds-alert-notice-text-size);
   font-weight: var(--fsds-alert-notice-text-weight);
 }

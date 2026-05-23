@@ -21,6 +21,20 @@ export class AccordionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .accordion {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -45,11 +59,21 @@ export class AccordionElement extends LitElement {
     }
     
     .accordion {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-accordion-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
       border-color: var(--fsds-accordion-border-color);
       border-radius: var(--fsds-accordion-border-radius);
-      gap: var(--fsds-accordion-spacing-gap);
       font-size: var(--fsds-accordion-text-sizeContent);
       line-height: var(--fsds-accordion-text-lineHeightContent);
     }
@@ -174,6 +198,20 @@ export class AccordionItemElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .accordion {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -198,11 +236,21 @@ export class AccordionItemElement extends LitElement {
     }
     
     .accordion {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-accordion-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
       border-color: var(--fsds-accordion-border-color);
       border-radius: var(--fsds-accordion-border-radius);
-      gap: var(--fsds-accordion-spacing-gap);
       font-size: var(--fsds-accordion-text-sizeContent);
       line-height: var(--fsds-accordion-text-lineHeightContent);
     }
@@ -292,6 +340,20 @@ export class AccordionTriggerElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .accordion {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -316,11 +378,21 @@ export class AccordionTriggerElement extends LitElement {
     }
     
     .accordion {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-accordion-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
       border-color: var(--fsds-accordion-border-color);
       border-radius: var(--fsds-accordion-border-radius);
-      gap: var(--fsds-accordion-spacing-gap);
       font-size: var(--fsds-accordion-text-sizeContent);
       line-height: var(--fsds-accordion-text-lineHeightContent);
     }
@@ -410,6 +482,20 @@ export class AccordionHeaderElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .accordion {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -434,11 +520,21 @@ export class AccordionHeaderElement extends LitElement {
     }
     
     .accordion {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-accordion-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
       border-color: var(--fsds-accordion-border-color);
       border-radius: var(--fsds-accordion-border-radius);
-      gap: var(--fsds-accordion-spacing-gap);
       font-size: var(--fsds-accordion-text-sizeContent);
       line-height: var(--fsds-accordion-text-lineHeightContent);
     }
@@ -528,6 +624,20 @@ export class AccordionContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .accordion {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-accordion-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-accordion-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-accordion-color-textSecondary: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -552,11 +662,21 @@ export class AccordionContentElement extends LitElement {
     }
     
     .accordion {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-accordion-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
       border-color: var(--fsds-accordion-border-color);
       border-radius: var(--fsds-accordion-border-radius);
-      gap: var(--fsds-accordion-spacing-gap);
       font-size: var(--fsds-accordion-text-sizeContent);
       line-height: var(--fsds-accordion-text-lineHeightContent);
     }

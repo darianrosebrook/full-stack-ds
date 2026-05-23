@@ -295,21 +295,59 @@ export function emitCss(ir: ComponentIR): string {
 export function emitTokensCss(ir: ComponentIR): string {
   const rootSelector = `.${ir.cssPrefix}`;
   // Portal-aware: when the contract enables a portal for its surface,
-  // the content node renders at document.body. Slot declarations
-  // scoped to `.<cssPrefix>` don't reach it, so the var(--…)
-  // references in the generated content rule resolve to nothing.
-  // Hoist all slot declarations to `:root` in that case — they
-  // become globally visible at no real cost (slot names are
-  // already cssPrefix-qualified, so cross-component bleed isn't
-  // possible).
+  // the content node renders at document.body. Component-local slot
+  // declarations scoped to `.<cssPrefix>` don't reach it, so the
+  // var(--…) references in the generated content rule resolve to
+  // nothing. Hoist component slots to `:root` in that case — they're
+  // already cssPrefix-qualified (`--fsds-modal-color-…`), so cross-
+  // component bleed isn't possible.
+  //
+  // Box-model slots (`--fsds-box-model-…`) are UNSCOPED on purpose and
+  // would leak across portal components if hoisted: two simultaneously-
+  // open portal components would race for `:root`-defined values. Keep
+  // them on `.<cssPrefix>` so the per-component override discipline
+  // survives even for portaled surfaces. The portaled content node is
+  // a descendant of document.body, not of `.<cssPrefix>` — so to
+  // restore reachability for box-model slots specifically, the trigger
+  // / surface node should still set these on a wrapping element, OR
+  // the surface contract should declare a portal escape via the
+  // existing `[data-<prefix>-content]` selector if it needs custom
+  // sizing.
   const portalEnabled = ir.behavior.portal?.enabled === true;
   const grouped = groupBlocksByRoot(ir.cssBlocks, rootSelector)
     .map((g) => filterGroupedBlock(g, "slots"))
-    .map((g) =>
-      portalEnabled && g.selector === rootSelector
-        ? { ...g, selector: ":root" }
-        : g,
-    )
+    .flatMap((g) => {
+      if (!portalEnabled || g.selector !== rootSelector) return [g];
+      // Split the root block into box-model (stays on `.<cssPrefix>`)
+      // and the rest (hoists to `:root`).
+      const stay: Record<string, string> = {};
+      const hoist: Record<string, string> = {};
+      for (const [prop, val] of Object.entries(g.decls)) {
+        if (prop.startsWith("--fsds-box-model-")) {
+          stay[prop] = val;
+        } else {
+          hoist[prop] = val;
+        }
+      }
+      const out = [];
+      if (Object.keys(hoist).length > 0) {
+        out.push({
+          selector: ":root",
+          decls: hoist,
+          comments: g.comments,
+          children: g.children,
+        });
+      }
+      if (Object.keys(stay).length > 0) {
+        out.push({
+          selector: rootSelector,
+          decls: stay,
+          comments: [] as string[],
+          children: [] as typeof g.children,
+        });
+      }
+      return out;
+    })
     .map((g) => formatGroupedBlock(g))
     .filter((s) => s.length > 0);
 

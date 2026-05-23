@@ -10,6 +10,23 @@
   --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-default, none);
   --fsds-calendar-elevation-hover: var(--fsds-semantic-elevation-surface-floating, 0 2px 8px rgba(0,0,0,0.12));
 }
+
+.calendar {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-padding-block: 0;
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-gap: 0;
+  --fsds-box-model-width: auto;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-max-width: none;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: 0;
+  --fsds-box-model-max-height: none;
+}
 /* @generated:end */
 
 /* @custom:start overrides */

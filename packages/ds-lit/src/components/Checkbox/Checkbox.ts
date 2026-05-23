@@ -21,6 +21,20 @@ export class CheckboxElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .checkbox {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-default, #aeaeae);
       --fsds-checkbox-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
@@ -36,6 +50,17 @@ export class CheckboxElement extends LitElement {
     }
     
     .checkbox {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
       cursor: pointer;

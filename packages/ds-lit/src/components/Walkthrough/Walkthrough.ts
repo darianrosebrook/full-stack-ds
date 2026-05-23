@@ -23,6 +23,20 @@ export class WalkthroughElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
@@ -49,6 +63,17 @@ export class WalkthroughElement extends LitElement {
     }
     
     .walkthrough {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-walkthrough-dots-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -59,7 +84,6 @@ export class WalkthroughElement extends LitElement {
       border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
-      gap: var(--fsds-walkthrough-dots-gap);
     }
     
     .walkthrough__content {
@@ -201,6 +225,20 @@ export class WalkthroughContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
@@ -227,6 +265,17 @@ export class WalkthroughContentElement extends LitElement {
     }
     
     .walkthrough {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-walkthrough-dots-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -237,7 +286,6 @@ export class WalkthroughContentElement extends LitElement {
       border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
-      gap: var(--fsds-walkthrough-dots-gap);
     }
     
     .walkthrough__content {
@@ -335,6 +383,20 @@ export class WalkthroughTitleElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
@@ -361,6 +423,17 @@ export class WalkthroughTitleElement extends LitElement {
     }
     
     .walkthrough {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-walkthrough-dots-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -371,7 +444,6 @@ export class WalkthroughTitleElement extends LitElement {
       border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
-      gap: var(--fsds-walkthrough-dots-gap);
     }
     
     .walkthrough__content {
@@ -469,6 +541,20 @@ export class WalkthroughDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .walkthrough {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
@@ -495,6 +581,17 @@ export class WalkthroughDescriptionElement extends LitElement {
     }
     
     .walkthrough {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-walkthrough-dots-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -505,7 +602,6 @@ export class WalkthroughDescriptionElement extends LitElement {
       border-radius: var(--fsds-walkthrough-surface-radius);
       box-shadow: var(--fsds-walkthrough-surface-shadow);
       padding: var(--fsds-walkthrough-surface-padding);
-      gap: var(--fsds-walkthrough-dots-gap);
     }
     
     .walkthrough__content {

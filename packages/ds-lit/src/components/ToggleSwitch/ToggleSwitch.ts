@@ -22,6 +22,20 @@ export class ToggleSwitchElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toggle-switch {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toggle-switch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toggle-switch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
@@ -37,6 +51,17 @@ export class ToggleSwitchElement extends LitElement {
     }
     
     .toggle-switch {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
       background-color: var(--fsds-toggle-switch-color-background-default);

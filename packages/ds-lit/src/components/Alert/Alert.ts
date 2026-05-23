@@ -22,6 +22,20 @@ export class AlertElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .alert {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
@@ -48,6 +62,17 @@ export class AlertElement extends LitElement {
     }
     
     .alert {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-alert-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       align-items: flex-start;
       border-style: solid;
@@ -58,7 +83,6 @@ export class AlertElement extends LitElement {
       border-color: var(--fsds-alert-color-border-danger);
       padding: var(--fsds-alert-size-padding);
       border-radius: var(--fsds-alert-size-radius);
-      gap: var(--fsds-alert-spacing-gap);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
     }
@@ -166,6 +190,20 @@ export class AlertBodyElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .alert {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
@@ -192,6 +230,17 @@ export class AlertBodyElement extends LitElement {
     }
     
     .alert {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-alert-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       align-items: flex-start;
       border-style: solid;
@@ -202,7 +251,6 @@ export class AlertBodyElement extends LitElement {
       border-color: var(--fsds-alert-color-border-danger);
       padding: var(--fsds-alert-size-padding);
       border-radius: var(--fsds-alert-size-radius);
-      gap: var(--fsds-alert-spacing-gap);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
     }
@@ -287,6 +335,20 @@ export class AlertTitleElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .alert {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
@@ -313,6 +375,17 @@ export class AlertTitleElement extends LitElement {
     }
     
     .alert {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-alert-spacing-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       align-items: flex-start;
       border-style: solid;
@@ -323,7 +396,6 @@ export class AlertTitleElement extends LitElement {
       border-color: var(--fsds-alert-color-border-danger);
       padding: var(--fsds-alert-size-padding);
       border-radius: var(--fsds-alert-size-radius);
-      gap: var(--fsds-alert-spacing-gap);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
     }

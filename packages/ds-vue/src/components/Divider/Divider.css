@@ -2,8 +2,18 @@
 
 /* @generated:start styles */
 .divider {
-  display: block;
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
   width: 100%;
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
+  display: block;
   border-top-color: var(--fsds-divider-color-default);
   border-top-style: solid;
   border-top-width: var(--fsds-divider-size-thickness);

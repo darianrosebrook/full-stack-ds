@@ -20,6 +20,20 @@ export class ProfileFlagElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .profile-flag {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-profile-flag-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-profile-flag-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-profile-flag-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -31,11 +45,21 @@ export class ProfileFlagElement extends LitElement {
     }
     
     .profile-flag {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-profile-flag-spacing-gap-default);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-profile-flag-color-background-default);
       border-color: var(--fsds-profile-flag-color-border-default);
       color: var(--fsds-profile-flag-color-foreground-primary);
       border-radius: var(--fsds-profile-flag-size-radius-default);
-      gap: var(--fsds-profile-flag-spacing-gap-default);
       padding: var(--fsds-profile-flag-spacing-padding-right);
     
       &:hover {

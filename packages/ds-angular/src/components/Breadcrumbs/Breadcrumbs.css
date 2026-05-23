@@ -2,12 +2,22 @@
 
 /* @generated:start styles */
 .breadcrumbs {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-breadcrumbs-spacing-gap-small);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-breadcrumbs-color-foreground-tertiary);
   background-color: var(--fsds-breadcrumbs-color-background-elevated);
   border-color: var(--fsds-breadcrumbs-color-border-subtle);
   line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
   border-radius: var(--fsds-breadcrumbs-shape-radius-small);
-  gap: var(--fsds-breadcrumbs-spacing-gap-small);
   padding: var(--fsds-breadcrumbs-spacing-padding-small);
   display: block;
 

@@ -26,6 +26,7 @@
 
 import type { ComponentContract, StyleEntry } from "../contract.js";
 import { getCssPrefix } from "../contract.js";
+import { loadBoxModelPrimitive } from "../box-model.js";
 import { expandStylesKey } from "../ir.js";
 import { loadKnownTokenPaths } from "./tokens.js";
 import type { ValidationIssue } from "../validate.js";
@@ -42,6 +43,7 @@ export function validateContractStyles(
 
   const cssPrefix = getCssPrefix(contract);
   const localSlots = new Set(Object.keys(contract.tokens ?? {}));
+  const boxModelSlots = loadBoxModelPrimitive().slotNames;
   const known = loadKnownTokenPaths();
   const issues: ValidationIssue[] = [];
 
@@ -55,6 +57,23 @@ export function validateContractStyles(
       if (typeof resolvesTo !== "string") continue;
       const firstSegment = resolvesTo.split(".")[0];
       const pointer = `/styles/${escapePointerSegment(selectorKey)}/${escapePointerSegment(property)}/resolvesTo`;
+
+      if (firstSegment === "box-model") {
+        // Box-model primitive slot: must match one of the slot names
+        // declared by box-model.primitive.schema.json. The slot itself
+        // is guaranteed to exist on every component's root (defaults
+        // injected at sidecar load) so the check is purely a typo gate.
+        if (!boxModelSlots.has(resolvesTo)) {
+          issues.push({
+            pointer,
+            message:
+              `references box-model slot "${resolvesTo}" which is not in the ` +
+              `box-model primitive pool. Valid slots are declared in ` +
+              `packages/ds-contracts/box-model.primitive.schema.json.`,
+          });
+        }
+        continue;
+      }
 
       if (firstSegment === cssPrefix) {
         // Component-local: must match a declared slot.

@@ -22,6 +22,20 @@ export class CommandElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .command {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
@@ -42,6 +56,17 @@ export class CommandElement extends LitElement {
     }
     
     .command {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       inset: 0;
       z-index: 1000;
@@ -290,6 +315,20 @@ export class CommandListElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .command {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
@@ -310,6 +349,17 @@ export class CommandListElement extends LitElement {
     }
     
     .command {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       inset: 0;
       z-index: 1000;
@@ -485,6 +535,20 @@ export class CommandGroupElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .command {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
@@ -505,6 +569,17 @@ export class CommandGroupElement extends LitElement {
     }
     
     .command {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       inset: 0;
       z-index: 1000;
@@ -680,6 +755,20 @@ export class CommandItemElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .command {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
@@ -700,6 +789,17 @@ export class CommandItemElement extends LitElement {
     }
     
     .command {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       inset: 0;
       z-index: 1000;

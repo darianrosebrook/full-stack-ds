@@ -2,12 +2,22 @@
 
 /* @generated:start styles */
 .postcard {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-postcard-size-gap-default);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-postcard-color-background-default);
   border-color: var(--fsds-postcard-color-border-accent);
   color: var(--fsds-postcard-color-foreground-secondary);
   padding: var(--fsds-postcard-size-padding-default);
   border-radius: var(--fsds-postcard-size-radius-default);
-  gap: var(--fsds-postcard-size-gap-default);
   line-height: var(--fsds-postcard-typography-content-lineHeight);
   display: flex;
   flex-direction: column;

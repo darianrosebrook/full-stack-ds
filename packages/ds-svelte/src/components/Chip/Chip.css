@@ -2,11 +2,21 @@
 
 /* @generated:start styles */
 .chip {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-chip-size-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-chip-color-background-default);
   color: var(--fsds-chip-color-foreground-default);
   border-color: var(--fsds-chip-color-border-default);
   padding: var(--fsds-chip-size-padding-vertical);
-  gap: var(--fsds-chip-size-gap);
   border-radius: var(--fsds-chip-size-radius);
   font-size: var(--fsds-chip-text-size);
   font-weight: var(--fsds-chip-text-weight);

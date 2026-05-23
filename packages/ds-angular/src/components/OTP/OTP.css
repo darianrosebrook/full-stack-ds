@@ -2,9 +2,19 @@
 
 /* @generated:start styles */
 .otp {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: 8px;
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
 }
 
 .otp__group {

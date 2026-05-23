@@ -39,6 +39,18 @@ export interface ContractValidator {
    */
   validateTokens(tokens: unknown): ValidationResult<Record<string, unknown>>;
   /**
+   * Validate the `box-model.*` partition of a tokens sidecar against
+   * `box-model.primitive.schema.json`. The component sidecar may declare
+   * any subset of the closed box-model slot pool to override defaults;
+   * unknown `box-model.*` keys (typos, removed slots) or values outside
+   * the constrained literal vocabulary fail at schema time. Pass the
+   * sub-object containing only keys whose first dotted segment is
+   * `box-model`; component-local slots use `validateTokens` instead.
+   */
+  validateBoxModelTokens(
+    tokens: unknown,
+  ): ValidationResult<Record<string, unknown>>;
+  /**
    * Validate a component's styles sidecar (`<Name>.styles.json`). Sidecars
    * are optional — absent file means the IR derives the component from
    * tokens.json + anatomy alone. When present, must match
@@ -62,6 +74,7 @@ export interface ContractValidatorPaths {
   tokensSchemaPath?: string;
   stylesSchemaPath?: string;
   usageSchemaPath?: string;
+  boxModelSchemaPath?: string;
 }
 
 const DEFAULT_COMPONENT_SCHEMA = "component.contract.schema.json";
@@ -72,6 +85,7 @@ const DEFAULT_PRIMITIVE_SCHEMA = path.join(
 const DEFAULT_TOKENS_SCHEMA = "component.tokens.schema.json";
 const DEFAULT_STYLES_SCHEMA = "component.styles.schema.json";
 const DEFAULT_USAGE_SCHEMA = "component.usage.schema.json";
+const DEFAULT_BOX_MODEL_SCHEMA = "box-model.primitive.schema.json";
 
 /**
  * Build a validator that loads schemas from a contracts root directory.
@@ -101,6 +115,10 @@ export function createContractValidator(
     paths.contractsRoot,
     paths.usageSchemaPath ?? DEFAULT_USAGE_SCHEMA,
   );
+  const boxModelSchemaPath = path.resolve(
+    paths.contractsRoot,
+    paths.boxModelSchemaPath ?? DEFAULT_BOX_MODEL_SCHEMA,
+  );
 
   for (const p of [
     componentSchemaPath,
@@ -108,6 +126,7 @@ export function createContractValidator(
     tokensSchemaPath,
     stylesSchemaPath,
     usageSchemaPath,
+    boxModelSchemaPath,
   ]) {
     if (!fs.existsSync(p)) {
       throw new Error(`Schema file not found: ${p}`);
@@ -130,6 +149,9 @@ export function createContractValidator(
   const validateUsageLineFn = ajv.compile(
     JSON.parse(fs.readFileSync(usageSchemaPath, "utf-8")),
   );
+  const validateBoxModelFn = ajv.compile(
+    JSON.parse(fs.readFileSync(boxModelSchemaPath, "utf-8")),
+  );
 
   return {
     validateComponent(contract) {
@@ -146,6 +168,12 @@ export function createContractValidator(
     },
     validateUsageLine(line) {
       return runValidation<Record<string, unknown>>(validateUsageLineFn, line);
+    },
+    validateBoxModelTokens(tokens) {
+      return runValidation<Record<string, unknown>>(
+        validateBoxModelFn,
+        tokens,
+      );
     },
   };
 }

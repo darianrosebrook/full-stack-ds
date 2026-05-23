@@ -120,6 +120,25 @@ describe("computeCssBlocks: styles.json key -> CSS selector", () => {
   });
 });
 
+// The box-model primitive auto-consumes its 11 longhand slots on every
+// component's root selector. Declared once here so the three root-block
+// shape tests below stay focused on what they're actually asserting
+// (token-slot wiring) rather than restating the consumer block in each
+// expectation.
+const BOX_MODEL_CONSUMERS = {
+  "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+  "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+  "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+  "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+  gap: "var(--fsds-box-model-gap)",
+  width: "var(--fsds-box-model-width)",
+  "min-width": "var(--fsds-box-model-min-width)",
+  "max-width": "var(--fsds-box-model-max-width)",
+  height: "var(--fsds-box-model-height)",
+  "min-height": "var(--fsds-box-model-min-height)",
+  "max-height": "var(--fsds-box-model-max-height)",
+};
+
 describe("computeCssBlocks: tokens.json -> slot declarations on root", () => {
   it("emits one slot declaration per tokens.json entry on the root selector", () => {
     const contract: ComponentContract = {
@@ -152,6 +171,7 @@ describe("computeCssBlocks: tokens.json -> slot declarations on root", () => {
         "var(--fsds-semantic-color-background-tertiary, #cecece)",
       "--fsds-x-color-thumb-bg":
         "var(--fsds-semantic-color-background-primary, #ffffff)",
+      ...BOX_MODEL_CONSUMERS,
     });
   });
 
@@ -170,6 +190,7 @@ describe("computeCssBlocks: tokens.json -> slot declarations on root", () => {
 
     expect(root?.declarations).toEqual({
       "--fsds-x-size-hairline": "1px",
+      ...BOX_MODEL_CONSUMERS,
     });
   });
 
@@ -198,6 +219,7 @@ describe("computeCssBlocks: tokens.json -> slot declarations on root", () => {
     expect(root?.declarations).toEqual({
       "--fsds-x-color-bg":
         "var(--fsds-semantic-color-background-primary, #fff)",
+      ...BOX_MODEL_CONSUMERS,
       "background-color": "var(--fsds-x-color-bg)",
       display: "inline-flex",
     });

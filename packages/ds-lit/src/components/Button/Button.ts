@@ -23,6 +23,20 @@ export class ButtonElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .button {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
@@ -71,6 +85,17 @@ export class ButtonElement extends LitElement {
     }
     
     .button {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-button-size-gap-default);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -82,7 +107,6 @@ export class ButtonElement extends LitElement {
       background-color: var(--fsds-button-color-background-default);
       color: var(--fsds-button-color-foreground-default);
       border-color: var(--fsds-button-color-border-default);
-      gap: var(--fsds-button-size-gap-default);
       border-radius: var(--fsds-button-size-radius);
       border-width: var(--fsds-button-size-border);
       font-weight: var(--fsds-button-text-weight);

@@ -2,12 +2,22 @@
 
 /* @generated:start styles */
 .card {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-card-size-gap-default);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-card-color-background-default);
   border-color: var(--fsds-card-color-border-default);
   color: var(--fsds-card-color-foreground-primary);
   padding: var(--fsds-card-size-padding-default);
   border-radius: var(--fsds-card-size-radius-default);
-  gap: var(--fsds-card-size-gap-default);
   line-height: var(--fsds-card-typography-lineHeight-normal);
   display: flex;
   flex-direction: column;

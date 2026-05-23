@@ -20,6 +20,12 @@ const validator = createContractValidator({ contractsRoot: CONTRACTS_ROOT });
 function listPrimitiveFiles(): string[] {
   return readdirSync(resolve(CONTRACTS_ROOT, "primitives"))
     .filter((f) => f.endsWith(".primitive.json"))
+    .filter(
+      // BoxModel is a slot-pool primitive validated by its own schema
+      // (box-model.primitive.schema.json), not by the Stack-style
+      // primitive.contract.schema.json that this loop checks.
+      (f) => f !== "BoxModel.primitive.json",
+    )
     .sort();
 }
 

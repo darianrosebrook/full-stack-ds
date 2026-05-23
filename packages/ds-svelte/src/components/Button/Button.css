@@ -2,6 +2,17 @@
 
 /* @generated:start styles */
 .button {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-button-size-gap-default);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +24,6 @@
   background-color: var(--fsds-button-color-background-default);
   color: var(--fsds-button-color-foreground-default);
   border-color: var(--fsds-button-color-border-default);
-  gap: var(--fsds-button-size-gap-default);
   border-radius: var(--fsds-button-size-radius);
   border-width: var(--fsds-button-size-border);
   font-weight: var(--fsds-button-text-weight);

@@ -25,6 +25,20 @@ export class SkeletonElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .skeleton {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f7c1c2);
       --fsds-skeleton-color-static: var(--fsds-semantic-color-background-secondary, #efefef);
@@ -39,10 +53,20 @@ export class SkeletonElement extends LitElement {
     }
     
     .skeleton {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-skeleton-gap-lg);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: block;
       background-color: var(--fsds-skeleton-color-base);
       border-radius: var(--fsds-skeleton-radius-lg);
-      gap: var(--fsds-skeleton-gap-lg);
       transition-duration: var(--fsds-skeleton-anim-duration);
       transition-timing-function: var(--fsds-skeleton-anim-easing);
       animation: skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;

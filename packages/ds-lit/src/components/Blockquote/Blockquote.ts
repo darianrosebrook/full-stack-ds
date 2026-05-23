@@ -21,6 +21,20 @@ export class BlockquoteElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .blockquote {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-blockquote-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-blockquote-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-blockquote-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
@@ -32,6 +46,17 @@ export class BlockquoteElement extends LitElement {
     }
     
     .blockquote {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-blockquote-color-foreground-primary);
       background-color: var(--fsds-blockquote-color-background-default);
       border-color: var(--fsds-blockquote-color-border-default);

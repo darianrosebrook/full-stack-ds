@@ -22,6 +22,20 @@ export class InputElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .input {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-input-color-bg-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-input-color-text-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-input-color-border-default: var(--fsds-semantic-color-border-default, #aeaeae);
@@ -33,10 +47,20 @@ export class InputElement extends LitElement {
     }
     
     .input {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-input-size-height-default);
+      max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-input-color-bg-default);
       color: var(--fsds-input-color-text-default);
       border-color: var(--fsds-input-color-border-default);
-      min-height: var(--fsds-input-size-height-default);
       border-radius: var(--fsds-input-size-radius-default);
       padding: var(--fsds-input-space-inline-default);
     

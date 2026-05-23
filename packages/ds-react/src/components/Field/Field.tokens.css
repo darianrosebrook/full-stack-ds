@@ -1,5 +1,19 @@
 /* @generated:start tokens */
 .field {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-padding-block: 0;
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-gap: 0;
+  --fsds-box-model-width: auto;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-max-width: none;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: 0;
+  --fsds-box-model-max-height: none;
   --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
   --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
   --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);

@@ -21,6 +21,20 @@ export class AvatarElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .avatar {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-avatar-size-small: var(--fsds-core-spacing-size-05, 12px);
       --fsds-avatar-size-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-avatar-size-medium: var(--fsds-core-spacing-size-08, 32px);
@@ -38,6 +52,17 @@ export class AvatarElement extends LitElement {
     }
     
     .avatar {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-avatar-size-default);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-avatar-size-default);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -49,8 +74,6 @@ export class AvatarElement extends LitElement {
       border-color: var(--fsds-avatar-color-border-default);
       border-style: solid;
       border-width: var(--fsds-avatar-size-border-default);
-      width: var(--fsds-avatar-size-default);
-      height: var(--fsds-avatar-size-default);
       font-weight: var(--fsds-avatar-typography-fontWeight-medium);
       font-family: var(--fsds-avatar-typography-fontFamily-sans);
     }

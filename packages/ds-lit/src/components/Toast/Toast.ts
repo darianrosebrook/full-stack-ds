@@ -22,6 +22,20 @@ export class ToastElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
@@ -43,12 +57,22 @@ export class ToastElement extends LitElement {
     }
     
     .toast {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-toast-spacing-stackGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       bottom: 0;
       right: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-toast-spacing-stackGap);
       z-index: 1000;
       pointer-events: none;
     }
@@ -173,6 +197,20 @@ export class ToastItemElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
@@ -194,12 +232,22 @@ export class ToastItemElement extends LitElement {
     }
     
     .toast {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-toast-spacing-stackGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       bottom: 0;
       right: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-toast-spacing-stackGap);
       z-index: 1000;
       pointer-events: none;
     }
@@ -288,6 +336,20 @@ export class ToastTitleElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
@@ -309,12 +371,22 @@ export class ToastTitleElement extends LitElement {
     }
     
     .toast {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-toast-spacing-stackGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       bottom: 0;
       right: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-toast-spacing-stackGap);
       z-index: 1000;
       pointer-events: none;
     }
@@ -403,6 +475,20 @@ export class ToastDescriptionElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .toast {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
@@ -424,12 +510,22 @@ export class ToastDescriptionElement extends LitElement {
     }
     
     .toast {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-toast-spacing-stackGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       position: fixed;
       bottom: 0;
       right: 0;
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-toast-spacing-stackGap);
       z-index: 1000;
       pointer-events: none;
     }

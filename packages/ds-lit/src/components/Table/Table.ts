@@ -21,6 +21,20 @@ export class TableElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .table {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-table-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-table-color-textMuted: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-table-color-border: var(--fsds-semantic-color-border-light, #fceaea);
@@ -45,10 +59,20 @@ export class TableElement extends LitElement {
     }
     
     .table {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: 100%;
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-table-color-text);
       font-size: var(--fsds-table-text-size);
       line-height: var(--fsds-table-text-lineHeight);
-      width: 100%;
       overflow-x: auto;
     
       &:hover {

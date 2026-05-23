@@ -22,6 +22,20 @@ export class DetailsElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .details {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
@@ -41,12 +55,22 @@ export class DetailsElement extends LitElement {
     }
     
     .details {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-details-spacing-gap-default);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       padding: var(--fsds-details-size-padding-default);
       border-radius: var(--fsds-details-size-radius-default);
       background-color: var(--fsds-details-color-background-default);
       color: var(--fsds-details-color-foreground-secondary);
       border-color: var(--fsds-details-color-border-accent);
-      gap: var(--fsds-details-spacing-gap-default);
       line-height: var(--fsds-details-typography-lineHeight-body);
       display: block;
       border-style: solid;
@@ -162,6 +186,20 @@ export class DetailsContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .details {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
@@ -181,12 +219,22 @@ export class DetailsContentElement extends LitElement {
     }
     
     .details {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-details-spacing-gap-default);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       padding: var(--fsds-details-size-padding-default);
       border-radius: var(--fsds-details-size-radius-default);
       background-color: var(--fsds-details-color-background-default);
       color: var(--fsds-details-color-foreground-secondary);
       border-color: var(--fsds-details-color-border-accent);
-      gap: var(--fsds-details-spacing-gap-default);
       line-height: var(--fsds-details-typography-lineHeight-body);
       display: block;
       border-style: solid;

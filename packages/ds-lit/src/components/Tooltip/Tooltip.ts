@@ -36,6 +36,20 @@ export class TooltipElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .tooltip {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -48,6 +62,17 @@ export class TooltipElement extends LitElement {
     }
     
     .tooltip {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-block;
     }
     
@@ -173,6 +198,20 @@ export class TooltipTriggerElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .tooltip {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -185,6 +224,17 @@ export class TooltipTriggerElement extends LitElement {
     }
     
     .tooltip {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-block;
     }
     
@@ -292,6 +342,20 @@ export class TooltipContentElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .tooltip {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -304,6 +368,17 @@ export class TooltipContentElement extends LitElement {
     }
     
     .tooltip {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-box-model-gap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: inline-block;
     }
     

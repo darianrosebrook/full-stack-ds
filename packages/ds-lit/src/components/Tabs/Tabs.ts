@@ -45,6 +45,20 @@ export class TabsElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .tabs {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-pillPadding: 4px 10px;
@@ -62,9 +76,19 @@ export class TabsElement extends LitElement {
     }
     
     .tabs {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-tabs-spacing-panelGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
     }
@@ -223,6 +247,20 @@ export class TabsListElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .tabs {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-pillPadding: 4px 10px;
@@ -240,9 +278,19 @@ export class TabsListElement extends LitElement {
     }
     
     .tabs {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-tabs-spacing-panelGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
     }
@@ -385,6 +433,20 @@ export class TabsTabElement extends LitElement {
   static override styles = css`
     :host { display: inline-flex; cursor: pointer; } :host([disabled]), :host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }
     .tabs {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-pillPadding: 4px 10px;
@@ -402,9 +464,19 @@ export class TabsTabElement extends LitElement {
     }
     
     .tabs {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-tabs-spacing-panelGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
     }
@@ -537,6 +609,20 @@ export class TabsPanelElement extends LitElement {
   static override styles = css`
     :host { display: block; } :host([hidden]) { display: none !important; }
     .tabs {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-tabs-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-tabs-spacing-pillPadding: 4px 10px;
@@ -554,9 +640,19 @@ export class TabsPanelElement extends LitElement {
     }
     
     .tabs {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-tabs-spacing-panelGap);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-tabs-spacing-panelGap);
       padding: var(--fsds-tabs-spacing-padding);
       border-radius: var(--fsds-tabs-shape-radius);
     }

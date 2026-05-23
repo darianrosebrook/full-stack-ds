@@ -1511,11 +1511,26 @@ export function computeCssBlocks(
   const emitted = new Set<string>();
 
   // Root block: slot declarations from tokens.json (always; even when
-  // styles.root is absent), then styles.root consumers. Slot declarations
-  // live ONLY on root and inherit through the CSS cascade to every
-  // descendant selector that reads them via var(--<slug>).
+  // styles.root is absent), then box-model consumers, then styles.root
+  // author rules. Slot declarations live ONLY on root and inherit through
+  // the CSS cascade to every descendant selector that reads them via
+  // var(--<slug>).
+  //
+  // Box-model consumers are auto-emitted on every component's root so the
+  // primitive slot pool actually applies without each contract having to
+  // re-declare `padding-inline-start: var(--fsds-box-model-...)` etc. in
+  // its styles.json. Only the longhand properties auto-consume — the
+  // shorthand slots (`box-model.padding`, `box-model.padding-block`, etc.)
+  // remain available for app-level overrides but are NOT auto-consumed,
+  // because setting both shorthand and longhand on the same rule produces
+  // a confusing cascade. Authors who want shorthand-level control read
+  // those slots explicitly in styles.json. Author-supplied properties in
+  // `styles.root` still merge ON TOP of the consumer block, so any
+  // explicit `padding: ...` from a contract wins over the box-model
+  // longhand defaults.
   const rootSelector = `.${cssPrefix}`;
   const slotDeclarations = renderTokenSlots(tokens);
+  const boxModelConsumers = renderBoxModelConsumers();
   const rootStyleDeclarations = renderStyleBlock(
     styles.root,
     cssPrefix,
@@ -1523,7 +1538,11 @@ export function computeCssBlocks(
   );
   blocks.push({
     selector: rootSelector,
-    declarations: { ...slotDeclarations, ...rootStyleDeclarations },
+    declarations: {
+      ...slotDeclarations,
+      ...boxModelConsumers,
+      ...rootStyleDeclarations,
+    },
   });
   emitted.add(rootSelector);
 
@@ -1683,6 +1702,34 @@ export function expandComplexSelector(key: string, prefix: string): string {
  * name. Consumers (in `<Name>.styles.json`) reference the slot via
  * `var(--<tokenSlug(name)>)`; the fallback chains automatically.
  */
+/**
+ * Auto-consumer block for the box-model primitive slots. Every component
+ * root gets these property declarations so the slot pool actually applies
+ * without each contract having to wire `padding-inline-start: var(...)`
+ * etc. in its styles.json. Longhand-only — see the docblock at the
+ * computeCssBlocks callsite for the rationale on excluding the shorthand
+ * slots.
+ *
+ * Author rules in styles.root merge on TOP of this map (object-spread
+ * order in the callsite), so any explicit `padding-inline-start: ...`
+ * from a contract overrides the consumer default.
+ */
+function renderBoxModelConsumers(): Record<string, string> {
+  return {
+    "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+    "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+    "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+    "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+    gap: "var(--fsds-box-model-gap)",
+    width: "var(--fsds-box-model-width)",
+    "min-width": "var(--fsds-box-model-min-width)",
+    "max-width": "var(--fsds-box-model-max-width)",
+    height: "var(--fsds-box-model-height)",
+    "min-height": "var(--fsds-box-model-min-height)",
+    "max-height": "var(--fsds-box-model-max-height)",
+  };
+}
+
 function renderTokenSlots(
   tokens: Record<string, TokenResolution>,
 ): Record<string, string> {

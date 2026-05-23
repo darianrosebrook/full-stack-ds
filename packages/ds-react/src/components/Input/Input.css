@@ -2,10 +2,20 @@
 
 /* @generated:start styles */
 .input {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-input-size-height-default);
+  max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-input-color-bg-default);
   color: var(--fsds-input-color-text-default);
   border-color: var(--fsds-input-color-border-default);
-  min-height: var(--fsds-input-size-height-default);
   border-radius: var(--fsds-input-size-radius-default);
   padding: var(--fsds-input-space-inline-default);
 

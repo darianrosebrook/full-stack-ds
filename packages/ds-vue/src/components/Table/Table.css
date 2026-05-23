@@ -2,10 +2,20 @@
 
 /* @generated:start styles */
 .table {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
+  width: 100%;
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-table-color-text);
   font-size: var(--fsds-table-text-size);
   line-height: var(--fsds-table-text-lineHeight);
-  width: 100%;
   overflow-x: auto;
 
   &:hover {

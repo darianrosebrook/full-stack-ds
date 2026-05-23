@@ -21,6 +21,20 @@ export class FieldElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .field {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -44,9 +58,19 @@ export class FieldElement extends LitElement {
     }
     
     .field {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-field-gap-y);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-field-gap-y);
       border-radius: var(--fsds-field-radius);
     }
     
@@ -185,6 +209,20 @@ export class FieldHeaderElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
     .field {
+      --fsds-box-model-padding: 0;
+      --fsds-box-model-padding-block: 0;
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: auto;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-max-width: none;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-max-height: none;
       --fsds-field-gap-y: var(--fsds-semantic-spacing-density-compact-sm, 8px);
       --fsds-field-gap-meta: var(--fsds-core-spacing-size-03, 4px);
       --fsds-field-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -208,9 +246,19 @@ export class FieldHeaderElement extends LitElement {
     }
     
     .field {
+      padding-block-start: var(--fsds-box-model-padding-block-start);
+      padding-block-end: var(--fsds-box-model-padding-block-end);
+      padding-inline-start: var(--fsds-box-model-padding-inline-start);
+      padding-inline-end: var(--fsds-box-model-padding-inline-end);
+      gap: var(--fsds-field-gap-y);
+      width: var(--fsds-box-model-width);
+      min-width: var(--fsds-box-model-min-width);
+      max-width: var(--fsds-box-model-max-width);
+      height: var(--fsds-box-model-height);
+      min-height: var(--fsds-box-model-min-height);
+      max-height: var(--fsds-box-model-max-height);
       display: flex;
       flex-direction: column;
-      gap: var(--fsds-field-gap-y);
       border-radius: var(--fsds-field-radius);
     }
     

@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "box-model.primitive.schema.json",
+  "title": "Box-model primitive slot pool",
+  "description": "Closed set of slot names that every component contract inherits as a stable, themable surface for padding, gap, and intrinsic sizing. Each slot resolves the same way as a component token (var(--<resolvesTo>, <fallback>) or a CSS literal). New slots may only be added by extending this schema; component sidecars may override any slot's resolution but cannot introduce new slot names.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "box-model.padding": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.padding-block": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.padding-block-start": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.padding-block-end": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.padding-inline": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.padding-inline-start": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.padding-inline-end": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.gap": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.width": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.min-width": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.max-width": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.height": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.min-height": { "$ref": "#/$defs/boxModelResolution" },
+    "box-model.max-height": { "$ref": "#/$defs/boxModelResolution" }
+  },
+  "$defs": {
+    "boxModelResolution": {
+      "type": "object",
+      "description": "Resolution for one box-model slot. Either token-backed (resolvesTo + fallback) or a constrained CSS literal. Literals are restricted to the value-shape vocabulary that box-model properties accept (lengths, percentages, viewport units, the keywords 0/auto/none/min-content/max-content/fit-content, and var() references). Free-form strings are rejected at schema time to keep the slot pool compilable across themes.",
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": ["resolvesTo", "fallback"],
+          "description": "Token reference — resolves via the global token graph as var(--<resolvesTo>, <fallback>)."
+        },
+        {
+          "required": ["literal"],
+          "description": "Literal CSS value — must match the constrained box-model value vocabulary."
+        }
+      ],
+      "properties": {
+        "resolvesTo": {
+          "type": "string",
+          "description": "Dotted path into the global token graph (e.g. \"core.spacing.size.04\"), without the -- prefix."
+        },
+        "fallback": {
+          "type": "string",
+          "description": "Hardcoded fallback — the second argument passed to var() in the emitted slot declaration. Must match the box-model literal vocabulary.",
+          "pattern": "^(0|auto|none|min-content|max-content|fit-content|[0-9]+(\\.[0-9]+)?(px|rem|em|%|vh|vw|vmin|vmax|ch|ex|fr)|calc\\(.+\\)|var\\(--.+\\))$"
+        },
+        "literal": {
+          "type": "string",
+          "description": "Hardcoded CSS value, mutually exclusive with `resolvesTo`+`fallback`. Constrained to the box-model literal vocabulary.",
+          "pattern": "^(0|auto|none|min-content|max-content|fit-content|[0-9]+(\\.[0-9]+)?(px|rem|em|%|vh|vw|vmin|vmax|ch|ex|fr)|calc\\(.+\\)|var\\(--.+\\))$"
+        },
+        "layer": {
+          "type": "string",
+          "enum": ["core", "semantic", "brand", "density"],
+          "description": "Expected resolution layer for resolvesTo. Defaults to \"core\" — box-model slots typically resolve into the spacing/dimension scales.",
+          "default": "core"
+        }
+      }
+    }
+  }
+}
