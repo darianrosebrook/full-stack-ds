@@ -1,0 +1,374 @@
+{
+  "$brand": {
+    "name": "slate",
+    "description": "Steel blue brand theme - professional, cool, and crisp",
+    "accent": "blue",
+    "density": "compact"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.600}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.600}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.blue.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.700}",
+          "design.paths.dark": "{color.palette.blue.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.blue.800}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.800}",
+          "design.paths.dark": "{color.palette.blue.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.600}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.blue.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.100}",
+          "design.paths.dark": "{color.palette.blue.800}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.300}",
+          "design.paths.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default input border - simple neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.blue.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.400}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        },
+        "$description": "Input hover border - cooler blue"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.600}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        },
+        "$description": "Input focus border - crisp steel blue accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.blue.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.200}",
+          "design.paths.dark": "{color.palette.blue.700}"
+        },
+        "$description": "Light input border - very subtle blue"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.blue.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.400}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        },
+        "$description": "Primary input border - medium steel blue"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.blue.600}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.600}",
+            "design.paths.dark": "{color.palette.blue.400}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.blue.600}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.blue.700}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.blue.800}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.blue.600}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.blue.500}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.medium}",
+          "$description": "Medium-small radius (6px) - crisp, professional"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Card border radius (4px) - crisp, mechanical"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.blue.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.200}",
+            "design.paths.dark": "{color.palette.blue.700}"
+          },
+          "$description": "Light card border - very subtle steel blue"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.blue.300}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.300}",
+            "design.paths.dark": "{color.palette.blue.600}"
+          },
+          "$description": "Medium card border - subtle crisp blue"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.blue.500}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.500}",
+            "design.paths.dark": "{color.palette.blue.400}"
+          },
+          "$description": "Dark card border - visible steel blue"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - modern, crisp"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "Near elevation - flat for modern look"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Default elevation - crisp shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Far elevation - clear shadow"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - modern, professional"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.medium}",
+        "$description": "Internal element radius (6px) - balanced"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.medium}",
+        "$description": "Button radius (6px) - crisp, professional"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.medium}",
+        "$description": "Badge/chip radius (6px) - balanced"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.medium}",
+          "$description": "Input border radius - crisp, professional (6px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input border width - precise, modern (1px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid, crisp"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input focus border width - clear emphasis (2px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.medium}",
+          "$description": "Field border radius - balanced, crisp (6px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field border width - precise (1px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field focus border width - clear (2px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.05}",
+        "$description": "Compact component padding (12px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Compact component gap (8px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "Card padding (16px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short3}",
+        "$description": "Crisp transitions (167ms) - efficient"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.quick.enter}",
+        "$description": "Crisp, efficient easing curve"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.regular}",
+        "$description": "Regular body weight (400)"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.bold}",
+        "$description": "Bold heading weight (700) - professional"
+      }
+    }
+  }
+}

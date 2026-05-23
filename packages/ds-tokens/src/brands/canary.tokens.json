@@ -1,0 +1,374 @@
+{
+  "$brand": {
+    "name": "canary",
+    "description": "Yellow brand theme - bright, cheerful, and playful",
+    "accent": "yellow",
+    "density": "default"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.600}",
+          "design.paths.dark": "{color.palette.yellow.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.600}",
+          "design.paths.dark": "{color.palette.yellow.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.700}",
+          "design.paths.dark": "{color.palette.yellow.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.500}",
+          "design.paths.dark": "{color.palette.yellow.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.700}",
+          "design.paths.dark": "{color.palette.yellow.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.500}",
+          "design.paths.dark": "{color.palette.yellow.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.200}",
+          "design.paths.dark": "{color.palette.yellow.700}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.500}",
+          "design.paths.dark": "{color.palette.yellow.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.300}",
+          "design.paths.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default input border - simple neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.400}",
+          "design.paths.dark": "{color.palette.yellow.500}"
+        },
+        "$description": "Input hover border - brighter yellow"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.500}",
+          "design.paths.dark": "{color.palette.yellow.400}"
+        },
+        "$description": "Input focus border - vibrant yellow accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.200}",
+          "design.paths.dark": "{color.palette.yellow.700}"
+        },
+        "$description": "Light input border - subtle yellow"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.400}",
+          "design.paths.dark": "{color.palette.yellow.500}"
+        },
+        "$description": "Primary input border - warm yellow"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.yellow.600}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.yellow.600}",
+            "design.paths.dark": "{color.palette.yellow.400}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.yellow.500}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.yellow.600}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.yellow.700}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.yellow.500}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.yellow.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.yellow.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.yellow.400}",
+          "design.paths.dark": "{color.palette.yellow.500}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.03}",
+          "$description": "Medium radius (8px) - cheerful, playful"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Card border radius (8px) - playful"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.yellow.100}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.yellow.100}",
+            "design.paths.dark": "{color.palette.yellow.800}"
+          },
+          "$description": "Light card border - very subtle yellow"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.yellow.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.yellow.200}",
+            "design.paths.dark": "{color.palette.yellow.700}"
+          },
+          "$description": "Medium card border - subtle yellow"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.yellow.400}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.yellow.400}",
+            "design.paths.dark": "{color.palette.yellow.500}"
+          },
+          "$description": "Dark card border - visible yellow"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - no border"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Near elevation - subtle shadow for playful cards"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Default elevation - standard shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.3}",
+          "$description": "Far elevation - prominent shadow for emphasis"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - flat cards"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Internal element radius (8px) - cheerful curves"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Button radius (8px) - playful"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.03}",
+        "$description": "Badge/chip radius (8px)"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.03}",
+          "$description": "Input border radius - playful, rounded (8px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input border width - thicker for playful feel (2px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input focus border width - bold (2px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.03}",
+          "$description": "Field border radius - rounded, cheerful (8px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field border width - playful thickness (2px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field focus border width - bold (2px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.07}",
+        "$description": "Comfortable component padding (24px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "Comfortable component gap (16px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.08}",
+        "$description": "Card padding (32px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short3}",
+        "$description": "Snappy transitions (167ms) - energetic"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.standard}",
+        "$description": "Standard easing curve - crisp, direct"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.medium}",
+        "$description": "Medium body weight (500) - energetic"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.bold}",
+        "$description": "Bold heading weight (700) - bright, cheerful"
+      }
+    }
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "$brand": {
+    "name": "midnight",
+    "description": "Premium midnight brand with purple/violet accents - mysterious and sophisticated",
+    "accent": "violet",
+    "density": "tight"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.500}",
+          "design.paths.dark": "{color.palette.violet.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.500}",
+          "design.paths.dark": "{color.palette.violet.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.violet.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.600}",
+          "design.paths.dark": "{color.palette.violet.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.violet.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.400}",
+          "design.paths.dark": "{color.palette.violet.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.violet.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.700}",
+          "design.paths.dark": "{color.palette.violet.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.500}",
+          "design.paths.dark": "{color.palette.violet.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.violet.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.100}",
+          "design.paths.dark": "{color.palette.violet.800}"
+        }
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.500}",
+          "design.paths.dark": "{color.palette.violet.400}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.500}",
+          "design.paths.dark": "{color.palette.violet.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.300}",
+          "design.paths.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default input border - simple neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.violet.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.400}",
+          "design.paths.dark": "{color.palette.violet.500}"
+        },
+        "$description": "Input hover border - deeper violet"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.500}",
+          "design.paths.dark": "{color.palette.violet.400}"
+        },
+        "$description": "Input focus border - premium violet accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.violet.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.200}",
+          "design.paths.dark": "{color.palette.violet.700}"
+        },
+        "$description": "Light input border - very subtle violet"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.violet.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.400}",
+          "design.paths.dark": "{color.palette.violet.500}"
+        },
+        "$description": "Primary input border - medium violet"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.violet.500}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.violet.500}",
+            "design.paths.dark": "{color.palette.violet.400}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.violet.500}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.violet.600}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.violet.700}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.violet.500}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.violet.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.violet.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.violet.400}",
+          "design.paths.dark": "{color.palette.violet.500}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.none}",
+          "$description": "No radius (0px) - ultra-sharp, sophisticated"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.none}",
+        "$description": "Card border radius (0px) - angular, dramatic"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.violet.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.violet.200}",
+            "design.paths.dark": "{color.palette.violet.700}"
+          },
+          "$description": "Light card border - very subtle violet"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.violet.300}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.violet.300}",
+            "design.paths.dark": "{color.palette.violet.600}"
+          },
+          "$description": "Medium card border - subtle mysterious violet"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.violet.500}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.violet.500}",
+            "design.paths.dark": "{color.palette.violet.400}"
+          },
+          "$description": "Dark card border - premium violet"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - sophisticated, dramatic"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Near elevation - subtle shadow"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Default elevation - premium shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.3}",
+          "$description": "Far elevation - dramatic shadow"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - sharp, sophisticated"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.none}",
+        "$description": "Internal element radius (0px) - sharp corners"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.01}",
+        "$description": "Button radius (2px) - barely rounded, sharp"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.01}",
+        "$description": "Badge/chip radius (2px) - minimal rounding"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.none}",
+          "$description": "Input border radius - sharp, sophisticated (0px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input border width - bold, premium (2px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid, sophisticated"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input focus border width - bold emphasis (2px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.none}",
+          "$description": "Field border radius - angular, dramatic (0px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field border width - bold (2px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field focus border width - bold (2px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.03}",
+        "$description": "Ultra-dense component padding (4px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.02}",
+        "$description": "Ultra-dense component gap (2px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Card padding (8px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short1}",
+        "$description": "Ultra-snappy transition speed (50ms)"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.emphasizedIn}",
+        "$description": "Sharp, decisive easing"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.bold}",
+        "$description": "Bold body weight (700) - strong, confident"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.bold}",
+        "$description": "Bold heading weight (700) - strong presence"
+      }
+    }
+  }
+}

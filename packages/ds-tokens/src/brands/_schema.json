@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "brand-tokens-schema",
+  "title": "Brand Token Override Schema",
+  "description": "Schema for brand-specific semantic token overrides",
+  "type": "object",
+  "required": ["$brand"],
+  "properties": {
+    "$brand": {
+      "type": "object",
+      "required": ["name", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for the brand"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable brand description"
+        },
+        "accent": {
+          "type": "string",
+          "description": "Primary accent color palette (e.g., 'red', 'blue', 'green')"
+        }
+      }
+    },
+    "color": {
+      "type": "object",
+      "description": "Color token overrides"
+    },
+    "typography": {
+      "type": "object",
+      "description": "Typography token overrides"
+    },
+    "spacing": {
+      "type": "object",
+      "description": "Spacing token overrides"
+    },
+    "shape": {
+      "type": "object",
+      "description": "Shape/radius token overrides"
+    },
+    "motion": {
+      "type": "object",
+      "description": "Motion/animation token overrides"
+    }
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "$brand": {
+    "name": "corporate",
+    "description": "Professional corporate brand with blue accents - trustworthy and stable",
+    "accent": "blue",
+    "density": "compact"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.blue.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.600}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.blue.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.700}",
+          "design.paths.dark": "{color.palette.blue.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.blue.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.700}",
+          "design.paths.dark": "{color.palette.blue.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.blue.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.100}",
+          "design.paths.dark": "{color.palette.blue.800}"
+        }
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.300}",
+          "design.paths.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default input border - simple neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.blue.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.300}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        },
+        "$description": "Input hover border - professional blue"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.blue.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.500}",
+          "design.paths.dark": "{color.palette.blue.400}"
+        },
+        "$description": "Input focus border - trustworthy blue accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.blue.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.100}",
+          "design.paths.dark": "{color.palette.blue.700}"
+        },
+        "$description": "Light input border - very subtle blue"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.blue.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.300}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        },
+        "$description": "Primary input border - medium blue"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.blue.600}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.600}",
+            "design.paths.dark": "{color.palette.blue.400}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.blue.500}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.blue.600}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.blue.700}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.blue.500}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.blue.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.blue.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.blue.400}",
+          "design.paths.dark": "{color.palette.blue.500}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}",
+          "$description": "Small radius (4px) - crisp, professional"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Card border radius (4px) - minimal, efficient"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.blue.100}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.100}",
+            "design.paths.dark": "{color.palette.blue.800}"
+          },
+          "$description": "Light card border - very subtle blue"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.blue.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.200}",
+            "design.paths.dark": "{color.palette.blue.700}"
+          },
+          "$description": "Medium card border - subtle professional blue"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.blue.400}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.blue.400}",
+            "design.paths.dark": "{color.palette.blue.500}"
+          },
+          "$description": "Dark card border - visible blue"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - clean, efficient"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "Near elevation - flat for efficiency"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Default elevation - minimal shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Far elevation - standard shadow"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - flat, professional"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.01}",
+        "$description": "Internal element radius (2px) - minimal rounding"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Button radius (4px) - precise"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.02}",
+        "$description": "Badge/chip radius (4px) - compact"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}",
+          "$description": "Input border radius - professional (4px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input border width - precise, efficient (1px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid, professional"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input focus border width - clear emphasis (2px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.02}",
+          "$description": "Field border radius - crisp, professional (4px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field border width - precise (1px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field focus border width - clear (2px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.04}",
+        "$description": "Ultra-compact component padding (8px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.03}",
+        "$description": "Ultra-compact component gap (4px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.05}",
+        "$description": "Card padding (12px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.short2}",
+        "$description": "Ultra-quick transition speed (83ms)"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.quick.enter}",
+        "$description": "Quick, efficient easing"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.medium}",
+        "$description": "Medium body weight (500) - authoritative"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.bold}",
+        "$description": "Bold heading weight (700)"
+      }
+    }
+  }
+}

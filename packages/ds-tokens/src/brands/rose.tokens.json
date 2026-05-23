@@ -1,0 +1,374 @@
+{
+  "$brand": {
+    "name": "rose",
+    "description": "Pink/rose brand theme - soft, elegant, and gentle",
+    "accent": "red",
+    "density": "spacious"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.400}",
+          "design.paths.dark": "{color.palette.red.300}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.400}",
+          "design.paths.dark": "{color.palette.red.300}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.red.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.500}",
+          "design.paths.dark": "{color.palette.red.200}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.red.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.300}",
+          "design.paths.dark": "{color.palette.red.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.600}",
+          "design.paths.dark": "{color.palette.red.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.400}",
+          "design.paths.dark": "{color.palette.red.300}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.100}",
+          "design.paths.dark": "{color.palette.red.800}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.400}",
+          "design.paths.dark": "{color.palette.red.300}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.red.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.200}",
+          "design.paths.dark": "{color.palette.red.600}"
+        },
+        "$description": "Default input border - soft rose tint"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.red.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.300}",
+          "design.paths.dark": "{color.palette.red.500}"
+        },
+        "$description": "Input hover border - warmer rose"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.red.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.400}",
+          "design.paths.dark": "{color.palette.red.300}"
+        },
+        "$description": "Input focus border - elegant rose accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.red.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.100}",
+          "design.paths.dark": "{color.palette.red.700}"
+        },
+        "$description": "Light input border - very subtle rose"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.red.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.300}",
+          "design.paths.dark": "{color.palette.red.500}"
+        },
+        "$description": "Primary input border - medium rose"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.red.400}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.red.400}",
+            "design.paths.dark": "{color.palette.red.300}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.400}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.red.500}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.red.600}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.red.400}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.red.300}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.red.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.red.300}",
+          "design.paths.dark": "{color.palette.red.400}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.full}",
+          "$description": "Pill radius - soft, elegant curves"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.05}",
+        "$description": "Card border radius (32px) - very soft, elegant"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.red.100}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.red.100}",
+            "design.paths.dark": "{color.palette.red.800}"
+          },
+          "$description": "Light card border - very subtle rose"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.red.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.red.200}",
+            "design.paths.dark": "{color.palette.red.700}"
+          },
+          "$description": "Medium card border - subtle elegant rose"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.red.300}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.red.300}",
+            "design.paths.dark": "{color.palette.red.500}"
+          },
+          "$description": "Dark card border - visible rose"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - soft, elegant"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Near elevation - gentle shadow"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Default elevation - soft shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.3}",
+          "$description": "Far elevation - elegant shadow"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - soft, gentle"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Internal element radius (16px) - gentle, elegant"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Button radius (16px) - soft, distinguished from sunset"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}",
+        "$description": "Badge/chip radius (pill)"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.full}",
+          "$description": "Input border radius - pill-shaped, elegant (9999px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input border width - delicate, gentle (1px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid, soft"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input focus border width - gentle emphasis (1px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.full}",
+          "$description": "Field border radius - pill-shaped, elegant (9999px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field border width - delicate (1px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field focus border width - gentle (1px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.07}",
+        "$description": "Airy component padding (24px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "Airy component gap (16px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.08}",
+        "$description": "Card padding (32px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.long3}",
+        "$description": "Very gentle transitions (1000ms) - soft, elegant"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.soft.enter}",
+        "$description": "Soft, gentle easing curve"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.light}",
+        "$description": "Light body weight (300) - delicate"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.light}",
+        "$description": "Light heading weight (300) - soft, elegant"
+      }
+    }
+  }
+}

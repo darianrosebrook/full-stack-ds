@@ -1,0 +1,374 @@
+{
+  "$brand": {
+    "name": "ocean",
+    "description": "Teal/cyan brand theme - calm, refreshing, and spacious",
+    "accent": "teal",
+    "density": "spacious"
+  },
+  "color": {
+    "foreground": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.teal.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.500}",
+          "design.paths.dark": "{color.palette.teal.400}"
+        }
+      },
+      "link": {
+        "$type": "color",
+        "$value": "{color.palette.teal.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.500}",
+          "design.paths.dark": "{color.palette.teal.400}"
+        }
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.teal.600}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.600}",
+          "design.paths.dark": "{color.palette.teal.300}"
+        }
+      },
+      "linkVisited": {
+        "$type": "color",
+        "$value": "{color.palette.teal.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.400}",
+          "design.paths.dark": "{color.palette.teal.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.teal.700}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.700}",
+          "design.paths.dark": "{color.palette.teal.200}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.teal.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.500}",
+          "design.paths.dark": "{color.palette.teal.400}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.teal.200}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.200}",
+          "design.paths.dark": "{color.palette.teal.700}"
+        }
+      }
+    },
+    "border": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.teal.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.500}",
+          "design.paths.dark": "{color.palette.teal.400}"
+        }
+      },
+      "default": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.neutral.300}",
+          "design.paths.dark": "{color.palette.neutral.600}"
+        },
+        "$description": "Default input border - simple neutral gray"
+      },
+      "hover": {
+        "$type": "color",
+        "$value": "{color.palette.teal.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.300}",
+          "design.paths.dark": "{color.palette.teal.500}"
+        },
+        "$description": "Input hover border - refreshing teal"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.teal.500}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.500}",
+          "design.paths.dark": "{color.palette.teal.400}"
+        },
+        "$description": "Input focus border - calm teal accent"
+      },
+      "light": {
+        "$type": "color",
+        "$value": "{color.palette.teal.100}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.100}",
+          "design.paths.dark": "{color.palette.teal.700}"
+        },
+        "$description": "Light input border - very subtle teal"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{color.palette.teal.300}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.300}",
+          "design.paths.dark": "{color.palette.teal.500}"
+        },
+        "$description": "Primary input border - medium teal"
+      }
+    },
+    "navigation": {
+      "foreground": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.teal.500}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.teal.500}",
+            "design.paths.dark": "{color.palette.teal.400}"
+          }
+        }
+      }
+    },
+    "action": {
+      "background": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.teal.500}"
+          },
+          "hover": {
+            "$type": "color",
+            "$value": "{color.palette.teal.600}"
+          },
+          "active": {
+            "$type": "color",
+            "$value": "{color.palette.teal.700}"
+          }
+        }
+      },
+      "border": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.palette.teal.500}"
+          },
+          "focus": {
+            "$type": "color",
+            "$value": "{color.palette.teal.400}"
+          }
+        }
+      }
+    },
+    "status": {
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.teal.400}",
+        "$extensions": {
+          "design.paths.light": "{color.palette.teal.400}",
+          "design.paths.dark": "{color.palette.teal.500}"
+        }
+      }
+    }
+  },
+  "shape": {
+    "control": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.05}",
+          "$description": "Extra large radius (32px) - very soft, spacious"
+        }
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Card border radius (16px) - fluid, rounded"
+      },
+      "border": {
+        "light": {
+          "$type": "color",
+          "$value": "{color.palette.teal.100}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.teal.100}",
+            "design.paths.dark": "{color.palette.teal.800}"
+          },
+          "$description": "Light card border - very subtle teal"
+        },
+        "medium": {
+          "$type": "color",
+          "$value": "{color.palette.teal.200}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.teal.200}",
+            "design.paths.dark": "{color.palette.teal.700}"
+          },
+          "$description": "Medium card border - subtle calm teal"
+        },
+        "dark": {
+          "$type": "color",
+          "$value": "{color.palette.teal.400}",
+          "$extensions": {
+            "design.paths.light": "{color.palette.teal.400}",
+            "design.paths.dark": "{color.palette.teal.500}"
+          },
+          "$description": "Dark card border - visible teal"
+        },
+        "transparent": {
+          "$type": "color",
+          "$value": "{color.mode.transparent}",
+          "$extensions": {
+            "design.paths.light": "{color.mode.transparent}",
+            "design.paths.dark": "{color.mode.transparent}"
+          },
+          "$description": "Transparent card border - calm, spacious"
+        }
+      },
+      "elevation": {
+        "near": {
+          "$type": "shadow",
+          "$value": "{elevation.level.1}",
+          "$description": "Near elevation - gentle shadow"
+        },
+        "default": {
+          "$type": "shadow",
+          "$value": "{elevation.level.2}",
+          "$description": "Default elevation - soft shadow"
+        },
+        "far": {
+          "$type": "shadow",
+          "$value": "{elevation.level.3}",
+          "$description": "Far elevation - fluid shadow"
+        },
+        "none": {
+          "$type": "shadow",
+          "$value": "{elevation.level.0}",
+          "$description": "No elevation - calm, refreshing"
+        }
+      }
+    },
+    "element": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.04}",
+        "$description": "Internal element radius (16px) - fluid curves"
+      }
+    },
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}",
+        "$description": "Button radius (pill) - fluid, spacious"
+      }
+    },
+    "badge": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "{shape.radius.full}",
+        "$description": "Badge/chip radius (pill)"
+      }
+    },
+    "input": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.05}",
+          "$description": "Input border radius - very soft, spacious (32px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input border width - gentle, calm (1px)"
+        },
+        "defaultStyle": {
+          "$type": "strokeStyle",
+          "$value": "{shape.border.style.solid}",
+          "$description": "Input border style - solid, fluid"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Input focus border width - soft emphasis (1px)"
+        }
+      }
+    },
+    "field": {
+      "radius": {
+        "default": {
+          "$type": "dimension",
+          "$value": "{shape.radius.05}",
+          "$description": "Field border radius - spacious, soft (32px)"
+        }
+      },
+      "border": {
+        "defaultWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field border width - gentle (1px)"
+        },
+        "focusWidth": {
+          "$type": "dimension",
+          "$value": "{shape.border.width.hairline}",
+          "$description": "Field focus border width - soft (1px)"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "component": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.07}",
+        "$description": "Generous component padding (24px)"
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.06}",
+        "$description": "Generous component gap (16px)"
+      }
+    },
+    "card": {
+      "padding": {
+        "$type": "dimension",
+        "$value": "{spacing.size.08}",
+        "$description": "Card padding (32px)"
+      }
+    }
+  },
+  "motion": {
+    "interaction": {
+      "duration": {
+        "$type": "duration",
+        "$value": "{motion.duration.medium2}",
+        "$description": "Flowing transitions (333ms) - fluid but responsive"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "$value": "{motion.easing.continuous}",
+        "$description": "Continuous, fluid easing curve"
+      }
+    }
+  },
+  "typography": {
+    "body": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.regular}",
+        "$description": "Regular body weight (400)"
+      }
+    },
+    "heading": {
+      "fontWeight": {
+        "$type": "fontWeight",
+        "$value": "{typography.weight.medium}",
+        "$description": "Medium heading weight (500)"
+      }
+    }
+  }
+}
