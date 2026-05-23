@@ -18,7 +18,7 @@ let { class: className, "data-testid": dataTestid, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
-const classes = $derived(["table__footer", className].filter(Boolean).join(" "));
+const classes = $derived(["table__row", className].filter(Boolean).join(" "));
 // @generated:end
 
 // @custom:start trailing
@@ -26,6 +26,6 @@ const classes = $derived(["table__footer", className].filter(Boolean).join(" "))
 // @custom:end
 </script>
 
-<tfoot class={classes} data-testid={dataTestid}>
+<tr class={classes} data-testid={dataTestid}>
   {@render children?.()}
-</tfoot>
+</tr>

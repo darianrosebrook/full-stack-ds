@@ -72,6 +72,31 @@ export interface PartIR {
   /** Optional layout hint used by emitters for horizontal vs vertical stacks. */
   layoutVariant?: "horizontal" | "vertical";
   /**
+   * Native HTML tag declared by the contract for this part. Derivation order:
+   *
+   *   1. `anatomy.details[name].tag` if present (primary authority).
+   *   2. `anatomy.dom` node tag if the part appears in the dom tree
+   *      (secondary; equality with details.tag is validated upstream).
+   *   3. undefined — emitters fall back to `semanticElement` /
+   *      `SEMANTIC_ELEMENTS` behavior.
+   *
+   * Emitters consult `nativeTag` when deciding whether to wrap a compound
+   * subcomponent in Stack vs render the native tag directly. When the tag
+   * is in `TABLE_COMPOSITION_TAGS` (table, thead, tbody, tfoot, tr, th, td,
+   * caption), the subcomponent emits the native element directly:
+   *   - React/Vue/Svelte: <tag className="...">{children}</tag>, no Stack.
+   *   - Angular: attribute selector (e.g. tr[fsdsTableRow]); host element
+   *     IS the native tag, supplied by the consumer's template.
+   *   - Lit: NOT registered as a sub-element custom element (autonomous
+   *     custom elements cannot be valid native table children); the root
+   *     Lit class owns the full native template via shadow-DOM slots.
+   *
+   * For parts not in the table composition set, nativeTag is still
+   * populated when declared, but emitters MAY ignore it (no general
+   * native-leaf policy is implied by this slice).
+   */
+  nativeTag?: string;
+  /**
    * Per-part metadata copied verbatim from `contract.anatomy.details[name]`.
    * Emitters read `details.role`, `details.interactive`, `details.focusable`,
    * `details.aria` etc. to wire up compound-part behavior (e.g. Tabs's tab
@@ -81,6 +106,29 @@ export interface PartIR {
    */
   details?: ContractPartDetails;
 }
+
+/**
+ * Tags that participate in the HTML table content model. Subcomponents
+ * whose `nativeTag` is in this set render the native element directly
+ * (no Stack wrapper) per the table realization doctrine. Scoped
+ * intentionally to the table set — extending to other native elements
+ * (list/select/details) is a separate slice
+ * (CODEGEN-NATIVE-LEAF-EXTENSION-LIST-01 etc.).
+ *
+ * Source fact: HTML5 table content model.
+ * Applies by: tag (not component name).
+ * Removable when: never (HTML spec constant).
+ */
+export const TABLE_COMPOSITION_TAGS: ReadonlySet<string> = new Set([
+  "table",
+  "thead",
+  "tbody",
+  "tfoot",
+  "tr",
+  "th",
+  "td",
+  "caption",
+]);
 
 /**
  * Parsed binding expression. The contract author writes a string form
@@ -1113,19 +1161,116 @@ function buildEventsIR(
 
 function buildParts(contract: ComponentContract): PartIR[] {
   const allDetails = getPartDetails(contract.anatomy);
+  const domTagByPart = collectDomTagsByPart(contract);
+  const partsInDomTree = new Set(Object.keys(domTagByPart));
   return getParts(contract.anatomy).map((name) => {
     const semanticElement = SEMANTIC_ELEMENTS[name];
     const details = allDetails[name];
+    const nativeTag = resolveNativeTag({
+      partName: name,
+      detailsTag: details?.tag,
+      domTag: domTagByPart[name],
+      componentName: contract.name,
+    });
+    // A part becomes a native-realization compound subcomponent when:
+    //   (a) it is declared in anatomy.parts (always true at this point),
+    //   (b) it has a nativeTag in TABLE_COMPOSITION_TAGS,
+    //   (c) it is not root and not container (root + container are owned
+    //       by the root component's anatomy.dom render, not exported as
+    //       subcomponents),
+    //   (d) it is NOT already rendered by the root component's anatomy.dom
+    //       tree (consumer-composed only — root-rendered parts must not
+    //       double as subcomponents or the consumer gets duplicate /
+    //       misplaced semantic nodes), AND
+    //   (e) [framework-target-specific] the emitter can honestly host it.
+    //
+    // This rule moves compound-classification from name-based folklore
+    // (the COMPOUND_PARTS set in semantics.ts) to contract-authored
+    // native realization. Existing components with names in
+    // COMPOUND_PARTS continue to be compound by the legacy rule;
+    // new realization is layered on top.
+    //
+    // Rule (d) is the doctrinal guard against cross-contract bleed:
+    // Calendar's contract declares <table>/<td> in its anatomy.dom
+    // (calendar grid is a real <table>), but those nodes are
+    // root-rendered, not consumer-composed. They must not become
+    // separate CalendarGrid/CalendarCell subcomponents.
+    const isTableCompositionPart =
+      nativeTag !== undefined &&
+      TABLE_COMPOSITION_TAGS.has(nativeTag) &&
+      name !== "root" &&
+      name !== "container" &&
+      !partsInDomTree.has(name);
     return {
       name,
       semanticElement,
-      isCompound: isCompoundPart(name),
+      isCompound: isCompoundPart(name) || isTableCompositionPart,
       isRootOnly: ROOT_ONLY_PARTS.has(name),
       layoutVariant:
         name === "footer" || name === "list" ? "horizontal" : undefined,
+      nativeTag,
       details,
     };
   });
+}
+
+/**
+ * Walk the contract's anatomy.dom tree and collect the HTML tag declared
+ * for each part name. Used to derive PartIR.nativeTag when the contract
+ * doesn't repeat the tag in anatomy.details.<part>.tag.
+ *
+ * Returns an empty map when the contract has no anatomy.dom tree.
+ */
+function collectDomTagsByPart(
+  contract: ComponentContract,
+): Record<string, string> {
+  if (!contract.anatomy || Array.isArray(contract.anatomy)) return {};
+  const dom = contract.anatomy.dom;
+  if (!dom) return {};
+  const out: Record<string, string> = {};
+  const stack: typeof dom[] = [dom];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part && typeof node.tag === "string") {
+      out[node.part] = node.tag;
+    }
+    if (Array.isArray(node.children)) {
+      for (const c of node.children) stack.push(c);
+    }
+  }
+  return out;
+}
+
+/**
+ * Resolve a part's native HTML tag from the contract.
+ *
+ *   1. anatomy.details.<part>.tag is the primary authority.
+ *   2. anatomy.dom node tag is the secondary source.
+ *   3. When both are present they must agree — disagreement throws
+ *      a hard error here so the IR refuses to build a contract with
+ *      split-brain authority over a part's native realization.
+ *   4. When neither is present, returns undefined (emitters fall
+ *      back to SEMANTIC_ELEMENTS).
+ */
+function resolveNativeTag(opts: {
+  partName: string;
+  detailsTag: string | undefined;
+  domTag: string | undefined;
+  componentName: string;
+}): string | undefined {
+  const { partName, detailsTag, domTag, componentName } = opts;
+  if (detailsTag !== undefined && domTag !== undefined) {
+    if (detailsTag !== domTag) {
+      throw new Error(
+        `[${componentName}] anatomy.details.${partName}.tag (${detailsTag}) ` +
+          `disagrees with anatomy.dom node tag (${domTag}) for the same part. ` +
+          `These declarations must be identical, or only one of them should ` +
+          `be set. Contract validator rule.`,
+      );
+    }
+    return detailsTag;
+  }
+  return detailsTag ?? domTag;
 }
 
 // ---------------------------------------------------------------------------

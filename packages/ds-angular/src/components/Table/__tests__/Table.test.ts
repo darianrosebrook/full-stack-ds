@@ -1,17 +1,23 @@
 // @generated:start imports
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, beforeEach, jest } from "@jest/globals";
+import { TestBed } from "@angular/core/testing";
 import { TableComponent } from "../Table.component";
 // @generated:end
 
 // @generated:start tests
 describe("Table — unit", () => {
-  it("creates the component class", () => {
-    expect(new TableComponent()).toBeInstanceOf(TableComponent);
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [TableComponent] });
+  });
+
+  it("creates the component", () => {
+    const fixture = TestBed.createComponent(TableComponent);
+    expect(fixture.componentInstance).toBeInstanceOf(TableComponent);
   });
 
   it("applies the base CSS class", () => {
-    const component = new TableComponent();
-    expect(classTokens(component)).toContain("table");
+    const fixture = TestBed.createComponent(TableComponent);
+    expect(classTokens(fixture.componentInstance)).toContain("table");
   });
 });
 

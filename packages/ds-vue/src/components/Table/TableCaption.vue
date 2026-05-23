@@ -18,7 +18,7 @@ const props = defineProps<Props>();
 
 // @generated:start classes
 const classNames = computed(() =>
-  ["table__footer", props.class].filter(Boolean).join(" "),
+  ["table__caption", props.class].filter(Boolean).join(" "),
 );
 // @generated:end
 
@@ -28,7 +28,7 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <tfoot :class="classNames" :data-testid="props['data-testid']">
+  <caption :class="classNames" :data-testid="props['data-testid']">
     <slot />
-  </tfoot>
+  </caption>
 </template>

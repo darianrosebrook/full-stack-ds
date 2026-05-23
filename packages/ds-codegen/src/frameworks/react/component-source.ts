@@ -17,7 +17,7 @@ import type {
   NormalizedChannelIR,
   PartIR,
 } from "../../ir.js";
-import { hasChildrenPlaceholder } from "../../ir.js";
+import { hasChildrenPlaceholder, TABLE_COMPOSITION_TAGS } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
   getGroupHostPart,
@@ -75,7 +75,22 @@ export function generateReactComponentSource(
   // (ModalHeader etc. still use <Stack as="header"> regardless of whether
   // the parent has a dom tree). Compound-state-container components use
   // plain HTML elements (div, button) so Stack is not needed.
-  if (!isCompound && (!ir.dom || ir.compoundParts.length > 0)) {
+  //
+  // Native-table-tag exception: when all compound parts have a nativeTag
+  // in TABLE_COMPOSITION_TAGS, the emitter renders native elements
+  // directly (no Stack), so the Stack import is omitted to avoid an
+  // unused-import warning. The root component itself uses anatomy.dom
+  // and also doesn't need Stack.
+  const allCompoundPartsNative =
+    ir.compoundParts.length > 0 &&
+    ir.compoundParts.every(
+      (p) => p.nativeTag !== undefined && TABLE_COMPOSITION_TAGS.has(p.nativeTag),
+    );
+  const needsStackImport =
+    !isCompound &&
+    !allCompoundPartsNative &&
+    (!ir.dom || ir.compoundParts.length > 0);
+  if (needsStackImport) {
     importLines.push(`import { Stack } from "${stackImportPath}";`);
   }
   if (isCompound || (ir.dom && ir.behavior.normalizedChannels.length > 0)) {
@@ -482,6 +497,30 @@ function generateSubComponent(
 ): string {
   const subName = `${name}${capitalize(part.name)}`;
   const cssClass = `${prefix}__${part.name}`;
+
+  // Native-tag branch: when the contract declares the part's native tag
+  // via anatomy.details.<part>.tag (or anatomy.dom) AND that tag is in
+  // the HTML table content model set, emit the native element directly.
+  // No Stack wrapper, no .stack class injection, no layout-primitive
+  // semantics imposed on a native table section/row/cell.
+  if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
+    const tag = part.nativeTag;
+    return [
+      `export function ${subName}({`,
+      `  children,`,
+      `  className,`,
+      `  "data-testid": testId,`,
+      `}: ${subName}Props) {`,
+      `  const classNames = ["${cssClass}", className].filter(Boolean).join(" ");`,
+      `  return (`,
+      `    <${tag} className={classNames} data-testid={testId}>`,
+      `      {children}`,
+      `    </${tag}>`,
+      `  );`,
+      `}`,
+    ].join("\n");
+  }
+
   const asElement = part.semanticElement;
   const asProp = asElement && asElement !== "div" ? ` as="${asElement}"` : "";
   const layoutProp =

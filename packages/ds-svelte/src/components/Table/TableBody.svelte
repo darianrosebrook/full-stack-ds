@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+
 // @generated:end
 
 // @custom:start imports
@@ -26,6 +26,6 @@ const classes = $derived(["table__body", className].filter(Boolean).join(" "));
 // @custom:end
 </script>
 
-<Stack class={classes} data-testid={dataTestid}>
+<tbody class={classes} data-testid={dataTestid}>
   {@render children?.()}
-</Stack>
+</tbody>

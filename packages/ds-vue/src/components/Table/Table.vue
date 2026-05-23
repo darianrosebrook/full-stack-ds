@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -42,7 +41,9 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <Stack :data-testid="props['data-testid']" :class="classNames">
-    <slot />
-  </Stack>
+  <div :class="classNames" :data-testid="props['data-testid']">
+    <table :class="'table__container'" :aria-label="props.ariaLabel">
+      <slot />
+    </table>
+  </div>
 </template>

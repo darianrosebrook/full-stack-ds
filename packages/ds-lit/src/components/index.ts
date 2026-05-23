@@ -36,7 +36,7 @@ export { SpinnerElement } from "./Spinner/Spinner.js";
 export { StatElement } from "./Stat/Stat.js";
 export { StatusElement } from "./Status/Status.js";
 export { SwitchElement } from "./Switch/Switch.js";
-export { TableElement, TableBodyElement, TableFooterElement, TableHeaderElement } from "./Table/Table.js";
+export { TableElement } from "./Table/Table.js";
 export { TabsElement, TabsListElement, TabsPanelElement, TabsTabElement } from "./Tabs/Tabs.js";
 export { TextElement } from "./Text/Text.js";
 export { TextFieldElement, TextFieldDescriptionElement } from "./TextField/TextField.js";

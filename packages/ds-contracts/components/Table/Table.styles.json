@@ -3,6 +3,17 @@
     "color": {
       "resolvesTo": "table.color.text"
     },
+    "font-size": {
+      "resolvesTo": "table.text.size"
+    },
+    "line-height": {
+      "resolvesTo": "table.text.lineHeight"
+    },
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "overflow-x": { "literal": "auto", "platforms": ["web"] }
+  },
+  "container": {
+    "border-collapse": { "literal": "collapse", "platforms": ["web"] },
     "border-color": {
       "resolvesTo": "table.color.border"
     },
@@ -12,18 +23,21 @@
     "border-radius": {
       "resolvesTo": "table.size.radius"
     },
-    "font-size": {
-      "resolvesTo": "table.text.size"
-    },
-    "line-height": {
-      "resolvesTo": "table.text.lineHeight"
-    },
-    "display": { "literal": "block", "platforms": ["web"] },
-    "width": { "literal": "100%", "platforms": ["web"] },
-    "box-sizing": { "literal": "border-box", "platforms": ["web"] }
+    "width": { "literal": "100%", "platforms": ["web"] }
   },
-  "body": {
-    "display": { "literal": "table-row-group", "platforms": ["web"] }
+  "caption": {
+    "font-size": {
+      "resolvesTo": "table.text.sizeCaption"
+    },
+    "text-align": { "literal": "start", "platforms": ["web"] },
+    "padding-bottom": {
+      "resolvesTo": "table.spacing.caption"
+    }
+  },
+  "head": {
+    "background-color": {
+      "resolvesTo": "table.color.background.footer"
+    }
   },
   "footer": {
     "background-color": {
@@ -31,9 +45,15 @@
     },
     "font-weight": {
       "resolvesTo": "table.text.weightFooter"
+    }
+  },
+  "headerCell": {
+    "font-weight": {
+      "resolvesTo": "table.text.weightHead"
     },
-    "display": { "literal": "flex", "platforms": ["web"] },
-    "align-items": { "literal": "center", "platforms": ["web"] },
+    "color": {
+      "resolvesTo": "table.color.text"
+    },
     "padding-left": {
       "resolvesTo": "table.spacing.cellX"
     },
@@ -46,25 +66,16 @@
     "padding-bottom": {
       "resolvesTo": "table.spacing.cellY"
     },
-    "border-top-width": {
+    "border-bottom-width": {
       "resolvesTo": "table.border.width"
     },
-    "border-top-color": {
+    "border-bottom-color": {
       "resolvesTo": "table.color.border"
     },
-    "border-top-style": { "literal": "solid", "platforms": ["web"] }
+    "border-bottom-style": { "literal": "solid", "platforms": ["web"] },
+    "text-align": { "literal": "start", "platforms": ["web"] }
   },
-  "header": {
-    "background-color": {
-      "resolvesTo": "table.color.background.footer"
-    },
-    "font-weight": {
-      "resolvesTo": "table.text.weightHead"
-    },
-    "color": {
-      "resolvesTo": "table.color.text"
-    },
-    "display": { "literal": "block", "platforms": ["web"] },
+  "cell": {
     "padding-left": {
       "resolvesTo": "table.spacing.cellX"
     },

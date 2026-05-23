@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 // @generated:end
@@ -20,25 +20,73 @@ import { StackComponent } from "../../primitives/index.js";
 @Component({
   selector: "fsds-table",
   standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  imports: [NgClass],
+  template: `<div [ngClass]="classes()">
+  <table [ngClass]="'table__container'" [attr.aria-label]="ariaLabel">
+    <ng-content />
+  </table>
+</div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent {
   @Input() responsive?: boolean;
   @Input() ariaLabel?: string;
+  @Input() class?: string;
 
   classes(): string {
-    const parts: Array<string | null | undefined> = ["table"];
-    return parts.filter(Boolean).join(" ");
+    return [
+      "table",
+      this.class,
+    ].filter(Boolean).join(" ");
   }
 }
 
 @Component({
-  selector: "fsds-table-body",
+  selector: "caption[fsdsTableCaption]",
   standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TableCaptionComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["table__caption", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "thead[fsdsTableHead]",
+  standalone: true,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TableHeadComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["table__head", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "tbody[fsdsTableBody]",
+  standalone: true,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableBodyComponent {
@@ -51,10 +99,13 @@ export class TableBodyComponent {
 }
 
 @Component({
-  selector: "fsds-table-footer",
+  selector: "tfoot[fsdsTableFooter]",
   standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="footer" variant="horizontal" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableFooterComponent {
@@ -67,18 +118,59 @@ export class TableFooterComponent {
 }
 
 @Component({
-  selector: "fsds-table-header",
+  selector: "tr[fsdsTableRow]",
   standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderComponent {
+export class TableRowComponent {
   @Input() class?: string;
   @Input() dataTestid?: string;
 
   classes(): string {
-    return ["table__header", this.class].filter(Boolean).join(" ");
+    return ["table__row", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "th[fsdsTableHeaderCell]",
+  standalone: true,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TableHeaderCellComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["table__headerCell", this.class].filter(Boolean).join(" ");
+  }
+}
+
+@Component({
+  selector: "td[fsdsTableCell]",
+  standalone: true,
+  imports: [NgClass],
+  template: `<ng-content />`,
+  host: {
+    "[class]": "classes()",
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TableCellComponent {
+  @Input() class?: string;
+  @Input() dataTestid?: string;
+
+  classes(): string {
+    return ["table__cell", this.class].filter(Boolean).join(" ");
   }
 }
 // @generated:end

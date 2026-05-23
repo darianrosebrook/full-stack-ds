@@ -12,9 +12,36 @@
       "body",
       "footer",
       "row",
-      "header",
+      "headerCell",
       "cell"
-    ]
+    ],
+    "details": {
+      "root": { "tag": "div", "description": "Responsive wrapper around the table element." },
+      "container": { "tag": "table", "description": "The native <table> element; carries the table's accessible label." },
+      "caption": { "tag": "caption", "description": "Accessible caption rendered above the table body." },
+      "head": { "tag": "thead", "description": "Group of header rows." },
+      "body": { "tag": "tbody", "description": "Group of data rows." },
+      "footer": { "tag": "tfoot", "description": "Group of footer/summary rows." },
+      "row": { "tag": "tr", "multiple": true, "description": "Table row." },
+      "headerCell": { "tag": "th", "multiple": true, "description": "Column or row header cell. scope is consumer-controlled; default header semantics infer from <thead>." },
+      "cell": { "tag": "td", "multiple": true, "description": "Data cell." }
+    },
+    "dom": {
+      "tag": "div",
+      "part": "root",
+      "children": [
+        {
+          "tag": "table",
+          "part": "container",
+          "bindings": {
+            "aria-label": "prop:ariaLabel"
+          },
+          "children": [
+            { "tag": "children" }
+          ]
+        }
+      ]
+    }
   },
   "props": {
     "styled": {
@@ -75,9 +102,9 @@
       "required": false,
       "selector": "[data-slot=\"table-head\"]"
     },
-    "header": {
+    "headerCell": {
       "required": false,
-      "selector": "[data-slot=\"table-header\"]"
+      "selector": "[data-slot=\"table-header-cell\"]"
     },
     "root": {
       "required": true,
@@ -96,16 +123,16 @@
   },
   "relationships": [
     {
-      "from": "root",
-      "to": "head",
+      "from": "container",
+      "to": "caption",
       "attribute": "aria-labelledby",
-      "description": "If a caption or external label is used, root references it via aria-labelledby."
+      "description": "When a caption is present, the table's accessible name is composed from the caption text by the user agent. Authors who supply ariaLabel override caption-derived naming."
     },
     {
-      "from": "header",
+      "from": "headerCell",
       "to": "cell",
       "attribute": "aria-sort",
-      "description": "Sorted column's header carries aria-sort; associated cells are in the same column. (Table anatomy uses `header` as the column-header role; row-header semantics are inferred from scope.)"
+      "description": "Sorted column's <th> carries aria-sort; associated <td> cells are in the same column. Cell-to-header association is derived from native <thead>/<tbody> structure, not authored explicitly."
     }
   ],
   "a11y": {
@@ -135,10 +162,14 @@
     "usageHints": [
       "Use for structured data that benefits from sorting or comparison across rows",
       "Enable row selection for bulk actions; pair with a toolbar for the action bar",
-      "Keep column count to 6\u20138 max; use column visibility controls for wider datasets"
+      "Keep column count to 6–8 max; use column visibility controls for wider datasets"
     ],
     "children": {
-      "allowed": false
+      "allowed": true,
+      "slot": "children",
+      "accepts": [
+        "node-ref"
+      ]
     }
   }
 }

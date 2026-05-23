@@ -36,7 +36,7 @@ export { SpinnerComponent } from "./Spinner/Spinner.component.js";
 export { StatComponent } from "./Stat/Stat.component.js";
 export { StatusComponent } from "./Status/Status.component.js";
 export { SwitchComponent } from "./Switch/Switch.component.js";
-export { TableComponent, TableBodyComponent, TableFooterComponent, TableHeaderComponent } from "./Table/Table.component.js";
+export { TableComponent, TableBodyComponent, TableCaptionComponent, TableCellComponent, TableFooterComponent, TableHeadComponent, TableHeaderCellComponent, TableRowComponent } from "./Table/Table.component.js";
 export { TabsComponent } from "./Tabs/Tabs.component.js";
 export { TextComponent } from "./Text/Text.component.js";
 export { TextFieldComponent, TextFieldDescriptionComponent } from "./TextField/TextField.component.js";

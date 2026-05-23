@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+
 // @generated:end
 
 // @custom:start imports
@@ -32,6 +32,8 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<Stack class={classes}>
-  {@render children?.()}
-</Stack>
+<div class={classes}>
+  <table class={'table__container'} aria-label={ariaLabel}>
+    {@render children?.()}
+  </table>
+</div>

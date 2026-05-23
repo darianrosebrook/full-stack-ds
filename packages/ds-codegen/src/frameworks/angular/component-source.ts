@@ -34,6 +34,7 @@ import type {
   NormalizedChannelIR,
   ResolvedPropIR,
 } from "../../ir.js";
+import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
 import {
   emitNonReactTypeAliases,
   translateNonReactType,
@@ -566,11 +567,49 @@ export function generateAngularCompoundStateParts(
  */
 function generateCompoundPartComponent(
   ir: ComponentIR,
-  part: { name: string; semanticElement?: string; layoutVariant?: string },
+  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
 ): string {
   const subName = `${ir.name}${part.name[0].toUpperCase()}${part.name.slice(1)}`;
   const className = `${subName}Component`;
   const cssClass = `${ir.cssPrefix}__${part.name}`;
+
+  // Native-tag branch: emit an attribute selector so the host element
+  // IS the native tag, supplied by the consumer's template. This is
+  // the only way to host native table children inside <thead>/<tbody>
+  // — element selectors (<fsds-table-row>) are invalid table content
+  // and would be hoisted out by the browser parser.
+  //
+  // Selector convention: <nativeTag>[fsdsComponentNamePartName]
+  //   e.g. `tr[fsdsTableRow]` for the row part of a Table component.
+  // Consumer writes: `<tr fsdsTableRow>...</tr>`.
+  if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
+    const tag = part.nativeTag;
+    // PascalCase attribute name from the subcomponent name. Angular
+    // attribute selectors use camelCase by convention, so `TableRow`
+    // becomes `fsdsTableRow` (lowercase first letter after the prefix).
+    const attrSelector = `fsds${subName}`;
+    return [
+      `@Component({`,
+      `  selector: "${tag}[${attrSelector}]",`,
+      `  standalone: true,`,
+      `  imports: [NgClass],`,
+      `  template: \`<ng-content />\`,`,
+      `  host: {`,
+      `    "[class]": "classes()",`,
+      `  },`,
+      `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+      `})`,
+      `export class ${className} {`,
+      `  @Input() class?: string;`,
+      `  @Input() dataTestid?: string;`,
+      ``,
+      `  classes(): string {`,
+      `    return ["${cssClass}", this.class].filter(Boolean).join(" ");`,
+      `  }`,
+      `}`,
+    ].join("\n");
+  }
+
   const selector = toKebab(subName);
   const asAttr =
     part.semanticElement && part.semanticElement !== "div"

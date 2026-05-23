@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+
 // @generated:end
 
 // @custom:start imports
@@ -18,7 +18,7 @@ let { class: className, "data-testid": dataTestid, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
-const classes = $derived(["table__header", className].filter(Boolean).join(" "));
+const classes = $derived(["table__cell", className].filter(Boolean).join(" "));
 // @generated:end
 
 // @custom:start trailing
@@ -26,6 +26,6 @@ const classes = $derived(["table__header", className].filter(Boolean).join(" "))
 // @custom:end
 </script>
 
-<Stack as="header" class={classes} data-testid={dataTestid}>
+<td class={classes} data-testid={dataTestid}>
   {@render children?.()}
-</Stack>
+</td>

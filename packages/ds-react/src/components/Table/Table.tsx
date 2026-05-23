@@ -1,6 +1,5 @@
 // @generated:start imports
-import { type ReactNode } from "react";
-import { Stack } from "../../primitives";
+import { type HTMLAttributes, type ReactNode } from "react";
 import "./Table.css";
 // @generated:end
 
@@ -17,7 +16,7 @@ import "./Table.css";
 // @custom:end
 
 // @generated:start props
-export interface TableProps {
+export interface TableProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaLabel" | "children" | "className" | "data-testid" | "responsive"> {
   responsive?: boolean;
   ariaLabel?: string;
   className?: string;
@@ -27,6 +26,44 @@ export interface TableProps {
 // @generated:end
 
 // @generated:start subcomponents
+export interface TableCaptionProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function TableCaption({
+  children,
+  className,
+  "data-testid": testId,
+}: TableCaptionProps) {
+  const classNames = ["table__caption", className].filter(Boolean).join(" ");
+  return (
+    <caption className={classNames} data-testid={testId}>
+      {children}
+    </caption>
+  );
+}
+
+export interface TableHeadProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function TableHead({
+  children,
+  className,
+  "data-testid": testId,
+}: TableHeadProps) {
+  const classNames = ["table__head", className].filter(Boolean).join(" ");
+  return (
+    <thead className={classNames} data-testid={testId}>
+      {children}
+    </thead>
+  );
+}
+
 export interface TableBodyProps {
   children?: ReactNode;
   className?: string;
@@ -40,9 +77,9 @@ export function TableBody({
 }: TableBodyProps) {
   const classNames = ["table__body", className].filter(Boolean).join(" ");
   return (
-    <Stack className={classNames} data-testid={testId}>
+    <tbody className={classNames} data-testid={testId}>
       {children}
-    </Stack>
+    </tbody>
   );
 }
 
@@ -59,28 +96,66 @@ export function TableFooter({
 }: TableFooterProps) {
   const classNames = ["table__footer", className].filter(Boolean).join(" ");
   return (
-    <Stack as="footer" variant="horizontal" className={classNames} data-testid={testId}>
+    <tfoot className={classNames} data-testid={testId}>
       {children}
-    </Stack>
+    </tfoot>
   );
 }
 
-export interface TableHeaderProps {
+export interface TableRowProps {
   children?: ReactNode;
   className?: string;
   "data-testid"?: string;
 }
 
-export function TableHeader({
+export function TableRow({
   children,
   className,
   "data-testid": testId,
-}: TableHeaderProps) {
-  const classNames = ["table__header", className].filter(Boolean).join(" ");
+}: TableRowProps) {
+  const classNames = ["table__row", className].filter(Boolean).join(" ");
   return (
-    <Stack as="header" className={classNames} data-testid={testId}>
+    <tr className={classNames} data-testid={testId}>
       {children}
-    </Stack>
+    </tr>
+  );
+}
+
+export interface TableHeaderCellProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function TableHeaderCell({
+  children,
+  className,
+  "data-testid": testId,
+}: TableHeaderCellProps) {
+  const classNames = ["table__headerCell", className].filter(Boolean).join(" ");
+  return (
+    <th className={classNames} data-testid={testId}>
+      {children}
+    </th>
+  );
+}
+
+export interface TableCellProps {
+  children?: ReactNode;
+  className?: string;
+  "data-testid"?: string;
+}
+
+export function TableCell({
+  children,
+  className,
+  "data-testid": testId,
+}: TableCellProps) {
+  const classNames = ["table__cell", className].filter(Boolean).join(" ");
+  return (
+    <td className={classNames} data-testid={testId}>
+      {children}
+    </td>
   );
 }
 // @generated:end
@@ -102,13 +177,11 @@ export function Table({
     .join(" ");
 
   return (
-    <Stack
-      className={classNames}
-      data-testid={testId}
-      {...rest}
-    >
+  <div className={`${classNames}`} data-testid={testId} {...rest}>
+    <table className="table__container" aria-label={ariaLabel}>
       {children}
-    </Stack>
+    </table>
+  </div>
   );
 }
 // @generated:end

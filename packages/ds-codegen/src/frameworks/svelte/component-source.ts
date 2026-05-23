@@ -24,7 +24,7 @@ import type {
   DomNodeIR,
   NormalizedChannelIR,
 } from "../../ir.js";
-import { hasChildrenPlaceholder } from "../../ir.js";
+import { hasChildrenPlaceholder, TABLE_COMPOSITION_TAGS } from "../../ir.js";
 import { translateNonReactType } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
@@ -728,9 +728,48 @@ export function generateSvelteCompoundStateParts(
  */
 export function generateSvelteCompoundPartSource(
   cssPrefix: string,
-  part: { name: string; semanticElement?: string; layoutVariant?: string },
+  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
 ): string {
   const cssClass = `${cssPrefix}__${part.name}`;
+
+  // Native-tag branch: emit native HTML element directly, no Stack.
+  if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
+    const tag = part.nativeTag;
+    return [
+      `<script lang="ts">`,
+      `// @generated:start imports`,
+      `// @generated:end`,
+      ``,
+      `// @custom:start imports`,
+      ``,
+      `// @custom:end`,
+      ``,
+      `// @generated:start props`,
+      `interface Props {`,
+      `  class?: string;`,
+      `  "data-testid"?: string;`,
+      `  children?: import('svelte').Snippet;`,
+      `}`,
+      ``,
+      `let { class: className, "data-testid": dataTestid, children }: Props = $props();`,
+      `// @generated:end`,
+      ``,
+      `// @generated:start classes`,
+      `const classes = $derived(["${cssClass}", className].filter(Boolean).join(" "));`,
+      `// @generated:end`,
+      ``,
+      `// @custom:start trailing`,
+      ``,
+      `// @custom:end`,
+      `</script>`,
+      ``,
+      `<${tag} class={classes} data-testid={dataTestid}>`,
+      `  {@render children?.()}`,
+      `</${tag}>`,
+      ``,
+    ].join("\n");
+  }
+
   const asAttr =
     part.semanticElement && part.semanticElement !== "div"
       ? ` as="${part.semanticElement}"`

@@ -24,6 +24,7 @@ import type {
   DomNodeIR,
   NormalizedChannelIR,
 } from "../../ir.js";
+import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
 import {
   emitNonReactTypeAliases,
   translateNonReactType,
@@ -306,9 +307,54 @@ function callbackArgument(propType: string, valueType: string | undefined): stri
  */
 export function generateVueCompoundPartSource(
   cssPrefix: string,
-  part: { name: string; semanticElement?: string; layoutVariant?: string },
+  part: { name: string; semanticElement?: string; layoutVariant?: string; nativeTag?: string },
 ): string {
   const cssClass = `${cssPrefix}__${part.name}`;
+
+  // Native-tag branch: emit the native HTML element directly with the
+  // BEM class. No Stack import, no .stack class injection. See PartIR
+  // doc in ir.ts for the realization rules.
+  if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
+    const tag = part.nativeTag;
+    return [
+      `<script setup lang="ts">`,
+      `// @generated:start imports`,
+      `import { computed } from "vue";`,
+      `// @generated:end`,
+      ``,
+      `// @custom:start imports`,
+      ``,
+      `// @custom:end`,
+      ``,
+      `// @generated:start props`,
+      `interface Props {`,
+      `  class?: string;`,
+      `  "data-testid"?: string;`,
+      `}`,
+      ``,
+      `const props = defineProps<Props>();`,
+      `// @generated:end`,
+      ``,
+      `// @generated:start classes`,
+      `const classNames = computed(() =>`,
+      `  ["${cssClass}", props.class].filter(Boolean).join(" "),`,
+      `);`,
+      `// @generated:end`,
+      ``,
+      `// @custom:start trailing`,
+      ``,
+      `// @custom:end`,
+      `</script>`,
+      ``,
+      `<template>`,
+      `  <${tag} :class="classNames" :data-testid="props['data-testid']">`,
+      `    <slot />`,
+      `  </${tag}>`,
+      `</template>`,
+      ``,
+    ].join("\n");
+  }
+
   const asAttr =
     part.semanticElement && part.semanticElement !== "div"
       ? ` as="${part.semanticElement}"`

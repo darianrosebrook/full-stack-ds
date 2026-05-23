@@ -567,6 +567,10 @@
       "additionalProperties": false,
       "properties": {
         "description": { "type": "string" },
+        "tag": {
+          "type": "string",
+          "description": "Native HTML tag this part is realized as. When set, the codegen uses this tag for the part's compound subcomponent (skipping Stack wrapping for tags in the table composition set) and for the root component's anatomy.dom node (when the part appears in that tree). If anatomy.dom also declares a tag for the same part, the two must agree."
+        },
         "role": {
           "type": "string",
           "description": "Conceptual role this part plays in the component's interaction model.",

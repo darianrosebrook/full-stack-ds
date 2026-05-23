@@ -30,6 +30,7 @@ import type {
   DomNodeIR,
   NormalizedChannelIR,
 } from "../../ir.js";
+import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
 import {
   emitNonReactTypeAliases,
@@ -995,7 +996,27 @@ export function generateLitComponentSource(ir: ComponentIR): string {
   }
 
   const typesBody = generateTypes(ir);
+  // Lit framework boundary: parts whose native realization is in the
+  // HTML table content model set (TABLE_COMPOSITION_TAGS) CANNOT be
+  // exported as autonomous custom elements. Autonomous custom elements
+  // host themselves as their custom tag (`<fsds-table-row>`), and the
+  // browser's table content parser hoists or discards foreign elements
+  // inside <table>/<thead>/<tbody>/<tfoot>. Shipping
+  // `customElements.define('fsds-table-row', ...)` would encode an
+  // invalid table semantic. Instead, the root <fsds-table> shadow
+  // template owns the full native table structure via anatomy.dom +
+  // slots; consumers compose by placing native <tr>/<td>/<th>
+  // elements into named slots.
+  //
+  // Doctrine: this filter is intentionally Lit-only. React/Vue/Svelte
+  // emit native subcomponents (no custom-element constraint); Angular
+  // uses attribute selectors that attach to native hosts. Lit alone
+  // is forced to suppress subcomponent emission for these parts.
   const compoundClasses = ir.compoundParts
+    .filter(
+      (part) =>
+        !(part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)),
+    )
     .map((part) => generateCompoundPartClass(ir, part))
     .join("\n\n");
   const componentBody =

@@ -3,14 +3,10 @@
 /* @generated:start styles */
 .table {
   color: var(--fsds-table-color-text);
-  border-color: var(--fsds-table-color-border);
-  border-width: var(--fsds-table-border-width);
-  border-radius: var(--fsds-table-size-radius);
   font-size: var(--fsds-table-text-size);
   line-height: var(--fsds-table-text-lineHeight);
-  display: block;
   width: 100%;
-  box-sizing: border-box;
+  overflow-x: auto;
 
   &:hover {
     background-color: var(--fsds-table-color-background-hover);
@@ -21,29 +17,43 @@
   }
 }
 
-.table__body {
-  display: table-row-group;
+.table__container {
+  border-collapse: collapse;
+  border-color: var(--fsds-table-color-border);
+  border-width: var(--fsds-table-border-width);
+  border-radius: var(--fsds-table-size-radius);
+  width: 100%;
+}
+
+.table__caption {
+  font-size: var(--fsds-table-text-sizeCaption);
+  text-align: start;
+  padding-bottom: var(--fsds-table-spacing-caption);
+}
+
+.table__head {
+  background-color: var(--fsds-table-color-background-footer);
 }
 
 .table__footer {
   background-color: var(--fsds-table-color-background-footer);
   font-weight: var(--fsds-table-text-weightFooter);
-  display: flex;
-  align-items: center;
+}
+
+.table__headerCell {
+  font-weight: var(--fsds-table-text-weightHead);
+  color: var(--fsds-table-color-text);
   padding-left: var(--fsds-table-spacing-cellX);
   padding-right: var(--fsds-table-spacing-cellX);
   padding-top: var(--fsds-table-spacing-cellY);
   padding-bottom: var(--fsds-table-spacing-cellY);
-  border-top-width: var(--fsds-table-border-width);
-  border-top-color: var(--fsds-table-color-border);
-  border-top-style: solid;
+  border-bottom-width: var(--fsds-table-border-width);
+  border-bottom-color: var(--fsds-table-color-border);
+  border-bottom-style: solid;
+  text-align: start;
 }
 
-.table__header {
-  background-color: var(--fsds-table-color-background-footer);
-  font-weight: var(--fsds-table-text-weightHead);
-  color: var(--fsds-table-color-text);
-  display: block;
+.table__cell {
   padding-left: var(--fsds-table-spacing-cellX);
   padding-right: var(--fsds-table-spacing-cellX);
   padding-top: var(--fsds-table-spacing-cellY);

@@ -59,6 +59,19 @@ export type ContractCollapseIntent = 'native-toggle-affordance';
 
 export interface ContractPartDetails {
   description?: string;
+  /**
+   * Native HTML tag this part is realized as. When set on a part whose
+   * tag is in the table composition set (TABLE_COMPOSITION_TAGS in ir.ts),
+   * the codegen emits the native element directly (no Stack wrapper).
+   * When the part also appears in anatomy.dom, the two tag declarations
+   * must agree — the IR builder throws on disagreement.
+   *
+   * Source fact: contract-authored native realization. Avoids coupling
+   * realization to global name-based classifiers (the legacy
+   * COMPOUND_PARTS set in semantics.ts), which would bleed into other
+   * components that happen to share part names.
+   */
+  tag?: string;
   role?: string;
   multiple?: boolean;
   focusable?: boolean | 'roving';
