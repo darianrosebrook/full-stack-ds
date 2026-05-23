@@ -3,6 +3,8 @@ import { useEffect, useState, useCallback } from "react";
 export type TokensTab =
   | "overview"
   | "core-vs-semantic"
+  | "box-model-primitive"
+  | "variant-redirection"
   | "token-naming"
   | "theming"
   | "dtcg-formats"
@@ -39,6 +41,8 @@ export type Route =
 const TOKENS_TABS = new Set<TokensTab>([
   "overview",
   "core-vs-semantic",
+  "box-model-primitive",
+  "variant-redirection",
   "token-naming",
   "theming",
   "dtcg-formats",

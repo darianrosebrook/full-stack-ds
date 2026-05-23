@@ -9,6 +9,8 @@ interface TokensPhilosophyViewProps {
 const TABS: { value: TokensTab; label: string }[] = [
   { value: "overview", label: "Philosophy" },
   { value: "core-vs-semantic", label: "Core vs semantic" },
+  { value: "box-model-primitive", label: "Box-model primitive" },
+  { value: "variant-redirection", label: "Variant redirection" },
   { value: "token-naming", label: "Naming" },
   { value: "theming", label: "Multi-brand theming" },
   { value: "dtcg-formats", label: "DTCG formats" },
@@ -53,6 +55,8 @@ export function TokensPhilosophyView({ tab }: TokensPhilosophyViewProps) {
       <div style={{ marginTop: "var(--space-6)" }}>
         {tab === "overview" && <OverviewPanel />}
         {tab === "core-vs-semantic" && <CoreVsSemanticPanel />}
+        {tab === "box-model-primitive" && <BoxModelPrimitivePanel />}
+        {tab === "variant-redirection" && <VariantRedirectionPanel />}
         {tab === "token-naming" && <TokenNamingPanel />}
         {tab === "theming" && <ThemingPanel />}
         {tab === "dtcg-formats" && <DtcgFormatsPanel />}
@@ -133,20 +137,47 @@ function OverviewPanel() {
           },
           {
             number: "3",
-            title: "Component tokens",
-            tagline: "UI-specific composition of semantic roles.",
+            title: "Component-local slots",
+            tagline: "Per-component themable surface, scoped to .<cssPrefix>.",
             body: (
               <>
-                The <strong>component layer</strong> applies tokens to
-                anatomy — button backgrounds, card shadows, input borders.
-                These alias back to semantic roles but give component teams a
-                stable handle for customization.
+                The <strong>component layer</strong> declares slots on the
+                component&apos;s root selector — <code>button.color.background.default</code>,{" "}
+                <code>card.spacing.padding</code>. These are CSS custom
+                properties prefixed by the component name; they alias back to
+                semantic tokens but exist on{" "}
+                <code>.&lt;cssPrefix&gt;</code> so brand authors can override
+                per component without affecting siblings. Variant selectors
+                like <code>.button--primary</code> redefine these slots at
+                scope (see &ldquo;Variant redirection&rdquo;).
               </>
             ),
             meta: [
-              { dt: "Examples", dd: "semantic.components.button.primary.background" },
-              { dt: "Stability", dd: "Tied to component API; evolves with components" },
-              { dt: "Audience", dd: "Component developers, consumers" },
+              { dt: "Examples", dd: "button.color.background.default, card.spacing.padding" },
+              { dt: "Stability", dd: "Per-component vocabulary; tracks the component contract" },
+              { dt: "Audience", dd: "Component authors, brand customizers" },
+            ],
+          },
+          {
+            number: "4",
+            title: "Box-model primitive slots",
+            tagline: "A universal 14-slot pool every component inherits.",
+            body: (
+              <>
+                Above component-local slots sits the <strong>box-model primitive</strong> — a
+                closed pool of 14 unscoped slots (<code>--fsds-box-model-padding-inline-start</code>,{" "}
+                <code>--fsds-box-model-min-height</code>, etc.) automatically
+                declared on every component&apos;s root. Defaults flow from
+                the component&apos;s <code>category</code> (action / input /
+                surface / feedback / glyph / display / structure). The pool
+                is the same for every component; the resolution differs by
+                category and per-component override.
+              </>
+            ),
+            meta: [
+              { dt: "Examples", dd: "box-model.padding-inline-start, box-model.gap" },
+              { dt: "Stability", dd: "Closed enum; new slots require schema extension" },
+              { dt: "Audience", dd: "Consumer apps overriding sizing per instance" },
             ],
           },
         ]}
@@ -200,9 +231,14 @@ function OverviewPanel() {
             <td>Core or other semantic tokens</td>
           </tr>
           <tr>
-            <td>Component</td>
-            <td>UI-specific bindings</td>
+            <td>Component-local slots</td>
+            <td>Per-component CSS custom properties on <code>.&lt;cssPrefix&gt;</code></td>
             <td>Semantic or core tokens</td>
+          </tr>
+          <tr>
+            <td>Box-model primitive slots</td>
+            <td>Universal 14-slot pool on every component root</td>
+            <td>Semantic tokens (typically category-keyed)</td>
           </tr>
         </tbody>
       </table>
@@ -237,20 +273,28 @@ function CoreVsSemanticPanel() {
 
       <h2>The tree model of abstraction</h2>
       <CodeBlock
-        code={`Depth 0: Raw Value     →  #fafafa
+        code={`Depth 0: Raw Value          →  #fafafa
     ↓
-Depth 1: Primitive     →  neutral-100
+Depth 1: Primitive          →  neutral-100
     ↓
-Depth 2: Semantic      →  surface-primary
+Depth 2: Semantic           →  surface-primary
     ↓
-Depth 3: Component     →  card-background-default
+Depth 3: Component slot     →  card.color.background.default
     ↓
-Depth 4+: Variant      →  card-background-hover`}
+Depth 4: Cascade scope      →  .card--primary, .card:hover, .card:disabled
+                               redefine the slot at scope`}
       />
       <p>
         If you have a change that affects many items, would you rather chase
         down 700+ uses of the same value at the component level, or change one
         value further up the tree and let it cascade down?
+      </p>
+      <p>
+        Depth 4 is not &ldquo;a deeper token&rdquo; — it&apos;s the same slot
+        resolving differently in a different selector scope. State and
+        variant don&apos;t introduce new slot names; they re-point existing
+        slots at the right scope, and the CSS cascade does the rest. See
+        &ldquo;Variant redirection&rdquo; for the realized pattern.
       </p>
 
       <h3>Depth trade-offs</h3>
@@ -266,8 +310,8 @@ Depth 4+: Variant      →  card-background-hover`}
           <tr><td>0</td><td>Raw value</td><td>Changes everything using that value</td></tr>
           <tr><td>1</td><td>Primitive</td><td>Changes all semantics referencing it</td></tr>
           <tr><td>2</td><td>Semantic</td><td>Changes all components using that role</td></tr>
-          <tr><td>3</td><td>Component</td><td>Changes one component&apos;s appearance</td></tr>
-          <tr><td>4+</td><td>Variant/state</td><td>Changes one specific state</td></tr>
+          <tr><td>3</td><td>Component slot</td><td>Changes one component&apos;s appearance at root</td></tr>
+          <tr><td>4</td><td>Cascade scope</td><td>Changes the slot&apos;s value at a variant or state scope</td></tr>
         </tbody>
       </table>
 
@@ -341,6 +385,372 @@ Depth 4+: Variant      →  card-background-hover`}
         Choose the depth that matches how you expect changes to cascade. Too
         shallow means more manual updates; too deep means less flexibility.
       </p>
+    </article>
+  );
+}
+
+function BoxModelPrimitivePanel() {
+  return (
+    <article>
+      <h2>The closed slot pool every component inherits</h2>
+      <p>
+        Before this primitive existed, every component author had to remember
+        to declare their own padding, gap, sizing slots — and consumers had
+        no reliable surface to override them. Some components had{" "}
+        <code>min-height</code>, some didn&apos;t. Naming drifted; per-side
+        granularity was inconsistent. The injection-mold pattern fixes this
+        by giving every component a stable substrate.
+      </p>
+
+      <h2>The 14 slots</h2>
+      <p>
+        Defined once in{" "}
+        <code>packages/ds-contracts/box-model.primitive.schema.json</code>{" "}
+        with <code>additionalProperties: false</code> — new slot names
+        require a deliberate schema edit, not a per-component decision:
+      </p>
+      <table className="props-table">
+        <thead>
+          <tr><th>Slot</th><th>Default</th><th>Consumed by</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>box-model.padding</code></td><td><code>0</code></td><td>shorthand (no auto-consumer)</td></tr>
+          <tr><td><code>box-model.padding-block</code></td><td><code>0</code></td><td>shorthand</td></tr>
+          <tr><td><code>box-model.padding-block-start</code></td><td><code>0</code></td><td><code>padding-block-start</code></td></tr>
+          <tr><td><code>box-model.padding-block-end</code></td><td><code>0</code></td><td><code>padding-block-end</code></td></tr>
+          <tr><td><code>box-model.padding-inline</code></td><td><code>0</code></td><td>shorthand</td></tr>
+          <tr><td><code>box-model.padding-inline-start</code></td><td><code>0</code></td><td><code>padding-inline-start</code></td></tr>
+          <tr><td><code>box-model.padding-inline-end</code></td><td><code>0</code></td><td><code>padding-inline-end</code></td></tr>
+          <tr><td><code>box-model.gap</code></td><td><code>0</code></td><td><code>gap</code></td></tr>
+          <tr><td><code>box-model.width</code></td><td><code>auto</code></td><td><code>width</code></td></tr>
+          <tr><td><code>box-model.min-width</code></td><td><code>0</code></td><td><code>min-width</code></td></tr>
+          <tr><td><code>box-model.max-width</code></td><td><code>none</code></td><td><code>max-width</code></td></tr>
+          <tr><td><code>box-model.height</code></td><td><code>auto</code></td><td><code>height</code></td></tr>
+          <tr><td><code>box-model.min-height</code></td><td><code>0</code></td><td><code>min-height</code></td></tr>
+          <tr><td><code>box-model.max-height</code></td><td><code>none</code></td><td><code>max-height</code></td></tr>
+        </tbody>
+      </table>
+      <p>
+        Logical axes (<code>block</code>/<code>inline</code>) only — no
+        physical <code>top</code>/<code>right</code>/<code>bottom</code>/<code>left</code>{" "}
+        slots. RTL correctness by construction.
+      </p>
+
+      <h2>Category-driven defaults</h2>
+      <p>
+        Each component contract declares a <code>category</code>. The
+        category determines which semantic tokens the box-model slots
+        resolve to:
+      </p>
+      <table className="props-table">
+        <thead>
+          <tr><th>Category</th><th>Typical components</th><th>Defaults map to</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>action</code></td><td>Button, Switch, ToggleSwitch</td><td><code>semantic.action.size.medium.*</code></td></tr>
+          <tr><td><code>input</code></td><td>Input, Select, Checkbox, TextField</td><td><code>semantic.input.size.medium.*</code></td></tr>
+          <tr><td><code>surface</code></td><td>Card, Sheet, Dialog, Popover</td><td><code>semantic.surface.size.*</code></td></tr>
+          <tr><td><code>feedback</code></td><td>Alert, Banner, Progress, Skeleton</td><td><code>semantic.feedback.size.*</code></td></tr>
+          <tr><td><code>glyph</code></td><td>Icon, Avatar, Badge, ProfileFlag</td><td><code>semantic.glyph.size.medium.extent</code> (square)</td></tr>
+          <tr><td><code>display</code></td><td>Text, Label, Chip, Image, Links, Stat</td><td><code>semantic.display.size.gap</code> only (size-to-content)</td></tr>
+          <tr><td><code>structure</code></td><td>Table, Tabs, Accordion, NavList</td><td><code>semantic.structure.size.gap</code> only (children carry padding)</td></tr>
+        </tbody>
+      </table>
+      <p>
+        The taxonomy is a starting point. A component whose category default
+        is wrong overrides the specific slot in its own{" "}
+        <code>tokens.json</code> — author intent wins over category default.
+      </p>
+
+      <h2>The .css / .tokens.css layering rule</h2>
+      <p>
+        Every generated component emits two CSS files. The split is
+        load-bearing:
+      </p>
+      <CodeBlock
+        code={`/* Button.css — durable structure. Variants do not override these. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  background-color: var(--fsds-button-color-background-default);
+  color: var(--fsds-button-color-foreground-default);
+
+  &:hover  { background-color: var(--fsds-button-color-background-hover); }
+  &:active { background-color: var(--fsds-button-color-background-active); }
+  &:disabled { background-color: var(--fsds-button-color-background-disabled); }
+}`}
+        filename="Button.css"
+      />
+      <CodeBlock
+        code={`/* Button.tokens.css — slot RESOLUTIONS at every scope. */
+.button {
+  --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-medium-padding-block, 8px);
+  --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default);
+  --fsds-button-color-background-hover:   var(--fsds-semantic-interaction-background-hover);
+  --fsds-button-color-background-active:  var(--fsds-semantic-interaction-background-active);
+}
+
+.button--primary {
+  --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default);
+  --fsds-button-color-background-hover:   var(--fsds-semantic-color-action-background-primary-hover);
+  --fsds-button-color-background-active:  var(--fsds-semantic-color-action-background-primary-active);
+}
+
+.button--small {
+  --fsds-box-model-padding-block-start: var(--fsds-semantic-action-size-small-padding-block, 4px);
+}`}
+        filename="Button.tokens.css"
+      />
+      <p>
+        <strong>Rule of thumb:</strong> if a variant changes the rule, it
+        belongs in <code>.css</code>. If a variant changes the resolved
+        value, it belongs in <code>.tokens.css</code>.
+      </p>
+      <ul>
+        <li><strong>.css</strong> holds the structural surface — layout literals (display, align-items, cursor), state pseudo-class rules (<code>:hover</code>, <code>:active</code>, <code>:focus</code>, <code>:disabled</code>, <code>:visited</code>, <code>:read-only</code>), and the CSS-property reads that consume slots.</li>
+        <li><strong>.tokens.css</strong> holds the resolutions — root-scope slot declarations, plus every variant scope (<code>.button--primary</code>, <code>.button--small</code>) that redefines slots.</li>
+      </ul>
+      <p>
+        Brand authors only ever touch the <code>.tokens.css</code>-equivalent
+        surface (the global brand layer for global tokens, or per-component
+        overrides via <code>@layer</code> rules). They never need to think
+        about CSS property names — only slot names.
+      </p>
+
+      <h2>Portal-aware scope discipline</h2>
+      <p>
+        Components whose contract sets <code>behavior.portal.enabled</code>{" "}
+        (Dialog, Popover, Tooltip, Toast) hoist their component-local slots
+        to <code>:root</code> so the portaled content can read them from
+        outside the <code>.&lt;cssPrefix&gt;</code> ancestor. But{" "}
+        <strong>box-model slots stay on <code>.&lt;cssPrefix&gt;</code></strong> —{" "}
+        they&apos;re unscoped names, so hoisting them to <code>:root</code>{" "}
+        would let two simultaneously-open portal components race for the
+        same value. Per-component override discipline is preserved.
+      </p>
+
+      <h2>How to override</h2>
+      <p>
+        From a component contract — author the slot in{" "}
+        <code>&lt;Name&gt;.tokens.json</code>:
+      </p>
+      <CodeBlock
+        code={`{
+  "box-model.padding-inline-start": {
+    "resolvesTo": "core.spacing.size.05",
+    "fallback": "12px"
+  },
+  "box-model.min-height": {
+    "resolvesTo": "core.dimension.actionMinHeight",
+    "fallback": "36px"
+  }
+}`}
+        filename="Button.tokens.json"
+      />
+      <p>From app code — set the CSS custom property on any ancestor:</p>
+      <CodeBlock
+        code={`.my-tall-button .button {
+  --fsds-box-model-min-height: 64px;
+}
+
+/* Every Dialog instance gets a wider max-width: */
+.dialog {
+  --fsds-box-model-max-width: 720px;
+}`}
+        filename="app.css"
+      />
+      <p>
+        The consumer line in <code>.css</code> reads{" "}
+        <code>min-height: var(--fsds-box-model-min-height)</code>, so the
+        override changes the rendered size. No <code>!important</code>, no
+        specificity fight — the slot is the single read site, and the
+        cascade resolves it at the most specific declaration.
+      </p>
+    </article>
+  );
+}
+
+function VariantRedirectionPanel() {
+  return (
+    <article>
+      <h2>State slots are first-class siblings, not scope redirections</h2>
+      <p>
+        A component&apos;s state-specific values live as <em>parallel
+        slots</em> in <code>tokens.json</code>, not as scope-redirections
+        of a single default slot:
+      </p>
+      <CodeBlock
+        code={`// Button.tokens.json — state slots as siblings
+{
+  "button.color.background.default":  { "resolvesTo": "semantic.color.action.background.primary.default" },
+  "button.color.background.hover":    { "resolvesTo": "semantic.interaction.background.hover" },
+  "button.color.background.active":   { "resolvesTo": "semantic.interaction.background.active" },
+  "button.color.background.disabled": { "resolvesTo": "semantic.color.action.background.primary.disabled" }
+}`}
+        filename="Button.tokens.json"
+      />
+      <p>
+        The structural state pseudo-class rules in <code>.css</code> read
+        the <em>state-specific</em> slot, not the default-scope-redirected
+        slot:
+      </p>
+      <CodeBlock
+        code={`.button {
+  background-color: var(--fsds-button-color-background-default);
+
+  &:hover    { background-color: var(--fsds-button-color-background-hover); }
+  &:active   { background-color: var(--fsds-button-color-background-active); }
+  &:disabled { background-color: var(--fsds-button-color-background-disabled); }
+}`}
+        filename="Button.css"
+      />
+
+      <h2>Variants redefine all state slots at variant scope</h2>
+      <p>
+        A variant selector populates every state slot for its scope at
+        once — default, hover, active, disabled — in{" "}
+        <code>tokens.css</code>:
+      </p>
+      <CodeBlock
+        code={`.button--primary {
+  --fsds-button-color-background-default:  var(--fsds-semantic-color-action-background-primary-default);
+  --fsds-button-color-background-hover:    var(--fsds-semantic-color-action-background-primary-hover);
+  --fsds-button-color-background-active:   var(--fsds-semantic-color-action-background-primary-active);
+  --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled);
+}
+
+.button--destructive {
+  --fsds-button-color-background-default:  var(--fsds-semantic-color-action-background-danger-default);
+  --fsds-button-color-background-hover:    var(--fsds-semantic-color-action-background-danger-hover);
+  --fsds-button-color-background-active:   var(--fsds-semantic-color-action-background-danger-active);
+}`}
+        filename="Button.tokens.css"
+      />
+
+      <h2>The cascade does the work</h2>
+      <p>
+        When the user hovers a <code>.button.button--primary</code> element,
+        three rules participate:
+      </p>
+      <ol>
+        <li>
+          <code>.button:hover</code> reads{" "}
+          <code>--fsds-button-color-background-hover</code> (the structural
+          rule).
+        </li>
+        <li>
+          <code>.button--primary</code> sets{" "}
+          <code>--fsds-button-color-background-hover</code> to the
+          primary-hover semantic at primary scope.
+        </li>
+        <li>
+          The cascade picks the more-specific scope (primary) → resolves
+          the slot → renders the primary-hover color.
+        </li>
+      </ol>
+      <p>
+        No compound <code>.button--primary:hover</code> selector is needed.
+        The intersection is implicit because state slots already exist as
+        separate named slots, and variants populate all of them.
+      </p>
+
+      <h2>Why this matters</h2>
+      <ul>
+        <li>
+          <strong>One slot name carries through the whole component.</strong>{" "}
+          DevTools, app code, and brand overrides see{" "}
+          <code>--fsds-button-color-background-hover</code> everywhere. No
+          &ldquo;if size is small, look at this slot; if medium, look at
+          that&rdquo; lookup.
+        </li>
+        <li>
+          <strong>Density can hit one place.</strong>{" "}
+          <code>[data-density=&quot;spacious&quot;] .button--primary</code>{" "}
+          redefines the slot once and every primary action picks up the
+          shift. With per-variant slot names, density would have to chase
+          each <code>--fsds-button-size-small-min-height</code>,{" "}
+          <code>--fsds-input-size-small-min-height</code> separately.
+        </li>
+        <li>
+          <strong>Brand override stays at one tier.</strong> A brand that
+          wants a different action-primary-hover writes{" "}
+          <code>[data-brand=x] { "{"} --fsds-semantic-color-action-background-primary-hover: ...; {"}"}</code>{" "}
+          and every action component in the category picks it up. The
+          intermediate component-local slot disappears from the brand
+          surface.
+        </li>
+      </ul>
+
+      <h2>State taxonomy supported today</h2>
+      <p>
+        The codegen&apos;s state map (<code>DERIVABLE_STATE_TO_PSEUDO</code>{" "}
+        in <code>ir.ts</code>) recognizes these state names in{" "}
+        <code>styles.json</code> selector keys:
+      </p>
+      <table className="props-table">
+        <thead>
+          <tr><th>State name</th><th>Emits as</th><th>Tier</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>hover</code></td><td><code>:hover</code></td><td>Interaction</td></tr>
+          <tr><td><code>active</code></td><td><code>:active</code></td><td>Interaction</td></tr>
+          <tr><td><code>focus</code> / <code>focus-visible</code></td><td><code>:focus-visible</code></td><td>Interaction</td></tr>
+          <tr><td><code>focus-within</code></td><td><code>:focus-within</code></td><td>Interaction</td></tr>
+          <tr><td><code>visited</code></td><td><code>:visited</code></td><td>Interaction</td></tr>
+          <tr><td><code>disabled</code></td><td><code>:disabled</code></td><td>Disabled (stacked)</td></tr>
+          <tr><td><code>read-only</code></td><td><code>:read-only</code></td><td>Disabled (stacked)</td></tr>
+          <tr><td><code>checked</code></td><td><code>:checked</code></td><td>Stacked</td></tr>
+          <tr><td><code>indeterminate</code></td><td><code>:indeterminate</code></td><td>Stacked</td></tr>
+          <tr><td><code>expanded</code></td><td><code>[aria-expanded=&quot;true&quot;]</code></td><td>Stacked (ARIA)</td></tr>
+          <tr><td><code>pressed</code></td><td><code>[aria-pressed=&quot;true&quot;]</code></td><td>Stacked (ARIA)</td></tr>
+          <tr><td><code>selected</code></td><td><code>[aria-selected=&quot;true&quot;]</code></td><td>Stacked (ARIA)</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Data-state and system-state axes (loading, empty, error, server
+        states, validation) currently live in component props and runtime
+        logic — not in the slot taxonomy. Future work may extend the
+        contract schema to model them as additional <code>state-axis</code>{" "}
+        scopes.
+      </p>
+
+      <h2>Authoring template</h2>
+      <p>
+        When adding a color variant to a component, the pattern is
+        consistent — declare the canonical and state slots once, then each
+        variant block redefines all the state slots together:
+      </p>
+      <CodeBlock
+        code={`// 1. <Name>.tokens.json — declare state slots as siblings of default
+{
+  "<name>.color.background.default":  { "resolvesTo": "..." },
+  "<name>.color.background.hover":    { "resolvesTo": "..." },
+  "<name>.color.background.active":   { "resolvesTo": "..." },
+  "<name>.color.background.disabled": { "resolvesTo": "..." }
+}
+
+// 2. <Name>.styles.json — root reads default, state selectors read state slots
+{
+  "root":  { "background-color": { "resolvesTo": "<name>.color.background.default"  } },
+  "hover": { "background-color": { "resolvesTo": "<name>.color.background.hover"    } },
+  "active":{ "background-color": { "resolvesTo": "<name>.color.background.active"   } },
+  "disabled":{ "background-color": { "resolvesTo": "<name>.color.background.disabled" } }
+}
+
+// 3. <Name>.styles.json — variants redefine ALL state slots at variant scope
+{
+  "--primary": {
+    "<name>.color.background.default":  { "resolvesTo": "semantic...primary.default"  },
+    "<name>.color.background.hover":    { "resolvesTo": "semantic...primary.hover"    },
+    "<name>.color.background.active":   { "resolvesTo": "semantic...primary.active"   },
+    "<name>.color.background.disabled": { "resolvesTo": "semantic...primary.disabled" }
+  }
+}`}
+        filename="Pattern"
+      />
     </article>
   );
 }
