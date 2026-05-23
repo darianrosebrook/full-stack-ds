@@ -115,12 +115,15 @@ export function Header() {
         </a>
 
         <Popover placement="bottom">
-          <Popover.Trigger
-            className="icon-btn"
-            aria-label="Appearance settings"
-            title="Appearance"
-          >
-            <PaletteIcon />
+          <Popover.Trigger asChild>
+            <button
+              type="button"
+              className="icon-btn"
+              aria-label="Appearance settings"
+              title="Appearance"
+            >
+              <PaletteIcon />
+            </button>
           </Popover.Trigger>
           <Popover.Content
             className="card"

@@ -87,6 +87,15 @@ export function Sidebar({ bundle, route }: SidebarProps) {
             <span>Tokens philosophy</span>
           </a>
         </NavListItem>
+        <NavListItem className="sidebar-item-host">
+          <a
+            className={`sidebar-item${route.kind === "complexity" ? " sidebar-item--active" : ""}`}
+            href={buildHref({ kind: "complexity", tab: "overview" })}
+            aria-current={route.kind === "complexity" ? "page" : undefined}
+          >
+            <span>Component complexity</span>
+          </a>
+        </NavListItem>
 
         {bundle.primitives.length > 0 && (
           <>
