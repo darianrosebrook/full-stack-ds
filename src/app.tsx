@@ -10,6 +10,7 @@ import { DeveloperView } from "./views/DeveloperView";
 import { TokensView } from "./views/TokensView";
 import { TokensPhilosophyView } from "./views/TokensPhilosophyView";
 import { ComponentComplexityView } from "./views/ComponentComplexityView";
+import { AccessibilityView } from "./views/AccessibilityView";
 import { PrimitiveView } from "./views/PrimitiveView";
 import { useRoute } from "./router";
 import type { TraceSelection } from "./trace/types";
@@ -47,6 +48,7 @@ export function App() {
         {route.kind === "complexity" && (
           <ComponentComplexityView tab={route.tab} />
         )}
+        {route.kind === "a11y" && <AccessibilityView tab={route.tab} />}
         {route.kind === "primitive" && activePrimitive && (
           <PrimitiveView primitive={activePrimitive} />
         )}

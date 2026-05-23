@@ -96,6 +96,15 @@ export function Sidebar({ bundle, route }: SidebarProps) {
             <span>Component complexity</span>
           </a>
         </NavListItem>
+        <NavListItem className="sidebar-item-host">
+          <a
+            className={`sidebar-item${route.kind === "a11y" ? " sidebar-item--active" : ""}`}
+            href={buildHref({ kind: "a11y", tab: "overview" })}
+            aria-current={route.kind === "a11y" ? "page" : undefined}
+          >
+            <span>Accessibility</span>
+          </a>
+        </NavListItem>
 
         {bundle.primitives.length > 0 && (
           <>
