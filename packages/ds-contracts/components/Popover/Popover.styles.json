@@ -20,13 +20,14 @@
     "align-items": { "literal": "center", "platforms": ["web"] },
     "cursor": { "literal": "pointer", "platforms": ["web"] }
   },
-  ".popover [data-popover-content]": {
+  "[data-popover-content]": {
     "background-color": { "resolvesTo": "popover.color.background.content" },
     "border-color": { "resolvesTo": "popover.color.border.accent" },
     "border-radius": { "resolvesTo": "popover.size.radius.default" },
     "padding": { "resolvesTo": "popover.size.padding.default" },
     "gap": { "resolvesTo": "popover.size.gap.default" },
     "box-shadow": { "resolvesTo": "popover.elevation.default" },
+    "z-index": { "resolvesTo": "popover.layer.content" },
     "display": { "literal": "inline-block", "platforms": ["web"] },
     "border-style": { "literal": "solid", "platforms": ["web"] },
     "border-width": { "literal": "1px", "platforms": ["web"] }

@@ -111,11 +111,21 @@ export function validateStylesSelectorCollisions(
   if (!styles || typeof styles !== "object") return [];
 
   const cssPrefix = getCssPrefix(contract);
+  // Mirror the portal-aware selector emission in computeCssBlocks so
+  // collision detection sees the same final selectors. Without this
+  // the validator would think `[data-popover-content]` and
+  // `.popover [data-popover-content]` produce different selectors,
+  // when in fact they both collapse to `[data-popover-content]` at
+  // emit time for portal-enabled surfaces.
+  const portalEnabled = contract.portal?.enabled === true;
+  const expandOptions = portalEnabled
+    ? { portalContentSelector: `[data-${cssPrefix}-content]` }
+    : undefined;
   const seen = new Map<string, string>();
   const issues: ValidationIssue[] = [];
 
   for (const key of Object.keys(styles)) {
-    const selector = expandStylesKey(key, cssPrefix);
+    const selector = expandStylesKey(key, cssPrefix, expandOptions);
     const prior = seen.get(selector);
     if (prior !== undefined && prior !== key) {
       issues.push({

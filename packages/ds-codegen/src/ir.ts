@@ -1382,6 +1382,21 @@ export function computeCssBlocks(
   });
   emitted.add(rootSelector);
 
+  // Portal-aware: when the contract opts into a portal for its
+  // surface content, the content element is rendered at document.body
+  // (escaping the .<cssPrefix> ancestor). Selectors that target the
+  // content's data-attribute MUST emit at the top level, not nested
+  // under the root, or they won't apply. Derive the content selector
+  // from the cssPrefix to match what surface-emit.ts emits as the
+  // data-<prefix>-content attribute.
+  const portalEnabled = contract.portal?.enabled === true;
+  const portalContentSelector = portalEnabled
+    ? `[data-${cssPrefix}-content]`
+    : undefined;
+  const expandOptions = portalContentSelector
+    ? { portalContentSelector }
+    : undefined;
+
   // Every other selector key in styles.json gets its own block. The
   // selector key is interpreted by expandStylesKey:
   //   - "root"          → already handled above; skip.
@@ -1393,9 +1408,10 @@ export function computeCssBlocks(
   //   - bare part name  → BEM anatomy part.
   //   - compound (whitespace, +, >, ~, or mixed __/: selectors) →
   //     expanded verbatim with bare parts qualified.
+  //   - portal-content   → top-level verbatim (no BEM qualification).
   for (const [key, rawBlock] of Object.entries(styles)) {
     if (key === "root") continue;
-    const selector = expandStylesKey(key, cssPrefix);
+    const selector = expandStylesKey(key, cssPrefix, expandOptions);
     if (emitted.has(selector)) continue;
     const declarations = renderStyleBlock(rawBlock, cssPrefix, platformTarget);
     if (Object.keys(declarations).length === 0) continue;
@@ -1419,8 +1435,45 @@ export function computeCssBlocks(
  *
  * Exported so validation/styles.ts can detect selector-aliasing
  * collisions between two distinct keys that resolve to the same selector.
+ *
+ * Portal-aware selectors: when `options.portalContentSelector` is set
+ * (the codegen passes it when the contract enables portal on its
+ * surface — typically `[data-popover-content]`), any styles key that
+ * equals that selector OR equals the legacy compound form
+ * `.<prefix> [data-<prefix>-content]` is emitted at the TOP LEVEL
+ * (verbatim, no BEM qualification). This is necessary because the
+ * portaled element lives at `document.body`, escaping the
+ * `.<prefix>` ancestor; styles nested under that ancestor never
+ * apply to the portaled content.
  */
-export function expandStylesKey(key: string, prefix: string): string {
+export interface ExpandStylesKeyOptions {
+  /**
+   * The bare attribute selector that identifies the portaled
+   * content node, e.g. `[data-popover-content]`. When the styles key
+   * matches it (either directly or as a compound `.popover [data-...]`),
+   * the emitter returns the bare attribute selector at top level so
+   * the rule actually targets the portaled element.
+   */
+  portalContentSelector?: string;
+}
+
+export function expandStylesKey(
+  key: string,
+  prefix: string,
+  options: ExpandStylesKeyOptions = {},
+): string {
+  const { portalContentSelector } = options;
+
+  // Portal-aware fast path: emit content-targeting selectors at top
+  // level when portal is enabled, regardless of whether the author
+  // wrote the bare form or the legacy compound form.
+  if (portalContentSelector) {
+    const trimmed = key.trim();
+    if (trimmed === portalContentSelector) return trimmed;
+    const compoundPrefix = `.${prefix} ${portalContentSelector}`;
+    if (trimmed === compoundPrefix) return portalContentSelector;
+  }
+
   const isCompound =
     /[\s+~>]/.test(key) ||
     (key.includes(":") && key.includes("__")) ||

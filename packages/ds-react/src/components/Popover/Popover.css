@@ -18,13 +18,14 @@
   cursor: pointer;
 }
 
-.popover [data-popover-content] {
+[data-popover-content] {
   background-color: var(--fsds-popover-color-background-content);
   border-color: var(--fsds-popover-color-border-accent);
   border-radius: var(--fsds-popover-size-radius-default);
   padding: var(--fsds-popover-size-padding-default);
   gap: var(--fsds-popover-size-gap-default);
   box-shadow: var(--fsds-popover-elevation-default);
+  z-index: var(--fsds-popover-layer-content);
   display: inline-block;
   border-style: solid;
   border-width: 1px;
@@ -33,28 +34,21 @@
 
 /* @custom:start overrides */
 /*
- * Portaled popover content sits at document.body, escaping the
- * `.popover` ancestor. Restate the visual properties directly on
- * `[data-popover-content]` so styling survives the portal hop, and
- * declare the layer token at :root so the var resolves anywhere.
+ * Polish on top of the contract-driven [data-popover-content] rule.
+ * The generated rule above handles colors, padding, border, radius,
+ * shadow, and z-index — its var(--fsds-popover-*) references resolve
+ * via the :root slot declarations in Popover.tokens.css (which the
+ * codegen hoists to :root automatically because the contract enables
+ * portal). This block adds visual polish that isn't in the contract:
  *
- * Pattern mirrored from the portfolio's Popover.css. The popover
- * enters with a back-out curve (0.34, 1.56, 0.64, 1) over 200ms so
- * the surface "settles" rather than slides — distinctive without
- * being annoying. Reduced-motion users get an instant fade in.
+ *   - min/max width — keep the surface within readable bounds
+ *   - contain: layout paint style — scope reflow inside the surface
+ *   - back-out enter animation (cubic-bezier 0.34, 1.56, 0.64, 1)
+ *   - prefers-reduced-motion override
+ *
+ * Pattern mirrored from the portfolio's Popover.css.
  */
-:root {
-  --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
-}
-
 [data-popover-content] {
-  background-color: var(--fsds-popover-color-background-content, var(--fsds-semantic-color-background-secondary, #efefef));
-  border: 1px solid var(--fsds-popover-color-border-accent, var(--fsds-semantic-color-border-subtle, #d4d4d4));
-  border-radius: var(--fsds-popover-size-radius-default, var(--fsds-semantic-shape-control-radius-default, 8px));
-  padding: var(--fsds-popover-size-padding-default, var(--fsds-core-spacing-size-06, 16px));
-  gap: var(--fsds-popover-size-gap-default, var(--fsds-core-spacing-size-04, 8px));
-  box-shadow: var(--fsds-popover-elevation-default, var(--fsds-semantic-elevation-default, 0 4px 16px rgba(0,0,0,0.12)));
-  z-index: var(--fsds-popover-layer-content);
   min-width: 256px;
   max-width: calc(100vw - 16px);
   contain: layout paint style;

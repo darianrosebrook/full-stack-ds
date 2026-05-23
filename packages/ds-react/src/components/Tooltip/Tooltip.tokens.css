@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.tooltip {
+:root {
   --fsds-tooltip-color-background-default: var(--fsds-semantic-color-background-inverse, #141414);
   --fsds-tooltip-color-foreground-default: var(--fsds-semantic-color-foreground-inverse, #fafafa);
   --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);

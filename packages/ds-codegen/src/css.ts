@@ -294,8 +294,22 @@ export function emitCss(ir: ComponentIR): string {
  */
 export function emitTokensCss(ir: ComponentIR): string {
   const rootSelector = `.${ir.cssPrefix}`;
+  // Portal-aware: when the contract enables a portal for its surface,
+  // the content node renders at document.body. Slot declarations
+  // scoped to `.<cssPrefix>` don't reach it, so the var(--…)
+  // references in the generated content rule resolve to nothing.
+  // Hoist all slot declarations to `:root` in that case — they
+  // become globally visible at no real cost (slot names are
+  // already cssPrefix-qualified, so cross-component bleed isn't
+  // possible).
+  const portalEnabled = ir.behavior.portal?.enabled === true;
   const grouped = groupBlocksByRoot(ir.cssBlocks, rootSelector)
     .map((g) => filterGroupedBlock(g, "slots"))
+    .map((g) =>
+      portalEnabled && g.selector === rootSelector
+        ? { ...g, selector: ":root" }
+        : g,
+    )
     .map((g) => formatGroupedBlock(g))
     .filter((s) => s.length > 0);
 
