@@ -39,6 +39,19 @@ export interface AnchoredSurfaceControllerOptions {
  */
 export class AnchoredSurfaceController extends SurfaceController {
   private listenerCleanups: Array<() => void> = [];
+  /**
+   * Timestamp of the last pointerdown that landed inside the surface
+   * (anchor ∪ content). Read by the blur-dismissal deferred branch:
+   * `relatedTarget === null` focusouts that follow an inside
+   * pointerdown by less than POINTER_GRACE_MS are treated as clicks on
+   * non-focusable elements (keep open), not tab-outs (close).
+   *
+   * Using a timestamp rather than a tick-flag because microtask FIFO
+   * ordering doesn't reliably let a flag set by pointerdown survive
+   * past the deferred focusout check.
+   */
+  protected lastInsidePointerdownAt = 0;
+  protected static readonly POINTER_GRACE_MS = 50;
 
   constructor(private readonly anchoredOptions: AnchoredSurfaceControllerOptions) {
     super({
@@ -149,10 +162,45 @@ export class AnchoredSurfaceController extends SurfaceController {
     // interactive content (Tooltip): Tooltip content has no
     // focusable descendants, so the content listener never fires.
     if (dismissal.includes("blur")) {
+      // Boundary semantics: close only when focus truly leaves the
+      // surface. The fast path uses `relatedTarget` — if it's inside
+      // the surface, do nothing. If it's outside, close.
+      //
+      // `relatedTarget === null` is ambiguous: it happens both on
+      // tab-out (focus going to body, surface should close) AND on
+      // click on a non-focusable element inside the surface (focus
+      // also goes to body, but surface should stay open because the
+      // pointer landed inside). The fallback path defers the close
+      // decision by one microtask, then checks whether
+      // `document.activeElement` is still inside the surface or — if
+      // a click is in flight — whether the most recent pointerdown
+      // target was inside. This makes the predicate purely about
+      // boundary, with no timing-based heuristic.
       const onFocusOut = (e: FocusEvent) => {
         if (!this.anchoredOptions.isOpen()) return;
-        if (this.isInsideSurface(e.relatedTarget)) return;
-        close();
+        if (e.relatedTarget !== null) {
+          if (this.isInsideSurface(e.relatedTarget)) return;
+          close();
+          return;
+        }
+        // Defer to next microtask so document.activeElement settles.
+        // Then disambiguate: if focus moved to a node inside the
+        // surface, do nothing. If focus fell back to body but a
+        // pointerdown landed inside the surface within the grace
+        // window, treat as click on non-focusable inside (keep open).
+        // Otherwise, true tab-out — close.
+        queueMicrotask(() => {
+          if (!this.anchoredOptions.isOpen()) return;
+          const active = document.activeElement;
+          if (this.isInsideSurface(active)) return;
+          if (
+            Date.now() - this.lastInsidePointerdownAt <
+            AnchoredSurfaceController.POINTER_GRACE_MS
+          ) {
+            return;
+          }
+          close();
+        });
       };
       if (anchor && !handlerMode) {
         anchor.addEventListener("focusout", onFocusOut);
@@ -204,6 +252,21 @@ export class AnchoredSurfaceController extends SurfaceController {
       document.addEventListener("mousedown", onPointer);
       this.listenerCleanups.push(() =>
         document.removeEventListener("mousedown", onPointer),
+      );
+    }
+
+    // Track inside-pointerdown timestamp for the blur-dismissal
+    // deferred branch (see onFocusOut above). Capture phase so the
+    // controller sees the pointer regardless of stopPropagation.
+    if (dismissal.includes("blur")) {
+      const onPointerInside = (e: MouseEvent) => {
+        if (this.isInsideSurface(e.target)) {
+          this.lastInsidePointerdownAt = Date.now();
+        }
+      };
+      document.addEventListener("mousedown", onPointerInside, true);
+      this.listenerCleanups.push(() =>
+        document.removeEventListener("mousedown", onPointerInside, true),
       );
     }
   }

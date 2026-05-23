@@ -100,14 +100,44 @@ describe("AnchoredSurfaceController — boundary focusout", () => {
     expect(setOpenSpy).toHaveBeenCalledWith(false);
   });
 
-  it("closes when focus moves anchor → null (body / document)", () => {
+  // The `relatedTarget === null` branch defers its close decision by
+  // a microtask so the controller can disambiguate "tab-out to body"
+  // (close) from "click on non-focusable element inside surface"
+  // (keep open). Tests for the close-on-tab-out semantics therefore
+  // await a flushed microtask before asserting.
+  it("closes when focus moves anchor → null (body / document)", async () => {
     dispatchFocusOut(anchor, null);
+    await Promise.resolve();
     expect(setOpenSpy).toHaveBeenCalledWith(false);
   });
 
-  it("closes when focus moves content → null", () => {
+  it("closes when focus moves content → null", async () => {
     dispatchFocusOut(contentInner, null);
+    await Promise.resolve();
     expect(setOpenSpy).toHaveBeenCalledWith(false);
+  });
+
+  it("does NOT close when focus moves to null but a recent pointerdown was inside content (click on dead space)", async () => {
+    // Simulate the user clicking on a non-focusable element (e.g. a
+    // <div> with a text label) inside the surface. Real browsers fire
+    // mousedown on the unfocusable target first, then focusout on the
+    // previously-focused element with relatedTarget === null.
+    const deadSpace = document.createElement("div");
+    content.appendChild(deadSpace);
+    const md = new MouseEvent("mousedown", { bubbles: true, cancelable: true, composed: true });
+    deadSpace.dispatchEvent(md);
+    dispatchFocusOut(contentInner, null);
+    await Promise.resolve();
+    expect(setOpenSpy).not.toHaveBeenCalled();
+    deadSpace.remove();
+  });
+
+  it("does NOT close when focus moves to null but a recent pointerdown was on the anchor (click on anchor while open)", async () => {
+    const md = new MouseEvent("mousedown", { bubbles: true, cancelable: true, composed: true });
+    anchor.dispatchEvent(md);
+    dispatchFocusOut(contentInner, null);
+    await Promise.resolve();
+    expect(setOpenSpy).not.toHaveBeenCalled();
   });
 
   it("does NOT close when the surface is already closed (isOpen guard absorbs teardown)", () => {
