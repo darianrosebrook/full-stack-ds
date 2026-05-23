@@ -97,5 +97,6 @@ function handleKeyDown(e: KeyboardEvent): void {
     @keydown="handleKeyDown"
   >
     <slot />
+    <span :class="'tabs__indicator'" aria-hidden="true"></span>
   </div>
 </template>

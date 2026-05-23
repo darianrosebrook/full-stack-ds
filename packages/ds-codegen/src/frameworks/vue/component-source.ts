@@ -30,6 +30,7 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
+  getGroupHostOrnamentPart,
   getGroupHostPart,
   getInteractiveItemPart,
   getRegionPart,
@@ -513,6 +514,7 @@ export function generateVueCompoundStateParts(
   const itemPart = getInteractiveItemPart(ir);
   const regionPart = getRegionPart(ir);
   const groupPart = getGroupHostPart(ir);
+  const ornamentPart = getGroupHostOrnamentPart(ir);
 
   if (!itemPart || !regionPart) return [];
 
@@ -629,6 +631,14 @@ export function generateVueCompoundStateParts(
     `    @keydown="handleKeyDown"`,
     `  >`,
     `    <slot />`,
+    ...(ornamentPart
+      ? [
+          // TABS-INDICATOR-REALIZATION-01: declared DOM realization of the
+          // group-host ornament (e.g. Tabs's `indicator`). Visual treatment
+          // and motion live in the contract's styles.json / Tabs.css.
+          `    <span :class="'${cssPrefix}__${ornamentPart.name}'" aria-hidden="true"></span>`,
+        ]
+      : []),
     `  </div>`,
     `</template>`,
     ``,

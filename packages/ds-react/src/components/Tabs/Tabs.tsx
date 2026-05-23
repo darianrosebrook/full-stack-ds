@@ -135,6 +135,7 @@ export function TabsList({
       aria-orientation={ctx.orientation}
     >
       {children}
+      <span className="tabs__indicator" aria-hidden="true" />
     </div>
   );
 }

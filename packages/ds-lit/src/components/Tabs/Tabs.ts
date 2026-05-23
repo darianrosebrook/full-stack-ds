@@ -374,7 +374,7 @@ export class TabsListElement extends LitElement {
   override render() {
     let orientation = "horizontal";
     try { orientation = this._ctx.value.orientation; } catch { /* no context yet */ }
-    return html`<div class="tabs__list" role="tablist" aria-orientation="${orientation}"><slot></slot></div>`;
+    return html`<div class="tabs__list" role="tablist" aria-orientation="${orientation}"><slot></slot><span class="tabs__indicator" aria-hidden="true"></span></div>`;
   }
 }
 

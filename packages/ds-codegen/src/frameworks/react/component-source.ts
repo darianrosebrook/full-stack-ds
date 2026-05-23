@@ -21,6 +21,7 @@ import { hasChildrenPlaceholder } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
   getGroupHostPart,
+  getGroupHostOrnamentPart,
   getInteractiveItemPart,
   getRegionPart,
   isCompoundStateContainer,
@@ -631,6 +632,15 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`    [ctx],`);
   lines.push(`  );`);
   lines.push(``);
+  // TABS-INDICATOR-REALIZATION-01: when the contract declares a singleton
+  // ornament part (e.g. `indicator`) as a direct child of the group host
+  // in anatomy.dom, render it as a sibling of the consumer's children
+  // inside the group container. Declared-DOM-realization only — the
+  // ornament's visual treatment, motion, and (eventual) measured
+  // positioning live in styles.json / Tabs.css and are NOT redesigned
+  // here. aria-hidden because it's a non-interactive decoration.
+  const ornamentPart = getGroupHostOrnamentPart(ir);
+
   lines.push(`  return (`);
   lines.push(`    <div`);
   lines.push(`      ref={listRef}`);
@@ -641,6 +651,11 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
   lines.push(`      aria-orientation={ctx.${orientation}}`);
   lines.push(`    >`);
   lines.push(`      {children}`);
+  if (ornamentPart) {
+    lines.push(
+      `      <span className="${prefix}__${ornamentPart.name}" aria-hidden="true" />`,
+    );
+  }
   lines.push(`    </div>`);
   lines.push(`  );`);
   lines.push(`}`);

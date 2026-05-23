@@ -45,6 +45,7 @@ import {
   getInteractiveItemPart,
   getRegionPart,
   getGroupHostPart,
+  getGroupHostOrnamentPart,
 } from "../react/hook-source.js";
 
 // Props we don't emit as @Input() — either Angular handles them natively
@@ -318,6 +319,7 @@ export function generateAngularCompoundStateParts(
   const itemPart = getInteractiveItemPart(ir);
   const regionPart = getRegionPart(ir);
   const groupPart = getGroupHostPart(ir);
+  const ornamentPart = getGroupHostOrnamentPart(ir);
 
   if (!itemPart || !regionPart) return [];
 
@@ -358,7 +360,7 @@ export function generateAngularCompoundStateParts(
     `  [ngClass]="classes()"`,
     `  [attr.aria-orientation]="ctx.orientation()"`,
     `  (keydown)="handleKeyDown($event)"`,
-    `><ng-content /></div>\`,`,
+    `><ng-content />${ornamentPart ? `<span [ngClass]="'${cssPrefix}__${ornamentPart.name}'" aria-hidden="true"></span>` : ""}</div>\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
     `export class ${listName}Component {`,

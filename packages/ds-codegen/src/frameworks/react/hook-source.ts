@@ -65,6 +65,63 @@ export function getGroupHostPart(ir: ComponentIR): PartIR | undefined {
   return ir.parts.find((p) => p.details?.role === "group");
 }
 
+/**
+ * Returns the "ornament" part of the group host — a sibling sub-node of
+ * the interactive item that the contract declares as a singleton decoration
+ * (e.g. Tabs's `indicator`). Detected from `anatomy.dom`: a child of the
+ * group-host node that is NOT a slot/children placeholder, NOT the
+ * interactive item template, and has a non-empty `part` name.
+ *
+ * This generalizes Tabs's active-indicator pattern to any compound-state
+ * container that declares a peer-of-the-item ornament. The emitter renders
+ * it as a sibling of the consumer-passed children inside the group host.
+ *
+ * Returns `undefined` when:
+ *   - the contract has no `anatomy.dom` (legacy compound-emit path)
+ *   - the group host has no children other than the interactive item
+ *   - the group host has more than one non-item child (ambiguous; emitter
+ *     stays conservative rather than guessing)
+ *
+ * Scope note (TABS-INDICATOR-REALIZATION-01): this finds the *declared*
+ * ornament so the emitter can project the DOM element. It does NOT prove
+ * measured positioning, active-tab width sync, or animation correctness
+ * beyond what the contract-authored CSS already specifies.
+ */
+export function getGroupHostOrnamentPart(
+  ir: ComponentIR,
+): PartIR | undefined {
+  if (!ir.dom) return undefined;
+  const groupHost = getGroupHostPart(ir);
+  const itemPart = getInteractiveItemPart(ir);
+  if (!groupHost || !itemPart) return undefined;
+
+  // Find the dom-tree node corresponding to the group host (depth-first).
+  const stack: typeof ir.dom[] = [ir.dom];
+  let groupNode: (typeof ir.dom) | undefined;
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === groupHost.name) {
+      groupNode = node;
+      break;
+    }
+    if (node.children) stack.push(...node.children);
+  }
+  if (!groupNode) return undefined;
+
+  // Among the group host's direct children, count those that are concrete
+  // declared parts (not slot/children placeholders) and not the item.
+  const ornamentCandidates = groupNode.children.filter(
+    (c) =>
+      c.tag !== "slot" &&
+      c.tag !== "children" &&
+      c.part !== undefined &&
+      c.part !== itemPart.name,
+  );
+  if (ornamentCandidates.length !== 1) return undefined;
+  const ornamentName = ornamentCandidates[0].part!;
+  return ir.parts.find((p) => p.name === ornamentName);
+}
+
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
   useFocusTrap: boolean;

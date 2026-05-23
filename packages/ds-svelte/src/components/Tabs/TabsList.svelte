@@ -94,4 +94,5 @@ function handleKeyDown(e: KeyboardEvent): void {
   onkeydown={handleKeyDown}
 >
   {@render children?.()}
+  <span class="tabs__indicator" aria-hidden="true"></span>
 </div>

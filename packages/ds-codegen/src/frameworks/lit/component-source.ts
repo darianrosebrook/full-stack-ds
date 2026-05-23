@@ -40,6 +40,7 @@ import { toKebab } from "../../contract.js";
 import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
 import {
   isCompoundStateContainer,
+  getGroupHostOrnamentPart,
 } from "../react/hook-source.js";
 
 /**
@@ -787,10 +788,20 @@ function generateTabsListClass(ir: ComponentIR): string {
   lines.push(`    super.disconnectedCallback();`);
   lines.push(`  }`);
   lines.push(``);
+  // TABS-INDICATOR-REALIZATION-01: declared DOM realization of the
+  // group-host ornament (e.g. Tabs's `indicator`) as a sibling of the
+  // default slot. Visual treatment and motion live in the contract's
+  // styles.json / Tabs.css. aria-hidden because it's a non-interactive
+  // decoration that's announced via the active tab's aria-selected.
+  const ornamentPart = getGroupHostOrnamentPart(ir);
+  const ornamentMarkup = ornamentPart
+    ? `<span class="${ir.classRecipe.base}__${ornamentPart.name}" aria-hidden="true"></span>`
+    : "";
+
   lines.push(`  override render() {`);
   lines.push(`    let orientation = "horizontal";`);
   lines.push(`    try { orientation = this._ctx.value.orientation; } catch { /* no context yet */ }`);
-  lines.push(`    return html\`<div class="${cssClass}" role="tablist" aria-orientation="\${orientation}"><slot></slot></div>\`;`);
+  lines.push(`    return html\`<div class="${cssClass}" role="tablist" aria-orientation="\${orientation}"><slot></slot>${ornamentMarkup}</div>\`;`);
   lines.push(`  }`);
   lines.push(`}`);
   lines.push(``);

@@ -33,6 +33,7 @@ import {
   getInteractiveItemPart,
   getRegionPart,
   getGroupHostPart,
+  getGroupHostOrnamentPart,
 } from "../react/hook-source.js";
 
 // Props the Svelte emitter handles natively: `class` via `class: className`
@@ -453,6 +454,7 @@ export function generateSvelteCompoundStateParts(
   const itemPart = getInteractiveItemPart(ir);
   const regionPart = getRegionPart(ir);
   const groupPart = getGroupHostPart(ir);
+  const ornamentPart = getGroupHostOrnamentPart(ir);
 
   if (!itemPart || !regionPart) return [];
 
@@ -567,6 +569,14 @@ export function generateSvelteCompoundStateParts(
     `  onkeydown={handleKeyDown}`,
     `>`,
     `  {@render children?.()}`,
+    ...(ornamentPart
+      ? [
+          // TABS-INDICATOR-REALIZATION-01: declared DOM realization of the
+          // group-host ornament (e.g. Tabs's `indicator`). Visual treatment
+          // and motion live in the contract's styles.json / Tabs.css.
+          `  <span class="${cssPrefix}__${ornamentPart.name}" aria-hidden="true"></span>`,
+        ]
+      : []),
     `</div>`,
     ``,
   ].join("\n");

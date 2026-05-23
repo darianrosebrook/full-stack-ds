@@ -19,7 +19,7 @@ import { useTabsContext } from "./useTabs.js";
   [ngClass]="classes()"
   [attr.aria-orientation]="ctx.orientation()"
   (keydown)="handleKeyDown($event)"
-><ng-content /></div>`,
+><ng-content /><span [ngClass]="'tabs__indicator'" aria-hidden="true"></span></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsListComponent {
