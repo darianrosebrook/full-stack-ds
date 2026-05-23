@@ -98,11 +98,11 @@ export function Sidebar({ bundle, route }: SidebarProps) {
         </NavListItem>
         <NavListItem className="sidebar-item-host">
           <a
-            className={`sidebar-item${route.kind === "a11y" ? " sidebar-item--active" : ""}`}
-            href={buildHref({ kind: "a11y", tab: "overview" })}
-            aria-current={route.kind === "a11y" ? "page" : undefined}
+            className={`sidebar-item${route.kind === "standards" ? " sidebar-item--active" : ""}`}
+            href={buildHref({ kind: "standards", tab: "overview" })}
+            aria-current={route.kind === "standards" ? "page" : undefined}
           >
-            <span>Accessibility</span>
+            <span>Component standards</span>
           </a>
         </NavListItem>
 

@@ -18,13 +18,13 @@ export type ComplexityTab =
   | "composers"
   | "assemblies";
 
-export type A11yTab =
+export type StandardsTab =
   | "overview"
-  | "philosophy"
-  | "standards"
-  | "assistive-tech"
-  | "tokens"
-  | "tooling";
+  | "anatomy"
+  | "props"
+  | "states"
+  | "usage"
+  | "accessibility";
 
 export type Route =
   | { kind: "home" }
@@ -34,7 +34,7 @@ export type Route =
   | { kind: "primitive"; name: string }
   | { kind: "tokens-philosophy"; tab: TokensTab }
   | { kind: "complexity"; tab: ComplexityTab }
-  | { kind: "a11y"; tab: A11yTab };
+  | { kind: "standards"; tab: StandardsTab };
 
 const TOKENS_TABS = new Set<TokensTab>([
   "overview",
@@ -56,13 +56,13 @@ const COMPLEXITY_TABS = new Set<ComplexityTab>([
   "assemblies",
 ]);
 
-const A11Y_TABS = new Set<A11yTab>([
+const STANDARDS_TABS = new Set<StandardsTab>([
   "overview",
-  "philosophy",
-  "standards",
-  "assistive-tech",
-  "tokens",
-  "tooling",
+  "anatomy",
+  "props",
+  "states",
+  "usage",
+  "accessibility",
 ]);
 
 function parseHash(hash: string): Route {
@@ -93,11 +93,11 @@ function parseHash(hash: string): Route {
       tab: COMPLEXITY_TABS.has(tab) ? tab : "overview",
     };
   }
-  if (parts[0] === "a11y") {
-    const tab = (parts[1] ?? "overview") as A11yTab;
+  if (parts[0] === "standards") {
+    const tab = (parts[1] ?? "overview") as StandardsTab;
     return {
-      kind: "a11y",
-      tab: A11Y_TABS.has(tab) ? tab : "overview",
+      kind: "standards",
+      tab: STANDARDS_TABS.has(tab) ? tab : "overview",
     };
   }
   return { kind: "home" };
@@ -123,8 +123,10 @@ function buildHref(route: Route): string {
       return route.tab === "overview"
         ? "#/complexity"
         : `#/complexity/${route.tab}`;
-    case "a11y":
-      return route.tab === "overview" ? "#/a11y" : `#/a11y/${route.tab}`;
+    case "standards":
+      return route.tab === "overview"
+        ? "#/standards"
+        : `#/standards/${route.tab}`;
   }
 }
 
