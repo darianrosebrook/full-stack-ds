@@ -35,10 +35,7 @@ export class BreadcrumbsElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-breadcrumbs-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-breadcrumbs-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
-      --fsds-breadcrumbs-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-breadcrumbs-color-foreground-tertiary: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-breadcrumbs-color-foreground-primary: var(--fsds-semantic-color-foreground-tertiary, #717171);
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
@@ -60,7 +57,6 @@ export class BreadcrumbsElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      color: var(--fsds-breadcrumbs-color-foreground-tertiary);
       background-color: var(--fsds-breadcrumbs-color-background-elevated);
       border-color: var(--fsds-breadcrumbs-color-border-subtle);
       line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);
@@ -121,10 +117,7 @@ export class BreadcrumbsListElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-breadcrumbs-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-breadcrumbs-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
-      --fsds-breadcrumbs-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-breadcrumbs-color-foreground-tertiary: var(--fsds-semantic-color-foreground-tertiary, #717171);
+      --fsds-breadcrumbs-color-foreground-primary: var(--fsds-semantic-color-foreground-tertiary, #717171);
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
@@ -146,7 +139,6 @@ export class BreadcrumbsListElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      color: var(--fsds-breadcrumbs-color-foreground-tertiary);
       background-color: var(--fsds-breadcrumbs-color-background-elevated);
       border-color: var(--fsds-breadcrumbs-color-border-subtle);
       line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);

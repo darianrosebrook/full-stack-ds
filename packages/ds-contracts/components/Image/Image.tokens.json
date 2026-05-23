@@ -1,12 +1,7 @@
 {
-  "box-model.width": {
-    "resolvesTo": "semantic.glyph.size.medium.extent",
-    "fallback": "16px",
-    "layer": "semantic"
-  },
-  "box-model.height": {
-    "resolvesTo": "semantic.glyph.size.medium.extent",
-    "fallback": "16px",
+  "box-model.gap": {
+    "resolvesTo": "semantic.display.size.gap",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "image.color.background.default": {
@@ -27,11 +22,6 @@
   "image.typography.error.fontSize": {
     "resolvesTo": "semantic.typography.body.04",
     "fallback": "12px",
-    "layer": "semantic"
-  },
-  "image.color.foreground.error": {
-    "resolvesTo": "semantic.color.foreground.danger",
-    "fallback": "#d9292b",
     "layer": "semantic"
   }
 }

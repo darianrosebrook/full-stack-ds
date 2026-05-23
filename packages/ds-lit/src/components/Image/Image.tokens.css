@@ -7,18 +7,17 @@
   --fsds-box-model-padding-inline: 0;
   --fsds-box-model-padding-inline-start: 0;
   --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: 0;
-  --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
+  --fsds-box-model-gap: var(--fsds-semantic-display-size-gap, 4px);
+  --fsds-box-model-width: auto;
   --fsds-box-model-min-width: 0;
   --fsds-box-model-max-width: none;
-  --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
+  --fsds-box-model-height: auto;
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
   --fsds-image-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-image-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-image-size-icon: var(--fsds-core-spacing-size-08, 32px);
   --fsds-image-typography-error-fontSize: var(--fsds-semantic-typography-body-04, 12px);
-  --fsds-image-color-foreground-error: var(--fsds-semantic-color-foreground-danger, #d9292b);
 }
 /* @generated:end */
 

@@ -421,6 +421,7 @@
   --fsds-semantic-dimension-min-target: var(--fsds-core-dimension-tap-target-min);
   --fsds-semantic-dimension-tap-target-min: var(--fsds-core-dimension-tap-target-min);
   --fsds-semantic-dimension-tap-target-large: 48px;
+  --fsds-semantic-display-size-gap: var(--fsds-core-spacing-size-03);
   --fsds-semantic-elevation-default: var(--fsds-core-elevation-level-1);
   --fsds-semantic-elevation-depth: var(--fsds-core-elevation-depth-0);
   --fsds-semantic-elevation-none: none;

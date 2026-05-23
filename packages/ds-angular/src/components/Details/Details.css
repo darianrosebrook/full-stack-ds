@@ -16,7 +16,6 @@
   padding: var(--fsds-details-size-padding-default);
   border-radius: var(--fsds-details-size-radius-default);
   background-color: var(--fsds-details-color-background-default);
-  color: var(--fsds-details-color-foreground-secondary);
   line-height: var(--fsds-details-typography-lineHeight-body);
   display: block;
   border-style: solid;

@@ -42,8 +42,8 @@
     },
     "category": {
       "type": "string",
-      "enum": ["action", "input", "surface", "feedback", "glyph", "structure"],
-      "description": "Behavioral category, used to derive box-model defaults from category-keyed semantic tokens (semantic.<category>.size.*). 'action' (button-like: Button, IconButton, Switch), 'input' (form controls: Input, TextField, Select, Checkbox), 'surface' (containers: Card, Sheet, Dialog, Popover, Tooltip, Toast), 'feedback' (status: Alert, Banner, Progress, Skeleton, Status), 'glyph' (atomic visual: Icon, Avatar, Badge, Chip, Spinner, Label, Text), 'structure' (collection layout: Table, Tabs, Accordion, NavList, List, Breadcrumbs). Codegen does not consume this field today — the migration script reads it to seed box-model defaults. See docs/box-model-primitive.md."
+      "enum": ["action", "input", "surface", "feedback", "glyph", "display", "structure"],
+      "description": "Behavioral category, used to derive box-model defaults from category-keyed semantic tokens (semantic.<category>.size.*). 'action' (button-like: Button, IconButton, Switch), 'input' (form controls: Input, TextField, Select, Checkbox), 'surface' (containers: Card, Sheet, Dialog, Popover, Tooltip, Toast), 'feedback' (status: Alert, Banner, Progress, Skeleton, Status), 'glyph' (atomic visual at a fixed square extent: Icon, Avatar, Badge, ProfileFlag), 'display' (inline content / structural visual that sizes to context: Text, Label, Chip, Image, Links, Stat, Truncate, Divider), 'structure' (collection layout: Table, Tabs, Accordion, NavList, List, Breadcrumbs). Codegen does not consume this field today — the migration script reads it to seed box-model defaults. See docs/box-model-primitive.md."
     },
     "cssPrefix": {
       "type": "string",

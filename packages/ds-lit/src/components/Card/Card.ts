@@ -40,8 +40,6 @@ export class CardElement extends LitElement {
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -64,6 +62,18 @@ export class CardElement extends LitElement {
       &:hover {
         --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
+    
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+    }
+    
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .card {
@@ -121,7 +131,6 @@ export class CardElement extends LitElement {
     
     .card__description {
       margin: 0;
-      color: var(--fsds-card-color-foreground-secondary);
     }
     
     .card__footer {
@@ -154,7 +163,6 @@ export class CardElement extends LitElement {
     }
     
     .card__link {
-      color: var(--fsds-card-color-foreground-link);
       text-decoration: none;
     }
     
@@ -163,7 +171,6 @@ export class CardElement extends LitElement {
     }
     
     .card__note {
-      color: var(--fsds-card-color-foreground-secondary);
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
     }
@@ -209,8 +216,6 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -233,6 +238,18 @@ export class CardHeaderElement extends LitElement {
       &:hover {
         --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
+    
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+    }
+    
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .card {
@@ -290,7 +307,6 @@ export class CardHeaderElement extends LitElement {
     
     .card__description {
       margin: 0;
-      color: var(--fsds-card-color-foreground-secondary);
     }
     
     .card__footer {
@@ -323,7 +339,6 @@ export class CardHeaderElement extends LitElement {
     }
     
     .card__link {
-      color: var(--fsds-card-color-foreground-link);
       text-decoration: none;
     }
     
@@ -332,7 +347,6 @@ export class CardHeaderElement extends LitElement {
     }
     
     .card__note {
-      color: var(--fsds-card-color-foreground-secondary);
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
     }
@@ -366,8 +380,6 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -390,6 +402,18 @@ export class CardContentElement extends LitElement {
       &:hover {
         --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
+    
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+    }
+    
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .card {
@@ -447,7 +471,6 @@ export class CardContentElement extends LitElement {
     
     .card__description {
       margin: 0;
-      color: var(--fsds-card-color-foreground-secondary);
     }
     
     .card__footer {
@@ -480,7 +503,6 @@ export class CardContentElement extends LitElement {
     }
     
     .card__link {
-      color: var(--fsds-card-color-foreground-link);
       text-decoration: none;
     }
     
@@ -489,7 +511,6 @@ export class CardContentElement extends LitElement {
     }
     
     .card__note {
-      color: var(--fsds-card-color-foreground-secondary);
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
     }
@@ -523,8 +544,6 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -547,6 +566,18 @@ export class CardFooterElement extends LitElement {
       &:hover {
         --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
+    
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+    }
+    
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .card {
@@ -604,7 +635,6 @@ export class CardFooterElement extends LitElement {
     
     .card__description {
       margin: 0;
-      color: var(--fsds-card-color-foreground-secondary);
     }
     
     .card__footer {
@@ -637,7 +667,6 @@ export class CardFooterElement extends LitElement {
     }
     
     .card__link {
-      color: var(--fsds-card-color-foreground-link);
       text-decoration: none;
     }
     
@@ -646,7 +675,6 @@ export class CardFooterElement extends LitElement {
     }
     
     .card__note {
-      color: var(--fsds-card-color-foreground-secondary);
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
     }
@@ -680,8 +708,6 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-card-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-card-color-foreground-link: var(--fsds-semantic-color-foreground-link, #d9292b);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
       --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
@@ -704,6 +730,18 @@ export class CardDescriptionElement extends LitElement {
       &:hover {
         --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       }
+    }
+    
+    .card__description {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .card__link {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
+    }
+    
+    .card__note {
+      --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .card {
@@ -761,7 +799,6 @@ export class CardDescriptionElement extends LitElement {
     
     .card__description {
       margin: 0;
-      color: var(--fsds-card-color-foreground-secondary);
     }
     
     .card__footer {
@@ -794,7 +831,6 @@ export class CardDescriptionElement extends LitElement {
     }
     
     .card__link {
-      color: var(--fsds-card-color-foreground-link);
       text-decoration: none;
     }
     
@@ -803,7 +839,6 @@ export class CardDescriptionElement extends LitElement {
     }
     
     .card__note {
-      color: var(--fsds-card-color-foreground-secondary);
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
     }

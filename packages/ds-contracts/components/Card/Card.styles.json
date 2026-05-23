@@ -150,8 +150,9 @@
         "web"
       ]
     },
-    "color": {
-      "resolvesTo": "card.color.foreground.secondary"
+    "card.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "footer": {
@@ -265,14 +266,15 @@
     }
   },
   "link": {
-    "color": {
-      "resolvesTo": "card.color.foreground.link"
-    },
     "text-decoration": {
       "literal": "none",
       "platforms": [
         "web"
       ]
+    },
+    "card.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.link",
+      "fallback": "#d9292b"
     }
   },
   ".card__link:hover": {
@@ -284,9 +286,6 @@
     }
   },
   "note": {
-    "color": {
-      "resolvesTo": "card.color.foreground.secondary"
-    },
     "font-size": {
       "literal": "0.875em",
       "platforms": [
@@ -295,6 +294,10 @@
     },
     "line-height": {
       "resolvesTo": "card.typography.lineHeight.normal"
+    },
+    "card.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   }
 }

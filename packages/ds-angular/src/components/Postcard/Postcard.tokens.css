@@ -16,8 +16,7 @@
   --fsds-box-model-max-height: none;
   --fsds-postcard-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-postcard-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
-  --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-postcard-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+  --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-postcard-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
   --fsds-postcard-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
   --fsds-postcard-size-radius-full: var(--fsds-core-shape-radius-full, 9999px);
@@ -40,8 +39,17 @@
   --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
 }
 
+.postcard__handle {
+  --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+}
+
+.postcard__timestamp {
+  --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+}
+
 .postcard__stat {
   --fsds-postcard-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-postcard-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
 }
 /* @generated:end */
 

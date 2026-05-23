@@ -1,8 +1,5 @@
 {
   "root": {
-    "color": {
-      "resolvesTo": "breadcrumbs.color.foreground.tertiary"
-    },
     "background-color": {
       "resolvesTo": "breadcrumbs.color.background.elevated"
     },
@@ -29,6 +26,10 @@
     "breadcrumbs.spacing.padding.default": {
       "resolvesTo": "core.spacing.size.03",
       "fallback": "4px"
+    },
+    "breadcrumbs.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.tertiary",
+      "fallback": "#717171"
     }
   },
   "focus": {

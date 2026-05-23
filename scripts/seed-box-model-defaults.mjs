@@ -220,6 +220,18 @@ const CATEGORY_DEFAULTS = {
       layer: "semantic",
     },
   },
+  display: {
+    // Display components are inline content / structural visuals that
+    // size to context: Text, Label, Chip, Image, Links, Stat, Truncate,
+    // Divider. No fixed width/height (auto from the primitive default).
+    // Only gap is opinionated — for the inline-children case (a Text
+    // with a leading icon, a Chip's label+icon row).
+    "box-model.gap": {
+      resolvesTo: "semantic.display.size.gap",
+      fallback: "4px",
+      layer: "semantic",
+    },
+  },
   structure: {
     // Structures arrange children; the root carries gap, children carry
     // their own padding.

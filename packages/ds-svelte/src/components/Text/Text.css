@@ -27,15 +27,6 @@
 .text--body {
   font-weight: var(--fsds-text-typography-fontWeight-regular);
   line-height: var(--fsds-text-typography-lineHeight-body);
-  color: var(--fsds-text-color-foreground-secondary);
-}
-
-.text__error {
-  color: var(--fsds-text-color-foreground-danger);
-}
-
-.text__success {
-  color: var(--fsds-text-color-foreground-success);
 }
 /* @generated:end */
 

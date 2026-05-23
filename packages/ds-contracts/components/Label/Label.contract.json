@@ -3,7 +3,7 @@
   "name": "Label",
   "description": "Accessible form label associated with a control via htmlFor.",
   "layer": "primitive",
-  "category": "glyph",
+  "category": "display",
   "anatomy": {
     "parts": [
       "root"

@@ -56,7 +56,6 @@
 
 .card__description {
   margin: 0;
-  color: var(--fsds-card-color-foreground-secondary);
 }
 
 .card__footer {
@@ -89,7 +88,6 @@
 }
 
 .card__link {
-  color: var(--fsds-card-color-foreground-link);
   text-decoration: none;
 }
 
@@ -98,7 +96,6 @@
 }
 
 .card__note {
-  color: var(--fsds-card-color-foreground-secondary);
   font-size: 0.875em;
   line-height: var(--fsds-card-typography-lineHeight-normal);
 }

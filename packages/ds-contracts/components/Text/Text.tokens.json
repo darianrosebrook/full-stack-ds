@@ -1,22 +1,12 @@
 {
-  "box-model.width": {
-    "resolvesTo": "semantic.glyph.size.medium.extent",
-    "fallback": "16px",
-    "layer": "semantic"
-  },
-  "box-model.height": {
-    "resolvesTo": "semantic.glyph.size.medium.extent",
-    "fallback": "16px",
+  "box-model.gap": {
+    "resolvesTo": "semantic.display.size.gap",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "text.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
-    "layer": "semantic"
-  },
-  "text.color.foreground.secondary": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
     "layer": "semantic"
   },
   "text.typography.fontWeight.light": {
@@ -47,16 +37,6 @@
   "text.typography.lineHeight.body": {
     "resolvesTo": "semantic.typography.line.height.body",
     "fallback": "1.5",
-    "layer": "semantic"
-  },
-  "text.color.foreground.danger": {
-    "resolvesTo": "semantic.color.foreground.danger",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
-  "text.color.foreground.success": {
-    "resolvesTo": "semantic.color.foreground.success",
-    "fallback": "#487e1e",
     "layer": "semantic"
   }
 }

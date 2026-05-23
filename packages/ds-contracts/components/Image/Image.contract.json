@@ -3,7 +3,7 @@
   "name": "Image",
   "description": "Responsive image component with layout and aspect-ratio helpers.",
   "layer": "primitive",
-  "category": "glyph",
+  "category": "display",
   "anatomy": {
     "parts": [
       "root",

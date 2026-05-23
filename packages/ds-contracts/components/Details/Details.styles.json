@@ -9,9 +9,6 @@
     "background-color": {
       "resolvesTo": "details.color.background.default"
     },
-    "color": {
-      "resolvesTo": "details.color.foreground.secondary"
-    },
     "gap": {
       "resolvesTo": "details.spacing.gap.default"
     },
@@ -47,6 +44,10 @@
     "details.color.border.default": {
       "resolvesTo": "semantic.color.border.accent",
       "fallback": "#d9292b"
+    },
+    "details.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "hover": {

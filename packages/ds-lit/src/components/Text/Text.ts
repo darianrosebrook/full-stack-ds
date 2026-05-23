@@ -32,23 +32,32 @@ export class TextElement extends LitElement {
       --fsds-box-model-padding-inline: 0;
       --fsds-box-model-padding-inline-start: 0;
       --fsds-box-model-padding-inline-end: 0;
-      --fsds-box-model-gap: 0;
-      --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
+      --fsds-box-model-gap: var(--fsds-semantic-display-size-gap, 4px);
+      --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
-      --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
+      --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
       --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
       --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-      --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
+    }
+    
+    .text--body {
+      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .text__error {
+      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-danger, #d9292b);
+    }
+    
+    .text__success {
+      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-success, #487e1e);
     }
     
     .text {
@@ -77,15 +86,6 @@ export class TextElement extends LitElement {
     .text--body {
       font-weight: var(--fsds-text-typography-fontWeight-regular);
       line-height: var(--fsds-text-typography-lineHeight-body);
-      color: var(--fsds-text-color-foreground-secondary);
-    }
-    
-    .text__error {
-      color: var(--fsds-text-color-foreground-danger);
-    }
-    
-    .text__success {
-      color: var(--fsds-text-color-foreground-success);
     }
   `;
 

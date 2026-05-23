@@ -3,9 +3,6 @@
     "background-color": {
       "resolvesTo": "postcard.color.background.default"
     },
-    "color": {
-      "resolvesTo": "postcard.color.foreground.secondary"
-    },
     "padding": {
       "resolvesTo": "postcard.size.padding.default"
     },
@@ -48,6 +45,10 @@
     "postcard.color.border.default": {
       "resolvesTo": "semantic.color.border.accent",
       "fallback": "#d9292b"
+    },
+    "postcard.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "hover": {
@@ -145,17 +146,15 @@
     }
   },
   "handle": {
-    "color": {
-      "resolvesTo": "postcard.color.foreground.secondary"
-    },
     "font-size": {
       "resolvesTo": "postcard.typography.handle.fontSize"
+    },
+    "postcard.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "timestamp": {
-    "color": {
-      "resolvesTo": "postcard.color.foreground.secondary"
-    },
     "font-size": {
       "resolvesTo": "postcard.typography.footer.fontSize"
     },
@@ -164,6 +163,10 @@
       "platforms": [
         "web"
       ]
+    },
+    "postcard.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "footer": {
@@ -231,15 +234,16 @@
         "web"
       ]
     },
-    "color": {
-      "resolvesTo": "postcard.color.foreground.secondary"
-    },
     "font-size": {
       "resolvesTo": "postcard.typography.footer.fontSize"
     },
     "postcard.size.gap.default": {
       "resolvesTo": "core.spacing.size.03",
       "fallback": "4px"
+    },
+    "postcard.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   }
 }

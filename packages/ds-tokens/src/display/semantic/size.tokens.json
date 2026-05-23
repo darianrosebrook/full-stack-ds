@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "display": {
+    "size": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.size.03}",
+        "$description": "Display inter-child gap. Display components (Text with inline glyph, Chip with icon, Stat label-and-value, etc.) often arrange a small set of inline children with light spacing between them. Used by `box-model.gap` on display-category components."
+      }
+    }
+  }
+}

@@ -13,7 +13,6 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  color: var(--fsds-breadcrumbs-color-foreground-tertiary);
   background-color: var(--fsds-breadcrumbs-color-background-elevated);
   border-color: var(--fsds-breadcrumbs-color-border-subtle);
   line-height: var(--fsds-breadcrumbs-typography-lineHeight-collapse);

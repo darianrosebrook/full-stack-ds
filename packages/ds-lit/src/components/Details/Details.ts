@@ -40,8 +40,7 @@ export class DetailsElement extends LitElement {
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-details-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
       --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
@@ -75,7 +74,6 @@ export class DetailsElement extends LitElement {
       padding: var(--fsds-details-size-padding-default);
       border-radius: var(--fsds-details-size-radius-default);
       background-color: var(--fsds-details-color-background-default);
-      color: var(--fsds-details-color-foreground-secondary);
       line-height: var(--fsds-details-typography-lineHeight-body);
       display: block;
       border-style: solid;
@@ -200,8 +198,7 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
-      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-details-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
       --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
@@ -235,7 +232,6 @@ export class DetailsContentElement extends LitElement {
       padding: var(--fsds-details-size-padding-default);
       border-radius: var(--fsds-details-size-radius-default);
       background-color: var(--fsds-details-color-background-default);
-      color: var(--fsds-details-color-foreground-secondary);
       line-height: var(--fsds-details-typography-lineHeight-body);
       display: block;
       border-style: solid;

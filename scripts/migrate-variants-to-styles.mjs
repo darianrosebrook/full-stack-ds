@@ -65,12 +65,24 @@ const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
 const ONLY = new Set(args.filter((a) => !a.startsWith("--")));
 
-// Last-segment names treated as canonical. `default` is the kind/state
-// canonical (Button's primary/secondary kinds canonicalize to `default`);
-// `medium` is the size canonical (Button's small/medium/large sizes
-// canonicalize to `medium`). The script prefers `default` when both exist
-// (sibling members include both `default` and `medium`).
-const CANONICAL_KEYS = ["default", "medium"];
+// Last-segment names treated as canonical, ordered by preference. The
+// first hit in a family wins:
+//   - `default` is the kind/state canonical (Button's primary/secondary
+//     kinds canonicalize to `default`)
+//   - `medium` is the size canonical (Button's small/medium/large sizes
+//     canonicalize to `medium`)
+//   - `primary` is the *fallback* canonical for families that don't have
+//     an explicit `default` or `medium`. By convention in this codebase,
+//     when a family looks like `<prefix>.color.foreground.{primary,
+//     secondary, ...}`, `primary` IS the conceptual default — there's no
+//     toggle between primary and something else; `primary` just names
+//     the semantic layer. Six components (Details, OTP, Postcard,
+//     Shuttle, Text, Truncate, ...) use this convention.
+//
+// `primary` is conditional: it only counts as canonical when no
+// `default` or `medium` exists in the same family. Otherwise it's a
+// regular variant (Button's `--primary` kind).
+const CANONICAL_KEYS = ["default", "medium", "primary"];
 
 // Recognized variant suffixes. A family is treated as a variant family
 // only when at least one non-canonical member's last segment is in this
@@ -108,36 +120,52 @@ function writeJson(p, data) {
 
 /**
  * Group slot keys into families. A family is identified by everything
- * EXCEPT the last segment of the dotted path. A family is migratable iff
- * one of its members' last segment is the canonical (`default`).
+ * EXCEPT the last segment of the dotted path. A family's canonical is
+ * picked in two passes:
+ *
+ *   1. Collect every member by prefix.
+ *   2. For each family, pick the canonical by walking CANONICAL_KEYS in
+ *      order and choosing the first member whose last segment matches.
+ *      `default` and `medium` beat `primary`; if a family has neither,
+ *      and a member's last segment is `primary`, that's the canonical.
+ *
+ * This two-pass approach catches the "primary is the conceptual default"
+ * convention without breaking Button (where `--primary` is one of many
+ * kind variants, and `default` exists as the real canonical).
  *
  * Returns: Map<family-prefix, { canonical: slot-name | null, variants: slot-name[] }>
  */
 function groupByFamily(tokens, cssPrefix) {
-  const families = new Map();
+  // Pass 1: bucket every member by prefix.
+  const allMembers = new Map(); // prefix → string[]
   for (const key of Object.keys(tokens)) {
     if (!key.startsWith(`${cssPrefix}.`)) continue; // skip box-model.* and others
     const segments = key.split(".");
     if (segments.length < 3) continue; // need at least <prefix>.<dim>.<key>
     const prefix = segments.slice(0, -1).join(".");
-    const last = segments[segments.length - 1];
-    let entry = families.get(prefix);
-    if (!entry) {
-      entry = { canonical: null, variants: [] };
-      families.set(prefix, entry);
+    let bucket = allMembers.get(prefix);
+    if (!bucket) {
+      bucket = [];
+      allMembers.set(prefix, bucket);
     }
-    if (CANONICAL_KEYS.includes(last)) {
-      // Prefer the first canonical hit (= "default" since it comes first
-      // in CANONICAL_KEYS). If a family has BOTH `default` and `medium`,
-      // `default` wins and `medium` is treated as a variant.
-      if (entry.canonical === null) {
-        entry.canonical = key;
-      } else {
-        entry.variants.push(key);
+    bucket.push(key);
+  }
+
+  // Pass 2: pick canonical per family by CANONICAL_KEYS preference order.
+  const families = new Map();
+  for (const [prefix, members] of allMembers.entries()) {
+    const lastSegments = new Map(members.map((m) => [m.split(".").pop(), m]));
+    let canonical = null;
+    for (const candidate of CANONICAL_KEYS) {
+      if (lastSegments.has(candidate)) {
+        canonical = lastSegments.get(candidate);
+        break;
       }
-    } else {
-      entry.variants.push(key);
     }
+    const variants = canonical
+      ? members.filter((m) => m !== canonical)
+      : members.slice();
+    families.set(prefix, { canonical, variants });
   }
   return families;
 }

@@ -4,24 +4,9 @@
     "fallback": "8px",
     "layer": "semantic"
   },
-  "breadcrumbs.color.foreground.secondary": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
-    "layer": "semantic"
-  },
-  "breadcrumbs.color.foreground.link": {
-    "resolvesTo": "semantic.color.foreground.link",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
   "breadcrumbs.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
-    "layer": "semantic"
-  },
-  "breadcrumbs.color.foreground.tertiary": {
-    "resolvesTo": "semantic.color.foreground.tertiary",
-    "fallback": "#717171",
     "layer": "semantic"
   },
   "breadcrumbs.color.background.elevated": {

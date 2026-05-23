@@ -37,7 +37,6 @@ export class CalendarElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-calendar-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -197,7 +196,6 @@ export class CalendarHeaderElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-calendar-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-calendar-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-calendar-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-07, 24px);

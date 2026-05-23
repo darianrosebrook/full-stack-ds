@@ -14,7 +14,6 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-postcard-color-background-default);
-  color: var(--fsds-postcard-color-foreground-secondary);
   padding: var(--fsds-postcard-size-padding-default);
   border-radius: var(--fsds-postcard-size-radius-default);
   line-height: var(--fsds-postcard-typography-content-lineHeight);
@@ -54,12 +53,10 @@
 }
 
 .postcard__handle {
-  color: var(--fsds-postcard-color-foreground-secondary);
   font-size: var(--fsds-postcard-typography-handle-fontSize);
 }
 
 .postcard__timestamp {
-  color: var(--fsds-postcard-color-foreground-secondary);
   font-size: var(--fsds-postcard-typography-footer-fontSize);
   flex-shrink: 0;
 }
@@ -84,7 +81,6 @@
 .postcard__stat {
   display: inline-flex;
   align-items: center;
-  color: var(--fsds-postcard-color-foreground-secondary);
   font-size: var(--fsds-postcard-typography-footer-fontSize);
 }
 /* @generated:end */

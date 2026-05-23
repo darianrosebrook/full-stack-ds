@@ -3,7 +3,7 @@
   "name": "Stat",
   "description": "Single-value metric display with prominent typography. Use inside a labelled wrapper (a captioned figure, Card, or Stack with Text label) for at-a-glance KPIs.",
   "layer": "primitive",
-  "category": "glyph",
+  "category": "display",
   "anatomy": {
     "parts": [
       "root"

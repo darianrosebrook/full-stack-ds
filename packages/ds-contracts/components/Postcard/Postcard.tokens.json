@@ -44,11 +44,6 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "postcard.color.foreground.secondary": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
-    "layer": "semantic"
-  },
   "postcard.size.padding.default": {
     "resolvesTo": "core.spacing.size.06",
     "fallback": "16px",

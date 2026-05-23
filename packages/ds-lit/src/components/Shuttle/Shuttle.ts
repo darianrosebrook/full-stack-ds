@@ -36,8 +36,7 @@ export class ShuttleElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-shuttle-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-shuttle-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-shuttle-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-shuttle-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -57,7 +56,6 @@ export class ShuttleElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-shuttle-color-background-default);
-      color: var(--fsds-shuttle-color-foreground-secondary);
       border-color: var(--fsds-shuttle-color-border-accent);
       padding: var(--fsds-shuttle-size-padding-default);
       border-radius: var(--fsds-shuttle-size-radius-default);
@@ -107,8 +105,7 @@ export class ShuttleItemElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-shuttle-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-shuttle-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-shuttle-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-shuttle-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
@@ -128,7 +125,6 @@ export class ShuttleItemElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-shuttle-color-background-default);
-      color: var(--fsds-shuttle-color-foreground-secondary);
       border-color: var(--fsds-shuttle-color-border-accent);
       padding: var(--fsds-shuttle-size-padding-default);
       border-radius: var(--fsds-shuttle-size-radius-default);

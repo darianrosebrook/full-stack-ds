@@ -3,7 +3,7 @@
   "name": "Text",
   "description": "Polymorphic text element with design-system typography variants and semantic element control.",
   "layer": "primitive",
-  "category": "glyph",
+  "category": "display",
   "anatomy": {
     "parts": [
       "root"

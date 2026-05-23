@@ -3,9 +3,6 @@
     "background-color": {
       "resolvesTo": "shuttle.color.background.default"
     },
-    "color": {
-      "resolvesTo": "shuttle.color.foreground.secondary"
-    },
     "border-color": {
       "resolvesTo": "shuttle.color.border.accent"
     },
@@ -14,27 +11,39 @@
     },
     "border-radius": {
       "resolvesTo": "shuttle.size.radius.default"
+    },
+    "shuttle.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "item": {
     "display": {
       "literal": "flex",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "align-items": {
       "literal": "center",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "padding": {
       "literal": "4px 8px",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "color": {
       "resolvesTo": "shuttle.color.foreground.primary"
     },
     "cursor": {
       "literal": "pointer",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     }
   }
 }

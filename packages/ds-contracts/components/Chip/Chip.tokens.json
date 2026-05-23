@@ -1,12 +1,7 @@
 {
-  "box-model.width": {
-    "resolvesTo": "semantic.glyph.size.medium.extent",
-    "fallback": "16px",
-    "layer": "semantic"
-  },
-  "box-model.height": {
-    "resolvesTo": "semantic.glyph.size.medium.extent",
-    "fallback": "16px",
+  "box-model.gap": {
+    "resolvesTo": "semantic.display.size.gap",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "chip.color.background.default": {

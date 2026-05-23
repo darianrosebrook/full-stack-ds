@@ -3234,6 +3234,15 @@
         }
       }
     },
+    "display": {
+      "size": {
+        "gap": {
+          "$type": "dimension",
+          "$description": "Display inter-child gap. Display components (Text with inline glyph, Chip with icon, Stat label-and-value, etc.) often arrange a small set of inline children with light spacing between them. Used by `box-model.gap` on display-category components.",
+          "$value": "4px"
+        }
+      }
+    },
     "elevation": {
       "default": {
         "$type": "shadow",

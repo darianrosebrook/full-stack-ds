@@ -6,7 +6,12 @@
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body"
     },
-    "margin": { "literal": "0", "platforms": ["web"] }
+    "margin": {
+      "literal": "0",
+      "platforms": [
+        "web"
+      ]
+    }
   },
   "--title": {
     "font-weight": {
@@ -26,18 +31,21 @@
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body"
     },
-    "color": {
-      "resolvesTo": "text.color.foreground.secondary"
+    "text.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
     }
   },
   "error": {
-    "color": {
-      "resolvesTo": "text.color.foreground.danger"
+    "text.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.danger",
+      "fallback": "#d9292b"
     }
   },
   "success": {
-    "color": {
-      "resolvesTo": "text.color.foreground.success"
+    "text.color.foreground.primary": {
+      "resolvesTo": "semantic.color.foreground.success",
+      "fallback": "#487e1e"
     }
   }
 }

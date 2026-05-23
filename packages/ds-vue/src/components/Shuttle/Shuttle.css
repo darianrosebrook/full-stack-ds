@@ -14,7 +14,6 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   background-color: var(--fsds-shuttle-color-background-default);
-  color: var(--fsds-shuttle-color-foreground-secondary);
   border-color: var(--fsds-shuttle-color-border-accent);
   padding: var(--fsds-shuttle-size-padding-default);
   border-radius: var(--fsds-shuttle-size-radius-default);

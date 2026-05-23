@@ -29,11 +29,6 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "details.color.foreground.secondary": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
-    "layer": "semantic"
-  },
   "details.color.border.default": {
     "resolvesTo": "semantic.color.border.primary",
     "fallback": "#f29495",
