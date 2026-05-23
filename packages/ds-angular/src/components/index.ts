@@ -38,7 +38,7 @@ export { StatusComponent } from "./Status/Status.component.js";
 export { SwitchComponent } from "./Switch/Switch.component.js";
 export { TableComponent, TableBodyComponent, TableFooterComponent, TableHeaderComponent } from "./Table/Table.component.js";
 export { TabsComponent } from "./Tabs/Tabs.component.js";
-export { TextComponent, TextBodyComponent, TextTitleComponent } from "./Text/Text.component.js";
+export { TextComponent } from "./Text/Text.component.js";
 export { TextFieldComponent, TextFieldDescriptionComponent } from "./TextField/TextField.component.js";
 export { ToastComponent, ToastDescriptionComponent, ToastItemComponent, ToastTitleComponent } from "./Toast/Toast.component.js";
 export { ToggleSwitchComponent } from "./ToggleSwitch/ToggleSwitch.component.js";

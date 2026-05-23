@@ -89,8 +89,6 @@ export { default as TabsList } from "./Tabs/TabsList.vue";
 export { default as TabsPanel } from "./Tabs/TabsPanel.vue";
 export { default as TabsTab } from "./Tabs/TabsTab.vue";
 export { default as Text } from "./Text/Text.vue";
-export { default as TextBody } from "./Text/TextBody.vue";
-export { default as TextTitle } from "./Text/TextTitle.vue";
 export { default as TextField } from "./TextField/TextField.vue";
 export { default as TextFieldDescription } from "./TextField/TextFieldDescription.vue";
 export { default as Toast } from "./Toast/Toast.vue";

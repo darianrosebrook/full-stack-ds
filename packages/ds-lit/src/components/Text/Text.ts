@@ -43,18 +43,16 @@ export class TextElement extends LitElement {
       margin: 0;
     }
     
-    .text__title {
+    .text--title {
       font-weight: var(--fsds-text-typography-fontWeight-bold);
       line-height: var(--fsds-text-typography-lineHeight-heading);
       color: var(--fsds-text-color-foreground-primary);
-      margin: 0;
     }
     
-    .text__body {
+    .text--body {
       font-weight: var(--fsds-text-typography-fontWeight-regular);
       line-height: var(--fsds-text-typography-lineHeight-body);
       color: var(--fsds-text-color-foreground-secondary);
-      margin: 0;
     }
     
     .text__error {
@@ -91,110 +89,6 @@ export class TextElement extends LitElement {
 }
 
 customElements.define('fsds-text', TextElement);
-
-export class TextTitleElement extends LitElement {
-  static override styles = css`
-    :host { display: contents; }
-    .text {
-      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
-      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
-      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
-      --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-      --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
-    }
-    
-    .text {
-      color: var(--fsds-text-color-foreground-primary);
-      line-height: var(--fsds-text-typography-lineHeight-body);
-      margin: 0;
-    }
-    
-    .text__title {
-      font-weight: var(--fsds-text-typography-fontWeight-bold);
-      line-height: var(--fsds-text-typography-lineHeight-heading);
-      color: var(--fsds-text-color-foreground-primary);
-      margin: 0;
-    }
-    
-    .text__body {
-      font-weight: var(--fsds-text-typography-fontWeight-regular);
-      line-height: var(--fsds-text-typography-lineHeight-body);
-      color: var(--fsds-text-color-foreground-secondary);
-      margin: 0;
-    }
-    
-    .text__error {
-      color: var(--fsds-text-color-foreground-danger);
-    }
-    
-    .text__success {
-      color: var(--fsds-text-color-foreground-success);
-    }
-  `;
-
-  override render() {
-    return html`<fsds-stack as="h3" class="text__title"><slot></slot></fsds-stack>`;
-  }
-}
-
-customElements.define('fsds-text-title', TextTitleElement);
-
-export class TextBodyElement extends LitElement {
-  static override styles = css`
-    :host { display: contents; }
-    .text {
-      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-text-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
-      --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
-      --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
-      --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
-      --fsds-text-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
-      --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
-      --fsds-text-color-foreground-danger: var(--fsds-semantic-color-foreground-danger, #d9292b);
-      --fsds-text-color-foreground-success: var(--fsds-semantic-color-foreground-success, #487e1e);
-    }
-    
-    .text {
-      color: var(--fsds-text-color-foreground-primary);
-      line-height: var(--fsds-text-typography-lineHeight-body);
-      margin: 0;
-    }
-    
-    .text__title {
-      font-weight: var(--fsds-text-typography-fontWeight-bold);
-      line-height: var(--fsds-text-typography-lineHeight-heading);
-      color: var(--fsds-text-color-foreground-primary);
-      margin: 0;
-    }
-    
-    .text__body {
-      font-weight: var(--fsds-text-typography-fontWeight-regular);
-      line-height: var(--fsds-text-typography-lineHeight-body);
-      color: var(--fsds-text-color-foreground-secondary);
-      margin: 0;
-    }
-    
-    .text__error {
-      color: var(--fsds-text-color-foreground-danger);
-    }
-    
-    .text__success {
-      color: var(--fsds-text-color-foreground-success);
-    }
-  `;
-
-  override render() {
-    return html`<fsds-stack class="text__body"><slot></slot></fsds-stack>`;
-  }
-}
-
-customElements.define('fsds-text-body', TextBodyElement);
 // @generated:end
 
 // @custom:start trailing

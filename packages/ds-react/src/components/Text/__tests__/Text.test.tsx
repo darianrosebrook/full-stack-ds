@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { axe } from "vitest-axe";
-import { Text, TextTitle, TextBody } from "../Text";
+import { Text } from "../Text";
 
 declare module "vitest" {
   interface Assertion<T> {

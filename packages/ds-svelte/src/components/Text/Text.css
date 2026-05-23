@@ -7,18 +7,16 @@
   margin: 0;
 }
 
-.text__title {
+.text--title {
   font-weight: var(--fsds-text-typography-fontWeight-bold);
   line-height: var(--fsds-text-typography-lineHeight-heading);
   color: var(--fsds-text-color-foreground-primary);
-  margin: 0;
 }
 
-.text__body {
+.text--body {
   font-weight: var(--fsds-text-typography-fontWeight-regular);
   line-height: var(--fsds-text-typography-lineHeight-body);
   color: var(--fsds-text-color-foreground-secondary);
-  margin: 0;
 }
 
 .text__error {

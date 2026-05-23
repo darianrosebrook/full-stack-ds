@@ -8,7 +8,7 @@
     },
     "margin": { "literal": "0", "platforms": ["web"] }
   },
-  "title": {
+  "--title": {
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.bold"
     },
@@ -17,10 +17,9 @@
     },
     "color": {
       "resolvesTo": "text.color.foreground.primary"
-    },
-    "margin": { "literal": "0", "platforms": ["web"] }
+    }
   },
-  "body": {
+  "--body": {
     "font-weight": {
       "resolvesTo": "text.typography.fontWeight.regular"
     },
@@ -29,8 +28,7 @@
     },
     "color": {
       "resolvesTo": "text.color.foreground.secondary"
-    },
-    "margin": { "literal": "0", "platforms": ["web"] }
+    }
   },
   "error": {
     "color": {

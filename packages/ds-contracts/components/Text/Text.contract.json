@@ -5,13 +5,7 @@
   "layer": "primitive",
   "anatomy": {
     "parts": [
-      "root",
-      "headline",
-      "title",
-      "body",
-      "caption",
-      "overline",
-      "code"
+      "root"
     ],
     "dom": {
       "tag": "p",

@@ -1,6 +1,5 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
-import { Stack } from "../../primitives";
 import "./Text.css";
 // @generated:end
 
@@ -41,43 +40,7 @@ export interface TextProps extends Omit<HTMLAttributes<HTMLParagraphElement>, "a
 // @generated:end
 
 // @generated:start subcomponents
-export interface TextTitleProps {
-  children?: ReactNode;
-  className?: string;
-  "data-testid"?: string;
-}
 
-export function TextTitle({
-  children,
-  className,
-  "data-testid": testId,
-}: TextTitleProps) {
-  const classNames = ["text__title", className].filter(Boolean).join(" ");
-  return (
-    <Stack as="h3" className={classNames} data-testid={testId}>
-      {children}
-    </Stack>
-  );
-}
-
-export interface TextBodyProps {
-  children?: ReactNode;
-  className?: string;
-  "data-testid"?: string;
-}
-
-export function TextBody({
-  children,
-  className,
-  "data-testid": testId,
-}: TextBodyProps) {
-  const classNames = ["text__body", className].filter(Boolean).join(" ");
-  return (
-    <Stack className={classNames} data-testid={testId}>
-      {children}
-    </Stack>
-  );
-}
 // @generated:end
 
 // @generated:start component

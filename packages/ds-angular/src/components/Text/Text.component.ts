@@ -1,7 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
-import { StackComponent } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -49,38 +48,6 @@ export class TextComponent {
       this.transform ? `text--${this.transform}` : null,
       this.class,
     ].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-text-title",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="h3" [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TextTitleComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["text__title", this.class].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-text-body",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TextBodyComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["text__body", this.class].filter(Boolean).join(" ");
   }
 }
 // @generated:end

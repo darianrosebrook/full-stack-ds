@@ -89,8 +89,6 @@ export { default as TabsList } from "./Tabs/TabsList.svelte";
 export { default as TabsPanel } from "./Tabs/TabsPanel.svelte";
 export { default as TabsTab } from "./Tabs/TabsTab.svelte";
 export { default as Text } from "./Text/Text.svelte";
-export { default as TextBody } from "./Text/TextBody.svelte";
-export { default as TextTitle } from "./Text/TextTitle.svelte";
 export { default as TextField } from "./TextField/TextField.svelte";
 export { default as TextFieldDescription } from "./TextField/TextFieldDescription.svelte";
 export { default as Toast } from "./Toast/Toast.svelte";
