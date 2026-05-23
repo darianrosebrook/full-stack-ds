@@ -64,3 +64,7 @@ the emitter produces:
 - Don't add `"focus"` **and** `"focus-visible"` — they map to the same selector. Prefer `"focus-visible"`.
 - ARIA-derived states (`expanded`, `pressed`, `selected`) require the component to set the corresponding `aria-*` attribute on the root element. The dom-tree emitter handles this when `attrs.aria-expanded` is bound to a channel; otherwise you need to set it yourself in `@custom`.
 - Don't declare `"role": "generic"` in `a11y.role` — `generic` is the implicit role of every element and emitting it explicitly is an axe violation. Omit `a11y.role` entirely when the component has no specific role.
+
+## See also
+
+- [`docs/component-layering.md`](./component-layering.md) — defines WHERE state pseudo-class rules land (in `.css`, nested under the component root, reading state-specific slots) and how variant scopes compose with them via slot redirection.

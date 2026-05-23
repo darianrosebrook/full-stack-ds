@@ -249,6 +249,7 @@ Same shape as a brand, but the file lands at `src/density/<id>.tokens.json` with
 
 - [`docs/codegen-authority.md`](./codegen-authority.md) — codegen layer authority; tokens are framework-neutral and live outside the per-framework emitters, in line with that doc's "one emitter, not five" principle as applied to design tokens.
 - [`docs/box-model-primitive.md`](./box-model-primitive.md) — box-model slot pool. The 14-slot `--fsds-box-model-*` surface that every component inherits as a stable substrate for padding / gap / sizing. Sits adjacent to this doc: it defines a slot pool, not new global tokens, and its slots may `resolvesTo` paths in the graph this doc governs.
+- [`docs/component-layering.md`](./component-layering.md) — the `.css` vs `.tokens.css` layering rule and the variant-redirection pattern. Tokens in this graph are consumed by component-local slots, which then flow into `.css` (structure) and `.tokens.css` (per-scope resolution) per that doc's rule.
 - [`docs/normal-form.md`](./normal-form.md) — property-2 (framework-neutral IR) and property-5 (fail-loud linters) are realized here as the single-emitter pipeline and the `validateContractTokens` gate.
 - [`docs/admission-rail.md`](./admission-rail.md) — the rail's philosophy of "evidence is inspectable, claims are bounded" is the same philosophy this doc uses for the cutover provenance and the byte-compare gate.
 
