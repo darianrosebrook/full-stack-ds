@@ -3,6 +3,7 @@
   "name": "Postcard",
   "description": "Social-media-style post card with author, content, media embed, and engagement stat slots.",
   "layer": "compound",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root",

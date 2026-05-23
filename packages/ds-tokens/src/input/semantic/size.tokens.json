@@ -1,0 +1,88 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "input": {
+    "size": {
+      "small": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.height}",
+          "$description": "Input small height — matches action.size.small.height for visual alignment when inputs and buttons sit on the same row."
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.height}",
+          "$description": "Input small min-height."
+        },
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.paddingY}",
+          "$description": "Input small vertical padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.paddingX}",
+          "$description": "Input small horizontal padding."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.03}",
+          "$description": "Input small gap between label/control/help-text when stacked, or adornment ↔ control when inline."
+        }
+      },
+      "medium": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{control.size.md.height}",
+          "$description": "Input medium height — default size for form inputs."
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": "{control.size.md.height}",
+          "$description": "Input medium min-height."
+        },
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{control.size.md.paddingY}",
+          "$description": "Input medium vertical padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{control.size.md.paddingX}",
+          "$description": "Input medium horizontal padding."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.04}",
+          "$description": "Input medium gap."
+        }
+      },
+      "large": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.height}",
+          "$description": "Input large height."
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.height}",
+          "$description": "Input large min-height."
+        },
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.paddingY}",
+          "$description": "Input large vertical padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.paddingX}",
+          "$description": "Input large horizontal padding."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.05}",
+          "$description": "Input large gap."
+        }
+      }
+    }
+  }
+}

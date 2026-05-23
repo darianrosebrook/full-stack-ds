@@ -3,6 +3,7 @@
   "name": "TextField",
   "description": "Full-featured form field composing a label, input, optional description, and error message with ARIA wiring.",
   "layer": "composer",
+  "category": "input",
   "anatomy": {
     "parts": [
       "root",

@@ -3,6 +3,7 @@
   "name": "Field",
   "description": "Form field layout wrapper that pairs a label, input, and optional hint or error message.",
   "layer": "composer",
+  "category": "input",
   "anatomy": {
     "parts": [
       "root",

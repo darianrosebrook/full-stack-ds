@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "glyph": {
+    "size": {
+      "small": {
+        "extent": {
+          "$type": "dimension",
+          "$value": "{spacing.size.05}",
+          "$description": "Glyph small extent — 12px. Used for small icons, status dots, dense badges. Glyphs are square; extent is both width and height."
+        }
+      },
+      "medium": {
+        "extent": {
+          "$type": "dimension",
+          "$value": "{spacing.size.06}",
+          "$description": "Glyph medium extent — 16px. Default size for icons, avatars, badges."
+        }
+      },
+      "large": {
+        "extent": {
+          "$type": "dimension",
+          "$value": "{spacing.size.07}",
+          "$description": "Glyph large extent — 24px."
+        }
+      }
+    }
+  }
+}

@@ -3,6 +3,7 @@
   "name": "ToggleSwitch",
   "description": "Binary switch control rendered as a button[role=switch] with an adjacent label.",
   "layer": "primitive",
+  "category": "action",
   "anatomy": {
     "parts": [
       "root",

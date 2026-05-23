@@ -3,6 +3,7 @@
   "name": "Spinner",
   "description": "Rotating indicator for indeterminate loading states.",
   "layer": "primitive",
+  "category": "feedback",
   "anatomy": {
     "parts": [
       "root",

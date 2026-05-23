@@ -3,6 +3,7 @@
   "name": "Breadcrumbs",
   "description": "Navigation landmark showing the current page location within a site hierarchy.",
   "layer": "compound",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",

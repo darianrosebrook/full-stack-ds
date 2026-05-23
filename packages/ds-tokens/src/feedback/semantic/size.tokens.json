@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "feedback": {
+    "size": {
+      "padding-block": {
+        "$type": "dimension",
+        "$value": "{spacing.padding.component}",
+        "$description": "Feedback vertical padding. Feedback components (Alert, AlertNotice, Banner, Status, Progress, Skeleton) carry padding so they read as a distinct surface in flow."
+      },
+      "padding-inline": {
+        "$type": "dimension",
+        "$value": "{spacing.padding.component}",
+        "$description": "Feedback horizontal padding. Symmetric with padding-block."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.gap.component}",
+        "$description": "Feedback inter-child gap — icon ↔ message ↔ action."
+      }
+    }
+  }
+}

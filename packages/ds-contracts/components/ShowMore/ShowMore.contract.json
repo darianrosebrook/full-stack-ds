@@ -3,6 +3,7 @@
   "name": "ShowMore",
   "description": "Expandable container that truncates long content with a 'show more' affordance.",
   "layer": "composer",
+  "category": "action",
   "anatomy": {
     "parts": [
       "root",
@@ -136,7 +137,7 @@
     "usageHints": [
       "Use when content could be long but brevity is preferred by default",
       "Configure maxLines to control how many lines are shown before truncation",
-      "Avoid if the full content is always needed \u2014 prefer Details instead"
+      "Avoid if the full content is always needed — prefer Details instead"
     ],
     "children": {
       "allowed": true,

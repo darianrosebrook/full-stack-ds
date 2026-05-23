@@ -3,6 +3,7 @@
   "name": "Status",
   "description": "Compact icon-and-label pair conveying a status condition (online, offline, busy, etc.).",
   "layer": "primitive",
+  "category": "feedback",
   "anatomy": {
     "parts": [
       "root",

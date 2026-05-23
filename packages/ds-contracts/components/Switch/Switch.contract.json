@@ -3,6 +3,7 @@
   "name": "Switch",
   "description": "Boolean toggle for enabling or disabling a setting. Semantically equivalent to a checkbox but with a sliding thumb affordance.",
   "layer": "primitive",
+  "category": "action",
   "anatomy": {
     "parts": [
       "root",

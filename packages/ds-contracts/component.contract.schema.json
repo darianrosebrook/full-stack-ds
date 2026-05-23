@@ -40,6 +40,11 @@
       "enum": ["primitive", "compound", "composer", "assembly"],
       "description": "Architecture layer per the component-complexity blueprint: 'primitive' (irreducible to the user, e.g. Button, Input, Icon), 'compound' (blessed bundle of primitives with ARIA wiring but no state orchestration, e.g. TextField, Card, Chip), 'composer' (orchestrates state, focus, dismissal, or multi-step interaction, e.g. Dialog, Popover, Field, Tabs), or 'assembly' (product flow; assemblies live in the app, not the system)."
     },
+    "category": {
+      "type": "string",
+      "enum": ["action", "input", "surface", "feedback", "glyph", "structure"],
+      "description": "Behavioral category, used to derive box-model defaults from category-keyed semantic tokens (semantic.<category>.size.*). 'action' (button-like: Button, IconButton, Switch), 'input' (form controls: Input, TextField, Select, Checkbox), 'surface' (containers: Card, Sheet, Dialog, Popover, Tooltip, Toast), 'feedback' (status: Alert, Banner, Progress, Skeleton, Status), 'glyph' (atomic visual: Icon, Avatar, Badge, Chip, Spinner, Label, Text), 'structure' (collection layout: Table, Tabs, Accordion, NavList, List, Breadcrumbs). Codegen does not consume this field today — the migration script reads it to seed box-model defaults. See docs/box-model-primitive.md."
+    },
     "cssPrefix": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9-]*$",

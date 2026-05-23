@@ -3,6 +3,7 @@
   "name": "Accordion",
   "description": "Vertically stacked sections that expand/collapse to reveal content. Supports single or multi-panel open modes.",
   "layer": "composer",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",
@@ -143,7 +144,7 @@
     "transitions": [
       {
         "name": "expand",
-        "trigger": "openness=collapsed\u2192expanded",
+        "trigger": "openness=collapsed→expanded",
         "phase": "enter",
         "properties": [
           "height",
@@ -154,7 +155,7 @@
       },
       {
         "name": "collapse",
-        "trigger": "openness=expanded\u2192collapsed",
+        "trigger": "openness=expanded→collapsed",
         "phase": "exit",
         "properties": [
           "height",
@@ -254,7 +255,7 @@
       "Use type=\"single\" to allow only one panel open at a time; \"multiple\" allows several",
       "Set collapsible on single mode to allow the open panel to also be closed",
       "Bind value and onValueChange for controlled mode",
-      "Avoid deeply nesting accordions \u2014 prefer flat structures for better readability"
+      "Avoid deeply nesting accordions — prefer flat structures for better readability"
     ],
     "children": {
       "allowed": true,

@@ -3,6 +3,7 @@
   "name": "Chip",
   "description": "Compact interactive element for tags, filters, or multi-select choices.",
   "layer": "compound",
+  "category": "glyph",
   "anatomy": {
     "parts": [
       "root",

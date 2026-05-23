@@ -3,6 +3,7 @@
   "name": "OTP",
   "description": "One-time password input composed of individual single-character digit fields.",
   "layer": "composer",
+  "category": "input",
   "anatomy": {
     "parts": [
       "root",

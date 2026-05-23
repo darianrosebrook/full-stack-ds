@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "structure": {
+    "size": {
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.gap.grid}",
+        "$description": "Structure inter-cell/inter-item gap. Used by Table, Tabs, Accordion, NavList, List, Breadcrumbs — components that arrange a collection of children and let each child carry its own padding rather than the structural root carrying it."
+      }
+    }
+  }
+}

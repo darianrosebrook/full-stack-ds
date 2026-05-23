@@ -3,6 +3,7 @@
   "name": "Checkbox",
   "description": "Binary or tri-state input for boolean selection. Supports indeterminate state for partial group selection.",
   "layer": "primitive",
+  "category": "input",
   "anatomy": {
     "parts": [
       "root",
@@ -188,7 +189,7 @@
     "usageHints": [
       "Use checked and onChange for controlled mode; defaultChecked for uncontrolled",
       "Set indeterminate for parent checkboxes in a group where some children are checked",
-      "Always pair with a label \u2014 either via prop:label or a visible sibling Label component",
+      "Always pair with a label — either via prop:label or a visible sibling Label component",
       "Use name and value for native form submission"
     ],
     "children": {

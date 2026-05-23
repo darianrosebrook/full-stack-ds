@@ -3,6 +3,7 @@
   "name": "Skeleton",
   "description": "Loading placeholder that mimics the shape of content before data is available.",
   "layer": "primitive",
+  "category": "feedback",
   "anatomy": {
     "parts": [
       "root",

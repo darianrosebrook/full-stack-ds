@@ -1,0 +1,103 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "action": {
+    "size": {
+      "small": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.height}",
+          "$description": "Action (button-like) small height — 28px at default density."
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.height}",
+          "$description": "Action small min-height; matches height so content cannot collapse the control."
+        },
+        "minWidth": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.height}",
+          "$description": "Action small min-width; square minimum so icon-only buttons stay tappable."
+        },
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.paddingY}",
+          "$description": "Action small vertical padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{control.size.sm.paddingX}",
+          "$description": "Action small horizontal padding."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.03}",
+          "$description": "Action small inter-child gap (icon ↔ label)."
+        }
+      },
+      "medium": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{control.size.md.height}",
+          "$description": "Action medium height — 36px at default density. Default size for action components."
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": "{control.size.md.height}",
+          "$description": "Action medium min-height; matches height."
+        },
+        "minWidth": {
+          "$type": "dimension",
+          "$value": "{control.size.md.height}",
+          "$description": "Action medium min-width; square minimum."
+        },
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{control.size.md.paddingY}",
+          "$description": "Action medium vertical padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{control.size.md.paddingX}",
+          "$description": "Action medium horizontal padding."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.04}",
+          "$description": "Action medium inter-child gap."
+        }
+      },
+      "large": {
+        "height": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.height}",
+          "$description": "Action large height — 48px at default density."
+        },
+        "minHeight": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.height}",
+          "$description": "Action large min-height; matches height."
+        },
+        "minWidth": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.height}",
+          "$description": "Action large min-width; square minimum."
+        },
+        "padding-block": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.paddingY}",
+          "$description": "Action large vertical padding."
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$value": "{control.size.lg.paddingX}",
+          "$description": "Action large horizontal padding."
+        },
+        "gap": {
+          "$type": "dimension",
+          "$value": "{spacing.size.05}",
+          "$description": "Action large inter-child gap."
+        }
+      }
+    }
+  }
+}

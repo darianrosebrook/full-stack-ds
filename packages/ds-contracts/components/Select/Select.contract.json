@@ -3,6 +3,7 @@
   "name": "Select",
   "description": "Dropdown selector with optional search, single or multi-select, and keyboard navigation. Renders a floating listbox anchored to the trigger.",
   "layer": "composer",
+  "category": "input",
   "anatomy": {
     "parts": [
       "root",
@@ -219,7 +220,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=closed\u2192open",
+        "trigger": "openness=closed→open",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -230,7 +231,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=open\u2192closed",
+        "trigger": "openness=open→closed",
         "phase": "exit",
         "properties": [
           "opacity",

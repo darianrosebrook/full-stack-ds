@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "surface": {
+    "size": {
+      "padding-block": {
+        "$type": "dimension",
+        "$value": "{spacing.padding.card}",
+        "$description": "Surface vertical padding. Surfaces (Card, Sheet, Dialog, Popover, Tooltip, Postcard, Toast) carry their own padding on the root; descendants do not. Density mode shifts spacing.padding.card."
+      },
+      "padding-inline": {
+        "$type": "dimension",
+        "$value": "{spacing.padding.card}",
+        "$description": "Surface horizontal padding. Symmetric with padding-block by default."
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": "{spacing.gap.component}",
+        "$description": "Surface inter-region gap — the vertical rhythm between header / body / footer regions when the surface is a vertical stack."
+      },
+      "minWidth": {
+        "$type": "dimension",
+        "$value": "{spacing.size.10}",
+        "$description": "Surface minimum width — prevents the surface from collapsing to icon-width when content is sparse."
+      }
+    }
+  }
+}

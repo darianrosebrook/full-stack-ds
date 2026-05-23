@@ -3,6 +3,7 @@
   "name": "Icon",
   "description": "Renders a named SVG icon from the design system icon set.",
   "layer": "primitive",
+  "category": "glyph",
   "anatomy": {
     "parts": [
       "root"

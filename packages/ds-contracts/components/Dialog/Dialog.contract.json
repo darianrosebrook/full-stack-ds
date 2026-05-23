@@ -3,6 +3,7 @@
   "name": "Dialog",
   "description": "Modal overlay requiring user attention before returning to the page. Traps focus until dismissed.",
   "layer": "composer",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root",
@@ -182,7 +183,7 @@
   ],
   "events": {
     "opennessChange": {
-      "description": "Fires whenever the dialog moves toward open or closed. Distinct from `close` \u2014 this reports the new intent, it does not ask for confirmation.",
+      "description": "Fires whenever the dialog moves toward open or closed. Distinct from `close` — this reports the new intent, it does not ask for confirmation.",
       "emittedVia": [
         "onOpenChange"
       ],
@@ -260,7 +261,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=closed\u2192opening",
+        "trigger": "openness=closed→opening",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -271,7 +272,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=open\u2192closing",
+        "trigger": "openness=open→closing",
         "phase": "exit",
         "properties": [
           "opacity",
@@ -342,7 +343,7 @@
       "from": "root",
       "to": "body",
       "attribute": "aria-describedby",
-      "description": "Optional \u2014 links the body region so screen readers announce it when the dialog opens. Dialog uses `body` as the description target since it doesn't carry a separate `description` anatomy part."
+      "description": "Optional — links the body region so screen readers announce it when the dialog opens. Dialog uses `body` as the description target since it doesn't carry a separate `description` anatomy part."
     }
   ],
   "a11y": {

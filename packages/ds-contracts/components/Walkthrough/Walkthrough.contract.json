@@ -3,6 +3,7 @@
   "name": "Walkthrough",
   "description": "Step-by-step guided tour overlay anchored to page elements. Manages step progression and keyboard navigation.",
   "layer": "composer",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",
@@ -211,7 +212,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=hidden\u2192visible",
+        "trigger": "openness=hidden→visible",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -222,7 +223,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=visible\u2192hidden",
+        "trigger": "openness=visible→hidden",
         "phase": "exit",
         "properties": [
           "opacity"
@@ -352,7 +353,7 @@
       "WalkthroughAnchor wraps the element each step points to",
       "Use WalkthroughControls and WalkthroughProgress for navigation UI",
       "Keyboard: ArrowRight/ArrowLeft navigate steps; Escape closes the tour",
-      "The walkthrough is non-blocking \u2014 it does not trap focus to the panel"
+      "The walkthrough is non-blocking — it does not trap focus to the panel"
     ],
     "children": {
       "allowed": true,

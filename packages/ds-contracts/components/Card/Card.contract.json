@@ -3,6 +3,7 @@
   "name": "Card",
   "description": "Surface container grouping related content with optional header, media, and action areas.",
   "layer": "compound",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root",
@@ -134,7 +135,7 @@
     "category": "display",
     "usageHints": [
       "Use Card.Link to make the entire card clickable",
-      "Keep Card.Actions to 1\u20132 actions; move secondary actions to an overflow menu",
+      "Keep Card.Actions to 1–2 actions; move secondary actions to an overflow menu",
       "Card.Media expects a fixed-aspect image or media slot"
     ],
     "children": {

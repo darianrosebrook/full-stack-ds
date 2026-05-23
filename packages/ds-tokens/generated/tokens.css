@@ -378,6 +378,24 @@
 
 @layer semantic {
   :root {
+  --fsds-semantic-action-size-small-height: var(--fsds-semantic-control-size-sm-height);
+  --fsds-semantic-action-size-small-min-height: var(--fsds-semantic-control-size-sm-height);
+  --fsds-semantic-action-size-small-min-width: var(--fsds-semantic-control-size-sm-height);
+  --fsds-semantic-action-size-small-padding-block: var(--fsds-semantic-control-size-sm-padding-y);
+  --fsds-semantic-action-size-small-padding-inline: var(--fsds-semantic-control-size-sm-padding-x);
+  --fsds-semantic-action-size-small-gap: var(--fsds-core-spacing-size-03);
+  --fsds-semantic-action-size-medium-height: var(--fsds-semantic-control-size-md-height);
+  --fsds-semantic-action-size-medium-min-height: var(--fsds-semantic-control-size-md-height);
+  --fsds-semantic-action-size-medium-min-width: var(--fsds-semantic-control-size-md-height);
+  --fsds-semantic-action-size-medium-padding-block: var(--fsds-semantic-control-size-md-padding-y);
+  --fsds-semantic-action-size-medium-padding-inline: var(--fsds-semantic-control-size-md-padding-x);
+  --fsds-semantic-action-size-medium-gap: var(--fsds-core-spacing-size-04);
+  --fsds-semantic-action-size-large-height: var(--fsds-semantic-control-size-lg-height);
+  --fsds-semantic-action-size-large-min-height: var(--fsds-semantic-control-size-lg-height);
+  --fsds-semantic-action-size-large-min-width: var(--fsds-semantic-control-size-lg-height);
+  --fsds-semantic-action-size-large-padding-block: var(--fsds-semantic-control-size-lg-padding-y);
+  --fsds-semantic-action-size-large-padding-inline: var(--fsds-semantic-control-size-lg-padding-x);
+  --fsds-semantic-action-size-large-gap: var(--fsds-core-spacing-size-05);
   --fsds-semantic-color-overlay-scrim: #00000066;
   --fsds-semantic-color-overlay-scrim-weak: #0000003d;
   --fsds-semantic-color-overlay-scrim-medium: #00000066;
@@ -408,9 +426,30 @@
   --fsds-semantic-elevation-none: none;
   --fsds-semantic-elevation-surface-raised: var(--fsds-core-elevation-level-1);
   --fsds-semantic-elevation-surface-floating: var(--fsds-core-elevation-level-2);
+  --fsds-semantic-feedback-size-padding-block: var(--fsds-semantic-spacing-padding-component);
+  --fsds-semantic-feedback-size-padding-inline: var(--fsds-semantic-spacing-padding-component);
+  --fsds-semantic-feedback-size-gap: var(--fsds-semantic-spacing-gap-component);
   --fsds-semantic-focus-ring-width: var(--fsds-core-interaction-focus-ring-width);
   --fsds-semantic-focus-ring-offset: var(--fsds-core-interaction-focus-ring-offset);
   --fsds-semantic-focus-ring-style: solid;
+  --fsds-semantic-glyph-size-small-extent: var(--fsds-core-spacing-size-05);
+  --fsds-semantic-glyph-size-medium-extent: var(--fsds-core-spacing-size-06);
+  --fsds-semantic-glyph-size-large-extent: var(--fsds-core-spacing-size-07);
+  --fsds-semantic-input-size-small-height: var(--fsds-semantic-control-size-sm-height);
+  --fsds-semantic-input-size-small-min-height: var(--fsds-semantic-control-size-sm-height);
+  --fsds-semantic-input-size-small-padding-block: var(--fsds-semantic-control-size-sm-padding-y);
+  --fsds-semantic-input-size-small-padding-inline: var(--fsds-semantic-control-size-sm-padding-x);
+  --fsds-semantic-input-size-small-gap: var(--fsds-core-spacing-size-03);
+  --fsds-semantic-input-size-medium-height: var(--fsds-semantic-control-size-md-height);
+  --fsds-semantic-input-size-medium-min-height: var(--fsds-semantic-control-size-md-height);
+  --fsds-semantic-input-size-medium-padding-block: var(--fsds-semantic-control-size-md-padding-y);
+  --fsds-semantic-input-size-medium-padding-inline: var(--fsds-semantic-control-size-md-padding-x);
+  --fsds-semantic-input-size-medium-gap: var(--fsds-core-spacing-size-04);
+  --fsds-semantic-input-size-large-height: var(--fsds-semantic-control-size-lg-height);
+  --fsds-semantic-input-size-large-min-height: var(--fsds-semantic-control-size-lg-height);
+  --fsds-semantic-input-size-large-padding-block: var(--fsds-semantic-control-size-lg-padding-y);
+  --fsds-semantic-input-size-large-padding-inline: var(--fsds-semantic-control-size-lg-padding-x);
+  --fsds-semantic-input-size-large-gap: var(--fsds-core-spacing-size-05);
   --fsds-semantic-interaction-disabled-opacity: var(--fsds-core-interaction-disabled-opacity);
   --fsds-semantic-motion-icon-scale-enter: var(--fsds-core-scale-080);
   --fsds-semantic-motion-icon-scale-exit: var(--fsds-core-scale-080);
@@ -484,6 +523,11 @@
   --fsds-semantic-spacing-padding-component: var(--fsds-core-spacing-density-default-sm);
   --fsds-semantic-spacing-padding-section: var(--fsds-core-spacing-density-default-lg);
   --fsds-semantic-spacing-padding-page: var(--fsds-core-spacing-density-default-xl);
+  --fsds-semantic-structure-size-gap: var(--fsds-semantic-spacing-gap-grid);
+  --fsds-semantic-surface-size-padding-block: var(--fsds-semantic-spacing-padding-card);
+  --fsds-semantic-surface-size-padding-inline: var(--fsds-semantic-spacing-padding-card);
+  --fsds-semantic-surface-size-gap: var(--fsds-semantic-spacing-gap-component);
+  --fsds-semantic-surface-size-min-width: var(--fsds-core-spacing-size-10);
   --fsds-semantic-typography-action-01: var(--fsds-core-typography-ramp-5);
   --fsds-semantic-typography-action-02: var(--fsds-core-typography-ramp-4);
   --fsds-semantic-typography-action-03: var(--fsds-core-typography-ramp-3);

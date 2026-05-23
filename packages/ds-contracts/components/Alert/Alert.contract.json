@@ -3,6 +3,7 @@
   "name": "Alert",
   "description": "Inline notification banner for important messages. Does not require user interaction to dismiss.",
   "layer": "compound",
+  "category": "feedback",
   "anatomy": {
     "parts": [
       "root",
@@ -155,7 +156,7 @@
     "category": "display",
     "usageHints": [
       "Use intent to convey severity: info, success, warning, or error",
-      "Keep messages concise \u2014 Alert is for brief contextual feedback, not lengthy instructions",
+      "Keep messages concise — Alert is for brief contextual feedback, not lengthy instructions",
       "Pair with an icon to reinforce intent visually"
     ],
     "children": {

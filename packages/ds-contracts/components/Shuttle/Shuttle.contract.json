@@ -3,6 +3,7 @@
   "name": "Shuttle",
   "description": "Dual-listbox transfer widget for moving items between two ordered collections.",
   "layer": "composer",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",

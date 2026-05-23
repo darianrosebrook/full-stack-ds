@@ -3,6 +3,7 @@
   "name": "Sheet",
   "description": "Slide-in panel (drawer) that overlays the page from an edge. Traps focus until dismissed.",
   "layer": "composer",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root",
@@ -164,7 +165,7 @@
   ],
   "events": {
     "opennessChange": {
-      "description": "Fires whenever the dialog moves toward open or closed. Distinct from `close` \u2014 this reports the new intent, it does not ask for confirmation.",
+      "description": "Fires whenever the dialog moves toward open or closed. Distinct from `close` — this reports the new intent, it does not ask for confirmation.",
       "emittedVia": [
         "onOpenChange"
       ],
@@ -242,7 +243,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=closed\u2192opening",
+        "trigger": "openness=closed→opening",
         "phase": "enter",
         "properties": [
           "transform"
@@ -252,7 +253,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=open\u2192closing",
+        "trigger": "openness=open→closing",
         "phase": "exit",
         "properties": [
           "transform"

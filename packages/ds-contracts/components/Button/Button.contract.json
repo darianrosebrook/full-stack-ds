@@ -3,6 +3,7 @@
   "name": "Button",
   "description": "Clickable element for triggering actions. Supports multiple visual variants and semantic intents.",
   "layer": "primitive",
+  "category": "action",
   "anatomy": {
     "parts": [
       "root",

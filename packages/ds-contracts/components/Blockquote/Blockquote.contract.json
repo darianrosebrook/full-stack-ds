@@ -3,6 +3,7 @@
   "name": "Blockquote",
   "description": "Styled blockquote for displaying cited passages or testimonials.",
   "layer": "primitive",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root"

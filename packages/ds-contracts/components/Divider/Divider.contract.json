@@ -3,6 +3,7 @@
   "name": "Divider",
   "description": "Visual separator between content sections. Renders as an hr or div depending on orientation.",
   "layer": "primitive",
+  "category": "glyph",
   "anatomy": {
     "parts": [
       "root"

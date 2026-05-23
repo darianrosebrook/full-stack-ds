@@ -3,6 +3,7 @@
   "name": "Input",
   "description": "Native text input with design-system styling. Use inside TextField for label and error support.",
   "layer": "primitive",
+  "category": "input",
   "anatomy": {
     "parts": [
       "root"

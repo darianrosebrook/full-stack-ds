@@ -3,6 +3,7 @@
   "name": "Truncate",
   "description": "Clamps multi-line text to a fixed number of lines with an optional expand/collapse toggle.",
   "layer": "primitive",
+  "category": "glyph",
   "anatomy": {
     "parts": [
       "root",

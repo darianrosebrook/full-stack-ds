@@ -3,6 +3,7 @@
   "name": "Text",
   "description": "Polymorphic text element with design-system typography variants and semantic element control.",
   "layer": "primitive",
+  "category": "glyph",
   "anatomy": {
     "parts": [
       "root"
@@ -185,7 +186,7 @@
   "a2ui": {
     "category": "display",
     "usageHints": [
-      "Use as to control the rendered element (p, span, h1\u2013h6, label, etc.)",
+      "Use as to control the rendered element (p, span, h1–h6, label, etc.)",
       "Use variant to apply typography scale (body, caption, heading, etc.)",
       "Do not nest block-level Text elements inside inline ones"
     ],

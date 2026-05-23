@@ -3,6 +3,7 @@
   "name": "List",
   "description": "Semantic list element (ul, ol, or dl) with consistent spacing and marker styles.",
   "layer": "compound",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root"

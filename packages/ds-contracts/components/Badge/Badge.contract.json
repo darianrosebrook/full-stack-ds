@@ -3,6 +3,7 @@
   "name": "Badge",
   "description": "Small label conveying status, category, or count. Typically paired with other content.",
   "layer": "primitive",
+  "category": "glyph",
   "anatomy": {
     "parts": [
       "root",
@@ -145,7 +146,7 @@
     "usageHints": [
       "Use intent to apply semantic color (info, success, warning, danger, neutral)",
       "Use variant to switch between filled, outlined, or subtle styles",
-      "Keep badge text short \u2014 ideally a single word or number",
+      "Keep badge text short — ideally a single word or number",
       "Pair with an icon using the icon prop to reinforce meaning"
     ],
     "children": {

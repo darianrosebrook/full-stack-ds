@@ -3,6 +3,7 @@
   "name": "NavList",
   "description": "Vertical or horizontal navigation list landmark. Composes a <nav> with grouped or flat <li> children; consumers render <a aria-current=page> for the active item.",
   "layer": "compound",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",

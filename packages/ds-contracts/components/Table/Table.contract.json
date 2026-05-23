@@ -3,6 +3,7 @@
   "name": "Table",
   "description": "Data table with sortable columns, row selection, and pagination support.",
   "layer": "compound",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",
@@ -16,15 +17,45 @@
       "cell"
     ],
     "details": {
-      "root": { "tag": "div", "description": "Responsive wrapper around the table element." },
-      "container": { "tag": "table", "description": "The native <table> element; carries the table's accessible label." },
-      "caption": { "tag": "caption", "description": "Accessible caption rendered above the table body." },
-      "head": { "tag": "thead", "description": "Group of header rows." },
-      "body": { "tag": "tbody", "description": "Group of data rows." },
-      "footer": { "tag": "tfoot", "description": "Group of footer/summary rows." },
-      "row": { "tag": "tr", "multiple": true, "description": "Table row." },
-      "headerCell": { "tag": "th", "multiple": true, "description": "Column or row header cell. scope is consumer-controlled; default header semantics infer from <thead>." },
-      "cell": { "tag": "td", "multiple": true, "description": "Data cell." }
+      "root": {
+        "tag": "div",
+        "description": "Responsive wrapper around the table element."
+      },
+      "container": {
+        "tag": "table",
+        "description": "The native <table> element; carries the table's accessible label."
+      },
+      "caption": {
+        "tag": "caption",
+        "description": "Accessible caption rendered above the table body."
+      },
+      "head": {
+        "tag": "thead",
+        "description": "Group of header rows."
+      },
+      "body": {
+        "tag": "tbody",
+        "description": "Group of data rows."
+      },
+      "footer": {
+        "tag": "tfoot",
+        "description": "Group of footer/summary rows."
+      },
+      "row": {
+        "tag": "tr",
+        "multiple": true,
+        "description": "Table row."
+      },
+      "headerCell": {
+        "tag": "th",
+        "multiple": true,
+        "description": "Column or row header cell. scope is consumer-controlled; default header semantics infer from <thead>."
+      },
+      "cell": {
+        "tag": "td",
+        "multiple": true,
+        "description": "Data cell."
+      }
     },
     "dom": {
       "tag": "div",
@@ -37,7 +68,9 @@
             "aria-label": "prop:ariaLabel"
           },
           "children": [
-            { "tag": "children" }
+            {
+              "tag": "children"
+            }
           ]
         }
       ]

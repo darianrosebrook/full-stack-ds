@@ -3,6 +3,7 @@
   "name": "Popover",
   "description": "Anchored persistent presence surface that exposes interactive content adjacent to a trigger element on click. Composes as <Popover><Popover.Trigger>...</Popover.Trigger><Popover.Content>...</Popover.Content></Popover>; the substrate wires aria-controls/aria-expanded, click toggling, and escape/outside-click/boundary-blur dismissal. Non-modal: does NOT trap focus or render an overlay scrim.",
   "layer": "composer",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root",
@@ -63,13 +64,13 @@
         {
           "name": "closeOnOutsideClick",
           "type": "boolean",
-          "description": "When true, a click outside the anchor \u222a content surface closes the popover.",
+          "description": "When true, a click outside the anchor ∪ content surface closes the popover.",
           "default": true
         },
         {
           "name": "closeOnBlur",
           "type": "boolean",
-          "description": "When true, focus leaving the anchor \u222a content surface boundary closes the popover.",
+          "description": "When true, focus leaving the anchor ∪ content surface boundary closes the popover.",
           "default": true
         }
       ]
@@ -118,7 +119,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=closed\u2192open",
+        "trigger": "openness=closed→open",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -129,7 +130,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=open\u2192closed",
+        "trigger": "openness=open→closed",
         "phase": "exit",
         "properties": [
           "opacity",

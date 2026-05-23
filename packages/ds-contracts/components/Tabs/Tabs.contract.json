@@ -3,6 +3,7 @@
   "name": "Tabs",
   "description": "Tabbed navigation for switching between related content panels within the same page context.",
   "layer": "composer",
+  "category": "structure",
   "anatomy": {
     "parts": [
       "root",

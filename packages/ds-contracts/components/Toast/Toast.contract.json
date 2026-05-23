@@ -3,6 +3,7 @@
   "name": "Toast",
   "description": "Transient notification message appearing briefly at the edge of the viewport.",
   "layer": "composer",
+  "category": "surface",
   "anatomy": {
     "parts": [
       "root",
@@ -159,7 +160,7 @@
     "transitions": [
       {
         "name": "open",
-        "trigger": "openness=hidden\u2192visible",
+        "trigger": "openness=hidden→visible",
         "phase": "enter",
         "properties": [
           "opacity",
@@ -170,7 +171,7 @@
       },
       {
         "name": "close",
-        "trigger": "openness=visible\u2192hidden",
+        "trigger": "openness=visible→hidden",
         "phase": "exit",
         "properties": [
           "opacity",
@@ -264,9 +265,9 @@
   "a2ui": {
     "category": "overlay",
     "usageHints": [
-      "Trigger toasts via the useToast hook or ToastProvider API \u2014 do not render Toast directly",
+      "Trigger toasts via the useToast hook or ToastProvider API — do not render Toast directly",
       "Use variant to set the visual style (default, success, warning, error)",
-      "Toasts are live regions \u2014 screen readers announce them without requiring focus",
+      "Toasts are live regions — screen readers announce them without requiring focus",
       "Keep toast messages brief; use an action button only for critical reversible operations"
     ],
     "children": {

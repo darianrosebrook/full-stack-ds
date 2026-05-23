@@ -1871,6 +1871,106 @@
     }
   },
   "semantic": {
+    "action": {
+      "size": {
+        "small": {
+          "height": {
+            "$type": "dimension",
+            "$description": "Action (button-like) small height — 28px at default density.",
+            "$value": "24px"
+          },
+          "minHeight": {
+            "$type": "dimension",
+            "$description": "Action small min-height; matches height so content cannot collapse the control.",
+            "$value": "24px"
+          },
+          "minWidth": {
+            "$type": "dimension",
+            "$description": "Action small min-width; square minimum so icon-only buttons stay tappable.",
+            "$value": "24px"
+          },
+          "padding-block": {
+            "$type": "dimension",
+            "$description": "Action small vertical padding.",
+            "$value": "2px"
+          },
+          "padding-inline": {
+            "$type": "dimension",
+            "$description": "Action small horizontal padding.",
+            "$value": "4px"
+          },
+          "gap": {
+            "$type": "dimension",
+            "$description": "Action small inter-child gap (icon ↔ label).",
+            "$value": "4px"
+          }
+        },
+        "medium": {
+          "height": {
+            "$type": "dimension",
+            "$description": "Action medium height — 36px at default density. Default size for action components.",
+            "$value": "32px"
+          },
+          "minHeight": {
+            "$type": "dimension",
+            "$description": "Action medium min-height; matches height.",
+            "$value": "32px"
+          },
+          "minWidth": {
+            "$type": "dimension",
+            "$description": "Action medium min-width; square minimum.",
+            "$value": "32px"
+          },
+          "padding-block": {
+            "$type": "dimension",
+            "$description": "Action medium vertical padding.",
+            "$value": "4px"
+          },
+          "padding-inline": {
+            "$type": "dimension",
+            "$description": "Action medium horizontal padding.",
+            "$value": "8px"
+          },
+          "gap": {
+            "$type": "dimension",
+            "$description": "Action medium inter-child gap.",
+            "$value": "8px"
+          }
+        },
+        "large": {
+          "height": {
+            "$type": "dimension",
+            "$description": "Action large height — 48px at default density.",
+            "$value": "48px"
+          },
+          "minHeight": {
+            "$type": "dimension",
+            "$description": "Action large min-height; matches height.",
+            "$value": "48px"
+          },
+          "minWidth": {
+            "$type": "dimension",
+            "$description": "Action large min-width; square minimum.",
+            "$value": "48px"
+          },
+          "padding-block": {
+            "$type": "dimension",
+            "$description": "Action large vertical padding.",
+            "$value": "8px"
+          },
+          "padding-inline": {
+            "$type": "dimension",
+            "$description": "Action large horizontal padding.",
+            "$value": "16px"
+          },
+          "gap": {
+            "$type": "dimension",
+            "$description": "Action large inter-child gap.",
+            "$value": "12px"
+          }
+        }
+      }
+    },
     "color": {
       "action": {
         "background": {
@@ -3159,6 +3259,25 @@
         }
       }
     },
+    "feedback": {
+      "size": {
+        "padding-block": {
+          "$type": "dimension",
+          "$description": "Feedback vertical padding. Feedback components (Alert, AlertNotice, Banner, Status, Progress, Skeleton) carry padding so they read as a distinct surface in flow.",
+          "$value": "16px"
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$description": "Feedback horizontal padding. Symmetric with padding-block.",
+          "$value": "16px"
+        },
+        "gap": {
+          "$type": "dimension",
+          "$description": "Feedback inter-child gap — icon ↔ message ↔ action.",
+          "$value": "8px"
+        }
+      }
+    },
     "focus": {
       "ring": {
         "width": {
@@ -3183,6 +3302,116 @@
           "$type": "strokeStyle",
           "$description": "Focus ring stroke style. Constant across themes.",
           "$value": "solid"
+        }
+      }
+    },
+    "glyph": {
+      "size": {
+        "small": {
+          "extent": {
+            "$type": "dimension",
+            "$description": "Glyph small extent — 12px. Used for small icons, status dots, dense badges. Glyphs are square; extent is both width and height.",
+            "$value": "12px"
+          }
+        },
+        "medium": {
+          "extent": {
+            "$type": "dimension",
+            "$description": "Glyph medium extent — 16px. Default size for icons, avatars, badges.",
+            "$value": "16px"
+          }
+        },
+        "large": {
+          "extent": {
+            "$type": "dimension",
+            "$description": "Glyph large extent — 24px.",
+            "$value": "24px"
+          }
+        }
+      }
+    },
+    "input": {
+      "size": {
+        "small": {
+          "height": {
+            "$type": "dimension",
+            "$description": "Input small height — matches action.size.small.height for visual alignment when inputs and buttons sit on the same row.",
+            "$value": "24px"
+          },
+          "minHeight": {
+            "$type": "dimension",
+            "$description": "Input small min-height.",
+            "$value": "24px"
+          },
+          "padding-block": {
+            "$type": "dimension",
+            "$description": "Input small vertical padding.",
+            "$value": "2px"
+          },
+          "padding-inline": {
+            "$type": "dimension",
+            "$description": "Input small horizontal padding.",
+            "$value": "4px"
+          },
+          "gap": {
+            "$type": "dimension",
+            "$description": "Input small gap between label/control/help-text when stacked, or adornment ↔ control when inline.",
+            "$value": "4px"
+          }
+        },
+        "medium": {
+          "height": {
+            "$type": "dimension",
+            "$description": "Input medium height — default size for form inputs.",
+            "$value": "32px"
+          },
+          "minHeight": {
+            "$type": "dimension",
+            "$description": "Input medium min-height.",
+            "$value": "32px"
+          },
+          "padding-block": {
+            "$type": "dimension",
+            "$description": "Input medium vertical padding.",
+            "$value": "4px"
+          },
+          "padding-inline": {
+            "$type": "dimension",
+            "$description": "Input medium horizontal padding.",
+            "$value": "8px"
+          },
+          "gap": {
+            "$type": "dimension",
+            "$description": "Input medium gap.",
+            "$value": "8px"
+          }
+        },
+        "large": {
+          "height": {
+            "$type": "dimension",
+            "$description": "Input large height.",
+            "$value": "48px"
+          },
+          "minHeight": {
+            "$type": "dimension",
+            "$description": "Input large min-height.",
+            "$value": "48px"
+          },
+          "padding-block": {
+            "$type": "dimension",
+            "$description": "Input large vertical padding.",
+            "$value": "8px"
+          },
+          "padding-inline": {
+            "$type": "dimension",
+            "$description": "Input large horizontal padding.",
+            "$value": "16px"
+          },
+          "gap": {
+            "$type": "dimension",
+            "$description": "Input large gap.",
+            "$value": "12px"
+          }
         }
       }
     },
@@ -3687,6 +3916,39 @@
           "$type": "dimension",
           "$description": "Page padding - maps to density mode",
           "$value": "40px"
+        }
+      }
+    },
+    "structure": {
+      "size": {
+        "gap": {
+          "$type": "dimension",
+          "$description": "Structure inter-cell/inter-item gap. Used by Table, Tabs, Accordion, NavList, List, Breadcrumbs — components that arrange a collection of children and let each child carry its own padding rather than the structural root carrying it.",
+          "$value": "16px"
+        }
+      }
+    },
+    "surface": {
+      "size": {
+        "padding-block": {
+          "$type": "dimension",
+          "$description": "Surface vertical padding. Surfaces (Card, Sheet, Dialog, Popover, Tooltip, Postcard, Toast) carry their own padding on the root; descendants do not. Density mode shifts spacing.padding.card.",
+          "$value": "16px"
+        },
+        "padding-inline": {
+          "$type": "dimension",
+          "$description": "Surface horizontal padding. Symmetric with padding-block by default.",
+          "$value": "16px"
+        },
+        "gap": {
+          "$type": "dimension",
+          "$description": "Surface inter-region gap — the vertical rhythm between header / body / footer regions when the surface is a vertical stack.",
+          "$value": "8px"
+        },
+        "minWidth": {
+          "$type": "dimension",
+          "$description": "Surface minimum width — prevents the surface from collapsing to icon-width when content is sparse.",
+          "$value": "64px"
         }
       }
     },
