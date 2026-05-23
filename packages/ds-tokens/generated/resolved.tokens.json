@@ -913,7 +913,18 @@
     "dimension": {
       "actionMinHeight": {
         "$type": "dimension",
+        "$description": "Minimum touch-target height for default action density (medium buttons, inputs, selects). 36px is the WCAG 2.2 target size.",
         "$value": "36px"
+      },
+      "actionMinHeightSmall": {
+        "$type": "dimension",
+        "$description": "Minimum touch-target height for compact controls (small button variant). Below WCAG 2.2 — intended for high-density contexts where users have other affordances.",
+        "$value": "28px"
+      },
+      "actionMinHeightLarge": {
+        "$type": "dimension",
+        "$description": "Minimum touch-target height for prominent controls (large button variant). Comfortable above 44px iOS / 48px Material guideline.",
+        "$value": "48px"
       },
       "breakpoint": {
         "sm": {

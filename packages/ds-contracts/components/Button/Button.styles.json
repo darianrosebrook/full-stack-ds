@@ -1,5 +1,13 @@
 {
   "root": {
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] },
+    "user-select": { "literal": "none", "platforms": ["web"] },
     "background-color": {
       "resolvesTo": "button.color.background.default"
     },
@@ -27,6 +35,24 @@
     "transition-timing-function": {
       "resolvesTo": "button.motion.easing.standard"
     }
+  },
+  "--small": {
+    "padding-block": { "resolvesTo": "button.size.padding-block.small" },
+    "padding-inline": { "resolvesTo": "button.size.padding-inline.small" },
+    "min-height": { "resolvesTo": "button.size.minHeight.small" },
+    "font-size": { "resolvesTo": "button.size.fontSize.small" }
+  },
+  "--medium": {
+    "padding-block": { "resolvesTo": "button.size.padding-block.medium" },
+    "padding-inline": { "resolvesTo": "button.size.padding-inline.medium" },
+    "min-height": { "resolvesTo": "button.size.minHeight.medium" },
+    "font-size": { "resolvesTo": "button.size.fontSize.medium" }
+  },
+  "--large": {
+    "padding-block": { "resolvesTo": "button.size.padding-block.large" },
+    "padding-inline": { "resolvesTo": "button.size.padding-inline.large" },
+    "min-height": { "resolvesTo": "button.size.minHeight.large" },
+    "font-size": { "resolvesTo": "button.size.fontSize.large" }
   },
   "hover": {
     "background-color": {

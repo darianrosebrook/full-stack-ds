@@ -38,9 +38,29 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-border-focus: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #cecece);
       --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
+      --fsds-button-size-padding-block-small: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-button-size-padding-block-large: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-button-size-padding-inline-small: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-button-size-padding-inline-large: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-button-size-minHeight-small: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
+      --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
+      --fsds-button-size-minHeight-large: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
+      --fsds-button-size-fontSize-small: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+      --fsds-button-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);
     }
     
     .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      cursor: pointer;
+      border-style: solid;
+      white-space: nowrap;
+      user-select: none;
       background-color: var(--fsds-button-color-background-default);
       color: var(--fsds-button-color-foreground-default);
       border-color: var(--fsds-button-color-border-default);
@@ -68,6 +88,27 @@ export class ButtonElement extends LitElement {
         background-color: var(--fsds-button-color-background-disabled);
         color: var(--fsds-button-color-foreground-disabled);
       }
+    }
+    
+    .button--small {
+      padding-block: var(--fsds-button-size-padding-block-small);
+      padding-inline: var(--fsds-button-size-padding-inline-small);
+      min-height: var(--fsds-button-size-minHeight-small);
+      font-size: var(--fsds-button-size-fontSize-small);
+    }
+    
+    .button--medium {
+      padding-block: var(--fsds-button-size-padding-block-medium);
+      padding-inline: var(--fsds-button-size-padding-inline-medium);
+      min-height: var(--fsds-button-size-minHeight-medium);
+      font-size: var(--fsds-button-size-fontSize-medium);
+    }
+    
+    .button--large {
+      padding-block: var(--fsds-button-size-padding-block-large);
+      padding-inline: var(--fsds-button-size-padding-inline-large);
+      min-height: var(--fsds-button-size-minHeight-large);
+      font-size: var(--fsds-button-size-fontSize-large);
     }
     
     .button__spinner {

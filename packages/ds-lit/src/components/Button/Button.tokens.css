@@ -15,6 +15,18 @@
   --fsds-button-color-border-focus: var(--fsds-semantic-color-border-accent, #d9292b);
   --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-primary-disabled, #cecece);
   --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
+  --fsds-button-size-padding-block-small: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-button-size-padding-block-large: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-button-size-padding-inline-small: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-button-size-padding-inline-large: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-button-size-minHeight-small: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
+  --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
+  --fsds-button-size-minHeight-large: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
+  --fsds-button-size-fontSize-small: var(--fsds-core-typography-ramp-3, 0.875rem);
+  --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+  --fsds-button-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);
 }
 /* @generated:end */
 

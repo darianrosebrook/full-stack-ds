@@ -2,6 +2,14 @@
 
 /* @generated:start styles */
 .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-style: solid;
+  white-space: nowrap;
+  user-select: none;
   background-color: var(--fsds-button-color-background-default);
   color: var(--fsds-button-color-foreground-default);
   border-color: var(--fsds-button-color-border-default);
@@ -29,6 +37,27 @@
     background-color: var(--fsds-button-color-background-disabled);
     color: var(--fsds-button-color-foreground-disabled);
   }
+}
+
+.button--small {
+  padding-block: var(--fsds-button-size-padding-block-small);
+  padding-inline: var(--fsds-button-size-padding-inline-small);
+  min-height: var(--fsds-button-size-minHeight-small);
+  font-size: var(--fsds-button-size-fontSize-small);
+}
+
+.button--medium {
+  padding-block: var(--fsds-button-size-padding-block-medium);
+  padding-inline: var(--fsds-button-size-padding-inline-medium);
+  min-height: var(--fsds-button-size-minHeight-medium);
+  font-size: var(--fsds-button-size-fontSize-medium);
+}
+
+.button--large {
+  padding-block: var(--fsds-button-size-padding-block-large);
+  padding-inline: var(--fsds-button-size-padding-inline-large);
+  min-height: var(--fsds-button-size-minHeight-large);
+  font-size: var(--fsds-button-size-fontSize-large);
 }
 
 .button__spinner {

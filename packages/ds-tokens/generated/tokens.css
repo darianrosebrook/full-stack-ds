@@ -169,6 +169,8 @@
   --fsds-core-density-scale-comfortable: 1;
   --fsds-core-density-scale-spacious: 1.125;
   --fsds-core-dimension-action-min-height: 36px;
+  --fsds-core-dimension-action-min-height-small: 28px;
+  --fsds-core-dimension-action-min-height-large: 48px;
   --fsds-core-dimension-breakpoint-sm: 640px;
   --fsds-core-dimension-breakpoint-md: 768px;
   --fsds-core-dimension-breakpoint-lg: 1024px;
