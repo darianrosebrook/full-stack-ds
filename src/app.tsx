@@ -8,6 +8,7 @@ import { ArchitectureView } from "./views/ArchitectureView";
 import { DesignView } from "./views/DesignView";
 import { DeveloperView } from "./views/DeveloperView";
 import { TokensView } from "./views/TokensView";
+import { TokensPhilosophyView } from "./views/TokensPhilosophyView";
 import { PrimitiveView } from "./views/PrimitiveView";
 import { useRoute } from "./router";
 import type { TraceSelection } from "./trace/types";
@@ -39,6 +40,9 @@ export function App() {
         {route.kind === "home" && <Home bundle={bundle} />}
         {route.kind === "architecture" && <ArchitectureView bundle={bundle} />}
         {route.kind === "tokens" && <TokensView bundle={bundle} />}
+        {route.kind === "tokens-philosophy" && (
+          <TokensPhilosophyView tab={route.tab} />
+        )}
         {route.kind === "primitive" && activePrimitive && (
           <PrimitiveView primitive={activePrimitive} />
         )}

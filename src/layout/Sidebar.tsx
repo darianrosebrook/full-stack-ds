@@ -77,6 +77,17 @@ export function Sidebar({ bundle, route }: SidebarProps) {
           </a>
         </NavListItem>
 
+        <li className="sidebar-group">Standards</li>
+        <NavListItem className="sidebar-item-host">
+          <a
+            className={`sidebar-item${route.kind === "tokens-philosophy" ? " sidebar-item--active" : ""}`}
+            href={buildHref({ kind: "tokens-philosophy", tab: "overview" })}
+            aria-current={route.kind === "tokens-philosophy" ? "page" : undefined}
+          >
+            <span>Tokens philosophy</span>
+          </a>
+        </NavListItem>
+
         {bundle.primitives.length > 0 && (
           <>
             <li className="sidebar-group">
