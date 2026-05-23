@@ -348,6 +348,81 @@ export function extractCanonicalPairs(
       bg: 'semantic.color.background.primary',
       context: 'Danger status on primary background',
     },
+    // Subtle feedback surfaces — info/success/warning/danger toasts and
+    // alerts use these. Each has its own `on-X-subtle` foreground token
+    // (saturated darker tone) chosen specifically for contrast against
+    // the subtle surface. Without this check, both the surface and the
+    // text-on-surface can drift independently.
+    {
+      fg: 'semantic.color.foreground.on.info.subtle',
+      bg: 'semantic.color.feedback.background.info.subtle',
+      context: 'Info-on-subtle (alert/toast info variant)',
+    },
+    {
+      fg: 'semantic.color.foreground.on.success.subtle',
+      bg: 'semantic.color.feedback.background.success.subtle',
+      context: 'Success-on-subtle (alert/toast success variant)',
+    },
+    {
+      fg: 'semantic.color.foreground.on.warning.subtle',
+      bg: 'semantic.color.feedback.background.warning.subtle',
+      context: 'Warning-on-subtle (alert/toast warning variant)',
+    },
+    {
+      fg: 'semantic.color.foreground.on.danger.subtle',
+      bg: 'semantic.color.feedback.background.danger.subtle',
+      context: 'Danger-on-subtle (alert/toast danger variant)',
+    },
+    // Links — accent foreground against primary background. Inline
+    // links are the second-most common text appearance after body copy,
+    // and their accent hue is more saturated than primary fg, so the
+    // contrast can be tighter than people expect.
+    {
+      fg: 'semantic.color.foreground.link',
+      bg: 'semantic.color.background.primary',
+      context: 'Link text on primary background',
+    },
+    {
+      fg: 'semantic.color.foreground.accent',
+      bg: 'semantic.color.background.primary',
+      context: 'Accent text on primary background',
+    },
+    // Focus rings need to be visually distinct against the surface they
+    // appear on. WCAG 2.2 SC 1.4.11 requires 3:1 between focus indicator
+    // and adjacent surface. AA_LARGE is the closest declared level we
+    // have (3:1) — we use it as a proxy for the 3:1 non-text requirement.
+    {
+      fg: 'semantic.color.border.focus',
+      bg: 'semantic.color.background.primary',
+      context: 'Focus ring against primary surface (WCAG 2.2 SC 1.4.11)',
+      level: 'AA_LARGE',
+    },
+    {
+      fg: 'semantic.color.border.focus',
+      bg: 'semantic.color.background.secondary',
+      context: 'Focus ring against secondary surface (WCAG 2.2 SC 1.4.11)',
+      level: 'AA_LARGE',
+    },
+    // Secondary action buttons (outline/ghost) — the foreground is the
+    // standard primary fg, the background is the secondary-default
+    // surface. This is the contrast the showcase relies on for default
+    // and outline button variants.
+    {
+      fg: 'semantic.color.foreground.primary',
+      bg: 'semantic.color.action.background.secondary.default',
+      context: 'Secondary button label on default secondary action surface',
+    },
+    // Disabled state — pairs the disabled fg against the disabled bg.
+    // WCAG explicitly exempts disabled controls from contrast minimums
+    // (SC 1.4.3 Note 5), but checking it surfaces unintentional drift
+    // where disabled becomes literally invisible. AA_LARGE is the
+    // realistic bar.
+    {
+      fg: 'semantic.color.foreground.disabled',
+      bg: 'semantic.color.background.disabled',
+      context: 'Disabled foreground on disabled background',
+      level: 'AA_LARGE',
+    },
   ];
 
   const out: Array<{

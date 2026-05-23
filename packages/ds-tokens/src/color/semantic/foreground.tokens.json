@@ -270,12 +270,12 @@
       },
       "disabled": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.300}",
-          "fsds.dark": "{color.palette.neutral.500}"
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.400}"
         },
-        "$description": "Disabled foreground color"
+        "$description": "Disabled foreground color. Bumped from neutral.300/500 to neutral.500/400 to meet 3:1 against background.disabled (neutral.200/700). WCAG SC 1.4.3 exempts disabled controls from contrast minimums, but unreadable disabled labels are usability debt — this satisfies AA_LARGE (3:1) so disabled state stays visibly de-emphasized without becoming invisible."
       },
       "placeholder": {
         "$type": "color",

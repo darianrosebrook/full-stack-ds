@@ -686,7 +686,7 @@
   --fsds-semantic-color-foreground-syntax-tag: var(--fsds-semantic-color-foreground-danger);
   --fsds-semantic-color-foreground-syntax-static: var(--fsds-semantic-color-foreground-accent);
   --fsds-semantic-color-foreground-syntax-string: var(--fsds-semantic-color-foreground-highlight);
-  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-300);
+  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-500);
   --fsds-semantic-color-foreground-placeholder: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-foreground-inverse: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-gradient-brand-primary: var(--fsds-core-color-palette-brand-primary-400);
@@ -855,7 +855,7 @@
   --fsds-semantic-color-foreground-syntax-tag: var(--fsds-semantic-color-foreground-danger);
   --fsds-semantic-color-foreground-syntax-static: var(--fsds-semantic-color-foreground-accent);
   --fsds-semantic-color-foreground-syntax-string: var(--fsds-semantic-color-foreground-highlight);
-  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-300);
+  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-500);
   --fsds-semantic-color-foreground-placeholder: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-foreground-inverse: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-gradient-brand-primary: var(--fsds-core-color-palette-brand-primary-400);
@@ -1022,7 +1022,7 @@
   --fsds-semantic-color-foreground-syntax-tag: var(--fsds-semantic-color-foreground-danger);
   --fsds-semantic-color-foreground-syntax-static: var(--fsds-semantic-color-foreground-accent);
   --fsds-semantic-color-foreground-syntax-string: var(--fsds-semantic-color-foreground-highlight);
-  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-500);
+  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-foreground-placeholder: var(--fsds-core-color-palette-neutral-500);
   --fsds-semantic-color-foreground-inverse: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-gradient-brand-primary: var(--fsds-core-color-palette-brand-primary-400);
@@ -1190,7 +1190,7 @@
   --fsds-semantic-color-foreground-syntax-tag: var(--fsds-semantic-color-foreground-danger);
   --fsds-semantic-color-foreground-syntax-static: var(--fsds-semantic-color-foreground-accent);
   --fsds-semantic-color-foreground-syntax-string: var(--fsds-semantic-color-foreground-highlight);
-  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-500);
+  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-foreground-placeholder: var(--fsds-core-color-palette-neutral-500);
   --fsds-semantic-color-foreground-inverse: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-gradient-brand-primary: var(--fsds-core-color-palette-brand-primary-400);
@@ -1356,7 +1356,7 @@
   --fsds-semantic-color-foreground-syntax-tag: var(--fsds-semantic-color-foreground-danger);
   --fsds-semantic-color-foreground-syntax-static: var(--fsds-semantic-color-foreground-accent);
   --fsds-semantic-color-foreground-syntax-string: var(--fsds-semantic-color-foreground-highlight);
-  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-300);
+  --fsds-semantic-color-foreground-disabled: var(--fsds-core-color-palette-neutral-500);
   --fsds-semantic-color-foreground-placeholder: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-foreground-inverse: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-gradient-brand-primary: var(--fsds-core-color-palette-brand-primary-400);
