@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import type { MouseEvent } from "react";
 import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
@@ -54,16 +55,29 @@ function findAnchorForRef(
 interface RefLinkProps {
   value: string;
   index: { core: Set<string>; semantic: Set<string>; brand: Set<string> };
+  onJump: (anchor: string) => void;
 }
 
-function RefLink({ value, index }: RefLinkProps) {
+function RefLink({ value, index, onJump }: RefLinkProps) {
   const target = refTarget(value);
   const href = findAnchorForRef(target, index);
   if (!href) {
     return <span className="token-ref token-ref--unresolved">{value}</span>;
   }
+  // Intentional anchor attribute so middle-click / right-click "Copy link"
+  // produces a useful URL, but the click handler prevents the default
+  // navigation — the showcase uses a hash router, so a bare `#token-…`
+  // hash would be parsed as "home" and unmount the table.
   return (
-    <a className="token-ref" href={`#${href}`}>
+    <a
+      className="token-ref"
+      href={`#${href}`}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        onJump(href);
+      }}
+    >
       {target}
     </a>
   );
@@ -72,13 +86,14 @@ function RefLink({ value, index }: RefLinkProps) {
 interface ValueCellProps {
   token: FoundationToken;
   index: { core: Set<string>; semantic: Set<string>; brand: Set<string> };
+  onJump: (anchor: string) => void;
 }
 
-function ValueCell({ token, index }: ValueCellProps) {
+function ValueCell({ token, index, onJump }: ValueCellProps) {
   const v = token.value;
   if (v == null) return <span className="muted">—</span>;
   if (isReference(v)) {
-    return <RefLink value={v} index={index} />;
+    return <RefLink value={v} index={index} onJump={onJump} />;
   }
   if (token.valueByMode && (token.valueByMode.light || token.valueByMode.dark)) {
     const { light, dark } = token.valueByMode;
@@ -167,22 +182,42 @@ export function TokensView({ bundle }: TokensViewProps) {
     return groups;
   }, [filtered]);
 
-  // When the user clicks an alias link, scrollIntoView is the browser's job —
-  // but we also want a visual flash so the jump destination is obvious.
-  // Listen for hashchange and toggle a class on the target row for ~1.5s.
-  useEffect(() => {
-    function flash() {
-      const hash = window.location.hash.slice(1);
-      if (!hash) return;
-      const el = document.getElementById(hash);
-      if (!el) return;
-      el.classList.add("token-row--flash");
-      window.setTimeout(() => el.classList.remove("token-row--flash"), 1500);
+  // Jump handler used by every in-page anchor (row name + {ref} links).
+  // We can't fall through to the browser's native hash navigation because the
+  // showcase uses a hash router (`#/tokens`); any non-routing hash like
+  // `#token-…` would be parsed as "home" and unmount the table. Instead, scroll
+  // the target into view, flash it, and update the URL via history.replaceState
+  // (which does NOT fire hashchange, so the router stays put).
+  const jumpToRow = useCallback((anchor: string) => {
+    const el = document.getElementById(anchor);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.remove("token-row--flash");
+    // Force a reflow so the animation restarts even when re-clicking the
+    // same target. Reading offsetWidth is the idiomatic reflow trigger.
+    void el.offsetWidth;
+    el.classList.add("token-row--flash");
+    window.setTimeout(() => el.classList.remove("token-row--flash"), 1500);
+    // Preserve `#/tokens` and append the row id as a query so deep links
+    // survive a reload without confusing the router. Using replaceState
+    // (not pushState) keeps the back button useful.
+    try {
+      const next = `#/tokens?row=${encodeURIComponent(anchor)}`;
+      window.history.replaceState(null, "", next);
+    } catch {
+      // Some browsers throw on rapid history mutations; the visual jump
+      // already happened, so swallowing the error is fine.
     }
-    window.addEventListener("hashchange", flash);
-    flash(); // also flash on first mount if URL already has a token hash
-    return () => window.removeEventListener("hashchange", flash);
   }, []);
+
+  const onNameClick = useCallback(
+    (anchor: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      jumpToRow(anchor);
+    },
+    [jumpToRow],
+  );
 
   const counts = {
     core: rows.filter((r) => r.layer === "core").length,
@@ -205,6 +240,8 @@ export function TokensView({ bundle }: TokensViewProps) {
 
       <div className="tokens-controls">
         <input
+          id="tokens-filter"
+          name="tokens-filter"
           type="search"
           className="tokens-filter-input"
           placeholder="Filter by name, value, or description…"
@@ -278,20 +315,27 @@ export function TokensView({ bundle }: TokensViewProps) {
                     </div>
                   </td>
                 </tr>,
-                ...items.map((t) => (
-                  <tr key={`${layer}.${t.path}`} id={anchorId(layer, t.path)}>
-                    <td className="tokens-name-cell">
-                      <a className="tokens-name-anchor" href={`#${anchorId(layer, t.path)}`}>
-                        {t.path}
-                      </a>
-                    </td>
-                    <td>
-                      <ValueCell token={t} index={refIndex} />
-                    </td>
-                    <td className="muted">{t.type ?? "—"}</td>
-                    <td className="muted tokens-desc-cell">{t.description ?? ""}</td>
-                  </tr>
-                )),
+                ...items.map((t) => {
+                  const anchor = anchorId(layer, t.path);
+                  return (
+                    <tr key={`${layer}.${t.path}`} id={anchor}>
+                      <td className="tokens-name-cell">
+                        <a
+                          className="tokens-name-anchor"
+                          href={`#${anchor}`}
+                          onClick={onNameClick(anchor)}
+                        >
+                          {t.path}
+                        </a>
+                      </td>
+                      <td>
+                        <ValueCell token={t} index={refIndex} onJump={jumpToRow} />
+                      </td>
+                      <td className="muted">{t.type ?? "—"}</td>
+                      <td className="muted tokens-desc-cell">{t.description ?? ""}</td>
+                    </tr>
+                  );
+                }),
               ];
             })}
             {filtered.length === 0 && (

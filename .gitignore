@@ -77,3 +77,6 @@ CLAUDE.md
 **/.caws/state/
 **/.caws/cache/
 **/.caws/events.jsonl
+
+# Local screenshots from DevTools-MCP review sessions
+.tmp-review/
