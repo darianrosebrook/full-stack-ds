@@ -30,8 +30,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate contracts
-        run: pnpm run generate:validate
+      # Contract validation — `generate:check` runs the JSON-Schema shape
+      # validator AND the cross-graph semantic checks (every contract
+      # resolvesTo path must exist in the composed token graph; emitted
+      # CSS must match contract truth; styles selectors don't collide).
+      # The bare `generate:validate` only checks shape, which is how a
+      # token-graph cleanup landed silently in 2026-05: contracts still
+      # referenced `semantic.overlay.scrim.dialog` after the shard was
+      # deleted, and the shape validator said VALID. `generate:check` is
+      # the real gate.
+      - name: Validate contracts (shape + semantic)
+        run: pnpm run generate:check
 
       # Design tokens — DTCG validation. Catches malformed token JSON,
       # self-references, and unknown $type values in source token files
@@ -54,12 +63,27 @@ jobs:
       - name: Validate token contrast (WCAG AA)
         run: pnpm run tokens:check-contrast
 
-      # Design tokens — usage report. Non-failing informational step
-      # that surfaces unused tokens (data-viz scales, orphans from
-      # token deletions, etc.) for visibility. Doesn't gate the build;
-      # we'd need a baseline to gate on. The report is uploaded as an
-      # artifact for inspection.
-      - name: Report token usage
+      # Design tokens — brand-reference verifier. Every `{ref}` inside
+      # the 10 brand override files must resolve to an actual token in
+      # the composed graph. The token build deliberately skips brand-file
+      # ref validation (brand overrides land in a separate cascade layer
+      # with a local definedVars set), so `{color.palette.cobalt.500}`
+      # would silently no-op at runtime without this gate.
+      - name: Validate brand references
+        run: pnpm run tokens:check-brand-refs
+
+      # Design tokens — usage regression gate. Fails if any token in the
+      # composed graph that was USED at baseline time has become unused,
+      # or if total unused count grew. Baseline lives at
+      # packages/ds-tokens/usage-baseline.json. To intentionally land a
+      # new unused token, re-baseline with
+      # `pnpm run tokens:write-usage-baseline` and commit the result.
+      - name: Gate token usage regressions
+        run: pnpm run tokens:check-usage:gate
+
+      # Full usage report uploaded for visibility into the baseline floor
+      # (398 tokens unused at baseline time, mostly data-viz palettes).
+      - name: Generate token usage report
         run: pnpm run tokens:check-usage -- --output=tokens-usage-report.md
         continue-on-error: true
 

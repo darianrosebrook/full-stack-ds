@@ -22,6 +22,8 @@
     "validate": "tsx build/build.ts --prefix=fsds --validate-only",
     "check-contrast": "tsx build/runners/check-contrast.ts",
     "check-usage": "tsx build/runners/usage.ts",
+    "check-usage:gate": "tsx build/runners/usage.ts --check-baseline",
+    "write-usage-baseline": "tsx build/runners/usage.ts --write-baseline",
     "check-brand-refs": "tsx build/runners/check-brand-refs.ts"
   },
   "dependencies": {

@@ -42,17 +42,25 @@ echo ""
 # Mirror CI's `pnpm install --frozen-lockfile`. Running this catches
 # lockfile drift before we push — the same drift that produces the
 # "@jest/globals not found" class of CI failure.
-echo "[pre-push 1/10] pnpm install --frozen-lockfile"
+echo "[pre-push 1/12] pnpm install --frozen-lockfile"
 pnpm install --frozen-lockfile
 
 echo ""
-echo "[pre-push 2/10] pnpm run generate:validate"
-pnpm run generate:validate
+echo "[pre-push 2/12] pnpm run generate:check"
+# `generate:check` is `generate:validate` PLUS the cross-graph semantic
+# checks (every contract resolvesTo path must exist in the composed
+# token graph; emitted CSS must match contract truth; styles selectors
+# don't collide). The bare `generate:validate` only checks JSON-Schema
+# shape, which is how a token-graph cleanup landed silently in 2026-05:
+# contracts still referenced `semantic.overlay.scrim.dialog` after the
+# shard was deleted, and the shape validator said VALID because the
+# contract JSON was well-formed. `generate:check` is the real gate.
+pnpm run generate:check
 
 # Design tokens — DTCG validation catches malformed token JSON,
 # self-references, and unknown $type values before they reach codegen.
 echo ""
-echo "[pre-push 3/10] pnpm run tokens:validate"
+echo "[pre-push 3/12] pnpm run tokens:validate"
 pnpm run tokens:validate
 
 # Design tokens — drift gate. Rebuilds composed.tokens.json + tokens.css
@@ -60,35 +68,55 @@ pnpm run tokens:validate
 # committed. Mirrors the `governed:rail` drift check below but scoped to
 # the tokens output.
 echo ""
-echo "[pre-push 4/10] pnpm run tokens:build:check"
+echo "[pre-push 4/12] pnpm run tokens:build:check"
 pnpm run tokens:build:check
 
 # Design tokens — WCAG contrast gate. Loads resolved.tokens.json and
 # checks the curated foreground × background pair list against AA. Fails
 # loud if any pair drops below its declared level.
 echo ""
-echo "[pre-push 5/10] pnpm run tokens:check-contrast"
+echo "[pre-push 5/12] pnpm run tokens:check-contrast"
 pnpm run tokens:check-contrast
 
+# Design tokens — brand-reference verifier. Every `{ref}` inside the 10
+# brand override files must resolve to an actual token in the composed
+# graph. The token build deliberately skips brand-file ref validation
+# (brand overrides land in a separate cascade layer with a local
+# definedVars set), so `{color.palette.cobalt.500}` would silently
+# no-op at runtime without this gate. See build/runners/check-brand-refs.ts.
 echo ""
-echo "[pre-push 6/10] pnpm run lint"
+echo "[pre-push 6/12] pnpm run tokens:check-brand-refs"
+pnpm run tokens:check-brand-refs
+
+# Design tokens — usage regression gate. Fails if any token in the
+# composed graph that was USED at baseline time has become unused, or
+# if total unused count grew. Baseline lives at
+# packages/ds-tokens/usage-baseline.json. To intentionally land a new
+# unused token (e.g. publishing one ahead of consumers), re-baseline
+# with `pnpm run tokens:write-usage-baseline` and commit the result.
+echo ""
+echo "[pre-push 7/12] pnpm run tokens:check-usage:gate"
+pnpm run tokens:check-usage:gate
+
+echo ""
+echo "[pre-push 8/12] pnpm run lint"
 pnpm run lint
 
 echo ""
-echo "[pre-push 7/10] pnpm run typecheck (root + codegen)"
+echo "[pre-push 9/12] pnpm run typecheck (root + codegen)"
 pnpm run typecheck
 
 echo ""
-echo "[pre-push 8/10] pnpm run typecheck:vue"
+echo "[pre-push 10/12] pnpm run typecheck:vue"
 pnpm run typecheck:vue
 
 echo ""
-echo "[pre-push 9/10] pnpm test (root) + pnpm run test:vue"
+echo "[pre-push 11/12] pnpm test (root) + pnpm run test:vue"
 pnpm test
 pnpm run test:vue
 
 echo ""
-echo "[pre-push 10/10] pnpm run governed:rail + framework-src diff check"
+echo "[pre-push 12/12] pnpm run governed:rail + framework-src diff check"
 pnpm run governed:rail
 
 # Mirror the CI "Generated artifacts are committed" step. If the rail
