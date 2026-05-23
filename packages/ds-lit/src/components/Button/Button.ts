@@ -50,6 +50,24 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-fontSize-small: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
       --fsds-button-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);
+      --fsds-button-color-background-primary: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-button-color-foreground-primary: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-button-color-border-primary: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
+      --fsds-button-color-background-secondary: var(--fsds-semantic-color-action-background-secondary-default, #ffffff);
+      --fsds-button-color-foreground-secondary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-button-color-border-secondary: var(--fsds-semantic-color-border-default, #8f8f8f);
+      --fsds-button-color-background-tertiary: transparent;
+      --fsds-button-color-foreground-tertiary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-button-color-border-tertiary: transparent;
+      --fsds-button-color-background-destructive: var(--fsds-semantic-color-action-background-danger-default, #d9292b);
+      --fsds-button-color-foreground-destructive: var(--fsds-semantic-color-foreground-inverse, #fafafa);
+      --fsds-button-color-border-destructive: var(--fsds-semantic-color-action-background-danger-default, #d9292b);
+      --fsds-button-color-background-ghost: transparent;
+      --fsds-button-color-foreground-ghost: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-button-color-border-ghost: transparent;
+      --fsds-button-color-background-outline: transparent;
+      --fsds-button-color-foreground-outline: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-button-color-border-outline: var(--fsds-semantic-color-border-default, #8f8f8f);
     }
     
     .button {
@@ -109,6 +127,42 @@ export class ButtonElement extends LitElement {
       padding-inline: var(--fsds-button-size-padding-inline-large);
       min-height: var(--fsds-button-size-minHeight-large);
       font-size: var(--fsds-button-size-fontSize-large);
+    }
+    
+    .button--primary {
+      background-color: var(--fsds-button-color-background-primary);
+      color: var(--fsds-button-color-foreground-primary);
+      border-color: var(--fsds-button-color-border-primary);
+    }
+    
+    .button--secondary {
+      background-color: var(--fsds-button-color-background-secondary);
+      color: var(--fsds-button-color-foreground-secondary);
+      border-color: var(--fsds-button-color-border-secondary);
+    }
+    
+    .button--tertiary {
+      background-color: var(--fsds-button-color-background-tertiary);
+      color: var(--fsds-button-color-foreground-tertiary);
+      border-color: var(--fsds-button-color-border-tertiary);
+    }
+    
+    .button--destructive {
+      background-color: var(--fsds-button-color-background-destructive);
+      color: var(--fsds-button-color-foreground-destructive);
+      border-color: var(--fsds-button-color-border-destructive);
+    }
+    
+    .button--ghost {
+      background-color: var(--fsds-button-color-background-ghost);
+      color: var(--fsds-button-color-foreground-ghost);
+      border-color: var(--fsds-button-color-border-ghost);
+    }
+    
+    .button--outline {
+      background-color: var(--fsds-button-color-background-outline);
+      color: var(--fsds-button-color-foreground-outline);
+      border-color: var(--fsds-button-color-border-outline);
     }
     
     .button__spinner {

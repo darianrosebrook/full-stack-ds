@@ -133,5 +133,85 @@
     "resolvesTo": "core.typography.ramp.5",
     "fallback": "1.125rem",
     "layer": "core"
+  },
+  "button.color.background.primary": {
+    "resolvesTo": "semantic.color.action.background.primary.default",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "button.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.inverse",
+    "fallback": "#fafafa",
+    "layer": "semantic"
+  },
+  "button.color.border.primary": {
+    "resolvesTo": "semantic.color.action.background.primary.default",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "button.color.background.secondary": {
+    "resolvesTo": "semantic.color.action.background.secondary.default",
+    "fallback": "#ffffff",
+    "layer": "semantic"
+  },
+  "button.color.foreground.secondary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "button.color.border.secondary": {
+    "resolvesTo": "semantic.color.border.default",
+    "fallback": "#8f8f8f",
+    "layer": "semantic"
+  },
+  "button.color.background.tertiary": {
+    "literal": "transparent"
+  },
+  "button.color.foreground.tertiary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "button.color.border.tertiary": {
+    "literal": "transparent"
+  },
+  "button.color.background.destructive": {
+    "resolvesTo": "semantic.color.action.background.danger.default",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "button.color.foreground.destructive": {
+    "resolvesTo": "semantic.color.foreground.inverse",
+    "fallback": "#fafafa",
+    "layer": "semantic"
+  },
+  "button.color.border.destructive": {
+    "resolvesTo": "semantic.color.action.background.danger.default",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "button.color.background.ghost": {
+    "literal": "transparent"
+  },
+  "button.color.foreground.ghost": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "button.color.border.ghost": {
+    "literal": "transparent"
+  },
+  "button.color.background.outline": {
+    "literal": "transparent"
+  },
+  "button.color.foreground.outline": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "button.color.border.outline": {
+    "resolvesTo": "semantic.color.border.default",
+    "fallback": "#8f8f8f",
+    "layer": "semantic"
   }
 }

@@ -746,6 +746,21 @@ function generateBrandLayerCSS(brands: Map<BrandId, BrandOverrides>): string {
   for (const [brandId, overrides] of brands) {
     if (Object.keys(overrides.lightVars).length === 0) continue;
 
+    // The brand named "default" applies unconditionally at :root in
+    // addition to its [data-brand="default"] selector. Without this, the
+    // "unbranded" page state (no data-brand attribute) resolves brand-
+    // dependent semantic tokens (e.g. action.background.primary.default)
+    // through the raw core.color.palette.brand.* values — which are the
+    // palette's literal hues, not the project's actual brand. The default
+    // brand override file IS the source of truth for the project's
+    // canonical look, so it must be the unbranded default too.
+    if (brandId === "default") {
+      const rootProps = Object.entries(overrides.lightVars)
+        .map(([p, v]) => `    ${p}: ${v};`)
+        .join("\n");
+      blocks.push(`  :root {\n${rootProps}\n  }`);
+    }
+
     // Light mode overrides (default)
     const lightBlock = formatBrandBlock(brandId, overrides.lightVars);
     if (lightBlock) {
@@ -777,6 +792,18 @@ function generateBrandLayerCSS(brands: Map<BrandId, BrandOverrides>): string {
       blocks.push(
         `  .dark[data-brand="${brandId}"], .dark [data-brand="${brandId}"], [data-theme="dark"][data-brand="${brandId}"], [data-theme="dark"] [data-brand="${brandId}"] {\n${darkProps}\n  }`,
       );
+
+      // Default brand's dark overrides also apply unconditionally so the
+      // unbranded page state honors dark theme. Mirrors the :root block
+      // added above for light overrides.
+      if (brandId === "default") {
+        blocks.push(
+          `  @media (prefers-color-scheme: dark) {\n    :root {\n${darkBlock}\n    }\n  }`,
+        );
+        blocks.push(
+          `  .dark, [data-theme="dark"] {\n${darkProps}\n  }`,
+        );
+      }
     }
   }
 

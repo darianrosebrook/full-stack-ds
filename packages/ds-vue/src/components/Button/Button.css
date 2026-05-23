@@ -60,6 +60,42 @@
   font-size: var(--fsds-button-size-fontSize-large);
 }
 
+.button--primary {
+  background-color: var(--fsds-button-color-background-primary);
+  color: var(--fsds-button-color-foreground-primary);
+  border-color: var(--fsds-button-color-border-primary);
+}
+
+.button--secondary {
+  background-color: var(--fsds-button-color-background-secondary);
+  color: var(--fsds-button-color-foreground-secondary);
+  border-color: var(--fsds-button-color-border-secondary);
+}
+
+.button--tertiary {
+  background-color: var(--fsds-button-color-background-tertiary);
+  color: var(--fsds-button-color-foreground-tertiary);
+  border-color: var(--fsds-button-color-border-tertiary);
+}
+
+.button--destructive {
+  background-color: var(--fsds-button-color-background-destructive);
+  color: var(--fsds-button-color-foreground-destructive);
+  border-color: var(--fsds-button-color-border-destructive);
+}
+
+.button--ghost {
+  background-color: var(--fsds-button-color-background-ghost);
+  color: var(--fsds-button-color-foreground-ghost);
+  border-color: var(--fsds-button-color-border-ghost);
+}
+
+.button--outline {
+  background-color: var(--fsds-button-color-background-outline);
+  color: var(--fsds-button-color-foreground-outline);
+  border-color: var(--fsds-button-color-border-outline);
+}
+
 .button__spinner {
   display: inline-block;
   width: 1em;

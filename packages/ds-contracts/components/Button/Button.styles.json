@@ -54,6 +54,36 @@
     "min-height": { "resolvesTo": "button.size.minHeight.large" },
     "font-size": { "resolvesTo": "button.size.fontSize.large" }
   },
+  "--primary": {
+    "background-color": { "resolvesTo": "button.color.background.primary" },
+    "color": { "resolvesTo": "button.color.foreground.primary" },
+    "border-color": { "resolvesTo": "button.color.border.primary" }
+  },
+  "--secondary": {
+    "background-color": { "resolvesTo": "button.color.background.secondary" },
+    "color": { "resolvesTo": "button.color.foreground.secondary" },
+    "border-color": { "resolvesTo": "button.color.border.secondary" }
+  },
+  "--tertiary": {
+    "background-color": { "resolvesTo": "button.color.background.tertiary" },
+    "color": { "resolvesTo": "button.color.foreground.tertiary" },
+    "border-color": { "resolvesTo": "button.color.border.tertiary" }
+  },
+  "--destructive": {
+    "background-color": { "resolvesTo": "button.color.background.destructive" },
+    "color": { "resolvesTo": "button.color.foreground.destructive" },
+    "border-color": { "resolvesTo": "button.color.border.destructive" }
+  },
+  "--ghost": {
+    "background-color": { "resolvesTo": "button.color.background.ghost" },
+    "color": { "resolvesTo": "button.color.foreground.ghost" },
+    "border-color": { "resolvesTo": "button.color.border.ghost" }
+  },
+  "--outline": {
+    "background-color": { "resolvesTo": "button.color.background.outline" },
+    "color": { "resolvesTo": "button.color.foreground.outline" },
+    "border-color": { "resolvesTo": "button.color.border.outline" }
+  },
   "hover": {
     "background-color": {
       "resolvesTo": "button.color.background.hover"
