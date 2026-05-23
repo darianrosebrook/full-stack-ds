@@ -134,25 +134,40 @@
     "button.color.background.default": {
       "resolvesTo": "semantic.color.action.background.primary.default"
     },
+    "button.color.background.hover": {
+      "resolvesTo": "semantic.color.action.background.primary.hover"
+    },
+    "button.color.background.active": {
+      "resolvesTo": "semantic.color.action.background.primary.active"
+    },
+    "button.color.background.disabled": {
+      "resolvesTo": "semantic.color.action.background.primary.disabled"
+    },
     "button.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.inverse"
     },
     "button.color.border.default": {
       "resolvesTo": "semantic.color.action.background.primary.default"
+    },
+    "button.color.border.hover": {
+      "resolvesTo": "semantic.color.action.background.primary.hover"
     }
   },
   "--secondary": {
     "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.secondary.default",
-      "fallback": "#ffffff"
+      "resolvesTo": "semantic.color.action.background.secondary.default"
+    },
+    "button.color.background.hover": {
+      "resolvesTo": "semantic.color.action.background.secondary.hover"
+    },
+    "button.color.background.active": {
+      "resolvesTo": "semantic.color.action.background.secondary.active"
     },
     "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.primary",
-      "fallback": "#141414"
+      "resolvesTo": "semantic.color.foreground.primary"
     },
     "button.color.border.default": {
-      "resolvesTo": "semantic.color.border.default",
-      "fallback": "#8f8f8f"
+      "resolvesTo": "semantic.color.border.default"
     }
   },
   "--tertiary": {
@@ -179,16 +194,22 @@
   },
   "--destructive": {
     "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.danger.default",
-      "fallback": "#d9292b"
+      "resolvesTo": "semantic.color.action.background.danger.default"
+    },
+    "button.color.background.hover": {
+      "resolvesTo": "semantic.color.action.background.danger.hover"
+    },
+    "button.color.background.active": {
+      "resolvesTo": "semantic.color.action.background.danger.active"
     },
     "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.inverse",
-      "fallback": "#fafafa"
+      "resolvesTo": "semantic.color.foreground.inverse"
     },
     "button.color.border.default": {
-      "resolvesTo": "semantic.color.action.background.danger.default",
-      "fallback": "#d9292b"
+      "resolvesTo": "semantic.color.action.background.danger.default"
+    },
+    "button.color.border.hover": {
+      "resolvesTo": "semantic.color.action.background.danger.hover"
     }
   },
   "--ghost": {
@@ -232,35 +253,29 @@
     }
   },
   "hover": {
-    "button.color.background.default": {
-      "resolvesTo": "semantic.interaction.background.hover",
-      "fallback": "#efefef"
+    "background-color": {
+      "resolvesTo": "button.color.background.hover"
     },
-    "button.color.border.default": {
-      "resolvesTo": "semantic.interaction.border.hover",
-      "fallback": "#8f8f8f"
+    "border-color": {
+      "resolvesTo": "button.color.border.hover"
     }
   },
   "active": {
-    "button.color.background.default": {
-      "resolvesTo": "semantic.interaction.background.active",
-      "fallback": "#cecece"
+    "background-color": {
+      "resolvesTo": "button.color.background.active"
     }
   },
   "focus": {
-    "button.color.border.default": {
-      "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+    "border-color": {
+      "resolvesTo": "button.color.border.focus"
     }
   },
   "disabled": {
-    "button.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.primary.disabled",
-      "fallback": "#cecece"
+    "background-color": {
+      "resolvesTo": "button.color.background.disabled"
     },
-    "button.color.foreground.default": {
-      "resolvesTo": "semantic.color.foreground.disabled",
-      "fallback": "#aeaeae"
+    "color": {
+      "resolvesTo": "button.color.foreground.disabled"
     }
   },
   "spinner": {

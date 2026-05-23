@@ -84,24 +84,41 @@ const ONLY = new Set(args.filter((a) => !a.startsWith("--")));
 // regular variant (Button's `--primary` kind).
 const CANONICAL_KEYS = ["default", "medium", "primary"];
 
-// Recognized variant suffixes. A family is treated as a variant family
-// only when at least one non-canonical member's last segment is in this
-// set. Otherwise the script treats co-prefixed slots as independent
-// concepts that happen to share a structural prefix (e.g.
-// `button.size.radius` and `button.size.border` aren't variants of
-// each other).
+// Recognized VARIANT suffixes — last-segment names that mark a family
+// member as a kind/size variant the script should migrate into a slot
+// redirection at the variant selector scope. A family is treated as a
+// variant family only when at least one non-canonical member's last
+// segment is in this set. Co-prefixed slots without a variant suffix
+// are independent concepts (e.g. `button.size.radius` and
+// `button.size.border` aren't variants of each other).
+//
+// IMPORTANT: state names (hover, active, focus, disabled, checked,
+// pressed, selected, indeterminate, on, off, etc.) are NOT in this
+// set. State slots are first-class named siblings of the default slot
+// — `button.color.background.{default, hover, active, disabled}` are
+// FOUR parallel slots, not one canonical with three state-scope
+// redirections. The state pseudo-class rules in `.css`
+// (e.g. `.button:hover { background-color: var(--...-hover); }`) read
+// the state-specific slot. Variants redefine ALL state slots at
+// variant scope. See docs/box-model-primitive.md state-layering rule.
 const VARIANT_SUFFIXES = new Set([
   // size variants
   "small", "medium", "large", "xs", "sm", "md", "lg", "xl",
   // kind variants
   "primary", "secondary", "tertiary", "quaternary", "destructive",
   "ghost", "outline", "link", "danger", "brand", "subtle", "default",
-  // state variants
-  "hover", "active", "focus", "focus-visible", "disabled", "checked",
-  "selected", "pressed", "expanded", "loading", "error", "warning",
-  "success", "info",
-  // checkbox/switch states
-  "indeterminate", "on", "off",
+  // category-of-message variants
+  "error", "warning", "success", "info",
+]);
+
+// State suffixes that the script leaves alone — these stay as
+// first-class siblings of the default slot. The structural state
+// pseudo-class rule reads the state-specific slot; variants redefine
+// all state slots at variant scope.
+const STATE_SUFFIXES = new Set([
+  "hover", "active", "focus", "focus-visible", "disabled",
+  "checked", "indeterminate", "selected", "pressed", "expanded",
+  "loading", "on", "off",
 ]);
 
 function listComponents() {
@@ -162,9 +179,13 @@ function groupByFamily(tokens, cssPrefix) {
         break;
       }
     }
-    const variants = canonical
-      ? members.filter((m) => m !== canonical)
-      : members.slice();
+    // Exclude state-suffix members from the variant set. State slots
+    // are first-class siblings of the default — they don't get rewritten
+    // into slot redirections; the structural state pseudo-class rules
+    // in .css read them directly.
+    const variants = (
+      canonical ? members.filter((m) => m !== canonical) : members.slice()
+    ).filter((m) => !STATE_SUFFIXES.has(m.split(".").pop()));
     families.set(prefix, { canonical, variants });
   }
   return families;

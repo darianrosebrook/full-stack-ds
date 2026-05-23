@@ -39,14 +39,44 @@
     "fallback": "#d9292b",
     "layer": "semantic"
   },
+  "button.color.background.hover": {
+    "resolvesTo": "semantic.interaction.background.hover",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "button.color.background.active": {
+    "resolvesTo": "semantic.interaction.background.active",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
+  "button.color.background.disabled": {
+    "resolvesTo": "semantic.color.action.background.primary.disabled",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
   "button.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.inverse",
     "fallback": "#fafafa",
     "layer": "semantic"
   },
+  "button.color.foreground.disabled": {
+    "resolvesTo": "semantic.color.foreground.disabled",
+    "fallback": "#aeaeae",
+    "layer": "semantic"
+  },
   "button.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
     "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "button.color.border.hover": {
+    "resolvesTo": "semantic.interaction.border.hover",
+    "fallback": "#8f8f8f",
+    "layer": "semantic"
+  },
+  "button.color.border.focus": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
     "layer": "semantic"
   },
   "button.size.gap.default": {
