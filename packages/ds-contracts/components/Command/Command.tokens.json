@@ -1,7 +1,7 @@
 {
   "command.color.overlay": {
-    "resolvesTo": "semantic.overlay.scrim.dialog",
-    "fallback": "rgba(0,0,0,0.60)",
+    "resolvesTo": "semantic.overlay.scrim.strong",
+    "fallback": "rgba(0,0,0,0.64)",
     "layer": "semantic"
   },
   "command.color.background": {

@@ -1,6 +1,6 @@
 /* @generated:start tokens */
 :root {
-  --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
+  --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
   --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
   --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);

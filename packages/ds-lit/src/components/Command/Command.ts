@@ -36,7 +36,7 @@ export class CommandElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
+      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -329,7 +329,7 @@ export class CommandListElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
+      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -549,7 +549,7 @@ export class CommandGroupElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
+      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -769,7 +769,7 @@ export class CommandItemElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
+      --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-strong, rgba(0,0,0,0.64));
       --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);

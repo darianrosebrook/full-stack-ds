@@ -1,7 +1,7 @@
 {
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "typography": {
-    "button": {
+    "action": {
       "01": {
         "$type": "dimension",
         "$value": "{typography.ramp.5}"

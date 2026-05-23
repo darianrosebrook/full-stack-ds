@@ -396,17 +396,10 @@
   --fsds-semantic-control-size-lg-height: var(--fsds-core-spacing-size-09);
   --fsds-semantic-control-size-lg-padding-x: var(--fsds-core-spacing-size-06);
   --fsds-semantic-control-size-lg-padding-y: var(--fsds-core-spacing-size-04);
-  --fsds-semantic-control-toggle-width-sm: calc(var(--fsds-semantic-control-size-sm-height) + var(--fsds-semantic-control-size-sm-paddingX) * 2);
-  --fsds-semantic-control-toggle-width-md: calc(var(--fsds-semantic-control-size-md-height) + var(--fsds-semantic-control-size-md-paddingX) * 2);
-  --fsds-semantic-control-toggle-width-lg: calc(var(--fsds-semantic-control-size-lg-height) + var(--fsds-semantic-control-size-lg-paddingX) * 2);
-  --fsds-semantic-control-toggle-thumb-sm: calc(var(--fsds-semantic-control-size-sm-height) - var(--fsds-semantic-control-size-sm-paddingY) * 2);
-  --fsds-semantic-control-toggle-thumb-md: calc(var(--fsds-semantic-control-size-md-height) - var(--fsds-semantic-control-size-md-paddingY) * 2);
-  --fsds-semantic-control-toggle-thumb-lg: calc(var(--fsds-semantic-control-size-lg-height) - var(--fsds-semantic-control-size-lg-paddingY) * 2);
   --fsds-semantic-dimension-breakpoint-sm: 640px;
   --fsds-semantic-dimension-breakpoint-md: 768px;
   --fsds-semantic-dimension-breakpoint-lg: 1024px;
   --fsds-semantic-dimension-breakpoint-xl: 1280px;
-  --fsds-semantic-dimension-button-min-height: var(--fsds-core-dimension-action-min-height);
   --fsds-semantic-dimension-min-target: var(--fsds-core-dimension-tap-target-min);
   --fsds-semantic-dimension-tap-target-min: var(--fsds-core-dimension-tap-target-min);
   --fsds-semantic-dimension-tap-target-large: 48px;
@@ -419,8 +412,6 @@
   --fsds-semantic-focus-ring-offset: var(--fsds-core-interaction-focus-ring-offset);
   --fsds-semantic-focus-ring-style: solid;
   --fsds-semantic-interaction-disabled-opacity: var(--fsds-core-interaction-disabled-opacity);
-  --fsds-semantic-link-decoration-offset: 2px;
-  --fsds-semantic-link-decoration-thickness: 1px;
   --fsds-semantic-motion-icon-scale-enter: var(--fsds-core-scale-080);
   --fsds-semantic-motion-icon-scale-exit: var(--fsds-core-scale-080);
   --fsds-semantic-motion-interaction-press-duration: var(--fsds-core-motion-duration-instant);
@@ -472,7 +463,6 @@
   --fsds-semantic-shape-radius-extra-small: var(--fsds-core-shape-radius-01);
   --fsds-semantic-shape-radius-none: 0px;
   --fsds-semantic-shape-radius-default: var(--fsds-core-shape-radius-02);
-  --fsds-semantic-skeleton-shine-duration: var(--fsds-core-motion-duration-medium3);
   --fsds-semantic-spacing-density-mode: default;
   --fsds-semantic-spacing-density-compact-xs: var(--fsds-core-spacing-density-compact-xs);
   --fsds-semantic-spacing-density-compact-sm: var(--fsds-core-spacing-density-compact-sm);
@@ -494,6 +484,9 @@
   --fsds-semantic-spacing-padding-component: var(--fsds-core-spacing-density-default-sm);
   --fsds-semantic-spacing-padding-section: var(--fsds-core-spacing-density-default-lg);
   --fsds-semantic-spacing-padding-page: var(--fsds-core-spacing-density-default-xl);
+  --fsds-semantic-typography-action-01: var(--fsds-core-typography-ramp-5);
+  --fsds-semantic-typography-action-02: var(--fsds-core-typography-ramp-4);
+  --fsds-semantic-typography-action-03: var(--fsds-core-typography-ramp-3);
   --fsds-semantic-typography-body-01: var(--fsds-core-typography-ramp-5);
   --fsds-semantic-typography-body-02: var(--fsds-core-typography-ramp-4);
   --fsds-semantic-typography-body-03: var(--fsds-core-typography-ramp-3);
@@ -507,9 +500,6 @@
   --fsds-semantic-typography-body-small-font-weight: var(--fsds-core-typography-weight-regular);
   --fsds-semantic-typography-body-small-font-size: var(--fsds-core-typography-ramp-3);
   --fsds-semantic-typography-body-small-line-height: 1.5;
-  --fsds-semantic-typography-button-01: var(--fsds-core-typography-ramp-5);
-  --fsds-semantic-typography-button-02: var(--fsds-core-typography-ramp-4);
-  --fsds-semantic-typography-button-03: var(--fsds-core-typography-ramp-3);
   --fsds-semantic-typography-caption-01: var(--fsds-core-typography-ramp-3);
   --fsds-semantic-typography-caption-02: var(--fsds-core-typography-ramp-2);
   --fsds-semantic-typography-caption-03: var(--fsds-core-typography-ramp-1);
@@ -535,6 +525,8 @@
   --fsds-semantic-typography-line-height-loose: 1.8;
   --fsds-semantic-typography-line-height-normal: 1.5;
   --fsds-semantic-typography-line-height-tight: 1.2;
+  --fsds-semantic-typography-link-decoration-offset: 2px;
+  --fsds-semantic-typography-link-decoration-thickness: 1px;
   --fsds-semantic-typography-meta-caption-font-family: var(--fsds-core-typography-font-family-inter);
   --fsds-semantic-typography-meta-caption-font-weight: var(--fsds-core-typography-weight-medium);
   --fsds-semantic-typography-meta-caption-font-size: var(--fsds-core-typography-ramp-2);
@@ -700,17 +692,9 @@
   --fsds-semantic-interaction-text-hover: var(--fsds-core-color-palette-neutral-600);
   --fsds-semantic-interaction-text-active: var(--fsds-core-color-mode-dark);
   --fsds-semantic-interaction-text-disabled: var(--fsds-core-color-palette-neutral-400);
-  --fsds-semantic-link-decoration-color: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-hover-text: var(--fsds-core-color-palette-blue-600);
-  --fsds-semantic-link-text: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-visited-text: var(--fsds-core-color-palette-blue-700);
-  --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60);
   --fsds-semantic-overlay-scrim-medium: rgba(0,0,0,0.40);
-  --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50);
   --fsds-semantic-overlay-scrim-strong: rgba(0,0,0,0.64);
   --fsds-semantic-overlay-scrim-weak: rgba(0,0,0,0.24);
-  --fsds-semantic-skeleton-background: var(--fsds-core-color-palette-neutral-100);
-  --fsds-semantic-skeleton-foreground: var(--fsds-core-color-palette-neutral-200);
 }
 }
 
@@ -865,17 +849,9 @@
   --fsds-semantic-interaction-text-hover: var(--fsds-core-color-palette-neutral-600);
   --fsds-semantic-interaction-text-active: var(--fsds-core-color-mode-dark);
   --fsds-semantic-interaction-text-disabled: var(--fsds-core-color-palette-neutral-400);
-  --fsds-semantic-link-decoration-color: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-hover-text: var(--fsds-core-color-palette-blue-600);
-  --fsds-semantic-link-text: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-visited-text: var(--fsds-core-color-palette-blue-700);
-  --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60);
   --fsds-semantic-overlay-scrim-medium: rgba(0,0,0,0.40);
-  --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50);
   --fsds-semantic-overlay-scrim-strong: rgba(0,0,0,0.64);
   --fsds-semantic-overlay-scrim-weak: rgba(0,0,0,0.24);
-  --fsds-semantic-skeleton-background: var(--fsds-core-color-palette-neutral-100);
-  --fsds-semantic-skeleton-foreground: var(--fsds-core-color-palette-neutral-200);
 }
 
   .dark, [data-theme="dark"] {
@@ -1028,17 +1004,9 @@
   --fsds-semantic-interaction-text-hover: var(--fsds-core-color-palette-neutral-600);
   --fsds-semantic-interaction-text-active: var(--fsds-core-color-mode-dark);
   --fsds-semantic-interaction-text-disabled: var(--fsds-core-color-palette-neutral-400);
-  --fsds-semantic-link-decoration-color: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-hover-text: var(--fsds-core-color-palette-blue-600);
-  --fsds-semantic-link-text: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-visited-text: var(--fsds-core-color-palette-blue-700);
-  --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.80);
   --fsds-semantic-overlay-scrim-medium: rgba(0,0,0,0.60);
-  --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.70);
   --fsds-semantic-overlay-scrim-strong: rgba(0,0,0,0.80);
   --fsds-semantic-overlay-scrim-weak: rgba(0,0,0,0.40);
-  --fsds-semantic-skeleton-background: var(--fsds-core-color-palette-neutral-100);
-  --fsds-semantic-skeleton-foreground: var(--fsds-core-color-palette-neutral-200);
 }
 
   @media (prefers-color-scheme: dark) {
@@ -1192,17 +1160,9 @@
   --fsds-semantic-interaction-text-hover: var(--fsds-core-color-palette-neutral-600);
   --fsds-semantic-interaction-text-active: var(--fsds-core-color-mode-dark);
   --fsds-semantic-interaction-text-disabled: var(--fsds-core-color-palette-neutral-400);
-  --fsds-semantic-link-decoration-color: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-hover-text: var(--fsds-core-color-palette-blue-600);
-  --fsds-semantic-link-text: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-visited-text: var(--fsds-core-color-palette-blue-700);
-  --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.80);
   --fsds-semantic-overlay-scrim-medium: rgba(0,0,0,0.60);
-  --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.70);
   --fsds-semantic-overlay-scrim-strong: rgba(0,0,0,0.80);
   --fsds-semantic-overlay-scrim-weak: rgba(0,0,0,0.40);
-  --fsds-semantic-skeleton-background: var(--fsds-core-color-palette-neutral-100);
-  --fsds-semantic-skeleton-foreground: var(--fsds-core-color-palette-neutral-200);
 }
     .light, [data-theme="light"] {
   --fsds-semantic-color-action-background-primary-default: var(--fsds-core-color-palette-brand-primary-500);
@@ -1354,17 +1314,9 @@
   --fsds-semantic-interaction-text-hover: var(--fsds-core-color-palette-neutral-600);
   --fsds-semantic-interaction-text-active: var(--fsds-core-color-mode-dark);
   --fsds-semantic-interaction-text-disabled: var(--fsds-core-color-palette-neutral-400);
-  --fsds-semantic-link-decoration-color: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-hover-text: var(--fsds-core-color-palette-blue-600);
-  --fsds-semantic-link-text: var(--fsds-core-color-palette-blue-500);
-  --fsds-semantic-link-visited-text: var(--fsds-core-color-palette-blue-700);
-  --fsds-semantic-overlay-scrim-dialog: rgba(0,0,0,0.60);
   --fsds-semantic-overlay-scrim-medium: rgba(0,0,0,0.40);
-  --fsds-semantic-overlay-scrim-sheet: rgba(0,0,0,0.50);
   --fsds-semantic-overlay-scrim-strong: rgba(0,0,0,0.64);
   --fsds-semantic-overlay-scrim-weak: rgba(0,0,0,0.24);
-  --fsds-semantic-skeleton-background: var(--fsds-core-color-palette-neutral-100);
-  --fsds-semantic-skeleton-foreground: var(--fsds-core-color-palette-neutral-200);
 }
   }
 }

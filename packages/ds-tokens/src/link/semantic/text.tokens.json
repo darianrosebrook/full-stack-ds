@@ -1,9 +1,0 @@
-{
-  "$schema": "../../../build/w3c/w3c-schema-strict.json",
-  "link": {
-    "text": {
-      "$type": "color",
-      "$value": "{color.palette.blue.500}"
-    }
-  }
-}

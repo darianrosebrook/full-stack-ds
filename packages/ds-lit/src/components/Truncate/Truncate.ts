@@ -39,7 +39,7 @@ export class TruncateElement extends LitElement {
       --fsds-truncate-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-truncate-typography-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-truncate-spacing-toggle: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
+      --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-color-foreground-linkHover, #ae0001);
     }
     
     .truncate {
@@ -133,7 +133,7 @@ export class TruncateContentElement extends LitElement {
       --fsds-truncate-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-truncate-typography-fontWeight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-truncate-spacing-toggle: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-link-hover-text, #ae0001);
+      --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-color-foreground-linkHover, #ae0001);
     }
     
     .truncate {

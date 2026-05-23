@@ -1,7 +1,7 @@
 {
   "sheet.color.overlay": {
-    "resolvesTo": "semantic.overlay.scrim.sheet",
-    "fallback": "rgba(0,0,0,0.50)",
+    "resolvesTo": "semantic.overlay.scrim.medium",
+    "fallback": "rgba(0,0,0,0.40)",
     "layer": "semantic"
   },
   "sheet.color.background": {

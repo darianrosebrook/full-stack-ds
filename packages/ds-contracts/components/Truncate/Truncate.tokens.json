@@ -20,7 +20,7 @@
     "layer": "core"
   },
   "truncate.color.foreground.linkHover": {
-    "resolvesTo": "semantic.link.hover.text",
+    "resolvesTo": "semantic.color.foreground.linkHover",
     "fallback": "#ae0001",
     "layer": "semantic"
   }

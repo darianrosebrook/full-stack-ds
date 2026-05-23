@@ -1,9 +1,0 @@
-{
-  "$schema": "../../../build/w3c/w3c-schema-strict.json",
-  "dimension": {
-    "buttonMinHeight": {
-      "$type": "dimension",
-      "$value": "{dimension.actionMinHeight}"
-    }
-  }
-}

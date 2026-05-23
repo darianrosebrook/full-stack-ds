@@ -36,7 +36,7 @@ export class SheetElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -282,7 +282,7 @@ export class SheetContentElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -473,7 +473,7 @@ export class SheetHeaderElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -664,7 +664,7 @@ export class SheetTitleElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -855,7 +855,7 @@ export class SheetDescriptionElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -1046,7 +1046,7 @@ export class SheetBodyElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -1237,7 +1237,7 @@ export class SheetFooterElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
+      --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-medium, rgba(0,0,0,0.40));
       --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-sheet-color-text: var(--fsds-semantic-color-foreground-primary, #141414);

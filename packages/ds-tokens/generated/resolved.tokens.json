@@ -3097,42 +3097,6 @@
             "$value": "8px"
           }
         }
-      },
-      "toggle": {
-        "width": {
-          "sm": {
-            "$type": "string",
-            "$description": "ToggleSwitch track width sm (= 32px)",
-            "$value": "calc(var(--fsds-semantic-control-size-sm-height) + var(--fsds-semantic-control-size-sm-paddingX) * 2)"
-          },
-          "md": {
-            "$type": "string",
-            "$description": "ToggleSwitch track width md (= 48px)",
-            "$value": "calc(var(--fsds-semantic-control-size-md-height) + var(--fsds-semantic-control-size-md-paddingX) * 2)"
-          },
-          "lg": {
-            "$type": "string",
-            "$description": "ToggleSwitch track width lg (= 80px)",
-            "$value": "calc(var(--fsds-semantic-control-size-lg-height) + var(--fsds-semantic-control-size-lg-paddingX) * 2)"
-          }
-        },
-        "thumb": {
-          "sm": {
-            "$type": "string",
-            "$description": "ToggleSwitch thumb size sm (= 20px)",
-            "$value": "calc(var(--fsds-semantic-control-size-sm-height) - var(--fsds-semantic-control-size-sm-paddingY) * 2)"
-          },
-          "md": {
-            "$type": "string",
-            "$description": "ToggleSwitch thumb size md (= 24px)",
-            "$value": "calc(var(--fsds-semantic-control-size-md-height) - var(--fsds-semantic-control-size-md-paddingY) * 2)"
-          },
-          "lg": {
-            "$type": "string",
-            "$description": "ToggleSwitch thumb size lg (= 32px)",
-            "$value": "calc(var(--fsds-semantic-control-size-lg-height) - var(--fsds-semantic-control-size-lg-paddingY) * 2)"
-          }
-        }
       }
     },
     "dimension": {
@@ -3153,10 +3117,6 @@
           "$type": "dimension",
           "$value": "1280px"
         }
-      },
-      "buttonMinHeight": {
-        "$type": "dimension",
-        "$value": "36px"
       },
       "minTarget": {
         "$type": "dimension",
@@ -3299,32 +3259,6 @@
           "$type": "color",
           "$value": "#8f8f8f"
         }
-      }
-    },
-    "link": {
-      "decorationColor": {
-        "$type": "color",
-        "$value": "#0a65fe"
-      },
-      "decorationOffset": {
-        "$type": "dimension",
-        "$value": "2px"
-      },
-      "decorationThickness": {
-        "$type": "dimension",
-        "$value": "1px"
-      },
-      "hover.text": {
-        "$type": "color",
-        "$value": "#0042dc"
-      },
-      "text": {
-        "$type": "color",
-        "$value": "#0a65fe"
-      },
-      "visited.text": {
-        "$type": "color",
-        "$value": "#002d99"
       }
     },
     "motion": {
@@ -3554,28 +3488,12 @@
     },
     "overlay": {
       "scrim": {
-        "dialog": {
-          "$type": "color",
-          "$description": "Backdrop scrim for dialog and command palette overlays",
-          "$value": {
-            "light": "rgba(0,0,0,0.60)",
-            "dark": "rgba(0,0,0,0.80)"
-          }
-        },
         "medium": {
           "$type": "color",
           "$description": "Medium overlay scrim",
           "$value": {
             "light": "rgba(0,0,0,0.40)",
             "dark": "rgba(0,0,0,0.60)"
-          }
-        },
-        "sheet": {
-          "$type": "color",
-          "$description": "Backdrop scrim for sheet and drawer components",
-          "$value": {
-            "light": "rgba(0,0,0,0.50)",
-            "dark": "rgba(0,0,0,0.70)"
           }
         },
         "strong": {
@@ -3656,23 +3574,6 @@
           "$type": "dimension",
           "$value": "4px"
         }
-      }
-    },
-    "skeleton": {
-      "background": {
-        "$type": "color",
-        "$description": "Skeleton loading background",
-        "$value": "#efefef"
-      },
-      "foreground": {
-        "$type": "color",
-        "$description": "Skeleton loading shimmer",
-        "$value": "#cecece"
-      },
-      "shineDuration": {
-        "$type": "duration",
-        "$description": "Duration of skeleton shine animation",
-        "$value": "500ms"
       }
     },
     "spacing": {
@@ -3790,6 +3691,20 @@
       }
     },
     "typography": {
+      "action": {
+        "01": {
+          "$type": "dimension",
+          "$value": "18px"
+        },
+        "02": {
+          "$type": "dimension",
+          "$value": "16px"
+        },
+        "03": {
+          "$type": "dimension",
+          "$value": "14px"
+        }
+      },
       "body": {
         "01": {
           "$type": "dimension",
@@ -3856,20 +3771,6 @@
               "$value": "1.5"
             }
           }
-        }
-      },
-      "button": {
-        "01": {
-          "$type": "dimension",
-          "$value": "18px"
-        },
-        "02": {
-          "$type": "dimension",
-          "$value": "16px"
-        },
-        "03": {
-          "$type": "dimension",
-          "$value": "14px"
         }
       },
       "caption": {
@@ -3989,6 +3890,18 @@
           "tight": {
             "$type": "number",
             "$value": "1.2"
+          }
+        }
+      },
+      "link": {
+        "decoration": {
+          "offset": {
+            "$type": "dimension",
+            "$value": "2px"
+          },
+          "thickness": {
+            "$type": "dimension",
+            "$value": "1px"
           }
         }
       },
