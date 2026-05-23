@@ -2,16 +2,12 @@
   "root": {
     "display": {
       "literal": "block",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
     },
     "background-color": {
       "resolvesTo": "skeleton.color.base"
-    },
-    "border-radius": {
-      "resolvesTo": "skeleton.radius.lg"
-    },
-    "gap": {
-      "resolvesTo": "skeleton.gap.lg"
     },
     "transition-duration": {
       "resolvesTo": "skeleton.anim.duration"
@@ -21,7 +17,17 @@
     },
     "animation": {
       "literal": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
-      "platforms": ["web"]
+      "platforms": [
+        "web"
+      ]
+    },
+    "skeleton.radius.md": {
+      "resolvesTo": "core.shape.radius.04",
+      "fallback": "16px"
+    },
+    "skeleton.gap.md": {
+      "resolvesTo": "core.spacing.size.07",
+      "fallback": "24px"
     }
   }
 }

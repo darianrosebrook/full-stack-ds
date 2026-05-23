@@ -41,8 +41,8 @@ export class DetailsElement extends LitElement {
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
-      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-details-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
       --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
       --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
@@ -76,6 +76,8 @@ export class DetailsElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+      border-color: var(--fsds-details-color-border-default);
+      color: var(--fsds-details-color-foreground-primary);
     
       &:hover {
         background-color: var(--fsds-details-color-background-hover);
@@ -201,8 +203,8 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
-      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-details-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
       --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
       --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
@@ -236,6 +238,8 @@ export class DetailsContentElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+      border-color: var(--fsds-details-color-border-default);
+      color: var(--fsds-details-color-foreground-primary);
     
       &:hover {
         background-color: var(--fsds-details-color-background-hover);

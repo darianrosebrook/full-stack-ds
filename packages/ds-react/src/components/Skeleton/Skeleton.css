@@ -6,7 +6,7 @@
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
   padding-inline-end: var(--fsds-box-model-padding-inline-end);
-  gap: var(--fsds-skeleton-gap-lg);
+  gap: var(--fsds-box-model-gap);
   width: var(--fsds-box-model-width);
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
@@ -15,7 +15,6 @@
   max-height: var(--fsds-box-model-max-height);
   display: block;
   background-color: var(--fsds-skeleton-color-base);
-  border-radius: var(--fsds-skeleton-radius-lg);
   transition-duration: var(--fsds-skeleton-anim-duration);
   transition-timing-function: var(--fsds-skeleton-anim-easing);
   animation: skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;

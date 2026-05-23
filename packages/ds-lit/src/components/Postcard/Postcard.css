@@ -22,6 +22,8 @@
   border-style: solid;
   border-width: var(--fsds-postcard-size-border-default);
   box-sizing: border-box;
+  border-color: var(--fsds-postcard-color-border-default);
+  color: var(--fsds-postcard-color-foreground-primary);
 
   &:hover {
     background-color: var(--fsds-postcard-color-background-hover);

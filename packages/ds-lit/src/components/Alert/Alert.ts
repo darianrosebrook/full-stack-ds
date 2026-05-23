@@ -36,9 +36,9 @@ export class AlertElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
@@ -94,6 +94,9 @@ export class AlertElement extends LitElement {
       border-radius: var(--fsds-alert-size-radius);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
+      background-color: var(--fsds-alert-color-background-primary);
+      color: var(--fsds-alert-color-foreground-primary);
+      border-color: var(--fsds-alert-color-border-primary);
     }
     
     .alert__icon {
@@ -189,9 +192,9 @@ export class AlertBodyElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
@@ -247,6 +250,9 @@ export class AlertBodyElement extends LitElement {
       border-radius: var(--fsds-alert-size-radius);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
+      background-color: var(--fsds-alert-color-background-primary);
+      color: var(--fsds-alert-color-foreground-primary);
+      border-color: var(--fsds-alert-color-border-primary);
     }
     
     .alert__icon {
@@ -319,9 +325,9 @@ export class AlertTitleElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
-      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
-      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+      --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-primary, #f29495);
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-size-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-alert-spacing-gap: var(--fsds-semantic-spacing-gap-gridSmall, 8px);
@@ -377,6 +383,9 @@ export class AlertTitleElement extends LitElement {
       border-radius: var(--fsds-alert-size-radius);
       font-size: var(--fsds-alert-text-size);
       font-weight: var(--fsds-alert-text-weight);
+      background-color: var(--fsds-alert-color-background-primary);
+      color: var(--fsds-alert-color-foreground-primary);
+      border-color: var(--fsds-alert-color-border-primary);
     }
     
     .alert__icon {

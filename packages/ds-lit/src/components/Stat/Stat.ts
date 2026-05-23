@@ -40,9 +40,7 @@ export class StatElement extends LitElement {
       --fsds-stat-color-foreground-trend-up: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
       --fsds-stat-color-foreground-trend-down: var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b);
       --fsds-stat-color-foreground-trend-neutral: var(--fsds-semantic-color-foreground-secondary, #555555);
-      --fsds-stat-size-value-sm: var(--fsds-semantic-typography-heading-03, 20px);
       --fsds-stat-size-value-md: var(--fsds-semantic-typography-heading-02, 28px);
-      --fsds-stat-size-value-lg: var(--fsds-semantic-typography-heading-01, 40px);
       --fsds-stat-size-label: var(--fsds-semantic-typography-caption-02, 12px);
       --fsds-stat-size-gap: var(--fsds-core-spacing-size-02, 4px);
       --fsds-stat-typography-weight-value: var(--fsds-semantic-typography-font-weight-bold, 700);

@@ -21,6 +21,8 @@
   border-style: solid;
   border-width: 1px;
   box-sizing: border-box;
+  border-color: var(--fsds-details-color-border-default);
+  color: var(--fsds-details-color-foreground-primary);
 
   &:hover {
     background-color: var(--fsds-details-color-background-hover);

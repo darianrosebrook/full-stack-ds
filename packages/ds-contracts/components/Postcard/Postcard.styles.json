@@ -42,13 +42,11 @@
         "web"
       ]
     },
-    "postcard.color.border.default": {
-      "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+    "border-color": {
+      "resolvesTo": "postcard.color.border.default"
     },
-    "postcard.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+    "color": {
+      "resolvesTo": "postcard.color.foreground.primary"
     }
   },
   "hover": {

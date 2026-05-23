@@ -24,17 +24,8 @@
     "fallback": "12px",
     "layer": "semantic"
   },
-  "spinner.size.xs": {
-    "literal": "12px"
-  },
-  "spinner.size.sm": {
-    "literal": "16px"
-  },
   "spinner.size.md": {
     "literal": "20px"
-  },
-  "spinner.size.lg": {
-    "literal": "28px"
   },
   "spinner.thickness.hairline": {
     "literal": "2px"

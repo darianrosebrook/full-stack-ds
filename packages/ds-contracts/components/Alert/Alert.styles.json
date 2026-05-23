@@ -45,17 +45,14 @@
     "font-weight": {
       "resolvesTo": "alert.text.weight"
     },
-    "alert.color.background.primary": {
-      "resolvesTo": "semantic.color.background.danger.subtle",
-      "fallback": "#fceaea"
+    "background-color": {
+      "resolvesTo": "alert.color.background.primary"
     },
-    "alert.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.on.danger.subtle",
-      "fallback": "#7b0000"
+    "color": {
+      "resolvesTo": "alert.color.foreground.primary"
     },
-    "alert.color.border.primary": {
-      "resolvesTo": "semantic.color.border.danger",
-      "fallback": "#ae0001"
+    "border-color": {
+      "resolvesTo": "alert.color.border.primary"
     }
   },
   "icon": {

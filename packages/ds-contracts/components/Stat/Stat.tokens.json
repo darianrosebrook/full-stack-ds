@@ -29,19 +29,9 @@
     "fallback": "#555555",
     "layer": "semantic"
   },
-  "stat.size.value.sm": {
-    "resolvesTo": "semantic.typography.heading.03",
-    "fallback": "20px",
-    "layer": "semantic"
-  },
   "stat.size.value.md": {
     "resolvesTo": "semantic.typography.heading.02",
     "fallback": "28px",
-    "layer": "semantic"
-  },
-  "stat.size.value.lg": {
-    "resolvesTo": "semantic.typography.heading.01",
-    "fallback": "40px",
     "layer": "semantic"
   },
   "stat.size.label": {

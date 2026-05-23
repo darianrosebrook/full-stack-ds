@@ -1,10 +1,31 @@
 {
   "root": {
-    "display": { "literal": "block", "platforms": ["web"] },
-    "color": { "resolvesTo": "stat.color.foreground.value" },
-    "font-size": { "resolvesTo": "stat.size.value.md" },
-    "font-weight": { "resolvesTo": "stat.typography.weight.value" },
-    "line-height": { "literal": "1.1", "platforms": ["web"] },
-    "letter-spacing": { "literal": "-0.02em", "platforms": ["web"] }
+    "display": {
+      "literal": "block",
+      "platforms": [
+        "web"
+      ]
+    },
+    "color": {
+      "resolvesTo": "stat.color.foreground.value"
+    },
+    "font-size": {
+      "resolvesTo": "stat.size.value.md"
+    },
+    "font-weight": {
+      "resolvesTo": "stat.typography.weight.value"
+    },
+    "line-height": {
+      "literal": "1.1",
+      "platforms": [
+        "web"
+      ]
+    },
+    "letter-spacing": {
+      "literal": "-0.02em",
+      "platforms": [
+        "web"
+      ]
+    }
   }
 }

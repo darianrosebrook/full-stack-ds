@@ -49,44 +49,14 @@
     "fallback": "none",
     "layer": "semantic"
   },
-  "toast.color.info": {
+  "toast.color.default": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
   },
-  "toast.color.success": {
-    "resolvesTo": "semantic.color.foreground.success",
-    "fallback": "#487e1e",
-    "layer": "semantic"
-  },
-  "toast.color.warning": {
-    "resolvesTo": "semantic.color.foreground.warning",
-    "fallback": "#ac5c00",
-    "layer": "semantic"
-  },
-  "toast.color.error": {
-    "resolvesTo": "semantic.color.foreground.danger",
-    "fallback": "#d9292b",
-    "layer": "semantic"
-  },
-  "toast.accent.info": {
+  "toast.accent.default": {
     "resolvesTo": "semantic.color.status.info",
     "fallback": "#0a65fe",
-    "layer": "semantic"
-  },
-  "toast.accent.success": {
-    "resolvesTo": "semantic.color.status.success",
-    "fallback": "#487e1e",
-    "layer": "semantic"
-  },
-  "toast.accent.warning": {
-    "resolvesTo": "semantic.color.status.warning",
-    "fallback": "#ac5c00",
-    "layer": "semantic"
-  },
-  "toast.accent.error": {
-    "resolvesTo": "semantic.color.status.danger",
-    "fallback": "#d9292b",
     "layer": "semantic"
   },
   "toast.spacing.padding": {

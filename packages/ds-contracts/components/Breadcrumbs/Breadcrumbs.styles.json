@@ -15,21 +15,14 @@
         "web"
       ]
     },
-    "breadcrumbs.shape.radius.medium": {
-      "resolvesTo": "core.shape.radius.small",
-      "fallback": "4px"
+    "border-radius": {
+      "resolvesTo": "breadcrumbs.shape.radius.medium"
     },
-    "breadcrumbs.spacing.gap.default": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px"
+    "padding": {
+      "resolvesTo": "breadcrumbs.spacing.padding.default"
     },
-    "breadcrumbs.spacing.padding.default": {
-      "resolvesTo": "core.spacing.size.03",
-      "fallback": "4px"
-    },
-    "breadcrumbs.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.tertiary",
-      "fallback": "#717171"
+    "color": {
+      "resolvesTo": "breadcrumbs.color.foreground.primary"
     }
   },
   "focus": {

@@ -11,10 +11,6 @@
     },
     "border-radius": {
       "resolvesTo": "shuttle.size.radius.default"
-    },
-    "shuttle.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
     }
   },
   "item": {

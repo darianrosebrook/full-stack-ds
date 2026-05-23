@@ -22,6 +22,9 @@
   border-radius: var(--fsds-alert-size-radius);
   font-size: var(--fsds-alert-text-size);
   font-weight: var(--fsds-alert-text-weight);
+  background-color: var(--fsds-alert-color-background-primary);
+  color: var(--fsds-alert-color-foreground-primary);
+  border-color: var(--fsds-alert-color-border-primary);
 }
 
 .alert__icon {

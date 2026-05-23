@@ -39,34 +39,14 @@
     "fallback": "#efefef",
     "layer": "semantic"
   },
-  "skeleton.radius.sm": {
-    "resolvesTo": "core.shape.radius.02",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "skeleton.radius.md": {
     "resolvesTo": "core.shape.radius.03",
     "fallback": "8px",
     "layer": "core"
   },
-  "skeleton.radius.lg": {
-    "resolvesTo": "core.shape.radius.04",
-    "fallback": "16px",
-    "layer": "core"
-  },
-  "skeleton.gap.sm": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "skeleton.gap.md": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
-    "layer": "core"
-  },
-  "skeleton.gap.lg": {
-    "resolvesTo": "core.spacing.size.07",
-    "fallback": "24px",
     "layer": "core"
   },
   "skeleton.anim.duration": {

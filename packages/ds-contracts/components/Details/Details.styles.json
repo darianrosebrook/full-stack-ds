@@ -41,13 +41,11 @@
         "web"
       ]
     },
-    "details.color.border.default": {
-      "resolvesTo": "semantic.color.border.accent",
-      "fallback": "#d9292b"
+    "border-color": {
+      "resolvesTo": "details.color.border.default"
     },
-    "details.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.secondary",
-      "fallback": "#555555"
+    "color": {
+      "resolvesTo": "details.color.foreground.primary"
     }
   },
   "hover": {

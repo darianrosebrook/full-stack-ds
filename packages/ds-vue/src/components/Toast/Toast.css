@@ -53,7 +53,7 @@
 
 .toast__description {
   flex: 1 1 auto;
-  color: var(--fsds-toast-color-info);
+  color: var(--fsds-toast-color-default);
   font-size: inherit;
 }
 
@@ -63,7 +63,7 @@
   background: transparent;
   border: 0;
   cursor: pointer;
-  color: var(--fsds-toast-color-info);
+  color: var(--fsds-toast-color-default);
 }
 
 .toast__close {
@@ -74,24 +74,8 @@
   border: 0;
   border-radius: 9999px;
   cursor: pointer;
-  color: var(--fsds-toast-color-info);
+  color: var(--fsds-toast-color-default);
   flex-shrink: 0;
-}
-
-.toast--info .toast__item {
-  color: var(--fsds-toast-color-info);
-}
-
-.toast--success .toast__item {
-  color: var(--fsds-toast-color-success);
-}
-
-.toast--warning .toast__item {
-  color: var(--fsds-toast-color-warning);
-}
-
-.toast--error .toast__item {
-  color: var(--fsds-toast-color-error);
 }
 /* @generated:end */
 

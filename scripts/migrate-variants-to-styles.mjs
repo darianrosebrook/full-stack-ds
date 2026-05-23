@@ -71,18 +71,27 @@ const ONLY = new Set(args.filter((a) => !a.startsWith("--")));
 //     kinds canonicalize to `default`)
 //   - `medium` is the size canonical (Button's small/medium/large sizes
 //     canonicalize to `medium`)
+//   - `md` is the legacy size canonical (some components author
+//     `sm/md/lg` instead of `small/medium/large`). Treated as canonical
+//     when no `default` or `medium` exists.
 //   - `primary` is the *fallback* canonical for families that don't have
-//     an explicit `default` or `medium`. By convention in this codebase,
-//     when a family looks like `<prefix>.color.foreground.{primary,
+//     an explicit `default`, `medium`, or `md`. By convention in this
+//     codebase, when a family looks like `<prefix>.color.foreground.{primary,
 //     secondary, ...}`, `primary` IS the conceptual default — there's no
 //     toggle between primary and something else; `primary` just names
 //     the semantic layer. Six components (Details, OTP, Postcard,
 //     Shuttle, Text, Truncate, ...) use this convention.
+//   - `lg` is a last-resort canonical for families that use `sm/md/lg`
+//     but where the contract authors `lg` as the default consumer
+//     (Skeleton uses `skeleton.radius.lg` in its root styles even
+//     though `md` exists as a member). Pick `lg` only when nothing
+//     earlier matches.
 //
-// `primary` is conditional: it only counts as canonical when no
-// `default` or `medium` exists in the same family. Otherwise it's a
-// regular variant (Button's `--primary` kind).
-const CANONICAL_KEYS = ["default", "medium", "primary"];
+// All non-`default`/`medium` canonicals are CONDITIONAL: they only count
+// as canonical when no earlier-preferred name exists in the same family.
+// e.g. Button's `--primary` kind variant is NOT canonical because Button
+// has an explicit `default` already.
+const CANONICAL_KEYS = ["default", "medium", "md", "primary", "lg"];
 
 // Recognized VARIANT suffixes — last-segment names that mark a family
 // member as a kind/size variant the script should migrate into a slot

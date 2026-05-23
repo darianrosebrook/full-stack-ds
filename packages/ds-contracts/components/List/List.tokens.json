@@ -19,19 +19,9 @@
     "fallback": "16px",
     "layer": "core"
   },
-  "list.spacing.sm": {
-    "resolvesTo": "core.spacing.size.03",
-    "fallback": "4px",
-    "layer": "core"
-  },
   "list.spacing.md": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
-    "layer": "core"
-  },
-  "list.spacing.lg": {
-    "resolvesTo": "core.spacing.size.06",
-    "fallback": "16px",
     "layer": "core"
   }
 }
