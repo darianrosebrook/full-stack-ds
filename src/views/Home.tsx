@@ -58,7 +58,7 @@ export function Home({ bundle }: HomeProps) {
         for each runtime. This showcase lets you compare them side-by-side and
         trace every line back to the field that produced it.
       </p>
-      <p className="muted" style={{ marginTop: "calc(-1 * var(--space-3))" }}>
+      <p className="muted" style={{ marginTop: "calc(-1 * var(--fsds-core-spacing-size-05))" }}>
         Why one contract, five frameworks, one primitive? The constraint exists
         to test an architectural claim about compositional systems generally —
         read it on the{" "}
@@ -93,7 +93,7 @@ export function Home({ bundle }: HomeProps) {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-            gap: "var(--space-4)",
+            gap: "var(--fsds-core-spacing-size-06)",
           }}
         >
           {FRAMEWORK_LABELS.map((fw) => (
@@ -102,7 +102,7 @@ export function Home({ bundle }: HomeProps) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--space-3)",
+                  gap: "var(--fsds-core-spacing-size-05)",
                 }}
               >
                 <span
@@ -114,16 +114,16 @@ export function Home({ bundle }: HomeProps) {
                     background: "currentColor",
                   }}
                 />
-                <strong style={{ fontSize: "var(--fs-400)" }}>
+                <strong style={{ fontSize: "var(--fsds-core-typography-ramp-4)" }}>
                   {fw.label}
                 </strong>
               </div>
               <p
                 className="muted"
                 style={{
-                  marginTop: "var(--space-3)",
+                  marginTop: "var(--fsds-core-spacing-size-05)",
                   marginBottom: 0,
-                  fontSize: "var(--fs-200)",
+                  fontSize: "var(--fsds-core-typography-ramp-2)",
                 }}
               >
                 {fw.key === "react" && "TSX, hooks, controllable state."}
@@ -143,7 +143,7 @@ export function Home({ bundle }: HomeProps) {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-            gap: "var(--space-4)",
+            gap: "var(--fsds-core-spacing-size-06)",
           }}
         >
           {NON_WEB_LABELS.map((fw) => (
@@ -152,7 +152,7 @@ export function Home({ bundle }: HomeProps) {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "var(--space-3)",
+                  gap: "var(--fsds-core-spacing-size-05)",
                 }}
               >
                 <span
@@ -164,16 +164,16 @@ export function Home({ bundle }: HomeProps) {
                     background: "currentColor",
                   }}
                 />
-                <strong style={{ fontSize: "var(--fs-400)" }}>
+                <strong style={{ fontSize: "var(--fsds-core-typography-ramp-4)" }}>
                   {fw.label}
                 </strong>
               </div>
               <p
                 className="muted"
                 style={{
-                  marginTop: "var(--space-3)",
+                  marginTop: "var(--fsds-core-spacing-size-05)",
                   marginBottom: 0,
-                  fontSize: "var(--fs-200)",
+                  fontSize: "var(--fsds-core-typography-ramp-2)",
                 }}
               >
                 {fw.key === "react-native" && "TSX, hooks, native primitives."}
@@ -204,7 +204,7 @@ export function Home({ bundle }: HomeProps) {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: "var(--space-5)",
+            gap: "var(--fsds-core-spacing-size-06)",
           }}
         >
           {samples.map((c) => (
@@ -223,7 +223,7 @@ export function Home({ bundle }: HomeProps) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  gap: "var(--space-3)",
+                  gap: "var(--fsds-core-spacing-size-05)",
                 }}
               >
                 <strong>{c.name}</strong>
@@ -232,9 +232,9 @@ export function Home({ bundle }: HomeProps) {
               <p
                 className="muted"
                 style={{
-                  marginTop: "var(--space-3)",
+                  marginTop: "var(--fsds-core-spacing-size-05)",
                   marginBottom: 0,
-                  fontSize: "var(--fs-200)",
+                  fontSize: "var(--fsds-core-typography-ramp-2)",
                 }}
               >
                 {c.contract.description ?? "—"}

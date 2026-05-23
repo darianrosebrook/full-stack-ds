@@ -24,13 +24,13 @@ export function TokensTable({ tokens }: TokensTableProps) {
         <div key={groupName}>
           <div
             style={{
-              padding: "var(--space-3) var(--space-5)",
-              fontSize: "var(--fs-100)",
+              padding: "var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06)",
+              fontSize: "var(--fsds-core-typography-ramp-2)",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
-              color: "var(--fg-subtle)",
-              borderBottom: "1px solid var(--border-subtle)",
-              background: "var(--bg-canvas)",
+              color: "var(--fsds-semantic-color-foreground-tertiary)",
+              borderBottom: "1px solid var(--fsds-semantic-color-border-subtle)",
+              background: "var(--fsds-semantic-color-background-primary)",
             }}
           >
             {groupName}

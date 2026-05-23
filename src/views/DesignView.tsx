@@ -54,7 +54,7 @@ export function DesignView({ component }: DesignViewProps) {
         </section>
       ) : (
         <section className="section">
-          <div className="muted" style={{ padding: "var(--space-7)", textAlign: "center" }}>
+          <div className="muted" style={{ padding: "var(--fsds-core-spacing-size-08)", textAlign: "center" }}>
             No usage examples curated yet for {component.name}.
           </div>
         </section>

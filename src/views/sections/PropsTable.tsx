@@ -22,7 +22,7 @@ export function PropsTable({ members }: PropsTableProps) {
               <td>
                 <code>{m.name}</code>
                 {m.required && (
-                  <span className="chip chip--accent" style={{ marginLeft: "var(--space-3)" }}>
+                  <span className="chip chip--accent" style={{ marginLeft: "var(--fsds-core-spacing-size-05)" }}>
                     required
                   </span>
                 )}

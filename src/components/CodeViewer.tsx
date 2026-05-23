@@ -91,10 +91,10 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
                       title={`${seg.hit.kind} → ${seg.hit.contractPath}\n${seg.hit.explanation}`}
                       style={{
                         background:
-                          selectedHitIndex === seg.hitIndex ? "var(--accent)" : "var(--accent-soft)",
-                        color: selectedHitIndex === seg.hitIndex ? "var(--accent-fg)" : "var(--fg-accent)",
+                          selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-background-accent)" : "var(--fsds-semantic-color-background-accent-subtle)",
+                        color: selectedHitIndex === seg.hitIndex ? "var(--fsds-semantic-color-foreground-on-color)" : "var(--fsds-semantic-color-foreground-accent)",
                         border: "none",
-                        borderRadius: "var(--radius-2)",
+                        borderRadius: "var(--fsds-core-shape-radius-02)",
                         padding: "0 2px",
                         font: "inherit",
                         cursor: "pointer",

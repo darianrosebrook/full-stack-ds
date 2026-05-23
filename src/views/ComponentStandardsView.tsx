@@ -48,7 +48,7 @@ export function ComponentStandardsView({ tab }: ComponentStandardsViewProps) {
         </TabsList>
       </Tabs>
 
-      <div style={{ marginTop: "var(--space-6)" }}>
+      <div style={{ marginTop: "var(--fsds-core-spacing-size-07)" }}>
         {tab === "overview" && <OverviewPanel />}
         {tab === "anatomy" && <AnatomyPanel />}
         {tab === "props" && <PropsPanel />}

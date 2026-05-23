@@ -151,9 +151,9 @@ function UsageFallback({ message }: { message: string }) {
     <code
       style={{
         display: "inline-block",
-        padding: "var(--space-2) var(--space-3)",
-        border: "1px dashed var(--semantic-color-border-danger, #c00)",
-        color: "var(--semantic-color-foreground-danger, #c00)",
+        padding: "var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05)",
+        border: "1px dashed var(--fsds-semantic-color-border-danger, #c00)",
+        color: "var(--fsds-semantic-color-foreground-danger, #c00)",
         fontSize: "0.85em",
       }}
     >

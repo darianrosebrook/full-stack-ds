@@ -133,7 +133,7 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
             <code>style</code>, refs, and DOM internals.
           </li>
         </ol>
-        <p className="muted" style={{ marginTop: "var(--space-4)" }}>
+        <p className="muted" style={{ marginTop: "var(--fsds-core-spacing-size-06)" }}>
           Drop any one of these and a predictable failure mode appears. The
           symptom catalog above — shadow files, stub-outs, force-pushes,
           drift, irreproducibility — is mostly diagnostic of which property

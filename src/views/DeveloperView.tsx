@@ -74,7 +74,7 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
         </Links>
       </nav>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "var(--space-7) 0 var(--space-5)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "var(--fsds-core-spacing-size-08) 0 var(--fsds-core-spacing-size-06)" }}>
         <Tabs
           appearance="pills"
           value={framework}
@@ -102,7 +102,7 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
             })}
           </TabsList>
         </Tabs>
-        <span className="muted" style={{ fontSize: "var(--fs-200)" }}>
+        <span className="muted" style={{ fontSize: "var(--fsds-core-typography-ramp-2)" }}>
           {traceIndex.hits.length} traced region{traceIndex.hits.length === 1 ? "" : "s"}
         </span>
       </div>

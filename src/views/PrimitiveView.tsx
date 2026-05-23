@@ -21,7 +21,7 @@ export function PrimitiveView({ primitive }: PrimitiveViewProps) {
             <span className="section-meta">{files?.length ?? 0} files</span>
           </header>
           {(files ?? []).map((f) => (
-            <div key={f.filename} style={{ marginBottom: "var(--space-5)" }}>
+            <div key={f.filename} style={{ marginBottom: "var(--fsds-core-spacing-size-06)" }}>
               <CodeViewer code={f.code} filename={f.filename} />
             </div>
           ))}

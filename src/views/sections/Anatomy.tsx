@@ -60,7 +60,7 @@ function renderDom(node: DomNode, depth: number): JSX.Element {
       {children.length > 0 && (
         <>
           {children.map((c, i) => (
-            <li key={i} style={{ paddingLeft: "var(--space-3)" }}>
+            <li key={i} style={{ paddingLeft: "var(--fsds-core-spacing-size-05)" }}>
               {renderDom(c, depth + 1)}
             </li>
           ))}

@@ -26,7 +26,7 @@ export function UsageExamples({ component }: UsageExamplesProps) {
         componentName={component.name}
       />
       {rest.length > 0 && (
-        <div style={{ display: "grid", gap: "var(--space-5)", marginTop: "var(--space-6)" }}>
+        <div style={{ display: "grid", gap: "var(--fsds-core-spacing-size-06)", marginTop: "var(--fsds-core-spacing-size-07)" }}>
           {rest.map((ex) => (
             <ExampleFrame
               key={ex.name}
@@ -62,7 +62,7 @@ function ExampleFrame({ example, emphasize, componentName }: ExampleFrameProps) 
       <div
         className="preview-frame"
         style={{
-          padding: emphasize ? "var(--space-7)" : "var(--space-5)",
+          padding: emphasize ? "var(--fsds-core-spacing-size-08)" : "var(--fsds-core-spacing-size-06)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

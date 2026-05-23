@@ -127,7 +127,7 @@ export function Header() {
           </Popover.Trigger>
           <Popover.Content
             className="card"
-            style={{ minWidth: 240, padding: "var(--space-4)" }}
+            style={{ minWidth: 240, padding: "var(--fsds-core-spacing-size-06)" }}
           >
             {/*
              * Row-wide click target via our own ghost Button so the
@@ -156,8 +156,8 @@ export function Header() {
             <div
               style={{
                 fontWeight: 600,
-                fontSize: "var(--fs-300)",
-                marginBottom: "var(--space-3)",
+                fontSize: "var(--fsds-core-typography-ramp-3)",
+                marginBottom: "var(--fsds-core-spacing-size-05)",
               }}
             >
               Brand
@@ -168,7 +168,7 @@ export function Header() {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "var(--space-2)",
+                gap: "var(--fsds-core-spacing-size-04)",
               }}
             >
               {brands.map((id) => {
@@ -185,7 +185,7 @@ export function Header() {
                   >
                     <span>{humanizeBrand(id)}</span>
                     {active && (
-                      <span aria-hidden style={{ fontSize: "var(--fs-200)" }}>
+                      <span aria-hidden style={{ fontSize: "var(--fsds-core-typography-ramp-2)" }}>
                         ✓
                       </span>
                     )}
@@ -198,8 +198,8 @@ export function Header() {
               <p
                 className="muted"
                 style={{
-                  fontSize: "var(--fs-100)",
-                  marginTop: "var(--space-3)",
+                  fontSize: "var(--fsds-core-typography-ramp-2)",
+                  marginTop: "var(--fsds-core-spacing-size-05)",
                   marginBottom: 0,
                 }}
               >

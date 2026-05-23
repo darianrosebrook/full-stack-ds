@@ -52,7 +52,7 @@ export function TokensPhilosophyView({ tab }: TokensPhilosophyViewProps) {
         </TabsList>
       </Tabs>
 
-      <div style={{ marginTop: "var(--space-6)" }}>
+      <div style={{ marginTop: "var(--fsds-core-spacing-size-07)" }}>
         {tab === "overview" && <OverviewPanel />}
         {tab === "core-vs-semantic" && <CoreVsSemanticPanel />}
         {tab === "box-model-primitive" && <BoxModelPrimitivePanel />}
@@ -1514,8 +1514,8 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-        gap: "var(--space-5)",
-        margin: "var(--space-5) 0",
+        gap: "var(--fsds-core-spacing-size-06)",
+        margin: "var(--fsds-core-spacing-size-06) 0",
       }}
     >
       {layers.map((layer) => (
@@ -1524,8 +1524,8 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "var(--space-3)",
-              marginBottom: "var(--space-3)",
+              gap: "var(--fsds-core-spacing-size-05)",
+              marginBottom: "var(--fsds-core-spacing-size-05)",
             }}
           >
             <span
@@ -1536,37 +1536,37 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
                 width: 28,
                 height: 28,
                 borderRadius: 999,
-                background: "var(--bg-surface-2, var(--bg-surface))",
-                border: "1px solid var(--border-default)",
-                fontSize: "var(--fs-200)",
+                background: "var(--fsds-semantic-color-background-subtle)",
+                border: "1px solid var(--fsds-semantic-color-border-default)",
+                fontSize: "var(--fsds-core-typography-ramp-2)",
                 fontWeight: 600,
               }}
             >
               {layer.number}
             </span>
-            <strong style={{ fontSize: "var(--fs-400)" }}>{layer.title}</strong>
+            <strong style={{ fontSize: "var(--fsds-core-typography-ramp-4)" }}>{layer.title}</strong>
           </div>
           <p
             className="muted"
             style={{
               marginTop: 0,
-              marginBottom: "var(--space-3)",
-              fontSize: "var(--fs-200)",
+              marginBottom: "var(--fsds-core-spacing-size-05)",
+              fontSize: "var(--fsds-core-typography-ramp-2)",
             }}
           >
             {layer.tagline}
           </p>
-          <p style={{ marginTop: 0, marginBottom: "var(--space-4)" }}>
+          <p style={{ marginTop: 0, marginBottom: "var(--fsds-core-spacing-size-06)" }}>
             {layer.body}
           </p>
           <dl style={{ margin: 0 }}>
             {layer.meta.map((m) => (
               <div
                 key={m.dt}
-                style={{ marginBottom: "var(--space-2)", fontSize: "var(--fs-200)" }}
+                style={{ marginBottom: "var(--fsds-core-spacing-size-04)", fontSize: "var(--fsds-core-typography-ramp-2)" }}
               >
                 <dt style={{ fontWeight: 600, display: "inline" }}>{m.dt}: </dt>
-                <dd style={{ display: "inline", margin: 0, color: "var(--fg-muted)" }}>
+                <dd style={{ display: "inline", margin: 0, color: "var(--fsds-semantic-color-foreground-secondary)" }}>
                   {m.dd}
                 </dd>
               </div>
@@ -1580,7 +1580,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
 
 function CodeBlock({ code, filename }: { code: string; filename?: string }) {
   return (
-    <div style={{ margin: "var(--space-4) 0" }}>
+    <div style={{ margin: "var(--fsds-core-spacing-size-06) 0" }}>
       <CodeViewer code={code} filename={filename} />
     </div>
   );
