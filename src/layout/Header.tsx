@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Popover, ToggleSwitch } from "@full-stack-ds/react";
+import { Button, Popover, Switch } from "@full-stack-ds/react";
 
 const BRAND_LABEL_OVERRIDES: Record<string, string> = {
   default: "Default",
@@ -129,24 +129,29 @@ export function Header() {
             className="card"
             style={{ minWidth: 240, padding: "var(--space-4)" }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: "var(--space-4)",
-              }}
+            {/*
+             * Row-wide click target via our own ghost Button so the
+             * icon, the label, the gap, and the Switch track all
+             * toggle theme. Switch is presentational here — the
+             * wrapping Button owns the onChange. Without that,
+             * clicking the Switch track would double-toggle (Switch
+             * fires its own onChange + the Button's onClick bubbles
+             * to ours).
+             */}
+            <Button
+              variant="ghost"
+              size="small"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              ariaPressed={isDark}
+              ariaLabel={`Switch to ${isDark ? "light" : "dark"} theme`}
+              className="header-appearance-row"
             >
-              <span style={{ fontWeight: 600, fontSize: "var(--fs-300)" }}>
-                Dark mode
+              <span className="header-appearance-row__label">
+                <SunMoonIcon />
+                <span>Dark mode</span>
               </span>
-              <ToggleSwitch
-                size="small"
-                checked={isDark}
-                onChange={(next) => setTheme(next ? "dark" : "light")}
-                ariaLabel={`Switch to ${isDark ? "light" : "dark"} mode`}
-              />
-            </div>
+              <Switch size="sm" checked={isDark} onChange={() => {}} />
+            </Button>
 
             <div
               style={{
@@ -160,7 +165,11 @@ export function Header() {
             <div
               role="radiogroup"
               aria-label="Brand theme"
-              style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--space-2)",
+              }}
             >
               {brands.map((id) => {
                 const active = brand === id;
@@ -242,6 +251,25 @@ function PaletteIcon() {
       <circle cx="8.5" cy="7.5" r="0.5" fill="currentColor" />
       <circle cx="6.5" cy="12.5" r="0.5" fill="currentColor" />
       <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-4.97-4.5-9-10-9z" />
+    </svg>
+  );
+}
+
+function SunMoonIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M12 2V4M12 20V22M4.9 4.9L6.3 6.3M17.7 17.7L19.1 19.1M2 12H4M20 12H22M6.3 17.7L4.9 19.1M19.1 4.9L17.7 6.3M12 8C11.4984 8.5362 11.2249 9.24634 11.2371 9.98047C11.2493 10.7146 11.5464 11.4152 12.0656 11.9344C12.5848 12.4536 13.2854 12.7507 14.0195 12.7629C14.7537 12.7751 15.4638 12.5016 16 12C16 12.7911 15.7654 13.5645 15.3259 14.2223C14.8864 14.8801 14.2616 15.3928 13.5307 15.6955C12.7998 15.9983 11.9956 16.0775 11.2196 15.9231C10.4437 15.7688 9.73098 15.3878 9.17157 14.8284C8.61216 14.269 8.2312 13.5563 8.07686 12.7804C7.92252 12.0044 8.00173 11.2002 8.30448 10.4693C8.60723 9.73836 9.11992 9.11365 9.77772 8.67412C10.4355 8.2346 11.2089 8 12 8Z"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
     </svg>
   );
 }
