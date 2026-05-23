@@ -2,7 +2,7 @@
   "$schema": "../../component.contract.schema.json",
   "name": "TextField",
   "description": "Full-featured form field composing a label, input, optional description, and error message with ARIA wiring.",
-  "layer": "compound",
+  "layer": "composer",
   "anatomy": {
     "parts": [
       "root",

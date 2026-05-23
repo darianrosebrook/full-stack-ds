@@ -44,6 +44,7 @@ export class TooltipElement extends LitElement {
       --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
       --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+      --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
     }
     
     .tooltip {
@@ -62,6 +63,7 @@ export class TooltipElement extends LitElement {
       border-radius: var(--fsds-tooltip-size-radius-default);
       padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
+      z-index: var(--fsds-tooltip-layer-content);
       font-size: 0.875em;
       display: inline-block;
       border-style: solid;
@@ -179,6 +181,7 @@ export class TooltipTriggerElement extends LitElement {
       --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
       --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+      --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
     }
     
     .tooltip {
@@ -197,6 +200,7 @@ export class TooltipTriggerElement extends LitElement {
       border-radius: var(--fsds-tooltip-size-radius-default);
       padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
+      z-index: var(--fsds-tooltip-layer-content);
       font-size: 0.875em;
       display: inline-block;
       border-style: solid;
@@ -296,6 +300,7 @@ export class TooltipContentElement extends LitElement {
       --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
       --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
+      --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
     }
     
     .tooltip {
@@ -314,6 +319,7 @@ export class TooltipContentElement extends LitElement {
       border-radius: var(--fsds-tooltip-size-radius-default);
       padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
+      z-index: var(--fsds-tooltip-layer-content);
       font-size: 0.875em;
       display: inline-block;
       border-style: solid;

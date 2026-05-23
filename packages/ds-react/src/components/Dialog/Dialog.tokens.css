@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.dialog {
+:root {
   --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-dialog-color-background-backdrop: var(--fsds-semantic-color-overlay-scrim, #00000066);
   --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);

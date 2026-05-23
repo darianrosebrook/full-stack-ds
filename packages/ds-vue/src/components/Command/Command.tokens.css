@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.command {
+:root {
   --fsds-command-color-overlay: var(--fsds-semantic-overlay-scrim-dialog, rgba(0,0,0,0.60));
   --fsds-command-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-command-color-border: var(--fsds-semantic-color-border-light, #fceaea);

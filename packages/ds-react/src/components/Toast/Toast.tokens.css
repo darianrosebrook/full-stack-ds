@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.toast {
+:root {
   --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
   --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);

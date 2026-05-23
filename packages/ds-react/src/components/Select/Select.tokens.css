@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.select {
+:root {
   --fsds-select-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-select-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);

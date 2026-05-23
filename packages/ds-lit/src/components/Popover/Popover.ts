@@ -42,6 +42,7 @@ export class PopoverElement extends LitElement {
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+      --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
     }
     
     .popover {
@@ -61,13 +62,14 @@ export class PopoverElement extends LitElement {
       cursor: pointer;
     }
     
-    .popover [data-popover-content] {
+    [data-popover-content] {
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
       border-radius: var(--fsds-popover-size-radius-default);
       padding: var(--fsds-popover-size-padding-default);
       gap: var(--fsds-popover-size-gap-default);
       box-shadow: var(--fsds-popover-elevation-default);
+      z-index: var(--fsds-popover-layer-content);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
@@ -183,6 +185,7 @@ export class PopoverTriggerElement extends LitElement {
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+      --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
     }
     
     .popover {
@@ -202,13 +205,14 @@ export class PopoverTriggerElement extends LitElement {
       cursor: pointer;
     }
     
-    .popover [data-popover-content] {
+    [data-popover-content] {
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
       border-radius: var(--fsds-popover-size-radius-default);
       padding: var(--fsds-popover-size-padding-default);
       gap: var(--fsds-popover-size-gap-default);
       box-shadow: var(--fsds-popover-elevation-default);
+      z-index: var(--fsds-popover-layer-content);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
@@ -305,6 +309,7 @@ export class PopoverContentElement extends LitElement {
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+      --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
     }
     
     .popover {
@@ -324,13 +329,14 @@ export class PopoverContentElement extends LitElement {
       cursor: pointer;
     }
     
-    .popover [data-popover-content] {
+    [data-popover-content] {
       background-color: var(--fsds-popover-color-background-content);
       border-color: var(--fsds-popover-color-border-accent);
       border-radius: var(--fsds-popover-size-radius-default);
       padding: var(--fsds-popover-size-padding-default);
       gap: var(--fsds-popover-size-gap-default);
       box-shadow: var(--fsds-popover-elevation-default);
+      z-index: var(--fsds-popover-layer-content);
       display: inline-block;
       border-style: solid;
       border-width: 1px;

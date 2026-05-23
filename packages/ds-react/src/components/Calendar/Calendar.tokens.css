@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.calendar {
+:root {
   --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-calendar-color-foreground-secondary: var(--fsds-semantic-color-foreground-secondary, #555555);

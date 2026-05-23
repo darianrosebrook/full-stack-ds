@@ -1,5 +1,5 @@
 /* @generated:start tokens */
-.sheet {
+:root {
   --fsds-sheet-color-overlay: var(--fsds-semantic-overlay-scrim-sheet, rgba(0,0,0,0.50));
   --fsds-sheet-color-background: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-sheet-color-border: var(--fsds-semantic-color-border-light, #fceaea);

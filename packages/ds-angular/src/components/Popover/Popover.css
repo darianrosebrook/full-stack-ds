@@ -18,13 +18,14 @@
   cursor: pointer;
 }
 
-.popover [data-popover-content] {
+[data-popover-content] {
   background-color: var(--fsds-popover-color-background-content);
   border-color: var(--fsds-popover-color-border-accent);
   border-radius: var(--fsds-popover-size-radius-default);
   padding: var(--fsds-popover-size-padding-default);
   gap: var(--fsds-popover-size-gap-default);
   box-shadow: var(--fsds-popover-elevation-default);
+  z-index: var(--fsds-popover-layer-content);
   display: inline-block;
   border-style: solid;
   border-width: 1px;
