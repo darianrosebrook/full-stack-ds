@@ -21,7 +21,8 @@
     "build": "tsx build/build.ts --prefix=fsds",
     "validate": "tsx build/build.ts --prefix=fsds --validate-only",
     "check-contrast": "tsx build/runners/check-contrast.ts",
-    "check-usage": "tsx build/runners/usage.ts"
+    "check-usage": "tsx build/runners/usage.ts",
+    "check-brand-refs": "tsx build/runners/check-brand-refs.ts"
   },
   "dependencies": {
     "ajv": "^8.18.0",
