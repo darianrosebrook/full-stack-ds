@@ -9,6 +9,21 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
+  "links.color.foreground.hover": {
+    "resolvesTo": "semantic.interaction.text.hover",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "links.color.foreground.visited": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "links.color.foreground.disabled": {
+    "resolvesTo": "semantic.color.foreground.disabled",
+    "fallback": "#aeaeae",
+    "layer": "semantic"
+  },
   "links.color.underline.default": {
     "resolvesTo": "semantic.color.border.light",
     "fallback": "#fceaea",

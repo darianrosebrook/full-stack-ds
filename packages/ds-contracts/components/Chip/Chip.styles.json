@@ -29,15 +29,13 @@
     }
   },
   "hover": {
-    "chip.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.secondary.hover",
-      "fallback": "#efefef"
+    "background-color": {
+      "resolvesTo": "chip.color.background.hover"
     }
   },
   "active": {
-    "chip.color.background.default": {
-      "resolvesTo": "semantic.color.action.background.secondary.active",
-      "fallback": "#cecece"
+    "background-color": {
+      "resolvesTo": "chip.color.background.active"
     }
   },
   "focus": {

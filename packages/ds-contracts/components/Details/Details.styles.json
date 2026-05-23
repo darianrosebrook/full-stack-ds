@@ -51,13 +51,11 @@
     }
   },
   "hover": {
-    "details.color.background.default": {
-      "resolvesTo": "semantic.color.background.hover",
-      "fallback": "#cecece"
+    "background-color": {
+      "resolvesTo": "details.color.background.hover"
     },
-    "details.color.border.default": {
-      "resolvesTo": "semantic.color.border.bold",
-      "fallback": "#8f8f8f"
+    "border-color": {
+      "resolvesTo": "details.color.border.hover"
     }
   },
   "summary": {

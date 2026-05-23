@@ -34,9 +34,19 @@
     "fallback": "#ffffff",
     "layer": "semantic"
   },
+  "postcard.color.background.hover": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
   "postcard.color.border.default": {
     "resolvesTo": "semantic.color.border.light",
     "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "postcard.color.border.hover": {
+    "resolvesTo": "semantic.color.border.bold",
+    "fallback": "#8f8f8f",
     "layer": "semantic"
   },
   "postcard.color.foreground.primary": {

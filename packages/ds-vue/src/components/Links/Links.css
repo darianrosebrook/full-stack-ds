@@ -17,6 +17,18 @@
   text-decoration-color: var(--fsds-links-color-underline-default);
   transition-duration: var(--fsds-links-motion-duration-fast);
 
+  &:hover {
+    color: var(--fsds-links-color-foreground-hover);
+  }
+
+  &:visited {
+    color: var(--fsds-links-color-foreground-visited);
+  }
+
+  &:disabled {
+    color: var(--fsds-links-color-foreground-disabled);
+  }
+
   &:focus-visible {
     outline-width: var(--fsds-links-focus-ring-width);
     outline-color: var(--fsds-links-focus-ring-color);

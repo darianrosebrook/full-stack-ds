@@ -52,13 +52,11 @@
     }
   },
   "hover": {
-    "postcard.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef"
+    "background-color": {
+      "resolvesTo": "postcard.color.background.hover"
     },
-    "postcard.color.border.default": {
-      "resolvesTo": "semantic.color.border.bold",
-      "fallback": "#8f8f8f"
+    "border-color": {
+      "resolvesTo": "postcard.color.border.hover"
     }
   },
   "content": {

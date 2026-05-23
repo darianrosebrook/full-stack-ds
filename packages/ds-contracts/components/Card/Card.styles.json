@@ -55,9 +55,8 @@
     }
   },
   "hover": {
-    "card.color.background.default": {
-      "resolvesTo": "semantic.color.background.secondary",
-      "fallback": "#efefef"
+    "background-color": {
+      "resolvesTo": "card.color.background.hover"
     }
   },
   "--inset": {

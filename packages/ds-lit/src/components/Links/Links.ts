@@ -37,6 +37,9 @@ export class LinksElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
+      --fsds-links-color-foreground-hover: var(--fsds-semantic-interaction-text-hover, #555555);
+      --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-links-color-underline-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-links-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-links-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
@@ -45,18 +48,6 @@ export class LinksElement extends LitElement {
       --fsds-links-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-links-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
       --fsds-links-focus-ring-radius: var(--fsds-core-shape-radius-small, 2px);
-    
-      &:hover {
-        --fsds-links-color-foreground-default: var(--fsds-semantic-interaction-text-hover, #555555);
-      }
-    
-      &:disabled {
-        --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
-      }
-    }
-    
-    .links__visited {
-      --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
     
     .links {
@@ -74,6 +65,18 @@ export class LinksElement extends LitElement {
       color: var(--fsds-links-color-foreground-default);
       text-decoration-color: var(--fsds-links-color-underline-default);
       transition-duration: var(--fsds-links-motion-duration-fast);
+    
+      &:hover {
+        color: var(--fsds-links-color-foreground-hover);
+      }
+    
+      &:visited {
+        color: var(--fsds-links-color-foreground-visited);
+      }
+    
+      &:disabled {
+        color: var(--fsds-links-color-foreground-disabled);
+      }
     
       &:focus-visible {
         outline-width: var(--fsds-links-focus-ring-width);

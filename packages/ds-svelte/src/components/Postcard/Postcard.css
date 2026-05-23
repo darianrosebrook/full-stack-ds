@@ -22,6 +22,11 @@
   border-style: solid;
   border-width: var(--fsds-postcard-size-border-default);
   box-sizing: border-box;
+
+  &:hover {
+    background-color: var(--fsds-postcard-color-background-hover);
+    border-color: var(--fsds-postcard-color-border-hover);
+  }
 }
 
 .postcard__content {

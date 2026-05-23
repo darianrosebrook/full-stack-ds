@@ -38,6 +38,8 @@ export class ChipElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-default, #fafafa);
+      --fsds-chip-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
+      --fsds-chip-color-background-active: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
       --fsds-chip-color-foreground-default: var(--fsds-semantic-color-action-foreground-secondary-default, #141414);
       --fsds-chip-color-border-default: var(--fsds-semantic-color-action-border-secondary-default, #aeaeae);
       --fsds-chip-size-padding-horizontal: var(--fsds-core-spacing-size-04, 8px);
@@ -52,14 +54,6 @@ export class ChipElement extends LitElement {
       --fsds-chip-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
       --fsds-chip-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-chip-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    
-      &:hover {
-        --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-hover, #efefef);
-      }
-    
-      &:active {
-        --fsds-chip-color-background-default: var(--fsds-semantic-color-action-background-secondary-active, #cecece);
-      }
     }
     
     .chip {
@@ -82,6 +76,14 @@ export class ChipElement extends LitElement {
       font-size: var(--fsds-chip-text-size);
       font-weight: var(--fsds-chip-text-weight);
       transition-duration: var(--fsds-chip-motion-duration-fast);
+    
+      &:hover {
+        background-color: var(--fsds-chip-color-background-hover);
+      }
+    
+      &:active {
+        background-color: var(--fsds-chip-color-background-active);
+      }
     
       &:focus-visible {
         outline-width: var(--fsds-chip-focus-ring-width);

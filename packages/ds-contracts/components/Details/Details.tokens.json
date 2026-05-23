@@ -24,6 +24,11 @@
     "fallback": "#ffffff",
     "layer": "semantic"
   },
+  "details.color.background.hover": {
+    "resolvesTo": "semantic.color.background.hover",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
   "details.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
@@ -32,6 +37,11 @@
   "details.color.border.default": {
     "resolvesTo": "semantic.color.border.primary",
     "fallback": "#f29495",
+    "layer": "semantic"
+  },
+  "details.color.border.hover": {
+    "resolvesTo": "semantic.color.border.bold",
+    "fallback": "#8f8f8f",
     "layer": "semantic"
   },
   "details.focus.ring.width": {

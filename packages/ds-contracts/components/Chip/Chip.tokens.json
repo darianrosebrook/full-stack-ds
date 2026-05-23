@@ -9,6 +9,16 @@
     "fallback": "#fafafa",
     "layer": "semantic"
   },
+  "chip.color.background.hover": {
+    "resolvesTo": "semantic.color.action.background.secondary.hover",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "chip.color.background.active": {
+    "resolvesTo": "semantic.color.action.background.secondary.active",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
   "chip.color.foreground.default": {
     "resolvesTo": "semantic.color.action.foreground.secondary.default",
     "fallback": "#141414",

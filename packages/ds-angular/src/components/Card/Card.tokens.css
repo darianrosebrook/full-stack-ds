@@ -15,6 +15,7 @@
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
   --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+  --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
   --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -35,10 +36,6 @@
   --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
   --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-
-  &:hover {
-    --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-  }
 }
 
 .card__description {

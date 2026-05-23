@@ -40,19 +40,16 @@ export class DetailsElement extends LitElement {
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
       --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
       --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-details-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
-    
-      &:hover {
-        --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
-        --fsds-details-color-border-default: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
     }
     
     .details__summary:hover {
@@ -79,6 +76,11 @@ export class DetailsElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-details-color-background-hover);
+        border-color: var(--fsds-details-color-border-hover);
+      }
     
       &[open] .details__icon {
         transform: rotate(180deg);
@@ -198,19 +200,16 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-details-size-icon: var(--fsds-core-spacing-size-05, 12px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-details-color-background-hover: var(--fsds-semantic-color-background-hover, #cecece);
       --fsds-details-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-details-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
       --fsds-details-focus-ring-width: var(--fsds-core-shape-border-width-thick, 2px);
       --fsds-details-focus-ring-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-details-focus-ring-offset: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-details-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
-    
-      &:hover {
-        --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
-        --fsds-details-color-border-default: var(--fsds-semantic-color-border-bold, #8f8f8f);
-      }
     }
     
     .details__summary:hover {
@@ -237,6 +236,11 @@ export class DetailsContentElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-details-color-background-hover);
+        border-color: var(--fsds-details-color-border-hover);
+      }
     
       &[open] .details__icon {
         transform: rotate(180deg);

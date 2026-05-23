@@ -1854,8 +1854,11 @@ const DERIVABLE_STATE_TO_PSEUDO: Record<string, string> = {
   "focus-visible": ":focus-visible",
   "focus-within": ":focus-within",
   active: ":active",
+  visited: ":visited",
   disabled: ":disabled",
+  "read-only": ":read-only",
   checked: ":checked",
+  indeterminate: ":indeterminate",
   // ARIA-derived states map to attribute selectors so they cover both
   // React's `aria-*` attributes and any native equivalents.
   expanded: '[aria-expanded="true"]',

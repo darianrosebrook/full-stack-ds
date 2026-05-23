@@ -38,6 +38,7 @@ export class CardElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -58,10 +59,6 @@ export class CardElement extends LitElement {
       --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-    
-      &:hover {
-        --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
     }
     
     .card__description {
@@ -99,6 +96,10 @@ export class CardElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-card-color-background-hover);
+      }
     }
     
     .card--inset {
@@ -214,6 +215,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -234,10 +236,6 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-    
-      &:hover {
-        --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
     }
     
     .card__description {
@@ -275,6 +273,10 @@ export class CardHeaderElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-card-color-background-hover);
+      }
     }
     
     .card--inset {
@@ -378,6 +380,7 @@ export class CardContentElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -398,10 +401,6 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-    
-      &:hover {
-        --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
     }
     
     .card__description {
@@ -439,6 +438,10 @@ export class CardContentElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-card-color-background-hover);
+      }
     }
     
     .card--inset {
@@ -542,6 +545,7 @@ export class CardFooterElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -562,10 +566,6 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-    
-      &:hover {
-        --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
     }
     
     .card__description {
@@ -603,6 +603,10 @@ export class CardFooterElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-card-color-background-hover);
+      }
     }
     
     .card--inset {
@@ -706,6 +710,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-card-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
+      --fsds-card-color-background-hover: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-card-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
@@ -726,10 +731,6 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-    
-      &:hover {
-        --fsds-card-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
-      }
     }
     
     .card__description {
@@ -767,6 +768,10 @@ export class CardDescriptionElement extends LitElement {
       border-style: solid;
       border-width: 1px;
       box-sizing: border-box;
+    
+      &:hover {
+        background-color: var(--fsds-card-color-background-hover);
+      }
     }
     
     .card--inset {
