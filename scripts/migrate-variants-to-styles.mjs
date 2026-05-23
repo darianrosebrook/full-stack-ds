@@ -145,9 +145,18 @@ function groupByFamily(tokens, cssPrefix) {
 /**
  * Walk styles.json looking for entries whose `resolvesTo` matches any of
  * the variant slot paths in `variantSet`. Returns a list of mutations:
- *   { selector, property, oldEntry, variantSlot, canonicalSlot }
+ *   { selector, property, oldEntry, variantSlot, canonicalSlot, kind }
+ *
+ * `kind` is "variant" for the normal case (entry reads a variant slot;
+ * rewrite to a slot-path redefinition of the canonical pointing at the
+ * variant's resolution), or "canonical-noop" for the symmetry case:
+ * entries at a variant-shaped selector (e.g. `--medium` when canonical
+ * is `<prefix>.medium`) that read the canonical via a CSS-property key.
+ * Those rewrites preserve the slot's existing root resolution but at the
+ * variant scope, so brand authors see all sibling sizes in the same
+ * file (.tokens.css) and can override per-variant uniformly.
  */
-function findStylesUsages(styles, variantSet, canonicalBySlot) {
+function findStylesUsages(styles, variantSet, canonicalBySlot, canonicalSet) {
   const mutations = [];
   for (const [selectorKey, block] of Object.entries(styles)) {
     if (!block || typeof block !== "object") continue;
@@ -155,17 +164,62 @@ function findStylesUsages(styles, variantSet, canonicalBySlot) {
       if (!entry || typeof entry !== "object") continue;
       const target = entry.resolvesTo;
       if (typeof target !== "string") continue;
-      if (!variantSet.has(target)) continue;
-      mutations.push({
-        selector: selectorKey,
-        property,
-        oldEntry: entry,
-        variantSlot: target,
-        canonicalSlot: canonicalBySlot.get(target),
-      });
+
+      if (variantSet.has(target)) {
+        // Variant case: entry reads a variant slot, rewrite to redefine
+        // the canonical at this selector.
+        mutations.push({
+          selector: selectorKey,
+          property,
+          oldEntry: entry,
+          variantSlot: target,
+          canonicalSlot: canonicalBySlot.get(target),
+          kind: "variant",
+        });
+        continue;
+      }
+
+      // Canonical-noop case: entry reads the canonical via a CSS-property
+      // key AND the selector is shaped like a variant of the canonical's
+      // family. Promote to a slot-path redefinition so the selector
+      // lands in tokens.css alongside its variant siblings.
+      if (
+        canonicalSet.has(target) &&
+        !property.includes(".") &&
+        isCanonicalSelectorForSlot(selectorKey, target)
+      ) {
+        mutations.push({
+          selector: selectorKey,
+          property,
+          oldEntry: entry,
+          variantSlot: target, // same slot — no rename
+          canonicalSlot: target,
+          kind: "canonical-noop",
+        });
+      }
     }
   }
   return mutations;
+}
+
+/**
+ * Return true when `selectorKey` is the variant form of the canonical's
+ * own suffix. e.g. selector `--medium` matches canonical slot
+ * `button.size.padding-block.medium` (both end in `medium`).
+ *
+ * Conservative: only matches when the selector is a single BEM variant
+ * modifier (`--<name>`) AND the name equals the canonical's last segment.
+ * Skips state selectors (hover/active/disabled), compound selectors,
+ * and anatomy-part selectors — the canonical-noop concern only applies
+ * to value-variant selectors at the same conceptual axis as the
+ * canonical's own naming (size vs size, kind vs kind, etc.).
+ */
+function isCanonicalSelectorForSlot(selectorKey, canonicalSlot) {
+  if (!selectorKey.startsWith("--")) return false;
+  if (/[\s:[]/.test(selectorKey)) return false; // skip compounds / pseudos
+  const selectorVariant = selectorKey.slice(2);
+  const canonicalSuffix = canonicalSlot.split(".").pop();
+  return selectorVariant === canonicalSuffix;
 }
 
 /**
@@ -187,9 +241,18 @@ function applyStylesMutations(styles, mutations, tokens) {
   for (const m of mutations) {
     const block = out[m.selector];
     if (!block) continue;
-    // Remove old property→{resolvesTo: variantSlot} entry
+    // Remove the old property→entry. For "variant" mutations this removes
+    // the CSS-property read of the variant slot; for "canonical-noop"
+    // mutations this removes the CSS-property read of the canonical so we
+    // can replace it with a slot-path redefinition.
     delete block[m.property];
-    // Add canonical-keyed entry pointing to whatever the variant slot used to
+
+    // The new entry's resolution comes from the variant slot's definition
+    // in tokens.json. For canonical-noop mutations, m.variantSlot === the
+    // canonical slot, so we read the canonical's own resolution and
+    // redefine the slot to the same value at this selector's scope —
+    // a no-op redefinition that puts the selector in tokens.css for
+    // symmetry with its sibling variants.
     const variantDef = tokens[m.variantSlot];
     if (!variantDef) continue;
     const newEntry = {};
@@ -232,7 +295,9 @@ function migrateComponent(name) {
   const skipped = [];
   const canonicalBySlot = new Map(); // variant slot → canonical slot
   const variantSet = new Set();
+  const canonicalSet = new Set(); // every migrated family's canonical
 
+  // First pass: variant families that still have variants to migrate.
   for (const [prefix, fam] of families.entries()) {
     // A "family" needs at least 2 sibling members at the same prefix to
     // be considered. Single-member entries (e.g. button.text.weight,
@@ -253,23 +318,55 @@ function migrateComponent(name) {
       continue;
     }
     migratable.push({ prefix, canonical: fam.canonical, variants: fam.variants });
+    canonicalSet.add(fam.canonical);
     for (const v of fam.variants) {
       canonicalBySlot.set(v, fam.canonical);
       variantSet.add(v);
     }
   }
 
-  if (variantSet.size === 0) {
+  // Second pass: register every canonical-named slot in tokens.json as a
+  // potential canonical-noop target — even when its sibling variants
+  // were already dropped by a prior script run. This is what makes the
+  // script idempotent for the canonical-noop symmetry: re-running after
+  // variants are gone still sees the canonical slot and can promote a
+  // `--medium`-style selector reading it into a tokens.css redefinition.
+  for (const key of Object.keys(tokens)) {
+    if (!key.startsWith(`${cssPrefix}.`)) continue;
+    const last = key.split(".").pop();
+    if (CANONICAL_KEYS.includes(last)) {
+      canonicalSet.add(key);
+    }
+  }
+
+  // Even when no variants remain to migrate (re-run on already-migrated
+  // contracts), the canonical-noop pass may still have work to do —
+  // promoting `--medium`-style selectors that read the canonical via a
+  // CSS-property key into slot-path redefinitions for symmetry. Only
+  // bail when BOTH variantSet and canonicalSet are empty.
+  if (variantSet.size === 0 && canonicalSet.size === 0) {
     return { status: "nothing-to-migrate", name, skipped };
   }
 
-  const mutations = findStylesUsages(styles, variantSet, canonicalBySlot);
+  const mutations = findStylesUsages(
+    styles,
+    variantSet,
+    canonicalBySlot,
+    canonicalSet,
+  );
 
   // The set of variant slots that have at least one styles.json reference.
   // Slots referenced by nothing are still removed from tokens.json (they
-  // were dead code in the variant pattern).
-  const referencedVariants = new Set(mutations.map((m) => m.variantSlot));
+  // were dead code in the variant pattern). Canonical-noop mutations
+  // don't count as "references" for orphan detection — they read the
+  // canonical, not a variant.
+  const referencedVariants = new Set(
+    mutations.filter((m) => m.kind === "variant").map((m) => m.variantSlot),
+  );
   const orphans = [...variantSet].filter((v) => !referencedVariants.has(v));
+  const canonicalNoopCount = mutations.filter(
+    (m) => m.kind === "canonical-noop",
+  ).length;
 
   const { styles: newStyles, warnings } = applyStylesMutations(
     styles,
@@ -281,7 +378,9 @@ function migrateComponent(name) {
   const newTokens = { ...tokens };
   for (const v of variantSet) delete newTokens[v];
 
-  if (!DRY_RUN) {
+  // Skip writes when nothing changed (idempotent re-runs should be no-ops).
+  const changed = mutations.length > 0 || variantSet.size > 0;
+  if (!DRY_RUN && changed) {
     writeJson(tokensPath, newTokens);
     writeJson(stylesPath, newStyles);
   }
@@ -291,6 +390,7 @@ function migrateComponent(name) {
     name,
     families: migratable.length,
     mutations: mutations.length,
+    canonicalNoops: canonicalNoopCount,
     droppedSlots: variantSet.size,
     orphans,
     skipped,
@@ -309,7 +409,7 @@ for (const r of results) {
     case "migrated":
       totalMigrated++;
       console.log(
-        `  ✓ ${r.name.padEnd(16)} ${r.families} family/families  ${r.mutations} styles entry/entries rewritten  ${r.droppedSlots} slot(s) dropped`,
+        `  ✓ ${r.name.padEnd(16)} ${r.families} family/families  ${r.mutations} styles entry/entries rewritten  ${r.droppedSlots} slot(s) dropped  ${r.canonicalNoops} canonical-noop(s)`,
       );
       if (r.orphans.length > 0) {
         totalOrphans += r.orphans.length;

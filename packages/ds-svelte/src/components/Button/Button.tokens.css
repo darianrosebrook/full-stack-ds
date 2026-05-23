@@ -54,6 +54,13 @@
   --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
 }
 
+.button--medium {
+  --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
+  --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+}
+
 .button--large {
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);

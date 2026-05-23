@@ -77,6 +77,13 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
     }
     
+    .button--medium {
+      --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
+      --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+    }
+    
     .button--large {
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);
@@ -148,13 +155,6 @@ export class ButtonElement extends LitElement {
       font-weight: var(--fsds-button-text-weight);
       transition-duration: var(--fsds-button-motion-duration-fast);
       transition-timing-function: var(--fsds-button-motion-easing-standard);
-    }
-    
-    .button--medium {
-      padding-block: var(--fsds-button-size-padding-block-medium);
-      padding-inline: var(--fsds-button-size-padding-inline-medium);
-      min-height: var(--fsds-button-size-minHeight-medium);
-      font-size: var(--fsds-button-size-fontSize-medium);
     }
     
     .button__spinner {

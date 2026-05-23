@@ -31,13 +31,6 @@
   transition-timing-function: var(--fsds-button-motion-easing-standard);
 }
 
-.button--medium {
-  padding-block: var(--fsds-button-size-padding-block-medium);
-  padding-inline: var(--fsds-button-size-padding-inline-medium);
-  min-height: var(--fsds-button-size-minHeight-medium);
-  font-size: var(--fsds-button-size-fontSize-medium);
-}
-
 .button__spinner {
   display: inline-block;
   width: 1em;

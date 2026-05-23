@@ -95,17 +95,21 @@
     }
   },
   "--medium": {
-    "padding-block": {
-      "resolvesTo": "button.size.padding-block.medium"
+    "button.size.padding-block.medium": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
     },
-    "padding-inline": {
-      "resolvesTo": "button.size.padding-inline.medium"
+    "button.size.padding-inline.medium": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
     },
-    "min-height": {
-      "resolvesTo": "button.size.minHeight.medium"
+    "button.size.minHeight.medium": {
+      "resolvesTo": "core.dimension.actionMinHeight",
+      "fallback": "36px"
     },
-    "font-size": {
-      "resolvesTo": "button.size.fontSize.medium"
+    "button.size.fontSize.medium": {
+      "resolvesTo": "core.typography.ramp.4",
+      "fallback": "1rem"
     }
   },
   "--large": {
