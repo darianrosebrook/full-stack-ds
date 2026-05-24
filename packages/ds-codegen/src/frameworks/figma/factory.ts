@@ -6,6 +6,11 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import {
+  FIGMA_COMPONENT_DESCRIPTOR_SCHEMA_VERSION,
+  FIGMA_COMPONENT_DESCRIPTOR_SOURCE,
+  type FigmaComponentDescriptorV1,
+} from "./descriptor.js";
 
 export function createFigmaEmitter(): FrameworkEmitter {
   return {
@@ -54,10 +59,10 @@ export function createFigmaEmitter(): FrameworkEmitter {
   };
 }
 
-function toFigmaComponentDescriptor(ir: ComponentIR): object {
+export function toFigmaComponentDescriptor(ir: ComponentIR): FigmaComponentDescriptorV1 {
   return {
-    schemaVersion: 1,
-    source: "@full-stack-ds/codegen/frameworks/figma",
+    schemaVersion: FIGMA_COMPONENT_DESCRIPTOR_SCHEMA_VERSION,
+    source: FIGMA_COMPONENT_DESCRIPTOR_SOURCE,
     component: {
       name: ir.name,
       cssPrefix: ir.cssPrefix,
@@ -99,7 +104,7 @@ function toFigmaComponentDescriptor(ir: ComponentIR): object {
     },
     surface: ir.surface ?? null,
     figma: {
-      intendedUse: "desktop-plugin-materialization",
+      intendedUse: "figma-library-materialization",
       documentationFrame: `${ir.name} / Documentation`,
       componentSetName: ir.name,
       propertySource: "IR styledProps + variants + states + behavior",
