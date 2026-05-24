@@ -68,6 +68,7 @@ function createNode(type: MockNode["type"]): MockNode {
 
 describe("Figma plugin scaffold materialization", () => {
   it("creates documentation and component-placeholder pages with provenance", async () => {
+    const { main } = await import("./plugin.js");
     const pages: MockNode[] = [];
     const frames: MockNode[] = [];
     const texts: MockNode[] = [];
@@ -94,7 +95,6 @@ describe("Figma plugin scaffold materialization", () => {
       closePlugin,
     });
 
-    const { main } = await import("./plugin.js");
     main();
 
     expect(pages.map((page) => page.name)).toEqual([
