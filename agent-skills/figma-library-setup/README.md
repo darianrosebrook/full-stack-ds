@@ -2,20 +2,21 @@
 
 This skill guides an agent through setting up a Full Stack DS library in Figma from contract-derived descriptors.
 
-The skill intentionally separates three authority surfaces:
+The skill separates three authority surfaces:
 
 1. Repository authority: contracts and generated Figma descriptors in this repo.
-2. Remote Figma MCP: file/team/library metadata, cloud file reads, comments, and publication-adjacent inspection when available.
-3. Local Figma MCP: desktop-app inspection and mutation of the currently open file.
+2. Remote Figma MCP: preferred Figma MCP surface for file/design inspection and, when exposed by the connected client/server, write-to-canvas setup of native Figma content.
+3. Desktop Figma MCP: fallback or organization-specific desktop-server surface when the environment requires it. Do not assume it is the primary mutation path.
 
-Agents must not treat remote or local Figma state as source of truth for component semantics. Figma state is a materialized projection of contracts.
+Agents must not treat Figma state as source of truth for component semantics. Figma state is a materialized projection of contracts. Agent skills also do not add new MCP capabilities; they only instruct the agent how to use available MCP tools safely.
 
 ## Inputs
 
 - Repository path or checked-out branch containing `packages/ds-contracts`.
 - Generated descriptor registry under `packages/ds-figma-plugin/src/generated/components`.
-- Figma file key or URL when remote MCP is available.
-- Open Figma desktop file when local MCP mutation is required.
+- Figma file key or URL for the target library file.
+- Remote Figma MCP connection when available.
+- Desktop Figma MCP connection only when explicitly configured or required by the user's environment.
 
 ## Required sequence
 
@@ -24,41 +25,39 @@ Agents must not treat remote or local Figma state as source of truth for compone
    - Run contract validation and Figma descriptor generation when local commands are available.
    - Refuse to mutate Figma if descriptors are missing or stale and generation cannot be run.
 
-2. Read remote Figma state when configured.
+2. Inspect Figma state through the remote MCP when available.
    - Locate the target file.
-   - Inspect pages, published components, component sets, styles, variables, and library metadata if the remote MCP exposes them.
+   - Inspect pages, components, component sets, styles, variables, and library metadata if the MCP exposes them.
    - Record existing naming conventions and potential collisions.
-   - Do not mutate through the remote surface unless the task explicitly authorizes a remote write and the MCP tool supports it.
+   - Treat unsupported reads as evidence gaps, not as proof of absence.
 
-3. Read local Figma state when configured.
-   - Inspect the currently open file.
-   - Confirm the file matches the intended remote file when both surfaces are available.
-   - Identify existing Full Stack DS pages, nodes, component sets, plugin data keys, and generated artifacts.
-
-4. Plan the library setup.
-   - Produce a bounded change plan naming pages, frames, components, component sets, properties, variables, and documentation frames to create or update.
-   - Prefer update-in-place when plugin data keys identify prior generated nodes.
-   - Treat destructive operations as explicit-confirmation actions unless the user has already authorized cleanup.
-
-5. Mutate local Figma state.
+3. Use write-to-canvas tools when the connected MCP exposes them and the user has requested setup.
    - Create or update documentation pages.
    - Create or update component pages.
-   - Materialize component placeholders or component sets from descriptors.
-   - Set plugin data keys for provenance: `fsds.component`, `fsds.descriptorSchemaVersion`, `fsds.contractPath`, and `fsds.generatedAt` when available.
-   - Create component properties only when the local MCP exposes a supported operation for them.
+   - Materialize component placeholders, components, component sets, variables, and auto layout when supported by the MCP tools.
+   - Set provenance metadata when the MCP exposes a supported mechanism for plugin data, annotations, or equivalent node metadata.
+
+4. Use desktop MCP only as a configured fallback or special-case surface.
+   - Inspect or mutate through desktop MCP only when the remote MCP is unavailable, the org requires desktop server usage, or the user explicitly selected that path.
+   - Do not describe desktop MCP as inherently stronger or as the default mutation lane.
+
+5. Plan the library setup before mutation.
+   - Produce a bounded change plan naming pages, frames, components, component sets, properties, variables, and documentation frames to create or update.
+   - Prefer update-in-place when stable provenance identifies prior generated nodes.
+   - Treat destructive operations as explicit-confirmation actions unless the user has already authorized cleanup.
 
 6. Verify.
-   - Re-read local Figma state.
+   - Re-read Figma state through the strongest available MCP surface.
    - Report created, updated, skipped, and blocked items.
-   - Surface unresolved collisions, unsupported Figma API gaps, and descriptors not materialized.
+   - Surface unresolved collisions, unsupported Figma MCP gaps, and descriptors not materialized.
 
 ## Refusal and pause conditions
 
 Pause or refuse mutation when:
 
-- The open local Figma file does not match the intended remote file.
+- The target file identity is ambiguous.
 - Descriptor generation is stale and cannot be refreshed.
-- A mutation would overwrite user-authored nodes without stable plugin data provenance.
+- A mutation would overwrite user-authored nodes without stable generated provenance.
 - The requested operation requires publishing a library or changing team-level permissions without explicit authorization.
 - Required MCP tools are unavailable.
 
@@ -67,6 +66,6 @@ Pause or refuse mutation when:
 Return:
 
 - Repository evidence: branch, commands run, descriptor count.
-- Figma evidence: remote file identity, local file identity, pages inspected.
+- Figma evidence: file identity, MCP surface used, pages inspected.
 - Mutations: created, updated, skipped, blocked.
 - Follow-up: exact unsupported operations or missing MCP capabilities.
