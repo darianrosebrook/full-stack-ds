@@ -14,6 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { FrameworkEmitter, TargetId } from "./emitter.js";
 import { createAngularEmitter } from "./frameworks/angular/factory.js";
+import { createFigmaEmitter } from "./frameworks/figma/factory.js";
 import { createLitEmitter } from "./frameworks/lit/factory.js";
 import { createReactEmitter } from "./frameworks/react/factory.js";
 import { createSvelteEmitter } from "./frameworks/svelte/factory.js";
@@ -133,6 +134,24 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       id: "svelte",
       emitter: createSvelteEmitter(),
       componentsRoot: svelteRoot,
+      barrelFile: "index.ts",
+    });
+  }
+
+  // Figma target — descriptor output consumed by the desktop plugin package.
+  const figmaRoot = path.join(
+    opts.workspaceRoot,
+    "packages",
+    "ds-figma-plugin",
+    "src",
+    "generated",
+    "components",
+  );
+  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-figma-plugin"))) {
+    bindings.set("figma", {
+      id: "figma",
+      emitter: createFigmaEmitter(),
+      componentsRoot: figmaRoot,
       barrelFile: "index.ts",
     });
   }
