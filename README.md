@@ -4,7 +4,9 @@ A design system that generates React, Vue, Svelte, Angular, and Lit packages fro
 
 ## The architectural claim
 
-This repository is not, primarily, a design system. It is a falsifiable claim about compositional systems, with a design system as the existence proof. The constraint of "45 components, 1 primitive, 5 frameworks" exists because five structurally opposed framework paradigms — React hooks, Vue composables, Svelte runes, Angular signals, Lit controllers — are the falsification surface: if the same contract can drive all of them idiomatically without leaking implementation detail into any of them, the contract is at the right level of abstraction. If it cannot, the wrongness shows up as friction in exactly one output. The full claim, seven properties of compositional systems in normal form, and the falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md).
+This repository is not, primarily, a design system. It is a falsifiable claim about compositional systems, with a design system as the existence proof. The constraint of "53 components, 1 primitive, 5 frameworks" exists because five structurally opposed framework paradigms — React hooks, Vue composables, Svelte runes, Angular signals, Lit controllers — are the falsification surface: if the same contract can drive all of them idiomatically without leaking implementation detail into any of them, the contract is at the right level of abstraction. If it cannot, the wrongness shows up as friction in exactly one output.
+
+The full claim, seven properties of compositional systems in normal form, bounded evidence status, and falsification conditions are written down in [`docs/normal-form.md`](docs/normal-form.md). The consumer-facing stance — strict internal invariants, boring external affordances, and admitted override surfaces — is named in [`docs/consumer-projection-doctrine.md`](docs/consumer-projection-doctrine.md).
 
 ## What this is
 
@@ -12,13 +14,13 @@ This project is a **contract testing ground**. Every component is defined by a J
 
 | Package | Components |
 |---|---:|
-| **`@full-stack-ds/react`** | 45 |
-| **`@full-stack-ds/vue`** | 45 |
-| **`@full-stack-ds/svelte`** | 45 |
-| **`@full-stack-ds/lit`** | 45 |
-| **`@full-stack-ds/angular`** | 45 |
+| **`@full-stack-ds/react`** | 53 |
+| **`@full-stack-ds/vue`** | 53 |
+| **`@full-stack-ds/svelte`** | 53 |
+| **`@full-stack-ds/lit`** | 53 |
+| **`@full-stack-ds/angular`** | 53 |
 
-Test counts vary as the suites evolve; run `pnpm run test:all` for the current numbers.
+Test counts vary as the suites evolve; run `pnpm run test:all` for the current numbers. The authoritative component count is the set of `*.contract.json` files under [`packages/ds-contracts/`](packages/ds-contracts/); this README may lag briefly after contract-corpus changes.
 
 Contracts live under [`packages/ds-contracts/`](packages/ds-contracts/) (`*.contract.json`), validated against [`packages/ds-contracts/component.contract.schema.json`](packages/ds-contracts/component.contract.schema.json).
 
@@ -34,12 +36,14 @@ Every component — from `Button` to `Dialog` to `Calendar` — is composed enti
 <Stack as="input" type="email" />
 ```
 
-This constraint exists to prove the contract carries enough information to fully describe a component. If 45 components with full interactivity, accessibility, and styling can be built from one primitive across five frameworks, then the contract is sufficient for:
+This constraint exists to test whether the contract carries enough information to fully describe the current component corpus. If 53 components with interactivity, accessibility, styling, documentation, and A2UI projection can be built from one primitive across five frameworks, then the contract is carrying real semantic load. That is evidence for the architecture, not proof that the primitive count will remain one forever.
+
+The current witness covers:
 
 - **Code generation** — scaffold framework-specific sources from contracts
 - **Cross-framework portability** — the contract is framework-agnostic; React/Vue/Svelte/Angular/Lit are all render targets
-- **Agent-to-UI** — an AI agent can read a contract and produce a working component in any of the supported frameworks
-- **Documentation sites** — generate prop tables, anatomy diagrams, a11y specs, and usage examples from the same source
+- **Agent-to-UI** — an AI agent can consume a contract-derived A2UI descriptor without renderer-internal seams
+- **Documentation sites** — derive prop tables, anatomy, a11y specs, usage guidance, and preview surfaces from the same source
 - **Design tool integration** — tokens and variants map directly to design tool properties
 
 ## Project structure
@@ -48,7 +52,7 @@ This constraint exists to prove the contract carries enough information to fully
 packages/
   ds-contracts/                # Component + schema JSON (source of truth)
     component.contract.schema.json
-    *.contract.json             # 45 component contracts
+    *.contract.json             # 53 component contracts
     primitives/
       primitive.contract.schema.json
       Stack.primitive.json      # Canonical Stack API + per-target import paths
@@ -76,6 +80,7 @@ src/
 
 docs/
   admission-rail.md            # Generated artifact admission rail (concept)
+  consumer-projection-doctrine.md # Boring consumer surface + admitted override doctrine
   manifest-schema.md           # Emission manifest schema (reference)
   governed-ci.md               # Rail operator workflow + CI integration
   codegen-authority.md         # Codegen layer authority doctrine
@@ -319,7 +324,7 @@ npm run typecheck:lit        # tsc -p
 npm run typecheck:all        # All five
 ```
 
-## 45 components
+## Current component corpus
 
 Accordion, Alert, AlertNotice, Avatar, Badge, Blockquote, Breadcrumbs, Button, Calendar, Card, Checkbox, Chip, Command, Details, Dialog, Divider, Field, Icon, Image, Input, Label, Links, List, OTP, Popover, Postcard, ProfileFlag, Progress, Select, Sheet, ShowMore, Shuttle, Skeleton, Spinner, Status, Switch, Table, Tabs, Text, TextField, Toast, ToggleSwitch, Tooltip, Truncate, Walkthrough
 
