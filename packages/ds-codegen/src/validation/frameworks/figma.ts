@@ -1,5 +1,9 @@
 import type { FrameworkValidationPlan } from "../types.js";
 
+type FigmaValidationPlan = Omit<FrameworkValidationPlan, "framework"> & {
+  framework: "figma";
+};
+
 /**
  * Figma admission plan.
  *
@@ -8,9 +12,12 @@ import type { FrameworkValidationPlan } from "../types.js";
  * admits the generated registry and plugin integration surface. Descriptor
  * schema validity is pinned separately by the figma emitter unit tests because
  * JSON descriptor validation is a codegen invariant, not a Figma compiler pass.
+ *
+ * This is intentionally an adjunct plan until the broader rail FrameworkId
+ * vocabulary is widened to include figma as a first-class framework.
  */
-export const figmaValidationPlan: FrameworkValidationPlan = {
-  framework: "figma" as FrameworkValidationPlan["framework"],
+export const figmaValidationPlan: FigmaValidationPlan = {
+  framework: "figma",
   commands: [
     {
       check: "typecheck",
