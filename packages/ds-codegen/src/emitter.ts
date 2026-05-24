@@ -3,7 +3,7 @@
  *
  * The codegen pipeline is `validatedContract -> ComponentIR -> emitter -> files`.
  * This module defines the strategy interface that lets every framework
- * (React, Vue, Lit, Svelte, Angular) plug in without changing the core CLI.
+ * (React, Vue, Lit, Svelte, Angular, Figma) plug in without changing the core CLI.
  *
  * We deliberately avoid a class hierarchy or DI container — emitters are
  * factory functions that return a small object of pure handlers. The CLI
@@ -12,7 +12,7 @@
 
 import type { ComponentIR } from "./ir.js";
 
-export type TargetId = "react" | "vue" | "lit" | "svelte" | "angular";
+export type TargetId = "react" | "vue" | "lit" | "svelte" | "angular" | "figma";
 
 /**
  * One generated file. `relativePath` is relative to the target package's
@@ -90,6 +90,7 @@ export const KNOWN_TARGETS: readonly TargetId[] = [
   "lit",
   "svelte",
   "angular",
+  "figma",
 ];
 
 export function isTargetId(value: string): value is TargetId {
