@@ -23,7 +23,7 @@ type FigmaComponentDescriptor = {
   };
 };
 
-function main(): void {
+export function main(): void {
   const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];
   const docsPage = ensurePage("Full Stack DS / Documentation");
   const componentsPage = ensurePage("Full Stack DS / Components");
@@ -96,4 +96,6 @@ function createText(characters: string): FigmaTextNode {
   return text;
 }
 
-main();
+if (typeof figma !== "undefined") {
+  main();
+}
