@@ -80,7 +80,10 @@ src/
 
 docs/
   admission-rail.md            # Generated artifact admission rail (concept)
+  component-evidence-pages.md  # Component docs as evidence/projection pages
   consumer-projection-doctrine.md # Boring consumer surface + admitted override doctrine
+  contract-group-axes.md       # Contract group axes and obligation rules
+  codegen-target-family-recon.md # Beyond the first five web targets
   manifest-schema.md           # Emission manifest schema (reference)
   governed-ci.md               # Rail operator workflow + CI integration
   codegen-authority.md         # Codegen layer authority doctrine
