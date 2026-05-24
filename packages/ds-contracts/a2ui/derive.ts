@@ -30,6 +30,8 @@ export interface ComponentContractLike {
     children?: A2UIChildrenPolicy;
   };
   props?: {
+    designed?: { members?: ContractPropMember[] };
+    constrained?: { members?: ContractPropMember[] };
     styled?: { members?: ContractPropMember[] };
     [key: string]: { description?: string; members?: ContractPropMember[] } | undefined;
   };
@@ -155,9 +157,11 @@ function splitUnion(type: string): string[] {
 }
 
 function stripLiteralQuotes(alt: string): string | null {
-  const m = alt.match(/^"([^"]*)"$|^'([^']*)'$/);
-  if (!m) return null;
-  return m[1] ?? m[2] ?? '';
+  const doubleQuoted = alt.match(/^"([^"]*)"$/);
+  if (doubleQuoted) return doubleQuoted[1] ?? '';
+  const singleQuoted = alt.match(/^'([^']*)'$/);
+  if (singleQuoted) return singleQuoted[1] ?? '';
+  return null;
 }
 
 interface ParsedType {
@@ -241,6 +245,32 @@ function parseType(
   return parsed;
 }
 
+/**
+ * Return the prop members that constitute the agent-facing authoring surface.
+ *
+ * New contracts should project from `designed` and `constrained`: those buckets
+ * carry API legitimacy rather than implementation shape. Legacy contracts that
+ * have not migrated yet continue to project from `styled` so existing A2UI
+ * consumers do not lose prop visibility during the transition.
+ */
+function collectA2UIPropMembers(contract: ComponentContractLike): ContractPropMember[] {
+  const designed = contract.props?.designed?.members ?? [];
+  const constrained = contract.props?.constrained?.members ?? [];
+  const legacyStyled = contract.props?.styled?.members ?? [];
+
+  const source =
+    designed.length > 0 || constrained.length > 0
+      ? [...designed, ...constrained]
+      : legacyStyled;
+
+  const byName = new Map<string, ContractPropMember>();
+  for (const member of source) {
+    if (!member || typeof member.name !== 'string') continue;
+    if (!byName.has(member.name)) byName.set(member.name, member);
+  }
+  return [...byName.values()];
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -254,7 +284,7 @@ export function deriveA2UIDescriptor(contract: ComponentContractLike): A2UIDescr
   }
 
   const props: Record<string, A2UIProp> = {};
-  const members = contract.props?.styled?.members ?? [];
+  const members = collectA2UIPropMembers(contract);
   for (const m of members) {
     if (!m || typeof m.name !== 'string' || typeof m.type !== 'string') continue;
     if (isExcludedByName(m.name)) continue;
