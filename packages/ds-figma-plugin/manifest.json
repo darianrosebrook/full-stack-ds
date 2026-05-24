@@ -1,0 +1,7 @@
+{
+  "name": "Full Stack DS Contract Materializer",
+  "id": "full-stack-ds-contract-materializer",
+  "api": "1.0.0",
+  "main": "dist/plugin.js",
+  "editorType": ["figma"]
+}
