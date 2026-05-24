@@ -30,6 +30,25 @@ A component evidence page should answer five questions:
 
 This makes documentation part of the governance loop rather than a marketing surface.
 
+## Derived facts, authored guidance
+
+A component page should derive facts wherever the contract already owns authority.
+
+Generated or derived sections should include:
+
+- prop tables;
+- events and channels;
+- children policy;
+- slots and anatomy;
+- token and slot references;
+- A2UI descriptor snippets;
+- framework preview status;
+- evidence and residual metadata.
+
+Hand-authored copy is still useful, but it should stay in the right lane: guidance, caveats, examples, migration notes, product judgment, and non-claims. A hand-authored paragraph may explain a prop, but it should not duplicate the prop's name, type, enum domain, or required status as an independent fact.
+
+Any hand-authored claim that duplicates a contract fact is drift-prone. If it cannot be derived, the page should either mark it as guidance or identify the missing contract field.
+
 ## Recommended page sections
 
 ### Semantic contract
