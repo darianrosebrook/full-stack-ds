@@ -61,7 +61,8 @@ function toFigmaComponentDescriptor(ir: ComponentIR): object {
     component: {
       name: ir.name,
       cssPrefix: ir.cssPrefix,
-      layer: ir.layer,
+      rootElement: ir.root.element,
+      effectiveRole: ir.root.effectiveRole ?? null,
     },
     anatomy: ir.parts.map((part) => ({
       name: part.name,
@@ -71,25 +72,37 @@ function toFigmaComponentDescriptor(ir: ComponentIR): object {
       isRootOnly: part.isRootOnly,
       layoutVariant: part.layoutVariant ?? null,
     })),
-    props: ir.props.map((prop) => ({
+    props: ir.styledProps.map((prop) => ({
       name: prop.name,
+      safeName: prop.safeName,
       type: prop.type,
       required: prop.required,
-      defaultValue: prop.defaultValue ?? null,
+      description: prop.description ?? null,
+      defaultExpr: prop.defaultExpr ?? null,
+      nodeKind: prop.nodeKind ?? null,
     })),
     variants: ir.variants,
     states: ir.states,
-    tokens: ir.tokens,
-    a11y: ir.a11y,
-    behavior: {
-      channels: ir.behavior?.channels ?? {},
-      events: ir.events,
+    classRecipe: ir.classRecipe,
+    root: ir.root,
+    css: {
+      blocks: ir.cssBlocks,
+      keyframes: ir.keyframes,
     },
+    behavior: {
+      channels: ir.behavior.normalizedChannels,
+      dismissalTriggers: ir.behavior.normalizedDismissalTriggers,
+      events: ir.behavior.normalizedEvents,
+      form: ir.behavior.form ?? null,
+      focus: ir.behavior.focus ?? null,
+      portal: ir.behavior.portal ?? null,
+    },
+    surface: ir.surface ?? null,
     figma: {
       intendedUse: "desktop-plugin-materialization",
       documentationFrame: `${ir.name} / Documentation`,
       componentSetName: ir.name,
-      propertySource: "contract.props + contract.variants + contract.states",
+      propertySource: "IR styledProps + variants + states + behavior",
     },
   };
 }
