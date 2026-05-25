@@ -20,24 +20,9 @@ This document defines the target-pack seam landed by this slice.
 
 ## Authority split
 
-Core codegen owns:
+Core codegen owns contract validation, `ComponentIR` construction, registry resolution, file writing, preservation handling, artifact hashing, emission manifest writing, and rail/admission orchestration.
 
-- component contract validation
-- `ComponentIR` construction
-- registry resolution
-- file writing
-- preservation and generated/custom region handling
-- artifact hashing
-- emission manifest writing
-- rail/admission orchestration
-
-A target pack owns:
-
-- lowering governed IR into target-specific generated file declarations
-- declaring output roots and file kinds
-- declaring capabilities and non-capabilities
-- declaring admission commands and known gaps
-- declaring the execution permissions it requires
+A target pack owns target-specific lowering, declared output roots and file kinds, capabilities and non-capabilities, admission commands and known gaps, and its requested permission posture.
 
 A target pack must not become a second contract interpreter. It should consume governed IR and emit declared artifacts.
 
@@ -45,13 +30,13 @@ A target pack must not become a second contract interpreter. It should consume g
 
 This slice introduces `TargetPackManifestV1` under `packages/ds-codegen/src/target-packs/manifest.ts` and binds every current built-in target to a manifest in `packages/ds-codegen/src/target-packs/builtin.ts`.
 
-`registry.ts` now attaches a `targetPack` manifest to each `TargetBinding` and validates the manifest before registering the target. The root `fsds.targets.json` file declares which built-in targets are admitted. If the file is missing, codegen falls back to the same built-in target set for compatibility.
+`registry.ts` attaches a `targetPack` manifest to each executable `TargetBinding` and validates the manifest before registering the target. It also records declared target-pack metadata separately from executable availability. The root `fsds.targets.json` file declares admitted built-in targets and local target-pack declarations. If the file is missing, codegen falls back to the same built-in target set for compatibility.
 
-`emitter.ts` now separates `BuiltinTargetId` from `TargetId`: built-ins remain a closed compatibility declaration, while `TargetId` is registry-admitted string identity. `parseTargetArg` validates target-id syntax and then checks the requested id against the registry's available targets. Unknown ids fail because they are not registered, not because they are absent from a hardcoded framework union.
+`emitter.ts` separates `BuiltinTargetId` from `TargetId`: built-ins remain a closed compatibility declaration, while `TargetId` is registry-admitted string identity. `parseTargetArg` validates target-id syntax and then checks the requested id against the registry's executable targets.
 
-The emitter path is otherwise unchanged: React, Vue, Svelte, Angular, Lit, and Figma are still built-in in-process emitters. Local target-pack declarations are valid registry-config syntax but intentionally fail closed until a loader slice lands.
+`packages/ds-codegen/src/target-packs/local.ts` resolves and validates local target-pack manifests without importing their entrypoints. Local packs can be declared, loaded, fingerprinted, and described. They are metadata-only in this slice: `registry.declared()` includes them, `registry.describeDeclaration()` exposes their manifest and load metadata, while `registry.available()` omits them and `registry.get()` refuses them as non-executable.
 
-That means this slice is a governed registry/config foundation, not the full external package loader.
+That means this slice is a governed registry/config/local-manifest foundation, not the full external package loader.
 
 ## Manifest contract
 
@@ -65,25 +50,27 @@ A V1 target-pack manifest declares:
 - `permissions`: filesystem, network, postinstall posture
 - `admission`: optional command plan and known gaps
 
-Target IDs identify registry entries. Target families are the closed vocabulary:
-
-- `web-dom`
-- `native-view`
-- `design-tool`
-- `agent-schema`
-- `docs`
-- `test-plan`
-
-This distinction matters. Target IDs are registry data. Target-family categories remain architectural vocabulary.
+Target IDs identify registry entries. Target families are the closed vocabulary: `web-dom`, `native-view`, `design-tool`, `agent-schema`, `docs`, and `test-plan`.
 
 ## Registry config contract
 
 The root `fsds.targets.json` file uses schema version `fsds.target-registry.v1` and declares a target list. Each entry has an `id` and a `source`:
 
 - `builtin`: admits one of the in-repo built-in targets.
-- `local`: declares a future local target-pack package root and manifest path.
+- `local`: declares a workspace-local target-pack package root and manifest path.
 
-The config validator rejects duplicate ids, malformed target ids, absolute paths, and path escapes. The current registry implementation accepts built-ins only. A `local` declaration is deliberately allowed by the config schema but rejected by registry materialization with a clear error because local code loading is not implemented in this slice.
+The config validator rejects duplicate ids, malformed target ids, absolute paths, and path escapes. Built-in materialization admits only known built-ins. Local materialization resolves the package root under the workspace, resolves the manifest under the package root, validates the manifest with `TargetPackManifestV1`, verifies the manifest target id matches the registry target id, verifies the declared emitter entrypoint exists under the package root, and records the manifest SHA-256 digest.
+
+## Local target-pack loading posture
+
+Local loading is metadata-only in this slice. The loader proves that the declaration can be resolved and validated under the repository boundary, but does not import the declared entrypoint.
+
+The execution status is explicit:
+
+- `status`: `metadata-only`
+- `reason`: `local_emitter_execution_not_implemented`
+
+This distinguishes undeclared targets, declared local targets, and executable targets.
 
 ## Rail boundary
 
@@ -93,40 +80,30 @@ The current emission manifest and admission rail still use the older five-framew
 
 ## Safety posture
 
-The manifest validator rejects:
+The manifest validator rejects absolute paths, relative path escapes, missing required blocks, unknown target families, disallowed network/postinstall posture, and malformed admission commands.
 
-- absolute paths
-- relative path escapes
-- missing required blocks
-- unknown target families
-- unsafe network/postinstall execution permissions
-- malformed admission commands
+The registry config validator rejects wrong schema versions, empty target lists, duplicate target ids, malformed target ids, and local package/manifest path escapes.
 
-Current V1 keeps the filesystem permission vocabulary deliberately narrow: `package-output-only` or `none`.
+The local loader additionally rejects non-local source kinds, missing package roots, missing manifests, manifest id mismatches, missing emitter entrypoints, entrypoint path escapes, and disallowed permission posture through the shared manifest validator.
 
-The registry config validator rejects:
+## Tests and evidence surface
 
-- wrong schema versions
-- empty target lists
-- duplicate target ids
-- malformed target ids
-- local package/manifest path escapes
+The target-pack test surface now covers built-in manifest validation, closed vocabulary enforcement, registry config loading, duplicate id refusal, local partitioning, path escape refusal, registry-admitted CLI target parsing, default target selection, local manifest loading, SHA-256 fingerprinting, metadata-only status, id mismatch refusal, missing entrypoint refusal, disallowed permission refusal, and registry behavior where local packs are declared/describable but not executable.
+
+The intended targeted validation is:
+
+```sh
+pnpm --filter @full-stack-ds/codegen test -- target-packs registry
+pnpm --filter @full-stack-ds/codegen typecheck
+```
 
 ## Non-claims
 
-This slice does not yet:
-
-- load target packs from npm packages
-- load target packs from arbitrary local paths
-- execute target packs in a sandboxed child process
-- migrate the emission manifest from emitter-source-set provenance to target-pack package provenance
-- move admission plans entirely out of core rail code
-- split `ComponentIR` into semantic IR plus target-family IR
-- prove any non-web target beyond the existing Figma descriptor target
+This slice does not yet load target packs from npm packages, run local target-pack emitters, migrate the emission manifest from emitter-source-set provenance to target-pack package provenance, move admission plans entirely out of core rail code, split `ComponentIR` into semantic IR plus target-family IR, or prove any non-web target beyond the existing Figma descriptor target.
 
 ## Next admissible slices
 
-1. Add a local-path target-pack loader that validates manifest + entrypoint while keeping file writing centralized in core codegen.
+1. Add an executable local target-pack adapter that imports only after manifest validation and keeps file writing centralized in core codegen.
 2. Bump the emission manifest to bind generated artifacts to target-pack provenance rather than only local emitter source files.
 3. Move admission-plan declarations onto target-pack manifests and have the rail consume them through a governed policy layer.
 4. Extract one target, preferably Figma or A2UI, into the target-pack shape before attempting SwiftUI or React Native.
