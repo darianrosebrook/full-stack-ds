@@ -122,6 +122,7 @@ const SHARED_EMITTER_SOURCES: readonly string[] = [
   "packages/ds-codegen/src/semantics.ts",
   "packages/ds-codegen/src/target-packs/builtin.ts",
   "packages/ds-codegen/src/target-packs/config.ts",
+  "packages/ds-codegen/src/target-packs/local.ts",
   "packages/ds-codegen/src/target-packs/manifest.ts",
   "packages/ds-codegen/src/test-plan.ts",
 ];
