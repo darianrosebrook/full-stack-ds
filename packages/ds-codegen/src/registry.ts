@@ -5,10 +5,10 @@
  * generate into for `react`/`vue`/...". Each target binds a
  * `FrameworkEmitter` to an output package root.
  *
- * To register a new target:
- *   1. Implement a `createXxxEmitter` factory in `frameworks/xxx`.
- *   2. Add its workspace root and emitter to `createDefaultRegistry`.
- *   3. Done — the CLI flag `--target=xxx` becomes available automatically.
+ * This registry is now manifest-backed for built-in targets. The manifest
+ * does not change emission behavior yet; it records the governed target-pack
+ * contract that a future external package loader will consume. Framework
+ * emitters remain in-process and built-in for this slice.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -20,10 +20,17 @@ import { createReactEmitter } from "./frameworks/react/factory.js";
 import { createSvelteEmitter } from "./frameworks/svelte/factory.js";
 import { createVueEmitter } from "./frameworks/vue/factory.js";
 import { readReactStackImportFromPrimitiveContract } from "./primitive-contract.js";
+import { getBuiltinTargetPackManifest } from "./target-packs/builtin.js";
+import {
+  assertTargetPackManifestV1,
+  type TargetPackManifestV1,
+} from "./target-packs/manifest.js";
 
 export interface TargetBinding {
   id: TargetId;
   emitter: FrameworkEmitter;
+  /** Governed target-pack manifest that describes this target's contract. */
+  targetPack: TargetPackManifestV1;
   /** Absolute path to the components root for this target. */
   componentsRoot: string;
   /** File name for the components barrel within the components root. */
@@ -41,6 +48,7 @@ export interface TargetRegistry {
   available(): TargetId[];
   get(id: TargetId): TargetBinding;
   has(id: TargetId): boolean;
+  describe(id: TargetId): TargetPackManifestV1;
 }
 
 /**
@@ -59,7 +67,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  bindings.set("react", {
+  registerTarget(bindings, {
     id: "react",
     emitter: createReactEmitter({
       stackImportRelative: readReactStackImportFromPrimitiveContract(
@@ -79,7 +87,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "components",
   );
   if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-vue"))) {
-    bindings.set("vue", {
+    registerTarget(bindings, {
       id: "vue",
       emitter: createVueEmitter(),
       componentsRoot: vueRoot,
@@ -96,7 +104,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "components",
   );
   if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-angular"))) {
-    bindings.set("angular", {
+    registerTarget(bindings, {
       id: "angular",
       emitter: createAngularEmitter(),
       componentsRoot: angularRoot,
@@ -113,7 +121,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "components",
   );
   if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-lit"))) {
-    bindings.set("lit", {
+    registerTarget(bindings, {
       id: "lit",
       emitter: createLitEmitter(),
       componentsRoot: litRoot,
@@ -130,7 +138,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "components",
   );
   if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-svelte"))) {
-    bindings.set("svelte", {
+    registerTarget(bindings, {
       id: "svelte",
       emitter: createSvelteEmitter(),
       componentsRoot: svelteRoot,
@@ -148,7 +156,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "components",
   );
   if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-figma-plugin"))) {
-    bindings.set("figma", {
+    registerTarget(bindings, {
       id: "figma",
       emitter: createFigmaEmitter(),
       componentsRoot: figmaRoot,
@@ -168,7 +176,26 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     has(id) {
       return bindings.has(id);
     },
+    describe(id) {
+      const b = bindings.get(id);
+      if (!b) throw new Error(`Target "${id}" is not registered.`);
+      return b.targetPack;
+    },
   };
+}
+
+function registerTarget(
+  bindings: Map<TargetId, TargetBinding>,
+  binding: Omit<TargetBinding, "targetPack">,
+): void {
+  const targetPack = getBuiltinTargetPackManifest(binding.id);
+  assertTargetPackManifestV1(targetPack);
+  if (targetPack.target.id !== binding.id) {
+    throw new Error(
+      `Target-pack manifest id ${targetPack.target.id} does not match registry id ${binding.id}.`,
+    );
+  }
+  bindings.set(binding.id, { ...binding, targetPack });
 }
 
 function workspaceExists(packageRoot: string): boolean {
