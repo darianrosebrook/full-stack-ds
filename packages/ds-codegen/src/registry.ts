@@ -12,7 +12,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import type { FrameworkEmitter, TargetId } from "./emitter.js";
+import type { BuiltinTargetId, FrameworkEmitter, TargetId } from "./emitter.js";
 import { createAngularEmitter } from "./frameworks/angular/factory.js";
 import { createFigmaEmitter } from "./frameworks/figma/factory.js";
 import { createLitEmitter } from "./frameworks/lit/factory.js";
@@ -54,6 +54,10 @@ export interface TargetRegistry {
   has(id: TargetId): boolean;
   describe(id: TargetId): TargetPackManifestV1;
 }
+
+type BuiltinTargetBindingInput = Omit<TargetBinding, "id" | "targetPack"> & {
+  id: BuiltinTargetId;
+};
 
 /**
  * Build the default registry. Targets without a corresponding workspace
@@ -209,7 +213,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
 
 function registerBuiltinTarget(
   bindings: Map<TargetId, TargetBinding>,
-  binding: Omit<TargetBinding, "targetPack">,
+  binding: BuiltinTargetBindingInput,
 ): void {
   const targetPack = getBuiltinTargetPackManifest(binding.id);
   assertTargetPackManifestV1(targetPack);
