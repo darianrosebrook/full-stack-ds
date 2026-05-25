@@ -107,7 +107,7 @@ function resolveUnderRoot(root: string, relativePath: string, fieldPath: string)
   }
   const resolved = path.resolve(root, relativePath);
   const relative = path.relative(root, resolved);
-  if (relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative))) {
+  if (relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative))) {
     return resolved;
   }
   throw new Error(`${fieldPath} must not escape its root.`);
