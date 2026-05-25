@@ -8,6 +8,7 @@ import {
   TARGET_REGISTRY_CONFIG_SCHEMA_VERSION,
   assertTargetRegistryConfigV1,
   configuredBuiltinTargets,
+  configuredLocalTargets,
   loadTargetRegistryConfigV1,
   type TargetRegistryConfigV1,
 } from "./config.js";
@@ -67,8 +68,9 @@ describe("TargetRegistryConfigV1", () => {
     ).toThrow(/Duplicate target id/);
   });
 
-  it("validates but does not yet execute local target-pack declarations", () => {
+  it("partitions local target-pack declarations without making them builtin", () => {
     const config = registryConfig([
+      { id: "react", source: { kind: "builtin" } },
       {
         id: "solid",
         source: {
@@ -80,7 +82,17 @@ describe("TargetRegistryConfigV1", () => {
     ]);
 
     expect(() => assertTargetRegistryConfigV1(config)).not.toThrow();
-    expect(() => configuredBuiltinTargets(config)).toThrow(/Local\/external target-pack loading/);
+    expect(configuredBuiltinTargets(config)).toEqual(["react"]);
+    expect(configuredLocalTargets(config)).toEqual([
+      {
+        id: "solid",
+        source: {
+          kind: "local",
+          packageRoot: "packages/ds-solid",
+          manifest: "fsds.target-pack.json",
+        },
+      },
+    ]);
   });
 
   it("rejects local target-pack path escapes", () => {
