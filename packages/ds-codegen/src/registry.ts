@@ -22,6 +22,10 @@ import { createVueEmitter } from "./frameworks/vue/factory.js";
 import { readReactStackImportFromPrimitiveContract } from "./primitive-contract.js";
 import { getBuiltinTargetPackManifest } from "./target-packs/builtin.js";
 import {
+  configuredBuiltinTargets,
+  loadTargetRegistryConfigV1,
+} from "./target-packs/config.js";
+import {
   assertTargetPackManifestV1,
   type TargetPackManifestV1,
 } from "./target-packs/manifest.js";
@@ -57,6 +61,8 @@ export interface TargetRegistry {
  * surfaces "unknown target" if a missing one is requested.
  */
 export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
+  const loadedConfig = loadTargetRegistryConfigV1(opts.workspaceRoot);
+  const configuredTargets = new Set(configuredBuiltinTargets(loadedConfig.config));
   const bindings = new Map<TargetId, TargetBinding>();
 
   // React target
@@ -67,16 +73,18 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  registerTarget(bindings, {
-    id: "react",
-    emitter: createReactEmitter({
-      stackImportRelative: readReactStackImportFromPrimitiveContract(
-        opts.contractsRoot,
-      ),
-    }),
-    componentsRoot: reactRoot,
-    barrelFile: "index.ts",
-  });
+  if (configuredTargets.has("react")) {
+    registerBuiltinTarget(bindings, {
+      id: "react",
+      emitter: createReactEmitter({
+        stackImportRelative: readReactStackImportFromPrimitiveContract(
+          opts.contractsRoot,
+        ),
+      }),
+      componentsRoot: reactRoot,
+      barrelFile: "index.ts",
+    });
+  }
 
   // Vue target — registered only when the package exists on disk.
   const vueRoot = path.join(
@@ -86,8 +94,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-vue"))) {
-    registerTarget(bindings, {
+  if (
+    configuredTargets.has("vue") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-vue"))
+  ) {
+    registerBuiltinTarget(bindings, {
       id: "vue",
       emitter: createVueEmitter(),
       componentsRoot: vueRoot,
@@ -103,8 +114,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-angular"))) {
-    registerTarget(bindings, {
+  if (
+    configuredTargets.has("angular") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-angular"))
+  ) {
+    registerBuiltinTarget(bindings, {
       id: "angular",
       emitter: createAngularEmitter(),
       componentsRoot: angularRoot,
@@ -120,8 +134,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-lit"))) {
-    registerTarget(bindings, {
+  if (
+    configuredTargets.has("lit") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-lit"))
+  ) {
+    registerBuiltinTarget(bindings, {
       id: "lit",
       emitter: createLitEmitter(),
       componentsRoot: litRoot,
@@ -137,8 +154,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-svelte"))) {
-    registerTarget(bindings, {
+  if (
+    configuredTargets.has("svelte") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-svelte"))
+  ) {
+    registerBuiltinTarget(bindings, {
       id: "svelte",
       emitter: createSvelteEmitter(),
       componentsRoot: svelteRoot,
@@ -155,8 +175,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "generated",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-figma-plugin"))) {
-    registerTarget(bindings, {
+  if (
+    configuredTargets.has("figma") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-figma-plugin"))
+  ) {
+    registerBuiltinTarget(bindings, {
       id: "figma",
       emitter: createFigmaEmitter(),
       componentsRoot: figmaRoot,
@@ -184,7 +207,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   };
 }
 
-function registerTarget(
+function registerBuiltinTarget(
   bindings: Map<TargetId, TargetBinding>,
   binding: Omit<TargetBinding, "targetPack">,
 ): void {
