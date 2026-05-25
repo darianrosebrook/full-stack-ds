@@ -1,11 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import { KNOWN_TARGETS } from "../emitter.js";
+import { KNOWN_TARGETS, assertTargetIdSyntax, isBuiltinTargetId } from "../emitter.js";
+import type { BuiltinTargetId } from "../emitter.js";
 
 export const TARGET_REGISTRY_CONFIG_SCHEMA_VERSION = "fsds.target-registry.v1" as const;
 export const TARGET_REGISTRY_CONFIG_FILENAME = "fsds.targets.json" as const;
-
-type BuiltinTargetId = (typeof KNOWN_TARGETS)[number];
 
 export type TargetRegistryConfigSourceV1 =
   | { kind: "builtin" }
@@ -74,26 +73,27 @@ export function assertTargetRegistryConfigV1(
 export function configuredBuiltinTargets(config: TargetRegistryConfigV1): BuiltinTargetId[] {
   const ids: BuiltinTargetId[] = [];
   for (const target of config.targets) {
-    if (target.source.kind === "builtin") {
-      if (!isBuiltinTargetId(target.id)) {
-        throw new Error(
-          `Target "${target.id}" is declared as builtin but is not one of: ${KNOWN_TARGETS.join(", ")}.`,
-        );
-      }
-      ids.push(target.id);
-      continue;
+    if (target.source.kind !== "builtin") continue;
+    if (!isBuiltinTargetId(target.id)) {
+      throw new Error(
+        `Target "${target.id}" is declared as builtin but is not one of: ${KNOWN_TARGETS.join(", ")}.`,
+      );
     }
-    throw new Error(
-      `Target "${target.id}" uses source kind "${target.source.kind}". Local/external target-pack loading is declared but not implemented in this slice.`,
-    );
+    ids.push(target.id);
   }
   return ids;
+}
+
+export function configuredLocalTargets(
+  config: TargetRegistryConfigV1,
+): TargetRegistryConfigTargetV1[] {
+  return config.targets.filter((target) => target.source.kind === "local");
 }
 
 function assertConfigTarget(value: unknown, fieldPath: string): void {
   const target = asRecord(value, fieldPath);
   const id = assertNonEmptyString(target.id, `${fieldPath}.id`);
-  assertTargetId(id, `${fieldPath}.id`);
+  assertTargetIdSyntax(id);
   const source = asRecord(target.source, `${fieldPath}.source`);
   if (source.kind === "builtin") {
     return;
@@ -110,18 +110,6 @@ function assertConfigTarget(value: unknown, fieldPath: string): void {
     return;
   }
   throw new Error(`${fieldPath}.source.kind must be builtin or local.`);
-}
-
-function isBuiltinTargetId(value: string): value is BuiltinTargetId {
-  return (KNOWN_TARGETS as readonly string[]).includes(value);
-}
-
-function assertTargetId(value: string, fieldPath: string): void {
-  if (!/^[a-z0-9][a-z0-9._-]*$/.test(value)) {
-    throw new Error(
-      `${fieldPath} must be lowercase identifier text: letters, numbers, '.', '_', '-'.`,
-    );
-  }
 }
 
 function assertRelativePath(value: string, fieldPath: string): void {
