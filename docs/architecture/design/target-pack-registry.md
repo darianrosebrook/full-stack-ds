@@ -6,6 +6,7 @@ title: Governed Target-Pack Registry
 owner: "@darianrosebrook"
 updated: 2026-05-25
 governs:
+  - fsds.targets.json
   - packages/ds-codegen/src/emitter.ts
   - packages/ds-codegen/src/registry.ts
   - packages/ds-codegen/src/target-packs/**
@@ -44,9 +45,13 @@ A target pack must not become a second contract interpreter. It should consume g
 
 This slice introduces `TargetPackManifestV1` under `packages/ds-codegen/src/target-packs/manifest.ts` and binds every current built-in target to a manifest in `packages/ds-codegen/src/target-packs/builtin.ts`.
 
-`registry.ts` now attaches a `targetPack` manifest to each `TargetBinding` and validates the manifest before registering the target. The emitter path is otherwise unchanged: React, Vue, Svelte, Angular, Lit, and Figma are still built-in in-process emitters.
+`registry.ts` now attaches a `targetPack` manifest to each `TargetBinding` and validates the manifest before registering the target. The root `fsds.targets.json` file declares which built-in targets are admitted. If the file is missing, codegen falls back to the same built-in target set for compatibility.
 
-That means this slice is a foundation slice, not the full external package loader.
+`emitter.ts` now separates `BuiltinTargetId` from `TargetId`: built-ins remain a closed compatibility declaration, while `TargetId` is registry-admitted string identity. `parseTargetArg` validates target-id syntax and then checks the requested id against the registry's available targets. Unknown ids fail because they are not registered, not because they are absent from a hardcoded framework union.
+
+The emitter path is otherwise unchanged: React, Vue, Svelte, Angular, Lit, and Figma are still built-in in-process emitters. Local target-pack declarations are valid registry-config syntax but intentionally fail closed until a loader slice lands.
+
+That means this slice is a governed registry/config foundation, not the full external package loader.
 
 ## Manifest contract
 
@@ -69,7 +74,22 @@ Target IDs identify registry entries. Target families are the closed vocabulary:
 - `docs`
 - `test-plan`
 
-This distinction matters. Framework IDs should become registry data. Target-family categories remain architectural vocabulary.
+This distinction matters. Target IDs are registry data. Target-family categories remain architectural vocabulary.
+
+## Registry config contract
+
+The root `fsds.targets.json` file uses schema version `fsds.target-registry.v1` and declares a target list. Each entry has an `id` and a `source`:
+
+- `builtin`: admits one of the in-repo built-in targets.
+- `local`: declares a future local target-pack package root and manifest path.
+
+The config validator rejects duplicate ids, malformed target ids, absolute paths, and path escapes. The current registry implementation accepts built-ins only. A `local` declaration is deliberately allowed by the config schema but rejected by registry materialization with a clear error because local code loading is not implemented in this slice.
+
+## Rail boundary
+
+The current emission manifest and admission rail still use the older five-framework `FrameworkId` vocabulary: React, Vue, Svelte, Lit, and Angular. That vocabulary is not widened by this slice.
+
+`TargetBinding` therefore carries an optional `railFrameworkId`. Targets that participate in the existing framework-admission rail set this field. Targets such as Figma can generate descriptor artifacts without being forced into the five-framework emission manifest. A later manifest-v6/provenance slice should add target-pack provenance rather than pretending every target is a framework rail member.
 
 ## Safety posture
 
@@ -83,6 +103,14 @@ The manifest validator rejects:
 - malformed admission commands
 
 Current V1 keeps the filesystem permission vocabulary deliberately narrow: `package-output-only` or `none`.
+
+The registry config validator rejects:
+
+- wrong schema versions
+- empty target lists
+- duplicate target ids
+- malformed target ids
+- local package/manifest path escapes
 
 ## Non-claims
 
@@ -98,9 +126,8 @@ This slice does not yet:
 
 ## Next admissible slices
 
-1. Replace framework ID closure in `emitter.ts` with registry-validated target IDs while keeping built-ins as compatibility declarations.
-2. Add a registry config file such as `fsds.targets.json` to map target IDs to package/local sources and expected digests.
-3. Add a local-path target-pack loader that validates manifest + entrypoint while keeping file writing centralized in core codegen.
-4. Bump the emission manifest to bind generated artifacts to target-pack provenance rather than only local emitter source files.
-5. Move admission-plan declarations onto target-pack manifests and have the rail consume them through a governed policy layer.
-6. Extract one target, preferably Figma or A2UI, into the target-pack shape before attempting SwiftUI or React Native.
+1. Add a local-path target-pack loader that validates manifest + entrypoint while keeping file writing centralized in core codegen.
+2. Bump the emission manifest to bind generated artifacts to target-pack provenance rather than only local emitter source files.
+3. Move admission-plan declarations onto target-pack manifests and have the rail consume them through a governed policy layer.
+4. Extract one target, preferably Figma or A2UI, into the target-pack shape before attempting SwiftUI or React Native.
+5. Add package-source loading with explicit digests only after the local loader and provenance surface are admitted.
