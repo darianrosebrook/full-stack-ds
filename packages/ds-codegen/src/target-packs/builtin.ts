@@ -1,4 +1,4 @@
-import type { TargetId } from "../emitter.js";
+import type { BuiltinTargetId } from "../emitter.js";
 import type { TargetPackManifestV1 } from "./manifest.js";
 import { TARGET_PACK_MANIFEST_SCHEMA_VERSION } from "./manifest.js";
 
@@ -18,7 +18,7 @@ const SAFE_BUILTIN_PERMISSIONS = {
   postinstall: false,
 } as const;
 
-export const BUILTIN_TARGET_PACKS: Readonly<Record<TargetId, TargetPackManifestV1>> = {
+export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackManifestV1>> = {
   react: {
     schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
     target: {
@@ -189,6 +189,6 @@ export const BUILTIN_TARGET_PACKS: Readonly<Record<TargetId, TargetPackManifestV
   },
 };
 
-export function getBuiltinTargetPackManifest(id: TargetId): TargetPackManifestV1 {
+export function getBuiltinTargetPackManifest(id: BuiltinTargetId): TargetPackManifestV1 {
   return BUILTIN_TARGET_PACKS[id];
 }
