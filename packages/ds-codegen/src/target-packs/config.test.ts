@@ -109,6 +109,18 @@ describe("parseTargetArg", () => {
     ]);
   });
 
+  it("uses react as the default target when it is registered", () => {
+    expect(parseTargetArg(undefined, ["figma", "react"])).toEqual(["react"]);
+  });
+
+  it("uses the first registered target as the default when react is not registered", () => {
+    expect(parseTargetArg(undefined, ["figma"])).toEqual(["figma"]);
+  });
+
+  it("rejects an empty registry", () => {
+    expect(() => parseTargetArg(undefined, [])).toThrow(/No targets are registered/);
+  });
+
   it("still rejects target ids that are not registered", () => {
     expect(() => parseTargetArg("solid", ["react"])).toThrow(/not registered/);
   });
