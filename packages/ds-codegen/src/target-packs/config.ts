@@ -1,9 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import { KNOWN_TARGETS, type BuiltinTargetId } from "../emitter.js";
+import { KNOWN_TARGETS } from "../emitter.js";
 
 export const TARGET_REGISTRY_CONFIG_SCHEMA_VERSION = "fsds.target-registry.v1" as const;
 export const TARGET_REGISTRY_CONFIG_FILENAME = "fsds.targets.json" as const;
+
+type BuiltinTargetId = (typeof KNOWN_TARGETS)[number];
 
 export type TargetRegistryConfigSourceV1 =
   | { kind: "builtin" }
