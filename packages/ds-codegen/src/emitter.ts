@@ -113,7 +113,12 @@ export function parseTargetArg(
   raw: string | undefined,
   available: readonly TargetId[],
 ): TargetId[] {
-  if (!raw || raw.length === 0) return ["react"];
+  if (available.length === 0) {
+    throw new Error("No targets are registered.");
+  }
+  if (!raw || raw.length === 0) {
+    return available.includes("react") ? ["react"] : [available[0]!];
+  }
   if (raw === "all") return [...available];
 
   const requested = raw
