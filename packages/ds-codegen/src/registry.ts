@@ -29,10 +29,13 @@ import {
   assertTargetPackManifestV1,
   type TargetPackManifestV1,
 } from "./target-packs/manifest.js";
+import type { FrameworkId } from "./validation/types.js";
 
 export interface TargetBinding {
   id: TargetId;
   emitter: FrameworkEmitter;
+  /** Rail framework id when this target participates in the current five-framework admission rail. */
+  railFrameworkId?: FrameworkId;
   /** Governed target-pack manifest that describes this target's contract. */
   targetPack: TargetPackManifestV1;
   /** Absolute path to the components root for this target. */
@@ -80,6 +83,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   if (configuredTargets.has("react")) {
     registerBuiltinTarget(bindings, {
       id: "react",
+      railFrameworkId: "react",
       emitter: createReactEmitter({
         stackImportRelative: readReactStackImportFromPrimitiveContract(
           opts.contractsRoot,
@@ -104,6 +108,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   ) {
     registerBuiltinTarget(bindings, {
       id: "vue",
+      railFrameworkId: "vue",
       emitter: createVueEmitter(),
       componentsRoot: vueRoot,
       barrelFile: "index.ts",
@@ -124,6 +129,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   ) {
     registerBuiltinTarget(bindings, {
       id: "angular",
+      railFrameworkId: "angular",
       emitter: createAngularEmitter(),
       componentsRoot: angularRoot,
       barrelFile: "index.ts",
@@ -144,6 +150,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   ) {
     registerBuiltinTarget(bindings, {
       id: "lit",
+      railFrameworkId: "lit",
       emitter: createLitEmitter(),
       componentsRoot: litRoot,
       barrelFile: "index.ts",
@@ -164,6 +171,7 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   ) {
     registerBuiltinTarget(bindings, {
       id: "svelte",
+      railFrameworkId: "svelte",
       emitter: createSvelteEmitter(),
       componentsRoot: svelteRoot,
       barrelFile: "index.ts",
