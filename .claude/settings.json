@@ -1,13 +1,5 @@
-{
-  "env": {
-    "CAWS_QUIET": "1"
-  },
-  "permissions": {
-    "allow": [
-      "Bash(caws *)",
-      "Bash(npx caws *)",
-      "Bash(npx --yes @paths.design/caws-cli *)"
-    ],
+{ 
+  "permissions": { 
     "deny": [
       "Bash(git push --force*)",
       "Bash(git push -f *)",
