@@ -157,3 +157,66 @@ jobs:
             packages/ds-svelte/src \
             packages/ds-angular/src \
             packages/ds-lit/src
+
+  runtime-rail:
+    name: Runtime visual proof rail
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: gate
+    # Runs after the gate job's pre-flight (validate/typecheck/test) passes.
+    # The rail boots the Vite dev server and exercises each of the 5
+    # changed components (Progress, Truncate, ShowMore, OTP, Calendar)
+    # in a real Chromium under Playwright, asserting contract facts and
+    # capturing screenshot baselines. Separates from the gate so that:
+    #   - A rail failure (visual regression, dev-server boot issue)
+    #     surfaces independently of contract validation.
+    #   - The rail's Chromium download doesn't slow the gate job that
+    #     also runs `pnpm test` and full typecheck.
+    # Pre-push hook does NOT run this rail — too slow for the local
+    # push gate; CI is where it earns its keep.
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build design tokens
+        run: pnpm -F @full-stack-ds/tokens build
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      # Runs only the contract-fact describe blocks — these assert
+      # DOM shape and inline-style values that are OS-agnostic. The
+      # screenshot describe block ("Runtime rail — screenshots")
+      # holds darwin-only baselines used by local developers for
+      # visual regression sanity checks; running it on Linux CI
+      # without committed Linux baselines would either always-fail
+      # or silently write a Linux baseline on first run (the wrong
+      # signal for a CI gate). See the rail's header comment for
+      # the explicit non-claim.
+      - name: Run runtime visual proof rail (fact assertions only)
+        run: pnpm run e2e:rail -- --grep "Runtime rail — (Progress|Truncate|ShowMore|OTP|Calendar)"
+
+      # On rail failure, surface the test report + any screenshot diffs
+      # so the PR reviewer can see what changed.
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-runtime-rail
+          path: playwright-report/
+          if-no-files-found: ignore
