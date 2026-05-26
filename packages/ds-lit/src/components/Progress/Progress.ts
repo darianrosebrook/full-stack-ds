@@ -104,7 +104,7 @@ export class ProgressElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="progressbar" aria-valuenow=${ifDefined(this.value)} aria-valuemin="0" aria-valuemax="100" aria-label=${ifDefined(this.label)}>
   <span class=${'progress__track'} aria-hidden="true">
-    <span class=${'progress__fill'} style=${styleMap({ '--fsds-progress-fill-width': String(this.value) })}></span>
+    <span class=${'progress__fill'} style=${styleMap({ '--fsds-progress-fill-width': this.value === undefined ? undefined : String(this.value) })}></span>
   </span>
   ${this.showValue ? html`
   <span class=${'progress__value'}>

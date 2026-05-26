@@ -1503,9 +1503,25 @@ function renderLitDomNode(
       if (valueExpr === null) continue;
       // styleMap value slots are typed `string | undefined`. Prop and
       // channel sources may carry non-string types (number/boolean),
-      // so coerce with String() — this matches what setProperty() does
-      // internally and satisfies lit-analyzer's strict typing.
-      entries.push(`'${varName}': String(${valueExpr})`);
+      // so coerce with String(). But a literal `String(undefined)`
+      // serializes to the string "undefined", which styleMap then sets
+      // as `--fsds-foo: undefined;` — a parseable but semantically
+      // wrong CSS declaration that overrides the var() rule's
+      // fallback. The runtime rail caught this on Progress (default
+      // props have no `value`, so the inline emit produced
+      // `--fsds-progress-fill-width: undefined`, blocking the CSS
+      // rule's `var(..., 0)` fallback from resolving).
+      //
+      // Lowering becomes:
+      //   <expr> === undefined ? undefined : String(<expr>)
+      // — preserves styleMap's "omit when undefined" semantics while
+      // satisfying lit-analyzer's `string | undefined` typing for
+      // arbitrary custom-property slots. Iteration aliases (loop
+      // locals) can't be undefined in the iterated scope, but using
+      // a uniform expression keeps the emit branch-free.
+      entries.push(
+        `'${varName}': ${valueExpr} === undefined ? undefined : String(${valueExpr})`,
+      );
     }
     if (entries.length > 0) {
       attrs.push(`style=\${styleMap({ ${entries.join(", ")} })}`);

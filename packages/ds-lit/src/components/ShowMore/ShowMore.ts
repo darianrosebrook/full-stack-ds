@@ -110,7 +110,7 @@ export class ShowMoreElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  <div class=${'show-more__content'} style=${styleMap({ '--fsds-show-more-content-max-lines': String(this.maxLines) })}>
+  <div class=${'show-more__content'} style=${styleMap({ '--fsds-show-more-content-max-lines': this.maxLines === undefined ? undefined : String(this.maxLines) })}>
     <slot></slot>
   </div>
   <button class=${'show-more__trigger'} type="button" @click=${(e: Event) => this.handleExpandedChange(e)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${this.showMoreLabel}</button>

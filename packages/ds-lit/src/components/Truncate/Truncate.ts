@@ -102,7 +102,7 @@ export class TruncateElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  <span class=${'truncate__content'} style=${styleMap({ '--fsds-truncate-content-lines': String(this.lines) })}>
+  <span class=${'truncate__content'} style=${styleMap({ '--fsds-truncate-content-lines': this.lines === undefined ? undefined : String(this.lines) })}>
     <slot></slot>
   </span>
   ${this.expandable ? html`

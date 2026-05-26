@@ -259,8 +259,13 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: count iteration lowering", () => {
     });
 
     it("emits bare alias inside styleMap directive value", () => {
+      // The undefined-guard ternary is uniform across all sources
+      // (iteration aliases included), even though loop-locals can't
+      // be undefined in scope. Keeping the emit shape branch-free
+      // makes the codegen path simpler than threading per-source
+      // nullability through styleMap construction.
       expect(src).toMatch(
-        /styleMap\(\{\s*'--fsds-fixture-count-dot-index':\s*String\(index\)\s*\}\)/,
+        /styleMap\(\{\s*'--fsds-fixture-count-dot-index':\s*index === undefined \? undefined : String\(index\)\s*\}\)/,
       );
     });
 

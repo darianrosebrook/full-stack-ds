@@ -130,9 +130,15 @@ describe("IR-DOM-CSS-VAR-BINDING-01: cssVariableBindings lowering", () => {
     it("merges all bindings into a single styleMap({...}) directive", () => {
       // String() coercion is required: lit-analyzer types arbitrary
       // styleMap value slots as `string | undefined`, and prop sources
-      // may carry non-string types.
+      // may carry non-string types. The undefined guard is also
+      // required because `String(undefined)` materializes the
+      // literal string "undefined" — runtime-rail surfaced this in
+      // Progress, where default props had no value but the inline
+      // emit set `--fsds-progress-fill-width: undefined`, blocking
+      // the CSS rule's fallback. The ternary preserves styleMap's
+      // "omit when undefined" semantics.
       expect(src).toMatch(
-        /<span[^>]*style=\$\{styleMap\(\{\s*'--fsds-fixture-bar-fill-width':\s*String\(this\.value\),\s*'--fsds-fixture-bar-fill-intent':\s*String\(this\.intent\)\s*\}\)\}/,
+        /<span[^>]*style=\$\{styleMap\(\{\s*'--fsds-fixture-bar-fill-width':\s*this\.value === undefined \? undefined : String\(this\.value\),\s*'--fsds-fixture-bar-fill-intent':\s*this\.intent === undefined \? undefined : String\(this\.intent\)\s*\}\)\}/,
       );
     });
 
