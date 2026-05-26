@@ -41,7 +41,7 @@ export function createFigmaEmitter(): FrameworkEmitter {
 
     emitBarrel(componentNames: string[]): string {
       const imports = componentNames
-        .map((name) => `import ${name} from "./${name}/${name}.figma.json" assert { type: "json" };`)
+        .map((name) => `import ${name} from "./${name}/${name}.figma.json" with { type: "json" };`)
         .join("\n");
       const entries = componentNames
         .map((name) => `  ${JSON.stringify(name)}: ${name},`)

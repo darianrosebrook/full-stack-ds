@@ -101,8 +101,8 @@ describe("createFigmaEmitter", () => {
 
   it("emits a JSON descriptor registry barrel", () => {
     const barrel = createFigmaEmitter().emitBarrel(["Button", "Input"]);
-    expect(barrel).toContain('import Button from "./Button/Button.figma.json" assert { type: "json" };');
-    expect(barrel).toContain('import Input from "./Input/Input.figma.json" assert { type: "json" };');
+    expect(barrel).toContain('import Button from "./Button/Button.figma.json" with { type: "json" };');
+    expect(barrel).toContain('import Input from "./Input/Input.figma.json" with { type: "json" };');
     expect(barrel).toContain('"Button": Button');
     expect(barrel).toContain('export type FigmaComponentName = keyof typeof figmaComponentRegistry;');
   });
