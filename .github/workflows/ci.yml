@@ -199,17 +199,14 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 
-      # Runs only the contract-fact describe blocks — these assert
-      # DOM shape and inline-style values that are OS-agnostic. The
-      # screenshot describe block ("Runtime rail — screenshots")
-      # holds darwin-only baselines used by local developers for
-      # visual regression sanity checks; running it on Linux CI
-      # without committed Linux baselines would either always-fail
-      # or silently write a Linux baseline on first run (the wrong
-      # signal for a CI gate). See the rail's header comment for
-      # the explicit non-claim.
+      # The screenshot describe block self-skips on CI=true (set
+      # automatically by GitHub Actions) — committed snapshots are
+      # darwin-only, so Linux CI would always write a baseline-missing
+      # error on first run. The 20 fact-assertion tests are OS-agnostic
+      # and run here. See `test.skip(!!process.env.CI, ...)` in
+      # e2e/runtime-rail.spec.ts and the rail's header non-claims.
       - name: Run runtime visual proof rail (fact assertions only)
-        run: pnpm run e2e:rail -- --grep "Runtime rail — (Progress|Truncate|ShowMore|OTP|Calendar)"
+        run: pnpm run e2e:rail
 
       # On rail failure, surface the test report + any screenshot diffs
       # so the PR reviewer can see what changed.

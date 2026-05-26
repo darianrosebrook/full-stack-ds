@@ -236,6 +236,16 @@ test.describe("Runtime rail — screenshots", () => {
   // by Commits 3-6. React-only keeps the snapshot surface manageable
   // while still proving "the rendered tree differs from what the
   // codegen-emit tests would catch."
+  //
+  // Skipped in CI: the committed baselines are chromium-darwin only.
+  // Running these on Linux CI without Linux baselines would either
+  // always-fail (which doesn't catch real regressions) or write
+  // Linux baselines on first run (the wrong signal for a gate).
+  // Local developers run them implicitly via `pnpm run e2e:rail`
+  // against the committed darwin baselines. The fact-assertion
+  // describes above run everywhere.
+  test.skip(!!process.env.CI, "Screenshot baselines are darwin-only");
+
   const COMPONENTS = ["Progress", "Truncate", "ShowMore", "OTP", "Calendar"] as const;
 
   for (const component of COMPONENTS) {
