@@ -196,6 +196,51 @@ test.describe("Runtime rail — Calendar (count iteration)", () => {
       expect(indices).toEqual(expected);
     });
   }
+
+  // BINDING-EXPRESSION-V2-01: Calendar's contract was migrated from
+  // `prop:index` to `iter:index` in this slice. The runtime DOM fact
+  // must be byte-equivalent — every cell still carries a numeric
+  // string `data-calendar-index` matching its position. If a future
+  // change to the V2 lowering ever regresses this back to literal
+  // `"undefined"` (the previous `String(undefined)` bug in Lit) or
+  // drops the attribute entirely, this assertion fails on the spot.
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: iter:index lowers to position-accurate data-calendar-index (V2 evidence)`, async ({
+      page,
+    }) => {
+      await goto(page, framework, "Calendar", "calendar");
+      const facts = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return { count: 0, samples: [] as Array<{ pos: number; raw: string | null }> };
+          const nodes = Array.from(
+            root.querySelectorAll("[data-calendar-index]"),
+          );
+          const sampleIndices = [0, 1, 5, 20, 41];
+          return {
+            count: nodes.length,
+            samples: sampleIndices.map((pos) => ({
+              pos,
+              raw: (nodes[pos] as HTMLElement | undefined)?.getAttribute(
+                "data-calendar-index",
+              ) ?? null,
+            })),
+          };
+        },
+        { host: `fsds-${kebab("Calendar")}`, isLit: framework === "lit" },
+      );
+
+      expect(facts.count).toBe(42);
+      // Each sampled cell carries the exact string of its zero-based
+      // position. The string form matters — a regression to numeric
+      // type or `"undefined"` would fail the strict equality.
+      for (const { pos, raw } of facts.samples) {
+        expect(raw).toBe(String(pos));
+      }
+    });
+  }
 });
 
 test.describe("Runtime rail — Truncate (CSS-var fallback)", () => {
