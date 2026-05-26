@@ -18,6 +18,7 @@ yarn.lock
 .vite/
 .vitest-cache/
 .cache/
+.turbo/
 __pycache__/
 *.pyc
 
