@@ -321,13 +321,73 @@ function walkDomBindings(
   issues: ValidationIssue[],
   pointer: string,
 ): void {
+  walkDomBindingsScoped(node, propNames, channelNames, issues, pointer, propNames);
+}
+
+/**
+ * Recursive worker for walkDomBindings. `inScope` is the set of names a
+ * `prop:X` reference may resolve to at the CURRENT subtree depth — the
+ * union of declared component props (`propNames`) plus any iteration
+ * aliases (`indexVar`, `itemVar`) introduced by enclosing `iterate`
+ * declarations. Extending the scope when descending into an iterated
+ * node mirrors the IR's `validateDomNode` rule
+ * (IR-DOM-ITERATE-CAPABILITY-01) so this semantic checker and the
+ * IR-build-time checker agree on what `prop:` may reference. The
+ * iterate.source itself remains validated against the outer scope
+ * (it cannot reference the names it introduces).
+ */
+function walkDomBindingsScoped(
+  node: unknown,
+  propNames: Set<string>,
+  channelNames: Set<string>,
+  issues: ValidationIssue[],
+  pointer: string,
+  inScope: Set<string>,
+): void {
   if (!node || typeof node !== "object") return;
   if (Array.isArray(node)) {
     for (const [i, child] of node.entries()) {
-      walkDomBindings(child, propNames, channelNames, issues, `${pointer}/${i}`);
+      walkDomBindingsScoped(
+        child,
+        propNames,
+        channelNames,
+        issues,
+        `${pointer}/${i}`,
+        inScope,
+      );
     }
     return;
   }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: extend the in-scope name set for THIS
+  // node and every descendant when `iterate` is declared. The iterate
+  // source must still resolve in the OUTER scope — validate it before
+  // extending. itemVar/indexVar defaults match parseIterate in ir.ts.
+  const iterate = (node as Record<string, unknown>).iterate;
+  let nodeScope = inScope;
+  if (iterate && typeof iterate === "object" && !Array.isArray(iterate)) {
+    const it = iterate as Record<string, unknown>;
+    if (typeof it.source === "string" && it.source.startsWith("prop:")) {
+      const sourceProp = it.source.slice("prop:".length);
+      if (!propNames.has(sourceProp)) {
+        issues.push({
+          pointer: `${pointer}/iterate/source`,
+          message: `references prop "${sourceProp}" which is not declared in any props bucket`,
+        });
+      }
+    }
+    const indexVar = typeof it.indexVar === "string" ? it.indexVar : "index";
+    const itemVar =
+      it.kind === "array"
+        ? typeof it.itemVar === "string"
+          ? it.itemVar
+          : "item"
+        : undefined;
+    nodeScope = new Set(inScope);
+    nodeScope.add(indexVar);
+    if (itemVar !== undefined) nodeScope.add(itemVar);
+  }
+
   for (const map of ["bindings", "on"] as const) {
     const record = (node as Record<string, unknown>)[map];
     if (record && typeof record === "object") {
@@ -344,7 +404,7 @@ function walkDomBindings(
           }
         } else if (expr.startsWith("prop:")) {
           const propRef = expr.slice("prop:".length);
-          if (!propNames.has(propRef)) {
+          if (!nodeScope.has(propRef)) {
             issues.push({
               pointer: `${pointer}/${map}/${attr}`,
               message: `references prop "${propRef}" which is not declared in any props bucket`,
@@ -357,12 +417,13 @@ function walkDomBindings(
   const children = (node as Record<string, unknown>).children;
   if (Array.isArray(children)) {
     for (const [i, child] of children.entries()) {
-      walkDomBindings(
+      walkDomBindingsScoped(
         child,
         propNames,
         channelNames,
         issues,
         `${pointer}/children/${i}`,
+        nodeScope,
       );
     }
   }
