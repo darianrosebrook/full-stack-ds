@@ -632,6 +632,18 @@ function main(): void {
  * provenance the IR was built from. Groups are empty in `--dry-run` mode
  * (no files were actually written).
  */
+const FRAMEWORK_EMITTING_TARGETS: ReadonlySet<FrameworkId> = new Set([
+  "react",
+  "vue",
+  "svelte",
+  "lit",
+  "angular",
+]);
+
+function isFrameworkEmittingTarget(id: TargetId): id is FrameworkId {
+  return FRAMEWORK_EMITTING_TARGETS.has(id as FrameworkId);
+}
+
 function emitForTarget(
   binding: TargetBinding,
   irInputs: { ir: ComponentIR; provenance: ContractProvenance }[],
@@ -643,7 +655,7 @@ function emitForTarget(
   const groups: EmittedArtifactGroup[] = [];
   for (const { ir, provenance } of irInputs) {
     const writtenFiles = writeFiles(emitter, ir, binding, args);
-    if (writtenFiles.length > 0) {
+    if (writtenFiles.length > 0 && isFrameworkEmittingTarget(emitter.id)) {
       groups.push({
         framework: emitter.id,
         component: ir.name,
