@@ -197,6 +197,12 @@ importers:
 
   packages/ds-contracts: {}
 
+  packages/ds-figma-plugin:
+    devDependencies:
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.3
+
   packages/ds-lit:
     devDependencies:
       jsdom:
