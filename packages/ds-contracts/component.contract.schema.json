@@ -359,6 +359,51 @@
         "if": {
           "type": "string",
           "description": "Render guard. \"<prop>\" renders when prop is truthy; \"!<prop>\" renders when prop is FALSY; \"children\" renders when consumer-provided children exist."
+        },
+        "iterate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source", "kind"],
+          "description": "Renders this node N times, driven by a prop. Note: index-keyed iteration only — not suitable for sortable/reorderable lists.",
+          "properties": {
+            "source": {
+              "type": "string",
+              "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+              "description": "Iteration source as a binding expression. Must reference a contract prop. 'prop:length' for count-driven; 'prop:items' for array-driven."
+            },
+            "kind": {
+              "type": "string",
+              "enum": ["count", "array"],
+              "description": "'count' renders N copies (source prop must be number-typed). 'array' renders one copy per item (source prop must be array-typed)."
+            },
+            "indexVar": {
+              "type": "string",
+              "pattern": "^[a-z][a-zA-Z0-9]*$",
+              "default": "index",
+              "description": "Local variable name carrying the zero-based loop index. Available to nested binding/content/attr expressions through render-context interpolation."
+            },
+            "itemVar": {
+              "type": "string",
+              "pattern": "^[a-z][a-zA-Z0-9]*$",
+              "default": "item",
+              "description": "Local variable name carrying the current item (only meaningful when kind='array')."
+            },
+            "itemType": {
+              "type": "string",
+              "description": "TypeScript type of each item, referencing a `types` entry or a builtin. Required when kind='array'."
+            }
+          }
+        },
+        "cssVariableBindings": {
+          "type": "object",
+          "patternProperties": {
+            "^--fsds-[a-z][a-z0-9-]+$": {
+              "type": "string",
+              "description": "Binding expression (same prop:/channel:/literal: grammar as `bindings`)."
+            }
+          },
+          "additionalProperties": false,
+          "description": "CSS custom-property bindings on this element's runtime `style` attribute. Keys must match --fsds-<component>-<name>. Lowers to: React/Vue/Lit object-style; Svelte `style:--x={v}` directive; Angular `[style.--x]` binding. Mutually exclusive with a literal `style` attr on the same node."
         }
       }
     },

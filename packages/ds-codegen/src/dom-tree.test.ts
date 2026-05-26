@@ -98,6 +98,8 @@ describe("buildDomTree (via buildComponentIR)", () => {
       children: [],
       ifProp: undefined,
       ifNegated: false,
+      iteration: undefined,
+      cssVarBindings: [],
     });
   });
 
@@ -167,6 +169,8 @@ describe("buildDomTree (via buildComponentIR)", () => {
           children: [],
           ifProp: undefined,
           ifNegated: false,
+          iteration: undefined,
+          cssVarBindings: [],
         },
         {
           tag: "slot",
@@ -179,10 +183,14 @@ describe("buildDomTree (via buildComponentIR)", () => {
           children: [],
           ifProp: undefined,
           ifNegated: false,
+          iteration: undefined,
+          cssVarBindings: [],
         },
       ],
       ifProp: undefined,
       ifNegated: false,
+      iteration: undefined,
+      cssVarBindings: [],
     });
   });
 
@@ -526,5 +534,466 @@ describe("if-prop validation", () => {
         },
       } as ComponentContract),
     ).not.toThrow();
+  });
+});
+
+describe("iterate directive", () => {
+  it("parses count-driven iteration into IterationIR", () => {
+    const ir = buildComponentIR({
+      name: "OTP",
+      anatomy: {
+        parts: ["root", "field"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "input",
+              part: "field",
+              iterate: {
+                source: "prop:length",
+                kind: "count",
+                indexVar: "fieldIndex",
+              },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [{ name: "length", type: "number", default: 6 }],
+        },
+      },
+    } as ComponentContract);
+    const field = ir.dom!.children[0];
+    expect(field.iteration).toEqual({
+      kind: "count",
+      source: { kind: "prop", prop: "length" },
+      sourceProp: "length",
+      indexVar: "fieldIndex",
+      itemVar: undefined,
+      itemType: undefined,
+    });
+  });
+
+  it("defaults indexVar to 'index' when omitted", () => {
+    const ir = buildComponentIR({
+      name: "Pin",
+      anatomy: {
+        parts: ["root", "dot"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "span",
+              part: "dot",
+              iterate: { source: "prop:count", kind: "count" },
+            },
+          ],
+        },
+      },
+      props: { styled: { members: [{ name: "count", type: "number" }] } },
+    } as ComponentContract);
+    expect(ir.dom!.children[0].iteration!.indexVar).toBe("index");
+  });
+
+  it("parses array-driven iteration with itemVar/itemType", () => {
+    const ir = buildComponentIR({
+      name: "Calendar",
+      types: {
+        CalendarDay: {
+          kind: "object",
+          fields: { date: "string", isToday: "boolean" },
+        },
+      },
+      anatomy: {
+        parts: ["root", "cell"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "td",
+              part: "cell",
+              iterate: {
+                source: "prop:days",
+                kind: "array",
+                itemVar: "day",
+                itemType: "CalendarDay",
+              },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [{ name: "days", type: "CalendarDay[]" }],
+        },
+      },
+    } as ComponentContract);
+    expect(ir.dom!.children[0].iteration).toEqual({
+      kind: "array",
+      source: { kind: "prop", prop: "days" },
+      sourceProp: "days",
+      indexVar: "index",
+      itemVar: "day",
+      itemType: "CalendarDay",
+    });
+  });
+
+  it("defaults itemVar to 'item' for array iteration when omitted", () => {
+    const ir = buildComponentIR({
+      name: "Stack",
+      types: { Item: { kind: "object", fields: { id: "string" } } },
+      anatomy: {
+        parts: ["root", "row"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "div",
+              part: "row",
+              iterate: {
+                source: "prop:items",
+                kind: "array",
+                itemType: "Item",
+              },
+            },
+          ],
+        },
+      },
+      props: { styled: { members: [{ name: "items", type: "Item[]" }] } },
+    } as ComponentContract);
+    expect(ir.dom!.children[0].iteration!.itemVar).toBe("item");
+  });
+
+  it("rejects iterate.source when the named prop is not declared", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Broken",
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: { source: "prop:nope", kind: "count" },
+              },
+            ],
+          },
+        },
+        props: { styled: { members: [{ name: "other", type: "number" }] } },
+      } as ComponentContract),
+    ).toThrow(/iterate\.source references unknown prop 'nope'/);
+  });
+
+  it("rejects count iteration when the source prop is not number-typed", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "BadCount",
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: { source: "prop:label", kind: "count" },
+              },
+            ],
+          },
+        },
+        props: { styled: { members: [{ name: "label", type: "string" }] } },
+      } as ComponentContract),
+    ).toThrow(/kind="count" requires prop 'label' to be typed 'number'/);
+  });
+
+  it("rejects array iteration when the source prop is not array-typed", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "BadArray",
+        types: { Item: { kind: "object", fields: { id: "string" } } },
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: {
+                  source: "prop:single",
+                  kind: "array",
+                  itemType: "Item",
+                },
+              },
+            ],
+          },
+        },
+        props: { styled: { members: [{ name: "single", type: "Item" }] } },
+      } as ComponentContract),
+    ).toThrow(/kind="array" requires prop 'single' to be an array type/);
+  });
+
+  it("rejects array iteration without itemType", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "NoItemType",
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: { source: "prop:items", kind: "array" },
+              },
+            ],
+          },
+        },
+        props: { styled: { members: [{ name: "items", type: "string[]" }] } },
+      } as ComponentContract),
+    ).toThrow(/iterate\.kind="array" requires `itemType`/);
+  });
+
+  it("rejects non-prop iterate.source", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "ChannelSource",
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: { source: "channel:open.value", kind: "count" },
+              },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/iterate\.source must be a prop: binding/);
+  });
+
+  it("rejects iterate + content on the same node", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "IterContent",
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "span",
+                part: "x",
+                iterate: { source: "prop:n", kind: "count" },
+                content: "prop:label",
+              },
+            ],
+          },
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "n", type: "number" },
+              { name: "label", type: "string" },
+            ],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/`iterate` and `content` are mutually exclusive/);
+  });
+
+  it("accepts Array<T> and ReadonlyArray<T> as array-typed sources", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "GenericArray",
+        types: { Item: { kind: "object", fields: { id: "string" } } },
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: {
+                  source: "prop:items",
+                  kind: "array",
+                  itemType: "Item",
+                },
+              },
+            ],
+          },
+        },
+        props: {
+          styled: { members: [{ name: "items", type: "Array<Item>" }] },
+        },
+      } as ComponentContract),
+    ).not.toThrow();
+    expect(() =>
+      buildComponentIR({
+        name: "ReadonlyArray",
+        types: { Item: { kind: "object", fields: { id: "string" } } },
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: {
+                  source: "prop:items",
+                  kind: "array",
+                  itemType: "Item",
+                },
+              },
+            ],
+          },
+        },
+        props: {
+          styled: {
+            members: [{ name: "items", type: "ReadonlyArray<Item>" }],
+          },
+        },
+      } as ComponentContract),
+    ).not.toThrow();
+  });
+});
+
+describe("cssVariableBindings", () => {
+  it("parses well-formed bindings into CssVarBindingIR[] in order", () => {
+    const ir = buildComponentIR({
+      name: "Progress",
+      anatomy: {
+        parts: ["root", "fill"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              tag: "div",
+              part: "fill",
+              cssVariableBindings: {
+                "--fsds-progress-fill-width": "prop:value",
+                "--fsds-progress-intent": "prop:intent",
+              },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "value", type: "number" },
+            { name: "intent", type: "string" },
+          ],
+        },
+      },
+    } as ComponentContract);
+    const fill = ir.dom!.children[0];
+    expect(fill.cssVarBindings).toEqual([
+      {
+        varName: "--fsds-progress-fill-width",
+        value: { kind: "prop", prop: "value" },
+      },
+      {
+        varName: "--fsds-progress-intent",
+        value: { kind: "prop", prop: "intent" },
+      },
+    ]);
+  });
+
+  it("rejects var names that don't include the component's cssPrefix", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Progress",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            cssVariableBindings: {
+              "--fsds-truncate-lines": "prop:value",
+            },
+          },
+        },
+        props: {
+          styled: { members: [{ name: "value", type: "number" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/must match --fsds-progress-<name>/);
+  });
+
+  it("rejects bindings that reference an unknown prop", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Progress",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            cssVariableBindings: {
+              "--fsds-progress-value": "prop:nope",
+            },
+          },
+        },
+        props: { styled: { members: [{ name: "value", type: "number" }] } },
+      } as ComponentContract),
+    ).toThrow(
+      /cssVariableBindings '--fsds-progress-value' references unknown prop 'nope'/,
+    );
+  });
+
+  it("rejects cssVariableBindings + literal attrs.style on the same node", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Progress",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            attrs: { style: "color: red;" },
+            cssVariableBindings: {
+              "--fsds-progress-value": "prop:value",
+            },
+          },
+        },
+        props: { styled: { members: [{ name: "value", type: "number" }] } },
+      } as ComponentContract),
+    ).toThrow(
+      /`cssVariableBindings` and a literal `attrs.style` cannot both be set/,
+    );
+  });
+
+  it("leaves cssVarBindings empty for nodes without the field", () => {
+    const ir = buildComponentIR({
+      name: "Bare",
+      anatomy: {
+        parts: ["root"],
+        dom: { tag: "div", part: "root" },
+      },
+    } as ComponentContract);
+    expect(ir.dom!.cssVarBindings).toEqual([]);
   });
 });

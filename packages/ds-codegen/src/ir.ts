@@ -142,6 +142,50 @@ export type BindingExpression =
   | { kind: "literal"; value: string };
 
 /**
+ * Iteration directive on a `DomNodeIR`. Resolved from the contract's
+ * `anatomy.dom[].iterate` block. When set on a node, framework emitters
+ * render that node and its subtree N times — once per item (kind=array) or
+ * N copies (kind=count).
+ *
+ * `indexVar` and `itemVar` name render-context variables that nested
+ * `bindings`/`attrs`/`content` expressions can reference. They are NOT new
+ * `BindingExpression` kinds — they live in the per-framework render
+ * context the walker already threads. Keeping the binding grammar at three
+ * kinds (`prop`/`channel`/`literal`) lets every emitter port the change as
+ * a single new dispatch branch.
+ */
+export interface IterationIR {
+  kind: "count" | "array";
+  /** Always normalized to `{ kind: "prop" }`; the source-prop name is on `sourceProp`. */
+  source: BindingExpression;
+  /** Extracted prop name (mirror of `source.prop`) for fast emitter access. */
+  sourceProp: string;
+  /** Render-context variable name for the zero-based loop index. */
+  indexVar: string;
+  /** Render-context variable name for the current item (kind="array" only). */
+  itemVar?: string;
+  /** TypeScript type of each item (kind="array" only). */
+  itemType?: string;
+}
+
+/**
+ * One CSS custom-property binding on a DOM node's runtime `style` attribute.
+ * Authored under `anatomy.dom[].cssVariableBindings` in the contract:
+ *   { "--fsds-progress-fill-width": "prop:value" }
+ *
+ * Names are validated against `^--fsds-<cssPrefix>(-[a-z0-9]+)+$` at
+ * IR-build time. The contract-wide `cssPrefix` is derived from the
+ * component name (see `getCssPrefix`) and namespaces design-system surface
+ * away from consumer CSS variables.
+ */
+export interface CssVarBindingIR {
+  /** Full CSS custom-property name, including the --fsds- prefix. */
+  varName: string;
+  /** Binding expression resolved from the prop:/channel:/literal: grammar. */
+  value: BindingExpression;
+}
+
+/**
  * A node in the rendered DOM tree, derived from `contract.anatomy.dom`.
  * Optional — components without a `dom` block on their contract continue to
  * emit single-root output. When present, framework component-source emitters
@@ -200,6 +244,19 @@ export interface DomNodeIR {
   ifProp: string | undefined;
   /** When true, the guard fires when `ifProp` is FALSY (i.e. `if: "!src"`). Emitters render `!prop && ...`. */
   ifNegated: boolean;
+  /**
+   * Iteration directive. When set, the framework emitter wraps this node and
+   * its subtree in its idiomatic iteration construct (React `Array.from(...).map`,
+   * Vue `v-for`, Svelte `{#each}`, Angular `*ngFor`, Lit `repeat()`/`.map`).
+   * `undefined` means render once (the default).
+   */
+  iteration: IterationIR | undefined;
+  /**
+   * CSS custom-property bindings. Empty array when no `cssVariableBindings`
+   * block is authored on the contract node. Order preserved from the
+   * contract for deterministic emission.
+   */
+  cssVarBindings: CssVarBindingIR[];
 }
 
 export interface ResolvedPropIR {
@@ -615,7 +672,13 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
   const dom = buildDomTree(contract);
 
   if (dom) {
-    validateDomBindings(dom, behavior.normalizedChannels, styledProps, contract.name);
+    validateDomBindings(
+      dom,
+      behavior.normalizedChannels,
+      styledProps,
+      contract.name,
+      cssPrefix,
+    );
   }
 
   // The polymorphic-as default tag comes from the contract's dom-tree root
@@ -723,17 +786,33 @@ function validateDomBindings(
   channels: NormalizedChannelIR[],
   styledProps: ResolvedPropIR[],
   componentName: string,
+  cssPrefix: string,
 ): void {
   const knownChannels = new Set(channels.map((c) => c.name));
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
   const knownProps = new Set(styledProps.map((p) => p.name));
+  const propTypes = new Map(styledProps.map((p) => [p.name, p.type]));
   validateDomNode(
     node,
     knownChannels,
     channelValueProps,
     knownProps,
+    propTypes,
     componentName,
+    cssPrefix,
   );
+}
+
+/**
+ * Match the loose form of an array type expression: `Foo[]`, `Array<Foo>`,
+ * `ReadonlyArray<Foo>`, or a union that contains an array shape
+ * (e.g. `Date[] | null`). The IR's prop type strings are TypeScript
+ * expressions stored verbatim, so this is intentionally permissive — a
+ * misformatted type is the contract-author's problem, not the codegen's.
+ */
+function looksLikeArrayType(type: string): boolean {
+  const t = type.trim();
+  return /\[\]/.test(t) || /\bArray</.test(t) || /\bReadonlyArray</.test(t);
 }
 
 function validateDomNode(
@@ -741,7 +820,9 @@ function validateDomNode(
   knownChannels: Set<string>,
   channelValueProps: Set<string>,
   knownProps: Set<string>,
+  propTypes: Map<string, string>,
   componentName: string,
+  cssPrefix: string,
 ): void {
   for (const [attr, binding] of Object.entries(node.bindings)) {
     if (binding.kind === "channel") {
@@ -778,13 +859,78 @@ function validateDomNode(
       );
     }
   }
+  // Iteration source must resolve to a declared prop with the right type:
+  // - kind="count" → prop type must be exactly `number`.
+  // - kind="array" → prop type must look array-shaped (T[], Array<T>,
+  //   ReadonlyArray<T>, or a union containing one of those).
+  // Reject sub-typing surprises early so the emitter can assume the type.
+  if (node.iteration) {
+    const { sourceProp, kind } = node.iteration;
+    if (!knownProps.has(sourceProp)) {
+      throw new Error(
+        `[${componentName}] DOM iterate.source references unknown prop ` +
+        `'${sourceProp}' (known: [${[...knownProps].join(", ")}])`,
+      );
+    }
+    const declaredType = (propTypes.get(sourceProp) ?? "").trim();
+    if (kind === "count" && declaredType !== "number") {
+      throw new Error(
+        `[${componentName}] DOM iterate.kind="count" requires prop ` +
+        `'${sourceProp}' to be typed 'number'; got '${declaredType}'. ` +
+        `For array-typed iteration sources, use kind="array" with itemType.`,
+      );
+    }
+    if (kind === "array" && !looksLikeArrayType(declaredType)) {
+      throw new Error(
+        `[${componentName}] DOM iterate.kind="array" requires prop ` +
+        `'${sourceProp}' to be an array type (T[], Array<T>, ` +
+        `ReadonlyArray<T>); got '${declaredType}'.`,
+      );
+    }
+  }
+  // CSS-var bindings: the schema accepts the loose `--fsds-<anything>`
+  // prefix; tighten it here to the component-specific form
+  // `--fsds-<cssPrefix>(-…)+` so a Progress contract can't accidentally
+  // bind a `--fsds-truncate-…` var (and so renames of one component's
+  // prefix never silently collide with another's). Also confirm that
+  // every binding's source resolves to a declared prop/channel.
+  if (node.cssVarBindings.length > 0) {
+    const expected = new RegExp(`^--fsds-${cssPrefix}(-[a-z0-9]+)+$`);
+    for (const { varName, value } of node.cssVarBindings) {
+      if (!expected.test(varName)) {
+        throw new Error(
+          `[${componentName}] DOM cssVariableBindings name '${varName}' ` +
+          `must match --fsds-${cssPrefix}-<name> (e.g. ` +
+          `'--fsds-${cssPrefix}-value'). This namespacing prevents ` +
+          `collision with consumer CSS variables and keeps the ` +
+          `design-system surface auditable.`,
+        );
+      }
+      if (value.kind === "prop" && !knownProps.has(value.prop)) {
+        throw new Error(
+          `[${componentName}] DOM cssVariableBindings '${varName}' ` +
+          `references unknown prop '${value.prop}' (known: ` +
+          `[${[...knownProps].join(", ")}])`,
+        );
+      }
+      if (value.kind === "channel" && !knownChannels.has(value.channel)) {
+        throw new Error(
+          `[${componentName}] DOM cssVariableBindings '${varName}' ` +
+          `references unknown channel '${value.channel}' (known: ` +
+          `[${[...knownChannels].join(", ")}])`,
+        );
+      }
+    }
+  }
   for (const child of node.children) {
     validateDomNode(
       child,
       knownChannels,
       channelValueProps,
       knownProps,
+      propTypes,
       componentName,
+      cssPrefix,
     );
   }
 }
@@ -866,6 +1012,25 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
         `Wrap the content value in its own child node if you need both.`,
     );
   }
+  const iteration = parseIterate(node);
+  if (iteration && content !== undefined) {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `\`iterate\` and \`content\` are mutually exclusive on the same node. ` +
+        `Wrap the content value in a child node and put \`iterate\` on the wrapper.`,
+    );
+  }
+  const cssVarBindings = parseCssVarBindings(node);
+  if (cssVarBindings.length > 0 && node.attrs?.style !== undefined) {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `\`cssVariableBindings\` and a literal \`attrs.style\` cannot both be ` +
+        `set on the same node — emitters cannot reconcile a literal style ` +
+        `string with structured custom-property bindings. Move the literal ` +
+        `style declarations into a CSS rule, or merge them into ` +
+        `\`cssVariableBindings\`.`,
+    );
+  }
   return {
     tag: node.tag,
     // `name` is meaningful only for slot placeholders. Carry it through the
@@ -878,7 +1043,60 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     content,
     children,
     ...parseIfGuard(node.if),
+    iteration,
+    cssVarBindings,
   };
+}
+
+/**
+ * Parse an `iterate` block on a contract DOM node into `IterationIR`.
+ * Returns `undefined` when no iteration is declared.
+ *
+ * Type validation (count → number prop; array → array-typed prop with
+ * `itemType`) is deferred to `validateDomNode` where `styledProps` is
+ * available. This function enforces only the structural rules: source must
+ * be a `prop:` binding; kind must be 'count' or 'array'; array iteration
+ * requires `itemType`.
+ */
+function parseIterate(node: ContractDomNode): IterationIR | undefined {
+  if (!node.iterate) return undefined;
+  const it = node.iterate;
+  const source = parseBindingExpression(it.source);
+  if (source.kind !== "prop") {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `iterate.source must be a prop: binding (got "${it.source}"). ` +
+        `Channel and literal sources are not supported for iteration.`,
+    );
+  }
+  if (it.kind === "array" && (it.itemType === undefined || it.itemType.trim() === "")) {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `iterate.kind="array" requires \`itemType\` to be set. Each emitter ` +
+        `needs the item's TypeScript type to generate typed loop variables.`,
+    );
+  }
+  return {
+    kind: it.kind,
+    source,
+    sourceProp: source.prop,
+    indexVar: it.indexVar ?? "index",
+    itemVar: it.kind === "array" ? (it.itemVar ?? "item") : undefined,
+    itemType: it.kind === "array" ? it.itemType : undefined,
+  };
+}
+
+/**
+ * Parse `cssVariableBindings` into an ordered array of `CssVarBindingIR`.
+ * Loose schema-level checks (the `--fsds-…` prefix) are tightened to the
+ * component-specific form `^--fsds-${cssPrefix}(-…)+$` in `validateDomNode`.
+ */
+function parseCssVarBindings(node: ContractDomNode): CssVarBindingIR[] {
+  if (!node.cssVariableBindings) return [];
+  return Object.entries(node.cssVariableBindings).map(([varName, expr]) => ({
+    varName,
+    value: parseBindingExpression(expr),
+  }));
 }
 
 /**

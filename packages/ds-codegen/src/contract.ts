@@ -178,6 +178,39 @@ export interface ContractDomNode {
    *   children exist.
    */
   if?: string;
+  /**
+   * Iteration directive — renders this node N times, driven by a prop.
+   * Index-keyed iteration only; not suitable for sortable/reorderable lists.
+   * See `IterationIR` in `ir.ts` for the resolved form.
+   */
+  iterate?: ContractDomNodeIterate;
+  /**
+   * CSS custom-property bindings on this element's runtime `style` attribute.
+   * Keys must match `--fsds-<component>-<name>` (validated at IR-build).
+   * Values use the same `prop:`/`channel:`/`literal:` grammar as `bindings`.
+   * Lowers to framework-idiomatic style bindings (React/Vue/Lit object-style;
+   * Svelte `style:--x={v}`; Angular `[style.--x]`). Mutually exclusive with
+   * a literal `style` attribute on the same node.
+   */
+  cssVariableBindings?: Record<string, string>;
+}
+
+/**
+ * Iteration directive on a DOM node. Authored under
+ * `anatomy.dom[].iterate` in the contract; parsed into `IterationIR` by the
+ * IR builder.
+ */
+export interface ContractDomNodeIterate {
+  /** Binding expression naming the iteration source prop. e.g. `"prop:length"`. */
+  source: string;
+  /** `"count"` for N-copy iteration over a number prop; `"array"` for per-item iteration. */
+  kind: 'count' | 'array';
+  /** Render-context variable name for the loop index. Defaults to `"index"`. */
+  indexVar?: string;
+  /** Render-context variable name for the current item (kind=array only). Defaults to `"item"`. */
+  itemVar?: string;
+  /** TypeScript type of each item. Required when kind=array. */
+  itemType?: string;
 }
 
 /**
