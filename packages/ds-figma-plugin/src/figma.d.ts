@@ -4,6 +4,11 @@ declare const figma: {
   createPage(): FigmaPageNode;
   createFrame(): FigmaFrameNode;
   createText(): FigmaTextNode;
+  createComponent(): FigmaComponentNode;
+  combineAsVariants(
+    components: readonly FigmaComponentNode[],
+    parent: FigmaBaseNode,
+  ): FigmaComponentSetNode;
   loadFontAsync(font: { family: string; style: string }): Promise<void>;
   notify(message: string): void;
   closePlugin(message?: string): void;
@@ -17,7 +22,7 @@ interface FigmaBaseNode {
 
 interface FigmaPageNode extends FigmaBaseNode {}
 
-interface FigmaFrameNode extends FigmaBaseNode {
+interface FigmaLayoutNode extends FigmaBaseNode {
   layoutMode: "NONE" | "HORIZONTAL" | "VERTICAL";
   itemSpacing: number;
   paddingTop: number;
@@ -26,6 +31,16 @@ interface FigmaFrameNode extends FigmaBaseNode {
   paddingLeft: number;
   resize(width: number, height: number): void;
 }
+
+interface FigmaFrameNode extends FigmaLayoutNode {}
+
+interface FigmaComponentNode extends FigmaLayoutNode {
+  createInstance(): FigmaInstanceNode;
+}
+
+interface FigmaComponentSetNode extends FigmaBaseNode {}
+
+interface FigmaInstanceNode extends FigmaBaseNode {}
 
 interface FigmaTextNode extends FigmaBaseNode {
   characters: string;

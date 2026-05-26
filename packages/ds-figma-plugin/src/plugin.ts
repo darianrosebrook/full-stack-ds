@@ -1,4 +1,7 @@
-import { figmaComponentRegistry } from "./generated/components/index.js";
+import {
+  figmaComponentRegistry,
+  figmaPrimitiveRegistry,
+} from "./generated/components/index.js";
 
 type FigmaComponentDescriptor = {
   schemaVersion: number;
@@ -8,7 +11,10 @@ type FigmaComponentDescriptor = {
     rootElement?: string;
     effectiveRole?: string | null;
   };
-  anatomy: Array<{ name: string }>;
+  anatomy: Array<{
+    name: string;
+    layoutVariant?: "horizontal" | "vertical" | null;
+  }>;
   props: Array<{
     name: string;
     type: string;
@@ -16,27 +22,33 @@ type FigmaComponentDescriptor = {
     defaultExpr?: string | null;
   }>;
   variants: Record<string, string[]>;
-  states: unknown;
-  figma?: {
-    documentationFrame?: string;
-    componentSetName?: string;
-  };
+};
+
+type FigmaStackPrimitiveDescriptor = {
+  schemaVersion: number;
+  primitive: { kind: string; name: string };
+  variants: { variant: string[] };
+  figma: { componentSetName: string };
+};
+
+type StackVariants = {
+  vertical: FigmaComponentNode;
+  horizontal: FigmaComponentNode;
 };
 
 export async function main(): Promise<void> {
   await figma.loadFontAsync({ family: "Inter", style: "Regular" });
 
-  const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];
-  const docsPage = ensurePage("Full Stack DS / Documentation");
   const componentsPage = ensurePage("Full Stack DS / Components");
 
+  const stackVariants = materializeStackPrimitive(componentsPage);
+  const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];
   for (const descriptor of descriptors) {
-    docsPage.appendChild(createDocumentationFrame(descriptor));
-    componentsPage.appendChild(createComponentPlaceholder(descriptor));
+    componentsPage.appendChild(materializeLeafComponent(descriptor, stackVariants));
   }
 
-  figma.notify(`Full Stack DS: scaffolded ${descriptors.length} contract descriptor(s).`);
-  figma.closePlugin(`Scaffolded ${descriptors.length} contract descriptor(s).`);
+  figma.notify(`Full Stack DS: scaffolded Stack + ${descriptors.length} component(s).`);
+  figma.closePlugin(`Scaffolded Stack + ${descriptors.length} component(s).`);
 }
 
 function ensurePage(name: string): FigmaPageNode {
@@ -45,57 +57,68 @@ function ensurePage(name: string): FigmaPageNode {
   return page;
 }
 
-function createDocumentationFrame(descriptor: FigmaComponentDescriptor): FigmaFrameNode {
-  const frame = createAutoLayoutFrame(
-    descriptor.figma?.documentationFrame ?? `${descriptor.component.name} / Documentation`,
-  );
-  frame.setPluginData("fsds.component", descriptor.component.name);
-  frame.setPluginData("fsds.descriptorSchemaVersion", String(descriptor.schemaVersion));
-
-  frame.appendChild(createText(`${descriptor.component.name}`));
-  frame.appendChild(createText(`Root: ${descriptor.component.rootElement ?? "unknown"}`));
-  frame.appendChild(createText(`Role: ${descriptor.component.effectiveRole ?? "none"}`));
-  frame.appendChild(createText(`Anatomy: ${descriptor.anatomy.map((part) => part.name).join(", ") || "none"}`));
-  frame.appendChild(createText(`Props: ${descriptor.props.map((prop) => prop.name).join(", ") || "none"}`));
-  frame.appendChild(createText(`Variants: ${Object.keys(descriptor.variants).join(", ") || "none"}`));
-
-  return frame;
+function materializeStackPrimitive(parent: FigmaPageNode): StackVariants {
+  const descriptor = figmaPrimitiveRegistry.Stack as FigmaStackPrimitiveDescriptor;
+  const vertical = createStackVariantComponent("variant=vertical", "VERTICAL");
+  const horizontal = createStackVariantComponent("variant=horizontal", "HORIZONTAL");
+  const set = figma.combineAsVariants([vertical, horizontal], parent);
+  set.name = descriptor.figma.componentSetName;
+  set.setPluginData("fsds.primitive", "Stack");
+  set.setPluginData("fsds.descriptorSchemaVersion", String(descriptor.schemaVersion));
+  return { vertical, horizontal };
 }
 
-function createComponentPlaceholder(descriptor: FigmaComponentDescriptor): FigmaFrameNode {
-  const frame = createAutoLayoutFrame(descriptor.figma?.componentSetName ?? descriptor.component.name);
-  frame.setPluginData("fsds.component", descriptor.component.name);
-  frame.setPluginData("fsds.cssPrefix", descriptor.component.cssPrefix);
-  frame.appendChild(createText(descriptor.component.name));
+function createStackVariantComponent(
+  variantName: string,
+  layoutMode: "VERTICAL" | "HORIZONTAL",
+): FigmaComponentNode {
+  const component = figma.createComponent();
+  component.name = variantName;
+  component.layoutMode = layoutMode;
+  component.itemSpacing = 8;
+  component.paddingTop = 8;
+  component.paddingRight = 8;
+  component.paddingBottom = 8;
+  component.paddingLeft = 8;
+  component.resize(240, 80);
+  return component;
+}
 
+function materializeLeafComponent(
+  descriptor: FigmaComponentDescriptor,
+  stack: StackVariants,
+): FigmaComponentNode {
+  const component = figma.createComponent();
+  component.name = descriptor.component.name;
+  component.layoutMode = "VERTICAL";
+  component.itemSpacing = 8;
+  component.paddingTop = 16;
+  component.paddingRight = 16;
+  component.paddingBottom = 16;
+  component.paddingLeft = 16;
+  component.resize(320, 200);
+
+  component.setPluginData("fsds.component", descriptor.component.name);
+  component.setPluginData("fsds.cssPrefix", descriptor.component.cssPrefix);
+  component.setPluginData("fsds.descriptorSchemaVersion", String(descriptor.schemaVersion));
   for (const prop of descriptor.props) {
-    frame.setPluginData(`fsds.prop.${prop.name}`, JSON.stringify(prop));
+    component.setPluginData(`fsds.prop.${prop.name}`, JSON.stringify(prop));
   }
-
   for (const [variantName, values] of Object.entries(descriptor.variants)) {
-    frame.setPluginData(`fsds.variant.${variantName}`, JSON.stringify(values));
+    component.setPluginData(`fsds.variant.${variantName}`, JSON.stringify(values));
   }
 
-  return frame;
-}
+  const parts = descriptor.anatomy.length > 0
+    ? descriptor.anatomy
+    : [{ name: "root", layoutVariant: null as "horizontal" | "vertical" | null }];
+  for (const part of parts) {
+    const variant = part.layoutVariant === "horizontal" ? stack.horizontal : stack.vertical;
+    const instance = variant.createInstance();
+    instance.name = part.name;
+    component.appendChild(instance);
+  }
 
-function createAutoLayoutFrame(name: string): FigmaFrameNode {
-  const frame = figma.createFrame();
-  frame.name = name;
-  frame.layoutMode = "VERTICAL";
-  frame.itemSpacing = 8;
-  frame.paddingTop = 16;
-  frame.paddingRight = 16;
-  frame.paddingBottom = 16;
-  frame.paddingLeft = 16;
-  frame.resize(640, 320);
-  return frame;
-}
-
-function createText(characters: string): FigmaTextNode {
-  const text = figma.createText();
-  text.characters = characters;
-  return text;
+  return component;
 }
 
 if (typeof figma !== "undefined") {

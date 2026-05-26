@@ -10,7 +10,10 @@ vi.mock("./generated/components/index.js", () => ({
         rootElement: "button",
         effectiveRole: "button",
       },
-      anatomy: [{ name: "root" }, { name: "icon" }],
+      anatomy: [
+        { name: "root", layoutVariant: null },
+        { name: "icon", layoutVariant: "horizontal" },
+      ],
       props: [
         {
           name: "variant",
@@ -20,11 +23,6 @@ vi.mock("./generated/components/index.js", () => ({
         },
       ],
       variants: { variant: ["primary", "secondary"] },
-      states: {},
-      figma: {
-        documentationFrame: "Button / Documentation",
-        componentSetName: "Button",
-      },
     },
     Empty: {
       schemaVersion: 1,
@@ -37,13 +35,32 @@ vi.mock("./generated/components/index.js", () => ({
       anatomy: [],
       props: [],
       variants: {},
-      states: {},
+    },
+  },
+  figmaPrimitiveRegistry: {
+    Stack: {
+      schemaVersion: 1,
+      primitive: { kind: "stack", name: "Stack" },
+      variants: { variant: ["vertical", "horizontal"] },
+      figma: {
+        intendedUse: "figma-library-materialization",
+        componentSetName: "Stack",
+        propertySource: "primitive contract Stack.variant",
+      },
     },
   },
 }));
 
+type NodeKind =
+  | "page"
+  | "frame"
+  | "text"
+  | "component"
+  | "componentSet"
+  | "instance";
+
 type MockNode = {
-  type: "page" | "frame" | "text";
+  kind: NodeKind;
   name?: string;
   children: MockNode[];
   pluginData: Record<string, string>;
@@ -56,17 +73,21 @@ type MockNode = {
   paddingLeft?: number;
   width?: number;
   height?: number;
+  parent?: MockNode;
+  master?: MockNode;
   appendChild(child: MockNode): void;
   setPluginData(key: string, value: string): void;
   resize(width: number, height: number): void;
+  createInstance?(): MockNode;
 };
 
-function createNode(type: MockNode["type"]): MockNode {
+function createNode(kind: NodeKind): MockNode {
   return {
-    type,
+    kind,
     children: [],
     pluginData: {},
     appendChild(child: MockNode): void {
+      child.parent = this;
       this.children.push(child);
     },
     setPluginData(key: string, value: string): void {
@@ -80,11 +101,12 @@ function createNode(type: MockNode["type"]): MockNode {
 }
 
 describe("Figma plugin scaffold materialization", () => {
-  it("creates documentation and component-placeholder pages with provenance", async () => {
+  it("materializes Stack primitive and leaf components onto a single Components page", async () => {
     const { main } = await import("./plugin.js");
     const pages: MockNode[] = [];
-    const frames: MockNode[] = [];
-    const texts: MockNode[] = [];
+    const components: MockNode[] = [];
+    const componentSets: MockNode[] = [];
+    const instances: MockNode[] = [];
     const notify = vi.fn();
     const closePlugin = vi.fn();
     const loadFontAsync = vi.fn(() => Promise.resolve());
@@ -95,16 +117,32 @@ describe("Figma plugin scaffold materialization", () => {
         pages.push(page);
         return page;
       }),
-      createFrame: vi.fn(() => {
-        const frame = createNode("frame");
-        frames.push(frame);
-        return frame;
+      createFrame: vi.fn(() => createNode("frame")),
+      createText: vi.fn(() => createNode("text")),
+      createComponent: vi.fn(() => {
+        const component = createNode("component");
+        component.createInstance = (): MockNode => {
+          const instance = createNode("instance");
+          instance.master = component;
+          instances.push(instance);
+          return instance;
+        };
+        components.push(component);
+        return component;
       }),
-      createText: vi.fn(() => {
-        const text = createNode("text");
-        texts.push(text);
-        return text;
-      }),
+      combineAsVariants: vi.fn(
+        (variants: MockNode[], parent: MockNode): MockNode => {
+          const set = createNode("componentSet");
+          for (const variant of variants) {
+            variant.parent = set;
+            set.children.push(variant);
+          }
+          set.parent = parent;
+          parent.children.push(set);
+          componentSets.push(set);
+          return set;
+        },
+      ),
       loadFontAsync,
       notify,
       closePlugin,
@@ -114,73 +152,91 @@ describe("Figma plugin scaffold materialization", () => {
 
     expect(loadFontAsync).toHaveBeenCalledWith({ family: "Inter", style: "Regular" });
 
+    // Single page (Documentation page was dropped).
     expect(pages.map((page) => page.name)).toEqual([
-      "Full Stack DS / Documentation",
       "Full Stack DS / Components",
     ]);
 
-    const [buttonDocFrame, buttonComponentFrame, emptyDocFrame, emptyComponentFrame] = frames;
-    expect(buttonDocFrame).toMatchObject({
-      name: "Button / Documentation",
-      layoutMode: "VERTICAL",
-      itemSpacing: 8,
-      paddingTop: 16,
-      paddingRight: 16,
-      paddingBottom: 16,
-      paddingLeft: 16,
-      width: 640,
-      height: 320,
-      pluginData: {
-        "fsds.component": "Button",
-        "fsds.descriptorSchemaVersion": "1",
-      },
+    // Exactly one Stack component set with two variants, plus two leaf components.
+    expect(componentSets).toHaveLength(1);
+    const [stackSet] = componentSets;
+    expect(stackSet.name).toBe("Stack");
+    expect(stackSet.pluginData).toMatchObject({
+      "fsds.primitive": "Stack",
+      "fsds.descriptorSchemaVersion": "1",
     });
-    expect(buttonComponentFrame).toMatchObject({
-      name: "Button",
-      pluginData: {
-        "fsds.component": "Button",
-        "fsds.cssPrefix": "button",
-        "fsds.prop.variant": JSON.stringify({
-          name: "variant",
-          type: "'primary' | 'secondary'",
-          required: false,
-          defaultExpr: "primary",
-        }),
-        "fsds.variant.variant": JSON.stringify(["primary", "secondary"]),
-      },
-    });
-    expect(emptyDocFrame).toMatchObject({
-      name: "Empty / Documentation",
-      pluginData: {
-        "fsds.component": "Empty",
-        "fsds.descriptorSchemaVersion": "1",
-      },
-    });
-    expect(emptyComponentFrame).toMatchObject({
-      name: "Empty",
-      pluginData: {
-        "fsds.component": "Empty",
-        "fsds.cssPrefix": "empty",
-      },
-    });
+    expect(stackSet.children.map((child) => child.name)).toEqual([
+      "variant=vertical",
+      "variant=horizontal",
+    ]);
+    expect(stackSet.children.map((child) => child.layoutMode)).toEqual([
+      "VERTICAL",
+      "HORIZONTAL",
+    ]);
 
-    expect(texts.map((text) => text.characters)).toEqual([
+    // 2 stack variants + 2 leaves = 4 component nodes total.
+    expect(components.map((c) => c.name)).toEqual([
+      "variant=vertical",
+      "variant=horizontal",
       "Button",
-      "Root: button",
-      "Role: button",
-      "Anatomy: root, icon",
-      "Props: variant",
-      "Variants: variant",
-      "Button",
-      "Empty",
-      "Root: div",
-      "Role: none",
-      "Anatomy: none",
-      "Props: none",
-      "Variants: none",
       "Empty",
     ]);
-    expect(notify).toHaveBeenCalledWith("Full Stack DS: scaffolded 2 contract descriptor(s).");
-    expect(closePlugin).toHaveBeenCalledWith("Scaffolded 2 contract descriptor(s).");
+
+    // Ordering: stack components are created before any leaf component
+    // (required because the leaves instantiate them).
+    expect(components[0].kind).toBe("component");
+    expect(components[1].kind).toBe("component");
+    expect(components[0].parent).toBe(stackSet);
+    expect(components[1].parent).toBe(stackSet);
+
+    // The two leaf components live directly on the Components page,
+    // not under the Stack set.
+    const buttonComponent = components.find((c) => c.name === "Button")!;
+    const emptyComponent = components.find((c) => c.name === "Empty")!;
+    expect(buttonComponent.parent).toBe(pages[0]);
+    expect(emptyComponent.parent).toBe(pages[0]);
+
+    // Button: 2 anatomy parts -> 2 stack instances. Icon is layoutVariant=horizontal.
+    expect(buttonComponent.children.map((child) => child.kind)).toEqual([
+      "instance",
+      "instance",
+    ]);
+    expect(buttonComponent.children.map((child) => child.name)).toEqual([
+      "root",
+      "icon",
+    ]);
+    expect(buttonComponent.children[0].master?.name).toBe("variant=vertical");
+    expect(buttonComponent.children[1].master?.name).toBe("variant=horizontal");
+
+    // Empty: zero anatomy -> single fallback root stack instance.
+    expect(emptyComponent.children.map((child) => child.kind)).toEqual(["instance"]);
+    expect(emptyComponent.children[0].name).toBe("root");
+    expect(emptyComponent.children[0].master?.name).toBe("variant=vertical");
+
+    // Plugin data on leaves.
+    expect(buttonComponent.pluginData).toMatchObject({
+      "fsds.component": "Button",
+      "fsds.cssPrefix": "button",
+      "fsds.descriptorSchemaVersion": "1",
+      "fsds.prop.variant": JSON.stringify({
+        name: "variant",
+        type: "'primary' | 'secondary'",
+        required: false,
+        defaultExpr: "primary",
+      }),
+      "fsds.variant.variant": JSON.stringify(["primary", "secondary"]),
+    });
+    expect(emptyComponent.pluginData).toMatchObject({
+      "fsds.component": "Empty",
+      "fsds.cssPrefix": "empty",
+      "fsds.descriptorSchemaVersion": "1",
+    });
+
+    expect(notify).toHaveBeenCalledWith(
+      "Full Stack DS: scaffolded Stack + 2 component(s).",
+    );
+    expect(closePlugin).toHaveBeenCalledWith(
+      "Scaffolded Stack + 2 component(s).",
+    );
   });
 });
