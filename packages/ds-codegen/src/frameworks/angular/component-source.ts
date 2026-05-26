@@ -31,6 +31,7 @@ import type {
   BindingExpression,
   ComponentIR,
   DomNodeIR,
+  IterationIR,
   NormalizedChannelIR,
   ResolvedPropIR,
 } from "../../ir.js";
@@ -1134,16 +1135,19 @@ interface AngularRenderContext {
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
   /**
-   * Identifier names that resolve as iteration aliases (item/index
-   * introduced by an enclosing `*ngFor`). When `prop:X` lowers and
-   * `X` is in scope, emit the bare identifier; Angular's *ngFor
-   * introduces those names as template locals, distinct from
-   * component-class properties accessed elsewhere as `this.X` (or
-   * bare `X` in the template — Angular templates accept both, but
-   * iteration aliases must never be prefixed). Empty/undefined
-   * means no enclosing iteration. IR-DOM-ITERATE-CAPABILITY-01.
+   * Identifier names introduced by enclosing `*ngFor` iterations. After
+   * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` lowering no
+   * longer consults this set — iteration locals reach the emitter as
+   * `iterationLocal`-kind bindings via `ctx.enclosingIteration`. The
+   * field is retained so future `if:` migration off this scope set can
+   * happen separately if needed.
    */
   iterationScope?: Set<string>;
+  /**
+   * Nearest enclosing iteration directive. Resolution target for
+   * `iterationLocal`-kind bindings.
+   */
+  enclosingIteration?: IterationIR;
 }
 
 function renderAngularDomNode(
@@ -1172,7 +1176,11 @@ function renderAngularDomNode(
     if (node.iteration.itemVar !== undefined) {
       extendedScope.add(node.iteration.itemVar);
     }
-    ctx = { ...ctx, iterationScope: extendedScope };
+    ctx = {
+      ...ctx,
+      iterationScope: extendedScope,
+      enclosingIteration: node.iteration,
+    };
   }
 
   const attrs: string[] = [];
@@ -1431,10 +1439,28 @@ function safePropertyExpr(prop: string): string {
  * `this.let` for a template local). IR-DOM-ITERATE-CAPABILITY-01.
  */
 function angularPropAccessor(propName: string, ctx: AngularRenderContext): string {
-  if (ctx.iterationScope?.has(propName)) {
-    return propName;
-  }
+  // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals reach the
+  // emitter as `iterationLocal`-kind bindings and never as `prop:`
+  // bindings; the legacy `iterationScope.has(propName)` shortcut is
+  // intentionally removed.
+  void ctx;
   return safePropertyExpr(propName);
+}
+
+/**
+ * Resolve an `iterationLocal`-kind binding to the Angular `*ngFor`
+ * template-local name. The Angular emit shape is
+ * `*ngFor="let item of items; let index = index"` — the bare
+ * identifier matches the iteration's declared `itemVar` / `indexVar`.
+ */
+function angularIterationLocalName(
+  local: "index" | "item",
+  ctx: AngularRenderContext,
+): string | null {
+  const it = ctx.enclosingIteration;
+  if (!it) return null;
+  if (local === "index") return it.indexVar;
+  return it.itemVar ?? null;
 }
 
 function renderAngularBinding(
@@ -1448,6 +1474,10 @@ function renderAngularBinding(
       return `${angularAttrBinding(attr, tag)}="${angularPropAccessor(expr.prop, ctx)}"`;
     case "literal":
       return `${attr}="${escapeAngularAttr(expr.value)}"`;
+    case "iterationLocal": {
+      const name = angularIterationLocalName(expr.local, ctx);
+      return name ? `${angularAttrBinding(attr, tag)}="${name}"` : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1485,6 +1515,8 @@ function renderAngularBindingValue(
       return angularPropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
+    case "iterationLocal":
+      return angularIterationLocalName(expr.local, ctx);
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1516,6 +1548,13 @@ function renderAngularEvent(
       // Rare — usually events should be wired to a callback. Pass the
       // literal through as the expression body.
       return `(${eventName})="${escapeAngularAttr(expr.value)}"`;
+    case "iterationLocal": {
+      // Iteration locals are values, not callables. Drop the binding —
+      // the IR validator would already have rejected a contract that
+      // routes iter:index to an event.
+      void ctx;
+      return null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

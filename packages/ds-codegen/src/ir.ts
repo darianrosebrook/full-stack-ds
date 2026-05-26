@@ -132,14 +132,27 @@ export const TABLE_COMPOSITION_TAGS: ReadonlySet<string> = new Set([
 
 /**
  * Parsed binding expression. The contract author writes a string form
- * (`"prop:disabled"`, `"channel:checked.value"`, `"channel:checked.onChange"`)
- * which the IR builder normalizes into this discriminated union so emitters
- * don't reparse.
+ * (`"prop:disabled"`, `"channel:checked.value"`, `"channel:checked.onChange"`,
+ * `"iter:index"`, `"iter:item"`) which the IR builder normalizes into this
+ * discriminated union so emitters don't reparse.
+ *
+ * `iterationLocal` carries the semantic *role* of the iteration variable —
+ * either the loop index or the current item — not its emitted lexical name.
+ * Emitters resolve the role to whatever `indexVar` / `itemVar` the enclosing
+ * `IterationIR` declared (`index` by default; contract authors can override).
+ * This is what stops the V1 grammar from lying about iteration locals: a
+ * contract author who wrote `prop:index` was previously relying on the
+ * emitter to silently decide whether `index` meant "the component prop named
+ * index" or "the loop-callback parameter named index", with the answer
+ * depending on whether the binding sat inside an iteration scope. With
+ * `iterationLocal`, that resolution lives in the IR build, not in five
+ * separately-duplicated emitter heuristics.
  */
 export type BindingExpression =
   | { kind: "prop"; prop: string }
   | { kind: "channel"; channel: string; field: "value" | "onChange" | "defaultValue" }
-  | { kind: "literal"; value: string };
+  | { kind: "literal"; value: string }
+  | { kind: "iterationLocal"; local: "index" | "item" };
 
 /**
  * Iteration directive on a `DomNodeIR`. Resolved from the contract's
@@ -148,11 +161,10 @@ export type BindingExpression =
  * N copies (kind=count).
  *
  * `indexVar` and `itemVar` name render-context variables that nested
- * `bindings`/`attrs`/`content` expressions can reference. They are NOT new
- * `BindingExpression` kinds — they live in the per-framework render
- * context the walker already threads. Keeping the binding grammar at three
- * kinds (`prop`/`channel`/`literal`) lets every emitter port the change as
- * a single new dispatch branch.
+ * `bindings`/`attrs`/`content` expressions can reference via the
+ * `iterationLocal` binding kind. Contract authors do not name the variables
+ * directly in their bindings — they write `iter:index` / `iter:item` and the
+ * IR resolves the role to whichever lexical name this iteration declared.
  */
 export interface IterationIR {
   kind: "count" | "array";
@@ -823,6 +835,7 @@ function validateDomNode(
   propTypes: Map<string, string>,
   componentName: string,
   cssPrefix: string,
+  enclosingIterations: IterationIR[] = [],
 ): void {
   // Iteration source must resolve in the OUTER scope (the iteration
   // variables it defines are not yet visible to itself). Validate it
@@ -856,37 +869,63 @@ function validateDomNode(
     }
   }
 
-  // Iteration aliases (`itemVar`, `indexVar`) come into scope on the
-  // node that DECLARES iteration — they're available in this node's own
-  // bindings/content/cssVarBindings AND in every descendant. They are
-  // NOT visible to this node's `iterate.source` (validated above against
-  // the outer scope) and NOT visible after we exit the iterated subtree.
-  // We extend the in-scope name set here and pass it down recursively.
-  let inScopeProps = knownProps;
-  if (node.iteration) {
-    inScopeProps = new Set(knownProps);
-    inScopeProps.add(node.iteration.indexVar);
-    if (node.iteration.itemVar !== undefined) {
-      inScopeProps.add(node.iteration.itemVar);
-    }
+  // After V2 (BINDING-EXPRESSION-V2-01), the validator distinguishes two
+  // separate scope concepts:
+  //
+  //   1. `enclosingIteration` (nearest) — used to validate `iterationLocal`
+  //      bindings. A binding of kind `iterationLocal` is only legal when
+  //      *some* enclosing iteration exists, and `iterationLocal.local ===
+  //      "item"` is only legal under an `array`-kind iteration (count has
+  //      no item).
+  //
+  //   2. `inScopeForIf` (cumulative) — used to validate `if:` guards. The
+  //      `if:` grammar predates V2 and still allows `if: "index"` inside
+  //      iteration to resolve to the iteration's `indexVar`. Outer
+  //      iteration locals remain visible inside nested iterations because
+  //      `if:` doesn't have an `iter:` form yet.
+  //
+  // `prop:X` bindings, after V1 normalization, never legitimately refer to
+  // iteration locals — so binding-side `prop:` validation uses the
+  // un-extended `knownProps` set.
+  const activeIterations = node.iteration
+    ? [...enclosingIterations, node.iteration]
+    : enclosingIterations;
+  const enclosingIteration = activeIterations[activeIterations.length - 1];
+  const inScopeForIf = new Set(knownProps);
+  for (const it of activeIterations) {
+    inScopeForIf.add(it.indexVar);
+    if (it.itemVar !== undefined) inScopeForIf.add(it.itemVar);
   }
 
   for (const [attr, binding] of Object.entries(node.bindings)) {
-    if (binding.kind === "channel") {
-      if (!knownChannels.has(binding.channel)) {
-        throw new Error(
-          `[${componentName}] DOM binding "${attr}" references unknown channel ` +
-          `'${binding.channel}' (known: [${[...knownChannels].join(", ")}])`,
-        );
-      }
-    } else if (binding.kind === "prop") {
-      if (!inScopeProps.has(binding.prop)) {
-        throw new Error(
-          `[${componentName}] DOM binding "${attr}" references unknown prop ` +
-          `'${binding.prop}' (known: [${[...inScopeProps].join(", ")}])`,
-        );
-      }
-    }
+    validateBindingAgainstScope(
+      binding,
+      `binding "${attr}"`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+    );
+  }
+  for (const [evt, binding] of Object.entries(node.events)) {
+    validateBindingAgainstScope(
+      binding,
+      `event "${evt}"`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+    );
+  }
+  if (node.content !== undefined) {
+    validateBindingAgainstScope(
+      node.content,
+      `content`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+    );
   }
   // `if: "<name>"` must resolve to a declared prop, a channel name, a
   // channel's value-prop, or the special literal "children". The React
@@ -894,14 +933,14 @@ function validateDomNode(
   // producing JS ReferenceErrors at runtime. Catch the issue at IR-build.
   if (node.ifProp && node.ifProp !== "children") {
     const resolves =
-      inScopeProps.has(node.ifProp) ||
+      inScopeForIf.has(node.ifProp) ||
       knownChannels.has(node.ifProp) ||
       channelValueProps.has(node.ifProp);
     if (!resolves) {
       throw new Error(
         `[${componentName}] DOM node 'if: "${node.ifProp}"' does not resolve ` +
         `to a declared prop, channel name, or channel value-prop. ` +
-        `Declared props: [${[...inScopeProps].join(", ")}]. ` +
+        `Declared props: [${[...inScopeForIf].join(", ")}]. ` +
         `Declared channels: [${[...knownChannels].join(", ")}].`,
       );
     }
@@ -924,20 +963,14 @@ function validateDomNode(
           `design-system surface auditable.`,
         );
       }
-      if (value.kind === "prop" && !inScopeProps.has(value.prop)) {
-        throw new Error(
-          `[${componentName}] DOM cssVariableBindings '${varName}' ` +
-          `references unknown prop '${value.prop}' (known: ` +
-          `[${[...inScopeProps].join(", ")}])`,
-        );
-      }
-      if (value.kind === "channel" && !knownChannels.has(value.channel)) {
-        throw new Error(
-          `[${componentName}] DOM cssVariableBindings '${varName}' ` +
-          `references unknown channel '${value.channel}' (known: ` +
-          `[${[...knownChannels].join(", ")}])`,
-        );
-      }
+      validateBindingAgainstScope(
+        value,
+        `cssVariableBindings '${varName}'`,
+        knownChannels,
+        knownProps,
+        enclosingIteration,
+        componentName,
+      );
     }
   }
   for (const child of node.children) {
@@ -945,12 +978,84 @@ function validateDomNode(
       child,
       knownChannels,
       channelValueProps,
-      inScopeProps,
+      knownProps,
       propTypes,
       componentName,
       cssPrefix,
+      activeIterations,
     );
   }
+}
+
+/**
+ * Validate a single `BindingExpression` against the declared channel /
+ * prop sets and the enclosing iteration. Used for `bindings`, `events`,
+ * `content`, and `cssVarBindings.value` — every site where a contract
+ * author writes a binding-expression string.
+ *
+ * Rejects:
+ *   - `channel:X` where `X` is not declared
+ *   - `prop:X` where `X` is not a declared prop (iteration locals do NOT
+ *     count here; after V1 normalization, a `prop:` binding always refers
+ *     to a real prop)
+ *   - `iter:index` / `iter:item` with no enclosing iteration
+ *   - `iter:item` when the enclosing iteration is `kind: "count"` (count
+ *     iteration has no item)
+ *
+ * Accepts:
+ *   - `literal:` (always opaque)
+ *   - `iter:index` under any kind of iteration
+ *   - `iter:item` under array iteration
+ */
+function validateBindingAgainstScope(
+  binding: BindingExpression,
+  siteLabel: string,
+  knownChannels: Set<string>,
+  knownProps: Set<string>,
+  enclosingIteration: IterationIR | undefined,
+  componentName: string,
+): void {
+  if (binding.kind === "channel") {
+    if (!knownChannels.has(binding.channel)) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} references unknown channel ` +
+        `'${binding.channel}' (known: [${[...knownChannels].join(", ")}])`,
+      );
+    }
+    return;
+  }
+  if (binding.kind === "prop") {
+    if (!knownProps.has(binding.prop)) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} references unknown prop ` +
+        `'${binding.prop}' (known: [${[...knownProps].join(", ")}]). ` +
+        `If this is meant to be an iteration index/item, use 'iter:index' ` +
+        `or 'iter:item' and ensure the binding sits inside an enclosing ` +
+        `\`iterate\` block.`,
+      );
+    }
+    return;
+  }
+  if (binding.kind === "iterationLocal") {
+    if (!enclosingIteration) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses 'iter:${binding.local}' ` +
+        `but the node is not inside any \`iterate\` block. ` +
+        `Move the binding under an iterating ancestor, or use a real prop.`,
+      );
+    }
+    if (binding.local === "item" && enclosingIteration.kind !== "array") {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses 'iter:item' under a ` +
+        `count-kind iteration (over '${enclosingIteration.sourceProp}'). ` +
+        `'iter:item' requires \`iterate.kind: "array"\` with an item type; ` +
+        `count iteration has no item value. Use 'iter:index' for the loop ` +
+        `index, or change the iteration kind.`,
+      );
+    }
+    return;
+  }
+  // literal: always accepted.
 }
 
 // ---------------------------------------------------------------------------
@@ -966,7 +1071,63 @@ function buildDomTree(contract: ComponentContract): DomNodeIR | undefined {
   if (!contract.anatomy || Array.isArray(contract.anatomy)) return undefined;
   const dom = contract.anatomy.dom;
   if (!dom) return undefined;
-  return parseDomNode(dom);
+  const root = parseDomNode(dom);
+  // Post-walk: rewrite legacy `prop:index` / `prop:item` references that sit
+  // inside an iteration scope to their `iterationLocal` semantic equivalent.
+  // Done as a separate pass because `parseDomNode` recurses bottom-up — a
+  // child's bindings are constructed before the parent's `iterate` block is
+  // resolved, so promotion cannot happen during the initial walk.
+  promoteIterationLocalsInTree(root, undefined);
+  return root;
+}
+
+/**
+ * Walk the IR tree and promote `prop:X` bindings to `iterationLocal` when
+ * `X` matches the enclosing iteration's declared `indexVar` or `itemVar`.
+ * Nested iterations resolve to the nearest enclosing scope (the inner
+ * iteration shadows the outer one's locals, just like JS closures).
+ *
+ * Mutates in place — the IR is fresh out of `parseDomNode` and not yet
+ * exposed. Returning a new tree would cost an unnecessary copy.
+ *
+ * Scope rule, from the user's spec:
+ * - `prop:index` / `prop:item` outside any iteration → left untouched
+ *   (validation will catch it later if no such prop is declared).
+ * - Inside iteration declaring `indexVar: "index"`, `prop:index` →
+ *   `{ kind: "iterationLocal", local: "index" }`.
+ * - Inside iteration declaring `indexVar: "dayIndex"`, `prop:dayIndex` →
+ *   same. `prop:index` would NOT promote (the literal "index" doesn't
+ *   match the iteration's declared name).
+ * - Count iteration has no `itemVar`, so `prop:item` is never promoted
+ *   under it. Authors who write `iter:item` under count get a typed
+ *   error from `validateDomNode`.
+ */
+function promoteIterationLocalsInTree(
+  node: DomNodeIR,
+  enclosing: IterationIR | undefined,
+): void {
+  // The iterating node itself is part of the iteration scope: its own
+  // bindings/events/content/cssVarBindings can reference the locals it
+  // introduces. So we resolve the active scope BEFORE rewriting this
+  // node's own fields.
+  const active = node.iteration ?? enclosing;
+  if (active) {
+    for (const [attr, binding] of Object.entries(node.bindings)) {
+      node.bindings[attr] = promoteIterationLocals(binding, active);
+    }
+    for (const [evt, binding] of Object.entries(node.events)) {
+      node.events[evt] = promoteIterationLocals(binding, active);
+    }
+    if (node.content !== undefined) {
+      node.content = promoteIterationLocals(node.content, active);
+    }
+    for (const css of node.cssVarBindings) {
+      css.value = promoteIterationLocals(css.value, active);
+    }
+  }
+  for (const child of node.children) {
+    promoteIterationLocalsInTree(child, active);
+  }
 }
 
 function parseDomNode(node: ContractDomNode): DomNodeIR {
@@ -1147,11 +1308,23 @@ function parseIfGuard(value: string | undefined): { ifProp: string | undefined; 
  *   binding := "prop:" name
  *            | "channel:" name "." field
  *            | "literal:" value
+ *            | "iter:" local
  *   field   := "value" | "onChange" | "defaultValue"
+ *   local   := "index" | "item"
  *
  * Anything not matching falls through as a literal so contracts that
  * misspell don't silently produce empty output. Consumers should still
  * treat parse errors as authoring bugs.
+ *
+ * `iter:` resolution is semantic: `iter:index` always refers to the
+ * enclosing iteration's loop-index role, regardless of whether that
+ * iteration named its `indexVar` something other than the default
+ * `"index"`. The lexical-variable lookup is the emitter's job —
+ * `parseBindingExpression` only attaches the role.
+ *
+ * Scope validation (no enclosing iteration; `iter:item` under count
+ * iteration) happens in `validateDomNode`, not here, because this function
+ * is context-free.
  */
 export function parseBindingExpression(expr: string): BindingExpression {
   const propMatch = expr.match(/^prop:([A-Za-z_$][\w$-]*)$/);
@@ -1170,9 +1343,48 @@ export function parseBindingExpression(expr: string): BindingExpression {
   if (literalMatch) {
     return { kind: "literal", value: literalMatch[1] };
   }
+  const iterMatch = expr.match(/^iter:(index|item)$/);
+  if (iterMatch) {
+    return { kind: "iterationLocal", local: iterMatch[1] as "index" | "item" };
+  }
   // Unrecognized — treat the whole expression as a literal so the contract's
   // intent (whatever it was) appears in output for visible failure.
   return { kind: "literal", value: expr };
+}
+
+/**
+ * In-place rewrite a `BindingExpression` so that `prop:index` / `prop:item`
+ * references resolve to `iterationLocal` when their target name matches
+ * the enclosing iteration's `indexVar` / `itemVar`. Returns the original
+ * binding unchanged when no rewrite applies.
+ *
+ * Why this exists: V1 contracts (Calendar, OTP) wrote `prop:index` to mean
+ * "the loop-index variable named index" — relying on the iteration scope
+ * happening to declare a local of that name. New contracts SHOULD write
+ * `iter:index`, but existing contracts must continue to emit byte-equivalent
+ * output. The auto-promotion is bounded: it only fires when the prop name
+ * exactly matches a declared iteration-local name in the *nearest* enclosing
+ * iteration. Outside iteration scope, `prop:index` still requires a real
+ * declared prop and `validateDomNode` will reject undeclared references.
+ *
+ * The promotion is local to the role of the matched variable: a `prop:index`
+ * binding inside an iteration whose `indexVar` is `index` becomes
+ * `{ kind: "iterationLocal", local: "index" }`, NOT a reference to the
+ * literal identifier — so a future contract that overrides `indexVar` to
+ * `"dayIndex"` still gets `iter:index` semantics at the emitter.
+ */
+export function promoteIterationLocals(
+  binding: BindingExpression,
+  iteration: { indexVar: string; itemVar?: string },
+): BindingExpression {
+  if (binding.kind !== "prop") return binding;
+  if (binding.prop === iteration.indexVar) {
+    return { kind: "iterationLocal", local: "index" };
+  }
+  if (iteration.itemVar !== undefined && binding.prop === iteration.itemVar) {
+    return { kind: "iterationLocal", local: "item" };
+  }
+  return binding;
 }
 
 /**

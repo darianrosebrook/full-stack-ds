@@ -14,6 +14,7 @@ import type {
   BindingExpression,
   ComponentIR,
   DomNodeIR,
+  IterationIR,
   NormalizedChannelIR,
   PartIR,
 } from "../../ir.js";
@@ -1313,13 +1314,19 @@ interface ReactRenderContext {
    */
   rootTagOverride?: string;
   /**
-   * Set of identifier names that resolve as iteration aliases (item/index
-   * variables introduced by an enclosing `iterate` directive) rather than
-   * as destructured component props. `renderReactBinding` consults this
-   * for `prop:X` lowering: in-scope → bare local; not in scope → existing
-   * prop-name resolution. Empty/undefined means no enclosing iteration.
+   * Nearest enclosing iteration directive, or `undefined` at the top
+   * level. After BINDING-EXPRESSION-V2-01 the IR carries
+   * `iterationLocal`-kind bindings directly, and the emitter resolves
+   * each `{ kind: "iterationLocal", local: "index"|"item" }` to the
+   * iteration's declared `indexVar` / `itemVar`. The previous
+   * `iterationScope: Set<string>` (a flat set of identifier names) was
+   * never read by the React emitter — React destructures all props at
+   * the top of the function body and the iteration callback parameter
+   * naturally shadows the destructured prop. The field still exists so
+   * the V2 lowering can look up declared variable names without
+   * branching on identifier coincidence.
    */
-  iterationScope?: Set<string>;
+  enclosingIteration?: IterationIR;
 }
 
 /**
@@ -1344,24 +1351,15 @@ function renderReactDomNode(
     return `${pad}{children}`;
   }
 
-  // IR-DOM-ITERATE-CAPABILITY-01: when this node declares `iterate`, the
-  // iteration aliases (indexVar, itemVar) come into scope on THIS node
-  // AND every descendant. Extend the render context's iterationScope so
-  // downstream `renderReactBinding` calls treat those names as in-scope
-  // local identifiers rather than component-prop accessors. React
-  // happens to destructure all styled props at the top of the
-  // component body, so a bare `prop:item` reference already lowers to
-  // the bare identifier `item` — the loop wrap below introduces `item`
-  // as a callback parameter and the existing emit shape is correct.
-  // The scope set still matters for cross-framework symmetry and for
-  // the validator extension in `ir.ts`.
+  // IR-DOM-ITERATE-CAPABILITY-01 / BINDING-EXPRESSION-V2-01: when this
+  // node declares `iterate`, set the enclosing-iteration context so that
+  // any `iterationLocal`-kind bindings on this node and its descendants
+  // can resolve to the correct lexical variable name. React's emit shape
+  // wraps the iterated subtree in `Array.from(...).map((item, index) =>
+  // (...))` — so the callback parameter names match the iteration's
+  // declared `indexVar` / `itemVar`.
   if (node.iteration) {
-    const extendedScope = new Set(ctx.iterationScope ?? []);
-    extendedScope.add(node.iteration.indexVar);
-    if (node.iteration.itemVar !== undefined) {
-      extendedScope.add(node.iteration.itemVar);
-    }
-    ctx = { ...ctx, iterationScope: extendedScope };
+    ctx = { ...ctx, enclosingIteration: node.iteration };
   }
 
   // Build attribute list. Order: static attrs, then bound attrs, then class, then root-only data-testid + ...rest.
@@ -1718,6 +1716,15 @@ function inferBindingValueType(
     // contract is that prop types match the attribute they're bound to.
     return undefined;
   }
+  if (expr.kind === "iterationLocal") {
+    // `iter:index` is always `number`. `iter:item`'s type lives on the
+    // iteration's `itemType` but pinning it here would couple the value
+    // walker to iteration kind details — emitters never currently need
+    // the item type for value inference (string-attr coercion etc.), so
+    // leave undefined and let the framework's type checker enforce
+    // shape against the iteration callback parameter's typed signature.
+    return expr.local === "index" ? "number" : undefined;
+  }
   return undefined;
 }
 
@@ -1742,6 +1749,16 @@ function renderReactBinding(
         : expr.prop;
     case "literal":
       return JSON.stringify(expr.value);
+    case "iterationLocal": {
+      // Resolve the local role to the iteration's declared variable name.
+      // The iteration's `.map((item, index) => ...)` callback introduces
+      // `indexVar` and `itemVar` as in-scope lexical names; emitting the
+      // bare identifier is correct because React JSX is JS — no template
+      // accessor wrapping needed.
+      const it = ctx.enclosingIteration;
+      if (!it) return null; // validator catches this; defensive.
+      return expr.local === "index" ? it.indexVar : (it.itemVar ?? "item");
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

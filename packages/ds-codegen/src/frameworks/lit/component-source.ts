@@ -28,6 +28,7 @@ import type {
   BindingExpression,
   ComponentIR,
   DomNodeIR,
+  IterationIR,
   NormalizedChannelIR,
 } from "../../ir.js";
 import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
@@ -123,20 +124,34 @@ function propAccessor(propName: string): string {
 }
 
 /**
- * Lower a `prop:X` reference to a Lit template expression. When `X` is
- * an in-scope iteration alias, emit the bare identifier — the
- * surrounding `.map((item, index) => html\`\`)` callback introduces it
- * as a local. Otherwise route through `propAccessor`, which prefixes
- * `this.` (or `this["..."]` for hyphenated names). The reference type
- * still has to typecheck under Lit's strict tsconfig, but since
- * iteration aliases are scope-bound the typing flows from the
- * `.map` callback parameter types. IR-DOM-ITERATE-CAPABILITY-01.
+ * Lower a `prop:X` reference to a Lit template expression. Post-V2
+ * (BINDING-EXPRESSION-V2-01), iteration locals reach the emitter as
+ * `iterationLocal`-kind bindings, never as `prop:` bindings — so this
+ * always routes through `propAccessor` (which prefixes `this.` or
+ * `this["..."]` for hyphenated names). The legacy
+ * `iterationScope.has(propName)` shortcut is removed.
  */
 function litPropAccessor(propName: string, ctx: LitRenderContext): string {
-  if (ctx.iterationScope?.has(propName)) {
-    return propName;
-  }
+  void ctx;
   return propAccessor(propName);
+}
+
+/**
+ * Resolve an `iterationLocal`-kind binding to the Lit iteration
+ * callback parameter name. Lit's emit wraps the iterated subtree in
+ * `.map((item, index) => html\`...\`)` (array) or
+ * `Array.from({ length: N }, (_, index) => html\`...\`)` (count) —
+ * the bare identifier matches the iteration's declared `itemVar` /
+ * `indexVar`.
+ */
+function litIterationLocalName(
+  local: "index" | "item",
+  ctx: LitRenderContext,
+): string | null {
+  const it = ctx.enclosingIteration;
+  if (!it) return null;
+  if (local === "index") return it.indexVar;
+  return it.itemVar ?? null;
 }
 
 // ---------------------------------------------------------------------------
@@ -1414,14 +1429,19 @@ interface LitRenderContext {
   isRoot: boolean;
   hasOverlayClick?: boolean;
   /**
-   * Identifier names that resolve as iteration aliases (item/index
-   * variables introduced by an enclosing `.map((item, index) => html\`\`)`).
-   * When `prop:X` lowers and `X` is in scope, emit the bare identifier
-   * — the map callback introduces it as a local. Otherwise fall
-   * through to `propAccessor`, which lowers to `this.X` (or
-   * `this["X"]` for hyphenated names). IR-DOM-ITERATE-CAPABILITY-01.
+   * Identifier names introduced by enclosing iteration. After
+   * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` lowering no
+   * longer consults this set — iteration locals reach the emitter as
+   * `iterationLocal`-kind bindings and dispatch via
+   * `ctx.enclosingIteration`. The set survives as the resolver for the
+   * `if:` guard grammar (V2 did not migrate `if:`).
    */
   iterationScope?: Set<string>;
+  /**
+   * Nearest enclosing iteration directive. Resolution target for
+   * `iterationLocal`-kind bindings.
+   */
+  enclosingIteration?: IterationIR;
 }
 
 function renderLitDomNode(
@@ -1448,7 +1468,11 @@ function renderLitDomNode(
     if (node.iteration.itemVar !== undefined) {
       extendedScope.add(node.iteration.itemVar);
     }
-    ctx = { ...ctx, iterationScope: extendedScope };
+    ctx = {
+      ...ctx,
+      iterationScope: extendedScope,
+      enclosingIteration: node.iteration,
+    };
   }
 
   const attrs: string[] = [];
@@ -1673,15 +1697,12 @@ function renderLitBinding(
       // string "null". Other props are declared `T | undefined` and
       // need no coercion.
       //
-      // IR-DOM-ITERATE-CAPABILITY-01: iteration aliases bypass the
-      // ARIA-mixin coercion and `this.` prefix — they're loop-scope
-      // locals introduced by the surrounding .map callback.
+      // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals never
+      // reach this branch — they come in as `iterationLocal`-kind
+      // bindings and are handled in the dedicated case below.
       const isAriaMixin = ARIA_MIXIN_NAMES.has(expr.prop);
-      const isIterationAlias = ctx.iterationScope?.has(expr.prop) ?? false;
-      const rawAcc = isIterationAlias ? expr.prop : propAccessor(expr.prop);
-      const acc = isAriaMixin && !isIterationAlias
-        ? `${rawAcc} ?? undefined`
-        : rawAcc;
+      const rawAcc = propAccessor(expr.prop);
+      const acc = isAriaMixin ? `${rawAcc} ?? undefined` : rawAcc;
       // Every styled prop is declared as `propName?: T` in the Lit
       // emitter (see generatePropertyDeclarations), so at the field
       // type level the value is always `T | undefined` regardless of
@@ -1732,6 +1753,20 @@ function renderLitBinding(
     }
     case "literal":
       return `${attr}="${expr.value.replace(/"/g, "&quot;")}"`;
+    case "iterationLocal": {
+      // Iteration locals are loop-scope locals introduced by the
+      // surrounding `.map((item, index) => html\`\`)` / `Array.from`
+      // callback — never undefined, no `ifDefined` wrap needed.
+      const name = litIterationLocalName(expr.local, ctx);
+      if (!name) return null;
+      if (attr.startsWith("aria-")) {
+        return `${attr}=\${${name}}`;
+      }
+      if (isAttributeOnlyBinding(attr)) {
+        return `${attr}=\${${name}}`;
+      }
+      return `.${attr}=\${${name}}`;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1794,6 +1829,10 @@ function renderLitContent(
       return expr.value.replace(/[<>&]/g, (c) =>
         c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&amp;",
       );
+    case "iterationLocal": {
+      const name = litIterationLocalName(expr.local, ctx);
+      return name ? `\${${name}}` : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1820,6 +1859,8 @@ function renderLitBindingValue(
       return litPropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
+    case "iterationLocal":
+      return litIterationLocalName(expr.local, ctx);
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1848,6 +1889,13 @@ function renderLitEvent(
       // Rare. Inline as a string handler — would need eval at runtime;
       // emit verbatim and let the consumer catch authoring errors.
       return `@${eventName}="${expr.value.replace(/"/g, "&quot;")}"`;
+    case "iterationLocal": {
+      // Iteration locals are values, not callables. Drop the binding —
+      // the IR validator would already reject a contract that routes
+      // iter:index to an event.
+      void ctx;
+      return null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;

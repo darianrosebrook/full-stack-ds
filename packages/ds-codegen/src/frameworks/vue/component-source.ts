@@ -22,6 +22,7 @@ import type {
   BindingExpression,
   ComponentIR,
   DomNodeIR,
+  IterationIR,
   NormalizedChannelIR,
 } from "../../ir.js";
 import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
@@ -1067,12 +1068,20 @@ interface VueRenderContext {
   rootRole?: string;
   /**
    * Identifier names that resolve as iteration aliases (item/index
-   * variables introduced by an enclosing `iterate` directive) rather
-   * than as `props.X` accessors. Vue's `v-for` introduces bare locals
-   * — `props.item` would resolve against component props, not the
-   * loop scope. Empty/undefined means no enclosing iteration.
+   * variables introduced by an enclosing `iterate` directive). After
+   * BINDING-EXPRESSION-V2-01, binding-side references to these locals
+   * are carried as `iterationLocal`-kind bindings and dispatched via
+   * `ctx.enclosingIteration`. `iterationScope` survives only as the
+   * resolver for the `if:` guard grammar, which still permits
+   * `if: "<iterationLocal>"` to mean "render only when truthy in the
+   * loop iteration." See `renderVueDomNode` `if:` branch.
    */
   iterationScope?: Set<string>;
+  /**
+   * Nearest enclosing iteration directive, or `undefined` at the top
+   * level. Lookup target for `iterationLocal`-kind bindings.
+   */
+  enclosingIteration?: IterationIR;
 }
 
 function renderVueDomNode(
@@ -1089,17 +1098,22 @@ function renderVueDomNode(
     return `${pad}<slot />`;
   }
 
-  // IR-DOM-ITERATE-CAPABILITY-01: extend iterationScope for THIS node
-  // and every descendant when `iterate` is set. Bindings on the
-  // iterated node and its subtree resolve `prop:item` / `prop:index`
-  // as bare locals from the v-for scope, not as `props.item`.
+  // IR-DOM-ITERATE-CAPABILITY-01 / BINDING-EXPRESSION-V2-01: when this
+  // node declares iteration, set `enclosingIteration` so any
+  // `iterationLocal` bindings on this node/descendants resolve to the
+  // correct lexical name. Continue to extend the legacy `iterationScope`
+  // identifier set for the `if:` guard grammar (V2 did not migrate `if:`).
   if (node.iteration) {
     const extendedScope = new Set(ctx.iterationScope ?? []);
     extendedScope.add(node.iteration.indexVar);
     if (node.iteration.itemVar !== undefined) {
       extendedScope.add(node.iteration.itemVar);
     }
-    ctx = { ...ctx, iterationScope: extendedScope };
+    ctx = {
+      ...ctx,
+      iterationScope: extendedScope,
+      enclosingIteration: node.iteration,
+    };
   }
 
   const attrs: string[] = [];
@@ -1318,10 +1332,33 @@ function renderVueDomNode(
  * `props.X` accessor as today. IR-DOM-ITERATE-CAPABILITY-01.
  */
 function vuePropAccessor(propName: string, ctx: VueRenderContext): string {
-  if (ctx.iterationScope?.has(propName)) {
-    return propName;
-  }
+  // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals reach the
+  // emitter as `iterationLocal`-kind bindings, never as `prop:`
+  // bindings — so a `prop:X` accessor is always a real component-prop
+  // lookup. The legacy `iterationScope.has(propName)` shortcut is
+  // intentionally removed. If you reach this with `propName` matching
+  // an iteration local, the IR-build normalization in
+  // `promoteIterationLocalsInTree` failed and the bug is upstream.
+  void ctx;
   return `props.${propAccess(propName)}`;
+}
+
+/**
+ * Resolve an `iterationLocal`-kind binding to the Vue v-for callback
+ * parameter name introduced by the enclosing iteration. The v-for emit
+ * writes `v-for="(item, index) in count"` (count) or
+ * `v-for="(item, index) in arr"` (array), so the bare identifier
+ * matches the iteration's declared `itemVar` / `indexVar`. Returns
+ * `null` defensively if the validator missed an out-of-scope reference.
+ */
+function vueIterationLocalName(
+  local: "index" | "item",
+  ctx: VueRenderContext,
+): string | null {
+  const it = ctx.enclosingIteration;
+  if (!it) return null;
+  if (local === "index") return it.indexVar;
+  return it.itemVar ?? null;
 }
 
 function renderVueTextContent(
@@ -1333,6 +1370,10 @@ function renderVueTextContent(
       return `{{ ${vuePropAccessor(expr.prop, ctx)} }}`;
     case "literal":
       return escapeAttrString(expr.value);
+    case "iterationLocal": {
+      const name = vueIterationLocalName(expr.local, ctx);
+      return name ? `{{ ${name} }}` : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1374,6 +1415,10 @@ function renderVueBinding(
       return `:${attr}="${vuePropAccessor(expr.prop, ctx)}"`;
     case "literal":
       return `${attr}="${escapeAttrString(expr.value)}"`;
+    case "iterationLocal": {
+      const name = vueIterationLocalName(expr.local, ctx);
+      return name ? `:${attr}="${name}"` : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1434,6 +1479,8 @@ function renderVueBindingValue(
       return vuePropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
+    case "iterationLocal":
+      return vueIterationLocalName(expr.local, ctx);
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1476,6 +1523,15 @@ function renderVueEvent(
     case "literal":
       // Rare. Inline as a string handler.
       return `@${eventName}="${escapeAttrString(expr.value)}"`;
+    case "iterationLocal": {
+      // Iteration locals (index/item) are values, not callables. An
+      // event-handler binding to an iteration local doesn't make sense;
+      // surface as a null so the caller (`renderVueDomNode`) drops the
+      // attribute and the IR-build validator can be extended later if a
+      // contract author tries this.
+      void ctx;
+      return null;
+    }
     case "channel": {
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderVueBinding(jsxAttr, expr, ctx);

@@ -49,6 +49,33 @@ describe("parseBindingExpression", () => {
       value: "not-a-binding",
     });
   });
+
+  // BINDING-EXPRESSION-V2-01: the `iter:` form names the *role* of an
+  // iteration local (index vs item), not a specific lexical variable.
+  // The IR resolves the role to the enclosing iteration's declared
+  // `indexVar` / `itemVar` at lowering time.
+  it("parses iter:index bindings", () => {
+    expect(parseBindingExpression("iter:index")).toEqual({
+      kind: "iterationLocal",
+      local: "index",
+    });
+  });
+
+  it("parses iter:item bindings", () => {
+    expect(parseBindingExpression("iter:item")).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+    });
+  });
+
+  it("rejects unknown iter: locals as literals (visible failure)", () => {
+    // Only "index" and "item" are valid. Anything else falls through to
+    // literal so the typo appears in output.
+    expect(parseBindingExpression("iter:row")).toEqual({
+      kind: "literal",
+      value: "iter:row",
+    });
+  });
 });
 
 describe("buildDomTree (via buildComponentIR)", () => {
@@ -995,5 +1022,257 @@ describe("cssVariableBindings", () => {
       },
     } as ComponentContract);
     expect(ir.dom!.cssVarBindings).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// BINDING-EXPRESSION-V2-01: iteration-local grammar + V1 normalization
+// ---------------------------------------------------------------------------
+
+describe("BindingExpressionV2 — iteration locals", () => {
+  function withIteratingDom(opts: {
+    iterateKind: "count" | "array";
+    iterateSource: string;
+    binding: string;
+    extraProps?: Array<{ name: string; type: string }>;
+  }): ComponentContract {
+    return {
+      name: "V2Fixture",
+      cssPrefix: "v2-fixture",
+      anatomy: {
+        parts: ["root", "cell"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [
+            {
+              tag: "li",
+              part: "cell",
+              iterate:
+                opts.iterateKind === "array"
+                  ? {
+                      source: opts.iterateSource,
+                      kind: "array",
+                      itemType: "string",
+                    }
+                  : { source: opts.iterateSource, kind: "count" },
+              bindings: { "data-index": opts.binding },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            opts.iterateKind === "count"
+              ? { name: "count", type: "number" }
+              : {
+                  name: "rows",
+                  type: "string[]",
+                  description: "Items to render",
+                },
+            ...(opts.extraProps ?? []),
+          ],
+        },
+      },
+    } as unknown as ComponentContract;
+  }
+
+  it("auto-promotes prop:index inside count iteration to iterationLocal", () => {
+    const ir = buildComponentIR(
+      withIteratingDom({
+        iterateKind: "count",
+        iterateSource: "prop:count",
+        binding: "prop:index",
+      }),
+    );
+    expect(ir.dom!.children[0].bindings["data-index"]).toEqual({
+      kind: "iterationLocal",
+      local: "index",
+    });
+  });
+
+  it("auto-promotes prop:item inside array iteration to iterationLocal", () => {
+    const ir = buildComponentIR(
+      withIteratingDom({
+        iterateKind: "array",
+        iterateSource: "prop:rows",
+        binding: "prop:item",
+      }),
+    );
+    expect(ir.dom!.children[0].bindings["data-index"]).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+    });
+  });
+
+  it("accepts explicit iter:index form (no auto-promotion needed)", () => {
+    const ir = buildComponentIR(
+      withIteratingDom({
+        iterateKind: "count",
+        iterateSource: "prop:count",
+        binding: "iter:index",
+      }),
+    );
+    expect(ir.dom!.children[0].bindings["data-index"]).toEqual({
+      kind: "iterationLocal",
+      local: "index",
+    });
+  });
+
+  it("does NOT promote prop:X when X is not the iteration's declared indexVar/itemVar", () => {
+    // Real prop named "foo" — still a prop binding, not an iteration local.
+    const ir = buildComponentIR(
+      withIteratingDom({
+        iterateKind: "count",
+        iterateSource: "prop:count",
+        binding: "prop:foo",
+        extraProps: [{ name: "foo", type: "string" }],
+      }),
+    );
+    expect(ir.dom!.children[0].bindings["data-index"]).toEqual({
+      kind: "prop",
+      prop: "foo",
+    });
+  });
+
+  it("rejects iter:item under count iteration (no item exists)", () => {
+    expect(() =>
+      buildComponentIR(
+        withIteratingDom({
+          iterateKind: "count",
+          iterateSource: "prop:count",
+          binding: "iter:item",
+        }),
+      ),
+    ).toThrow(/iter:item.*count-kind iteration/);
+  });
+
+  it("accepts iter:item under array iteration", () => {
+    const ir = buildComponentIR(
+      withIteratingDom({
+        iterateKind: "array",
+        iterateSource: "prop:rows",
+        binding: "iter:item",
+      }),
+    );
+    expect(ir.dom!.children[0].bindings["data-index"]).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+    });
+  });
+
+  it("rejects iter:index outside any iteration scope", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "V2NoIter",
+        cssPrefix: "v2-no-iter",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            bindings: { "data-index": "iter:index" },
+          },
+        },
+        props: { styled: { members: [] } },
+      } as unknown as ComponentContract),
+    ).toThrow(/iter:index.*not inside any `iterate` block/);
+  });
+
+  it("rejects prop:undeclared outside iteration (validation still catches typos)", () => {
+    // Pre-V2 sanity: outside iteration, `prop:index` must refer to a real
+    // prop named `index`. With no such prop declared, validation throws.
+    expect(() =>
+      buildComponentIR({
+        name: "V2BadProp",
+        cssPrefix: "v2-bad",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            bindings: { "data-x": "prop:index" },
+          },
+        },
+        props: { styled: { members: [] } },
+      } as unknown as ComponentContract),
+    ).toThrow(/references unknown prop 'index'/);
+  });
+
+  it("nested iterations resolve iter:index to the nearest enclosing scope", () => {
+    // The inner iteration's indexVar shadows the outer one's. A binding on
+    // the inner iterating node sees the inner index.
+    const ir = buildComponentIR({
+      name: "V2Nested",
+      cssPrefix: "v2-nested",
+      anatomy: {
+        parts: ["outer", "inner"],
+        dom: {
+          tag: "ul",
+          part: "outer",
+          children: [
+            {
+              tag: "li",
+              iterate: { source: "prop:outerRows", kind: "array", itemType: "string[]" },
+              children: [
+                {
+                  tag: "span",
+                  part: "inner",
+                  iterate: { source: "prop:innerCount", kind: "count" },
+                  bindings: { "data-inner-index": "iter:index" },
+                },
+              ],
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "outerRows", type: "string[][]" },
+            { name: "innerCount", type: "number" },
+          ],
+        },
+      },
+    } as unknown as ComponentContract);
+    const inner = ir.dom!.children[0].children[0];
+    expect(inner.bindings["data-inner-index"]).toEqual({
+      kind: "iterationLocal",
+      local: "index",
+    });
+  });
+
+  it("resolves iter:index to the iteration's declared indexVar at emit (not literal 'index')", () => {
+    // Contract author overrides indexVar; the IR still carries
+    // { kind: "iterationLocal", local: "index" } — the emitter looks up
+    // the lexical name from the iteration's indexVar when lowering.
+    const ir = buildComponentIR({
+      name: "V2Renamed",
+      cssPrefix: "v2-renamed",
+      anatomy: {
+        parts: ["root", "cell"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [
+            {
+              tag: "li",
+              part: "cell",
+              iterate: { source: "prop:count", kind: "count", indexVar: "dayIndex" },
+              bindings: { "data-day": "iter:index" },
+            },
+          ],
+        },
+      },
+      props: { styled: { members: [{ name: "count", type: "number" }] } },
+    } as unknown as ComponentContract);
+    // IR carries the role, not the variable name. The variable name
+    // lives on `iteration.indexVar` and is resolved at emit time.
+    expect(ir.dom!.children[0].bindings["data-day"]).toEqual({
+      kind: "iterationLocal",
+      local: "index",
+    });
+    expect(ir.dom!.children[0].iteration!.indexVar).toBe("dayIndex");
   });
 });

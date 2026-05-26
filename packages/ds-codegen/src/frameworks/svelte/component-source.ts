@@ -22,6 +22,7 @@ import type {
   BindingExpression,
   ComponentIR,
   DomNodeIR,
+  IterationIR,
   NormalizedChannelIR,
 } from "../../ir.js";
 import { hasChildrenPlaceholder, TABLE_COMPOSITION_TAGS } from "../../ir.js";
@@ -988,15 +989,19 @@ interface SvelteRenderContext {
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
   /**
-   * Identifier names that resolve as iteration aliases (item/index
-   * introduced by an enclosing `{#each}`). When `prop:X` lowers and
-   * `X` is in scope, emit the bare identifier instead of running
-   * `X` through `jsAccessorFor` (which would camelCase-mangle a
-   * literal alias like `item-id`). For default alias names (`item`,
-   * `index`) `jsAccessorFor` is a no-op, so the scope check is
-   * defensive against future contracts that rename the aliases.
+   * Identifier names introduced by enclosing `{#each}` iterations. After
+   * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` accessor no
+   * longer consults this set — iteration locals reach the emitter as
+   * `iterationLocal`-kind bindings and dispatch via
+   * `ctx.enclosingIteration`. The set is retained as the `if:` guard's
+   * resolver (V2 did not migrate `if:`).
    */
   iterationScope?: Set<string>;
+  /**
+   * Nearest enclosing iteration directive. Resolution target for
+   * `iterationLocal`-kind bindings.
+   */
+  enclosingIteration?: IterationIR;
 }
 
 function renderSvelteDomNode(
@@ -1026,7 +1031,11 @@ function renderSvelteDomNode(
     if (node.iteration.itemVar !== undefined) {
       extendedScope.add(node.iteration.itemVar);
     }
-    ctx = { ...ctx, iterationScope: extendedScope };
+    ctx = {
+      ...ctx,
+      iterationScope: extendedScope,
+      enclosingIteration: node.iteration,
+    };
   }
 
   const attrs: string[] = [];
@@ -1226,10 +1235,30 @@ function formatSvelteAttrs(attrs: string[]): string {
  * defensive against future renames. IR-DOM-ITERATE-CAPABILITY-01.
  */
 function sveltePropAccessor(propName: string, ctx: SvelteRenderContext): string {
-  if (ctx.iterationScope?.has(propName)) {
-    return propName;
-  }
+  // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals reach the
+  // emitter as `iterationLocal`-kind bindings, never as `prop:`
+  // bindings — so a `prop:X` accessor here is always a real component
+  // prop. The legacy `iterationScope.has(propName)` shortcut is
+  // intentionally removed.
+  void ctx;
   return jsAccessorFor(propName);
+}
+
+/**
+ * Resolve an `iterationLocal`-kind binding to the Svelte `{#each}`
+ * scope variable name. Svelte emits
+ * `{#each ... as item, index}` (array) or
+ * `{#each ... as _, index}` (count) — the bare identifier matches the
+ * iteration's declared `itemVar` / `indexVar`.
+ */
+function svelteIterationLocalName(
+  local: "index" | "item",
+  ctx: SvelteRenderContext,
+): string | null {
+  const it = ctx.enclosingIteration;
+  if (!it) return null;
+  if (local === "index") return it.indexVar;
+  return it.itemVar ?? null;
 }
 
 function renderSvelteTextChildExpression(
@@ -1241,6 +1270,10 @@ function renderSvelteTextChildExpression(
       return `{${sveltePropAccessor(expr.prop, ctx)}}`;
     case "literal":
       return escapeAttrValue(expr.value);
+    case "iterationLocal": {
+      const name = svelteIterationLocalName(expr.local, ctx);
+      return name ? `{${name}}` : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1269,6 +1302,8 @@ function renderSvelteBindingValue(
       return sveltePropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
+    case "iterationLocal":
+      return svelteIterationLocalName(expr.local, ctx);
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1292,6 +1327,10 @@ function renderSvelteBinding(
       return `${attr}={${sveltePropAccessor(expr.prop, ctx)}}`;
     case "literal":
       return `${attr}="${escapeAttrValue(expr.value)}"`;
+    case "iterationLocal": {
+      const name = svelteIterationLocalName(expr.local, ctx);
+      return name ? `${attr}={${name}}` : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
@@ -1392,6 +1431,13 @@ function renderSvelteEvent(
     case "literal":
       // Rare. Emit as a string handler — consumer-error territory.
       return `${svelteEventAttr}="${escapeAttrValue(expr.value)}"`;
+    case "iterationLocal": {
+      // Iteration locals are values, not handlers. Surface null so the
+      // caller drops the attribute. Defensive — the IR validator would
+      // already reject a contract that wires iter:index to an event.
+      void ctx;
+      return null;
+    }
     case "channel": {
       // Delegate to the channel-onChange path in renderSvelteBinding by
       // re-deriving the synthetic JSX-attr name. resolveEventValueStrategy

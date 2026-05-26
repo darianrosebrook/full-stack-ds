@@ -252,10 +252,15 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: count iteration lowering", () => {
       );
     });
 
-    it("emits bare alias in attribute bindings (no `this.` prefix)", () => {
-      // data-index attribute binding lowers to the bare local —
-      // `data-index=${ifDefined(index)}` (data- attrs use ifDefined).
-      expect(src).toMatch(/data-index=\$\{ifDefined\(index\)\}/);
+    it("emits bare alias in attribute bindings (no `this.` prefix, no ifDefined)", () => {
+      // Post-V2 (BINDING-EXPRESSION-V2-01): `prop:index` inside an
+      // iteration scope normalizes to `iterationLocal` in the IR, and
+      // the Lit emitter's `iterationLocal` branch lowers without an
+      // `ifDefined` wrap. Iteration locals introduced by a `.map`
+      // callback are never undefined, so `ifDefined` was always dead
+      // weight on the V1 path.
+      expect(src).toMatch(/data-index=\$\{index\}/);
+      expect(src).not.toMatch(/data-index=\$\{ifDefined\(index\)\}/);
     });
 
     it("emits bare alias inside styleMap directive value", () => {
@@ -381,11 +386,16 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
       expect(src).not.toMatch(/\$\{this\.item\}/);
     });
 
-    it("emits attribute bindings against the bare aliases", () => {
-      // data-* always uses ifDefined wrap; aria-* takes the aria-label path.
-      expect(src).toMatch(/data-row-index=\$\{ifDefined\(index\)\}/);
-      // aria-label routes through the aria-string path with ifDefined.
-      expect(src).toMatch(/aria-label=\$\{ifDefined\(item\)\}/);
+    it("emits attribute bindings against the bare aliases (no ifDefined)", () => {
+      // Post-V2 (BINDING-EXPRESSION-V2-01): both `data-row-index` and
+      // `aria-label` bind to iterationLocal-kind values now, so the
+      // emitter takes the dedicated iterationLocal branch which skips
+      // the `ifDefined` wrap. Loop locals introduced by `.map((item,
+      // index) => ...)` are never undefined; the V1 wrap was inherited
+      // mechanically from the `prop:` branch.
+      expect(src).toMatch(/data-row-index=\$\{index\}/);
+      expect(src).toMatch(/aria-label=\$\{item\}/);
+      expect(src).not.toMatch(/ifDefined\((index|item)\)/);
     });
   });
 });
