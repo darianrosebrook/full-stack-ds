@@ -1297,22 +1297,29 @@ function startWatch(
 }
 
 function surfaceTypeDiagnostics(irs: readonly ComponentIR[], strict: boolean): boolean {
-  let ok = true;
-  for (const ir of irs) {
-    const issues = ir.surfaceTypes.filter((s) => s.resolution === "unknown");
-    if (issues.length === 0) continue;
-    const detail = issues
-      .map((s) => `${s.key}=${s.tsType} (${s.reason})`)
-      .join(", ");
-    const msg = `${ir.name}: unresolved surface prop types: ${detail}`;
-    if (strict) {
-      console.error(`TYPE-DRIFT ${msg}`);
-      ok = false;
-    } else {
-      console.warn(`TYPE-WARN  ${msg}`);
+  const offenders = irs.filter((ir) => ir.unresolvedTypeRefs.length > 0);
+  if (offenders.length === 0) return true;
+
+  console.warn("\nUnresolved type references:");
+  for (const ir of offenders) {
+    for (const ref of ir.unresolvedTypeRefs) {
+      console.warn(
+        `  ${ir.name}: type "${ref.ref}" referenced by ${ref.fromProps.join(", ")}`,
+      );
     }
   }
-  return ok;
+
+  if (strict) {
+    console.error(
+      "\n--strict-types is set. Add the missing types to the contract's `types` block, or remove --strict-types.",
+    );
+    return false;
+  }
+
+  console.warn(
+    "Generation will continue, but the missing types fall through as `unknown`. Define them in the contract or pass --strict-types to fail the build.",
+  );
+  return true;
 }
 
 main();
