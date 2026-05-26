@@ -30,6 +30,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Design tokens — emit composed.tokens.json before contract
+      # validation. `generate:check` (next step) loads the composed
+      # token graph to verify every contract's `resolvesTo` path, but
+      # `composed.tokens.json` is gitignored (regenerable scratch), so
+      # it has to be produced fresh in CI. Without this step, every
+      # contract reports `token graph not built` DRIFT and the gate
+      # fails before any real validation runs.
+      - name: Build design tokens
+        run: pnpm -F @full-stack-ds/tokens build
+
       # Contract validation — `generate:check` runs the JSON-Schema shape
       # validator AND the cross-graph semantic checks (every contract
       # resolvesTo path must exist in the composed token graph; emitted

@@ -42,11 +42,21 @@ echo ""
 # Mirror CI's `pnpm install --frozen-lockfile`. Running this catches
 # lockfile drift before we push — the same drift that produces the
 # "@jest/globals not found" class of CI failure.
-echo "[pre-push 1/12] pnpm install --frozen-lockfile"
+echo "[pre-push 1/13] pnpm install --frozen-lockfile"
 pnpm install --frozen-lockfile
 
+# Mirror CI's "Build design tokens" step. `generate:check` (next step)
+# loads `composed.tokens.json` to verify every contract's `resolvesTo`
+# path, but that file is gitignored (regenerable scratch), so we have
+# to emit it before validation runs. Without this step, every contract
+# reports `token graph not built` DRIFT and the gate fails before any
+# real validation runs.
 echo ""
-echo "[pre-push 2/12] pnpm run generate:check"
+echo "[pre-push 2/13] pnpm -F @full-stack-ds/tokens build"
+pnpm -F @full-stack-ds/tokens build
+
+echo ""
+echo "[pre-push 3/13] pnpm run generate:check"
 # `generate:check` is `generate:validate` PLUS the cross-graph semantic
 # checks (every contract resolvesTo path must exist in the composed
 # token graph; emitted CSS must match contract truth; styles selectors
@@ -60,7 +70,7 @@ pnpm run generate:check
 # Design tokens — DTCG validation catches malformed token JSON,
 # self-references, and unknown $type values before they reach codegen.
 echo ""
-echo "[pre-push 3/12] pnpm run tokens:validate"
+echo "[pre-push 4/13] pnpm run tokens:validate"
 pnpm run tokens:validate
 
 # Design tokens — drift gate. Rebuilds composed.tokens.json + tokens.css
@@ -68,14 +78,14 @@ pnpm run tokens:validate
 # committed. Mirrors the `governed:rail` drift check below but scoped to
 # the tokens output.
 echo ""
-echo "[pre-push 4/12] pnpm run tokens:build:check"
+echo "[pre-push 5/13] pnpm run tokens:build:check"
 pnpm run tokens:build:check
 
 # Design tokens — WCAG contrast gate. Loads resolved.tokens.json and
 # checks the curated foreground × background pair list against AA. Fails
 # loud if any pair drops below its declared level.
 echo ""
-echo "[pre-push 5/12] pnpm run tokens:check-contrast"
+echo "[pre-push 6/13] pnpm run tokens:check-contrast"
 pnpm run tokens:check-contrast
 
 # Design tokens — brand-reference verifier. Every `{ref}` inside the 10
@@ -85,7 +95,7 @@ pnpm run tokens:check-contrast
 # definedVars set), so `{color.palette.cobalt.500}` would silently
 # no-op at runtime without this gate. See build/runners/check-brand-refs.ts.
 echo ""
-echo "[pre-push 6/12] pnpm run tokens:check-brand-refs"
+echo "[pre-push 7/13] pnpm run tokens:check-brand-refs"
 pnpm run tokens:check-brand-refs
 
 # Design tokens — usage regression gate. Fails if any token in the
@@ -95,28 +105,28 @@ pnpm run tokens:check-brand-refs
 # unused token (e.g. publishing one ahead of consumers), re-baseline
 # with `pnpm run tokens:write-usage-baseline` and commit the result.
 echo ""
-echo "[pre-push 7/12] pnpm run tokens:check-usage:gate"
+echo "[pre-push 8/13] pnpm run tokens:check-usage:gate"
 pnpm run tokens:check-usage:gate
 
 echo ""
-echo "[pre-push 8/12] pnpm run lint"
+echo "[pre-push 9/13] pnpm run lint"
 pnpm run lint
 
 echo ""
-echo "[pre-push 9/12] pnpm run typecheck (root + codegen)"
+echo "[pre-push 10/13] pnpm run typecheck (root + codegen)"
 pnpm run typecheck
 
 echo ""
-echo "[pre-push 10/12] pnpm run typecheck:vue"
+echo "[pre-push 11/13] pnpm run typecheck:vue"
 pnpm run typecheck:vue
 
 echo ""
-echo "[pre-push 11/12] pnpm test (root) + pnpm run test:vue"
+echo "[pre-push 12/13] pnpm test (root) + pnpm run test:vue"
 pnpm test
 pnpm run test:vue
 
 echo ""
-echo "[pre-push 12/12] pnpm run governed:rail + framework-src diff check"
+echo "[pre-push 13/13] pnpm run governed:rail + framework-src diff check"
 pnpm run governed:rail
 
 # Mirror the CI "Generated artifacts are committed" step. If the rail
