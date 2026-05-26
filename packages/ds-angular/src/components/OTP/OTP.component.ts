@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useOTP } from "./useOTP.js";
 // @generated:end
@@ -21,10 +21,12 @@ export type OTPMode = "numeric" | "alphanumeric";
 @Component({
   selector: "fsds-otp",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, NgFor],
   template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="label" aria-describedby="otp-error-id">
   <div [ngClass]="'otp__group'">
-    <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" [disabled]="disabled" [attr.aria-readonly]="readOnly" />
+    <ng-container *ngFor="let _ of arrayFromCount(length); let index = index">
+      <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" [disabled]="disabled" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
+    </ng-container>
   </div>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,6 +62,19 @@ export class OTPComponent {
 
   protected handleValueChange(event: Event): void {
     this.behavior.setValue((event.target as HTMLInputElement).value);
+  }
+
+  // Materializes an array of length N for *ngFor count-iteration.
+  // Memoized by length so re-renders don't churn the iteration source.
+  private _arrayFromCountCache = new Map<number, ReadonlyArray<undefined>>();
+  protected arrayFromCount(n: number | undefined): ReadonlyArray<undefined> {
+    const len = typeof n === "number" && n > 0 ? Math.floor(n) : 0;
+    let arr = this._arrayFromCountCache.get(len);
+    if (!arr) {
+      arr = Array.from({ length: len });
+      this._arrayFromCountCache.set(len, arr);
+    }
+    return arr;
   }
 }
 

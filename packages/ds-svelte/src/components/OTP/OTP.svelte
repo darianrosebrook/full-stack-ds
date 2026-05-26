@@ -58,6 +58,8 @@ const classes = $derived(
 
 <div class={classes} role="group" aria-label={label} aria-describedby="otp-error-id">
   <div class={'otp__group'}>
-    <input class={'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" disabled={disabled} aria-readonly={readOnly} />
+    {#each Array(length) as _, index (index)}
+    <input class={'otp__field'} type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" disabled={disabled} aria-readonly={readOnly} data-otp-index={index} />
+    {/each}
   </div>
 </div>

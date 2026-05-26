@@ -28,6 +28,10 @@
             {
               "tag": "input",
               "part": "field",
+              "iterate": {
+                "source": "prop:length",
+                "kind": "count"
+              },
               "attrs": {
                 "type": "text",
                 "inputmode": "numeric",
@@ -36,7 +40,8 @@
               },
               "bindings": {
                 "disabled": "prop:disabled",
-                "aria-readonly": "prop:readOnly"
+                "aria-readonly": "prop:readOnly",
+                "data-otp-index": "prop:index"
               }
             }
           ]

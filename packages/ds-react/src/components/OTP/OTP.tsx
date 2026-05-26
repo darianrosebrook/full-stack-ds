@@ -87,7 +87,7 @@ export function OTP({
   return (
   <div className={`${classNames}`} role="group" aria-label={label} aria-describedby={"otp-error-id"} data-testid={testId} {...rest}>
     <div className="otp__group">
-      <input className="otp__field" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={1} disabled={disabled} aria-readonly={readOnly} />
+      {Array.from({ length: length }, (_, index) => <input className="otp__field" type="text" inputMode="numeric" autoComplete="one-time-code" maxLength={1} disabled={disabled} aria-readonly={readOnly} data-otp-index={index} key={index} />)}
     </div>
   </div>
   );
