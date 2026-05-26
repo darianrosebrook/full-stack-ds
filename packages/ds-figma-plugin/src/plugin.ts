@@ -55,8 +55,8 @@ function createDocumentationFrame(descriptor: FigmaComponentDescriptor): FigmaFr
   frame.appendChild(createText(`${descriptor.component.name}`));
   frame.appendChild(createText(`Root: ${descriptor.component.rootElement ?? "unknown"}`));
   frame.appendChild(createText(`Role: ${descriptor.component.effectiveRole ?? "none"}`));
-  frame.appendChild(createText(`Anatomy: ${descriptor.anatomy.map((part) => part.name).join(", ")}`));
-  frame.appendChild(createText(`Props: ${descriptor.props.map((prop) => prop.name).join(", ")}`));
+  frame.appendChild(createText(`Anatomy: ${descriptor.anatomy.map((part) => part.name).join(", ") || "none"}`));
+  frame.appendChild(createText(`Props: ${descriptor.props.map((prop) => prop.name).join(", ") || "none"}`));
   frame.appendChild(createText(`Variants: ${Object.keys(descriptor.variants).join(", ") || "none"}`));
 
   return frame;

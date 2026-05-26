@@ -26,6 +26,19 @@ vi.mock("./generated/components/index.js", () => ({
         componentSetName: "Button",
       },
     },
+    Empty: {
+      schemaVersion: 1,
+      component: {
+        name: "Empty",
+        cssPrefix: "empty",
+        rootElement: "div",
+        effectiveRole: null,
+      },
+      anatomy: [],
+      props: [],
+      variants: {},
+      states: {},
+    },
   },
 }));
 
@@ -106,8 +119,8 @@ describe("Figma plugin scaffold materialization", () => {
       "Full Stack DS / Components",
     ]);
 
-    const [documentationFrame, componentFrame] = frames;
-    expect(documentationFrame).toMatchObject({
+    const [buttonDocFrame, buttonComponentFrame, emptyDocFrame, emptyComponentFrame] = frames;
+    expect(buttonDocFrame).toMatchObject({
       name: "Button / Documentation",
       layoutMode: "VERTICAL",
       itemSpacing: 8,
@@ -122,7 +135,7 @@ describe("Figma plugin scaffold materialization", () => {
         "fsds.descriptorSchemaVersion": "1",
       },
     });
-    expect(componentFrame).toMatchObject({
+    expect(buttonComponentFrame).toMatchObject({
       name: "Button",
       pluginData: {
         "fsds.component": "Button",
@@ -136,6 +149,20 @@ describe("Figma plugin scaffold materialization", () => {
         "fsds.variant.variant": JSON.stringify(["primary", "secondary"]),
       },
     });
+    expect(emptyDocFrame).toMatchObject({
+      name: "Empty / Documentation",
+      pluginData: {
+        "fsds.component": "Empty",
+        "fsds.descriptorSchemaVersion": "1",
+      },
+    });
+    expect(emptyComponentFrame).toMatchObject({
+      name: "Empty",
+      pluginData: {
+        "fsds.component": "Empty",
+        "fsds.cssPrefix": "empty",
+      },
+    });
 
     expect(texts.map((text) => text.characters)).toEqual([
       "Button",
@@ -145,8 +172,15 @@ describe("Figma plugin scaffold materialization", () => {
       "Props: variant",
       "Variants: variant",
       "Button",
+      "Empty",
+      "Root: div",
+      "Role: none",
+      "Anatomy: none",
+      "Props: none",
+      "Variants: none",
+      "Empty",
     ]);
-    expect(notify).toHaveBeenCalledWith("Full Stack DS: scaffolded 1 contract descriptor(s).");
-    expect(closePlugin).toHaveBeenCalledWith("Scaffolded 1 contract descriptor(s).");
+    expect(notify).toHaveBeenCalledWith("Full Stack DS: scaffolded 2 contract descriptor(s).");
+    expect(closePlugin).toHaveBeenCalledWith("Scaffolded 2 contract descriptor(s).");
   });
 });
