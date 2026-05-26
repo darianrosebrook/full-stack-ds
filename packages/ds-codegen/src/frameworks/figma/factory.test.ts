@@ -4,7 +4,12 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { ComponentIR } from "../../ir.js";
 import { assertFigmaComponentDescriptorV1 } from "./descriptor.js";
-import { createFigmaEmitter, toFigmaComponentDescriptor } from "./factory.js";
+import {
+  buildFigmaStackPrimitiveDescriptor,
+  createFigmaEmitter,
+  toFigmaComponentDescriptor,
+} from "./factory.js";
+import { assertFigmaStackPrimitiveDescriptorV1 } from "./primitive.js";
 
 function fixtureIR(): ComponentIR {
   return {
@@ -99,12 +104,30 @@ describe("createFigmaEmitter", () => {
     expect(files[1]!.contents).toContain("transfer artifact, not the source of truth");
   });
 
-  it("emits a JSON descriptor registry barrel", () => {
+  it("emits a JSON descriptor registry barrel without primitives by default", () => {
     const barrel = createFigmaEmitter().emitBarrel(["Button", "Input"]);
     expect(barrel).toContain('import Button from "./Button/Button.figma.json" with { type: "json" };');
     expect(barrel).toContain('import Input from "./Input/Input.figma.json" with { type: "json" };');
     expect(barrel).toContain('"Button": Button');
     expect(barrel).toContain('export type FigmaComponentName = keyof typeof figmaComponentRegistry;');
+    expect(barrel).toContain('export const figmaPrimitiveRegistry = {} as const;');
+    expect(barrel).not.toContain('import Stack');
+  });
+
+  it("includes Stack in the barrel when the primitive descriptor exists on disk", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "figma-barrel-"));
+    const componentsRoot = path.join(root, "components");
+    fs.mkdirSync(componentsRoot, { recursive: true });
+    fs.mkdirSync(path.join(componentsRoot, "Button"));
+    fs.writeFileSync(path.join(componentsRoot, "Button", "Button.figma.json"), "{}\n");
+    const primitivesRoot = path.join(root, "primitives", "Stack");
+    fs.mkdirSync(primitivesRoot, { recursive: true });
+    fs.writeFileSync(path.join(primitivesRoot, "Stack.figma.json"), "{}\n");
+
+    const barrel = createFigmaEmitter().emitBarrel(["Button"], componentsRoot);
+    expect(barrel).toContain('import Stack from "../primitives/Stack/Stack.figma.json" with { type: "json" };');
+    expect(barrel).toContain('export const figmaPrimitiveRegistry = {\n  "Stack": Stack,\n} as const;');
+    expect(barrel).toContain('export type FigmaPrimitiveName = keyof typeof figmaPrimitiveRegistry;');
   });
 
   it("discovers only component directories with matching figma descriptors", () => {
@@ -115,5 +138,64 @@ describe("createFigmaEmitter", () => {
     fs.writeFileSync(path.join(root, "Input", "README.md"), "partial\n");
 
     expect(createFigmaEmitter().discoverComponentIds(root)).toEqual(["Button"]);
+  });
+});
+
+describe("buildFigmaStackPrimitiveDescriptor", () => {
+  it("derives a governed Stack descriptor from the primitive contract", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "figma-primitive-"));
+    const primitivesDir = path.join(root, "primitives");
+    fs.mkdirSync(primitivesDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(primitivesDir, "Stack.primitive.json"),
+      JSON.stringify({
+        name: "Stack",
+        description: "Polymorphic layout shell.",
+        props: [
+          { name: "as", kind: "elementType", default: "div" },
+          { name: "variant", kind: "layoutVariant", default: "vertical" },
+        ],
+      }),
+    );
+
+    const { relativePath, contents } = buildFigmaStackPrimitiveDescriptor(root);
+    expect(relativePath).toBe("primitives/Stack/Stack.figma.json");
+    const descriptor = JSON.parse(contents);
+    assertFigmaStackPrimitiveDescriptorV1(descriptor);
+    expect(descriptor).toMatchObject({
+      schemaVersion: 1,
+      source: "@full-stack-ds/codegen/frameworks/figma",
+      primitive: { kind: "stack", name: "Stack" },
+      variants: { variant: ["vertical", "horizontal"] },
+      figma: {
+        intendedUse: "figma-library-materialization",
+        componentSetName: "Stack",
+        propertySource: "primitive contract Stack.variant",
+      },
+    });
+  });
+
+  it("rejects a contract missing the variant prop", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "figma-primitive-bad-"));
+    const primitivesDir = path.join(root, "primitives");
+    fs.mkdirSync(primitivesDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(primitivesDir, "Stack.primitive.json"),
+      JSON.stringify({ name: "Stack", props: [{ name: "as", kind: "elementType" }] }),
+    );
+
+    expect(() => buildFigmaStackPrimitiveDescriptor(root)).toThrow(/variant.*layoutVariant/);
+  });
+
+  it("rejects a non-Stack primitive contract", () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "figma-primitive-wrong-"));
+    const primitivesDir = path.join(root, "primitives");
+    fs.mkdirSync(primitivesDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(primitivesDir, "Stack.primitive.json"),
+      JSON.stringify({ name: "Box", props: [] }),
+    );
+
+    expect(() => buildFigmaStackPrimitiveDescriptor(root)).toThrow(/name: "Stack"/);
   });
 });

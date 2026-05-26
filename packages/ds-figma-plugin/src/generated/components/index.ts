@@ -1,3 +1,4 @@
+import Stack from "../primitives/Stack/Stack.figma.json" with { type: "json" };
 import Accordion from "./Accordion/Accordion.figma.json" with { type: "json" };
 import Alert from "./Alert/Alert.figma.json" with { type: "json" };
 import AlertNotice from "./AlertNotice/AlertNotice.figma.json" with { type: "json" };
@@ -97,3 +98,9 @@ export const figmaComponentRegistry = {
 } as const;
 
 export type FigmaComponentName = keyof typeof figmaComponentRegistry;
+
+export const figmaPrimitiveRegistry = {
+  "Stack": Stack,
+} as const;
+
+export type FigmaPrimitiveName = keyof typeof figmaPrimitiveRegistry;

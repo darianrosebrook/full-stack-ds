@@ -72,6 +72,7 @@ import {
 } from "./validation/emission-manifest-path.js";
 import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
+import { buildFigmaStackPrimitiveDescriptor } from "./frameworks/figma/factory.js";
 import { validateContractTokens } from "./validation/tokens.js";
 import {
   validateContractStyles,
@@ -658,6 +659,9 @@ function emitForTarget(
   }
 
   if (!args.dryRun) {
+    if (binding.id === "figma") {
+      writeFigmaStackPrimitiveDescriptor(binding);
+    }
     writeBarrel(binding);
   }
 
@@ -1136,6 +1140,24 @@ function writeBarrel(binding: TargetBinding): void {
   );
   console.log(
     `\n  BARREL  ${path.relative(cwd, barrelPath)} (${componentIds.length} components)`,
+  );
+}
+
+/**
+ * Write the figma target's Stack primitive descriptor. Called once per figma
+ * build (before barrel write) so the barrel emitter can detect the primitive
+ * on disk and include it in the registry.
+ */
+function writeFigmaStackPrimitiveDescriptor(binding: TargetBinding): void {
+  const primitive = buildFigmaStackPrimitiveDescriptor(CONTRACTS_DIR);
+  // Resolve relative to the figma target's `generated/` root (sibling of
+  // `components/`). `binding.componentsRoot` is `.../generated/components/`,
+  // so the primitive's natural home is `.../generated/primitives/Stack/...`.
+  const absolutePath = path.join(binding.componentsRoot, "..", primitive.relativePath);
+  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+  fs.writeFileSync(absolutePath, primitive.contents);
+  console.log(
+    `\n  PRIMITIVE  ${path.relative(cwd, absolutePath)} (Stack)`,
   );
 }
 

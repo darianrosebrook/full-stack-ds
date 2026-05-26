@@ -11,6 +11,10 @@ import {
   FIGMA_COMPONENT_DESCRIPTOR_SOURCE,
   type FigmaComponentDescriptorV1,
 } from "./descriptor.js";
+import {
+  toFigmaStackPrimitiveDescriptor,
+  type StackPrimitiveContract,
+} from "./primitive.js";
 
 export function createFigmaEmitter(): FrameworkEmitter {
   return {
@@ -39,14 +43,28 @@ export function createFigmaEmitter(): FrameworkEmitter {
       return [];
     },
 
-    emitBarrel(componentNames: string[]): string {
-      const imports = componentNames
+    emitBarrel(componentNames: string[], componentsRoot?: string): string {
+      const componentImports = componentNames
         .map((name) => `import ${name} from "./${name}/${name}.figma.json" with { type: "json" };`)
         .join("\n");
-      const entries = componentNames
+      const componentEntries = componentNames
         .map((name) => `  ${JSON.stringify(name)}: ${name},`)
         .join("\n");
-      return `${imports}\n\nexport const figmaComponentRegistry = {\n${entries}\n} as const;\n\nexport type FigmaComponentName = keyof typeof figmaComponentRegistry;\n`;
+
+      const includePrimitive =
+        componentsRoot !== undefined &&
+        fs.existsSync(
+          path.join(componentsRoot, "..", "primitives", "Stack", "Stack.figma.json"),
+        );
+
+      const primitiveImports = includePrimitive
+        ? `import Stack from "../primitives/Stack/Stack.figma.json" with { type: "json" };\n`
+        : "";
+      const primitiveRegistry = includePrimitive
+        ? `\nexport const figmaPrimitiveRegistry = {\n  "Stack": Stack,\n} as const;\n\nexport type FigmaPrimitiveName = keyof typeof figmaPrimitiveRegistry;\n`
+        : `\nexport const figmaPrimitiveRegistry = {} as const;\n\nexport type FigmaPrimitiveName = keyof typeof figmaPrimitiveRegistry;\n`;
+
+      return `${primitiveImports}${componentImports}\n\nexport const figmaComponentRegistry = {\n${componentEntries}\n} as const;\n\nexport type FigmaComponentName = keyof typeof figmaComponentRegistry;\n${primitiveRegistry}`;
     },
 
     discoverComponentIds(componentsRoot: string): string[] {
@@ -56,6 +74,34 @@ export function createFigmaEmitter(): FrameworkEmitter {
         return fs.existsSync(descriptor);
       });
     },
+  };
+}
+
+/**
+ * Build the Stack primitive descriptor from the source contract. Returned as
+ * an in-memory descriptor; the CLI is responsible for writing it to disk at
+ * `<figma target>/generated/primitives/Stack/Stack.figma.json` (sibling of
+ * `components/`).
+ *
+ * This is a top-level helper rather than a FrameworkEmitter method because
+ * primitives are a figma-target-specific concept — other framework emitters
+ * have no analog. Adding `emitPrimitive` to FrameworkEmitter would impose a
+ * concept on emitters that don't model primitives this way.
+ */
+export function buildFigmaStackPrimitiveDescriptor(
+  contractsRoot: string,
+): { relativePath: string; contents: string } {
+  const stackPath = path.join(contractsRoot, "primitives", "Stack.primitive.json");
+  if (!fs.existsSync(stackPath)) {
+    throw new Error(
+      `Stack primitive contract not found at ${stackPath}; figma primitive emission requires it.`,
+    );
+  }
+  const contract = JSON.parse(fs.readFileSync(stackPath, "utf-8")) as StackPrimitiveContract;
+  const descriptor = toFigmaStackPrimitiveDescriptor(contract);
+  return {
+    relativePath: "primitives/Stack/Stack.figma.json",
+    contents: `${JSON.stringify(descriptor, null, 2)}\n`,
   };
 }
 
