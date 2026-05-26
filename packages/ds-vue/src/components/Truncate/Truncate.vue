@@ -60,7 +60,7 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" :data-testid="props['data-testid']">
-    <span :class="'truncate__content'">
+    <span :class="'truncate__content'" :style="{ '--fsds-truncate-content-lines': props.lines }">
       <slot />
     </span>
     <button v-if="props.expandable" :class="'truncate__toggle'" type="button" :aria-expanded="behavior.expanded.value"></button>

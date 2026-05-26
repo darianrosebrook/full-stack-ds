@@ -23,7 +23,7 @@ import { useShowMore } from "./useShowMore.js";
   standalone: true,
   imports: [NgClass],
   template: `<div [ngClass]="classes()">
-  <div [ngClass]="'show-more__content'">
+  <div [ngClass]="'show-more__content'" [style.--fsds-show-more-content-max-lines]="maxLines">
     <ng-content />
   </div>
   <button [ngClass]="'show-more__trigger'" type="button" (click)="handleExpandedChange($event)" [attr.aria-expanded]="behavior.expanded()">

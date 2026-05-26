@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useTruncate } from "./useTruncate";
 import "./Truncate.css";
@@ -83,7 +83,7 @@ export function Truncate({
 
   return (
   <div className={`${classNames}`} data-testid={testId} {...rest}>
-    <span className="truncate__content">
+    <span className="truncate__content" style={{ "--fsds-truncate-content-lines": lines } as CSSProperties}>
       {children}
     </span>
     {expandable && (

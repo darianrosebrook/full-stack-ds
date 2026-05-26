@@ -19,6 +19,8 @@
 .truncate__content {
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--fsds-truncate-content-lines, 3);
+  line-clamp: var(--fsds-truncate-content-lines, 3);
   overflow: hidden;
 }
 

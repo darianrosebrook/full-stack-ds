@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { TruncateBehavior } from './TruncateBehavior.js';
+import { styleMap } from 'lit/directives/style-map.js';
 // @generated:end
 
 // @custom:start imports
@@ -60,6 +61,8 @@ export class TruncateElement extends LitElement {
     .truncate__content {
       display: -webkit-box;
       -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--fsds-truncate-content-lines, 3);
+      line-clamp: var(--fsds-truncate-content-lines, 3);
       overflow: hidden;
     }
     
@@ -99,7 +102,7 @@ export class TruncateElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  <span class=${'truncate__content'}>
+  <span class=${'truncate__content'} style=${styleMap({ '--fsds-truncate-content-lines': String(this.lines) })}>
     <slot></slot>
   </span>
   ${this.expandable ? html`
@@ -154,6 +157,8 @@ export class TruncateContentElement extends LitElement {
     .truncate__content {
       display: -webkit-box;
       -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--fsds-truncate-content-lines, 3);
+      line-clamp: var(--fsds-truncate-content-lines, 3);
       overflow: hidden;
     }
     

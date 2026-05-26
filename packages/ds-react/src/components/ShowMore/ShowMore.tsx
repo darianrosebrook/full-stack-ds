@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useShowMore } from "./useShowMore";
 import "./ShowMore.css";
@@ -100,7 +100,7 @@ export function ShowMore({
 
   return (
   <div className={`${classNames}`} data-testid={testId} {...rest}>
-    <div className="show-more__content">
+    <div className="show-more__content" style={{ "--fsds-show-more-content-max-lines": maxLines } as CSSProperties}>
       {children}
     </div>
     <button className="show-more__trigger" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>

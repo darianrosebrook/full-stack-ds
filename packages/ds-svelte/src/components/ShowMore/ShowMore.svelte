@@ -46,7 +46,7 @@ const classes = $derived(
 </script>
 
 <div class={classes}>
-  <div class={'show-more__content'}>
+  <div class={'show-more__content'} style:--fsds-show-more-content-max-lines={maxLines}>
     {@render children?.()}
   </div>
   <button class={'show-more__trigger'} type="button" onclick={() => behavior.setExpanded(!behavior.expanded)} aria-expanded={behavior.expanded}>{showMoreLabel}</button>

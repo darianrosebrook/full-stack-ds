@@ -19,10 +19,17 @@
 
 .progress__track {
   background-color: var(--fsds-progress-color-track-background);
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .progress__fill {
   background-color: var(--fsds-progress-color-fill-info);
+  display: block;
+  height: 100%;
+  width: calc(var(--fsds-progress-fill-width, 0) * 1%);
 }
 
 .progress__value {

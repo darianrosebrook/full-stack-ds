@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ShowMoreBehavior } from './ShowMoreBehavior.js';
+import { styleMap } from 'lit/directives/style-map.js';
 // @generated:end
 
 // @custom:start imports
@@ -66,7 +67,10 @@ export class ShowMoreElement extends LitElement {
     
     .show-more__content {
       overflow: hidden;
-      display: block;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
+      line-clamp: var(--fsds-show-more-content-max-lines, 3);
     }
     
     .show-more__trigger {
@@ -106,7 +110,7 @@ export class ShowMoreElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  <div class=${'show-more__content'}>
+  <div class=${'show-more__content'} style=${styleMap({ '--fsds-show-more-content-max-lines': String(this.maxLines) })}>
     <slot></slot>
   </div>
   <button class=${'show-more__trigger'} type="button" @click=${(e: Event) => this.handleExpandedChange(e)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${this.showMoreLabel}</button>
@@ -165,7 +169,10 @@ export class ShowMoreContentElement extends LitElement {
     
     .show-more__content {
       overflow: hidden;
-      display: block;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
+      line-clamp: var(--fsds-show-more-content-max-lines, 3);
     }
     
     .show-more__trigger {
@@ -235,7 +242,10 @@ export class ShowMoreTriggerElement extends LitElement {
     
     .show-more__content {
       overflow: hidden;
-      display: block;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
+      line-clamp: var(--fsds-show-more-content-max-lines, 3);
     }
     
     .show-more__trigger {

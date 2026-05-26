@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
 import "./Progress.css";
 // @generated:end
 
@@ -65,7 +65,7 @@ export function Progress({
   return (
   <div className={`${classNames}`} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label} data-testid={testId} {...rest}>
     <span className="progress__track" aria-hidden="true">
-      <span className="progress__fill" />
+      <span className="progress__fill" style={{ "--fsds-progress-fill-width": value } as CSSProperties} />
     </span>
     {showValue && (
       <span className="progress__value">

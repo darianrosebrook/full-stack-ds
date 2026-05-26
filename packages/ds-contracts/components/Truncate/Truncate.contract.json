@@ -17,6 +17,9 @@
         {
           "tag": "span",
           "part": "content",
+          "cssVariableBindings": {
+            "--fsds-truncate-content-lines": "prop:lines"
+          },
           "children": [
             {
               "tag": "children"

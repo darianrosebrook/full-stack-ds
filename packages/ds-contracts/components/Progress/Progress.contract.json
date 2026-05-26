@@ -33,7 +33,10 @@
           "children": [
             {
               "tag": "span",
-              "part": "fill"
+              "part": "fill",
+              "cssVariableBindings": {
+                "--fsds-progress-fill-width": "prop:value"
+              }
             }
           ]
         },

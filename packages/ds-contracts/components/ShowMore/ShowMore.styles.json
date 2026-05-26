@@ -18,7 +18,16 @@
   },
   "content": {
     "overflow": { "literal": "hidden", "platforms": ["web"] },
-    "display": { "literal": "block", "platforms": ["web"] }
+    "display": { "literal": "-webkit-box", "platforms": ["web"] },
+    "-webkit-box-orient": { "literal": "vertical", "platforms": ["web"] },
+    "-webkit-line-clamp": {
+      "literal": "var(--fsds-show-more-content-max-lines, 3)",
+      "platforms": ["web"]
+    },
+    "line-clamp": {
+      "literal": "var(--fsds-show-more-content-max-lines, 3)",
+      "platforms": ["web"]
+    }
   },
   "trigger": {
     "display": { "literal": "inline-flex", "platforms": ["web"] },

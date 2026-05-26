@@ -47,7 +47,7 @@ const classes = $derived(
 </script>
 
 <div class={classes}>
-  <span class={'truncate__content'}>
+  <span class={'truncate__content'} style:--fsds-truncate-content-lines={lines}>
     {@render children?.()}
   </span>
   {#if expandable}

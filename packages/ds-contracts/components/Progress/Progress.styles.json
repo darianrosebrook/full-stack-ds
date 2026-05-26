@@ -7,10 +7,20 @@
     }
   },
   "track": {
-    "background-color": { "resolvesTo": "progress.color.track.background" }
+    "background-color": { "resolvesTo": "progress.color.track.background" },
+    "display": { "literal": "block", "platforms": ["web"] },
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "height": { "literal": "100%", "platforms": ["web"] },
+    "overflow": { "literal": "hidden", "platforms": ["web"] }
   },
   "fill": {
-    "background-color": { "resolvesTo": "progress.color.fill.info" }
+    "background-color": { "resolvesTo": "progress.color.fill.info" },
+    "display": { "literal": "block", "platforms": ["web"] },
+    "height": { "literal": "100%", "platforms": ["web"] },
+    "width": {
+      "literal": "calc(var(--fsds-progress-fill-width, 0) * 1%)",
+      "platforms": ["web"]
+    }
   },
   "value": {
     "display": {

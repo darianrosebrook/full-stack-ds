@@ -17,6 +17,9 @@
         {
           "tag": "div",
           "part": "content",
+          "cssVariableBindings": {
+            "--fsds-show-more-content-max-lines": "prop:maxLines"
+          },
           "children": [
             {
               "tag": "children"

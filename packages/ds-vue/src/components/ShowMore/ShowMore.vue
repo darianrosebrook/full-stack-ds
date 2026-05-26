@@ -60,7 +60,7 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" :data-testid="props['data-testid']">
-    <div :class="'show-more__content'">
+    <div :class="'show-more__content'" :style="{ '--fsds-show-more-content-max-lines': props.maxLines }">
       <slot />
     </div>
     <button :class="'show-more__trigger'" type="button" @click="() => behavior.setExpanded(!behavior.expanded.value)" :aria-expanded="behavior.expanded.value">

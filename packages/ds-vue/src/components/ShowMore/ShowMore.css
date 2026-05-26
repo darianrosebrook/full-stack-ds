@@ -22,7 +22,10 @@
 
 .show-more__content {
   overflow: hidden;
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
+  line-clamp: var(--fsds-show-more-content-max-lines, 3);
 }
 
 .show-more__trigger {

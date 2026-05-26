@@ -24,7 +24,7 @@ export type ProgressIntent = "info" | "success" | "warning" | "danger";
   imports: [NgClass, NgIf],
   template: `<div [ngClass]="classes()" role="progressbar" [attr.aria-valuenow]="value" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="label">
   <span [ngClass]="'progress__track'" aria-hidden="true">
-    <span [ngClass]="'progress__fill'"></span>
+    <span [ngClass]="'progress__fill'" [style.--fsds-progress-fill-width]="value"></span>
   </span>
   <ng-container *ngIf="showValue">
     <span [ngClass]="'progress__value'">

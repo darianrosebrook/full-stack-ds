@@ -5,6 +5,14 @@
   "content": {
     "display": { "literal": "-webkit-box", "platforms": ["web"] },
     "-webkit-box-orient": { "literal": "vertical", "platforms": ["web"] },
+    "-webkit-line-clamp": {
+      "literal": "var(--fsds-truncate-content-lines, 3)",
+      "platforms": ["web"]
+    },
+    "line-clamp": {
+      "literal": "var(--fsds-truncate-content-lines, 3)",
+      "platforms": ["web"]
+    },
     "overflow": { "literal": "hidden", "platforms": ["web"] }
   },
   "toggle": {

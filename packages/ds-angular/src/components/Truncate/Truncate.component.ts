@@ -23,7 +23,7 @@ import { useTruncate } from "./useTruncate.js";
   standalone: true,
   imports: [NgClass, NgIf],
   template: `<div [ngClass]="classes()">
-  <span [ngClass]="'truncate__content'">
+  <span [ngClass]="'truncate__content'" [style.--fsds-truncate-content-lines]="lines">
     <ng-content />
   </span>
   <ng-container *ngIf="expandable">

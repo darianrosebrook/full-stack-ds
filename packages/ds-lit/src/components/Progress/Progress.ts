@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { styleMap } from 'lit/directives/style-map.js';
 // @generated:end
 
 // @custom:start imports
@@ -62,10 +63,17 @@ export class ProgressElement extends LitElement {
     
     .progress__track {
       background-color: var(--fsds-progress-color-track-background);
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
     
     .progress__fill {
       background-color: var(--fsds-progress-color-fill-info);
+      display: block;
+      height: 100%;
+      width: calc(var(--fsds-progress-fill-width, 0) * 1%);
     }
     
     .progress__value {
@@ -96,7 +104,7 @@ export class ProgressElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="progressbar" aria-valuenow=${ifDefined(this.value)} aria-valuemin="0" aria-valuemax="100" aria-label=${ifDefined(this.label)}>
   <span class=${'progress__track'} aria-hidden="true">
-    <span class=${'progress__fill'}></span>
+    <span class=${'progress__fill'} style=${styleMap({ '--fsds-progress-fill-width': String(this.value) })}></span>
   </span>
   ${this.showValue ? html`
   <span class=${'progress__value'}>

@@ -52,7 +52,7 @@ const classes = $derived(
 
 <div class={classes} role="progressbar" aria-valuenow={value} aria-valuemin="0" aria-valuemax="100" aria-label={label}>
   <span class={'progress__track'} aria-hidden="true">
-    <span class={'progress__fill'}></span>
+    <span class={'progress__fill'} style:--fsds-progress-fill-width={value}></span>
   </span>
   {#if showValue}
   <span class={'progress__value'}>
