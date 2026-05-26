@@ -1058,6 +1058,18 @@ function renderSvelteDomNode(
     attrs.push(rendered);
   }
 
+  // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to Svelte 5's
+  // `style:--fsds-foo={expr}` directive form, one per binding. This
+  // idiomatic form sets a single CSS custom property without touching
+  // the rest of the element's inline style, and svelte-check accepts
+  // arbitrary `--*` names. A literal `style` attr coexisting with
+  // cssVarBindings is rejected by the IR builder.
+  for (const { varName, value } of node.cssVarBindings) {
+    const valueExpr = renderSvelteBindingValue(value, ctx);
+    if (valueExpr === null) continue;
+    attrs.push(`style:${varName}={${valueExpr}}`);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
     // Only emit role if the anatomy.dom.attrs doesn't already declare one
@@ -1170,6 +1182,35 @@ function renderSvelteTextChildExpression(
       if (!ch) return null;
       if (expr.field === "value") {
         return `{${ctx.hookVar}.${ch.name}}`;
+      }
+      return null;
+    }
+  }
+}
+
+/**
+ * Lower a BindingExpression to a bare Svelte template expression (no
+ * `attr={...}` scaffolding). Used by callers that splice the expression
+ * into a surrounding template construct — `cssVarBindings` ->
+ * `style:--fsds-foo={<expr>}`, future `{#each}` source expressions, etc.
+ * Returns null for binding kinds that can't appear in an expression
+ * position (e.g. channel events).
+ */
+function renderSvelteBindingValue(
+  expr: BindingExpression,
+  ctx: SvelteRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return jsAccessorFor(expr.prop);
+    case "literal":
+      return JSON.stringify(expr.value);
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") return `${ctx.hookVar}.${ch.name}`;
+      if (expr.field === "defaultValue" && ch.defaultValueProp) {
+        return jsAccessorFor(ch.defaultValueProp);
       }
       return null;
     }

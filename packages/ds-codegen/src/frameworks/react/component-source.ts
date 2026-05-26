@@ -57,19 +57,56 @@ export function generateReactComponentSource(
   const isCompound = isCompoundStateContainer(ir);
   const reactTypeImports = collectReactImports(ir);
 
+  // Generate body sections BEFORE the import header so the body-scanner
+  // below can detect identifiers (`CSSProperties`) that appear only in
+  // generated output, not in styled prop types. Mirrors the Lit emitter's
+  // `usesIfDefined` pattern (line 1031).
+  const typesBody = generateTypes(ir).trimEnd();
+  const propsBody = generatePropsInterface(ir);
+
+  let subcomponentsBody: string;
+  if (isCompound) {
+    subcomponentsBody = generateCompoundStateSubcomponents(ir);
+  } else {
+    subcomponentsBody = ir.compoundParts
+      .map((part) =>
+        [
+          generateSubComponentProps(ir.name, part),
+          "",
+          generateSubComponent(ir.name, ir.cssPrefix, part),
+        ].join("\n"),
+      )
+      .join("\n\n");
+  }
+
+  const componentBody = generateRootComponent(ir);
+
+  // IR-DOM-CSS-VAR-BINDING-01: cssVarBindings emit `as CSSProperties`.
+  // Scan the rendered body for the identifier so we add the type import
+  // only when it's actually referenced. `collectReactImports` doesn't see
+  // body identifiers — it only scans styled prop types and defined types
+  // — so we patch the list here.
+  const bodyHaystack = `${subcomponentsBody}\n${componentBody}`;
+  const needsCssProperties =
+    /\bCSSProperties\b/.test(bodyHaystack) &&
+    !reactTypeImports.includes("type CSSProperties");
+  const finalReactTypeImports = needsCssProperties
+    ? [...reactTypeImports, "type CSSProperties"].sort()
+    : reactTypeImports;
+
   const importLines: string[] = [];
   if (isCompound) {
     // For compound-state-container, we need both type imports and runtime hooks.
     // Also need KeyboardEvent type for the keyboard handler in TabsList.
     const runtimeHooks = ["useCallback", "useEffect", "useRef"];
     // Add KeyboardEvent type if not already in the list
-    const compoundTypeImports = reactTypeImports.includes("type KeyboardEvent")
-      ? reactTypeImports
-      : [...reactTypeImports, "type KeyboardEvent"];
+    const compoundTypeImports = finalReactTypeImports.includes("type KeyboardEvent")
+      ? finalReactTypeImports
+      : [...finalReactTypeImports, "type KeyboardEvent"];
     const allReactImports = [...compoundTypeImports, ...runtimeHooks].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
   } else {
-    importLines.push(`import { ${reactTypeImports.join(", ")} } from "react";`);
+    importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
   }
   // Stack is needed for legacy single-root output AND for compound parts
   // (ModalHeader etc. still use <Stack as="header"> regardless of whether
@@ -101,26 +138,6 @@ export function generateReactComponentSource(
   }
   importLines.push(`import "./${ir.name}.css";`);
   const importsBody = importLines.join("\n");
-
-  const typesBody = generateTypes(ir).trimEnd();
-  const propsBody = generatePropsInterface(ir);
-
-  let subcomponentsBody: string;
-  if (isCompound) {
-    subcomponentsBody = generateCompoundStateSubcomponents(ir);
-  } else {
-    subcomponentsBody = ir.compoundParts
-      .map((part) =>
-        [
-          generateSubComponentProps(ir.name, part),
-          "",
-          generateSubComponent(ir.name, ir.cssPrefix, part),
-        ].join("\n"),
-      )
-      .join("\n\n");
-  }
-
-  const componentBody = generateRootComponent(ir);
 
   const blank = (): Section => ({ kind: "between", body: "" });
   const sections: Section[] = [
@@ -1434,6 +1451,29 @@ function renderReactDomNode(
       continue;
     }
     attrs.push(`${jsxKey}={${valueExpr}}`);
+  }
+
+  // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to a React inline
+  // style prop. Each entry becomes a property on a `CSSProperties` object
+  // literal whose key is the literal `--fsds-<prefix>-<name>` custom-
+  // property name. React's `CSSProperties` type has an index signature
+  // for known CSS properties but not for arbitrary custom-property
+  // strings, so we assert through `CSSProperties` to satisfy strict
+  // type-checking. The identifier scanner in `collectReactImports` will
+  // pick up `CSSProperties` automatically because it's listed in
+  // `REACT_TYPE_IDENTIFIERS`. A literal `style` attr coexisting with
+  // cssVarBindings is rejected by the IR builder, so we can build the
+  // object fresh here.
+  if (node.cssVarBindings.length > 0) {
+    const entries: string[] = [];
+    for (const { varName, value } of node.cssVarBindings) {
+      const valueExpr = renderReactBinding("style", value, ctx);
+      if (valueExpr === null) continue;
+      entries.push(`"${varName}": ${valueExpr}`);
+    }
+    if (entries.length > 0) {
+      attrs.push(`style={{ ${entries.join(", ")} } as CSSProperties}`);
+    }
   }
 
   if (ctx.isRoot) {

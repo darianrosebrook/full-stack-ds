@@ -1136,6 +1136,18 @@ function renderAngularDomNode(
     attrs.push(rendered);
   }
 
+  // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to Angular's
+  // `[style.--fsds-foo]="expr"` per-property binding (one attr per
+  // CSS variable). Angular 9+ accepts arbitrary CSS custom-property
+  // names through the `[style.<name>]` syntax. A literal `style` attr
+  // coexisting with cssVarBindings is rejected by the IR builder, so
+  // we don't need to compose with an existing `style` declaration.
+  for (const { varName, value } of node.cssVarBindings) {
+    const valueExpr = renderAngularBindingValue(value, ctx);
+    if (valueExpr === null) continue;
+    attrs.push(`[style.${varName}]="${valueExpr}"`);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
   } else if (

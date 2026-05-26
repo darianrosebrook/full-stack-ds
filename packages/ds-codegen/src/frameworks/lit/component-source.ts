@@ -1024,14 +1024,23 @@ export function generateLitComponentSource(ir: ComponentIR): string {
     (compoundClasses ? "\n\n" + compoundClasses : "");
 
   // Imports depend on what the rendered class body actually references.
-  // Today the only such dependency is the `ifDefined` directive; emit
-  // its import only when at least one rendered binding uses it. This
-  // mirrors the same pattern used by `treeUsesNgIf` in the Angular
-  // emitter — only declare imports the template actually consumes.
+  // We conditionally emit directive imports only when at least one
+  // rendered binding uses the directive. Mirrors the same pattern used
+  // by `treeUsesNgIf` in the Angular emitter — only declare imports the
+  // template actually consumes. IR-DOM-CSS-VAR-BINDING-01 adds the
+  // `styleMap` directive for `cssVariableBindings` lowering.
   const usesIfDefined = componentBody.includes("ifDefined(");
+  const usesStyleMap = componentBody.includes("styleMap(");
   const baseImports = ir.dom ? generateDomTreeImports(ir) : generateImports(ir);
-  const importsBody = usesIfDefined
-    ? `${baseImports}\nimport { ifDefined } from 'lit/directives/if-defined.js';`
+  const directiveImports: string[] = [];
+  if (usesIfDefined) {
+    directiveImports.push(`import { ifDefined } from 'lit/directives/if-defined.js';`);
+  }
+  if (usesStyleMap) {
+    directiveImports.push(`import { styleMap } from 'lit/directives/style-map.js';`);
+  }
+  const importsBody = directiveImports.length > 0
+    ? `${baseImports}\n${directiveImports.join("\n")}`
     : baseImports;
 
   const blank = (): Section => ({ kind: "between", body: "" });
@@ -1440,6 +1449,30 @@ function renderLitDomNode(
     attrs.push(rendered);
   }
 
+  // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to Lit's
+  // `style=${styleMap({ '--fsds-foo': value })}` directive form.
+  // styleMap accepts arbitrary string keys (including CSS custom
+  // properties), and lit-analyzer types non-known property values as
+  // `string | undefined`, so cast non-string sources with `String(...)`
+  // to avoid no-incompatible-type-binding. The `styleMap` directive
+  // import is conditionally injected by the imports-body scan
+  // (`usesStyleMap`) so files that don't reference it stay clean.
+  if (node.cssVarBindings.length > 0) {
+    const entries: string[] = [];
+    for (const { varName, value } of node.cssVarBindings) {
+      const valueExpr = renderLitBindingValue(value, ctx);
+      if (valueExpr === null) continue;
+      // styleMap value slots are typed `string | undefined`. Prop and
+      // channel sources may carry non-string types (number/boolean),
+      // so coerce with String() — this matches what setProperty() does
+      // internally and satisfies lit-analyzer's strict typing.
+      entries.push(`'${varName}': String(${valueExpr})`);
+    }
+    if (entries.length > 0) {
+      attrs.push(`style=\${styleMap({ ${entries.join(", ")} })}`);
+    }
+  }
+
   // Tag channel-guarded subtrees with `data-fsds-channel-renders="${name}"`
   // so behavioral tests can assert that the channel state is reflected in
   // the rendered DOM, not just in the behavior controller. The attribute is
@@ -1677,6 +1710,32 @@ function renderLitContent(
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") return `\${this.behavior.${ch.name}}`;
+      return null;
+    }
+  }
+}
+
+/**
+ * Lower a BindingExpression to a bare TS expression usable inside a Lit
+ * template's `${...}` interpolation (e.g. as an entry value in a
+ * `styleMap({...})` directive). Distinct from `renderLitContent` because
+ * the latter wraps prop/channel cases in their own `${...}` for embedding
+ * directly into the `html\`...\`` text context, and HTML-escapes literals
+ * — wrong for object-literal/JS-expression positions.
+ */
+function renderLitBindingValue(
+  expr: BindingExpression,
+  ctx: LitRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return propAccessor(expr.prop);
+    case "literal":
+      return JSON.stringify(expr.value);
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") return `this.behavior.${ch.name}`;
       return null;
     }
   }

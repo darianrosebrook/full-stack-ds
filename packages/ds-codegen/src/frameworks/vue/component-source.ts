@@ -1149,6 +1149,24 @@ function renderVueDomNode(
     attrs.push(rendered);
   }
 
+  // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to a single Vue
+  // `:style="{ '--fsds-foo': expr, ... }"` binding. Vue's template parser
+  // accepts string-quoted keys with hyphens in object literal style
+  // bindings, so the custom-property names go through as written. A
+  // literal `style` attr coexisting with cssVarBindings is rejected by
+  // the IR builder, so the object can be built fresh here.
+  if (node.cssVarBindings.length > 0) {
+    const entries: string[] = [];
+    for (const { varName, value } of node.cssVarBindings) {
+      const valueExpr = renderVueBindingValue(value, ctx);
+      if (valueExpr === null) continue;
+      entries.push(`'${varName}': ${valueExpr}`);
+    }
+    if (entries.length > 0) {
+      attrs.push(`:style="{ ${entries.join(", ")} }"`);
+    }
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       // The root node's BEM class is included in `classNames` (computed).
@@ -1317,6 +1335,34 @@ function renderVueBinding(
         return `@${eventName}="() => ${setter}(!behavior.${ch.name}.value)"`;
       }
       return `@${eventName}="() => ${setter}(behavior.${ch.name}.value)"`;
+    }
+  }
+}
+
+/**
+ * Lower a BindingExpression to a bare Vue template expression (no `:attr=`
+ * scaffolding). Used by callers that splice the expression into a
+ * surrounding template construct — `cssVarBindings` -> `:style="{ key: <expr> }"`,
+ * and any future v-for / inline calc context. Returns null for binding
+ * kinds that can't appear in an expression position (e.g. channel events).
+ */
+function renderVueBindingValue(
+  expr: BindingExpression,
+  ctx: VueRenderContext,
+): string | null {
+  switch (expr.kind) {
+    case "prop":
+      return `props.${propAccess(expr.prop)}`;
+    case "literal":
+      return JSON.stringify(expr.value);
+    case "channel": {
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      if (expr.field === "value") return `behavior.${ch.name}.value`;
+      if (expr.field === "defaultValue" && ch.defaultValueProp) {
+        return `props.${propAccess(ch.defaultValueProp)}`;
+      }
+      return null;
     }
   }
 }
