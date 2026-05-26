@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "fsds.target-registry.v1",
+  "targets": [
+    { "id": "react", "source": { "kind": "builtin" } },
+    { "id": "vue", "source": { "kind": "builtin" } },
+    { "id": "lit", "source": { "kind": "builtin" } },
+    { "id": "svelte", "source": { "kind": "builtin" } },
+    { "id": "angular", "source": { "kind": "builtin" } },
+    { "id": "figma", "source": { "kind": "builtin" } }
+  ]
+}

@@ -12,7 +12,8 @@
 
 import type { ComponentIR } from "./ir.js";
 
-export type TargetId = "react" | "vue" | "lit" | "svelte" | "angular" | "figma";
+export type BuiltinTargetId = "react" | "vue" | "lit" | "svelte" | "angular" | "figma";
+export type TargetId = string;
 
 /**
  * One generated file. `relativePath` is relative to the target package's
@@ -81,10 +82,8 @@ export interface FrameworkEmitter {
   discoverComponentIds(componentsRoot: string): string[];
 }
 
-/**
- * Type predicate used by the CLI to validate `--target` arguments.
- */
-export const KNOWN_TARGETS: readonly TargetId[] = [
+/** Built-in target ids. Registry admission is data-driven; this is not the full target universe. */
+export const KNOWN_TARGETS: readonly BuiltinTargetId[] = [
   "react",
   "vue",
   "lit",
@@ -93,8 +92,16 @@ export const KNOWN_TARGETS: readonly TargetId[] = [
   "figma",
 ];
 
-export function isTargetId(value: string): value is TargetId {
+export function isBuiltinTargetId(value: string): value is BuiltinTargetId {
   return (KNOWN_TARGETS as readonly string[]).includes(value);
+}
+
+export function assertTargetIdSyntax(value: string): void {
+  if (!/^[a-z0-9][a-z0-9._-]*$/.test(value)) {
+    throw new Error(
+      `Target id "${value}" must be lowercase identifier text: letters, numbers, '.', '_', '-'.`,
+    );
+  }
 }
 
 /**
@@ -106,7 +113,12 @@ export function parseTargetArg(
   raw: string | undefined,
   available: readonly TargetId[],
 ): TargetId[] {
-  if (!raw || raw.length === 0) return ["react"];
+  if (available.length === 0) {
+    throw new Error("No targets are registered.");
+  }
+  if (!raw || raw.length === 0) {
+    return available.includes("react") ? ["react"] : [available[0]!];
+  }
   if (raw === "all") return [...available];
 
   const requested = raw
@@ -116,11 +128,7 @@ export function parseTargetArg(
   const result: TargetId[] = [];
   const seen = new Set<TargetId>();
   for (const entry of requested) {
-    if (!isTargetId(entry)) {
-      throw new Error(
-        `Unknown --target value "${entry}". Allowed: ${available.join(", ")}, all.`,
-      );
-    }
+    assertTargetIdSyntax(entry);
     if (!available.includes(entry)) {
       throw new Error(
         `Target "${entry}" is not registered. Registered targets: ${available.join(", ")}.`,

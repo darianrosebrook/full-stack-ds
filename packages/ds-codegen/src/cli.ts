@@ -120,6 +120,10 @@ const SHARED_EMITTER_SOURCES: readonly string[] = [
   "packages/ds-codegen/src/preserve.ts",
   "packages/ds-codegen/src/registry.ts",
   "packages/ds-codegen/src/semantics.ts",
+  "packages/ds-codegen/src/target-packs/builtin.ts",
+  "packages/ds-codegen/src/target-packs/config.ts",
+  "packages/ds-codegen/src/target-packs/local.ts",
+  "packages/ds-codegen/src/target-packs/manifest.ts",
   "packages/ds-codegen/src/test-plan.ts",
 ];
 
@@ -632,18 +636,6 @@ function main(): void {
  * provenance the IR was built from. Groups are empty in `--dry-run` mode
  * (no files were actually written).
  */
-const FRAMEWORK_EMITTING_TARGETS: ReadonlySet<FrameworkId> = new Set([
-  "react",
-  "vue",
-  "svelte",
-  "lit",
-  "angular",
-]);
-
-function isFrameworkEmittingTarget(id: TargetId): id is FrameworkId {
-  return FRAMEWORK_EMITTING_TARGETS.has(id as FrameworkId);
-}
-
 function emitForTarget(
   binding: TargetBinding,
   irInputs: { ir: ComponentIR; provenance: ContractProvenance }[],
@@ -655,9 +647,9 @@ function emitForTarget(
   const groups: EmittedArtifactGroup[] = [];
   for (const { ir, provenance } of irInputs) {
     const writtenFiles = writeFiles(emitter, ir, binding, args);
-    if (writtenFiles.length > 0 && isFrameworkEmittingTarget(emitter.id)) {
+    if (writtenFiles.length > 0 && binding.railFrameworkId) {
       groups.push({
-        framework: emitter.id,
+        framework: binding.railFrameworkId,
         component: ir.name,
         contract: provenance,
         files: writtenFiles,
@@ -867,8 +859,9 @@ function runPruneStep(
   // removed. Done after orphan removal — order matters.
   const touchedFrameworks = new Set<string>(orphans.map((g) => g.framework));
   for (const targetId of requestedTargets) {
-    if (!touchedFrameworks.has(targetId)) continue;
-    writeBarrel(registry.get(targetId));
+    const binding = registry.get(targetId);
+    if (!binding.railFrameworkId || !touchedFrameworks.has(binding.railFrameworkId)) continue;
+    writeBarrel(binding);
   }
 
   printPruneReport(orphans, report);
@@ -1252,178 +1245,58 @@ function runUsageValidation(
  */
 function startWatch(
   args: CliArgs,
-  requestedTargets: TargetId[],
+  initialTargets: readonly TargetId[],
   registry: TargetRegistry,
   validator: ContractValidator,
 ): void {
-  const debounce = new Map<string, ReturnType<typeof setTimeout>>();
-  const componentsRoot = path.join(CONTRACTS_DIR, "components");
+  const timers = new Map<string, NodeJS.Timeout>();
 
-  fs.watch(
-    componentsRoot,
-    { persistent: true, recursive: true },
-    (event, filename) => {
-      if (!filename) return;
-      if (event !== "change" && event !== "rename") return;
-      // With recursive:true, filename arrives as e.g. "Button/Button.contract.json",
-      // "Button/Button.tokens.json", or "Button/Button.styles.json". Accept
-      // any of the three; reject editor temp files and stray top-level files.
-      // Coalesce all three into a single component-keyed debounce entry so a
-      // contract+sidecar edit in one save triggers a single re-emit.
-      const parts = filename.split(path.sep);
-      if (parts.length !== 2) return;
-      const [folder, leaf] = parts;
-      const isContract = leaf === `${folder}.contract.json`;
-      const isTokens = leaf === `${folder}.tokens.json`;
-      const isStyles = leaf === `${folder}.styles.json`;
-      if (!isContract && !isTokens && !isStyles) return;
+  const schedule = (filename: string) => {
+    if (!filename.endsWith(".contract.json")) return;
+    const filePath = path.join(CONTRACTS_DIR, "components", filename);
+    if (!fs.existsSync(filePath)) return;
+    const componentName = filename.replace(/\.contract\.json$/, "");
+    if (args.names.length > 0 && !args.names.includes(componentName)) return;
 
-      const componentName = folder;
-      const existing = debounce.get(componentName);
-      if (existing) clearTimeout(existing);
-      debounce.set(
-        componentName,
-        setTimeout(() => {
-          debounce.delete(componentName);
-          watchHandleChange(componentName, args, requestedTargets, registry, validator);
-        }, 150),
-      );
-    },
-  );
-}
+    const existing = timers.get(filename);
+    if (existing) clearTimeout(existing);
 
-function watchHandleChange(
-  componentName: string,
-  args: CliArgs,
-  requestedTargets: TargetId[],
-  registry: TargetRegistry,
-  validator: ContractValidator,
-): void {
-  const folder = path.join(CONTRACTS_DIR, "components", componentName);
-  const contractFilename = `${componentName}.contract.json`;
-  const filePath = path.join(folder, contractFilename);
-  if (!fs.existsSync(filePath)) {
-    console.log(`\n[watch] ${componentName} removed — skipping.`);
-    return;
-  }
-
-  // If a names filter was set, only process matching contracts.
-  if (args.names.length > 0 && !args.names.includes(componentName)) return;
-
-  console.log(`\n[watch] ${componentName} changed — regenerating...`);
-
-  let raw: unknown;
-  try {
-    raw = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  } catch (err: unknown) {
-    if ((err as NodeJS.ErrnoException)?.code === "ENOENT") {
-      console.log(`[watch] ${contractFilename} disappeared mid-read — skipping.`);
-      return;
-    }
-    console.error(`[watch] JSON parse error in ${contractFilename} — skipping.`);
-    return;
-  }
-
-  const result = validator.validateComponent(raw);
-  if (!result.ok) {
-    console.error(`[watch] INVALID ${contractFilename}:`);
-    console.error(formatIssues(result.issues));
-    return;
-  }
-
-  // Attach tokens + styles from sibling sidecars — missing file means
-  // zero tokens / zero styles. Routes through findComponentTokens /
-  // findComponentStyles for symmetry with the main loop.
-  const watchEntry: DiscoveredContract = {
-    name: componentName,
-    filename: contractFilename,
-    relPath: path.join("components", componentName, contractFilename),
-    absPath: filePath,
+    const handle = setTimeout(() => {
+      timers.delete(filename);
+      console.log(`\nChange detected: ${filename}`);
+      try {
+        const rawBytes = fs.readFileSync(filePath);
+        const raw = JSON.parse(rawBytes.toString("utf-8"));
+        const result = validator.validateComponent(raw);
+        if (!result.ok) {
+          console.error(`INVALID  ${filename}`);
+          console.error(formatIssues(result.issues));
+          return;
+        }
+        const ir = buildComponentIR(result.value);
+        if (!surfaceTypeDiagnostics([ir], args.strictTypes)) return;
+        const provenance: ContractProvenance = {
+          path: toPosixRel(filePath),
+          sha256: crypto.createHash("sha256").update(rawBytes).digest("hex"),
+        };
+        for (const targetId of initialTargets) {
+          emitForTarget(registry.get(targetId), [{ ir, provenance }], args);
+        }
+      } catch (err) {
+        console.error((err as Error).stack ?? (err as Error).message);
+      }
+    }, 150);
+    timers.set(filename, handle);
   };
-  let watchAuthoredTokens: Record<string, TokenResolution> | undefined;
-  const tokensEntry = findComponentTokens(watchEntry);
-  if (tokensEntry) {
-    let tokensRaw: unknown;
-    try {
-      tokensRaw = JSON.parse(fs.readFileSync(tokensEntry.absPath, "utf-8"));
-    } catch {
-      console.error(`[watch] JSON parse error in ${tokensEntry.filename} — skipping.`);
-      return;
-    }
-    const tokensResult = validator.validateTokens(tokensRaw);
-    if (!tokensResult.ok) {
-      console.error(`[watch] INVALID ${tokensEntry.filename}:`);
-      console.error(formatIssues(tokensResult.issues));
-      return;
-    }
-    const partitioned = partitionBoxModelTokens(
-      tokensResult.value as Record<string, TokenResolution>,
-    );
-    const boxResult = validator.validateBoxModelTokens(partitioned.boxModel);
-    if (!boxResult.ok) {
-      console.error(`[watch] INVALID ${tokensEntry.filename} (box-model):`);
-      console.error(formatIssues(boxResult.issues));
-      return;
-    }
-    watchAuthoredTokens = tokensResult.value as Record<string, TokenResolution>;
-  }
-  (result.value as { tokens?: unknown }).tokens =
-    mergeBoxModelDefaults(watchAuthoredTokens);
-  const stylesEntry = findComponentStyles(watchEntry);
-  if (stylesEntry) {
-    let stylesRaw: unknown;
-    try {
-      stylesRaw = JSON.parse(fs.readFileSync(stylesEntry.absPath, "utf-8"));
-    } catch {
-      console.error(`[watch] JSON parse error in ${stylesEntry.filename} — skipping.`);
-      return;
-    }
-    const stylesResult = validator.validateStyles(stylesRaw);
-    if (!stylesResult.ok) {
-      console.error(`[watch] INVALID ${stylesEntry.filename}:`);
-      console.error(formatIssues(stylesResult.issues));
-      return;
-    }
-    (result.value as { styles?: unknown }).styles = stylesResult.value;
-  }
 
-  const ir = buildComponentIR(result.value);
-
-  if (ir.unresolvedTypeRefs.length > 0) {
-    for (const ref of ir.unresolvedTypeRefs) {
-      console.warn(
-        `[watch] unresolved type "${ref.ref}" in ${ir.name} (${ref.fromProps.join(", ")})`,
-      );
+  fs.watch(path.join(CONTRACTS_DIR, "components"), (eventType, filename) => {
+    if (eventType === "rename" || eventType === "change") {
+      if (typeof filename === "string") schedule(filename);
     }
-    if (args.strictTypes) {
-      console.error("[watch] --strict-types: aborting due to unresolved types.");
-      return;
-    }
-  }
-
-  for (const targetId of requestedTargets) {
-    const binding = registry.get(targetId);
-    // Watch mode intentionally does NOT update the EmissionManifest
-    // after each contract change. An incremental update would leave
-    // the manifest in a partial state the rail cannot distinguish
-    // from a full run; the manifest is a full-run snapshot by design.
-    // After a watch session, re-run `pnpm run generate` to refresh
-    // the manifest before invoking `validate:generated`.
-    writeFiles(binding.emitter, ir, binding, args);
-    writeBarrel(binding);
-  }
-
-  console.log(`[watch] Done.`);
+  });
 }
 
-/**
- * Print and (optionally) fail on unresolved type references in the IR.
- * Returns `true` when generation should proceed.
- */
-function surfaceTypeDiagnostics(
-  irs: ComponentIR[],
-  strict: boolean,
-): boolean {
+function surfaceTypeDiagnostics(irs: readonly ComponentIR[], strict: boolean): boolean {
   const offenders = irs.filter((ir) => ir.unresolvedTypeRefs.length > 0);
   if (offenders.length === 0) return true;
 

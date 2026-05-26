@@ -2,17 +2,17 @@
  * Framework emitter registry.
  *
  * Targets are configured here so the CLI can ask "which packages do you
- * generate into for `react`/`vue`/...". Each target binds a
+ * generate into for `react`/`vue`/...". Each executable target binds a
  * `FrameworkEmitter` to an output package root.
  *
- * To register a new target:
- *   1. Implement a `createXxxEmitter` factory in `frameworks/xxx`.
- *   2. Add its workspace root and emitter to `createDefaultRegistry`.
- *   3. Done — the CLI flag `--target=xxx` becomes available automatically.
+ * The registry also records declared target-pack metadata for non-executable
+ * local packs. Those packs may be validated and described, but they are not
+ * returned from `available()` and cannot be selected for generation until a
+ * later executable adapter slice admits them.
  */
 import fs from "node:fs";
 import path from "node:path";
-import type { FrameworkEmitter, TargetId } from "./emitter.js";
+import type { BuiltinTargetId, FrameworkEmitter, TargetId } from "./emitter.js";
 import { createAngularEmitter } from "./frameworks/angular/factory.js";
 import { createFigmaEmitter } from "./frameworks/figma/factory.js";
 import { createLitEmitter } from "./frameworks/lit/factory.js";
@@ -20,14 +20,41 @@ import { createReactEmitter } from "./frameworks/react/factory.js";
 import { createSvelteEmitter } from "./frameworks/svelte/factory.js";
 import { createVueEmitter } from "./frameworks/vue/factory.js";
 import { readReactStackImportFromPrimitiveContract } from "./primitive-contract.js";
+import { getBuiltinTargetPackManifest } from "./target-packs/builtin.js";
+import {
+  configuredBuiltinTargets,
+  configuredLocalTargets,
+  loadTargetRegistryConfigV1,
+} from "./target-packs/config.js";
+import {
+  loadLocalTargetPackManifestV1,
+  type LocalTargetPackManifestLoadResultV1,
+} from "./target-packs/local.js";
+import {
+  assertTargetPackManifestV1,
+  type TargetPackManifestV1,
+} from "./target-packs/manifest.js";
+import type { FrameworkId } from "./validation/types.js";
 
 export interface TargetBinding {
   id: TargetId;
   emitter: FrameworkEmitter;
+  /** Rail framework id when this target participates in the current five-framework admission rail. */
+  railFrameworkId?: FrameworkId;
+  /** Governed target-pack manifest that describes this target's contract. */
+  targetPack: TargetPackManifestV1;
   /** Absolute path to the components root for this target. */
   componentsRoot: string;
   /** File name for the components barrel within the components root. */
   barrelFile: string;
+}
+
+export interface TargetDeclaration {
+  id: TargetId;
+  sourceKind: "builtin" | "local";
+  executable: boolean;
+  targetPack: TargetPackManifestV1;
+  local?: LocalTargetPackManifestLoadResultV1;
 }
 
 export interface RegistryOptions {
@@ -38,18 +65,31 @@ export interface RegistryOptions {
 }
 
 export interface TargetRegistry {
+  /** Executable targets selectable by `--target`. */
   available(): TargetId[];
+  /** All declared target packs, including metadata-only local packs. */
+  declared(): TargetId[];
   get(id: TargetId): TargetBinding;
   has(id: TargetId): boolean;
+  describe(id: TargetId): TargetPackManifestV1;
+  describeDeclaration(id: TargetId): TargetDeclaration;
 }
 
+type BuiltinTargetBindingInput = Omit<TargetBinding, "id" | "targetPack"> & {
+  id: BuiltinTargetId;
+};
+
 /**
- * Build the default registry. Targets without a corresponding workspace
- * package (e.g. before `packages/ds-vue` exists) are simply omitted; the CLI
- * surfaces "unknown target" if a missing one is requested.
+ * Build the default registry. Built-in targets without a corresponding
+ * workspace package (e.g. before `packages/ds-vue` exists) are simply omitted
+ * from executable availability. Local target packs are loaded as governed
+ * metadata only and deliberately remain non-executable for this slice.
  */
 export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
+  const loadedConfig = loadTargetRegistryConfigV1(opts.workspaceRoot);
+  const configuredTargets = new Set(configuredBuiltinTargets(loadedConfig.config));
   const bindings = new Map<TargetId, TargetBinding>();
+  const declarations = new Map<TargetId, TargetDeclaration>();
 
   // React target
   const reactRoot = path.join(
@@ -59,16 +99,19 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  bindings.set("react", {
-    id: "react",
-    emitter: createReactEmitter({
-      stackImportRelative: readReactStackImportFromPrimitiveContract(
-        opts.contractsRoot,
-      ),
-    }),
-    componentsRoot: reactRoot,
-    barrelFile: "index.ts",
-  });
+  if (configuredTargets.has("react")) {
+    registerBuiltinTarget(bindings, declarations, {
+      id: "react",
+      railFrameworkId: "react",
+      emitter: createReactEmitter({
+        stackImportRelative: readReactStackImportFromPrimitiveContract(
+          opts.contractsRoot,
+        ),
+      }),
+      componentsRoot: reactRoot,
+      barrelFile: "index.ts",
+    });
+  }
 
   // Vue target — registered only when the package exists on disk.
   const vueRoot = path.join(
@@ -78,9 +121,13 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-vue"))) {
-    bindings.set("vue", {
+  if (
+    configuredTargets.has("vue") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-vue"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
       id: "vue",
+      railFrameworkId: "vue",
       emitter: createVueEmitter(),
       componentsRoot: vueRoot,
       barrelFile: "index.ts",
@@ -95,9 +142,13 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-angular"))) {
-    bindings.set("angular", {
+  if (
+    configuredTargets.has("angular") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-angular"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
       id: "angular",
+      railFrameworkId: "angular",
       emitter: createAngularEmitter(),
       componentsRoot: angularRoot,
       barrelFile: "index.ts",
@@ -112,9 +163,13 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-lit"))) {
-    bindings.set("lit", {
+  if (
+    configuredTargets.has("lit") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-lit"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
       id: "lit",
+      railFrameworkId: "lit",
       emitter: createLitEmitter(),
       componentsRoot: litRoot,
       barrelFile: "index.ts",
@@ -129,9 +184,13 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "src",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-svelte"))) {
-    bindings.set("svelte", {
+  if (
+    configuredTargets.has("svelte") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-svelte"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
       id: "svelte",
+      railFrameworkId: "svelte",
       emitter: createSvelteEmitter(),
       componentsRoot: svelteRoot,
       barrelFile: "index.ts",
@@ -147,8 +206,11 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     "generated",
     "components",
   );
-  if (workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-figma-plugin"))) {
-    bindings.set("figma", {
+  if (
+    configuredTargets.has("figma") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-figma-plugin"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
       id: "figma",
       emitter: createFigmaEmitter(),
       componentsRoot: figmaRoot,
@@ -156,19 +218,78 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     });
   }
 
+  for (const target of configuredLocalTargets(loadedConfig.config)) {
+    registerLocalTargetDeclaration(declarations, opts.workspaceRoot, target);
+  }
+
   return {
     available() {
       return [...bindings.keys()];
     },
+    declared() {
+      return [...declarations.keys()];
+    },
     get(id) {
       const b = bindings.get(id);
-      if (!b) throw new Error(`Target "${id}" is not registered.`);
+      if (!b) throw new Error(`Target "${id}" is not executable.`);
       return b;
     },
     has(id) {
       return bindings.has(id);
     },
+    describe(id) {
+      return getDeclaration(declarations, id).targetPack;
+    },
+    describeDeclaration(id) {
+      return getDeclaration(declarations, id);
+    },
   };
+}
+
+function registerBuiltinTarget(
+  bindings: Map<TargetId, TargetBinding>,
+  declarations: Map<TargetId, TargetDeclaration>,
+  binding: BuiltinTargetBindingInput,
+): void {
+  const targetPack = getBuiltinTargetPackManifest(binding.id);
+  assertTargetPackManifestV1(targetPack);
+  if (targetPack.target.id !== binding.id) {
+    throw new Error(
+      `Target-pack manifest id ${targetPack.target.id} does not match registry id ${binding.id}.`,
+    );
+  }
+  const executableBinding = { ...binding, targetPack };
+  bindings.set(binding.id, executableBinding);
+  declarations.set(binding.id, {
+    id: binding.id,
+    sourceKind: "builtin",
+    executable: true,
+    targetPack,
+  });
+}
+
+function registerLocalTargetDeclaration(
+  declarations: Map<TargetId, TargetDeclaration>,
+  workspaceRoot: string,
+  target: Parameters<typeof loadLocalTargetPackManifestV1>[1],
+): void {
+  const loaded = loadLocalTargetPackManifestV1(workspaceRoot, target);
+  declarations.set(target.id, {
+    id: target.id,
+    sourceKind: "local",
+    executable: false,
+    targetPack: loaded.targetPack,
+    local: loaded,
+  });
+}
+
+function getDeclaration(
+  declarations: Map<TargetId, TargetDeclaration>,
+  id: TargetId,
+): TargetDeclaration {
+  const declaration = declarations.get(id);
+  if (!declaration) throw new Error(`Target "${id}" is not declared.`);
+  return declaration;
 }
 
 function workspaceExists(packageRoot: string): boolean {
