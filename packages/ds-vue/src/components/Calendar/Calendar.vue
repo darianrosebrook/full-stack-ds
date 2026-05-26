@@ -27,6 +27,7 @@ interface Props {
   maxDate?: Date;
   locale?: string;
   shouldCloseOnSelect?: boolean;
+  daysShown?: number;
   class?: string;
   "data-testid"?: string;
 }
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
   mode: "single",
   locale: "en-US",
   shouldCloseOnSelect: true,
+  daysShown: 42,
 });
 // @generated:end
 
@@ -73,7 +75,7 @@ const classNames = computed(() => [
     <table :class="'calendar__grid'" role="grid" aria-label="Calendar">
       <tbody>
         <tr>
-          <td :class="'calendar__cell'" role="gridcell">
+          <td v-for="(_, index) in Array(daysShown)" :key="index" :class="'calendar__cell'" role="gridcell" :data-calendar-index="index">
             <button :class="'calendar__day'"></button>
           </td>
         </tr>

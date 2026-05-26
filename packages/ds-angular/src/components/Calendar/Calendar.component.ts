@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useCalendar } from "./useCalendar.js";
 // @generated:end
@@ -21,7 +21,7 @@ export type CalendarMode = "single" | "range";
 @Component({
   selector: "fsds-calendar",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, NgFor],
   template: `<div [ngClass]="classes()" role="application">
   <div [ngClass]="'calendar__header'">
     <button [ngClass]="'calendar__nav'" aria-label="Previous month"></button>
@@ -31,9 +31,11 @@ export type CalendarMode = "single" | "range";
   <table [ngClass]="'calendar__grid'" role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        <td [ngClass]="'calendar__cell'" role="gridcell">
-          <button [ngClass]="'calendar__day'"></button>
-        </td>
+        <ng-container *ngFor="let _ of arrayFromCount(daysShown); let index = index">
+          <td [ngClass]="'calendar__cell'" role="gridcell" [attr.data-calendar-index]="index">
+            <button [ngClass]="'calendar__day'"></button>
+          </td>
+        </ng-container>
       </tr>
     </tbody>
   </table>
@@ -50,6 +52,7 @@ export class CalendarComponent {
   @Input() maxDate?: Date;
   @Input() locale?: string = "en-US";
   @Input() shouldCloseOnSelect?: boolean = true;
+  @Input() daysShown?: number = 42;
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
@@ -69,6 +72,19 @@ export class CalendarComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  // Materializes an array of length N for *ngFor count-iteration.
+  // Memoized by length so re-renders don't churn the iteration source.
+  private _arrayFromCountCache = new Map<number, ReadonlyArray<undefined>>();
+  protected arrayFromCount(n: number | undefined): ReadonlyArray<undefined> {
+    const len = typeof n === "number" && n > 0 ? Math.floor(n) : 0;
+    let arr = this._arrayFromCountCache.get(len);
+    if (!arr) {
+      arr = Array.from({ length: len });
+      this._arrayFromCountCache.set(len, arr);
+    }
+    return arr;
+  }
 }
 
 @Component({

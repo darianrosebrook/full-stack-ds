@@ -62,8 +62,15 @@
                     {
                       "tag": "td",
                       "part": "cell",
+                      "iterate": {
+                        "source": "prop:daysShown",
+                        "kind": "count"
+                      },
                       "attrs": {
                         "role": "gridcell"
+                      },
+                      "bindings": {
+                        "data-calendar-index": "prop:index"
                       },
                       "children": [
                         {
@@ -132,6 +139,12 @@
           "type": "boolean",
           "description": "When true, selecting a date closes the popup. Wired to behavior.dismissalTriggers.select.enabledBy.",
           "default": true
+        },
+        {
+          "name": "daysShown",
+          "type": "number",
+          "description": "Number of day cells the grid should render. Drives structural count iteration on the cell node; visible date labels and selection state are NOT yet wired (the binding grammar cannot project a Date into a button label inline). A typical month occupies 42 cells (6 weeks x 7 days), which is the recommended default.",
+          "default": 42
         }
       ]
     }

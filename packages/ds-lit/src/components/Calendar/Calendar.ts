@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { CalendarBehavior } from './CalendarBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -138,6 +139,7 @@ export class CalendarElement extends LitElement {
   @property({ attribute: false }) maxDate?: Date;
   @property({ type: String }) locale?: string = "en-US";
   @property({ type: Boolean }) shouldCloseOnSelect?: boolean = true;
+  @property({ type: Number }) daysShown?: number = 42;
 
   private behavior = new CalendarBehavior(this, {
     value: () => this.value,
@@ -164,9 +166,11 @@ export class CalendarElement extends LitElement {
   <table class=${'calendar__grid'} role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        <td class=${'calendar__cell'} role="gridcell">
+        ${Array.from({ length: this.daysShown ?? 0 }, (_, index) => html`
+        <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${ifDefined(index)}>
           <button class=${'calendar__day'}></button>
         </td>
+        `)}
       </tr>
     </tbody>
   </table>
