@@ -824,42 +824,9 @@ function validateDomNode(
   componentName: string,
   cssPrefix: string,
 ): void {
-  for (const [attr, binding] of Object.entries(node.bindings)) {
-    if (binding.kind === "channel") {
-      if (!knownChannels.has(binding.channel)) {
-        throw new Error(
-          `[${componentName}] DOM binding "${attr}" references unknown channel ` +
-          `'${binding.channel}' (known: [${[...knownChannels].join(", ")}])`,
-        );
-      }
-    } else if (binding.kind === "prop") {
-      if (!knownProps.has(binding.prop)) {
-        throw new Error(
-          `[${componentName}] DOM binding "${attr}" references unknown prop ` +
-          `'${binding.prop}' (known: [${[...knownProps].join(", ")}])`,
-        );
-      }
-    }
-  }
-  // `if: "<name>"` must resolve to a declared prop, a channel name, a
-  // channel's value-prop, or the special literal "children". The React
-  // emitter falls back to emitting the raw identifier when this fails —
-  // producing JS ReferenceErrors at runtime. Catch the issue at IR-build.
-  if (node.ifProp && node.ifProp !== "children") {
-    const resolves =
-      knownProps.has(node.ifProp) ||
-      knownChannels.has(node.ifProp) ||
-      channelValueProps.has(node.ifProp);
-    if (!resolves) {
-      throw new Error(
-        `[${componentName}] DOM node 'if: "${node.ifProp}"' does not resolve ` +
-        `to a declared prop, channel name, or channel value-prop. ` +
-        `Declared props: [${[...knownProps].join(", ")}]. ` +
-        `Declared channels: [${[...knownChannels].join(", ")}].`,
-      );
-    }
-  }
-  // Iteration source must resolve to a declared prop with the right type:
+  // Iteration source must resolve in the OUTER scope (the iteration
+  // variables it defines are not yet visible to itself). Validate it
+  // before extending the in-scope name set for the rest of the node.
   // - kind="count" → prop type must be exactly `number`.
   // - kind="array" → prop type must look array-shaped (T[], Array<T>,
   //   ReadonlyArray<T>, or a union containing one of those).
@@ -888,12 +855,63 @@ function validateDomNode(
       );
     }
   }
+
+  // Iteration aliases (`itemVar`, `indexVar`) come into scope on the
+  // node that DECLARES iteration — they're available in this node's own
+  // bindings/content/cssVarBindings AND in every descendant. They are
+  // NOT visible to this node's `iterate.source` (validated above against
+  // the outer scope) and NOT visible after we exit the iterated subtree.
+  // We extend the in-scope name set here and pass it down recursively.
+  let inScopeProps = knownProps;
+  if (node.iteration) {
+    inScopeProps = new Set(knownProps);
+    inScopeProps.add(node.iteration.indexVar);
+    if (node.iteration.itemVar !== undefined) {
+      inScopeProps.add(node.iteration.itemVar);
+    }
+  }
+
+  for (const [attr, binding] of Object.entries(node.bindings)) {
+    if (binding.kind === "channel") {
+      if (!knownChannels.has(binding.channel)) {
+        throw new Error(
+          `[${componentName}] DOM binding "${attr}" references unknown channel ` +
+          `'${binding.channel}' (known: [${[...knownChannels].join(", ")}])`,
+        );
+      }
+    } else if (binding.kind === "prop") {
+      if (!inScopeProps.has(binding.prop)) {
+        throw new Error(
+          `[${componentName}] DOM binding "${attr}" references unknown prop ` +
+          `'${binding.prop}' (known: [${[...inScopeProps].join(", ")}])`,
+        );
+      }
+    }
+  }
+  // `if: "<name>"` must resolve to a declared prop, a channel name, a
+  // channel's value-prop, or the special literal "children". The React
+  // emitter falls back to emitting the raw identifier when this fails —
+  // producing JS ReferenceErrors at runtime. Catch the issue at IR-build.
+  if (node.ifProp && node.ifProp !== "children") {
+    const resolves =
+      inScopeProps.has(node.ifProp) ||
+      knownChannels.has(node.ifProp) ||
+      channelValueProps.has(node.ifProp);
+    if (!resolves) {
+      throw new Error(
+        `[${componentName}] DOM node 'if: "${node.ifProp}"' does not resolve ` +
+        `to a declared prop, channel name, or channel value-prop. ` +
+        `Declared props: [${[...inScopeProps].join(", ")}]. ` +
+        `Declared channels: [${[...knownChannels].join(", ")}].`,
+      );
+    }
+  }
   // CSS-var bindings: the schema accepts the loose `--fsds-<anything>`
   // prefix; tighten it here to the component-specific form
   // `--fsds-<cssPrefix>(-…)+` so a Progress contract can't accidentally
   // bind a `--fsds-truncate-…` var (and so renames of one component's
   // prefix never silently collide with another's). Also confirm that
-  // every binding's source resolves to a declared prop/channel.
+  // every binding's source resolves to a declared prop/channel/alias.
   if (node.cssVarBindings.length > 0) {
     const expected = new RegExp(`^--fsds-${cssPrefix}(-[a-z0-9]+)+$`);
     for (const { varName, value } of node.cssVarBindings) {
@@ -906,11 +924,11 @@ function validateDomNode(
           `design-system surface auditable.`,
         );
       }
-      if (value.kind === "prop" && !knownProps.has(value.prop)) {
+      if (value.kind === "prop" && !inScopeProps.has(value.prop)) {
         throw new Error(
           `[${componentName}] DOM cssVariableBindings '${varName}' ` +
           `references unknown prop '${value.prop}' (known: ` +
-          `[${[...knownProps].join(", ")}])`,
+          `[${[...inScopeProps].join(", ")}])`,
         );
       }
       if (value.kind === "channel" && !knownChannels.has(value.channel)) {
@@ -927,7 +945,7 @@ function validateDomNode(
       child,
       knownChannels,
       channelValueProps,
-      knownProps,
+      inScopeProps,
       propTypes,
       componentName,
       cssPrefix,

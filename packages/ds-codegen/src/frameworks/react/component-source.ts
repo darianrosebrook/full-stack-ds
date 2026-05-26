@@ -1312,6 +1312,14 @@ interface ReactRenderContext {
    * MUST clear this — only the root node should use it.
    */
   rootTagOverride?: string;
+  /**
+   * Set of identifier names that resolve as iteration aliases (item/index
+   * variables introduced by an enclosing `iterate` directive) rather than
+   * as destructured component props. `renderReactBinding` consults this
+   * for `prop:X` lowering: in-scope → bare local; not in scope → existing
+   * prop-name resolution. Empty/undefined means no enclosing iteration.
+   */
+  iterationScope?: Set<string>;
 }
 
 /**
@@ -1334,6 +1342,26 @@ function renderReactDomNode(
       return `${pad}{slots?.${node.slotName}}`;
     }
     return `${pad}{children}`;
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: when this node declares `iterate`, the
+  // iteration aliases (indexVar, itemVar) come into scope on THIS node
+  // AND every descendant. Extend the render context's iterationScope so
+  // downstream `renderReactBinding` calls treat those names as in-scope
+  // local identifiers rather than component-prop accessors. React
+  // happens to destructure all styled props at the top of the
+  // component body, so a bare `prop:item` reference already lowers to
+  // the bare identifier `item` — the loop wrap below introduces `item`
+  // as a callback parameter and the existing emit shape is correct.
+  // The scope set still matters for cross-framework symmetry and for
+  // the validator extension in `ir.ts`.
+  if (node.iteration) {
+    const extendedScope = new Set(ctx.iterationScope ?? []);
+    extendedScope.add(node.iteration.indexVar);
+    if (node.iteration.itemVar !== undefined) {
+      extendedScope.add(node.iteration.itemVar);
+    }
+    ctx = { ...ctx, iterationScope: extendedScope };
   }
 
   // Build attribute list. Order: static attrs, then bound attrs, then class, then root-only data-testid + ...rest.
@@ -1523,6 +1551,18 @@ function renderReactDomNode(
     }
   }
 
+  // IR-DOM-ITERATE-CAPABILITY-01: when this node is iterated, React needs
+  // a `key` on the element so the reconciler can identify items across
+  // renders. We use the iteration index — sufficient for the current
+  // contract surface where iteration source props (count/array prop) are
+  // not reorderable lists, and where contracts cannot declare a
+  // per-item key strategy. If/when reorderable iteration becomes a
+  // real requirement we'd add `keyExpression` to IterationIR and lower
+  // it here.
+  if (node.iteration) {
+    attrs.push(`key={${node.iteration.indexVar}}`);
+  }
+
   // Children rendering
   const childCtx: ReactRenderContext = { ...ctx, isRoot: false };
   const renderedChildren = node.children.map((c) =>
@@ -1559,6 +1599,10 @@ function renderReactDomNode(
   // if-guard: wrap in a JSX expression. When the guard prop matches a
   // channel value-prop, reference the hook-resolved value (which reflects
   // controlled + uncontrolled state) rather than the controlled prop alone.
+  // Doctrine: when a node has BOTH `iterate` and `if`, the if-guard nests
+  // INSIDE the loop (each iteration re-evaluates the guard against the
+  // per-iteration scope). See IR-DOM-ITERATE-CAPABILITY-01.
+  let withIfGuard = body;
   if (node.ifProp) {
     let guard: string;
     if (node.ifProp === "children") {
@@ -1570,10 +1614,32 @@ function renderReactDomNode(
       guard = matchingChannel ? matchingChannel.name : node.ifProp;
     }
     const condition = node.ifNegated ? `!${guard}` : guard;
-    return `${pad}{${condition} && (\n${body.replace(/^/gm, "  ")}\n${pad})}`;
+    withIfGuard = `${pad}{${condition} && (\n${body.replace(/^/gm, "  ")}\n${pad})}`;
   }
 
-  return body;
+  // IR-DOM-ITERATE-CAPABILITY-01: iteration wrap is the outermost layer
+  // — runs N times and produces an array of rendered (or falsy when an
+  // inner if-guard rejects) elements. React handles arrays of elements
+  // (and false values) natively. Stable iteration source (count number
+  // or array prop) means an index-based key is sufficient.
+  if (node.iteration) {
+    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const innerBody = node.ifProp ? withIfGuard : body;
+    // For multi-line bodies the inner JSX needs to live inside a
+    // parenthesized return expression in the arrow function.
+    const isMultiLine = innerBody.includes("\n");
+    const arrow = (params: string) =>
+      isMultiLine
+        ? `(${params}) => (\n${innerBody.replace(/^/gm, "  ")}\n${pad})`
+        : `(${params}) => ${innerBody.trimStart()}`;
+    if (kind === "count") {
+      return `${pad}{Array.from({ length: ${sourceProp} }, ${arrow(`_, ${indexVar}`)})}`;
+    }
+    // kind === "array"
+    return `${pad}{${sourceProp}.map(${arrow(`${itemVar}, ${indexVar}`)})}`;
+  }
+
+  return withIfGuard;
 }
 
 /**

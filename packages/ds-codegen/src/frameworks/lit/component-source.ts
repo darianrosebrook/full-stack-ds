@@ -122,6 +122,23 @@ function propAccessor(propName: string): string {
   return `this.${propName}`;
 }
 
+/**
+ * Lower a `prop:X` reference to a Lit template expression. When `X` is
+ * an in-scope iteration alias, emit the bare identifier — the
+ * surrounding `.map((item, index) => html\`\`)` callback introduces it
+ * as a local. Otherwise route through `propAccessor`, which prefixes
+ * `this.` (or `this["..."]` for hyphenated names). The reference type
+ * still has to typecheck under Lit's strict tsconfig, but since
+ * iteration aliases are scope-bound the typing flows from the
+ * `.map` callback parameter types. IR-DOM-ITERATE-CAPABILITY-01.
+ */
+function litPropAccessor(propName: string, ctx: LitRenderContext): string {
+  if (ctx.iterationScope?.has(propName)) {
+    return propName;
+  }
+  return propAccessor(propName);
+}
+
 // ---------------------------------------------------------------------------
 // Import block
 // ---------------------------------------------------------------------------
@@ -1396,6 +1413,15 @@ interface LitRenderContext {
   styledByName: Map<string, { type: string }>;
   isRoot: boolean;
   hasOverlayClick?: boolean;
+  /**
+   * Identifier names that resolve as iteration aliases (item/index
+   * variables introduced by an enclosing `.map((item, index) => html\`\`)`).
+   * When `prop:X` lowers and `X` is in scope, emit the bare identifier
+   * — the map callback introduces it as a local. Otherwise fall
+   * through to `propAccessor`, which lowers to `this.X` (or
+   * `this["X"]` for hyphenated names). IR-DOM-ITERATE-CAPABILITY-01.
+   */
+  iterationScope?: Set<string>;
 }
 
 function renderLitDomNode(
@@ -1410,6 +1436,19 @@ function renderLitDomNode(
       return `${pad}<slot name="${node.slotName}"></slot>`;
     }
     return `${pad}<slot></slot>`;
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: extend iterationScope for this node
+  // and every descendant when `iterate` is declared. Bindings resolve
+  // `prop:item` / `prop:index` as bare locals from the map callback's
+  // scope, not via `this.item`.
+  if (node.iteration) {
+    const extendedScope = new Set(ctx.iterationScope ?? []);
+    extendedScope.add(node.iteration.indexVar);
+    if (node.iteration.itemVar !== undefined) {
+      extendedScope.add(node.iteration.itemVar);
+    }
+    ctx = { ...ctx, iterationScope: extendedScope };
   }
 
   const attrs: string[] = [];
@@ -1538,6 +1577,7 @@ function renderLitDomNode(
     ].join("\n");
   }
 
+  let withIfGuard = body;
   if (node.ifProp) {
     if (node.ifProp === "children") {
       // Guard the label wrapper on slot presence, mirroring Vue's `v-if="$slots.default"`
@@ -1546,18 +1586,43 @@ function renderLitDomNode(
       // state property that gets flipped true/false via a `slotchange` listener
       // on the inner <slot>. The class body generator injects this property and
       // the handler when it detects any `if: "children"` node in the tree.
-      return `\${this._hasChildren ? html\`\n${body}\n${pad}\` : nothing}`;
+      withIfGuard = `\${this._hasChildren ? html\`\n${body}\n${pad}\` : nothing}`;
+    } else {
+      // IR-DOM-ITERATE-CAPABILITY-01: iteration aliases match before
+      // channel lookup. A guard `if: "item"` resolves to the bare
+      // local introduced by the surrounding .map callback.
+      const matchingChannel = [...ctx.channelByName.values()].find(
+        (c) => c.valueProp === node.ifProp || c.name === node.ifProp,
+      );
+      const expr = ctx.iterationScope?.has(node.ifProp)
+        ? node.ifProp
+        : matchingChannel
+          ? `this.behavior.${matchingChannel.name}`
+          : `this.${node.ifProp}`;
+      const condition = node.ifNegated ? `!${expr}` : expr;
+      withIfGuard = `${pad}\${${condition} ? html\`\n${body}\n${pad}\` : nothing}`;
     }
-    const matchingChannel = [...ctx.channelByName.values()].find(
-      (c) => c.valueProp === node.ifProp || c.name === node.ifProp,
-    );
-    const expr = matchingChannel
-      ? `this.behavior.${matchingChannel.name}`
-      : `this.${node.ifProp}`;
-    const condition = node.ifNegated ? `!${expr}` : expr;
-    return `${pad}\${${condition} ? html\`\n${body}\n${pad}\` : nothing}`;
   }
-  return body;
+
+  // IR-DOM-ITERATE-CAPABILITY-01: iteration wrap as the outermost
+  // layer. Lit's html-template arrays render natively, so a bare
+  // `.map(...)` returning an array of html fragments works without
+  // explicit `repeat()` directive (which would be needed only for
+  // keyed reconciliation of reorderable lists — not relevant here
+  // since iteration sources are count or non-reorderable arrays).
+  //
+  //   kind="array": ${items.map((item, index) => html`...`)}
+  //   kind="count": ${Array.from({ length: count }, (_, index) => html`...`)}
+  if (node.iteration) {
+    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const params = kind === "array" ? `${itemVar}, ${indexVar}` : `_, ${indexVar}`;
+    const arrowSource =
+      kind === "array"
+        ? `this.${sourceProp}.map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
+        : `Array.from({ length: this.${sourceProp} ?? 0 }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
+    return `${pad}\${${arrowSource}}`;
+  }
+  return withIfGuard;
 }
 
 // Attributes that should be bound as plain HTML attributes (no `.` prefix
@@ -1591,9 +1656,16 @@ function renderLitBinding(
       // omits the attribute rather than serializing as the literal
       // string "null". Other props are declared `T | undefined` and
       // need no coercion.
+      //
+      // IR-DOM-ITERATE-CAPABILITY-01: iteration aliases bypass the
+      // ARIA-mixin coercion and `this.` prefix — they're loop-scope
+      // locals introduced by the surrounding .map callback.
       const isAriaMixin = ARIA_MIXIN_NAMES.has(expr.prop);
-      const rawAcc = propAccessor(expr.prop);
-      const acc = isAriaMixin ? `${rawAcc} ?? undefined` : rawAcc;
+      const isIterationAlias = ctx.iterationScope?.has(expr.prop) ?? false;
+      const rawAcc = isIterationAlias ? expr.prop : propAccessor(expr.prop);
+      const acc = isAriaMixin && !isIterationAlias
+        ? `${rawAcc} ?? undefined`
+        : rawAcc;
       // Every styled prop is declared as `propName?: T` in the Lit
       // emitter (see generatePropertyDeclarations), so at the field
       // type level the value is always `T | undefined` regardless of
@@ -1701,7 +1773,7 @@ function renderLitContent(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `\${this.${expr.prop}}`;
+      return `\${${litPropAccessor(expr.prop, ctx)}}`;
     case "literal":
       return expr.value.replace(/[<>&]/g, (c) =>
         c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&amp;",
@@ -1729,7 +1801,7 @@ function renderLitBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return propAccessor(expr.prop);
+      return litPropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
     case "channel": {
@@ -1755,7 +1827,7 @@ function renderLitEvent(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `@${eventName}=\${this.${expr.prop}}`;
+      return `@${eventName}=\${${litPropAccessor(expr.prop, ctx)}}`;
     case "literal":
       // Rare. Inline as a string handler — would need eval at runtime;
       // emit verbatim and let the consumer catch authoring errors.

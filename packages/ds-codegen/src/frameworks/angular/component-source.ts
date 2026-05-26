@@ -823,6 +823,22 @@ function treeUsesNgIf(node: DomNodeIR): boolean {
   return node.children.some(treeUsesNgIf);
 }
 
+/** Walk a DomNodeIR tree and return true if any node declares
+ *  iteration. Used to decide whether `NgFor` belongs in the
+ *  standalone component's imports list. */
+function treeUsesNgFor(node: DomNodeIR): boolean {
+  if (node.iteration) return true;
+  return node.children.some(treeUsesNgFor);
+}
+
+/** Walk a DomNodeIR tree and return true if any node has count
+ *  iteration. Count iteration needs a class-body `arrayFromCount`
+ *  helper because Angular templates can't construct arrays inline. */
+function treeUsesCountIteration(node: DomNodeIR): boolean {
+  if (node.iteration?.kind === "count") return true;
+  return node.children.some(treeUsesCountIteration);
+}
+
 function generateDomTreeImports(ir: ComponentIR): string {
   const coreNames = [
     "Component",
@@ -840,9 +856,15 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // Only import NgIf when the rendered template will actually use
   // `*ngIf`. Declaring it otherwise triggers ngc NG8113 (unused
   // directive in standalone imports) and clutters the public API
-  // surface of the standalone component.
+  // surface of the standalone component. Same pattern for NgFor
+  // when `iterate` directives are present in the dom tree
+  // (IR-DOM-ITERATE-CAPABILITY-01).
   const usesNgIf = ir.dom ? treeUsesNgIf(ir.dom) : false;
-  const commonImports = usesNgIf ? "NgClass, NgIf" : "NgClass";
+  const usesNgFor = ir.dom ? treeUsesNgFor(ir.dom) : false;
+  const commonNames = ["NgClass"];
+  if (usesNgIf) commonNames.push("NgIf");
+  if (usesNgFor) commonNames.push("NgFor");
+  const commonImports = commonNames.join(", ");
   const lines: string[] = [
     `import { ${coreNames.join(", ")} } from "@angular/core";`,
     `import { ${commonImports} } from "@angular/common";`,
@@ -883,12 +905,17 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const template = renderAngularDomNode(ir.dom, ctx, 0);
   const hasChildrenGuard = treeHasChildrenGuard(ir.dom);
   const usesNgIf = treeUsesNgIf(ir.dom);
+  const usesNgFor = treeUsesNgFor(ir.dom);
+  const usesCountIteration = treeUsesCountIteration(ir.dom);
+  const decoratorImports = ["NgClass"];
+  if (usesNgIf) decoratorImports.push("NgIf");
+  if (usesNgFor) decoratorImports.push("NgFor");
 
   const lines: string[] = [];
   lines.push(`@Component({`);
   lines.push(`  selector: "fsds-${selector}",`);
   lines.push(`  standalone: true,`);
-  lines.push(`  imports: [${usesNgIf ? "NgClass, NgIf" : "NgClass"}],`);
+  lines.push(`  imports: [${decoratorImports.join(", ")}],`);
   lines.push(`  template: \`${template}\`,`);
   lines.push(`  changeDetection: ChangeDetectionStrategy.OnPush,`);
   lines.push(`})`);
@@ -987,6 +1014,31 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(`  }`);
   }
 
+  // IR-DOM-ITERATE-CAPABILITY-01: count iteration needs a class-body
+  // helper to materialize an array of length N for *ngFor's source.
+  // Angular template parsers reject `new Array(n)` / `Array(n)` inline,
+  // so we emit a memoized method. The helper is only injected when
+  // some node in the dom tree actually has kind="count" iteration.
+  if (usesCountIteration) {
+    lines.push(``);
+    lines.push(
+      `  // Materializes an array of length N for *ngFor count-iteration.`,
+    );
+    lines.push(
+      `  // Memoized by length so re-renders don't churn the iteration source.`,
+    );
+    lines.push(`  private _arrayFromCountCache = new Map<number, ReadonlyArray<undefined>>();`);
+    lines.push(`  protected arrayFromCount(n: number | undefined): ReadonlyArray<undefined> {`);
+    lines.push(`    const len = typeof n === "number" && n > 0 ? Math.floor(n) : 0;`);
+    lines.push(`    let arr = this._arrayFromCountCache.get(len);`);
+    lines.push(`    if (!arr) {`);
+    lines.push(`      arr = Array.from({ length: len });`);
+    lines.push(`      this._arrayFromCountCache.set(len, arr);`);
+    lines.push(`    }`);
+    lines.push(`    return arr;`);
+    lines.push(`  }`);
+  }
+
   // Inject content-projection detection when the dom tree has an `if: "children"` node.
   // Mirrors Vue's `v-if="$slots.default"` / Svelte's `{#if children}`.
   if (hasChildrenGuard) {
@@ -1081,6 +1133,17 @@ interface AngularRenderContext {
   isRoot: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  /**
+   * Identifier names that resolve as iteration aliases (item/index
+   * introduced by an enclosing `*ngFor`). When `prop:X` lowers and
+   * `X` is in scope, emit the bare identifier; Angular's *ngFor
+   * introduces those names as template locals, distinct from
+   * component-class properties accessed elsewhere as `this.X` (or
+   * bare `X` in the template — Angular templates accept both, but
+   * iteration aliases must never be prefixed). Empty/undefined
+   * means no enclosing iteration. IR-DOM-ITERATE-CAPABILITY-01.
+   */
+  iterationScope?: Set<string>;
 }
 
 function renderAngularDomNode(
@@ -1095,6 +1158,21 @@ function renderAngularDomNode(
       return `${pad}<ng-content select="[slot=${node.slotName}]" />`;
     }
     return `${pad}<ng-content />`;
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: extend iterationScope for this node
+  // and every descendant. Bindings on the iterated node and its subtree
+  // resolve `prop:item` / `prop:index` as bare locals from the *ngFor
+  // template scope, not via `safePropertyExpr` (which would route them
+  // through the component-class accessor and prefix reserved names
+  // with `this.`).
+  if (node.iteration) {
+    const extendedScope = new Set(ctx.iterationScope ?? []);
+    extendedScope.add(node.iteration.indexVar);
+    if (node.iteration.itemVar !== undefined) {
+      extendedScope.add(node.iteration.itemVar);
+    }
+    ctx = { ...ctx, iterationScope: extendedScope };
   }
 
   const attrs: string[] = [];
@@ -1220,6 +1298,7 @@ function renderAngularDomNode(
     ].join("\n");
   }
 
+  let withIfGuard = body;
   if (ifWrap) {
     if (ifWrap === "children") {
       // Guard the label wrapper on content-projection presence, mirroring
@@ -1228,27 +1307,62 @@ function renderAngularDomNode(
       // without querying the DOM. We emit `*ngIf="hasContent"` and let the
       // class body generator inject `hasContent` + an `ngAfterContentInit` hook
       // that reads the host element's text/child nodes to determine presence.
-      return [
+      withIfGuard = [
         `${pad}<ng-container *ngIf="hasContent">`,
         body.replace(/^/gm, "  "),
         `${pad}</ng-container>`,
       ].join("\n");
+    } else {
+      const matchingChannel = [...ctx.channelByName.values()].find(
+        (c) => c.valueProp === ifWrap || c.name === ifWrap,
+      );
+      const expr = matchingChannel
+        ? `behavior.${matchingChannel.name}()`
+        : ifWrap;
+      const condition = node.ifNegated ? `!${expr}` : expr;
+      withIfGuard = [
+        `${pad}<ng-container *ngIf="${condition}">`,
+        body.replace(/^/gm, "  "),
+        `${pad}</ng-container>`,
+      ].join("\n");
     }
-    const matchingChannel = [...ctx.channelByName.values()].find(
-      (c) => c.valueProp === ifWrap || c.name === ifWrap,
-    );
-    const expr = matchingChannel
-      ? `behavior.${matchingChannel.name}()`
-      : ifWrap;
-    const condition = node.ifNegated ? `!${expr}` : expr;
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: apply the *ngFor wrap as the outermost
+  // layer using <ng-container *ngFor>. Doctrine: iteration outside,
+  // if-guard inside — each iteration re-evaluates *ngIf against the
+  // per-iteration scope. Angular's microsyntax for *ngFor:
+  //   *ngFor="let item of items; let index = index"
+  //     - left `index` is the local alias bound from the right side's
+  //       built-in `index` template-variable name (which Angular
+  //       exposes as the 0-based iteration index).
+  //   *ngFor="let _ of arrayN; let index = index"
+  //     - for count iteration we need an array-of-length-N as the
+  //       source. We emit it inline via the class field `_${sourceProp}Range`
+  //       to avoid `new Array(n)` expressions in templates (Angular's
+  //       template parser rejects `new` and most JS-side constructions).
+  //     - Simpler: bind it as `arrayFromCount(${sourceProp})` where
+  //       `arrayFromCount` is a class-body helper injected when at
+  //       least one count iteration is present.
+  //
+  // To keep this commit a pure no-op for existing components, the
+  // count-iteration helper is only injected when the dom tree
+  // actually has a count iteration somewhere. The helper detection
+  // lives in generateRootComponent / generateClassBody; this emitter
+  // produces the bare call.
+  if (node.iteration) {
+    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const ngForExpr =
+      kind === "array"
+        ? `let ${itemVar} of ${sourceProp}; let ${indexVar} = index`
+        : `let _ of arrayFromCount(${sourceProp}); let ${indexVar} = index`;
     return [
-      `${pad}<ng-container *ngIf="${condition}">`,
-      body.replace(/^/gm, "  "),
+      `${pad}<ng-container *ngFor="${ngForExpr}">`,
+      withIfGuard.replace(/^/gm, "  "),
       `${pad}</ng-container>`,
     ].join("\n");
   }
-
-  return body;
+  return withIfGuard;
 }
 
 // Angular's `[prop]="expr"` binds a DOM *property* — fine for things like
@@ -1305,6 +1419,24 @@ function safePropertyExpr(prop: string): string {
   return ANGULAR_TEMPLATE_KEYWORDS.has(prop) ? `this.${prop}` : prop;
 }
 
+/**
+ * Lower a `prop:X` reference to an Angular template expression. When `X`
+ * is an in-scope iteration alias (item/index introduced by an enclosing
+ * `*ngFor`), emit the bare identifier — Angular's *ngFor introduces
+ * those names as template locals distinct from component-class fields.
+ * The class-field path is via `safePropertyExpr`, which prefixes
+ * Angular-reserved names with `this.`; iteration aliases must NOT take
+ * that path (a future contract that picks `let` or `of` as an alias
+ * name is the author's bug, but our codegen shouldn't silently emit
+ * `this.let` for a template local). IR-DOM-ITERATE-CAPABILITY-01.
+ */
+function angularPropAccessor(propName: string, ctx: AngularRenderContext): string {
+  if (ctx.iterationScope?.has(propName)) {
+    return propName;
+  }
+  return safePropertyExpr(propName);
+}
+
 function renderAngularBinding(
   attr: string,
   expr: BindingExpression,
@@ -1313,7 +1445,7 @@ function renderAngularBinding(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${angularAttrBinding(attr, tag)}="${safePropertyExpr(expr.prop)}"`;
+      return `${angularAttrBinding(attr, tag)}="${angularPropAccessor(expr.prop, ctx)}"`;
     case "literal":
       return `${attr}="${escapeAngularAttr(expr.value)}"`;
     case "channel": {
@@ -1350,7 +1482,7 @@ function renderAngularBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return safePropertyExpr(expr.prop);
+      return angularPropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
     case "channel": {
@@ -1379,7 +1511,7 @@ function renderAngularEvent(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `(${eventName})="${safePropertyExpr(expr.prop)} && ${safePropertyExpr(expr.prop)}()"`;
+      return `(${eventName})="${angularPropAccessor(expr.prop, ctx)} && ${angularPropAccessor(expr.prop, ctx)}()"`;
     case "literal":
       // Rare — usually events should be wired to a callback. Pass the
       // literal through as the expression body.

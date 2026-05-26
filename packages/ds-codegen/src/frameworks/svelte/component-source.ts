@@ -987,6 +987,16 @@ interface SvelteRenderContext {
   rootRole?: string;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  /**
+   * Identifier names that resolve as iteration aliases (item/index
+   * introduced by an enclosing `{#each}`). When `prop:X` lowers and
+   * `X` is in scope, emit the bare identifier instead of running
+   * `X` through `jsAccessorFor` (which would camelCase-mangle a
+   * literal alias like `item-id`). For default alias names (`item`,
+   * `index`) `jsAccessorFor` is a no-op, so the scope check is
+   * defensive against future contracts that rename the aliases.
+   */
+  iterationScope?: Set<string>;
 }
 
 function renderSvelteDomNode(
@@ -1003,6 +1013,20 @@ function renderSvelteDomNode(
       return `${pad}{@render ${node.slotName}?.()}`;
     }
     return `${pad}{@render children?.()}`;
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: extend iterationScope for this node
+  // and every descendant when `iterate` is declared. Bindings on the
+  // iterated node and its subtree resolve `prop:item` / `prop:index`
+  // as bare locals from the {#each} scope, not as destructured
+  // component props.
+  if (node.iteration) {
+    const extendedScope = new Set(ctx.iterationScope ?? []);
+    extendedScope.add(node.iteration.indexVar);
+    if (node.iteration.itemVar !== undefined) {
+      extendedScope.add(node.iteration.itemVar);
+    }
+    ctx = { ...ctx, iterationScope: extendedScope };
   }
 
   const attrs: string[] = [];
@@ -1134,10 +1158,14 @@ function renderSvelteDomNode(
     ].join("\n");
   }
 
+  let withIfGuard = body;
   if (node.ifProp) {
     let expr: string;
     if (node.ifProp === "children") {
       expr = "children";
+    } else if (ctx.iterationScope?.has(node.ifProp)) {
+      // IR-DOM-ITERATE-CAPABILITY-01: bare iteration-alias reference.
+      expr = node.ifProp;
     } else {
       const matchingChannel = [...ctx.channelByName.values()].find(
         (c) => c.valueProp === node.ifProp || c.name === node.ifProp,
@@ -1147,9 +1175,30 @@ function renderSvelteDomNode(
         : jsAccessorFor(node.ifProp);
     }
     const condition = node.ifNegated ? `!${expr}` : expr;
-    return [`${pad}{#if ${condition}}`, body, `${pad}{/if}`].join("\n");
+    withIfGuard = [`${pad}{#if ${condition}}`, body, `${pad}{/if}`].join("\n");
   }
-  return body;
+
+  // IR-DOM-ITERATE-CAPABILITY-01: apply the {#each} wrap as the
+  // outermost layer. If-guard nests INSIDE the loop so each iteration
+  // re-evaluates the guard against the per-iteration scope. Key the
+  // iteration on `indexVar` — sufficient for the current contract
+  // surface (count-iteration and non-reorderable arrays).
+  //
+  //   kind="array": {#each items as item, index (index)} ... {/each}
+  //   kind="count": {#each Array(count) as _, index (index)} ... {/each}
+  //
+  // Svelte 5's destructure-in-{#each} accepts `_` as a discarded
+  // item; Array(N) yields an iterable of length N with undefined slots,
+  // giving 0-based index parity with the other frameworks.
+  if (node.iteration) {
+    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const head =
+      kind === "array"
+        ? `{#each ${sourceProp} as ${itemVar}, ${indexVar} (${indexVar})}`
+        : `{#each Array(${sourceProp}) as _, ${indexVar} (${indexVar})}`;
+    return [`${pad}${head}`, withIfGuard, `${pad}{/each}`].join("\n");
+  }
+  return withIfGuard;
 }
 
 function escapeAttrValue(s: string): string {
@@ -1168,13 +1217,28 @@ function formatSvelteAttrs(attrs: string[]): string {
  * owning element. Returns null for binding kinds that don't map to
  * text content (channels with no value field, etc.).
  */
+/**
+ * Lower a `prop:X` reference to a Svelte template accessor. When `X`
+ * is an in-scope iteration alias (item/index introduced by an
+ * enclosing `{#each}`), emit the bare identifier — `jsAccessorFor`
+ * would camelCase-mangle a hyphenated alias name. For default alias
+ * names (`item`, `index`) `jsAccessorFor` is a no-op, so this check is
+ * defensive against future renames. IR-DOM-ITERATE-CAPABILITY-01.
+ */
+function sveltePropAccessor(propName: string, ctx: SvelteRenderContext): string {
+  if (ctx.iterationScope?.has(propName)) {
+    return propName;
+  }
+  return jsAccessorFor(propName);
+}
+
 function renderSvelteTextChildExpression(
   expr: BindingExpression,
   ctx: SvelteRenderContext,
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `{${jsAccessorFor(expr.prop)}}`;
+      return `{${sveltePropAccessor(expr.prop, ctx)}}`;
     case "literal":
       return escapeAttrValue(expr.value);
     case "channel": {
@@ -1202,7 +1266,7 @@ function renderSvelteBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return jsAccessorFor(expr.prop);
+      return sveltePropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
     case "channel": {
@@ -1225,7 +1289,7 @@ function renderSvelteBinding(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${attr}={${jsAccessorFor(expr.prop)}}`;
+      return `${attr}={${sveltePropAccessor(expr.prop, ctx)}}`;
     case "literal":
       return `${attr}="${escapeAttrValue(expr.value)}"`;
     case "channel": {
@@ -1324,7 +1388,7 @@ function renderSvelteEvent(
   const svelteEventAttr = `on${eventName}`;
   switch (expr.kind) {
     case "prop":
-      return `${svelteEventAttr}={${jsAccessorFor(expr.prop)}}`;
+      return `${svelteEventAttr}={${sveltePropAccessor(expr.prop, ctx)}}`;
     case "literal":
       // Rare. Emit as a string handler — consumer-error territory.
       return `${svelteEventAttr}="${escapeAttrValue(expr.value)}"`;

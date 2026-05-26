@@ -1065,6 +1065,14 @@ interface VueRenderContext {
    * declares one. Parity with React's `ReactRenderContext.rootRole`.
    */
   rootRole?: string;
+  /**
+   * Identifier names that resolve as iteration aliases (item/index
+   * variables introduced by an enclosing `iterate` directive) rather
+   * than as `props.X` accessors. Vue's `v-for` introduces bare locals
+   * — `props.item` would resolve against component props, not the
+   * loop scope. Empty/undefined means no enclosing iteration.
+   */
+  iterationScope?: Set<string>;
 }
 
 function renderVueDomNode(
@@ -1079,6 +1087,19 @@ function renderVueDomNode(
       return `${pad}<slot name="${node.slotName}" />`;
     }
     return `${pad}<slot />`;
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: extend iterationScope for THIS node
+  // and every descendant when `iterate` is set. Bindings on the
+  // iterated node and its subtree resolve `prop:item` / `prop:index`
+  // as bare locals from the v-for scope, not as `props.item`.
+  if (node.iteration) {
+    const extendedScope = new Set(ctx.iterationScope ?? []);
+    extendedScope.add(node.iteration.indexVar);
+    if (node.iteration.itemVar !== undefined) {
+      extendedScope.add(node.iteration.itemVar);
+    }
+    ctx = { ...ctx, iterationScope: extendedScope };
   }
 
   const attrs: string[] = [];
@@ -1200,6 +1221,12 @@ function renderVueDomNode(
     let expr: string;
     if (ifGuard === "children") {
       expr = "$slots.default";
+    } else if (ctx.iterationScope?.has(ifGuard)) {
+      // IR-DOM-ITERATE-CAPABILITY-01: if-guard resolves against the
+      // iteration scope when the guard name matches an in-scope alias
+      // (e.g. `if: "item"`). Bare identifier preserves Vue's v-for
+      // template scope.
+      expr = ifGuard;
     } else {
       const matchingChannel = [...ctx.channelByName.values()].find(
         (c) => c.valueProp === ifGuard || c.name === ifGuard,
@@ -1212,6 +1239,28 @@ function renderVueDomNode(
     }
     const finalExpr = node.ifNegated ? `!${expr}` : expr;
     attrs.unshift(`v-if="${finalExpr}"`);
+  }
+
+  // IR-DOM-ITERATE-CAPABILITY-01: when iteration is set without an
+  // if-guard, push v-for + :key onto the element's own attrs. Cleanest
+  // emit — no <template> wrapper needed because there's no v-if to
+  // race against the v-for scope.
+  //
+  // v-for syntax by source kind:
+  //   - kind="array": v-for="(item, index) in source"
+  //   - kind="count": v-for="(_, index) in Array(source)"  (0-based.
+  //     Vue's numeric form `v-for="i in N"` is 1-indexed, which would
+  //     disagree with React/Svelte/Lit semantics; Array(N) yields
+  //     {length: N} so v-for over it produces (undefined, 0..N-1).)
+  const iter = node.iteration;
+  const vForExpr = iter
+    ? iter.kind === "array"
+      ? `(${iter.itemVar}, ${iter.indexVar}) in ${iter.sourceProp}`
+      : `(_, ${iter.indexVar}) in Array(${iter.sourceProp})`
+    : null;
+  if (iter && !ifGuard) {
+    attrs.unshift(`:key="${iter.indexVar}"`);
+    attrs.unshift(`v-for="${vForExpr}"`);
   }
 
   const childCtx: VueRenderContext = { ...ctx, isRoot: false };
@@ -1227,17 +1276,32 @@ function renderVueDomNode(
   const tag = node.tag;
   const isVoidEl = VOID_HTML_ELEMENTS_VUE.has(tag);
 
+  let body: string;
   if (allChildren.length === 0 && isVoidEl) {
-    return `${pad}<${tag}${formatVueAttrs(attrs)} />`;
+    body = `${pad}<${tag}${formatVueAttrs(attrs)} />`;
+  } else if (allChildren.length === 0) {
+    body = `${pad}<${tag}${formatVueAttrs(attrs)}></${tag}>`;
+  } else {
+    body = [
+      `${pad}<${tag}${formatVueAttrs(attrs)}>`,
+      ...allChildren,
+      `${pad}</${tag}>`,
+    ].join("\n");
   }
-  if (allChildren.length === 0) {
-    return `${pad}<${tag}${formatVueAttrs(attrs)}></${tag}>`;
+
+  // IR-DOM-ITERATE-CAPABILITY-01: when iteration AND if-guard coexist,
+  // Vue 3 evaluates v-if BEFORE v-for on the same element, which would
+  // un-scope the alias used by v-if. Wrap with <template v-for> so the
+  // loop's scope is introduced before v-if sees it. :key goes on the
+  // template (Vue requires :key on the v-for element).
+  if (iter && ifGuard) {
+    return [
+      `${pad}<template v-for="${vForExpr}" :key="${iter.indexVar}">`,
+      body.replace(/^/gm, "  "),
+      `${pad}</template>`,
+    ].join("\n");
   }
-  return [
-    `${pad}<${tag}${formatVueAttrs(attrs)}>`,
-    ...allChildren,
-    `${pad}</${tag}>`,
-  ].join("\n");
+  return body;
 }
 
 /**
@@ -1245,13 +1309,28 @@ function renderVueDomNode(
  * the React side's child-text rendering: the binding becomes the element's
  * body, not an attribute.
  */
+/**
+ * Lower a `prop:X` reference to a Vue template expression. When `X` is
+ * an in-scope iteration alias (item/index introduced by an enclosing
+ * `v-for`), emit the bare identifier — Vue's `v-for` introduces those
+ * names as bare locals in the template scope and `props.X` would
+ * resolve against component props instead. Otherwise emit the
+ * `props.X` accessor as today. IR-DOM-ITERATE-CAPABILITY-01.
+ */
+function vuePropAccessor(propName: string, ctx: VueRenderContext): string {
+  if (ctx.iterationScope?.has(propName)) {
+    return propName;
+  }
+  return `props.${propAccess(propName)}`;
+}
+
 function renderVueTextContent(
   expr: BindingExpression,
   ctx: VueRenderContext,
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `{{ props.${propAccess(expr.prop)} }}`;
+      return `{{ ${vuePropAccessor(expr.prop, ctx)} }}`;
     case "literal":
       return escapeAttrString(expr.value);
     case "channel": {
@@ -1292,7 +1371,7 @@ function renderVueBinding(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `:${attr}="props.${propAccess(expr.prop)}"`;
+      return `:${attr}="${vuePropAccessor(expr.prop, ctx)}"`;
     case "literal":
       return `${attr}="${escapeAttrString(expr.value)}"`;
     case "channel": {
@@ -1352,7 +1431,7 @@ function renderVueBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `props.${propAccess(expr.prop)}`;
+      return vuePropAccessor(expr.prop, ctx);
     case "literal":
       return JSON.stringify(expr.value);
     case "channel": {
@@ -1393,7 +1472,7 @@ function renderVueEvent(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `@${eventName}="props.${propAccess(expr.prop)}?.()"`;
+      return `@${eventName}="${vuePropAccessor(expr.prop, ctx)}?.()"`;
     case "literal":
       // Rare. Inline as a string handler.
       return `@${eventName}="${escapeAttrString(expr.value)}"`;
