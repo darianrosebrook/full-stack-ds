@@ -4,6 +4,7 @@ declare const figma: {
   createPage(): FigmaPageNode;
   createFrame(): FigmaFrameNode;
   createText(): FigmaTextNode;
+  loadFontAsync(font: { family: string; style: string }): Promise<void>;
   notify(message: string): void;
   closePlugin(message?: string): void;
 };

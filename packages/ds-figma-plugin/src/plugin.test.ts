@@ -74,6 +74,7 @@ describe("Figma plugin scaffold materialization", () => {
     const texts: MockNode[] = [];
     const notify = vi.fn();
     const closePlugin = vi.fn();
+    const loadFontAsync = vi.fn(() => Promise.resolve());
 
     vi.stubGlobal("figma", {
       createPage: vi.fn(() => {
@@ -91,11 +92,14 @@ describe("Figma plugin scaffold materialization", () => {
         texts.push(text);
         return text;
       }),
+      loadFontAsync,
       notify,
       closePlugin,
     });
 
-    main();
+    await main();
+
+    expect(loadFontAsync).toHaveBeenCalledWith({ family: "Inter", style: "Regular" });
 
     expect(pages.map((page) => page.name)).toEqual([
       "Full Stack DS / Documentation",

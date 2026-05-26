@@ -23,7 +23,9 @@ type FigmaComponentDescriptor = {
   };
 };
 
-export function main(): void {
+export async function main(): Promise<void> {
+  await figma.loadFontAsync({ family: "Inter", style: "Regular" });
+
   const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];
   const docsPage = ensurePage("Full Stack DS / Documentation");
   const componentsPage = ensurePage("Full Stack DS / Components");
@@ -97,5 +99,9 @@ function createText(characters: string): FigmaTextNode {
 }
 
 if (typeof figma !== "undefined") {
-  main();
+  main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    figma.notify(`Full Stack DS plugin error: ${message}`);
+    figma.closePlugin(`Plugin error: ${message}`);
+  });
 }
