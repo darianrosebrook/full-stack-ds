@@ -10,6 +10,7 @@ declare const figma: {
     parent: FigmaBaseNode,
   ): FigmaComponentSetNode;
   loadFontAsync(font: { family: string; style: string }): Promise<void>;
+  setCurrentPageAsync(page: FigmaPageNode): Promise<void>;
   notify(message: string): void;
   closePlugin(message?: string): void;
 };

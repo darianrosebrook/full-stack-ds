@@ -402,6 +402,7 @@ function setupFigma(): {
       },
     ),
     loadFontAsync,
+    setCurrentPageAsync: vi.fn(() => Promise.resolve()),
     notify,
     closePlugin,
   });
@@ -602,6 +603,56 @@ describe("Figma plugin: generic component-set materializer", () => {
     // Label is component name.
     expect(info.children[0].characters).toBe("Status");
     expect(error.children[0].characters).toBe("Status");
+  });
+
+  it("switches currentPage to the components page BEFORE any combineAsVariants call (live-only bug regression)", async () => {
+    // Live evidence: figma.combineAsVariants requires components and parent
+    // on the same page; createComponent binds to figma.currentPage. The
+    // mocked test surface previously hid this. Assert that the production
+    // code calls setCurrentPageAsync at least once before any combineAsVariants.
+    const order: string[] = [];
+    const setCurrentPageAsync = vi.fn(() => {
+      order.push("setCurrentPageAsync");
+      return Promise.resolve();
+    });
+    vi.stubGlobal("figma", {
+      createPage: vi.fn(() => createNode("page")),
+      createFrame: vi.fn(() => createNode("frame")),
+      createText: vi.fn(() => createNode("text")),
+      createComponent: vi.fn(() => {
+        const c = createNode("component");
+        c.createInstance = (): MockNode => {
+          const i = createNode("instance");
+          i.master = c;
+          return i;
+        };
+        return c;
+      }),
+      combineAsVariants: vi.fn((variants: MockNode[], parent: MockNode) => {
+        order.push("combineAsVariants");
+        const set = createNode("componentSet");
+        for (const v of variants) { v.parent = set; set.children.push(v); }
+        set.parent = parent;
+        parent.children.push(set);
+        return set;
+      }),
+      loadFontAsync: vi.fn(() => Promise.resolve()),
+      setCurrentPageAsync,
+      notify: vi.fn(),
+      closePlugin: vi.fn(),
+    });
+
+    const { main } = await import("./plugin.js");
+    await main();
+
+    expect(setCurrentPageAsync).toHaveBeenCalledTimes(1);
+    // The first call to setCurrentPageAsync MUST come before the first
+    // combineAsVariants. If we ever flip the order, live materialization
+    // breaks with "Grouped nodes must be in the same page as the parent".
+    const firstSetIdx = order.indexOf("setCurrentPageAsync");
+    const firstCombineIdx = order.indexOf("combineAsVariants");
+    expect(firstSetIdx).toBeGreaterThanOrEqual(0);
+    expect(firstCombineIdx).toBeGreaterThan(firstSetIdx);
   });
 
   it("classifyDescriptorForMaterialization is exported and pure", async () => {

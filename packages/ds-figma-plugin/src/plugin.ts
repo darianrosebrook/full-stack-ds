@@ -63,6 +63,16 @@ export async function main(): Promise<void> {
   await figma.loadFontAsync({ family: "Inter", style: "Regular" });
 
   const componentsPage = ensurePage("Full Stack DS / Components");
+  // Real Figma API: `figma.createComponent()` binds the new node to
+  // `figma.currentPage`, and `figma.combineAsVariants(components, parent)`
+  // requires the components and the parent to live on the same page.
+  // Without switching first, every component-set materialization throws
+  // "Grouped nodes must be in the same page as the parent". The mocked
+  // test surface doesn't have an implicit page binding for new components,
+  // so this only shows up at live execution. Use `setCurrentPageAsync`
+  // (the sync `figma.currentPage = page` assignment is a no-op under the
+  // dynamic-page documentAccess mode).
+  await figma.setCurrentPageAsync(componentsPage);
 
   const stackVariants = materializeStackPrimitive(componentsPage);
   const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];

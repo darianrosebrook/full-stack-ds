@@ -8,8 +8,8 @@
     "build": "vite build",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@figma/plugin-typings": "^1.127.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.8"
   }
