@@ -804,6 +804,13 @@ function validateDomBindings(
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
   const knownProps = new Set(styledProps.map((p) => p.name));
   const propTypes = new Map(styledProps.map((p) => [p.name, p.type]));
+  const channelValuePropByName = new Map(channels.map((c) => [c.name, c.valueProp]));
+  // Resolve iteration sources that arrived as `channel:X.value` to the
+  // underlying styled prop name. This is done up-front so the recursive
+  // validator can use the same `propTypes`/`knownProps` checks for both
+  // sources (`prop:X` and `channel:X.value`). Mutates the IR in place; the
+  // tree is fresh out of `buildDomTree` and not yet exposed externally.
+  resolveChannelIterationSources(node, channelValuePropByName, componentName);
   validateDomNode(
     node,
     knownChannels,
@@ -813,6 +820,39 @@ function validateDomBindings(
     componentName,
     cssPrefix,
   );
+}
+
+/**
+ * Walk the IR tree and, for every `iteration` whose `source` is a
+ * `channel:X.value` binding, resolve X to the channel's valueProp and
+ * write it into `sourceProp`. `parseIterate` leaves `sourceProp = ""`
+ * for channel sources because it lacks access to the channel registry.
+ * Throws if X is not a known channel.
+ *
+ * PRODUCTION-ARRAY-ITERATION-CONSUMER-01: lets a contract author write
+ * `iterate.source: "channel:selection.value"` and have the validator
+ * still confirm the channel's underlying valueProp is the right shape
+ * (array for `kind: "array"`, number for `kind: "count"`).
+ */
+function resolveChannelIterationSources(
+  node: DomNodeIR,
+  channelValuePropByName: Map<string, string>,
+  componentName: string,
+): void {
+  if (node.iteration && node.iteration.source.kind === "channel") {
+    const channelName = node.iteration.source.channel;
+    const valueProp = channelValuePropByName.get(channelName);
+    if (valueProp === undefined) {
+      throw new Error(
+        `[${componentName}] DOM iterate.source references unknown channel ` +
+        `'${channelName}' (known: [${[...channelValuePropByName.keys()].join(", ")}])`,
+      );
+    }
+    node.iteration.sourceProp = valueProp;
+  }
+  for (const child of node.children) {
+    resolveChannelIterationSources(child, channelValuePropByName, componentName);
+  }
 }
 
 /**
@@ -1241,11 +1281,35 @@ function parseIterate(node: ContractDomNode): IterationIR | undefined {
   if (!node.iterate) return undefined;
   const it = node.iterate;
   const source = parseBindingExpression(it.source);
-  if (source.kind !== "prop") {
+  // Accepted sources:
+  //   - `prop:X`        — raw prop reference (must exist; validated later)
+  //   - `channel:X.value` — the resolved channel value (must be a known channel)
+  // Other kinds are not meaningful for iteration:
+  //   - `literal:` would iterate over a string constant, never useful
+  //   - `iter:`    would refer to an outer iteration local (and require
+  //                outer-scope addressing, which V2 explicitly excludes)
+  //   - `channel:X.{onChange,defaultValue}` aren't iterable values
+  // The IR's `sourceProp` denotes the *underlying styled prop name* — the
+  // prop whose declared type (array vs number) the validator constrains.
+  // For `prop:X` that's just X. For `channel:X.value` we resolve X to the
+  // channel's `valueProp` at validation time, because the channel
+  // registry isn't available here in `parseIterate`. We carry the channel
+  // name on `source` and the validator looks it up — see `validateDomNode`.
+  // The runtime identifier (post-channel-resolution; what each framework
+  // actually emits in the loop wrapper) is NOT this string — emitters
+  // route `source` through their binding-value renderer at emit time.
+  let sourceProp: string;
+  if (source.kind === "prop") {
+    sourceProp = source.prop;
+  } else if (source.kind === "channel" && source.field === "value") {
+    // Placeholder; the validator resolves the channel to its valueProp.
+    sourceProp = "";
+  } else {
     throw new Error(
       `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
-        `iterate.source must be a prop: binding (got "${it.source}"). ` +
-        `Channel and literal sources are not supported for iteration.`,
+        `iterate.source must be a prop: or channel:<name>.value binding ` +
+        `(got "${it.source}"). literal: and iter: sources, and the ` +
+        `onChange/defaultValue fields of channels, are not iterable.`,
     );
   }
   if (it.kind === "array" && (it.itemType === undefined || it.itemType.trim() === "")) {
@@ -1258,7 +1322,7 @@ function parseIterate(node: ContractDomNode): IterationIR | undefined {
   return {
     kind: it.kind,
     source,
-    sourceProp: source.prop,
+    sourceProp,
     indexVar: it.indexVar ?? "index",
     itemVar: it.kind === "array" ? (it.itemVar ?? "item") : undefined,
     itemType: it.kind === "array" ? it.itemType : undefined,
@@ -1797,6 +1861,13 @@ function defaultExpr(prop: StyledPropMember): string | undefined {
   if (prop.default === undefined) return undefined;
   if (typeof prop.default === "string") return `"${prop.default}"`;
   if (typeof prop.default === "boolean") return String(prop.default);
+  if (Array.isArray(prop.default)) {
+    // JSON-serialize array defaults so each emitter can splice them
+    // verbatim into the destructure-or-binding site. PRODUCTION-ARRAY-
+    // ITERATION-CONSUMER-01: enables Shuttle's `defaultValue` to seed a
+    // demo with non-empty `value` for the runtime rail to assert against.
+    return JSON.stringify(prop.default);
+  }
   return String(prop.default);
 }
 

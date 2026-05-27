@@ -75,7 +75,7 @@ const classNames = computed(() => [
     <table :class="'calendar__grid'" role="grid" aria-label="Calendar">
       <tbody>
         <tr>
-          <td v-for="(_, index) in Array(daysShown)" :key="index" :class="'calendar__cell'" role="gridcell" :data-calendar-index="index">
+          <td v-for="(_, index) in Array(props.daysShown)" :key="index" :class="'calendar__cell'" role="gridcell" :data-calendar-index="index">
             <button :class="'calendar__day'"></button>
           </td>
         </tr>

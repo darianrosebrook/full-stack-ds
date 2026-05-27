@@ -1200,11 +1200,24 @@ function renderSvelteDomNode(
   // item; Array(N) yields an iterable of length N with undefined slots,
   // giving 0-based index parity with the other frameworks.
   if (node.iteration) {
-    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const { kind, source, indexVar, itemVar } = node.iteration;
+    // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: route iteration source
+    // through the binding-value renderer for invariant consistency across
+    // emitters. For Svelte the practical effect is small — `prop:X`
+    // lowers to the same bare identifier the destructured `$props` exposes
+    // — but channel-driven sources (`channel:X.value` → `${hookVar}.X`)
+    // now resolve to the hook's controllable-state value rather than the
+    // raw `$props` field.
+    const sourceExpr = renderSvelteBindingValue(source, ctx);
+    if (sourceExpr === null) {
+      throw new Error(
+        `Svelte emitter: iteration source could not be lowered (source kind=${source.kind})`,
+      );
+    }
     const head =
       kind === "array"
-        ? `{#each ${sourceProp} as ${itemVar}, ${indexVar} (${indexVar})}`
-        : `{#each Array(${sourceProp}) as _, ${indexVar} (${indexVar})}`;
+        ? `{#each (${sourceExpr} ?? []) as ${itemVar}, ${indexVar} (${indexVar})}`
+        : `{#each Array(${sourceExpr}) as _, ${indexVar} (${indexVar})}`;
     return [`${pad}${head}`, withIfGuard, `${pad}{/each}`].join("\n");
   }
   return withIfGuard;

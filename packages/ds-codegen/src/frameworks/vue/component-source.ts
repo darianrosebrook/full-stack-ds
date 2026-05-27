@@ -171,13 +171,27 @@ function generateDefineProps(ir: ComponentIR): string {
 }
 
 /**
- * Vue defaults need a factory wrapper when the prop type allows a non-
- * primitive value (object/array/function). `unknown` covers all of those,
- * so any prop whose translated type contains a bare `unknown` token gets
- * its default wrapped at emission time.
+ * Vue defaults need a factory wrapper whenever the prop type allows a
+ * non-primitive value (object, array, function). Vue 3.4+ rejects bare
+ * non-primitive literals in `withDefaults` to prevent accidental cross-
+ * instance mutation; the runtime expects `() => value` so each instance
+ * gets a fresh reference.
+ *
+ * - `unknown` covers ReactNode/ReactElement/arbitrary handler types.
+ * - Array syntax (`T[]`, `Array<T>`, `ReadonlyArray<T>`, or any union
+ *   that contains one of those) is the case Shuttle hit:
+ *   `string[]` default `["a","b"]` must emit `() => (["a","b"])`.
+ * - PRODUCTION-ARRAY-ITERATION-CONSUMER-01: extended to cover array
+ *   types so production array consumers can declare runtime-seedable
+ *   defaults.
  */
 function defaultNeedsFactory(translatedType: string): boolean {
-  return /\bunknown\b/.test(translatedType);
+  if (/\bunknown\b/.test(translatedType)) return true;
+  // Array literal syntax: `T[]` or a union containing it.
+  if (/\[\]/.test(translatedType)) return true;
+  // Generic array forms.
+  if (/\b(Array|ReadonlyArray)</.test(translatedType)) return true;
+  return false;
 }
 
 function collectDefaults(ir: ComponentIR): Array<[string, string, boolean]> {
@@ -1267,10 +1281,24 @@ function renderVueDomNode(
   //     disagree with React/Svelte/Lit semantics; Array(N) yields
   //     {length: N} so v-for over it produces (undefined, 0..N-1).)
   const iter = node.iteration;
-  const vForExpr = iter
+  // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: route iteration source through
+  // the binding-value renderer. Bare `sourceProp` failed for any prop
+  // accessed via `props.X` instead of a bare identifier (Vue 3 `<script
+  // setup>` doesn't auto-expose `defineProps` returns as bare locals).
+  // The value renderer handles `prop:X` → `props.X` and
+  // `channel:X.value` → `behavior.X.value`.
+  const iterSourceExpr = iter
+    ? renderVueBindingValue(iter.source, ctx)
+    : null;
+  if (iter && iterSourceExpr === null) {
+    throw new Error(
+      `Vue emitter: iteration source could not be lowered (source kind=${iter.source.kind})`,
+    );
+  }
+  const vForExpr = iter && iterSourceExpr
     ? iter.kind === "array"
-      ? `(${iter.itemVar}, ${iter.indexVar}) in ${iter.sourceProp}`
-      : `(_, ${iter.indexVar}) in Array(${iter.sourceProp})`
+      ? `(${iter.itemVar}, ${iter.indexVar}) in (${iterSourceExpr} ?? [])`
+      : `(_, ${iter.indexVar}) in Array(${iterSourceExpr})`
     : null;
   if (iter && !ifGuard) {
     attrs.unshift(`:key="${iter.indexVar}"`);

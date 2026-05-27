@@ -1654,12 +1654,25 @@ function renderLitDomNode(
   //   kind="array": ${items.map((item, index) => html`...`)}
   //   kind="count": ${Array.from({ length: count }, (_, index) => html`...`)}
   if (node.iteration) {
-    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const { kind, source, indexVar, itemVar } = node.iteration;
     const params = kind === "array" ? `${itemVar}, ${indexVar}` : `_, ${indexVar}`;
+    // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: route iteration source
+    // through the binding-value renderer. The previous bare `this.X`
+    // happened to work for `prop:X` because Lit components expose props
+    // as instance fields, but channel-driven sources should resolve to
+    // `this.behavior.X` (the controllable-state value), not the raw
+    // `@property` field. Going through `renderLitBindingValue` keeps
+    // the dispatch source-uniform.
+    const sourceExpr = renderLitBindingValue(source, ctx);
+    if (sourceExpr === null) {
+      throw new Error(
+        `Lit emitter: iteration source could not be lowered (source kind=${source.kind})`,
+      );
+    }
     const arrowSource =
       kind === "array"
-        ? `this.${sourceProp}.map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
-        : `Array.from({ length: this.${sourceProp} ?? 0 }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
+        ? `(${sourceExpr} ?? []).map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
+        : `Array.from({ length: ${sourceExpr} ?? 0 }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
     return `${pad}\${${arrowSource}}`;
   }
   return withIfGuard;

@@ -1079,7 +1079,14 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     destructured.push(`${ch.valueProp}: ${alias}`);
     handled.add(ch.valueProp);
     if (ch.defaultValueProp) {
-      destructured.push(ch.defaultValueProp);
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: include the channel's
+      // declared `default` (if any) in the destructure so contracts can
+      // seed the demo with a non-empty starting value. Necessary for
+      // Shuttle to render its initial selection without a controlled
+      // `value` prop in the preview pipeline.
+      const dvProp = propByName.get(ch.defaultValueProp);
+      const def = dvProp?.defaultExpr;
+      destructured.push(def ? `${ch.defaultValueProp} = ${def}` : ch.defaultValueProp);
       handled.add(ch.defaultValueProp);
     }
     destructured.push(ch.changeHandlerProp);
@@ -1621,7 +1628,7 @@ function renderReactDomNode(
   // (and false values) natively. Stable iteration source (count number
   // or array prop) means an index-based key is sufficient.
   if (node.iteration) {
-    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const { kind, source, indexVar, itemVar } = node.iteration;
     const innerBody = node.ifProp ? withIfGuard : body;
     // For multi-line bodies the inner JSX needs to live inside a
     // parenthesized return expression in the arrow function.
@@ -1630,11 +1637,32 @@ function renderReactDomNode(
       isMultiLine
         ? `(${params}) => (\n${innerBody.replace(/^/gm, "  ")}\n${pad})`
         : `(${params}) => ${innerBody.trimStart()}`;
-    if (kind === "count") {
-      return `${pad}{Array.from({ length: ${sourceProp} }, ${arrow(`_, ${indexVar}`)})}`;
+    // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: route the iteration source
+    // through the same binding-value renderer that handles `prop:` /
+    // `channel:` resolution for any other binding. The previous bare
+    // `${sourceProp}` emit failed for channel-driven prop sources because
+    // React destructures the channel value-prop under a `controlledX`
+    // alias. Going through `renderReactBinding` resolves `channel:X.value`
+    // to the channel's runtime identifier (e.g. `selection`) and `prop:X`
+    // to whatever the destructured local is.
+    const sourceExpr = renderReactBinding("__iter_source__", source, ctx);
+    if (sourceExpr === null) {
+      // Should never fire — `parseIterate` only accepts `prop:` and
+      // `channel:X.value`, both of which the value renderer handles.
+      throw new Error(
+        `React emitter: iteration source could not be lowered ` +
+        `(source kind=${source.kind})`,
+      );
     }
-    // kind === "array"
-    return `${pad}{${sourceProp}.map(${arrow(`${itemVar}, ${indexVar}`)})}`;
+    if (kind === "count") {
+      return `${pad}{Array.from({ length: ${sourceExpr} }, ${arrow(`_, ${indexVar}`)})}`;
+    }
+    // kind === "array" — guard the source with `?? []` so an undefined
+    // value (controllable-state with no controlled and no defaultValue)
+    // renders zero items rather than throwing a TypeError. Lit's count
+    // emit already does the analogous `?? 0` guard; this is the array
+    // counterpart.
+    return `${pad}{(${sourceExpr} ?? []).map(${arrow(`${itemVar}, ${indexVar}`)})}`;
   }
 
   return withIfGuard;

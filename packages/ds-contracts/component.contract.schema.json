@@ -368,8 +368,8 @@
           "properties": {
             "source": {
               "type": "string",
-              "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
-              "description": "Iteration source as a binding expression. Must reference a contract prop. 'prop:length' for count-driven; 'prop:items' for array-driven."
+              "pattern": "^(prop:[A-Za-z_$][\\w$-]*|channel:[A-Za-z_$][\\w$-]*\\.value)$",
+              "description": "Iteration source as a binding expression. Either 'prop:X' referencing a contract prop, or 'channel:X.value' referencing a declared channel's resolved value. 'prop:length' for count-driven; 'prop:items' or 'channel:selection.value' for array-driven."
             },
             "kind": {
               "type": "string",
@@ -429,9 +429,19 @@
           "oneOf": [
             { "type": "string" },
             { "type": "number" },
-            { "type": "boolean" }
+            { "type": "boolean" },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "number" },
+                  { "type": "boolean" }
+                ]
+              }
+            }
           ],
-          "description": "Default value when the prop is omitted."
+          "description": "Default value when the prop is omitted. Arrays of primitives are accepted for collection-typed props (e.g. `string[]`); the codegen emits them as JSON literals in the destructure (`= [\"a\", \"b\"]`)."
         },
         "description": {
           "type": "string",

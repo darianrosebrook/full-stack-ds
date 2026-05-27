@@ -103,7 +103,7 @@ export function WalkthroughDescription({
 // @generated:start component
 export function Walkthrough({
   index: controlledIndex,
-  defaultIndex,
+  defaultIndex = 0,
   onStepChange,
   placement = "auto",
   className,

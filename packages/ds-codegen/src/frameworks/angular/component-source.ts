@@ -1359,11 +1359,23 @@ function renderAngularDomNode(
   // lives in generateRootComponent / generateClassBody; this emitter
   // produces the bare call.
   if (node.iteration) {
-    const { kind, sourceProp, indexVar, itemVar } = node.iteration;
+    const { kind, source, indexVar, itemVar } = node.iteration;
+    // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: route iteration source
+    // through the binding-value renderer. Angular templates accept bare
+    // identifiers, but `safePropertyExpr` prefixes Angular-reserved
+    // names with `this.`, and channel-driven sources resolve to
+    // `behavior.X()` rather than the raw `@Input X`. Going through the
+    // value renderer keeps the dispatch source-uniform.
+    const sourceExpr = renderAngularBindingValue(source, ctx);
+    if (sourceExpr === null) {
+      throw new Error(
+        `Angular emitter: iteration source could not be lowered (source kind=${source.kind})`,
+      );
+    }
     const ngForExpr =
       kind === "array"
-        ? `let ${itemVar} of ${sourceProp}; let ${indexVar} = index`
-        : `let _ of arrayFromCount(${sourceProp}); let ${indexVar} = index`;
+        ? `let ${itemVar} of (${sourceExpr} ?? []); let ${indexVar} = index`
+        : `let _ of arrayFromCount(${sourceExpr}); let ${indexVar} = index`;
     return [
       `${pad}<ng-container *ngFor="${ngForExpr}">`,
       withIfGuard.replace(/^/gm, "  "),

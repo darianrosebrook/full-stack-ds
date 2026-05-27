@@ -793,10 +793,14 @@ describe("iterate directive", () => {
     ).toThrow(/iterate\.kind="array" requires `itemType`/);
   });
 
-  it("rejects non-prop iterate.source", () => {
+  it("rejects iterate.source kinds outside { prop, channel.value }", () => {
+    // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: channel:X.value is now an
+    // accepted iteration source (in addition to prop:X). Sources that
+    // remain rejected are literal:, iter:, and channel:X.{onChange,
+    // defaultValue} — none of which represent an iterable value.
     expect(() =>
       buildComponentIR({
-        name: "ChannelSource",
+        name: "LiteralSource",
         anatomy: {
           parts: ["root", "x"],
           dom: {
@@ -806,13 +810,88 @@ describe("iterate directive", () => {
               {
                 tag: "div",
                 part: "x",
-                iterate: { source: "channel:open.value", kind: "count" },
+                iterate: { source: "literal:5", kind: "count" },
               },
             ],
           },
         },
       } as ComponentContract),
-    ).toThrow(/iterate\.source must be a prop: binding/);
+    ).toThrow(/must be a prop: or channel:<name>\.value/);
+  });
+
+  it("rejects channel:X.value iterate.source when X is not a known channel", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "UnknownChannelSource",
+        anatomy: {
+          parts: ["root", "x"],
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [
+              {
+                tag: "div",
+                part: "x",
+                iterate: { source: "channel:nonexistent.value", kind: "count" },
+              },
+            ],
+          },
+        },
+        // No channels declared.
+        props: { styled: { members: [] } },
+      } as ComponentContract),
+    ).toThrow(/iterate\.source references unknown channel 'nonexistent'/);
+  });
+
+  it("accepts channel:X.value iterate.source when X is declared", () => {
+    const ir = buildComponentIR({
+      name: "ChannelArraySource",
+      anatomy: {
+        parts: ["root", "x"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [
+            {
+              tag: "li",
+              part: "x",
+              iterate: {
+                source: "channel:selection.value",
+                kind: "array",
+                itemType: "string",
+              },
+              children: [{ tag: "span", content: "iter:item" }],
+            },
+          ],
+        },
+      },
+      channels: {
+        selection: {
+          value: "value",
+          defaultValue: "defaultValue",
+          onChange: "onValueChange",
+          valueType: "string[]",
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "value", type: "string[]" },
+            { name: "defaultValue", type: "string[]" },
+            { name: "onValueChange", type: "(value: string[]) => void" },
+          ],
+        },
+      },
+    } as unknown as ComponentContract);
+    // The iteration's source binding survives intact; sourceProp is
+    // resolved to the channel's valueProp by the validator.
+    const iter = ir.dom!.children[0].iteration!;
+    expect(iter.source).toEqual({
+      kind: "channel",
+      channel: "selection",
+      field: "value",
+    });
+    expect(iter.sourceProp).toBe("value");
   });
 
   it("rejects iterate + content on the same node", () => {

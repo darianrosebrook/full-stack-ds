@@ -171,13 +171,18 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: count iteration lowering", () => {
   describe("Vue", () => {
     const src = generateVueComponentSource(ir);
 
-    it("emits v-for over Array(count) for 0-based index", () => {
-      // Array(count) yields a sparse iterable of length N — Vue's v-for
+    it("emits v-for over Array(props.count) for 0-based index", () => {
+      // Array(props.count) yields a sparse iterable of length N — Vue's v-for
       // produces 0..count-1 as the index. The numeric form `v-for="i in N"`
       // is 1-based, so we deliberately wrap in Array() for cross-framework
       // parity.
+      //
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: the source is now rendered
+      // through the binding-value renderer, which for Vue lowers `prop:count`
+      // to `props.count` rather than bare `count`. Vue's <script setup>
+      // doesn't auto-expose `defineProps` returns as bare template locals.
       expect(src).toMatch(
-        /<span[^>]*v-for="\(_, index\) in Array\(count\)"[^>]*:key="index"/,
+        /<span[^>]*v-for="\(_, index\) in Array\(props\.count\)"[^>]*:key="index"/,
       );
     });
 
@@ -287,8 +292,12 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
   describe("React", () => {
     const src = generateReactComponentSource(ir, "../../primitives");
 
-    it("wraps in items.map((item, index) => (...))", () => {
-      expect(src).toMatch(/\{items\.map\(\(item, index\) =>/);
+    it("wraps in (items ?? []).map((item, index) => (...))", () => {
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: array iteration emit
+      // guards the source with `?? []` so undefined values render zero
+      // items instead of throwing. Matches Lit's existing `?? 0` guard
+      // for count iteration; the array counterpart.
+      expect(src).toMatch(/\{\(items \?\? \[\]\)\.map\(\(item, index\) =>/);
     });
 
     it("resolves both `item` and `index` aliases inside the subtree", () => {
@@ -309,9 +318,13 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
   describe("Vue", () => {
     const src = generateVueComponentSource(ir);
 
-    it("emits v-for=\"(item, index) in items\"", () => {
+    it("emits v-for=\"(item, index) in (props.items ?? [])\"", () => {
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: source goes through the
+      // value renderer (so prop:items → props.items, not bare `items`)
+      // and is guarded with `?? []` so an undefined source renders zero
+      // items instead of erroring in the v-for evaluator.
       expect(src).toMatch(
-        /<li[^>]*v-for="\(item, index\) in items"[^>]*:key="index"/,
+        /<li[^>]*v-for="\(item, index\) in \(props\.items \?\? \[\]\)"[^>]*:key="index"/,
       );
     });
 
@@ -329,8 +342,9 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
   describe("Svelte", () => {
     const src = generateSvelteComponentSource(ir);
 
-    it("wraps in {#each items as item, index (index)}", () => {
-      expect(src).toContain(`{#each items as item, index (index)}`);
+    it("wraps in {#each (items ?? []) as item, index (index)}", () => {
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: source guarded with `?? []`.
+      expect(src).toContain(`{#each (items ?? []) as item, index (index)}`);
     });
 
     it("inlines content as {item} text expression on the inner <span>", () => {
@@ -348,9 +362,10 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
   describe("Angular", () => {
     const src = generateAngularComponentSource(ir);
 
-    it("wraps in <ng-container *ngFor=\"let item of items; let index = index\">", () => {
+    it("wraps in <ng-container *ngFor=\"let item of (items ?? []); let index = index\">", () => {
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: source guarded with `?? []`.
       expect(src).toMatch(
-        /<ng-container \*ngFor="let item of items; let index = index">/,
+        /<ng-container \*ngFor="let item of \(items \?\? \[\]\); let index = index">/,
       );
     });
 
@@ -373,9 +388,10 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
   describe("Lit", () => {
     const src = generateLitComponentSource(ir);
 
-    it("wraps in this.items.map((item, index) => html``)", () => {
+    it("wraps in (this.items ?? []).map((item, index) => html``)", () => {
+      // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: source guarded with `?? []`.
       expect(src).toMatch(
-        /this\.items\.map\(\(item, index\) => html`/,
+        /\(this\.items \?\? \[\]\)\.map\(\(item, index\) => html`/,
       );
     });
 
@@ -397,6 +413,191 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: array iteration lowering", () => {
       expect(src).toMatch(/aria-label=\$\{item\}/);
       expect(src).not.toMatch(/ifDefined\((index|item)\)/);
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// PRODUCTION-ARRAY-ITERATION-CONSUMER-01: channel-driven iteration source
+// ---------------------------------------------------------------------------
+
+// A channel-driven array prop. The contract sets `iterate.source` to
+// `channel:selection.value`, so each emitter must lower the iteration
+// over the channel's *resolved* runtime identifier (e.g. React's
+// `selection` from useX(), Vue's `behavior.selection.value`), NOT over
+// the raw destructured prop name (which would be `controlledValue` in
+// React or undefined in Vue's template scope).
+const CHANNEL_ARRAY_CONTRACT: ComponentContract = {
+  name: "FixtureChannelArray",
+  layer: "primitive",
+  cssPrefix: "fixture-channel-array",
+  anatomy: {
+    parts: ["root", "row"],
+    dom: {
+      tag: "ul",
+      part: "root",
+      children: [
+        {
+          tag: "li",
+          part: "row",
+          iterate: {
+            source: "channel:selection.value",
+            kind: "array",
+            itemType: "string",
+          },
+          children: [
+            {
+              tag: "span",
+              content: "iter:item",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  channels: {
+    selection: {
+      value: "value",
+      defaultValue: "defaultValue",
+      onChange: "onValueChange",
+      valueType: "string[]",
+    },
+  },
+  props: {
+    styled: {
+      members: [
+        { name: "value", type: "string[]" },
+        { name: "defaultValue", type: "string[]" },
+        { name: "onValueChange", type: "(value: string[]) => void" },
+      ],
+    },
+  },
+} as unknown as ComponentContract;
+
+describe("PRODUCTION-ARRAY-ITERATION-CONSUMER-01: channel-driven iteration source", () => {
+  const ir = buildComponentIR(CHANNEL_ARRAY_CONTRACT);
+
+  it("IR sourceProp resolves to the channel's valueProp", () => {
+    // The contract author wrote `channel:selection.value`. The validator
+    // resolves this to the channel's underlying valueProp (`"value"`)
+    // for type-checking purposes, while leaving `source` as the original
+    // channel binding so each emitter's value renderer can dispatch on
+    // it idiomatically.
+    const iter = ir.dom!.children[0].iteration!;
+    expect(iter.sourceProp).toBe("value");
+    expect(iter.source).toEqual({
+      kind: "channel",
+      channel: "selection",
+      field: "value",
+    });
+  });
+
+  describe("React", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+
+    it("emits .map on the channel's resolved local (selection), not the renamed raw prop", () => {
+      // The component destructures `value: controlledValue` (channel
+      // value-prop alias) and `const { selection, setSelection } =
+      // useFixtureChannelArray(...)`. Iteration source must resolve to
+      // `selection`, the post-resolution channel value — NOT
+      // `controlledValue` (raw destructure) and NOT `value` (undefined).
+      expect(src).toMatch(/\(selection \?\? \[\]\)\.map\(\(item, index\)/);
+      expect(src).not.toMatch(/\{value\.map\(/);
+      expect(src).not.toMatch(/\{controlledValue\.map\(/);
+    });
+  });
+
+  describe("Vue", () => {
+    const src = generateVueComponentSource(ir);
+
+    it("emits v-for over (behavior.selection.value ?? []) — the resolved channel ref", () => {
+      // Vue's <script setup> exposes `props` and `behavior` to the
+      // template. The channel's resolved value is `behavior.selection.value`
+      // (the controllable-state ref auto-unwrapped via `.value`).
+      // A raw `value` reference would be undefined; `props.value` would
+      // be the raw prop, pre-channel-resolution.
+      expect(src).toMatch(
+        /v-for="\(item, index\) in \(behavior\.selection\.value \?\? \[\]\)"/,
+      );
+      expect(src).not.toMatch(/v-for="[^"]* in value"/);
+      expect(src).not.toMatch(/v-for="[^"]* in props\.value"/);
+    });
+  });
+
+  describe("Svelte", () => {
+    const src = generateSvelteComponentSource(ir);
+
+    it("emits {#each} over the hook's selection value (not raw $props.value), guarded with `?? []`", () => {
+      // The Svelte component calls the hook and destructures its return.
+      // Iteration source resolves to `${hookVar}.selection`, the
+      // controllable-state value — not the raw destructured `$props` field.
+      expect(src).toMatch(
+        /\{#each \([a-zA-Z_$][\w$]*\.selection \?\? \[\]\) as item, index/,
+      );
+    });
+  });
+
+  describe("Lit", () => {
+    const src = generateLitComponentSource(ir);
+
+    it("emits .map on (this.behavior.selection ?? []) — the controllable-state value", () => {
+      // Lit exposes the resolved channel value as `this.behavior.X` —
+      // a property whose getter returns the controller's current state.
+      // Routing iteration source through the value renderer ensures the
+      // emit uses `this.behavior.selection`, not `this.value` (raw prop).
+      expect(src).toMatch(
+        /\$\{\(this\.behavior\.selection \?\? \[\]\)\.map\(\(item, index\)/,
+      );
+      expect(src).not.toMatch(/\$\{this\.value\.map\(/);
+    });
+  });
+
+  describe("Angular", () => {
+    const src = generateAngularComponentSource(ir);
+
+    it("emits *ngFor over (behavior.selection() ?? []) — the controllable-state getter", () => {
+      // Angular's resolved channel value is `behavior.X()` — a class
+      // method that returns the current state. Iteration source resolves
+      // through the binding-value renderer to that accessor form, then
+      // wrapped with `?? []` for undefined-safety.
+      expect(src).toMatch(
+        /\*ngFor="let item of \(behavior\.selection\(\) \?\? \[\]\); let index = index"/,
+      );
+      expect(src).not.toMatch(/\*ngFor="let item of value/);
+    });
+  });
+});
+
+describe("PRODUCTION-ARRAY-ITERATION-CONSUMER-01: count iteration still works for plain props", () => {
+  // Regression guard: routing the source through the value renderer must
+  // not break the existing plain-prop count-iteration emit (Calendar's
+  // `daysShown`, OTP's `length`). Use the existing COUNT_CONTRACT
+  // fixture (kind="count", source="prop:count"); every framework should
+  // still emit its expected shape over the prop.
+  const ir = buildComponentIR(COUNT_CONTRACT);
+
+  it("React: Array.from over bare count identifier", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+    expect(src).toMatch(/Array\.from\(\{ length: count \}/);
+  });
+
+  it("Lit: Array.from over this.count", () => {
+    const src = generateLitComponentSource(ir);
+    expect(src).toMatch(/Array\.from\(\{ length: this\.count \?\? 0 \}/);
+  });
+
+  it("Vue: v-for over Array(props.count)", () => {
+    const src = generateVueComponentSource(ir);
+    expect(src).toMatch(/v-for="\(_, index\) in Array\(props\.count\)"/);
+  });
+
+  it("Svelte: {#each} over Array(count) bare", () => {
+    const src = generateSvelteComponentSource(ir);
+    expect(src).toMatch(/\{#each Array\(count\) as _, index/);
+  });
+
+  it("Angular: *ngFor over arrayFromCount(count)", () => {
+    const src = generateAngularComponentSource(ir);
+    expect(src).toMatch(/\*ngFor="let _ of arrayFromCount\(count\); let index = index"/);
   });
 });
 
