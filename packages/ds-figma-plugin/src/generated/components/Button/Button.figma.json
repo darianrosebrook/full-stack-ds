@@ -1,0 +1,410 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Button",
+    "cssPrefix": "button",
+    "rootElement": "button",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "spinner",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "loadingText",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "ButtonSize",
+      "required": false,
+      "description": "Visual size variant.",
+      "defaultExpr": "\"medium\"",
+      "nodeKind": null
+    },
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "ButtonVariant",
+      "required": false,
+      "description": "Visual intent variant. Use destructive only for irreversible actions.",
+      "defaultExpr": "\"primary\"",
+      "nodeKind": null
+    },
+    {
+      "name": "type",
+      "safeName": "type",
+      "type": "ButtonType",
+      "required": false,
+      "description": "HTML button type. Defaults to button to prevent accidental form submission.",
+      "defaultExpr": "\"button\"",
+      "nodeKind": null
+    },
+    {
+      "name": "loading",
+      "safeName": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, replaces content with a spinner and sets aria-busy.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Prevents interaction and applies disabled styling.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for icon-only buttons.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaExpanded",
+      "safeName": "ariaExpanded",
+      "type": "boolean",
+      "required": false,
+      "description": "aria-expanded for disclosure triggers.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaPressed",
+      "safeName": "ariaPressed",
+      "type": "boolean",
+      "required": false,
+      "description": "aria-pressed for toggle buttons.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "title",
+      "safeName": "title",
+      "type": "string",
+      "required": false,
+      "description": "Supplementary tooltip text.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ],
+    "variant": [
+      "primary",
+      "secondary",
+      "tertiary",
+      "ghost",
+      "destructive",
+      "outline"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "active",
+      "disabled"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "button",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size",
+        "defaultExpr": "\"medium\""
+      },
+      {
+        "propName": "variant",
+        "safeName": "variant",
+        "defaultExpr": "\"primary\""
+      }
+    ],
+    "booleanModifiers": [
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "button",
+    "explicitRole": "button",
+    "implicitRole": "button",
+    "labeling": [
+      "aria-label",
+      "title"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Activate the button (same as click)."
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".button",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-action-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-action-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-action-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-action-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-action-size-medium-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-action-size-medium-min-width, 36px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-action-size-medium-min-height, 36px)",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #efefef)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-interaction-background-active, #cecece)",
+          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-primary-disabled, #cecece)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+          "--fsds-button-color-foreground-disabled": "var(--fsds-semantic-color-foreground-disabled, #aeaeae)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-button-color-border-hover": "var(--fsds-semantic-interaction-border-hover, #8f8f8f)",
+          "--fsds-button-color-border-focus": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-button-size-gap-default": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-button-size-radius": "var(--fsds-core-shape-radius-full, 9999px)",
+          "--fsds-button-size-border": "var(--fsds-core-shape-border-width-hairline, 1px)",
+          "--fsds-button-text-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-button-motion-duration-fast": "var(--fsds-core-motion-duration-short, 150ms)",
+          "--fsds-button-motion-easing-standard": "var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))",
+          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-button-size-minHeight-medium": "var(--fsds-core-dimension-actionMinHeight, 36px)",
+          "--fsds-button-size-fontSize-medium": "var(--fsds-core-typography-ramp-4, 1rem)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-button-size-gap-default)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "box-sizing": "border-box",
+          "cursor": "pointer",
+          "border-style": "solid",
+          "white-space": "nowrap",
+          "user-select": "none",
+          "background-color": "var(--fsds-button-color-background-default)",
+          "color": "var(--fsds-button-color-foreground-default)",
+          "border-color": "var(--fsds-button-color-border-default)",
+          "border-radius": "var(--fsds-button-size-radius)",
+          "border-width": "var(--fsds-button-size-border)",
+          "font-weight": "var(--fsds-button-text-weight)",
+          "transition-duration": "var(--fsds-button-motion-duration-fast)",
+          "transition-timing-function": "var(--fsds-button-motion-easing-standard)"
+        }
+      },
+      {
+        "selector": ".button--small",
+        "declarations": {
+          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-button-size-minHeight-medium": "var(--fsds-core-dimension-actionMinHeightSmall, 28px)",
+          "--fsds-button-size-fontSize-medium": "var(--fsds-core-typography-ramp-3, 0.875rem)"
+        }
+      },
+      {
+        "selector": ".button--medium",
+        "declarations": {
+          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-button-size-minHeight-medium": "var(--fsds-core-dimension-actionMinHeight, 36px)",
+          "--fsds-button-size-fontSize-medium": "var(--fsds-core-typography-ramp-4, 1rem)"
+        }
+      },
+      {
+        "selector": ".button--large",
+        "declarations": {
+          "--fsds-button-size-padding-block-medium": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-button-size-padding-inline-medium": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-button-size-minHeight-medium": "var(--fsds-core-dimension-actionMinHeightLarge, 48px)",
+          "--fsds-button-size-fontSize-medium": "var(--fsds-core-typography-ramp-5, 1.125rem)"
+        }
+      },
+      {
+        "selector": ".button--primary",
+        "declarations": {
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-primary-default)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-primary-hover)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-primary-active)",
+          "--fsds-button-color-background-disabled": "var(--fsds-semantic-color-action-background-primary-disabled)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-action-background-primary-default)",
+          "--fsds-button-color-border-hover": "var(--fsds-semantic-color-action-background-primary-hover)"
+        }
+      },
+      {
+        "selector": ".button--secondary",
+        "declarations": {
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-secondary-default)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-secondary-hover)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-secondary-active)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-primary)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-border-default)"
+        }
+      },
+      {
+        "selector": ".button--tertiary",
+        "declarations": {
+          "--fsds-button-color-background-default": "transparent",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-button-color-border-default": "transparent"
+        }
+      },
+      {
+        "selector": ".button--destructive",
+        "declarations": {
+          "--fsds-button-color-background-default": "var(--fsds-semantic-color-action-background-danger-default)",
+          "--fsds-button-color-background-hover": "var(--fsds-semantic-color-action-background-danger-hover)",
+          "--fsds-button-color-background-active": "var(--fsds-semantic-color-action-background-danger-active)",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-action-background-danger-default)",
+          "--fsds-button-color-border-hover": "var(--fsds-semantic-color-action-background-danger-hover)"
+        }
+      },
+      {
+        "selector": ".button--ghost",
+        "declarations": {
+          "--fsds-button-color-background-default": "transparent",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-button-color-border-default": "transparent"
+        }
+      },
+      {
+        "selector": ".button--outline",
+        "declarations": {
+          "--fsds-button-color-background-default": "transparent",
+          "--fsds-button-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-button-color-border-default": "var(--fsds-semantic-color-border-default, #8f8f8f)"
+        }
+      },
+      {
+        "selector": ".button:hover",
+        "declarations": {
+          "background-color": "var(--fsds-button-color-background-hover)",
+          "border-color": "var(--fsds-button-color-border-hover)"
+        }
+      },
+      {
+        "selector": ".button:active",
+        "declarations": {
+          "background-color": "var(--fsds-button-color-background-active)"
+        }
+      },
+      {
+        "selector": ".button:focus-visible",
+        "declarations": {
+          "border-color": "var(--fsds-button-color-border-focus)"
+        }
+      },
+      {
+        "selector": ".button:disabled",
+        "declarations": {
+          "background-color": "var(--fsds-button-color-background-disabled)",
+          "color": "var(--fsds-button-color-foreground-disabled)"
+        }
+      },
+      {
+        "selector": ".button__spinner",
+        "declarations": {
+          "display": "inline-block",
+          "width": "1em",
+          "height": "1em",
+          "flex-shrink": "0",
+          "animation": "spin 1s linear infinite"
+        }
+      },
+      {
+        "selector": ".button__loadingText",
+        "declarations": {
+          "display": "inline-block",
+          "opacity": "0.7"
+        }
+      }
+    ],
+    "keyframes": [
+      {
+        "name": "spin",
+        "frames": [
+          {
+            "selector": "from",
+            "declarations": {
+              "transform": "rotate(0deg)"
+            }
+          },
+          {
+            "selector": "to",
+            "declarations": {
+              "transform": "rotate(360deg)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Button / Documentation",
+    "componentSetName": "Button",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

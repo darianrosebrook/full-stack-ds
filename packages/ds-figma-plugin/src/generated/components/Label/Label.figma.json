@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Label",
+    "cssPrefix": "label",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "label",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "htmlFor",
+      "safeName": "htmlFor",
+      "type": "string",
+      "required": false,
+      "description": "ID of the form control this label is associated with.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "form",
+      "safeName": "form",
+      "type": "string",
+      "required": false,
+      "description": "ID of the form this label belongs to.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "label",
+    "valueModifiers": [],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".label",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-display-size-gap, 4px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-label-color-text-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-label-typo-weight-default": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-label-typo-lineHeight-default": "var(--fsds-semantic-typography-line-height-tight, 1.2)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "color": "var(--fsds-label-color-text-default)",
+          "line-height": "var(--fsds-label-typo-lineHeight-default)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Label / Documentation",
+    "componentSetName": "Label",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

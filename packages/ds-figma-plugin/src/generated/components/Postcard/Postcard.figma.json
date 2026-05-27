@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Postcard",
+    "cssPrefix": "postcard",
+    "rootElement": "article",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "article",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "header",
+      "semanticElement": "header",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "userInfo",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "displayName",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "handle",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "timestamp",
+      "semanticElement": null,
+      "nativeTag": "time",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "footer",
+      "semanticElement": "footer",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": "horizontal"
+    },
+    {
+      "name": "stats",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "stat",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "postId",
+      "safeName": "postId",
+      "type": "string",
+      "required": true,
+      "description": "Unique identifier for the post.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "author",
+      "safeName": "author",
+      "type": "PostcardAuthor",
+      "required": true,
+      "description": "Author metadata: name, handle, and avatar URL.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "timestamp",
+      "safeName": "timestamp",
+      "type": "string",
+      "required": true,
+      "description": "ISO 8601 timestamp of the post.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "stats",
+      "safeName": "stats",
+      "type": "PostcardStats",
+      "required": true,
+      "description": "Engagement statistics: likes, replies, reposts.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "embed",
+      "safeName": "embed",
+      "type": "PostcardEmbed",
+      "required": false,
+      "description": "Optional media embed with type, URL, and aspect ratio.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "type": [
+      "image",
+      "video",
+      "audio"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "postcard",
+    "valueModifiers": [
+      {
+        "propName": "type",
+        "safeName": "type"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "article",
+    "explicitRole": "article",
+    "implicitRole": "article",
+    "labeling": [
+      "aria-labelledby"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".postcard",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-postcard-color-background-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-postcard-color-background-hover": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-postcard-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-postcard-color-border-hover": "var(--fsds-semantic-color-border-bold, #8f8f8f)",
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-postcard-size-padding-default": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-postcard-size-radius-default": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-postcard-size-radius-full": "var(--fsds-core-shape-radius-full, 9999px)",
+          "--fsds-postcard-size-gap-default": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-postcard-size-border-default": "var(--fsds-core-shape-border-width-hairline, 1px)",
+          "--fsds-postcard-typography-displayName-fontSize": "var(--fsds-semantic-typography-body-02, 16px)",
+          "--fsds-postcard-typography-displayName-fontWeight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-postcard-typography-handle-fontSize": "var(--fsds-semantic-typography-body-03, 14px)",
+          "--fsds-postcard-typography-content-fontSize": "var(--fsds-semantic-typography-body-02, 16px)",
+          "--fsds-postcard-typography-content-lineHeight": "var(--fsds-semantic-typography-line-height-body, 1.5)",
+          "--fsds-postcard-typography-footer-fontSize": "var(--fsds-semantic-typography-body-03, 14px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-postcard-size-gap-default)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-postcard-color-background-default)",
+          "padding": "var(--fsds-postcard-size-padding-default)",
+          "border-radius": "var(--fsds-postcard-size-radius-default)",
+          "line-height": "var(--fsds-postcard-typography-content-lineHeight)",
+          "display": "flex",
+          "flex-direction": "column",
+          "border-style": "solid",
+          "border-width": "var(--fsds-postcard-size-border-default)",
+          "box-sizing": "border-box",
+          "border-color": "var(--fsds-postcard-color-border-default)",
+          "color": "var(--fsds-postcard-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".postcard:hover",
+        "declarations": {
+          "background-color": "var(--fsds-postcard-color-background-hover)",
+          "border-color": "var(--fsds-postcard-color-border-hover)"
+        }
+      },
+      {
+        "selector": ".postcard__content",
+        "declarations": {
+          "line-height": "var(--fsds-postcard-typography-content-lineHeight)",
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-postcard-size-gap-default)",
+          "color": "var(--fsds-postcard-color-foreground-primary)",
+          "font-size": "var(--fsds-postcard-typography-content-fontSize)"
+        }
+      },
+      {
+        "selector": ".postcard__header",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "space-between",
+          "gap": "var(--fsds-postcard-size-gap-default)"
+        }
+      },
+      {
+        "selector": ".postcard__userInfo",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "flex": "1 1 auto",
+          "--fsds-postcard-size-gap-default": "var(--fsds-core-spacing-size-03, 4px)"
+        }
+      },
+      {
+        "selector": ".postcard__displayName",
+        "declarations": {
+          "font-weight": "var(--fsds-postcard-typography-displayName-fontWeight)",
+          "font-size": "var(--fsds-postcard-typography-displayName-fontSize)",
+          "color": "var(--fsds-postcard-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".postcard__handle",
+        "declarations": {
+          "font-size": "var(--fsds-postcard-typography-handle-fontSize)",
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      },
+      {
+        "selector": ".postcard__timestamp",
+        "declarations": {
+          "font-size": "var(--fsds-postcard-typography-footer-fontSize)",
+          "flex-shrink": "0",
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      },
+      {
+        "selector": ".postcard__footer",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "gap": "var(--fsds-postcard-size-gap-default)",
+          "padding-top": "var(--fsds-postcard-size-padding-default)",
+          "border-top-color": "var(--fsds-postcard-color-border-default)",
+          "border-top-style": "solid",
+          "border-top-width": "var(--fsds-postcard-size-border-default)",
+          "font-size": "var(--fsds-postcard-typography-footer-fontSize)"
+        }
+      },
+      {
+        "selector": ".postcard__stats",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "gap": "var(--fsds-postcard-size-gap-default)"
+        }
+      },
+      {
+        "selector": ".postcard__stat",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "font-size": "var(--fsds-postcard-typography-footer-fontSize)",
+          "--fsds-postcard-size-gap-default": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-postcard-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "Postcard is a display surface. Focus is not managed — child engagement actions (Like, Reply, Repost) carry their own focus handling."
+    },
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Postcard / Documentation",
+    "componentSetName": "Postcard",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

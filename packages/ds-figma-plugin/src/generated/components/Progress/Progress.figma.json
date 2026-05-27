@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Progress",
+    "cssPrefix": "progress",
+    "rootElement": "div",
+    "effectiveRole": "progressbar"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "track",
+      "semanticElement": "div",
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "fill",
+      "semanticElement": "div",
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "value",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "number",
+      "required": false,
+      "description": "Progress value (0-100). Omit for indeterminate progress.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "ProgressVariant",
+      "required": false,
+      "description": "Progress variant.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "ProgressSize",
+      "required": false,
+      "description": "Size token.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "intent",
+      "safeName": "intent",
+      "type": "ProgressIntent",
+      "required": false,
+      "description": "Visual intent / color.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "label",
+      "safeName": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "showValue",
+      "safeName": "showValue",
+      "type": "boolean",
+      "required": false,
+      "description": "Show the percentage label inside the component.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "formatValue",
+      "safeName": "formatValue",
+      "type": "(value: number, max: number) => string",
+      "required": false,
+      "description": "Custom value formatter.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "variant": [
+      "linear",
+      "circular"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ],
+    "intent": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "progress",
+    "valueModifiers": [
+      {
+        "propName": "variant",
+        "safeName": "variant"
+      },
+      {
+        "propName": "size",
+        "safeName": "size"
+      },
+      {
+        "propName": "intent",
+        "safeName": "intent"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "progressbar",
+    "effectiveRole": "progressbar",
+    "labeling": [
+      "aria-label",
+      "aria-valuenow",
+      "aria-valuemin",
+      "aria-valuemax"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".progress",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-feedback-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-progress-color-text-default": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-progress-spacing-gap": "var(--fsds-core-spacing-size-02, 2px)",
+          "--fsds-progress-motion-duration-indeterminate": "var(--fsds-core-motion-duration-extra-long1, 1500ms)",
+          "--fsds-progress-color-track-background": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-progress-color-fill-info": "var(--fsds-semantic-color-status-info, #0a65fe)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-progress-spacing-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "color": "var(--fsds-progress-color-text-default)",
+          "transition-duration": "var(--fsds-progress-motion-duration-indeterminate)"
+        }
+      },
+      {
+        "selector": ".progress__track",
+        "declarations": {
+          "background-color": "var(--fsds-progress-color-track-background)",
+          "display": "block",
+          "width": "100%",
+          "height": "100%",
+          "overflow": "hidden"
+        }
+      },
+      {
+        "selector": ".progress__fill",
+        "declarations": {
+          "background-color": "var(--fsds-progress-color-fill-info)",
+          "display": "block",
+          "height": "100%",
+          "width": "calc(var(--fsds-progress-fill-width, 0) * 1%)"
+        }
+      },
+      {
+        "selector": ".progress__value",
+        "declarations": {
+          "display": "inline-block",
+          "color": "var(--fsds-progress-color-text-default)",
+          "font-size": "0.875em",
+          "margin-left": "var(--fsds-progress-spacing-gap)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Progress / Documentation",
+    "componentSetName": "Progress",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

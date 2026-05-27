@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "primitive": {
+    "kind": "stack",
+    "name": "Stack",
+    "description": "Polymorphic layout shell; generated components compose Stack as the sole layout primitive."
+  },
+  "variants": {
+    "variant": [
+      "vertical",
+      "horizontal"
+    ]
+  },
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "componentSetName": "Stack",
+    "propertySource": "primitive contract Stack.variant"
+  }
+}

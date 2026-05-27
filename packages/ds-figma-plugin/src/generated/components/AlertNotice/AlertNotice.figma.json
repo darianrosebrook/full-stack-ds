@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "AlertNotice",
+    "cssPrefix": "alert-notice",
+    "rootElement": "div",
+    "effectiveRole": "alert"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "icon",
+      "semanticElement": "span",
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "body",
+      "semanticElement": "div",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "title",
+      "semanticElement": "h3",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "dismiss",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "status",
+      "safeName": "status",
+      "type": "AlertNoticeStatus",
+      "required": false,
+      "description": "Status severity of the alert notice",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "level",
+      "safeName": "level",
+      "type": "AlertNoticeLevel",
+      "required": false,
+      "description": "Display level affecting layout and emphasis",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "dismissible",
+      "safeName": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the alert notice can be dismissed by the user",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onDismiss",
+      "safeName": "onDismiss",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the user clicks the dismiss control. Required surface for `dismissible`; consumers handle removing/hiding the notice.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "dismissLabel",
+      "safeName": "dismissLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the dismiss control. Defaults to \"Dismiss\".",
+      "defaultExpr": "\"Dismiss\"",
+      "nodeKind": null
+    },
+    {
+      "name": "icon",
+      "safeName": "icon",
+      "type": "ReactNode",
+      "required": false,
+      "description": "Optional icon node rendered before the alert content",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "status": [
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
+    "level": [
+      "page",
+      "section",
+      "inline"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "alert-notice",
+    "valueModifiers": [
+      {
+        "propName": "status",
+        "safeName": "status"
+      },
+      {
+        "propName": "level",
+        "safeName": "level"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "alert",
+    "effectiveRole": "alert",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".alert-notice",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-feedback-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-alert-notice-color-background-primary": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-alert-notice-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-alert-notice-color-background-info": "var(--fsds-semantic-color-background-info-subtle, #d9f3fe)",
+          "--fsds-alert-notice-color-background-success": "var(--fsds-semantic-color-background-success-subtle, #e4f2e0)",
+          "--fsds-alert-notice-color-background-warning": "var(--fsds-semantic-color-background-warning-subtle, #ffedcc)",
+          "--fsds-alert-notice-color-background-danger": "var(--fsds-semantic-color-background-danger-subtle, #fceaea)",
+          "--fsds-alert-notice-color-foreground-info": "var(--fsds-semantic-color-foreground-on-info-subtle, #002d99)",
+          "--fsds-alert-notice-color-foreground-success": "var(--fsds-semantic-color-foreground-on-success-subtle, #234104)",
+          "--fsds-alert-notice-color-foreground-warning": "var(--fsds-semantic-color-foreground-on-warning-subtle, #593000)",
+          "--fsds-alert-notice-color-foreground-danger": "var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000)",
+          "--fsds-alert-notice-color-border-info": "var(--fsds-semantic-color-border-info, #0042dc)",
+          "--fsds-alert-notice-color-border-success": "var(--fsds-semantic-color-border-success, #336006)",
+          "--fsds-alert-notice-color-border-warning": "var(--fsds-semantic-color-border-warning, #824500)",
+          "--fsds-alert-notice-color-border-danger": "var(--fsds-semantic-color-border-danger, #ae0001)",
+          "--fsds-alert-notice-size-padding": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-alert-notice-size-radius": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-alert-notice-spacing-gap": "var(--fsds-semantic-spacing-gap-gridSmall, 8px)",
+          "--fsds-alert-notice-text-size": "var(--fsds-semantic-typography-body-03, 14px)",
+          "--fsds-alert-notice-text-weight": "var(--fsds-semantic-typography-font-weight-regular, 400)",
+          "--fsds-alert-notice-icon-size": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-alert-notice-typography-title-fontWeight": "var(--fsds-semantic-typography-font-weight-bold, 700)",
+          "--fsds-alert-notice-typography-title-fontSize": "var(--fsds-semantic-typography-body-02, 16px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-alert-notice-spacing-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "flex",
+          "align-items": "flex-start",
+          "border-style": "solid",
+          "border-width": "1px",
+          "box-sizing": "border-box",
+          "background-color": "var(--fsds-alert-notice-color-background-danger)",
+          "color": "var(--fsds-alert-notice-color-foreground-danger)",
+          "border-color": "var(--fsds-alert-notice-color-border-danger)",
+          "padding": "var(--fsds-alert-notice-size-padding)",
+          "border-radius": "var(--fsds-alert-notice-size-radius)",
+          "font-size": "var(--fsds-alert-notice-text-size)",
+          "font-weight": "var(--fsds-alert-notice-text-weight)"
+        }
+      },
+      {
+        "selector": ".alert-notice__icon",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "flex-shrink": "0"
+        }
+      },
+      {
+        "selector": ".alert-notice__body",
+        "declarations": {
+          "flex": "1 1 auto",
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-alert-notice-spacing-gap)"
+        }
+      },
+      {
+        "selector": ".alert-notice__dismiss",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "flex-shrink": "0",
+          "background": "transparent",
+          "border": "0",
+          "padding": "0",
+          "margin-left": "auto",
+          "color": "inherit",
+          "cursor": "pointer",
+          "font": "inherit",
+          "line-height": "1"
+        }
+      },
+      {
+        "selector": ".alert-notice__dismiss:hover",
+        "declarations": {
+          "opacity": "0.7"
+        }
+      },
+      {
+        "selector": ".alert-notice__dismiss:focus-visible",
+        "declarations": {
+          "outline": "2px solid currentColor",
+          "outline-offset": "2px"
+        }
+      },
+      {
+        "selector": ".alert-notice__title",
+        "declarations": {
+          "margin": "0",
+          "font-weight": "var(--fsds-alert-notice-typography-title-fontWeight)",
+          "font-size": "var(--fsds-alert-notice-typography-title-fontSize)"
+        }
+      },
+      {
+        "selector": ".alert-notice--info",
+        "declarations": {
+          "background-color": "var(--fsds-alert-notice-color-background-info)",
+          "color": "var(--fsds-alert-notice-color-foreground-info)",
+          "border-color": "var(--fsds-alert-notice-color-border-info)"
+        }
+      },
+      {
+        "selector": ".alert-notice--success",
+        "declarations": {
+          "background-color": "var(--fsds-alert-notice-color-background-success)",
+          "color": "var(--fsds-alert-notice-color-foreground-success)",
+          "border-color": "var(--fsds-alert-notice-color-border-success)"
+        }
+      },
+      {
+        "selector": ".alert-notice--warning",
+        "declarations": {
+          "background-color": "var(--fsds-alert-notice-color-background-warning)",
+          "color": "var(--fsds-alert-notice-color-foreground-warning)",
+          "border-color": "var(--fsds-alert-notice-color-border-warning)"
+        }
+      },
+      {
+        "selector": ".alert-notice--error",
+        "declarations": {
+          "background-color": "var(--fsds-alert-notice-color-background-danger)",
+          "color": "var(--fsds-alert-notice-color-foreground-danger)",
+          "border-color": "var(--fsds-alert-notice-color-border-danger)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "AlertNotice / Documentation",
+    "componentSetName": "AlertNotice",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Avatar",
+    "cssPrefix": "avatar",
+    "rootElement": "div",
+    "effectiveRole": "img"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "image",
+      "semanticElement": null,
+      "nativeTag": "img",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "initials",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "status",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "src",
+      "safeName": "src",
+      "type": "string",
+      "required": false,
+      "description": "Image source URL. Omit to render initials from `name`.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "name",
+      "safeName": "name",
+      "type": "string",
+      "required": true,
+      "description": "User/entity name. Used for initials fallback and as the accessible label.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "priority",
+      "safeName": "priority",
+      "type": "boolean",
+      "required": false,
+      "description": "Mark image as priority for above-the-fold loading.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "small",
+      "medium",
+      "large",
+      "extra-large"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "focus"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "avatar",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "img",
+    "effectiveRole": "img",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".avatar",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "0",
+          "--fsds-box-model-width": "var(--fsds-semantic-glyph-size-medium-extent, 16px)",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "var(--fsds-semantic-glyph-size-medium-extent, 16px)",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-avatar-size-default": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-avatar-size-radius-default": "var(--fsds-core-shape-radius-full, 9999px)",
+          "--fsds-avatar-size-border-default": "var(--fsds-core-shape-border-width-hairline, 1px)",
+          "--fsds-avatar-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-avatar-color-background-inverse": "var(--fsds-semantic-color-background-inverse, #141414)",
+          "--fsds-avatar-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-avatar-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-avatar-typography-fontWeight-medium": "var(--fsds-core-typography-weight-medium, 500)",
+          "--fsds-avatar-typography-fontFamily-sans": "var(--fsds-core-typography-font-family-sans, \"Inter\", sans-serif)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-avatar-size-default)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-avatar-size-default)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "overflow": "hidden",
+          "position": "relative",
+          "border-radius": "var(--fsds-avatar-size-radius-default)",
+          "background-color": "var(--fsds-avatar-color-background-default)",
+          "color": "var(--fsds-avatar-color-foreground-primary)",
+          "border-color": "var(--fsds-avatar-color-border-default)",
+          "border-style": "solid",
+          "border-width": "var(--fsds-avatar-size-border-default)",
+          "font-weight": "var(--fsds-avatar-typography-fontWeight-medium)",
+          "font-family": "var(--fsds-avatar-typography-fontFamily-sans)"
+        }
+      },
+      {
+        "selector": ".avatar__image",
+        "declarations": {
+          "width": "100%",
+          "height": "100%",
+          "object-fit": "cover",
+          "display": "block"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Avatar / Documentation",
+    "componentSetName": "Avatar",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

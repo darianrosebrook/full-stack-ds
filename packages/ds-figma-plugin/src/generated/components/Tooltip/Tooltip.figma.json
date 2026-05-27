@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Tooltip",
+    "cssPrefix": "tooltip",
+    "rootElement": "div",
+    "effectiveRole": "tooltip"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "trigger",
+      "semanticElement": "button",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "open",
+      "safeName": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled visibility.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultOpen",
+      "safeName": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial visibility.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onOpenChange",
+      "safeName": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Called when visibility changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "placement",
+      "safeName": "placement",
+      "type": "TooltipPlacement",
+      "required": false,
+      "description": "Preferred placement. May be overridden by collision detection.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Suppresses the tooltip entirely; the trigger renders but never opens.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnEscape",
+      "safeName": "closeOnEscape",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, Escape closes the tooltip and returns focus is preserved.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnBlur",
+      "safeName": "closeOnBlur",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, blur on the trigger closes the tooltip.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "entering",
+      "leaving"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "tooltip",
+    "valueModifiers": [
+      {
+        "propName": "placement",
+        "safeName": "placement"
+      }
+    ],
+    "booleanModifiers": [
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "tooltip",
+    "effectiveRole": "tooltip",
+    "labeling": [
+      "aria-describedby"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Dismiss the tooltip without moving focus from the trigger (WCAG 2.1 SC 1.4.13)."
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".tooltip",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-tooltip-color-background-default": "var(--fsds-semantic-color-background-inverse, #141414)",
+          "--fsds-tooltip-color-foreground-default": "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+          "--fsds-tooltip-color-border-default": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-tooltip-size-padding-y": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-tooltip-size-padding-x": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-tooltip-size-radius-default": "var(--fsds-core-shape-radius-small, 4px)",
+          "--fsds-tooltip-size-maxWidth": "200px",
+          "--fsds-tooltip-typography-fontSize": "var(--fsds-semantic-typography-caption-01, 14px)",
+          "--fsds-tooltip-layer-content": "var(--fsds-core-layer-tooltip, 1800)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "inline-block"
+        }
+      },
+      {
+        "selector": ".tooltip__trigger",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center"
+        }
+      },
+      {
+        "selector": ".tooltip__content",
+        "declarations": {
+          "background-color": "var(--fsds-tooltip-color-background-default)",
+          "color": "var(--fsds-tooltip-color-foreground-default)",
+          "border-color": "var(--fsds-tooltip-color-border-default)",
+          "border-radius": "var(--fsds-tooltip-size-radius-default)",
+          "padding": "var(--fsds-tooltip-size-padding-x)",
+          "max-width": "var(--fsds-tooltip-size-maxWidth)",
+          "z-index": "var(--fsds-tooltip-layer-content)",
+          "font-size": "0.875em",
+          "display": "inline-block",
+          "border-style": "solid",
+          "border-width": "1px"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "open",
+        "valueProp": "open",
+        "defaultValueProp": "defaultOpen",
+        "changeHandlerProp": "onOpenChange",
+        "valueType": "boolean",
+        "description": "Whether the tooltip is visible.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [
+      {
+        "event": "escape",
+        "enabledByProp": "closeOnEscape",
+        "defaultEnabled": true
+      },
+      {
+        "event": "blur",
+        "enabledByProp": "closeOnBlur",
+        "defaultEnabled": true
+      }
+    ],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "Tooltip never takes focus — it is non-interactive. The trigger element retains focus throughout the tooltip's lifecycle."
+    },
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "anchored",
+      "layering": "tooltip",
+      "collision": "flip-shift"
+    }
+  },
+  "surface": {
+    "kind": "tooltip",
+    "presence": "ephemeral",
+    "modality": "non-blocking",
+    "anchor": {
+      "part": {
+        "name": "trigger",
+        "semanticElement": "button",
+        "isCompound": true,
+        "isRootOnly": false,
+        "details": {
+          "role": "trigger",
+          "interactive": true,
+          "focusable": true
+        }
+      },
+      "relation": "describedby"
+    },
+    "content": {
+      "part": {
+        "name": "content",
+        "semanticElement": "div",
+        "isCompound": true,
+        "isRootOnly": false,
+        "details": {
+          "role": "content",
+          "aria": {
+            "role": "tooltip"
+          }
+        }
+      },
+      "interactive": false
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": [
+      "escape",
+      "blur",
+      "pointer-leave"
+    ],
+    "openTriggers": [
+      "hover",
+      "focus"
+    ]
+  },
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Tooltip / Documentation",
+    "componentSetName": "Tooltip",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

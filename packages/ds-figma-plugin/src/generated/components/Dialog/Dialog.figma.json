@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Dialog",
+    "cssPrefix": "dialog",
+    "rootElement": "div",
+    "effectiveRole": "dialog"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "backdrop",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "modal",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "header",
+      "semanticElement": "header",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "title",
+      "semanticElement": "h3",
+      "nativeTag": "h2",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "body",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "footer",
+      "semanticElement": "footer",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": "horizontal"
+    },
+    {
+      "name": "closeButton",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "open",
+      "safeName": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled open state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultOpen",
+      "safeName": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial open state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onOpenChange",
+      "safeName": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Called when the open state changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "modal",
+      "safeName": "modal",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, renders a modal dialog with backdrop and focus trap.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "DialogSize",
+      "required": false,
+      "description": "Controls the maximum width of the dialog content panel.",
+      "defaultExpr": "\"md\"",
+      "nodeKind": null
+    },
+    {
+      "name": "dismissible",
+      "safeName": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "When false, removes the close button and disables backdrop-click dismissal.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnEscape",
+      "safeName": "closeOnEscape",
+      "type": "boolean",
+      "required": false,
+      "description": "When false, pressing Escape does not close the dialog.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnBackdropClick",
+      "safeName": "closeOnBackdropClick",
+      "type": "boolean",
+      "required": false,
+      "description": "When false, clicking the backdrop overlay does not close the dialog.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "initialFocus",
+      "safeName": "initialFocus",
+      "type": "string",
+      "required": false,
+      "description": "CSS selector or element ID to receive initial focus when the dialog opens.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "returnFocus",
+      "safeName": "returnFocus",
+      "type": "string",
+      "required": false,
+      "description": "CSS selector or element ID to return focus to on close.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "full"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "active",
+      "leaving"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "dialog",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size",
+        "defaultExpr": "\"md\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "dialog",
+    "effectiveRole": "dialog",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-describedby"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Close the dialog and return focus to the trigger element.",
+        "when": "open"
+      },
+      {
+        "key": "Tab",
+        "action": "Cycle focus forward through interactive elements within the dialog.",
+        "when": "open"
+      },
+      {
+        "key": "Shift+Tab",
+        "action": "Cycle focus backward through interactive elements within the dialog.",
+        "when": "open"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".dialog",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-dialog-color-background-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-dialog-color-border-default": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-dialog-size-radius-default": "var(--fsds-core-shape-radius-large, 16px)",
+          "--fsds-dialog-size-sm-width": "400px",
+          "--fsds-dialog-size-sm-maxWidth": "90vw",
+          "--fsds-dialog-size-md-width": "500px",
+          "--fsds-dialog-size-md-maxWidth": "90vw",
+          "--fsds-dialog-size-lg-width": "700px",
+          "--fsds-dialog-size-lg-maxWidth": "90vw",
+          "--fsds-dialog-size-xl-width": "900px",
+          "--fsds-dialog-size-xl-maxWidth": "95vw",
+          "--fsds-dialog-size-full-width": "100vw",
+          "--fsds-dialog-size-full-height": "100vh",
+          "--fsds-dialog-size-closeButton-size": "var(--fsds-core-spacing-size-08, 32px)",
+          "--fsds-dialog-elevation-default": "var(--fsds-semantic-elevation-surface-floating, 0 8px 32px rgba(0,0,0,0.16))",
+          "--fsds-dialog-spacing-header-paddingTop": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-dialog-spacing-body-paddingRight": "var(--fsds-core-spacing-size-07, 24px)",
+          "--fsds-dialog-spacing-footer-gap": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-dialog-typography-title-fontSize": "var(--fsds-semantic-typography-heading-04, 18px)",
+          "--fsds-dialog-typography-title-fontWeight": "var(--fsds-semantic-typography-font-weight-bold, 700)",
+          "--fsds-dialog-typography-title-lineHeight": "var(--fsds-semantic-typography-line-height-heading, 1)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "position": "fixed",
+          "inset": "0",
+          "z-index": "1000",
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "pointer-events": "none"
+        }
+      },
+      {
+        "selector": ".dialog__backdrop",
+        "declarations": {
+          "position": "absolute",
+          "inset": "0",
+          "pointer-events": "auto",
+          "--fsds-dialog-color-background-default": "var(--fsds-semantic-color-overlay-scrim, #00000066)"
+        }
+      },
+      {
+        "selector": ".dialog__modal",
+        "declarations": {
+          "position": "relative",
+          "display": "flex",
+          "flex-direction": "column",
+          "background-color": "var(--fsds-dialog-color-background-default)",
+          "color": "var(--fsds-dialog-color-foreground-default)",
+          "border-color": "var(--fsds-dialog-color-border-default)",
+          "border-style": "solid",
+          "border-width": "1px",
+          "border-radius": "var(--fsds-dialog-size-radius-default)",
+          "box-shadow": "var(--fsds-dialog-elevation-default)",
+          "width": "var(--fsds-dialog-size-md-width)",
+          "max-width": "var(--fsds-dialog-size-md-maxWidth)",
+          "max-height": "90vh",
+          "pointer-events": "auto",
+          "box-sizing": "border-box",
+          "overflow": "hidden"
+        }
+      },
+      {
+        "selector": ".dialog__header",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "border-bottom-color": "var(--fsds-dialog-color-border-default)",
+          "border-bottom-style": "solid",
+          "border-bottom-width": "1px"
+        }
+      },
+      {
+        "selector": ".dialog__title",
+        "declarations": {
+          "margin": "0",
+          "font-size": "var(--fsds-dialog-typography-title-fontSize)",
+          "font-weight": "var(--fsds-dialog-typography-title-fontWeight)",
+          "line-height": "var(--fsds-dialog-typography-title-lineHeight)",
+          "color": "var(--fsds-dialog-color-foreground-default)"
+        }
+      },
+      {
+        "selector": ".dialog__body",
+        "declarations": {
+          "flex": "1 1 auto",
+          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "overflow-y": "auto",
+          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      },
+      {
+        "selector": ".dialog__footer",
+        "declarations": {
+          "display": "flex",
+          "justify-content": "flex-end",
+          "align-items": "center",
+          "gap": "var(--fsds-dialog-spacing-footer-gap)",
+          "padding-top": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "padding-right": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "padding-bottom": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "padding-left": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "border-top-color": "var(--fsds-dialog-color-border-default)",
+          "border-top-style": "solid",
+          "border-top-width": "1px"
+        }
+      },
+      {
+        "selector": ".dialog__closeButton",
+        "declarations": {
+          "position": "absolute",
+          "top": "var(--fsds-dialog-spacing-header-paddingTop)",
+          "right": "var(--fsds-dialog-spacing-body-paddingRight)",
+          "width": "var(--fsds-dialog-size-closeButton-size)",
+          "height": "var(--fsds-dialog-size-closeButton-size)",
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "background-color": "transparent",
+          "border": "0",
+          "border-radius": "9999px",
+          "cursor": "pointer",
+          "--fsds-dialog-color-foreground-default": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      },
+      {
+        "selector": ".dialog__closeButton:hover",
+        "declarations": {
+          "--fsds-dialog-color-background-default": "var(--fsds-semantic-color-background-hover, #cecece)"
+        }
+      },
+      {
+        "selector": ".dialog--sm .dialog__modal",
+        "declarations": {
+          "width": "var(--fsds-dialog-size-sm-width)",
+          "max-width": "var(--fsds-dialog-size-sm-maxWidth)"
+        }
+      },
+      {
+        "selector": ".dialog--lg .dialog__modal",
+        "declarations": {
+          "width": "var(--fsds-dialog-size-lg-width)",
+          "max-width": "var(--fsds-dialog-size-lg-maxWidth)"
+        }
+      },
+      {
+        "selector": ".dialog--xl .dialog__modal",
+        "declarations": {
+          "width": "var(--fsds-dialog-size-xl-width)",
+          "max-width": "var(--fsds-dialog-size-xl-maxWidth)"
+        }
+      },
+      {
+        "selector": ".dialog--full .dialog__modal",
+        "declarations": {
+          "width": "var(--fsds-dialog-size-full-width)",
+          "height": "var(--fsds-dialog-size-full-height)",
+          "max-width": "100vw",
+          "max-height": "100vh",
+          "border-radius": "0"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "openness",
+        "valueProp": "open",
+        "defaultValueProp": "defaultOpen",
+        "changeHandlerProp": "onOpenChange",
+        "valueType": "boolean",
+        "description": "Whether the dialog is open.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [
+      {
+        "event": "escape",
+        "enabledByProp": "closeOnEscape",
+        "defaultEnabled": true
+      },
+      {
+        "event": "overlayClick",
+        "enabledByProp": "closeOnBackdropClick",
+        "defaultEnabled": true
+      }
+    ],
+    "events": [
+      {
+        "name": "opennessChange",
+        "emittedViaProps": [
+          "onOpenChange"
+        ],
+        "payload": [
+          {
+            "name": "isOpen",
+            "type": "boolean",
+            "description": "The new desired open state."
+          }
+        ],
+        "returns": "void",
+        "cancelable": false,
+        "triggeredByActions": [
+          "Programmatic open() / close()",
+          "Escape keypress (when closeOnEscape)",
+          "Overlay click (when closeOnOverlayClick)"
+        ],
+        "description": "Fires whenever the dialog moves toward open or closed. Distinct from `close` — this reports the new intent, it does not ask for confirmation."
+      },
+      {
+        "name": "close",
+        "emittedViaProps": [
+          "onOpenChange"
+        ],
+        "payload": [],
+        "returns": "void",
+        "cancelable": false,
+        "triggeredByActions": [
+          "Escape keypress",
+          "Overlay click"
+        ],
+        "description": "Fires on a user-initiated close request. A specialization of opennessChange that fires only on close (escape, overlay click, explicit dismiss). Emitted via the same onOpenChange callback with value=false; the consumer distinguishes by inspecting the new value."
+      }
+    ],
+    "form": null,
+    "focus": {
+      "strategy": "trap",
+      "initialFocus": "prop:initialFocus",
+      "returnFocus": "trigger",
+      "scrollLock": true,
+      "wrap": true
+    },
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "centered",
+      "layering": "modal",
+      "backdrop": true
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Dialog / Documentation",
+    "componentSetName": "Dialog",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

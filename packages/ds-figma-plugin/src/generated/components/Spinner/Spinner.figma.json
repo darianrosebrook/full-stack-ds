@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Spinner",
+    "cssPrefix": "spinner",
+    "rootElement": "div",
+    "effectiveRole": "status"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "visual",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "SpinnerSize",
+      "required": false,
+      "description": "Visual size token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "SpinnerVariant",
+      "required": false,
+      "description": "Visual variant: ring, dots, or bars",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "thickness",
+      "safeName": "thickness",
+      "type": "SpinnerThickness",
+      "required": false,
+      "description": "Stroke thickness token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaHidden",
+      "safeName": "ariaHidden",
+      "type": "boolean",
+      "required": false,
+      "description": "If decorative only, set ariaHidden; else provide label",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "label",
+      "safeName": "label",
+      "type": "string",
+      "required": false,
+      "description": "Localized label for screen reader users; ignored if ariaHidden",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "inline",
+      "safeName": "inline",
+      "type": "boolean",
+      "required": false,
+      "description": "Inline layout (align with baseline)",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "showAfterMs",
+      "safeName": "showAfterMs",
+      "type": "number",
+      "required": false,
+      "description": "Delay before showing (ms) to avoid spinner flash",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "xs",
+      "sm",
+      "md",
+      "lg"
+    ],
+    "variant": [
+      "ring",
+      "dots",
+      "bars"
+    ],
+    "thickness": [
+      "hairline",
+      "regular",
+      "bold"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "spinner",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size"
+      },
+      {
+        "propName": "variant",
+        "safeName": "variant"
+      },
+      {
+        "propName": "thickness",
+        "safeName": "thickness"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "status",
+    "effectiveRole": "status",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".spinner",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-feedback-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-spinner-size-md": "20px",
+          "--fsds-spinner-thickness-hairline": "2px",
+          "--fsds-spinner-thickness-regular": "3px",
+          "--fsds-spinner-thickness-bold": "4px",
+          "--fsds-spinner-color-accent": "var(--fsds-semantic-color-background-accent, #d9292b)",
+          "--fsds-spinner-color-track": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-spinner-dots-gap": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-spinner-anim-duration": "800ms",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-spinner-dots-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "transition-duration": "var(--fsds-spinner-anim-duration)"
+        }
+      },
+      {
+        "selector": ".spinner__visual",
+        "declarations": {
+          "display": "inline-block",
+          "width": "1em",
+          "height": "1em",
+          "border-radius": "50%",
+          "border-style": "solid",
+          "border-width": "var(--fsds-spinner-thickness-regular)",
+          "border-color": "var(--fsds-spinner-color-track)",
+          "border-top-color": "var(--fsds-spinner-color-accent)",
+          "animation": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite"
+        }
+      }
+    ],
+    "keyframes": [
+      {
+        "name": "spin",
+        "frames": [
+          {
+            "selector": "from",
+            "declarations": {
+              "transform": "rotate(0deg)"
+            }
+          },
+          {
+            "selector": "to",
+            "declarations": {
+              "transform": "rotate(360deg)"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Spinner / Documentation",
+    "componentSetName": "Spinner",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

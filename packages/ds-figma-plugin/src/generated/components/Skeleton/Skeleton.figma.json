@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Skeleton",
+    "cssPrefix": "skeleton",
+    "rootElement": "div",
+    "effectiveRole": "status"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "stack",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "row",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "shape",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "SkeletonVariant",
+      "required": false,
+      "description": "Visual variant",
+      "defaultExpr": "\"block\"",
+      "nodeKind": null
+    },
+    {
+      "name": "animate",
+      "safeName": "animate",
+      "type": "SkeletonAnimate",
+      "required": false,
+      "description": "Animation style",
+      "defaultExpr": "\"shimmer\"",
+      "nodeKind": null
+    },
+    {
+      "name": "density",
+      "safeName": "density",
+      "type": "SkeletonDensity",
+      "required": false,
+      "description": "Spacing density to match surrounding content",
+      "defaultExpr": "\"regular\"",
+      "nodeKind": null
+    },
+    {
+      "name": "aspectRatio",
+      "safeName": "aspectRatio",
+      "type": "string",
+      "required": false,
+      "description": "CSS aspect-ratio value to size the placeholder",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "lines",
+      "safeName": "lines",
+      "type": "SkeletonLines",
+      "required": false,
+      "description": "Number of lines to render for text variant. Pass a number or {min, max} range.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "radius",
+      "safeName": "radius",
+      "type": "SkeletonRadius",
+      "required": false,
+      "description": "Border radius token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "decorative",
+      "safeName": "decorative",
+      "type": "boolean",
+      "required": false,
+      "description": "Set true for decorative skeletons that should not announce to screen readers.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Localized loading label when decorative is false.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "variant": [
+      "block",
+      "text",
+      "avatar",
+      "media",
+      "dataviz",
+      "actions"
+    ],
+    "animate": [
+      "shimmer",
+      "wipe",
+      "pulse",
+      "none"
+    ],
+    "density": [
+      "compact",
+      "regular",
+      "spacious"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "skeleton",
+    "valueModifiers": [
+      {
+        "propName": "variant",
+        "safeName": "variant",
+        "defaultExpr": "\"block\""
+      },
+      {
+        "propName": "animate",
+        "safeName": "animate",
+        "defaultExpr": "\"shimmer\""
+      },
+      {
+        "propName": "density",
+        "safeName": "density",
+        "defaultExpr": "\"regular\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "status",
+    "effectiveRole": "status",
+    "labeling": [
+      "aria-label",
+      "aria-busy"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".skeleton",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-feedback-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-feedback-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-feedback-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-skeleton-color-base": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-skeleton-color-highlight": "var(--fsds-semantic-color-background-highlight, #f7c1c2)",
+          "--fsds-skeleton-color-static": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-04, 16px)",
+          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-07, 24px)",
+          "--fsds-skeleton-anim-duration": "var(--fsds-core-motion-duration-long, 400ms)",
+          "--fsds-skeleton-anim-easing": "var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "block",
+          "background-color": "var(--fsds-skeleton-color-base)",
+          "transition-duration": "var(--fsds-skeleton-anim-duration)",
+          "transition-timing-function": "var(--fsds-skeleton-anim-easing)",
+          "animation": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite"
+        }
+      }
+    ],
+    "keyframes": [
+      {
+        "name": "skeleton-shimmer",
+        "frames": [
+          {
+            "selector": "0%",
+            "declarations": {
+              "opacity": "1"
+            }
+          },
+          {
+            "selector": "50%",
+            "declarations": {
+              "opacity": "0.5"
+            }
+          },
+          {
+            "selector": "100%",
+            "declarations": {
+              "opacity": "1"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Skeleton / Documentation",
+    "componentSetName": "Skeleton",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Popover",
+    "cssPrefix": "popover",
+    "rootElement": "div",
+    "effectiveRole": "group"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "trigger",
+      "semanticElement": "button",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "open",
+      "safeName": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled open state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultOpen",
+      "safeName": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial open state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onOpenChange",
+      "safeName": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Called when open state changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "placement",
+      "safeName": "placement",
+      "type": "PopoverPlacement",
+      "required": false,
+      "description": "Preferred placement relative to the trigger. May be overridden by collision detection.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Suppresses the popover entirely; the trigger renders but never opens.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnEscape",
+      "safeName": "closeOnEscape",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, Escape closes the popover and returns focus to the trigger.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnOutsideClick",
+      "safeName": "closeOnOutsideClick",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, a click outside the anchor ∪ content surface closes the popover.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnBlur",
+      "safeName": "closeOnBlur",
+      "type": "boolean",
+      "required": false,
+      "description": "When true, focus leaving the anchor ∪ content surface boundary closes the popover.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "open",
+      "focus",
+      "entering",
+      "leaving"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "popover",
+    "valueModifiers": [
+      {
+        "propName": "placement",
+        "safeName": "placement"
+      }
+    ],
+    "booleanModifiers": [
+      {
+        "propName": "open",
+        "safeName": "open"
+      },
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "group",
+    "effectiveRole": "group",
+    "labeling": [
+      "aria-controls",
+      "aria-expanded"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Close the popover and return focus to the trigger (WCAG 2.1 SC 2.1.1)."
+      },
+      {
+        "key": "Enter",
+        "action": "Toggle the popover open or closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle the popover open or closed.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".popover",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-popover-size-padding-default": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-popover-size-radius-default": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-popover-size-gap-default": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-popover-color-background-content": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-popover-color-border-accent": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-popover-elevation-default": "var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12))",
+          "--fsds-popover-layer-content": "var(--fsds-core-layer-dropdown, 1000)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-popover-size-gap-default)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "padding": "var(--fsds-popover-size-padding-default)",
+          "border-radius": "var(--fsds-popover-size-radius-default)",
+          "background-color": "var(--fsds-popover-color-background-content)",
+          "border-color": "var(--fsds-popover-color-border-accent)",
+          "box-shadow": "var(--fsds-popover-elevation-default)",
+          "position": "relative",
+          "display": "inline-block"
+        }
+      },
+      {
+        "selector": ".popover [data-popover-trigger]",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "cursor": "pointer"
+        }
+      },
+      {
+        "selector": "[data-popover-content]",
+        "declarations": {
+          "background-color": "var(--fsds-popover-color-background-content)",
+          "border-color": "var(--fsds-popover-color-border-accent)",
+          "border-radius": "var(--fsds-popover-size-radius-default)",
+          "padding": "var(--fsds-popover-size-padding-default)",
+          "gap": "var(--fsds-popover-size-gap-default)",
+          "box-shadow": "var(--fsds-popover-elevation-default)",
+          "z-index": "var(--fsds-popover-layer-content)",
+          "display": "inline-block",
+          "border-style": "solid",
+          "border-width": "1px"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "open",
+        "valueProp": "open",
+        "defaultValueProp": "defaultOpen",
+        "changeHandlerProp": "onOpenChange",
+        "valueType": "boolean",
+        "description": "Whether the popover content is visible.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [
+      {
+        "event": "escape",
+        "enabledByProp": "closeOnEscape",
+        "defaultEnabled": true
+      },
+      {
+        "event": "outsideClick",
+        "enabledByProp": "closeOnOutsideClick",
+        "defaultEnabled": true
+      },
+      {
+        "event": "blur",
+        "enabledByProp": "closeOnBlur",
+        "defaultEnabled": true
+      }
+    ],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "Popover does not trap focus. Focus remains on the trigger or moves into the content if interactive children are present."
+    },
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "anchored",
+      "layering": "popover",
+      "collision": "flip-shift"
+    }
+  },
+  "surface": {
+    "kind": "popover",
+    "presence": "persistent",
+    "modality": "non-blocking",
+    "anchor": {
+      "part": {
+        "name": "trigger",
+        "semanticElement": "button",
+        "isCompound": true,
+        "isRootOnly": false,
+        "details": {
+          "role": "trigger",
+          "interactive": true,
+          "focusable": true
+        }
+      },
+      "relation": "controls-expanded"
+    },
+    "content": {
+      "part": {
+        "name": "content",
+        "semanticElement": "div",
+        "isCompound": true,
+        "isRootOnly": false,
+        "details": {
+          "role": "content",
+          "interactive": true,
+          "focusable": true
+        }
+      },
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "anchored",
+      "placementProp": "placement",
+      "collision": "flip-shift"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click",
+      "blur"
+    ],
+    "openTriggers": [
+      "click"
+    ]
+  },
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Popover / Documentation",
+    "componentSetName": "Popover",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

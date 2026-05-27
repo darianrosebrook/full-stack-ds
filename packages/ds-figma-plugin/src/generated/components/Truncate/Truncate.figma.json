@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Truncate",
+    "cssPrefix": "truncate",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "span",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "toggle",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "lines",
+      "safeName": "lines",
+      "type": "number",
+      "required": false,
+      "description": "Maximum number of visible lines before truncation.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "expandable",
+      "safeName": "expandable",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether to render an expand/collapse toggle button.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "expanded",
+      "safeName": "expanded",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled expanded state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultExpanded",
+      "safeName": "defaultExpanded",
+      "type": "boolean",
+      "required": false,
+      "description": "Initial expanded state for uncontrolled mode.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onExpandedChange",
+      "safeName": "onExpandedChange",
+      "type": "(expanded: boolean) => void",
+      "required": false,
+      "description": "Called when expanded changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "expandText",
+      "safeName": "expandText",
+      "type": "string",
+      "required": false,
+      "description": "Custom expand button label.",
+      "defaultExpr": "\"Show more\"",
+      "nodeKind": null
+    },
+    {
+      "name": "collapseText",
+      "safeName": "collapseText",
+      "type": "string",
+      "required": false,
+      "description": "Custom collapse button label.",
+      "defaultExpr": "\"Show less\"",
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "expanded"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "truncate",
+    "valueModifiers": [],
+    "booleanModifiers": [
+      {
+        "propName": "expanded",
+        "safeName": "expanded"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "when": "toggle",
+        "action": "Toggle the expanded/collapsed state."
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".truncate",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-display-size-gap, 4px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-truncate-color-foreground-link": "var(--fsds-semantic-color-foreground-link, #d9292b)",
+          "--fsds-truncate-color-background-primary": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-truncate-typography-fontWeight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-truncate-spacing-toggle": "var(--fsds-core-spacing-size-02, 2px)",
+          "--fsds-truncate-color-foreground-linkHover": "var(--fsds-semantic-color-foreground-linkHover, #ae0001)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "block"
+        }
+      },
+      {
+        "selector": ".truncate__content",
+        "declarations": {
+          "display": "-webkit-box",
+          "-webkit-box-orient": "vertical",
+          "-webkit-line-clamp": "var(--fsds-truncate-content-lines, 3)",
+          "line-clamp": "var(--fsds-truncate-content-lines, 3)",
+          "overflow": "hidden"
+        }
+      },
+      {
+        "selector": ".truncate__toggle",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "color": "var(--fsds-truncate-color-foreground-link)",
+          "font-weight": "var(--fsds-truncate-typography-fontWeight)",
+          "margin-top": "var(--fsds-truncate-spacing-toggle)",
+          "background": "none",
+          "border": "none",
+          "padding": "0",
+          "cursor": "pointer"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "expanded",
+        "valueProp": "expanded",
+        "defaultValueProp": "defaultExpanded",
+        "changeHandlerProp": "onExpandedChange",
+        "valueType": "boolean",
+        "description": "Whether the truncated content is fully visible.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Truncate / Documentation",
+    "componentSetName": "Truncate",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

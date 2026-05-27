@@ -1,0 +1,560 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Select",
+    "cssPrefix": "select",
+    "rootElement": "div",
+    "effectiveRole": "combobox"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "trigger",
+      "semanticElement": "button",
+      "nativeTag": "button",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "text",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "search",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "options",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "option",
+      "semanticElement": "li",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "emptyState",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "options",
+      "safeName": "options",
+      "type": "SelectOption[]",
+      "required": true,
+      "description": "Available options.",
+      "defaultExpr": "[{\"value\":\"alpha\",\"label\":\"Alpha\"},{\"value\":\"beta\",\"label\":\"Beta\"},{\"value\":\"gamma\",\"label\":\"Gamma\"}]",
+      "nodeKind": null
+    },
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string | string[]",
+      "required": false,
+      "description": "Controlled selected value(s).",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string | string[]",
+      "required": false,
+      "description": "Default selected value(s) for uncontrolled usage.",
+      "defaultExpr": "\"beta\"",
+      "nodeKind": null
+    },
+    {
+      "name": "onChange",
+      "safeName": "onChange",
+      "type": "(value: string | string[]) => void",
+      "required": false,
+      "description": "Called when selection changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "open",
+      "safeName": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled open state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultOpen",
+      "safeName": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "Default open state for uncontrolled usage.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "onOpenChange",
+      "safeName": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Called when open state changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "multiple",
+      "safeName": "multiple",
+      "type": "boolean",
+      "required": false,
+      "description": "Allow multiple selections.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disabled state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "SelectSize",
+      "required": false,
+      "description": "Size variant.",
+      "defaultExpr": "\"md\"",
+      "nodeKind": null
+    },
+    {
+      "name": "filterFn",
+      "safeName": "filterFn",
+      "type": "((option: SelectOption, searchTerm: string) => boolean)",
+      "required": false,
+      "description": "Custom filter function for search.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "searchable",
+      "safeName": "searchable",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether to render the search input inside the dropdown.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "empty",
+      "safeName": "empty",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the option list is empty (drives the empty-state slot).",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ],
+    "position": [
+      "bottom",
+      "top",
+      "auto"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "active",
+      "disabled",
+      "open",
+      "closed",
+      "selected"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "select",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size",
+        "defaultExpr": "\"md\""
+      },
+      {
+        "propName": "position",
+        "safeName": "position"
+      }
+    ],
+    "booleanModifiers": [
+      {
+        "propName": "open",
+        "safeName": "open"
+      },
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "combobox",
+    "effectiveRole": "combobox",
+    "labeling": [
+      "aria-label",
+      "aria-expanded",
+      "aria-haspopup"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter",
+        "action": "Open the dropdown or select the focused option.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Open the dropdown or select the focused option.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next option, or open the dropdown if closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous option.",
+        "when": "content"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next option.",
+        "when": "content"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first option.",
+        "when": "content"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last option.",
+        "when": "content"
+      },
+      {
+        "key": "Enter",
+        "action": "Select the focused option and close the dropdown.",
+        "when": "option"
+      },
+      {
+        "key": "Escape",
+        "action": "Close the dropdown and return focus to the trigger.",
+        "when": "content"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".select",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-input-size-medium-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-input-size-medium-min-height, 36px)",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-select-color-background-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-select-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-select-color-border-default": "var(--fsds-semantic-color-border-primary, #f29495)",
+          "--fsds-select-color-icon-default": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-select-color-placeholder-default": "var(--fsds-semantic-color-foreground-placeholder, #8f8f8f)",
+          "--fsds-select-size-padding-default": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-select-size-radius-default": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-select-size-border-default": "var(--fsds-core-shape-border-width-hairline, 1px)",
+          "--fsds-select-size-sm-height": "var(--fsds-semantic-control-size-sm-height, 24px)",
+          "--fsds-select-size-md-height": "var(--fsds-semantic-control-size-md-height, 32px)",
+          "--fsds-select-size-lg-height": "var(--fsds-semantic-control-size-lg-height, 48px)",
+          "--fsds-select-font-size-default": "var(--fsds-semantic-typography-body-02, 16px)",
+          "--fsds-select-font-lineHeight-default": "var(--fsds-semantic-typography-line-height-body, 1.5)",
+          "--fsds-select-color-icon-isOpen": "var(--fsds-semantic-color-foreground-accent, #d9292b)",
+          "--fsds-select-focus-ring-width": "var(--fsds-semantic-focus-ring-width, 2px)",
+          "--fsds-select-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0a65fe)",
+          "--fsds-select-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
+          "--fsds-select-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "inline-flex",
+          "flex-direction": "column",
+          "position": "relative"
+        }
+      },
+      {
+        "selector": ".select__text",
+        "declarations": {
+          "flex": "1 1 auto",
+          "min-width": "0",
+          "overflow": "hidden",
+          "text-overflow": "ellipsis",
+          "white-space": "nowrap",
+          "text-align": "left"
+        }
+      },
+      {
+        "selector": ".select__trigger",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "space-between",
+          "gap": "var(--fsds-select-size-padding-default)",
+          "padding": "var(--fsds-select-size-padding-default)",
+          "border-style": "solid",
+          "border-width": "var(--fsds-select-size-border-default)",
+          "border-radius": "var(--fsds-select-size-radius-default)",
+          "border-color": "var(--fsds-select-color-border-default)",
+          "background-color": "var(--fsds-select-color-background-default)",
+          "color": "var(--fsds-select-color-foreground-default)",
+          "font-size": "var(--fsds-select-font-size-default)",
+          "line-height": "var(--fsds-select-font-lineHeight-default)",
+          "cursor": "pointer",
+          "width": "100%",
+          "box-sizing": "border-box"
+        }
+      },
+      {
+        "selector": ".select__content",
+        "declarations": {
+          "background-color": "var(--fsds-select-color-background-default)",
+          "border-style": "solid",
+          "border-width": "var(--fsds-select-size-border-default)",
+          "border-radius": "var(--fsds-select-size-radius-default)",
+          "border-color": "var(--fsds-select-color-border-default)",
+          "box-shadow": "0 4px 16px rgba(0,0,0,0.12)",
+          "padding": "var(--fsds-select-size-padding-default)",
+          "max-height": "320px",
+          "overflow-y": "auto",
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-select-size-padding-default)"
+        }
+      },
+      {
+        "selector": ".select__search",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "padding": "var(--fsds-select-size-padding-default)",
+          "border-style": "solid",
+          "border-width": "var(--fsds-select-size-border-default)",
+          "border-radius": "var(--fsds-select-size-radius-default)",
+          "border-color": "var(--fsds-select-color-border-default)",
+          "background-color": "var(--fsds-select-color-background-default)",
+          "color": "var(--fsds-select-color-foreground-default)",
+          "font-size": "var(--fsds-select-font-size-default)"
+        }
+      },
+      {
+        "selector": ".select__options",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "2px",
+          "list-style": "none",
+          "padding": "0",
+          "margin": "0"
+        }
+      },
+      {
+        "selector": ".select__option",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "gap": "var(--fsds-select-size-padding-default)",
+          "padding": "var(--fsds-select-size-padding-default)",
+          "border-radius": "var(--fsds-select-size-radius-default)",
+          "color": "var(--fsds-select-color-foreground-default)",
+          "cursor": "pointer"
+        }
+      },
+      {
+        "selector": ".select__emptyState",
+        "declarations": {
+          "text-align": "center",
+          "padding": "var(--fsds-select-size-padding-default)",
+          "color": "var(--fsds-select-color-placeholder-default)"
+        }
+      },
+      {
+        "selector": ".select__trigger:focus-visible",
+        "declarations": {
+          "outline-width": "var(--fsds-select-focus-ring-width)",
+          "outline-color": "var(--fsds-select-focus-ring-color)",
+          "outline-style": "var(--fsds-select-focus-ring-style)",
+          "outline-offset": "var(--fsds-select-focus-ring-offset)",
+          "--fsds-select-color-border-default": "var(--fsds-semantic-color-border-accent, #d9292b)"
+        }
+      },
+      {
+        "selector": ".select__trigger:hover",
+        "declarations": {
+          "--fsds-select-color-border-default": "var(--fsds-semantic-color-border-bold, #8f8f8f)",
+          "--fsds-select-color-background-default": "var(--fsds-semantic-color-background-hover, #cecece)",
+          "--fsds-select-color-foreground-default": "var(--fsds-semantic-color-foreground-hover, #3a3a3a)"
+        }
+      },
+      {
+        "selector": ".select--open .select__trigger",
+        "declarations": {
+          "--fsds-select-color-border-default": "var(--fsds-semantic-color-border-accent, #d9292b)"
+        }
+      },
+      {
+        "selector": ".select--disabled .select__trigger",
+        "declarations": {
+          "cursor": "not-allowed",
+          "opacity": "0.5",
+          "--fsds-select-color-background-default": "var(--fsds-semantic-color-background-disabled, #cecece)",
+          "--fsds-select-color-foreground-default": "var(--fsds-semantic-color-foreground-disabled, #aeaeae)",
+          "--fsds-select-color-border-default": "var(--fsds-semantic-color-border-disabled, #cecece)"
+        }
+      },
+      {
+        "selector": ".select__option:hover",
+        "declarations": {
+          "--fsds-select-color-background-default": "var(--fsds-semantic-color-background-hover, #cecece)",
+          "--fsds-select-color-foreground-default": "var(--fsds-semantic-color-foreground-hover, #3a3a3a)"
+        }
+      },
+      {
+        "selector": ".select__option[aria-selected=\"true\"]",
+        "declarations": {
+          "--fsds-select-color-background-default": "var(--fsds-semantic-color-background-highlight, #f7c1c2)",
+          "--fsds-select-color-foreground-default": "var(--fsds-semantic-color-foreground-accent, #d9292b)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "selection",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onChange",
+        "valueType": "string | string[]",
+        "description": "Currently selected value(s).",
+        "callbackKind": "value"
+      },
+      {
+        "name": "open",
+        "valueProp": "open",
+        "defaultValueProp": "defaultOpen",
+        "changeHandlerProp": "onOpenChange",
+        "valueType": "boolean",
+        "description": "Whether the dropdown is open.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [
+      {
+        "event": "escape",
+        "defaultEnabled": true
+      },
+      {
+        "event": "outsideClick",
+        "defaultEnabled": true
+      },
+      {
+        "event": "selection",
+        "defaultEnabled": true,
+        "description": "After a single-select choice is made, the listbox closes automatically."
+      }
+    ],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "roving",
+      "orientation": "vertical",
+      "initialFocus": "search",
+      "returnFocus": "trigger",
+      "wrap": true
+    },
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "anchored",
+      "layering": "popover",
+      "collision": "flip-shift"
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Select / Documentation",
+    "componentSetName": "Select",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

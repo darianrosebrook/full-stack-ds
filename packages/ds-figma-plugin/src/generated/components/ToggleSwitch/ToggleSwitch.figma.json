@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "ToggleSwitch",
+    "cssPrefix": "toggle-switch",
+    "rootElement": "div",
+    "effectiveRole": "switch"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "label",
+      "semanticElement": "label",
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "input",
+      "semanticElement": "input",
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "checked",
+      "safeName": "checked",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled checked state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultChecked",
+      "safeName": "defaultChecked",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial checked state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onChange",
+      "safeName": "onChange",
+      "type": "(checked: boolean) => void",
+      "required": false,
+      "description": "Called when checked changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "ToggleSwitchSize",
+      "required": false,
+      "description": "Size token.",
+      "defaultExpr": "\"medium\"",
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Prevents interaction.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaDescribedby",
+      "safeName": "ariaDescribedby",
+      "type": "string",
+      "required": false,
+      "description": "External description element id appended to aria-describedby.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "small",
+      "medium",
+      "large"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "active",
+      "disabled",
+      "checked"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "toggle-switch",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size",
+        "defaultExpr": "\"medium\""
+      }
+    ],
+    "booleanModifiers": [
+      {
+        "propName": "checked",
+        "safeName": "checked"
+      },
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "switch",
+    "effectiveRole": "switch",
+    "labeling": [
+      "aria-label",
+      "aria-checked",
+      "aria-describedby"
+    ],
+    "keyboard": [
+      {
+        "key": "Space|Enter",
+        "action": "Toggle the switch."
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".toggle-switch",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-action-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-action-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-action-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-action-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-action-size-medium-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-action-size-medium-min-width, 36px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-action-size-medium-min-height, 36px)",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-toggle-switch-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-toggle-switch-color-foreground-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-toggle-switch-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-toggle-switch-border-radius-default": "var(--fsds-core-shape-radius-full, 9999px)",
+          "--fsds-toggle-switch-motion-duration-fast": "var(--fsds-core-motion-duration-short, 150ms)",
+          "--fsds-toggle-switch-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #efefef)",
+          "--fsds-toggle-switch-color-background-checked": "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+          "--fsds-toggle-switch-color-background-disabled": "var(--fsds-semantic-color-background-disabled, #cecece)",
+          "--fsds-toggle-switch-focus-ring-width": "var(--fsds-semantic-focus-ring-width, 2px)",
+          "--fsds-toggle-switch-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0a65fe)",
+          "--fsds-toggle-switch-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
+          "--fsds-toggle-switch-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "inline-flex",
+          "align-items": "center",
+          "background-color": "var(--fsds-toggle-switch-color-background-default)",
+          "color": "var(--fsds-toggle-switch-color-foreground-default)",
+          "border-color": "var(--fsds-toggle-switch-color-border-default)",
+          "border-radius": "var(--fsds-toggle-switch-border-radius-default)",
+          "transition-duration": "var(--fsds-toggle-switch-motion-duration-fast)",
+          "border-style": "solid",
+          "border-width": "1px",
+          "cursor": "pointer",
+          "box-sizing": "border-box"
+        }
+      },
+      {
+        "selector": ".toggle-switch:hover",
+        "declarations": {
+          "background-color": "var(--fsds-toggle-switch-color-background-hover)"
+        }
+      },
+      {
+        "selector": ".toggle-switch[aria-checked=\"true\"]",
+        "declarations": {
+          "background-color": "var(--fsds-toggle-switch-color-background-checked)"
+        }
+      },
+      {
+        "selector": ".toggle-switch:disabled",
+        "declarations": {
+          "background-color": "var(--fsds-toggle-switch-color-background-disabled)",
+          "cursor": "not-allowed"
+        }
+      },
+      {
+        "selector": ".toggle-switch:focus-visible",
+        "declarations": {
+          "outline-width": "var(--fsds-toggle-switch-focus-ring-width)",
+          "outline-color": "var(--fsds-toggle-switch-focus-ring-color)",
+          "outline-style": "var(--fsds-toggle-switch-focus-ring-style)",
+          "outline-offset": "var(--fsds-toggle-switch-focus-ring-offset)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "checked",
+        "valueProp": "checked",
+        "defaultValueProp": "defaultChecked",
+        "changeHandlerProp": "onChange",
+        "valueType": "boolean",
+        "description": "Whether the toggle switch is on.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": {
+      "participates": true,
+      "inputType": "checkbox",
+      "name": {
+        "prop": "name"
+      },
+      "serialization": {
+        "valueType": "string",
+        "valueSource": "static:on",
+        "omitWhen": "unchecked"
+      },
+      "validity": {
+        "model": "native",
+        "ariaAttributes": [
+          "aria-disabled"
+        ]
+      },
+      "labeling": {
+        "strategy": "associated-label",
+        "required": true,
+        "via": [
+          "aria-labelledby",
+          "aria-label"
+        ]
+      }
+    },
+    "focus": {
+      "strategy": "auto",
+      "description": "Native input[role=switch] receives focus via Tab. Space toggles the checked state."
+    },
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "ToggleSwitch / Documentation",
+    "componentSetName": "ToggleSwitch",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

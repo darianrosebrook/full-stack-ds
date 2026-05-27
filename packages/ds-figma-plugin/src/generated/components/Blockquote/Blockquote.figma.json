@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Blockquote",
+    "cssPrefix": "blockquote",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "blockquote",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "cite",
+      "safeName": "cite",
+      "type": "string",
+      "required": false,
+      "description": "Citation or source URL of the quote",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "BlockquoteVariant",
+      "required": false,
+      "description": "Visual variant of the blockquote",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "BlockquoteSize",
+      "required": false,
+      "description": "Size token",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "variant": [
+      "default",
+      "bordered",
+      "highlighted"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "blockquote",
+    "valueModifiers": [
+      {
+        "propName": "variant",
+        "safeName": "variant"
+      },
+      {
+        "propName": "size",
+        "safeName": "size"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".blockquote",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-blockquote-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-blockquote-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-blockquote-color-border-default": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-blockquote-typography-fontStyle": "var(--fsds-semantic-typography-font-style-italic, italic)",
+          "--fsds-blockquote-typography-fontWeight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-blockquote-size-padding-default": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-blockquote-size-radius-default": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-blockquote-size-border-thick": "var(--fsds-core-shape-border-width-thick, 2px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "color": "var(--fsds-blockquote-color-foreground-primary)",
+          "background-color": "var(--fsds-blockquote-color-background-default)",
+          "border-color": "var(--fsds-blockquote-color-border-default)",
+          "padding": "var(--fsds-blockquote-size-padding-default)",
+          "border-radius": "var(--fsds-blockquote-size-radius-default)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Blockquote / Documentation",
+    "componentSetName": "Blockquote",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Accordion",
+    "cssPrefix": "accordion",
+    "rootElement": "section",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "item",
+      "semanticElement": "li",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "trigger",
+      "semanticElement": "button",
+      "nativeTag": "button",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "header",
+      "semanticElement": "header",
+      "nativeTag": "h3",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "chevron",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "contentInner",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "type",
+      "safeName": "type",
+      "type": "AccordionType",
+      "required": false,
+      "description": "Whether only one panel can be open at a time (single) or multiple may be open simultaneously (multiple).",
+      "defaultExpr": "\"single\"",
+      "nodeKind": null
+    },
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string | string[]",
+      "required": false,
+      "description": "Controlled value. String in single mode; string array in multiple mode.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string | string[]",
+      "required": false,
+      "description": "Uncontrolled initial open value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onValueChange",
+      "safeName": "onValueChange",
+      "type": "(value: string | string[]) => void",
+      "required": false,
+      "description": "Called when the open panel(s) change.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "collapsible",
+      "safeName": "collapsible",
+      "type": "boolean",
+      "required": false,
+      "description": "When true in single mode, the open panel may be collapsed by clicking its trigger again.",
+      "defaultExpr": "false",
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables all accordion items.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "type": [
+      "single",
+      "multiple"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "disabled",
+      "open",
+      "closed"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "accordion",
+    "valueModifiers": [
+      {
+        "propName": "type",
+        "safeName": "type",
+        "defaultExpr": "\"single\""
+      }
+    ],
+    "booleanModifiers": [
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "section",
+    "explicitRole": "region",
+    "implicitRole": "region",
+    "labeling": [],
+    "keyboard": [
+      {
+        "key": "Enter|Space",
+        "action": "Toggle the focused accordion item open or closed.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first accordion trigger.",
+        "when": "trigger"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last accordion trigger.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".accordion",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-accordion-color-background-hover": "var(--fsds-semantic-interaction-background-hover, #efefef)",
+          "--fsds-accordion-color-text": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-accordion-color-textSecondary": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-accordion-color-icon": "var(--fsds-semantic-color-foreground-tertiary, #717171)",
+          "--fsds-accordion-border-width": "var(--fsds-core-shape-border-width-hairline, 1px)",
+          "--fsds-accordion-border-color": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-accordion-border-radius": "var(--fsds-core-shape-radius-small, 4px)",
+          "--fsds-accordion-spacing-gap": "var(--fsds-core-spacing-size-07, 24px)",
+          "--fsds-accordion-spacing-paddingX": "var(--fsds-core-spacing-size-00, 0px)",
+          "--fsds-accordion-spacing-paddingY": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-accordion-text-weight": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-accordion-text-size": "var(--fsds-semantic-typography-body-02, 16px)",
+          "--fsds-accordion-text-lineHeight": "var(--fsds-semantic-typography-line-height-normal, 1.5)",
+          "--fsds-accordion-text-sizeContent": "var(--fsds-semantic-typography-body-03, 14px)",
+          "--fsds-accordion-text-lineHeightContent": "var(--fsds-semantic-typography-line-height-loose, 1.8)",
+          "--fsds-accordion-icon-size": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-accordion-focus-width": "var(--fsds-core-shape-border-width-thick, 2px)",
+          "--fsds-accordion-focus-color": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-accordion-focus-offset": "var(--fsds-core-spacing-size-01, 1px)",
+          "--fsds-accordion-opacity-disabled": "var(--fsds-semantic-interaction-disabled-opacity, 0.5)",
+          "--fsds-accordion-color-textHover": "var(--fsds-semantic-interaction-text-hover, #555555)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-accordion-spacing-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "flex",
+          "flex-direction": "column",
+          "border-color": "var(--fsds-accordion-border-color)",
+          "border-radius": "var(--fsds-accordion-border-radius)",
+          "font-size": "var(--fsds-accordion-text-sizeContent)",
+          "line-height": "var(--fsds-accordion-text-lineHeightContent)"
+        }
+      },
+      {
+        "selector": ".accordion__item",
+        "declarations": {
+          "background-color": "transparent",
+          "border-color": "var(--fsds-accordion-border-color)",
+          "border-style": "solid",
+          "border-width": "1px",
+          "border-radius": "var(--fsds-accordion-border-radius)",
+          "overflow": "hidden"
+        }
+      },
+      {
+        "selector": ".accordion__header",
+        "declarations": {
+          "margin": "0"
+        }
+      },
+      {
+        "selector": ".accordion__trigger",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "space-between",
+          "width": "100%",
+          "padding": "var(--fsds-accordion-spacing-paddingY)",
+          "background": "transparent",
+          "border": "0",
+          "cursor": "pointer",
+          "font-size": "var(--fsds-accordion-text-size)",
+          "font-weight": "var(--fsds-accordion-text-weight)",
+          "color": "var(--fsds-accordion-color-text)",
+          "text-align": "left",
+          "line-height": "var(--fsds-accordion-text-lineHeight)"
+        }
+      },
+      {
+        "selector": ".accordion__trigger:hover",
+        "declarations": {
+          "background-color": "var(--fsds-accordion-color-background-hover)",
+          "color": "var(--fsds-accordion-color-textHover)"
+        }
+      },
+      {
+        "selector": ".accordion__trigger:focus-visible",
+        "declarations": {
+          "outline-width": "var(--fsds-accordion-focus-width)",
+          "outline-color": "var(--fsds-accordion-focus-color)",
+          "outline-offset": "var(--fsds-accordion-focus-offset)",
+          "outline-style": "solid"
+        }
+      },
+      {
+        "selector": ".accordion__chevron",
+        "declarations": {
+          "display": "inline-flex",
+          "flex-shrink": "0",
+          "width": "var(--fsds-accordion-icon-size)",
+          "height": "var(--fsds-accordion-icon-size)",
+          "align-items": "center",
+          "justify-content": "center",
+          "transition": "transform 200ms ease",
+          "color": "var(--fsds-accordion-color-icon)"
+        }
+      },
+      {
+        "selector": ".accordion__trigger[aria-expanded=\"true\"] .accordion__chevron",
+        "declarations": {
+          "transform": "rotate(180deg)"
+        }
+      },
+      {
+        "selector": ".accordion__content",
+        "declarations": {
+          "display": "block",
+          "overflow": "hidden"
+        }
+      },
+      {
+        "selector": ".accordion__contentInner",
+        "declarations": {
+          "padding": "var(--fsds-accordion-spacing-paddingY)",
+          "color": "var(--fsds-accordion-color-textSecondary)",
+          "font-size": "var(--fsds-accordion-text-sizeContent)",
+          "line-height": "var(--fsds-accordion-text-lineHeightContent)"
+        }
+      },
+      {
+        "selector": ".accordion--disabled",
+        "declarations": {
+          "opacity": "var(--fsds-accordion-opacity-disabled)",
+          "pointer-events": "none"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "openness",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onValueChange",
+        "valueType": "string | string[]",
+        "description": "Which panel(s) are expanded. String in single mode, string[] in multiple mode.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "manual",
+      "orientation": "vertical",
+      "initialFocus": "trigger",
+      "wrap": true,
+      "description": "Arrow keys navigate between accordion triggers; Space/Enter toggles the focused panel."
+    },
+    "portal": {
+      "enabled": false
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Accordion / Documentation",
+    "componentSetName": "Accordion",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

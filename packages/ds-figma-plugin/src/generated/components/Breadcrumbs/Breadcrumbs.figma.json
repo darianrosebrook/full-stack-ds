@@ -1,0 +1,186 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Breadcrumbs",
+    "cssPrefix": "breadcrumbs",
+    "rootElement": "nav",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "nav",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "list",
+      "semanticElement": "ul",
+      "nativeTag": "ol",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": "horizontal"
+    },
+    {
+      "name": "link",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "current",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "separator",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "overflow",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the nav landmark. Defaults to \"Breadcrumb\".",
+      "defaultExpr": "\"Breadcrumb\"",
+      "nodeKind": null
+    },
+    {
+      "name": "separator",
+      "safeName": "separator",
+      "type": "string",
+      "required": false,
+      "description": "Separator character or string rendered between items.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "breadcrumbs",
+    "valueModifiers": [],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "nav",
+    "explicitRole": "navigation",
+    "implicitRole": "navigation",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".breadcrumbs",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-breadcrumbs-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-breadcrumbs-color-background-elevated": "var(--fsds-semantic-color-background-elevated, #ffffff)",
+          "--fsds-breadcrumbs-color-border-subtle": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-breadcrumbs-typography-lineHeight-collapse": "var(--fsds-semantic-typography-line-height-collapse, 1)",
+          "--fsds-breadcrumbs-shape-radius-medium": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-breadcrumbs-spacing-gap-default": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-breadcrumbs-spacing-padding-default": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-breadcrumbs-color-focus": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-breadcrumbs-color-background-elevated)",
+          "border-color": "var(--fsds-breadcrumbs-color-border-subtle)",
+          "line-height": "var(--fsds-breadcrumbs-typography-lineHeight-collapse)",
+          "display": "block",
+          "border-radius": "var(--fsds-breadcrumbs-shape-radius-medium)",
+          "padding": "var(--fsds-breadcrumbs-spacing-padding-default)",
+          "color": "var(--fsds-breadcrumbs-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".breadcrumbs:focus-visible",
+        "declarations": {
+          "outline-color": "var(--fsds-breadcrumbs-color-focus)"
+        }
+      },
+      {
+        "selector": ".breadcrumbs__list",
+        "declarations": {
+          "list-style": "none",
+          "padding": "0",
+          "margin": "0",
+          "display": "flex",
+          "align-items": "center",
+          "flex-wrap": "wrap",
+          "gap": "var(--fsds-breadcrumbs-spacing-gap-default)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Breadcrumbs / Documentation",
+    "componentSetName": "Breadcrumbs",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

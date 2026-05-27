@@ -1,0 +1,370 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "TextField",
+    "cssPrefix": "text-field",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "label",
+      "semanticElement": "label",
+      "nativeTag": "label",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "field",
+      "semanticElement": null,
+      "nativeTag": "input",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "description",
+      "semanticElement": "p",
+      "nativeTag": "span",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "error",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "label",
+      "safeName": "label",
+      "type": "ReactNode",
+      "required": false,
+      "description": "Visible label rendered above the input.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "description",
+      "safeName": "description",
+      "type": "ReactNode",
+      "required": false,
+      "description": "Helper text rendered below the input.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "error",
+      "safeName": "error",
+      "type": "ReactNode",
+      "required": false,
+      "description": "Error message rendered below the input. Setting this also flips the field into invalid state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "type",
+      "safeName": "type",
+      "type": "string",
+      "required": false,
+      "description": "HTML input type.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string",
+      "required": false,
+      "description": "Controlled value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string",
+      "required": false,
+      "description": "Uncontrolled initial value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onChange",
+      "safeName": "onChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Called when value changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "invalid",
+      "safeName": "invalid",
+      "type": "boolean",
+      "required": false,
+      "description": "Applies error styling and sets aria-invalid.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Prevents interaction.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "required",
+      "safeName": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Marks the input as required.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "name",
+      "safeName": "name",
+      "type": "string",
+      "required": false,
+      "description": "Form name for native submission.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "ariaDescribedby",
+      "safeName": "ariaDescribedby",
+      "type": "string",
+      "required": false,
+      "description": "External description element id appended to aria-describedby.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default",
+      "focus",
+      "disabled",
+      "invalid"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "text-field",
+    "valueModifiers": [],
+    "booleanModifiers": [
+      {
+        "propName": "invalid",
+        "safeName": "invalid"
+      },
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-describedby"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".text-field",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-input-size-medium-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-input-size-medium-min-height, 36px)",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-text-field-spacing-gap": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-text-field-border-width": "var(--fsds-core-shape-border-width-hairline, 1px)",
+          "--fsds-text-field-border-radius": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-text-field-color-input-text": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-text-field-color-input-placeholder": "var(--fsds-semantic-color-foreground-tertiary, #717171)",
+          "--fsds-text-field-color-input-borderError": "var(--fsds-semantic-color-status-danger, #d9292b)",
+          "--fsds-text-field-color-error": "var(--fsds-semantic-color-foreground-danger, #d9292b)",
+          "--fsds-text-field-focus-ring-width": "var(--fsds-semantic-focus-ring-width, 2px)",
+          "--fsds-text-field-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0a65fe)",
+          "--fsds-text-field-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
+          "--fsds-text-field-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-text-field-spacing-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "flex",
+          "flex-direction": "column"
+        }
+      },
+      {
+        "selector": ".text-field__label",
+        "declarations": {
+          "display": "inline-block",
+          "font-size": "0.875rem",
+          "font-weight": "500",
+          "color": "var(--fsds-text-field-color-input-text)"
+        }
+      },
+      {
+        "selector": ".text-field__field",
+        "declarations": {
+          "display": "block",
+          "width": "100%",
+          "box-sizing": "border-box",
+          "border-style": "solid",
+          "border-width": "var(--fsds-text-field-border-width)",
+          "border-radius": "var(--fsds-text-field-border-radius)",
+          "color": "var(--fsds-text-field-color-input-text)",
+          "font-size": "1rem",
+          "padding": "8px 12px"
+        }
+      },
+      {
+        "selector": ".text-field__description",
+        "declarations": {
+          "display": "block",
+          "font-size": "0.875em",
+          "color": "var(--fsds-text-field-color-input-text)"
+        }
+      },
+      {
+        "selector": ".text-field__error",
+        "declarations": {
+          "display": "block",
+          "font-size": "0.875em",
+          "color": "var(--fsds-text-field-color-error)"
+        }
+      },
+      {
+        "selector": ".text-field__field:focus-visible",
+        "declarations": {
+          "outline-width": "var(--fsds-text-field-focus-ring-width)",
+          "outline-color": "var(--fsds-text-field-focus-ring-color)",
+          "outline-style": "var(--fsds-text-field-focus-ring-style)",
+          "outline-offset": "var(--fsds-text-field-focus-ring-offset)"
+        }
+      },
+      {
+        "selector": ".text-field--invalid .text-field__field",
+        "declarations": {
+          "border-color": "var(--fsds-text-field-color-input-borderError)"
+        }
+      },
+      {
+        "selector": ".text-field__field:disabled",
+        "declarations": {
+          "opacity": "0.5",
+          "cursor": "not-allowed"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "value",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onChange",
+        "valueType": "string",
+        "description": "The current text value of the field's input.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": {
+      "participates": true,
+      "inputType": "text",
+      "name": {
+        "prop": "name"
+      },
+      "required": {
+        "prop": "required",
+        "constraintValidation": true
+      },
+      "serialization": {
+        "valueType": "string",
+        "valueSource": "prop:value",
+        "omitWhen": "never"
+      },
+      "validity": {
+        "model": "hybrid",
+        "invalidProp": "invalid",
+        "errorMessageProp": "error",
+        "errorSurface": "aria-describedby",
+        "ariaAttributes": [
+          "aria-invalid",
+          "aria-required",
+          "aria-describedby"
+        ]
+      },
+      "labeling": {
+        "strategy": "associated-label",
+        "required": true,
+        "via": [
+          "prop:label",
+          "aria-labelledby",
+          "aria-label"
+        ]
+      }
+    },
+    "focus": {
+      "strategy": "auto",
+      "initialFocus": "field",
+      "description": "Focus moves to the native input (anatomy part `field`) via Tab. Label, description, and error are non-interactive and not in the tab sequence."
+    },
+    "portal": {
+      "enabled": false
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "TextField / Documentation",
+    "componentSetName": "TextField",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Badge",
+    "cssPrefix": "badge",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "icon",
+      "semanticElement": "span",
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "span",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "BadgeVariant",
+      "required": false,
+      "description": "Visual variant of the badge",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "intent",
+      "safeName": "intent",
+      "type": "BadgeIntent",
+      "required": false,
+      "description": "Intent/severity for status badges",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "BadgeSize",
+      "required": false,
+      "description": "Badge size token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "icon",
+      "safeName": "icon",
+      "type": "ReactNode",
+      "required": false,
+      "description": "Icon to display. For status variant, defaults to a star icon if not provided. Pass null to hide.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "showStatusIcon",
+      "safeName": "showStatusIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether to show the default status icon (only applies to status variant)",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "variant": [
+      "default",
+      "status",
+      "counter",
+      "tag"
+    ],
+    "intent": [
+      "info",
+      "success",
+      "warning",
+      "danger"
+    ],
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "badge",
+    "valueModifiers": [
+      {
+        "propName": "variant",
+        "safeName": "variant"
+      },
+      {
+        "propName": "intent",
+        "safeName": "intent"
+      },
+      {
+        "propName": "size",
+        "safeName": "size"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".badge",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "0",
+          "--fsds-box-model-width": "var(--fsds-semantic-glyph-size-medium-extent, 16px)",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "var(--fsds-semantic-glyph-size-medium-extent, 16px)",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-badge-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-badge-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-badge-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-badge-spacing-gap": "var(--fsds-core-spacing-size-02, 2px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-badge-spacing-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-badge-color-background-default)",
+          "color": "var(--fsds-badge-color-foreground-primary)",
+          "border-color": "var(--fsds-badge-color-border-default)"
+        }
+      },
+      {
+        "selector": ".badge__icon",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "flex-shrink": "0",
+          "width": "1em",
+          "height": "1em",
+          "margin-inline-end": "2px"
+        }
+      },
+      {
+        "selector": ".badge__content",
+        "declarations": {
+          "display": "inline-block",
+          "white-space": "nowrap"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Badge / Documentation",
+    "componentSetName": "Badge",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

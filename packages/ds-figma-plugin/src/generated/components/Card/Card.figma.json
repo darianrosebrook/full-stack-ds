@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Card",
+    "cssPrefix": "card",
+    "rootElement": "div",
+    "effectiveRole": "group"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "header",
+      "semanticElement": "header",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "media",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "footer",
+      "semanticElement": "footer",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": "horizontal"
+    },
+    {
+      "name": "actions",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "badge",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "description",
+      "semanticElement": "p",
+      "nativeTag": null,
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "link",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "note",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "interactive",
+      "safeName": "interactive",
+      "type": "boolean",
+      "required": false,
+      "description": "Enable hover affordances (shadow lift, translate)",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "status",
+      "safeName": "status",
+      "type": "CardStatus",
+      "required": false,
+      "description": "Visual status variant of the card",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "density",
+      "safeName": "density",
+      "type": "CardDensity",
+      "required": false,
+      "description": "Padding and border treatment. Use 'inset' for compact tiles inside a list or grid where the surrounding container provides primary structure.",
+      "defaultExpr": "\"default\"",
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "status": [
+      "completed",
+      "in-progress",
+      "planned",
+      "deprecated",
+      "category",
+      "complexity"
+    ],
+    "density": [
+      "default",
+      "inset"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "active"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "card",
+    "valueModifiers": [
+      {
+        "propName": "status",
+        "safeName": "status"
+      },
+      {
+        "propName": "density",
+        "safeName": "density",
+        "defaultExpr": "\"default\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "group",
+    "effectiveRole": "group",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".card",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-card-color-background-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-card-color-background-hover": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-card-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-card-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-card-size-padding-default": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-card-size-padding-inset": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-card-size-radius-default": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-card-size-gap-default": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-card-typography-lineHeight-heading": "var(--fsds-semantic-typography-line-height-heading, 1)",
+          "--fsds-card-typography-lineHeight-normal": "var(--fsds-semantic-typography-line-height-normal, 1.5)",
+          "--fsds-card-color-badge-success-background": "var(--fsds-semantic-color-background-success-subtle, #e4f2e0)",
+          "--fsds-card-color-badge-success-foreground": "var(--fsds-semantic-color-foreground-on-success-subtle, #234104)",
+          "--fsds-card-color-badge-warning-background": "var(--fsds-semantic-color-background-warning-subtle, #ffedcc)",
+          "--fsds-card-color-badge-warning-foreground": "var(--fsds-semantic-color-foreground-on-warning-subtle, #593000)",
+          "--fsds-card-color-badge-info-background": "var(--fsds-semantic-color-background-info-subtle, #d9f3fe)",
+          "--fsds-card-color-badge-info-foreground": "var(--fsds-semantic-color-foreground-on-info-subtle, #002d99)",
+          "--fsds-card-color-badge-error-background": "var(--fsds-semantic-color-background-danger-subtle, #fceaea)",
+          "--fsds-card-color-badge-error-foreground": "var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000)",
+          "--fsds-card-color-badge-neutral-background": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-card-color-badge-neutral-foreground": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-card-color-badge-accent-background": "var(--fsds-semantic-color-background-accent, #d9292b)",
+          "--fsds-card-color-badge-accent-foreground": "var(--fsds-semantic-color-foreground-on-brand, #ffffff)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-card-size-gap-default)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-card-color-background-default)",
+          "border-color": "var(--fsds-card-color-border-default)",
+          "color": "var(--fsds-card-color-foreground-primary)",
+          "padding": "var(--fsds-card-size-padding-default)",
+          "border-radius": "var(--fsds-card-size-radius-default)",
+          "line-height": "var(--fsds-card-typography-lineHeight-normal)",
+          "display": "flex",
+          "flex-direction": "column",
+          "border-style": "solid",
+          "border-width": "1px",
+          "box-sizing": "border-box"
+        }
+      },
+      {
+        "selector": ".card:hover",
+        "declarations": {
+          "background-color": "var(--fsds-card-color-background-hover)"
+        }
+      },
+      {
+        "selector": ".card--inset",
+        "declarations": {
+          "padding": "var(--fsds-card-size-padding-inset)"
+        }
+      },
+      {
+        "selector": ".card__header",
+        "declarations": {
+          "display": "flex",
+          "align-items": "flex-start",
+          "justify-content": "space-between",
+          "gap": "var(--fsds-card-size-gap-default)",
+          "line-height": "var(--fsds-card-typography-lineHeight-heading)",
+          "color": "var(--fsds-card-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".card__media",
+        "declarations": {
+          "display": "block",
+          "width": "100%",
+          "overflow": "hidden",
+          "border-radius": "var(--fsds-card-size-radius-default)"
+        }
+      },
+      {
+        "selector": ".card__content",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-card-size-gap-default)",
+          "flex": "1 1 auto",
+          "color": "var(--fsds-card-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".card__description",
+        "declarations": {
+          "margin": "0",
+          "--fsds-card-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      },
+      {
+        "selector": ".card__footer",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "justify-content": "flex-end",
+          "gap": "var(--fsds-card-size-gap-default)",
+          "padding-top": "var(--fsds-card-size-padding-default)",
+          "margin-top": "auto",
+          "border-top-color": "var(--fsds-card-color-border-default)",
+          "border-top-style": "solid",
+          "border-top-width": "1px"
+        }
+      },
+      {
+        "selector": ".card__actions",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "gap": "var(--fsds-card-size-gap-default)"
+        }
+      },
+      {
+        "selector": ".card__badge",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "background-color": "var(--fsds-card-color-badge-accent-background)",
+          "color": "var(--fsds-card-color-badge-accent-foreground)",
+          "padding": "2px 8px",
+          "border-radius": "9999px",
+          "font-size": "0.75em",
+          "line-height": "1.4"
+        }
+      },
+      {
+        "selector": ".card__link",
+        "declarations": {
+          "text-decoration": "none",
+          "--fsds-card-color-foreground-primary": "var(--fsds-semantic-color-foreground-link, #d9292b)"
+        }
+      },
+      {
+        "selector": ".card__link:hover",
+        "declarations": {
+          "text-decoration": "underline"
+        }
+      },
+      {
+        "selector": ".card__note",
+        "declarations": {
+          "font-size": "0.875em",
+          "line-height": "var(--fsds-card-typography-lineHeight-normal)",
+          "--fsds-card-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Card / Documentation",
+    "componentSetName": "Card",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

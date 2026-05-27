@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Walkthrough",
+    "cssPrefix": "walkthrough",
+    "rootElement": "div",
+    "effectiveRole": "status"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "title",
+      "semanticElement": "h3",
+      "nativeTag": "h3",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "description",
+      "semanticElement": "p",
+      "nativeTag": "p",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "controls",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "skip",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "prev",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "next",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "dots",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "dot",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "counter",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "steps",
+      "safeName": "steps",
+      "type": "WalkthroughStepSpec[]",
+      "required": false,
+      "description": "Array of step definitions, each specifying an anchor target and content.",
+      "defaultExpr": "[{\"anchor\":\"#step-1\",\"title\":\"Welcome to the tour\"},{\"anchor\":\"#step-2\",\"title\":\"Browse your dashboard\"},{\"anchor\":\"#step-3\",\"title\":\"Configure preferences\"}]",
+      "nodeKind": null
+    },
+    {
+      "name": "index",
+      "safeName": "index",
+      "type": "number",
+      "required": false,
+      "description": "Controlled active step index.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultIndex",
+      "safeName": "defaultIndex",
+      "type": "number",
+      "required": false,
+      "description": "Uncontrolled initial step index.",
+      "defaultExpr": "0",
+      "nodeKind": null
+    },
+    {
+      "name": "onStepChange",
+      "safeName": "onStepChange",
+      "type": "(index: number) => void",
+      "required": false,
+      "description": "Called when the active step changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onComplete",
+      "safeName": "onComplete",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the user advances past the last step.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onSkip",
+      "safeName": "onSkip",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the user skips the tour.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "label",
+      "safeName": "label",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the walkthrough region.",
+      "defaultExpr": "\"Feature tour\"",
+      "nodeKind": null
+    },
+    {
+      "name": "storageKey",
+      "safeName": "storageKey",
+      "type": "string",
+      "required": false,
+      "description": "localStorage key to persist tour completion state across sessions.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "autoStart",
+      "safeName": "autoStart",
+      "type": "boolean",
+      "required": false,
+      "description": "Automatically begin the tour on mount.",
+      "defaultExpr": "false",
+      "nodeKind": null
+    },
+    {
+      "name": "closeOnOutsideClick",
+      "safeName": "closeOnOutsideClick",
+      "type": "boolean",
+      "required": false,
+      "description": "Close/skip the tour when the user clicks outside the panel.",
+      "defaultExpr": "false",
+      "nodeKind": null
+    },
+    {
+      "name": "placement",
+      "safeName": "placement",
+      "type": "WalkthroughPlacement",
+      "required": false,
+      "description": "Preferred placement of the walkthrough panel relative to its anchor.",
+      "defaultExpr": "\"auto\"",
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "placement": [
+      "top",
+      "bottom",
+      "left",
+      "right",
+      "auto"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "disabled"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "walkthrough",
+    "valueModifiers": [
+      {
+        "propName": "placement",
+        "safeName": "placement",
+        "defaultExpr": "\"auto\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "status",
+    "effectiveRole": "status",
+    "labeling": [
+      "aria-label"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowRight",
+        "action": "Advance to the next step.",
+        "when": "active"
+      },
+      {
+        "key": "ArrowLeft",
+        "action": "Go to the previous step.",
+        "when": "active"
+      },
+      {
+        "key": "Escape",
+        "action": "Close/skip the walkthrough tour.",
+        "when": "active"
+      },
+      {
+        "key": "Enter|Space",
+        "action": "Activate the focused control (skip, prev, next, or dot).",
+        "when": "active"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".walkthrough",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-walkthrough-surface-bg": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-walkthrough-surface-border": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-walkthrough-surface-radius": "var(--fsds-core-shape-radius-04, 16px)",
+          "--fsds-walkthrough-surface-shadow": "var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12))",
+          "--fsds-walkthrough-surface-padding": "var(--fsds-core-spacing-size-08, 32px)",
+          "--fsds-walkthrough-title-fontSize": "var(--fsds-semantic-typography-heading-03, 20px)",
+          "--fsds-walkthrough-title-fontWeight": "var(--fsds-semantic-typography-font-weight-bold, 700)",
+          "--fsds-walkthrough-title-color": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-walkthrough-description-fontSize": "var(--fsds-semantic-typography-body-02, 16px)",
+          "--fsds-walkthrough-description-color": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-walkthrough-description-marginTop": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-walkthrough-controls-gap": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-walkthrough-controls-marginTop": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-walkthrough-dots-size": "var(--fsds-core-spacing-size-02, 2px)",
+          "--fsds-walkthrough-dots-gap": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-walkthrough-dots-active": "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+          "--fsds-walkthrough-dots-idle": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-walkthrough-button-primary-bg": "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+          "--fsds-walkthrough-button-primary-color": "var(--fsds-semantic-color-action-foreground-primary-default, #ffffff)",
+          "--fsds-walkthrough-button-primary-radius": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-walkthrough-button-secondary-bg": "var(--fsds-core-color-mode-transparent, transparent)",
+          "--fsds-walkthrough-button-secondary-color": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-walkthrough-button-secondary-border": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-walkthrough-dots-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "position": "relative",
+          "display": "flex",
+          "flex-direction": "column",
+          "background-color": "var(--fsds-walkthrough-surface-bg)",
+          "border-color": "var(--fsds-walkthrough-surface-border)",
+          "border-style": "solid",
+          "border-width": "1px",
+          "border-radius": "var(--fsds-walkthrough-surface-radius)",
+          "box-shadow": "var(--fsds-walkthrough-surface-shadow)",
+          "padding": "var(--fsds-walkthrough-surface-padding)"
+        }
+      },
+      {
+        "selector": ".walkthrough__content",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-walkthrough-description-marginTop)"
+        }
+      },
+      {
+        "selector": ".walkthrough__title",
+        "declarations": {
+          "margin": "0",
+          "font-size": "var(--fsds-walkthrough-title-fontSize)",
+          "font-weight": "var(--fsds-walkthrough-title-fontWeight)",
+          "color": "var(--fsds-walkthrough-title-color)"
+        }
+      },
+      {
+        "selector": ".walkthrough__description",
+        "declarations": {
+          "margin": "0",
+          "font-size": "var(--fsds-walkthrough-description-fontSize)",
+          "color": "var(--fsds-walkthrough-description-color)",
+          "line-height": "1.5"
+        }
+      },
+      {
+        "selector": ".walkthrough__controls",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "row",
+          "align-items": "center",
+          "gap": "var(--fsds-walkthrough-controls-gap)",
+          "margin-top": "var(--fsds-walkthrough-controls-marginTop)",
+          "border-top-color": "var(--fsds-walkthrough-surface-border)",
+          "border-top-style": "solid",
+          "border-top-width": "1px",
+          "padding-top": "var(--fsds-walkthrough-controls-marginTop)"
+        }
+      },
+      {
+        "selector": ".walkthrough__skip",
+        "declarations": {
+          "background": "transparent",
+          "border": "none",
+          "color": "var(--fsds-walkthrough-button-secondary-color)",
+          "cursor": "pointer",
+          "padding": "0",
+          "margin-right": "auto"
+        }
+      },
+      {
+        "selector": ".walkthrough__prev",
+        "declarations": {
+          "background-color": "var(--fsds-walkthrough-button-secondary-bg)",
+          "border-color": "var(--fsds-walkthrough-button-secondary-border)",
+          "border-style": "solid",
+          "border-width": "1px",
+          "border-radius": "var(--fsds-walkthrough-button-primary-radius)",
+          "color": "var(--fsds-walkthrough-button-secondary-color)",
+          "cursor": "pointer"
+        }
+      },
+      {
+        "selector": ".walkthrough__next",
+        "declarations": {
+          "background-color": "var(--fsds-walkthrough-button-primary-bg)",
+          "border": "none",
+          "border-radius": "var(--fsds-walkthrough-button-primary-radius)",
+          "color": "var(--fsds-walkthrough-button-primary-color)",
+          "cursor": "pointer"
+        }
+      },
+      {
+        "selector": ".walkthrough__dots",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "row",
+          "align-items": "center",
+          "justify-content": "center",
+          "gap": "var(--fsds-walkthrough-dots-gap)"
+        }
+      },
+      {
+        "selector": ".walkthrough__dot",
+        "declarations": {
+          "display": "block",
+          "width": "8px",
+          "height": "8px",
+          "border-radius": "50%",
+          "background-color": "var(--fsds-walkthrough-dots-idle)",
+          "border": "none",
+          "padding": "0",
+          "cursor": "pointer"
+        }
+      },
+      {
+        "selector": ".walkthrough__counter",
+        "declarations": {
+          "color": "var(--fsds-walkthrough-description-color)",
+          "font-size": "var(--fsds-walkthrough-description-fontSize)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "step",
+        "valueProp": "index",
+        "defaultValueProp": "defaultIndex",
+        "changeHandlerProp": "onStepChange",
+        "valueType": "number",
+        "description": "Active step index.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [
+      {
+        "event": "escape",
+        "defaultEnabled": true
+      },
+      {
+        "event": "outsideClick",
+        "enabledByProp": "closeOnOutsideClick",
+        "defaultEnabled": true
+      }
+    ],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "Walkthrough panels are non-blocking. Focus remains on the anchored element while the panel is visible."
+    },
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "anchored",
+      "layering": "popover",
+      "collision": "flip-shift"
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Walkthrough / Documentation",
+    "componentSetName": "Walkthrough",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

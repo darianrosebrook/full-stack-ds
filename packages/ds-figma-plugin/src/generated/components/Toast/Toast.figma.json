@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Toast",
+    "cssPrefix": "toast",
+    "rootElement": "div",
+    "effectiveRole": "alert"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "viewport",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "item",
+      "semanticElement": "li",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "title",
+      "semanticElement": "h3",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "description",
+      "semanticElement": "p",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "row",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "action",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "close",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "open",
+      "safeName": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether this toast is visible.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onOpenChange",
+      "safeName": "onOpenChange",
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Called when the toast is dismissed.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "title",
+      "safeName": "title",
+      "type": "string",
+      "required": false,
+      "description": "Toast title text.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "ToastVariant",
+      "required": false,
+      "description": "Visual style indicating intent.",
+      "defaultExpr": "\"info\"",
+      "nodeKind": null
+    },
+    {
+      "name": "politeness",
+      "safeName": "politeness",
+      "type": "ToastPoliteness",
+      "required": false,
+      "description": "ARIA live region politeness level.",
+      "defaultExpr": "\"polite\"",
+      "nodeKind": null
+    },
+    {
+      "name": "action",
+      "safeName": "action",
+      "type": "ReactNode",
+      "required": false,
+      "description": "Optional action slot rendered next to the toast description (e.g. an undo button).",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "variant": [
+      "info",
+      "success",
+      "warning",
+      "error"
+    ],
+    "politeness": [
+      "polite",
+      "assertive"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "entering",
+      "visible",
+      "leaving"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "toast",
+    "valueModifiers": [
+      {
+        "propName": "variant",
+        "safeName": "variant",
+        "defaultExpr": "\"info\""
+      },
+      {
+        "propName": "politeness",
+        "safeName": "politeness",
+        "defaultExpr": "\"polite\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "alert",
+    "effectiveRole": "alert",
+    "labeling": [
+      "aria-label",
+      "aria-live",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "Escape",
+        "action": "Dismiss the focused toast.",
+        "when": "item"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".toast",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-surface-size-gap, 12px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-surface-size-min-width, 64px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-toast-surface-bg": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-toast-surface-border": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-toast-surface-radius": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-toast-surface-shadow": "var(--fsds-semantic-elevation-surface-raised, none)",
+          "--fsds-toast-color-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-toast-accent-default": "var(--fsds-semantic-color-status-info, #0a65fe)",
+          "--fsds-toast-spacing-padding": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-toast-spacing-gap": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-toast-spacing-stackGap": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-toast-size-maxWidth": "400px",
+          "--fsds-toast-motion-enter": "var(--fsds-core-motion-duration-short, 150ms)",
+          "--fsds-toast-motion-leave": "var(--fsds-core-motion-duration-short, 150ms)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-toast-spacing-stackGap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "position": "fixed",
+          "bottom": "0",
+          "right": "0",
+          "display": "flex",
+          "flex-direction": "column",
+          "z-index": "1000",
+          "pointer-events": "none"
+        }
+      },
+      {
+        "selector": ".toast__item",
+        "declarations": {
+          "background-color": "var(--fsds-toast-surface-bg)",
+          "border-color": "var(--fsds-toast-surface-border)",
+          "border-style": "solid",
+          "border-width": "1px",
+          "border-radius": "var(--fsds-toast-surface-radius)",
+          "box-shadow": "var(--fsds-toast-surface-shadow)",
+          "padding": "var(--fsds-toast-spacing-padding)",
+          "max-width": "var(--fsds-toast-size-maxWidth)",
+          "display": "flex",
+          "flex-direction": "column",
+          "position": "relative",
+          "pointer-events": "auto",
+          "box-sizing": "border-box"
+        }
+      },
+      {
+        "selector": ".toast__row",
+        "declarations": {
+          "display": "flex",
+          "align-items": "flex-start",
+          "gap": "var(--fsds-toast-spacing-gap)",
+          "flex": "1 1 auto"
+        }
+      },
+      {
+        "selector": ".toast__title",
+        "declarations": {
+          "margin": "0",
+          "font-weight": "600",
+          "flex": "1 1 auto"
+        }
+      },
+      {
+        "selector": ".toast__description",
+        "declarations": {
+          "flex": "1 1 auto",
+          "color": "var(--fsds-toast-color-default)",
+          "font-size": "inherit"
+        }
+      },
+      {
+        "selector": ".toast__action",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "background": "transparent",
+          "border": "0",
+          "cursor": "pointer",
+          "color": "var(--fsds-toast-color-default)"
+        }
+      },
+      {
+        "selector": ".toast__close",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "justify-content": "center",
+          "background": "transparent",
+          "border": "0",
+          "border-radius": "9999px",
+          "cursor": "pointer",
+          "color": "var(--fsds-toast-color-default)",
+          "flex-shrink": "0"
+        }
+      },
+      {
+        "selector": ".toast--success",
+        "declarations": {
+          "--fsds-toast-color-default": "var(--fsds-semantic-color-foreground-success)"
+        }
+      },
+      {
+        "selector": ".toast--warning",
+        "declarations": {
+          "--fsds-toast-color-default": "var(--fsds-semantic-color-foreground-warning)"
+        }
+      },
+      {
+        "selector": ".toast--error",
+        "declarations": {
+          "--fsds-toast-color-default": "var(--fsds-semantic-color-foreground-danger)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "open",
+        "valueProp": "open",
+        "changeHandlerProp": "onOpenChange",
+        "valueType": "boolean",
+        "description": "Per-toast visibility managed by ToastProvider.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [
+      {
+        "event": "escape",
+        "defaultEnabled": true
+      },
+      {
+        "event": "userDismiss",
+        "defaultEnabled": true
+      }
+    ],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "none",
+      "description": "ToastViewport is an ARIA live region. Toasts appear without moving keyboard focus."
+    },
+    "portal": {
+      "enabled": true,
+      "defaultTarget": "body",
+      "positioning": "fixed",
+      "layering": "popover"
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Toast / Documentation",
+    "componentSetName": "Toast",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Text",
+    "cssPrefix": "text",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "p",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "as",
+      "safeName": "as",
+      "type": "TextElement",
+      "required": false,
+      "description": "Element tag to render.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "variant",
+      "safeName": "variant",
+      "type": "TextVariant",
+      "required": false,
+      "description": "Typography variant",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "TextSize",
+      "required": false,
+      "description": "Type-scale size token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "weight",
+      "safeName": "weight",
+      "type": "TextWeight",
+      "required": false,
+      "description": "Font weight token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "align",
+      "safeName": "align",
+      "type": "TextAlign",
+      "required": false,
+      "description": "Text alignment",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "transform",
+      "safeName": "transform",
+      "type": "TextTransform",
+      "required": false,
+      "description": "CSS text-transform",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "truncate",
+      "safeName": "truncate",
+      "type": "boolean",
+      "required": false,
+      "description": "Single-line truncation with ellipsis.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "variant": [
+      "display",
+      "headline",
+      "title",
+      "body",
+      "caption",
+      "overline",
+      "code"
+    ],
+    "size": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "2xl",
+      "3xl"
+    ],
+    "weight": [
+      "light",
+      "normal",
+      "medium",
+      "semibold",
+      "bold"
+    ],
+    "align": [
+      "left",
+      "center",
+      "right",
+      "justify"
+    ],
+    "transform": [
+      "none",
+      "uppercase",
+      "lowercase",
+      "capitalize"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "error",
+      "success"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "text",
+    "valueModifiers": [
+      {
+        "propName": "variant",
+        "safeName": "variant"
+      },
+      {
+        "propName": "size",
+        "safeName": "size"
+      },
+      {
+        "propName": "weight",
+        "safeName": "weight"
+      },
+      {
+        "propName": "align",
+        "safeName": "align"
+      },
+      {
+        "propName": "transform",
+        "safeName": "transform"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": [],
+    "polymorphicTagProp": {
+      "propName": "as",
+      "allowedTags": [
+        "p",
+        "span",
+        "div",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6"
+      ],
+      "defaultTag": "p"
+    }
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".text",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-display-size-gap, 4px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-text-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-text-typography-fontWeight-light": "var(--fsds-semantic-typography-font-weight-light, 300)",
+          "--fsds-text-typography-fontWeight-regular": "var(--fsds-semantic-typography-font-weight-regular, 400)",
+          "--fsds-text-typography-fontWeight-medium": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "--fsds-text-typography-fontWeight-bold": "var(--fsds-semantic-typography-font-weight-bold, 700)",
+          "--fsds-text-typography-lineHeight-heading": "var(--fsds-semantic-typography-line-height-heading, 1)",
+          "--fsds-text-typography-lineHeight-body": "var(--fsds-semantic-typography-line-height-body, 1.5)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "color": "var(--fsds-text-color-foreground-primary)",
+          "line-height": "var(--fsds-text-typography-lineHeight-body)",
+          "margin": "0"
+        }
+      },
+      {
+        "selector": ".text--title",
+        "declarations": {
+          "font-weight": "var(--fsds-text-typography-fontWeight-bold)",
+          "line-height": "var(--fsds-text-typography-lineHeight-heading)",
+          "color": "var(--fsds-text-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".text--body",
+        "declarations": {
+          "font-weight": "var(--fsds-text-typography-fontWeight-regular)",
+          "line-height": "var(--fsds-text-typography-lineHeight-body)",
+          "--fsds-text-color-foreground-primary": "var(--fsds-semantic-color-foreground-secondary, #555555)"
+        }
+      },
+      {
+        "selector": ".text__error",
+        "declarations": {
+          "--fsds-text-color-foreground-primary": "var(--fsds-semantic-color-foreground-danger, #d9292b)"
+        }
+      },
+      {
+        "selector": ".text__success",
+        "declarations": {
+          "--fsds-text-color-foreground-primary": "var(--fsds-semantic-color-foreground-success, #487e1e)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Text / Documentation",
+    "componentSetName": "Text",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

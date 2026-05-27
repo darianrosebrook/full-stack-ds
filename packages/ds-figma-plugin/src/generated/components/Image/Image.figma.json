@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Image",
+    "cssPrefix": "image",
+    "rootElement": "div",
+    "effectiveRole": "img"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "img",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "img",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "placeholder",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "errorState",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "src",
+      "safeName": "src",
+      "type": "string",
+      "required": false,
+      "description": "Image source URL.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "alt",
+      "safeName": "alt",
+      "type": "string",
+      "required": true,
+      "description": "Accessible text describing the image. Use empty string for decorative images.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "width",
+      "safeName": "width",
+      "type": "number",
+      "required": false,
+      "description": "Pixel width.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "height",
+      "safeName": "height",
+      "type": "number",
+      "required": false,
+      "description": "Pixel height.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "aspectRatio",
+      "safeName": "aspectRatio",
+      "type": "ImageAspectRatio",
+      "required": false,
+      "description": "Aspect ratio preset or numeric ratio.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "objectFit",
+      "safeName": "objectFit",
+      "type": "ImageObjectFit",
+      "required": false,
+      "description": "Object fit behavior",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "objectPosition",
+      "safeName": "objectPosition",
+      "type": "string",
+      "required": false,
+      "description": "Object position CSS value",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "loading",
+      "safeName": "loading",
+      "type": "ImageLoading",
+      "required": false,
+      "description": "Native image loading hint",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "sizes",
+      "safeName": "sizes",
+      "type": "string",
+      "required": false,
+      "description": "Native sizes attribute for responsive images",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "radius",
+      "safeName": "radius",
+      "type": "ImageRadius",
+      "required": false,
+      "description": "Border radius token",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "showPlaceholder",
+      "safeName": "showPlaceholder",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether to show a placeholder while loading",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "fallbackSrc",
+      "safeName": "fallbackSrc",
+      "type": "string",
+      "required": false,
+      "description": "Fallback image source on error",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "xs",
+      "sm",
+      "md",
+      "lg",
+      "xl",
+      "full"
+    ],
+    "radius": [
+      "none",
+      "sm",
+      "md",
+      "lg",
+      "full"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "loading",
+      "error"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "image",
+    "valueModifiers": [
+      {
+        "propName": "radius",
+        "safeName": "radius"
+      },
+      {
+        "propName": "size",
+        "safeName": "size"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "img",
+    "effectiveRole": "img",
+    "labeling": [
+      "aria-label",
+      "alt"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".image",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-display-size-gap, 4px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-image-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-image-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-image-size-icon": "var(--fsds-core-spacing-size-08, 32px)",
+          "--fsds-image-typography-error-fontSize": "var(--fsds-semantic-typography-body-04, 12px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "100%",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "block",
+          "background-color": "var(--fsds-image-color-background-default)",
+          "color": "var(--fsds-image-color-foreground-primary)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Image / Documentation",
+    "componentSetName": "Image",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

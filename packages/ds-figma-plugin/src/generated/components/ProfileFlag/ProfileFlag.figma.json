@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "ProfileFlag",
+    "cssPrefix": "profile-flag",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "profile",
+      "safeName": "profile",
+      "type": "ProfileFlagData",
+      "required": false,
+      "description": "Profile data object to display.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default",
+      "hover"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "profile-flag",
+    "valueModifiers": [],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".profile-flag",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "0",
+          "--fsds-box-model-width": "var(--fsds-semantic-glyph-size-medium-extent, 16px)",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "var(--fsds-semantic-glyph-size-medium-extent, 16px)",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-profile-flag-color-background-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-profile-flag-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-profile-flag-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-profile-flag-size-radius-default": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-profile-flag-spacing-gap-default": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-profile-flag-spacing-padding-default": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-profile-flag-spacing-padding-right": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-profile-flag-color-border-hover": "var(--fsds-semantic-color-border-bold, #8f8f8f)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-profile-flag-spacing-gap-default)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-profile-flag-color-background-default)",
+          "border-color": "var(--fsds-profile-flag-color-border-default)",
+          "color": "var(--fsds-profile-flag-color-foreground-primary)",
+          "border-radius": "var(--fsds-profile-flag-size-radius-default)",
+          "padding": "var(--fsds-profile-flag-spacing-padding-right)"
+        }
+      },
+      {
+        "selector": ".profile-flag:hover",
+        "declarations": {
+          "border-color": "var(--fsds-profile-flag-color-border-hover)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "ProfileFlag / Documentation",
+    "componentSetName": "ProfileFlag",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

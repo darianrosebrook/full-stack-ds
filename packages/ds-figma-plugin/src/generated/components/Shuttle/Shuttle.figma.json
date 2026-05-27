@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Shuttle",
+    "cssPrefix": "shuttle",
+    "rootElement": "div",
+    "effectiveRole": "listbox"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "ul",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "item",
+      "semanticElement": "li",
+      "nativeTag": "li",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "ariaLabel",
+      "safeName": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the shuttle widget",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string[]",
+      "required": false,
+      "description": "Controlled list of selected-item ids (items currently in the right-hand list).",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string[]",
+      "required": false,
+      "description": "Uncontrolled initial selection.",
+      "defaultExpr": "[\"alpha\",\"beta\",\"gamma\"]",
+      "nodeKind": null
+    },
+    {
+      "name": "onValueChange",
+      "safeName": "onValueChange",
+      "type": "(value: string[]) => void",
+      "required": false,
+      "description": "Called when items move between the two lists; the new value reflects the right-hand list contents.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "shuttle",
+    "valueModifiers": [],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "listbox",
+    "effectiveRole": "listbox",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "Space",
+        "action": "Select or deselect the focused item"
+      },
+      {
+        "key": "ArrowUp|ArrowDown",
+        "action": "Navigate between items in a listbox"
+      },
+      {
+        "key": "Enter",
+        "action": "Transfer the selected items to the other listbox"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".shuttle",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-shuttle-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-shuttle-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-shuttle-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-shuttle-color-border-accent": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-shuttle-size-padding-default": "var(--fsds-core-spacing-size-07, 24px)",
+          "--fsds-shuttle-size-radius-default": "var(--fsds-core-shape-radius-medium, 8px)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-shuttle-color-background-default)",
+          "border-color": "var(--fsds-shuttle-color-border-accent)",
+          "padding": "var(--fsds-shuttle-size-padding-default)",
+          "border-radius": "var(--fsds-shuttle-size-radius-default)"
+        }
+      },
+      {
+        "selector": ".shuttle__item",
+        "declarations": {
+          "display": "flex",
+          "align-items": "center",
+          "padding": "4px 8px",
+          "color": "var(--fsds-shuttle-color-foreground-primary)",
+          "cursor": "pointer"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "selection",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onValueChange",
+        "valueType": "string[]",
+        "description": "The set of item ids currently in the right-hand (selected) list. Changes as items are transferred between the two listboxes.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "roving",
+      "orientation": "vertical",
+      "description": "Arrow keys move focus within each listbox independently. Focus does not leave the shuttle widget."
+    },
+    "portal": {
+      "enabled": false
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Shuttle / Documentation",
+    "componentSetName": "Shuttle",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

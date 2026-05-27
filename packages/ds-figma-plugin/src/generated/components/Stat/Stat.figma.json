@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Stat",
+    "cssPrefix": "stat",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "size",
+      "safeName": "size",
+      "type": "StatSize",
+      "required": false,
+      "description": "Visual size of the metric value.",
+      "defaultExpr": "\"md\"",
+      "nodeKind": null
+    },
+    {
+      "name": "trend",
+      "safeName": "trend",
+      "type": "StatTrend",
+      "required": false,
+      "description": "Optional direction-of-change indicator. Drives the value's color via a data attribute; consumers may render a trend arrow as inline children.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "size": [
+      "sm",
+      "md",
+      "lg"
+    ],
+    "trend": [
+      "up",
+      "down",
+      "neutral"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "stat",
+    "valueModifiers": [
+      {
+        "propName": "size",
+        "safeName": "size",
+        "defaultExpr": "\"md\""
+      },
+      {
+        "propName": "trend",
+        "safeName": "trend"
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".stat",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-display-size-gap, 4px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-stat-color-foreground-value": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-stat-color-foreground-label": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-stat-color-foreground-trend-up": "var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c)",
+          "--fsds-stat-color-foreground-trend-down": "var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b)",
+          "--fsds-stat-color-foreground-trend-neutral": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-stat-size-value-md": "var(--fsds-semantic-typography-heading-02, 28px)",
+          "--fsds-stat-size-label": "var(--fsds-semantic-typography-caption-02, 12px)",
+          "--fsds-stat-size-gap": "var(--fsds-core-spacing-size-02, 4px)",
+          "--fsds-stat-typography-weight-value": "var(--fsds-semantic-typography-font-weight-bold, 700)",
+          "--fsds-stat-typography-weight-label": "var(--fsds-semantic-typography-font-weight-medium, 500)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "block",
+          "color": "var(--fsds-stat-color-foreground-value)",
+          "font-size": "var(--fsds-stat-size-value-md)",
+          "font-weight": "var(--fsds-stat-typography-weight-value)",
+          "line-height": "1.1",
+          "letter-spacing": "-0.02em"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Stat / Documentation",
+    "componentSetName": "Stat",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

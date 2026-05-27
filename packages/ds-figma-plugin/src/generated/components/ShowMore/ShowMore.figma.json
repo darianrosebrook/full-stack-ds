@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "ShowMore",
+    "cssPrefix": "show-more",
+    "rootElement": "button",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "content",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "trigger",
+      "semanticElement": "button",
+      "nativeTag": "button",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "expanded",
+      "safeName": "expanded",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled expanded state.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultExpanded",
+      "safeName": "defaultExpanded",
+      "type": "boolean",
+      "required": false,
+      "description": "Default expanded state for uncontrolled usage.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onExpandedChange",
+      "safeName": "onExpandedChange",
+      "type": "(expanded: boolean) => void",
+      "required": false,
+      "description": "Called when expanded state changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "maxLines",
+      "safeName": "maxLines",
+      "type": "number",
+      "required": false,
+      "description": "Number of lines to show before truncation.",
+      "defaultExpr": "3",
+      "nodeKind": null
+    },
+    {
+      "name": "showMoreLabel",
+      "safeName": "showMoreLabel",
+      "type": "string",
+      "required": false,
+      "description": "Label for the expand trigger button.",
+      "defaultExpr": "\"Show more\"",
+      "nodeKind": null
+    },
+    {
+      "name": "showLessLabel",
+      "safeName": "showLessLabel",
+      "type": "string",
+      "required": false,
+      "description": "Label for the collapse trigger button.",
+      "defaultExpr": "\"Show less\"",
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default",
+      "expanded",
+      "collapsed"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "show-more",
+    "valueModifiers": [],
+    "booleanModifiers": [
+      {
+        "propName": "expanded",
+        "safeName": "expanded"
+      }
+    ]
+  },
+  "root": {
+    "element": "button",
+    "explicitRole": "button",
+    "implicitRole": "button",
+    "labeling": [
+      "aria-expanded"
+    ],
+    "keyboard": [
+      {
+        "key": "Enter",
+        "action": "Toggle expanded state.",
+        "when": "trigger"
+      },
+      {
+        "key": "Space",
+        "action": "Toggle expanded state.",
+        "when": "trigger"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".show-more",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-action-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-action-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-action-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-action-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-action-size-medium-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "var(--fsds-semantic-action-size-medium-min-width, 36px)",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-action-size-medium-min-height, 36px)",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-show-more-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-show-more-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-show-more-color-foreground-secondary": "var(--fsds-semantic-color-foreground-secondary, #555555)",
+          "--fsds-show-more-color-border-default": "var(--fsds-semantic-color-border-light, #fceaea)",
+          "--fsds-show-more-color-border-accent": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-show-more-size-padding-default": "var(--fsds-core-spacing-size-07, 24px)",
+          "--fsds-show-more-size-radius-default": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-show-more-overlay-imageOverlay": "var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5))",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-show-more-color-background-default)",
+          "color": "var(--fsds-show-more-color-foreground-secondary)",
+          "border-color": "var(--fsds-show-more-color-border-accent)",
+          "padding": "var(--fsds-show-more-size-padding-default)",
+          "border-radius": "var(--fsds-show-more-size-radius-default)"
+        }
+      },
+      {
+        "selector": ".show-more__content",
+        "declarations": {
+          "overflow": "hidden",
+          "display": "-webkit-box",
+          "-webkit-box-orient": "vertical",
+          "-webkit-line-clamp": "var(--fsds-show-more-content-max-lines, 3)",
+          "line-clamp": "var(--fsds-show-more-content-max-lines, 3)"
+        }
+      },
+      {
+        "selector": ".show-more__trigger",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "color": "var(--fsds-show-more-color-foreground-primary)",
+          "background": "none",
+          "border": "none",
+          "padding": "0",
+          "cursor": "pointer"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "expanded",
+        "valueProp": "expanded",
+        "defaultValueProp": "defaultExpanded",
+        "changeHandlerProp": "onExpandedChange",
+        "valueType": "boolean",
+        "description": "Whether the full content is revealed.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": {
+      "strategy": "auto",
+      "description": "Focus stays on the trigger when expanded or collapsed; the revealed content is not auto-focused."
+    },
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "ShowMore / Documentation",
+    "componentSetName": "ShowMore",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

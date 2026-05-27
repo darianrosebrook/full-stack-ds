@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Tabs",
+    "cssPrefix": "tabs",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "div",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "list",
+      "semanticElement": "ul",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": "horizontal"
+    },
+    {
+      "name": "tab",
+      "semanticElement": null,
+      "nativeTag": "button",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "indicator",
+      "semanticElement": null,
+      "nativeTag": "span",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    },
+    {
+      "name": "panel",
+      "semanticElement": "div",
+      "nativeTag": "div",
+      "isCompound": true,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string",
+      "required": false,
+      "description": "Controlled value of the active tab.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string",
+      "required": false,
+      "description": "Default value for uncontrolled usage.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onValueChange",
+      "safeName": "onValueChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Called when the active tab changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "orientation",
+      "safeName": "orientation",
+      "type": "TabsOrientation",
+      "required": false,
+      "description": "Layout direction of the tab list.",
+      "defaultExpr": "\"horizontal\"",
+      "nodeKind": null
+    },
+    {
+      "name": "appearance",
+      "safeName": "appearance",
+      "type": "TabsAppearance",
+      "required": false,
+      "description": "Visual style of the tab list. 'underline' draws an indicator bar under the active tab; 'pills' renders each tab as a rounded segmented control.",
+      "defaultExpr": "\"underline\"",
+      "nodeKind": null
+    },
+    {
+      "name": "activationMode",
+      "safeName": "activationMode",
+      "type": "TabsActivationMode",
+      "required": false,
+      "description": "Whether tabs activate on focus or require Enter/Space.",
+      "defaultExpr": "\"automatic\"",
+      "nodeKind": null
+    },
+    {
+      "name": "loop",
+      "safeName": "loop",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether arrow-key navigation wraps around.",
+      "defaultExpr": "true",
+      "nodeKind": null
+    },
+    {
+      "name": "unmountInactive",
+      "safeName": "unmountInactive",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether inactive panels are unmounted from the DOM.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "idBase",
+      "safeName": "idBase",
+      "type": "string",
+      "required": false,
+      "description": "Base string for generating tab and panel IDs.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {
+    "orientation": [
+      "horizontal",
+      "vertical"
+    ],
+    "appearance": [
+      "underline",
+      "pills"
+    ],
+    "activationMode": [
+      "automatic",
+      "manual"
+    ]
+  },
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "tabs",
+    "valueModifiers": [
+      {
+        "propName": "orientation",
+        "safeName": "orientation",
+        "defaultExpr": "\"horizontal\""
+      },
+      {
+        "propName": "appearance",
+        "safeName": "appearance",
+        "defaultExpr": "\"underline\""
+      },
+      {
+        "propName": "activationMode",
+        "safeName": "activationMode",
+        "defaultExpr": "\"automatic\""
+      }
+    ],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby"
+    ],
+    "keyboard": [
+      {
+        "key": "ArrowLeft",
+        "action": "Move focus to the previous tab (horizontal orientation).",
+        "when": "tab"
+      },
+      {
+        "key": "ArrowRight",
+        "action": "Move focus to the next tab (horizontal orientation).",
+        "when": "tab"
+      },
+      {
+        "key": "ArrowUp",
+        "action": "Move focus to the previous tab (vertical orientation).",
+        "when": "tab",
+        "mode": "vertical"
+      },
+      {
+        "key": "ArrowDown",
+        "action": "Move focus to the next tab (vertical orientation).",
+        "when": "tab",
+        "mode": "vertical"
+      },
+      {
+        "key": "Home",
+        "action": "Move focus to the first tab.",
+        "when": "tab"
+      },
+      {
+        "key": "End",
+        "action": "Move focus to the last tab.",
+        "when": "tab"
+      },
+      {
+        "key": "Enter",
+        "action": "Activate the focused tab (when activationMode is manual).",
+        "when": "tab"
+      },
+      {
+        "key": "Space",
+        "action": "Activate the focused tab (when activationMode is manual).",
+        "when": "tab"
+      },
+      {
+        "key": "Tab",
+        "action": "Move focus to the active tab panel content.",
+        "when": "list"
+      }
+    ]
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".tabs",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-gap": "var(--fsds-semantic-structure-size-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-tabs-spacing-gap": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-tabs-spacing-padding": "var(--fsds-core-spacing-size-04, 8px)",
+          "--fsds-tabs-spacing-pillPadding": "4px 10px",
+          "--fsds-tabs-spacing-panelGap": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-tabs-color-fg": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-tabs-color-disabled-fg": "var(--fsds-semantic-color-foreground-disabled, #aeaeae)",
+          "--fsds-tabs-color-indicator": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-tabs-shape-radius": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-tabs-motion-indicator": "var(--fsds-core-motion-duration-short, 150ms)",
+          "--fsds-tabs-color-hover-bg": "var(--fsds-semantic-color-background-hover, #cecece)",
+          "--fsds-tabs-color-hover-fg": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-tabs-color-active-fg": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-tabs-color-active-bg": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-tabs-color-focus": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-tabs-spacing-panelGap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "display": "flex",
+          "flex-direction": "column",
+          "padding": "var(--fsds-tabs-spacing-padding)",
+          "border-radius": "var(--fsds-tabs-shape-radius)"
+        }
+      },
+      {
+        "selector": ".tabs__list",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "row",
+          "gap": "var(--fsds-tabs-spacing-gap)",
+          "border-bottom-color": "var(--fsds-tabs-color-indicator)",
+          "border-bottom-style": "solid",
+          "border-bottom-width": "1px",
+          "position": "relative"
+        }
+      },
+      {
+        "selector": ".tabs__tab",
+        "declarations": {
+          "display": "inline-flex",
+          "align-items": "center",
+          "padding": "var(--fsds-tabs-spacing-padding)",
+          "color": "var(--fsds-tabs-color-fg)",
+          "background": "transparent",
+          "border": "none",
+          "cursor": "pointer",
+          "position": "relative"
+        }
+      },
+      {
+        "selector": ".tabs__tab:hover",
+        "declarations": {
+          "color": "var(--fsds-tabs-color-hover-fg)",
+          "background-color": "var(--fsds-tabs-color-hover-bg)"
+        }
+      },
+      {
+        "selector": ".tabs__tab--active",
+        "declarations": {
+          "color": "var(--fsds-tabs-color-active-fg)",
+          "background-color": "var(--fsds-tabs-color-active-bg)"
+        }
+      },
+      {
+        "selector": ".tabs__tab:disabled",
+        "declarations": {
+          "color": "var(--fsds-tabs-color-disabled-fg)",
+          "cursor": "not-allowed"
+        }
+      },
+      {
+        "selector": ".tabs__indicator",
+        "declarations": {
+          "position": "absolute",
+          "bottom": "-1px",
+          "left": "0",
+          "right": "0",
+          "height": "2px",
+          "background-color": "var(--fsds-tabs-color-indicator)",
+          "transition": "transform var(--fsds-tabs-motion-indicator) ease, width var(--fsds-tabs-motion-indicator) ease"
+        }
+      },
+      {
+        "selector": ".tabs__panel",
+        "declarations": {
+          "display": "block",
+          "padding": "var(--fsds-tabs-spacing-padding)"
+        }
+      },
+      {
+        "selector": ".tabs--pills .tabs__list",
+        "declarations": {
+          "border-bottom-width": "0",
+          "gap": "var(--fsds-tabs-spacing-gap)"
+        }
+      },
+      {
+        "selector": ".tabs--pills .tabs__tab",
+        "declarations": {
+          "border-radius": "var(--fsds-tabs-shape-radius)",
+          "padding": "var(--fsds-tabs-spacing-pillPadding)"
+        }
+      },
+      {
+        "selector": ".tabs--pills .tabs__tab--active",
+        "declarations": {
+          "background-color": "var(--fsds-tabs-color-active-bg)",
+          "color": "var(--fsds-tabs-color-active-fg)"
+        }
+      },
+      {
+        "selector": ".tabs--pills .tabs__indicator",
+        "declarations": {
+          "display": "none"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "activeTab",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onValueChange",
+        "valueType": "string",
+        "description": "The value of the currently active tab.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [
+      {
+        "name": "activeTabChange",
+        "emittedViaProps": [
+          "onValueChange"
+        ],
+        "payload": [
+          {
+            "name": "activeTab",
+            "type": "number",
+            "description": "Zero-based index of the now-active tab."
+          }
+        ],
+        "returns": "void",
+        "cancelable": false,
+        "triggeredByActions": [
+          "Click on tab",
+          "ArrowLeft/ArrowRight (horizontal) or ArrowUp/ArrowDown (vertical) while a tab is focused",
+          "Home/End while a tab is focused"
+        ],
+        "description": "Fires when the active tab index changes. Under automatic activation this also fires when focus moves via arrow keys."
+      }
+    ],
+    "form": null,
+    "focus": {
+      "strategy": "roving",
+      "orientation": "horizontal",
+      "initialFocus": "activeTab",
+      "wrap": true,
+      "description": "Arrow keys move focus between tabs; focus follows the active indicator. Tab panels are reached with Tab key."
+    },
+    "portal": {
+      "enabled": false
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Tabs / Documentation",
+    "componentSetName": "Tabs",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

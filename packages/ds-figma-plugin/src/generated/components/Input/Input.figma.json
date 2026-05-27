@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "Input",
+    "cssPrefix": "input",
+    "rootElement": "div",
+    "effectiveRole": "textbox"
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "input",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "type",
+      "safeName": "type",
+      "type": "string",
+      "required": false,
+      "description": "HTML input type (text, email, password, number, search, etc.).",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "value",
+      "safeName": "value",
+      "type": "string",
+      "required": false,
+      "description": "Controlled value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "defaultValue",
+      "safeName": "defaultValue",
+      "type": "string",
+      "required": false,
+      "description": "Uncontrolled initial value.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onChange",
+      "safeName": "onChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Called when value changes.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "placeholder",
+      "safeName": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Placeholder text shown when empty.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "disabled",
+      "safeName": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Prevents interaction.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "invalid",
+      "safeName": "invalid",
+      "type": "boolean",
+      "required": false,
+      "description": "Applies error styling and sets aria-invalid.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "required",
+      "safeName": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Sets the native required attribute.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "name",
+      "safeName": "name",
+      "type": "string",
+      "required": false,
+      "description": "Form name for native submission.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [
+      "default",
+      "hover",
+      "focus",
+      "disabled",
+      "invalid"
+    ],
+    "dimensions": null
+  },
+  "classRecipe": {
+    "base": "input",
+    "valueModifiers": [],
+    "booleanModifiers": [
+      {
+        "propName": "disabled",
+        "safeName": "disabled"
+      },
+      {
+        "propName": "invalid",
+        "safeName": "invalid"
+      }
+    ]
+  },
+  "root": {
+    "element": "div",
+    "explicitRole": "textbox",
+    "effectiveRole": "textbox",
+    "labeling": [
+      "aria-label",
+      "aria-labelledby",
+      "aria-invalid"
+    ],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".input",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-input-size-medium-gap, 8px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "var(--fsds-semantic-input-size-medium-min-height, 36px)",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-input-color-bg-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-input-color-text-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-input-color-border-default": "var(--fsds-semantic-color-border-default, #aeaeae)",
+          "--fsds-input-size-height-default": "var(--fsds-semantic-control-size-lg-height, 48px)",
+          "--fsds-input-size-radius-default": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-input-space-inline-default": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-input-color-focus-default": "var(--fsds-semantic-color-border-focus, #d9292b)",
+          "--fsds-input-color-invalid-default": "var(--fsds-semantic-color-border-danger, #ae0001)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-input-size-height-default)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-input-color-bg-default)",
+          "color": "var(--fsds-input-color-text-default)",
+          "border-color": "var(--fsds-input-color-border-default)",
+          "border-radius": "var(--fsds-input-size-radius-default)",
+          "padding": "var(--fsds-input-space-inline-default)"
+        }
+      },
+      {
+        "selector": ".input:focus-visible",
+        "declarations": {
+          "border-color": "var(--fsds-input-color-focus-default)"
+        }
+      },
+      {
+        "selector": ".input__invalid",
+        "declarations": {
+          "border-color": "var(--fsds-input-color-invalid-default)"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [
+      {
+        "name": "value",
+        "valueProp": "value",
+        "defaultValueProp": "defaultValue",
+        "changeHandlerProp": "onChange",
+        "valueType": "string",
+        "description": "The current text value of the input.",
+        "callbackKind": "value"
+      }
+    ],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": {
+      "participates": true,
+      "inputType": "text",
+      "name": {
+        "prop": "name"
+      },
+      "required": {
+        "prop": "required",
+        "constraintValidation": true
+      },
+      "serialization": {
+        "valueType": "string",
+        "valueSource": "channel:value",
+        "omitWhen": "never"
+      },
+      "validity": {
+        "model": "hybrid",
+        "invalidProp": "invalid",
+        "ariaAttributes": [
+          "aria-invalid",
+          "aria-required",
+          "aria-describedby"
+        ]
+      },
+      "labeling": {
+        "strategy": "associated-label",
+        "required": true,
+        "via": [
+          "aria-labelledby",
+          "aria-label"
+        ]
+      }
+    },
+    "focus": {
+      "strategy": "none"
+    },
+    "portal": {
+      "enabled": false
+    }
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "Input / Documentation",
+    "componentSetName": "Input",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}
