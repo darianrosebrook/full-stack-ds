@@ -22,6 +22,14 @@ interface FigmaBaseNode {
 
 interface FigmaPageNode extends FigmaBaseNode {}
 
+interface FigmaSolidPaint {
+  type: "SOLID";
+  color: { r: number; g: number; b: number };
+  opacity?: number;
+}
+
+type FigmaPaint = FigmaSolidPaint;
+
 interface FigmaLayoutNode extends FigmaBaseNode {
   layoutMode: "NONE" | "HORIZONTAL" | "VERTICAL";
   itemSpacing: number;
@@ -29,6 +37,15 @@ interface FigmaLayoutNode extends FigmaBaseNode {
   paddingRight: number;
   paddingBottom: number;
   paddingLeft: number;
+  primaryAxisAlignItems?: "MIN" | "CENTER" | "MAX" | "SPACE_BETWEEN";
+  counterAxisAlignItems?: "MIN" | "CENTER" | "MAX" | "BASELINE";
+  primaryAxisSizingMode?: "FIXED" | "AUTO";
+  counterAxisSizingMode?: "FIXED" | "AUTO";
+  minHeight?: number;
+  cornerRadius?: number;
+  fills?: readonly FigmaPaint[];
+  strokes?: readonly FigmaPaint[];
+  strokeWeight?: number;
   resize(width: number, height: number): void;
 }
 
@@ -44,4 +61,6 @@ interface FigmaInstanceNode extends FigmaBaseNode {}
 
 interface FigmaTextNode extends FigmaBaseNode {
   characters: string;
+  fontSize?: number;
+  fills?: readonly FigmaPaint[];
 }
