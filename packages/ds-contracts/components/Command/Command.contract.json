@@ -371,6 +371,15 @@
   "a11y": {
     "role": "dialog",
     "apgPattern": "dialog-modal",
+    "obligations": {
+      "suppress": [
+        {
+          "role": "option",
+          "attr": "aria-selected",
+          "reason": "Per-item selection state (\"is this command item the active suggestion?\") requires BindingExpressionV2 property paths or set-membership grammar; held until BINDING-EXPRESSION-V2-PATH-01. Until then, the highlighted item is communicated via `aria-activedescendant` on the surrounding listbox, not per-option aria-selected."
+        }
+      ]
+    },
     "labeling": [
       "aria-label"
     ],

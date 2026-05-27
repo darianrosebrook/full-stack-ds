@@ -55,7 +55,7 @@ const classNames = computed(() => [
 
 <template>
   <ul :class="classNames" role="listbox" :aria-label="props.ariaLabel" :data-testid="props['data-testid']">
-    <li v-for="(item, index) in (behavior.selection.value ?? [])" :key="index" :class="'shuttle__item'" role="option">
+    <li v-for="(item, index) in (behavior.selection.value ?? [])" :key="index" :class="'shuttle__item'" role="option" aria-selected="true">
       <span>
         {{ item }}
       </span>

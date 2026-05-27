@@ -515,6 +515,32 @@ export interface ComponentContract {
     labeling?: string[];
     keyboard?: Array<string | { key: string; action: string; when?: string; mode?: string }>;
     screenReader?: string[];
+    /**
+     * Typed unresolved ARIA-obligation acknowledgements. The contract-side
+     * a11y validator (A11Y-CONTRACT-OBLIGATION-VALIDATOR-01) walks
+     * `anatomy.dom` and asserts that every static role with a required
+     * ARIA state has it declared (as attr or binding). When a contract
+     * cannot yet truthfully declare the required state — e.g. because
+     * the underlying selection model needs a grammar that hasn't landed
+     * — it acknowledges the gap here with a typed reason, and the
+     * validator degrades to an advisory diagnostic instead of failing.
+     *
+     * Each entry is point-in-time documentation of a real technical
+     * blocker; the reason should cite the slice/issue that would
+     * unblock the fix. This is not a silencer for arbitrary a11y
+     * complaints — it's the explicit "we know, this is held until X"
+     * channel.
+     */
+    obligations?: {
+      suppress?: Array<{
+        /** ARIA role the suppression applies to (e.g. "option"). */
+        role: string;
+        /** Required attribute the contract cannot yet provide (e.g. "aria-selected"). */
+        attr: string;
+        /** Why the obligation can't be met today + what would unblock it. */
+        reason: string;
+      }>;
+    };
   };
   usage?: { example?: string; hookExample?: string };
   a2ui?: {

@@ -24,7 +24,7 @@ import { useShuttle } from "./useShuttle.js";
   imports: [NgClass, NgFor],
   template: `<ul [ngClass]="classes()" role="listbox" [attr.aria-label]="ariaLabel">
   <ng-container *ngFor="let item of (behavior.selection() ?? []); let index = index">
-    <li [ngClass]="'shuttle__item'" role="option">
+    <li [ngClass]="'shuttle__item'" role="option" aria-selected="true">
       <span>
         {{ item }}
       </span>

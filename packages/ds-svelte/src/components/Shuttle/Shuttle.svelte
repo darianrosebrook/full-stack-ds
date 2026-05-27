@@ -43,7 +43,7 @@ const classes = $derived(
 
 <ul class={classes} role="listbox" aria-label={ariaLabel}>
   {#each (behavior.selection ?? []) as item, index (index)}
-  <li class={'shuttle__item'} role="option">
+  <li class={'shuttle__item'} role="option" aria-selected="true">
     <span>{item}</span>
   </li>
   {/each}

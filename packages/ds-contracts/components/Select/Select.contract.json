@@ -318,6 +318,15 @@
   "a11y": {
     "role": "combobox",
     "apgPattern": "combobox",
+    "obligations": {
+      "suppress": [
+        {
+          "role": "option",
+          "attr": "aria-selected",
+          "reason": "Per-item selection state (\"is this option in `value`?\") requires BindingExpressionV2 property paths or set-membership grammar; held until BINDING-EXPRESSION-V2-PATH-01. Until then, the option's selection state is communicated via the controlling combobox's `aria-activedescendant` and focus management, not per-option aria-selected."
+        }
+      ]
+    },
     "labeling": [
       "aria-label",
       "aria-expanded",

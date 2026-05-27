@@ -1219,6 +1219,36 @@
             { "type": "null" }
           ],
           "description": "ARIA Authoring Practices Guide pattern name (e.g. \"accordion\", \"dialog\", \"combobox\"). Helps agent tooling and a11y review route to the correct interaction expectations. Nullable to make explicit absence distinguishable from forgotten field."
+        },
+        "obligations": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Typed acknowledgements of unresolved ARIA obligations the contract cannot yet satisfy (A11Y-CONTRACT-OBLIGATION-VALIDATOR-01). When the static-role validator finds a missing required attribute, an entry here downgrades the failure to an advisory diagnostic. Every suppression records the upstream blocker that would let the contract declare the real obligation.",
+          "properties": {
+            "suppress": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["role", "attr", "reason"],
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "description": "ARIA role the suppression applies to, matching the role found in `anatomy.dom`."
+                  },
+                  "attr": {
+                    "type": "string",
+                    "description": "Required attribute the contract cannot yet provide (e.g. \"aria-selected\")."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Why the obligation can't be met today, and the slice/issue that would unblock the real fix."
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

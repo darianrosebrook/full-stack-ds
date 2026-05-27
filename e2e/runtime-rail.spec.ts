@@ -267,10 +267,13 @@ test.describe("Runtime rail — Shuttle (array iteration with channel source)", 
   //   - Mutating the selection at runtime (no transfer behavior tested).
   //   - The unselected/source list (Shuttle's dual-listbox design
   //     wasn't built; contract has selected-only DOM by design).
-  //   - ARIA correctness of `role="option"` without `aria-selected`
-  //     (svelte-check flags this; the codegen-emit side surfaces it).
+  //   - That all listboxes in the system render `aria-selected` correctly.
+  //     This rail only asserts Shuttle, whose selected-only DOM makes
+  //     `aria-selected="true"` truthful on every rendered option.
+  //     Select and Command have suppression records pending the property-
+  //     path slice.
   for (const framework of FRAMEWORKS) {
-    test(`${framework}: renders defaultValue items as <li role="option"> with iter:item text`, async ({
+    test(`${framework}: renders defaultValue items as <li role="option" aria-selected="true"> with iter:item text`, async ({
       page,
     }) => {
       await goto(page, framework, "Shuttle", "shuttle");
@@ -280,7 +283,13 @@ test.describe("Runtime rail — Shuttle (array iteration with channel source)", 
           const root: Document | ShadowRoot | null = isLit
             ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
             : document;
-          if (!root) return { count: 0, texts: [] as string[], roles: [] as Array<string | null> };
+          if (!root)
+            return {
+              count: 0,
+              texts: [] as string[],
+              roles: [] as Array<string | null>,
+              ariaSelected: [] as Array<string | null>,
+            };
           const nodes = Array.from(
             root.querySelectorAll(".shuttle__item"),
           );
@@ -288,6 +297,7 @@ test.describe("Runtime rail — Shuttle (array iteration with channel source)", 
             count: nodes.length,
             texts: nodes.map((n) => (n.textContent ?? "").trim()),
             roles: nodes.map((n) => n.getAttribute("role")),
+            ariaSelected: nodes.map((n) => n.getAttribute("aria-selected")),
           };
         },
         { host: `fsds-${kebab("Shuttle")}`, isLit: framework === "lit" },
@@ -298,6 +308,11 @@ test.describe("Runtime rail — Shuttle (array iteration with channel source)", 
       expect(items.texts).toEqual(["alpha", "beta", "gamma"]);
       // Each cell carries role="option" per the contract's attr.
       expect(items.roles).toEqual(["option", "option", "option"]);
+      // A11Y-CONTRACT-OBLIGATION-VALIDATOR-01: every rendered option in
+      // Shuttle's selected-only list is selected by definition. The
+      // contract's static `attrs.aria-selected: "true"` surfaces as a
+      // literal "true" string on each DOM node.
+      expect(items.ariaSelected).toEqual(["true", "true", "true"]);
     });
   }
 });

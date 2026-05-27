@@ -92,7 +92,7 @@ export class ShuttleElement extends LitElement {
   override render() {
     return html`<ul class="${this.computeClasses()}" role="listbox" aria-label=${ifDefined(this.ariaLabel ?? undefined)}>
   ${(this.behavior.selection ?? []).map((item, index) => html`
-  <li class=${'shuttle__item'} role="option">
+  <li class=${'shuttle__item'} role="option" aria-selected="true">
     <span>${item}</span>
   </li>
   `)}

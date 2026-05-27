@@ -379,6 +379,29 @@ export interface UnresolvedTypeRefIR {
 }
 
 /**
+ * One ARIA-obligation gap acknowledged by the contract via
+ * `a11y.obligations.suppress`. Carried on the IR so downstream tooling
+ * (admission rail, doc generator, future audit pipelines) can inspect
+ * the gap without re-parsing the contract.
+ *
+ * A11Y-CONTRACT-OBLIGATION-VALIDATOR-01: the obligation walker throws
+ * when it finds a static role with a missing required ARIA attribute
+ * AND no matching suppression entry. When a matching suppression is
+ * found, the entry is recorded here instead — the IR builds normally,
+ * but the gap remains visible.
+ */
+export interface A11yObligationIR {
+  /** ARIA role from the offending DOM node (matched against the obligation table). */
+  role: string;
+  /** Required attribute that was not provided as a static attr or binding. */
+  attr: string;
+  /** The contract author's documented reason for the suppression. */
+  reason: string;
+  /** Part name (from anatomy.parts), if the offending node carries one. */
+  part: string | undefined;
+}
+
+/**
  * One controlled/uncontrolled prop trio (value/defaultValue/onChange).
  * Hook generators map each channel to a `useControllableState` call.
  */
@@ -532,6 +555,15 @@ export interface ComponentIR {
   styledProps: ResolvedPropIR[];
   definedTypes: Record<string, ContractTypeDef>;
   unresolvedTypeRefs: UnresolvedTypeRefIR[];
+
+  /**
+   * ARIA-obligation gaps acknowledged via `a11y.obligations.suppress`.
+   * Each entry is point-in-time evidence that a static role in
+   * `anatomy.dom` carries a known-missing required attribute. Unmet
+   * obligations WITHOUT a matching suppression entry throw at IR-build;
+   * suppressed ones land here. A11Y-CONTRACT-OBLIGATION-VALIDATOR-01.
+   */
+  unresolvedA11yObligations: A11yObligationIR[];
 
   /** Variants and states */
   variants: Record<string, string[]>;
@@ -693,6 +725,17 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
     );
   }
 
+  // A11Y-CONTRACT-OBLIGATION-VALIDATOR-01: throw on static ARIA roles
+  // with required attributes that aren't satisfied by either attrs,
+  // bindings, or an explicit `a11y.obligations.suppress` entry.
+  // Suppressed obligations land on `unresolvedA11yObligations` for
+  // downstream inspection without blocking IR build.
+  const unresolvedA11yObligations: A11yObligationIR[] = [];
+  if (dom) {
+    const suppressed = contract.a11y?.obligations?.suppress ?? [];
+    validateDomA11yObligations(dom, suppressed, contract.name, unresolvedA11yObligations);
+  }
+
   // The polymorphic-as default tag comes from the contract's dom-tree root
   // (when present) rather than the a11y-role-derived rootElement, because
   // contracts like List declare the semantic tag via anatomy.dom.tag without
@@ -712,6 +755,7 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
     styledProps,
     definedTypes: contract.types || {},
     unresolvedTypeRefs: collectUnresolvedTypes(styledProps, contract.types),
+    unresolvedA11yObligations,
     variants,
     states,
     classRecipe,
@@ -1096,6 +1140,103 @@ function validateBindingAgainstScope(
     return;
   }
   // literal: always accepted.
+}
+
+// ---------------------------------------------------------------------------
+// A11y obligation validation (A11Y-CONTRACT-OBLIGATION-VALIDATOR-01)
+// ---------------------------------------------------------------------------
+
+/**
+ * Required ARIA attributes for static roles found in `anatomy.dom`.
+ *
+ * Source fact: WAI-ARIA spec — these attributes are required on the
+ * named role and the spec considers their absence an authoring error.
+ * Bounded to roles whose absence-of-required-state would mislead
+ * assistive tech (e.g. axe / lit-analyzer / svelte-check would flag
+ * the resulting rendered DOM as a violation).
+ *
+ * Applies by: static `attrs.role` value (or, future: a contract-level
+ * `details.role` projection onto a DOM node). The walker does not
+ * branch on component name. Roles whose required state is contextual
+ * (require a containing-role check) are deliberately excluded from
+ * this minimal first slice; they belong to a separate slice that
+ * understands ARIA role inheritance.
+ *
+ * Removable when: the IR carries a richer ARIA semantics layer that
+ * supersedes a static role/attr lookup (e.g. derives obligations from
+ * `contract.a11y.apgPattern` + ancestry analysis).
+ */
+const ARIA_ROLE_REQUIRED_ATTRS: ReadonlyMap<string, readonly string[]> = new Map([
+  // role="option" requires aria-selected to communicate selection state
+  // (WAI-ARIA 1.2 §4.3.13). Without it, the option's selection is
+  // ambiguous to AT; axe flags this as aria-required-attr.
+  ["option", ["aria-selected"]],
+]);
+
+/**
+ * Walk `anatomy.dom` and assert that every static role with a required
+ * ARIA attribute has it declared — either as a static `attrs.X` or as
+ * a dynamic `bindings.X`. Returns the suppressed-but-acknowledged
+ * obligations as `A11yObligationIR[]` for inspection on the IR; throws
+ * on the first unmet, unsuppressed obligation.
+ *
+ * The throw is descriptive: it names the component, the offending part,
+ * the role, the missing attribute, and points the contract author to
+ * the two remediation paths (declare the attr, or suppress with reason).
+ *
+ * No component-name branches. The walker reads `node.attrs.role`,
+ * `node.attrs[attr]`, `node.bindings[attr]`, and the contract's
+ * `a11y.obligations.suppress`. All decisions follow from those inputs.
+ */
+function validateDomA11yObligations(
+  node: DomNodeIR,
+  suppressed: ReadonlyArray<{ role: string; attr: string; reason: string }>,
+  componentName: string,
+  diagnostics: A11yObligationIR[],
+): void {
+  const role = node.attrs.role;
+  if (role) {
+    const requiredAttrs = ARIA_ROLE_REQUIRED_ATTRS.get(role);
+    if (requiredAttrs) {
+      for (const attr of requiredAttrs) {
+        const hasStatic = Object.prototype.hasOwnProperty.call(node.attrs, attr);
+        const hasBinding = Object.prototype.hasOwnProperty.call(node.bindings, attr);
+        if (hasStatic || hasBinding) continue;
+        const matchingSuppression = suppressed.find(
+          (s) => s.role === role && s.attr === attr,
+        );
+        if (matchingSuppression) {
+          diagnostics.push({
+            role,
+            attr,
+            reason: matchingSuppression.reason,
+            part: node.part,
+          });
+          continue;
+        }
+        const partLabel = node.part ? `part="${node.part}"` : `tag="${node.tag}"`;
+        throw new Error(
+          `[${componentName}] anatomy.dom node (${partLabel}) has ` +
+          `\`role="${role}"\` but is missing the required ARIA attribute ` +
+          `'${attr}'. WAI-ARIA requires this attribute on \`role="${role}"\`; ` +
+          `assistive tech and a11y validators (axe, svelte-check, ` +
+          `lit-analyzer) flag its absence. To resolve, either:\n` +
+          `  1. Declare the attribute under \`attrs\` (static) or ` +
+          `\`bindings\` (dynamic). Static is appropriate when every ` +
+          `rendered instance carries the same state (e.g. a ` +
+          `selected-items-only listbox).\n` +
+          `  2. If the contract cannot yet truthfully declare the ` +
+          `attribute (e.g. per-item selection state needs grammar that ` +
+          `hasn't landed), add an explicit suppression under ` +
+          `\`a11y.obligations.suppress\` with a reason citing the ` +
+          `upstream blocker.`,
+        );
+      }
+    }
+  }
+  for (const child of node.children) {
+    validateDomA11yObligations(child, suppressed, componentName, diagnostics);
+  }
 }
 
 // ---------------------------------------------------------------------------

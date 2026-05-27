@@ -1355,3 +1355,160 @@ describe("BindingExpressionV2 — iteration locals", () => {
     expect(ir.dom!.children[0].iteration!.indexVar).toBe("dayIndex");
   });
 });
+
+// ---------------------------------------------------------------------------
+// A11Y-CONTRACT-OBLIGATION-VALIDATOR-01
+// ---------------------------------------------------------------------------
+
+describe("A11y obligation validator (anatomy.dom role obligations)", () => {
+  function makeContract(opts: {
+    role?: string;
+    extraAttrs?: Record<string, string>;
+    bindings?: Record<string, string>;
+    suppress?: Array<{ role: string; attr: string; reason: string }>;
+  }): ComponentContract {
+    const attrs: Record<string, string> = {};
+    if (opts.role) attrs.role = opts.role;
+    Object.assign(attrs, opts.extraAttrs ?? {});
+    return {
+      name: "A11yFixture",
+      cssPrefix: "a11y-fixture",
+      anatomy: {
+        parts: ["root", "item"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [
+            {
+              tag: "li",
+              part: "item",
+              attrs,
+              bindings: opts.bindings,
+            },
+          ],
+        },
+      },
+      props: { styled: { members: [] } },
+      a11y: opts.suppress
+        ? { obligations: { suppress: opts.suppress } }
+        : undefined,
+    } as unknown as ComponentContract;
+  }
+
+  it("rejects role='option' without aria-selected (no suppression)", () => {
+    expect(() =>
+      buildComponentIR(makeContract({ role: "option" })),
+    ).toThrow(
+      /\[A11yFixture\] anatomy\.dom node \(part="item"\) has `role="option"` but is missing the required ARIA attribute 'aria-selected'/,
+    );
+  });
+
+  it("error message names component, part, role, missing attr, and remediation", () => {
+    let captured: Error | undefined;
+    try {
+      buildComponentIR(makeContract({ role: "option" }));
+    } catch (e) {
+      captured = e as Error;
+    }
+    expect(captured).toBeDefined();
+    const msg = captured!.message;
+    // Component name
+    expect(msg).toContain("[A11yFixture]");
+    // Part identifier
+    expect(msg).toContain('part="item"');
+    // Role
+    expect(msg).toContain('role="option"');
+    // Missing attr
+    expect(msg).toContain("aria-selected");
+    // Remediation path 1: declare via attrs / bindings
+    expect(msg).toMatch(/Declare the attribute under `attrs` .* or `bindings`/);
+    // Remediation path 2: explicit suppression
+    expect(msg).toMatch(/suppression under `a11y\.obligations\.suppress`/);
+  });
+
+  it("accepts role='option' with static attrs.aria-selected", () => {
+    expect(() =>
+      buildComponentIR(
+        makeContract({
+          role: "option",
+          extraAttrs: { "aria-selected": "true" },
+        }),
+      ),
+    ).not.toThrow();
+  });
+
+  it("accepts role='option' with dynamic aria-selected binding", () => {
+    expect(() =>
+      buildComponentIR(
+        makeContract({
+          role: "option",
+          // `literal:` binding is structurally satisfied by the validator;
+          // truthfulness of the literal is the contract author's
+          // responsibility. The validator only checks presence, not value.
+          bindings: { "aria-selected": "literal:true" },
+        }),
+      ),
+    ).not.toThrow();
+  });
+
+  it("downgrades to advisory diagnostic when a matching suppression exists", () => {
+    const ir = buildComponentIR(
+      makeContract({
+        role: "option",
+        suppress: [
+          {
+            role: "option",
+            attr: "aria-selected",
+            reason: "Per-item selection state needs property-path grammar",
+          },
+        ],
+      }),
+    );
+    expect(ir.unresolvedA11yObligations).toHaveLength(1);
+    expect(ir.unresolvedA11yObligations[0]).toEqual({
+      role: "option",
+      attr: "aria-selected",
+      reason: "Per-item selection state needs property-path grammar",
+      part: "item",
+    });
+  });
+
+  it("ignores suppression entries that don't match a real obligation", () => {
+    // Suppression for role="button" / attr="aria-pressed" — neither
+    // appears in the dom. The validator should not surface a
+    // spurious diagnostic; the IR's unresolvedA11yObligations is empty.
+    const ir = buildComponentIR(
+      makeContract({
+        role: "option",
+        extraAttrs: { "aria-selected": "true" },
+        suppress: [
+          { role: "button", attr: "aria-pressed", reason: "n/a" },
+        ],
+      }),
+    );
+    expect(ir.unresolvedA11yObligations).toEqual([]);
+  });
+
+  it("non-option roles are not constrained (table is bounded to roles in production)", () => {
+    // role="group" has no required attrs in this minimal validator;
+    // it should pass without aria-selected. If a future slice extends
+    // the obligation table to cover group, this test should be updated
+    // in lockstep.
+    expect(() =>
+      buildComponentIR(makeContract({ role: "group" })),
+    ).not.toThrow();
+  });
+
+  it("contracts without anatomy.dom skip a11y validation entirely", () => {
+    // Defensive: pre-DOM contracts should not be perturbed by the
+    // obligation walker. `unresolvedA11yObligations` must be present
+    // (empty array) so consumers can rely on the field shape.
+    const ir = buildComponentIR({
+      name: "NoDom",
+      anatomy: { parts: ["root"] },
+      props: { styled: { members: [] } },
+    } as unknown as ComponentContract);
+    expect(ir.dom).toBeUndefined();
+    expect(ir.unresolvedA11yObligations).toEqual([]);
+  });
+});
