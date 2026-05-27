@@ -131,7 +131,10 @@ function generatePropsBlock(ir: ComponentIR): string {
   const lines: string[] = [`interface Props {`];
   for (const p of ir.styledProps) {
     if (SVELTE_SKIP_PROPS.has(p.name)) continue;
-    const optional = p.required ? "" : "?";
+    // A prop with a `defaultExpr` is effectively optional at the
+    // call site even if the contract marks it required — the
+    // component supplies the default in the `$props()` destructure.
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     lines.push(`  ${propName}${optional}: ${svelteType(p.type)};`);
   }
@@ -306,7 +309,10 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
   const propsLines: string[] = [`interface Props {`];
   for (const p of ir.styledProps) {
     if (SVELTE_SKIP_PROPS.has(p.name)) continue;
-    const optional = p.required ? "" : "?";
+    // A prop with a `defaultExpr` is effectively optional at the
+    // call site even if the contract marks it required — the
+    // component supplies the default in the `$props()` destructure.
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     propsLines.push(`  ${propName}${optional}: ${svelteType(p.type)};`);
   }

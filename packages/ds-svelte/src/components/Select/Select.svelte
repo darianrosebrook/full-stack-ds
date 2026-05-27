@@ -18,7 +18,7 @@ type SelectSize = "sm" | "md" | "lg";
 
 // @generated:start props
 interface Props {
-  options: SelectOption[];
+  options?: SelectOption[];
   value?: string | string[];
   defaultValue?: string | string[];
   onChange?: (value: string | string[]) => void;

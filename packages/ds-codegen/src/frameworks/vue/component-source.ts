@@ -119,7 +119,10 @@ function generatePropsInterface(ir: ComponentIR): string {
   const lines: string[] = [`interface Props {`];
   for (const p of ir.styledProps) {
     if (VUE_SKIP_PROPS.has(p.name)) continue;
-    const optional = p.required ? "" : "?";
+    // A prop with a `defaultExpr` is effectively optional at the
+    // call site even if the contract marks it required — the
+    // component supplies the default via `withDefaults`.
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     lines.push(`  ${propName}${optional}: ${vueType(p.type)};`);
   }
@@ -446,7 +449,10 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
   const propsLines: string[] = [`interface Props {`];
   for (const p of ir.styledProps) {
     if (VUE_SKIP_PROPS.has(p.name)) continue;
-    const optional = p.required ? "" : "?";
+    // A prop with a `defaultExpr` is effectively optional at the
+    // call site even if the contract marks it required — the
+    // component supplies the default via `withDefaults`.
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propKey = p.name.includes("-") ? `"${p.name}"` : p.name;
     propsLines.push(`  ${propKey}${optional}: ${vueType(p.type)};`);
   }

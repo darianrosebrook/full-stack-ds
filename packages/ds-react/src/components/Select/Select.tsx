@@ -21,7 +21,7 @@ export type SelectOption = { value: string; label: string; disabled?: boolean };
 
 // @generated:start props
 export interface SelectProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultOpen" | "defaultValue" | "disabled" | "empty" | "filterFn" | "multiple" | "onChange" | "onOpenChange" | "open" | "options" | "position" | "searchable" | "size" | "value"> {
-  options: SelectOption[];
+  options?: SelectOption[];
   value?: string | string[];
   defaultValue?: string | string[];
   onChange?: (value: string | string[]) => void;

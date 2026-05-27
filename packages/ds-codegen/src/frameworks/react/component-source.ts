@@ -439,7 +439,14 @@ function generatePropsInterface(ir: ComponentIR): string {
   );
 
   for (const p of ir.styledProps) {
-    const optional = p.required ? "" : "?";
+    // A prop with a `defaultExpr` is effectively optional at the call
+    // site even if the contract marks it `required: true` — the
+    // generated component supplies the default. Make the TS prop
+    // optional so consumers (including this contract's own generated
+    // tests) can omit the prop. BINDING-EXPRESSION-V2-PREDICATE-01
+    // surfaced this when Select gained an `options` default: tests
+    // that previously had to pass `options={[]}` can now omit it.
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     const tsType = resolveReactType(p.type, ir);
     lines.push(`  ${propName}${optional}: ${tsType};`);
