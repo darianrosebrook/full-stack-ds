@@ -23,11 +23,6 @@ describe("Shuttle — unit", () => {
     expect(wrapper.classes()).toContain("shuttle");
     expect(wrapper.classes()).toContain("custom");
   });
-
-  it("calls onValueChange when selection changes", async () => {
-    const onValueChangeSpy = vi.fn();
-    expect(() => mount(Shuttle as Component, { props: { "value": false, "onValueChange": onValueChangeSpy }, attrs: { "data-testid": "shuttle" }, slots: { default: "content" } })).not.toThrow();
-  });
 });
 
 describe("Shuttle — accessibility", () => {

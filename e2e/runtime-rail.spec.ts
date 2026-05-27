@@ -243,6 +243,65 @@ test.describe("Runtime rail — Calendar (count iteration)", () => {
   }
 });
 
+test.describe("Runtime rail — Shuttle (array iteration with channel source)", () => {
+  // PRODUCTION-ARRAY-ITERATION-CONSUMER-01: the production proof.
+  // Shuttle's contract declares `defaultValue: ["alpha", "beta", "gamma"]`
+  // and binds `iterate.source` to `channel:selection.value` (the
+  // resolved channel value, not the raw destructured prop). At runtime
+  // we expect 3 `<li role="option">` cells with text "alpha", "beta",
+  // "gamma" in order.
+  //
+  // What this proves:
+  //   - The IR's V2 grammar (BindingExpression `iterationLocal`) lowers
+  //     to bare-identifier emit on each framework.
+  //   - The iteration source goes through the value renderer (so
+  //     `channel:selection.value` resolves to the controllable-state
+  //     identifier — `selection` in React, `behavior.selection.value`
+  //     in Vue, etc. — NOT the raw `value` prop).
+  //   - The `?? []` undefined-guard doesn't fire because defaultValue
+  //     seeds the controllable state.
+  //   - `content: "iter:item"` in the iterated `<li>`'s child `<span>`
+  //     lowers to the per-iteration item value at each position.
+  //
+  // What this does NOT prove:
+  //   - Mutating the selection at runtime (no transfer behavior tested).
+  //   - The unselected/source list (Shuttle's dual-listbox design
+  //     wasn't built; contract has selected-only DOM by design).
+  //   - ARIA correctness of `role="option"` without `aria-selected`
+  //     (svelte-check flags this; the codegen-emit side surfaces it).
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: renders defaultValue items as <li role="option"> with iter:item text`, async ({
+      page,
+    }) => {
+      await goto(page, framework, "Shuttle", "shuttle");
+
+      const items = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return { count: 0, texts: [] as string[], roles: [] as Array<string | null> };
+          const nodes = Array.from(
+            root.querySelectorAll(".shuttle__item"),
+          );
+          return {
+            count: nodes.length,
+            texts: nodes.map((n) => (n.textContent ?? "").trim()),
+            roles: nodes.map((n) => n.getAttribute("role")),
+          };
+        },
+        { host: `fsds-${kebab("Shuttle")}`, isLit: framework === "lit" },
+      );
+
+      // defaultValue = ["alpha", "beta", "gamma"] in the contract.
+      expect(items.count).toBe(3);
+      expect(items.texts).toEqual(["alpha", "beta", "gamma"]);
+      // Each cell carries role="option" per the contract's attr.
+      expect(items.roles).toEqual(["option", "option", "option"]);
+    });
+  }
+});
+
 test.describe("Runtime rail — Truncate (CSS-var fallback)", () => {
   for (const framework of FRAMEWORKS) {
     test(`${framework}: content element has style attribute slot for --fsds-truncate-content-lines`, async ({ page }) => {

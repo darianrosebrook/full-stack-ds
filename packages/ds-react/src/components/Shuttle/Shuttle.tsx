@@ -1,6 +1,7 @@
 // @generated:start imports
-import { type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { useShuttle } from "./useShuttle";
 import "./Shuttle.css";
 // @generated:end
 
@@ -17,14 +18,13 @@ import "./Shuttle.css";
 // @custom:end
 
 // @generated:start props
-export interface ShuttleProps {
+export interface ShuttleProps extends Omit<HTMLAttributes<HTMLUListElement>, "ariaLabel" | "children" | "className" | "data-testid" | "defaultValue" | "onValueChange" | "value"> {
   ariaLabel?: string;
   value?: string[];
   defaultValue?: string[];
   onValueChange?: (value: string[]) => void;
   className?: string;
   "data-testid"?: string;
-  children?: ReactNode;
 }
 // @generated:end
 
@@ -51,15 +51,20 @@ export function ShuttleItem({
 
 // @generated:start component
 export function Shuttle({
+  value: controlledValue,
+  defaultValue = ["alpha","beta","gamma"],
+  onValueChange,
   className,
   "data-testid": testId,
-  children,
   ariaLabel,
-  value,
-  defaultValue,
-  onValueChange,
   ...rest
 }: ShuttleProps) {
+  const { selection, setSelection } = useShuttle({
+    value: controlledValue,
+    defaultValue,
+    onValueChange,
+  });
+
   const classNames = [
     "shuttle",
     className,
@@ -68,14 +73,15 @@ export function Shuttle({
     .join(" ");
 
   return (
-    <Stack
-      role="listbox"
-      className={classNames}
-      data-testid={testId}
-      {...rest}
-    >
-      {children}
-    </Stack>
+  <ul className={`${classNames}`} role="listbox" aria-label={ariaLabel} data-testid={testId} {...rest}>
+    {(selection ?? []).map((item, index) => (
+      <li className="shuttle__item" role="option" key={index}>
+        <span>
+          {item}
+        </span>
+      </li>
+    ))}
+  </ul>
   );
 }
 // @generated:end

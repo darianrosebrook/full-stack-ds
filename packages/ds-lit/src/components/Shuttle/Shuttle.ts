@@ -1,7 +1,8 @@
 // @generated:start imports
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { StackElement as _Stack } from '../../primitives/index.js';
+import { ShuttleBehavior } from './ShuttleBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -72,15 +73,30 @@ export class ShuttleElement extends LitElement {
 
   @property({ attribute: 'aria-label', reflect: true })
   override ariaLabel: string | null = null;
-  @property({ attribute: false })
-  value?: string[];
-  @property({ attribute: false })
-  defaultValue?: string[];
-  @property({ attribute: false })
-  onValueChange?: (value: string[]) => void;
+  @property({ attribute: false }) value?: string[];
+  @property({ attribute: false }) defaultValue?: string[] = ["alpha","beta","gamma"];
+  @property({ attribute: false }) onValueChange?: (value: string[]) => void;
+
+  private behavior = new ShuttleBehavior(this, {
+    value: () => this.value,
+    defaultValue: this.defaultValue,
+    onValueChange: (v) => this.onValueChange?.(v),
+  });
+
+  private computeClasses(): string {
+    return [
+      "shuttle",
+    ].filter(Boolean).join(" ");
+  }
 
   override render() {
-    return html`<fsds-stack role="listbox" class="shuttle"><slot></slot></fsds-stack>`;
+    return html`<ul class="${this.computeClasses()}" role="listbox" aria-label=${ifDefined(this.ariaLabel ?? undefined)}>
+  ${(this.behavior.selection ?? []).map((item, index) => html`
+  <li class=${'shuttle__item'} role="option">
+    <span>${item}</span>
+  </li>
+  `)}
+</ul>`;
   }
 }
 

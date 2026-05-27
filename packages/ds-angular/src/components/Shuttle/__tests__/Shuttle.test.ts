@@ -1,17 +1,23 @@
 // @generated:start imports
-import { describe, expect, it } from "@jest/globals";
+import { describe, expect, it, beforeEach, jest } from "@jest/globals";
+import { TestBed } from "@angular/core/testing";
 import { ShuttleComponent } from "../Shuttle.component";
 // @generated:end
 
 // @generated:start tests
 describe("Shuttle — unit", () => {
-  it("creates the component class", () => {
-    expect(new ShuttleComponent()).toBeInstanceOf(ShuttleComponent);
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [ShuttleComponent] });
+  });
+
+  it("creates the component", () => {
+    const fixture = TestBed.createComponent(ShuttleComponent);
+    expect(fixture.componentInstance).toBeInstanceOf(ShuttleComponent);
   });
 
   it("applies the base CSS class", () => {
-    const component = new ShuttleComponent();
-    expect(classTokens(component)).toContain("shuttle");
+    const fixture = TestBed.createComponent(ShuttleComponent);
+    expect(classTokens(fixture.componentInstance)).toContain("shuttle");
   });
 });
 

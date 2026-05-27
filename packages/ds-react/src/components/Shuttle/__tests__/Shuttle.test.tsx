@@ -14,29 +14,29 @@ declare module "vitest" {
 // @generated:start tests
 describe("Shuttle — unit", () => {
   it("renders with default props", () => {
-    render(<Shuttle data-testid="shuttle">content</Shuttle>);
+    render(<Shuttle data-testid="shuttle" />);
     expect(screen.getByTestId("shuttle")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Shuttle data-testid="shuttle">content</Shuttle>);
+    render(<Shuttle data-testid="shuttle" />);
     expect(screen.getByTestId("shuttle")).toHaveClass("shuttle");
   });
 
   it("merges custom className", () => {
-    render(<Shuttle data-testid="shuttle" className="custom">content</Shuttle>);
+    render(<Shuttle data-testid="shuttle" className="custom" />);
     expect(screen.getByTestId("shuttle")).toHaveClass("shuttle", "custom");
   });
 
   it("calls onValueChange when selection changes", async () => {
     const onValueChangeSpy = vi.fn();
-    expect(() => render(<Shuttle data-testid="shuttle" value={[]} onValueChange={onValueChangeSpy}>content</Shuttle>)).not.toThrow();
+    expect(() => render(<Shuttle data-testid="shuttle" value={[]} onValueChange={onValueChangeSpy} />)).not.toThrow();
   });
 });
 
 describe("Shuttle — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Shuttle aria-label="Test Shuttle">content</Shuttle></>);
+    const { container } = render(<><Shuttle aria-label="Test Shuttle" /></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

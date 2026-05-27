@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+import { useShuttle } from "./useShuttle.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -14,10 +14,17 @@ interface Props {
   defaultValue?: string[];
   onValueChange?: (value: string[]) => void;
   class?: string;
-  children?: import('svelte').Snippet;
 }
 
-let { ariaLabel, value, defaultValue, onValueChange, class: className, children }: Props = $props();
+let { ariaLabel, value, defaultValue = ["alpha","beta","gamma"], onValueChange, class: className }: Props = $props();
+// @generated:end
+
+// @generated:start hook
+const behavior = useShuttle({
+  value: () => value,
+  defaultValue: () => defaultValue,
+  onValueChange: () => onValueChange,
+});
 // @generated:end
 
 // @generated:start classes
@@ -34,6 +41,10 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<Stack role="listbox" class={classes}>
-  {@render children?.()}
-</Stack>
+<ul class={classes} role="listbox" aria-label={ariaLabel}>
+  {#each (behavior.selection ?? []) as item, index (index)}
+  <li class={'shuttle__item'} role="option">
+    <span>{item}</span>
+  </li>
+  {/each}
+</ul>

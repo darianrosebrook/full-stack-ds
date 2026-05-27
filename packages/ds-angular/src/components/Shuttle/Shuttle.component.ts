@@ -1,7 +1,8 @@
 // @generated:start imports
-import { Component, Input, ChangeDetectionStrategy, computed } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
+import { useShuttle } from "./useShuttle.js";
 // @generated:end
 
 // @custom:start imports
@@ -20,20 +21,39 @@ import { StackComponent } from "../../primitives/index.js";
 @Component({
   selector: "fsds-shuttle",
   standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack role="listbox" [ngClass]="classes()"><ng-content /></fsds-stack>`,
+  imports: [NgClass, NgFor],
+  template: `<ul [ngClass]="classes()" role="listbox" [attr.aria-label]="ariaLabel">
+  <ng-container *ngFor="let item of (behavior.selection() ?? []); let index = index">
+    <li [ngClass]="'shuttle__item'" role="option">
+      <span>
+        {{ item }}
+      </span>
+    </li>
+  </ng-container>
+</ul>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShuttleComponent {
   @Input() ariaLabel?: string;
   @Input() value?: string[];
-  @Input() defaultValue?: string[];
+  @Input() defaultValue?: string[] = ["alpha","beta","gamma"];
   @Input() onValueChange?: (value: string[]) => void;
+  @Input() class?: string;
 
-  classes(): string {
-    const parts: Array<string | null | undefined> = ["shuttle"];
-    return parts.filter(Boolean).join(" ");
-  }
+  private destroyRef = inject(DestroyRef);
+  protected behavior = useShuttle({
+    value: () => this.value,
+    defaultValue: this.defaultValue,
+    onValueChange: (v) => this.onValueChange?.(v),
+    destroyRef: this.destroyRef,
+  });
+
+  classes = computed(() =>
+    [
+      "shuttle",
+      this.class,
+    ].filter(Boolean).join(" "),
+  );
 }
 
 @Component({
