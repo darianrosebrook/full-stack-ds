@@ -36,6 +36,7 @@ import {
   parseTargetArg,
 } from "./emitter.js";
 import { buildComponentIR, type ComponentIR } from "./ir.js";
+import { REACT_ADMITTED_TYPES } from "./frameworks/react/admitted-types.js";
 import {
   type CommentStyle,
   PreserveError,
@@ -572,7 +573,7 @@ function main(): void {
     }));
   const irs: ComponentIR[] = irInputs.map((x) => x.ir);
 
-  if (!surfaceTypeDiagnostics(irs, args.strictTypes)) {
+  if (!surfaceTypeDiagnostics(irs, args.strictTypes, requestedTargets)) {
     process.exit(1);
   }
 
@@ -1296,7 +1297,8 @@ function startWatch(
           return;
         }
         const ir = buildComponentIR(result.value);
-        if (!surfaceTypeDiagnostics([ir], args.strictTypes)) return;
+        if (!surfaceTypeDiagnostics([ir], args.strictTypes, initialTargets))
+          return;
         const provenance: ContractProvenance = {
           path: toPosixRel(filePath),
           sha256: crypto.createHash("sha256").update(rawBytes).digest("hex"),
@@ -1318,13 +1320,32 @@ function startWatch(
   });
 }
 
-function surfaceTypeDiagnostics(irs: readonly ComponentIR[], strict: boolean): boolean {
-  const offenders = irs.filter((ir) => ir.unresolvedTypeRefs.length > 0);
-  if (offenders.length === 0) return true;
+function surfaceTypeDiagnostics(
+  irs: readonly ComponentIR[],
+  strict: boolean,
+  targets: readonly TargetId[],
+): boolean {
+  // The IR's unresolved-ref check is framework-neutral by design — it
+  // does NOT silently admit React-shaped type names. When React is
+  // among the active targets, the React emitter would have admitted
+  // those names anyway, so filter them out of the surfaced diagnostic.
+  // When React is NOT active (e.g. `--target=vue`), surface them as
+  // genuine unresolved refs: the contract is leaking React detail into
+  // a non-React generation and the operator deserves to know.
+  const reactAdmitted = targets.includes("react") ? REACT_ADMITTED_TYPES : null;
+  const filteredOffenders = irs
+    .map((ir) => ({
+      ir,
+      refs: reactAdmitted
+        ? ir.unresolvedTypeRefs.filter((r) => !reactAdmitted.has(r.ref))
+        : ir.unresolvedTypeRefs,
+    }))
+    .filter((x) => x.refs.length > 0);
+  if (filteredOffenders.length === 0) return true;
 
   console.warn("\nUnresolved type references:");
-  for (const ir of offenders) {
-    for (const ref of ir.unresolvedTypeRefs) {
+  for (const { ir, refs } of filteredOffenders) {
+    for (const ref of refs) {
       console.warn(
         `  ${ir.name}: type "${ref.ref}" referenced by ${ref.fromProps.join(", ")}`,
       );

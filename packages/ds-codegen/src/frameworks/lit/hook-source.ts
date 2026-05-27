@@ -57,7 +57,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // index" channel can't bind AnchorToggle without a type mismatch — fall
   // through to standalone Dismissal in that case.
   const hasBooleanOpenChannel = channels.some(
-    (c) => c.valueType === "boolean" || c.name === "open",
+    (c) => c.isDisclosureChannel,
   );
   const useAnchor =
     !hasFocusTrap && (hasEscape || hasOutsideClick) && hasBooleanOpenChannel;
@@ -194,7 +194,7 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
   // mirroring the heuristic used below for focus-trap / scroll-lock.
   const openChannel =
     bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     ) ?? bindings.useControllableState[0];
   const anchorOwnsChannel =
     bindings.useAnchorToggle &&
@@ -266,7 +266,7 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
 
   if (bindings.useFocusTrap) {
     const boolChannel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeExpr = boolChannel
       ? `this.${boolChannel.name}State.value`
@@ -279,7 +279,7 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
 
   if (bindings.useScrollLock) {
     const boolChannel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeExpr = boolChannel
       ? `this.${boolChannel.name}State.value`
@@ -302,7 +302,7 @@ function generateClassBody(ir: ComponentIR, bindings: PrimitiveBindings): string
 
   if (bindings.useDismissal) {
     const boolChannel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const openExpr = boolChannel
       ? `this.${boolChannel.name}State.value`

@@ -562,6 +562,11 @@
           "type": "string",
           "description": "Short type hint for the channel's value (e.g. \"number\", \"string | string[]\"). Use when the prop's TS type alone is not descriptive cross-language."
         },
+        "callbackKind": {
+          "type": "string",
+          "enum": ["value", "event"],
+          "description": "Shape of the change-handler callback. \"value\" (default) means the handler receives the channel's value as its first argument (e.g. (checked: boolean) => void). \"event\" means the handler receives a framework-native event object the consumer is expected to inspect (e.g. (e: ChangeEvent) => void). Declared explicitly so the IR does not have to infer this from React/DOM type-name heuristics."
+        },
         "notes": {
           "type": "string",
           "description": "Free-form notes about semantics (e.g. \"in multi mode the value is an array\")."

@@ -406,3 +406,50 @@ function makeContract(extra: Partial<ComponentContract>): ComponentContract {
     ...extra,
   } as ComponentContract;
 }
+
+describe("renderStyleBlock — platforms-on-literal guard", () => {
+  // The schema requires `platforms` whenever `literal` is set. Prior to
+  // this guard, a `literal` entry that bypassed schema validation (e.g.
+  // a hand-constructed StyleEntry, or a malformed contract that slipped
+  // past validation) would be silently dropped from emission with no
+  // diagnostic. The IR now throws so the contract bug is visible.
+  it("throws when a literal entry omits platforms", () => {
+    const contract = makeContract({
+      anatomy: { parts: ["root", "track"] },
+      styles: {
+        track: {
+          // Intentionally missing `platforms` — would have produced an
+          // empty declaration block before the guard.
+          "background-color": { literal: "red" },
+        },
+      },
+    });
+    expect(() => computeCssBlocks(contract, "x")).toThrow(
+      /uses `literal` without a `platforms` array/,
+    );
+  });
+
+  it("does NOT throw on resolvesTo without platforms (symmetric default = all platforms)", () => {
+    const contract = makeContract({
+      anatomy: { parts: ["root", "track"] },
+      styles: {
+        track: {
+          "background-color": {
+            resolvesTo: "semantic.color.background.tertiary",
+          },
+        },
+      },
+    });
+    // Must not throw — that is the contract under test. The exact
+    // selector chosen by `computeCssBlocks` for a bare part key is an
+    // emitter implementation detail; the cross-check we care about is
+    // that the resolvesTo entry survives to a declaration somewhere.
+    const blocks = computeCssBlocks(contract, "x");
+    const allDeclarations = blocks.flatMap((b) =>
+      Object.values(b.declarations),
+    );
+    expect(allDeclarations).toContain(
+      "var(--fsds-semantic-color-background-tertiary)",
+    );
+  });
+});

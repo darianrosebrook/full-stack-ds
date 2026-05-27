@@ -333,7 +333,9 @@
         "changeHandlerProp": "onOpenChange",
         "valueType": "boolean",
         "description": "Per-toast visibility managed by ToastProvider.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 0
       }
     ],
     "dismissalTriggers": [

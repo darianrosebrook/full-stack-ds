@@ -484,17 +484,42 @@ export interface NormalizedChannelIR {
    *   framework idiomatically wraps native events to extract the value
    *   (e.g. `event.target.checked` for checkboxes) before invoking the
    *   handler. This keeps the contract framework-neutral.
-   * - `"event"`: handler signature carries a DOM event (e.g.
-   *   `(event: ChangeEvent<HTMLInputElement>) => void`). Framework
-   *   emitters preserve the event shape rather than unwrapping. Use
-   *   only when the consumer genuinely needs `event.preventDefault()`,
-   *   `event.target` access beyond a single value, etc.
+   * - `"event"`: handler signature carries a framework-native event. Use
+   *   only when the consumer genuinely needs the event object itself.
    *
-   * Inferred from the prop's TypeScript type when not declared explicitly:
-   * if the type contains `Event`, `EventHandler`, `ChangeEvent`, etc., the
-   * heuristic returns `"event"`; otherwise `"value"`.
+   * Sourced from `ContractChannel.callbackKind`; defaults to `"value"`.
+   * The IR no longer infers this from React/DOM type-name patterns —
+   * see `resolveCallbackKind`.
    */
   callbackKind: "value" | "event";
+  /**
+   * True when this channel controls visibility / open-closed state of an
+   * overlay or disclosure surface (dialog, popover, drawer, accordion
+   * panel, …). Disclosure channels are what drive `useAnchorToggle`,
+   * dismissal wiring, scroll lock, and similar overlay behavior in every
+   * framework emitter.
+   *
+   * Derived structurally at IR build time: a channel is a disclosure
+   * channel iff its `valueType === "boolean"` OR its contract name is
+   * `"open"`. The rule lives in the IR so emitters do not each maintain
+   * the same `c.name === "open"` string predicate (which historically
+   * leaked the same channel-name lore across five framework files).
+   */
+  isDisclosureChannel: boolean;
+  /**
+   * Priority for ranking disclosure channels when more than one exists.
+   * Lower = higher priority. Used by emitters to pick the "primary"
+   * disclosure channel for anchor-toggle / dismissal wiring.
+   *
+   *   0 — channel named `"open"`
+   *   1 — channel named `"expanded"`
+   *   2 — any other disclosure channel
+   *   Number.MAX_SAFE_INTEGER — non-disclosure channels
+   *
+   * The IR also exposes a precomputed `primaryDisclosureChannel` on
+   * `BehaviorIR` so emitters do not have to sort or filter themselves.
+   */
+  disclosurePriority: number;
 }
 
 /**
@@ -539,6 +564,14 @@ export interface BehaviorIR {
 
   /** Normalized channel trios for direct use by hook generators. */
   normalizedChannels: NormalizedChannelIR[];
+  /**
+   * Precomputed primary disclosure channel for overlay/anchor/dismissal
+   * wiring (priority: `open` → `expanded` → first other disclosure
+   * channel). Emitters read this instead of filtering channels by
+   * `c.name === "open"` themselves. Undefined when no disclosure channel
+   * is declared.
+   */
+  primaryDisclosureChannel: NormalizedChannelIR | undefined;
   /** Normalized dismissal triggers, with prop names already resolved. */
   normalizedDismissalTriggers: NormalizedDismissalTriggerIR[];
   /** Normalized event signatures. */
@@ -737,7 +770,23 @@ function derivePolymorphicTagProp(
  * Validation must happen before this call — `buildComponentIR` assumes the
  * contract conforms to the schema.
  */
-export function buildComponentIR(contract: ComponentContract): ComponentIR {
+export interface BuildComponentIROptions {
+  /**
+   * Extra type names the unresolved-ref diagnostic should treat as known.
+   * Use to admit per-emitter type vocabularies (e.g. a React-only consumer
+   * passes `REACT_ADMITTED_TYPES`) without dragging realization-specific
+   * names into the framework-neutral builtin set. Omitting this means the
+   * IR will surface any non-builtin, non-contract-defined reference as
+   * unresolved — including React-shaped names — which is the desired
+   * default for framework-neutral validation.
+   */
+  extraKnownTypes?: ReadonlySet<string>;
+}
+
+export function buildComponentIR(
+  contract: ComponentContract,
+  options?: BuildComponentIROptions,
+): ComponentIR {
   const cssPrefix = getCssPrefix(contract);
   const styledProps = resolveProps(contract);
   const parts = buildParts(contract);
@@ -812,7 +861,11 @@ export function buildComponentIR(contract: ComponentContract): ComponentIR {
     compoundParts,
     styledProps,
     definedTypes: contract.types || {},
-    unresolvedTypeRefs: collectUnresolvedTypes(styledProps, contract.types),
+    unresolvedTypeRefs: collectUnresolvedTypes(
+      styledProps,
+      contract.types,
+      options?.extraKnownTypes,
+    ),
     unresolvedA11yObligations,
     variants,
     states,
@@ -1885,6 +1938,10 @@ function buildBehaviorIR(
   contract: ComponentContract,
   styledProps: ResolvedPropIR[],
 ): BehaviorIR {
+  const normalizedChannelsForBuild = buildChannelsIR(
+    contract.channels,
+    styledProps,
+  );
   return {
     channels: contract.channels,
     events: contract.events,
@@ -1894,7 +1951,10 @@ function buildBehaviorIR(
     portal: contract.portal,
     dismissal: contract.dismissal,
     relationships: contract.relationships,
-    normalizedChannels: buildChannelsIR(contract.channels, styledProps),
+    normalizedChannels: normalizedChannelsForBuild,
+    primaryDisclosureChannel: pickPrimaryDisclosureChannel(
+      normalizedChannelsForBuild,
+    ),
     normalizedDismissalTriggers: buildDismissalTriggersIR(contract.dismissal),
     normalizedEvents: buildEventsIR(contract.events),
   };
@@ -1999,40 +2059,22 @@ export function buildSurfaceIR(
 }
 
 /**
- * Inspect a TypeScript type string and decide whether the corresponding
- * change handler should be treated as a value-callback or an event-callback.
+ * Resolve a channel's callback shape from its contract-declared
+ * `callbackKind`. The IR is deliberately framework-neutral here: it does
+ * not inspect handler TypeScript types looking for React/DOM event
+ * identifiers, because that classification would leak React realization
+ * knowledge into the IR as a fact published to all five framework
+ * emitters. Contracts that need event-shaped callbacks must declare
+ * `callbackKind: "event"` on the channel; absent declaration defaults to
+ * `"value"`, which matches the entire current corpus.
  *
- * Only treats `Event` as event-shaped when it appears inside a parenthesized
- * function-signature parameter (e.g. `(e: Event) => void`,
- * `(event: ChangeEvent<HTMLInputElement>) => void`). Identifiers like
- * `EventEmitter<T>`, `EventBus`, or `EventPayload` will not match because
- * they appear outside a parameter slot.
+ * Exported so the parity tests and external consumers can call the same
+ * resolution rather than reimplement it.
  */
-export function inferCallbackKind(typeStr: string | undefined): "value" | "event" {
-  if (!typeStr) return "value";
-  // Look at parenthesized parameter lists (anything before `=>`). Multiple
-  // parameter lists are uncommon in handler types, so a single match is fine.
-  const paramMatch = typeStr.match(/\(([^()]*)\)\s*=>/);
-  const paramList = paramMatch?.[1] ?? "";
-  if (!paramList) return "value";
-  if (
-    /:\s*(?:[\w.]+\s*<[^<>]*>|[\w.]+)\s*\)/.test(`${paramList})`) === false &&
-    !paramList.includes(":")
-  ) {
-    return "value";
-  }
-  // DOM-event-shaped identifiers in the parameter type position.
-  if (
-    /:\s*(?:Mouse|Keyboard|Change|Focus|Form|Synthetic|Pointer|Drag|Touch|Wheel|Composition|Animation|Transition|Clipboard|Input|Submit|Reset|Select)Event\b/.test(
-      paramList,
-    )
-  ) {
-    return "event";
-  }
-  if (/:\s*(?:EventHandler|SyntheticEvent)\b/.test(paramList)) return "event";
-  // Bare `Event` in parameter position (e.g. `(e: Event) => void`).
-  if (/:\s*Event\b/.test(paramList)) return "event";
-  return "value";
+export function resolveCallbackKind(
+  channel: Pick<ContractChannel, "callbackKind">,
+): "value" | "event" {
+  return channel.callbackKind ?? "value";
 }
 
 function buildChannelsIR(
@@ -2040,23 +2082,51 @@ function buildChannelsIR(
   styledProps: ResolvedPropIR[],
 ): NormalizedChannelIR[] {
   if (!channels) return [];
-  const propsByName = new Map(styledProps.map((p) => [p.name, p]));
+  // styledProps reserved for future channel-aware prop introspection;
+  // intentionally not consumed today now that callbackKind is
+  // contract-declared rather than handler-type-inferred.
+  void styledProps;
   const out: NormalizedChannelIR[] = [];
   for (const [name, c] of Object.entries(channels)) {
-    const handlerProp = propsByName.get(c.onChange);
-    const callbackKind = inferCallbackKind(handlerProp?.type);
+    const callbackKind = resolveCallbackKind(c);
+    const isDisclosureChannel = c.valueType === "boolean" || name === "open";
+    const disclosurePriority = !isDisclosureChannel
+      ? Number.MAX_SAFE_INTEGER
+      : name === "open"
+        ? 0
+        : name === "expanded"
+          ? 1
+          : 2;
     out.push({
       name,
       valueProp: c.value,
       defaultValueProp: c.defaultValue,
       changeHandlerProp: c.onChange,
       valueType: c.valueType,
-      enabledByProp: (c as { enabledBy?: string }).enabledBy,
+      enabledByProp: c.enabledBy,
       description: c.description,
       callbackKind,
+      isDisclosureChannel,
+      disclosurePriority,
     });
   }
   return out;
+}
+
+/**
+ * Pick the primary disclosure channel from a normalized channel list, or
+ * undefined when none exists. Emitters call this once when wiring
+ * anchor-toggle / dismissal / focus-trap primitives so they do not each
+ * reimplement the priority order (`open` → `expanded` → other boolean).
+ */
+export function pickPrimaryDisclosureChannel(
+  channels: readonly NormalizedChannelIR[],
+): NormalizedChannelIR | undefined {
+  const disclosure = channels.filter((c) => c.isDisclosureChannel);
+  if (disclosure.length === 0) return undefined;
+  return disclosure.reduce((best, c) =>
+    c.disclosurePriority < best.disclosurePriority ? c : best,
+  );
 }
 
 function buildDismissalTriggersIR(
@@ -2212,6 +2282,16 @@ function resolveNativeTag(opts: {
 // Props / type resolution
 // ---------------------------------------------------------------------------
 
+// Framework-neutral type names the IR treats as "known" — primitives,
+// generic TS utility types, and intrinsic JS globals only. React-specific
+// names (ReactNode, SyntheticEvent, MouseEventHandler, HTMLButtonElement,
+// React, …) deliberately do NOT live here: a contract reaching for those
+// is leaking realization detail into the source-of-truth. The unresolved-
+// ref diagnostic surfaces that leak so it can be paid down at the
+// contract layer. Per-emitter type allowlists, if needed, live in the
+// emitter's own translation surface (e.g. `non-react-types.ts` for the
+// non-React emitters, where React-shaped contract types get rewritten
+// before emission).
 const BUILTIN_TYPE_NAMES = new Set([
   "string",
   "number",
@@ -2231,40 +2311,17 @@ const BUILTIN_TYPE_NAMES = new Set([
   "Record",
   "Omit",
   "Partial",
-  "ReactNode",
-  "ReactElement",
-  "ComponentType",
-  "CSSProperties",
-  "Ref",
-  "RefObject",
-  "MouseEvent",
-  "KeyboardEvent",
-  "ChangeEvent",
-  "FocusEvent",
-  "FormEvent",
-  "MouseEventHandler",
-  "KeyboardEventHandler",
-  "ChangeEventHandler",
-  "FocusEventHandler",
-  "FormEventHandler",
-  "EventHandler",
-  "SyntheticEvent",
-  "HTMLElement",
-  "HTMLButtonElement",
-  "HTMLInputElement",
-  "HTMLSpanElement",
-  "HTMLDivElement",
-  "HTMLAnchorElement",
-  "HTMLFormElement",
-  "HTMLTextAreaElement",
-  "HTMLSelectElement",
-  "HTMLLabelElement",
-  "HTMLTableElement",
-  "Element",
-  "Node",
-  "AllHTMLAttributes",
-  "AriaRole",
-  "React",
+  "Pick",
+  "Readonly",
+  "Required",
+  "Exclude",
+  "Extract",
+  "NonNullable",
+  "ReturnType",
+  "Parameters",
+  "Date",
+  "RegExp",
+  "Error",
 ]);
 
 function resolveProps(contract: ComponentContract): ResolvedPropIR[] {
@@ -2307,6 +2364,7 @@ function extractTypeRefs(typeStr: string): string[] {
 function collectUnresolvedTypes(
   props: ResolvedPropIR[],
   types: ComponentContract["types"],
+  extraKnownTypes?: ReadonlySet<string>,
 ): UnresolvedTypeRefIR[] {
   const definedTypes = new Set(Object.keys(types || {}));
   const unresolved = new Map<string, Set<string>>();
@@ -2315,7 +2373,7 @@ function collectUnresolvedTypes(
       if (
         definedTypes.has(ref) ||
         BUILTIN_TYPE_NAMES.has(ref) ||
-        ref.startsWith("React")
+        extraKnownTypes?.has(ref)
       )
         continue;
       let bucket = unresolved.get(ref);
@@ -2717,8 +2775,17 @@ function renderTokenSlots(
  * always do (they're dotted by construction). The dot count IS the type
  * tag; no separate field is needed.
  *
- * Literal entries with `platforms` arrays are dropped silently when the
- * current target isn't in the array (other emitters honor it).
+ * Platform handling:
+ *
+ *  - `literal` entries: the contract schema requires `platforms` whenever
+ *    `literal` is set. If `platforms` is missing we throw — the schema
+ *    should have caught it, and silently dropping the declaration (the
+ *    previous behavior) hid the contract bug. If `platforms` is present
+ *    but excludes the current target, the entry is skipped normally.
+ *  - `resolvesTo` entries: `platforms` is optional and defaults to "all
+ *    platforms" when absent; explicit `platforms` filters as expected.
+ *    This is the symmetry the user spec requires; both branches now
+ *    interpret "no platforms array" deliberately rather than by accident.
  */
 function renderStyleBlock(
   block: Record<string, StyleEntry> | undefined,
@@ -2735,8 +2802,15 @@ function renderStyleBlock(
     const outputKey = isSlotKey ? `--${tokenSlug(property)}` : property;
 
     if (typeof entry.literal === "string") {
-      const platforms = entry.platforms ?? [];
-      if (!platforms.includes(platformTarget)) continue;
+      if (!entry.platforms) {
+        throw new Error(
+          `Style entry "${property}" uses \`literal\` without a \`platforms\` array. ` +
+            `The schema requires \`platforms\` on \`literal\` entries; if you see this ` +
+            `error the entry bypassed schema validation. Add an explicit ` +
+            `\`platforms\` array (e.g. ["web"]) and regenerate.`,
+        );
+      }
+      if (!entry.platforms.includes(platformTarget)) continue;
       // Slot-path key with literal: redefine the slot at this scope to
       // a literal CSS value (e.g. `transparent` for ghost/tertiary
       // variants). The literal flows straight through as the custom-

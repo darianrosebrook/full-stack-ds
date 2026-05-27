@@ -203,7 +203,9 @@
         "changeHandlerProp": "onExpandedChange",
         "valueType": "boolean",
         "description": "Whether the truncated content is fully visible.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 1
       }
     ],
     "dismissalTriggers": [],

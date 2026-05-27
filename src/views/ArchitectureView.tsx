@@ -214,9 +214,8 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
         </header>
         <p>
           The long-form argument — including the cross-substrate transfer
-          evidence and the detailed treatment of the two load-bearing
-          functions <code>validateDomBindings</code> and{" "}
-          <code>inferCallbackKind</code> — lives in{" "}
+          evidence and the detailed treatment of the load-bearing
+          function <code>validateDomBindings</code> — lives in{" "}
           <a
             href="https://github.com/darianrosebrook/full-stack-ds/blob/main/docs/normal-form.md"
             target="_blank"

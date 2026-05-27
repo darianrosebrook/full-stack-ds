@@ -19,11 +19,12 @@
  * Returns `null` when no behavior field is populated; the CLI uses that
  * signal to skip emission.
  */
-import type {
-  ComponentIR,
-  NormalizedChannelIR,
-  PartIR,
-  ResolvedPropIR,
+import {
+  type ComponentIR,
+  type NormalizedChannelIR,
+  type PartIR,
+  type ResolvedPropIR,
+  pickPrimaryDisclosureChannel,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 
@@ -158,9 +159,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // useAnchorToggle requires a boolean "open" channel — components with only
   // non-boolean channels (e.g. Walkthrough's step index) fall through to
   // standalone useDismissal instead.
-  const hasBooleanOpenChannel = channels.some(
-    (c) => c.valueType === "boolean" || c.name === "open",
-  );
+  const hasBooleanOpenChannel = channels.some((c) => c.isDisclosureChannel);
   const useAnchor =
     !hasFocusTrap &&
     (hasEscapeTrigger || hasOutsideClickTrigger) &&
@@ -396,12 +395,9 @@ function generateInlineTypes(
 function pickOpenChannel(
   channels: NormalizedChannelIR[],
 ): NormalizedChannelIR | undefined {
-  const boolChannels = channels.filter((c) => c.valueType === "boolean");
-  return (
-    boolChannels.find((c) => c.name === "open") ??
-    boolChannels.find((c) => c.name === "expanded") ??
-    boolChannels[0]
-  );
+  // Delegates to the IR's structural priority order so each emitter does
+  // not maintain its own `c.name === "open"` / `"expanded"` predicate.
+  return pickPrimaryDisclosureChannel(channels);
 }
 
 function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
@@ -507,8 +503,8 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   // Focus trap
   if (bindings.useFocusTrap) {
-    const channel = bindings.useControllableState.find((c) =>
-      c.valueType === "boolean" || c.name === "open",
+    const channel = bindings.useControllableState.find(
+      (c) => c.isDisclosureChannel,
     );
     const activeExpr = channel ? channel.name : "true";
     const initial = ir.behavior.focus?.initialFocus;
@@ -532,8 +528,8 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   // Scroll lock
   if (bindings.useScrollLock) {
-    const channel = bindings.useControllableState.find((c) =>
-      c.valueType === "boolean" || c.name === "open",
+    const channel = bindings.useControllableState.find(
+      (c) => c.isDisclosureChannel,
     );
     lines.push(`  useScrollLock(${channel?.name ?? "true"});`);
     lines.push(``);

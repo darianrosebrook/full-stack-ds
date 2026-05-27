@@ -136,6 +136,42 @@ const COMPONENT_TREES: ReadonlyArray<{ framework: FrameworkId; relPath: string }
 const DIGEST_GRAMMAR = /^[0-9a-f]{64}$/;
 
 /**
+ * Reject manifest-supplied paths that could escape the workspace root.
+ *
+ * The verifier later does `path.join(workspaceRoot, candidate)` and
+ * hashes the resolved file. Without a guard, a hand-crafted or
+ * externally-mutated manifest naming `../../etc/passwd` or `/etc/passwd`
+ * would cause the verifier to read and hash a file outside the
+ * workspace. The exposure is bounded (the verifier returns sha256, not
+ * file contents) but it breaches the workspace boundary the rail
+ * promises to operate within.
+ *
+ * A path is workspace-relative iff:
+ *  - not absolute on POSIX (`/...`) or Windows (`C:\...`, `\\?\...`);
+ *  - normalizes to a value that does not start with `..` or contain
+ *    `..` as an intermediate path segment after normalization.
+ *
+ * Returns true when the candidate is safe to join with `workspaceRoot`.
+ */
+function isWorkspaceRelativePath(candidate: string): boolean {
+  if (typeof candidate !== "string" || candidate.length === 0) return false;
+  // Absolute paths (any OS shape) are rejected outright.
+  if (path.isAbsolute(candidate)) return false;
+  // Windows drive letter or UNC forms that `path.isAbsolute` may not
+  // catch on POSIX runtimes when the manifest came from a Windows
+  // producer.
+  if (/^[a-zA-Z]:[\\/]/.test(candidate) || candidate.startsWith("\\\\")) {
+    return false;
+  }
+  // Normalize using the POSIX semantics the manifest writer commits
+  // to (cli.ts `toPosixRel`). Any segment that resolves to a parent
+  // reference indicates escape.
+  const normalized = path.posix.normalize(candidate.replace(/\\/g, "/"));
+  if (normalized === ".." || normalized.startsWith("../")) return false;
+  return true;
+}
+
+/**
  * Workspace-relative POSIX path of the codegen package.json the
  * verifier reads `version` from when comparing against
  * `manifest.environment.codegenPackageVersion`
@@ -712,6 +748,12 @@ export function readManifestForVerification(
         message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].contract.sha256 is not lowercase 64-char hex`,
       };
     }
+    if (!isWorkspaceRelativePath(g.contract.path)) {
+      return {
+        kind: "parse_error",
+        message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].contract.path "${g.contract.path}" is not workspace-relative (absolute or escapes the workspace via "..")`,
+      };
+    }
     if (!Array.isArray(g.files)) {
       return {
         kind: "parse_error",
@@ -735,6 +777,12 @@ export function readManifestForVerification(
         return {
           kind: "parse_error",
           message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].files[${j}].sha256 is not lowercase 64-char hex`,
+        };
+      }
+      if (!isWorkspaceRelativePath(f.path)) {
+        return {
+          kind: "parse_error",
+          message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but group[${i}].files[${j}].path "${f.path}" is not workspace-relative (absolute or escapes the workspace via "..")`,
         };
       }
     }
@@ -829,6 +877,12 @@ export function readManifestForVerification(
           message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources[${i}].sha256 is not lowercase 64-char hex`,
         };
       }
+      if (!isWorkspaceRelativePath(src.path)) {
+        return {
+          kind: "parse_error",
+          message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but emitterSourceSets["${framework}"].sources[${i}].path "${src.path}" is not workspace-relative (absolute or escapes the workspace via "..")`,
+        };
+      }
     }
   }
   // v5 invariant
@@ -879,6 +933,12 @@ export function readManifestForVerification(
     return {
       kind: "parse_error",
       message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment.lockfile.sha256\` is not lowercase 64-char hex`,
+    };
+  }
+  if (!isWorkspaceRelativePath(env.lockfile.path)) {
+    return {
+      kind: "parse_error",
+      message: `manifest schemaVersion v${EMISSION_MANIFEST_SCHEMA_VERSION} but \`environment.lockfile.path\` "${env.lockfile.path}" is not workspace-relative (absolute or escapes the workspace via "..")`,
     };
   }
   return { kind: "ok", manifest: manifestParsed };

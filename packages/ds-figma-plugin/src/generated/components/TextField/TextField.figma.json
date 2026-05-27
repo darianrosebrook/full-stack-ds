@@ -310,7 +310,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "string",
         "description": "The current text value of the field's input.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [],

@@ -50,7 +50,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Walkthrough that have only a numeric step-index channel fall through
   // to standalone Dismissal.
   const hasBooleanOpenChannel = channels.some(
-    (c) => c.valueType === "boolean" || c.name === "open",
+    (c) => c.isDisclosureChannel,
   );
   const useAnchor =
     !hasFocusTrap && (hasEscape || hasOutsideClick) && hasBooleanOpenChannel;
@@ -252,7 +252,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   // wiring AnchorToggle to that mis-types it.
   const openChannel =
     bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     ) ?? bindings.useControllableState[0];
   const anchorOwnsChannel =
     bindings.useAnchorToggle &&
@@ -306,7 +306,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useFocusTrap) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeGetter = channel
       ? `() => ${channel.name}State.value`
@@ -319,7 +319,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useScrollLock) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeGetter = channel
       ? `() => ${channel.name}State.value`
@@ -340,7 +340,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useDismissal) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const openGetter = channel
       ? `() => ${channel.name}State.value`

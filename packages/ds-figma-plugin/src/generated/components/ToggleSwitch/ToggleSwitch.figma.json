@@ -247,7 +247,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "boolean",
         "description": "Whether the toggle switch is on.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 2
       }
     ],
     "dismissalTriggers": [],

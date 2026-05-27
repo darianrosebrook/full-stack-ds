@@ -375,7 +375,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "Date | Date[] | null",
         "description": "Selected date or date range.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [

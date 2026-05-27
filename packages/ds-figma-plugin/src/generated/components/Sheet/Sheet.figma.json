@@ -406,7 +406,9 @@
         "changeHandlerProp": "onOpenChange",
         "valueType": "boolean",
         "description": "Whether the sheet panel is open.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 2
       }
     ],
     "dismissalTriggers": [

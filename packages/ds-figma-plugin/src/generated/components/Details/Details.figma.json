@@ -334,7 +334,9 @@
         "changeHandlerProp": "onOpenChange",
         "valueType": "boolean",
         "description": "Whether the disclosure is expanded.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 0
       }
     ],
     "dismissalTriggers": [],

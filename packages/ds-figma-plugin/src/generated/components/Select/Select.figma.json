@@ -506,7 +506,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "string | string[]",
         "description": "Currently selected value(s).",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       },
       {
         "name": "open",
@@ -515,7 +517,9 @@
         "changeHandlerProp": "onOpenChange",
         "valueType": "boolean",
         "description": "Whether the dropdown is open.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 0
       }
     ],
     "dismissalTriggers": [

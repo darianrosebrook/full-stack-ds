@@ -24,7 +24,17 @@ export interface ContractChannel {
   defaultValue?: string;
   onChange: string;
   valueType?: string;
+  /**
+   * Shape of the change-handler callback. "value" (default) means the
+   * handler receives the channel value directly; "event" means the
+   * handler receives a framework-native event object. Declared by the
+   * contract so the IR does not have to infer this from React/DOM
+   * type-name heuristics — see ir.ts `buildChannelsIR`.
+   */
+  callbackKind?: "value" | "event";
+  enabledBy?: string;
   notes?: string;
+  omitWhen?: string;
 }
 
 export interface ContractEventPayloadField {

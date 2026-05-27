@@ -385,7 +385,9 @@
         "changeHandlerProp": "onValueChange",
         "valueType": "string",
         "description": "The value of the currently active tab.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [],

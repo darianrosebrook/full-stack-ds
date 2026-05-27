@@ -494,7 +494,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
 
   const importsBody = [
     `import { computed } from "vue";`,
-    `import { ${name === "Tabs" ? "useTabs, provideTabsContext" : `use${name}, provide${name}Context`} } from "./use${name}.js";`,
+    `import { use${name}, provide${name}Context } from "./use${name}.js";`,
   ].join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");

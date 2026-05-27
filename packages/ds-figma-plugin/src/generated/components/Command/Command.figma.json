@@ -554,7 +554,9 @@
         "changeHandlerProp": "onOpenChange",
         "valueType": "boolean",
         "description": "Whether the command palette is open.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 0
       },
       {
         "name": "search",
@@ -563,7 +565,9 @@
         "changeHandlerProp": "onSearchChange",
         "valueType": "string",
         "description": "Current search query string.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [

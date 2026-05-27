@@ -1487,4 +1487,142 @@ describe("readManifestForVerification", () => {
       expect(out.foundVersion).toBe(2);
     }
   });
+
+  // ------------------------------------------------------------------
+  // Workspace path-escape guard (CODEGEN-AUTHORING-INVARIANT-HARDEN-01).
+  //
+  // The verifier later does `path.join(workspaceRoot, candidate)` and
+  // hashes the result. A manifest naming `../../etc/passwd` or
+  // `/etc/passwd` would cause the verifier to read a file outside the
+  // workspace. The reader now rejects such manifests up-front.
+  // ------------------------------------------------------------------
+  describe("workspace path-escape guard", () => {
+    function manifestWith(
+      override: (m: EmissionManifest) => void,
+    ): EmissionManifest {
+      const m: EmissionManifest = {
+        schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
+        generatedAt: "2026-05-27T00:00:00.000Z",
+        environment: structuredClone(STUB_VALID_ENVIRONMENT),
+        emitterSourceSets: structuredClone(STUB_VALID_EMITTER_SOURCE_SETS),
+        groups: [
+          {
+            framework: "react",
+            component: "Foo",
+            contract: {
+              path: DEFAULT_CONTRACT_PATH,
+              sha256: "a".repeat(64),
+            },
+            files: [
+              {
+                path: "packages/ds-react/src/components/Foo/Foo.tsx",
+                sha256: "a".repeat(64),
+              },
+            ],
+          },
+        ],
+      };
+      override(m);
+      return m;
+    }
+
+    function expectPathEscape(label: string, m: EmissionManifest): void {
+      fs.writeFileSync(manifestPath, JSON.stringify(m));
+      const out = readManifestForVerification(manifestPath);
+      expect(out.kind, `${label}: should reject malformed path`).toBe(
+        "parse_error",
+      );
+      if (out.kind === "parse_error") {
+        expect(out.message).toMatch(/not workspace-relative/);
+      }
+    }
+
+    it("rejects absolute POSIX path in group file path", () => {
+      expectPathEscape(
+        "absolute file",
+        manifestWith((m) => {
+          m.groups[0].files[0].path = "/etc/passwd";
+        }),
+      );
+    });
+
+    it("rejects parent-traversal in group file path (../../etc/passwd)", () => {
+      expectPathEscape(
+        "../../etc/passwd",
+        manifestWith((m) => {
+          m.groups[0].files[0].path = "../../etc/passwd";
+        }),
+      );
+    });
+
+    it("rejects normalized parent traversal in group file path (a/../../etc/passwd)", () => {
+      expectPathEscape(
+        "a/../../etc/passwd",
+        manifestWith((m) => {
+          // After normalization this becomes `../etc/passwd` — must
+          // still be rejected even though the raw string starts with
+          // a non-".." segment.
+          m.groups[0].files[0].path = "a/../../etc/passwd";
+        }),
+      );
+    });
+
+    it("rejects absolute Windows drive path in group file path (C:\\Windows\\…)", () => {
+      expectPathEscape(
+        "C:\\Windows",
+        manifestWith((m) => {
+          m.groups[0].files[0].path = "C:\\Windows\\System32\\config";
+        }),
+      );
+    });
+
+    it("rejects UNC path in group file path (\\\\server\\share)", () => {
+      expectPathEscape(
+        "UNC",
+        manifestWith((m) => {
+          m.groups[0].files[0].path = "\\\\evil\\share\\loot";
+        }),
+      );
+    });
+
+    it("rejects absolute path in group contract path", () => {
+      expectPathEscape(
+        "absolute contract",
+        manifestWith((m) => {
+          m.groups[0].contract.path = "/etc/passwd";
+        }),
+      );
+    });
+
+    it("rejects parent-traversal in emitter source path", () => {
+      expectPathEscape(
+        "emitter source ..",
+        manifestWith((m) => {
+          m.emitterSourceSets.react.sources[0].path = "../../etc/passwd";
+        }),
+      );
+    });
+
+    it("rejects absolute environment lockfile path", () => {
+      expectPathEscape(
+        "lockfile absolute",
+        manifestWith((m) => {
+          m.environment.lockfile.path = "/tmp/evil-lock.yaml";
+        }),
+      );
+    });
+
+    it("accepts a fully workspace-relative manifest", () => {
+      // Sanity: the same manifest construction without any escape
+      // returns `ok` — proves the test fixture isn't poisoning the
+      // result.
+      const m = manifestWith(() => {});
+      fs.writeFileSync(manifestPath, JSON.stringify(m));
+      const out = readManifestForVerification(manifestPath);
+      if (out.kind === "parse_error") {
+        throw new Error(`baseline rejected: ${out.message}`);
+      }
+      expect(out.kind).toBe("ok");
+    });
+  });
 });

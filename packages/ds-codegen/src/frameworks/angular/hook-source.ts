@@ -57,7 +57,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // instead — avoids handing AnchorToggle a number-typed value where it
   // expects a boolean.
   const hasBooleanOpenChannel = channels.some(
-    (c) => c.valueType === "boolean" || c.name === "open",
+    (c) => c.isDisclosureChannel,
   );
   const useAnchor =
     !hasFocusTrap && (hasEscape || hasOutsideClick) && hasBooleanOpenChannel;
@@ -265,7 +265,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
   // selection channel first, and wiring AnchorToggle to that mis-types it.
   const openChannel =
     bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     ) ?? bindings.useControllableState[0];
   const anchorOwnsChannel =
     bindings.useAnchorToggle &&
@@ -314,7 +314,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useFocusTrap) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeRef = channel ? channel.name : `{ value: true } as unknown as Signal<boolean>`;
     lines.push(`  createFocusTrap(panelRef, { active: ${activeRef}, destroyRef: options.destroyRef });`);
@@ -323,7 +323,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useScrollLock) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeSignal = channel?.name ?? "{ value: true } as unknown as Signal<boolean>";
     lines.push(`  createScrollLock(${activeSignal}, options.destroyRef);`);
@@ -342,7 +342,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useDismissal) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const openGetter = channel ? `() => ${channel.name}()` : `() => true`;
     const setterCall = channel

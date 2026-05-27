@@ -222,7 +222,9 @@
         "changeHandlerProp": "onOpenChange",
         "valueType": "boolean",
         "description": "Whether the tooltip is visible.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 0
       }
     ],
     "dismissalTriggers": [

@@ -207,7 +207,9 @@
         "changeHandlerProp": "onExpandedChange",
         "valueType": "boolean",
         "description": "Whether the full content is revealed.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 1
       }
     ],
     "dismissalTriggers": [],

@@ -273,7 +273,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "boolean",
         "description": "Whether the checkbox is checked.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": true,
+        "disclosurePriority": 2
       }
     ],
     "dismissalTriggers": [],

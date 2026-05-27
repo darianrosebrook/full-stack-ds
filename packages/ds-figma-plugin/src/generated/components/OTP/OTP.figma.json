@@ -276,7 +276,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "string",
         "description": "The full OTP string assembled from individual digit inputs.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [],

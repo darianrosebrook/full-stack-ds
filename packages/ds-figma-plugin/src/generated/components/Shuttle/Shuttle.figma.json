@@ -162,7 +162,9 @@
         "changeHandlerProp": "onValueChange",
         "valueType": "string[]",
         "description": "The set of item ids currently in the right-hand (selected) list. Changes as items are transferred between the two listboxes.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [],

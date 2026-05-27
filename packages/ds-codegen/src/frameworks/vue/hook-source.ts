@@ -13,7 +13,11 @@
  * `[provideTabsContext, useTabsContext]` pair so all sub-component SFCs
  * can import from the same module (matching the idBase counter pattern).
  */
-import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
+import {
+  type ComponentIR,
+  type NormalizedChannelIR,
+  pickPrimaryDisclosureChannel,
+} from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
   isCompoundStateContainer,
@@ -50,7 +54,7 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // AnchorToggle needs a boolean "open" state to bind. Non-boolean channels
   // (Walkthrough's step index) fall through to standalone Dismissal.
   const hasBooleanOpenChannel = channels.some(
-    (c) => c.valueType === "boolean" || c.name === "open",
+    (c) => c.isDisclosureChannel,
   );
   const useAnchor =
     !hasFocusTrap && (hasEscape || hasOutsideClick) && hasBooleanOpenChannel;
@@ -238,12 +242,9 @@ function generateResultInterface(
 function pickOpenChannel(
   channels: NormalizedChannelIR[],
 ): NormalizedChannelIR | undefined {
-  const boolChannels = channels.filter((c) => c.valueType === "boolean");
-  return (
-    boolChannels.find((c) => c.name === "open") ??
-    boolChannels.find((c) => c.name === "expanded") ??
-    boolChannels[0]
-  );
+  // Delegates to the IR's structural priority order so the emitter does
+  // not maintain its own `c.name === "open"` / `"expanded"` predicate.
+  return pickPrimaryDisclosureChannel(channels);
 }
 
 function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
@@ -307,7 +308,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useFocusTrap) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const activeRef = channel ? channel.name : `ref(true)`;
     lines.push(`  useFocusTrap(panelRef, { active: ${activeRef} });`);
@@ -316,7 +317,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useScrollLock) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     lines.push(`  useScrollLock(${channel?.name ?? "ref(true)"});`);
     lines.push(``);
@@ -333,7 +334,7 @@ function generateBody(ir: ComponentIR, bindings: PrimitiveBindings): string {
 
   if (bindings.useDismissal) {
     const channel = bindings.useControllableState.find(
-      (c) => c.valueType === "boolean" || c.name === "open",
+      (c) => c.isDisclosureChannel,
     );
     const openExpr = channel ? `${channel.name}.value` : "true";
     const setterCall = channel

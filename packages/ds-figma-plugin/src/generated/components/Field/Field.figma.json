@@ -405,7 +405,9 @@
         "changeHandlerProp": "onChange",
         "valueType": "unknown",
         "description": "Controlled value of the field's child control, passed through context.",
-        "callbackKind": "value"
+        "callbackKind": "value",
+        "isDisclosureChannel": false,
+        "disclosurePriority": 9007199254740991
       }
     ],
     "dismissalTriggers": [],
