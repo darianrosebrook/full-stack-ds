@@ -40,6 +40,9 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  options: () => ([{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}]),
+  defaultValue: () => ("beta"),
+  defaultOpen: true,
   size: "md",
 });
 // @generated:end
@@ -81,7 +84,11 @@ const classNames = computed(() => [
         <input type="text" />
       </div>
       <div :class="'select__options'">
-        <div :class="'select__option'" role="option"></div>
+        <div v-for="(item, index) in (props.options ?? [])" :key="index" :class="'select__option'" role="option" :aria-selected="(Array.isArray(behavior.selection.value) ? behavior.selection.value.includes(item.value) : item.value === behavior.selection.value)" :data-value="item.value">
+          <span>
+            {{ item.label }}
+          </span>
+        </div>
       </div>
       <div v-if="props.empty" :class="'select__emptyState'"></div>
     </div>

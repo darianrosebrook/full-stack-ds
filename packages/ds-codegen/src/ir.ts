@@ -168,12 +168,49 @@ export const TABLE_COMPOSITION_TAGS: ReadonlySet<string> = new Set([
  *
  * Out of scope this slice: `iterate.source` paths (the iteration root must
  * still be `prop:X` or `channel:X.value` with no tail).
+ *
+ * `predicate` is a closed boolean-shaped binding form
+ * (BINDING-EXPRESSION-V2-PREDICATE-01). It carries an operator name and two
+ * operand sub-expressions, each itself a value-shaped `BindingExpression`.
+ * The grammar is *closed* — there is a finite set of operators, no
+ * arbitrary JS, no nested predicates, no boolean composition. Operators:
+ *
+ *   - `eq(L, R)`         — `L === R`. Use when both operands are scalar.
+ *   - `contains(C, I)`   — `C.includes(I)`. Use when `C` is array-shaped
+ *                          and the comparison is set membership.
+ *   - `memberOf(X, S)`   — adapts to `S`'s runtime shape:
+ *                          `Array.isArray(S) ? S.includes(X) : X === S`.
+ *                          Use when the channel/prop declares a `T | T[]`
+ *                          union (e.g. Select's `value: string | string[]`).
+ *
+ * Predicates are only legal in boolean attribute-binding contexts in this
+ * slice (the canonical witness is `aria-selected`). They are rejected in
+ * `content`, `events`, and `iterate.source` — those positions consume
+ * value-shaped expressions, not boolean ones. Predicates may not nest:
+ * the operand positions must be value-shaped (`prop`, `channel`, `literal`,
+ * `iterationLocal`), never another `predicate`. Boolean composition
+ * (AND / OR / NOT) and arbitrary comparison operators are explicitly held
+ * for a future grammar extension.
  */
 export type BindingExpression =
   | { kind: "prop"; prop: string; path?: string[] }
   | { kind: "channel"; channel: string; field: "value" | "onChange" | "defaultValue"; path?: string[] }
   | { kind: "literal"; value: string }
-  | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] };
+  | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] }
+  | {
+      kind: "predicate";
+      op: BindingPredicateOp;
+      left: BindingExpression;
+      right: BindingExpression;
+    };
+
+/**
+ * Closed set of predicate operators (BINDING-EXPRESSION-V2-PREDICATE-01).
+ * Adding a new operator requires extending this type AND the lowering in
+ * every framework emitter. There is intentionally no escape hatch for
+ * arbitrary expressions — the grammar is the contract.
+ */
+export type BindingPredicateOp = "eq" | "contains" | "memberOf";
 
 /**
  * Iteration directive on a `DomNodeIR`. Resolved from the contract's
@@ -1010,6 +1047,11 @@ function validateDomNode(
       knownProps,
       enclosingIteration,
       componentName,
+      // BINDING-EXPRESSION-V2-PREDICATE-01: attribute bindings are the
+      // only callsite where predicate-kind expressions are admitted.
+      // Event/content/iterate-source/css-var callsites pass the default
+      // `false` and reject predicates with a typed error.
+      true,
     );
   }
   for (const [evt, binding] of Object.entries(node.events)) {
@@ -1119,6 +1161,16 @@ function validateBindingAgainstScope(
   knownProps: Set<string>,
   enclosingIteration: IterationIR | undefined,
   componentName: string,
+  /**
+   * Whether `predicate`-kind bindings are admitted at this callsite.
+   * Defaults to `false`. Only attribute-binding contexts pass `true`
+   * (and only because attribute bindings can be boolean-valued). For
+   * `content`, `events`, `iterate.source`, and `cssVariableBindings`,
+   * `predicate` is rejected with a typed message — those positions
+   * consume value-shaped expressions, not boolean ones.
+   * BINDING-EXPRESSION-V2-PREDICATE-01.
+   */
+  allowPredicates: boolean = false,
 ): void {
   if (binding.kind === "channel") {
     if (!knownChannels.has(binding.channel)) {
@@ -1172,6 +1224,46 @@ function validateBindingAgainstScope(
         `if the array's items are objects, or drop the path.`,
       );
     }
+    return;
+  }
+  if (binding.kind === "predicate") {
+    // BINDING-EXPRESSION-V2-PREDICATE-01: predicates are boolean-valued.
+    // They're admitted only at boolean attribute-binding callsites
+    // (`bindings.<attr>`). `content`, `events`, `iterate.source`, and
+    // `cssVariableBindings` consume value-shaped expressions; a predicate
+    // there is a typed authoring error.
+    if (!allowPredicates) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses a predicate:${binding.op} ` +
+        `binding, but predicates are only legal in attribute-binding ` +
+        `positions (\`bindings.<attr>\`). They produce boolean values and ` +
+        `are not value-shaped — use a prop / channel / iter expression at ` +
+        `this site, or move the predicate into an attribute binding.`,
+      );
+    }
+    // Operand scope checks. Each operand inherits the enclosing iteration
+    // and prop/channel sets; predicates do NOT introduce a new scope. Note
+    // we pass `allowPredicates=false` to the recursive calls because
+    // operand positions are value-shaped — nested predicates are explicitly
+    // held for a future grammar extension.
+    validateBindingAgainstScope(
+      binding.left,
+      `${siteLabel} predicate:${binding.op} left operand`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+    );
+    validateBindingAgainstScope(
+      binding.right,
+      `${siteLabel} predicate:${binding.op} right operand`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+    );
     return;
   }
   // literal: always accepted.
@@ -1484,8 +1576,9 @@ function parseIterate(node: ContractDomNode): IterationIR | undefined {
     throw new Error(
       `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
         `iterate.source must be a prop: or channel:<name>.value binding ` +
-        `(got "${it.source}"). literal: and iter: sources, and the ` +
-        `onChange/defaultValue fields of channels, are not iterable.`,
+        `(got "${it.source}"). literal:, iter:, and predicate: sources, ` +
+        `and the onChange/defaultValue fields of channels, are not ` +
+        `iterable.`,
     );
   }
   // BINDING-EXPRESSION-V2-PATH-01 explicitly excludes paths on the
@@ -1645,9 +1738,73 @@ export function parseBindingExpression(expr: string): BindingExpression {
       ...buildPathField(iterMatch[2]),
     };
   }
+  // BINDING-EXPRESSION-V2-PREDICATE-01: `predicate:<op>(LEFT, RIGHT)`.
+  // The match below claims the entire string starting with `predicate:`;
+  // any malformed form (missing parens, unknown op, single operand,
+  // nested predicate, literal operand) falls through to `literal` so
+  // the authoring error appears verbatim in output.
+  const predicateMatch = expr.match(/^predicate:([a-zA-Z][a-zA-Z0-9]*)\((.*)\)$/);
+  if (predicateMatch) {
+    const opName = predicateMatch[1];
+    const inner = predicateMatch[2];
+    const parsed = tryParsePredicate(opName, inner);
+    if (parsed) return parsed;
+    // Malformed predicate form — fall through to literal below.
+  }
   // Unrecognized — treat the whole expression as a literal so the contract's
   // intent (whatever it was) appears in output for visible failure.
   return { kind: "literal", value: expr };
+}
+
+/**
+ * BINDING-EXPRESSION-V2-PREDICATE-01.
+ *
+ * Parse the inside of a `predicate:<op>(...)` form. Returns the
+ * `predicate`-kind BindingExpression on success, or `null` on any
+ * malformed shape so the caller can fall through to literal. Closed
+ * grammar:
+ *
+ *   - Operator name must be one of: `eq`, `contains`, `memberOf`.
+ *   - Exactly two comma-separated operands.
+ *   - Each operand must parse to a value-shaped kind (`prop`,
+ *     `channel`, `iterationLocal`). `literal` and `predicate` are
+ *     rejected as operands — literals carry no comparison semantics
+ *     in this grammar, and nested predicates are explicitly held.
+ *
+ * Comma splitting is naive (single comma + optional space). Operand
+ * strings never contain commas in the V2 grammar (no function calls,
+ * no array literals, no arbitrary JS), so naive split is sufficient.
+ */
+function tryParsePredicate(opName: string, inner: string): BindingExpression | null {
+  if (opName !== "eq" && opName !== "contains" && opName !== "memberOf") {
+    return null;
+  }
+  const op = opName as BindingPredicateOp;
+  // Naive split — V2 operand grammar contains no commas. If a future
+  // grammar adds commas inside operands, this must learn paren-aware
+  // splitting; today it's a deliberate shortcut.
+  const parts = inner.split(",").map((s) => s.trim());
+  if (parts.length !== 2) return null;
+  const [leftStr, rightStr] = parts;
+  if (leftStr.length === 0 || rightStr.length === 0) return null;
+  const left = parseBindingExpression(leftStr);
+  const right = parseBindingExpression(rightStr);
+  // Reject operand kinds that aren't value-shaped in this grammar.
+  if (!isPredicateOperand(left) || !isPredicateOperand(right)) return null;
+  return { kind: "predicate", op, left, right };
+}
+
+/**
+ * Closed set of operand kinds legal inside a predicate. Predicates and
+ * literals are rejected: nesting is explicitly held; literals carry no
+ * useful comparison semantics in the V2 grammar.
+ */
+function isPredicateOperand(expr: BindingExpression): boolean {
+  return (
+    expr.kind === "prop" ||
+    expr.kind === "channel" ||
+    expr.kind === "iterationLocal"
+  );
 }
 
 /**
@@ -1688,6 +1845,18 @@ export function promoteIterationLocals(
   binding: BindingExpression,
   iteration: { indexVar: string; itemVar?: string },
 ): BindingExpression {
+  // BINDING-EXPRESSION-V2-PREDICATE-01: predicate operands are themselves
+  // BindingExpressions. Walk into both sides so any V1-style
+  // `prop:<indexVar>` / `prop:<itemVar>` reference inside an operand gets
+  // promoted to `iterationLocal` just like a top-level binding would.
+  // Nested predicates are not legal (the parser rejects them), but the
+  // recursion shape is the same either way.
+  if (binding.kind === "predicate") {
+    const left = promoteIterationLocals(binding.left, iteration);
+    const right = promoteIterationLocals(binding.right, iteration);
+    if (left === binding.left && right === binding.right) return binding;
+    return { kind: "predicate", op: binding.op, left, right };
+  }
   if (binding.kind !== "prop") return binding;
   // Preserve the path field across promotion. V1 contracts never wrote
   // `prop:item.foo`, so in practice this branch is only hit when the

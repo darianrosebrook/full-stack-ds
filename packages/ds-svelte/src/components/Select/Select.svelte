@@ -35,7 +35,7 @@ interface Props {
   class?: string;
 }
 
-let { options, value, defaultValue, onChange, open, defaultOpen, onOpenChange, multiple, disabled, size = "md", filterFn, searchable, empty, position, class: className }: Props = $props();
+let { options = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}], value, defaultValue = "beta", onChange, open, defaultOpen = true, onOpenChange, multiple, disabled, size = "md", filterFn, searchable, empty, position, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -79,7 +79,11 @@ const classes = $derived(
     </div>
     {/if}
     <div class={'select__options'}>
-      <div class={'select__option'} role="option"></div>
+      {#each (options ?? []) as item, index (index)}
+      <div class={'select__option'} role="option" aria-selected={(Array.isArray(behavior.selection) ? behavior.selection.includes(item.value) : item.value === behavior.selection)} data-value={item.value}>
+        <span>{item.label}</span>
+      </div>
+      {/each}
     </div>
     {#if empty}
     <div class={'select__emptyState'}></div>

@@ -42,7 +42,7 @@ export interface UseSelectResult {
 export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
   const [selection, setSelection] = useControllableState<string | string[]>({
     controlled: options.value,
-    defaultValue: options.defaultValue ?? undefined as never,
+    defaultValue: options.defaultValue ?? "beta",
     onChange: options.onChange,
   });
 

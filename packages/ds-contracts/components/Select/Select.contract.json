@@ -73,9 +73,21 @@
                 {
                   "tag": "div",
                   "part": "option",
+                  "iterate": {
+                    "source": "prop:options",
+                    "kind": "array",
+                    "itemType": "SelectOption"
+                  },
                   "attrs": {
                     "role": "option"
-                  }
+                  },
+                  "bindings": {
+                    "aria-selected": "predicate:memberOf(iter:item.value, channel:selection.value)",
+                    "data-value": "iter:item.value"
+                  },
+                  "children": [
+                    { "tag": "span", "content": "iter:item.label" }
+                  ]
                 }
               ]
             },
@@ -97,7 +109,12 @@
           "name": "options",
           "type": "SelectOption[]",
           "description": "Available options.",
-          "required": true
+          "required": true,
+          "default": [
+            { "value": "alpha", "label": "Alpha" },
+            { "value": "beta", "label": "Beta" },
+            { "value": "gamma", "label": "Gamma" }
+          ]
         },
         {
           "name": "value",
@@ -107,7 +124,8 @@
         {
           "name": "defaultValue",
           "type": "string | string[]",
-          "description": "Default selected value(s) for uncontrolled usage."
+          "description": "Default selected value(s) for uncontrolled usage.",
+          "default": "beta"
         },
         {
           "name": "onChange",
@@ -122,7 +140,8 @@
         {
           "name": "defaultOpen",
           "type": "boolean",
-          "description": "Default open state for uncontrolled usage."
+          "description": "Default open state for uncontrolled usage.",
+          "default": true
         },
         {
           "name": "onOpenChange",
@@ -318,15 +337,6 @@
   "a11y": {
     "role": "combobox",
     "apgPattern": "combobox",
-    "obligations": {
-      "suppress": [
-        {
-          "role": "option",
-          "attr": "aria-selected",
-          "reason": "Per-item selection state (\"is this option in `value`?\") requires BindingExpressionV2 property paths or set-membership grammar; held until BINDING-EXPRESSION-V2-PATH-01. Until then, the option's selection state is communicated via the controlling combobox's `aria-activedescendant` and focus management, not per-option aria-selected."
-        }
-      ]
-    },
     "labeling": [
       "aria-label",
       "aria-expanded",

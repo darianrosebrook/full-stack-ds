@@ -26,6 +26,7 @@
  */
 import type {
   BindingExpression,
+  BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
   IterationIR,
@@ -1853,6 +1854,21 @@ function renderLitBinding(
       const handlerName = `handle${capitalizeLit(ch.name)}Change`;
       return `@${eventName}=\${(e: Event) => this.${handlerName}(e)}`;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01. Predicate result is
+      // boolean. ARIA boolean attrs need the explicit `"true"`/`"false"`
+      // string serialization Lit's templates use for boolean channels;
+      // other attribute slots get the bare boolean.
+      const lowered = renderLitPredicate(expr, ctx);
+      if (lowered === null) return null;
+      if (attr.startsWith("aria-")) {
+        return `${attr}=\${(${lowered}) ? 'true' : 'false'}`;
+      }
+      if (isAttributeOnlyBinding(attr)) {
+        return `${attr}=\${${lowered}}`;
+      }
+      return `.${attr}=\${${lowered}}`;
+    }
   }
 }
 
@@ -1883,6 +1899,39 @@ function renderLitContent(
       if (expr.field === "value") return `\${${appendPath(`this.behavior.${ch.name}`, expr.path)}}`;
       return null;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01: defensive (validator
+      // rejects predicate in content position). Returns the boolean
+      // expression wrapped in template interpolation.
+      const lowered = renderLitPredicate(expr, ctx);
+      return lowered === null ? null : `\${${lowered}}`;
+    }
+  }
+}
+
+/**
+ * Lower a predicate-kind binding to a Lit template-expression string
+ * (no `${...}` scaffold). Operand accessors come from
+ * `renderLitBindingValue`.
+ */
+function renderLitPredicate(
+  expr: BindingExpression & { kind: "predicate" },
+  ctx: LitRenderContext,
+): string | null {
+  const left = renderLitBindingValue(expr.left, ctx);
+  const right = renderLitBindingValue(expr.right, ctx);
+  if (left === null || right === null) return null;
+  return loweredLitPredicate(expr.op, left, right);
+}
+
+function loweredLitPredicate(op: BindingPredicateOp, left: string, right: string): string {
+  switch (op) {
+    case "eq":
+      return `(${left} === ${right})`;
+    case "contains":
+      return `((${left} ?? []).includes(${right}))`;
+    case "memberOf":
+      return `(Array.isArray(${right}) ? ${right}.includes(${left}) : ${left} === ${right})`;
   }
 }
 
@@ -1913,6 +1962,9 @@ function renderLitBindingValue(
       if (expr.field === "value") return appendPath(`this.behavior.${ch.name}`, expr.path);
       return null;
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      return renderLitPredicate(expr, ctx);
   }
 }
 
@@ -1951,6 +2003,10 @@ function renderLitEvent(
       const handlerName = `handle${capitalizeLit(ch.name)}Change`;
       return `@${eventName}=\${(e: Event) => this.${handlerName}(e)}`;
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at
+      // IR-build; the case keeps the switch exhaustive.
+      return null;
   }
 }
 

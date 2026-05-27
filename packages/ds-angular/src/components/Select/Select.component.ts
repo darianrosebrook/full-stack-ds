@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass, NgIf, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useSelect } from "./useSelect.js";
 // @generated:end
@@ -22,7 +22,7 @@ export type SelectSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-select",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, NgFor],
   template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
   <button [ngClass]="'select__trigger'" type="button" [disabled]="disabled">
     <span [ngClass]="'select__text'"></span>
@@ -35,7 +35,13 @@ export type SelectSize = "sm" | "md" | "lg";
         </div>
       </ng-container>
       <div [ngClass]="'select__options'">
-        <div [ngClass]="'select__option'" role="option"></div>
+        <ng-container *ngFor="let item of (options ?? []); let index = index">
+          <div [ngClass]="'select__option'" role="option" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
+            <span>
+              {{ item.label }}
+            </span>
+          </div>
+        </ng-container>
       </div>
       <ng-container *ngIf="empty">
         <div [ngClass]="'select__emptyState'"></div>
@@ -46,12 +52,12 @@ export type SelectSize = "sm" | "md" | "lg";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent {
-  @Input() options!: SelectOption[];
+  @Input() options: SelectOption[] = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}];
   @Input() value?: string | string[];
-  @Input() defaultValue?: string | string[];
+  @Input() defaultValue?: string | string[] = "beta";
   @Input() onChange?: (value: string | string[]) => void;
   @Input() open?: boolean;
-  @Input() defaultOpen?: boolean;
+  @Input() defaultOpen?: boolean = true;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() multiple?: boolean;
   @Input() disabled?: boolean;
@@ -86,6 +92,13 @@ export class SelectComponent {
 
   protected handleOpenChange(event: Event): void {
     this.behavior.setOpen((event.target as HTMLInputElement).checked);
+  }
+
+  // BindingExpressionV2 predicate:memberOf helper. Adapts to the runtime
+  // shape of `selection`: scalar equality when not an array, set
+  // membership otherwise. Used for channels typed `T | T[]`.
+  protected memberOf(candidate: unknown, selection: unknown): boolean {
+    return Array.isArray(selection) ? selection.includes(candidate) : candidate === selection;
   }
 }
 

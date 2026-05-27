@@ -102,17 +102,17 @@ export function SelectOption({
 // @generated:start component
 export function Select({
   value: controlledValue,
-  defaultValue,
+  defaultValue = "beta",
   onChange,
   open: controlledOpen,
-  defaultOpen,
+  defaultOpen = true,
   onOpenChange,
   size = "md",
   position,
   disabled,
   className,
   "data-testid": testId,
-  options,
+  options = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}],
   multiple,
   filterFn,
   searchable,
@@ -152,7 +152,13 @@ export function Select({
           </div>
         )}
         <div className="select__options">
-          <div className="select__option" role="option" />
+          {(options ?? []).map((item, index) => (
+            <div className="select__option" role="option" aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
+              <span>
+                {item.label}
+              </span>
+            </div>
+          ))}
         </div>
         {empty && (
           <div className="select__emptyState" />

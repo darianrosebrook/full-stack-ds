@@ -376,7 +376,7 @@
         {
           "role": "option",
           "attr": "aria-selected",
-          "reason": "Per-item selection state (\"is this command item the active suggestion?\") requires BindingExpressionV2 property paths or set-membership grammar; held until BINDING-EXPRESSION-V2-PATH-01. Until then, the highlighted item is communicated via `aria-activedescendant` on the surrounding listbox, not per-option aria-selected."
+          "reason": "Command's highlighted item is active-descendant state, not selected-value state — it tracks the keyboard navigation cursor, not a persistent selection. Unlike Select (which migrated to `predicate:memberOf` in BINDING-EXPRESSION-V2-PREDICATE-01), Command has no `selection` channel and no per-item value-equality semantics; the highlighted item is communicated via `aria-activedescendant` on the surrounding listbox by design. Resolving this suppression would require a separate active-descendant binding mechanism (not value comparison) and a contract surface for the highlight cursor — both held."
         }
       ]
     },

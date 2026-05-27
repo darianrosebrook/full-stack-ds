@@ -1825,3 +1825,235 @@ describe("A11y obligation validator (anatomy.dom role obligations)", () => {
     expect(ir.unresolvedA11yObligations).toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------------
+// BINDING-EXPRESSION-V2-PREDICATE-01: closed predicate grammar
+// ---------------------------------------------------------------------------
+
+describe("parseBindingExpression — predicates (V2-PREDICATE-01)", () => {
+  it("parses predicate:eq with two value-shaped operands", () => {
+    expect(parseBindingExpression("predicate:eq(prop:value, prop:other)")).toEqual({
+      kind: "predicate",
+      op: "eq",
+      left: { kind: "prop", prop: "value" },
+      right: { kind: "prop", prop: "other" },
+    });
+  });
+
+  it("parses predicate:contains with channel collection + iter:item operand", () => {
+    expect(
+      parseBindingExpression("predicate:contains(channel:selection.value, iter:item.value)"),
+    ).toEqual({
+      kind: "predicate",
+      op: "contains",
+      left: { kind: "channel", channel: "selection", field: "value" },
+      right: { kind: "iterationLocal", local: "item", path: ["value"] },
+    });
+  });
+
+  it("parses predicate:memberOf with iter:item.value candidate and channel scalarOrCollection", () => {
+    expect(
+      parseBindingExpression("predicate:memberOf(iter:item.value, channel:selection.value)"),
+    ).toEqual({
+      kind: "predicate",
+      op: "memberOf",
+      left: { kind: "iterationLocal", local: "item", path: ["value"] },
+      right: { kind: "channel", channel: "selection", field: "value" },
+    });
+  });
+
+  it("accepts trim around the comma (predicate:eq(a,  b))", () => {
+    // Naive split tolerates extra space after the comma.
+    expect(parseBindingExpression("predicate:eq(prop:value,  prop:other)")).toEqual({
+      kind: "predicate",
+      op: "eq",
+      left: { kind: "prop", prop: "value" },
+      right: { kind: "prop", prop: "other" },
+    });
+  });
+
+  it("rejects nested predicates (operand kind=predicate is illegal)", () => {
+    // The inner predicate parses; the outer parser rejects it as an operand
+    // and falls through to literal so the malformed form appears in output.
+    const expr = "predicate:eq(predicate:eq(prop:a, prop:b), prop:c)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects literal operands (literals have no comparison semantics)", () => {
+    const expr = "predicate:eq(literal:foo, prop:value)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects arbitrary JS comparison (=== is not the grammar)", () => {
+    const expr = "iter:item.value === channel:selection.value";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects unknown predicate op", () => {
+    const expr = "predicate:notAnOp(prop:value, prop:other)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects predicate with single operand", () => {
+    const expr = "predicate:eq(prop:value)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects predicate with three operands", () => {
+    const expr = "predicate:eq(prop:a, prop:b, prop:c)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects predicate with empty operand", () => {
+    const expr = "predicate:eq(prop:value, )";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects predicate missing parens", () => {
+    const expr = "predicate:eq prop:value, prop:other";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+});
+
+describe("predicate validator — context and scope", () => {
+  function withPredicateBinding(opts: {
+    bindingSite: "binding" | "content" | "event" | "css-var";
+    expr: string;
+    enclosingIterate?: { source: string; kind: "array" | "count"; itemType?: string };
+    extraProps?: Array<{ name: string; type: string; default?: unknown }>;
+    cssPrefix?: string;
+  }): ComponentContract {
+    const innerNode: ContractDomNode = {
+      tag: "li",
+      part: "item",
+      ...(opts.enclosingIterate
+        ? { iterate: opts.enclosingIterate as ContractDomNode["iterate"] }
+        : {}),
+      ...(opts.bindingSite === "binding"
+        ? { bindings: { "aria-selected": opts.expr } }
+        : opts.bindingSite === "content"
+        ? { content: opts.expr }
+        : opts.bindingSite === "event"
+        ? { events: { click: opts.expr } }
+        : {
+            cssVariableBindings: {
+              [`--fsds-${opts.cssPrefix ?? "p-fixture"}-x`]: opts.expr,
+            },
+          }),
+    } as ContractDomNode;
+    return {
+      name: "PredicateFixture",
+      cssPrefix: opts.cssPrefix ?? "p-fixture",
+      anatomy: {
+        parts: ["root", "item"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [innerNode],
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "value", type: "string | string[]" },
+            ...(opts.extraProps ?? []),
+          ],
+        },
+      },
+      channels: {
+        selection: {
+          value: "value",
+          defaultValue: "defaultValue",
+          onChange: "onValueChange",
+          valueType: "string | string[]",
+        },
+      },
+    } as unknown as ComponentContract;
+  }
+
+  it("accepts predicate in attribute-binding position", () => {
+    const ir = buildComponentIR(
+      withPredicateBinding({
+        bindingSite: "binding",
+        expr: "predicate:memberOf(iter:item, channel:selection.value)",
+        enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+      }),
+    );
+    expect(ir.dom!.children[0].bindings["aria-selected"]).toEqual({
+      kind: "predicate",
+      op: "memberOf",
+      left: { kind: "iterationLocal", local: "item" },
+      right: { kind: "channel", channel: "selection", field: "value" },
+    });
+  });
+
+  it("rejects predicate in content position", () => {
+    expect(() =>
+      buildComponentIR(
+        withPredicateBinding({
+          bindingSite: "content",
+          expr: "predicate:eq(prop:value, prop:value)",
+        }),
+      ),
+    ).toThrow(/predicate.*only legal in attribute-binding positions/);
+  });
+
+  it("rejects predicate in event position", () => {
+    expect(() =>
+      buildComponentIR(
+        withPredicateBinding({
+          bindingSite: "event",
+          expr: "predicate:eq(prop:value, prop:value)",
+        }),
+      ),
+    ).toThrow(/predicate.*only legal in attribute-binding positions/);
+  });
+
+  it("rejects predicate in cssVariableBindings position", () => {
+    expect(() =>
+      buildComponentIR(
+        withPredicateBinding({
+          bindingSite: "css-var",
+          expr: "predicate:eq(prop:value, prop:value)",
+        }),
+      ),
+    ).toThrow(/predicate.*only legal in attribute-binding positions/);
+  });
+
+  it("preserves iter:item scope rules inside predicate operands (rejects under count)", () => {
+    expect(() =>
+      buildComponentIR(
+        withPredicateBinding({
+          bindingSite: "binding",
+          expr: "predicate:eq(iter:item.value, prop:value)",
+          enclosingIterate: { source: "prop:count", kind: "count" },
+          extraProps: [{ name: "count", type: "number" }],
+        }),
+      ),
+    ).toThrow(/iter:item.*count-kind iteration/);
+  });
+
+  it("rejects unknown prop inside predicate operand", () => {
+    expect(() =>
+      buildComponentIR(
+        withPredicateBinding({
+          bindingSite: "binding",
+          expr: "predicate:eq(prop:doesNotExist, prop:value)",
+          enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+        }),
+      ),
+    ).toThrow(/references unknown prop 'doesNotExist'/);
+  });
+
+  it("rejects unknown channel inside predicate operand", () => {
+    expect(() =>
+      buildComponentIR(
+        withPredicateBinding({
+          bindingSite: "binding",
+          expr: "predicate:eq(channel:unknown.value, prop:value)",
+          enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+        }),
+      ),
+    ).toThrow(/references unknown channel 'unknown'/);
+  });
+});

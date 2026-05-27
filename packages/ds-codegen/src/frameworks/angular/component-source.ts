@@ -29,6 +29,7 @@
  */
 import type {
   BindingExpression,
+  BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
   IterationIR,
@@ -840,6 +841,31 @@ function treeUsesCountIteration(node: DomNodeIR): boolean {
   return node.children.some(treeUsesCountIteration);
 }
 
+/** Walk a DomNodeIR tree and return true if any binding uses the
+ *  `predicate:memberOf` operator. Angular templates can't reference
+ *  the global `Array` object, so memberOf is lowered to a component
+ *  helper method (`this.memberOf(L, R)`) injected only when needed.
+ *  BINDING-EXPRESSION-V2-PREDICATE-01.
+ *
+ *  Source fact: Angular template parser rejects bare `Array.isArray`.
+ *  Applies by: presence of `predicate:memberOf` in any binding
+ *  expression on this DomNodeIR subtree.
+ *  Removable when: Angular emitter has a generic mechanism for
+ *  template-safe lowering of any global call. */
+function treeUsesMemberOfPredicate(node: DomNodeIR): boolean {
+  const checkExpr = (expr: BindingExpression): boolean => {
+    if (expr.kind === "predicate") {
+      if (expr.op === "memberOf") return true;
+      return checkExpr(expr.left) || checkExpr(expr.right);
+    }
+    return false;
+  };
+  for (const binding of Object.values(node.bindings)) {
+    if (checkExpr(binding)) return true;
+  }
+  return node.children.some(treeUsesMemberOfPredicate);
+}
+
 function generateDomTreeImports(ir: ComponentIR): string {
   const coreNames = [
     "Component",
@@ -905,6 +931,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   };
   const template = renderAngularDomNode(ir.dom, ctx, 0);
   const hasChildrenGuard = treeHasChildrenGuard(ir.dom);
+  const usesMemberOf = treeUsesMemberOfPredicate(ir.dom);
   const usesNgIf = treeUsesNgIf(ir.dom);
   const usesNgFor = treeUsesNgFor(ir.dom);
   const usesCountIteration = treeUsesCountIteration(ir.dom);
@@ -1037,6 +1064,32 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(`      this._arrayFromCountCache.set(len, arr);`);
     lines.push(`    }`);
     lines.push(`    return arr;`);
+    lines.push(`  }`);
+  }
+
+  // BINDING-EXPRESSION-V2-PREDICATE-01: predicate:memberOf helper.
+  // Angular templates cannot reference the global `Array` object, so
+  // `predicate:memberOf` lowers to a method call on the component
+  // instance. The helper is only injected when at least one
+  // `predicate:memberOf` appears in the IR. Identical runtime
+  // semantics to the inline form used in React/Svelte/Lit.
+  if (usesMemberOf) {
+    lines.push(``);
+    lines.push(
+      `  // BindingExpressionV2 predicate:memberOf helper. Adapts to the runtime`,
+    );
+    lines.push(
+      `  // shape of \`selection\`: scalar equality when not an array, set`,
+    );
+    lines.push(
+      `  // membership otherwise. Used for channels typed \`T | T[]\`.`,
+    );
+    lines.push(
+      `  protected memberOf(candidate: unknown, selection: unknown): boolean {`,
+    );
+    lines.push(
+      `    return Array.isArray(selection) ? selection.includes(candidate) : candidate === selection;`,
+    );
     lines.push(`  }`);
   }
 
@@ -1519,6 +1572,13 @@ function renderAngularBinding(
       const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
       return `(${eventName})="${handlerName}($event)"`;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      const lowered = renderAngularPredicate(expr, ctx);
+      return lowered === null
+        ? null
+        : `${angularAttrBinding(attr, tag)}="${escapeAngularAttr(lowered)}"`;
+    }
   }
 }
 
@@ -1549,6 +1609,43 @@ function renderAngularBindingValue(
       }
       return null;
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      return renderAngularPredicate(expr, ctx);
+  }
+}
+
+/**
+ * Lower a predicate-kind binding to an Angular template-expression
+ * string. Operand accessors come from `renderAngularBindingValue` so
+ * they pick up the idiomatic Angular shapes (`X` for props on this,
+ * `behavior.X()` for channel signals via standard `()` invocation,
+ * iter locals from `*ngFor`).
+ */
+function renderAngularPredicate(
+  expr: BindingExpression & { kind: "predicate" },
+  ctx: AngularRenderContext,
+): string | null {
+  const left = renderAngularBindingValue(expr.left, ctx);
+  const right = renderAngularBindingValue(expr.right, ctx);
+  if (left === null || right === null) return null;
+  return loweredAngularPredicate(expr.op, left, right);
+}
+
+function loweredAngularPredicate(op: BindingPredicateOp, left: string, right: string): string {
+  switch (op) {
+    case "eq":
+      return `(${left} === ${right})`;
+    case "contains":
+      return `((${left} ?? []).includes(${right}))`;
+    case "memberOf":
+      // Angular template expressions cannot reference globals like
+      // `Array`, so memberOf delegates to a component-instance helper
+      // method (`this.memberOf`) injected by the class generator when
+      // any predicate:memberOf appears in the IR. The helper has
+      // identical runtime semantics to the React/Svelte/Lit inline
+      // form: `Array.isArray(s) ? s.includes(c) : c === s`.
+      return `memberOf(${left}, ${right})`;
   }
 }
 
@@ -1587,6 +1684,10 @@ function renderAngularEvent(
       const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
       return `(${eventName})="${handlerName}($event)"`;
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at
+      // IR-build; the case keeps the switch exhaustive.
+      return null;
   }
 }
 

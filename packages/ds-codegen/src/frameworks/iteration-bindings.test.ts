@@ -756,3 +756,219 @@ describe("BINDING-EXPRESSION-V2-PATH-01: object-field path lowering", () => {
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// BINDING-EXPRESSION-V2-PREDICATE-01 — emitter-side predicate lowering
+// ---------------------------------------------------------------------------
+
+// Three fixtures exercise each closed predicate operator independently
+// against the same iteration shape (object-array with `.value` field).
+// Per-framework assertions are deliberately literal — these are the
+// emit-shape contracts the production Select migration depends on.
+
+function buildPredicateFixture(opName: "eq" | "contains" | "memberOf"): ComponentContract {
+  // For `contains`, the channel value type is array-shaped (collection
+  // first, item second). For `eq`, both sides are scalar. For
+  // `memberOf`, the union type is preserved (`string | string[]`).
+  const valueType =
+    opName === "contains" ? "string[]" : opName === "memberOf" ? "string | string[]" : "string";
+  const expr =
+    opName === "contains"
+      ? "predicate:contains(channel:selection.value, iter:item.value)"
+      : opName === "memberOf"
+      ? "predicate:memberOf(iter:item.value, channel:selection.value)"
+      : "predicate:eq(iter:item.value, channel:selection.value)";
+  return {
+    name: `Predicate${opName[0].toUpperCase()}${opName.slice(1)}Fixture`,
+    layer: "primitive",
+    cssPrefix: `predicate-${opName}`,
+    anatomy: {
+      parts: ["root", "option"],
+      dom: {
+        tag: "ul",
+        part: "root",
+        children: [
+          {
+            tag: "li",
+            part: "option",
+            attrs: { role: "option" },
+            iterate: {
+              source: "prop:options",
+              kind: "array",
+              itemType: "{ value: string; label: string }",
+            },
+            bindings: {
+              "aria-selected": expr,
+            },
+          },
+        ],
+      },
+    },
+    props: {
+      styled: {
+        members: [
+          {
+            name: "options",
+            type: "Array<{ value: string; label: string }>",
+            description: "Object rows for the iteration.",
+          },
+          {
+            name: "value",
+            type: valueType,
+            description: "Selected value (scalar or array per the chosen operator).",
+          },
+          {
+            name: "defaultValue",
+            type: valueType,
+            description: "Uncontrolled default selected value.",
+          },
+          {
+            name: "onValueChange",
+            type: `(value: ${valueType}) => void`,
+            description: "Selection change handler.",
+          },
+        ],
+      },
+    },
+    channels: {
+      selection: {
+        description: "Selected option value(s).",
+        value: "value",
+        defaultValue: "defaultValue",
+        onChange: "onValueChange",
+        valueType,
+      },
+    },
+  } as unknown as ComponentContract;
+}
+
+describe("BINDING-EXPRESSION-V2-PREDICATE-01: eq operator lowering", () => {
+  const ir = buildComponentIR(buildPredicateFixture("eq"));
+
+  it("React lowers to (item.value === selection)", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+    expect(src).toMatch(/aria-selected=\{\(item\.value === selection\)\}/);
+  });
+
+  it("Vue lowers to (item.value === behavior.selection.value)", () => {
+    const src = generateVueComponentSource(ir);
+    expect(src).toMatch(/:aria-selected="\(item\.value === behavior\.selection\.value\)"/);
+  });
+
+  it("Svelte lowers to (item.value === hook.selection)", () => {
+    const src = generateSvelteComponentSource(ir);
+    // Svelte's hookVar is the cebab-cased component name; for this
+    // fixture it's `predicate_eq_fixture` (the generated hook variable).
+    // Match the general shape with a relaxed selector.
+    expect(src).toMatch(/aria-selected=\{\(item\.value === [a-zA-Z_$][\w$]*\.selection\)\}/);
+  });
+
+  it("Angular lowers to (item.value === behavior.selection())", () => {
+    const src = generateAngularComponentSource(ir);
+    expect(src).toMatch(
+      /\[attr\.aria-selected\]="\(item\.value === behavior\.selection\(\)\)"/,
+    );
+  });
+
+  it("Lit lowers to (item.value === this.behavior.selection) wrapped in ARIA string serialization", () => {
+    const src = generateLitComponentSource(ir);
+    expect(src).toMatch(
+      /aria-selected=\$\{\(\(item\.value === this\.behavior\.selection\)\) \? 'true' : 'false'\}/,
+    );
+  });
+});
+
+describe("BINDING-EXPRESSION-V2-PREDICATE-01: contains operator lowering", () => {
+  const ir = buildComponentIR(buildPredicateFixture("contains"));
+
+  it("React lowers to ((selection ?? []).includes(item.value))", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+    expect(src).toMatch(
+      /aria-selected=\{\(\(selection \?\? \[\]\)\.includes\(item\.value\)\)\}/,
+    );
+  });
+
+  it("Vue lowers to ((behavior.selection.value ?? []).includes(item.value))", () => {
+    const src = generateVueComponentSource(ir);
+    expect(src).toMatch(
+      /:aria-selected="\(\(behavior\.selection\.value \?\? \[\]\)\.includes\(item\.value\)\)"/,
+    );
+  });
+
+  it("Svelte lowers to ((hook.selection ?? []).includes(item.value))", () => {
+    const src = generateSvelteComponentSource(ir);
+    expect(src).toMatch(
+      /aria-selected=\{\(\([a-zA-Z_$][\w$]*\.selection \?\? \[\]\)\.includes\(item\.value\)\)\}/,
+    );
+  });
+
+  it("Angular lowers to ((behavior.selection() ?? []).includes(item.value))", () => {
+    const src = generateAngularComponentSource(ir);
+    expect(src).toMatch(
+      /\[attr\.aria-selected\]="\(\(behavior\.selection\(\) \?\? \[\]\)\.includes\(item\.value\)\)"/,
+    );
+  });
+
+  it("Lit lowers to ARIA-stringified contains predicate", () => {
+    const src = generateLitComponentSource(ir);
+    expect(src).toMatch(
+      /aria-selected=\$\{\(\(\(this\.behavior\.selection \?\? \[\]\)\.includes\(item\.value\)\)\) \? 'true' : 'false'\}/,
+    );
+  });
+});
+
+describe("BINDING-EXPRESSION-V2-PREDICATE-01: memberOf operator lowering", () => {
+  const ir = buildComponentIR(buildPredicateFixture("memberOf"));
+
+  it("React lowers to (Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+    expect(src).toMatch(
+      /aria-selected=\{\(Array\.isArray\(selection\) \? selection\.includes\(item\.value\) : item\.value === selection\)\}/,
+    );
+  });
+
+  it("Vue lowers memberOf against behavior.selection.value", () => {
+    const src = generateVueComponentSource(ir);
+    expect(src).toMatch(
+      /:aria-selected="\(Array\.isArray\(behavior\.selection\.value\) \? behavior\.selection\.value\.includes\(item\.value\) : item\.value === behavior\.selection\.value\)"/,
+    );
+  });
+
+  it("Svelte lowers memberOf against hook.selection", () => {
+    const src = generateSvelteComponentSource(ir);
+    expect(src).toMatch(
+      /aria-selected=\{\(Array\.isArray\([a-zA-Z_$][\w$]*\.selection\) \? [a-zA-Z_$][\w$]*\.selection\.includes\(item\.value\) : item\.value === [a-zA-Z_$][\w$]*\.selection\)\}/,
+    );
+  });
+
+  it("Angular lowers memberOf to a component-instance helper call", () => {
+    // Angular templates can't reference the global `Array` object, so
+    // `predicate:memberOf` lowers to `memberOf(L, R)` — a method on
+    // the component class. The class generator injects the helper
+    // when the IR walker detects any `predicate:memberOf` binding.
+    const src = generateAngularComponentSource(ir);
+    expect(src).toMatch(
+      /\[attr\.aria-selected\]="memberOf\(item\.value, behavior\.selection\(\)\)"/,
+    );
+    // Helper definition is injected on the component class.
+    expect(src).toMatch(
+      /protected memberOf\(candidate: unknown, selection: unknown\): boolean \{[\s\S]*Array\.isArray\(selection\)[\s\S]*selection\.includes\(candidate\)[\s\S]*candidate === selection/,
+    );
+  });
+
+  it("Angular omits memberOf helper when no predicate:memberOf is used", () => {
+    // Negative — the eq fixture uses `predicate:eq`, which lowers
+    // inline (`L === R` is template-safe). The class generator must
+    // not inject the helper unconditionally.
+    const eqIr = buildComponentIR(buildPredicateFixture("eq"));
+    const eqSrc = generateAngularComponentSource(eqIr);
+    expect(eqSrc).not.toMatch(/protected memberOf\(/);
+  });
+
+  it("Lit lowers memberOf against this.behavior.selection and wraps for ARIA serialization", () => {
+    const src = generateLitComponentSource(ir);
+    expect(src).toMatch(
+      /aria-selected=\$\{\(\(Array\.isArray\(this\.behavior\.selection\) \? this\.behavior\.selection\.includes\(item\.value\) : item\.value === this\.behavior\.selection\)\) \? 'true' : 'false'\}/,
+    );
+  });
+});

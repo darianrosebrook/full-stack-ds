@@ -12,6 +12,7 @@
  */
 import type {
   BindingExpression,
+  BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
   IterationIR,
@@ -1753,6 +1754,11 @@ function inferBindingValueType(
     // shape against the iteration callback parameter's typed signature.
     return expr.local === "index" ? "number" : undefined;
   }
+  if (expr.kind === "predicate") {
+    // BINDING-EXPRESSION-V2-PREDICATE-01: every predicate operator
+    // (`eq`, `contains`, `memberOf`) evaluates to a boolean.
+    return "boolean";
+  }
   return undefined;
 }
 
@@ -1827,6 +1833,47 @@ function renderReactBinding(
       }
       return `() => ${setter}(${ch.name})`;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01: lower each operator to the
+      // canonical JS form. Operand expressions go through the same
+      // `renderReactBinding` walker (with a non-attribute synthetic
+      // attribute name) so they get path-aware accessor handling. The
+      // outer caller wraps the resulting boolean expression for ARIA
+      // serialization where required.
+      const left = renderReactBinding("__predicate_operand__", expr.left, ctx);
+      const right = renderReactBinding("__predicate_operand__", expr.right, ctx);
+      if (left === null || right === null) return null;
+      return loweredPredicate(expr.op, left, right);
+    }
+  }
+}
+
+/**
+ * Lower a closed BindingPredicateOp to its JS expression form. Identical
+ * across all five frameworks because the operators are JS-native; what
+ * differs is each framework's operand-accessor string (e.g. React's bare
+ * `selection`, Vue's `behavior.selection.value`, Lit's `this.behavior.X`).
+ * Wrapping each operator's output in parentheses keeps composition safe
+ * if a future grammar admits boolean combinators (which this slice does
+ * not).
+ */
+function loweredPredicate(op: BindingPredicateOp, left: string, right: string): string {
+  switch (op) {
+    case "eq":
+      // L === R
+      return `(${left} === ${right})`;
+    case "contains":
+      // C.includes(I), guarded by `?? []` so an undefined collection
+      // renders false rather than throwing. First operand is the
+      // collection; second is the item.
+      return `((${left} ?? []).includes(${right}))`;
+    case "memberOf":
+      // Union-aware membership: `Array.isArray(S) ? S.includes(X) : X === S`.
+      // First operand is the candidate; second is the scalar-or-collection.
+      // This is the truthful expansion for channels typed `T | T[]` like
+      // Select's `value: string | string[]` — preserves the public
+      // contract shape without sneaking a narrowing into the codegen.
+      return `(Array.isArray(${right}) ? ${right}.includes(${left}) : ${left} === ${right})`;
   }
 }
 

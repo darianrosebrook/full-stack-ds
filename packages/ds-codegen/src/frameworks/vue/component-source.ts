@@ -20,6 +20,7 @@
  */
 import type {
   BindingExpression,
+  BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
   IterationIR,
@@ -1421,6 +1422,14 @@ function renderVueTextContent(
       }
       return null;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01: defensive. The IR validator
+      // rejects predicates in content position; this branch keeps the
+      // exhaustive switch from falling through if a future site admits
+      // predicate-valued text.
+      const lowered = renderVuePredicate(expr, ctx);
+      return lowered === null ? null : `{{ ${lowered} }}`;
+    }
   }
 }
 
@@ -1498,6 +1507,38 @@ function renderVueBinding(
       }
       return `@${eventName}="() => ${setter}(behavior.${ch.name}.value)"`;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      const lowered = renderVuePredicate(expr, ctx);
+      return lowered === null ? null : `:${attr}="${escapeAttrString(lowered)}"`;
+    }
+  }
+}
+
+/**
+ * Lower a predicate-kind binding to a Vue template-expression string
+ * (the bare comparison without the `:attr=` scaffold). Operand
+ * accessors come from `renderVueBindingValue` so they pick up the
+ * idiomatic Vue prefixes (`props.X`, `behavior.X.value`, iter locals).
+ */
+function renderVuePredicate(
+  expr: BindingExpression & { kind: "predicate" },
+  ctx: VueRenderContext,
+): string | null {
+  const left = renderVueBindingValue(expr.left, ctx);
+  const right = renderVueBindingValue(expr.right, ctx);
+  if (left === null || right === null) return null;
+  return loweredVuePredicate(expr.op, left, right);
+}
+
+function loweredVuePredicate(op: BindingPredicateOp, left: string, right: string): string {
+  switch (op) {
+    case "eq":
+      return `(${left} === ${right})`;
+    case "contains":
+      return `((${left} ?? []).includes(${right}))`;
+    case "memberOf":
+      return `(Array.isArray(${right}) ? ${right}.includes(${left}) : ${left} === ${right})`;
   }
 }
 
@@ -1530,6 +1571,13 @@ function renderVueBindingValue(
       }
       return null;
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01: value-position predicate.
+      // The IR-build validator rejects predicate-kind expressions in
+      // content/events/iterate.source/cssVarBindings, so this branch is
+      // defensive — if a future site admits predicates in value
+      // position, the lowering shape is already correct here.
+      return renderVuePredicate(expr, ctx);
   }
 }
 
@@ -1576,6 +1624,10 @@ function renderVueEvent(
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderVueBinding(jsxAttr, expr, ctx);
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at
+      // IR-build; the case keeps the switch exhaustive.
+      return null;
   }
 }
 

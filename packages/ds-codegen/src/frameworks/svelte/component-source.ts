@@ -20,6 +20,7 @@
  */
 import type {
   BindingExpression,
+  BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
   IterationIR,
@@ -1304,6 +1305,13 @@ function renderSvelteTextChildExpression(
       }
       return null;
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01: defensive. Validator rejects
+      // predicates in content position; this branch keeps the switch
+      // exhaustive if a future site admits them.
+      const lowered = renderSveltePredicate(expr, ctx);
+      return lowered === null ? null : `{${lowered}}`;
+    }
   }
 }
 
@@ -1337,6 +1345,37 @@ function renderSvelteBindingValue(
       }
       return null;
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      return renderSveltePredicate(expr, ctx);
+  }
+}
+
+/**
+ * Lower a predicate-kind binding to a Svelte template expression
+ * string (no `{ }` scaffold). Operand accessors come from
+ * `renderSvelteBindingValue` so they pick up the idiomatic Svelte
+ * shapes (`X` for props in legacy components, `hook.X` for channels,
+ * iter locals introduced by `{#each}` scope).
+ */
+function renderSveltePredicate(
+  expr: BindingExpression & { kind: "predicate" },
+  ctx: SvelteRenderContext,
+): string | null {
+  const left = renderSvelteBindingValue(expr.left, ctx);
+  const right = renderSvelteBindingValue(expr.right, ctx);
+  if (left === null || right === null) return null;
+  return loweredSveltePredicate(expr.op, left, right);
+}
+
+function loweredSveltePredicate(op: BindingPredicateOp, left: string, right: string): string {
+  switch (op) {
+    case "eq":
+      return `(${left} === ${right})`;
+    case "contains":
+      return `((${left} ?? []).includes(${right}))`;
+    case "memberOf":
+      return `(Array.isArray(${right}) ? ${right}.includes(${left}) : ${left} === ${right})`;
   }
 }
 
@@ -1426,6 +1465,14 @@ function renderSvelteBinding(
           return `${eventName}={() => ${ctx.hookVar}.${setter}(!${ctx.hookVar}.${ch.name})}`;
       }
     }
+    case "predicate": {
+      // BINDING-EXPRESSION-V2-PREDICATE-01: the predicate result is
+      // always boolean, so no ARIA-Booleanish coercion is needed —
+      // svelte-check accepts `boolean | undefined | null` for the
+      // ARIA-Booleanish attribute slot.
+      const lowered = renderSveltePredicate(expr, ctx);
+      return lowered === null ? null : `${attr}={${lowered}}`;
+    }
   }
 }
 
@@ -1477,6 +1524,11 @@ function renderSvelteEvent(
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderSvelteBinding(jsxAttr, expr, ctx, hostTag);
     }
+    case "predicate":
+      // BINDING-EXPRESSION-V2-PREDICATE-01: predicates are boolean,
+      // not callable. The IR validator rejects predicate-in-event at
+      // build time; this case keeps the switch exhaustive.
+      return null;
   }
 }
 

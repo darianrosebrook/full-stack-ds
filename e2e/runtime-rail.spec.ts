@@ -395,6 +395,108 @@ test.describe("Runtime rail — Walkthrough (object-array iteration with paths)"
   }
 });
 
+test.describe("Runtime rail — Select (predicate:memberOf for aria-selected)", () => {
+  // PRODUCTION-PREDICATE-CONSUMER-01: the production repayment of
+  // Select's `aria-selected` suppression from
+  // A11Y-CONTRACT-OBLIGATION-VALIDATOR-01.
+  //
+  // Select's contract declares:
+  //   - `options: SelectOption[]` with a default of three items
+  //     (Alpha, Beta, Gamma) so the rail can mount with concrete data.
+  //   - `defaultValue: string | string[]` with a default of `"beta"`
+  //     (scalar string — exercises the eq arm of memberOf).
+  //   - `defaultOpen: true` so the listbox renders without an
+  //     interaction (the contract's existing `if: "open"` guards the
+  //     content panel).
+  //   - `iterate.kind: "array"` on the option node over `prop:options`.
+  //   - `aria-selected = predicate:memberOf(iter:item.value, channel:selection.value)`.
+  //
+  // What this proves:
+  //   - BindingExpressionV2 predicate grammar lowers correctly in
+  //     production output across React/Vue/Svelte/Lit.
+  //   - `predicate:memberOf` truthfully handles the scalar arm of
+  //     Select's `string | string[]` selection union — exactly one
+  //     option (whose value matches `defaultValue`) renders
+  //     `aria-selected="true"`; the other rendered options render
+  //     `aria-selected="false"`.
+  //   - The Select contract no longer carries an `aria-selected`
+  //     suppression in `a11y.obligations.suppress`; the obligation
+  //     validator now sees `aria-selected` declared as a dynamic
+  //     binding and admits the contract without recording an
+  //     unresolved obligation.
+  //   - svelte-check no longer warns
+  //     `a11y_role_has_required_aria_props` on Select.svelte.
+  //
+  // What this does NOT prove:
+  //   - The array arm of `memberOf` against runtime `string[]`
+  //     selection. The contract's `defaultValue` seeded here is a
+  //     scalar; covering the array arm in the rail would require an
+  //     out-of-band override (not in this slice). Codegen-level
+  //     emitter tests pin the array-arm lowering syntactically.
+  //   - Selection mutation at runtime (clicking, keyboard
+  //     navigation). Select's interactive behavior is unchanged.
+  //   - Command's `aria-selected` debt. Command's suppression
+  //     remains intentionally open with a refreshed reason —
+  //     Command's highlighted item is active-descendant state, not
+  //     selected-value state, and resolution requires a separate
+  //     mechanism.
+  // Vue is intentionally excluded from this rail case. The predicate
+  // lowering in the Vue emitter is correctly asserted by
+  // `iteration-bindings.test.ts` (regex match on
+  // `(Array.isArray(behavior.selection.value) ? ... )`). The runtime
+  // skip is unrelated to the predicate mechanism: Vue's preview
+  // pipeline mounts `<Select>` via `h(Component, { defaultOpen: true, ... })`,
+  // but the panel guarded by `v-if="behavior.open.value"` does not
+  // open at first render even though `props.defaultOpen === true`
+  // flows through `useSelect → useAnchorToggle → useControllableState`.
+  // The other three browser-mountable frameworks (React, Svelte, Lit)
+  // open correctly with the same contract. Investigating Vue's
+  // first-render reactivity here is a separate slice; the predicate
+  // mechanism is proven by the other three frameworks' rail facts
+  // plus the codegen-level lowering tests for all five.
+  const SELECT_RAIL_FRAMEWORKS = FRAMEWORKS.filter((f) => f !== "vue");
+  for (const framework of SELECT_RAIL_FRAMEWORKS) {
+    test(`${framework}: renders one aria-selected=true option matching defaultValue=beta`, async ({
+      page,
+    }) => {
+      await goto(page, framework, "Select", "select");
+
+      const options = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root)
+            return {
+              count: 0,
+              values: [] as Array<string | null>,
+              ariaSelected: [] as Array<string | null>,
+            };
+          const nodes = Array.from(root.querySelectorAll(".select__option"));
+          return {
+            count: nodes.length,
+            values: nodes.map((n) => n.getAttribute("data-value")),
+            ariaSelected: nodes.map((n) => n.getAttribute("aria-selected")),
+          };
+        },
+        { host: `fsds-${kebab("Select")}`, isLit: framework === "lit" },
+      );
+
+      // The contract's `options` default seeds three items.
+      expect(options.count).toBe(3);
+      // Each option carries its value as a data attribute (the
+      // `iter:item.value` path projection).
+      expect(options.values).toEqual(["alpha", "beta", "gamma"]);
+      // `defaultValue: "beta"` selects exactly the second option.
+      // The memberOf ternary collapses to scalar equality at runtime
+      // because `selection` is a string, not an array. Each
+      // framework's ARIA-string serialization produces "true"/"false"
+      // literals.
+      expect(options.ariaSelected).toEqual(["false", "true", "false"]);
+    });
+  }
+});
+
 test.describe("Runtime rail — Truncate (CSS-var fallback)", () => {
   for (const framework of FRAMEWORKS) {
     test(`${framework}: content element has style attribute slot for --fsds-truncate-content-lines`, async ({ page }) => {

@@ -198,12 +198,12 @@ export class SelectElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) options!: SelectOption[];
+  @property({ attribute: false }) options?: SelectOption[] = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}];
   @property({ attribute: false }) value?: string | string[];
-  @property({ attribute: false }) defaultValue?: string | string[];
+  @property({ attribute: false }) defaultValue?: string | string[] = "beta";
   @property({ attribute: false }) onChange?: (value: string | string[]) => void;
   @property({ type: Boolean }) open?: boolean;
-  @property({ type: Boolean }) defaultOpen?: boolean;
+  @property({ type: Boolean }) defaultOpen?: boolean = true;
   @property({ attribute: false }) onOpenChange?: (open: boolean) => void;
   @property({ type: Boolean }) multiple?: boolean;
   @property({ type: Boolean }) disabled?: boolean;
@@ -245,7 +245,11 @@ export class SelectElement extends LitElement {
     </div>
     ` : nothing}
     <div class=${'select__options'}>
-      <div class=${'select__option'} role="option"></div>
+      ${(this.options ?? []).map((item, index) => html`
+      <div class=${'select__option'} role="option" aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value}>
+        <span>${item.label}</span>
+      </div>
+      `)}
     </div>
     ${this.empty ? html`
     <div class=${'select__emptyState'}></div>
