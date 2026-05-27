@@ -31,6 +31,8 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  expanded: undefined,
+  defaultExpanded: undefined,
   maxLines: 3,
   showMoreLabel: "Show more",
   showLessLabel: "Show less",

@@ -29,6 +29,7 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  interactive: undefined,
   density: "default",
 });
 // @generated:end

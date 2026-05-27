@@ -440,22 +440,15 @@ test.describe("Runtime rail — Select (predicate:memberOf for aria-selected)", 
   //     Command's highlighted item is active-descendant state, not
   //     selected-value state, and resolution requires a separate
   //     mechanism.
-  // Vue is intentionally excluded from this rail case. The predicate
-  // lowering in the Vue emitter is correctly asserted by
-  // `iteration-bindings.test.ts` (regex match on
-  // `(Array.isArray(behavior.selection.value) ? ... )`). The runtime
-  // skip is unrelated to the predicate mechanism: Vue's preview
-  // pipeline mounts `<Select>` via `h(Component, { defaultOpen: true, ... })`,
-  // but the panel guarded by `v-if="behavior.open.value"` does not
-  // open at first render even though `props.defaultOpen === true`
-  // flows through `useSelect → useAnchorToggle → useControllableState`.
-  // The other three browser-mountable frameworks (React, Svelte, Lit)
-  // open correctly with the same contract. Investigating Vue's
-  // first-render reactivity here is a separate slice; the predicate
-  // mechanism is proven by the other three frameworks' rail facts
-  // plus the codegen-level lowering tests for all five.
-  const SELECT_RAIL_FRAMEWORKS = FRAMEWORKS.filter((f) => f !== "vue");
-  for (const framework of SELECT_RAIL_FRAMEWORKS) {
+  // VUE-FIRST-RENDER-CONTROLLABLE-DEFAULT-01 unblocked the Vue rail
+  // case. The original gap: Vue's `Boolean` prop coercion turned an
+  // omitted `open` prop into the literal `false` at runtime, which
+  // the controllable-state computed prefers over the uncontrolled
+  // default. The fix injects explicit `<name>: undefined` defaults
+  // into `withDefaults` for every boolean-shaped prop without a
+  // contract default, neutralizing the coercion. Vue now rejoins the
+  // rest of FRAMEWORKS for Select.
+  for (const framework of FRAMEWORKS) {
     test(`${framework}: renders one aria-selected=true option matching defaultValue=beta`, async ({
       page,
     }) => {

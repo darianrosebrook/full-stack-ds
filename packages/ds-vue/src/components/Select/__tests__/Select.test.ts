@@ -96,4 +96,48 @@ describe("Select — accessibility", () => {
 
 // @custom:start tests
 
+// VUE-FIRST-RENDER-CONTROLLABLE-DEFAULT-01.
+// The generated tests above all pass `open: true` (controlled), which
+// bypasses the controllable-state default path. The bug surfaced in
+// BINDING-EXPRESSION-V2-PREDICATE-01 runtime rail only fires on the
+// *uncontrolled* path: passing `defaultOpen: true` should make the
+// listbox render on first mount. These tests pin the contract.
+describe("Select — uncontrolled defaultOpen first-render", () => {
+  it("renders the listbox content on first mount with defaultOpen=true", () => {
+    const wrapper = mount(Select as Component, {
+      props: { defaultOpen: true },
+    });
+    // The `v-if="behavior.open.value"` guard must be open on first
+    // render. The listbox content carries class `select__content`.
+    expect(wrapper.find(".select__content").exists()).toBe(true);
+  });
+
+  it("reports aria-expanded='true' on first mount with defaultOpen=true", () => {
+    const wrapper = mount(Select as Component, {
+      props: { defaultOpen: true },
+    });
+    // The combobox root's aria-expanded reads `behavior.open.value`.
+    expect(wrapper.attributes("aria-expanded")).toBe("true");
+  });
+
+  it("renders three default options on first mount with defaultOpen=true", () => {
+    const wrapper = mount(Select as Component, {
+      props: { defaultOpen: true },
+    });
+    const options = wrapper.findAll(".select__option");
+    expect(options).toHaveLength(3);
+  });
+
+  it("marks the option matching defaultValue as aria-selected='true'", () => {
+    const wrapper = mount(Select as Component, {
+      props: { defaultOpen: true, defaultValue: "beta" },
+    });
+    const options = wrapper.findAll(".select__option");
+    const selected = options.map((o) => o.attributes("aria-selected"));
+    // memberOf(item.value, "beta") collapses to scalar equality at
+    // runtime because the channel value is a string, not an array.
+    expect(selected).toEqual(["false", "true", "false"]);
+  });
+});
+
 // @custom:end

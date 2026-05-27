@@ -201,11 +201,66 @@ function defaultNeedsFactory(translatedType: string): boolean {
 function collectDefaults(ir: ComponentIR): Array<[string, string, boolean]> {
   const out: Array<[string, string, boolean]> = [];
   for (const p of ir.styledProps) {
-    if (p.defaultExpr === undefined) continue;
     if (VUE_SKIP_PROPS.has(p.name)) continue;
-    out.push([p.name, p.defaultExpr, defaultNeedsFactory(vueType(p.type))]);
+    if (p.defaultExpr !== undefined) {
+      out.push([p.name, p.defaultExpr, defaultNeedsFactory(vueType(p.type))]);
+      continue;
+    }
+    // VUE-FIRST-RENDER-CONTROLLABLE-DEFAULT-01.
+    //
+    // Source fact: Vue 3's runtime prop coercion for `Boolean`-typed
+    // props turns an omitted prop into the literal value `false`, not
+    // `undefined`. This is observable as `props.open === false` when
+    // the consumer didn't pass `open` at all. Without a workaround,
+    // the codegen's controllable-state path mistakes this `false` for
+    // a controlled value of `false`, and the controllable-state
+    // computed prefers it over the uncontrolled `defaultValue`. The
+    // first-render result: `useControllableState({ controlled: () =>
+    // props.open, defaultValue: true })` returns `false`.
+    //
+    // Applies by: prop type matches `\bboolean\b` (the prop is
+    // declared as boolean-shaped) AND there is no contract default.
+    // Setting `<name>: undefined` in `withDefaults` neutralizes the
+    // Boolean coercion — Vue then leaves `props.<name>` as `undefined`
+    // when the consumer omits it, which lets the controllable-state
+    // fallback to the uncontrolled default fire correctly.
+    //
+    // Removable when: the Vue prop coercion behavior changes
+    // (unlikely; it's a documented Vue contract), or the codegen
+    // adopts a different controllable-state wiring that doesn't rely
+    // on `undefined` to distinguish "consumer omitted" from "consumer
+    // passed false".
+    if (isBooleanShapedProp(p.type)) {
+      out.push([p.name, "undefined", false]);
+    }
   }
   return out;
+}
+
+/**
+ * Detect whether a prop's TS type expression is a (possibly-optional)
+ * boolean *value* shape — i.e. `boolean`, `boolean | undefined`,
+ * `boolean | null`. Does NOT match function types that happen to
+ * return boolean (e.g. `(o: SelectOption) => boolean`) — those are
+ * not boolean-valued props and Vue's prop coercion does not apply to
+ * function-typed props.
+ *
+ * Source fact: Vue's Boolean coercion only fires for props whose
+ * runtime type entry is `{ type: Boolean }`. The codegen translates
+ * a bare TS `boolean` to that runtime type; function types translate
+ * to `{ type: Function }` (or are left unwrapped), which Vue does NOT
+ * coerce on omission.
+ */
+function isBooleanShapedProp(type: string): boolean {
+  const trimmed = type.trim();
+  // Strip optional union pieces (`| undefined`, `| null`) for the
+  // shape comparison.
+  const stripped = trimmed
+    .split("|")
+    .map((s) => s.trim())
+    .filter((s) => s !== "undefined" && s !== "null")
+    .join(" | ");
+  return stripped === "boolean";
 }
 
 // ---------------------------------------------------------------------------

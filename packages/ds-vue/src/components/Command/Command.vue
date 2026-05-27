@@ -38,6 +38,8 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  open: undefined,
+  defaultOpen: undefined,
   placeholder: "Search...",
   emptyMessage: "No results found.",
   label: "Command palette",

@@ -34,6 +34,10 @@ interface Props {
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
   size: "md",
+  checked: undefined,
+  defaultChecked: undefined,
+  indeterminate: undefined,
+  disabled: undefined,
 });
 // @generated:end
 

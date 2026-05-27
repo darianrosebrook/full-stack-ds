@@ -42,8 +42,13 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   options: () => ([{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}]),
   defaultValue: () => ("beta"),
+  open: undefined,
   defaultOpen: true,
+  multiple: undefined,
+  disabled: undefined,
   size: "md",
+  searchable: undefined,
+  empty: undefined,
 });
 // @generated:end
 

@@ -32,7 +32,10 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  checked: undefined,
+  defaultChecked: undefined,
   size: "md",
+  disabled: undefined,
 });
 // @generated:end
 

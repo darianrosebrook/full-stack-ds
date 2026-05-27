@@ -36,6 +36,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   length: 6,
   mode: "numeric",
+  disabled: undefined,
+  readOnly: undefined,
   label: "One-time password",
 });
 // @generated:end

@@ -36,7 +36,11 @@ interface Props {
 // @generated:end
 
 // @generated:start defineProps
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  invalid: undefined,
+  disabled: undefined,
+  required: undefined,
+});
 // @generated:end
 
 // @generated:start hook

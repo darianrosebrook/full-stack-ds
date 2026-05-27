@@ -32,7 +32,11 @@ interface Props {
 // @generated:end
 
 // @generated:start defineProps
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  open: undefined,
+  defaultOpen: undefined,
+  disabled: undefined,
+});
 // @generated:end
 
 // @generated:start hook

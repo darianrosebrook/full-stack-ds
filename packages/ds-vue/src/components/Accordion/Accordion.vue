@@ -33,6 +33,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: "single",
   collapsible: false,
+  disabled: undefined,
 });
 // @generated:end
 

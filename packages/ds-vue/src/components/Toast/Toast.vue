@@ -32,6 +32,7 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  open: undefined,
   variant: "info",
   politeness: "polite",
 });

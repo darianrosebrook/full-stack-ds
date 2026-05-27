@@ -38,6 +38,10 @@ const props = withDefaults(defineProps<Props>(), {
   size: "medium",
   variant: "primary",
   type: "button",
+  loading: undefined,
+  disabled: undefined,
+  ariaExpanded: undefined,
+  ariaPressed: undefined,
 });
 // @generated:end
 

@@ -34,7 +34,11 @@ interface Props {
 // @generated:end
 
 // @generated:start defineProps
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  disabled: undefined,
+  ariaExpanded: undefined,
+  ariaPressed: undefined,
+});
 // @generated:end
 
 // @generated:start classes

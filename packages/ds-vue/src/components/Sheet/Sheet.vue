@@ -32,6 +32,8 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  open: undefined,
+  defaultOpen: undefined,
   side: "right",
   modal: true,
 });

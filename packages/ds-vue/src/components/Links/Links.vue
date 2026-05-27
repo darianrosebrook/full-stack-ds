@@ -29,7 +29,9 @@ interface Props {
 // @generated:end
 
 // @generated:start defineProps
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  disabled: undefined,
+});
 // @generated:end
 
 // @generated:start classes

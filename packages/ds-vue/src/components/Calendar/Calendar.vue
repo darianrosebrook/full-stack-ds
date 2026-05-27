@@ -36,6 +36,7 @@ interface Props {
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
   mode: "single",
+  disabled: undefined,
   locale: "en-US",
   shouldCloseOnSelect: true,
   daysShown: 42,

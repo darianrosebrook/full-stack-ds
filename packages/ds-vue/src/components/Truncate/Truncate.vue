@@ -32,6 +32,9 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  expandable: undefined,
+  expanded: undefined,
+  defaultExpanded: undefined,
   expandText: "Show more",
   collapseText: "Show less",
 });
