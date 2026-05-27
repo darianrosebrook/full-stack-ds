@@ -317,6 +317,84 @@ test.describe("Runtime rail — Shuttle (array iteration with channel source)", 
   }
 });
 
+test.describe("Runtime rail — Walkthrough (object-array iteration with paths)", () => {
+  // PRODUCTION-OBJECT-ARRAY-CONSUMER-01: the production proof of
+  // BINDING-EXPRESSION-V2-PATH-01.
+  //
+  // Walkthrough's contract declares:
+  //   - `steps: WalkthroughStepSpec[]` with a contract default of 3
+  //     WalkthroughStepSpec objects: { anchor, title } each
+  //   - `iterate.kind: "array"` on `button[part="dot"]` using
+  //     `prop:steps` and `itemType: "WalkthroughStepSpec"`
+  //   - `aria-label: "iter:item.title"` — object-field projection
+  //   - `data-step-index: "iter:index"` — index local alongside path
+  //
+  // What this proves:
+  //   - BindingExpressionV2 property paths (iter:item.<field>) lower
+  //     correctly in production output, not just synthetic test contracts.
+  //   - Every framework emits the dotted accessor (`item.title`) without
+  //     a component-name branch in the emitter.
+  //   - Index and item locals coexist on the same iterated node.
+  //   - The `description?: string` optional field is deliberately NOT
+  //     bound — paths only project required object fields in this slice.
+  //
+  // What this does NOT prove:
+  //   - Active-step state, dot interaction, focus, or any guided-tour
+  //     behavior. The iteration is structural; the component's
+  //     interactive surface is untouched by this slice.
+  //   - That paths work for predicates ("is this dot the active step?").
+  //     That requires BINDING-EXPRESSION-V2-PREDICATE-01.
+  //   - That object-array iteration scales beyond one production
+  //     consumer. The mechanism is the same as Shuttle's array iteration;
+  //     the path lowering is the new fact.
+  //   - Select / Command aria-selected repayment — those suppressions
+  //     remain pending the predicate slice.
+  const EXPECTED_TITLES = [
+    "Welcome to the tour",
+    "Browse your dashboard",
+    "Configure preferences",
+  ];
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: renders one dot per step with aria-label=step.title and data-step-index=index`, async ({
+      page,
+    }) => {
+      await goto(page, framework, "Walkthrough", "walkthrough");
+
+      const dots = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root)
+            return {
+              count: 0,
+              ariaLabels: [] as Array<string | null>,
+              stepIndexes: [] as Array<string | null>,
+            };
+          const nodes = Array.from(root.querySelectorAll(".walkthrough__dot"));
+          return {
+            count: nodes.length,
+            ariaLabels: nodes.map((n) => n.getAttribute("aria-label")),
+            stepIndexes: nodes.map((n) => n.getAttribute("data-step-index")),
+          };
+        },
+        { host: `fsds-${kebab("Walkthrough")}`, isLit: framework === "lit" },
+      );
+
+      // The contract's `steps` default seeds three objects.
+      expect(dots.count).toBe(3);
+      // Each dot's aria-label is the projected `title` field of its
+      // corresponding step. This is the production witness of
+      // `iter:item.title` lowering correctly across frameworks.
+      expect(dots.ariaLabels).toEqual(EXPECTED_TITLES);
+      // Iteration locals (item AND index) coexist on the same node:
+      // the data-step-index reads `iter:index` while aria-label reads
+      // `iter:item.title`.
+      expect(dots.stepIndexes).toEqual(["0", "1", "2"]);
+    });
+  }
+});
+
 test.describe("Runtime rail — Truncate (CSS-var fallback)", () => {
   for (const framework of FRAMEWORKS) {
     test(`${framework}: content element has style attribute slot for --fsds-truncate-content-lines`, async ({ page }) => {

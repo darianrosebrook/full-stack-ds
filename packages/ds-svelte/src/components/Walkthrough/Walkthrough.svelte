@@ -34,7 +34,7 @@ interface Props {
   title?: import('svelte').Snippet;
 }
 
-let { steps, index, defaultIndex = 0, onStepChange, onComplete, onSkip, label = "Feature tour", storageKey, autoStart = false, closeOnOutsideClick = false, placement = "auto", class: className, description, title }: Props = $props();
+let { steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}], index, defaultIndex = 0, onStepChange, onComplete, onSkip, label = "Feature tour", storageKey, autoStart = false, closeOnOutsideClick = false, placement = "auto", class: className, description, title }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -74,7 +74,9 @@ const classes = $derived(
     <button class={'walkthrough__skip'} type="button"></button>
     <button class={'walkthrough__prev'} type="button"></button>
     <div class={'walkthrough__dots'}>
-      <button class={'walkthrough__dot'} type="button"></button>
+      {#each (steps ?? []) as item, index (index)}
+      <button class={'walkthrough__dot'} type="button" aria-label={item.title} data-step-index={index}></button>
+      {/each}
     </div>
     <span class={'walkthrough__counter'}></span>
     <button class={'walkthrough__next'} type="button"></button>

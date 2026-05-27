@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgFor } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useWalkthrough } from "./useWalkthrough.js";
 // @generated:end
@@ -22,7 +22,7 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
 @Component({
   selector: "fsds-walkthrough",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, NgFor],
   template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="label">
   <div [ngClass]="'walkthrough__content'">
     <h3 [ngClass]="'walkthrough__title'">
@@ -36,7 +36,9 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
     <button [ngClass]="'walkthrough__skip'" type="button"></button>
     <button [ngClass]="'walkthrough__prev'" type="button"></button>
     <div [ngClass]="'walkthrough__dots'">
-      <button [ngClass]="'walkthrough__dot'" type="button"></button>
+      <ng-container *ngFor="let item of (steps ?? []); let index = index">
+        <button [ngClass]="'walkthrough__dot'" type="button" [attr.aria-label]="item.title" [attr.data-step-index]="index"></button>
+      </ng-container>
     </div>
     <span [ngClass]="'walkthrough__counter'"></span>
     <button [ngClass]="'walkthrough__next'" type="button"></button>
@@ -45,7 +47,7 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalkthroughComponent {
-  @Input() steps?: WalkthroughStepSpec[];
+  @Input() steps?: WalkthroughStepSpec[] = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}];
   @Input() index?: number;
   @Input() defaultIndex?: number = 0;
   @Input() onStepChange?: (index: number) => void;

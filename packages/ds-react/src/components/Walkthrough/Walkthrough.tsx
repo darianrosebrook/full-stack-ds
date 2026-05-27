@@ -108,7 +108,7 @@ export function Walkthrough({
   placement = "auto",
   className,
   "data-testid": testId,
-  steps,
+  steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}],
   onComplete,
   onSkip,
   label = "Feature tour",
@@ -147,7 +147,7 @@ export function Walkthrough({
       <button className="walkthrough__skip" type="button" />
       <button className="walkthrough__prev" type="button" />
       <div className="walkthrough__dots">
-        <button className="walkthrough__dot" type="button" />
+        {(steps ?? []).map((item, index) => <button className="walkthrough__dot" type="button" aria-label={item.title} data-step-index={index} key={index} />)}
       </div>
       <span className="walkthrough__counter" />
       <button className="walkthrough__next" type="button" />

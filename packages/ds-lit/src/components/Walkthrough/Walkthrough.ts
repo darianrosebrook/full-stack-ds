@@ -170,7 +170,7 @@ export class WalkthroughElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) steps?: WalkthroughStepSpec[];
+  @property({ attribute: false }) steps?: WalkthroughStepSpec[] = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}];
   @property({ type: Number }) index?: number;
   @property({ type: Number }) defaultIndex?: number = 0;
   @property({ attribute: false }) onStepChange?: (index: number) => void;
@@ -210,7 +210,9 @@ export class WalkthroughElement extends LitElement {
     <button class=${'walkthrough__skip'} type="button"></button>
     <button class=${'walkthrough__prev'} type="button"></button>
     <div class=${'walkthrough__dots'}>
-      <button class=${'walkthrough__dot'} type="button"></button>
+      ${(this.steps ?? []).map((item, index) => html`
+      <button class=${'walkthrough__dot'} type="button" aria-label=${item.title} data-step-index=${index}></button>
+      `)}
     </div>
     <span class=${'walkthrough__counter'}></span>
     <button class=${'walkthrough__next'} type="button"></button>

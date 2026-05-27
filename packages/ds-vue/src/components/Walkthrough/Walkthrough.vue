@@ -37,6 +37,7 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
+  steps: () => ([{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}]),
   defaultIndex: 0,
   label: "Feature tour",
   autoStart: false,
@@ -81,7 +82,7 @@ const classNames = computed(() => [
       <button :class="'walkthrough__skip'" type="button"></button>
       <button :class="'walkthrough__prev'" type="button"></button>
       <div :class="'walkthrough__dots'">
-        <button :class="'walkthrough__dot'" type="button"></button>
+        <button v-for="(item, index) in (props.steps ?? [])" :key="index" :class="'walkthrough__dot'" type="button" :aria-label="item.title" :data-step-index="index"></button>
       </div>
       <span :class="'walkthrough__counter'"></span>
       <button :class="'walkthrough__next'" type="button"></button>

@@ -79,8 +79,17 @@
                 {
                   "tag": "button",
                   "part": "dot",
+                  "iterate": {
+                    "source": "prop:steps",
+                    "kind": "array",
+                    "itemType": "WalkthroughStepSpec"
+                  },
                   "attrs": {
                     "type": "button"
+                  },
+                  "bindings": {
+                    "aria-label": "iter:item.title",
+                    "data-step-index": "iter:index"
                   }
                 }
               ]
@@ -108,7 +117,12 @@
         {
           "name": "steps",
           "type": "WalkthroughStepSpec[]",
-          "description": "Array of step definitions, each specifying an anchor target and content."
+          "description": "Array of step definitions, each specifying an anchor target and content.",
+          "default": [
+            { "anchor": "#step-1", "title": "Welcome to the tour" },
+            { "anchor": "#step-2", "title": "Browse your dashboard" },
+            { "anchor": "#step-3", "title": "Configure preferences" }
+          ]
         },
         {
           "name": "index",

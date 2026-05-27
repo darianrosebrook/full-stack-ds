@@ -436,12 +436,22 @@
                 "oneOf": [
                   { "type": "string" },
                   { "type": "number" },
-                  { "type": "boolean" }
+                  { "type": "boolean" },
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "oneOf": [
+                        { "type": "string" },
+                        { "type": "number" },
+                        { "type": "boolean" }
+                      ]
+                    }
+                  }
                 ]
               }
             }
           ],
-          "description": "Default value when the prop is omitted. Arrays of primitives are accepted for collection-typed props (e.g. `string[]`); the codegen emits them as JSON literals in the destructure (`= [\"a\", \"b\"]`)."
+          "description": "Default value when the prop is omitted. Arrays of primitives are accepted for collection-typed props (e.g. `string[]`); the codegen emits them as JSON literals in the destructure (`= [\"a\", \"b\"]`). Object items inside arrays are accepted for typed-object collections (e.g. `WalkthroughStepSpec[]`), as long as every object field is primitive-shaped — the codegen JSON-stringifies the whole literal, so any JSON-serializable shape works mechanically."
         },
         "description": {
           "type": "string",
