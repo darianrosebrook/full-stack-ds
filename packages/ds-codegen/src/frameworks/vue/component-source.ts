@@ -1372,6 +1372,16 @@ function vuePropAccessor(propName: string, ctx: VueRenderContext): string {
 }
 
 /**
+ * Append a dotted property path to a base Vue template accessor.
+ * BINDING-EXPRESSION-V2-PATH-01: identical lowering across all five
+ * frameworks because `.x.y` is template-agnostic syntax.
+ */
+function appendPath(base: string, path: readonly string[] | undefined): string {
+  if (!path || path.length === 0) return base;
+  return `${base}.${path.join(".")}`;
+}
+
+/**
  * Resolve an `iterationLocal`-kind binding to the Vue v-for callback
  * parameter name introduced by the enclosing iteration. The v-for emit
  * writes `v-for="(item, index) in count"` (count) or
@@ -1395,17 +1405,17 @@ function renderVueTextContent(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `{{ ${vuePropAccessor(expr.prop, ctx)} }}`;
+      return `{{ ${appendPath(vuePropAccessor(expr.prop, ctx), expr.path)} }}`;
     case "literal":
       return escapeAttrString(expr.value);
     case "iterationLocal": {
       const name = vueIterationLocalName(expr.local, ctx);
-      return name ? `{{ ${name} }}` : null;
+      return name ? `{{ ${appendPath(name, expr.path)} }}` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return `{{ behavior.${ch.name}.value }}`;
+      if (expr.field === "value") return `{{ ${appendPath(`behavior.${ch.name}.value`, expr.path)} }}`;
       if (expr.field === "defaultValue" && ch.defaultValueProp) {
         return `{{ props.${propAccess(ch.defaultValueProp)} }}`;
       }
@@ -1440,12 +1450,12 @@ function renderVueBinding(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `:${attr}="${vuePropAccessor(expr.prop, ctx)}"`;
+      return `:${attr}="${appendPath(vuePropAccessor(expr.prop, ctx), expr.path)}"`;
     case "literal":
       return `${attr}="${escapeAttrString(expr.value)}"`;
     case "iterationLocal": {
       const name = vueIterationLocalName(expr.local, ctx);
-      return name ? `:${attr}="${name}"` : null;
+      return name ? `:${attr}="${appendPath(name, expr.path)}"` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -1454,7 +1464,7 @@ function renderVueBinding(
         // Reference behavior.<name>.value — Vue's auto-unwrap only kicks in
         // for top-level refs in template scope. For nested property access
         // we must explicitly read .value to satisfy strict typecheck.
-        return `:${attr}="behavior.${ch.name}.value"`;
+        return `:${attr}="${appendPath(`behavior.${ch.name}.value`, expr.path)}"`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
@@ -1504,15 +1514,17 @@ function renderVueBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return vuePropAccessor(expr.prop, ctx);
+      return appendPath(vuePropAccessor(expr.prop, ctx), expr.path);
     case "literal":
       return JSON.stringify(expr.value);
-    case "iterationLocal":
-      return vueIterationLocalName(expr.local, ctx);
+    case "iterationLocal": {
+      const name = vueIterationLocalName(expr.local, ctx);
+      return name ? appendPath(name, expr.path) : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return `behavior.${ch.name}.value`;
+      if (expr.field === "value") return appendPath(`behavior.${ch.name}.value`, expr.path);
       if (expr.field === "defaultValue" && ch.defaultValueProp) {
         return `props.${propAccess(ch.defaultValueProp)}`;
       }

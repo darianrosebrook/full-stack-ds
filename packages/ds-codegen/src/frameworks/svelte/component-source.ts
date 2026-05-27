@@ -1258,6 +1258,15 @@ function sveltePropAccessor(propName: string, ctx: SvelteRenderContext): string 
 }
 
 /**
+ * Append a dotted property path to a base Svelte expression.
+ * BINDING-EXPRESSION-V2-PATH-01.
+ */
+function appendPath(base: string, path: readonly string[] | undefined): string {
+  if (!path || path.length === 0) return base;
+  return `${base}.${path.join(".")}`;
+}
+
+/**
  * Resolve an `iterationLocal`-kind binding to the Svelte `{#each}`
  * scope variable name. Svelte emits
  * `{#each ... as item, index}` (array) or
@@ -1280,18 +1289,18 @@ function renderSvelteTextChildExpression(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `{${sveltePropAccessor(expr.prop, ctx)}}`;
+      return `{${appendPath(sveltePropAccessor(expr.prop, ctx), expr.path)}}`;
     case "literal":
       return escapeAttrValue(expr.value);
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
-      return name ? `{${name}}` : null;
+      return name ? `{${appendPath(name, expr.path)}}` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
-        return `{${ctx.hookVar}.${ch.name}}`;
+        return `{${appendPath(`${ctx.hookVar}.${ch.name}`, expr.path)}}`;
       }
       return null;
     }
@@ -1312,15 +1321,17 @@ function renderSvelteBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return sveltePropAccessor(expr.prop, ctx);
+      return appendPath(sveltePropAccessor(expr.prop, ctx), expr.path);
     case "literal":
       return JSON.stringify(expr.value);
-    case "iterationLocal":
-      return svelteIterationLocalName(expr.local, ctx);
+    case "iterationLocal": {
+      const name = svelteIterationLocalName(expr.local, ctx);
+      return name ? appendPath(name, expr.path) : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return `${ctx.hookVar}.${ch.name}`;
+      if (expr.field === "value") return appendPath(`${ctx.hookVar}.${ch.name}`, expr.path);
       if (expr.field === "defaultValue" && ch.defaultValueProp) {
         return jsAccessorFor(ch.defaultValueProp);
       }
@@ -1337,12 +1348,12 @@ function renderSvelteBinding(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${attr}={${sveltePropAccessor(expr.prop, ctx)}}`;
+      return `${attr}={${appendPath(sveltePropAccessor(expr.prop, ctx), expr.path)}}`;
     case "literal":
       return `${attr}="${escapeAttrValue(expr.value)}"`;
     case "iterationLocal": {
       const name = svelteIterationLocalName(expr.local, ctx);
-      return name ? `${attr}={${name}}` : null;
+      return name ? `${attr}={${appendPath(name, expr.path)}}` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
@@ -1357,14 +1368,22 @@ function renderSvelteBinding(
         // raw value is admission-red. Coerce to Boolean so the
         // attribute reflects "truthy" — matching React's existing
         // emitter behavior.
+        //
+        // Note: ARIA coercion applies to the base channel value only.
+        // When a path is present, the result is a projection of the
+        // channel value — semantically a different type — and the
+        // contract author has opted into emitting the projected value
+        // directly. Coercion would silently mask shape mismatches.
+        const base = appendPath(`${ctx.hookVar}.${ch.name}`, expr.path);
         if (
+          (expr.path === undefined || expr.path.length === 0) &&
           ARIA_BOOLEANISH_ATTRS.has(attr) &&
           ch.valueType !== undefined &&
           ch.valueType !== "boolean"
         ) {
-          return `${attr}={Boolean(${ctx.hookVar}.${ch.name})}`;
+          return `${attr}={Boolean(${base})}`;
         }
-        return `${attr}={${ctx.hookVar}.${ch.name}}`;
+        return `${attr}={${base}}`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;

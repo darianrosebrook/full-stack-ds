@@ -1460,6 +1460,15 @@ function angularPropAccessor(propName: string, ctx: AngularRenderContext): strin
 }
 
 /**
+ * Append a dotted property path to a base Angular template expression.
+ * BINDING-EXPRESSION-V2-PATH-01.
+ */
+function appendPath(base: string, path: readonly string[] | undefined): string {
+  if (!path || path.length === 0) return base;
+  return `${base}.${path.join(".")}`;
+}
+
+/**
  * Resolve an `iterationLocal`-kind binding to the Angular `*ngFor`
  * template-local name. The Angular emit shape is
  * `*ngFor="let item of items; let index = index"` — the bare
@@ -1483,18 +1492,18 @@ function renderAngularBinding(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${angularAttrBinding(attr, tag)}="${angularPropAccessor(expr.prop, ctx)}"`;
+      return `${angularAttrBinding(attr, tag)}="${appendPath(angularPropAccessor(expr.prop, ctx), expr.path)}"`;
     case "literal":
       return `${attr}="${escapeAngularAttr(expr.value)}"`;
     case "iterationLocal": {
       const name = angularIterationLocalName(expr.local, ctx);
-      return name ? `${angularAttrBinding(attr, tag)}="${name}"` : null;
+      return name ? `${angularAttrBinding(attr, tag)}="${appendPath(name, expr.path)}"` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
-        return `${angularAttrBinding(attr, tag)}="behavior.${ch.name}()"`;
+        return `${angularAttrBinding(attr, tag)}="${appendPath(`behavior.${ch.name}()`, expr.path)}"`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
@@ -1524,15 +1533,17 @@ function renderAngularBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return angularPropAccessor(expr.prop, ctx);
+      return appendPath(angularPropAccessor(expr.prop, ctx), expr.path);
     case "literal":
       return JSON.stringify(expr.value);
-    case "iterationLocal":
-      return angularIterationLocalName(expr.local, ctx);
+    case "iterationLocal": {
+      const name = angularIterationLocalName(expr.local, ctx);
+      return name ? appendPath(name, expr.path) : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return `behavior.${ch.name}()`;
+      if (expr.field === "value") return appendPath(`behavior.${ch.name}()`, expr.path);
       if (expr.field === "defaultValue" && ch.defaultValueProp) {
         return safePropertyExpr(ch.defaultValueProp);
       }

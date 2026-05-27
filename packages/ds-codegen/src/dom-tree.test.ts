@@ -78,6 +78,146 @@ describe("parseBindingExpression", () => {
   });
 });
 
+// BINDING-EXPRESSION-V2-PATH-01: property paths are object-field projection
+// only — no transforms, no comparisons, no optional chaining, no array
+// indexing, no function calls, no boolean / arithmetic expressions, no
+// set-membership, no fallback expressions. The grammar is a dotted tail
+// of identifier segments only. Anything else falls through to `literal`.
+describe("parseBindingExpression — paths (V2-PATH-01)", () => {
+  it("parses prop:foo.bar with a single path segment", () => {
+    expect(parseBindingExpression("prop:item.value")).toEqual({
+      kind: "prop",
+      prop: "item",
+      path: ["value"],
+    });
+  });
+
+  it("parses prop:foo.bar.baz with multiple path segments", () => {
+    expect(parseBindingExpression("prop:user.profile.firstName")).toEqual({
+      kind: "prop",
+      prop: "user",
+      path: ["profile", "firstName"],
+    });
+  });
+
+  it("parses channel:X.value.field with a path on the channel value", () => {
+    expect(parseBindingExpression("channel:selection.value.length")).toEqual({
+      kind: "channel",
+      channel: "selection",
+      field: "value",
+      path: ["length"],
+    });
+  });
+
+  it("parses iter:item.field for array-iteration object access", () => {
+    expect(parseBindingExpression("iter:item.value")).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+      path: ["value"],
+    });
+  });
+
+  it("parses iter:item.label as a separate object-field projection", () => {
+    expect(parseBindingExpression("iter:item.label")).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+      path: ["label"],
+    });
+  });
+
+  it("parses iter:index without path (path is optional)", () => {
+    expect(parseBindingExpression("iter:index")).toEqual({
+      kind: "iterationLocal",
+      local: "index",
+    });
+  });
+
+  it("rejects empty segment at end (trailing dot)", () => {
+    // `iter:item.` is malformed — falls through to literal.
+    expect(parseBindingExpression("iter:item.")).toEqual({
+      kind: "literal",
+      value: "iter:item.",
+    });
+  });
+
+  it("rejects double dot (empty middle segment)", () => {
+    expect(parseBindingExpression("iter:item..value")).toEqual({
+      kind: "literal",
+      value: "iter:item..value",
+    });
+  });
+
+  it("rejects bracket access (path is dot-only)", () => {
+    expect(parseBindingExpression("iter:item[value]")).toEqual({
+      kind: "literal",
+      value: "iter:item[value]",
+    });
+  });
+
+  it("rejects optional chaining", () => {
+    expect(parseBindingExpression("iter:item?.value")).toEqual({
+      kind: "literal",
+      value: "iter:item?.value",
+    });
+  });
+
+  it("rejects fallback expressions (?? x)", () => {
+    expect(parseBindingExpression("iter:item.value ?? alpha")).toEqual({
+      kind: "literal",
+      value: "iter:item.value ?? alpha",
+    });
+  });
+
+  it("rejects comparison expressions", () => {
+    expect(parseBindingExpression("iter:item.value === channel:selection.value")).toEqual({
+      kind: "literal",
+      value: "iter:item.value === channel:selection.value",
+    });
+  });
+
+  it("rejects function-call paths", () => {
+    expect(parseBindingExpression("iter:item.value()")).toEqual({
+      kind: "literal",
+      value: "iter:item.value()",
+    });
+  });
+
+  it("rejects paths on channel:X.onChange (no value projection on callbacks)", () => {
+    // channel:X.onChange is a callback, not a value; a path makes no
+    // sense and should not parse — falls through to literal.
+    expect(parseBindingExpression("channel:selection.onChange.foo")).toEqual({
+      kind: "literal",
+      value: "channel:selection.onChange.foo",
+    });
+  });
+
+  it("rejects paths on channel:X.defaultValue (out of scope this slice)", () => {
+    expect(parseBindingExpression("channel:selection.defaultValue.length")).toEqual({
+      kind: "literal",
+      value: "channel:selection.defaultValue.length",
+    });
+  });
+
+  it("does not attach path to literal: (literal carries no path)", () => {
+    // The contents of literal: are opaque — even though "Foo.Bar" contains a
+    // dot, it is part of the literal value, not a path.
+    expect(parseBindingExpression("literal:Foo.Bar")).toEqual({
+      kind: "literal",
+      value: "Foo.Bar",
+    });
+  });
+
+  it("rejects segments that start with a digit", () => {
+    // Segment must start with identifier-start; `1value` is not a valid
+    // JS property identifier-tail in our grammar (it isn't a valid
+    // unquoted property at parse time anyway).
+    expect(parseBindingExpression("iter:item.1value")).toEqual({
+      kind: "literal",
+      value: "iter:item.1value",
+    });
+  });
+});
+
 describe("buildDomTree (via buildComponentIR)", () => {
   function withDom(dom: unknown): ComponentContract {
     return {
@@ -1353,6 +1493,179 @@ describe("BindingExpressionV2 — iteration locals", () => {
       local: "index",
     });
     expect(ir.dom!.children[0].iteration!.indexVar).toBe("dayIndex");
+  });
+
+  // ------------------------------------------------------------------
+  // BINDING-EXPRESSION-V2-PATH-01: scope rules for paths
+  // ------------------------------------------------------------------
+
+  it("accepts iter:item.value under array iteration (object-field projection)", () => {
+    // Synthetic contract: items are objects with a `value` field. The
+    // IR carries the path; the framework type-checker enforces that
+    // the projection is well-typed against the declared itemType.
+    const ir = buildComponentIR({
+      name: "V2PathArray",
+      cssPrefix: "v2-path-array",
+      anatomy: {
+        parts: ["root", "cell"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [
+            {
+              tag: "li",
+              part: "cell",
+              iterate: {
+                source: "prop:rows",
+                kind: "array",
+                itemType: "{ value: string; label: string }",
+              },
+              bindings: { "data-value": "iter:item.value" },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            {
+              name: "rows",
+              type: "Array<{ value: string; label: string }>",
+            },
+          ],
+        },
+      },
+    } as unknown as ComponentContract);
+    expect(ir.dom!.children[0].bindings["data-value"]).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+      path: ["value"],
+    });
+  });
+
+  it("rejects iter:item.value under count iteration (no item exists)", () => {
+    // The iter:item scope check fires *before* path-validity checks —
+    // count iteration has no `item`, so any iter:item form (with or
+    // without path) is a scope error.
+    expect(() =>
+      buildComponentIR(
+        withIteratingDom({
+          iterateKind: "count",
+          iterateSource: "prop:count",
+          binding: "iter:item.value",
+        }),
+      ),
+    ).toThrow(/iter:item.*count-kind iteration/);
+  });
+
+  it("rejects iter:index.<anything> (index resolves to a number)", () => {
+    // iter:index is the loop index (number-typed). Object-field paths
+    // are only meaningful on object-shaped values; the validator catches
+    // this with a typed message rather than silently emitting `index.foo`.
+    expect(() =>
+      buildComponentIR(
+        withIteratingDom({
+          iterateKind: "array",
+          iterateSource: "prop:rows",
+          binding: "iter:index.value",
+        }),
+      ),
+    ).toThrow(/iter:index\.value.*loop index.*number/);
+  });
+
+  it("rejects path on iterate.source itself (out of scope this slice)", () => {
+    // iterate.source must be a bare prop:<name> or channel:<name>.value.
+    // Property paths on the iteration root are explicitly held for a
+    // future nested-iteration grammar.
+    expect(() =>
+      buildComponentIR({
+        name: "V2PathOnSource",
+        cssPrefix: "v2-path-on-source",
+        anatomy: {
+          parts: ["root", "cell"],
+          dom: {
+            tag: "ul",
+            part: "root",
+            children: [
+              {
+                tag: "li",
+                part: "cell",
+                iterate: {
+                  source: "prop:groups.items",
+                  kind: "array",
+                  itemType: "string",
+                },
+                bindings: { "data-x": "iter:item" },
+              },
+            ],
+          },
+        },
+        props: {
+          styled: {
+            members: [
+              { name: "groups", type: "{ items: string[] }[]" },
+            ],
+          },
+        },
+      } as unknown as ComponentContract),
+    ).toThrow(/iterate\.source must be a bare prop:<name>/);
+  });
+
+  it("preserves path through prop:item.<field> auto-promotion (carry-through)", () => {
+    // V1 contracts only ever wrote bare `prop:item` / `prop:index`, but
+    // the V2 promotion code is path-aware so a `prop:item.value` form
+    // (synthetic — no production contract uses this) still ends up as
+    // `iterationLocal item path:[value]` rather than dropping the path.
+    const ir = buildComponentIR({
+      name: "V2PromoteWithPath",
+      cssPrefix: "v2-promote-with-path",
+      anatomy: {
+        parts: ["root", "cell"],
+        dom: {
+          tag: "ul",
+          part: "root",
+          children: [
+            {
+              tag: "li",
+              part: "cell",
+              iterate: {
+                source: "prop:rows",
+                kind: "array",
+                itemType: "{ value: string }",
+              },
+              bindings: { "data-v": "prop:item.value" },
+            },
+          ],
+        },
+      },
+      props: {
+        styled: { members: [{ name: "rows", type: "Array<{ value: string }>" }] },
+      },
+    } as unknown as ComponentContract);
+    expect(ir.dom!.children[0].bindings["data-v"]).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+      path: ["value"],
+    });
+  });
+
+  it("rejects iter:item.value with no enclosing iteration", () => {
+    // iter:item scope check still applies — path doesn't bypass scope.
+    expect(() =>
+      buildComponentIR({
+        name: "V2PathNoIter",
+        cssPrefix: "v2-path-no-iter",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            bindings: { "data-v": "iter:item.value" },
+          },
+        },
+        props: { styled: { members: [] } },
+      } as unknown as ComponentContract),
+    ).toThrow(/iter:item.*not inside any `iterate` block/);
   });
 });
 

@@ -137,6 +137,16 @@ function litPropAccessor(propName: string, ctx: LitRenderContext): string {
 }
 
 /**
+ * Append a dotted property path to a base Lit template expression.
+ * BINDING-EXPRESSION-V2-PATH-01: identical lowering across all five
+ * frameworks because `.x.y` is template-agnostic syntax.
+ */
+function appendPath(base: string, path: readonly string[] | undefined): string {
+  if (!path || path.length === 0) return base;
+  return `${base}.${path.join(".")}`;
+}
+
+/**
  * Resolve an `iterationLocal`-kind binding to the Lit iteration
  * callback parameter name. Lit's emit wraps the iterated subtree in
  * `.map((item, index) => html\`...\`)` (array) or
@@ -1701,7 +1711,16 @@ function renderLitBinding(
   switch (expr.kind) {
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
-      const isBoolean = prop ? /\bboolean\b/.test(prop.type) : false;
+      // BINDING-EXPRESSION-V2-PATH-01: when a path is present, the
+      // projected field's type is unknown to the emitter — the
+      // prop.type string describes only the root prop, not nested
+      // members. Special-case coercions (boolean attribute binding,
+      // ARIA string serialization, ARIA-mixin null coercion) are
+      // only applied when the binding reads the raw prop. With a
+      // path, fall through to the generic attribute binding with
+      // ifDefined.
+      const hasPath = expr.path !== undefined && expr.path.length > 0;
+      const isBoolean = !hasPath && prop ? /\bboolean\b/.test(prop.type) : false;
       // ARIA-mixin props (`ariaLabel`, `ariaDescribedby`, etc.) are
       // declared as `string | null` because the underlying DOM IDL
       // (ARIAMixin) typing is `string | null`. Coerce null to
@@ -1713,8 +1732,8 @@ function renderLitBinding(
       // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals never
       // reach this branch — they come in as `iterationLocal`-kind
       // bindings and are handled in the dedicated case below.
-      const isAriaMixin = ARIA_MIXIN_NAMES.has(expr.prop);
-      const rawAcc = propAccessor(expr.prop);
+      const isAriaMixin = !hasPath && ARIA_MIXIN_NAMES.has(expr.prop);
+      const rawAcc = appendPath(propAccessor(expr.prop), expr.path);
       const acc = isAriaMixin ? `${rawAcc} ?? undefined` : rawAcc;
       // Every styled prop is declared as `propName?: T` in the Lit
       // emitter (see generatePropertyDeclarations), so at the field
@@ -1770,20 +1789,32 @@ function renderLitBinding(
       // Iteration locals are loop-scope locals introduced by the
       // surrounding `.map((item, index) => html\`\`)` / `Array.from`
       // callback — never undefined, no `ifDefined` wrap needed.
+      // Paths on `iter:item.field` are projected directly; the field's
+      // value may itself be undefined (no compile-time guarantee), but
+      // emitting `item.field` matches the contract author's intent and
+      // lets the underlying type-checker flag mismatches.
       const name = litIterationLocalName(expr.local, ctx);
       if (!name) return null;
+      const acc = appendPath(name, expr.path);
       if (attr.startsWith("aria-")) {
-        return `${attr}=\${${name}}`;
+        return `${attr}=\${${acc}}`;
       }
       if (isAttributeOnlyBinding(attr)) {
-        return `${attr}=\${${name}}`;
+        return `${attr}=\${${acc}}`;
       }
-      return `.${attr}=\${${name}}`;
+      return `.${attr}=\${${acc}}`;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
+        // BINDING-EXPRESSION-V2-PATH-01: ch.valueType describes the
+        // channel's value at the root; a path-projected field's type
+        // is opaque to the emitter. Skip boolean-coercion shortcuts
+        // when a path is present and emit a plain expression — the
+        // type-checker on the consumer side handles shape.
+        const hasPath = expr.path !== undefined && expr.path.length > 0;
+        const channelAcc = appendPath(`this.behavior.${ch.name}`, expr.path);
         // ARIA attrs are always string-typed at the DOM. For boolean channels
         // (`aria-checked`, `aria-pressed`, `aria-selected`), serialize the
         // value as the explicit `"true"`/`"false"` string the ARIA spec
@@ -1792,18 +1823,18 @@ function renderLitBinding(
         // `aria-checked=${false}` would serialize as `aria-checked="false"`
         // (valid but axe correctly flags it when the role doesn't permit it).
         if (attr.startsWith("aria-")) {
-          if (ch.valueType === "boolean") {
-            return `${attr}=\${this.behavior.${ch.name} ? 'true' : 'false'}`;
+          if (!hasPath && ch.valueType === "boolean") {
+            return `${attr}=\${${channelAcc} ? 'true' : 'false'}`;
           }
-          return `${attr}=\${this.behavior.${ch.name}}`;
+          return `${attr}=\${${channelAcc}}`;
         }
-        if (ch.valueType === "boolean") {
-          return `?${attr}=\${this.behavior.${ch.name}}`;
+        if (!hasPath && ch.valueType === "boolean") {
+          return `?${attr}=\${${channelAcc}}`;
         }
         if (isAttributeOnlyBinding(attr)) {
-          return `${attr}=\${this.behavior.${ch.name}}`;
+          return `${attr}=\${${channelAcc}}`;
         }
-        return `.${attr}=\${this.behavior.${ch.name}}`;
+        return `.${attr}=\${${channelAcc}}`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
@@ -1837,19 +1868,19 @@ function renderLitContent(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `\${${litPropAccessor(expr.prop, ctx)}}`;
+      return `\${${appendPath(litPropAccessor(expr.prop, ctx), expr.path)}}`;
     case "literal":
       return expr.value.replace(/[<>&]/g, (c) =>
         c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&amp;",
       );
     case "iterationLocal": {
       const name = litIterationLocalName(expr.local, ctx);
-      return name ? `\${${name}}` : null;
+      return name ? `\${${appendPath(name, expr.path)}}` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return `\${this.behavior.${ch.name}}`;
+      if (expr.field === "value") return `\${${appendPath(`this.behavior.${ch.name}`, expr.path)}}`;
       return null;
     }
   }
@@ -1869,15 +1900,17 @@ function renderLitBindingValue(
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return litPropAccessor(expr.prop, ctx);
+      return appendPath(litPropAccessor(expr.prop, ctx), expr.path);
     case "literal":
       return JSON.stringify(expr.value);
-    case "iterationLocal":
-      return litIterationLocalName(expr.local, ctx);
+    case "iterationLocal": {
+      const name = litIterationLocalName(expr.local, ctx);
+      return name ? appendPath(name, expr.path) : null;
+    }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return `this.behavior.${ch.name}`;
+      if (expr.field === "value") return appendPath(`this.behavior.${ch.name}`, expr.path);
       return null;
     }
   }

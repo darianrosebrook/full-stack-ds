@@ -147,12 +147,33 @@ export const TABLE_COMPOSITION_TAGS: ReadonlySet<string> = new Set([
  * depending on whether the binding sat inside an iteration scope. With
  * `iterationLocal`, that resolution lives in the IR build, not in five
  * separately-duplicated emitter heuristics.
+ *
+ * `path` is an optional dotted projection appended to `prop`/`channel`/
+ * `iterationLocal` roots, e.g. `"iter:item.value"` parses to
+ * `{ kind: "iterationLocal", local: "item", path: ["value"] }`. The grammar
+ * is bounded to object-field reads (BINDING-EXPRESSION-V2-PATH-01):
+ *   - No transforms (`upper`, `length`, ...)
+ *   - No comparisons (`===`, `==`)
+ *   - No optional chaining (`?.`)
+ *   - No array indexing (`[0]`)
+ *   - No function calls (`()`)
+ *   - No boolean / arithmetic expressions
+ *   - No set-membership / contains predicates
+ *   - No fallback expressions (`?? x`)
+ * Each segment must match `[A-Za-z_$][\w$]*`. `literal:` carries no path.
+ * Paths on `channel:` apply *after* the field, so the only well-formed
+ * channel-with-path is `channel:X.value.<seg>(.<seg>)*` (paths on
+ * `.onChange`/`.defaultValue` are syntactically rejected — they're
+ * callbacks/defaults, not value-shaped reads).
+ *
+ * Out of scope this slice: `iterate.source` paths (the iteration root must
+ * still be `prop:X` or `channel:X.value` with no tail).
  */
 export type BindingExpression =
-  | { kind: "prop"; prop: string }
-  | { kind: "channel"; channel: string; field: "value" | "onChange" | "defaultValue" }
+  | { kind: "prop"; prop: string; path?: string[] }
+  | { kind: "channel"; channel: string; field: "value" | "onChange" | "defaultValue"; path?: string[] }
   | { kind: "literal"; value: string }
-  | { kind: "iterationLocal"; local: "index" | "item" };
+  | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] };
 
 /**
  * Iteration directive on a `DomNodeIR`. Resolved from the contract's
@@ -1137,6 +1158,20 @@ function validateBindingAgainstScope(
         `index, or change the iteration kind.`,
       );
     }
+    // BINDING-EXPRESSION-V2-PATH-01: `iter:index` resolves to a `number`
+    // and has no object-field projections. Paths are only valid on
+    // `iter:item` (and only when the item type is object-shaped — that's
+    // not checked here; the framework type-checker enforces it against
+    // the iteration's declared `itemType`).
+    if (binding.local === "index" && binding.path && binding.path.length > 0) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses ` +
+        `'iter:index.${binding.path.join(".")}' but \`iter:index\` resolves ` +
+        `to the loop index (a \`number\`); object-field paths are only ` +
+        `valid on object-shaped iteration items. Use 'iter:item.${binding.path.join(".")}' ` +
+        `if the array's items are objects, or drop the path.`,
+      );
+    }
     return;
   }
   // literal: always accepted.
@@ -1453,6 +1488,22 @@ function parseIterate(node: ContractDomNode): IterationIR | undefined {
         `onChange/defaultValue fields of channels, are not iterable.`,
     );
   }
+  // BINDING-EXPRESSION-V2-PATH-01 explicitly excludes paths on the
+  // iteration root: the iterable must be the raw prop / channel value,
+  // not a projection. A future slice may relax this (e.g. to iterate
+  // over `prop:groups.items` once nested-array semantics are designed),
+  // but until then a path-on-source is rejected so contract authors
+  // don't unintentionally rely on path resolution at the iteration
+  // boundary.
+  if (source.path !== undefined && source.path.length > 0) {
+    throw new Error(
+      `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+        `iterate.source must be a bare prop:<name> or channel:<name>.value ` +
+        `binding (got "${it.source}"). Property paths on the iteration ` +
+        `source are not supported in this slice — they are reserved for ` +
+        `a future nested-iteration grammar.`,
+    );
+  }
   if (it.kind === "array" && (it.itemType === undefined || it.itemType.trim() === "")) {
     throw new Error(
       `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
@@ -1510,12 +1561,30 @@ function parseIfGuard(value: string | undefined): { ifProp: string | undefined; 
  * Parse a binding expression string into its structured form.
  *
  * Grammar (regex-friendly):
- *   binding := "prop:" name
- *            | "channel:" name "." field
+ *   binding := "prop:" name path?
+ *            | "channel:" name "." field path?
  *            | "literal:" value
- *            | "iter:" local
+ *            | "iter:" local path?
  *   field   := "value" | "onChange" | "defaultValue"
  *   local   := "index" | "item"
+ *   path    := ("." segment)+
+ *   segment := identifier ([A-Za-z_$][\w$]*)
+ *
+ * Path constraint (BINDING-EXPRESSION-V2-PATH-01): path is object-field
+ * projection only. Empty segments (`a..b`, `a.`), bracket access (`a[0]`),
+ * optional chaining (`a?.b`), and any operator (`?? x`, `=== x`, `()`) are
+ * syntactically rejected — the expression falls through to `literal` so
+ * downstream emit shows the malformed string in output instead of
+ * silently lowering to garbage. Validators (`validateBindingAgainstScope`,
+ * `iter:index` typing) consume the parsed form and decide semantic
+ * legality (e.g. `iter:index.foo` is a type error: index is `number`).
+ *
+ * Channel-path constraint: only `channel:X.value.<seg>+` is well-formed.
+ * `channel:X.onChange.foo` and `channel:X.defaultValue.foo` parse-fail
+ * because `.onChange` is a callback (no value-shaped projection) and
+ * `.defaultValue` is the default itself (the *initial* value, not a
+ * read-after-defaulting projection). Paths on those fields are reserved
+ * for a future predicate slice if ever needed.
  *
  * Anything not matching falls through as a literal so contracts that
  * misspell don't silently produce empty output. Consumers should still
@@ -1528,33 +1597,70 @@ function parseIfGuard(value: string | undefined): { ifProp: string | undefined; 
  * `parseBindingExpression` only attaches the role.
  *
  * Scope validation (no enclosing iteration; `iter:item` under count
- * iteration) happens in `validateDomNode`, not here, because this function
- * is context-free.
+ * iteration) and typing (`iter:index` is `number`, not an object) happen
+ * in `validateDomNode`, not here, because this function is context-free.
  */
 export function parseBindingExpression(expr: string): BindingExpression {
-  const propMatch = expr.match(/^prop:([A-Za-z_$][\w$-]*)$/);
+  // Path: zero or more `.segment` tails. Anchored to consume the rest of
+  // the string after the root so an unexpected suffix (operators, brackets,
+  // optional chaining) falls through to `literal` instead of being
+  // silently truncated.
+  const pathTail = /(?:\.[A-Za-z_$][\w$]*)*/.source;
+  const propMatch = expr.match(new RegExp(`^prop:([A-Za-z_$][\\w$-]*)(${pathTail})$`));
   if (propMatch) {
-    return { kind: "prop", prop: propMatch[1] };
+    return { kind: "prop", prop: propMatch[1], ...buildPathField(propMatch[2]) };
   }
-  const channelMatch = expr.match(/^channel:([A-Za-z_$][\w$-]*)\.(value|onChange|defaultValue)$/);
-  if (channelMatch) {
+  // Channel paths only apply to `.value`; `.onChange` and `.defaultValue`
+  // refuse a tail by construction (the regex does not allow it).
+  const channelValueMatch = expr.match(
+    new RegExp(`^channel:([A-Za-z_$][\\w$-]*)\\.value(${pathTail})$`),
+  );
+  if (channelValueMatch) {
     return {
       kind: "channel",
-      channel: channelMatch[1],
-      field: channelMatch[2] as "value" | "onChange" | "defaultValue",
+      channel: channelValueMatch[1],
+      field: "value",
+      ...buildPathField(channelValueMatch[2]),
+    };
+  }
+  const channelCallbackMatch = expr.match(
+    /^channel:([A-Za-z_$][\w$-]*)\.(onChange|defaultValue)$/,
+  );
+  if (channelCallbackMatch) {
+    return {
+      kind: "channel",
+      channel: channelCallbackMatch[1],
+      field: channelCallbackMatch[2] as "onChange" | "defaultValue",
     };
   }
   const literalMatch = expr.match(/^literal:(.*)$/);
   if (literalMatch) {
     return { kind: "literal", value: literalMatch[1] };
   }
-  const iterMatch = expr.match(/^iter:(index|item)$/);
+  const iterMatch = expr.match(new RegExp(`^iter:(index|item)(${pathTail})$`));
   if (iterMatch) {
-    return { kind: "iterationLocal", local: iterMatch[1] as "index" | "item" };
+    return {
+      kind: "iterationLocal",
+      local: iterMatch[1] as "index" | "item",
+      ...buildPathField(iterMatch[2]),
+    };
   }
   // Unrecognized — treat the whole expression as a literal so the contract's
   // intent (whatever it was) appears in output for visible failure.
   return { kind: "literal", value: expr };
+}
+
+/**
+ * Convert a leading-dot path tail like `".foo.bar"` (or `""`) into the
+ * spread fragment used to attach a `path` field to a `BindingExpression`.
+ * Returns `{}` when the tail is empty so the resulting binding stays
+ * shape-compatible with V1 (no `path` key present at all).
+ */
+function buildPathField(pathTail: string): { path?: string[] } {
+  if (pathTail.length === 0) return {};
+  // Drop the leading "." then split. Each segment is already validated
+  // by the regex.
+  return { path: pathTail.slice(1).split(".") };
 }
 
 /**
@@ -1583,11 +1689,18 @@ export function promoteIterationLocals(
   iteration: { indexVar: string; itemVar?: string },
 ): BindingExpression {
   if (binding.kind !== "prop") return binding;
+  // Preserve the path field across promotion. V1 contracts never wrote
+  // `prop:item.foo`, so in practice this branch is only hit when the
+  // promotion runs on an already-pathed V2 binding (which itself never
+  // happens — the parser routes `iter:item.foo` straight to
+  // `iterationLocal` without ever being a `prop:` — but the carry is
+  // semantically correct and trivial).
+  const pathField = binding.path && binding.path.length > 0 ? { path: binding.path } : {};
   if (binding.prop === iteration.indexVar) {
-    return { kind: "iterationLocal", local: "index" };
+    return { kind: "iterationLocal", local: "index", ...pathField };
   }
   if (iteration.itemVar !== undefined && binding.prop === iteration.itemVar) {
-    return { kind: "iterationLocal", local: "item" };
+    return { kind: "iterationLocal", local: "item", ...pathField };
   }
   return binding;
 }

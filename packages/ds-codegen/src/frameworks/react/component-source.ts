@@ -1771,10 +1771,10 @@ function renderReactBinding(
   ctx: ReactRenderContext,
 ): string | null {
   switch (expr.kind) {
-    case "prop":
-      return expr.prop.includes("-")
-        ? toCamelCase(expr.prop)
-        : expr.prop;
+    case "prop": {
+      const base = expr.prop.includes("-") ? toCamelCase(expr.prop) : expr.prop;
+      return appendPath(base, expr.path);
+    }
     case "literal":
       return JSON.stringify(expr.value);
     case "iterationLocal": {
@@ -1785,12 +1785,13 @@ function renderReactBinding(
       // accessor wrapping needed.
       const it = ctx.enclosingIteration;
       if (!it) return null; // validator catches this; defensive.
-      return expr.local === "index" ? it.indexVar : (it.itemVar ?? "item");
+      const base = expr.local === "index" ? it.indexVar : (it.itemVar ?? "item");
+      return appendPath(base, expr.path);
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (expr.field === "value") return ch.name;
+      if (expr.field === "value") return appendPath(ch.name, expr.path);
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
         return ch.defaultValueProp;
@@ -1827,6 +1828,17 @@ function renderReactBinding(
       return `() => ${setter}(${ch.name})`;
     }
   }
+}
+
+/**
+ * Append a dotted property path to a base accessor. `base + ""` is `base`;
+ * `base + ["a", "b"]` is `base.a.b`. Identical lowering for all five
+ * frameworks (React JSX, Vue/Angular `{{ }}`, Svelte `{}`, Lit `${ }`) —
+ * the `.x.y` syntax is template-agnostic.
+ */
+function appendPath(base: string, path: readonly string[] | undefined): string {
+  if (!path || path.length === 0) return base;
+  return `${base}.${path.join(".")}`;
 }
 
 function toCamelCase(name: string): string {

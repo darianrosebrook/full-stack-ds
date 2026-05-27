@@ -617,3 +617,142 @@ describe("IR-DOM-ITERATE-CAPABILITY-01: no-opt-in drift guard", () => {
     expect(true).toBe(true);
   });
 });
+
+// ---------------------------------------------------------------------------
+// BINDING-EXPRESSION-V2-PATH-01 — emitter-side path lowering
+// ---------------------------------------------------------------------------
+
+// Object-array iteration: items are `{ value: string; label: string }`.
+// Two bindings exercise the path lowering — `iter:item.value` on an
+// attribute, `iter:item.label` on content. The dispatch must produce
+// `item.value` / `item.label` in all five frameworks with no
+// component-name branch and identical `.x` lowering across frameworks.
+const OBJECT_ARRAY_CONTRACT: ComponentContract = {
+  name: "FixtureObjectArrayPath",
+  layer: "primitive",
+  cssPrefix: "fixture-obj-array",
+  anatomy: {
+    parts: ["root", "row", "label"],
+    dom: {
+      tag: "ul",
+      part: "root",
+      children: [
+        {
+          tag: "li",
+          part: "row",
+          iterate: {
+            source: "prop:rows",
+            kind: "array",
+            itemType: "{ value: string; label: string }",
+          },
+          bindings: {
+            // Attribute binding reads the `value` field of each item.
+            "data-row-value": "iter:item.value",
+          },
+          children: [
+            {
+              tag: "span",
+              part: "label",
+              // Content binding reads the `label` field.
+              content: "iter:item.label",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  props: {
+    styled: {
+      members: [
+        {
+          name: "rows",
+          type: "Array<{ value: string; label: string }>",
+          description: "Object rows; the iteration projects two fields per row.",
+        },
+      ],
+    },
+  },
+} as unknown as ComponentContract;
+
+describe("BINDING-EXPRESSION-V2-PATH-01: object-field path lowering", () => {
+  const ir = buildComponentIR(OBJECT_ARRAY_CONTRACT);
+
+  it("IR carries the path on item-rooted bindings", () => {
+    // The IR shape is the contract between contracts and emitters; pin
+    // it here so a regression in `parseBindingExpression` or
+    // `promoteIterationLocals` is caught upstream of any emitter test.
+    const row = ir.dom!.children[0];
+    expect(row.bindings["data-row-value"]).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+      path: ["value"],
+    });
+    const labelSpan = row.children[0];
+    expect(labelSpan.content).toEqual({
+      kind: "iterationLocal",
+      local: "item",
+      path: ["label"],
+    });
+  });
+
+  describe("React", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+
+    it("emits item.value on the attribute and item.label in content", () => {
+      // React JSX: `{item.value}` interpolates the projection directly.
+      // No alternative idiom is needed — `.field` is plain JS.
+      expect(src).toMatch(/data-row-value=\{item\.value\}/);
+      expect(src).toMatch(/<span[^>]*>\s*\{item\.label\}\s*<\/span>/);
+    });
+
+    it("does NOT introduce an alias / destructure for the path", () => {
+      // Sanity: the emitter doesn't try to be clever (e.g. destructuring
+      // `{ value, label }` from the iteration callback). It lowers the
+      // path as a member access at the call site.
+      expect(src).not.toMatch(/\{\s*value\s*,\s*label\s*\}\s*=\s*item/);
+    });
+  });
+
+  describe("Vue", () => {
+    const src = generateVueComponentSource(ir);
+
+    it("emits item.value in :data-row-value and item.label in {{ }}", () => {
+      expect(src).toMatch(/:data-row-value="item\.value"/);
+      expect(src).toMatch(/<span[^>]*>\s*\{\{ item\.label \}\}\s*<\/span>/);
+    });
+  });
+
+  describe("Svelte", () => {
+    const src = generateSvelteComponentSource(ir);
+
+    it("emits item.value on the attribute and item.label in text content", () => {
+      expect(src).toMatch(/data-row-value=\{item\.value\}/);
+      expect(src).toMatch(/<span[^>]*>\{item\.label\}<\/span>/);
+    });
+  });
+
+  describe("Angular", () => {
+    const src = generateAngularComponentSource(ir);
+
+    it("emits [attr.data-row-value]=\"item.value\" and {{ item.label }} content", () => {
+      expect(src).toMatch(/\[attr\.data-row-value\]="item\.value"/);
+      expect(src).toMatch(/<span[^>]*>[\s\S]*\{\{ item\.label \}\}[\s\S]*<\/span>/);
+    });
+  });
+
+  describe("Lit", () => {
+    const src = generateLitComponentSource(ir);
+
+    it("emits item.value bare (no ifDefined wrap on iteration locals)", () => {
+      // Loop locals introduced by `.map((item, index) => ...)` are never
+      // undefined; the V2 emitter skips `ifDefined` on iterationLocal
+      // bindings — paths inherit the same dispatch.
+      expect(src).toMatch(/data-row-value=\$\{item\.value\}/);
+      expect(src).not.toMatch(/ifDefined\(item\.value\)/);
+    });
+
+    it("emits ${item.label} inside the inner <span>", () => {
+      expect(src).toMatch(/<span[^>]*>[\s\S]*\$\{item\.label\}[\s\S]*<\/span>/);
+    });
+  });
+});
