@@ -1,5 +1,174 @@
 import { describe, expect, it, vi } from "vitest";
 
+const buttonCssBlocks = [
+  {
+    selector: ".button",
+    declarations: {
+      "--fsds-button-size-gap-default": "var(--fsds-core-spacing-size-04, 8px)",
+      "--fsds-button-size-radius": "var(--fsds-core-shape-radius-full, 9999px)",
+      "--fsds-button-size-border": "var(--fsds-core-shape-border-width-hairline, 1px)",
+      "--fsds-button-color-background-default":
+        "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+      "--fsds-button-color-border-default":
+        "var(--fsds-semantic-color-border-light, #fceaea)",
+      "--fsds-button-size-padding-block-medium":
+        "var(--fsds-core-spacing-size-04, 8px)",
+      "--fsds-button-size-padding-inline-medium":
+        "var(--fsds-core-spacing-size-05, 12px)",
+      "--fsds-button-size-minHeight-medium":
+        "var(--fsds-core-dimension-actionMinHeight, 36px)",
+      "--fsds-button-size-fontSize-medium":
+        "var(--fsds-core-typography-ramp-4, 1rem)",
+    },
+  },
+  {
+    selector: ".button--small",
+    declarations: {
+      "--fsds-button-size-padding-block-medium":
+        "var(--fsds-core-spacing-size-03, 4px)",
+      "--fsds-button-size-padding-inline-medium":
+        "var(--fsds-core-spacing-size-04, 8px)",
+      "--fsds-button-size-minHeight-medium":
+        "var(--fsds-core-dimension-actionMinHeightSmall, 28px)",
+      "--fsds-button-size-fontSize-medium":
+        "var(--fsds-core-typography-ramp-3, 0.875rem)",
+    },
+  },
+  {
+    selector: ".button--medium",
+    declarations: {
+      "--fsds-button-size-padding-block-medium":
+        "var(--fsds-core-spacing-size-04, 8px)",
+      "--fsds-button-size-padding-inline-medium":
+        "var(--fsds-core-spacing-size-05, 12px)",
+      "--fsds-button-size-minHeight-medium":
+        "var(--fsds-core-dimension-actionMinHeight, 36px)",
+      "--fsds-button-size-fontSize-medium":
+        "var(--fsds-core-typography-ramp-4, 1rem)",
+    },
+  },
+  {
+    selector: ".button--large",
+    declarations: {
+      "--fsds-button-size-padding-block-medium":
+        "var(--fsds-core-spacing-size-05, 12px)",
+      "--fsds-button-size-padding-inline-medium":
+        "var(--fsds-core-spacing-size-06, 16px)",
+      "--fsds-button-size-minHeight-medium":
+        "var(--fsds-core-dimension-actionMinHeightLarge, 48px)",
+      "--fsds-button-size-fontSize-medium":
+        "var(--fsds-core-typography-ramp-5, 1.125rem)",
+    },
+  },
+  {
+    selector: ".button--primary",
+    declarations: {
+      "--fsds-button-color-background-default":
+        "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+      "--fsds-button-color-border-default":
+        "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
+    },
+  },
+  {
+    selector: ".button--tertiary",
+    declarations: {
+      "--fsds-button-color-background-default": "transparent",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-primary, #141414)",
+      "--fsds-button-color-border-default": "transparent",
+    },
+  },
+  {
+    selector: ".button--secondary",
+    declarations: {
+      "--fsds-button-color-background-default":
+        "var(--fsds-semantic-color-action-background-secondary-default, #efefef)",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-primary, #141414)",
+      "--fsds-button-color-border-default":
+        "var(--fsds-semantic-color-border-default, #8f8f8f)",
+    },
+  },
+  {
+    selector: ".button--destructive",
+    declarations: {
+      "--fsds-button-color-background-default":
+        "var(--fsds-semantic-color-action-background-danger-default, #d9292b)",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
+      "--fsds-button-color-border-default":
+        "var(--fsds-semantic-color-action-background-danger-default, #d9292b)",
+    },
+  },
+  {
+    selector: ".button--ghost",
+    declarations: {
+      "--fsds-button-color-background-default": "transparent",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-primary, #141414)",
+      "--fsds-button-color-border-default": "transparent",
+    },
+  },
+  {
+    selector: ".button--outline",
+    declarations: {
+      "--fsds-button-color-background-default": "transparent",
+      "--fsds-button-color-foreground-default":
+        "var(--fsds-semantic-color-foreground-primary, #141414)",
+      "--fsds-button-color-border-default":
+        "var(--fsds-semantic-color-border-default, #8f8f8f)",
+    },
+  },
+];
+
+const chipCssBlocks = [
+  {
+    selector: ".chip",
+    declarations: {
+      "--fsds-chip-color-background-default":
+        "var(--fsds-semantic-color-action-background-secondary-default, #fafafa)",
+      "--fsds-chip-color-foreground-default":
+        "var(--fsds-semantic-color-action-foreground-secondary-default, #141414)",
+      "--fsds-chip-color-border-default":
+        "var(--fsds-semantic-color-action-border-secondary-default, #aeaeae)",
+      "--fsds-chip-size-padding-horizontal":
+        "var(--fsds-core-spacing-size-04, 8px)",
+      "--fsds-chip-size-padding-vertical":
+        "var(--fsds-core-spacing-size-02, 2px)",
+      "--fsds-chip-size-gap": "var(--fsds-core-spacing-size-02, 2px)",
+      "--fsds-chip-size-radius": "var(--fsds-core-shape-radius-full, 9999px)",
+      "--fsds-chip-size-border":
+        "var(--fsds-core-shape-border-width-hairline, 1px)",
+      "--fsds-chip-text-size":
+        "var(--fsds-semantic-typography-body-04, 12px)",
+    },
+  },
+];
+
+const statusCssBlocks = [
+  {
+    selector: ".status",
+    declarations: {
+      "--fsds-status-color-background-default":
+        "var(--fsds-semantic-color-background-primary, #ffffff)",
+      "--fsds-status-color-foreground-primary":
+        "var(--fsds-semantic-color-foreground-primary, #141414)",
+      "--fsds-status-color-border-default":
+        "var(--fsds-semantic-color-border-primary, #f29495)",
+      "--fsds-status-size-radius-default":
+        "var(--fsds-core-shape-radius-full, 9999px)",
+      "--fsds-status-size-padding-default":
+        "var(--fsds-core-spacing-size-04, 8px)",
+      "--fsds-status-size-border-default":
+        "var(--fsds-core-shape-border-width-hairline, 1px)",
+    },
+  },
+];
+
 vi.mock("./generated/components/index.js", () => ({
   figmaComponentRegistry: {
     Button: {
@@ -16,151 +185,60 @@ vi.mock("./generated/components/index.js", () => ({
         { name: "loadingText", layoutVariant: null },
       ],
       props: [
-        {
-          name: "size",
-          type: "ButtonSize",
-          required: false,
-          defaultExpr: '"medium"',
-        },
-        {
-          name: "variant",
-          type: "ButtonVariant",
-          required: false,
-          defaultExpr: '"primary"',
-        },
+        { name: "variant", type: "ButtonVariant", required: false, defaultExpr: '"primary"' },
       ],
       variants: {
         size: ["small", "medium", "large"],
         variant: ["primary", "secondary", "tertiary", "ghost", "destructive", "outline"],
       },
-      css: {
-        blocks: [
-          {
-            selector: ".button",
-            declarations: {
-              "--fsds-button-size-gap-default": "var(--fsds-core-spacing-size-04, 8px)",
-              "--fsds-button-size-radius": "var(--fsds-core-shape-radius-full, 9999px)",
-              "--fsds-button-size-border": "var(--fsds-core-shape-border-width-hairline, 1px)",
-              "--fsds-button-color-background-default":
-                "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
-              "--fsds-button-color-border-default":
-                "var(--fsds-semantic-color-border-light, #fceaea)",
-              "--fsds-button-size-padding-block-medium":
-                "var(--fsds-core-spacing-size-04, 8px)",
-              "--fsds-button-size-padding-inline-medium":
-                "var(--fsds-core-spacing-size-05, 12px)",
-              "--fsds-button-size-minHeight-medium":
-                "var(--fsds-core-dimension-actionMinHeight, 36px)",
-              "--fsds-button-size-fontSize-medium":
-                "var(--fsds-core-typography-ramp-4, 1rem)",
-            },
-          },
-          {
-            selector: ".button--small",
-            declarations: {
-              "--fsds-button-size-padding-block-medium":
-                "var(--fsds-core-spacing-size-03, 4px)",
-              "--fsds-button-size-padding-inline-medium":
-                "var(--fsds-core-spacing-size-04, 8px)",
-              "--fsds-button-size-minHeight-medium":
-                "var(--fsds-core-dimension-actionMinHeightSmall, 28px)",
-              "--fsds-button-size-fontSize-medium":
-                "var(--fsds-core-typography-ramp-3, 0.875rem)",
-            },
-          },
-          {
-            selector: ".button--medium",
-            declarations: {
-              "--fsds-button-size-padding-block-medium":
-                "var(--fsds-core-spacing-size-04, 8px)",
-              "--fsds-button-size-padding-inline-medium":
-                "var(--fsds-core-spacing-size-05, 12px)",
-              "--fsds-button-size-minHeight-medium":
-                "var(--fsds-core-dimension-actionMinHeight, 36px)",
-              "--fsds-button-size-fontSize-medium":
-                "var(--fsds-core-typography-ramp-4, 1rem)",
-            },
-          },
-          {
-            selector: ".button--large",
-            declarations: {
-              "--fsds-button-size-padding-block-medium":
-                "var(--fsds-core-spacing-size-05, 12px)",
-              "--fsds-button-size-padding-inline-medium":
-                "var(--fsds-core-spacing-size-06, 16px)",
-              "--fsds-button-size-minHeight-medium":
-                "var(--fsds-core-dimension-actionMinHeightLarge, 48px)",
-              "--fsds-button-size-fontSize-medium":
-                "var(--fsds-core-typography-ramp-5, 1.125rem)",
-            },
-          },
-          {
-            selector: ".button--primary",
-            declarations: {
-              "--fsds-button-color-background-default":
-                "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
-              "--fsds-button-color-border-default":
-                "var(--fsds-semantic-color-action-background-primary-default, #d9292b)",
-            },
-          },
-          {
-            selector: ".button--secondary",
-            declarations: {
-              "--fsds-button-color-background-default":
-                "var(--fsds-semantic-color-action-background-secondary-default, #efefef)",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-primary, #141414)",
-              "--fsds-button-color-border-default":
-                "var(--fsds-semantic-color-border-default, #8f8f8f)",
-            },
-          },
-          {
-            selector: ".button--tertiary",
-            declarations: {
-              "--fsds-button-color-background-default": "transparent",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-primary, #141414)",
-              "--fsds-button-color-border-default": "transparent",
-            },
-          },
-          {
-            selector: ".button--ghost",
-            declarations: {
-              "--fsds-button-color-background-default": "transparent",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-primary, #141414)",
-              "--fsds-button-color-border-default": "transparent",
-            },
-          },
-          {
-            selector: ".button--destructive",
-            declarations: {
-              "--fsds-button-color-background-default":
-                "var(--fsds-semantic-color-action-background-danger-default, #d9292b)",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-inverse, #fafafa)",
-              "--fsds-button-color-border-default":
-                "var(--fsds-semantic-color-action-background-danger-default, #d9292b)",
-            },
-          },
-          {
-            selector: ".button--outline",
-            declarations: {
-              "--fsds-button-color-background-default": "transparent",
-              "--fsds-button-color-foreground-default":
-                "var(--fsds-semantic-color-foreground-primary, #141414)",
-              "--fsds-button-color-border-default":
-                "var(--fsds-semantic-color-border-default, #8f8f8f)",
-            },
-          },
-        ],
+      css: { blocks: buttonCssBlocks },
+    },
+    Chip: {
+      schemaVersion: 1,
+      component: {
+        name: "Chip",
+        cssPrefix: "chip",
+        rootElement: "button",
+        effectiveRole: "button",
       },
+      anatomy: [
+        { name: "root", layoutVariant: null },
+        { name: "icon", layoutVariant: null },
+        { name: "text", layoutVariant: null },
+      ],
+      props: [
+        { name: "variant", type: "ChipVariant", required: false, defaultExpr: '"default"' },
+        { name: "size", type: "ChipSize", required: false, defaultExpr: '"medium"' },
+      ],
+      variants: {
+        variant: ["default", "selected", "dismissible"],
+        size: ["small", "medium", "large"],
+      },
+      css: { blocks: chipCssBlocks },
+    },
+    Status: {
+      schemaVersion: 1,
+      component: {
+        name: "Status",
+        cssPrefix: "status",
+        rootElement: "span",
+        effectiveRole: null,
+      },
+      anatomy: [
+        { name: "root", layoutVariant: null },
+        { name: "icon", layoutVariant: null },
+        { name: "label", layoutVariant: null },
+      ],
+      props: [
+        { name: "status", type: "StatusKind", required: false, defaultExpr: '"info"' },
+      ],
+      variants: {
+        status: ["info", "success", "warning", "danger", "error"],
+      },
+      css: { blocks: statusCssBlocks },
     },
     Card: {
+      // Ineligible: no variants. Should fall through to placeholder path.
       schemaVersion: 1,
       component: {
         name: "Card",
@@ -168,19 +246,29 @@ vi.mock("./generated/components/index.js", () => ({
         rootElement: "div",
         effectiveRole: null,
       },
-      anatomy: [
-        { name: "root", layoutVariant: null },
-        { name: "media", layoutVariant: "horizontal" },
-      ],
-      props: [
-        {
-          name: "variant",
-          type: "'default' | 'elevated'",
-          required: false,
-          defaultExpr: '"default"',
-        },
-      ],
-      variants: { variant: ["default", "elevated"] },
+      anatomy: [{ name: "root", layoutVariant: null }],
+      props: [],
+      variants: {},
+      css: {
+        blocks: [{ selector: ".card", declarations: { padding: "16px" } }],
+      },
+    },
+    Avatar: {
+      // Eligible variants, but NOT in this slice's allowlist. Falls through
+      // to placeholder_deferred.
+      schemaVersion: 1,
+      component: {
+        name: "Avatar",
+        cssPrefix: "avatar",
+        rootElement: "span",
+        effectiveRole: null,
+      },
+      anatomy: [{ name: "root", layoutVariant: null }],
+      props: [],
+      variants: { size: ["sm", "md", "lg"] },
+      css: {
+        blocks: [{ selector: ".avatar", declarations: { padding: "8px" } }],
+      },
     },
   },
   figmaPrimitiveRegistry: {
@@ -321,161 +409,274 @@ function setupFigma(): {
   return { pages, components, componentSets, texts, notify, closePlugin };
 }
 
-describe("Figma plugin scaffold materialization", () => {
-  it("scaffolds the components page with Stack primitive + Button component set + non-Button placeholders", async () => {
+describe("Figma plugin: generic component-set materializer", () => {
+  it("routes Button (allowlisted, eligible) into component-set path", async () => {
     const { main } = await import("./plugin.js");
-    const { pages, components, componentSets, notify, closePlugin } = setupFigma();
-
+    const { componentSets } = setupFigma();
     await main();
 
-    expect(pages.map((p) => p.name)).toEqual(["Full Stack DS / Components"]);
-
-    // 1 Stack set + 1 Button set = 2 component sets total.
-    expect(componentSets).toHaveLength(2);
-    const stackSet = componentSets.find((set) => set.name === "Stack");
     const buttonSet = componentSets.find((set) => set.name === "Button");
-    expect(stackSet).toBeDefined();
     expect(buttonSet).toBeDefined();
-
-    // Stack: 2 children (vertical + horizontal).
-    expect(stackSet!.children.map((c) => c.name)).toEqual([
-      "variant=vertical",
-      "variant=horizontal",
-    ]);
-
-    // Button: 3 sizes × 6 variants = 18 children.
+    // 3 sizes × 6 variants = 18.
     expect(buttonSet!.children).toHaveLength(18);
+    expect(buttonSet!.pluginData["fsds.materializer"]).toBe("component-set");
+    expect(buttonSet!.pluginData["fsds.eligibility.reason"]).toBe(
+      "component_set_materialized",
+    );
+  });
 
-    // Non-Button (Card) goes through the placeholder leaf path: a single
-    // FigmaComponentNode on the page, not a component set.
+  it("routes Chip (allowlisted, eligible) into the same generic path", async () => {
+    const { main } = await import("./plugin.js");
+    const { componentSets } = setupFigma();
+    await main();
+
+    const chipSet = componentSets.find((set) => set.name === "Chip");
+    expect(chipSet).toBeDefined();
+    // 3 variants × 3 sizes = 9.
+    expect(chipSet!.children).toHaveLength(9);
+    expect(chipSet!.pluginData["fsds.materializer"]).toBe("component-set");
+    expect(chipSet!.pluginData["fsds.eligibility.reason"]).toBe(
+      "component_set_materialized",
+    );
+    expect(chipSet!.pluginData["fsds.variantMatrix.size"]).toBe("9");
+
+    // Variant names derived from descriptor — same path as Button.
+    const names = chipSet!.children.map((c) => c.name);
+    expect(names).toContain("variant=default, size=small");
+    expect(names).toContain("variant=selected, size=medium");
+    expect(names).toContain("variant=dismissible, size=large");
+  });
+
+  it("routes Status (allowlisted, single axis) into the same generic path", async () => {
+    const { main } = await import("./plugin.js");
+    const { componentSets } = setupFigma();
+    await main();
+
+    const statusSet = componentSets.find((set) => set.name === "Status");
+    expect(statusSet).toBeDefined();
+    // 5 statuses.
+    expect(statusSet!.children).toHaveLength(5);
+    expect(statusSet!.pluginData["fsds.materializer"]).toBe("component-set");
+
+    const names = statusSet!.children.map((c) => c.name);
+    expect(names).toEqual([
+      "status=info",
+      "status=success",
+      "status=warning",
+      "status=danger",
+      "status=error",
+    ]);
+  });
+
+  it("Card (no variants) classifies as placeholder_no_variants and falls back to leaf path", async () => {
+    const { main } = await import("./plugin.js");
+    const { components, componentSets } = setupFigma();
+    await main();
+
+    expect(componentSets.find((set) => set.name === "Card")).toBeUndefined();
     const cardComponent = components.find((c) => c.name === "Card");
     expect(cardComponent).toBeDefined();
-    expect(cardComponent!.parent).toBe(pages[0]);
-    expect(cardComponent!.children.map((c) => c.kind)).toEqual([
-      "instance",
-      "instance",
-    ]);
-
-    expect(notify).toHaveBeenCalledWith(
-      "Full Stack DS: scaffolded Stack + 2 component(s).",
+    expect(cardComponent!.pluginData["fsds.materializer"]).toBe(
+      "placeholder-leaf",
     );
-    expect(closePlugin).toHaveBeenCalledWith(
-      "Scaffolded Stack + 2 component(s).",
+    expect(cardComponent!.pluginData["fsds.eligibility.reason"]).toBe(
+      "placeholder_no_variants",
     );
   });
 
-  it("Button component set carries variant property pairs derived from descriptor.variants", async () => {
+  it("Avatar (has variants but NOT allowlisted) classifies as placeholder_deferred", async () => {
+    const { main } = await import("./plugin.js");
+    const { components, componentSets } = setupFigma();
+    await main();
+
+    expect(componentSets.find((set) => set.name === "Avatar")).toBeUndefined();
+    const avatarComponent = components.find((c) => c.name === "Avatar");
+    expect(avatarComponent).toBeDefined();
+    expect(avatarComponent!.pluginData["fsds.materializer"]).toBe(
+      "placeholder-leaf",
+    );
+    expect(avatarComponent!.pluginData["fsds.eligibility.reason"]).toBe(
+      "placeholder_deferred",
+    );
+  });
+
+  it("Button per-variant geometry is derived from descriptor CSS via generic semantic extraction", async () => {
+    const { main } = await import("./plugin.js");
     const { componentSets } = setupFigma();
-    const { main } = await import("./plugin.js");
     await main();
 
     const buttonSet = componentSets.find((set) => set.name === "Button")!;
-    const variantNames = buttonSet.children.map((c) => c.name);
+    const small = buttonSet.children.find(
+      (c) => c.name === "size=small, variant=primary",
+    )!;
+    const medium = buttonSet.children.find(
+      (c) => c.name === "size=medium, variant=primary",
+    )!;
+    const large = buttonSet.children.find(
+      (c) => c.name === "size=large, variant=primary",
+    )!;
 
-    expect(variantNames).toContain("size=small, variant=primary");
-    expect(variantNames).toContain("size=medium, variant=primary");
-    expect(variantNames).toContain("size=large, variant=outline");
-    expect(variantNames).toContain("size=small, variant=destructive");
-
-    // Cartesian product completeness.
-    const sizes = ["small", "medium", "large"];
-    const variants = ["primary", "secondary", "tertiary", "ghost", "destructive", "outline"];
-    for (const size of sizes) {
-      for (const variant of variants) {
-        expect(variantNames).toContain(`size=${size}, variant=${variant}`);
-      }
-    }
-
-    expect(buttonSet.pluginData["fsds.materializer"]).toBe("component-set");
-    expect(buttonSet.pluginData["fsds.variantMatrix.size"]).toBe("18");
-  });
-
-  it("each Button variant has horizontal layout, a label text child, and CSS-derived sizing/styling", async () => {
-    const { componentSets, texts } = setupFigma();
-    const { main } = await import("./plugin.js");
-    await main();
-
-    const buttonSet = componentSets.find((set) => set.name === "Button")!;
-    const small = buttonSet.children.find((c) => c.name === "size=small, variant=primary")!;
-    const medium = buttonSet.children.find((c) => c.name === "size=medium, variant=primary")!;
-    const large = buttonSet.children.find((c) => c.name === "size=large, variant=primary")!;
-
-    for (const variant of [small, medium, large]) {
-      expect(variant.layoutMode).toBe("HORIZONTAL");
-      expect(variant.primaryAxisAlignItems).toBe("CENTER");
-      expect(variant.counterAxisAlignItems).toBe("CENTER");
-      expect(variant.children).toHaveLength(1);
-      expect(variant.children[0].kind).toBe("text");
-      expect(variant.children[0].characters).toBe("Button");
-    }
-
-    // Size differentiation: small=4 pad-block / 8 pad-inline / 28 min-height.
+    // Padding-block / padding-inline / minHeight differ across sizes,
+    // pulled from `.button--<size>` declarations via generic
+    // padding-block/padding-inline/min-height name matching.
     expect(small.paddingTop).toBe(4);
     expect(small.paddingLeft).toBe(8);
     expect(small.minHeight).toBe(28);
-    // Medium: 8 / 12 / 36.
     expect(medium.paddingTop).toBe(8);
     expect(medium.paddingLeft).toBe(12);
     expect(medium.minHeight).toBe(36);
-    // Large: 12 / 16 / 48.
     expect(large.paddingTop).toBe(12);
     expect(large.paddingLeft).toBe(16);
     expect(large.minHeight).toBe(48);
 
-    // Primary variant has a background fill from the variant block's fallback hex.
+    // Background fill: primary block carries hex fallback → resolved.
     expect(medium.fills).toBeDefined();
     expect(medium.fills!.length).toBe(1);
     expect(medium.fills![0].type).toBe("SOLID");
-    // #d9292b ≈ rgb(217, 41, 43).
     expect(medium.fills![0].color.r).toBeCloseTo(217 / 255, 2);
 
-    // Tertiary, ghost, outline all have `transparent` background — fills cleared to [].
+    // Transparent background variants (ghost/tertiary/outline) → fills cleared.
     const tertiary = buttonSet.children.find(
       (c) => c.name === "size=medium, variant=tertiary",
     )!;
     expect(tertiary.fills).toEqual([]);
 
-    // Text label fontSize derived from size block, rem→px (1rem=16, 0.875rem=14, 1.125rem=18).
-    const smallLabel = small.children[0];
-    const mediumLabel = medium.children[0];
-    const largeLabel = large.children[0];
-    expect(smallLabel.fontSize).toBeCloseTo(14, 1);
-    expect(mediumLabel.fontSize).toBeCloseTo(16, 1);
-    expect(largeLabel.fontSize).toBeCloseTo(18, 1);
-
-    // Text label has a fill from the variant's foreground color.
-    expect(mediumLabel.fills).toBeDefined();
-    expect(mediumLabel.fills![0].type).toBe("SOLID");
-
-    // Sanity: as many text nodes were created as there are variants.
-    expect(texts).toHaveLength(buttonSet.children.length);
+    // fontSize differentiation: small=0.875rem→14, medium=1rem→16, large=1.125rem→18.
+    expect(small.children[0].fontSize).toBeCloseTo(14, 1);
+    expect(medium.children[0].fontSize).toBeCloseTo(16, 1);
+    expect(large.children[0].fontSize).toBeCloseTo(18, 1);
   });
 
-  it("Button set records descriptor metadata via setPluginData", async () => {
-    const { componentSets } = setupFigma();
+  it("Chip variants share base-block styling (no per-variant CSS in descriptor → no differentiation, but no invented styling either)", async () => {
     const { main } = await import("./plugin.js");
+    const { componentSets } = setupFigma();
     await main();
 
-    const buttonSet = componentSets.find((set) => set.name === "Button")!;
-    expect(buttonSet.pluginData).toMatchObject({
-      "fsds.component": "Button",
-      "fsds.cssPrefix": "button",
-      "fsds.descriptorSchemaVersion": "1",
-      "fsds.materializer": "component-set",
-      "fsds.variantMatrix.size": "18",
-    });
-    expect(buttonSet.pluginData["fsds.variant.size"]).toBe(
-      JSON.stringify(["small", "medium", "large"]),
+    const chipSet = componentSets.find((set) => set.name === "Chip")!;
+    // All 9 Chip variants pull from the same base block — geometry and
+    // fills should match across them. This is the *correct* behavior
+    // when the contract doesn't carry per-variant CSS; the materializer
+    // must not invent differentiation.
+    const first = chipSet.children[0];
+    const last = chipSet.children[8];
+
+    // Base block declares `--fsds-chip-size-padding-horizontal: 8px` and
+    // `--fsds-chip-size-padding-vertical: 2px` (fallback hex extracted).
+    expect(first.paddingTop).toBe(2);
+    expect(first.paddingLeft).toBe(8);
+    expect(last.paddingTop).toBe(2);
+    expect(last.paddingLeft).toBe(8);
+
+    // Background fill resolved from base block's --fsds-chip-color-background-default
+    // (#fafafa). Same for all variants.
+    expect(first.fills).toBeDefined();
+    expect(first.fills!.length).toBe(1);
+    expect(first.fills![0].color.r).toBeCloseTo(0xfa / 255, 2);
+    expect(last.fills![0].color.r).toBeCloseTo(0xfa / 255, 2);
+
+    // fontSize from --fsds-chip-text-size: 12px.
+    expect(first.children[0].fontSize).toBe(12);
+
+    // Label text is the descriptor's component name.
+    expect(first.children[0].characters).toBe("Chip");
+  });
+
+  it("Status variants share base-block styling, label text matches component name", async () => {
+    const { main } = await import("./plugin.js");
+    const { componentSets } = setupFigma();
+    await main();
+
+    const statusSet = componentSets.find((set) => set.name === "Status")!;
+    const info = statusSet.children.find((c) => c.name === "status=info")!;
+    const error = statusSet.children.find((c) => c.name === "status=error")!;
+
+    // Both should have the same base-block padding (8px from
+    // --fsds-status-size-padding-default).
+    expect(info.paddingTop).toBe(8);
+    expect(error.paddingTop).toBe(8);
+
+    // Both should have the same background (#ffffff).
+    expect(info.fills![0].color.r).toBeCloseTo(1, 2);
+    expect(error.fills![0].color.r).toBeCloseTo(1, 2);
+
+    // Label is component name.
+    expect(info.children[0].characters).toBe("Status");
+    expect(error.children[0].characters).toBe("Status");
+  });
+
+  it("classifyDescriptorForMaterialization is exported and pure", async () => {
+    const { classifyDescriptorForMaterialization } = await import("./plugin.js");
+    // No css blocks → placeholder_missing_css.
+    expect(
+      classifyDescriptorForMaterialization({
+        schemaVersion: 1,
+        component: { name: "Button", cssPrefix: "button" },
+        anatomy: [],
+        props: [],
+        variants: { size: ["small"] },
+      }),
+    ).toBe("placeholder_missing_css");
+
+    // Empty variants → placeholder_no_variants.
+    expect(
+      classifyDescriptorForMaterialization({
+        schemaVersion: 1,
+        component: { name: "Button", cssPrefix: "button" },
+        anatomy: [],
+        props: [],
+        variants: {},
+        css: { blocks: [{ selector: ".button", declarations: {} }] },
+      }),
+    ).toBe("placeholder_no_variants");
+
+    // Variants + css + allowlisted → component_set_materialized.
+    expect(
+      classifyDescriptorForMaterialization({
+        schemaVersion: 1,
+        component: { name: "Button", cssPrefix: "button" },
+        anatomy: [],
+        props: [],
+        variants: { size: ["small"] },
+        css: { blocks: [{ selector: ".button", declarations: {} }] },
+      }),
+    ).toBe("component_set_materialized");
+
+    // Variants + css + NOT allowlisted → placeholder_deferred.
+    expect(
+      classifyDescriptorForMaterialization({
+        schemaVersion: 1,
+        component: { name: "Tooltip", cssPrefix: "tooltip" },
+        anatomy: [],
+        props: [],
+        variants: { variant: ["default"] },
+        css: { blocks: [{ selector: ".tooltip", declarations: {} }] },
+      }),
+    ).toBe("placeholder_deferred");
+  });
+
+  it("scaffolds full page: 1 Stack set + 3 component sets (Button/Chip/Status) + 2 placeholder leaves (Card/Avatar)", async () => {
+    const { main } = await import("./plugin.js");
+    const { pages, components, componentSets, notify, closePlugin } = setupFigma();
+    await main();
+
+    expect(pages.map((p) => p.name)).toEqual(["Full Stack DS / Components"]);
+    // 1 Stack set + 3 generic-materialized sets = 4 component sets.
+    expect(componentSets).toHaveLength(4);
+    const setNames = componentSets.map((s) => s.name).sort();
+    expect(setNames).toEqual(["Button", "Chip", "Stack", "Status"]);
+
+    // Card + Avatar materialized as placeholder leaves.
+    const leafNames = components
+      .filter((c) => c.parent?.kind === "page")
+      .map((c) => c.name);
+    expect(leafNames).toContain("Card");
+    expect(leafNames).toContain("Avatar");
+
+    expect(notify).toHaveBeenCalledWith(
+      "Full Stack DS: scaffolded Stack + 5 component(s).",
     );
-    expect(buttonSet.pluginData["fsds.variant.variant"]).toBe(
-      JSON.stringify([
-        "primary",
-        "secondary",
-        "tertiary",
-        "ghost",
-        "destructive",
-        "outline",
-      ]),
+    expect(closePlugin).toHaveBeenCalledWith(
+      "Scaffolded Stack + 5 component(s).",
     );
   });
 });

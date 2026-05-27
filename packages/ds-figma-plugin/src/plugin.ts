@@ -44,6 +44,21 @@ type StackVariants = {
   horizontal: FigmaComponentNode;
 };
 
+/**
+ * Components selected for the generic component-set materializer proof.
+ * The materializer body does not branch on component name; this allowlist
+ * only gates *which* descriptors enter the component-set path versus the
+ * placeholder leaf path.
+ */
+const COMPONENT_SET_ALLOWLIST: readonly string[] = ["Button", "Chip", "Status"];
+
+type EligibilityReason =
+  | "component_set_materialized"
+  | "placeholder_no_variants"
+  | "placeholder_missing_css"
+  | "placeholder_unsupported_shape"
+  | "placeholder_deferred";
+
 export async function main(): Promise<void> {
   await figma.loadFontAsync({ family: "Inter", style: "Regular" });
 
@@ -52,10 +67,13 @@ export async function main(): Promise<void> {
   const stackVariants = materializeStackPrimitive(componentsPage);
   const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];
   for (const descriptor of descriptors) {
-    if (descriptor.component.name === "Button") {
-      materializeButtonComponentSet(descriptor, componentsPage);
+    const eligibility = classifyDescriptorForMaterialization(descriptor);
+    if (eligibility === "component_set_materialized") {
+      materializeComponentSet(descriptor, componentsPage);
     } else {
-      componentsPage.appendChild(materializeLeafComponent(descriptor, stackVariants));
+      componentsPage.appendChild(
+        materializeLeafComponent(descriptor, stackVariants, eligibility),
+      );
     }
   }
 
@@ -67,6 +85,36 @@ function ensurePage(name: string): FigmaPageNode {
   const page = figma.createPage();
   page.name = name;
   return page;
+}
+
+/**
+ * Selects which materialization path a descriptor takes. The allowlist
+ * gates entry to the generic component-set path; eligibility reasons are
+ * declarative facts about the descriptor, not policy decisions. The
+ * generic materializer below does not consume this classifier — once a
+ * descriptor enters `materializeComponentSet`, everything is driven by
+ * `descriptor.variants` and `descriptor.css`.
+ */
+export function classifyDescriptorForMaterialization(
+  descriptor: FigmaComponentDescriptor,
+): EligibilityReason {
+  const variantAxes = Object.keys(descriptor.variants ?? {}).filter(
+    (axis) => descriptor.variants[axis]?.length > 0,
+  );
+  if (variantAxes.length === 0) {
+    return "placeholder_no_variants";
+  }
+  const blocks = descriptor.css?.blocks ?? [];
+  const hasBaseBlock = blocks.some(
+    (block) => block.selector === `.${descriptor.component.cssPrefix}`,
+  );
+  if (!hasBaseBlock) {
+    return "placeholder_missing_css";
+  }
+  if (!COMPONENT_SET_ALLOWLIST.includes(descriptor.component.name)) {
+    return "placeholder_deferred";
+  }
+  return "component_set_materialized";
 }
 
 function materializeStackPrimitive(parent: FigmaPageNode): StackVariants {
@@ -99,6 +147,7 @@ function createStackVariantComponent(
 function materializeLeafComponent(
   descriptor: FigmaComponentDescriptor,
   stack: StackVariants,
+  eligibility: EligibilityReason,
 ): FigmaComponentNode {
   const component = figma.createComponent();
   component.name = descriptor.component.name;
@@ -111,6 +160,8 @@ function materializeLeafComponent(
   component.resize(320, 200);
 
   recordDescriptorPluginData(component, descriptor);
+  component.setPluginData("fsds.materializer", "placeholder-leaf");
+  component.setPluginData("fsds.eligibility.reason", eligibility);
 
   const parts = descriptor.anatomy.length > 0
     ? descriptor.anatomy
@@ -140,7 +191,18 @@ function recordDescriptorPluginData(
   }
 }
 
-function materializeButtonComponentSet(
+/**
+ * Generic descriptor-driven materializer. Consumes only:
+ *   - `descriptor.variants` (axis name → values) for the variant matrix
+ *   - `descriptor.css.blocks` for shallow style facts via semantic
+ *     declaration-name matching (no component-specific token literals)
+ *   - `descriptor.component.cssPrefix` to locate base + per-variant blocks
+ *
+ * Does not branch on component name. Does not know about Button-, Chip-,
+ * or Status-specific anything. Eligibility is decided by the classifier
+ * above; once routed here, materialization is uniform.
+ */
+function materializeComponentSet(
   descriptor: FigmaComponentDescriptor,
   parent: FigmaPageNode,
 ): FigmaComponentSetNode {
@@ -149,7 +211,7 @@ function materializeButtonComponentSet(
   const baseBlock = blocksBySelector.get(`.${descriptor.component.cssPrefix}`) ?? null;
 
   const variantComponents: FigmaComponentNode[] = rows.map((row) =>
-    createButtonVariantComponent(descriptor, row, blocksBySelector, baseBlock),
+    createVariantComponent(descriptor, row, blocksBySelector, baseBlock),
   );
 
   const set = figma.combineAsVariants(variantComponents, parent);
@@ -157,20 +219,32 @@ function materializeButtonComponentSet(
   recordDescriptorPluginData(set, descriptor);
   set.setPluginData("fsds.materializer", "component-set");
   set.setPluginData("fsds.variantMatrix.size", String(rows.length));
+  set.setPluginData("fsds.eligibility.reason", "component_set_materialized");
   return set;
 }
 
-function createButtonVariantComponent(
+function createVariantComponent(
   descriptor: FigmaComponentDescriptor,
   row: VariantRow,
   blocksBySelector: Map<string, FigmaCssBlock>,
   baseBlock: FigmaCssBlock | null,
 ): FigmaComponentNode {
   const prefix = descriptor.component.cssPrefix;
-  const sizeBlock = row.size ? blocksBySelector.get(`.${prefix}--${row.size}`) ?? null : null;
-  const variantBlock = row.variant
-    ? blocksBySelector.get(`.${prefix}--${row.variant}`) ?? null
-    : null;
+  // For each (axis, value) pair, locate a `.<prefix>--<value>` block. The
+  // materializer does not know which axis carries color vs size — it
+  // collects every matching block and lets the categorical extractor
+  // resolve declarations by semantic name.
+  const variantBlocks: FigmaCssBlock[] = [];
+  for (const [, value] of row.pairs) {
+    const block = blocksBySelector.get(`.${prefix}--${value}`);
+    if (block) variantBlocks.push(block);
+  }
+  // Lookup order: variant-scoped blocks first (more specific), then base.
+  // Mirrors CSS cascade specificity for class selectors of equal weight,
+  // resolved by source order — variant blocks are emitted after base.
+  const lookupOrder: FigmaCssBlock[] = baseBlock
+    ? [...variantBlocks, baseBlock]
+    : variantBlocks;
 
   const component = figma.createComponent();
   component.name = formatVariantName(row.pairs);
@@ -180,63 +254,41 @@ function createButtonVariantComponent(
   component.primaryAxisSizingMode = "AUTO";
   component.counterAxisSizingMode = "AUTO";
 
-  const padBlock = pickPx(sizeBlock, "--fsds-button-size-padding-block-medium")
-    ?? pickPx(baseBlock, "--fsds-box-model-padding-block-start")
-    ?? 8;
-  const padInline = pickPx(sizeBlock, "--fsds-button-size-padding-inline-medium")
-    ?? pickPx(baseBlock, "--fsds-box-model-padding-inline-start")
-    ?? 12;
-  const minHeight = pickPx(sizeBlock, "--fsds-button-size-minHeight-medium")
-    ?? pickPx(baseBlock, "--fsds-box-model-min-height")
-    ?? 36;
-  const itemSpacing = pickPx(baseBlock, "--fsds-button-size-gap-default")
-    ?? pickPx(baseBlock, "--fsds-box-model-gap")
-    ?? 8;
-  const cornerRadius = pickPx(baseBlock, "--fsds-button-size-radius") ?? 0;
-  const strokeWeight = pickPx(baseBlock, "--fsds-button-size-border") ?? 1;
+  const styles = extractShallowStyles(lookupOrder);
 
-  component.paddingTop = padBlock;
-  component.paddingBottom = padBlock;
-  component.paddingLeft = padInline;
-  component.paddingRight = padInline;
-  component.itemSpacing = itemSpacing;
-  component.cornerRadius = cornerRadius;
-  component.minHeight = minHeight;
-  component.resize(Math.max(minHeight * 2.5, 96), minHeight);
+  if (styles.paddingBlock !== null) {
+    component.paddingTop = styles.paddingBlock;
+    component.paddingBottom = styles.paddingBlock;
+  }
+  if (styles.paddingInline !== null) {
+    component.paddingLeft = styles.paddingInline;
+    component.paddingRight = styles.paddingInline;
+  }
+  if (styles.gap !== null) component.itemSpacing = styles.gap;
+  if (styles.cornerRadius !== null) component.cornerRadius = styles.cornerRadius;
+  if (styles.minHeight !== null) component.minHeight = styles.minHeight;
+  if (styles.minHeight !== null) {
+    component.resize(Math.max(styles.minHeight * 2.5, 96), styles.minHeight);
+  }
 
-  const backgroundDecl = pickDecl(variantBlock, "--fsds-button-color-background-default")
-    ?? pickDecl(baseBlock, "--fsds-button-color-background-default");
-  const backgroundFill = backgroundDecl ? resolveSolidPaint(backgroundDecl) : null;
-  if (backgroundFill) {
-    component.fills = [backgroundFill];
-  } else if (isTransparent(backgroundDecl)) {
+  if (styles.backgroundFill) {
+    component.fills = [styles.backgroundFill];
+  } else if (styles.backgroundIsTransparent) {
     component.fills = [];
   }
 
-  const borderDecl = pickDecl(variantBlock, "--fsds-button-color-border-default")
-    ?? pickDecl(baseBlock, "--fsds-button-color-border-default");
-  const borderFill = borderDecl ? resolveSolidPaint(borderDecl) : null;
-  if (borderFill) {
-    component.strokes = [borderFill];
-    component.strokeWeight = strokeWeight;
-  } else if (isTransparent(borderDecl)) {
+  if (styles.borderFill) {
+    component.strokes = [styles.borderFill];
+    if (styles.strokeWeight !== null) component.strokeWeight = styles.strokeWeight;
+  } else if (styles.borderIsTransparent) {
     component.strokes = [];
   }
 
-  const foregroundDecl = pickDecl(variantBlock, "--fsds-button-color-foreground-default")
-    ?? pickDecl(baseBlock, "--fsds-button-color-foreground-default");
-  const foregroundFill = foregroundDecl ? resolveSolidPaint(foregroundDecl) : null;
-
   const label = figma.createText();
   label.name = "label";
-  label.characters = "Button";
-  const fontSize = pickPx(sizeBlock, "--fsds-button-size-fontSize-medium")
-    ?? pickPx(baseBlock, "--fsds-button-size-fontSize-medium")
-    ?? 16;
-  label.fontSize = fontSize;
-  if (foregroundFill) {
-    label.fills = [foregroundFill];
-  }
+  label.characters = descriptor.component.name;
+  if (styles.fontSize !== null) label.fontSize = styles.fontSize;
+  if (styles.foregroundFill) label.fills = [styles.foregroundFill];
   component.appendChild(label);
 
   return component;
@@ -244,8 +296,6 @@ function createButtonVariantComponent(
 
 type VariantRow = {
   pairs: Array<[string, string]>;
-  size?: string;
-  variant?: string;
 };
 
 function enumerateVariantMatrix(
@@ -265,14 +315,7 @@ function enumerateVariantMatrix(
     }
     rows = next;
   }
-  return rows.map((pairs) => {
-    const lookup = Object.fromEntries(pairs);
-    return {
-      pairs,
-      size: lookup.size,
-      variant: lookup.variant,
-    };
-  });
+  return rows.map((pairs) => ({ pairs }));
 }
 
 function formatVariantName(pairs: Array<[string, string]>): string {
@@ -288,19 +331,174 @@ function indexCssBlocks(blocks: FigmaCssBlock[]): Map<string, FigmaCssBlock> {
   return map;
 }
 
-function pickDecl(block: FigmaCssBlock | null, name: string): string | null {
-  if (!block) return null;
-  return block.declarations[name] ?? null;
+type ShallowStyles = {
+  backgroundFill: FigmaSolidPaint | null;
+  backgroundIsTransparent: boolean;
+  foregroundFill: FigmaSolidPaint | null;
+  borderFill: FigmaSolidPaint | null;
+  borderIsTransparent: boolean;
+  paddingBlock: number | null;
+  paddingInline: number | null;
+  gap: number | null;
+  cornerRadius: number | null;
+  minHeight: number | null;
+  strokeWeight: number | null;
+  fontSize: number | null;
+};
+
+/**
+ * Semantic-category style extractor. Walks declarations of each block in
+ * specificity order looking for declaration *names* (or top-level CSS
+ * properties) that signal a category, and returns the first resolvable
+ * value per category.
+ *
+ * Categories handled:
+ *   background / foreground / border (paints)
+ *   border-radius / padding-block / padding-inline / gap / font-size /
+ *   min-height / border-width (lengths)
+ *
+ * The extractor knows nothing about `--fsds-button-*` literals; it
+ * matches on substrings of declaration names. Components whose CSS
+ * blocks don't carry these signals produce variants with omitted
+ * styling — that's the correct behavior, not a bug.
+ */
+function extractShallowStyles(blocks: FigmaCssBlock[]): ShallowStyles {
+  return {
+    backgroundFill: resolveCategoricalPaint(blocks, [
+      "background",
+    ]),
+    backgroundIsTransparent: hasCategoricalTransparent(blocks, ["background"]),
+    foregroundFill: resolveCategoricalPaint(blocks, [
+      "foreground",
+      "color-text",
+      "text-color",
+    ]),
+    borderFill: resolveCategoricalPaint(blocks, ["border", "stroke"]),
+    borderIsTransparent: hasCategoricalTransparent(blocks, [
+      "border",
+      "stroke",
+    ]),
+    paddingBlock:
+      resolveCategoricalLength(blocks, [
+        "padding-block",
+        "padding-top",
+        "padding-bottom",
+        "padding-vertical",
+      ]) ?? resolveBarePaddingLength(blocks),
+    paddingInline:
+      resolveCategoricalLength(blocks, [
+        "padding-inline",
+        "padding-left",
+        "padding-right",
+        "padding-horizontal",
+      ]) ?? resolveBarePaddingLength(blocks),
+    gap: resolveCategoricalLength(blocks, ["gap"]),
+    cornerRadius: resolveCategoricalLength(blocks, ["radius", "border-radius"]),
+    minHeight: resolveCategoricalLength(blocks, ["min-height", "minheight"]),
+    strokeWeight: resolveCategoricalLength(blocks, [
+      "border-width",
+      "stroke-width",
+    ]),
+    fontSize: resolveCategoricalLength(blocks, [
+      "font-size",
+      "fontsize",
+      "text-size",
+    ]),
+  };
+}
+
+/**
+ * Walks blocks in specificity order. The first declaration whose name
+ * matches the category and whose value is *resolvable* (either a hex
+ * paint or the literal `transparent`) wins — including `transparent`,
+ * which short-circuits as a definitive "no paint" answer rather than
+ * falling through to a less specific block. This mirrors CSS cascade
+ * semantics: a more-specific selector explicitly saying `transparent`
+ * must override the base block's color, not the other way around.
+ */
+function resolveCategoricalPaint(
+  blocks: FigmaCssBlock[],
+  categoryHints: string[],
+): FigmaSolidPaint | null {
+  for (const block of blocks) {
+    for (const [name, value] of Object.entries(block.declarations)) {
+      if (!declarationMatchesCategory(name, categoryHints)) continue;
+      if (isTransparent(value)) return null;
+      const paint = resolveSolidPaint(value);
+      if (paint) return paint;
+    }
+  }
+  return null;
+}
+
+function hasCategoricalTransparent(
+  blocks: FigmaCssBlock[],
+  categoryHints: string[],
+): boolean {
+  for (const block of blocks) {
+    for (const [name, value] of Object.entries(block.declarations)) {
+      if (!declarationMatchesCategory(name, categoryHints)) continue;
+      if (isTransparent(value)) return true;
+      const paint = resolveSolidPaint(value);
+      if (paint) return false;
+    }
+  }
+  return false;
+}
+
+function resolveCategoricalLength(
+  blocks: FigmaCssBlock[],
+  categoryHints: string[],
+): number | null {
+  for (const block of blocks) {
+    for (const [name, value] of Object.entries(block.declarations)) {
+      if (!declarationMatchesCategory(name, categoryHints)) continue;
+      const px = extractPx(value);
+      if (px !== null) return px;
+    }
+  }
+  return null;
+}
+
+/**
+ * Fallback for components whose CSS uses bare `padding` (a single value
+ * applied to all sides) rather than directional padding declarations.
+ * Matches any declaration name containing `padding` but excludes
+ * direction-qualified names so it doesn't double-count above.
+ */
+function resolveBarePaddingLength(blocks: FigmaCssBlock[]): number | null {
+  const directionalHints = [
+    "padding-block",
+    "padding-inline",
+    "padding-top",
+    "padding-bottom",
+    "padding-left",
+    "padding-right",
+    "padding-horizontal",
+    "padding-vertical",
+  ];
+  for (const block of blocks) {
+    for (const [name, value] of Object.entries(block.declarations)) {
+      const normalized = name.toLowerCase();
+      if (!normalized.includes("padding")) continue;
+      if (directionalHints.some((hint) => normalized.includes(hint))) continue;
+      const px = extractPx(value);
+      if (px !== null) return px;
+    }
+  }
+  return null;
+}
+
+function declarationMatchesCategory(
+  declarationName: string,
+  categoryHints: string[],
+): boolean {
+  const normalized = declarationName.toLowerCase();
+  return categoryHints.some((hint) => normalized.includes(hint));
 }
 
 const PX_RE = /(-?\d+(?:\.\d+)?)px/;
 const REM_RE = /(-?\d+(?:\.\d+)?)rem/;
-
-function pickPx(block: FigmaCssBlock | null, name: string): number | null {
-  const decl = pickDecl(block, name);
-  if (!decl) return null;
-  return extractPx(decl);
-}
 
 function extractPx(value: string): number | null {
   const pxMatch = value.match(PX_RE);
