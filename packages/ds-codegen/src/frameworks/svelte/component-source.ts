@@ -1464,6 +1464,9 @@ function renderSvelteBinding(
         case "toggle":
           return `${eventName}={() => ${ctx.hookVar}.${setter}(!${ctx.hookVar}.${ch.name})}`;
       }
+      // Exhaustive inner switch above; defensive return so eslint's
+      // no-fallthrough rule sees a terminator before the next case.
+      return null;
     }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: the predicate result is
