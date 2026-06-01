@@ -52,6 +52,12 @@ jobs:
       - name: Validate contracts (shape + semantic)
         run: pnpm run generate:check
 
+      # Docs-claims drift — asserts `<!-- component-count -->` markers in
+      # governed docs match the loader-derived corpus count. Caught the
+      # 2026-05 case where prose said 53 components but the corpus was 47.
+      - name: Check docs claims (corpus count drift)
+        run: pnpm run docs:check-claims
+
       # Design tokens — DTCG validation. Catches malformed token JSON,
       # self-references, and unknown $type values in source token files
       # before the build composes them.

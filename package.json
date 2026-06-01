@@ -18,6 +18,8 @@
     "generate:all:dry-run": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --target=all --dry-run",
     "generate:watch": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/cli.js --watch",
     "validate:generated": "pnpm exec turbo run build --filter=@full-stack-ds/codegen && node packages/ds-codegen/dist/validation/validate-cli.js",
+    "docs:check-claims": "node scripts/docs-claims-check.mjs",
+    "docs:check-claims:fix": "node scripts/docs-claims-check.mjs --fix",
     "governed:rail": "pnpm run generate -- --target=all && node packages/ds-codegen/dist/validation/validate-cli.js --require-artifact-manifest",
     "governed:rail:changed": "pnpm run generate -- --target=all && node packages/ds-codegen/dist/validation/validate-cli.js --require-artifact-manifest --scope-to-git-range origin/main...HEAD",
     "tokens:validate": "pnpm --filter @full-stack-ds/tokens run validate",

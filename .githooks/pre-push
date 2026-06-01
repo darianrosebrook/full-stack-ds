@@ -67,6 +67,13 @@ echo "[pre-push 3/13] pnpm run generate:check"
 # contract JSON was well-formed. `generate:check` is the real gate.
 pnpm run generate:check
 
+# Docs-claims drift — re-derives the corpus count from the same loader
+# glob `generate:check` trusts and asserts every `<!-- component-count -->`
+# marker in governed docs matches. Catches the 2026-05 failure where
+# normal-form.md prose said 53 components while the corpus was 47. Cheap;
+# folded under step 3 because it guards the same corpus truth.
+pnpm run docs:check-claims
+
 # Design tokens — DTCG validation catches malformed token JSON,
 # self-references, and unknown $type values before they reach codegen.
 echo ""
