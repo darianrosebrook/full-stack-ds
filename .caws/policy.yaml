@@ -1,0 +1,31 @@
+version: 1
+risk_tiers:
+  '1':
+    max_files: 5
+    max_loc: 200
+  '2':
+    max_files: 15
+    max_loc: 600
+  '3':
+    max_files: 30
+    max_loc: 1500
+gates:
+  budget_limit:
+    enabled: true
+    mode: block
+  spec_completeness:
+    enabled: true
+    mode: block
+  scope_boundary:
+    enabled: true
+    mode: block
+  god_object:
+    enabled: true
+    mode: warn
+  todo_detection:
+    enabled: true
+    mode: warn
+edit_rules:
+  policy_and_code_same_pr: true
+  require_signed_commits: false
+  require_dual_control_for_governance: false
