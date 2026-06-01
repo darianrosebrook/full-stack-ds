@@ -1,4 +1,10 @@
 #!/bin/bash
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 8,16
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
 # Shared runtime bootstrap for Claude hook scripts.
 # Ensures common developer-installed binaries remain available when hooks run
 # under a reduced PATH that does not load interactive shell init.

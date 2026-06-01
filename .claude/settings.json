@@ -1,11 +1,6 @@
-{ 
-  "permissions": { 
-    "deny": [
-      "Bash(git push --force*)",
-      "Bash(git push -f *)",
-      "Bash(git reset --hard*)",
-      "Bash(git clean -f*)"
-    ]
+{
+  "env": {
+    "CAWS_QUIET": "1"
   },
   "hooks": {
     "PreToolUse": [
@@ -65,5 +60,72 @@
         ]
       }
     ]
-  }
+  },
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(python -m pytest *)",
+      "Bash(python -m pytest*)",
+      "Bash(pytest *)",
+      "Bash(ruff *)",
+      "Bash(mypy *)",
+      "Bash(pip *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)",
+      "Bash(git show*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git stash list*)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git merge *)",
+      "Bash(git rebase *)",
+      "Bash(git fetch*)",
+      "Bash(git pull*)",
+      "Bash(git remote*)",
+      "Bash(git rev-parse*)",
+      "Bash(git worktree*)",
+      "Bash(gh *)",
+      "Bash(ls *)",
+      "Bash(ls)",
+      "Bash(wc *)",
+      "Bash(which *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(chmod *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(sort *)",
+      "Bash(uniq *)",
+      "Bash(diff *)",
+      "Bash(jq *)",
+      "Bash(node *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(source *)",
+      "Bash(echo *)",
+      "Bash(printf *)",
+      "Bash(cd *)",
+      "Bash(pwd)",
+      "Bash(env *)",
+      "Bash(export *)", 
+      "Bash(git -C:*)",
+      "Read(//tmp/**)"
+    ]
+  },
+  "outputStyle": "default",
+  "spinnerTipsEnabled": false,
+  "prefersReducedMotion": true
 }

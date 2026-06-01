@@ -1,8 +1,15 @@
 #!/bin/bash
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 27
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+#
 # Plan Transcript Finalize — overwrite each pending plan-transcript
 # snapshot with the final turn-end transcript.
 #
-# Wired into: Stop (see .claude/settings.json).
+# Wired into: Stop dispatch.
 #
 # At hook time:
 #   - The agent's turn is ending. The transcript at $TRANSCRIPT_PATH
@@ -19,6 +26,9 @@
 #
 # Idempotency: this hook is safe to run multiple times. If the pending
 # list is empty or doesn't exist, the hook is a no-op.
+#
+# Companion: plan-transcript-snapshot.sh (PostToolUse on ExitPlanMode)
+# is the producer. Both ship together per CAWS-HOOK-PACK-PROMOTE-001.
 
 set -euo pipefail
 

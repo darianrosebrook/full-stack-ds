@@ -1,50 +1,45 @@
 #!/bin/bash
-# CAWS Worktree Safety Guard for Claude Code
-# Blocks dangerous operations when parallel worktrees are active
-# @author @darianrosebrook
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 4,6,11,19,32
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+#
+# CAWS Worktree Safety Guard for Claude Code (v11-shape).
+# Blocks dangerous git operations and cross-boundary file copies when
+# parallel worktrees are active.
+#
+# Registry-shape compatibility:
+#   v11 direct-key: { "<name>": { "status": "active", ... } }
+#   v10 nested:     { "worktrees": { "<name>": { ... } } }
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/parse-input.sh
 source "$SCRIPT_DIR/lib/parse-input.sh"
+# shellcheck source=lib/caws-state.sh
+# Provides $CAWS_NODE_ENTRIES_OF — the single canonical dual-shape
+# (v10 envelope / v11 flat-map) registry reader. Replaces three inline
+# copies that had drifted (HOOK-LIB-CONSOLIDATION-001 T1b).
+source "$SCRIPT_DIR/lib/caws-state.sh" 2>/dev/null || true
+# shellcheck source=lib/emit.sh
+# Canonical Claude Code envelope emitters (HOOK-LIB-CONSOLIDATION-001 T3a).
+source "$SCRIPT_DIR/lib/emit.sh" 2>/dev/null || true
 parse_hook_input
 
-# Back-compat aliases keep the downstream git-command checks readable.
 TOOL_NAME="$HOOK_TOOL_NAME"
 COMMAND="$HOOK_COMMAND"
 
-# Only check Bash tool
 if [[ "$TOOL_NAME" != "Bash" ]] || [[ -z "$COMMAND" ]]; then
   exit 0
 fi
 
-# --- Resolve main repo root ---
-# When running inside a worktree, CLAUDE_PROJECT_DIR points to the
-# worktree directory, but .caws/worktrees.json only exists in the main
-# repo. Use git's common dir to find the true repo root.
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
+# Resolve main repo root (shared helper — HOOK-LIB-CONSOLIDATION-001 T2a).
+PROJECT_DIR="$(resolve_canonical_dir "${CLAUDE_PROJECT_DIR:-.}")"
 
-if command -v git >/dev/null 2>&1; then
-  GIT_COMMON_DIR=$(cd "$PROJECT_DIR" && git rev-parse --git-common-dir 2>/dev/null || echo "")
-  if [[ -n "$GIT_COMMON_DIR" ]] && [[ "$GIT_COMMON_DIR" != ".git" ]]; then
-    # Inside a worktree: --git-common-dir returns the main repo's .git path
-    # (e.g., /path/to/repo/.git or /path/to/repo/.git/worktrees/<name>/..)
-    CANDIDATE=$(cd "$PROJECT_DIR" && cd "$GIT_COMMON_DIR/.." 2>/dev/null && pwd || echo "")
-    if [[ -n "$CANDIDATE" ]] && [[ -d "$CANDIDATE/.caws" ]]; then
-      PROJECT_DIR="$CANDIDATE"
-    fi
-  fi
-fi
-
-# --- CWD-safety for worktree-destroying commands ---
-# Handled by quiet-merge.sh (runs after this hook). That hook prepends
-# `cd <repo-root>` and suppresses verbose output in a single updatedInput.
-# Do NOT emit updatedInput here for merge/destroy — it would be overwritten
-# by quiet-merge.sh, or quiet-merge.sh would overwrite ours.
-
-# --- Gap 2: Block sparse checkout (all paths) ---
-# This must run before the "only check git commands" early-exit
+# Block sparse checkout (runs before "only check git commands" early-exit)
 if echo "$COMMAND" | grep -qE 'caws\s+(worktree\s+create|parallel\s+setup).*--scope'; then
   echo "BLOCKED: --scope (sparse checkout) is not allowed." >&2
   echo "Sparse checkout breaks cross-module imports in most projects." >&2
@@ -53,26 +48,122 @@ if echo "$COMMAND" | grep -qE 'caws\s+(worktree\s+create|parallel\s+setup).*--sc
   exit 2
 fi
 
-# Block direct git sparse-checkout commands.
-# Only match when sparse-checkout is an actual git subcommand (at line
-# start or after a command separator), not when it appears inside a
-# quoted string, commit message, or echo argument.
 if echo "$COMMAND" | grep -qE '(^|;|&&|\|)\s*git\s+sparse-checkout'; then
-  echo "BLOCKED: git sparse-checkout is not allowed in this project." >&2
-  echo "Sterling's Python imports span the full codebase." >&2
-  echo "Use full worktrees without sparse-checkout." >&2
+  # WORKTREE-SPEC-CANONICAL-ACCESS-GUARD-001 A3: blanket refusal stays.
+  # Agent-issued git sparse-checkout commands are refused regardless of
+  # subcommand (disable / set / init / reapply / list / add). Recovery
+  # of the canonical-spec-materialization invariant in a linked CAWS
+  # worktree is a CAWS worktree-repair concern routed through the CLI,
+  # not an agent-Bash git operation.
+  echo "BLOCKED: agent-issued git sparse-checkout is refused in CAWS projects." >&2
+  echo "" >&2
+  echo "Sparse-checkout in a CAWS linked worktree carries the mechanical guard" >&2
+  echo "against the v10.2 split-brain authority class: .caws/specs/ is excluded" >&2
+  echo "from the worktree by design, so canonical spec authority cannot be" >&2
+  echo "materialized inside the worktree as a divergent private copy. Disabling" >&2
+  echo "sparse-checkout (or any sparse-checkout reconfiguration via agent Bash)" >&2
+  echo "would re-open that class. Linked worktrees must not use worktree-local" >&2
+  echo ".caws/specs/ files as authority; CAWS resolves spec reads through the" >&2
+  echo "canonical control plane regardless of cwd." >&2
+  echo "" >&2
+  echo "To read a spec from any cwd (including this worktree), use:" >&2
+  echo "  caws specs show <id>" >&2
+  echo "" >&2
+  echo "To check scope from any cwd, use:" >&2
+  echo "  caws scope show <path>" >&2
+  echo "  caws scope check <path>" >&2
+  echo "" >&2
+  echo "To restore the sparse-checkout invariant on a linked worktree (e.g.," >&2
+  echo "after a human-authorized sparse-checkout reconfiguration left the tree" >&2
+  echo "with materialized .caws/specs/ files), run from the canonical checkout:" >&2
+  echo "  caws worktree repair-sparse <name>" >&2
+  echo "" >&2
+  echo "The repair command is non-destructive: it refuses dirty .caws/specs/" >&2
+  echo "rather than stashing, cleaning, or deleting work." >&2
   exit 2
 fi
 
-# --- Gap 5: Block cross-boundary file copies ---
-# Only block copies FROM a worktree back to the main repo (defeats isolation).
-# Copies INTO a worktree are fine — the agent is working there and the files
-# live on the worktree branch, disappearing on merge.
+# ─── CANONICAL-CHECKOUT-WORKTREE-GUARD-001 (Entry 19) ────────────────
+# Block mutating git commands from the canonical checkout while at
+# least one active CAWS worktree exists. Hook-layer enforcement only:
+# authority remains in worktrees.json + specs. The guard's refusal
+# predicate is conjunctive: canonical + worktrees-active + mutating
+# command. Any one false MUST allow.
+#
+# Leases (.caws/leases/*.json) are NOT consulted by this decision —
+# stale-lease-is-evidence-never-authority. The block decision uses
+# worktrees.json's active entries only.
+canonical_guard_emit_block() {
+  local action="$1"
+  local first_active="$2"
+  echo "BLOCKED: $action from the canonical checkout while CAWS worktrees are active." >&2
+  echo "Active worktree(s) detected (e.g. '$first_active' in .caws/worktrees.json)." >&2
+  echo "Switch into your worktree before mutating: cd .caws/worktrees/$first_active" >&2
+  echo "Or destroy any worktree that is genuinely abandoned: caws worktree destroy <name>" >&2
+}
+
+# Determine whether the session's cwd is the canonical checkout.
+# is_canonical_checkout (lib/caws-state.sh) returns 0 when git-dir ==
+# git-common-dir; a linked worktree has git-dir under
+# git-common-dir/worktrees/<name>/ (HOOK-LIB-CONSOLIDATION-001 T2a).
+CANONICAL_GUARD_CHECK_CWD="${HOOK_CWD:-$PROJECT_DIR}"
+if is_canonical_checkout "$CANONICAL_GUARD_CHECK_CWD"; then
+    # We are in the canonical checkout. Now check for active worktrees.
+    WORKTREES_JSON="$PROJECT_DIR/.caws/worktrees.json"
+      if [[ -f "$WORKTREES_JSON" ]] && command -v node >/dev/null 2>&1; then
+        FIRST_ACTIVE_WT=$(node -e "
+          $CAWS_NODE_ENTRIES_OF
+          try {
+            var reg = JSON.parse(require('fs').readFileSync('$WORKTREES_JSON', 'utf8'));
+            // entriesOf (lib/caws-state.sh) returns object-shape entries with
+            // .name synthesized from the flat-map key. 'active' is the
+            // documented status; entries without an explicit status
+            // (CLI-created registries — caws-cli 11.1.7+ persists no status
+            // field) are also treated as active, matching listWorktreesPretty's
+            // status:'active' default (HOOK-LIB-CONSOLIDATION-001 T1b).
+            var active = entriesOf(reg).filter(function(w) {
+              var s = w.status;
+              return s === 'active' || s === undefined || s === null || s === '';
+            });
+            if (active.length > 0) console.log(active[0].name);
+            else console.log('');
+          } catch(e) { console.log(''); }
+        " 2>/dev/null || echo "")
+        if [[ -n "$FIRST_ACTIVE_WT" ]]; then
+          # Predicate (a) canonical + (b) at least one active worktree
+          # is satisfied. Now check (c) mutation command keywords.
+          # Read-only commands (status, log, diff, show, fetch w/o --prune,
+          # rev-parse, ls-files, branch -v, stash list) are NOT in this
+          # set; they fall through to the existing guard rules.
+          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+checkout\s+[^[:space:]-]'; then
+            canonical_guard_emit_block "git checkout (branch switch)" "$FIRST_ACTIVE_WT"
+            exit 2
+          fi
+          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+switch\s+[^[:space:]-]'; then
+            canonical_guard_emit_block "git switch (branch switch)" "$FIRST_ACTIVE_WT"
+            exit 2
+          fi
+          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+branch\s+(-f|--force)'; then
+            canonical_guard_emit_block "git branch -f (force branch update)" "$FIRST_ACTIVE_WT"
+            exit 2
+          fi
+          # git reset variants other than --hard (already covered later in
+          # this file) — --keep, --merge, --soft, --mixed, or with no
+          # mode flag — mutate the canonical's working tree/HEAD.
+          if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+reset\b' \
+             && ! echo "$COMMAND" | grep -qE 'git\s+reset\s+--hard'; then
+            canonical_guard_emit_block "git reset (HEAD mutation)" "$FIRST_ACTIVE_WT"
+            exit 2
+          fi
+        fi
+      fi
+fi
+# ─── /CANONICAL-CHECKOUT-WORKTREE-GUARD-001 ──────────────────────────
+
+# Block cross-boundary file copies (worktree → main).
 WORKTREE_BASE="$PROJECT_DIR/.caws/worktrees"
 if [[ -d "$WORKTREE_BASE" ]]; then
   if echo "$COMMAND" | grep -qE '\b(cp|mv)\b'; then
-    # If the agent is working inside a worktree, allow all copies — they're
-    # in their own workspace
     AGENT_IN_WORKTREE=false
     if [[ -n "$HOOK_CWD" ]] && [[ "$HOOK_CWD" == "$WORKTREE_BASE"/* ]]; then
       AGENT_IN_WORKTREE=true
@@ -80,13 +171,11 @@ if [[ -d "$WORKTREE_BASE" ]]; then
 
     if [[ "$AGENT_IN_WORKTREE" != "true" ]]; then
       if echo "$COMMAND" | grep -qF ".caws/worktrees/" || echo "$COMMAND" | grep -qF "$WORKTREE_BASE"; then
-        # Check if the command references both a worktree path and the main repo
         HAS_WT_PATH=false
         HAS_MAIN_PATH=false
         if echo "$COMMAND" | grep -qE '\.caws/worktrees/|'"$(echo "$WORKTREE_BASE" | sed 's/[\/&]/\\&/g')"''; then
           HAS_WT_PATH=true
         fi
-        # Check if destination/source is outside the worktree
         if echo "$COMMAND" | grep -qE "(^|\s)$PROJECT_DIR/[^.]|core/|src/|tests/|packages/" && [[ "$HAS_WT_PATH" == "true" ]]; then
           HAS_MAIN_PATH=true
         fi
@@ -107,11 +196,15 @@ if ! echo "$COMMAND" | grep -qE '(^|\s|&&|\|)git\s'; then
   exit 0
 fi
 
-# --- Determine if worktrees are active ---
+# Determine if worktrees are active (dual-shape aware).
+#
+# Helper logic embedded in the Node inline reads worktrees.json under both
+# shapes. v11 direct-key: registry keys are worktree names themselves,
+# each value is an entry object with at least { status }. v10 nested:
+# registry.worktrees is the entry map.
 WORKTREES_ACTIVE=false
 PARALLEL_BASE=""
 
-# Check .caws/parallel.json
 if [[ -f "$PROJECT_DIR/.caws/parallel.json" ]] && command -v node >/dev/null 2>&1; then
   PARALLEL_INFO=$(node -e "
     try {
@@ -129,12 +222,18 @@ if [[ -f "$PROJECT_DIR/.caws/parallel.json" ]] && command -v node >/dev/null 2>&
   fi
 fi
 
-# Check .caws/worktrees.json
 if [[ "$WORKTREES_ACTIVE" != "true" ]] && [[ -f "$PROJECT_DIR/.caws/worktrees.json" ]] && command -v node >/dev/null 2>&1; then
   ACTIVE_COUNT=$(node -e "
+    $CAWS_NODE_ENTRIES_OF
     try {
       var reg = JSON.parse(require('fs').readFileSync('$PROJECT_DIR/.caws/worktrees.json', 'utf8'));
-      var active = Object.values(reg.worktrees || {}).filter(function(w) { return w.status === 'active'; });
+      // entriesOf (lib/caws-state.sh) handles both v10 envelope and v11
+      // flat-map. Status-less entries (CLI-created) count as active —
+      // see the FIRST_ACTIVE_WT note above (HOOK-LIB-CONSOLIDATION-001 T1b).
+      var active = entriesOf(reg).filter(function(w) {
+        var s = w.status;
+        return s === 'active' || s === undefined || s === null || s === '';
+      });
       console.log(active.length);
     } catch(e) { console.log('0'); }
   " 2>/dev/null || echo "0")
@@ -144,14 +243,12 @@ if [[ "$WORKTREES_ACTIVE" != "true" ]] && [[ -f "$PROJECT_DIR/.caws/worktrees.js
   fi
 fi
 
-# If no worktrees are active, allow everything
 if [[ "$WORKTREES_ACTIVE" != "true" ]]; then
   exit 0
 fi
 
 # --- Block dangerous git operations when worktrees are active ---
 
-# Block git commit --amend
 if echo "$COMMAND" | grep -qE 'git\s+commit\s+.*--amend'; then
   echo "BLOCKED: git commit --amend is not allowed while worktrees are active." >&2
   echo "Amending commits risks rewriting another agent's work." >&2
@@ -159,7 +256,6 @@ if echo "$COMMAND" | grep -qE 'git\s+commit\s+.*--amend'; then
   exit 2
 fi
 
-# Block git stash (shared across worktrees)
 if echo "$COMMAND" | grep -qE 'git\s+stash' && ! echo "$COMMAND" | grep -qE 'git\s+stash\s+list'; then
   echo "BLOCKED: git stash is not allowed while worktrees are active." >&2
   echo "Stash is shared across all worktrees and can capture or destroy another agent's work." >&2
@@ -167,14 +263,45 @@ if echo "$COMMAND" | grep -qE 'git\s+stash' && ! echo "$COMMAND" | grep -qE 'git
   exit 2
 fi
 
-# Block git reset --hard
 if echo "$COMMAND" | grep -qE 'git\s+reset\s+--hard'; then
   echo "BLOCKED: git reset --hard is not allowed while worktrees are active." >&2
   echo "This could discard work that other agents depend on." >&2
   exit 2
 fi
 
-# Block git push --force
+# WORKTREE-ISOLATION-HARDENING-001 (Fix 5): the git restore synonym gap.
+# `git restore <path>`, `git checkout -- <path>`, and `git clean` all DISCARD
+# working-tree content by path — the same hazard class as `git reset --hard`,
+# but they were matched nowhere (only a bare `git restore .` was a classifier
+# deny). They are blocked here while worktrees are active and worded by the
+# ACTUAL operation (a path/working-tree restore is NOT a branch switch).
+# `git restore --staged <path>` (unstage only, no working-tree discard) and
+# `git restore --source=... ` to a path are still working-tree mutations, so the
+# block is intentionally broad for the path-restore family; un-discarding
+# operations (status/diff) are unaffected.
+if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+restore\b'; then
+  echo "BLOCKED: git restore (working-tree/path restore) is not allowed while worktrees are active." >&2
+  echo "git restore DISCARDS uncommitted changes by path — the same work-loss hazard as git reset --hard." >&2
+  echo "This is a path/working-tree restore, NOT a branch switch." >&2
+  echo "Commit the work you want to keep first; to intentionally drop a specific file's changes," >&2
+  echo "do it from a session rooted in the owning worktree, not from a shared/foreign checkout." >&2
+  exit 2
+fi
+
+if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+checkout\s+--\s'; then
+  echo "BLOCKED: git checkout -- <path> (working-tree discard) is not allowed while worktrees are active." >&2
+  echo "This discards uncommitted changes to the named path(s) — a work-loss hazard while parallel work exists." >&2
+  echo "Commit first, or operate from the owning worktree's session." >&2
+  exit 2
+fi
+
+if echo "$COMMAND" | grep -qE '(^|[[:space:];&|])git\s+clean\b'; then
+  echo "BLOCKED: git clean (untracked-file deletion) is not allowed while worktrees are active." >&2
+  echo "git clean can delete another agent's untracked files across the shared tree." >&2
+  echo "Remove specific files you own explicitly instead." >&2
+  exit 2
+fi
+
 if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(--force|-f\s)'; then
   echo "BLOCKED: Force push is not allowed while worktrees are active." >&2
   echo "This could rewrite history that other agents have based work on." >&2
@@ -182,19 +309,19 @@ if echo "$COMMAND" | grep -qE 'git\s+push\s+.*(--force|-f\s)'; then
 fi
 
 # --- Base branch protections ---
-# Use the hook input's cwd (where the git command will actually execute), not
-# CLAUDE_PROJECT_DIR (which always points to the main repo root, even when the
-# agent has cd'd into a worktree at .caws/worktrees/<name>/).
 AGENT_DIR="${HOOK_CWD:-${CLAUDE_PROJECT_DIR:-.}}"
-CURRENT_BRANCH=$(cd "$AGENT_DIR" && git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+CURRENT_BRANCH=$(caws_current_branch "$AGENT_DIR")  # HOOK-LIB-CONSOLIDATION-001 T2b
 
-# Determine the base branch to protect
 BASE_BRANCH="$PARALLEL_BASE"
 if [[ -z "$BASE_BRANCH" ]] && [[ -f "$PROJECT_DIR/.caws/worktrees.json" ]] && command -v node >/dev/null 2>&1; then
   BASE_BRANCH=$(node -e "
+    $CAWS_NODE_ENTRIES_OF
     try {
       var reg = JSON.parse(require('fs').readFileSync('$PROJECT_DIR/.caws/worktrees.json', 'utf8'));
-      var active = Object.values(reg.worktrees || {}).filter(function(w) { return w.status === 'active'; });
+      var active = entriesOf(reg).filter(function(w) {
+        var s = w.status;
+        return s === 'active' || s === undefined || s === null || s === '';
+      });
       if (active.length > 0) console.log(active[0].baseBranch || '');
       else console.log('');
     } catch(e) { console.log(''); }
@@ -202,7 +329,6 @@ if [[ -z "$BASE_BRANCH" ]] && [[ -f "$PROJECT_DIR/.caws/worktrees.json" ]] && co
 fi
 
 if [[ -n "$BASE_BRANCH" ]] && [[ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]]; then
-  # Block push from base branch
   if echo "$COMMAND" | grep -qE 'git\s+push'; then
     echo "BLOCKED: Pushing from the base branch ($BASE_BRANCH) while worktrees are active." >&2
     echo "You should be working in a worktree, not on the base branch." >&2
@@ -210,29 +336,15 @@ if [[ -n "$BASE_BRANCH" ]] && [[ "$CURRENT_BRANCH" == "$BASE_BRANCH" ]]; then
     exit 2
   fi
 
-  # Allow git merge into base branch (merging completed worktree branches back)
-  # The commit-msg hook enforces the merge(worktree): message format
   if echo "$COMMAND" | grep -qE 'git\s+merge\b'; then
-    echo '{
-      "hookSpecificOutput": {
-        "hookEventName": "PreToolUse",
-        "additionalContext": "Merging into base branch ('"$BASE_BRANCH"') while worktrees are active. The commit-msg hook will enforce the merge(worktree): message format. Make sure the worktree for this branch has been destroyed first."
-      }
-    }'
+    emit_additional_context "Merging into base branch ($BASE_BRANCH) while worktrees are active. The commit-msg hook will enforce the merge(worktree): message format. Make sure the worktree for this branch has been destroyed first."
     exit 0
   fi
 
-  # Warn (but don't block) commits on base branch — the pre-commit + commit-msg hooks handle blocking
   if echo "$COMMAND" | grep -qE 'git\s+commit\b' && ! echo "$COMMAND" | grep -qE '--amend'; then
-    echo '{
-      "hookSpecificOutput": {
-        "hookEventName": "PreToolUse",
-        "additionalContext": "NOTE: committing to the base branch ('"$BASE_BRANCH"') while worktrees are active. The commit-msg hook permits four commit categories: (1) merge(worktree): <description> for completed-worktree merges; (2) wip(checkpoint): <description> for prior-session dirty-file cleanup; (3) git merge --no-ff merge commits (detected via MERGE_HEAD); (4) doc/config-only commits (all staged files under docs/, .claude/, or .caws/). Commits outside those categories are blocked. See .claude/rules/worktree-isolation.md and .githooks/commit-msg for details."
-      }
-    }'
+    emit_additional_context "NOTE: committing to the base branch ($BASE_BRANCH) while worktrees are active. Worktrees are preferred for isolated feature work, but logical checkpoint commits from the current checkout are allowed by Claude hooks. Avoid --amend and force-push while worktrees are active."
     exit 0
   fi
 fi
 
-# Allow the command
 exit 0

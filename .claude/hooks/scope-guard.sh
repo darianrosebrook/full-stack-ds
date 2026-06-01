@@ -1,9 +1,25 @@
 #!/bin/bash
-# CAWS Scope Guard Hook for Claude Code
-# Validates file edits against scope boundaries from working-spec + feature specs
-# Specs with terminal status (completed, closed, archived) are skipped
-# Worktree-aware: reads specs from the agent's working directory, not always the main repo
-# @author @darianrosebrook
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 8,11,12,16
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+#
+# CAWS Scope Guard Hook for Claude Code (v11-shape).
+# Validates file edits against scope boundaries from per-feature specs under .caws/specs/.
+#
+# Lifecycle resolution (v11-shape, with v10 fallback):
+#   lifecycle_state first, status second.
+#   Terminal (not enforced): closed, archived, completed.
+#   active: participates in union enforcement.
+#   draft: does NOT participate in union-wide blocking unless authoritative/bound.
+#   Both fields missing: treat as active (legacy compatibility).
+#
+# Worktree registry shape compatibility:
+#   v11 direct-key: { "<name>": { ... } }
+#   v10 nested:     { "worktrees": { "<name>": { ... } } }
+#   Bound id key:   specId (v10) OR spec_id (v11) — both accepted.
 
 set -euo pipefail
 
@@ -12,6 +28,19 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/parse-input.sh"
 # shellcheck source=guard-strikes.sh
 source "$SCRIPT_DIR/guard-strikes.sh"
+# shellcheck source=lib/guard-message.sh
+# Provides guard_identity / guard_amend_scope_hint / guard_not_harness_note —
+# the shared legibility helpers (HOOK-GUARD-LEGIBILITY-001) so a scope refusal
+# names itself ("CAWS scope-guard") and prints a literal copy-pasteable
+# amend-scope remediation, instead of reading as a generic harness prompt.
+# Guard with a file-existence test: under `set -euo pipefail`, `source <missing>`
+# is a fatal builtin error a trailing `|| true` does NOT catch.
+[[ -f "$SCRIPT_DIR/lib/guard-message.sh" ]] && source "$SCRIPT_DIR/lib/guard-message.sh"
+# shellcheck source=lib/caws-state.sh
+# Provides $CAWS_NODE_GLOB_TO_SCOPE_REGEXP — the single canonical scope-glob
+# matcher shared with worktree-write-guard so the two guards can never
+# disagree on a (path, pattern) scope decision (HOOK-LIB-CONSOLIDATION-001 T1a).
+source "$SCRIPT_DIR/lib/caws-state.sh" 2>/dev/null || true
 parse_hook_input
 
 # Back-compat aliases kept to minimize diff in the scope-resolution logic below.
@@ -30,15 +59,45 @@ fi
 
 emit_scope_progression() {
   local detail="$1"
-  local unblock="To get unblocked: edit files that are already in scope, switch into the correct CAWS worktree, or update the relevant CAWS spec so this path is legitimately in scope. If you are already in the correct worktree, verify the mutual CAWS binding: the spec must declare 'worktree: <name>' and .caws/worktrees.json must map that same worktree name to the correct 'specId'. If that registry binding is missing, unrelated active specs may block your edit. If the scope change is not clearly yours to make, ask the user. If the scope was legitimately corrected but prior strikes from earlier edits are still cornering this session, ask the user to run: bash .claude/hooks/reset-strikes.sh --current (or --session <uuid>) to clear stale strike state — never edit guard-strikes-*.json by hand. Do not edit .claude/hooks/, .claude/logs/guard-strikes-*.json, or other guard state to bypass this check."
+  # Optional 2nd arg: the bound spec id (authoritative mode). When known, the
+  # message prints the literal copy-pasteable widening command for THAT spec;
+  # otherwise it falls back to a placeholdered form. Run-003 (caws-firsttime-
+  # probe) showed an agent mis-attributing this very ask to the harness three
+  # times — so every strike message now leads with a self-identifying
+  # "CAWS scope-guard" token (guard_identity) and carries the exact remediation.
+  local spec_id="${2:-}"
+
+  # guard-message.sh provides the legibility helpers. If it failed to source
+  # (stand-alone invocation), fall back to literal strings so the message still
+  # self-identifies and remediates — legibility must never depend on a lib load.
+  local _id _hint _note
+  if command -v guard_identity >/dev/null 2>&1; then
+    _id="$(guard_identity scope-guard)"
+    _hint="$(guard_amend_scope_hint "$spec_id" "$REL_PATH")"
+    _note="$(guard_not_harness_note)"
+  else
+    _id="CAWS scope-guard"
+    _hint="caws specs amend-scope ${spec_id:-<spec-id>} --add $REL_PATH"
+    _note="This is a CAWS governance decision, not a Claude Code harness prompt."
+  fi
+
+  # Strike-level diagnostic triage: strike 1 fires often (any agent
+  # touching the edge of its lane) and the edit proceeds — keep the
+  # message short so it informs without burying. Strike 2 escalates to
+  # user-approval and adds the spec/binding-fix options. Strike 3 is the
+  # hard block and surfaces the full reset-strikes + binding guidance.
+  # Every level now leads with the guard identity + the literal remediation.
+  local widen="If this path SHOULD be in scope, widen the bound spec: $_hint"
+  local fix_options="Fix options: (1) edit a file already in scope, (2) $widen, (3) ask the user."
+  local hard_block_guidance="If prior strikes from earlier edits are cornering this session and the scope is now correct, ask the user to run: bash .claude/hooks/reset-strikes.sh --current (or --session <uuid>) to clear stale strike state. Verify the worktree binding: the spec must declare 'worktree: <name>' and .caws/worktrees.json must map that same worktree name to the correct 'specId' (v10) or 'spec_id' (v11). On CAWS v11.0 the worktree lifecycle CLI is not yet restored; on v11.1+ use 'caws worktree bind'. Do not edit .claude/hooks/, .claude/logs/guard-strikes-*.json, or other guard state to bypass this check."
 
   guard_enforce_progressive_strikes \
     "$SESSION_ID" \
     "scope_guard" \
     "$WORK_DIR" \
-    "Scope guard strike 1 of 3 for '$REL_PATH'. Strict warning: this edit is allowed, but the next out of scope edit requires user permission. $detail $unblock" \
-    "Scope guard strike 2 of 3 for '$REL_PATH'. You are blocked, asking the user for approval. $detail $unblock" \
-    "Scope guard strike 3 of 3 for '$REL_PATH'. You are blocked on moving forward until your scope is properly set. $detail $unblock"
+    "$_id strike 1 of 3 for '$REL_PATH'. $_note This edit proceeds, but a second out-of-scope edit will require user approval. $detail $widen" \
+    "$_id strike 2 of 3 for '$REL_PATH'. $_note Blocked — asking the user for approval. $detail $fix_options" \
+    "$_id strike 3 of 3 for '$REL_PATH'. $_note Hard-blocked until scope is corrected. $detail $fix_options $hard_block_guidance"
 }
 
 resolve_worktree_root() {
@@ -52,45 +111,27 @@ resolve_worktree_root() {
   return 1
 }
 
-# ── Always-allowed paths ──────────────────────────────────────────────
-# Paths matching any of these prefixes bypass scope checks entirely.
-# Edit this array to add new always-allowed directories.
+# Always-allowed paths bypass scope checks entirely.
 ALLOW_PREFIXES=(
-  "$HOME/.claude/"         # User's global Claude config (memory, settings)
-  ".caws/"                 # CAWS governance files
-  ".claude/"               # Project-level Claude config
-  "docs/"                  # Documentation
-  "tests/"                 # Test suites
-  "scripts/"               # Automation scripts
+  "$HOME/.claude/"
+  ".caws/"
+  ".claude/"
+  "docs/"
+  "tests/"
+  "scripts/"
   "tmp/"
   ".archive/"
 )
 
-# ── Policy-declared non-governed zones (CAWSFIX-26 / ledger D9) ──────
-# Load additional allowlist prefixes from .caws/policy.yaml's
-# `non_governed_zones` field. This lets the repo declare subtrees
-# (research/, playground/) as opt-out from scope enforcement without
-# burning a one-shot CAWS spec per declaration. The caws-cli
-# scope-boundary gate (commit-time) already reads this field via
-# PolicyManager; this shell hook mirrors the behavior at pre-write time.
-#
-# Parsing is intentionally narrow: only the block-style list form
-#     non_governed_zones:
-#       - "research/**"
-#       - playground/**
-# is recognized. Each entry is normalized `foo/**` -> `foo/` for
-# prefix matching, consistent with ALLOW_PREFIXES semantics.
+# Policy-declared non-governed zones (CAWSFIX-26 / ledger D9).
 POLICY_FILE="${CLAUDE_PROJECT_DIR:-.}/.caws/policy.yaml"
 if [[ -f "$POLICY_FILE" ]]; then
   while IFS= read -r raw_zone; do
     [[ -z "$raw_zone" ]] && continue
-    # Strip surrounding quotes.
     raw_zone="${raw_zone%\"}"; raw_zone="${raw_zone#\"}"
     raw_zone="${raw_zone%\'}"; raw_zone="${raw_zone#\'}"
-    # Normalize glob tail: `foo/**` -> `foo/`, `foo/*` -> `foo/`.
     raw_zone="${raw_zone%/\*\*}"
     raw_zone="${raw_zone%/\*}"
-    # Ensure trailing slash for prefix matching (treat as a subtree).
     [[ "$raw_zone" != */ ]] && raw_zone="${raw_zone}/"
     ALLOW_PREFIXES+=("$raw_zone")
   done < <(awk '
@@ -104,10 +145,6 @@ if [[ -f "$POLICY_FILE" ]]; then
   ' "$POLICY_FILE" 2>/dev/null)
 fi
 
-# --- Resolve working directory ---
-# Use the hook input's cwd (where the agent is actually working), not
-# CLAUDE_PROJECT_DIR. In a worktree, CLAUDE_PROJECT_DIR still points at the
-# main repo root, but the agent's specs live in the worktree.
 WORK_DIR="${HOOK_CWD:-${CLAUDE_PROJECT_DIR:-.}}"
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 
@@ -123,7 +160,6 @@ elif [[ -n "$PROJECT_WORKTREE_ROOT" ]]; then
   WORK_DIR="$PROJECT_WORKTREE_ROOT"
 fi
 
-# Resolve the main repo root (needed for fallback)
 PROJECT_DIR="$(cd "$PROJECT_DIR" 2>/dev/null && pwd || printf '%s\n' "$PROJECT_DIR")"
 WORK_DIR="$(cd "$WORK_DIR" 2>/dev/null && pwd || printf '%s\n' "$WORK_DIR")"
 WORKTREE_NAME=""
@@ -131,24 +167,23 @@ if [[ "$WORK_DIR" =~ \/\.caws\/worktrees\/([^/]+)$ ]]; then
   WORKTREE_NAME="${BASH_REMATCH[1]}"
 fi
 
-# Spec/scope resolution: prefer the worktree's own .caws/ if present,
-# otherwise fall back to the main repo's .caws/.
-if [[ -f "$WORK_DIR/.caws/working-spec.yaml" ]]; then
-  SPEC_FILE="$WORK_DIR/.caws/working-spec.yaml"
-  SCOPE_FILE="$WORK_DIR/.caws/scope.json"
+# CAWS-LITE-MODE-RETIREMENT-001: lite mode (scope.json without specs/)
+# was removed in pack v8. v11 projects only have .caws/specs/; lite-mode
+# .caws/scope.json is a v10 artifact. Consumers with a legacy
+# .caws/scope.json get a doctor finding (not a hook branch).
+if [[ -d "$WORK_DIR/.caws/specs" ]]; then
   SPECS_BASE="$WORK_DIR"
 else
-  SPEC_FILE="$PROJECT_DIR/.caws/working-spec.yaml"
-  SCOPE_FILE="$PROJECT_DIR/.caws/scope.json"
   SPECS_BASE="$PROJECT_DIR"
 fi
 
-# Check if any spec infrastructure exists
-if [[ ! -f "$SPEC_FILE" ]] && [[ ! -f "$SCOPE_FILE" ]] && [[ ! -d "$SPECS_BASE/.caws/specs" ]]; then
+# No specs directory means no v11 governance to enforce. Pre-v8 this
+# branch would fall through to the lite-mode scope.json path; v8+ it
+# is a clean no-op.
+if [[ ! -d "$SPECS_BASE/.caws/specs" ]]; then
   exit 0
 fi
 
-# Get relative path from the work directory (portable — macOS realpath lacks --relative-to)
 if [[ "$FILE_PATH" == "$WORK_DIR"/* ]]; then
   REL_PATH="${FILE_PATH#$WORK_DIR/}"
 elif [[ "$FILE_PATH" == "$PROJECT_DIR"/* ]]; then
@@ -157,88 +192,58 @@ else
   REL_PATH="$FILE_PATH"
 fi
 
-# ── Check against allowlist ───────────────────────────────────────────
-# Root-level files (no directory component) are always allowed.
 if [[ "$REL_PATH" != */* ]]; then
   exit 0
 fi
-# Check both the absolute FILE_PATH and relative REL_PATH against prefixes.
 for prefix in "${ALLOW_PREFIXES[@]}"; do
   if [[ "$FILE_PATH" == "${prefix}"* ]] || [[ "$REL_PATH" == "${prefix}"* ]]; then
     exit 0
   fi
 done
 
-# ── Lite mode: scope.json (no working-spec.yaml) ─────────────────────
-if [[ ! -f "$SPEC_FILE" ]] && [[ -f "$SCOPE_FILE" ]]; then
-  if command -v node >/dev/null 2>&1; then
-    LITE_CHECK=$(node -e "
-      var fs = require('fs');
-      var path = require('path');
-      try {
-        var scope = JSON.parse(fs.readFileSync('$SCOPE_FILE', 'utf8'));
-        var filePath = '$REL_PATH';
-        var dirs = scope.allowedDirectories || [];
-        var banned = scope.bannedPatterns || {};
+# CAWS-LITE-MODE-RETIREMENT-001: the v10 "Lite mode" branch
+# (`.caws/scope.json` without `.caws/specs/`) was removed in pack v8.
+# A consumer upgrading from v10 with a legacy `.caws/scope.json` on
+# disk now gets a doctor finding instead — the hook no longer has a
+# silent fallback behavior that disagrees with `caws doctor`.
 
-        // Check banned file patterns
-        var basename = path.basename(filePath);
-        var bannedFiles = banned.files || [];
-        for (var i = 0; i < bannedFiles.length; i++) {
-          var regex = new RegExp(bannedFiles[i].replace(/\\*/g, '.*').replace(/\\?/g, '.'));
-          if (regex.test(basename)) {
-            console.log('banned:' + bannedFiles[i]);
-            process.exit(0);
-          }
-        }
+# Full mode: per-feature specs under .caws/specs/ (v11-shape aware)
+SPECS_DIR="$SPECS_BASE/.caws/specs"
 
-        // Check banned doc patterns
-        var bannedDocs = banned.docs || [];
-        for (var i = 0; i < bannedDocs.length; i++) {
-          var regex = new RegExp(bannedDocs[i].replace(/\\*/g, '.*').replace(/\\?/g, '.'));
-          if (regex.test(basename)) {
-            console.log('banned:' + bannedDocs[i]);
-            process.exit(0);
-          }
-        }
-
-        // Check allowed directories
-        if (dirs.length > 0) {
-          var normalized = filePath.replace(/\\\\\\\\/g, '/');
-          var found = false;
-          for (var i = 0; i < dirs.length; i++) {
-            var d = dirs[i].replace(/\\/$/, '');
-            if (normalized.startsWith(d + '/') || normalized === d) { found = true; break; }
-          }
-          if (!found) {
-            console.log('not_allowed');
-            process.exit(0);
-          }
-        }
-        console.log('allowed');
-      } catch (error) {
-        console.log('error:' + error.message);
-      }
-    " 2>&1)
-
-    if [[ "$LITE_CHECK" == banned:* ]]; then
-      PATTERN="${LITE_CHECK#banned:}"
-      emit_scope_progression "This file matches banned pattern '$PATTERN' in .caws/scope.json."
-      exit 0
-    fi
-
-    if [[ "$LITE_CHECK" == "not_allowed" ]]; then
-      emit_scope_progression "This file is outside the allowed directories in .caws/scope.json."
-      exit 0
-    fi
-
-    # File is allowed - exit normally
+# CAWS-SCOPE-STRIKE-SOURCE-UNIFY-001: delegate to `caws scope check`
+# (the kernel-backed authority) before falling back to the inline node
+# block below. This guarantees the hook's ADMIT/REFUSE decision matches
+# what `caws scope show <path>` would report — the spec's invariant 1.
+#
+# Why it matters: when the kernel says ADMIT for a path, this hook exits
+# 0 immediately without invoking `emit_scope_progression`. That means
+# strikes do NOT increment, even if the path was previously rejected by
+# an earlier scope decision (e.g., before a `scope.in` amendment landed).
+# This auto-invalidates stale strike state by treating the current
+# kernel decision as the only authority — the spec's invariant 2 and A1.
+#
+# Fall-through to the inline node block happens when:
+#   (a) `caws` is not on PATH (e.g. a non-global install during early
+#       bootstrap), OR
+#   (b) `caws scope check` exits non-zero AND we need the inline node
+#       logic to compute the structured diagnostic (out_of_scope vs
+#       not_in_scope, the union/authoritative mode label, the
+#       offending pattern) for emit_scope_progression's user-facing
+#       message. The inline node block is the SAME logic the kernel
+#       runs, evaluated on the same YAML — so they must agree on
+#       REFUSE shape too.
+if command -v caws >/dev/null 2>&1; then
+  if caws scope check "$REL_PATH" >/dev/null 2>&1; then
+    # Kernel-authoritative ADMIT. Skip strike counter entirely.
     exit 0
   fi
+  # Kernel-authoritative REFUSE. The exact diagnostic still comes from
+  # the inline node block below (it parses scope.out vs scope.in miss
+  # vs union vs authoritative, all data the kernel knows but doesn't
+  # expose via `caws scope check`'s exit code). Future work: have
+  # `caws scope check --explain` emit the structured detail so the
+  # fallback inline node block can be deleted entirely.
 fi
-
-# ── Full mode: working-spec.yaml + feature specs ─────────────────────
-SPECS_DIR="$SPECS_BASE/.caws/specs"
 
 if command -v node >/dev/null 2>&1; then
   SCOPE_CHECK=$(node -e "
@@ -246,62 +251,81 @@ if command -v node >/dev/null 2>&1; then
     var fs = require('fs');
     var path = require('path');
 
+    $CAWS_NODE_GLOB_TO_SCOPE_REGEXP
+
     try {
       var filePath = '$REL_PATH';
       var projectDir = '$PROJECT_DIR';
       var worktreeName = '$WORKTREE_NAME';
 
-      // Terminal statuses: specs that are not active — scope no longer enforced
-      var TERMINAL = { completed: 1, closed: 1, archived: 1, draft: 1 };
+      // v11-shape lifecycle resolution.
+      // Read lifecycle_state first, fall back to status, then 'active'.
+      function lifecycleOf(s) {
+        return (s && (s.lifecycle_state || s.status)) || 'active';
+      }
+      // Terminal: not enforced at all.
+      var TERMINAL = { closed: 1, archived: 1, completed: 1 };
+      // Draft: does not participate in union-wide blocking. Only enforces
+      // scope when it is the authoritative/bound spec.
+      function isDraft(state) { return state === 'draft'; }
 
-      // Collect all active specs (working-spec + feature specs)
+      // Collect all non-terminal per-feature specs under .caws/specs/.
+      // Draft specs are collected but separately tagged.
       var specs = [];
 
-      // Load working-spec.yaml if present
-      var mainSpec = '$SPEC_FILE';
-      if (fs.existsSync(mainSpec)) {
-        try {
-          var s = yaml.load(fs.readFileSync(mainSpec, 'utf8'));
-          if (s && !TERMINAL[s.status]) {
-            specs.push({ source: 'working-spec', spec: s });
-          }
-        } catch (_) {}
-      }
+      // INV-5 (harvested from Sterling, CAWS-1117-SCOPE-GUARD-V11-DETECTION-01):
+      // track specs that FAILED to parse. A malformed spec must not silently
+      // weaken enforcement — if the worktree's bound spec is among them we
+      // DENY rather than fall into the weaker union mode below.
+      var malformedSpecs = [];
 
-      // Load feature specs from .caws/specs/
       var specsDir = '$SPECS_DIR';
       if (fs.existsSync(specsDir)) {
         var files = fs.readdirSync(specsDir).filter(function(f) { return f.endsWith('.yaml') || f.endsWith('.yml'); });
         for (var fi = 0; fi < files.length; fi++) {
           try {
             var s = yaml.load(fs.readFileSync(path.join(specsDir, files[fi]), 'utf8'));
-            if (s && !TERMINAL[s.status]) {
-              specs.push({ source: files[fi], spec: s });
-            }
-          } catch (_) {}
+            if (!s) continue;
+            var state = lifecycleOf(s);
+            if (TERMINAL[state]) continue;
+            specs.push({ source: files[fi], spec: s, state: state });
+          } catch (parseErr) {
+            malformedSpecs.push(files[fi]);
+            process.stderr.write('scope-guard: malformed spec at ' +
+              files[fi] + ': ' + (parseErr && parseErr.message) + '\n');
+          }
         }
       }
 
-      // No active specs — allow everything
       if (specs.length === 0) {
         console.log('in_scope');
         process.exit(0);
       }
 
-      // CSS-like specificity: when a worktree registry entry and a spec
-      // mutually reference each other, that spec owns scope resolution for
-      // edits inside the worktree. Unrelated active specs do not override it.
+      // Authoritative binding lookup (v10 + v11 registry shape compat).
+      function worktreeEntry(registry, name) {
+        if (!registry) return null;
+        if (registry.worktrees && registry.worktrees[name]) return registry.worktrees[name];
+        if (registry[name] && typeof registry[name] === 'object') return registry[name];
+        return null;
+      }
+      function boundSpecIdOf(entry) {
+        if (!entry) return null;
+        return entry.specId || entry.spec_id || null;
+      }
+
       var authoritativeSpec = null;
       if (worktreeName) {
         try {
           var registryPath = path.join(projectDir, '.caws', 'worktrees.json');
           if (fs.existsSync(registryPath)) {
             var registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
-            var entry = registry && registry.worktrees ? registry.worktrees[worktreeName] : null;
-            if (entry && entry.specId) {
+            var entry = worktreeEntry(registry, worktreeName);
+            var boundId = boundSpecIdOf(entry);
+            if (boundId) {
               for (var si = 0; si < specs.length; si++) {
                 var candidate = specs[si].spec || {};
-                if (candidate.id === entry.specId && candidate.worktree === worktreeName) {
+                if (candidate.id === boundId && candidate.worktree === worktreeName) {
                   authoritativeSpec = specs[si];
                   break;
                 }
@@ -311,14 +335,50 @@ if command -v node >/dev/null 2>&1; then
         } catch (_) {}
       }
 
+      // INV-5 DENY-by-default (harvested from Sterling): if the worktree's
+      // bound spec ID maps to a file we FAILED to parse, we cannot honor
+      // the authoritative spec. Refuse rather than silently dropping into
+      // union mode (quietly weaker enforcement). Names the malformed file
+      // so the user can fix it.
+      if (worktreeName && malformedSpecs.length > 0) {
+        try {
+          var mRegistryPath = path.join(projectDir, '.caws', 'worktrees.json');
+          if (fs.existsSync(mRegistryPath)) {
+            var mRegistry = JSON.parse(fs.readFileSync(mRegistryPath, 'utf8'));
+            var mEntry = worktreeEntry(mRegistry, worktreeName);
+            var mBoundId = boundSpecIdOf(mEntry);
+            if (mBoundId) {
+              for (var mi = 0; mi < malformedSpecs.length; mi++) {
+                var mFileBase = malformedSpecs[mi].replace(/\.ya?ml$/i, '');
+                if (mFileBase === mBoundId) {
+                  console.log('malformed_bound_spec:' + malformedSpecs[mi]);
+                  process.exit(0);
+                }
+              }
+            }
+          }
+        } catch (_) {}
+      }
+
       var mode = authoritativeSpec ? 'authoritative' : 'union';
-      var specsToCheck = authoritativeSpec ? [authoritativeSpec] : specs;
+      var specsToCheck;
+      if (authoritativeSpec) {
+        specsToCheck = [authoritativeSpec];
+      } else {
+        // Union mode: drafts do NOT participate. Only active specs.
+        specsToCheck = specs.filter(function(s) { return !isDraft(s.state); });
+        if (specsToCheck.length === 0) {
+          // Only drafts present, none authoritative — allow.
+          console.log('in_scope');
+          process.exit(0);
+        }
+      }
 
       // Check scope.out across applicable specs — any match blocks
       for (var si = 0; si < specsToCheck.length; si++) {
         var outPatterns = (specsToCheck[si].spec.scope && specsToCheck[si].spec.scope.out) || [];
         for (var pi = 0; pi < outPatterns.length; pi++) {
-          var regex = new RegExp(outPatterns[pi].replace(/\\*/g, '.*').replace(/\\?/g, '.'));
+          var regex = globToRegExp(outPatterns[pi]);
           if (regex.test(filePath)) {
             console.log('out_of_scope:' + mode + ':' + specsToCheck[si].source + ':' + outPatterns[pi]);
             process.exit(0);
@@ -326,25 +386,38 @@ if command -v node >/dev/null 2>&1; then
         }
       }
 
-      // Union all scope.in patterns from applicable specs — file must match at least one
+      // Union all scope.in AND scope.support patterns — file must match at
+      // least one. scope.support (WORKTREE-SUPPORT-SCOPE-001) is ADMITTED for
+      // edits exactly like scope.in here; the difference (support is NOT a
+      // worktree claim) lives in worktree-write-guard claim derivation, which
+      // reads scope.in only. This guard only decides edit-admissibility.
       var allInScope = [];
       for (var si = 0; si < specsToCheck.length; si++) {
         var inPatterns = (specsToCheck[si].spec.scope && specsToCheck[si].spec.scope.in) || [];
         for (var pi = 0; pi < inPatterns.length; pi++) {
           allInScope.push(inPatterns[pi]);
         }
+        var supportPatterns = (specsToCheck[si].spec.scope && specsToCheck[si].spec.scope.support) || [];
+        for (var sp = 0; sp < supportPatterns.length; sp++) {
+          allInScope.push(supportPatterns[sp]);
+        }
       }
       if (allInScope.length > 0) {
         var found = false;
         for (var pi = 0; pi < allInScope.length; pi++) {
-          var regex = new RegExp(allInScope[pi].replace(/\\*/g, '.*').replace(/\\?/g, '.'));
+          var regex = globToRegExp(allInScope[pi]);
           if (regex.test(filePath)) {
             found = true;
             break;
           }
         }
         if (!found) {
-          console.log('not_in_scope:' + mode);
+          // Append the authoritative bound spec id (when known) so the bash
+          // side can print a literal amend-scope remediation command
+          // (HOOK-GUARD-LEGIBILITY-001). Union mode has no single bound id,
+          // so the field is empty there.
+          var boundIdForHint = (authoritativeSpec && authoritativeSpec.spec && authoritativeSpec.spec.id) || '';
+          console.log('not_in_scope:' + mode + ':' + boundIdForHint);
           process.exit(0);
         }
       }
@@ -357,35 +430,49 @@ if command -v node >/dev/null 2>&1; then
 
   if [[ "$SCOPE_CHECK" == out_of_scope:* ]]; then
     DETAIL="${SCOPE_CHECK#out_of_scope:}"
-    # Format: mode:source:pattern
     MODE="${DETAIL%%:*}"
     REST="${DETAIL#*:}"
     SOURCE="${REST%%:*}"
     PATTERN="${REST#*:}"
     if [[ "$MODE" == "union" ]]; then
-      emit_scope_progression "This file is marked out-of-scope in '$SOURCE' by pattern '$PATTERN'. Mode: union (no authoritative spec bound). An unrelated spec may be blocking this edit. Fix: caws worktree bind <your-spec-id>. Diagnose: caws scope show."
+      emit_scope_progression "This file is marked out-of-scope in '$SOURCE' by pattern '$PATTERN'. Mode: union (no authoritative spec bound). An unrelated spec may be blocking this edit. Diagnose: caws scope show."
     else
       emit_scope_progression "This file is marked out-of-scope in '$SOURCE' by pattern '$PATTERN'. Mode: authoritative (checking only your bound spec)."
     fi
     exit 0
   fi
 
+  if [[ "$SCOPE_CHECK" == malformed_bound_spec:* ]]; then
+    # INV-5 (harvested from Sterling): the worktree's bound spec failed to
+    # parse. We cannot honor authoritative scope, and silently dropping to
+    # union mode would be quietly weaker enforcement — so refuse and name
+    # the malformed file. Routed through the strike system like an
+    # out-of-scope refusal.
+    MALFORMED_FILE="${SCOPE_CHECK#malformed_bound_spec:}"
+    emit_scope_progression "Your worktree's bound spec '.caws/specs/$MALFORMED_FILE' failed to parse (invalid YAML). Scope cannot be enforced authoritatively, so the edit is refused rather than falling back to weaker union-mode checks. Fix the YAML in '$MALFORMED_FILE', then retry."
+    exit 0
+  fi
+
   if [[ "$SCOPE_CHECK" == not_in_scope:* ]]; then
-    MODE="${SCOPE_CHECK#not_in_scope:}"
+    # Output shape: not_in_scope:<mode>[:<bound-spec-id>]
+    REST="${SCOPE_CHECK#not_in_scope:}"
+    MODE="${REST%%:*}"
+    BOUND_SPEC_ID=""
+    if [[ "$REST" == *:* ]]; then
+      BOUND_SPEC_ID="${REST#*:}"
+    fi
     if [[ "$MODE" == "union" ]]; then
-      emit_scope_progression "This file is not in the defined scope of any active spec. Mode: union (no authoritative spec bound). Fix: caws worktree bind <your-spec-id>. Diagnose: caws scope show."
+      emit_scope_progression "This file is not in the defined scope of any active spec. Mode: union (no authoritative spec bound). Diagnose: caws scope show."
     else
-      emit_scope_progression "This file is not in the defined scope of your bound spec. Mode: authoritative. Update your spec's scope.in if this file should be in scope."
+      emit_scope_progression "This file is not in the defined scope of your bound spec '${BOUND_SPEC_ID:-<unknown>}'. Mode: authoritative." "$BOUND_SPEC_ID"
     fi
     exit 0
   fi
 
-  # Legacy fallback for unqualified not_in_scope
   if [[ "$SCOPE_CHECK" == "not_in_scope" ]]; then
     emit_scope_progression "This file is not in the defined scope of any active spec. Diagnose: caws scope show."
     exit 0
   fi
 fi
 
-# File is in scope or scope couldn't be checked - allow
 exit 0

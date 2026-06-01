@@ -1,8 +1,16 @@
 #!/bin/bash
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 27
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+#
 # Plan Transcript Snapshot — capture conversation context at the moment
 # the agent presents a plan via ExitPlanMode.
 #
-# Wired into: PostToolUse with matcher "ExitPlanMode" (see .claude/settings.json).
+# Wired into: PostToolUse with matcher "ExitPlanMode" (self-filters on
+# $HOOK_TOOL_NAME at the top).
 #
 # At hook time:
 #   - The agent has finished building the plan (Write/Edit calls done).
@@ -24,6 +32,10 @@
 # outputs, Read results, and any content that crossed the conversation.
 # Sharing the .transcript.jsonl file is equivalent to sharing your full
 # session for the turns leading up to the plan. Treat accordingly.
+#
+# Companion: plan-transcript-finalize.sh (Stop hook) drains the pending
+# list and finalizes each snapshot with the turn-end transcript.
+# Promoted from Sterling per CAWS-HOOK-PACK-PROMOTE-001.
 
 set -euo pipefail
 

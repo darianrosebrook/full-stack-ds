@@ -1,4 +1,10 @@
 #!/bin/bash
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 9
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
 # CAWS Audit Hook for Claude Code
 # Logs agent actions for compliance and debugging
 # @author @darianrosebrook

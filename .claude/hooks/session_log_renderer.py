@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
-"""Render lean session artifacts from a Claude transcript JSONL."""
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 10
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+"""Render lean session artifacts from a Claude transcript JSONL.
+
+This file is invoked by session-log.sh via `python3 <path>`. It is NOT
+executable on its own; the pack manifest registers it with
+`executable: false`. The CAWS-MANAGED-HOOK header above is parsed
+by `caws init` to recognize this file as managed.
+
+Bundled in v6 of the pack to fix CAWS-HOOK-PACK-RENDERER-MISSING-001:
+session-log.sh's `RENDERER` path used to point at a file that was
+not bundled, producing a crash on every invocation in fresh installs.
+"""
 
 from __future__ import annotations
 
@@ -40,11 +56,18 @@ NOTABLE_KW = (
     "typedrefusal",
 )
 
+#
+# MEANINGFUL_COMMAND_KW is a small, intentionally-generic baseline of
+# substrings that mark "interesting" bash commands worth surfacing in
+# session.txt. Consumers with project-specific toolchains (Rust:
+# `cargo test`, `cargo build`; Python lint/typecheck: `ruff`, `mypy`;
+# etc.) should NOT edit this file to add their entries — re-running
+# `caws init --agent-surface claude-code` would refuse the merge as
+# `unmanaged_collision`. Future work (CAWS-HOOK-PACK-RENDERER-CONFIG-001)
+# will admit a sidecar config (e.g. `.caws/session-log.yaml`) for
+# consumer extensions; until then the baseline is the only set.
 MEANINGFUL_COMMAND_KW = (
     "pytest",
-    "cargo test",
-    "ruff",
-    "mypy",
     "npm test",
     "pnpm test",
     "git log",
@@ -56,8 +79,23 @@ MEANINGFUL_COMMAND_KW = (
     "caws ",
     "pip install",
     "make",
-    "cargo build",
 )
+
+
+def command_is_of_interest(entry: dict[str, Any]) -> bool:
+    """A command is worth surfacing in the handoff/log if it matches the
+    meaningful-keyword allowlist OR if it ERRORED. Errors are always
+    meaningful: a blocked/failed command is exactly what a continuing agent
+    needs to see, even when the command itself is not on the curated list
+    (e.g. a bare `git worktree list` that tripped a guard, or an `ls` into a
+    missing worktree dir). Without this, non-allowlisted failures vanish from
+    the handoff and first-contact debugging has to reconstruct them from raw
+    transcript JSONL (SESSION-LOG-ERROR-VISIBILITY-001).
+    """
+    command = entry.get("command") or ""
+    if entry.get("is_error"):
+        return True
+    return any(keyword in command for keyword in MEANINGFUL_COMMAND_KW)
 
 DECISION_PATTERNS = [
     re.compile(r"(?:^|\n)\s*(?:decision|decided|choosing|will use|going with)[:\s]+(.+?)(?:\n|$)", re.IGNORECASE),
@@ -408,7 +446,9 @@ def accumulate_turns(events: list[dict[str, Any]], cwd: str) -> tuple[list[dict[
                 )
                 if "git commit" in command and "-m" in command:
                     current["artifacts"].append({"type": "git_commit", "command": command, "ts": ts})
-                if any(keyword in command for keyword in ("pytest", "cargo test", "npm test", "pnpm test")):
+                # Test-runner detection: kept aligned with MEANINGFUL_COMMAND_KW.
+                # See the comment above that tuple for consumer-extension guidance.
+                if any(keyword in command for keyword in ("pytest", "npm test", "pnpm test")):
                     current["artifacts"].append({"type": "test_run", "command": command, "ts": ts})
 
             elif name in ("Agent", "Task"):
@@ -712,8 +752,11 @@ def write_session_txt(
     lines.extend(["", "## Commands", ""])
     for command in indexes["commands"]:
         text = command.get("command", "")
-        if any(keyword in text for keyword in MEANINGFUL_COMMAND_KW):
-            lines.append(f"- turn {command['turn']}: `{truncate(text, 120)}`")
+        if command_is_of_interest(command):
+            # Flag failures so a scanning reader spots them without parsing
+            # output (SESSION-LOG-ERROR-VISIBILITY-001).
+            marker = " ❌ FAILED" if command.get("is_error") else ""
+            lines.append(f"- turn {command['turn']}: `{truncate(text, 120)}`{marker}")
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -778,9 +821,11 @@ def build_handoff(
                     "turn": entry["turn"],
                     "command": entry.get("command"),
                     "output_preview": entry.get("output_preview"),
+                    "is_error": bool(entry.get("is_error")),
+                    "duration_s": entry.get("duration_s"),
                 }
                 for entry in indexes["commands"]
-                if any(keyword in (entry.get("command") or "") for keyword in MEANINGFUL_COMMAND_KW)
+                if command_is_of_interest(entry)
             ][-20:],
             "agent_reports": indexes["agents"][-20:],
             "session_events": session_events[-20:],

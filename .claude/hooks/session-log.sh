@@ -1,4 +1,10 @@
 #!/bin/bash
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 11
+# caws_min_major: 11
+# lineage_refs: 10
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
 # Session Logger for Claude Code — lean structured session capture.
 #
 # Canonical artifacts:
@@ -7,7 +13,10 @@
 #   handoff.json       — compact continuation view for follow-on agents
 #   session.txt        — human-readable summary pointing at the JSON artifacts
 #
-# Output: ./tmp/<session-id>/
+# Output: <canonical-repo-root>/.caws/sessions/<session-id>/
+# (CAWS-SESSION-LOG-RELOCATE-001: per-session state lives under .caws/sessions/
+# — gitignored, provenance-adjacent — NOT repo-root tmp/, which is user-owned
+# scratch that bloats and gets committed.)
 
 set -euo pipefail
 
@@ -22,7 +31,28 @@ CWD="${HOOK_CWD:-.}"
 TRANSCRIPT_PATH="$HOOK_TRANSCRIPT_PATH"
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-LOG_DIR="${CWD}/tmp/${SESSION_ID}"
+# Resolve the CANONICAL repo root so a linked worktree's session logs land in
+# the canonical .caws/sessions/, not a per-worktree copy. git-common-dir's
+# parent is the canonical checkout (for the main checkout it equals the repo
+# root). Fall back to CWD if git is unavailable.
+_session_canonical_root() {
+  local common parent
+  common=$(cd "$CWD" 2>/dev/null && git rev-parse --git-common-dir 2>/dev/null) || { printf '%s\n' "$CWD"; return; }
+  [[ -z "$common" ]] && { printf '%s\n' "$CWD"; return; }
+  case "$common" in
+    /*) : ;;
+    *)  common="$CWD/$common" ;;
+  esac
+  parent=$(cd "$common/.." 2>/dev/null && pwd -P) || { printf '%s\n' "$CWD"; return; }
+  if [[ -n "$parent" ]] && [[ -d "$parent/.caws" ]]; then
+    printf '%s\n' "$parent"
+  else
+    printf '%s\n' "$CWD"
+  fi
+}
+CAWS_ROOT="$(_session_canonical_root)"
+
+LOG_DIR="${CAWS_ROOT}/.caws/sessions/${SESSION_ID}"
 mkdir -p "$LOG_DIR"
 
 META_FILE="$LOG_DIR/.meta.json"

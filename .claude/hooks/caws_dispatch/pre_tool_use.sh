@@ -55,6 +55,14 @@ HANDLERS=(
   worktree-guard.sh
   scope-guard.sh
   worktree-write-guard.sh
+  # WORKTREE-ISOLATION-HARDENING-001 (Fix 3): Bash mutation target authority.
+  # Self-filters to Bash; extracts write targets for a narrow set of mutation
+  # forms (redirection, tee, sed -i, rm/mv/cp, git restore, ...) and routes each
+  # through the same worktree-claim-oracle as worktree-write-guard, so a Bash
+  # mutation of a foreign worktree's payload blocks at the same boundary as a
+  # foreign Write/Edit. Runs after worktree-write-guard (file-tool authority)
+  # since the two cover disjoint tool surfaces.
+  bash-write-guard.sh
   protected-paths.sh
   scan-secrets.sh
   # quiet-merge.sh MUST be the last interceptor: it emits
