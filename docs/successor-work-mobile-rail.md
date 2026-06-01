@@ -108,7 +108,17 @@ they *need* that the IR doesn't cleanly expose:
 `resolveCallbackKind` is **fine** — it's contract-declared and substrate
 neutral by design (proven by `callback-kind.test.ts`). The doc's "lives or
 dies here" worry is resolved on the callback-kind axis; it's the *role
-elision* axis that's unresolved.
+elision* axis that was thought unresolved.
+
+> **UPDATE (MOBILE-IR-FACT-PARITY-SWEEP-01, commit 5103447):** the corpus
+> sweep **refuted the role-elision blocker** — true role loss is **0/47**.
+> All 7 components whose element implies a role also declare it explicitly,
+> so `explicitRole` retains the fact. The real universal IR gap is **typed
+> token facts** (every one of 47 mines token values out of CSS strings).
+> See [`successor-work-mobile-rail-sweep.md`](./successor-work-mobile-rail-sweep.md)
+> for the full classification (A=21 IR-sufficient, C=17 native-layout,
+> D=9 controller, B=0, E=0). The Phase 0 breakdown below is superseded by
+> the sweep's revised sizing; it is kept for the original reasoning trail.
 
 ---
 
