@@ -166,15 +166,41 @@ if [[ "$STATUS" == "superseded" ]]; then
   fi
 fi
 
-# V6: Check caws_specs for roadmap docs
+# V6: Check caws_specs for roadmap docs.
+#
+# A roadmap doc declares which CAWS specs track its items. The remediation
+# must point at the ACTION that makes the linkage real (`caws specs create`),
+# never at the field SYNTAX with example IDs — modelling `caws_specs: [TC-01]`
+# taught at least one agent to fabricate IDs that satisfy the regex but
+# reference specs that do not exist (turn-003 minted four placeholder IDs to
+# clear this gate against an uninitialized control plane).
+#
+# Precondition: the linkage cannot resolve if `.caws/` does not exist. When
+# CAWS is not initialized, the only correct first step is `caws init`; demanding
+# the field before there is a control plane to create specs in corners the
+# author into fabrication. So the remediation branches on `.caws/` presence.
 if [[ "$AUTHORITY" == "roadmap" ]]; then
   if ! echo "$FRONTMATTER" | grep -q "^caws_specs:"; then
-    echo '{
-      "hookSpecificOutput": {
-        "hookEventName": "PostToolUse",
-        "additionalContext": "Doc governance (V6): '"$FILE_PATH"' has authority '"'"'roadmap'"'"' but no caws_specs field. Roadmap docs should declare which CAWS specs track their items (e.g., caws_specs: [TC-01, TC-04])."
-      }
-    }'
+    REPO_ROOT=$(git -C "$(dirname "$FILE_PATH")" rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-.}")
+    if [[ ! -d "$REPO_ROOT/.caws" ]]; then
+      # CAWS is not initialized — the caws_specs linkage has no control plane
+      # to point at. Do NOT model the field syntax; point at init first.
+      echo '{
+        "hookSpecificOutput": {
+          "hookEventName": "PostToolUse",
+          "additionalContext": "Doc governance (V6): '"$FILE_PATH"' has authority '"'"'roadmap'"'"' but no caws_specs field, and this repo has no '"'"'.caws/'"'"' directory — CAWS is not initialized. Do NOT invent placeholder spec IDs to satisfy this field; that links the roadmap to specs that do not exist. Initialize CAWS first (`caws init`), then author a real spec for each phase (`caws specs create <ID> --title \"...\" --mode <feature|refactor|fix|doc|chore> --risk-tier <1|2|3>`) and list the created IDs in caws_specs."
+        }
+      }'
+    else
+      # CAWS is initialized — the field should reference specs that exist.
+      # Point at spec creation, not the field syntax.
+      echo '{
+        "hookSpecificOutput": {
+          "hookEventName": "PostToolUse",
+          "additionalContext": "Doc governance (V6): '"$FILE_PATH"' has authority '"'"'roadmap'"'"' but no caws_specs field. Roadmap docs must link to CAWS specs that actually track the work. For each phase this roadmap describes, create a spec with `caws specs create <ID> --title \"...\" --mode <feature|refactor|fix|doc|chore> --risk-tier <1|2|3>`, then list the real IDs in caws_specs. Do NOT invent placeholder IDs to clear this check — a caws_specs entry that names a non-existent spec is a broken link, not a tracked item."
+        }
+      }'
+    fi
     exit 0
   fi
 fi
