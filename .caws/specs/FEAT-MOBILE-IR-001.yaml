@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: mobile-ir-001
 created_at: '2026-06-01T19:34:55.846Z'
-updated_at: '2026-06-01T19:34:55.846Z'
+updated_at: '2026-06-02T01:15:39.768Z'
 blast_radius:
   modules:
     - packages/ds-codegen (framework-neutral IR)
@@ -16,6 +16,7 @@ scope:
   in:
     - 'packages/ds-codegen/src/ir.ts'
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
+    - packages/ds-codegen/src/token-facts.test.ts
   out:
     # Explicitly NOT this spec — successor specs own these (see invariants/non-claims).
     - 'packages/ds-codegen/src/target-packs'
