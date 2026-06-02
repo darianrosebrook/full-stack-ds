@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: mobile-disclosure
 created_at: '2026-06-02T02:19:28.205Z'
-updated_at: '2026-06-02T02:50:06.389Z'
+updated_at: '2026-06-02T02:52:46.609Z'
 blast_radius:
   modules:
     - packages/ds-codegen (collapse-intent collection in framework-neutral IR)
@@ -20,6 +20,7 @@ scope:
     - 'packages/ds-codegen/src/frameworks/swift/swiftui/component-source.ts'
     - packages/ds-codegen/src/contract.ts
     - packages/ds-contracts/component.contract.schema.json
+    - packages/ds-codegen/src/collapse-intent.test.ts
   out:
     # Explicitly NOT this spec — successor specs / out-of-scope (Phase 1, rail).
     - 'packages/ds-codegen/src/target-packs'
