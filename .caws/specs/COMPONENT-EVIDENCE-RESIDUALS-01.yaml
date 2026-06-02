@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-02T09:44:28.780Z'
-updated_at: '2026-06-02T09:44:37.979Z'
+updated_at: '2026-06-02T09:44:38.866Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -18,7 +18,10 @@ scope:
     - src/views/sections/A2UIDescriptorPanel.tsx
     - src/views/sections/EvidencePanel.tsx
     - src/types/data.ts
-  out: []
+  out:
+    - packages
+    - vite-plugin-fsds-data.ts
+    - src/router.tsx
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
 acceptance:
