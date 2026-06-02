@@ -63,6 +63,31 @@ describe("FEAT-MOBILE-DISCLOSURE-001: Details native-disclosure intent (A1)", ()
   });
 });
 
+describe("FEAT-MOBILE-DISCLOSURE-001: name-independence is falsifiable (A1, full pipeline)", () => {
+  // FALSIFICATION TEST (TEST-MOBILE-IR-FALSIFIABILITY-HARDEN-01 A1).
+  //
+  // The two A1 tests above both build a contract NAMED "Details", so they pass
+  // even if any stage of the pipeline did `if (name === "Details") …`. This
+  // test removes that loophole: it takes the real Details contract, RENAMES it
+  // to a non-"Details" name, and drives the FULL buildComponentIR pipeline
+  // (part construction included — not a synthetic IR). The authored
+  // `collapsibleTo: native-disclosure` is preserved. If ANY component-name
+  // special case existed anywhere in contract→IR→collector, the intent would
+  // not collect and this test fails. Proven to fail under injected name-lore;
+  // see the slice's mutation-evidence report.
+  it("collects native-disclosure for a NON-Details-named contract carrying the authored intent", () => {
+    const details = loadContract("Details");
+    const renamed = { ...details, name: "ZzNotDetails" } as ComponentContract;
+
+    const ir = buildComponentIR(renamed);
+    expect(ir.name).toBe("ZzNotDetails"); // guard: the rename actually took
+
+    const intents = collectCollapseIntents(ir);
+    expect(intents.has("native-disclosure")).toBe(true);
+    expect(intents.get("native-disclosure")).toContain("root");
+  });
+});
+
 describe("FEAT-MOBILE-DISCLOSURE-001: collector generalizes (A2)", () => {
   it("admits both native-toggle-affordance and native-disclosure by intent value", () => {
     // Synthetic IR: two parts, each declaring a different intent. The
@@ -97,6 +122,18 @@ describe("FEAT-MOBILE-DISCLOSURE-001: disclosure primitive facts available (A3)"
     expect(partNames).toContain("summary");
     expect(partNames).toContain("summaryText");
     expect(partNames).toContain("content");
+
+    // HARDENING (A5): a native disclosure primitive's trigger is the summary
+    // element. Assert the summary part actually carries the trigger affordance
+    // a consumer reads — its native `<summary>` tag — not merely that a part
+    // NAMED "summary" exists. A hollow part with no nativeTag would pass the
+    // name check above but give a SwiftUI/Compose consumer nothing to bind the
+    // disclosure trigger to; this assertion catches that.
+    const summary = ir.parts.find((p) => p.name === "summary");
+    expect(summary?.nativeTag).toBe("summary");
+    // The collapsible body part must likewise be a real part, not a bare name.
+    const content = ir.parts.find((p) => p.name === "content");
+    expect(content).toBeDefined();
 
     // Open/close state channel, typed boolean — drives the native expanded
     // binding. This is data availability only; no rendering is asserted.
