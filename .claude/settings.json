@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/dispatch/pre_tool_use.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/pre_tool_use.sh",
             "timeout": 45
           }
         ]
@@ -21,7 +21,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/dispatch/post_tool_use.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/post_tool_use.sh",
             "timeout": 60
           }
         ]
@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/dispatch/session_start.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/session_start.sh",
             "timeout": 30
           }
         ]
@@ -43,7 +43,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/dispatch/stop.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/stop.sh",
             "timeout": 30
           }
         ]

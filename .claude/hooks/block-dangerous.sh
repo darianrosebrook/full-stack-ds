@@ -215,20 +215,57 @@ fi
 PROTECTED_HOOK_REL=".claude/hooks/worktree-write-guard.sh"
 PROTECTED_HOOK_ABS="${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/worktree-write-guard.sh"
 if printf '%s' "$COMMAND" | grep -qF "$PROTECTED_HOOK_REL" || printf '%s' "$COMMAND" | grep -qF "$PROTECTED_HOOK_ABS"; then
-  # Allow checkpoint-oriented git flows that only stage/commit the protected file.
+  # DANGER-LATCH-TRIGGER-DISCRIMINATION-001: the latch must fire on protected-
+  # guard DESTINATION mutation, NOT on the guard merely appearing as a read/copy
+  # SOURCE (e.g. `cp <guard> /tmp/fixture` or `node -e '...copyFileSync(<guard>,
+  # dest)...'` for diagnostic setup). The prior predicate latched whenever the
+  # guard path appeared AND any mutating-utility token appeared anywhere —
+  # source-blind — which armed the sticky latch on benign fixture construction.
+  #
+  # Determine whether the guard is the DESTINATION of the mutation.
+  _GUARD_TOKEN=""
+  if printf '%s' "$COMMAND" | grep -qF "$PROTECTED_HOOK_ABS"; then
+    _GUARD_TOKEN="$PROTECTED_HOOK_ABS"
+  else
+    _GUARD_TOKEN="$PROTECTED_HOOK_REL"
+  fi
+  # The guard is the LAST whitespace-delimited token (the cp/mv/install
+  # destination position), ignoring a trailing `;`/`&`/`|` separator.
+  _LAST_TOKEN="$(printf '%s' "$COMMAND" | sed -E 's/[[:space:]]*[;&|][[:space:]]*$//' | awk '{print $NF}')"
+  _GUARD_IS_DEST=0
+  [[ "$_LAST_TOKEN" == "$_GUARD_TOKEN" ]] && _GUARD_IS_DEST=1
+
   if printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])git[[:space:]]+(add|commit|status|diff|log|show)\b'; then
+    # Checkpoint-oriented git flows that only stage/commit the protected file.
     :
-  # Mutating utilities (cp, mv, rm, sed, etc.) targeting the protected path.
-  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(cp|mv|rm|sed|perl|python|python3|ruby|node|tee|touch|truncate|install|chmod)[[:space:]]'; then
-    record_danger_latch "$LATCH_FILE" "block" "shell edit of protected guard" "$COMMAND"
+  elif printf '%s' "$COMMAND" | grep -qE '(>>|>)[[:space:]]*'"$_GUARD_TOKEN"; then
+    # Output redirect whose TARGET is the guard → in-place write → latch.
+    record_danger_latch "$LATCH_FILE" "block" "shell redirect into protected guard (destination)" "$COMMAND"
+    emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not redirect output into it. Ask the user for permission before modifying this hook. Command was: $COMMAND"
+    exit 0
+  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(rm|sed|perl|tee|touch|truncate|install|chmod)[[:space:]]'; then
+    # In-place file mutators name the operand AS the target. The guard appearing
+    # as an operand of these IS a destination mutation → latch.
+    record_danger_latch "$LATCH_FILE" "block" "shell edit of protected guard (in-place mutator)" "$COMMAND"
     emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not modify it via the shell. Ask the user for permission before modifying this hook. Command was: $COMMAND"
     exit 0
-  # Output-redirect operators that write to a file. Match `>` or `>>` only
-  # when NOT followed by `&` (fd-redirects like 2>&1, >&2 are read-only
-  # plumbing). `<<` heredoc is INPUT and never writes a file, so excluded.
-  elif printf '%s' "$COMMAND" | grep -qE '(>>|>)[^&]'; then
-    record_danger_latch "$LATCH_FILE" "block" "shell redirect into protected guard" "$COMMAND"
-    emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not redirect output into it. Ask the user for permission before modifying this hook. Command was: $COMMAND"
+  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(cp|mv)[[:space:]]' && [[ "$_GUARD_IS_DEST" == "1" ]]; then
+    # cp/mv ONLY when the guard is the DESTINATION (last operand). cp/mv with
+    # the guard as a SOURCE (copying it OUT to a fixture) is NOT a guard mutation.
+    record_danger_latch "$LATCH_FILE" "block" "shell edit of protected guard (copy/move destination)" "$COMMAND"
+    emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not copy/move over it. Ask the user for permission before modifying this hook. Command was: $COMMAND"
+    exit 0
+  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(cp|mv|node|python|python3|ruby)[[:space:]]'; then
+    # The guard is referenced by a copy SOURCE or an interpreter (opaque code
+    # that most likely reads/copies it OUT). This is NOT a confirmed destination
+    # mutation → do NOT arm the sticky latch. ASK so a genuine in-place edit
+    # still gets human review, but a diagnostic fixture copy is not punished.
+    REASON="CAWS command-safety: this command references the protected guard $PROTECTED_HOOK_REL but does not appear to write INTO it (guard is a copy source or an interpreter argument, not the destination). If you are reading/copying it out for a fixture, that is allowed once approved; if you intend to modify the guard in place, that requires explicit human approval. This did NOT arm the danger latch. Command was: $COMMAND"
+    if command -v emit_ask_json >/dev/null 2>&1; then
+      emit_ask_json "$REASON"
+    else
+      printf '%s\n' "$REASON" >&2
+    fi
     exit 0
   fi
 fi

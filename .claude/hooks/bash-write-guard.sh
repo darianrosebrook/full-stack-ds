@@ -291,7 +291,27 @@ case "$WORST" in
       echo "  This is a CAWS governance decision, not a Claude Code harness prompt." >&2
       echo "  To work in worktree '$_OWN_WT', operate from a SESSION rooted there (caws claim '$_OWN_WT' --takeover to take ownership)." >&2
     else
-      echo "[$_BG_ID] BLOCKED: this Bash command mutates '$WORST_DETAIL', claimed by an active worktree's scope.in." >&2
+      # block_claimed detail is a COMMA-separated list of name:pattern pairs —
+      # one per claiming worktree (CLASH-GUARD-CLAIMANT-LABELING-001). The lead
+      # claimant names the mutated file; if more than one worktree claims it we
+      # list every claimant so the agent sees all owners, not just the first.
+      # CLASH-GUARD-CLAIMANT-RENDER-HOTFIX-001: array split (no pipe-while), so
+      # the claimant enumeration emits under the guard runtime (stdin + set -e).
+      IFS=',' read -ra _CLAIM_PAIRS <<< "$WORST_DETAIL"
+      _LEAD_WT="${_CLAIM_PAIRS[0]%%:*}"
+      _LEAD_PAT="${_CLAIM_PAIRS[0]#*:}"
+      echo "[$_BG_ID] BLOCKED: this Bash command mutates '$_LEAD_WT:$_LEAD_PAT', claimed by an active worktree's scope.in." >&2
+      _CLAIMANT_COUNT=${#_CLAIM_PAIRS[@]}
+      if [[ "$_CLAIMANT_COUNT" -gt 1 ]]; then
+        echo "  This path is claimed via scope.in by $_CLAIMANT_COUNT active worktrees:" >&2
+        for _pair in "${_CLAIM_PAIRS[@]}"; do
+          [[ -z "$_pair" ]] && continue
+          _cw="${_pair%%:*}"
+          _cp="${_pair#*:}"
+          echo "    - worktree '$_cw' via scope.in '$_cp'" >&2
+        done
+        echo "  Route the edit through whichever single worktree should own it." >&2
+      fi
       echo "  This is a CAWS governance decision, not a Claude Code harness prompt." >&2
     fi
     echo "  Do NOT edit .claude/hooks/ or guard state to bypass this." >&2

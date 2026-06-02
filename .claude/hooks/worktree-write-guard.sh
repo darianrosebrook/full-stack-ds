@@ -232,9 +232,21 @@ if [[ -n "$FILE_PATH" ]]; then
           block_claimed)
             # A worktree-payload path that also matches a canonical claim. Treat
             # as the canonical claimed-block (session-independent) for legibility.
+            # _ORACLE_DETAIL is a COMMA-separated list of name:pattern pairs —
+            # one per claiming worktree (CLASH-GUARD-CLAIMANT-LABELING-001).
             _WG_ID="CAWS worktree-write-guard"
             command -v guard_identity >/dev/null 2>&1 && _WG_ID="$(guard_identity worktree-write-guard)"
-            echo "[$_WG_ID] BLOCKED: '$FILE_PATH_FOR_ALLOWLIST' is claimed by an active worktree's scope.in ($_ORACLE_DETAIL)." >&2
+            echo "[$_WG_ID] BLOCKED: '$FILE_PATH_FOR_ALLOWLIST' is claimed by an active worktree's scope.in." >&2
+            # CLASH-GUARD-CLAIMANT-RENDER-HOTFIX-001: array split (no pipe-while).
+            IFS=',' read -ra _CLAIM_PAIRS <<< "$_ORACLE_DETAIL"
+            _CLAIMANT_COUNT=${#_CLAIM_PAIRS[@]}
+            for _pair in "${_CLAIM_PAIRS[@]}"; do
+              [[ -z "$_pair" ]] && continue
+              _cw="${_pair%%:*}"
+              _cp="${_pair#*:}"
+              echo "  claimed:$_cw:$_cp — worktree '$_cw' via scope.in '$_cp'" >&2
+            done
+            [[ "$_CLAIMANT_COUNT" -gt 1 ]] && echo "  $_CLAIMANT_COUNT worktrees claim this path; route the edit through whichever single worktree should own it." >&2
             echo "  This is a CAWS governance decision, not a Claude Code harness prompt." >&2
             exit 2 ;;
           ask_uncertain|error_fail_closed)
@@ -451,6 +463,10 @@ if [[ -n "$FILE_PATH" ]] && [[ "$WT_COUNT" -gt 0 ]] 2>/dev/null; then
         process.exit(0);
       }
 
+      // CLASH-GUARD-CLAIMANT-LABELING-001: accumulate EVERY claiming worktree
+      // (a contested path may be claimed by more than one active spec) rather
+      // than exiting on the first match, so the block names all owners.
+      var _claimants = [];
       for (var wi = 0; wi < worktrees.length; wi++) {
         var wt = worktrees[wi];
         // entrySpecId handles both v11 spec_id and v10 specId carryover.
@@ -502,10 +518,19 @@ if [[ -n "$FILE_PATH" ]] && [[ "$WT_COUNT" -gt 0 ]] 2>/dev/null; then
 
         for (var pi = 0; pi < patterns.length; pi++) {
           if (globToRegExp(patterns[pi]).test(relPath)) {
-            console.log('claimed:' + (wt.name || wtSpecId) + ':' + patterns[pi]);
-            process.exit(0);
+            // First matching pattern per worktree; name the worktree once.
+            _claimants.push((wt.name || wtSpecId) + ':' + patterns[pi]);
+            break;
           }
         }
+      }
+
+      if (_claimants.length > 0) {
+        // claimed: detail is a COMMA-separated list of name:pattern pairs, one
+        // per claiming worktree. A single claimant is byte-identical to the
+        // prior single-claimant 'claimed:name:pattern' output.
+        console.log('claimed:' + _claimants.join(','));
+        process.exit(0);
       }
 
       console.log('clear');
@@ -644,17 +669,36 @@ case "${SPEC_CONTENTION_CHECK:-}" in
     _WG_ID="CAWS worktree-write-guard"
     command -v guard_identity >/dev/null 2>&1 && _WG_ID="$(guard_identity worktree-write-guard)"
     echo "[$_WG_ID] BLOCKED: '$REL_PATH' is claimed by an active worktree's scope.in." >&2
-    echo "  $SPEC_CONTENTION_CHECK" >&2
+    # SPEC_CONTENTION_CHECK is "claimed:<wt>:<pattern>[,<wt>:<pattern>...]" — the
+    # payload after "claimed:" is a COMMA-separated list of claimants
+    # (CLASH-GUARD-CLAIMANT-LABELING-001). List EVERY claimant so the agent sees
+    # all owners of a contested path, not just the first.
+    _CLAIM_LIST="${SPEC_CONTENTION_CHECK#claimed:}"
+    # CLASH-GUARD-CLAIMANT-RENDER-HOTFIX-001: split on comma into an array via
+    # `IFS=',' read -ra` (NO pipe, NO `while read` subshell). The prior
+    # `printf | tr | while read` form emitted nothing under the guard's actual
+    # runtime (hook JSON on stdin + `set -euo pipefail`), dropping the
+    # `claimed:<wt>:<pattern>` token the risk-surface test asserts. A `for` over
+    # an array is robust to that runtime.
+    IFS=',' read -ra _CLAIM_PAIRS <<< "$_CLAIM_LIST"
+    _CLAIM_COUNT=${#_CLAIM_PAIRS[@]}
     echo "  (format: claimed:<worktree-name>:<matching-pattern>)" >&2
+    for _pair in "${_CLAIM_PAIRS[@]}"; do
+      [[ -z "$_pair" ]] && continue
+      echo "  claimed:$_pair" >&2
+    done
     echo "  This is a CAWS governance decision, not a Claude Code harness prompt." >&2
-    # Name the owning worktree (CAWS-GUARD-ASK-ACTIONABLE-REDIRECT-001 A3),
+    # Name the owning worktree(s) (CAWS-GUARD-ASK-ACTIONABLE-REDIRECT-001 A3),
     # but frame the fix as a SESSION-CONTEXT requirement, not a bare shell cd
     # (run-003 fix): a one-off Bash `cd` does NOT move the Edit/Write tool
     # context, so "cd into the worktree" alone makes the agent loop. The edit
-    # must come from a SESSION rooted in that worktree.
-    # SPEC_CONTENTION_CHECK is "claimed:<wt>:<pattern>"; field 2 is the name.
-    _CLAIM_WT="$(printf '%s' "$SPEC_CONTENTION_CHECK" | cut -d: -f2)"
-    if [[ -n "$_CLAIM_WT" ]]; then
+    # must come from a SESSION rooted in the owning worktree.
+    # The lead claimant is the first comma field; field 1 (pre-colon) is its name.
+    _CLAIM_WT="$(printf '%s' "$_CLAIM_LIST" | cut -d, -f1 | cut -d: -f1)"
+    if [[ "$_CLAIM_COUNT" -gt 1 ]]; then
+      echo "This path is claimed via scope.in by $_CLAIM_COUNT active worktrees (listed above)." >&2
+      echo "  Route the edit through whichever single worktree should own it; your SESSION must be rooted in that worktree (a one-off Bash cd does NOT move your Edit/Write tool context)." >&2
+    elif [[ -n "$_CLAIM_WT" ]]; then
       echo "To make this edit, your SESSION must be operating in the owning worktree '$_CLAIM_WT'." >&2
       echo "  cd .caws/worktrees/$_CLAIM_WT and operate from there — a one-off Bash cd does NOT move your Edit/Write tool context; the session itself must be rooted in the worktree." >&2
     else

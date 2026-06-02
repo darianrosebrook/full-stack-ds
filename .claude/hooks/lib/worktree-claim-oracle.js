@@ -187,10 +187,13 @@ function classifyPath(projectDir, candidate) {
 }
 
 // ---------------------------------------------------------------------------
-// Claim resolution. Returns the FIRST active-bound worktree whose scope.in
-// matches the logical path, or null. scope.in ONLY (never scope.out, never
-// scope.support — WORKTREE-SUPPORT-SCOPE-001). Only active-bound specs on the
-// current branch confer a claim.
+// Claim resolution. Returns ALL active-bound worktrees whose scope.in matches
+// the logical path (CLASH-GUARD-CLAIMANT-LABELING-001 — a contested path may be
+// claimed by more than one spec; the block must name every owner, not just the
+// first match). scope.in ONLY (never scope.out, never scope.support —
+// WORKTREE-SUPPORT-SCOPE-001). Only active-bound specs on the current branch
+// confer a claim. The DECISION is unchanged (any claimant => block); only the
+// reported claimant set widens from first-match to all-matches.
 // ---------------------------------------------------------------------------
 
 function loadSpecScopeIn(projectDir, specId) {
@@ -208,8 +211,12 @@ function loadSpecScopeIn(projectDir, specId) {
   return { patterns: patterns };
 }
 
-function findClaimant(projectDir, currentBranch, logicalPath, worktrees) {
-  var sawBranchScopedWorktree = false;
+// Returns { noYaml: true } if any candidate spec's YAML is unreadable (fail
+// closed, same posture as before), else { claimants: [{ wt, pattern }, ...] }
+// listing every active-bound worktree that claims logicalPath via scope.in.
+// An empty claimants array means "no claim" (the caller treats it as pass).
+function findClaimants(projectDir, currentBranch, logicalPath, worktrees) {
+  var claimants = [];
   for (var wi = 0; wi < worktrees.length; wi++) {
     var wt = worktrees[wi];
     if (wt.status === 'destroyed' || wt.status === 'missing') continue;
@@ -219,7 +226,6 @@ function findClaimant(projectDir, currentBranch, logicalPath, worktrees) {
     }
     var specId = entrySpecId(wt);
     if (!specId) continue;
-    sawBranchScopedWorktree = true;
     var scope = loadSpecScopeIn(projectDir, specId);
     // yaml absent: cannot read scope.in to prove/deny a canonical claim. The
     // caller fails closed (ask) rather than silently passing.
@@ -228,11 +234,14 @@ function findClaimant(projectDir, currentBranch, logicalPath, worktrees) {
     if (!scope.patterns || scope.patterns.length === 0) continue;
     for (var pi = 0; pi < scope.patterns.length; pi++) {
       if (globToRegExp(scope.patterns[pi]).test(logicalPath)) {
-        return { wt: wt, pattern: scope.patterns[pi] };
+        // First matching pattern per worktree; a worktree is named once even
+        // if several of its scope.in patterns would match.
+        claimants.push({ wt: wt, pattern: scope.patterns[pi] });
+        break;
       }
     }
   }
-  return sawBranchScopedWorktree ? null : null;
+  return { claimants: claimants };
 }
 
 // ---------------------------------------------------------------------------
@@ -315,16 +324,24 @@ function main() {
   // worktree-write-guard behavior): if any active-bound worktree claims the
   // logical path via scope.in, this is a claimed write at the canonical root
   // and must block regardless of which session is operating.
-  var claimant = findClaimant(projectDir, currentBranch, cls.logical, worktrees);
-  if (claimant !== null && claimant.noYaml) {
+  var claim = findClaimants(projectDir, currentBranch, cls.logical, worktrees);
+  if (claim.noYaml) {
     // Canonical claim check needs spec YAML and js-yaml is unresolvable here.
     // Fail closed for the canonical-root path (the caller asks). This matches
     // the existing inline node block's no-js-yaml posture.
     emit('error_fail_closed', 'no-js-yaml');
   }
-  if (claimant !== null) {
-    emit('block_claimed',
-      (claimant.wt.name || entrySpecId(claimant.wt)) + ':' + claimant.pattern);
+  if (claim.claimants.length > 0) {
+    // block_claimed detail is a COMMA-separated list of `name:pattern` pairs —
+    // one per claiming worktree (CLASH-GUARD-CLAIMANT-LABELING-001). Comma is
+    // safe: worktree names and scope.in patterns do not contain it. A single
+    // claimant yields exactly `name:pattern` (no comma), byte-identical to the
+    // pre-change single-claimant detail so the guards' lead-name parse is
+    // unchanged for that common case.
+    var detail = claim.claimants.map(function (c) {
+      return (c.wt.name || entrySpecId(c.wt)) + ':' + c.pattern;
+    }).join(',');
+    emit('block_claimed', detail);
   }
 
   emit('pass', 'unclaimed');
