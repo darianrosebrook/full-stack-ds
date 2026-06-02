@@ -107,6 +107,22 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
         </span>
       </div>
 
+      <p className="muted fw-readiness" style={{ fontSize: "var(--fsds-core-typography-ramp-2)", marginTop: 0 }}>
+        Generated source:{" "}
+        {FRAMEWORK_TABS.map((t, i) => {
+          const present = Boolean(component.sources[t.key]?.component);
+          return (
+            <span key={t.key}>
+              {i > 0 ? " · " : ""}
+              <span className={present ? "" : "subtle"}>
+                {t.label} {present ? "✓" : "—"}
+              </span>
+            </span>
+          );
+        })}
+        <span className="subtle"> (build-artifact presence; not a runtime or admission claim)</span>
+      </p>
+
       {!componentFile ? (
         <div className="card card--inset muted">No source available for {framework}.</div>
       ) : (
