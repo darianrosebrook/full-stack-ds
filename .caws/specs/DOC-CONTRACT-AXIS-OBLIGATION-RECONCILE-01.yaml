@@ -2,10 +2,11 @@ id: DOC-CONTRACT-AXIS-OBLIGATION-RECONCILE-01
 title: 'Reconcile successor ledger: three contract-axis obligation families landed'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
-worktree: obligation-reconcile
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge obligation-reconcile at c2b72c88e278988d5e1bad77fc78e517edd6da16'
 created_at: '2026-06-02T09:09:24.161Z'
-updated_at: '2026-06-02T09:09:32.952Z'
+updated_at: '2026-06-02T09:11:09.212Z'
 blast_radius:
   modules:
     - docs (successor ledger reconciliation — single file)
