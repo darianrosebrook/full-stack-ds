@@ -7,21 +7,59 @@ created_at: '2026-06-02T07:03:23.770Z'
 updated_at: '2026-06-02T07:03:25.142Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - packages/ds-codegen (mobile-IR test hardening — test files only)
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - packages/ds-codegen/src/collapse-intent.test.ts
     - packages/ds-codegen/src/token-facts.test.ts
-  out: []
+  out:
+    # Test-only hardening. The implementation is already correct (proven by a
+    # throwaway probe); these tests make that correctness durable. No
+    # production code may change unless a stronger test exposes a real bug.
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/frameworks'
+    - 'packages/ds-contracts'
+    - 'packages/ds-react'
+    - 'packages/ds-vue'
+    - 'packages/ds-svelte'
+    - 'packages/ds-angular'
+    - 'packages/ds-lit'
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Test-only change: the committed diff is exactly the two named test files plus CAWS spec lifecycle. No production source (ir.ts, emitters, contracts, generated packages) changes.'
+  - 'The new falsification tests have proven bite: each is demonstrated to FAIL against a deliberately sabotaged implementation (name-lore for the collapse test; CSS-mining for the token test) and to PASS on the real implementation. The sabotage is evidence captured in the report only — it is never committed and leaves no implementation diff.'
+  - 'The hardened tests still pass on the unchanged implementation — hardening adds falsification pressure, it does not change the behavior under test.'
+  - 'The name-independence test drives the FULL buildComponentIR pipeline (not a synthetic IR that bypasses part construction), so it falsifies name-lore anywhere in the contract→IR path, not only in the four-line collector.'
+  - 'The CSS-independence test removes the CSS-producing input BEFORE buildComponentIR runs (not by mutating cssBlocks on an already-built IR), so it falsifies CSS-string mining at the point it would actually occur.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'a real Details-derived contract carrying the authored collapsibleTo native-disclosure fact'
+    when: 'the contract name is changed to a non-Details name and the full buildComponentIR pipeline runs, then collectCollapseIntents reads the result'
+    then: 'native-disclosure is still collected (proving the intent flows from the authored contract fact through the whole pipeline, independent of the component name) — and the report shows this test FAILS when a component-name special case is injected'
+  - id: A2
+    given: 'the Switch contract whose typed token rawValue must come from the tokens sidecar, not from mining CSS declaration strings'
+    when: 'the CSS-producing input (styles sidecar) is removed before buildComponentIR runs and the typed token fact is read'
+    then: 'the typed rawValue is still produced (48px) — and the report shows this test FAILS when buildTokenFacts is rewired to mine cssBlocks'
+  - id: A3
+    given: 'the Switch typed token facts, which include a known set of literal-flagged tokens'
+    when: 'the literal discriminator is asserted'
+    then: 'the test asserts the expected literal token names/set explicitly, not merely that isLiteral-filtered facts carry a rawValue (so a discriminator that mislabels every fact as literal is caught)'
+  - id: A4
+    given: 'the Switch token sidecar with a known number of token entries that project to facts'
+    when: 'token availability is asserted'
+    then: 'the test asserts the expected fact count, not merely length greater than zero (so a projection that emits one fact is caught)'
+  - id: A5
+    given: 'the Details disclosure parts'
+    when: 'disclosure data availability is asserted'
+    then: 'the test asserts the trigger/summary role data a native disclosure primitive actually consumes (not just that a part name is present), so a hollow summary part is caught'
+  - id: A6
+    given: 'the two new falsification tests (A1, A2)'
+    when: 'the implementation is transiently sabotaged in the worktree (name-lore injected; buildTokenFacts rewired to CSS mining), the suite is run, then the sabotage is reverted'
+    then: 'the report captures the FAILING run for each sabotage and the PASSING run after revert; git diff confirms the final tree carries no implementation change'
+  - id: A7
+    given: 'the slice as committed'
+    when: 'git diff is taken over the change set'
+    then: 'exactly the two test files changed (plus CAWS spec lifecycle); no ir.ts / emitter / contract / generated-package file appears in the diff'
 non_functional: {}
 contracts: []
