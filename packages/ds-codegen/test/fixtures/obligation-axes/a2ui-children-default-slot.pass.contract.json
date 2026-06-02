@@ -1,0 +1,11 @@
+{
+  "name": "A2uiChildrenDefaultSlotPass",
+  "category": "structure",
+  "layer": "compound",
+  "anatomy": { "parts": ["root"] },
+  "props": { "styled": { "members": [] } },
+  "a2ui": {
+    "category": "container",
+    "children": { "allowed": true, "slot": "children" }
+  }
+}

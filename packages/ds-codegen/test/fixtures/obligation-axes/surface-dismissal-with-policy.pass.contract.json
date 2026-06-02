@@ -1,0 +1,12 @@
+{
+  "name": "SurfaceDismissalWithPolicyPass",
+  "category": "surface",
+  "layer": "composer",
+  "anatomy": { "parts": ["root"] },
+  "props": { "styled": { "members": [] } },
+  "channels": { "openness": { "value": "open" } },
+  "focus": { "strategy": "trap", "returnFocus": "trigger" },
+  "dismissal": {
+    "triggers": [{ "event": "escape" }, { "event": "outsideClick" }]
+  }
+}

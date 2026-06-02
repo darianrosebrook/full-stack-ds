@@ -1,0 +1,9 @@
+{
+  "name": "SurfaceDismissalNoPolicyFail",
+  "category": "surface",
+  "layer": "composer",
+  "anatomy": { "parts": ["root"] },
+  "props": { "styled": { "members": [] } },
+  "channels": { "openness": { "value": "open" } },
+  "dismissal": { "triggers": [{ "event": "selection" }] }
+}

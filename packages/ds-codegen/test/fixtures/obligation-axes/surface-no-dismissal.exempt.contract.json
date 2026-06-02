@@ -1,0 +1,7 @@
+{
+  "name": "SurfaceNoDismissalExempt",
+  "category": "surface",
+  "layer": "compound",
+  "anatomy": { "parts": ["root"] },
+  "props": { "styled": { "members": [] } }
+}

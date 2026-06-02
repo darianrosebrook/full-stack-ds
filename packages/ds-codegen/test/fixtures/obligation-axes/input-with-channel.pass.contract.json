@@ -1,0 +1,17 @@
+{
+  "name": "InputWithChannelPass",
+  "category": "input",
+  "layer": "primitive",
+  "anatomy": { "parts": ["root"] },
+  "props": {
+    "styled": {
+      "members": [
+        { "name": "value", "type": "string", "description": "Controlled value" },
+        { "name": "onValueChange", "type": "(v: string) => void", "description": "cb" }
+      ]
+    }
+  },
+  "channels": {
+    "text": { "value": "value", "onChange": "onValueChange" }
+  }
+}

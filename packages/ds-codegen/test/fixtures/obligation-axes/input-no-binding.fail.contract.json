@@ -1,0 +1,7 @@
+{
+  "name": "InputNoBindingFail",
+  "category": "input",
+  "layer": "primitive",
+  "anatomy": { "parts": ["root"] },
+  "props": { "styled": { "members": [] } }
+}

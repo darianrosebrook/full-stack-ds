@@ -1,0 +1,11 @@
+{
+  "name": "A2uiChildrenRealHostPass",
+  "category": "structure",
+  "layer": "compound",
+  "anatomy": { "parts": ["root", "header", "body"] },
+  "props": { "styled": { "members": [] } },
+  "a2ui": {
+    "category": "container",
+    "children": { "allowed": true, "slot": "body" }
+  }
+}
