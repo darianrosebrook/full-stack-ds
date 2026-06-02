@@ -2,10 +2,11 @@ id: FEAT-MOBILE-IR-001
 title: 'Typed token facts for non-DOM target-family projection'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: mobile-ir-001
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge mobile-ir-001 at c0e30dba26cabc34c76661f20366710dd3af5254'
 created_at: '2026-06-01T19:34:55.846Z'
-updated_at: '2026-06-02T01:15:39.768Z'
+updated_at: '2026-06-02T01:26:30.449Z'
 blast_radius:
   modules:
     - packages/ds-codegen (framework-neutral IR)
