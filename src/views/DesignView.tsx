@@ -9,6 +9,8 @@ import { StatesGrid } from "./sections/StatesGrid";
 import { TokensTable } from "./sections/TokensTable";
 import { A11yPanel } from "./sections/A11yPanel";
 import { UsageExamples } from "./sections/UsageExamples";
+import { A2UIDescriptorPanel } from "./sections/A2UIDescriptorPanel";
+import { EvidencePanel } from "./sections/EvidencePanel";
 
 interface DesignViewProps {
   component: ComponentBundle;
@@ -119,6 +121,22 @@ export function DesignView({ component }: DesignViewProps) {
           <TokensTable tokens={component.contract.tokens} />
         </section>
       )}
+
+      <section className="section">
+        <header className="section-header">
+          <h2 className="section-title">A2UI descriptor</h2>
+          <span className="section-meta">deriveA2UIDescriptor(contract)</span>
+        </header>
+        <A2UIDescriptorPanel contract={component.contract} />
+      </section>
+
+      <section className="section">
+        <header className="section-header">
+          <h2 className="section-title">Evidence &amp; residuals</h2>
+          <span className="section-meta">bundle-derivable facts</span>
+        </header>
+        <EvidencePanel component={component} />
+      </section>
     </div>
   );
 }

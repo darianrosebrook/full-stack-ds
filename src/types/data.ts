@@ -110,6 +110,30 @@ export interface ComponentContract {
   types?: Record<string, unknown>;
   behavior?: Record<string, unknown>;
   compoundParts?: unknown;
+  /**
+   * Behavioral category axis (action/input/surface/feedback/glyph/display/
+   * structure). Carried in every contract JSON; surfaced by the Evidence
+   * section. Codegen does not consume it.
+   */
+  category?: string;
+  /**
+   * Agent-facing authoring metadata. Present in all corpus contracts. The
+   * A2UI Descriptor section feeds this (plus props/channels/events/form) to
+   * `deriveA2UIDescriptor`. Declared optional + untyped-deep so it stays
+   * structurally compatible with the deriver's ComponentContractLike without
+   * re-exporting its full type graph into the app.
+   */
+  a2ui?: {
+    category: string;
+    usageHints?: string[];
+    children?: { allowed: boolean; slot?: string; accepts?: string[]; min?: number; max?: number };
+  };
+  /** Controlled-state channels. Read by A2UI derivation (events surface). */
+  channels?: Record<string, unknown>;
+  /** Imperative events. Read by A2UI derivation (events surface). */
+  events?: Record<string, unknown>;
+  /** Form participation; carried through to the A2UI descriptor unchanged. */
+  form?: unknown;
 }
 
 /**
