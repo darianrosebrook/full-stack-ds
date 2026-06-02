@@ -1,0 +1,25 @@
+id: TEST-MOBILE-IR-FALSIFIABILITY-HARDEN-01
+title: 'Harden mobile-IR tests into falsifiable regression tests (no impl change)'
+risk_tier: 3
+mode: chore
+lifecycle_state: active
+created_at: '2026-06-02T07:03:23.770Z'
+updated_at: '2026-06-02T07:03:23.770Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
