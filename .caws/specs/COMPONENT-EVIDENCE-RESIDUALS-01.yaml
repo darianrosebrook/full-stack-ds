@@ -2,10 +2,11 @@ id: COMPONENT-EVIDENCE-RESIDUALS-01
 title: 'Component Evidence/Residuals + A2UI descriptor sections (bundle-derivable only)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: evidence-residuals
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge evidence-residuals at ade5860f467440203b0adc65fabe66e1f45c2742'
 created_at: '2026-06-02T09:44:28.780Z'
-updated_at: '2026-06-02T09:44:45.168Z'
+updated_at: '2026-06-02T10:11:59.201Z'
 blast_radius:
   modules:
     - src (showcase Design view — evidence/residuals + A2UI descriptor sections)
