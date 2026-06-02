@@ -13,6 +13,11 @@
       "summaryText",
       "content"
     ],
+    "details": {
+      "root": {
+        "collapsibleTo": "native-disclosure"
+      }
+    },
     "dom": {
       "tag": "details",
       "part": "root",
