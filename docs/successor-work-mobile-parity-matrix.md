@@ -1,19 +1,17 @@
 ---
-doc_id: successor-work-mobile-parity-matrix
-authority: roadmap
-status: implemented
-title: Mobile-vs-web target parity quality matrix (measurement)
-owner: darianrosebrook
+doc_id: REF-MOBILE-PARITY-MATRIX-001
+authority: reference
+status: draft
+title: Mobile-vs-web target parity quality matrix
+owner: "@darianrosebrook"
 updated: 2026-06-02
-verified_at_commit: HEAD
-caws_specs:
-  - MOBILE-PARITY-QUALITY-RECON-01
-governs:
-  - the measured asymmetry between the five web targets and the three native targets
-  - the gap inventory that future mobile execution slices size against
 ---
 
 # Mobile-vs-web target parity — measured quality matrix
+
+Produced by the measurement slice `MOBILE-PARITY-QUALITY-RECON-01`. This is a
+**reference** artifact — a measured, reproducible lookup surface — not a
+roadmap: it states what is true now and recommends no future work.
 
 > **Measurement only.** This document reports what
 > [`scripts/mobile-parity-matrix.mjs`](../scripts/mobile-parity-matrix.mjs)
