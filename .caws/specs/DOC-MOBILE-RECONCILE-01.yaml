@@ -4,7 +4,7 @@ risk_tier: 3
 mode: doc
 lifecycle_state: active
 created_at: '2026-06-02T06:46:06.382Z'
-updated_at: '2026-06-02T06:46:06.382Z'
+updated_at: '2026-06-02T06:46:12.989Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,6 +13,9 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
+    - docs/current-implementation-snapshot.md
+    - docs/successor-work-mobile-rail.md
+    - docs/successor-work-mobile-rail-sweep.md
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
