@@ -34,7 +34,7 @@ Status vocabulary:
 |---|---|---|---|
 | A2UI constraint projection | open | A2UI derivation exists, but this item was specifically about constrained prop conditions. | Project `onlyWhen`, `requires`, `excludes`, value dependencies, and slot-backed children constraints into machine-readable guidance with fixtures. |
 | Restricted and passthrough guidance | open | No current snapshot claim says negative guidance or passthrough summaries are complete. | Emit restricted-prop omissions/reasons and consumer-parameterized passthrough summaries without exposing renderer seams. |
-| Contract-axis obligation validator | partial | `generate:check` now runs semantic validation beyond schema shape, and CI depends on it. | Add the specific cross-axis obligation families listed below: input/form/channel coherence, surface+dismissal focus policy, and A2UI children/anatomy compatibility. |
+| Contract-axis obligation validator | partial (3 of 6 families landed) | `generate:check` runs semantic validation beyond schema shape, and CI depends on it. `CONTRACT-AXIS-OBLIGATION-VALIDATOR-01` (@ 850f764) added three typed obligation families: input/form/channel coherence, surface+dismissal focus policy, and A2UI children/anatomy host compatibility. | Remaining lattice families are still open: relationships ↔ accessible-labeling references, constrained-prop machine-checkable constraints, and raw-semantic-token-usage auditing against category/state coverage. |
 | Component evidence pages | partial | The showcase now derives Design and Developer views from component bundles: usage examples, anatomy, variants, states, props, a11y, tokens, previews, source, and trace regions. | Add explicit Evidence/Residuals sections, A2UI descriptor display, rail/runtime status binding, and per-framework readiness reporting. |
 | Target-family IR recon implementation | partial | Target-pack manifest/config/local-loader foundation exists, and Figma is a built-in design-tool descriptor target. | Execute local target packs only after manifest validation, add target-pack provenance to the emission manifest, and promote one hostile non-Web-DOM target through residual extraction. |
 | README component-list generation or removal | resolved-by-docs | README no longer maintains the five-framework component-count table as an authority surface; it routes readers to loader-discovered contracts. | Optional: add a generated corpus count/check if the project wants visible counts again. |
@@ -77,14 +77,21 @@ Source doc: [`contract-group-axes.md`](./contract-group-axes.md)
 
 Goal: validate coherent combinations across contract axes, not just schema shape.
 
-Current status: **partial**. `generate:check` is now the CI-facing semantic validation command, and the workflow runs it before codegen/typecheck/test gates. That should not be overstated: semantic validation exists, but this successor item names specific obligation families that are not fully claimed by the snapshot.
+Current status: **partial — 3 of 6 obligation families landed.** `generate:check` is the CI-facing semantic validation command, and the workflow runs it before codegen/typecheck/test gates.
 
-Useful acceptance shape:
+Landed via `CONTRACT-AXIS-OBLIGATION-VALIDATOR-01` (merged @ `850f764`). Three families now emit typed, actionable diagnostics from `validateContractSemantics`, each prefixed with a stable `[OBLIGATION_*]` code rendered through the existing `formatIssues` path (no CLI change):
 
-- `category: input` without `form`, `channels`, or documented exception is flagged;
-- surface+dismissal without focus/Escape/outside-click policy is flagged;
-- A2UI children policy without compatible slot/anatomy host is flagged;
-- diagnostics are typed and actionable.
+- **input/form/channel coherence** — `OBLIGATION_INPUT_NO_DATA_BINDING`: `category: input` that declares neither `form` nor `channels`, and carries no documented display-only exception, is flagged;
+- **surface+dismissal focus policy** — `OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY`: a dismissable `category: surface` that lacks a focus policy and/or an escape/outside-click affordance is flagged (surfaces with no dismissal are exempt);
+- **A2UI children/anatomy host compatibility** — `OBLIGATION_A2UI_CHILDREN_NO_HOST`: a named `a2ui.children.slot` that resolves to no `slots`/`anatomy.parts`/`anatomy.details` host is flagged (the default sentinels `children`/`default` always resolve).
+
+Evidence (not overclaimed): `generate:check` reports **47/47** on the real corpus with the rules active (no new DRIFT — the rules are conditional and the corpus is already coherent); bite is proven by fail/pass JSON fixtures under `packages/ds-codegen/test/fixtures/obligation-axes` plus throwaway mutation probes that were captured failing and reverted (never committed). Non-claim: the slice changed no real component contract, emitter, or generated package — it only added the validator, fixtures, and tests. This proves *contract coherence*, not determinism, visual quality, or a11y adequacy.
+
+Remaining families (still open — this item is NOT complete):
+
+- `relationships` ↔ accessible-labeling references (cross-part labeling coherence beyond the existing `relationships.{from,to}` ⊆ anatomy.parts check);
+- `constrained` props with machine-checkable constraints, not only prose;
+- raw semantic token usage auditable against category and state coverage.
 
 ## Component evidence pages
 
