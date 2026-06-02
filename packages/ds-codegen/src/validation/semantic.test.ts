@@ -8,6 +8,9 @@
  * appears in the issue list for the failing case.
  */
 
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../contract.js";
 import { validateContractSemantics } from "./semantic.js";
@@ -338,5 +341,120 @@ describe("validateContractSemantics — layer-conditional rules", () => {
     });
     const issues = validateContractSemantics(c);
     expect(issueAt(issues, "/channels")).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------
+// Cross-axis obligation rules (docs/contract-group-axes.md).
+//
+// These tests are loaded from real contract JSON fixtures under
+// test/fixtures/obligation-axes so the rules are exercised against the
+// actual on-disk contract shape, not a hand-built partial. Each family
+// asserts BOTH polarities — the rule FIRES on an incoherent fixture and
+// is SILENT on a coherent sibling — so a rule that always fires (or
+// never fires) is caught. We match on the typed [CODE] prefix in the
+// message, not only the pointer, so a diagnostic that lands on the
+// right pointer with the wrong family is also caught.
+// ---------------------------------------------------------------------
+
+const FIXTURE_DIR = path.resolve(
+  fileURLToPath(import.meta.url),
+  "../../../test/fixtures/obligation-axes",
+);
+
+function loadFixture(file: string): ComponentContract {
+  const raw = fs.readFileSync(path.join(FIXTURE_DIR, file), "utf8");
+  return JSON.parse(raw) as ComponentContract;
+}
+
+function hasCode(issues: { message: string }[], code: string): boolean {
+  return issues.some((i) => i.message.includes(`[${code}]`));
+}
+
+describe("obligation rule — input data binding (OBLIGATION_INPUT_NO_DATA_BINDING)", () => {
+  it("FIRES on a category:input contract that binds no data", () => {
+    const issues = validateContractSemantics(
+      loadFixture("input-no-binding.fail.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_INPUT_NO_DATA_BINDING")).toBe(true);
+    // the diagnostic lands at /category
+    expect(
+      issues.some(
+        (i) =>
+          i.pointer === "/category" &&
+          i.message.includes("OBLIGATION_INPUT_NO_DATA_BINDING"),
+      ),
+    ).toBe(true);
+  });
+
+  it("is SILENT when the input declares a channel", () => {
+    const issues = validateContractSemantics(
+      loadFixture("input-with-channel.pass.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_INPUT_NO_DATA_BINDING")).toBe(false);
+  });
+
+  it("is SILENT when the input documents a display-only exception", () => {
+    const issues = validateContractSemantics(
+      loadFixture("input-display-only.pass.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_INPUT_NO_DATA_BINDING")).toBe(false);
+  });
+});
+
+describe("obligation rule — surface dismissal focus policy (OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY)", () => {
+  it("FIRES on a dismissable surface with no focus and no escape/outside-click", () => {
+    const issues = validateContractSemantics(
+      loadFixture("surface-dismissal-no-policy.fail.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY")).toBe(
+      true,
+    );
+    // both halves fire: the missing focus policy (/focus) and the
+    // missing escape/outside-click affordance (/dismissal).
+    expect(issueAt(issues, "/focus")).toBe(true);
+    expect(issueAt(issues, "/dismissal")).toBe(true);
+  });
+
+  it("is SILENT on a dismissable surface with focus + escape/outside-click", () => {
+    const issues = validateContractSemantics(
+      loadFixture("surface-dismissal-with-policy.pass.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY")).toBe(
+      false,
+    );
+  });
+
+  it("is SILENT on a surface that declares no dismissal (obligation is conditional)", () => {
+    const issues = validateContractSemantics(
+      loadFixture("surface-no-dismissal.exempt.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY")).toBe(
+      false,
+    );
+  });
+});
+
+describe("obligation rule — a2ui children host (OBLIGATION_A2UI_CHILDREN_NO_HOST)", () => {
+  it("FIRES when a2ui.children.slot names a host that exists nowhere", () => {
+    const issues = validateContractSemantics(
+      loadFixture("a2ui-children-no-host.fail.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_A2UI_CHILDREN_NO_HOST")).toBe(true);
+    expect(issueAt(issues, "/a2ui/children/slot")).toBe(true);
+  });
+
+  it("is SILENT when the named slot resolves to a real anatomy host", () => {
+    const issues = validateContractSemantics(
+      loadFixture("a2ui-children-real-host.pass.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_A2UI_CHILDREN_NO_HOST")).toBe(false);
+  });
+
+  it('is SILENT for the default-slot sentinel "children"', () => {
+    const issues = validateContractSemantics(
+      loadFixture("a2ui-children-default-slot.pass.contract.json"),
+    );
+    expect(hasCode(issues, "OBLIGATION_A2UI_CHILDREN_NO_HOST")).toBe(false);
   });
 });

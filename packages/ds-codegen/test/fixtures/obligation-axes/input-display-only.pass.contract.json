@@ -1,0 +1,13 @@
+{
+  "name": "InputDisplayOnlyPass",
+  "category": "input",
+  "layer": "primitive",
+  "anatomy": { "parts": ["root"] },
+  "props": { "styled": { "members": [] } },
+  "a2ui": {
+    "category": "form-field",
+    "usageHints": [
+      "display-only: renders a read-only echo of an upstream value; binds no data of its own"
+    ]
+  }
+}

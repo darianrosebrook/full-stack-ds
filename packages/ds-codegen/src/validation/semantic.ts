@@ -39,6 +39,38 @@
  * carry one channel), so the primitive-channel restriction is NOT a
  * rule. The blueprint draws the line at multi-step orchestration, not
  * the presence of any channel.
+ *
+ *   (4) Cross-axis obligation rules (docs/contract-group-axes.md, the
+ *       "Obligation rules" section). These prove that *combinations*
+ *       across the contract's axes are coherent, not just that each
+ *       axis is individually shaped. Each emits a typed diagnostic
+ *       whose message is prefixed with a stable [CODE] so consumers can
+ *       match on the obligation family without a CLI/format change.
+ *         - OBLIGATION_INPUT_NO_DATA_BINDING: a `category: "input"`
+ *           component must carry a `form` block or `channels` (or a
+ *           documented display-only exception via a `usageHints` entry
+ *           starting "display-only:"). An input that participates in no
+ *           data binding and isn't declared display-only is incoherent.
+ *         - OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY: a
+ *           `category: "surface"` component that *can be dismissed*
+ *           (a non-empty dismissal contract, or a surface.dismissal
+ *           mode list) must also declare a `focus` block AND an
+ *           escape/outside-click dismissal affordance. A dismissable
+ *           surface with no focus policy strands keyboard users; one
+ *           with no escape/outside-click can only be closed
+ *           programmatically. Surfaces with NO dismissal are exempt.
+ *         - OBLIGATION_A2UI_CHILDREN_NO_HOST: an `a2ui.children.slot`
+ *           that names a *specific* host must resolve to a real hosting
+ *           surface — a `slots` map key, an `anatomy.parts` entry, or an
+ *           `anatomy.details` key. The reserved default-slot sentinels
+ *           "children"/"default" always resolve (they map to the IR's
+ *           unnamed `tag:"slot"`/`tag:"children"` placeholder), so a
+ *           plain `slot: "children"` is never flagged.
+ *
+ * The obligation rules are CONDITIONAL by construction: they fire only
+ * on genuinely incoherent combinations, so the existing coherent corpus
+ * passes unchanged. They surface latent incoherence; they never rewrite
+ * the contract to hide it.
  */
 
 import type { ComponentContract } from "../contract.js";
@@ -225,6 +257,73 @@ export function validateContractSemantics(
     }
   }
 
+  // --- Cross-axis obligation rules ---------------------------------
+  // (docs/contract-group-axes.md "Obligation rules"). Coherent
+  // combinations across axes, not just per-axis shape. Each pushes a
+  // [CODE]-prefixed message so the family is greppable through the
+  // existing formatIssues path.
+  const contractRecord = contract as unknown as Record<string, unknown>;
+  const category =
+    typeof contractRecord.category === "string"
+      ? (contractRecord.category as string)
+      : undefined;
+
+  // R-INPUT: category:input must bind data (form or channels) or be a
+  // documented display-only exception.
+  if (category === "input") {
+    const hasForm =
+      typeof contract.form === "object" && contract.form !== null;
+    const hasChannels = channelNames.size > 0;
+    if (!hasForm && !hasChannels && !hasDocumentedDisplayOnly(contract)) {
+      issues.push({
+        pointer: "/category",
+        message:
+          '[OBLIGATION_INPUT_NO_DATA_BINDING] category "input" must declare a form block or channels (data participation), ' +
+          'or document a display-only exception via a usageHints entry beginning "display-only:". ' +
+          "An input that binds no data and isn't declared display-only is incoherent.",
+      });
+    }
+  }
+
+  // R-SURFACE: a dismissable surface must declare a focus policy AND an
+  // escape/outside-click dismissal affordance. Surfaces with no
+  // dismissal are exempt (the obligation is conditional on dismissal).
+  if (category === "surface" && hasDismissal(contract)) {
+    if (!hasFocusPolicy(contract)) {
+      issues.push({
+        pointer: "/focus",
+        message:
+          "[OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY] a dismissable surface must declare a focus block " +
+          "(strategy / initialFocus / returnFocus) — otherwise keyboard focus is stranded when the surface opens and closes.",
+      });
+    }
+    if (!hasEscapeOrOutsideClickDismissal(contract)) {
+      issues.push({
+        pointer: "/dismissal",
+        message:
+          "[OBLIGATION_SURFACE_DISMISSAL_NO_FOCUS_POLICY] a dismissable surface must offer an escape or outside-click " +
+          "dismissal affordance (dismissal.triggers[].event of escape/overlayClick/outsideClick, or surface.dismissal of escape/outside-click) — " +
+          "otherwise the surface can only be closed programmatically.",
+      });
+    }
+  }
+
+  // R-A2UI: a2ui.children.slot naming a SPECIFIC host must resolve to a
+  // real hosting surface. The default-slot sentinels resolve implicitly.
+  const childSlot = contract.a2ui?.children?.slot;
+  if (typeof childSlot === "string" && !isDefaultSlotSentinel(childSlot)) {
+    const hosts = hostingSurfaces(contract);
+    if (!hosts.has(childSlot)) {
+      issues.push({
+        pointer: "/a2ui/children/slot",
+        message:
+          `[OBLIGATION_A2UI_CHILDREN_NO_HOST] a2ui.children.slot "${childSlot}" resolves to no hosting surface — ` +
+          "it matches no slots map key, anatomy.parts entry, or anatomy.details key. " +
+          'Declare the slot/anatomy host, or use the default slot "children".',
+      });
+    }
+  }
+
   return issues;
 }
 
@@ -235,6 +334,106 @@ function anatomyParts(contract: ComponentContract): Set<string> {
   if (!a) return new Set();
   if (Array.isArray(a)) return new Set(a);
   return new Set(a.parts ?? []);
+}
+
+// ---------- obligation-rule helpers --------------------------------
+
+/**
+ * The reserved default-slot sentinels. `a2ui.children.slot` set to one
+ * of these maps to the IR's unnamed `tag:"slot"` / `tag:"children"`
+ * placeholder (see ir.ts: "Slot/children placement"), so it always
+ * resolves — no named host is required.
+ */
+function isDefaultSlotSentinel(slot: string): boolean {
+  return slot === "children" || slot === "default";
+}
+
+/**
+ * The names a child slot may legitimately resolve to: declared slot
+ * anchors, anatomy parts, and anatomy.details keys. These are the
+ * hosting surfaces a child can be projected into.
+ */
+function hostingSurfaces(contract: ComponentContract): Set<string> {
+  const hosts = new Set<string>(anatomyParts(contract));
+  const a = contract.anatomy;
+  if (a && typeof a === "object" && !Array.isArray(a)) {
+    for (const key of Object.keys(a.details ?? {})) hosts.add(key);
+  }
+  const slots = (contract as unknown as Record<string, unknown>).slots;
+  if (slots && typeof slots === "object" && !Array.isArray(slots)) {
+    for (const key of Object.keys(slots)) hosts.add(key);
+  }
+  return hosts;
+}
+
+/**
+ * True when the contract carries a documented display-only exception
+ * for the input-data-binding obligation: a `usageHints` entry that
+ * begins "display-only:". This is the explicit "this input-categorized
+ * component intentionally binds no data" channel — point-in-time
+ * documentation, not a blanket silencer.
+ */
+function hasDocumentedDisplayOnly(contract: ComponentContract): boolean {
+  const hints = contract.a2ui?.usageHints;
+  if (!Array.isArray(hints)) return false;
+  return hints.some(
+    (h) => typeof h === "string" && h.trimStart().startsWith("display-only:"),
+  );
+}
+
+/**
+ * True when the contract can be dismissed: either a structured
+ * dismissal contract with at least one trigger, a legacy flat dismissal
+ * array, or a surface.dismissal mode list. Mirrors the dual-form
+ * handling the existing primitive-dismissal rule (9a) uses.
+ */
+function hasDismissal(contract: ComponentContract): boolean {
+  const d = contract.dismissal;
+  if (Array.isArray(d)) {
+    if (d.length > 0) return true;
+  } else if (d && typeof d === "object") {
+    if (Array.isArray(d.triggers) && d.triggers.length > 0) return true;
+  }
+  const surfaceModes = contract.surface?.dismissal;
+  return Array.isArray(surfaceModes) && surfaceModes.length > 0;
+}
+
+/**
+ * True when the contract declares a focus policy: a `focus` object with
+ * any of the policy fields a dismissable surface needs (strategy,
+ * initialFocus, returnFocus). A bare empty `focus: {}` does not count.
+ */
+function hasFocusPolicy(contract: ComponentContract): boolean {
+  const f = contract.focus;
+  if (!f || typeof f !== "object") return false;
+  return (
+    typeof f.strategy === "string" ||
+    typeof f.initialFocus === "string" ||
+    typeof f.returnFocus === "string"
+  );
+}
+
+/**
+ * True when the contract offers an escape or outside-click dismissal
+ * affordance, in either the dismissal-trigger vocabulary
+ * (escape/overlayClick/outsideClick) or the surface.dismissal mode
+ * vocabulary (escape/outside-click).
+ */
+function hasEscapeOrOutsideClickDismissal(contract: ComponentContract): boolean {
+  const triggerEvents = new Set(["escape", "overlayClick", "outsideClick"]);
+  const d = contract.dismissal;
+  if (Array.isArray(d)) {
+    if (d.some((e) => triggerEvents.has(e))) return true;
+  } else if (d && typeof d === "object" && Array.isArray(d.triggers)) {
+    if (d.triggers.some((t) => t && triggerEvents.has(t.event))) return true;
+  }
+  const surfaceModes = contract.surface?.dismissal;
+  if (Array.isArray(surfaceModes)) {
+    if (surfaceModes.some((m) => m === "escape" || m === "outside-click")) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function collectPropNames(contract: ComponentContract): Set<string> {

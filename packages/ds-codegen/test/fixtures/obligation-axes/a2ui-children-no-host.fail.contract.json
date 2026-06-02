@@ -1,0 +1,11 @@
+{
+  "name": "A2uiChildrenNoHostFail",
+  "category": "structure",
+  "layer": "compound",
+  "anatomy": { "parts": ["root", "header"] },
+  "props": { "styled": { "members": [] } },
+  "a2ui": {
+    "category": "container",
+    "children": { "allowed": true, "slot": "body" }
+  }
+}
