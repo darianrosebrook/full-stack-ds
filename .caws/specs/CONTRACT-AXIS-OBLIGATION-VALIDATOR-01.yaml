@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-02T08:06:20.211Z'
-updated_at: '2026-06-02T08:06:20.211Z'
+updated_at: '2026-06-02T08:06:27.531Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,6 +13,9 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
+    - packages/ds-codegen/src/validation/semantic.ts
+    - packages/ds-codegen/src/validation/semantic.test.ts
+    - packages/ds-codegen/test/fixtures/obligation-axes
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
