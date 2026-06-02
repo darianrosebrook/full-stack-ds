@@ -69,6 +69,25 @@ describe("FEAT-MOBILE-IR-001: typed token facts (A1)", () => {
       expect(lit.rawValue).toBeDefined();
       expect(lit.resolvesTo).toBeUndefined();
     }
+
+    // HARDENING (A3): assert the EXACT set of literal token names, not just
+    // "the isLiteral-filtered facts look right." The previous loop is
+    // tautological — a discriminator that mislabelled EVERY fact as literal
+    // (or none) would still pass it (the filter and the assertion use the same
+    // flag). Switch's sidecar declares exactly six literal slots: the
+    // thumb-translate offsets for the three sizes. Pinning the set catches a
+    // discriminator that drifts in either direction.
+    const literalNames = literals.map((l) => l.name).sort();
+    expect(literalNames).toEqual(
+      [
+        "switch.size.lg.thumb.translate.off",
+        "switch.size.lg.thumb.translate.on",
+        "switch.size.md.thumb.translate.off",
+        "switch.size.md.thumb.translate.on",
+        "switch.size.sm.thumb.translate.off",
+        "switch.size.sm.thumb.translate.on",
+      ].sort(),
+    );
   });
 });
 
@@ -76,8 +95,14 @@ describe("FEAT-MOBILE-IR-001: typed value matches the old CSS-mining result (A2 
   // The retired findSizeToken/parsePxFallback hack read
   //   ir.cssBlocks[..].declarations["--fsds-switch-size-md-track-width"]
   // = "var(--fsds-core-spacing-size-09, 48px)" and regexed the px fallback.
-  // The typed fact must yield the identical number from typed data, and must
-  // NOT depend on the CSS declaration string existing.
+  // Two tests below: (1) the typed rawValue matches the px the CSS carried
+  // (no regression), and (2) the typed fact carries STRUCTURE the flattened
+  // CSS string lost (dotted alias path, layer tier, ref/literal flag) — which
+  // is what genuinely distinguishes the typed path from CSS-string mining.
+  // NOTE: independence is NOT provable by stripping an input — cssBlocks and
+  // tokenFacts are siblings off the same contract.tokens map, so no strip
+  // removes the CSS string while keeping the typed value. The structural
+  // assertion is the real falsification (proven to fail for a CSS-miner).
   it("typed rawValue equals the px fallback the CSS string carried", () => {
     const ir = buildComponentIR(loadContract("Switch"));
 
@@ -95,16 +120,58 @@ describe("FEAT-MOBILE-IR-001: typed value matches the old CSS-mining result (A2 
     expect(fact!.rawValue?.match(/^(\d+)/)?.[1]).toBe("48");
   });
 
-  it("typed facts survive even if CSS declaration strings are stripped", () => {
+  it("carries the structured fields that CSS-string mining cannot reconstruct", () => {
+    // FALSIFICATION TEST (TEST-MOBILE-IR-FALSIFIABILITY-HARDEN-01 A2).
+    //
+    // CORRECTION over the original framing: you CANNOT prove CSS-independence
+    // by stripping an input, because cssBlocks and tokenFacts are siblings —
+    // both derive from the same `contract.tokens` map (renderTokenSlots and
+    // buildTokenFacts respectively). No contract-level strip removes the CSS
+    // string while keeping the typed value; stripping `styles` leaves the
+    // token-driven var declaration intact (verified: cssBlocks still carries
+    // `var(--fsds-core-spacing-size-09, 48px)`), so a CSS-miner would still
+    // find "48px". The earlier "strip styles" test therefore had NO bite.
+    //
+    // What actually distinguishes typed facts from CSS-string mining is
+    // STRUCTURE: the CSS declaration `var(--fsds-core-spacing-size-09, 48px)`
+    // is lossy — a regex over it can recover the fallback px and (with effort)
+    // the ref var name, but NOT the semantic alias path, the layer tier, or
+    // the literal/ref discriminator as typed data. The typed fact carries all
+    // of these. Asserting them is the real falsification: a projection that
+    // mined the CSS string could not populate `resolvesTo`/`layer`/`isLiteral`
+    // correctly without re-parsing structure the string already flattened.
     const ir = buildComponentIR(loadContract("Switch"));
-    // Simulate the CSS layer being mutated/removed — the typed source must
-    // not be erased, because it is projected from contract.tokens, not from
-    // cssBlocks.
-    const mutated = { ...ir, cssBlocks: [] };
-    const fact = mutated.tokenFacts.find(
+    const fact = ir.tokenFacts.find(
       (t) => t.name === "switch.size.md.track.width",
     );
-    expect(fact?.rawValue).toBe("48px");
+    expect(fact).toBeDefined();
+
+    // The CSS string the old hack mined — for the equality oracle below.
+    const cssDecl = ir.cssBlocks
+      .flatMap((b) => Object.entries(b.declarations))
+      .find(([k]) => k === "--fsds-switch-size-md-track-width")?.[1];
+
+    // (a) The raw value matches what the CSS string carried (no regression).
+    expect(fact!.rawValue).toBe("48px");
+    expect(cssDecl).toContain("48px");
+
+    // (b) The semantic alias path — present as a typed field, NOT recoverable
+    // as structured data from the flattened CSS string. The CSS carries only
+    // the *css-var name* `--fsds-core-spacing-size-09` (slug form); the dotted
+    // token path `core.spacing.size.09` is gone. A CSS-miner cannot produce it
+    // without inverting the slug transform.
+    expect(fact!.resolvesTo).toBe("core.spacing.size.09");
+    expect(cssDecl).not.toContain("core.spacing.size.09"); // dotted path absent
+
+    // (c) The provenance tier as a typed enum. The CSS string mentions "core"
+    // only inside the slugified var name (`--fsds-core-…`), never as a typed
+    // layer field — a miner would have to heuristically parse the slug to
+    // guess the tier. The typed fact states it directly.
+    expect(fact!.layer).toBe("core");
+
+    // (d) The ref/literal discriminator — typed boolean; the CSS string is a
+    // `var(--ref, fallback)` either way and carries no such flag.
+    expect(fact!.isLiteral).toBe(false);
   });
 });
 
@@ -124,6 +191,16 @@ describe("FEAT-MOBILE-IR-001: no component-name lore in projection (A4)", () => 
 });
 
 describe("FEAT-MOBILE-IR-001: native availability for Switch + Details (A5)", () => {
+  it("Switch projects the full expected fact count, not merely some facts", () => {
+    // HARDENING (A4): `length > 0` would pass even if the projection emitted a
+    // single fact and dropped the rest. Switch's sidecar declares 38
+    // fact-projecting entries (32 ref-backed + 6 literal); pin the exact count
+    // so a projection that silently drops slots is caught.
+    const ir = buildComponentIR(loadContract("Switch"));
+    expect(ir.tokenFacts.length).toBe(38);
+    expect(ir.tokenFacts.filter((t) => t.isLiteral).length).toBe(6);
+  });
+
   // Proves DATA AVAILABILITY for a native consumer — not final rendering.
   for (const name of ["Switch", "Details"]) {
     it(`${name} exposes non-empty, well-typed token facts`, () => {
