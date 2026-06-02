@@ -2,10 +2,11 @@ id: CONTRACT-AXIS-OBLIGATION-VALIDATOR-01
 title: 'Cross-axis contract obligation validators (input/form/channel, surface+dismissal focus, A2UI children/anatomy)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: obligation-axes
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge obligation-axes at 850f7643b78d1bc2e57eab402f4919a58ebc67cd'
 created_at: '2026-06-02T08:06:20.211Z'
-updated_at: '2026-06-02T08:06:33.292Z'
+updated_at: '2026-06-02T08:15:44.374Z'
 blast_radius:
   modules:
     - packages/ds-codegen (cross-field semantic validator — new obligation rules + fixtures + tests)
