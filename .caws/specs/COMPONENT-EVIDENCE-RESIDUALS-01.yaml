@@ -3,6 +3,7 @@ title: 'Component Evidence/Residuals + A2UI descriptor sections (bundle-derivabl
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: evidence-residuals
 created_at: '2026-06-02T09:44:28.780Z'
 updated_at: '2026-06-02T09:44:45.168Z'
 blast_radius:
