@@ -3,6 +3,7 @@ title: 'Cross-axis contract obligation validators (input/form/channel, surface+d
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: obligation-axes
 created_at: '2026-06-02T08:06:20.211Z'
 updated_at: '2026-06-02T08:06:33.292Z'
 blast_radius:
