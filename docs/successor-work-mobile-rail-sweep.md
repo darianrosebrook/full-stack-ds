@@ -4,7 +4,7 @@ authority: reference
 status: draft
 title: MOBILE-IR-FACT-PARITY-SWEEP-01 — corpus classification for mobile rail parity
 owner: "@darianrosebrook"
-updated: 2026-06-01
+updated: 2026-06-02
 verified_at_commit: 5103447
 governs:
   - packages/ds-codegen/src/ir.ts
@@ -58,6 +58,18 @@ is the actual Phase 0.1, and it is small.
 
 There is a *different* role finding (below): 15 components carry no root role
 fact at all.
+
+> **Forward reconciliation (2026-06-02).** This sweep is preserved unchanged as
+> the historical measurement record (corpus at `5103447`). What it named has
+> since moved: the **Phase 0.2 typed-token gap** it identified closed via
+> `FEAT-MOBILE-IR-001` (closed `eb933df`); the **C1/Details collapse
+> candidate** it flagged was proven via `FEAT-MOBILE-DISCLOSURE-001` (closed
+> `f00110c`, `native-disclosure` intent); and the structural web↔native
+> asymmetry is now measured in the parity matrix
+> `REF-MOBILE-PARITY-MATRIX-001` (`docs/successor-work-mobile-parity-matrix.md`,
+> `MOBILE-PARITY-QUALITY-RECON-01` closed `2788873`). The A=21 / C=17 / D=9
+> split and role-loss 0/47 below are the original sweep numbers and are **not**
+> revised here.
 
 ## Category distribution (47 contracts)
 
