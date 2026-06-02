@@ -64,8 +64,17 @@ export interface ContractStateDimension {
  * Closed vocabulary of native-primitive intents a part may collapse into.
  * Seeded with only the intents actually consumed by emitters; widen in
  * lockstep with new emitter mappings.
+ *
+ * - `native-toggle-affordance`: collapses to a native on/off control
+ *   (SwiftUI Toggle, Android Switch) — see Switch.
+ * - `native-disclosure`: collapses to a native disclosure primitive that
+ *   holds both the summary/trigger and the collapsible content (SwiftUI
+ *   DisclosureGroup, Android expandable) — see Details. The C1 candidate
+ *   from MOBILE-COLLAPSE-INTENT-TRIAGE-01.
  */
-export type ContractCollapseIntent = 'native-toggle-affordance';
+export type ContractCollapseIntent =
+  | 'native-toggle-affordance'
+  | 'native-disclosure';
 
 export interface ContractPartDetails {
   description?: string;
