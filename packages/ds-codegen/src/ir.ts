@@ -390,6 +390,52 @@ export interface KeyframeIR {
   }>;
 }
 
+/**
+ * A substrate-neutral typed token fact (FEAT-MOBILE-IR-001, Phase 0.2).
+ *
+ * Non-DOM emitters (SwiftUI, Compose, RN) need token VALUES, not CSS
+ * declaration strings. Before this surface existed, the SwiftUI emitter mined
+ * values out of `cssBlocks` declaration strings by regexing the `var(--ref,
+ * 48px)` fallback (see the now-removed `findSizeToken`/`parsePxFallback`).
+ * `tokenFacts` exposes the same data the contract's `tokens` sidecar already
+ * carries, in typed form, so a consumer never parses CSS to learn a value.
+ *
+ * This is a pure projection of `contract.tokens`: no I/O, no clock, no
+ * randomness, so regeneration stays byte-deterministic. It is purely
+ * ADDITIVE — web emitters keep reading `cssBlocks`, so their output is
+ * unchanged.
+ */
+export interface TokenFactIR {
+  /** Slot path as authored in the sidecar, e.g. `switch.size.md.track.width`. */
+  name: string;
+  /** CSS custom-property name this slot renders to, e.g. `--fsds-switch-size-md-track-width`. */
+  cssVar: string;
+  /**
+   * Coarse category derived from the slot PATH structure (the segment after
+   * the component slug, e.g. `size`, `color`, `box-model`). Never derived from
+   * the component name — `name.split(".")[1]` is path structure, not lore.
+   */
+  category: string;
+  /** Token tier / provenance, defaulting to `semantic` per TokenResolution. */
+  layer: "core" | "semantic" | "brand" | "density";
+  /**
+   * Source kind. Today only `tokens-sidecar`; recorded so a consumer never
+   * has to assume where a fact came from (and so CSS is never treated as the
+   * authority).
+   */
+  source: "tokens-sidecar";
+  /** Dotted path into the global token graph this slot resolves to, when ref-backed. */
+  resolvesTo?: string;
+  /**
+   * The concrete value when available — the `var()` fallback for ref-backed
+   * slots, or the verbatim value for `literal` slots. This is the field that
+   * replaces CSS-string mining (e.g. `"48px"`).
+   */
+  rawValue?: string;
+  /** True when this slot is an intentional literal rather than a graph ref. */
+  isLiteral: boolean;
+}
+
 export interface RootSemanticsIR {
   /** Resolved root HTML element for the component. */
   element: string;
@@ -670,6 +716,13 @@ export interface ComponentIR {
   cssBlocks: CssBlockIR[];
   keyframes: KeyframeIR[];
 
+  /**
+   * Typed token facts (FEAT-MOBILE-IR-001). Substrate-neutral projection of
+   * `contract.tokens` so non-DOM emitters read token values without parsing
+   * CSS. Additive — web emitters ignore this and read `cssBlocks`.
+   */
+  tokenFacts: TokenFactIR[];
+
   /** Higher-level behavior metadata. Emitters can ignore for now. */
   behavior: BehaviorIR;
 
@@ -817,6 +870,7 @@ export function buildComponentIR(
 
   const cssBlocks = buildCssBlocks(contract, cssPrefix);
   const keyframes = buildKeyframes(contract);
+  const tokenFacts = buildTokenFacts(contract.tokens ?? {});
 
   const behavior = buildBehaviorIR(contract, styledProps);
   const surface = buildSurfaceIR(contract, parts);
@@ -881,6 +935,7 @@ export function buildComponentIR(
     },
     cssBlocks,
     keyframes,
+    tokenFacts,
     behavior,
     surface,
     dom,
@@ -2728,6 +2783,50 @@ function renderBoxModelConsumers(): Record<string, string> {
     "min-height": "var(--fsds-box-model-min-height)",
     "max-height": "var(--fsds-box-model-max-height)",
   };
+}
+
+/**
+ * Project `contract.tokens` into typed token facts (FEAT-MOBILE-IR-001).
+ *
+ * Pure function of the tokens record + cssPrefix — the same input
+ * `renderTokenSlots` flattens into CSS strings, but preserved as typed data
+ * so non-DOM consumers never parse CSS. Category is derived from the slot
+ * PATH (the segment after the component slug), never from the component name.
+ * Emitted in stable (insertion) order for byte-determinism.
+ */
+function buildTokenFacts(
+  tokens: Record<string, TokenResolution>,
+): TokenFactIR[] {
+  const facts: TokenFactIR[] = [];
+  for (const [name, value] of Object.entries(tokens)) {
+    if (!value || typeof value !== "object") continue;
+    // Category = path structure after the component slug. `switch.size.md...`
+    // -> "size". A single-segment slot (no dot) categorizes as "root".
+    const segments = name.split(".");
+    const category = segments.length > 1 ? segments[1] : "root";
+    const base: Omit<TokenFactIR, "rawValue" | "resolvesTo" | "isLiteral"> = {
+      name,
+      cssVar: `--${tokenSlug(name)}`,
+      category,
+      layer: value.layer ?? "semantic",
+      source: "tokens-sidecar",
+    };
+    if (typeof value.literal === "string") {
+      facts.push({ ...base, isLiteral: true, rawValue: value.literal });
+      continue;
+    }
+    if (typeof value.resolvesTo === "string") {
+      facts.push({
+        ...base,
+        isLiteral: false,
+        resolvesTo: value.resolvesTo,
+        // The fallback is the concrete value when present — this is what
+        // replaces regexing `(\d+)px\)$` out of the CSS var() expression.
+        ...(typeof value.fallback === "string" ? { rawValue: value.fallback } : {}),
+      });
+    }
+  }
+  return facts;
 }
 
 function renderTokenSlots(

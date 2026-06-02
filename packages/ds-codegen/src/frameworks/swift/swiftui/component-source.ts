@@ -18,7 +18,11 @@
  * preservation via @custom sections, full token resolution against
  * a SwiftUI Theme module.
  */
-import type { ComponentIR, NormalizedChannelIR } from "../../../ir.js";
+import type {
+  ComponentIR,
+  NormalizedChannelIR,
+  TokenFactIR,
+} from "../../../ir.js";
 import { collectCollapseIntents } from "../../../ir.js";
 
 const INDENT = "    ";
@@ -210,17 +214,16 @@ function emitSizeAccessor(
   const sizeDef = ir.definedTypes[sizeTypeName];
   if (!sizeDef?.values) return;
 
-  // Round-2 honors only the md token (gap 1a deferred). When gap 1a lands,
-  // each variant's own token populates and the per-variant lookup picks
-  // each up distinctly. Until then, missing variants fall through to md
-  // so SwiftUI doesn't ship a 0-sized track.
-  const mdValue = parsePxFallback(findSizeToken(ir, "md", dimension));
+  // Per-variant size values come from typed token facts (FEAT-MOBILE-IR-001),
+  // not from regexing CSS var() strings. A variant with no authored token
+  // falls through to md so SwiftUI never ships a 0-sized track.
+  const mdValue = sizeValuePx(ir, "md", dimension);
 
   lines.push(`${INDENT}private var ${accessorName}: CGFloat {`);
   lines.push(`${INDENT}${INDENT}switch size {`);
   for (const value of sizeDef.values) {
-    const variantToken = findSizeToken(ir, value, dimension);
-    const px = variantToken ? parsePxFallback(variantToken) : mdValue;
+    const variantPx = sizeValuePx(ir, value, dimension);
+    const px = variantPx ?? mdValue ?? 0;
     lines.push(`${INDENT}${INDENT}case .${value}: return ${px}`);
   }
   lines.push(`${INDENT}${INDENT}}`);
@@ -245,33 +248,28 @@ function findSizeTypeName(ir: ComponentIR): string | undefined {
 }
 
 /**
- * Look up the px fallback for a `<componentSlug>.size.<variant>.track.<dimension>`
- * token. After TOKENS-WORKSTREAM-STEP-06A-II, the IR's cssBlocks declare
- * a per-variant slot like
+ * Resolve the pixel value for a `<componentSlug>.size.<variant>.track.<dimension>`
+ * token from typed token facts (FEAT-MOBILE-IR-001), NOT by parsing CSS.
  *
- *   "--fsds-switch-size-md-track-width": "var(--fsds-core-spacing-size-09, 48px)"
+ * The token fact's `rawValue` is the concrete value the contract authored as
+ * the var() fallback (e.g. `"48px"`); we read it directly and parse the
+ * leading integer. Returns undefined when no fact for that variant/dimension
+ * exists, so the caller can fall back to md.
  *
- * The inner var() arg is the fallback. We match by the slot's custom-property
- * name (which embeds the variant), so this resolves per-variant even when
- * the IR carries entries for sm/md/lg simultaneously. Returns undefined when
- * the slot for that variant/dimension isn't present (gap 1a still pending
- * for Switch — only md is currently authored).
+ * Lookup is by the slot `name` (path), which is target-neutral and embeds the
+ * variant — no CSS custom-property string is constructed or scanned, and no
+ * branch is keyed on component identity.
  */
-function findSizeToken(
+function sizeValuePx(
   ir: ComponentIR,
   variant: string,
   dimension: "width" | "height",
-): string | undefined {
-  const slotName = `--fsds-${ir.cssPrefix}-size-${variant}-track-${dimension}`;
-  for (const block of ir.cssBlocks) {
-    const slotValue = block.declarations[slotName];
-    if (typeof slotValue === "string") return slotValue;
-  }
-  return undefined;
-}
-
-function parsePxFallback(varExpr: string | undefined): number {
-  if (!varExpr) return 0;
-  const match = varExpr.match(/(\d+)px\)$/);
-  return match ? Number(match[1]) : 0;
+): number | undefined {
+  const slotName = `${ir.cssPrefix}.size.${variant}.track.${dimension}`;
+  const fact = ir.tokenFacts.find(
+    (t: TokenFactIR) => t.name === slotName && t.rawValue !== undefined,
+  );
+  if (!fact?.rawValue) return undefined;
+  const match = fact.rawValue.match(/^(\d+)/);
+  return match ? Number(match[1]) : undefined;
 }
