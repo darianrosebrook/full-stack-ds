@@ -2,10 +2,11 @@ id: DOC-MOBILE-RECONCILE-01
 title: 'Reconcile claim ledger + mobile roadmap docs with landed mobile work'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
-worktree: mobile-reconcile
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge mobile-reconcile at 2852457db2a98b919bbb58a8a671bb05974a460b'
 created_at: '2026-06-02T06:46:06.382Z'
-updated_at: '2026-06-02T06:46:12.989Z'
+updated_at: '2026-06-02T06:51:15.298Z'
 blast_radius:
   modules:
     - docs (claim ledger + mobile roadmap reconciliation)
