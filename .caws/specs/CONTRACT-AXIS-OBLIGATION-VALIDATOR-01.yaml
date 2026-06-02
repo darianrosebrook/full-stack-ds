@@ -1,0 +1,28 @@
+id: CONTRACT-AXIS-OBLIGATION-VALIDATOR-01
+title: 'Cross-axis contract obligation validators (input/form/channel, surface+dismissal focus, A2UI children/anatomy)'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-02T08:06:20.211Z'
+updated_at: '2026-06-02T08:06:20.211Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'obligation-diagnostics'
+    type: behavior
+    path: 'packages/ds-codegen/src/validation/semantic.ts'
