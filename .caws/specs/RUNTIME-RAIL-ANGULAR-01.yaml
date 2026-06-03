@@ -7,12 +7,11 @@ created_at: '2026-06-03T01:05:21.191Z'
 updated_at: '2026-06-03T01:05:31.441Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - src/runtime (navigable Angular preview route) + e2e (rail, Angular default-props facts)
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - e2e/runtime-rail.spec.ts
     - src/runtime/angular-compiler/vite-plugin.ts
     - src/runtime/shells/angular.ts
@@ -26,12 +25,33 @@ scope:
     - src/runtime/preview-props.ts
     - packages
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Scope is navigable-route reachability ONLY. This spec adds a navigable Angular preview HTML route and brings Angular into the runtime fact rail for DEFAULT-props assertions. It does NOT add query-param overrideProps for Angular, prop-keyed host filenames, on-demand compile, or per-prop-set cache dirs — those are deferred to RUNTIME-RAIL-ANGULAR-NONDEFAULT-01 (Angular non-default props require a prop-keyed compiled-host strategy because props bake before full-tree AOT compile, not at Vite load time).'
+  - 'host.ts is fenced out: the synthesizer keeps producing one default host per component (synthesizeAllHosts at startup). No override path, no prop-keying. demos.ts and the R/V/S/L plugins + preview-props.ts are also untouched (scope.out).'
+  - 'The navigable route reuses the EXISTING executable Angular preview: it wraps buildAngularShell (which already imports the compiled default host from the cache and posts fsds:ready) and serves it as a navigable HTML page, rather than only as srcDoc inside the showcase FrameworkPreview. It must handle the compile-in-flight case cleanly (await the in-flight compile or honor the existing 503 + Retry-After) so the rail does not flake on a cold cache.'
+  - 'Angular renders default (emulated) encapsulation = light DOM with the same BEM classes/roles as the other frameworks (verified: Progress emits role="progressbar" + .progress__fill in light DOM). So the rail uses its EXISTING document.querySelector + waitFor({state:"attached"}) path for Angular — NOT the Lit-style shadow-piercing path. No new selector machinery.'
+  - 'Angular is added to the rail FRAMEWORKS array only AFTER the default-props Angular facts pass for the covered components — a red Angular column must not be committed. The assertions reused are the existing default-props ones (Progress/Truncate/ShowMore CSS-var-or-fallback, OTP/Calendar iteration counts).'
+  - 'The rail header comment is updated from "Angular excluded (no navigable route)" to "Angular included for default-props runtime facts; non-default Angular props deferred to RUNTIME-RAIL-ANGULAR-NONDEFAULT-01". No claim that Angular has non-default or behavioral-parity coverage.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'the Angular preview pipeline, which today serves compiled host JS from /preview/angular/<path> but exposes no navigable per-component HTML page (Angular mounts only via srcDoc inside the showcase FrameworkPreview)'
+    when: 'a navigable route /preview/angular/<Name> is requested for a rail-covered component'
+    then: 'it returns an HTML page (wrapping buildAngularShell) that bootstraps the compiled default host and mounts the component into #root, emitting the fsds:ready signal — reachable by Playwright page.goto like the R/V/S/L routes'
+  - id: A2
+    given: 'a cold Angular preview cache (initial compile in flight at dev-server start)'
+    when: 'the navigable route is requested before the compile completes'
+    then: 'the route does not serve a broken page — it awaits the in-flight compile or returns 503 + Retry-After so the caller retries, and the rail navigation ultimately resolves to a mounted component (no flake on cold cache)'
+  - id: A3
+    given: 'the runtime rail, with Angular now reachable via the navigable route'
+    when: 'the default-props assertions run for Angular across the rail-covered components (Progress, Truncate, ShowMore, OTP, Calendar)'
+    then: 'Angular passes the same default-props facts the other frameworks assert — via the existing light-DOM document.querySelector path (Progress role="progressbar"/.progress__fill, OTP/Calendar [data-*-index] counts, ShowMore --fsds-show-more-content-max-lines:"3"), with no shadow-piercing selector added'
+  - id: A4
+    given: 'green default-props Angular facts from A3'
+    when: 'the FRAMEWORKS array is updated'
+    then: 'angular is added to FRAMEWORKS (covering default-props assertions) only after A3 passes; the rail header comment is updated to state Angular default-props coverage and to defer non-default Angular props to RUNTIME-RAIL-ANGULAR-NONDEFAULT-01'
+  - id: A5
+    given: 'the slice as committed'
+    when: 'git diff is taken'
+    then: 'only e2e/runtime-rail.spec.ts, src/runtime/angular-compiler/vite-plugin.ts, and src/runtime/shells/angular.ts changed; no host.ts, demos.ts, R/V/S/L plugin, preview-props.ts, or package file appears — no prop-keyed host / on-demand-compile / per-prop-set-cache work landed'
 non_functional: {}
 contracts:
   - name: 'angular-rail-route'
