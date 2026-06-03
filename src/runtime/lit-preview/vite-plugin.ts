@@ -10,8 +10,13 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { defaultPropsFromContract, childLabel, elementTag } from "../demos";
+import { defaultPropsFromContract, childLabel, elementTag, type DemoProps } from "../demos";
 import type { ComponentBundle } from "../../types/data";
+import {
+  decodePropsParam,
+  encodePropsParam,
+  parsePropsFromQuery,
+} from "../preview-props";
 
 const URL_PREFIX = "/preview/lit/";
 const VIRTUAL_ID_PREFIX = "virtual:fsds-preview-lit/";
@@ -22,9 +27,15 @@ const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
 
 function parseShellRequest(url: string) {
   if (!url.startsWith(URL_PREFIX)) return null;
-  const tail = url.slice(URL_PREFIX.length).split("?")[0];
+  const afterPrefix = url.slice(URL_PREFIX.length);
+  const qIndex = afterPrefix.indexOf("?");
+  const tail = qIndex === -1 ? afterPrefix : afterPrefix.slice(0, qIndex);
+  const query = qIndex === -1 ? "" : afterPrefix.slice(qIndex + 1);
   if (!/^[A-Z][A-Za-z0-9]*\/?$/.test(tail)) return null;
-  return { componentName: tail.replace(/\/$/, "") };
+  return {
+    componentName: tail.replace(/\/$/, ""),
+    overrideProps: parsePropsFromQuery(query),
+  };
 }
 
 function parseVirtualEntryId(id: string) {
@@ -34,13 +45,17 @@ function parseVirtualEntryId(id: string) {
   })();
   if (!decoded.startsWith(VIRTUAL_ID_PREFIX)) return null;
   const tail = decoded.slice(VIRTUAL_ID_PREFIX.length);
-  const match = /^([A-Z][A-Za-z0-9]*)\/entry\.ts$/.exec(tail);
+  const qIndex = tail.indexOf("?");
+  const modulePath = qIndex === -1 ? tail : tail.slice(0, qIndex);
+  const propsQuery = qIndex === -1 ? "" : tail.slice(qIndex + 1);
+  const match = /^([A-Z][A-Za-z0-9]*)\/entry\.ts$/.exec(modulePath);
   if (!match) return null;
-  return { componentName: match[1] };
+  const propsParam = new URLSearchParams(propsQuery).get("props");
+  return { componentName: match[1], overrideProps: decodePropsParam(propsParam) };
 }
 
-function renderHtmlAttrs(component: ComponentBundle): string {
-  const props = defaultPropsFromContract(component);
+function renderHtmlAttrs(component: ComponentBundle, overrideProps: DemoProps): string {
+  const props = { ...defaultPropsFromContract(component), ...overrideProps };
   return Object.entries(props)
     .map(([k, v]) => {
       if (v === null || v === undefined) return "";
@@ -51,7 +66,11 @@ function renderHtmlAttrs(component: ComponentBundle): string {
     .join("");
 }
 
-function buildEntrySource(componentName: string, bundle: Awaited<ReturnType<typeof buildBundle>>): string {
+function buildEntrySource(
+  componentName: string,
+  bundle: Awaited<ReturnType<typeof buildBundle>>,
+  overrideProps: DemoProps,
+): string {
   const component = bundle.components.find((c) => c.name === componentName);
   if (!component) {
     throw new Error(`fsds-lit-preview: unknown component "${componentName}"`);
@@ -61,7 +80,7 @@ function buildEntrySource(componentName: string, bundle: Awaited<ReturnType<type
   // primitives) resolve through the normal graph.
   const absImport = `/packages/ds-lit/src/components/${componentName}/${componentName}.ts`;
   const tag = elementTag(component, "lit");
-  const attrs = renderHtmlAttrs(component);
+  const attrs = renderHtmlAttrs(component, overrideProps);
   const child = childLabel(component);
   const inner = child.replace(/</g, "&lt;").replace(/&/g, "&amp;");
   // For Lit, we inject the custom-element tag literally. The component's
@@ -98,7 +117,7 @@ export function litPreviewPlugin(): Plugin {
       const parsed = parseVirtualEntryId(id);
       if (!parsed) return null;
       const bundle = await getBundle();
-      return buildEntrySource(parsed.componentName, bundle);
+      return buildEntrySource(parsed.componentName, bundle, parsed.overrideProps);
     },
 
     configureServer(server: ViteDevServer) {
@@ -115,12 +134,16 @@ export function litPreviewPlugin(): Plugin {
             return;
           }
           const { buildCommonPreviewShellHtml } = await import("../preview-shell-common");
+          const propsParam = encodePropsParam(parsed.overrideProps);
+          const entryId = propsParam
+            ? `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.ts?props=${propsParam}`
+            : `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.ts`;
           const html = buildCommonPreviewShellHtml({
             componentName: parsed.componentName,
             framework: "lit",
             componentCss: component.sources.lit?.css?.code,
             tokensCss: bundle.tokensCss,
-            entryId: `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.ts`,
+            entryId,
           });
           res.statusCode = 200;
           res.setHeader("Content-Type", "text/html; charset=utf-8");
