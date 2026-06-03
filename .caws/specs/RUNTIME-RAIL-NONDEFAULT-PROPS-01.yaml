@@ -2,10 +2,11 @@ id: RUNTIME-RAIL-NONDEFAULT-PROPS-01
 title: 'Runtime rail: non-default prop assertions for R/V/S/L via query-param overrideProps'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: rail-nondefault
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge rail-nondefault at ce0fea3b6240e95a53b21b284b7184dca615a626'
 created_at: '2026-06-03T00:08:09.776Z'
-updated_at: '2026-06-03T00:43:15.936Z'
+updated_at: '2026-06-03T00:51:37.965Z'
 blast_radius:
   modules:
     - src/runtime (R/V/S/L preview plugins — query-param overrideProps) + e2e (runtime rail)
