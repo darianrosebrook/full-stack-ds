@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-03T00:08:09.776Z'
-updated_at: '2026-06-03T00:08:17.622Z'
+updated_at: '2026-06-03T00:08:18.449Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -18,7 +18,11 @@ scope:
     - src/runtime/vue-preview/vite-plugin.ts
     - src/runtime/svelte-preview/vite-plugin.ts
     - src/runtime/lit-preview/vite-plugin.ts
-  out: []
+  out:
+    - src/runtime/angular-compiler
+    - src/runtime/shells
+    - src/runtime/demos.ts
+    - packages
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
 acceptance:
