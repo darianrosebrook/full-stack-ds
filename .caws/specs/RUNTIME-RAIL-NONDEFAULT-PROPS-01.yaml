@@ -3,6 +3,7 @@ title: 'Runtime rail: non-default prop assertions for R/V/S/L via query-param ov
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: rail-nondefault
 created_at: '2026-06-03T00:08:09.776Z'
 updated_at: '2026-06-03T00:08:18.449Z'
 blast_radius:
