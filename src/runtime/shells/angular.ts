@@ -97,7 +97,15 @@ try {
     providers.push(ngCore.provideExperimentalZonelessChangeDetection());
   }
   await bootstrapApplication(HostComponent, { providers });
+  // Signal readiness two ways: postMessage for the showcase FrameworkPreview
+  // (which listens on the parent across the srcDoc iframe), and a DOM marker
+  // for same-origin navigable consumers (the Playwright runtime rail) that
+  // navigate to this page directly and cannot observe a cross-frame message.
+  // Defer the marker one macrotask so the bootstrap's first change-detection
+  // pass (which renders @for/*ngFor children) has flushed before the rail
+  // queries iterated DOM.
   parent.postMessage({ type: "fsds:ready" }, "*");
+  setTimeout(() => document.body.setAttribute("data-fsds-ready", ""), 0);
 } catch (e) {
   showError(e?.stack || e?.message || String(e));
 }

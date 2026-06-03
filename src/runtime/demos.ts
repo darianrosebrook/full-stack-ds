@@ -48,6 +48,35 @@ function renderHtmlAttrs(props: DemoProps): string {
     .join("");
 }
 
+/**
+ * Render props as Angular template inputs for the synthesized host.
+ *
+ * Angular is the one framework where a STATIC HTML attribute does not carry a
+ * prop's type: `<fsds-otp length="6">` binds `@Input() length` to the STRING
+ * "6", so a `typeof === "number"` guard (e.g. OTP's arrayFromCount) sees a
+ * string and renders nothing. Non-string inputs therefore need a property
+ * binding `[length]="6"`, which evaluates the bracketed expression and passes
+ * the real number / boolean / array / object. Strings stay as plain static
+ * attributes (correct as-is, and avoids quoting churn). This is Angular-only;
+ * Lit's renderHtmlAttrs path is unchanged because Lit reflects attributes to
+ * typed properties via its element converters.
+ */
+function renderAngularInputs(props: DemoProps): string {
+  return Object.entries(props)
+    .map(([k, v]) => {
+      if (v === null || v === undefined) return "";
+      // Strings: a static attribute binds correctly to a string @Input.
+      if (typeof v === "string") return ` ${k}="${escape(v)}"`;
+      // Everything else (number, boolean, array, object) needs a property
+      // binding so Angular evaluates it to the real typed value. JSON.stringify
+      // produces a valid Angular template expression for these literals; the
+      // attribute value is double-quote-delimited, so escape any inner quotes.
+      const expr = JSON.stringify(v).replace(/"/g, "&quot;");
+      return ` [${k}]="${expr}"`;
+    })
+    .join("");
+}
+
 function escape(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
@@ -260,7 +289,10 @@ export function buildAngularDemo(
   const exportedClasses = extractStandaloneExports(componentFile.code);
   const tag = elementTag(component, "angular");
   const child = childLabel(component);
-  const attrs = renderHtmlAttrs(props);
+  // Angular needs property bindings for non-string inputs (see
+  // renderAngularInputs) — a static attribute would bind numbers/arrays as
+  // strings and break typed guards like OTP's arrayFromCount.
+  const attrs = renderAngularInputs(props);
 
   const node = child
     ? `<${tag}${attrs}>${escape(child)}</${tag}>`
