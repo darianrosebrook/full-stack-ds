@@ -61,8 +61,25 @@ const FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit"];
  * lives under the host. The element-tag-vs-class distinction is
  * documented per-test below where it matters.
  */
-async function goto(page: Page, framework: Framework, component: string, blockClass: string) {
-  await page.goto(`/preview/${framework}/${component}`, {
+async function goto(
+  page: Page,
+  framework: Framework,
+  component: string,
+  blockClass: string,
+  props?: Record<string, string | number | boolean>,
+) {
+  // Non-default props ride the preview URL query. The plugin parses them,
+  // encodes them into the (distinct) virtual entry id, and bakes them into the
+  // mounted component — so a non-default URL must NOT serve the cached
+  // default-props render. The paired default-vs-non-default tests below prove
+  // the override actually takes effect.
+  const query = props
+    ? "?" +
+      Object.entries(props)
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+        .join("&")
+    : "";
+  await page.goto(`/preview/${framework}/${component}${query}`, {
     waitUntil: "domcontentloaded",
   });
   // For React/Vue/Svelte, the BEM block class lands directly on a DOM
@@ -516,6 +533,90 @@ test.describe("Runtime rail — ShowMore (CSS-var with default)", () => {
       // so the default-props demo SHOULD have the inline var set.
       const style = await readInlineStyle(page, framework, "ShowMore", "show-more", "show-more__content");
       expect(style["--fsds-show-more-content-max-lines"]).toBe("3");
+    });
+  }
+});
+
+// ---------------------------------------------------------------------
+// Non-default prop rail (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
+//
+// These tests drive an EXPLICIT non-default prop through the preview URL
+// query and assert the runtime fact CHANGES from the default. Each pairs a
+// default render with a non-default render and asserts they differ — so a
+// plugin that ignored the override (and served the cached default-props
+// entry) would FAIL here, not silently pass. This closes the rail's prior
+// "non-default props are not asserted" non-claim for R/V/S/L.
+// ---------------------------------------------------------------------
+
+test.describe("Runtime rail — ShowMore non-default maxLines", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: maxLines=7 overrides the default-3 CSS var`, async ({ page }) => {
+      await goto(page, framework, "ShowMore", "show-more", { maxLines: 7 });
+      const style = await readInlineStyle(
+        page,
+        framework,
+        "ShowMore",
+        "show-more",
+        "show-more__content",
+      );
+      // The override must reach the inline var: 7, not the default 3.
+      expect(style["--fsds-show-more-content-max-lines"]).toBe("7");
+      expect(style["--fsds-show-more-content-max-lines"]).not.toBe("3");
+    });
+  }
+});
+
+test.describe("Runtime rail — Progress non-default value", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: value=50 sets the fill var and aria-valuenow`, async ({ page }) => {
+      // Default Progress has no value -> no inline var (asserted above).
+      await goto(page, framework, "Progress", "progress", { value: 50 });
+
+      // Fact 1: the fill carries the inline CSS var derived from value=50.
+      const style = await readInlineStyle(
+        page,
+        framework,
+        "Progress",
+        "progress",
+        "progress__fill",
+      );
+      expect(style).toHaveProperty("--fsds-progress-fill-width");
+      expect(style["--fsds-progress-fill-width"]).toContain("50");
+      // Not the dropped-undefined state the default-props test asserts.
+      expect(style["--fsds-progress-fill-width"]).not.toBe("undefined");
+
+      // Fact 2: the progressbar root reflects aria-valuenow=50.
+      const ariaValueNow = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return null;
+          const el = root.querySelector('[role="progressbar"]') as HTMLElement | null;
+          return el?.getAttribute("aria-valuenow") ?? null;
+        },
+        { host: `fsds-${kebab("Progress")}`, isLit: framework === "lit" },
+      );
+      expect(ariaValueNow).toBe("50");
+    });
+  }
+});
+
+test.describe("Runtime rail — Truncate non-default lines", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: lines=5 sets an exact CSS-var value`, async ({ page }) => {
+      // Default Truncate has no lines -> inline var absent (asserted above).
+      await goto(page, framework, "Truncate", "truncate", { lines: 5 });
+      const style = await readInlineStyle(
+        page,
+        framework,
+        "Truncate",
+        "truncate",
+        "truncate__content",
+      );
+      // Upgrades the default "not the string undefined" assertion to an
+      // exact non-default value.
+      expect(style["--fsds-truncate-content-lines"]).toBe("5");
     });
   }
 });
