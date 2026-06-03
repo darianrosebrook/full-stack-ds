@@ -1,0 +1,28 @@
+id: RUNTIME-RAIL-NONDEFAULT-PROPS-01
+title: 'Runtime rail: non-default prop assertions for R/V/S/L via query-param overrideProps'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-03T00:08:09.776Z'
+updated_at: '2026-06-03T00:08:09.776Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'nondefault-prop-rail'
+    type: behavior
+    path: 'e2e/runtime-rail.spec.ts'
