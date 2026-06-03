@@ -2,9 +2,11 @@ id: RUNTIME-RAIL-ANGULAR-NONDEFAULT-01
 title: 'Angular non-default prop facts in runtime rail (prop-keyed compiled-host strategy)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: abandoned
+closure_notes: 'DEFERRED problem-statement record (not abandoned work — ''abandoned'' is the closest CLI resolution for ''closed without implementation''). Captures the Angular non-default-prop constraint (full-tree AOT recompile per prop-set wipes the single shared cache; serve-or-404 middleware, no on-demand compile) and the decision space (per-prop-set cache / fixed fixture set / incremental compiler / explicit non-admission). When the design is chosen, author a FRESH active spec rather than reopening this one. Closed to remove a misleading active-but-unactionable surface; predecessor RUNTIME-RAIL-ANGULAR-01 lands Angular default-props rail facts.'
 created_at: '2026-06-03T01:06:36.618Z'
-updated_at: '2026-06-03T01:06:36.618Z'
+updated_at: '2026-06-03T17:13:18.594Z'
 blast_radius:
   modules:
     - src/runtime/angular-compiler + packages/ds-angular/src/preview (prop-keyed host + compile/cache) — design chosen at activation
