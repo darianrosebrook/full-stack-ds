@@ -3,11 +3,23 @@
  *
  * Spins up the Vite dev server and renders each of the 5 components
  * that gained new behavior in Commits 1-6 (Progress, Truncate,
- * ShowMore, OTP, Calendar) through every browser-mountable framework
- * (React, Vue, Svelte, Lit). Angular's preview pipeline is a
- * documented static placeholder, so Angular runtime assertions are
- * skipped here — its emit shape is covered by the `iteration-bindings`
- * and `css-var-bindings` codegen tests.
+ * ShowMore, OTP, Calendar) through every framework reachable by this
+ * rail's navigable /preview/{framework}/<Name> route
+ * (React, Vue, Svelte, Lit).
+ *
+ * Angular is NOT a static placeholder — its preview is executable
+ * (live AOT compile + bootstrapApplication landed in
+ * HARNESS-ANGULAR-PREVIEW-LIVE-BOOTSTRAP-01, and every corpus
+ * component renders in the showcase's Angular preview). It is excluded
+ * from THIS Playwright fact rail for a routing reason, not an
+ * executability one: R/V/S/L expose a navigable per-component preview
+ * HTML page that the rail can goto(); Angular mounts via a compiled-
+ * host + srcDoc path (the /preview/angular/ endpoint serves JS modules,
+ * not a navigable page). Bringing Angular into this rail therefore
+ * needs a navigable Angular preview route — tracked as the adjacent
+ * follow-up RUNTIME-RAIL-ANGULAR-01. Until then Angular's emit shape is
+ * covered by the `iteration-bindings` and `css-var-bindings` codegen
+ * tests and admitted by ngc strictTemplates (CODEGEN-RAIL-ANGULAR-NGTSC-01).
  *
  * The rail asserts CONTRACT FACTS, not screenshot pixels. Each `it`
  * block names exactly what claim it is proving and what would
@@ -31,18 +43,23 @@
  *   Calendar  — `daysShown=42` (default) renders 42 `[data-calendar-index]`
  *               nodes with values 0..41.
  *
+ * Non-default props ARE now asserted for R/V/S/L on ShowMore (maxLines),
+ * Progress (value), and Truncate (lines): the preview plugins parse props
+ * from the URL query and bake them into the (prop-keyed) virtual entry, and
+ * the "non-default" describe blocks below assert the runtime fact changes
+ * from the default (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
+ *
  * What this rail does NOT prove:
  *
- *   - Visible behavior with non-default props (Progress at value=42,
- *     Truncate at lines=5, etc.). The default-props surface is what
- *     the existing preview pipeline mounts. Asserting non-defaults
- *     would require either driving the iframe with messages or
- *     authoring a dedicated test harness; that's an explicit
- *     follow-up.
+ *   - Non-default props for components OTHER than the three above, or
+ *     for prop kinds beyond the numeric/boolean query surface. The
+ *     mechanism generalizes, but only these three are asserted here.
  *   - Cross-framework behavioral parity beyond DOM shape (e.g.
  *     whether OTP's React input-focus advance behaves identically
  *     in Svelte). The iteration is structural here.
- *   - Angular runtime — its preview is a placeholder.
+ *   - Angular runtime facts — not because Angular preview is inert (it
+ *     is executable), but because this rail has no navigable Angular
+ *     route yet. See the header note + RUNTIME-RAIL-ANGULAR-01.
  */
 
 import { test, expect, type Page } from "@playwright/test";
