@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: angular-rail
 created_at: '2026-06-03T01:05:21.191Z'
-updated_at: '2026-06-03T01:05:31.441Z'
+updated_at: '2026-06-03T21:17:05.222Z'
 blast_radius:
   modules:
     - src/runtime (navigable Angular preview route) + e2e (rail, Angular default-props facts)
@@ -16,9 +16,9 @@ scope:
     - e2e/runtime-rail.spec.ts
     - src/runtime/angular-compiler/vite-plugin.ts
     - src/runtime/shells/angular.ts
+    - src/runtime/demos.ts
   out:
     - src/runtime/angular-compiler/host.ts
-    - src/runtime/demos.ts
     - src/runtime/react-preview
     - src/runtime/vue-preview
     - src/runtime/svelte-preview
