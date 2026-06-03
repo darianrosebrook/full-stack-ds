@@ -136,6 +136,71 @@ export function angularPreviewPlugin(): Plugin {
 
         // Strip prefix and query string, guard against traversal.
         const relPath = decodeURIComponent(req.url.slice(URL_PREFIX.length).split("?")[0]);
+
+        // Navigable preview-page branch. A bare PascalCase segment (optionally
+        // trailing-slashed) is a per-component preview HTML PAGE — the
+        // Playwright runtime rail navigates to /preview/angular/<Name> like it
+        // does for the R/V/S/L routes. The matcher is deliberately STRICT so it
+        // never captures the compiled cache assets this same middleware serves
+        // (e.g. ".fsds-preview-hosts/Progress.host.component.js"): those contain
+        // a "/" and/or a "." and fall through to the asset branch below.
+        const pageMatch = /^([A-Z][A-Za-z0-9]*)\/?$/.exec(relPath);
+        if (pageMatch) {
+          const componentName = pageMatch[1];
+          // Honor the compile-in-flight contract: a navigable page must not
+          // bootstrap against a cache that has no compiled host yet. Await the
+          // initial compile so the rail's page.goto resolves to a mounted
+          // component rather than racing a 404/empty host import.
+          if (state.compilePromise && !state.lastResult) {
+            try {
+              await state.compilePromise;
+            } catch {
+              res.statusCode = 500;
+              res.setHeader("Content-Type", "text/plain");
+              res.end("Angular preview compile failed — see dev-server logs.");
+              return;
+            }
+          }
+          // The compiled default host must exist for this component, else the
+          // page would import a missing module and never emit fsds:ready.
+          const hostJs = path.join(
+            CACHE_DIR,
+            ".fsds-preview-hosts",
+            `${componentName}.host.component.js`,
+          );
+          if (!fs.existsSync(hostJs)) {
+            res.statusCode = 404;
+            res.setHeader("Content-Type", "text/plain");
+            res.end(`no compiled Angular host for "${componentName}"`);
+            return;
+          }
+          const { buildAngularShell } = await import("../shells/angular");
+          // css is optional fidelity; the rail asserts inline --fsds-* vars and
+          // DOM shape (author-written, present regardless of stylesheet), so we
+          // pass the component CSS when cheaply available and omit otherwise.
+          let css: string | undefined;
+          try {
+            const { loadBundleFromDisk } = await import("./bundle-loader");
+            const bundle = await loadBundleFromDisk();
+            css = bundle.components.find((c) => c.name === componentName)
+              ?.sources.angular?.css?.code;
+          } catch { /* css is optional — proceed without it */ }
+          // componentSource + demo are accepted by buildAngularShell for API
+          // symmetry but unused (the compiled host on disk is the source of
+          // truth); pass empty strings.
+          const html = buildAngularShell({
+            componentName,
+            componentSource: "",
+            css,
+            demo: "",
+          });
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "text/html; charset=utf-8");
+          res.setHeader("Cache-Control", "no-store");
+          res.end(html);
+          return;
+        }
+
         const absPath = path.join(CACHE_DIR, relPath);
         if (!absPath.startsWith(CACHE_DIR + path.sep)) {
           res.statusCode = 403; res.end("forbidden"); return;

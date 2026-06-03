@@ -4,22 +4,25 @@
  * Spins up the Vite dev server and renders each of the 5 components
  * that gained new behavior in Commits 1-6 (Progress, Truncate,
  * ShowMore, OTP, Calendar) through every framework reachable by this
- * rail's navigable /preview/{framework}/<Name> route
- * (React, Vue, Svelte, Lit).
+ * rail's navigable /preview/{framework}/<Name> route — now including
+ * Angular (React, Vue, Svelte, Lit, Angular).
  *
- * Angular is NOT a static placeholder — its preview is executable
- * (live AOT compile + bootstrapApplication landed in
- * HARNESS-ANGULAR-PREVIEW-LIVE-BOOTSTRAP-01, and every corpus
- * component renders in the showcase's Angular preview). It is excluded
- * from THIS Playwright fact rail for a routing reason, not an
- * executability one: R/V/S/L expose a navigable per-component preview
- * HTML page that the rail can goto(); Angular mounts via a compiled-
- * host + srcDoc path (the /preview/angular/ endpoint serves JS modules,
- * not a navigable page). Bringing Angular into this rail therefore
- * needs a navigable Angular preview route — tracked as the adjacent
- * follow-up RUNTIME-RAIL-ANGULAR-01. Until then Angular's emit shape is
- * covered by the `iteration-bindings` and `css-var-bindings` codegen
- * tests and admitted by ngc strictTemplates (CODEGEN-RAIL-ANGULAR-NGTSC-01).
+ * Angular DEFAULT-props facts are covered (RUNTIME-RAIL-ANGULAR-01).
+ * Its preview is executable (live AOT compile + bootstrapApplication,
+ * HARNESS-ANGULAR-PREVIEW-LIVE-BOOTSTRAP-01); this rail reaches it via a
+ * navigable /preview/angular/<Name> HTML page added in that spec, which
+ * wraps the existing Angular shell and bootstraps the compiled default
+ * host. Angular renders light DOM with the same BEM classes/roles, so
+ * the existing document.querySelector path covers it (no shadow-piercing).
+ * Bringing Angular in surfaced and fixed a real preview defect: numeric/
+ * array inputs were emitted as static HTML attributes (bound as strings),
+ * so iteration components rendered zero cells; the Angular host now uses
+ * property bindings ([prop]="value") for non-string inputs.
+ *
+ * Angular NON-default prop facts are NOT covered here: Angular bakes
+ * props before AOT compile (a full-tree recompile per prop-set), so the
+ * R/V/S/L query-param->load-time seam doesn't apply. That is the deferred
+ * problem-statement RUNTIME-RAIL-ANGULAR-NONDEFAULT-01.
  *
  * The rail asserts CONTRACT FACTS, not screenshot pixels. Each `it`
  * block names exactly what claim it is proving and what would
@@ -57,16 +60,30 @@
  *   - Cross-framework behavioral parity beyond DOM shape (e.g.
  *     whether OTP's React input-focus advance behaves identically
  *     in Svelte). The iteration is structural here.
- *   - Angular runtime facts — not because Angular preview is inert (it
- *     is executable), but because this rail has no navigable Angular
- *     route yet. See the header note + RUNTIME-RAIL-ANGULAR-01.
+ *   - Angular NON-default prop facts — Angular default-props facts ARE
+ *     covered now, but non-default props need a prop-keyed compiled-host
+ *     strategy (props bake before AOT compile). Deferred to
+ *     RUNTIME-RAIL-ANGULAR-NONDEFAULT-01.
  */
 
 import { test, expect, type Page } from "@playwright/test";
 
-type Framework = "react" | "vue" | "svelte" | "lit";
+type Framework = "react" | "vue" | "svelte" | "lit" | "angular";
 
-const FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit"];
+// Angular is included for DEFAULT-props facts only (RUNTIME-RAIL-ANGULAR-01):
+// it is reachable via the navigable /preview/angular/<Name> route and renders
+// light DOM with the same BEM classes/roles, so the existing
+// document.querySelector path covers it. Angular NON-default props are NOT
+// asserted here — they need a prop-keyed compiled-host strategy (deferred,
+// RUNTIME-RAIL-ANGULAR-NONDEFAULT-01), so the non-default describe blocks below
+// keep their own R/V/S/L-only framework list.
+const FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit", "angular"];
+
+// The non-default prop rail (query-param overrideProps) covers only the
+// frameworks whose previews bake props at Vite load time. Angular bakes props
+// before AOT compile, so it is excluded from the non-default blocks until
+// RUNTIME-RAIL-ANGULAR-NONDEFAULT-01 lands a prop-keyed host strategy.
+const NONDEFAULT_FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit"];
 
 /**
  * Navigate to a single-component preview route and wait for the
@@ -110,6 +127,19 @@ async function goto(
     state: "attached",
     timeout: 30_000,
   });
+  // Angular bootstraps asynchronously: bootstrapApplication resolves a
+  // microtask after the host attaches, so the block class can be present
+  // while the component's @for/*ngFor children are still empty. The Angular
+  // shell sets `<body data-fsds-ready>` after bootstrap resolves (and the
+  // first render flushes); wait for that so iterated DOM is guaranteed
+  // populated. R/V/S/L mount synchronously after module import, so the
+  // attached wait above already suffices for them.
+  if (framework === "angular") {
+    await page.locator("body[data-fsds-ready]").waitFor({
+      state: "attached",
+      timeout: 30_000,
+    });
+  }
 }
 
 function kebab(s: string): string {
@@ -566,7 +596,7 @@ test.describe("Runtime rail — ShowMore (CSS-var with default)", () => {
 // ---------------------------------------------------------------------
 
 test.describe("Runtime rail — ShowMore non-default maxLines", () => {
-  for (const framework of FRAMEWORKS) {
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
     test(`${framework}: maxLines=7 overrides the default-3 CSS var`, async ({ page }) => {
       await goto(page, framework, "ShowMore", "show-more", { maxLines: 7 });
       const style = await readInlineStyle(
@@ -584,7 +614,7 @@ test.describe("Runtime rail — ShowMore non-default maxLines", () => {
 });
 
 test.describe("Runtime rail — Progress non-default value", () => {
-  for (const framework of FRAMEWORKS) {
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
     test(`${framework}: value=50 sets the fill var and aria-valuenow`, async ({ page }) => {
       // Default Progress has no value -> no inline var (asserted above).
       await goto(page, framework, "Progress", "progress", { value: 50 });
@@ -620,7 +650,7 @@ test.describe("Runtime rail — Progress non-default value", () => {
 });
 
 test.describe("Runtime rail — Truncate non-default lines", () => {
-  for (const framework of FRAMEWORKS) {
+  for (const framework of NONDEFAULT_FRAMEWORKS) {
     test(`${framework}: lines=5 sets an exact CSS-var value`, async ({ page }) => {
       // Default Truncate has no lines -> inline var absent (asserted above).
       await goto(page, framework, "Truncate", "truncate", { lines: 5 });
