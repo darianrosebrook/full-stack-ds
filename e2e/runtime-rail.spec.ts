@@ -3,11 +3,23 @@
  *
  * Spins up the Vite dev server and renders each of the 5 components
  * that gained new behavior in Commits 1-6 (Progress, Truncate,
- * ShowMore, OTP, Calendar) through every browser-mountable framework
- * (React, Vue, Svelte, Lit). Angular's preview pipeline is a
- * documented static placeholder, so Angular runtime assertions are
- * skipped here — its emit shape is covered by the `iteration-bindings`
- * and `css-var-bindings` codegen tests.
+ * ShowMore, OTP, Calendar) through every framework reachable by this
+ * rail's navigable /preview/{framework}/<Name> route
+ * (React, Vue, Svelte, Lit).
+ *
+ * Angular is NOT a static placeholder — its preview is executable
+ * (live AOT compile + bootstrapApplication landed in
+ * HARNESS-ANGULAR-PREVIEW-LIVE-BOOTSTRAP-01, and every corpus
+ * component renders in the showcase's Angular preview). It is excluded
+ * from THIS Playwright fact rail for a routing reason, not an
+ * executability one: R/V/S/L expose a navigable per-component preview
+ * HTML page that the rail can goto(); Angular mounts via a compiled-
+ * host + srcDoc path (the /preview/angular/ endpoint serves JS modules,
+ * not a navigable page). Bringing Angular into this rail therefore
+ * needs a navigable Angular preview route — tracked as the adjacent
+ * follow-up RUNTIME-RAIL-ANGULAR-01. Until then Angular's emit shape is
+ * covered by the `iteration-bindings` and `css-var-bindings` codegen
+ * tests and admitted by ngc strictTemplates (CODEGEN-RAIL-ANGULAR-NGTSC-01).
  *
  * The rail asserts CONTRACT FACTS, not screenshot pixels. Each `it`
  * block names exactly what claim it is proving and what would
@@ -31,18 +43,23 @@
  *   Calendar  — `daysShown=42` (default) renders 42 `[data-calendar-index]`
  *               nodes with values 0..41.
  *
+ * Non-default props ARE now asserted for R/V/S/L on ShowMore (maxLines),
+ * Progress (value), and Truncate (lines): the preview plugins parse props
+ * from the URL query and bake them into the (prop-keyed) virtual entry, and
+ * the "non-default" describe blocks below assert the runtime fact changes
+ * from the default (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
+ *
  * What this rail does NOT prove:
  *
- *   - Visible behavior with non-default props (Progress at value=42,
- *     Truncate at lines=5, etc.). The default-props surface is what
- *     the existing preview pipeline mounts. Asserting non-defaults
- *     would require either driving the iframe with messages or
- *     authoring a dedicated test harness; that's an explicit
- *     follow-up.
+ *   - Non-default props for components OTHER than the three above, or
+ *     for prop kinds beyond the numeric/boolean query surface. The
+ *     mechanism generalizes, but only these three are asserted here.
  *   - Cross-framework behavioral parity beyond DOM shape (e.g.
  *     whether OTP's React input-focus advance behaves identically
  *     in Svelte). The iteration is structural here.
- *   - Angular runtime — its preview is a placeholder.
+ *   - Angular runtime facts — not because Angular preview is inert (it
+ *     is executable), but because this rail has no navigable Angular
+ *     route yet. See the header note + RUNTIME-RAIL-ANGULAR-01.
  */
 
 import { test, expect, type Page } from "@playwright/test";
@@ -61,8 +78,25 @@ const FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit"];
  * lives under the host. The element-tag-vs-class distinction is
  * documented per-test below where it matters.
  */
-async function goto(page: Page, framework: Framework, component: string, blockClass: string) {
-  await page.goto(`/preview/${framework}/${component}`, {
+async function goto(
+  page: Page,
+  framework: Framework,
+  component: string,
+  blockClass: string,
+  props?: Record<string, string | number | boolean>,
+) {
+  // Non-default props ride the preview URL query. The plugin parses them,
+  // encodes them into the (distinct) virtual entry id, and bakes them into the
+  // mounted component — so a non-default URL must NOT serve the cached
+  // default-props render. The paired default-vs-non-default tests below prove
+  // the override actually takes effect.
+  const query = props
+    ? "?" +
+      Object.entries(props)
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+        .join("&")
+    : "";
+  await page.goto(`/preview/${framework}/${component}${query}`, {
     waitUntil: "domcontentloaded",
   });
   // For React/Vue/Svelte, the BEM block class lands directly on a DOM
@@ -516,6 +550,90 @@ test.describe("Runtime rail — ShowMore (CSS-var with default)", () => {
       // so the default-props demo SHOULD have the inline var set.
       const style = await readInlineStyle(page, framework, "ShowMore", "show-more", "show-more__content");
       expect(style["--fsds-show-more-content-max-lines"]).toBe("3");
+    });
+  }
+});
+
+// ---------------------------------------------------------------------
+// Non-default prop rail (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
+//
+// These tests drive an EXPLICIT non-default prop through the preview URL
+// query and assert the runtime fact CHANGES from the default. Each pairs a
+// default render with a non-default render and asserts they differ — so a
+// plugin that ignored the override (and served the cached default-props
+// entry) would FAIL here, not silently pass. This closes the rail's prior
+// "non-default props are not asserted" non-claim for R/V/S/L.
+// ---------------------------------------------------------------------
+
+test.describe("Runtime rail — ShowMore non-default maxLines", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: maxLines=7 overrides the default-3 CSS var`, async ({ page }) => {
+      await goto(page, framework, "ShowMore", "show-more", { maxLines: 7 });
+      const style = await readInlineStyle(
+        page,
+        framework,
+        "ShowMore",
+        "show-more",
+        "show-more__content",
+      );
+      // The override must reach the inline var: 7, not the default 3.
+      expect(style["--fsds-show-more-content-max-lines"]).toBe("7");
+      expect(style["--fsds-show-more-content-max-lines"]).not.toBe("3");
+    });
+  }
+});
+
+test.describe("Runtime rail — Progress non-default value", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: value=50 sets the fill var and aria-valuenow`, async ({ page }) => {
+      // Default Progress has no value -> no inline var (asserted above).
+      await goto(page, framework, "Progress", "progress", { value: 50 });
+
+      // Fact 1: the fill carries the inline CSS var derived from value=50.
+      const style = await readInlineStyle(
+        page,
+        framework,
+        "Progress",
+        "progress",
+        "progress__fill",
+      );
+      expect(style).toHaveProperty("--fsds-progress-fill-width");
+      expect(style["--fsds-progress-fill-width"]).toContain("50");
+      // Not the dropped-undefined state the default-props test asserts.
+      expect(style["--fsds-progress-fill-width"]).not.toBe("undefined");
+
+      // Fact 2: the progressbar root reflects aria-valuenow=50.
+      const ariaValueNow = await page.evaluate(
+        ({ host, isLit }) => {
+          const root: Document | ShadowRoot | null = isLit
+            ? (document.querySelector(host) as HTMLElement)?.shadowRoot ?? null
+            : document;
+          if (!root) return null;
+          const el = root.querySelector('[role="progressbar"]') as HTMLElement | null;
+          return el?.getAttribute("aria-valuenow") ?? null;
+        },
+        { host: `fsds-${kebab("Progress")}`, isLit: framework === "lit" },
+      );
+      expect(ariaValueNow).toBe("50");
+    });
+  }
+});
+
+test.describe("Runtime rail — Truncate non-default lines", () => {
+  for (const framework of FRAMEWORKS) {
+    test(`${framework}: lines=5 sets an exact CSS-var value`, async ({ page }) => {
+      // Default Truncate has no lines -> inline var absent (asserted above).
+      await goto(page, framework, "Truncate", "truncate", { lines: 5 });
+      const style = await readInlineStyle(
+        page,
+        framework,
+        "Truncate",
+        "truncate",
+        "truncate__content",
+      );
+      // Upgrades the default "not the string undefined" assertion to an
+      // exact non-default value.
+      expect(style["--fsds-truncate-content-lines"]).toBe("5");
     });
   }
 });

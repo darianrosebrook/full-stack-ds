@@ -18,7 +18,12 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { buildReactDemo } from "../demos";
+import { buildReactDemo, type DemoProps } from "../demos";
+import {
+  decodePropsParam,
+  encodePropsParam,
+  parsePropsFromQuery,
+} from "../preview-props";
 
 // NOTE: the URL prefix is inlined here as a string literal — Vite's config
 // loader doesn't reliably follow .ts → .ts imports inside the
@@ -38,19 +43,29 @@ const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
 
 interface ParsedShellRequest {
   componentName: string;
+  /** Non-default prop overrides parsed from the request query string. */
+  overrideProps: DemoProps;
 }
 
 interface ParsedVirtualEntryId {
   componentName: string;
+  /** Non-default prop overrides decoded from the entry id's props payload. */
+  overrideProps: DemoProps;
 }
 
 function parseShellRequest(url: string): ParsedShellRequest | null {
   if (!url.startsWith(URL_PREFIX)) return null;
-  const tail = url.slice(URL_PREFIX.length).split("?")[0];
+  const afterPrefix = url.slice(URL_PREFIX.length);
+  const qIndex = afterPrefix.indexOf("?");
+  const tail = qIndex === -1 ? afterPrefix : afterPrefix.slice(0, qIndex);
+  const query = qIndex === -1 ? "" : afterPrefix.slice(qIndex + 1);
   // Only the bare component segment matches. We never serve sub-paths from
   // the shell middleware; the entry virtual module is reached via /@id/.
   if (!/^[A-Z][A-Za-z0-9]*\/?$/.test(tail)) return null;
-  return { componentName: tail.replace(/\/$/, "") };
+  return {
+    componentName: tail.replace(/\/$/, ""),
+    overrideProps: parsePropsFromQuery(query),
+  };
 }
 
 function parseVirtualEntryId(id: string): ParsedVirtualEntryId | null {
@@ -63,12 +78,19 @@ function parseVirtualEntryId(id: string): ParsedVirtualEntryId | null {
   })();
   if (!decoded.startsWith(VIRTUAL_ID_PREFIX)) return null;
   const tail = decoded.slice(VIRTUAL_ID_PREFIX.length);
+  // Split the optional ?props=<encoded> payload off the module path. The
+  // props payload makes distinct prop-sets resolve to distinct modules — the
+  // module path alone is keyed by component name and would otherwise collide.
+  const qIndex = tail.indexOf("?");
+  const modulePath = qIndex === -1 ? tail : tail.slice(0, qIndex);
+  const propsQuery = qIndex === -1 ? "" : tail.slice(qIndex + 1);
   // .tsx extension is required: Vite's import-analyzer dispatches transforms
   // by file extension and refuses to parse JSX from extensionless modules.
   // The shell builder uses the same suffix when generating the entry URL.
-  const match = /^([A-Z][A-Za-z0-9]*)\/entry\.tsx$/.exec(tail);
+  const match = /^([A-Z][A-Za-z0-9]*)\/entry\.tsx$/.exec(modulePath);
   if (!match) return null;
-  return { componentName: match[1] };
+  const propsParam = new URLSearchParams(propsQuery).get("props");
+  return { componentName: match[1], overrideProps: decodePropsParam(propsParam) };
 }
 
 /**
@@ -78,12 +100,16 @@ function parseVirtualEntryId(id: string): ParsedVirtualEntryId | null {
  * /packages/ds-react/..., so Vite's React plugin picks it up like any
  * other workspace module.
  */
-function buildEntrySource(componentName: string, bundle: Awaited<ReturnType<typeof buildBundle>>): string {
+function buildEntrySource(
+  componentName: string,
+  bundle: Awaited<ReturnType<typeof buildBundle>>,
+  overrideProps: DemoProps,
+): string {
   const component = bundle.components.find((c) => c.name === componentName);
   if (!component) {
     throw new Error(`fsds-react-preview: unknown component "${componentName}"`);
   }
-  const demo = buildReactDemo(component);
+  const demo = buildReactDemo(component, overrideProps);
   // The workspace alias `@full-stack-ds/react` points at packages/ds-react/src/index.ts,
   // which only re-exports a subset. For previews we want the raw component file
   // so siblings (useAccordion etc.) resolve naturally through Vite's graph.
@@ -134,7 +160,7 @@ export function reactPreviewPlugin(): Plugin {
       // doesn't carry an extension — the plugin uses moduleType detection,
       // which falls back to JSX-aware parsing for virtual modules. If that
       // ever changes upstream, we'd add an extension hint here.
-      return buildEntrySource(parsed.componentName, bundle);
+      return buildEntrySource(parsed.componentName, bundle, parsed.overrideProps);
     },
 
     configureServer(server: ViteDevServer) {
@@ -159,11 +185,15 @@ export function reactPreviewPlugin(): Plugin {
           // skip server.transformIndexHtml — that pass triggers Vite's
           // import-analysis on inline <script type="module"> blocks, which
           // can't normalize /@id/<virtual:...> URLs with literal colons.
+          const propsParam = encodePropsParam(parsed.overrideProps);
+          const entryId = propsParam
+            ? `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.tsx?props=${propsParam}`
+            : `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.tsx`;
           const html = buildReactPreviewShellHtml({
             componentName: parsed.componentName,
             componentCss: component.sources.react?.css?.code,
             tokensCss: bundle.tokensCss,
-            entryId: `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.tsx`,
+            entryId,
           });
           res.statusCode = 200;
           res.setHeader("Content-Type", "text/html; charset=utf-8");
