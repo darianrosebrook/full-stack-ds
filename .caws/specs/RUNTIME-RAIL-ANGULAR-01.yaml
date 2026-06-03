@@ -2,10 +2,11 @@ id: RUNTIME-RAIL-ANGULAR-01
 title: 'Navigable Angular preview route + Angular in runtime rail (default props only)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: angular-rail
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge angular-rail at 0d515fe394c1fda57add175e0030089f085b1f8d'
 created_at: '2026-06-03T01:05:21.191Z'
-updated_at: '2026-06-03T21:17:05.222Z'
+updated_at: '2026-06-03T21:20:56.548Z'
 blast_radius:
   modules:
     - src/runtime (navigable Angular preview route) + e2e (rail, Angular default-props facts)
