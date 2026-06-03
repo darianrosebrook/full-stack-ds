@@ -27,7 +27,7 @@ scope:
     - packages
 invariants:
   - 'Scope is navigable-route reachability ONLY. This spec adds a navigable Angular preview HTML route and brings Angular into the runtime fact rail for DEFAULT-props assertions. It does NOT add query-param overrideProps for Angular, prop-keyed host filenames, on-demand compile, or per-prop-set cache dirs — those are deferred to RUNTIME-RAIL-ANGULAR-NONDEFAULT-01 (Angular non-default props require a prop-keyed compiled-host strategy because props bake before full-tree AOT compile, not at Vite load time).'
-  - 'host.ts is fenced out: the synthesizer keeps producing one default host per component (synthesizeAllHosts at startup). No override path, no prop-keying. demos.ts and the R/V/S/L plugins + preview-props.ts are also untouched (scope.out).'
+  - 'host.ts is fenced out: the synthesizer keeps producing one default host per component (synthesizeAllHosts at startup). No override path, no prop-keying. The R/V/S/L plugins + preview-props.ts are untouched (scope.out). SCOPE AMENDED MID-SLICE (git-tracked): demos.ts was moved into scope.in because bringing Angular into the rail surfaced a real pre-existing default-props defect — buildAngularDemo emitted numeric/array inputs as static HTML attributes, which Angular binds as strings, so iteration components (OTP/Calendar/Shuttle/Walkthrough/Select) rendered zero cells. The fix is Angular-only (a new renderAngularInputs that emits [prop]="value" property bindings for non-string inputs); the shared renderHtmlAttrs used by Lit is unchanged, and the full rail stays green for R/V/S/L.'
   - 'The navigable route reuses the EXISTING executable Angular preview: it wraps buildAngularShell (which already imports the compiled default host from the cache and posts fsds:ready) and serves it as a navigable HTML page, rather than only as srcDoc inside the showcase FrameworkPreview. It must handle the compile-in-flight case cleanly (await the in-flight compile or honor the existing 503 + Retry-After) so the rail does not flake on a cold cache.'
   - 'Angular renders default (emulated) encapsulation = light DOM with the same BEM classes/roles as the other frameworks (verified: Progress emits role="progressbar" + .progress__fill in light DOM). So the rail uses its EXISTING document.querySelector + waitFor({state:"attached"}) path for Angular — NOT the Lit-style shadow-piercing path. No new selector machinery.'
   - 'Angular is added to the rail FRAMEWORKS array only AFTER the default-props Angular facts pass for the covered components — a red Angular column must not be committed. The assertions reused are the existing default-props ones (Progress/Truncate/ShowMore CSS-var-or-fallback, OTP/Calendar iteration counts).'
@@ -50,9 +50,13 @@ acceptance:
     when: 'the FRAMEWORKS array is updated'
     then: 'angular is added to FRAMEWORKS (covering default-props assertions) only after A3 passes; the rail header comment is updated to state Angular default-props coverage and to defer non-default Angular props to RUNTIME-RAIL-ANGULAR-NONDEFAULT-01'
   - id: A5
-    given: 'the slice as committed'
+    given: 'the slice as committed (scope amended mid-slice to add demos.ts — git-tracked — to fix the surfaced iteration-prop binding defect)'
     when: 'git diff is taken'
-    then: 'only e2e/runtime-rail.spec.ts, src/runtime/angular-compiler/vite-plugin.ts, and src/runtime/shells/angular.ts changed; no host.ts, demos.ts, R/V/S/L plugin, preview-props.ts, or package file appears — no prop-keyed host / on-demand-compile / per-prop-set-cache work landed'
+    then: 'only e2e/runtime-rail.spec.ts, src/runtime/angular-compiler/vite-plugin.ts, src/runtime/shells/angular.ts, and src/runtime/demos.ts changed; no host.ts, R/V/S/L plugin, preview-props.ts, or package file appears — the demos.ts change is Angular-only (renderAngularInputs property bindings), no prop-keyed host / on-demand-compile / per-prop-set-cache work landed'
+  - id: A6
+    given: 'the iteration-prop binding fix in demos.ts (renderAngularInputs)'
+    when: 'the full runtime rail runs'
+    then: 'all 9 Angular default-props facts pass (4 CSS-var + 5 iteration: OTP/Calendar/Shuttle/Walkthrough/Select), AND R/V/S/L stay green (no regression from the shared-module change — Lit''s renderHtmlAttrs path is untouched)'
 non_functional: {}
 contracts:
   - name: 'angular-rail-route'
