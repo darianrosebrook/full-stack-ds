@@ -2,10 +2,11 @@ id: RUNTIME-RAIL-ANGULAR-NONDEFAULT-02
 title: 'Angular non-default prop facts in runtime rail via pre-compiled startup fixtures (option b)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: angular-nondefault
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge angular-nondefault at 013789d7d31eeff1d2e64286a360fd3762329075'
 created_at: '2026-06-04T15:30:44.489Z'
-updated_at: '2026-06-04T15:32:08.485Z'
+updated_at: '2026-06-04T20:26:31.829Z'
 blast_radius:
   modules:
     - src/runtime/angular-compiler (non-default fixture registry + additive startup synthesis + serve route) + e2e (runtime rail Angular non-default facts)
