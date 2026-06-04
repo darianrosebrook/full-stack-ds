@@ -19,6 +19,7 @@ import * as path from "node:path";
 import type { ComponentBundle } from "../../types/data";
 import { buildAngularDemo } from "../demos";
 import { angularPackageRoot } from "@full-stack-ds/angular/preview";
+import { ANGULAR_NONDEFAULT_FIXTURES } from "./nondefault-fixtures";
 
 const HOSTS_DIR_NAME = ".fsds-preview-hosts";
 
@@ -45,6 +46,15 @@ export function hostModuleName(componentName: string): string {
 interface SynthesizeOptions {
   component: ComponentBundle;
   overrideProps?: Record<string, unknown>;
+  /**
+   * Output host basename. Defaults to `component.name` (the one default host
+   * per component). A non-default fixture passes its distinct PascalCase key
+   * (e.g. "ShowMoreMaxLines7") so its override-baked host lands in a separate
+   * `<key>.host.component.ts` and never overwrites the component's default
+   * host. The import rewrite below is keyed on the import STRING, not the
+   * filename, so a fixture host still imports the real component correctly.
+   */
+  hostKey?: string;
 }
 
 /**
@@ -56,11 +66,11 @@ interface SynthesizeOptions {
 export async function synthesizeHost(
   opts: SynthesizeOptions,
 ): Promise<string> {
-  const { component, overrideProps } = opts;
+  const { component, overrideProps, hostKey } = opts;
   const dir = hostsDir();
   await fsp.mkdir(dir, { recursive: true });
 
-  const filePath = hostFilePath(component.name);
+  const filePath = hostFilePath(hostKey ?? component.name);
   const sourceFromDemo = buildAngularDemo(component, overrideProps);
   // The buildAngularDemo string assumes the host file sits one level above
   // src/components/<Name>. Our hosts live in <pkg>/.fsds-preview-hosts/, which
@@ -95,6 +105,34 @@ export async function synthesizeAllHosts(
   for (const component of bundle.components) {
     if (!component.sources.angular?.component) continue;
     out.push(await synthesizeHost({ component }));
+  }
+  return out;
+}
+
+/**
+ * Synthesize the fixed set of non-default rail fixture hosts
+ * (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02). Each fixture bakes its override props
+ * into a host written under the fixture's distinct PascalCase key, so it
+ * coexists with — and never overwrites — the component's default host. The
+ * plugin concatenates these paths into the SAME single startup compile that
+ * builds the default hosts (no separate / on-demand compile). Additive by
+ * construction: a component with no Angular source is skipped, and the default
+ * synthesizeAllHosts output is unchanged.
+ */
+export async function synthesizeNonDefaultFixtures(
+  bundle: { components: readonly ComponentBundle[] },
+): Promise<readonly string[]> {
+  const out: string[] = [];
+  for (const fixture of ANGULAR_NONDEFAULT_FIXTURES) {
+    const component = bundle.components.find((c) => c.name === fixture.component);
+    if (!component?.sources.angular?.component) continue;
+    out.push(
+      await synthesizeHost({
+        component,
+        overrideProps: { ...fixture.props },
+        hostKey: fixture.key,
+      }),
+    );
   }
   return out;
 }
