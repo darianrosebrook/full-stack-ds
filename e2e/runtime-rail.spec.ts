@@ -19,10 +19,15 @@
  * so iteration components rendered zero cells; the Angular host now uses
  * property bindings ([prop]="value") for non-string inputs.
  *
- * Angular NON-default prop facts are NOT covered here: Angular bakes
- * props before AOT compile (a full-tree recompile per prop-set), so the
- * R/V/S/L query-param->load-time seam doesn't apply. That is the deferred
- * problem-statement RUNTIME-RAIL-ANGULAR-NONDEFAULT-01.
+ * Angular NON-default prop facts for ShowMore/Progress/Truncate ARE now
+ * covered (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02) — but NOT via the R/V/S/L
+ * query-param seam. Angular bakes props before AOT compile, so each
+ * non-default case is a small PRE-COMPILED fixture host baked into the
+ * existing startup compile under a distinct PascalCase key and served at
+ * /preview/angular/<key>. Arbitrary request-carried Angular prop-sets stay
+ * out of scope: a measured probe showed on-demand/incremental recompile buys
+ * nothing (oldProgram reuse still re-emits the whole tree), so only the fixed
+ * fixture set is admitted.
  *
  * The rail asserts CONTRACT FACTS, not screenshot pixels. Each `it`
  * block names exactly what claim it is proving and what would
@@ -60,13 +65,14 @@
  *   - Cross-framework behavioral parity beyond DOM shape (e.g.
  *     whether OTP's React input-focus advance behaves identically
  *     in Svelte). The iteration is structural here.
- *   - Angular NON-default prop facts — Angular default-props facts ARE
- *     covered now, but non-default props need a prop-keyed compiled-host
- *     strategy (props bake before AOT compile). Deferred to
- *     RUNTIME-RAIL-ANGULAR-NONDEFAULT-01.
+ *   - Angular NON-default props BEYOND the three fixtures (ShowMore/
+ *     Progress/Truncate) — only those three are pre-compiled into the rail.
+ *     Arbitrary request-carried Angular prop-sets are intentionally not
+ *     compiled; RUNTIME-RAIL-ANGULAR-NONDEFAULT-02 admits only the fixed set.
  */
 
 import { test, expect, type Page } from "@playwright/test";
+import { ANGULAR_NONDEFAULT_FIXTURES } from "../src/runtime/angular-compiler/nondefault-fixtures";
 
 type Framework = "react" | "vue" | "svelte" | "lit" | "angular";
 
@@ -79,10 +85,13 @@ type Framework = "react" | "vue" | "svelte" | "lit" | "angular";
 // keep their own R/V/S/L-only framework list.
 const FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit", "angular"];
 
-// The non-default prop rail (query-param overrideProps) covers only the
-// frameworks whose previews bake props at Vite load time. Angular bakes props
-// before AOT compile, so it is excluded from the non-default blocks until
-// RUNTIME-RAIL-ANGULAR-NONDEFAULT-01 lands a prop-keyed host strategy.
+// The query-param overrideProps seam covers only the frameworks whose previews
+// bake props at Vite load time (R/V/S/L). Angular bakes props before AOT
+// compile, so its non-default cases are served as PRE-COMPILED fixtures via a
+// distinct route (gotoAngularFixture) rather than this query seam — so Angular
+// is intentionally NOT in NONDEFAULT_FRAMEWORKS. The Angular non-default cases
+// are added explicitly in each non-default block below
+// (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02).
 const NONDEFAULT_FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit"];
 
 /**
@@ -147,6 +156,47 @@ function kebab(s: string): string {
     .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
     .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
     .toLowerCase();
+}
+
+/**
+ * Resolve the registered non-default fixture key for a component
+ * (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02). The fixture registry is the single
+ * source of truth — a missing fixture throws rather than silently skipping the
+ * assertion, so a registry/rail drift fails loudly.
+ */
+function angularFixtureKey(component: string): string {
+  const fixture = ANGULAR_NONDEFAULT_FIXTURES.find((f) => f.component === component);
+  if (!fixture) {
+    throw new Error(`no Angular non-default fixture registered for "${component}"`);
+  }
+  return fixture.key;
+}
+
+/**
+ * Navigate to a pre-compiled Angular non-default fixture page
+ * (/preview/angular/<FixtureKey>) and wait for it to mount and finish its first
+ * change-detection pass. Unlike goto's query-param path (R/V/S/L), Angular's
+ * override props are baked into a fixture host compiled at startup, so the key
+ * IS the stable route segment — no query string. Reuses the same light-DOM
+ * block-class wait and the `data-fsds-ready` marker the default Angular route
+ * uses; Angular renders light DOM, so no shadow-piercing selector is needed.
+ */
+async function gotoAngularFixture(
+  page: Page,
+  fixtureKey: string,
+  blockClass: string,
+) {
+  await page.goto(`/preview/angular/${fixtureKey}`, {
+    waitUntil: "domcontentloaded",
+  });
+  await page.locator(`.${blockClass}`).first().waitFor({
+    state: "attached",
+    timeout: 30_000,
+  });
+  await page.locator("body[data-fsds-ready]").waitFor({
+    state: "attached",
+    timeout: 30_000,
+  });
 }
 
 /**
@@ -611,6 +661,23 @@ test.describe("Runtime rail — ShowMore non-default maxLines", () => {
       expect(style["--fsds-show-more-content-max-lines"]).not.toBe("3");
     });
   }
+
+  // Angular proves the SAME changed fact, but its override is baked into a
+  // PRE-COMPILED fixture host (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02), reached via
+  // its stable fixture-key route rather than the R/V/S/L query seam. If the
+  // route served the default host instead, this would observe "3" and fail.
+  test("angular: maxLines=7 fixture overrides the default-3 CSS var", async ({ page }) => {
+    await gotoAngularFixture(page, angularFixtureKey("ShowMore"), "show-more");
+    const style = await readInlineStyle(
+      page,
+      "angular",
+      "ShowMore",
+      "show-more",
+      "show-more__content",
+    );
+    expect(style["--fsds-show-more-content-max-lines"]).toBe("7");
+    expect(style["--fsds-show-more-content-max-lines"]).not.toBe("3");
+  });
 });
 
 test.describe("Runtime rail — Progress non-default value", () => {
@@ -647,6 +714,27 @@ test.describe("Runtime rail — Progress non-default value", () => {
       expect(ariaValueNow).toBe("50");
     });
   }
+
+  // Angular: pre-compiled fixture (value=50) via the fixture-key route. Angular
+  // renders light DOM, so the progressbar root is queried directly on document.
+  test("angular: value=50 fixture sets the fill var and aria-valuenow", async ({ page }) => {
+    await gotoAngularFixture(page, angularFixtureKey("Progress"), "progress");
+    const style = await readInlineStyle(
+      page,
+      "angular",
+      "Progress",
+      "progress",
+      "progress__fill",
+    );
+    expect(style).toHaveProperty("--fsds-progress-fill-width");
+    expect(style["--fsds-progress-fill-width"]).toContain("50");
+    expect(style["--fsds-progress-fill-width"]).not.toBe("undefined");
+    const ariaValueNow = await page.evaluate(() => {
+      const el = document.querySelector('[role="progressbar"]') as HTMLElement | null;
+      return el?.getAttribute("aria-valuenow") ?? null;
+    });
+    expect(ariaValueNow).toBe("50");
+  });
 });
 
 test.describe("Runtime rail — Truncate non-default lines", () => {
@@ -666,6 +754,19 @@ test.describe("Runtime rail — Truncate non-default lines", () => {
       expect(style["--fsds-truncate-content-lines"]).toBe("5");
     });
   }
+
+  // Angular: pre-compiled fixture (lines=5) via the fixture-key route.
+  test("angular: lines=5 fixture sets an exact CSS-var value", async ({ page }) => {
+    await gotoAngularFixture(page, angularFixtureKey("Truncate"), "truncate");
+    const style = await readInlineStyle(
+      page,
+      "angular",
+      "Truncate",
+      "truncate",
+      "truncate__content",
+    );
+    expect(style["--fsds-truncate-content-lines"]).toBe("5");
+  });
 });
 
 test.describe("Runtime rail — screenshots", () => {
