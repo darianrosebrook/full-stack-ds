@@ -1,0 +1,25 @@
+id: DOC-RUNTIME-RAIL-ANGULAR-RECONCILE-01
+title: 'Reconcile snapshot + successor-work docs with landed Angular runtime preview/rail'
+risk_tier: 3
+mode: doc
+lifecycle_state: active
+created_at: '2026-06-04T23:55:37.968Z'
+updated_at: '2026-06-04T23:55:37.968Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
