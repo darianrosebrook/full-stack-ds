@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-04T15:30:44.489Z'
-updated_at: '2026-06-04T15:30:44.489Z'
+updated_at: '2026-06-04T15:31:32.193Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,7 +13,19 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
-  out: []
+    - src/runtime/angular-compiler/nondefault-fixtures.ts
+    - src/runtime/angular-compiler/host.ts
+    - src/runtime/angular-compiler/vite-plugin.ts
+    - e2e/runtime-rail.spec.ts
+  out:
+    - src/runtime/shells/angular.ts
+    - src/runtime/demos.ts
+    - src/runtime/preview-props.ts
+    - src/runtime/react-preview
+    - src/runtime/vue-preview
+    - src/runtime/svelte-preview
+    - src/runtime/lit-preview
+    - packages
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
 acceptance:
