@@ -2,10 +2,11 @@ id: CONTRACT-PROP-SURFACE-CORPUS-INVENTORY-01
 title: 'Prop-surface inventory + advisory certification harness (corpus scoreboard)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: prop-surface-inventory
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge prop-surface-inventory at 3fc1868caaf51568c9de93ed893a46f3897bd6c2'
 created_at: '2026-06-05T07:36:30.396Z'
-updated_at: '2026-06-05T07:36:31.426Z'
+updated_at: '2026-06-05T07:40:57.369Z'
 blast_radius:
   modules:
     - codegen prop-surface inventory scanner (static, read-only)
