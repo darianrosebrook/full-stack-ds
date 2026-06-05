@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-05T23:56:40.956Z'
-updated_at: '2026-06-05T23:56:40.956Z'
+updated_at: '2026-06-05T23:56:42.016Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,7 +13,19 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
-  out: []
+    - packages/ds-contracts/component.contract.schema.json
+    - packages/ds-contracts/components/**
+    - packages/ds-codegen/src/contract.ts
+    - packages/ds-codegen/src/frameworks/figma/descriptor.ts
+    - packages/ds-codegen/src/frameworks/figma/factory.ts
+    - packages/ds-codegen/src/**/*.test.ts
+    - packages/ds-figma-plugin/src/planner.ts
+    - packages/ds-figma-plugin/src/planner.test.ts
+    - packages/ds-figma-plugin/src/materialize-state.test.ts
+    - packages/ds-figma-plugin/src/generated/**
+  out:
+    - packages/ds-figma-plugin/src/materialize-state.ts
+    - packages/ds-tokens/
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
 acceptance:
