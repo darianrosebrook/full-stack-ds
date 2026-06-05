@@ -7,7 +7,9 @@ created_at: '2026-06-05T23:38:45.448Z'
 updated_at: '2026-06-05T23:38:45.448Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-contracts/components/Icon/: contract-authored static SVG glyph matching src/assets/placeholder.svg.'
+    - 'packages/ds-{react,vue,svelte,angular,lit}/src/components/Icon/: regenerated Icon realizations only.'
+    - 'src/assets/placeholder.svg: reference asset supplied by the user, used as the glyph source of truth for this slice.'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -21,12 +23,22 @@ scope:
     - 'src/assets/placeholder.svg'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The placeholder glyph is represented in the Icon contract DOM tree, not by hand-editing generated framework component files.'
+  - 'The rendered glyph preserves the supplied SVG geometry: 17x17 viewBox, two currentColor stroked circles, round stroke caps, and dash arrays.'
+  - 'Regeneration changes only Icon outputs for the five admitted web framework packages.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'the supplied src/assets/placeholder.svg'
+    when: 'the Icon contract is updated'
+    then: 'Icon anatomy contains an inline SVG with equivalent circle geometry and currentColor stroke semantics'
+  - id: A2
+    given: 'the updated Icon contract'
+    when: 'Icon is regenerated for all web targets'
+    then: 'React, Vue, Svelte, Angular, and Lit Icon outputs render the placeholder SVG inside the Icon root'
+  - id: A3
+    given: 'the regenerated Icon outputs'
+    when: 'targeted validation/tests run'
+    then: 'contract validation passes and Icon component tests still pass'
 non_functional: {}
 contracts:
   - name: 'icon-placeholder-glyph'
