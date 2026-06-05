@@ -6,6 +6,8 @@
   "description": "Figma desktop plugin for materializing Full Stack DS contracts.",
   "scripts": {
     "build": "vite build",
+    "dev": "vite build --watch",
+    "build:check": "node scripts/check-dist-fresh.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {

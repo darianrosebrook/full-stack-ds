@@ -19,3 +19,17 @@ pnpm --filter @full-stack-ds/figma-plugin run build
 ```
 
 Load `manifest.json` from this package in Figma Desktop during development.
+
+> [!IMPORTANT]
+> **Rebuild before you load.** `dist/plugin.js` is gitignored build output and
+> Figma loads it directly from disk — nothing rebuilds it for you. If you edit
+> `src/**` (or regenerate the descriptors under `src/generated/`) and don't
+> rebuild, Figma runs the **old** bytes. This is how the
+> `combineAsVariants: Grouped nodes must be in the same page as the parent`
+> error came back after the fix had already landed in source.
+>
+> - Active development: `pnpm --filter @full-stack-ds/figma-plugin dev`
+>   (Vite `--watch` — rebuilds `dist/plugin.js` on every save).
+> - One-off / before loading: run `build`, then verify freshness with
+>   `pnpm --filter @full-stack-ds/figma-plugin build:check`
+>   (fails if any `src/**` input is newer than `dist/plugin.js`).
