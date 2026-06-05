@@ -1,0 +1,36 @@
+id: CONTRACT-PROP-SURFACE-BATCH-A-01
+title: 'Prop-surface migration Batch A (leaf/display/glyph): styled→designed + structured propType'
+risk_tier: 3
+mode: refactor
+lifecycle_state: active
+created_at: '2026-06-05T07:58:41.102Z'
+updated_at: '2026-06-05T07:58:41.102Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Avatar/**'
+    - 'packages/ds-contracts/components/Badge/**'
+    - 'packages/ds-contracts/components/Blockquote/**'
+    - 'packages/ds-contracts/components/Divider/**'
+    - 'packages/ds-contracts/components/Icon/**'
+    - 'packages/ds-contracts/components/Image/**'
+    - 'packages/ds-contracts/components/Label/**'
+    - 'packages/ds-contracts/components/Links/**'
+    - 'packages/ds-contracts/components/List/**'
+    - 'packages/ds-contracts/components/ProfileFlag/**'
+    - 'packages/ds-contracts/components/Text/**'
+    - 'packages/ds-contracts/components/Truncate/**'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
