@@ -4,6 +4,7 @@
   "description": "Circular user or entity representation showing an image, initials, or icon fallback.",
   "layer": "compound",
   "category": "glyph",
+  "morphology": "fixed-square",
   "anatomy": {
     "parts": [
       "root",

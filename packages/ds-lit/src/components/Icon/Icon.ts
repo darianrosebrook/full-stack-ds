@@ -39,6 +39,11 @@ export class IconElement extends LitElement {
     }
     
     .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-sizing: border-box;
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);

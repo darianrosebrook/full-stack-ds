@@ -47,6 +47,11 @@ export class AvatarElement extends LitElement {
     }
     
     .avatar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-sizing: border-box;
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
@@ -58,9 +63,6 @@ export class AvatarElement extends LitElement {
       height: var(--fsds-avatar-size-default);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       overflow: hidden;
       position: relative;
       border-radius: var(--fsds-avatar-size-radius-default);

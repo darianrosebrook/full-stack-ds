@@ -4,6 +4,7 @@
   "description": "Loading placeholder that mimics the shape of content before data is available.",
   "layer": "primitive",
   "category": "feedback",
+  "morphology": "loading-block",
   "anatomy": {
     "parts": [
       "root",

@@ -4,6 +4,7 @@
   "description": "Avatar-style display of a user or entity identity with name and optional status badge.",
   "layer": "primitive",
   "category": "glyph",
+  "morphology": "identity-inline",
   "anatomy": {
     "parts": [
       "root"

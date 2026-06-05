@@ -4,6 +4,7 @@
   "description": "Visual indicator for task completion. Supports linear bar and circular ring variants.",
   "layer": "primitive",
   "category": "feedback",
+  "morphology": "linear-meter",
   "anatomy": {
     "parts": [
       "root",

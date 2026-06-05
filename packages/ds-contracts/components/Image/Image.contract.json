@@ -4,6 +4,7 @@
   "description": "Responsive image component with layout and aspect-ratio helpers.",
   "layer": "primitive",
   "category": "display",
+  "morphology": "replaced-media",
   "anatomy": {
     "parts": [
       "root",

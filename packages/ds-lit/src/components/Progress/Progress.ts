@@ -26,16 +26,16 @@ export class ProgressElement extends LitElement {
     .progress {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-feedback-size-padding-block, 16px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-feedback-size-padding-block, 16px);
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
-      --fsds-box-model-width: auto;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: 100%;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
-      --fsds-box-model-height: auto;
+      --fsds-box-model-height: 8px;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-progress-color-text-default: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -46,6 +46,8 @@ export class ProgressElement extends LitElement {
     }
     
     .progress {
+      display: block;
+      box-sizing: border-box;
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
