@@ -2,9 +2,10 @@ id: CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01
 title: 'PropTypeIR V2 (observed-corpus extension): callback/array/union/literal/void/promise + enum quote fix'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
 created_at: '2026-06-05T08:25:28.756Z'
-updated_at: '2026-06-05T08:25:28.756Z'
+updated_at: '2026-06-05T09:36:04.581Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src (PropTypeIR vocabulary, canonicalTsType, normalizePropType, typeRefs, inventory)'
