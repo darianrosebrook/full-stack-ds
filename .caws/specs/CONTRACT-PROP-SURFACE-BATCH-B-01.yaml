@@ -2,10 +2,11 @@ id: CONTRACT-PROP-SURFACE-BATCH-B-01
 title: 'Prop-surface migration Batch B (feedback/status/material): styled→designed + structured propType'
 risk_tier: 3
 mode: refactor
-lifecycle_state: active
-worktree: prop-surface-batch-b
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge prop-surface-batch-b at 6d9817cec5196eb1b212262024c7ffe2bed49f80'
 created_at: '2026-06-05T16:04:04.182Z'
-updated_at: '2026-06-05T16:04:04.182Z'
+updated_at: '2026-06-05T16:09:43.912Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components (Batch B: Alert, AlertNotice, Progress, Skeleton, Spinner, Stat, Status, Chip, Card)'
