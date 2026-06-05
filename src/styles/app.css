@@ -546,8 +546,14 @@ button {
   background: var(--fsds-semantic-color-background-danger-subtle);
 }
 
-/* Chips */
-.chip {
+/* Pills — inline label badges for showcase metadata (variant keys, "required"
+   markers). Namespaced as `.pill` (not `.chip`) because DS Chip renders its
+   root with class `chip` + `chip--<variant>`: a bare `.chip` app rule would
+   cascade onto every DS Chip on the page. `.pill` (not `.tag`) because a
+   scoped `.anatomy-tree .tag` rule already exists — a bare `.tag` would bleed
+   pill chrome onto the anatomy tree. Joins .card→.panel and .tabs→.view-tabs
+   as a renamed selector that no longer collides with a DS or app class. */
+.pill {
   display: inline-flex;
   align-items: center;
   gap: var(--fsds-core-spacing-size-04);
@@ -561,13 +567,13 @@ button {
   white-space: nowrap;
 }
 
-.chip--accent {
+.pill--accent {
   color: var(--fsds-semantic-color-foreground-accent);
   background: var(--fsds-semantic-color-background-accent-subtle);
   border-color: transparent;
 }
 
-.chip--mono {
+.pill--mono {
   font-family: var(--fsds-core-typography-font-family-mono);
   font-size: var(--fsds-core-typography-ramp-2);
 }
