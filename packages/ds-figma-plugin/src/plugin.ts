@@ -2,6 +2,8 @@ import {
   figmaComponentRegistry,
   figmaPrimitiveRegistry,
 } from "./generated/components/index.js";
+import { materializeComponentStateSurface } from "./materialize-state.js";
+import type { PlannerStateDimension } from "./planner.js";
 
 type FigmaCssBlock = {
   selector: string;
@@ -30,6 +32,8 @@ type FigmaComponentDescriptor = {
   css?: {
     blocks?: FigmaCssBlock[];
   };
+  /** Dimensional states — consumed by the planner, not read for state decisions here. */
+  states?: { dimensions?: Record<string, PlannerStateDimension> | null };
 };
 
 type FigmaStackPrimitiveDescriptor = {
@@ -78,13 +82,17 @@ export async function main(): Promise<void> {
   const descriptors = Object.values(figmaComponentRegistry) as FigmaComponentDescriptor[];
   for (const descriptor of descriptors) {
     const eligibility = classifyDescriptorForMaterialization(descriptor);
+    let node: FigmaComponentSetNode | FigmaComponentNode;
     if (eligibility === "component_set_materialized") {
-      materializeComponentSet(descriptor, componentsPage);
+      node = materializeComponentSet(descriptor, componentsPage);
     } else {
-      componentsPage.appendChild(
-        materializeLeafComponent(descriptor, stackVariants, eligibility),
-      );
+      const leaf = materializeLeafComponent(descriptor, stackVariants, eligibility);
+      componentsPage.appendChild(leaf);
+      node = leaf;
     }
+    // Plan-driven state surface. The planner is the single source of state
+    // semantics; this loop never classifies state dimensions itself.
+    materializeComponentStateSurface(node, descriptor);
   }
 
   figma.notify(`Full Stack DS: scaffolded Stack + ${descriptors.length} component(s).`);
