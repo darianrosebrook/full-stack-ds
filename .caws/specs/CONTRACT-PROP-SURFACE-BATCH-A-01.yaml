@@ -3,6 +3,7 @@ title: 'Prop-surface migration Batch A (leaf/display/glyph): styled→designed +
 risk_tier: 3
 mode: refactor
 lifecycle_state: active
+worktree: prop-surface-batch-a-clean
 created_at: '2026-06-05T07:58:41.102Z'
 updated_at: '2026-06-05T07:58:41.102Z'
 blast_radius:
