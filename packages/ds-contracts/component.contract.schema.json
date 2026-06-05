@@ -464,14 +464,27 @@
         }
       }
     },
+    "propType": {
+      "description": "Framework-neutral structured prop type (PropTypeIR V1). When present it supersedes the legacy TS-string `type` as the agnostic source the IR normalizes and emitters lower. See docs/a2ui-projection.md + CODEGEN-PROP-TYPE-IR-PILOT-01.",
+      "oneOf": [
+        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "string" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "number" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "boolean" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "values"], "properties": { "kind": { "const": "enum" }, "values": { "type": "array", "items": { "type": "string" }, "minItems": 1 } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "node" }, "of": { "enum": ["content", "icon"] } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "to"], "properties": { "kind": { "const": "ref" }, "to": { "type": "string", "minLength": 1 } } }
+      ]
+    },
     "designedPropMember": {
       "type": "object",
-      "description": "A prop in the `designed` or `restricted` bucket. Identical shape to `propMember` except `description` is required to be non-empty — new contracts must explain every designed prop.",
-      "required": ["name", "type", "description"],
+      "description": "A prop in the `designed` or `restricted` bucket. `description` is required to be non-empty. Each member declares its type as EITHER a legacy TS-string `type` OR a structured framework-neutral `propType` (exactly one).",
+      "required": ["name", "description"],
+      "anyOf": [{ "required": ["type"] }, { "required": ["propType"] }],
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string" },
         "type": { "type": "string" },
+        "propType": { "$ref": "#/$defs/propType" },
         "description": {
           "type": "string",
           "minLength": 1,
@@ -493,12 +506,14 @@
     },
     "constrainedPropMember": {
       "type": "object",
-      "description": "A prop in the `constrained` bucket. Adds a required `constraint` field documenting the condition under which the prop is valid.",
-      "required": ["name", "type", "description", "constraint"],
+      "description": "A prop in the `constrained` bucket. Adds a required `constraint` field documenting the condition under which the prop is valid. Type is declared as EITHER a legacy TS-string `type` OR a structured `propType` (exactly one).",
+      "required": ["name", "description", "constraint"],
+      "anyOf": [{ "required": ["type"] }, { "required": ["propType"] }],
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string" },
         "type": { "type": "string" },
+        "propType": { "$ref": "#/$defs/propType" },
         "description": { "type": "string", "minLength": 1 },
         "constraint": {
           "type": "string",

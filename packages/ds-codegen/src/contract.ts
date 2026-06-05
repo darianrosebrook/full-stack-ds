@@ -2,9 +2,30 @@
  * Normalized view of a component contract JSON file (validated separately via Ajv).
  */
 
+/**
+ * Framework-neutral structured prop type (PropTypeIR V1 vocabulary), authored
+ * on `designed`/`constrained` members. When present it supersedes the legacy
+ * TS-string `type` as the agnostic source the IR normalizes and emitters lower.
+ * See docs/a2ui-projection.md + CODEGEN-PROP-TYPE-IR-PILOT-01.
+ */
+export type AuthoredPropType =
+  | { kind: 'string' }
+  | { kind: 'number' }
+  | { kind: 'boolean' }
+  | { kind: 'enum'; values: string[] }
+  | { kind: 'node'; of?: 'content' | 'icon' }
+  | { kind: 'ref'; to: string };
+
 export interface StyledPropMember {
   name: string;
-  type: string;
+  /**
+   * Legacy TypeScript type string (the React-first source). Optional now that
+   * `designed`/`constrained` members may author a structured `propType` instead.
+   * Exactly one of `type` / `propType` is present (schema-enforced).
+   */
+  type?: string;
+  /** Structured, framework-neutral type. Present on migrated members. */
+  propType?: AuthoredPropType;
   description?: string;
   required?: boolean;
   default?: unknown;
@@ -596,6 +617,29 @@ export function getPartDetails(
 
 export function getStyledProps(contract: ComponentContract): StyledPropMember[] {
   return contract.props?.styled?.members || [];
+}
+
+/**
+ * The component's consumer-facing prop surface as the union of the durable
+ * buckets — `designed` + `constrained` + legacy `styled` — deduped by name
+ * (first wins; designed > constrained > styled). This is the non-breaking
+ * sourcing path (CODEGEN-PROP-TYPE-IR-PILOT-01): contracts migrated to the
+ * six-bucket form expose props via `designed`/`constrained`; unmigrated
+ * contracts keep exposing them via legacy `styled`. The IR normalizes every
+ * member (structured `propType` or legacy `type`) into PropTypeIR downstream.
+ */
+export function getPropMembers(contract: ComponentContract): StyledPropMember[] {
+  const props = contract.props ?? {};
+  const ordered = [
+    ...(props.designed?.members ?? []),
+    ...(props.constrained?.members ?? []),
+    ...(props.styled?.members ?? []),
+  ];
+  const byName = new Map<string, StyledPropMember>();
+  for (const m of ordered) {
+    if (m && typeof m.name === 'string' && !byName.has(m.name)) byName.set(m.name, m);
+  }
+  return [...byName.values()];
 }
 
 export function getCssPrefix(contract: ComponentContract): string {

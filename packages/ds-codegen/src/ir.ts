@@ -36,6 +36,7 @@ import type {
   ContractSurfacePositioningStrategy,
   ContractSurfacePresence,
   ContractTypeDef,
+  AuthoredPropType,
   StyledPropMember,
   StyleEntry,
   StylePlatform,
@@ -46,7 +47,7 @@ import {
   getCssPrefix,
   getPartDetails,
   getParts,
-  getStyledProps,
+  getPropMembers,
   normalizeStates,
 } from "./contract.js";
 import {
@@ -369,12 +370,27 @@ export interface DomNodeIR {
   cssVarBindings: CssVarBindingIR[];
 }
 
+/**
+ * Framework-neutral prop type the IR owns and emitters LOWER (they must not
+ * re-parse the legacy `type` string for migrated props). The six V1 kinds are
+ * the authorable vocabulary (mirrors `AuthoredPropType`); `fallback` is the
+ * normalization escape hatch for legacy `styled` members whose TS-string type
+ * is not (yet) modeled — it is explicitly marked, never silently treated as a
+ * clean neutral kind. See CODEGEN-PROP-TYPE-IR-PILOT-01.
+ */
+export type PropTypeIR = AuthoredPropType | { kind: "fallback"; raw: string };
+
 export interface ResolvedPropIR {
   /** Original prop name as authored. */
   name: string;
   /** Identifier-safe name (kebab-case prop names get camelCased for binding). */
   safeName: string;
-  /** Target-neutral type expression (still a TypeScript type string). */
+  /**
+   * Canonical TypeScript type expression. For migrated props it is DERIVED from
+   * `propType`; for legacy `styled` props it is the authored string. Retained so
+   * back-compat consumers (import scanners, type-ref extraction, and not-yet-
+   * migrated emitters) keep working unchanged during the migration.
+   */
   type: string;
   /** Type alias names referenced by this prop's type expression. */
   typeRefs: string[];
@@ -383,6 +399,53 @@ export interface ResolvedPropIR {
   /** Default literal as a code expression, e.g. `"primary"` or `false`. */
   defaultExpr?: string;
   nodeKind?: StyledPropMember["nodeKind"];
+  /**
+   * The framework-neutral type. Emitters migrated to PropTypeIR lower from this;
+   * un-migrated emitters may still read `type` (kept canonical) until they move.
+   */
+  propType: PropTypeIR;
+}
+
+/**
+ * Normalize an authored prop member into PropTypeIR: structured `propType` wins;
+ * otherwise the legacy TS-string `type` becomes an explicit `fallback` (never a
+ * silent clean kind — satisfies the "out-of-V1 is fallback/residual" invariant).
+ */
+export function normalizePropType(member: {
+  propType?: AuthoredPropType;
+  type?: string;
+}): PropTypeIR {
+  if (member.propType) return member.propType;
+  return { kind: "fallback", raw: typeof member.type === "string" ? member.type : "unknown" };
+}
+
+/** Derive the canonical TypeScript type string for a PropTypeIR. */
+export function canonicalTsType(pt: PropTypeIR): string {
+  switch (pt.kind) {
+    case "string":
+      return "string";
+    case "number":
+      return "number";
+    case "boolean":
+      return "boolean";
+    case "enum":
+      return pt.values.map((v) => `'${v}'`).join(" | ");
+    case "node":
+      return "ReactNode";
+    case "ref":
+      return pt.to;
+    case "fallback":
+      return pt.raw;
+  }
+}
+
+/** Back-compat nodeKind hint: from a structured `node` type, else the legacy field. */
+function nodeKindForPropType(
+  pt: PropTypeIR,
+  legacy: StyledPropMember["nodeKind"],
+): StyledPropMember["nodeKind"] {
+  if (pt.kind === "node") return pt.of === "icon" ? "icon-ref" : "node-ref";
+  return legacy;
 }
 
 /**
@@ -2420,16 +2483,25 @@ const BUILTIN_TYPE_NAMES = new Set([
 ]);
 
 function resolveProps(contract: ComponentContract): ResolvedPropIR[] {
-  return getStyledProps(contract).map((p) => ({
-    name: p.name,
-    safeName: toSafeIdentifier(p.name),
-    type: p.type,
-    typeRefs: extractTypeRefs(p.type),
-    required: p.required ?? false,
-    description: p.description,
-    defaultExpr: defaultExpr(p),
-    nodeKind: p.nodeKind,
-  }));
+  return getPropMembers(contract).map((p) => {
+    const propType = normalizePropType(p);
+    // Migrated members (structured propType) derive their canonical TS string;
+    // legacy members keep the authored string verbatim. Either way `type` stays
+    // populated so import scanners / type-ref extraction / un-migrated emitters
+    // behave identically.
+    const type = p.propType ? canonicalTsType(propType) : p.type ?? "";
+    return {
+      name: p.name,
+      safeName: toSafeIdentifier(p.name),
+      type,
+      typeRefs: extractTypeRefs(type),
+      required: p.required ?? false,
+      description: p.description,
+      defaultExpr: defaultExpr(p),
+      nodeKind: nodeKindForPropType(propType, p.nodeKind),
+      propType,
+    };
+  });
 }
 
 function defaultExpr(prop: StyledPropMember): string | undefined {

@@ -29,55 +29,54 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Button> component.",
+    "designed": {
       "members": [
         {
           "name": "size",
-          "type": "ButtonSize",
+          "propType": { "kind": "ref", "to": "ButtonSize" },
           "description": "Visual size variant.",
           "default": "medium"
         },
         {
           "name": "variant",
-          "type": "ButtonVariant",
+          "propType": { "kind": "ref", "to": "ButtonVariant" },
           "description": "Visual intent variant. Use destructive only for irreversible actions.",
           "default": "primary"
         },
         {
           "name": "type",
-          "type": "ButtonType",
+          "propType": { "kind": "ref", "to": "ButtonType" },
           "description": "HTML button type. Defaults to button to prevent accidental form submission.",
           "default": "button"
         },
         {
           "name": "loading",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "When true, replaces content with a spinner and sets aria-busy."
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Prevents interaction and applies disabled styling."
         },
         {
           "name": "ariaLabel",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible label for icon-only buttons."
         },
         {
           "name": "ariaExpanded",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "aria-expanded for disclosure triggers."
         },
         {
           "name": "ariaPressed",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "aria-pressed for toggle buttons."
         },
         {
           "name": "title",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Supplementary tooltip text."
         }
       ]

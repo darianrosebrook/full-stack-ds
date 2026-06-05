@@ -48,9 +48,25 @@ export interface ContractTypeDef {
   alias?: string;
 }
 
+/**
+ * Framework-neutral structured prop type (PropTypeIR V1) authored on migrated
+ * members. Mirrors `AuthoredPropType` in ds-codegen (a2ui must not depend on
+ * codegen, so the shape is restated here). See CODEGEN-PROP-TYPE-IR-PILOT-01.
+ */
+export type ContractPropType =
+  | { kind: 'string' }
+  | { kind: 'number' }
+  | { kind: 'boolean' }
+  | { kind: 'enum'; values: string[] }
+  | { kind: 'node'; of?: 'content' | 'icon' }
+  | { kind: 'ref'; to: string };
+
 export interface ContractPropMember {
   name: string;
-  type: string;
+  /** Legacy TS-string type. Optional once a member authors a structured `propType`. */
+  type?: string;
+  /** Structured, framework-neutral type (migrated members). Supersedes `type`. */
+  propType?: ContractPropType;
   description?: string;
   required?: boolean;
   default?: string | number | boolean;
@@ -246,6 +262,52 @@ function parseType(
 }
 
 /**
+ * Derive the accepted A2UI value kind(s) from a structured `propType` — the
+ * agnostic source — without re-parsing any TS string. `ref` resolves the named
+ * alias through the existing `parseType` alias path so a union alias still
+ * projects as an enum. (CODEGEN-PROP-TYPE-IR-PILOT-01, A4)
+ */
+function parsePropType(
+  pt: ContractPropType,
+  types: Record<string, ContractTypeDef> | undefined,
+): ParsedType | null {
+  switch (pt.kind) {
+    case 'string':
+      return { accepts: ['string'] };
+    case 'number':
+      return { accepts: ['number'] };
+    case 'boolean':
+      return { accepts: ['boolean'] };
+    case 'enum':
+      return pt.values.length > 0
+        ? { accepts: ['enum'], enumValues: [...pt.values] }
+        : null;
+    case 'node':
+      return { accepts: [pt.of === 'icon' ? 'icon-ref' : 'node-ref'] };
+    case 'ref':
+      return parseType(pt.to, undefined, types);
+  }
+}
+
+/** Human-readable TS-ish rendering of a structured type, for the descriptor's `type` field. */
+function canonicalA2uiType(pt: ContractPropType): string {
+  switch (pt.kind) {
+    case 'string':
+      return 'string';
+    case 'number':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    case 'enum':
+      return pt.values.map((v) => `'${v}'`).join(' | ');
+    case 'node':
+      return 'ReactNode';
+    case 'ref':
+      return pt.to;
+  }
+}
+
+/**
  * Return the prop members that constitute the agent-facing authoring surface.
  *
  * New contracts should project from `designed` and `constrained`: those buckets
@@ -286,14 +348,28 @@ export function deriveA2UIDescriptor(contract: ComponentContractLike): A2UIDescr
   const props: Record<string, A2UIProp> = {};
   const members = collectA2UIPropMembers(contract);
   for (const m of members) {
-    if (!m || typeof m.name !== 'string' || typeof m.type !== 'string') continue;
+    if (!m || typeof m.name !== 'string') continue;
     if (isExcludedByName(m.name)) continue;
-    if (isExcludedByType(m.type)) continue;
-    const parsed = parseType(m.type, m.nodeKind, contract.types);
+
+    // Migrated members derive their accepted kind from the structured `propType`
+    // (no TS-string parsing of authored input); legacy `styled` members keep
+    // parsing their `type` string. Exactly one source is present per member.
+    let parsed: ParsedType | null;
+    let typeForDisplay: string;
+    if (m.propType) {
+      parsed = parsePropType(m.propType, contract.types);
+      typeForDisplay = canonicalA2uiType(m.propType);
+    } else if (typeof m.type === 'string') {
+      if (isExcludedByType(m.type)) continue;
+      parsed = parseType(m.type, m.nodeKind, contract.types);
+      typeForDisplay = m.type;
+    } else {
+      continue;
+    }
     if (!parsed) continue;
 
     const prop: A2UIProp = {
-      type: m.type,
+      type: typeForDisplay,
       accepts: parsed.accepts,
     };
     if (m.description) prop.description = m.description;
