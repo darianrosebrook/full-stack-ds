@@ -342,14 +342,22 @@ button {
 }
 
 /* Tabs */
-.tabs {
+/*
+ * View-mode switch (Design <-> Developer). This is route NAVIGATION rendered
+ * as DS Links with aria-current="page" — not a stateful tab control, so it is
+ * deliberately NOT the DS Tabs component (which manages in-page panels).
+ * Named `.view-tabs`/`.view-tab` rather than `.tabs`/`.tab`: the DS Tabs
+ * component owns `.tabs` (Tabs.css), and DeveloperView renders both on one
+ * page, so the shared name caused a global cascade collision.
+ */
+.view-tabs {
   display: flex;
   gap: var(--fsds-core-spacing-size-04);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
   margin-bottom: var(--fsds-core-spacing-size-07);
 }
 
-.tab {
+.view-tab {
   background: transparent;
   border: none;
   color: var(--fsds-semantic-color-foreground-secondary);
@@ -361,28 +369,37 @@ button {
   transition: color var(--fsds-app-transition-fast), border-color var(--fsds-app-transition-fast);
 }
 
-.tab:hover {
+.view-tab:hover {
   color: var(--fsds-semantic-color-foreground-primary);
 }
 
-.tab--active {
+.view-tab--active {
   color: var(--fsds-semantic-color-foreground-primary);
   border-bottom-color: var(--fsds-semantic-color-background-accent);
 }
 
 /* Card */
-.card {
+/*
+ * App-local "panel" surface — a thin bordered box (no padding/flex/hover).
+ * Deliberately NOT named `.card`: the DS Card component owns `.card`
+ * (Card.css), which is a heavier padded+flex+hover surface. Sharing the class
+ * name caused a global cascade collision (whichever stylesheet loaded last
+ * won per-property). The showcase needs both surfaces, so they get distinct
+ * names. A lighter DS "Surface/Panel" primitive would let this consume the DS
+ * directly — see SHOWCASE-CONSUMPTION-01 follow-ups.
+ */
+.panel {
   border: 1px solid var(--fsds-semantic-color-border-subtle);
   border-radius: var(--fsds-core-shape-radius-04);
   background: var(--fsds-semantic-color-background-elevated);
   overflow: hidden;
 }
 
-.card--inset {
+.panel--inset {
   padding: var(--fsds-core-spacing-size-07);
 }
 
-.card-toolbar {
+.panel-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -466,7 +483,7 @@ button {
  * offset by half a cell, so dots read as a diagonal lattice instead of a
  * square grid. The dot color is the semantic border-default so it tracks
  * theme; the field is background-subtle so the preview sits visually inside
- * a "stage" distinct from the surrounding card/canvas in both light and dark.
+ * a "stage" distinct from the surrounding panel/canvas in both light and dark.
  */
 .preview-frame {
   display: flex;
@@ -722,14 +739,9 @@ button {
   flex-wrap: wrap;
 }
 
+/* Layout only — the DS Input component (.input) owns the field's appearance. */
 .tokens-filter-input {
   flex: 1 1 280px;
-  padding: var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-06);
-  border: 1px solid var(--fsds-semantic-color-border-default);
-  border-radius: var(--fsds-core-shape-radius-03);
-  background: var(--fsds-semantic-color-background-elevated);
-  color: var(--fsds-semantic-color-foreground-primary);
-  font: inherit;
 }
 
 .tokens-layer-chips {
@@ -737,37 +749,19 @@ button {
   gap: var(--fsds-core-spacing-size-04);
 }
 
-.tokens-layer-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--fsds-core-spacing-size-04);
-  padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-06);
-  border-radius: var(--fsds-core-shape-radius-03);
-  border: 1px solid var(--fsds-semantic-color-border-default);
-  background: var(--fsds-semantic-color-background-elevated);
-  color: var(--fsds-semantic-color-foreground-tertiary);
-  font: inherit;
-  font-size: var(--fsds-core-typography-ramp-2);
-  cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
-}
-
-.tokens-layer-chip:hover {
-  border-color: var(--fsds-semantic-color-foreground-tertiary);
-  color: var(--fsds-semantic-color-foreground-primary);
-}
-
-.tokens-layer-chip.is-active {
-  background: var(--fsds-semantic-color-background-subtle);
-  color: var(--fsds-semantic-color-foreground-primary);
-  border-color: var(--fsds-semantic-color-foreground-tertiary);
-}
-
+/*
+ * The layer toggles are the DS Chip component (variant="selected" carries the
+ * active state, ariaPressed the toggle a11y). Only the layer-colored dot is
+ * app-specific — it renders inside Chip's text slot, so it owns its own
+ * spacing/alignment here.
+ */
 .tokens-layer-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   display: inline-block;
+  vertical-align: middle;
+  margin-inline-end: var(--fsds-core-spacing-size-04);
 }
 
 .tokens-layer-dot--core {

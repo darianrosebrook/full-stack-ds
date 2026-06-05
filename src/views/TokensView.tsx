@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import type { MouseEvent } from "react";
+import { Chip, Input } from "@full-stack-ds/react";
 import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
@@ -239,7 +240,7 @@ export function TokensView({ bundle }: TokensViewProps) {
       </p>
 
       <div className="tokens-controls">
-        <input
+        <Input
           id="tokens-filter"
           name="tokens-filter"
           type="search"
@@ -247,23 +248,23 @@ export function TokensView({ bundle }: TokensViewProps) {
           placeholder="Filter by name, value, or description…"
           aria-label="Filter tokens"
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={setFilter}
         />
 
         <div className="tokens-layer-chips" role="group" aria-label="Token layers">
           {LAYER_ORDER.map((l) => {
             const active = layers[l];
             return (
-              <button
+              <Chip
                 key={l}
                 type="button"
-                className={`tokens-layer-chip ${active ? "is-active" : ""}`}
-                aria-pressed={active}
+                variant={active ? "selected" : "default"}
+                ariaPressed={active}
                 onClick={() => setLayers((prev) => ({ ...prev, [l]: !prev[l] }))}
               >
                 <span className={`tokens-layer-dot tokens-layer-dot--${l}`} aria-hidden />
                 {LAYER_LABEL[l]}
-              </button>
+              </Chip>
             );
           })}
         </div>
@@ -288,7 +289,7 @@ export function TokensView({ bundle }: TokensViewProps) {
         </div>
       </div>
 
-      <div className="card tokens-card">
+      <div className="panel tokens-card">
         <table className="tokens-table">
           <thead>
             <tr>

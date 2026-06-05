@@ -28,16 +28,16 @@ export function DesignView({ component }: DesignViewProps) {
         {component.contract.description ?? "Component contract."}
       </p>
 
-      <nav className="tabs" aria-label="View mode">
+      <nav className="view-tabs" aria-label="View mode">
         <Links
-          className="tab tab--active"
+          className="view-tab view-tab--active"
           href={buildHref({ kind: "component", name: component.name, tab: "design" })}
           aria-current="page"
         >
           Design
         </Links>
         <Links
-          className="tab"
+          className="view-tab"
           href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
         >
           Developer

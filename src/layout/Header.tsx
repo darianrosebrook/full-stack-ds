@@ -126,7 +126,7 @@ export function Header() {
             </button>
           </Popover.Trigger>
           <Popover.Content
-            className="card"
+            className="panel"
             style={{ minWidth: 240, padding: "var(--fsds-core-spacing-size-06)" }}
           >
             {/*

@@ -58,15 +58,15 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
         click any to see the contract path in the panel on the right.
       </p>
 
-      <nav className="tabs" aria-label="View mode">
+      <nav className="view-tabs" aria-label="View mode">
         <Links
-          className="tab"
+          className="view-tab"
           href={buildHref({ kind: "component", name: component.name, tab: "design" })}
         >
           Design
         </Links>
         <Links
-          className="tab tab--active"
+          className="view-tab view-tab--active"
           href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
           aria-current="page"
         >
@@ -124,7 +124,7 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
       </p>
 
       {!componentFile ? (
-        <div className="card card--inset muted">No source available for {framework}.</div>
+        <div className="panel panel--inset muted">No source available for {framework}.</div>
       ) : (
         <>
           <section className="section" style={{ marginTop: 0 }}>
@@ -132,8 +132,8 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
               <h2 className="section-title">Live preview</h2>
               <span className="section-meta">in-iframe {framework}</span>
             </header>
-            <div className="card">
-              <div className="card-toolbar">
+            <div className="panel">
+              <div className="panel-toolbar">
                 <span>{framework}</span>
                 <span className="subtle">demo harness</span>
               </div>

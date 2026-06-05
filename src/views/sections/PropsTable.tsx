@@ -6,7 +6,7 @@ interface PropsTableProps {
 
 export function PropsTable({ members }: PropsTableProps) {
   return (
-    <div className="card">
+    <div className="panel">
       <table className="props-table">
         <thead>
           <tr>

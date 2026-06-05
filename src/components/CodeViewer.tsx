@@ -55,9 +55,9 @@ export function CodeViewer({ code, filename, hits = [], onHitClick, selectedHitI
   }, [selectedHitIndex]);
 
   return (
-    <div className="card">
+    <div className="panel">
       {filename && (
-        <div className="card-toolbar">
+        <div className="panel-toolbar">
           <span>{filename}</span>
           <span className="subtle">{code.split("\n").length} lines</span>
         </div>

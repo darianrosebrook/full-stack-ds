@@ -32,7 +32,7 @@ export function ArchitectureView({ bundle }: ArchitectureViewProps) {
         <header className="section-header">
           <h2 className="section-title">The claim</h2>
         </header>
-        <div className="card card--inset">
+        <div className="panel panel--inset">
           <p style={{ margin: 0 }}>
             Compositional systems — systems where higher-order artifacts are
             assembled from lower-order ones under shared constraints —

@@ -1077,7 +1077,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
       }}
     >
       {layers.map((layer) => (
-        <div key={layer.title} className="card card--inset">
+        <div key={layer.title} className="panel panel--inset">
           <div
             style={{
               display: "flex",
