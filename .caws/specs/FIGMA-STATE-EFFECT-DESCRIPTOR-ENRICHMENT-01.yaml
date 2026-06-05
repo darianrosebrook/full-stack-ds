@@ -1,0 +1,33 @@
+id: FIGMA-STATE-EFFECT-DESCRIPTOR-ENRICHMENT-01
+title: 'State-surface effect facts: neutral effect/valueEffects on stateDimension; planner reads facts not category heuristics; sharper residuals; framework byte-equivalent'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-05T23:56:40.956Z'
+updated_at: '2026-06-05T23:56:40.956Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'state-effect-schema'
+    type: schema
+    path: 'packages/ds-contracts/component.contract.schema.json'
+  - name: 'planner-reads-effect-facts'
+    type: behavior
+    path: 'packages/ds-figma-plugin/src/planner.ts'
+  - name: 'effect-residual-before-after'
+    type: contract-test
