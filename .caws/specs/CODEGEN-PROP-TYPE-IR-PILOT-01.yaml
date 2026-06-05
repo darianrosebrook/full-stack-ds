@@ -2,10 +2,11 @@ id: CODEGEN-PROP-TYPE-IR-PILOT-01
 title: 'Structured PropTypeIR pilot for Button + A2UI projection source'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: proptypeir-pilot
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge proptypeir-pilot at 494b1d83b460a757318a551a13b0aa963234f86d'
 created_at: '2026-06-05T04:09:39.603Z'
-updated_at: '2026-06-05T04:09:41.609Z'
+updated_at: '2026-06-05T06:23:18.294Z'
 blast_radius:
   modules:
     - contract schema (prop buckets + structured propType)
