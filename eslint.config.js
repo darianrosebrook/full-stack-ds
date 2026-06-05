@@ -35,6 +35,10 @@ export default tseslint.config(
       // correct), marked do_not_edit_directly / maintained via `caws init`.
       // Not repo source — its own toolchain owns it, like the surfaces below.
       ".claude/**",
+      // Codex agent-surface tooling: same rationale as .claude/** — CommonJS
+      // by design (require() is correct), per-machine agent tooling, not repo
+      // source. Untracked and gitignored; its own toolchain owns it.
+      ".codex/**",
       "packages/ds-contracts/portfolio-original/**",
       "packages/ds-vue/**",
       "packages/ds-svelte/**",

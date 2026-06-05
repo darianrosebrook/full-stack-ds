@@ -73,6 +73,11 @@ CLAUDE.md
 .claude/transcripts/
 .claude/cache/
 
+# Codex agent runtime — per-machine agent tooling (hooks, worktrees,
+# claim oracle). Not repo source; eslint also ignores .codex/** (see
+# eslint.config.js). AGENTS.md is left untracked, not gitignored.
+.codex/
+
 # CAWS runtime state — specs and waivers are tracked,
 # state/cache/event logs are per-machine.
 **/.caws/state/
