@@ -1,0 +1,26 @@
+id: SHOWCASE-TOKENS-STICKY-01
+title: 'Fix Tokens-table sticky header (panel overflow:hidden clips the sticky context)'
+risk_tier: 3
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-05T05:29:25.101Z'
+updated_at: '2026-06-05T05:29:25.101Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'src/styles/app.css'
+    - 'src/views/TokensView.tsx'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
