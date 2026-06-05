@@ -43,6 +43,7 @@ export function useFocusTrap<T extends HTMLElement>(
     previouslyFocused.current =
       (document.activeElement as HTMLElement | null) ?? null;
 
+    const restoreTo = returnFocusRef?.current ?? previouslyFocused.current;
     const focusables = () =>
       Array.from(
         container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
@@ -76,7 +77,6 @@ export function useFocusTrap<T extends HTMLElement>(
     container.addEventListener("keydown", onKey);
     return () => {
       container.removeEventListener("keydown", onKey);
-      const restoreTo = returnFocusRef?.current ?? previouslyFocused.current;
       if (restoreTo && typeof restoreTo.focus === "function") {
         restoreTo.focus({ preventScroll: true });
       }

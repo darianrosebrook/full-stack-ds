@@ -261,13 +261,13 @@ export function extractTokenPaths(obj: TokenGroup, prefix = ""): string[] {
 /**
  * Deep merge two objects
  */
-export function deepMerge<T extends Record<string, any>>(
+export function deepMerge<T extends Record<string, unknown>>(
   target: T,
   source: Partial<T>,
 ): T {
   if (!source) return target;
 
-  const result = { ...target };
+  const result: Record<string, unknown> = { ...target };
 
   for (const [key, value] of Object.entries(source)) {
     if (value && typeof value === "object" && !Array.isArray(value)) {
@@ -276,19 +276,19 @@ export function deepMerge<T extends Record<string, any>>(
         typeof result[key] === "object" &&
         !Array.isArray(result[key])
       ) {
-        (result as any)[key] = deepMerge(
-          result[key] as Record<string, any>,
-          value as Record<string, any>,
+        result[key] = deepMerge(
+          result[key] as Record<string, unknown>,
+          value as Record<string, unknown>,
         );
       } else {
-        (result as any)[key] = value;
+        result[key] = value;
       }
     } else {
-      (result as any)[key] = value;
+      result[key] = value;
     }
   }
 
-  return result;
+  return result as T;
 }
 
 /**

@@ -18,7 +18,7 @@ import * as fsp from "node:fs/promises";
 import * as path from "node:path";
 import type { ComponentBundle } from "../../types/data";
 import { buildAngularDemo } from "../demos";
-import { angularPackageRoot } from "@full-stack-ds/angular/preview";
+import { angularPackageRoot } from "../../../packages/ds-angular/src/preview/index.ts";
 import { ANGULAR_NONDEFAULT_FIXTURES } from "./nondefault-fixtures";
 
 const HOSTS_DIR_NAME = ".fsds-preview-hosts";

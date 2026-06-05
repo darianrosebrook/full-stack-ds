@@ -557,7 +557,7 @@ function matchRenderedClasses(source, prefix) {
  * Returns null when the key doesn't correspond to a single anatomy part
  * (e.g. compound selectors, state shorthands, variant modifiers).
  */
-function styleKeyToPart(key, declaredParts, prefix) {
+function styleKeyToPart(key, declaredParts) {
   if (key === "root") return "root";
   if (STATE_KEYS.has(key)) return null;
   if (key.startsWith("--")) return null;
@@ -596,7 +596,7 @@ function auditComponent(name) {
 
   const declaredParts = getDeclaredParts(contract);
   const prefix = getCssPrefix(contract);
-  const { parts: renderedParts, modifiers: renderedModifiers } = extractRenderedClasses(tsxPath, prefix);
+  const { parts: renderedParts } = extractRenderedClasses(tsxPath, prefix);
 
   // AUDIT-TAG-REALIZATION-GENERALIZATION-01 — per-part tag realization.
   //
@@ -619,7 +619,7 @@ function auditComponent(name) {
   // Which declared parts have a styles.json key that targets them.
   const authoredParts = new Set();
   for (const key of Object.keys(styles)) {
-    const targeted = styleKeyToPart(key, declaredParts, prefix);
+    const targeted = styleKeyToPart(key, declaredParts);
     if (targeted) authoredParts.add(targeted);
   }
 

@@ -30,6 +30,7 @@ export default tseslint.config(
       "**/.vitest-cache/**",
       "**/coverage/**",
       "**/tmp/**",
+      ".caws/**",
       // Installed CAWS agent-surface hooks: CommonJS by design (require() is
       // correct), marked do_not_edit_directly / maintained via `caws init`.
       // Not repo source — its own toolchain owns it, like the surfaces below.

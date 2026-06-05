@@ -356,7 +356,7 @@ export class Resolver {
     tokens: Record<string, unknown>
   ): Record<string, unknown> {
     const resolved: Record<string, unknown> = {};
-    const visited: any = new Set();
+    const visited = new Set<string>();
 
     for (const [path, value] of Object.entries(tokens)) {
       resolved[path] = this.resolveAliasRecursive(value, tokens, visited, path);
@@ -371,7 +371,7 @@ export class Resolver {
   private resolveAliasRecursive(
     value: unknown,
     tokens: Record<string, unknown>,
-    visited: any,
+    visited: Set<string>,
     currentPath: ReferencePath
   ): unknown {
     if (typeof value === 'string' && value.match(/^\{[^}]+\}$/)) {

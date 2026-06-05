@@ -74,7 +74,7 @@ source "$SCRIPT_DIR/lib/emit.sh" 2>/dev/null || true
 # the same answer. Absent (older install) -> the worktree-payload arm below
 # degrades to the prior allowlist behavior (fail open on the helper, never a
 # silent enforcement claim).
-CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.cjs"
+CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.js"
 
 TOOL_NAME="$HOOK_TOOL_NAME"
 FILE_PATH="$HOOK_FILE_PATH"

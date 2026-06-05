@@ -56,7 +56,7 @@ if [[ "$TOOL_NAME" != "Bash" ]] || [[ -z "$COMMAND" ]]; then
   exit 0
 fi
 
-CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.cjs"
+CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.js"
 # No oracle or no node -> cannot decide ownership; fail OPEN (the enforcement
 # claim is only made when the oracle is present). This matches the
 # worktree-write-guard payload arm.

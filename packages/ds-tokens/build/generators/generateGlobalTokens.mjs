@@ -272,7 +272,7 @@ function collectMaps(tokens, currentPath, inheritedType, maps) {
   }
 }
 
-function lintTypeVsUnit(pathStr, value, nodeType) {
+function lintTypeVsUnit(pathStr, value) {
   // Warn if a token path suggests dimensions but value is a bare number
   // Exclude lineHeight (should be unitless) and letterSpacing normal (can be 0)
   const dimensionPaths =

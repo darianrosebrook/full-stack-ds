@@ -97,7 +97,7 @@ export function validateTokenFile(filePath) {
     }
 
     // Additional custom validations
-    const customValidation = performCustomValidations(tokens, filePath);
+    const customValidation = performCustomValidations(tokens);
     result.errors.push(...customValidation.errors);
     result.warnings.push(...customValidation.warnings);
 
@@ -120,13 +120,11 @@ export function validateTokenFile(filePath) {
 /**
  * Perform custom validation rules beyond schema validation
  */
-function performCustomValidations(tokens, filePath) {
+function performCustomValidations(tokens) {
   const errors = [];
   const warnings = [];
 
-  // Track token references for circular dependency detection
   const tokenRefs = new Map();
-  const visited = new Set();
 
   function validateNode(node, path = '') {
     if (!node || typeof node !== 'object') return;

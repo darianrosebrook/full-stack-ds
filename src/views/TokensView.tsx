@@ -131,7 +131,7 @@ export function TokensView({ bundle }: TokensViewProps) {
     brand: true,
   });
 
-  const brands = bundle.brandTokens ?? [];
+  const brands = useMemo(() => bundle.brandTokens ?? [], [bundle.brandTokens]);
   const [brandId, setBrandId] = useState<string>(() => brands[0]?.id ?? "default");
   const activeBrand = useMemo(
     () => brands.find((b) => b.id === brandId) ?? brands[0],

@@ -65,7 +65,6 @@ window.addEventListener("unhandledrejection", (e) => showError(e.reason?.stack |
  */
 export function buildReactPreviewShellHtml(input: ShellInput): string {
   const { componentName, componentCss, tokensCss, entryId } = input;
-  const entryUrl = `/@id/${entryId}`;
   const escapeStyle = (s: string) => s.replace(/<\/style>/g, "<\\/style>");
   return `<!doctype html>
 <html>

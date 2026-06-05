@@ -29,7 +29,7 @@ const REPORT_PATH = path.join(TOKENS_DIR, "insights.json");
 function readJSON(filePath) {
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf8"));
-  } catch (err) {
+  } catch {
     return undefined;
   }
 }

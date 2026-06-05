@@ -14,14 +14,13 @@
 
 import * as path from "node:path";
 import * as fs from "node:fs";
-import * as fsp from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import {
   compileAngularPackage,
   angularPackageRoot,
   type CompileResult,
-} from "@full-stack-ds/angular/preview";
+} from "../../../packages/ds-angular/src/preview/index.ts";
 // NOTE: the URL prefix is inlined here rather than imported from ./constants
 // because Vite's config loader doesn't reliably follow .ts → .ts imports
 // inside a vite.config.ts dep graph (the import is stripped but the value

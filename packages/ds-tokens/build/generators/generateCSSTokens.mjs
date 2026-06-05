@@ -314,15 +314,6 @@ function buildCssForComponent({ cssVarPrefix, pascalComponent, tokenData }) {
   );
 }
 
-/**
- * Infer the component className from the token file content or filename
- * We prefer the JSON `prefix` field; falls back to folder name in kebab/camel to match SCSS class convention used locally.
- */
-function inferClassName(prefix, folderName) {
-  if (prefix) return String(prefix);
-  return folderName;
-}
-
 function findTokenJsonFiles(dir) {
   const items = fs.readdirSync(dir, { withFileTypes: true });
   const results = [];

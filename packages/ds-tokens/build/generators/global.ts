@@ -15,7 +15,6 @@ import fs from "fs";
 import path from "path";
 import {
   PATHS,
-  PROJECT_ROOT,
   readTokenFile,
   writeOutputFile,
   tokenPathToCSSVar,

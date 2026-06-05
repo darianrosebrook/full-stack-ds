@@ -28,7 +28,6 @@ const ROOT = process.cwd();
 const CONTRACTS_DIR = path.join(ROOT, "packages", "ds-contracts");
 
 type AnyJson = unknown;
-type Json = string | number | boolean | null | { [k: string]: Json } | Json[];
 
 interface TokenResolution {
   resolvesTo: string;

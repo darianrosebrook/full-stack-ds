@@ -50,15 +50,6 @@ function listComponents() {
     .sort();
 }
 
-// HTML elements whose implicit ARIA role a native target would still need.
-// (Mirror of the spirit of IMPLICIT_ROLES_BY_ELEMENT — used only to label the
-// role-loss reason, not to re-derive IR facts.)
-const IMPLICIT_ROLE_BEARING = new Set([
-  "button", "a", "input", "select", "textarea", "nav", "main", "header",
-  "footer", "article", "aside", "dialog", "ul", "ol", "li", "table",
-  "progress", "meter", "img", "h1", "h2", "h3", "h4", "h5", "h6",
-]);
-
 function classify(ir, contract) {
   const root = ir.root || {};
   const explicitRole = root.explicitRole;

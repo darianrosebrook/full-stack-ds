@@ -205,9 +205,7 @@ function performCustomValidations(
   const errors = [];
   const warnings = [];
 
-  // Track token references for circular dependency detection
   const tokenRefs = new Map();
-  const visited = new Set();
 
   // Track optional properties used (for strict mode reporting)
   const optionalPropsUsed = {
@@ -297,9 +295,6 @@ function performCustomValidations(
     // In strict mode, check for additional properties on token
     if (strictMode) {
       const tokenProps = Object.keys(token);
-      const additionalTokenProps = tokenProps.filter(
-        (key) => !allowedProps.token.has(key) && !key.startsWith('$')
-      );
       // Check for non-standard $ properties
       const nonStandardDollarProps = tokenProps.filter(
         (key) => key.startsWith('$') && !allowedProps.token.has(key)
@@ -855,7 +850,7 @@ if (!fs.existsSync(options.target)) {
 }
 
 // Create validator with options
-const { validate, schema, strict } = createValidator({
+const { validate, strict } = createValidator({
   strict: options.strict,
   schema: options.schema,
 });

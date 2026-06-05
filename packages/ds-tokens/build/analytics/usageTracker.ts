@@ -52,7 +52,9 @@ function extractAllTokenPaths(
         paths.push(currentPath);
 
         // Check if deprecated
-        const extensions = (value as any).$extensions;
+        const extensions = (
+          value as { $extensions?: { design?: { deprecated?: boolean } } }
+        ).$extensions;
         if (extensions?.design?.deprecated) {
           paths.push(`${currentPath}@deprecated`);
         }

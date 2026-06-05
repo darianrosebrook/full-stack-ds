@@ -30,7 +30,7 @@
  * ```
  */
 
-import Ajv, { ValidateFunction, ErrorObject } from 'ajv';
+import Ajv, { type ValidateFunction, type ErrorObject } from 'ajv';
 import addFormats from 'ajv-formats';
 
 // Import schema - users can provide their own path or use the bundled schema
