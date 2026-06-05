@@ -114,6 +114,7 @@ import {
  * identical regardless of which set claims them.
  */
 const SHARED_EMITTER_SOURCES: readonly string[] = [
+  "packages/ds-codegen/src/box-model.ts",
   "packages/ds-codegen/src/cli.ts",
   "packages/ds-codegen/src/contract.ts",
   "packages/ds-codegen/src/css.ts",

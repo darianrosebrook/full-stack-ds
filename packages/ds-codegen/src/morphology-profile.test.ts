@@ -22,6 +22,7 @@
  *      NOTHING extra when morphology is absent.
  */
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import {
@@ -249,5 +250,50 @@ describe("computeCssBlocks emits profile structure + slot values", () => {
     // Width/height stay auto so the intrinsic aspect ratio is preserved.
     expect(decls["--fsds-box-model-width"]).toBe("auto");
     expect(decls["--fsds-box-model-height"]).toBe("auto");
+  });
+});
+
+describe("profile code contains no component-name lore", () => {
+  // The geometry mechanism must branch on the morphology FACT only — never on
+  // a component name (the codegen-authority rule). A `name === "Badge"` or a
+  // `case "Progress"` predicate in the profile module would re-introduce the
+  // per-component lore this slice removes. Same predicate shapes the admitted-
+  // emitter guard (frameworks/no-component-name-lore.test.ts) catches, applied
+  // here to the shared profile module that guard does not scan.
+  const LORE_PATTERNS: RegExp[] = [
+    /\b(?:ir|component|contract)\.name\s*===\s*"[A-Z][a-zA-Z0-9]*"/,
+    /(?<![\w.])name\s*===\s*"[A-Z][a-zA-Z0-9]*"/,
+  ];
+  // The seven scoped component names must not appear as branch predicates: the
+  // STYLE_PROFILES registry keys on morphology, not on component identity.
+  const SCOPED_NAMES = [
+    "Badge",
+    "ProfileFlag",
+    "Progress",
+    "Skeleton",
+    "Image",
+    "Icon",
+    "Avatar",
+  ];
+
+  it("box-model.ts (profile registry + resolver + merge) has no name predicate", () => {
+    const contents = readFileSync(resolve(__dirname, "box-model.ts"), "utf-8");
+    const violations: string[] = [];
+    contents.split("\n").forEach((line, i) => {
+      // Strip line comments so illustrative prose ("True glyphs (Icon, Avatar)")
+      // is never counted — only real code predicates are lore.
+      const code = line.replace(/\/\/.*$/, "");
+      const trimmed = code.trim();
+      if (trimmed.startsWith("*") || trimmed.startsWith("/*")) return;
+      for (const pat of LORE_PATTERNS) {
+        if (pat.test(code)) violations.push(`box-model.ts:${i + 1}  ${line.trim()}`);
+      }
+      for (const nm of SCOPED_NAMES) {
+        if (new RegExp(`===\\s*"${nm}"|case\\s+"${nm}"`).test(code)) {
+          violations.push(`box-model.ts:${i + 1}  ${line.trim()}`);
+        }
+      }
+    });
+    expect(violations, violations.join("\n")).toHaveLength(0);
   });
 });
