@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-05T02:15:14.240Z'
-updated_at: '2026-06-05T02:15:14.240Z'
+updated_at: '2026-06-05T02:25:02.784Z'
 blast_radius:
   modules:
     - 'DS Table component family: contract -> codegen IR/emitters -> generated Table across 5 frameworks (colSpan/rowSpan/scope/style on cells & headers)'
@@ -21,6 +21,7 @@ scope:
     - 'packages/ds-vue/src/components/Table/'
     - 'packages/ds-svelte/src/components/Table/'
     - 'packages/ds-lit/src/components/Table/'
+    - packages/ds-angular/src/components/Table/
   # NOTE: ds-angular emits Table under a different path (seen under dist/); the
   # implementer confirms the angular generated-source path and `caws specs
   # amend-scope`s it when regenerating, per the governed-widening flow.
