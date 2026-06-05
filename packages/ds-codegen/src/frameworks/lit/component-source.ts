@@ -1409,12 +1409,17 @@ function generateLitDomTreePropertyDecl(
   // makes no sense, but the property still must be declared so consumer
   // code can set it via JS (`el.onDismiss = handler`) and so lit-analyzer
   // does not flag the render reference as an undeclared property access.
-  // A function-typed prop can only arrive as a `fallback` (functions are not in
-  // the V1 vocabulary); lower from the structured type, not the canonical string.
+  // A function-typed prop arrives either as a structured `callback` (PropTypeIR
+  // V2) or — for legacy/un-migrated members — as a `fallback` whose raw string
+  // is a function type. Both must reflect `attribute: false`; a callback value
+  // can never round-trip through an HTML attribute. (CODEGEN-PROP-TYPE-IR-
+  // OBSERVED-TYPES-01: the V1-era assumption "functions only arrive as fallback"
+  // no longer holds once callbacks are first-class.)
   const isFunctionType =
-    p.propType.kind === "fallback" &&
-    (/=>\s*(void|never|[A-Za-z])/.test(p.propType.raw) ||
-      /EventHandler/.test(p.propType.raw));
+    p.propType.kind === "callback" ||
+    (p.propType.kind === "fallback" &&
+      (/=>\s*(void|never|[A-Za-z])/.test(p.propType.raw) ||
+        /EventHandler/.test(p.propType.raw)));
   if (isFunctionType) {
     const propType = applyLitTypeRename(lowerLitPropType(p.propType), rename);
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;

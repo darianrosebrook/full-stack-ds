@@ -267,6 +267,7 @@ function v2MigratedContract(): ComponentContract {
     name: "ProbeV2",
     layer: "primitive",
     a2ui: { category: "action" },
+    anatomy: { parts: ["root"], dom: { tag: "div", part: "root", children: [{ tag: "children" }] } },
     props: {
       designed: {
         members: [
@@ -311,5 +312,14 @@ describe("V2 kinds lower through the emitters from propType (A1/A5)", () => {
     const src = generateReactComponentSource(buildComponentIR(v2MigratedContract()), STACK_IMPORT);
     expect(src).toContain("onValueChange?: (value: string) => void;");
     expect(src).toContain("items?: ProbeItem[];");
+  });
+
+  // Lit: a `callback` propType is not attribute-serializable, so it must reflect
+  // `@property({ attribute: false })` — the same decoration a legacy function-typed
+  // `fallback` got. Regression guard for the V1-era assumption that functions only
+  // arrive as `fallback` (broken once callbacks became first-class V2 kinds).
+  it("lit: callback propType reflects @property({ attribute: false })", () => {
+    const src = generateLitComponentSource(buildComponentIR(v2MigratedContract()));
+    expect(src).toContain("@property({ attribute: false }) onValueChange?: (value: string) => void;");
   });
 });
