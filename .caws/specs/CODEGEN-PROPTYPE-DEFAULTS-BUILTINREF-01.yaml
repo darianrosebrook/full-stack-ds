@@ -2,10 +2,11 @@ id: CODEGEN-PROPTYPE-DEFAULTS-BUILTINREF-01
 title: 'PropTypeIR corpus enablers: widen designed/constrained default schema (arrays) + inventory builtin-ref resolution'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: proptype-enablers
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge proptype-enablers at d0ec1c2f833ed2b458bd0b1046b2392299257d8e'
 created_at: '2026-06-05T17:43:38.668Z'
-updated_at: '2026-06-05T17:43:38.668Z'
+updated_at: '2026-06-05T17:50:10.823Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/component.contract.schema.json (designed/constrained default schema)'
