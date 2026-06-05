@@ -3,6 +3,7 @@ title: 'Fix Tokens-table sticky header (panel overflow:hidden clips the sticky c
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: tokens-sticky
 created_at: '2026-06-05T05:29:25.101Z'
 updated_at: '2026-06-05T05:29:25.101Z'
 blast_radius:
