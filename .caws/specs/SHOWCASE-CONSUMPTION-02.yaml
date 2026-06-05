@@ -3,6 +3,7 @@ title: 'Showcase DS consumption pass 2: A4-A6 regression guard + raw tables -> D
 risk_tier: 3
 mode: refactor
 lifecycle_state: active
+worktree: showcase-consumption-2
 created_at: '2026-06-05T00:52:26.616Z'
 updated_at: '2026-06-05T00:52:26.616Z'
 blast_radius:
