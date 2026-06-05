@@ -448,6 +448,27 @@ button {
   color: var(--fsds-semantic-color-foreground-primary);
 }
 
+/*
+ * A11yPanel keyboard table consumes DS Table; these classes carry the
+ * cell-level layout the DS TableCell API can't (no style/colSpan/scope prop).
+ * The key column shrinks to content (width: 0.1% + nowrap); the DS Table
+ * wrapper padding is zeroed so the table sits flush inside its inset Card.
+ */
+.kbd-table {
+  padding: 0;
+  font-size: var(--fsds-core-typography-ramp-2);
+}
+
+.kbd-key-cell {
+  width: 0.1%;
+  white-space: nowrap;
+  padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-04) 0;
+}
+
+.kbd-action-cell {
+  padding: var(--fsds-core-spacing-size-04) 0;
+}
+
 .muted {
   color: var(--fsds-semantic-color-foreground-secondary);
 }

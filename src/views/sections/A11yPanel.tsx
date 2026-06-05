@@ -1,4 +1,11 @@
-import { Card, List } from "@full-stack-ds/react";
+import {
+  Card,
+  List,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@full-stack-ds/react";
 import type { A11y } from "../../types/data";
 
 interface A11yPanelProps {
@@ -49,23 +56,23 @@ export function A11yPanel({ a11y }: A11yPanelProps) {
       <Card density="inset">
         <h3 style={{ marginTop: 0, marginBottom: "var(--fsds-core-spacing-size-05)", fontSize: "var(--fsds-core-typography-ramp-3)" }}>Keyboard</h3>
         {a11y.keyboard && a11y.keyboard.length > 0 ? (
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--fsds-core-typography-ramp-2)" }}>
-            <tbody>
+          <Table className="kbd-table" ariaLabel="Keyboard interactions">
+            <TableBody>
               {a11y.keyboard.map((k, i) => (
-                <tr key={i}>
-                  <td style={{ padding: "var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-04) 0", width: "0.1%", whiteSpace: "nowrap" }}>
+                <TableRow key={i}>
+                  <TableCell className="kbd-key-cell">
                     {k.key.split("|").map((part, j) => (
                       <span key={j}>
                         {j > 0 && <span className="subtle" style={{ margin: "0 var(--fsds-core-spacing-size-04)" }}>or</span>}
                         <span className="kbd">{part}</span>
                       </span>
                     ))}
-                  </td>
-                  <td className="muted" style={{ padding: "var(--fsds-core-spacing-size-04) 0" }}>{k.action}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="kbd-action-cell muted">{k.action}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         ) : (
           <span className="subtle">No declared keyboard interactions.</span>
         )}

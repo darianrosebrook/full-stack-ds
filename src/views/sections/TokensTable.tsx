@@ -1,3 +1,4 @@
+import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import type { TokenDefinition } from "../../types/data";
 
 interface TokensTableProps {
@@ -35,22 +36,22 @@ export function TokensTable({ tokens }: TokensTableProps) {
           >
             {groupName}
           </div>
-          <table className="tokens-table">
-            <thead>
-              <tr>
-                <th>Token</th>
-                <th>Resolves to</th>
-                <th>Fallback</th>
-                <th>Property</th>
-                <th>Layer</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="tokens-table" ariaLabel="Token definitions">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Token</TableHeaderCell>
+                <TableHeaderCell>Resolves to</TableHeaderCell>
+                <TableHeaderCell>Fallback</TableHeaderCell>
+                <TableHeaderCell>Property</TableHeaderCell>
+                <TableHeaderCell>Layer</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {Object.entries(entries).map(([name, def]) => (
-                <tr key={name}>
-                  <td>{name}</td>
-                  <td className="muted">{def.resolvesTo ?? "—"}</td>
-                  <td>
+                <TableRow key={name}>
+                  <TableCell>{name}</TableCell>
+                  <TableCell className="muted">{def.resolvesTo ?? "—"}</TableCell>
+                  <TableCell>
                     {isColorish(def.fallback) && (
                       <span
                         className="token-swatch"
@@ -59,13 +60,13 @@ export function TokensTable({ tokens }: TokensTableProps) {
                       />
                     )}
                     {def.fallback ?? "—"}
-                  </td>
-                  <td className="muted">{def.property ?? "—"}</td>
-                  <td className="muted">{def.layer ?? "—"}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="muted">{def.property ?? "—"}</TableCell>
+                  <TableCell className="muted">{def.layer ?? "—"}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       ))}
     </div>

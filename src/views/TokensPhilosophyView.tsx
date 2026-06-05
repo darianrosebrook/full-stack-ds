@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Tabs, TabsList, TabsTab, Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import { buildHref, type TokensTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -211,37 +211,37 @@ function OverviewPanel() {
         the same or lower layers. The depth you choose determines how changes
         cascade:
       </p>
-      <table className="props-table">
-        <thead>
-          <tr>
-            <th>Layer</th>
-            <th>Contains</th>
-            <th>Can reference</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Core</td>
-            <td>Raw values only</td>
-            <td>Nothing (leaf nodes)</td>
-          </tr>
-          <tr>
-            <td>Semantic</td>
-            <td>Aliases with purpose</td>
-            <td>Core or other semantic tokens</td>
-          </tr>
-          <tr>
-            <td>Component-local slots</td>
-            <td>Per-component CSS custom properties on <code>.&lt;cssPrefix&gt;</code></td>
-            <td>Semantic or core tokens</td>
-          </tr>
-          <tr>
-            <td>Box-model primitive slots</td>
-            <td>Universal 14-slot pool on every component root</td>
-            <td>Semantic tokens (typically category-keyed)</td>
-          </tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Token layer reference chain">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Layer</TableHeaderCell>
+            <TableHeaderCell>Contains</TableHeaderCell>
+            <TableHeaderCell>Can reference</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>Core</TableCell>
+            <TableCell>Raw values only</TableCell>
+            <TableCell>Nothing (leaf nodes)</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Semantic</TableCell>
+            <TableCell>Aliases with purpose</TableCell>
+            <TableCell>Core or other semantic tokens</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Component-local slots</TableCell>
+            <TableCell>Per-component CSS custom properties on <code>.&lt;cssPrefix&gt;</code></TableCell>
+            <TableCell>Semantic or core tokens</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Box-model primitive slots</TableCell>
+            <TableCell>Universal 14-slot pool on every component root</TableCell>
+            <TableCell>Semantic tokens (typically category-keyed)</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
       <h2>The golden rule</h2>
       <div className="panel panel--inset">
@@ -298,22 +298,22 @@ Depth 4: Cascade scope      →  .card--primary, .card:hover, .card:disabled
       </p>
 
       <h3>Depth trade-offs</h3>
-      <table className="props-table">
-        <thead>
-          <tr>
-            <th>Depth</th>
-            <th>Abstraction level</th>
-            <th>Change impact</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>0</td><td>Raw value</td><td>Changes everything using that value</td></tr>
-          <tr><td>1</td><td>Primitive</td><td>Changes all semantics referencing it</td></tr>
-          <tr><td>2</td><td>Semantic</td><td>Changes all components using that role</td></tr>
-          <tr><td>3</td><td>Component slot</td><td>Changes one component&apos;s appearance at root</td></tr>
-          <tr><td>4</td><td>Cascade scope</td><td>Changes the slot&apos;s value at a variant or state scope</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Token abstraction depth trade-offs">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Depth</TableHeaderCell>
+            <TableHeaderCell>Abstraction level</TableHeaderCell>
+            <TableHeaderCell>Change impact</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell>0</TableCell><TableCell>Raw value</TableCell><TableCell>Changes everything using that value</TableCell></TableRow>
+          <TableRow><TableCell>1</TableCell><TableCell>Primitive</TableCell><TableCell>Changes all semantics referencing it</TableCell></TableRow>
+          <TableRow><TableCell>2</TableCell><TableCell>Semantic</TableCell><TableCell>Changes all components using that role</TableCell></TableRow>
+          <TableRow><TableCell>3</TableCell><TableCell>Component slot</TableCell><TableCell>Changes one component&apos;s appearance at root</TableCell></TableRow>
+          <TableRow><TableCell>4</TableCell><TableCell>Cascade scope</TableCell><TableCell>Changes the slot&apos;s value at a variant or state scope</TableCell></TableRow>
+        </TableBody>
+      </Table>
 
       <h2>Semantic tokens can reference other semantics</h2>
       <p>
@@ -409,27 +409,27 @@ function BoxModelPrimitivePanel() {
         with <code>additionalProperties: false</code> — new slot names
         require a deliberate schema edit, not a per-component decision:
       </p>
-      <table className="props-table">
-        <thead>
-          <tr><th>Slot</th><th>Default</th><th>Consumed by</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>box-model.padding</code></td><td><code>0</code></td><td>shorthand (no auto-consumer)</td></tr>
-          <tr><td><code>box-model.padding-block</code></td><td><code>0</code></td><td>shorthand</td></tr>
-          <tr><td><code>box-model.padding-block-start</code></td><td><code>0</code></td><td><code>padding-block-start</code></td></tr>
-          <tr><td><code>box-model.padding-block-end</code></td><td><code>0</code></td><td><code>padding-block-end</code></td></tr>
-          <tr><td><code>box-model.padding-inline</code></td><td><code>0</code></td><td>shorthand</td></tr>
-          <tr><td><code>box-model.padding-inline-start</code></td><td><code>0</code></td><td><code>padding-inline-start</code></td></tr>
-          <tr><td><code>box-model.padding-inline-end</code></td><td><code>0</code></td><td><code>padding-inline-end</code></td></tr>
-          <tr><td><code>box-model.gap</code></td><td><code>0</code></td><td><code>gap</code></td></tr>
-          <tr><td><code>box-model.width</code></td><td><code>auto</code></td><td><code>width</code></td></tr>
-          <tr><td><code>box-model.min-width</code></td><td><code>0</code></td><td><code>min-width</code></td></tr>
-          <tr><td><code>box-model.max-width</code></td><td><code>none</code></td><td><code>max-width</code></td></tr>
-          <tr><td><code>box-model.height</code></td><td><code>auto</code></td><td><code>height</code></td></tr>
-          <tr><td><code>box-model.min-height</code></td><td><code>0</code></td><td><code>min-height</code></td></tr>
-          <tr><td><code>box-model.max-height</code></td><td><code>none</code></td><td><code>max-height</code></td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Box-model primitive slots">
+        <TableHead>
+          <TableRow><TableHeaderCell>Slot</TableHeaderCell><TableHeaderCell>Default</TableHeaderCell><TableHeaderCell>Consumed by</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell><code>box-model.padding</code></TableCell><TableCell><code>0</code></TableCell><TableCell>shorthand (no auto-consumer)</TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.padding-block</code></TableCell><TableCell><code>0</code></TableCell><TableCell>shorthand</TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.padding-block-start</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>padding-block-start</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.padding-block-end</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>padding-block-end</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.padding-inline</code></TableCell><TableCell><code>0</code></TableCell><TableCell>shorthand</TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.padding-inline-start</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>padding-inline-start</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.padding-inline-end</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>padding-inline-end</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.gap</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>gap</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.width</code></TableCell><TableCell><code>auto</code></TableCell><TableCell><code>width</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.min-width</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>min-width</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.max-width</code></TableCell><TableCell><code>none</code></TableCell><TableCell><code>max-width</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.height</code></TableCell><TableCell><code>auto</code></TableCell><TableCell><code>height</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.min-height</code></TableCell><TableCell><code>0</code></TableCell><TableCell><code>min-height</code></TableCell></TableRow>
+          <TableRow><TableCell><code>box-model.max-height</code></TableCell><TableCell><code>none</code></TableCell><TableCell><code>max-height</code></TableCell></TableRow>
+        </TableBody>
+      </Table>
       <p>
         Logical axes (<code>block</code>/<code>inline</code>) only — no
         physical <code>top</code>/<code>right</code>/<code>bottom</code>/<code>left</code>{" "}
@@ -442,20 +442,20 @@ function BoxModelPrimitivePanel() {
         category determines which semantic tokens the box-model slots
         resolve to:
       </p>
-      <table className="props-table">
-        <thead>
-          <tr><th>Category</th><th>Typical components</th><th>Defaults map to</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>action</code></td><td>Button, Switch, ToggleSwitch</td><td><code>semantic.action.size.medium.*</code></td></tr>
-          <tr><td><code>input</code></td><td>Input, Select, Checkbox, TextField</td><td><code>semantic.input.size.medium.*</code></td></tr>
-          <tr><td><code>surface</code></td><td>Card, Sheet, Dialog, Popover</td><td><code>semantic.surface.size.*</code></td></tr>
-          <tr><td><code>feedback</code></td><td>Alert, Banner, Progress, Skeleton</td><td><code>semantic.feedback.size.*</code></td></tr>
-          <tr><td><code>glyph</code></td><td>Icon, Avatar, Badge, ProfileFlag</td><td><code>semantic.glyph.size.medium.extent</code> (square)</td></tr>
-          <tr><td><code>display</code></td><td>Text, Label, Chip, Image, Links, Stat</td><td><code>semantic.display.size.gap</code> only (size-to-content)</td></tr>
-          <tr><td><code>structure</code></td><td>Table, Tabs, Accordion, NavList</td><td><code>semantic.structure.size.gap</code> only (children carry padding)</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Component category-driven box-model defaults">
+        <TableHead>
+          <TableRow><TableHeaderCell>Category</TableHeaderCell><TableHeaderCell>Typical components</TableHeaderCell><TableHeaderCell>Defaults map to</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell><code>action</code></TableCell><TableCell>Button, Switch, ToggleSwitch</TableCell><TableCell><code>semantic.action.size.medium.*</code></TableCell></TableRow>
+          <TableRow><TableCell><code>input</code></TableCell><TableCell>Input, Select, Checkbox, TextField</TableCell><TableCell><code>semantic.input.size.medium.*</code></TableCell></TableRow>
+          <TableRow><TableCell><code>surface</code></TableCell><TableCell>Card, Sheet, Dialog, Popover</TableCell><TableCell><code>semantic.surface.size.*</code></TableCell></TableRow>
+          <TableRow><TableCell><code>feedback</code></TableCell><TableCell>Alert, Banner, Progress, Skeleton</TableCell><TableCell><code>semantic.feedback.size.*</code></TableCell></TableRow>
+          <TableRow><TableCell><code>glyph</code></TableCell><TableCell>Icon, Avatar, Badge, ProfileFlag</TableCell><TableCell><code>semantic.glyph.size.medium.extent</code> (square)</TableCell></TableRow>
+          <TableRow><TableCell><code>display</code></TableCell><TableCell>Text, Label, Chip, Image, Links, Stat</TableCell><TableCell><code>semantic.display.size.gap</code> only (size-to-content)</TableCell></TableRow>
+          <TableRow><TableCell><code>structure</code></TableCell><TableCell>Table, Tabs, Accordion, NavList</TableCell><TableCell><code>semantic.structure.size.gap</code> only (children carry padding)</TableCell></TableRow>
+        </TableBody>
+      </Table>
       <p>
         The taxonomy is a starting point. A component whose category default
         is wrong overrides the specific slot in its own{" "}
@@ -690,25 +690,25 @@ function VariantRedirectionPanel() {
         in <code>ir.ts</code>) recognizes these state names in{" "}
         <code>styles.json</code> selector keys:
       </p>
-      <table className="props-table">
-        <thead>
-          <tr><th>State name</th><th>Emits as</th><th>Tier</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>hover</code></td><td><code>:hover</code></td><td>Interaction</td></tr>
-          <tr><td><code>active</code></td><td><code>:active</code></td><td>Interaction</td></tr>
-          <tr><td><code>focus</code> / <code>focus-visible</code></td><td><code>:focus-visible</code></td><td>Interaction</td></tr>
-          <tr><td><code>focus-within</code></td><td><code>:focus-within</code></td><td>Interaction</td></tr>
-          <tr><td><code>visited</code></td><td><code>:visited</code></td><td>Interaction</td></tr>
-          <tr><td><code>disabled</code></td><td><code>:disabled</code></td><td>Disabled (stacked)</td></tr>
-          <tr><td><code>read-only</code></td><td><code>:read-only</code></td><td>Disabled (stacked)</td></tr>
-          <tr><td><code>checked</code></td><td><code>:checked</code></td><td>Stacked</td></tr>
-          <tr><td><code>indeterminate</code></td><td><code>:indeterminate</code></td><td>Stacked</td></tr>
-          <tr><td><code>expanded</code></td><td><code>[aria-expanded=&quot;true&quot;]</code></td><td>Stacked (ARIA)</td></tr>
-          <tr><td><code>pressed</code></td><td><code>[aria-pressed=&quot;true&quot;]</code></td><td>Stacked (ARIA)</td></tr>
-          <tr><td><code>selected</code></td><td><code>[aria-selected=&quot;true&quot;]</code></td><td>Stacked (ARIA)</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="State taxonomy supported by codegen">
+        <TableHead>
+          <TableRow><TableHeaderCell>State name</TableHeaderCell><TableHeaderCell>Emits as</TableHeaderCell><TableHeaderCell>Tier</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell><code>hover</code></TableCell><TableCell><code>:hover</code></TableCell><TableCell>Interaction</TableCell></TableRow>
+          <TableRow><TableCell><code>active</code></TableCell><TableCell><code>:active</code></TableCell><TableCell>Interaction</TableCell></TableRow>
+          <TableRow><TableCell><code>focus</code> / <code>focus-visible</code></TableCell><TableCell><code>:focus-visible</code></TableCell><TableCell>Interaction</TableCell></TableRow>
+          <TableRow><TableCell><code>focus-within</code></TableCell><TableCell><code>:focus-within</code></TableCell><TableCell>Interaction</TableCell></TableRow>
+          <TableRow><TableCell><code>visited</code></TableCell><TableCell><code>:visited</code></TableCell><TableCell>Interaction</TableCell></TableRow>
+          <TableRow><TableCell><code>disabled</code></TableCell><TableCell><code>:disabled</code></TableCell><TableCell>Disabled (stacked)</TableCell></TableRow>
+          <TableRow><TableCell><code>read-only</code></TableCell><TableCell><code>:read-only</code></TableCell><TableCell>Disabled (stacked)</TableCell></TableRow>
+          <TableRow><TableCell><code>checked</code></TableCell><TableCell><code>:checked</code></TableCell><TableCell>Stacked</TableCell></TableRow>
+          <TableRow><TableCell><code>indeterminate</code></TableCell><TableCell><code>:indeterminate</code></TableCell><TableCell>Stacked</TableCell></TableRow>
+          <TableRow><TableCell><code>expanded</code></TableCell><TableCell><code>[aria-expanded=&quot;true&quot;]</code></TableCell><TableCell>Stacked (ARIA)</TableCell></TableRow>
+          <TableRow><TableCell><code>pressed</code></TableCell><TableCell><code>[aria-pressed=&quot;true&quot;]</code></TableCell><TableCell>Stacked (ARIA)</TableCell></TableRow>
+          <TableRow><TableCell><code>selected</code></TableCell><TableCell><code>[aria-selected=&quot;true&quot;]</code></TableCell><TableCell>Stacked (ARIA)</TableCell></TableRow>
+        </TableBody>
+      </Table>
       <p>
         Data-state and system-state axes (loading, empty, error, server
         states, validation) currently live in component props and runtime
@@ -780,16 +780,16 @@ semantic.spacing.gap.grid`}
       />
 
       <h3>Layer prefix (required)</h3>
-      <table className="props-table">
-        <thead>
-          <tr><th>Prefix</th><th>Purpose</th><th>Can reference</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>core.</code></td><td>Raw primitives with no semantic meaning</td><td>Nothing (leaf nodes)</td></tr>
-          <tr><td><code>semantic.</code></td><td>Purpose-driven roles and aliases</td><td><code>core.*</code> or other <code>semantic.*</code></td></tr>
-          <tr><td><code>semantic.components.</code></td><td>UI-specific bindings</td><td><code>semantic.*</code> or <code>core.*</code></td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Token naming layer prefixes">
+        <TableHead>
+          <TableRow><TableHeaderCell>Prefix</TableHeaderCell><TableHeaderCell>Purpose</TableHeaderCell><TableHeaderCell>Can reference</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell><code>core.</code></TableCell><TableCell>Raw primitives with no semantic meaning</TableCell><TableCell>Nothing (leaf nodes)</TableCell></TableRow>
+          <TableRow><TableCell><code>semantic.</code></TableCell><TableCell>Purpose-driven roles and aliases</TableCell><TableCell><code>core.*</code> or other <code>semantic.*</code></TableCell></TableRow>
+          <TableRow><TableCell><code>semantic.components.</code></TableCell><TableCell>UI-specific bindings</TableCell><TableCell><code>semantic.*</code> or <code>core.*</code></TableCell></TableRow>
+        </TableBody>
+      </Table>
 
       <h2>Naming principles</h2>
 
@@ -1068,21 +1068,21 @@ function DtcgFormatsPanel() {
       />
 
       <h2>DTCG type system</h2>
-      <table className="props-table">
-        <thead>
-          <tr><th>Type</th><th>Value format</th><th>Example</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>color</code></td><td>Hex or color object</td><td><code>&quot;#0a65fe&quot;</code></td></tr>
-          <tr><td><code>dimension</code></td><td>Number with unit (px, rem)</td><td><code>&quot;16px&quot;</code></td></tr>
-          <tr><td><code>number</code></td><td>Unitless number</td><td><code>1.5</code></td></tr>
-          <tr><td><code>duration</code></td><td>Time with unit (ms, s)</td><td><code>&quot;250ms&quot;</code></td></tr>
-          <tr><td><code>cubicBezier</code></td><td>Array of 4 numbers</td><td><code>[0.4, 0, 0.2, 1]</code></td></tr>
-          <tr><td><code>fontFamily</code></td><td>String or array</td><td><code>&quot;Inter, sans-serif&quot;</code></td></tr>
-          <tr><td><code>typography</code></td><td>Composite object</td><td>see below</td></tr>
-          <tr><td><code>shadow</code></td><td>Composite object</td><td>see below</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="DTCG type system token types">
+        <TableHead>
+          <TableRow><TableHeaderCell>Type</TableHeaderCell><TableHeaderCell>Value format</TableHeaderCell><TableHeaderCell>Example</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell><code>color</code></TableCell><TableCell>Hex or color object</TableCell><TableCell><code>&quot;#0a65fe&quot;</code></TableCell></TableRow>
+          <TableRow><TableCell><code>dimension</code></TableCell><TableCell>Number with unit (px, rem)</TableCell><TableCell><code>&quot;16px&quot;</code></TableCell></TableRow>
+          <TableRow><TableCell><code>number</code></TableCell><TableCell>Unitless number</TableCell><TableCell><code>1.5</code></TableCell></TableRow>
+          <TableRow><TableCell><code>duration</code></TableCell><TableCell>Time with unit (ms, s)</TableCell><TableCell><code>&quot;250ms&quot;</code></TableCell></TableRow>
+          <TableRow><TableCell><code>cubicBezier</code></TableCell><TableCell>Array of 4 numbers</TableCell><TableCell><code>[0.4, 0, 0.2, 1]</code></TableCell></TableRow>
+          <TableRow><TableCell><code>fontFamily</code></TableCell><TableCell>String or array</TableCell><TableCell><code>&quot;Inter, sans-serif&quot;</code></TableCell></TableRow>
+          <TableRow><TableCell><code>typography</code></TableCell><TableCell>Composite object</TableCell><TableCell>see below</TableCell></TableRow>
+          <TableRow><TableCell><code>shadow</code></TableCell><TableCell>Composite object</TableCell><TableCell>see below</TableCell></TableRow>
+        </TableBody>
+      </Table>
 
       <h2>Composite tokens</h2>
       <p>
@@ -1407,18 +1407,18 @@ function A11yTokensPanel() {
         foreground token has a corresponding background it&apos;s designed to
         work with.
       </p>
-      <table className="props-table">
-        <thead>
-          <tr><th>Foreground token</th><th>Designed for</th><th>Min contrast</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>foreground.primary</code></td><td><code>background.primary</code></td><td>7:1 (AAA)</td></tr>
-          <tr><td><code>foreground.secondary</code></td><td><code>background.primary</code></td><td>4.5:1 (AA)</td></tr>
-          <tr><td><code>foreground.tertiary</code></td><td><code>background.primary</code></td><td>4.5:1 (AA)</td></tr>
-          <tr><td><code>foreground.inverse</code></td><td><code>background.brand</code></td><td>4.5:1 (AA)</td></tr>
-          <tr><td><code>status.danger</code></td><td><code>background.primary</code></td><td>4.5:1 (AA)</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Contrast-aware color token pairs">
+        <TableHead>
+          <TableRow><TableHeaderCell>Foreground token</TableHeaderCell><TableHeaderCell>Designed for</TableHeaderCell><TableHeaderCell>Min contrast</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell><code>foreground.primary</code></TableCell><TableCell><code>background.primary</code></TableCell><TableCell>7:1 (AAA)</TableCell></TableRow>
+          <TableRow><TableCell><code>foreground.secondary</code></TableCell><TableCell><code>background.primary</code></TableCell><TableCell>4.5:1 (AA)</TableCell></TableRow>
+          <TableRow><TableCell><code>foreground.tertiary</code></TableCell><TableCell><code>background.primary</code></TableCell><TableCell>4.5:1 (AA)</TableCell></TableRow>
+          <TableRow><TableCell><code>foreground.inverse</code></TableCell><TableCell><code>background.brand</code></TableCell><TableCell>4.5:1 (AA)</TableCell></TableRow>
+          <TableRow><TableCell><code>status.danger</code></TableCell><TableCell><code>background.primary</code></TableCell><TableCell>4.5:1 (AA)</TableCell></TableRow>
+        </TableBody>
+      </Table>
 
       <h2>Motion tokens with reduced motion</h2>
       <p>

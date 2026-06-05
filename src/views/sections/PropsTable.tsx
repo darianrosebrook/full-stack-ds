@@ -1,3 +1,11 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from "@full-stack-ds/react";
 import type { PropMember } from "../../types/data";
 
 interface PropsTableProps {
@@ -7,47 +15,47 @@ interface PropsTableProps {
 export function PropsTable({ members }: PropsTableProps) {
   return (
     <div className="panel">
-      <table className="props-table">
-        <thead>
-          <tr>
-            <th>Prop</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table className="props-table" ariaLabel="Component props">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Prop</TableHeaderCell>
+            <TableHeaderCell>Type</TableHeaderCell>
+            <TableHeaderCell>Default</TableHeaderCell>
+            <TableHeaderCell>Description</TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {members.map((m) => (
-            <tr key={m.name}>
-              <td>
+            <TableRow key={m.name}>
+              <TableCell>
                 <code>{m.name}</code>
                 {m.required && (
                   <span className="chip chip--accent" style={{ marginLeft: "var(--fsds-core-spacing-size-05)" }}>
                     required
                   </span>
                 )}
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 <code>{m.type}</code>
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 {m.default !== undefined ? (
                   <code>{JSON.stringify(m.default)}</code>
                 ) : (
                   <span className="subtle">—</span>
                 )}
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 {m.description ? (
                   <span className="muted">{m.description}</span>
                 ) : (
                   <span className="subtle">—</span>
                 )}
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 }

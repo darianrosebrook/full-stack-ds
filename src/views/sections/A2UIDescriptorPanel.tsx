@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import {
   deriveA2UIDescriptor,
   type A2UIDescriptor,
@@ -99,28 +100,28 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
           <h3 className="subsection-title">
             Agent-fillable props ({propEntries.length})
           </h3>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Prop</th>
-                <th>Accepts</th>
-                <th>Enum domain</th>
-                <th>Required</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="data-table" ariaLabel="Agent-fillable props">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Prop</TableHeaderCell>
+                <TableHeaderCell>Accepts</TableHeaderCell>
+                <TableHeaderCell>Enum domain</TableHeaderCell>
+                <TableHeaderCell>Required</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {propEntries.map(([name, p]) => (
-                <tr key={name}>
-                  <td>
+                <TableRow key={name}>
+                  <TableCell>
                     <code>{name}</code>
-                  </td>
-                  <td>{p.accepts.join(" | ")}</td>
-                  <td>{p.enum ? p.enum.join(", ") : "—"}</td>
-                  <td>{p.required ? "yes" : "—"}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell>{p.accepts.join(" | ")}</TableCell>
+                  <TableCell>{p.enum ? p.enum.join(", ") : "—"}</TableCell>
+                  <TableCell>{p.required ? "yes" : "—"}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
 
@@ -129,26 +130,26 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
           <h3 className="subsection-title">
             Events &amp; channels ({eventEntries.length})
           </h3>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Key</th>
-                <th>Source</th>
-                <th>Payload</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table className="data-table" ariaLabel="Events and channels">
+            <TableHead>
+              <TableRow>
+                <TableHeaderCell>Key</TableHeaderCell>
+                <TableHeaderCell>Source</TableHeaderCell>
+                <TableHeaderCell>Payload</TableHeaderCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {eventEntries.map(([key, e]) => (
-                <tr key={key}>
-                  <td>
+                <TableRow key={key}>
+                  <TableCell>
                     <code>{key}</code>
-                  </td>
-                  <td>{e.source}</td>
-                  <td>{e.valueType ?? "—"}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell>{e.source}</TableCell>
+                  <TableCell>{e.valueType ?? "—"}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
 
