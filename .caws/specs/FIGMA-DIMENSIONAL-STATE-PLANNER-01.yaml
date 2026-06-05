@@ -3,6 +3,7 @@ title: 'Figma dimensional-state planner: pure descriptor->plan layer (no canvas 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: figma-state-planner
 created_at: '2026-06-05T22:09:42.378Z'
 updated_at: '2026-06-05T22:09:52.432Z'
 blast_radius:
