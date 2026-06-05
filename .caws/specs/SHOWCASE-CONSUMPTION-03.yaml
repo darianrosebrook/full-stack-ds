@@ -3,6 +3,7 @@ title: 'DS Table API gaps + selector collision cleanup'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: showcase-consumption-3
 created_at: '2026-06-05T02:15:14.240Z'
 updated_at: '2026-06-05T02:25:02.784Z'
 blast_radius:
