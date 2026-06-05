@@ -1,0 +1,33 @@
+id: CONTRACT-DIMENSIONAL-STATES-AUTHORITY-01
+title: 'Dimensional states authority: object-only states, extend stateDimension (category/suppresses/a11y/value-derivesFrom), migrate full corpus, byte-equivalent output'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-05T20:53:11.125Z'
+updated_at: '2026-06-05T20:53:11.125Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'dimensional-states-schema'
+    type: schema
+    path: 'packages/ds-contracts/component.contract.schema.json'
+  - name: 'normalize-states-flat-projection'
+    type: behavior
+    path: 'packages/ds-codegen/src/contract.ts'
+  - name: 'generated-output-byte-equivalence'
+    type: contract-test
