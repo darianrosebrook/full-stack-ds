@@ -1,0 +1,25 @@
+id: RENDER-PROP-BINDING-BLAST-RADIUS-01
+title: 'Render prop->DOM binding obligation blast-radius audit (classified matrix; no fix)'
+risk_tier: 3
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-05T21:11:11.812Z'
+updated_at: '2026-06-05T21:11:11.812Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
