@@ -2,10 +2,11 @@ id: ESLINT-IGNORE-CODEX-01
 title: 'eslint-ignore + gitignore .codex/ agent-tooling dir (unblock pre-push lint)'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
-worktree: eslint-codex
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge eslint-codex at 9faafe9021e7228db40c8a727db97e17d926c19f'
 created_at: '2026-06-05T19:46:21.400Z'
-updated_at: '2026-06-05T19:46:30.736Z'
+updated_at: '2026-06-05T19:47:40.976Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
