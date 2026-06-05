@@ -1,0 +1,30 @@
+id: COMPONENT-TOKEN-HYGIENE-01
+title: 'Tokenize hardcoded component dimensions (Command, OTP, Stat)'
+risk_tier: 3
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-05T05:29:26.099Z'
+updated_at: '2026-06-05T05:29:26.099Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Command/'
+    - 'packages/ds-contracts/components/OTP/'
+    - 'packages/ds-contracts/components/Stat/'
+    - 'packages/ds-react/src/components/Command/'
+    - 'packages/ds-react/src/components/OTP/'
+    - 'packages/ds-react/src/components/Stat/'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
