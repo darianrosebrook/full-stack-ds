@@ -3,6 +3,7 @@ title: 'Render prop->DOM binding obligation blast-radius audit (classified matri
 risk_tier: 3
 mode: feature
 lifecycle_state: active
+worktree: render-binding
 created_at: '2026-06-05T21:11:11.812Z'
 updated_at: '2026-06-05T21:16:04.196Z'
 blast_radius:
