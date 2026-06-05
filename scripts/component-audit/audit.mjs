@@ -165,7 +165,10 @@ function buildRow(s, prior) {
     geom_expected: s.geom?.expected ?? prior?.geom_expected ?? "",
     geom_actual: s.geom?.actual ?? prior?.geom_actual ?? "",
     geom_verdict: s.geom?.verdict ?? (s.geometryProbed ? "" : prior?.geom_verdict ?? "(not probed)"),
-    visual_review: s.flags.length ? "yes" : "",
+    visual_review:
+      s.flags.length || /FLAG|manual|no root|error|zero-size|HTTP/i.test(s.geom?.verdict ?? "")
+        ? "yes"
+        : "",
     notes: prior?.notes || "",
   };
 }

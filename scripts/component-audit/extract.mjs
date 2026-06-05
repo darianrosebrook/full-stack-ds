@@ -221,19 +221,23 @@ export function extractStatic(name) {
   if (gridCols) layoutBits.push(`grid-cols=${gridCols}`);
   if (boxOverrides.gap) layoutBits.push(`gap=${boxOverrides.gap}`);
 
-  // --- Heuristic flags ---
+  // --- Heuristic flags (only mechanically-defensible signals) ---
+  // NOTE: width:auto is intentionally NOT flagged. A block-level root
+  // (display:block/flex/grid) with width:auto already fills its container in
+  // normal flow; only an inline-level root (inline-flex/inline-block) hugs
+  // content — and for chips/buttons/badges that is correct. Whether a given
+  // root "should be 100%" is a design call, not mechanically decidable, so the
+  // box_model column records the width and leaves the judgment to review.
   const flags = [];
-  const isLayoutish = layer === "compound" || category === "structure" || category === "layout";
-  const widthAuto = (boxEmitted.width ?? "auto") === "auto";
-  if (isLayoutish && widthAuto && !INLINE_DISPLAYS.has(display)) {
-    flags.push("layout-root width:auto (block component may expect 100%)");
-  }
   if (literalDims.length) {
-    flags.push(`${literalDims.length} hardcoded dim(s)`);
+    flags.push(`hardcoded dim(s): ${literalDims.join(", ")}`);
   }
-  // a non-inline display with no box-model padding override is worth an eye
-  if (!INLINE_DISPLAYS.has(display) && Object.keys(boxOverrides).filter((s) => s.startsWith("padding")).length === 0) {
-    flags.push("no padding override on non-inline root");
+  // A width-override to a fixed px on a root that is a layout container is worth
+  // a glance (a fixed-width container rarely composes well) — rare, precise.
+  const widthFixed = boxOverrides.width && /px$/.test(boxOverrides.width);
+  const isContainer = layer === "compound" || category === "structure" || category === "layout";
+  if (widthFixed && isContainer && !INLINE_DISPLAYS.has(display)) {
+    flags.push(`fixed-width container root (width=${boxOverrides.width})`);
   }
 
   return {
