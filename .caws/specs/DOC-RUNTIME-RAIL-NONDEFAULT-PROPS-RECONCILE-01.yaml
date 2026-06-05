@@ -1,0 +1,25 @@
+id: DOC-RUNTIME-RAIL-NONDEFAULT-PROPS-RECONCILE-01
+title: 'Reconcile snapshot CSS-var-bindings row with landed non-default prop routes'
+risk_tier: 3
+mode: doc
+lifecycle_state: active
+created_at: '2026-06-05T00:51:34.393Z'
+updated_at: '2026-06-05T00:51:34.393Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
