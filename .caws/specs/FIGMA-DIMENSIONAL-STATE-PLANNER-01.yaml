@@ -1,0 +1,30 @@
+id: FIGMA-DIMENSIONAL-STATE-PLANNER-01
+title: 'Figma dimensional-state planner: pure descriptor->plan layer (no canvas mutation); boolean-vs-variant classification, suppression relations, residuals'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-05T22:09:42.378Z'
+updated_at: '2026-06-05T22:09:42.378Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'figma-state-plan'
+    type: behavior
+    path: 'packages/ds-figma-plugin/src/planner.ts'
+  - name: 'per-component-plan-fixtures'
+    type: contract-test
