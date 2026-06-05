@@ -3,6 +3,7 @@ title: 'PropTypeIR corpus enablers: widen designed/constrained default schema (a
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: proptype-enablers
 created_at: '2026-06-05T17:43:38.668Z'
 updated_at: '2026-06-05T17:43:38.668Z'
 blast_radius:
