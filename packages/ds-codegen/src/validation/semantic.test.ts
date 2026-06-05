@@ -158,7 +158,7 @@ describe("validateContractSemantics — cross-reference rules", () => {
   it("flags stateMachine.from referencing a state outside states.dimensions", () => {
     const c = base({
       states: {
-        dimensions: { openness: { values: ["closed", "expanded"] } },
+        dimensions: { openness: { category: "visibility", values: ["closed", "expanded"], initial: "closed" } },
       },
       stateMachine: {
         transitions: [
@@ -173,7 +173,7 @@ describe("validateContractSemantics — cross-reference rules", () => {
   it("flags stateMachine.from as string-array entries individually", () => {
     const c = base({
       states: {
-        dimensions: { openness: { values: ["closed", "expanded"] } },
+        dimensions: { openness: { category: "visibility", values: ["closed", "expanded"], initial: "closed" } },
       },
       // Schema-side widening: `from` may be string | string[]. The
       // contract type still declares string; cast through unknown
@@ -187,19 +187,6 @@ describe("validateContractSemantics — cross-reference rules", () => {
     const issues = validateContractSemantics(c);
     expect(issueAt(issues, "/stateMachine/transitions/0/from/1")).toBe(true);
     expect(issueAt(issues, "/stateMachine/transitions/0/from/0")).toBe(false);
-  });
-
-  it("skips stateMachine cross-check when states is a flat array (legacy)", () => {
-    const c = base({
-      states: ["default", "hover"],
-      stateMachine: {
-        transitions: [{ event: "hover", from: "default", to: "hover" }],
-      },
-    } as Partial<ComponentContract>);
-    // Legacy form — can't cross-check; should not flag.
-    const issues = validateContractSemantics(c);
-    expect(issueAt(issues, "/stateMachine/transitions/0/from")).toBe(false);
-    expect(issueAt(issues, "/stateMachine/transitions/0/to")).toBe(false);
   });
 
   it("flags anatomy.dom binding referencing a missing channel", () => {

@@ -102,11 +102,34 @@ export interface ContractEventSignature {
   triggeredBy?: string[];
 }
 
+export type StateCategory =
+  | "interaction"
+  | "availability"
+  | "selection"
+  | "validation"
+  | "data"
+  | "visibility"
+  | "motion"
+  | "presentation";
+
 export interface ContractStateDimension {
   description?: string;
+  /** Semantic domain of this axis. Cardinality derives from values.length. */
+  category: StateCategory;
   values: string[];
+  /** Base/absence value; excluded from the derived flat selector list. */
   initial?: string;
+  /** Intra-dimension mutual exclusion. Defaults to true. */
   exclusive?: boolean;
+  /** Cross-dimension suppression (e.g. availability=disabled masks interaction). */
+  suppresses?: { categories?: StateCategory[]; names?: string[] };
+  /** ARIA projection; values authored because semantic values can't be fabricated. */
+  a11y?: { attribute: string; values?: Record<string, string | boolean> };
+  /** Value-level derivation override, keyed by dimension value. */
+  derivesFrom?: Record<
+    string,
+    { selector?: string; attr?: string; channel?: string; prop?: string }
+  >;
 }
 
 /**
@@ -565,10 +588,8 @@ export interface ComponentContract {
     semantics?: Record<string, string>;
   };
   variants?: Record<string, string[]>;
-  /** States as a flat list (legacy) or dimensional form. */
-  states?:
-    | string[]
-    | { dimensions: Record<string, ContractStateDimension>; description?: string };
+  /** States as orthogonal dimensions (axes). Object-only — the legacy flat list form was removed. */
+  states?: { dimensions: Record<string, ContractStateDimension>; description?: string };
   tokens?: Record<string, TokenResolution>;
   styles?: Record<string, Record<string, StyleEntry>>;
   keyframes?: Record<string, Record<string, Record<string, string>>>;
@@ -696,21 +717,23 @@ export function getCssPrefix(contract: ComponentContract): string {
 /**
  * Normalized view of a contract's `states` field.
  *
- * Contracts may declare states as a flat list (legacy) or as orthogonal
- * dimensions (each with its own values). The shared codegen pipeline always
- * needs a flat list (for CSS modifier emission and React boolean-prop class
- * recipes), and emitters that care about the underlying axes can read
- * `dimensions` directly.
+ * States are authored as orthogonal dimensions (the object-only form). The
+ * shared codegen pipeline still needs a flat list of *active* selector keys
+ * (for CSS modifier emission and React boolean-prop class recipes); that
+ * `flat` list is a downstream-derived projection, never an authoring form.
+ * Emitters that care about the underlying axes read `dimensions` directly.
  */
 export interface NormalizedStates {
   /**
-   * Flat union of every state value across every dimension. Deduplicated and
-   * preserves first-seen order. Empty array when the contract omits states.
+   * Flat union of every *non-initial* state value across every dimension,
+   * deduplicated and first-seen-ordered. Each dimension's `initial` value is
+   * the base/absence state and is excluded — dimension defaults (rest,
+   * enabled, unchecked, …) must never emit a selector or a boolean modifier.
+   * Empty when the contract omits states.
    */
   flat: string[];
   /**
-   * The dimensional form when the contract authored it that way. `null` when
-   * the contract used the flat list form (or omitted states entirely).
+   * The dimensional form. `null` only when the contract omits states entirely.
    */
   dimensions: Record<string, ContractStateDimension> | null;
 }
@@ -719,13 +742,15 @@ export function normalizeStates(
   states: ComponentContract["states"],
 ): NormalizedStates {
   if (!states) return { flat: [], dimensions: null };
-  if (Array.isArray(states)) {
-    return { flat: dedupe(states), dimensions: null };
-  }
   const dims = states.dimensions;
   const flat: string[] = [];
   for (const dim of Object.values(dims)) {
-    for (const v of dim.values) flat.push(v);
+    for (const v of dim.values) {
+      // The initial (base/absence) value is the un-modified state — it carries
+      // no selector and no boolean modifier, so it stays out of the flat list.
+      if (dim.initial !== undefined && v === dim.initial) continue;
+      flat.push(v);
+    }
   }
   return { flat: dedupe(flat), dimensions: dims };
 }
