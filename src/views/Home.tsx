@@ -210,7 +210,7 @@ export function Home({ bundle }: HomeProps) {
           {samples.map((c) => (
             <a
               key={c.name}
-              className="card card--inset"
+              className="panel panel--inset"
               href={buildHref({
                 kind: "component",
                 name: c.name,

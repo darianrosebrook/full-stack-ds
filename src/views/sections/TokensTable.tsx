@@ -13,8 +13,8 @@ export function TokensTable({ tokens }: TokensTableProps) {
   const groups = Object.entries(tokens);
 
   return (
-    <div className="card">
-      <div className="card-toolbar">
+    <div className="panel">
+      <div className="panel-toolbar">
         <span>{groups.length} state group{groups.length === 1 ? "" : "s"}</span>
         <span className="subtle">
           token → resolves → CSS property

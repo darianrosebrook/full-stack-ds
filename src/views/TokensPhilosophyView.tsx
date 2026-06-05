@@ -244,7 +244,7 @@ function OverviewPanel() {
       </table>
 
       <h2>The golden rule</h2>
-      <div className="card card--inset">
+      <div className="panel panel--inset">
         <strong>Never use raw values in components.</strong> Always reference
         tokens so the entire system can be re-themed by changing a single
         source file. This isn&apos;t just about efficiency — it&apos;s a
@@ -1519,7 +1519,7 @@ function LayerGrid({ layers }: { layers: LayerCardSpec[] }) {
       }}
     >
       {layers.map((layer) => (
-        <div key={layer.title} className="card card--inset">
+        <div key={layer.title} className="panel panel--inset">
           <div
             style={{
               display: "flex",

@@ -48,8 +48,8 @@ interface ExampleFrameProps {
 
 function ExampleFrame({ example, emphasize, componentName }: ExampleFrameProps) {
   return (
-    <div className="card">
-      <div className="card-toolbar">
+    <div className="panel">
+      <div className="panel-toolbar">
         <span>
           {componentName} · <strong>{example.name}</strong>
         </span>

@@ -25,8 +25,8 @@ export function VariantsMatrix({ component }: VariantsMatrixProps) {
   const combos = cartesian(valueLists).slice(0, 36);
 
   return (
-    <div className="card">
-      <div className="card-toolbar">
+    <div className="panel">
+      <div className="panel-toolbar">
         <span>
           {keys.length === 1
             ? `${combos.length} variant${combos.length === 1 ? "" : "s"}`
