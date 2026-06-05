@@ -33,7 +33,16 @@ import type { DemoProps } from "./demos";
 export function parsePropsFromQuery(query: string): DemoProps {
   const out: DemoProps = {};
   const params = new URLSearchParams(query);
+  // Explicit typed channel: `?props=<encoded JSON>` carries arbitrary typed
+  // overrides — including STRINGS — for the runtime rails' sentinel injection
+  // (e.g. RENDER-PROP-BINDING-PLAYWRIGHT-RAIL-01 driving placeholder/name/value).
+  // It is decoded via the same side-decodable JSON used for the entry id, so a
+  // string prop only enters through this declared channel — bare query keys
+  // below stay narrow (numbers/booleans only, no stray string coercion).
+  const propsJson = params.get("props");
+  if (propsJson) Object.assign(out, decodePropsParam(propsJson));
   for (const [key, raw] of params) {
+    if (key === "props") continue;
     if (raw === "true") {
       out[key] = true;
     } else if (raw === "false") {
