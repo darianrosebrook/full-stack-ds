@@ -14,27 +14,26 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Divider> component.",
+    "designed": {
       "members": [
         {
           "name": "orientation",
-          "type": "\"horizontal\" | \"vertical\"",
+          "propType": { "kind": "enum", "values": ["horizontal", "vertical"] },
           "description": "Visual orientation of the divider"
         },
         {
           "name": "decorative",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Semantic role - separator (default) or presentation for purely decorative"
         },
         {
           "name": "thickness",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Custom thickness/size"
         },
         {
           "name": "title",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Title attribute on the underlying hr element."
         }
       ]
