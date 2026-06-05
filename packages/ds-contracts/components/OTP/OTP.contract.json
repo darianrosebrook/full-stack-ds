@@ -50,54 +50,61 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <OTP> component.",
+    "designed": {
       "members": [
         {
           "name": "length",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Number of individual input fields to render.",
           "default": 6
         },
         {
           "name": "value",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Controlled OTP value string."
         },
         {
           "name": "defaultValue",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Uncontrolled initial OTP value."
         },
         {
           "name": "onChange",
-          "type": "(value: string) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "value", "type": { "kind": "string" } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when the OTP value changes."
         },
         {
           "name": "onComplete",
-          "type": "(value: string) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "value", "type": { "kind": "string" } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when all fields are filled."
         },
         {
           "name": "mode",
-          "type": "OTPMode",
+          "propType": { "kind": "ref", "to": "OTPMode" },
           "description": "Whether fields accept only digits or any alphanumeric character.",
           "default": "numeric"
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Disables all input fields."
         },
         {
           "name": "readOnly",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Makes all fields read-only."
         },
         {
           "name": "label",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible label for the OTP group.",
           "default": "One-time password"
         }

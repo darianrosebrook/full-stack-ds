@@ -42,28 +42,31 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Shuttle> component.",
+    "designed": {
       "members": [
         {
           "name": "ariaLabel",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible label for the shuttle widget"
         },
         {
           "name": "value",
-          "type": "string[]",
+          "propType": { "kind": "array", "items": { "kind": "string" } },
           "description": "Controlled list of selected-item ids (items currently in the right-hand list)."
         },
         {
           "name": "defaultValue",
-          "type": "string[]",
+          "propType": { "kind": "array", "items": { "kind": "string" } },
           "description": "Uncontrolled initial selection.",
           "default": ["alpha", "beta", "gamma"]
         },
         {
           "name": "onValueChange",
-          "type": "(value: string[]) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "value", "type": { "kind": "array", "items": { "kind": "string" } } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when items move between the two lists; the new value reflects the right-hand list contents."
         }
       ]

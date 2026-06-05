@@ -102,12 +102,11 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Select> dropdown component.",
+    "designed": {
       "members": [
         {
           "name": "options",
-          "type": "SelectOption[]",
+          "propType": { "kind": "array", "items": { "kind": "ref", "to": "SelectOption" } },
           "description": "Available options.",
           "required": true,
           "default": [
@@ -118,49 +117,57 @@
         },
         {
           "name": "value",
-          "type": "string | string[]",
+          "propType": { "kind": "union", "of": [{ "kind": "string" }, { "kind": "array", "items": { "kind": "string" } }] },
           "description": "Controlled selected value(s)."
         },
         {
           "name": "defaultValue",
-          "type": "string | string[]",
+          "propType": { "kind": "union", "of": [{ "kind": "string" }, { "kind": "array", "items": { "kind": "string" } }] },
           "description": "Default selected value(s) for uncontrolled usage.",
           "default": "beta"
         },
         {
           "name": "onChange",
-          "type": "(value: string | string[]) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "value", "type": { "kind": "union", "of": [{ "kind": "string" }, { "kind": "array", "items": { "kind": "string" } }] } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when selection changes."
         },
         {
           "name": "open",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Controlled open state."
         },
         {
           "name": "defaultOpen",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Default open state for uncontrolled usage.",
           "default": true
         },
         {
           "name": "onOpenChange",
-          "type": "(open: boolean) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "open", "type": { "kind": "boolean" } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when open state changes."
         },
         {
           "name": "multiple",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Allow multiple selections."
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Disabled state."
         },
         {
           "name": "size",
-          "type": "SelectSize",
+          "propType": { "kind": "ref", "to": "SelectSize" },
           "description": "Size variant.",
           "default": "md"
         },
@@ -171,12 +178,12 @@
         },
         {
           "name": "searchable",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Whether to render the search input inside the dropdown."
         },
         {
           "name": "empty",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Whether the option list is empty (drives the empty-state slot)."
         }
       ]
