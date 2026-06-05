@@ -43,6 +43,7 @@ export class StatElement extends LitElement {
       --fsds-stat-size-value-md: var(--fsds-semantic-typography-heading-02, 28px);
       --fsds-stat-size-label: var(--fsds-semantic-typography-caption-02, 12px);
       --fsds-stat-size-gap: var(--fsds-core-spacing-size-02, 4px);
+      --fsds-stat-typography-lineHeight-value: 1.1;
       --fsds-stat-typography-weight-value: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-stat-typography-weight-label: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
@@ -63,7 +64,7 @@ export class StatElement extends LitElement {
       color: var(--fsds-stat-color-foreground-value);
       font-size: var(--fsds-stat-size-value-md);
       font-weight: var(--fsds-stat-typography-weight-value);
-      line-height: 1.1;
+      line-height: var(--fsds-stat-typography-lineHeight-value);
       letter-spacing: -0.02em;
     }
   `;

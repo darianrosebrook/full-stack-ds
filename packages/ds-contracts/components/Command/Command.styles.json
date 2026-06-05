@@ -6,7 +6,7 @@
     "display": { "literal": "flex", "platforms": ["web"] },
     "align-items": { "literal": "flex-start", "platforms": ["web"] },
     "justify-content": { "literal": "center", "platforms": ["web"] },
-    "padding-top": { "literal": "10vh", "platforms": ["web"] },
+    "padding-top": { "resolvesTo": "command.size.topOffset", "platforms": ["web"] },
     "pointer-events": { "literal": "none", "platforms": ["web"] }
   },
   "overlay": {
