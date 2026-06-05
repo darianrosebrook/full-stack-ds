@@ -3,6 +3,7 @@ title: 'Morphology geometry profile: classifier-driven box-model defaults + stri
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: morphology-geometry
 created_at: '2026-06-05T08:21:06.290Z'
 updated_at: '2026-06-05T08:22:46.845Z'
 blast_radius:
