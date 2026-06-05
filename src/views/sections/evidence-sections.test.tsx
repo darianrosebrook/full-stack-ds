@@ -104,17 +104,63 @@ describe("EvidencePanel (A2)", () => {
     expect(tableHtml).toContain("absent");
   });
 
-  it("A2: states the rail/runtime/token non-claims explicitly", () => {
+  it("A3: states the non-claims explicitly, with runtime-rail now bound as coverage", () => {
     const component = bundleFor(contractWithA2UI(), {
       react: { component: { filename: "Switchy.tsx", code: "" }, siblings: [] },
     });
     render(<EvidencePanel component={component} />);
 
-    // each CI-side surface is named as NOT bound in-app
+    // admission-rail and token-gate remain unbound in-app
     expect(screen.getByText(/Admission-rail status is not bound in-app/)).toBeInTheDocument();
-    expect(screen.getByText(/Runtime-rail facts are not bound in-app/)).toBeInTheDocument();
     expect(screen.getByText(/Token-gate status is not bound in-app/)).toBeInTheDocument();
+    // runtime-rail is now BOUND as coverage; the non-claim is about last-run status
+    expect(
+      screen.getByText(/Runtime-rail binding is coverage, not last-run status/),
+    ).toBeInTheDocument();
     // the quality non-claim from the governing doc
     expect(screen.getByText(/proves projection, not quality/)).toBeInTheDocument();
+    // the old "not bound in-app" runtime-rail residual is gone
+    expect(screen.queryByText(/Runtime-rail facts are not bound in-app/)).toBeNull();
+  });
+});
+
+/** A minimal contract carrying just a name + layer (rail lookup keys on name). */
+function minimalContract(name: string): ComponentContract {
+  return { name, layer: "primitive" } as ComponentContract;
+}
+
+describe("EvidencePanel — runtime-rail coverage (A1, A4)", () => {
+  it("A1: a rail-covered component shows per-framework asserted facts incl. non-default mechanisms", () => {
+    // Progress is rail-covered with a non-default `value` fact (q-param + fixture).
+    const component = bundleFor(minimalContract("Progress"), {
+      react: { component: { filename: "Progress.tsx", code: "" }, siblings: [] },
+    });
+    const { container } = render(<EvidencePanel component={component} />);
+    console.log("\n=== Evidence panel (Progress) runtime-rail coverage ===\n" + container.innerHTML);
+
+    expect(screen.getByText("Runtime-rail coverage")).toBeInTheDocument();
+    // default-prop facts asserted for all five frameworks (5 exact "asserted" cells)
+    expect(screen.getAllByText("asserted")).toHaveLength(5);
+    // non-default: R/V/S/L via query-param (4), Angular via fixed fixture (1)
+    expect(screen.getAllByText("asserted (query-param)")).toHaveLength(4);
+    expect(screen.getAllByText("asserted (fixed fixture)")).toHaveLength(1);
+    // the non-default prop is named, framed as coverage not pass/fail
+    expect(container.textContent).toContain("non-default prop: value");
+    expect(container.textContent).toContain("not a claim that the last CI run passed");
+    // a covered component renders BOTH tables (realizations + rail coverage)
+    expect(container.querySelectorAll("table")).toHaveLength(2);
+  });
+
+  it("A4: an uncovered component shows a neutral 'no rail facts asserted', not a failure", () => {
+    // Button is not in the rail coverage projection.
+    const component = bundleFor(minimalContract("Button"), {
+      react: { component: { filename: "Button.tsx", code: "" }, siblings: [] },
+    });
+    const { container } = render(<EvidencePanel component={component} />);
+
+    expect(screen.getByText(/No rail facts asserted for this component/)).toBeInTheDocument();
+    expect(container.textContent).toContain("absence here is neutral, not a failure");
+    // only the realizations table renders — no rail-coverage table
+    expect(container.querySelectorAll("table")).toHaveLength(1);
   });
 });
