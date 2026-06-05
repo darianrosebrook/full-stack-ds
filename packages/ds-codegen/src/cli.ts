@@ -459,7 +459,7 @@ function main(): void {
     (result.value as { tokens?: unknown }).tokens = mergeBoxModelDefaults(
       authoredTokens,
       undefined,
-      (result.value as { morphology?: string }).morphology,
+      (result.value as ComponentContract).morphology,
     );
     const stylesEntry = findComponentStyles(entry);
     if (stylesEntry) {

@@ -2965,8 +2965,7 @@ function renderBoxModelConsumers(): Record<string, string> {
 function renderProfileStructure(
   contract: ComponentContract,
 ): Record<string, string> {
-  const morphology = (contract as { morphology?: string }).morphology;
-  const profile = resolveStyleProfile(morphology);
+  const profile = resolveStyleProfile(contract.morphology);
   if (!profile) return {};
   return { ...profile.structure };
 }
