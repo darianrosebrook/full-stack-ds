@@ -1,0 +1,22 @@
+{
+  "_comment": "Host-element native attribute capability map for RENDER-PROP-BINDING-BLAST-RADIUS-01. Maps an HTML tag (anatomy.dom.tag) to the native attributes it accepts. Used ONLY to classify a designed prop that has NO other declared realization (not in anatomy.dom bindings/content/events, not a channel/variant, not a node/callback propType): if the prop name is a native attribute of the host tag, its render obligation is native-attr and it is EXPECTED to bind. This is the host-capability rule the audit keys on instead of component-name lore. Lives under fixtures/ so it is reference data, not strike-eligible source. Lists are conservative high-signal form/interactive/media attributes; not exhaustive global attrs.",
+  "_global": ["id", "title", "tabindex", "hidden", "lang", "dir", "role", "autofocus", "inert"],
+  "input": ["type", "name", "value", "placeholder", "required", "disabled", "readonly", "checked", "min", "max", "step", "pattern", "minlength", "maxlength", "autocomplete", "inputmode", "multiple", "accept", "list", "size"],
+  "textarea": ["name", "value", "placeholder", "required", "disabled", "readonly", "rows", "cols", "minlength", "maxlength", "autocomplete", "wrap"],
+  "select": ["name", "value", "required", "disabled", "multiple", "size", "autocomplete"],
+  "option": ["value", "selected", "disabled", "label"],
+  "button": ["type", "name", "value", "disabled", "form", "formaction", "formmethod"],
+  "a": ["href", "target", "rel", "download", "hreflang", "type", "referrerpolicy"],
+  "img": ["src", "alt", "srcset", "sizes", "width", "height", "loading", "decoding", "crossorigin"],
+  "label": ["for"],
+  "form": ["action", "method", "name", "novalidate", "target", "autocomplete", "enctype"],
+  "details": ["open"],
+  "dialog": ["open"],
+  "progress": ["value", "max"],
+  "meter": ["value", "min", "max", "low", "high", "optimum"],
+  "fieldset": ["name", "disabled", "form"],
+  "ol": ["start", "reversed", "type"],
+  "td": ["colspan", "rowspan", "headers"],
+  "th": ["colspan", "rowspan", "headers", "scope"],
+  "time": ["datetime"]
+}
