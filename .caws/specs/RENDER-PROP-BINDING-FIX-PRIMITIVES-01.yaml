@@ -3,6 +3,7 @@ title: 'Complete Input/Checkbox native form-control attribute bindings (close BL
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: rb-fix
 created_at: '2026-06-05T21:46:28.920Z'
 updated_at: '2026-06-05T21:46:44.629Z'
 blast_radius:
