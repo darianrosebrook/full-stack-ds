@@ -1476,6 +1476,7 @@ function renderAngularDomNode(
 // facts, not from "tests are failing".
 const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>> = {
   label: new Set(["form"]),
+  svg: new Set(["height", "width"]),
 };
 
 function angularAttrBinding(attr: string, tag?: string): string {
