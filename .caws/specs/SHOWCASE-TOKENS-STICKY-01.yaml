@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: tokens-sticky
 created_at: '2026-06-05T05:29:25.101Z'
-updated_at: '2026-06-05T05:29:25.101Z'
+updated_at: '2026-06-05T06:41:36.241Z'
 blast_radius:
   modules:
     - 'src/styles/app.css: the .panel / .tokens-card overflow that creates the clipping ancestor; the .tokens-table sticky-header rules'
@@ -28,6 +28,7 @@ scope:
   in:
     - 'src/styles/app.css'
     - 'src/views/TokensView.tsx'
+    - e2e/
   out: []
 invariants:
   - 'The Tokens-table column header stays pinned to the scroll container (main.app-main) top while the table body scrolls — position:sticky on the <th> is honored because no ancestor between it and the scroller clips/scrolls.'
