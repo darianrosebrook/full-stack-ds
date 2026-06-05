@@ -147,7 +147,6 @@ const BENIGN_DIM = new Set(["0", "auto", "none", "1em", "100%", "1px", "2px", "i
 export function extractStatic(name) {
   const cdir = resolve(CONTRACTS, name);
   const contract = readJSON(resolve(cdir, `${name}.contract.json`)) ?? {};
-  const tokensJson = readJSON(resolve(cdir, `${name}.tokens.json`)) ?? {};
   const stylesJson = readJSON(resolve(cdir, `${name}.styles.json`)) ?? {};
 
   const css = readText(resolve(REACT, name, `${name}.css`));
