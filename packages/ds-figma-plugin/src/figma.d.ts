@@ -52,11 +52,36 @@ interface FigmaLayoutNode extends FigmaBaseNode {
 
 interface FigmaFrameNode extends FigmaLayoutNode {}
 
-interface FigmaComponentNode extends FigmaLayoutNode {
+type FigmaComponentPropertyType = "BOOLEAN" | "TEXT" | "INSTANCE_SWAP" | "VARIANT";
+
+/**
+ * Component-property surface the state materializer writes to. This is a
+ * plugin-local mock/typing subset (not full Figma API fidelity): the real live
+ * materializer would use `addComponentProperty` for BOOLEAN and variant-naming
+ * for VARIANT axes. Here a single recording method captures the materialization
+ * intent so it is inspectable under the mocked Figma API.
+ */
+interface FigmaComponentPropertyHost {
+  componentPropertyDefinitions?: Record<
+    string,
+    {
+      type: FigmaComponentPropertyType;
+      defaultValue?: string | boolean;
+      variantOptions?: string[];
+    }
+  >;
+  addComponentProperty(
+    name: string,
+    type: FigmaComponentPropertyType,
+    options?: { defaultValue?: string | boolean; variantOptions?: string[] },
+  ): string;
+}
+
+interface FigmaComponentNode extends FigmaLayoutNode, FigmaComponentPropertyHost {
   createInstance(): FigmaInstanceNode;
 }
 
-interface FigmaComponentSetNode extends FigmaBaseNode {}
+interface FigmaComponentSetNode extends FigmaBaseNode, FigmaComponentPropertyHost {}
 
 interface FigmaInstanceNode extends FigmaBaseNode {}
 

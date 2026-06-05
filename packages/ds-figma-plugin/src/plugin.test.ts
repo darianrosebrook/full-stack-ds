@@ -329,6 +329,16 @@ type MockNode = {
   setPluginData(key: string, value: string): void;
   resize(width: number, height: number): void;
   createInstance?(): MockNode;
+  componentProperties: Array<{
+    name: string;
+    type: string;
+    options?: { defaultValue?: string | boolean; variantOptions?: string[] };
+  }>;
+  addComponentProperty(
+    name: string,
+    type: string,
+    options?: { defaultValue?: string | boolean; variantOptions?: string[] },
+  ): string;
 };
 
 function createNode(kind: NodeKind): MockNode {
@@ -336,12 +346,17 @@ function createNode(kind: NodeKind): MockNode {
     kind,
     children: [],
     pluginData: {},
+    componentProperties: [],
     appendChild(child: MockNode): void {
       child.parent = this;
       this.children.push(child);
     },
     setPluginData(key: string, value: string): void {
       this.pluginData[key] = value;
+    },
+    addComponentProperty(name, type, options): string {
+      this.componentProperties.push({ name, type, options });
+      return name;
     },
     resize(width: number, height: number): void {
       this.width = width;
