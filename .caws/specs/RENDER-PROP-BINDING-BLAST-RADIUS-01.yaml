@@ -2,10 +2,11 @@ id: RENDER-PROP-BINDING-BLAST-RADIUS-01
 title: 'Render prop->DOM binding obligation blast-radius audit (classified matrix; no fix)'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
-worktree: render-binding
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge render-binding at ded3dacc7baa80592edd6de332b254cdee43bbd8'
 created_at: '2026-06-05T21:11:11.812Z'
-updated_at: '2026-06-05T21:16:04.196Z'
+updated_at: '2026-06-05T21:37:19.687Z'
 blast_radius:
   modules:
     - 'scripts/render-binding-audit/ (new read-only audit tool: derives each prop''s render obligation from the contract structure and reports per-framework satisfaction)'
