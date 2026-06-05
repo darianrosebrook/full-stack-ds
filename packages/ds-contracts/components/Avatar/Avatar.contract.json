@@ -31,23 +31,22 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Avatar> component.",
+    "designed": {
       "members": [
         {
           "name": "src",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Image source URL. Omit to render initials from `name`."
         },
         {
           "name": "name",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "User/entity name. Used for initials fallback and as the accessible label.",
           "required": true
         },
         {
           "name": "priority",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Mark image as priority for above-the-fold loading."
         }
       ]

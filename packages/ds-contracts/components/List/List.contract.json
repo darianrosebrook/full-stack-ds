@@ -19,32 +19,31 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <List> component.",
+    "designed": {
       "members": [
         {
           "name": "as",
-          "type": "ListElement",
+          "propType": { "kind": "ref", "to": "ListElement" },
           "description": "Underlying list element."
         },
         {
           "name": "variant",
-          "type": "ListVariant",
+          "propType": { "kind": "ref", "to": "ListVariant" },
           "description": "Visual variant"
         },
         {
           "name": "marker",
-          "type": "ListMarker",
+          "propType": { "kind": "ref", "to": "ListMarker" },
           "description": "Marker style for ordered/unordered lists"
         },
         {
           "name": "spacing",
-          "type": "ListSpacing",
+          "propType": { "kind": "ref", "to": "ListSpacing" },
           "description": "Spacing between items"
         },
         {
           "name": "size",
-          "type": "ListSize",
+          "propType": { "kind": "ref", "to": "ListSize" },
           "description": "Type-scale size token"
         }
       ]

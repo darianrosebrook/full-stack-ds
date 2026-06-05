@@ -17,24 +17,23 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Icon> component.",
+    "designed": {
       "members": [
         {
           "name": "icon",
-          "type": "IconDefinition",
+          "propType": { "kind": "ref", "to": "IconDefinition" },
           "description": "Icon definition object (name + glyph data).",
           "required": true
         },
         {
           "name": "width",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Pixel width of the rendered glyph.",
           "default": 20
         },
         {
           "name": "height",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Pixel height of the rendered glyph.",
           "default": 20
         }
