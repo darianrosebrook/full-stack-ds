@@ -3,6 +3,7 @@ title: 'eslint-ignore + gitignore .codex/ agent-tooling dir (unblock pre-push li
 risk_tier: 3
 mode: chore
 lifecycle_state: active
+worktree: eslint-codex
 created_at: '2026-06-05T19:46:21.400Z'
 updated_at: '2026-06-05T19:46:30.736Z'
 blast_radius:
