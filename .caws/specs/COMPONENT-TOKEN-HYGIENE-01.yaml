@@ -7,9 +7,23 @@ created_at: '2026-06-05T05:29:26.099Z'
 updated_at: '2026-06-05T05:29:26.099Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-contracts/components/{Command,OTP,Stat}/: the styles.json that emits the three hardcoded dimensional literals'
+    - 'generated outputs for those three components across all five frameworks (regenerate-driven); governed:rail must stay green'
   data_migration: false
 operational_rollback_slo: 5m
+# SOURCE (COMPONENT-AUDIT-TOOL-01 hardcoded-dim flag, confirmed in generated CSS):
+#   Command/Command.css:22  padding-top: 10vh     (palette top offset)
+#   OTP/OTP.css:9           gap: 8px              (digit-cell gap)
+#   Stat/Stat.css:20        line-height: 1.1      (stat number leading)
+# Each is a bare literal that should resolve through a token (or be documented
+# as an intentional non-token value, e.g. the 10vh viewport offset).
+# TIERING: tier 3 here because it is per-component VALUE tokenization in
+# styles.json, regenerate-verified by the rail — no shared codegen logic. If an
+# implementer finds they must touch shared emitter/IR code, escalate to tier 2.
+# None of the three is Button, so no overlap with the active
+# CODEGEN-PROP-TYPE-IR-PILOT-01 (Button) work. The implementer regenerates all
+# five frameworks and amend-scopes the non-React generated dirs (as in
+# SHOWCASE-CONSUMPTION-03's Angular widening).
 scope:
   in:
     - 'packages/ds-contracts/components/Command/'
@@ -20,11 +34,20 @@ scope:
     - 'packages/ds-react/src/components/Stat/'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Each of the three flagged hardcoded dimensional literals (Command padding-top:10vh, OTP gap:8px, Stat line-height:1.1) either resolves through a design token or is explicitly documented as an intentional non-token value — no silent bare literal remains.'
+  - 'The rendered dimension is unchanged by the tokenization (the resolved value equals the prior literal); governed:rail stays green across all five frameworks.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'the Command, OTP, and Stat styles.json + generated CSS'
+    when: 'the spec is implemented and all five frameworks are regenerated'
+    then: 'Command padding-top, OTP gap, and Stat line-height are token-backed (var(--fsds-…)) or documented intentional, with governed:rail green'
+  - id: A2
+    given: 'the rendered geometry of the three components before and after'
+    when: 'compared'
+    then: 'the resolved dimension is unchanged (no visual regression) — verifiable by the component audit''s geometry snapshot'
+  - id: A3
+    given: 'the component audit'
+    when: 're-run `node scripts/component-audit/audit.mjs --components Command,OTP,Stat`'
+    then: 'the hardcoded-dim flag is cleared for all three (and the selftest''s known-bad assertions are updated or retargeted, since those three are no longer hardcoded)'
 non_functional: {}
 contracts: []
