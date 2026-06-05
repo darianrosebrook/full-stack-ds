@@ -1,0 +1,130 @@
+// Committed in-app PROJECTION of runtime-rail coverage.
+//
+// This module is NOT the source of truth for what the rail asserts — the rail
+// itself (e2e/runtime-rail.spec.ts) is. This is the committed projection the
+// showcase reads so the Evidence/Residuals surface can state, per component and
+// per framework, WHICH facts the rail asserts. A coherence test
+// (rail-coverage.test.ts) fails if this projection drifts from the asserted
+// rail surface discoverable in e2e/runtime-rail.spec.ts (and, for the Angular
+// fixtures, from src/runtime/angular-compiler/nondefault-fixtures.ts).
+//
+// Scope of the claim (COMPONENT-EVIDENCE-RAIL-COVERAGE-BINDING-01):
+//   - "rail facts asserted" / "no rail facts asserted" — coverage, NOT a
+//     last-run pass/fail. Whether the most recent CI rail run was green is the
+//     reserved COMPONENT-EVIDENCE-CI-STATUS-BINDING-01 slice (needs a committed
+//     or reproducibly generated status artifact with a declared freshness
+//     model). This module deliberately carries no run status, timestamp, or sha.
+//   - Coverage is a property of the committed rail spec, so it needs no Playwright
+//     run to be true.
+//
+// The module is dependency-free (types + data only) so both the browser-side
+// showcase (EvidencePanel) and the Node-side coherence test can import it.
+
+export type Framework = "react" | "vue" | "svelte" | "lit" | "angular";
+
+/**
+ * The frameworks the rail exercises for DEFAULT-prop facts. Mirrors the rail
+ * spec's `FRAMEWORKS` constant; the coherence test asserts they match.
+ */
+export const RAIL_DEFAULT_FRAMEWORKS: readonly Framework[] = [
+  "react",
+  "vue",
+  "svelte",
+  "lit",
+  "angular",
+];
+
+/**
+ * Frameworks whose NON-default facts the rail asserts via the request-carried
+ * query-param `overrideProps` seam (props baked at Vite load time). Mirrors the
+ * rail spec's `NONDEFAULT_FRAMEWORKS`.
+ */
+export const RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS: readonly Framework[] = [
+  "react",
+  "vue",
+  "svelte",
+  "lit",
+];
+
+/**
+ * Frameworks whose NON-default facts the rail asserts via fixed pre-compiled
+ * startup fixtures (Angular bakes props before AOT compile, so it has no
+ * query-param seam). Mirrors ANGULAR_NONDEFAULT_FIXTURES.
+ */
+export const RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS: readonly Framework[] = ["angular"];
+
+export interface RailNonDefaultCoverage {
+  /**
+   * The non-default prop(s) whose runtime effect the rail asserts (e.g.
+   * `maxLines`). One per covered component today; an array for honesty.
+   */
+  readonly props: readonly string[];
+  /** Frameworks asserting these via the query-param overrideProps seam. */
+  readonly queryParamFrameworks: readonly Framework[];
+  /** Frameworks asserting these via fixed pre-compiled fixtures. */
+  readonly fixtureFrameworks: readonly Framework[];
+}
+
+export interface RailCoverageEntry {
+  /** Component name as it appears in the contract corpus / bundle. */
+  readonly component: string;
+  /** Frameworks for which the rail asserts DEFAULT-prop facts. */
+  readonly defaultFrameworks: readonly Framework[];
+  /** Non-default prop coverage, present only when the rail asserts any. */
+  readonly nonDefault?: RailNonDefaultCoverage;
+}
+
+/**
+ * The committed coverage projection. Each entry mirrors a `Runtime rail — <X>`
+ * describe surface in e2e/runtime-rail.spec.ts. Components absent from this list
+ * have NO rail coverage — that is a neutral fact, not a failure.
+ */
+export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
+  { component: "Progress", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
+    nonDefault: {
+      props: ["value"],
+      queryParamFrameworks: RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+      fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
+    } },
+  { component: "OTP", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  { component: "Calendar", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  { component: "Shuttle", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  { component: "Walkthrough", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  { component: "Select", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
+  { component: "Truncate", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
+    nonDefault: {
+      props: ["lines"],
+      queryParamFrameworks: RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+      fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
+    } },
+  { component: "ShowMore", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
+    nonDefault: {
+      props: ["maxLines"],
+      queryParamFrameworks: RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+      fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
+    } },
+];
+
+/** Look up the rail coverage projection for a component, if any. */
+export function railCoverageFor(component: string): RailCoverageEntry | undefined {
+  return RAIL_COVERAGE.find((e) => e.component === component);
+}
+
+/** Whether a framework asserts default-prop facts for a covered entry. */
+export function hasDefaultFact(entry: RailCoverageEntry, framework: Framework): boolean {
+  return entry.defaultFrameworks.includes(framework);
+}
+
+/**
+ * How a framework asserts NON-default facts for a covered entry:
+ * "query-param" (R/V/S/L), "fixed-fixture" (Angular), or null (none).
+ */
+export function nonDefaultMechanism(
+  entry: RailCoverageEntry,
+  framework: Framework,
+): "query-param" | "fixed-fixture" | null {
+  if (!entry.nonDefault) return null;
+  if (entry.nonDefault.queryParamFrameworks.includes(framework)) return "query-param";
+  if (entry.nonDefault.fixtureFrameworks.includes(framework)) return "fixed-fixture";
+  return null;
+}
