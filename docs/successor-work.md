@@ -38,7 +38,7 @@ Status vocabulary:
 | Component evidence pages | partial | The showcase now derives Design and Developer views from component bundles: usage examples, anatomy, variants, states, props, a11y, tokens, previews, source, and trace regions. | Add explicit Evidence/Residuals sections, A2UI descriptor display, rail/runtime status binding, and per-framework readiness reporting. |
 | Target-family IR recon implementation | partial | Target-pack manifest/config/local-loader foundation exists, and Figma is a built-in design-tool descriptor target. | Execute local target packs only after manifest validation, add target-pack provenance to the emission manifest, and promote one hostile non-Web-DOM target through residual extraction. |
 | README component-list generation or removal | resolved-by-docs | README no longer maintains the five-framework component-count table as an authority surface; it routes readers to loader-discovered contracts. | Optional: add a generated corpus count/check if the project wants visible counts again. |
-| Runtime proof rail | promoted | `e2e/runtime-rail.spec.ts` and CI runtime-rail job now assert selected contract facts in Chromium for React, Vue, Svelte, and Lit. | Add non-default prop harnessing, decide Angular runtime posture, and avoid treating screenshots as CI proof until OS-specific baselines are admitted. |
+| Runtime proof rail | promoted | `e2e/runtime-rail.spec.ts` and the CI runtime-rail job assert selected contract facts in Chromium for React, Vue, Svelte, Lit, **and Angular** — default-prop facts for all five, plus non-default facts (R/V/S/L via a query-param override seam; Angular via three fixed startup fixtures: ShowMore `maxLines=7`, Progress `value=50`, Truncate `lines=5`). Angular preview is executable in both the showcase and the rail. | Remaining: widen the non-default surface, and decide whether to admit arbitrary Angular prop-set compilation (today only the fixed fixtures are admitted — Angular bakes props before AOT compile). Keep screenshots out of CI proof until OS-specific baselines are admitted. |
 | Target-pack executable loading | open | Local target packs can be declared, loaded, validated, fingerprinted, and described as metadata. | Import and execute local emitters under policy while keeping file writing, manifests, and admission centralized in core codegen. |
 
 ## A2UI constraint projection
@@ -161,12 +161,17 @@ Source surfaces: [`e2e/runtime-rail.spec.ts`](../e2e/runtime-rail.spec.ts), [`.g
 
 Goal: extend the runtime rail beyond its first admitted fact surface.
 
-Current status: **promoted**. The first runtime proof rail has landed and is CI-wired. It asserts contract facts for Progress, Truncate, ShowMore, OTP, and Calendar across React, Vue, Svelte, and Lit. Screenshot baselines remain local/darwin-only and are skipped under `CI=true`.
+Current status: **promoted**. The runtime proof rail has landed and is CI-wired. It asserts default-prop contract facts for Progress, Truncate, ShowMore, OTP, and Calendar across React, Vue, Svelte, Lit, and Angular, plus non-default prop facts via two seams: a query-param override for React/Vue/Svelte/Lit, and three fixed pre-compiled startup fixtures for Angular (ShowMore `maxLines=7`, Progress `value=50`, Truncate `lines=5`). Angular preview is executable in both the showcase `FrameworkPreview` and this rail. Screenshot baselines remain local/darwin-only and are skipped under `CI=true`.
 
-Useful acceptance shape for follow-up work:
+Landed (`RUNTIME-RAIL-NONDEFAULT-PROPS-01`, `RUNTIME-RAIL-ANGULAR-01`, `RUNTIME-RAIL-ANGULAR-NONDEFAULT-02`):
 
-- add a harness route or message protocol for non-default runtime props;
-- decide whether Angular preview should become executable or remain a documented placeholder;
+- non-default runtime prop harnessing — a query-param override seam for React/Vue/Svelte/Lit, and three fixed pre-compiled startup fixtures for Angular;
+- Angular preview is executable (no longer a documented placeholder) in both the showcase and the rail.
+
+Remaining follow-up:
+
+- arbitrary request-carried Angular non-default prop-sets are intentionally NOT admitted — only the three fixed fixtures plus default-prop facts (Angular bakes props before AOT compile, so it has no query-param override seam); admit arbitrary Angular prop-set compilation only if a future need justifies the per-prop-set compile cost;
+- widen the non-default surface to more components/props;
 - keep screenshots separate from OS-agnostic fact assertions unless Linux baselines are admitted;
 - bind runtime rail outcomes into component evidence pages without claiming visual quality.
 
