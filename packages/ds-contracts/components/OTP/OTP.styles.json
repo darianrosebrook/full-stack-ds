@@ -11,12 +11,6 @@
       "platforms": [
         "web"
       ]
-    },
-    "gap": {
-      "literal": "8px",
-      "platforms": [
-        "web"
-      ]
     }
   },
   "group": {

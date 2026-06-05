@@ -17,7 +17,7 @@
   color: var(--fsds-stat-color-foreground-value);
   font-size: var(--fsds-stat-size-value-md);
   font-weight: var(--fsds-stat-typography-weight-value);
-  line-height: 1.1;
+  line-height: var(--fsds-stat-typography-lineHeight-value);
   letter-spacing: -0.02em;
 }
 /* @generated:end */

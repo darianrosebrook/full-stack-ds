@@ -50,6 +50,9 @@
   "command.size.maxHeight": {
     "literal": "400px"
   },
+  "command.size.topOffset": {
+    "literal": "10vh"
+  },
   "command.size.icon": {
     "resolvesTo": "core.spacing.size.04",
     "fallback": "8px",

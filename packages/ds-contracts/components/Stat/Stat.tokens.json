@@ -44,6 +44,9 @@
     "fallback": "4px",
     "layer": "core"
   },
+  "stat.typography.lineHeight.value": {
+    "literal": "1.1"
+  },
   "stat.typography.weight.value": {
     "resolvesTo": "semantic.typography.font.weight.bold",
     "fallback": "700",

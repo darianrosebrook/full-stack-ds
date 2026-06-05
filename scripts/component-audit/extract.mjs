@@ -144,6 +144,32 @@ const DIMENSION_PROPS = new Set([
 // Literal dimensional values that are intentional/benign (icon sizing, resets).
 const BENIGN_DIM = new Set(["0", "auto", "none", "1em", "100%", "1px", "2px", "inherit", "fit-content"]);
 
+/**
+ * Token-usage / hardcoded-dimension detector for a root selector's top-level
+ * `[prop, value]` declarations. A declaration is `tokenized` when it references
+ * a design token (`var(--fsds-…)`); otherwise it is a `literal`, and a literal
+ * on a dimensional property whose value is non-benign and numeric is a
+ * `literalDim` — a hardcoded dimension, the token-hygiene defect this audit
+ * flags. Exported as a pure function so the self-test can prove the detector
+ * bites on synthetic input without reading a real component off disk.
+ */
+export function detectHardcodedDims(rootDecls) {
+  let tokenized = 0;
+  let literal = 0;
+  const literalDims = [];
+  for (const [prop, value] of rootDecls) {
+    const usesVar = value.includes("var(--fsds-");
+    if (usesVar) tokenized++;
+    else {
+      literal++;
+      if (DIMENSION_PROPS.has(prop) && !BENIGN_DIM.has(value) && /\d/.test(value)) {
+        literalDims.push(`${prop}=${value}`);
+      }
+    }
+  }
+  return { tokenized, literal, literalDims };
+}
+
 export function extractStatic(name) {
   const cdir = resolve(CONTRACTS, name);
   const contract = readJSON(resolve(cdir, `${name}.contract.json`)) ?? {};
@@ -191,19 +217,7 @@ export function extractStatic(name) {
   // --- Token usage: root .{prefix} block in the component CSS ---
   const cssBody = blockBody(css, `.${prefix}`);
   const rootDecls = topLevelDecls(cssBody);
-  let tokenized = 0;
-  let literal = 0;
-  const literalDims = [];
-  for (const [prop, value] of rootDecls) {
-    const usesVar = value.includes("var(--fsds-");
-    if (usesVar) tokenized++;
-    else {
-      literal++;
-      if (DIMENSION_PROPS.has(prop) && !BENIGN_DIM.has(value) && /\d/.test(value)) {
-        literalDims.push(`${prop}=${value}`);
-      }
-    }
-  }
+  const { tokenized, literal, literalDims } = detectHardcodedDims(rootDecls);
 
   // --- Layout (declared): display + flex/grid hints from styles.root ---
   const sRoot = stylesJson.root ?? {};

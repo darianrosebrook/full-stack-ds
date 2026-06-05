@@ -10,7 +10,7 @@
  *   node scripts/component-audit/selftest.mjs
  */
 import assert from "node:assert/strict";
-import { extractStatic } from "./extract.mjs";
+import { extractStatic, detectHardcodedDims } from "./extract.mjs";
 import { computeVerdict } from "./geometry.mjs";
 
 let pass = 0;
@@ -27,19 +27,47 @@ const check = (name, fn) => {
 };
 
 console.log("static — hardcoded-dimension detector:");
-// Known-bad: real components that carry a hardcoded dimensional literal (the
-// detector MUST bite, else the audit silently passes a real token-hygiene gap).
+// Positive control (synthetic): the detector MUST bite on bare dimensional
+// literals. Synthetic because COMPONENT-TOKEN-HYGIENE-01 tokenized the last
+// real offenders (Command/OTP/Stat) — there is intentionally no hardcoded-dim
+// component left in the corpus to point at.
+check("flags synthetic hardcoded dims (positive control)", () => {
+  const { literalDims } = detectHardcodedDims([
+    ["padding-top", "10vh"],
+    ["gap", "8px"],
+    ["line-height", "1.1"],
+  ]);
+  assert.equal(
+    literalDims.length,
+    3,
+    `expected 3 hardcoded dims, got: ${literalDims.join(", ") || "(none)"}`,
+  );
+});
+// Negative control (synthetic): tokenized references and benign values must NOT
+// bite, else the detector is just always-on noise.
+check("does NOT flag tokenized/benign declarations (negative control)", () => {
+  const { literalDims } = detectHardcodedDims([
+    ["gap", "var(--fsds-box-model-gap)"],
+    ["border-width", "1px"],
+    ["padding", "0"],
+    ["display", "flex"],
+  ]);
+  assert.equal(literalDims.length, 0, `unexpected hardcoded-dim flags: ${literalDims.join(", ")}`);
+});
+// Regression guard: the three components COMPONENT-TOKEN-HYGIENE-01 fixed must
+// stay tokenized. If one regresses to a bare dimensional literal on its root,
+// this bites — proving the fix held AND the real-component extraction path still
+// feeds the detector.
 for (const c of ["Command", "OTP", "Stat"]) {
-  check(`flags hardcoded dim in ${c} (known-bad)`, () => {
+  check(`${c} root is tokenized — no hardcoded dim (post-hygiene regression guard)`, () => {
     const s = extractStatic(c);
     assert.ok(
-      s.flags.some((f) => /hardcoded dim/.test(f)),
-      `expected a hardcoded-dim flag, got: ${s.flags.join(" | ") || "(none)"}`,
+      !s.flags.some((f) => /hardcoded dim/.test(f)),
+      `${c} unexpectedly flagged: ${s.flags.join(" | ") || "(none)"}`,
     );
   });
 }
-// Discriminator: a clean, fully-tokenized component must NOT be flagged, else
-// the detector is just always-on noise.
+// Discriminator: a clean, fully-tokenized component must NOT be flagged.
 check("does NOT flag clean, tokenized Button (discriminator)", () => {
   const s = extractStatic("Button");
   assert.ok(

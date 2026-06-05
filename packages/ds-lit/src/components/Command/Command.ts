@@ -46,6 +46,7 @@ export class CommandElement extends LitElement {
       --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-command-size-maxWidth: 640px;
       --fsds-command-size-maxHeight: 400px;
+      --fsds-command-size-topOffset: 10vh;
       --fsds-command-size-icon: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -73,7 +74,7 @@ export class CommandElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: 10vh;
+      padding-top: var(--fsds-command-size-topOffset);
       pointer-events: none;
     }
     
@@ -339,6 +340,7 @@ export class CommandListElement extends LitElement {
       --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-command-size-maxWidth: 640px;
       --fsds-command-size-maxHeight: 400px;
+      --fsds-command-size-topOffset: 10vh;
       --fsds-command-size-icon: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -366,7 +368,7 @@ export class CommandListElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: 10vh;
+      padding-top: var(--fsds-command-size-topOffset);
       pointer-events: none;
     }
     
@@ -559,6 +561,7 @@ export class CommandGroupElement extends LitElement {
       --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-command-size-maxWidth: 640px;
       --fsds-command-size-maxHeight: 400px;
+      --fsds-command-size-topOffset: 10vh;
       --fsds-command-size-icon: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -586,7 +589,7 @@ export class CommandGroupElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: 10vh;
+      padding-top: var(--fsds-command-size-topOffset);
       pointer-events: none;
     }
     
@@ -779,6 +782,7 @@ export class CommandItemElement extends LitElement {
       --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-command-size-maxWidth: 640px;
       --fsds-command-size-maxHeight: 400px;
+      --fsds-command-size-topOffset: 10vh;
       --fsds-command-size-icon: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-spacing-dialogPadding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-command-text-size: var(--fsds-semantic-typography-body-02, 16px);
@@ -806,7 +810,7 @@ export class CommandItemElement extends LitElement {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding-top: 10vh;
+      padding-top: var(--fsds-command-size-topOffset);
       pointer-events: none;
     }
     

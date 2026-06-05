@@ -16,7 +16,7 @@
       "resolvesTo": "stat.typography.weight.value"
     },
     "line-height": {
-      "literal": "1.1",
+      "resolvesTo": "stat.typography.lineHeight.value",
       "platforms": [
         "web"
       ]
