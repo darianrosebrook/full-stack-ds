@@ -19,33 +19,7 @@
     "css-var": 2
   },
   "failingClasses": {
-    "missingNativeAttr": [
-      {
-        "component": "Checkbox",
-        "prop": "name",
-        "target": "input[name]"
-      },
-      {
-        "component": "Checkbox",
-        "prop": "value",
-        "target": "input[value]"
-      },
-      {
-        "component": "Input",
-        "prop": "name",
-        "target": "input[name]"
-      },
-      {
-        "component": "Input",
-        "prop": "placeholder",
-        "target": "input[placeholder]"
-      },
-      {
-        "component": "Input",
-        "prop": "required",
-        "target": "input[required]"
-      }
-    ],
+    "missingNativeAttr": [],
     "unconfirmedMissingNativeAttr": [],
     "missingAriaAttr": []
   },
@@ -815,14 +789,14 @@
           "propBucket": "designed",
           "propType": "string",
           "bucket": "native-attr",
-          "obligation": "missing",
+          "obligation": "bound",
           "target": "input[name]",
           "perFramework": {
-            "react": "absent",
-            "vue": "absent",
-            "svelte": "absent",
-            "angular": "absent",
-            "lit": "absent"
+            "react": "bound",
+            "vue": "bound",
+            "svelte": "bound",
+            "angular": "bound",
+            "lit": "bound"
           }
         },
         {
@@ -851,14 +825,14 @@
           "propBucket": "designed",
           "propType": "string",
           "bucket": "native-attr",
-          "obligation": "missing",
+          "obligation": "bound",
           "target": "input[value]",
           "perFramework": {
-            "react": "absent",
-            "vue": "absent",
-            "svelte": "absent",
-            "angular": "absent",
-            "lit": "absent"
+            "react": "bound",
+            "vue": "bound",
+            "svelte": "bound",
+            "angular": "bound",
+            "lit": "bound"
           }
         }
       ]
@@ -1783,14 +1757,14 @@
           "propBucket": "designed",
           "propType": "string",
           "bucket": "native-attr",
-          "obligation": "missing",
+          "obligation": "bound",
           "target": "input[name]",
           "perFramework": {
-            "react": "absent",
-            "vue": "absent",
-            "svelte": "absent",
-            "angular": "absent",
-            "lit": "absent"
+            "react": "bound",
+            "vue": "bound",
+            "svelte": "bound",
+            "angular": "bound",
+            "lit": "bound"
           }
         },
         {
@@ -1809,14 +1783,14 @@
           "propBucket": "designed",
           "propType": "string",
           "bucket": "native-attr",
-          "obligation": "missing",
+          "obligation": "bound",
           "target": "input[placeholder]",
           "perFramework": {
-            "react": "absent",
-            "vue": "absent",
-            "svelte": "absent",
-            "angular": "absent",
-            "lit": "absent"
+            "react": "bound",
+            "vue": "bound",
+            "svelte": "bound",
+            "angular": "bound",
+            "lit": "bound"
           }
         },
         {
@@ -1825,14 +1799,14 @@
           "propBucket": "designed",
           "propType": "boolean",
           "bucket": "native-attr",
-          "obligation": "missing",
+          "obligation": "bound",
           "target": "input[required]",
           "perFramework": {
-            "react": "absent",
-            "vue": "absent",
-            "svelte": "absent",
-            "angular": "absent",
-            "lit": "absent"
+            "react": "bound",
+            "vue": "bound",
+            "svelte": "bound",
+            "angular": "bound",
+            "lit": "bound"
           }
         },
         {

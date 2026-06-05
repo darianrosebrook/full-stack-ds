@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { CheckboxBehavior } from './CheckboxBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -138,7 +139,7 @@ export class CheckboxElement extends LitElement {
   }
 
   override render() {
-    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} />`;
+    return html`<input class="${this.computeClasses()}" type="checkbox" role="checkbox" @change=${(e: Event) => this.handleCheckedChange(e)} ?checked=${this.behavior.checked} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} value=${ifDefined(this.value)} />`;
   }
 }
 

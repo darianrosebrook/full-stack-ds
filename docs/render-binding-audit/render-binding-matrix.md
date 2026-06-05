@@ -18,13 +18,7 @@ Components: **47** · Frameworks: react, vue, svelte, angular, lit · Total decl
 
 ## Failing class A — native-attr declared but NOT bound (confirmed absent in all 5 frameworks)
 
-| component | prop | expected host binding |
-|---|---|---|
-| Checkbox | `name` | input[name] |
-| Checkbox | `value` | input[value] |
-| Input | `name` | input[name] |
-| Input | `placeholder` | input[placeholder] |
-| Input | `required` | input[required] |
+_none_
 
 ## Failing class B — aria-attr expected but absent in all 5 frameworks
 
@@ -143,10 +137,10 @@ _none_
 | `defaultChecked` | designed | boolean | behavior | consumed | - | - | - | - | - | - |
 | `disabled` | designed | boolean | native-attr | bound | input[disabled] | bound | bound | bound | bound | bound |
 | `indeterminate` | designed | boolean | no-render | not-applicable | - | - | - | - | - | - |
-| `name` | designed | string | native-attr | missing | input[name] | absent | absent | absent | absent | absent |
+| `name` | designed | string | native-attr | bound | input[name] | bound | bound | bound | bound | bound |
 | `onChange` | designed | callback | behavior | consumed | - | - | - | - | - | - |
 | `size` | designed | ref | class-state | consumed | class | - | - | - | - | - |
-| `value` | designed | string | native-attr | missing | input[value] | absent | absent | absent | absent | absent |
+| `value` | designed | string | native-attr | bound | input[value] | bound | bound | bound | bound | bound |
 
 ### Chip  <button>
 
@@ -265,10 +259,10 @@ _none_
 | `defaultValue` | designed | string | behavior | consumed | - | - | - | - | - | - |
 | `disabled` | designed | boolean | native-attr | bound | input[disabled] | bound | bound | bound | bound | bound |
 | `invalid` | designed | boolean | aria-attr | derived | aria-invalid | bound | bound | bound | bound | bound |
-| `name` | designed | string | native-attr | missing | input[name] | absent | absent | absent | absent | absent |
+| `name` | designed | string | native-attr | bound | input[name] | bound | bound | bound | bound | bound |
 | `onChange` | designed | callback | behavior | consumed | - | - | - | - | - | - |
-| `placeholder` | designed | string | native-attr | missing | input[placeholder] | absent | absent | absent | absent | absent |
-| `required` | designed | boolean | native-attr | missing | input[required] | absent | absent | absent | absent | absent |
+| `placeholder` | designed | string | native-attr | bound | input[placeholder] | bound | bound | bound | bound | bound |
+| `required` | designed | boolean | native-attr | bound | input[required] | bound | bound | bound | bound | bound |
 | `type` | designed | string | native-attr | bound | input[type] | bound | bound | bound | bound | bound |
 | `value` | designed | string | behavior | consumed | - | - | - | - | - | - |
 

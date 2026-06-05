@@ -15,7 +15,10 @@
         "value": "channel:value.value",
         "disabled": "prop:disabled",
         "aria-invalid": "prop:invalid",
-        "type": "prop:type"
+        "type": "prop:type",
+        "placeholder": "prop:placeholder",
+        "name": "prop:name",
+        "required": "prop:required"
       },
       "events": {
         "change": "channel:value.onChange"

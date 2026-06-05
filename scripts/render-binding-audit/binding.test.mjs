@@ -34,7 +34,10 @@ const check = (name, fn) => {
 };
 const rowOf = (c, prop) => classify(c).rows.find((r) => r.prop === prop);
 
-console.log("native form-control props declared but unbound -> native-attr + missing:");
+// RENDER-PROP-BINDING-FIX-PRIMITIVES-01 completed these binding maps: the
+// formerly-missing native form-control attrs are now declared in
+// anatomy.dom.bindings, so they must classify native-attr + BOUND.
+console.log("native form-control props now declared AND bound -> native-attr + bound:");
 for (const [c, prop] of [
   ["Input", "placeholder"],
   ["Input", "name"],
@@ -42,11 +45,11 @@ for (const [c, prop] of [
   ["Checkbox", "name"],
   ["Checkbox", "value"],
 ]) {
-  check(`${c}.${prop} is native-attr + missing`, () => {
+  check(`${c}.${prop} is native-attr + bound`, () => {
     const r = rowOf(c, prop);
     assert.ok(r, `no row for ${c}.${prop}`);
     assert.equal(r.bucket, "native-attr", `bucket=${r.bucket}`);
-    assert.equal(r.obligation, "missing", `obligation=${r.obligation}`);
+    assert.equal(r.obligation, "bound", `obligation=${r.obligation}`);
   });
 }
 
@@ -92,15 +95,18 @@ check("Image.src is native-attr + bound", () => {
   assert.equal(r.obligation, "bound", `obligation=${r.obligation}`);
 });
 
-console.log("\nblast-radius regression lock — the missing-native set is EXACTLY the known 5:");
-check("global missing-native set equals the locked blast radius", () => {
+// Post-fix lock: RENDER-PROP-BINDING-FIX-PRIMITIVES-01 closed the class-A gap,
+// so NO native-attr declared by any contract may be left unbound. If a future
+// edit drops a native-attr binding (or adds a new declared-but-unbound one),
+// this set goes non-empty and the lock fails.
+console.log("\nblast-radius regression lock — the missing-native set is now EMPTY (gap closed):");
+check("no native-attr is declared-but-unbound across the corpus", () => {
   const missing = ALL_COMPONENTS()
     .flatMap((c) => classify(c).rows)
     .filter((r) => r.bucket === "native-attr" && r.obligation === "missing")
     .map((r) => `${r.component}.${r.prop}`)
     .sort();
-  const expected = ["Checkbox.name", "Checkbox.value", "Input.name", "Input.placeholder", "Input.required"].sort();
-  assert.deepEqual(missing, expected, `got: ${JSON.stringify(missing)}`);
+  assert.deepEqual(missing, [], `expected none, got: ${JSON.stringify(missing)}`);
 });
 
 console.log(`\nlocked test: ${pass} passed, ${fail} failed`);

@@ -18,7 +18,9 @@
       },
       "bindings": {
         "checked": "channel:checked.value",
-        "disabled": "prop:disabled"
+        "disabled": "prop:disabled",
+        "name": "prop:name",
+        "value": "prop:value"
       },
       "events": {
         "change": "channel:checked.onChange"
