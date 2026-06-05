@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-05T02:09:53.536Z'
-updated_at: '2026-06-05T02:09:54.509Z'
+updated_at: '2026-06-05T02:10:14.598Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -12,7 +12,6 @@ blast_radius:
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - src/runtime/rail-coverage.ts
     - src/runtime/rail-coverage.test.ts
     - src/views/sections/EvidencePanel.tsx
