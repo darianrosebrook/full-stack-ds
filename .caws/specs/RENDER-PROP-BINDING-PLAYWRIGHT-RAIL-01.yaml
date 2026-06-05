@@ -4,7 +4,7 @@ risk_tier: 3
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-05T22:44:46.791Z'
-updated_at: '2026-06-05T22:44:46.791Z'
+updated_at: '2026-06-05T22:44:47.878Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -12,7 +12,9 @@ blast_radius:
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
+    - e2e/render-binding-rail.spec.ts
+    - src/runtime/preview-props.ts
+    - docs/render-binding-audit/
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
