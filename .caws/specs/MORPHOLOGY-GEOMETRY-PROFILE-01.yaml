@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: morphology-geometry
 created_at: '2026-06-05T08:21:06.290Z'
-updated_at: '2026-06-05T08:22:46.845Z'
+updated_at: '2026-06-05T16:43:01.766Z'
 blast_radius:
   modules:
     - packages/ds-codegen (morphology StyleProfileIR + three-way box-model merge + profile structural CSS) + packages/ds-contracts (morphology schema + seven broken-family contracts) + regenerated web/figma artifacts for the seven + scripts/seed retirement + geometry audit
@@ -69,6 +69,8 @@ scope:
     - packages/ds-svelte/src/components/Avatar
     - packages/ds-angular/src/components/Avatar
     - packages/ds-lit/src/components/Avatar
+    - packages/ds-codegen/src/contract.ts
+    - packages/ds-codegen/src/morphology-profile.test.ts
   out:
     - packages/ds-codegen/src/frameworks
     - packages/ds-tokens
