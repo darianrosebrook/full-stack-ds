@@ -3,6 +3,7 @@ title: 'Tokenize hardcoded component dimensions (Command, OTP, Stat)'
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: token-hygiene
 created_at: '2026-06-05T05:29:26.099Z'
 updated_at: '2026-06-05T05:29:26.099Z'
 blast_radius:
