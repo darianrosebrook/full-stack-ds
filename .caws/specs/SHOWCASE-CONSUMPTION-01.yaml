@@ -2,10 +2,11 @@ id: SHOWCASE-CONSUMPTION-01
 title: 'Showcase consumes DS via faithful patterns (smoke test + dedup)'
 risk_tier: 3
 mode: refactor
-lifecycle_state: active
-worktree: showcase-consumption
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge showcase-consumption at 962e6293bb8aa85f4c32b65b07fbf8bcd9839cf7'
 created_at: '2026-06-05T00:03:53.929Z'
-updated_at: '2026-06-05T00:03:53.929Z'
+updated_at: '2026-06-05T00:41:15.978Z'
 blast_radius:
   modules:
     - 'src/ (React showcase app: views, layout, styles)'
