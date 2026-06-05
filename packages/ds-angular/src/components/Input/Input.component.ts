@@ -21,7 +21,7 @@ import { useInput } from "./useInput.js";
   selector: "fsds-input",
   standalone: true,
   imports: [NgClass],
-  template: `<input [ngClass]="classes()" (change)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" />`,
+  template: `<input [ngClass]="classes()" (change)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" [placeholder]="placeholder" [name]="name" [required]="required" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent {

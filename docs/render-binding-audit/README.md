@@ -58,6 +58,8 @@ the element?), so a "missing" verdict is corroborated, not just inferred.
 | Checkbox | `name` | `input[name]` |
 | Checkbox | `value` | `input[value]` |
 
+> **RESOLVED** by `RENDER-PROP-BINDING-FIX-PRIMITIVES-01` — all five were added to `anatomy.dom.bindings` and now bind across all five frameworks. The table above is the original finding (kept for the record); the live matrix reports Failing class A = **0**.
+
 ### Failing class B — aria-attr expected but absent in all 5: **0**
 
 ### Root cause
@@ -72,19 +74,20 @@ both bind `name`/`value`/`type` on their nested `<input>` node, and `Image` bind
 `src`/`alt` — verified, not flagged. So this is incomplete per-component binding
 maps on two primitives, not a systemic emitter failure.
 
-## Smallest source-level fix slice (proposal — NOT applied here)
+## Smallest source-level fix slice — APPLIED (`RENDER-PROP-BINDING-FIX-PRIMITIVES-01`)
 
-**Recommended (smallest that closes the measured gap): complete the binding maps
-on the two primitive contracts.** Add the five missing `prop:` entries to
-`anatomy.dom.bindings`:
+The smallest closing fix completed the binding maps on the two primitive
+contracts — the five missing `prop:` entries were added to `anatomy.dom.bindings`:
 
 - `Input`: `placeholder: "prop:placeholder"`, `name: "prop:name"`, `required: "prop:required"`
 - `Checkbox`: `name: "prop:name"`, `value: "prop:value"`
 
-then regenerate all five frameworks and re-run this audit + the runtime rail.
-This is **in-pattern** (exactly how `TextField`/`Switch` already declare their
-nested-input bindings — no new lore), touches **2 contracts / 5 lines**, and is
-fully covered by the regression lock in `binding.test.mjs`.
+All five frameworks were regenerated and this audit re-run: **Failing class A is
+now 0** (the live `render-binding-matrix.{json,md}` reflects the fixed state).
+The fix is **in-pattern** (exactly how `TextField`/`Switch` already declare their
+nested-input bindings — no new lore), touched **2 contracts / 5 lines +
+regenerated artifacts**, and is locked by `binding.test.mjs` (now asserting the
+formerly-missing five are BOUND and the missing-native set is EMPTY).
 
 **Durable follow-up (your slice 2, optional): a generic IR rule** that auto-binds
 a `designed` prop to the host element when the prop name is an element-specific
