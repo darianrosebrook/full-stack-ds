@@ -1,32 +1,42 @@
 #!/usr/bin/env bash
-# Pre-push gate — runs the same sequence GitHub Actions runs in
-# .github/workflows/ci.yml. The contract: if this passes locally, CI
-# should pass too. Reasoning behind every step is in that workflow file
-# (search for the matching `- name:` block).
+# Pre-push gate — a CHANGE-SCOPED pre-flight for .github/workflows/ci.yml.
 #
-# Install: this file is tracked in `.githooks/`. To activate it for
-# your clone, run once:
+# CI is the AUTHORITATIVE full gate (it additionally runs e2e:rail + chromium
+# and the other framework suites — it is a superset of this hook). This hook
+# runs only the step-groups whose inputs are in the push diff, so a docs/
+# scripts/spec-only push doesn't pay to regenerate every framework. It is
+# conservative: an indeterminate range, a classifier failure, or PREPUSH_FULL=1
+# all fall back to the FULL sequence. It can over-skip relative to CI but never
+# silently skips a step whose input changed; CI is the backstop.
 #
-#     git config core.hooksPath .githooks
+# Scoping logic: scripts/prepush-scope.mjs (pure, unit-tested in
+# scripts/prepush-scope.test.mjs). Step-group order is fail-fast: install ->
+# lint -> typecheck -> token build (once) -> token gates -> generate:check ->
+# docs -> tests -> governed:rail (heaviest, last).
 #
-# To bypass for an emergency push (use sparingly — CI will still run):
+# Activate per clone:   git config core.hooksPath .githooks
+# Emergency bypass:      git push --no-verify   (CI still runs)
+# Force the full gate:   PREPUSH_FULL=1 git push
 #
-#     git push --no-verify
-#
-# Maintenance: when .github/workflows/ci.yml changes its step list, this
-# script must change in lockstep. The header comment in CI references
-# this file by path so the dependency is discoverable.
+# Maintenance: when ci.yml changes its step LIST, update the step commands here
+# AND scripts/prepush-scope.mjs's path->group mapping in lockstep.
 
 set -euo pipefail
 
-cd "$(git rev-parse --show-toplevel)"
+ROOT="$(git rev-parse --show-toplevel)"
+cd "$ROOT"
 
-# Don't run when pushing tags or when no commits are being pushed
-# (e.g. `git push --tags` with up-to-date branch).
+ZERO="0000000000000000000000000000000000000000"
+
+# Which commits are being pushed? Capture the tip + the remote sha from stdin.
 PUSHING_COMMITS=false
+TIP=""
+REMOTE_SHA=""
 while IFS=' ' read -r _local_ref local_sha _remote_ref remote_sha; do
-  if [ -n "$local_sha" ] && [ "$local_sha" != "0000000000000000000000000000000000000000" ]; then
+  if [ -n "${local_sha:-}" ] && [ "$local_sha" != "$ZERO" ]; then
     PUSHING_COMMITS=true
+    TIP="$local_sha"
+    REMOTE_SHA="${remote_sha:-}"
     break
   fi
 done
@@ -36,122 +46,119 @@ if [ "$PUSHING_COMMITS" = false ]; then
   exit 0
 fi
 
-echo "[pre-push] running CI-equivalent gate (mirrors .github/workflows/ci.yml)"
-echo ""
+# --- determine the diff range (or fall back to FULL) ---
+FULL=false
+[ "${PREPUSH_FULL:-}" = "1" ] && FULL=true
 
-# Mirror CI's `pnpm install --frozen-lockfile`. Running this catches
-# lockfile drift before we push — the same drift that produces the
-# "@jest/globals not found" class of CI failure.
-echo "[pre-push 1/13] pnpm install --frozen-lockfile"
-pnpm install --frozen-lockfile
-
-# Mirror CI's "Build design tokens" step. `generate:check` (next step)
-# loads `composed.tokens.json` to verify every contract's `resolvesTo`
-# path, but that file is gitignored (regenerable scratch), so we have
-# to emit it before validation runs. Without this step, every contract
-# reports `token graph not built` DRIFT and the gate fails before any
-# real validation runs.
-echo ""
-echo "[pre-push 2/13] pnpm -F @full-stack-ds/tokens build"
-pnpm -F @full-stack-ds/tokens build
-
-echo ""
-echo "[pre-push 3/13] pnpm run generate:check"
-# `generate:check` is `generate:validate` PLUS the cross-graph semantic
-# checks (every contract resolvesTo path must exist in the composed
-# token graph; emitted CSS must match contract truth; styles selectors
-# don't collide). The bare `generate:validate` only checks JSON-Schema
-# shape, which is how a token-graph cleanup landed silently in 2026-05:
-# contracts still referenced `semantic.overlay.scrim.dialog` after the
-# shard was deleted, and the shape validator said VALID because the
-# contract JSON was well-formed. `generate:check` is the real gate.
-pnpm run generate:check
-
-# Docs-claims drift — re-derives the corpus count from the same loader
-# glob `generate:check` trusts and asserts every `<!-- component-count -->`
-# marker in governed docs matches. Catches the 2026-05 failure where
-# normal-form.md prose said 53 components while the corpus was 47. Cheap;
-# folded under step 3 because it guards the same corpus truth.
-pnpm run docs:check-claims
-
-# Design tokens — DTCG validation catches malformed token JSON,
-# self-references, and unknown $type values before they reach codegen.
-echo ""
-echo "[pre-push 4/13] pnpm run tokens:validate"
-pnpm run tokens:validate
-
-# Design tokens — drift gate. Rebuilds composed.tokens.json + tokens.css
-# from source and refuses if the regenerated artifacts differ from what's
-# committed. Mirrors the `governed:rail` drift check below but scoped to
-# the tokens output.
-echo ""
-echo "[pre-push 5/13] pnpm run tokens:build:check"
-pnpm run tokens:build:check
-
-# Design tokens — WCAG contrast gate. Loads resolved.tokens.json and
-# checks the curated foreground × background pair list against AA. Fails
-# loud if any pair drops below its declared level.
-echo ""
-echo "[pre-push 6/13] pnpm run tokens:check-contrast"
-pnpm run tokens:check-contrast
-
-# Design tokens — brand-reference verifier. Every `{ref}` inside the 10
-# brand override files must resolve to an actual token in the composed
-# graph. The token build deliberately skips brand-file ref validation
-# (brand overrides land in a separate cascade layer with a local
-# definedVars set), so `{color.palette.cobalt.500}` would silently
-# no-op at runtime without this gate. See build/runners/check-brand-refs.ts.
-echo ""
-echo "[pre-push 7/13] pnpm run tokens:check-brand-refs"
-pnpm run tokens:check-brand-refs
-
-# Design tokens — usage regression gate. Fails if any token in the
-# composed graph that was USED at baseline time has become unused, or
-# if total unused count grew. Baseline lives at
-# packages/ds-tokens/usage-baseline.json. To intentionally land a new
-# unused token (e.g. publishing one ahead of consumers), re-baseline
-# with `pnpm run tokens:write-usage-baseline` and commit the result.
-echo ""
-echo "[pre-push 8/13] pnpm run tokens:check-usage:gate"
-pnpm run tokens:check-usage:gate
-
-echo ""
-echo "[pre-push 9/13] pnpm run lint"
-pnpm run lint
-
-echo ""
-echo "[pre-push 10/13] pnpm run typecheck (root + codegen)"
-pnpm run typecheck
-
-echo ""
-echo "[pre-push 11/13] pnpm run typecheck:vue"
-pnpm run typecheck:vue
-
-echo ""
-echo "[pre-push 12/13] pnpm test (root) + pnpm run test:vue"
-pnpm test
-pnpm run test:vue
-
-echo ""
-echo "[pre-push 13/13] pnpm run governed:rail + framework-src diff check"
-pnpm run governed:rail
-
-# Mirror the CI "Generated artifacts are committed" step. If the rail
-# regenerated and produced drift, this fails — preventing a push that
-# would land out-of-sync generated files.
-if ! git diff --exit-code -- \
-    packages/ds-react/src \
-    packages/ds-vue/src \
-    packages/ds-svelte/src \
-    packages/ds-angular/src \
-    packages/ds-lit/src; then
-  echo ""
-  echo "[pre-push] generated framework src trees have uncommitted drift after"
-  echo "[pre-push] running the rail. The rail regenerates from contracts; if"
-  echo "[pre-push] the regen produced different output than what's committed,"
-  echo "[pre-push] commit the regen output before pushing. CI will reject."
-  exit 1
+BASE=""
+if [ "$FULL" = false ]; then
+  # Prefer the merge-base with origin/main (the full branch delta vs main);
+  # fall back to the last-pushed remote sha; else FULL.
+  if git rev-parse --verify --quiet origin/main >/dev/null 2>&1; then
+    BASE="$(git merge-base origin/main "$TIP" 2>/dev/null || true)"
+  fi
+  if [ -z "$BASE" ] && [ -n "$REMOTE_SHA" ] && [ "$REMOTE_SHA" != "$ZERO" ]; then
+    BASE="$REMOTE_SHA"
+  fi
+  [ -z "$BASE" ] && FULL=true
 fi
 
+CHANGED=""
+if [ "$FULL" = false ]; then
+  CHANGED="$(git diff --name-only "$BASE" "$TIP" || true)"
+fi
+
+# --- classify into RUN_* step-group flags (fail-safe to FULL on any error) ---
+if [ "$FULL" = true ]; then
+  FLAGS="$(node "$ROOT/scripts/prepush-scope.mjs" --full)" || FLAGS=""
+else
+  FLAGS="$(printf '%s\n' "$CHANGED" | node "$ROOT/scripts/prepush-scope.mjs")" \
+    || FLAGS="$(node "$ROOT/scripts/prepush-scope.mjs" --full || true)"
+fi
+if [ -z "$FLAGS" ]; then
+  echo "[pre-push] classifier produced no output — running FULL gate"
+  FLAGS="$(node "$ROOT/scripts/prepush-scope.mjs" --full)"
+fi
+eval "$FLAGS"
+
+if [ "$FULL" = true ]; then
+  echo "[pre-push] $REASON"
+else
+  echo "[pre-push] range ${BASE:0:9}..${TIP:0:9} — $REASON"
+fi
 echo ""
-echo "[pre-push] all checks passed; proceeding with push"
+
+# --- install: only when deps could have changed (or full) ---
+NEED_INSTALL=false
+if [ "$FULL" = true ]; then
+  NEED_INSTALL=true
+elif printf '%s\n' "$CHANGED" | grep -qE '(^|/)(pnpm-lock\.yaml|package\.json)$'; then
+  NEED_INSTALL=true
+fi
+if [ "$NEED_INSTALL" = true ]; then
+  echo "[pre-push] install — pnpm install --frozen-lockfile"
+  pnpm install --frozen-lockfile
+else
+  echo "[pre-push] skip install (no package.json / lockfile change)"
+fi
+
+# --- fail-fast: lint + typecheck before the heavy token/rail work ---
+if [ "${RUN_LINT:-false}" = true ]; then
+  echo ""; echo "[pre-push] lint — pnpm run lint"; pnpm run lint
+else echo "[pre-push] skip lint"; fi
+
+if [ "${RUN_TYPECHECK:-false}" = true ]; then
+  echo ""; echo "[pre-push] typecheck (root + codegen)"; pnpm run typecheck
+  echo "[pre-push] typecheck:vue"; pnpm run typecheck:vue
+else echo "[pre-push] skip typecheck"; fi
+
+# --- token build (once): tokens:build:check emits the composed graph that
+#     generate:check needs AND runs the committed-output drift diff. This folds
+#     the old standalone tokens:build into one step. ---
+if [ "${RUN_TOKEN_BUILD:-false}" = true ]; then
+  echo ""; echo "[pre-push] tokens:build:check (build composed graph + drift diff)"
+  pnpm run tokens:build:check
+else echo "[pre-push] skip token build"; fi
+
+# --- token gates: only when ds-tokens source changed ---
+if [ "${RUN_TOKEN_GATES:-false}" = true ]; then
+  echo ""; echo "[pre-push] tokens:validate"; pnpm run tokens:validate
+  echo "[pre-push] tokens:check-contrast"; pnpm run tokens:check-contrast
+  echo "[pre-push] tokens:check-brand-refs"; pnpm run tokens:check-brand-refs
+  echo "[pre-push] tokens:check-usage:gate"; pnpm run tokens:check-usage:gate
+else echo "[pre-push] skip token gates"; fi
+
+# --- generate:check (reuses the composed graph built above) + docs claims ---
+if [ "${RUN_GENERATE_CHECK:-false}" = true ]; then
+  echo ""; echo "[pre-push] generate:check"; pnpm run generate:check
+else echo "[pre-push] skip generate:check"; fi
+
+if [ "${RUN_DOCS_CLAIMS:-false}" = true ]; then
+  echo "[pre-push] docs:check-claims"; pnpm run docs:check-claims
+else echo "[pre-push] skip docs:check-claims"; fi
+
+# --- tests ---
+if [ "${RUN_TESTS:-false}" = true ]; then
+  echo ""; echo "[pre-push] test (root) + test:vue"; pnpm test; pnpm run test:vue
+else echo "[pre-push] skip tests"; fi
+
+# --- heaviest, last: governed:rail + generated-tree drift diff ---
+if [ "${RUN_RAIL:-false}" = true ]; then
+  echo ""; echo "[pre-push] governed:rail + framework-src diff"
+  pnpm run governed:rail
+  if ! git diff --exit-code -- \
+      packages/ds-react/src \
+      packages/ds-vue/src \
+      packages/ds-svelte/src \
+      packages/ds-angular/src \
+      packages/ds-lit/src; then
+    echo ""
+    echo "[pre-push] generated framework src trees have uncommitted drift after"
+    echo "[pre-push] running the rail. Commit the regen output before pushing."
+    echo "[pre-push] CI will reject otherwise."
+    exit 1
+  fi
+else echo "[pre-push] skip governed:rail"; fi
+
+echo ""
+echo "[pre-push] all selected checks passed; proceeding with push"
