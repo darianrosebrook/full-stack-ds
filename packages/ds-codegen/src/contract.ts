@@ -513,10 +513,29 @@ export interface ContractForm {
   autofill?: ContractFormAutofill;
 }
 
+/**
+ * Geometry / default-affordance axis (MORPHOLOGY-GEOMETRY-PROFILE-01). Closed
+ * enum mirroring `component.contract.schema.json#/properties/morphology`. When
+ * present, selects a StyleProfile (box-model.ts#STYLE_PROFILES) layered BETWEEN
+ * the BoxModel primitive defaults and the component token sidecar — the sidecar
+ * still wins. Absent => the legacy two-way primitive-under-sidecar merge and no
+ * structural CSS, so unclassified components are byte-unchanged. Distinct from
+ * the behavioral `category` axis: morphology drives box-model geometry only.
+ */
+export type ContractMorphology =
+  | "fixed-square"
+  | "content-inline"
+  | "identity-inline"
+  | "linear-meter"
+  | "loading-block"
+  | "replaced-media";
+
 export interface ComponentContract {
   name: string;
   layer?: string;
   cssPrefix?: string;
+  /** See {@link ContractMorphology}. Optional; absent keeps legacy geometry. */
+  morphology?: ContractMorphology;
   /** Anatomy as a flat name list, or the richer object form with optional `details` per part. */
   anatomy?:
     | string[]

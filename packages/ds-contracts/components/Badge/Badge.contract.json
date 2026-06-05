@@ -4,6 +4,7 @@
   "description": "Small label conveying status, category, or count. Typically paired with other content.",
   "layer": "primitive",
   "category": "glyph",
+  "morphology": "content-inline",
   "anatomy": {
     "parts": [
       "root",

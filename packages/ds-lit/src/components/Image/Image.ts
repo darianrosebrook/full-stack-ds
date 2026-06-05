@@ -34,7 +34,7 @@ export class ImageElement extends LitElement {
       --fsds-box-model-gap: var(--fsds-semantic-display-size-gap, 4px);
       --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
-      --fsds-box-model-max-width: none;
+      --fsds-box-model-max-width: 100%;
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
@@ -45,6 +45,7 @@ export class ImageElement extends LitElement {
     }
     
     .image {
+      display: block;
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
@@ -56,7 +57,6 @@ export class ImageElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      display: block;
       background-color: var(--fsds-image-color-background-default);
       color: var(--fsds-image-color-foreground-primary);
     }

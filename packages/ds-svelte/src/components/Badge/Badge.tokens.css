@@ -2,17 +2,17 @@
 .badge {
   --fsds-box-model-padding: 0;
   --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-block-start: 2px;
+  --fsds-box-model-padding-block-end: 2px;
   --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-padding-inline-start: 8px;
+  --fsds-box-model-padding-inline-end: 8px;
   --fsds-box-model-gap: 0;
-  --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
+  --fsds-box-model-width: auto;
   --fsds-box-model-min-width: 0;
   --fsds-box-model-max-width: none;
-  --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
-  --fsds-box-model-min-height: 0;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
   --fsds-box-model-max-height: none;
   --fsds-badge-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);

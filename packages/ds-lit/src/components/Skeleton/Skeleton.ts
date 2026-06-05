@@ -27,17 +27,17 @@ export class SkeletonElement extends LitElement {
     .skeleton {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: var(--fsds-semantic-feedback-size-padding-block, 16px);
-      --fsds-box-model-padding-block-end: var(--fsds-semantic-feedback-size-padding-block, 16px);
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-padding-inline-end: var(--fsds-semantic-feedback-size-padding-inline, 16px);
-      --fsds-box-model-gap: var(--fsds-semantic-feedback-size-gap, 12px);
-      --fsds-box-model-width: auto;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-gap: 0;
+      --fsds-box-model-width: 100%;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
       --fsds-box-model-height: auto;
-      --fsds-box-model-min-height: 0;
+      --fsds-box-model-min-height: 1em;
       --fsds-box-model-max-height: none;
       --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f7c1c2);
@@ -49,6 +49,8 @@ export class SkeletonElement extends LitElement {
     }
     
     .skeleton {
+      display: block;
+      box-sizing: border-box;
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
@@ -60,7 +62,6 @@ export class SkeletonElement extends LitElement {
       height: var(--fsds-box-model-height);
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
-      display: block;
       background-color: var(--fsds-skeleton-color-base);
       transition-duration: var(--fsds-skeleton-anim-duration);
       transition-timing-function: var(--fsds-skeleton-anim-easing);

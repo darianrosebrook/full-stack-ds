@@ -2,6 +2,7 @@
 
 /* @generated:start styles */
 .image {
+  display: block;
   padding-block-start: var(--fsds-box-model-padding-block-start);
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
@@ -13,7 +14,6 @@
   height: var(--fsds-box-model-height);
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
-  display: block;
   background-color: var(--fsds-image-color-background-default);
   color: var(--fsds-image-color-foreground-primary);
 }

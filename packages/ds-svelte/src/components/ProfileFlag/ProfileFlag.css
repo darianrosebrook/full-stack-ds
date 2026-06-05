@@ -2,6 +2,10 @@
 
 /* @generated:start styles */
 .profile-flag {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  box-sizing: border-box;
   padding-block-start: var(--fsds-box-model-padding-block-start);
   padding-block-end: var(--fsds-box-model-padding-block-end);
   padding-inline-start: var(--fsds-box-model-padding-inline-start);

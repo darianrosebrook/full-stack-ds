@@ -22,17 +22,17 @@ export class ProfileFlagElement extends LitElement {
     .profile-flag {
       --fsds-box-model-padding: 0;
       --fsds-box-model-padding-block: 0;
-      --fsds-box-model-padding-block-start: 0;
-      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-block-start: 2px;
+      --fsds-box-model-padding-block-end: 2px;
       --fsds-box-model-padding-inline: 0;
-      --fsds-box-model-padding-inline-start: 0;
-      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-padding-inline-start: 4px;
+      --fsds-box-model-padding-inline-end: 4px;
       --fsds-box-model-gap: 0;
-      --fsds-box-model-width: var(--fsds-semantic-glyph-size-medium-extent, 16px);
+      --fsds-box-model-width: auto;
       --fsds-box-model-min-width: 0;
       --fsds-box-model-max-width: none;
-      --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
-      --fsds-box-model-min-height: 0;
+      --fsds-box-model-height: auto;
+      --fsds-box-model-min-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-max-height: none;
       --fsds-profile-flag-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-profile-flag-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
@@ -45,6 +45,10 @@ export class ProfileFlagElement extends LitElement {
     }
     
     .profile-flag {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      box-sizing: border-box;
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
