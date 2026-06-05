@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: icon-placeholder-glyph
 created_at: '2026-06-05T23:38:45.448Z'
-updated_at: '2026-06-05T23:38:45.448Z'
+updated_at: '2026-06-05T23:41:49.438Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components/Icon/: contract-authored static SVG glyph matching src/assets/placeholder.svg.'
@@ -22,6 +22,8 @@ scope:
     - 'packages/ds-angular/src/components/Icon/'
     - 'packages/ds-lit/src/components/Icon/'
     - 'src/assets/placeholder.svg'
+    - packages/ds-codegen/src/frameworks/react/component-source.ts
+    - packages/ds-codegen/src/frameworks/react/hook-source.test.ts
   out: []
 invariants:
   - 'The placeholder glyph is represented in the Icon contract DOM tree, not by hand-editing generated framework component files.'
