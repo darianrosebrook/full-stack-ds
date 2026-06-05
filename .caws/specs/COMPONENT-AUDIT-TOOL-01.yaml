@@ -3,6 +3,7 @@ title: 'Reusable component box-model/sizing/token + rendered-geometry drift audi
 risk_tier: 3
 mode: chore
 lifecycle_state: active
+worktree: component-audit
 created_at: '2026-06-05T04:12:45.058Z'
 updated_at: '2026-06-05T04:12:45.058Z'
 blast_radius:
