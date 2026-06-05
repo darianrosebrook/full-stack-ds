@@ -2,10 +2,11 @@ id: COMPONENT-TOKEN-HYGIENE-01
 title: 'Tokenize hardcoded component dimensions (Command, OTP, Stat)'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: token-hygiene
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge token-hygiene at 1582360b37af1442eb8978a3465aec4980bd5f5c'
 created_at: '2026-06-05T05:29:26.099Z'
-updated_at: '2026-06-05T19:19:44.444Z'
+updated_at: '2026-06-05T19:32:59.356Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components/{Command,OTP,Stat}/: the styles.json that emits the three hardcoded dimensional literals'
