@@ -1,0 +1,28 @@
+id: LIT-LABEL-HTMLFOR-DOM-ATTR-01
+title: 'Lit emitter lowers htmlFor binding to the DOM for attribute (close rail residual)'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-05T23:50:49.635Z'
+updated_at: '2026-06-05T23:50:49.635Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'lit-label-for-association'
+    type: contract-test
+    path: 'e2e/render-binding-rail.spec.ts'
