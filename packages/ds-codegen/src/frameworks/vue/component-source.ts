@@ -25,10 +25,12 @@ import type {
   DomNodeIR,
   IterationIR,
   NormalizedChannelIR,
+  PropTypeIR,
 } from "../../ir.js";
 import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
+  canonicalTsType,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -154,7 +156,7 @@ function generatePropsInterface(ir: ComponentIR): string {
     // component supplies the default via `withDefaults`.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
-    lines.push(`  ${propName}${optional}: ${vueType(p.type)};`);
+    lines.push(`  ${propName}${optional}: ${lowerVuePropType(p.propType)};`);
   }
   for (const dim of Object.keys(ir.variants)) {
     if (!propNames.has(dim)) {
@@ -233,7 +235,7 @@ function collectDefaults(ir: ComponentIR): Array<[string, string, boolean]> {
   for (const p of ir.styledProps) {
     if (VUE_SKIP_PROPS.has(p.name)) continue;
     if (p.defaultExpr !== undefined) {
-      out.push([p.name, p.defaultExpr, defaultNeedsFactory(vueType(p.type))]);
+      out.push([p.name, p.defaultExpr, defaultNeedsFactory(lowerVuePropType(p.propType))]);
       continue;
     }
     // VUE-FIRST-RENDER-CONTROLLABLE-DEFAULT-01.
@@ -260,7 +262,7 @@ function collectDefaults(ir: ComponentIR): Array<[string, string, boolean]> {
     // adopts a different controllable-state wiring that doesn't rely
     // on `undefined` to distinguish "consumer omitted" from "consumer
     // passed false".
-    if (isBooleanShapedProp(p.type)) {
+    if (isBooleanShapedPropType(p.propType)) {
       out.push([p.name, "undefined", false]);
     }
   }
@@ -547,7 +549,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
     // component supplies the default via `withDefaults`.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propKey = p.name.includes("-") ? `"${p.name}"` : p.name;
-    propsLines.push(`  ${propKey}${optional}: ${vueType(p.type)};`);
+    propsLines.push(`  ${propKey}${optional}: ${lowerVuePropType(p.propType)};`);
   }
   for (const dim of Object.keys(ir.variants)) {
     if (!propNames.has(dim)) propsLines.push(`  ${dim}?: string;`);
@@ -1022,6 +1024,31 @@ function generateTemplateEventAttrs(ir: ComponentIR): string {
  */
 function vueType(typeStr: string): string {
   return translateNonReactType(typeStr);
+}
+
+/**
+ * Lower a framework-neutral PropTypeIR into a Vue/TS type expression. Reads the
+ * structured `propType` — `ref` realizes from `propType.to`, `fallback` keeps the
+ * legacy string path on `propType.raw`, and the V1 kinds realize their canonical
+ * string through the existing `vueType` so output is byte-identical.
+ * (CODEGEN-PROP-TYPE-IR-PILOT-01, slice 2)
+ */
+function lowerVuePropType(pt: PropTypeIR): string {
+  switch (pt.kind) {
+    case "ref":
+      return vueType(pt.to);
+    case "fallback":
+      return vueType(pt.raw);
+    default:
+      return vueType(canonicalTsType(pt));
+  }
+}
+
+/** Boolean-shape classification from the neutral type (fallback delegates to the string check). */
+function isBooleanShapedPropType(pt: PropTypeIR): boolean {
+  if (pt.kind === "boolean") return true;
+  if (pt.kind === "fallback") return isBooleanShapedProp(pt.raw);
+  return false;
 }
 
 // ---------------------------------------------------------------------------

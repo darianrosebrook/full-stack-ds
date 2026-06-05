@@ -25,11 +25,13 @@ import type {
   DomNodeIR,
   IterationIR,
   NormalizedChannelIR,
+  PropTypeIR,
 } from "../../ir.js";
 import {
   hasChildrenPlaceholder,
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
+  canonicalTsType,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -171,7 +173,7 @@ function generatePropsBlock(ir: ComponentIR): string {
     // component supplies the default in the `$props()` destructure.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
-    lines.push(`  ${propName}${optional}: ${svelteType(p.type)};`);
+    lines.push(`  ${propName}${optional}: ${lowerSveltePropType(p.propType)};`);
   }
   for (const dim of Object.keys(ir.variants)) {
     if (!ir.styledProps.some((p) => p.name === dim)) {
@@ -349,7 +351,7 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
     // component supplies the default in the `$props()` destructure.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
-    propsLines.push(`  ${propName}${optional}: ${svelteType(p.type)};`);
+    propsLines.push(`  ${propName}${optional}: ${lowerSveltePropType(p.propType)};`);
   }
   propsLines.push(`  class?: string;`);
   propsLines.push(`  "data-testid"?: string;`);
@@ -891,6 +893,23 @@ function generateTemplate(ir: ComponentIR): string {
  */
 function svelteType(typeStr: string): string {
   return translateNonReactType(typeStr);
+}
+
+/**
+ * Lower a framework-neutral PropTypeIR into a Svelte/TS type expression. Reads
+ * the structured `propType` (ref from `propType.to`, fallback via the legacy
+ * string path on `propType.raw`, V1 kinds via the canonical string) so output is
+ * byte-identical. (CODEGEN-PROP-TYPE-IR-PILOT-01, slice 2)
+ */
+function lowerSveltePropType(pt: PropTypeIR): string {
+  switch (pt.kind) {
+    case "ref":
+      return svelteType(pt.to);
+    case "fallback":
+      return svelteType(pt.raw);
+    default:
+      return svelteType(canonicalTsType(pt));
+  }
 }
 
 // ---------------------------------------------------------------------------

@@ -18,6 +18,7 @@ import type {
   IterationIR,
   NormalizedChannelIR,
   PartIR,
+  PropTypeIR,
 } from "../../ir.js";
 import {
   hasChildrenPlaceholder,
@@ -317,6 +318,31 @@ function resolveReactType(typeStr: string, ir: ComponentIR): string {
 }
 
 /**
+ * Lower a framework-neutral PropTypeIR into a React/TS type expression. The
+ * emitter lowers from the structured type — it does NOT re-parse the legacy
+ * `type` string for migrated props. `ref` resolves the named alias and
+ * `fallback` (legacy, un-migrated members) delegate to resolveReactType, which
+ * reproduces the prior behavior exactly — so migrating a contract to PropTypeIR
+ * yields byte-identical React output. (CODEGEN-PROP-TYPE-IR-PILOT-01)
+ */
+function lowerReactPropType(pt: PropTypeIR, ir: ComponentIR): string {
+  switch (pt.kind) {
+    case "string":
+    case "number":
+    case "boolean":
+      return pt.kind;
+    case "enum":
+      return pt.values.map((v) => `'${v}'`).join(" | ");
+    case "node":
+      return "ReactNode";
+    case "ref":
+      return resolveReactType(pt.to, ir);
+    case "fallback":
+      return resolveReactType(pt.raw, ir);
+  }
+}
+
+/**
  * Build the `import type { ... } from "react"` identifier list by scanning
  * every text source the generator will emit (styled prop types, defined
  * types' values/aliases). `ReactNode` is always included because the props
@@ -453,7 +479,7 @@ function generatePropsInterface(ir: ComponentIR): string {
     // that previously had to pass `options={[]}` can now omit it.
     const optional = p.required && p.defaultExpr === undefined ? "" : "?";
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
-    const tsType = resolveReactType(p.type, ir);
+    const tsType = lowerReactPropType(p.propType, ir);
     lines.push(`  ${propName}${optional}: ${tsType};`);
   }
 

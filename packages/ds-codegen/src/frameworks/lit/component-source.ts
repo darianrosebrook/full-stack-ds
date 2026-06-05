@@ -31,8 +31,9 @@ import type {
   DomNodeIR,
   IterationIR,
   NormalizedChannelIR,
+  PropTypeIR,
 } from "../../ir.js";
-import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
+import { TABLE_COMPOSITION_TAGS, canonicalTsType } from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
 import {
   emitNonReactTypeAliases,
@@ -86,6 +87,38 @@ function litStaticStylesLine(
  */
 function litType(typeStr: string): string {
   return translateNonReactType(typeStr);
+}
+
+/**
+ * Lower a framework-neutral PropTypeIR into a Lit/TS type expression. Reads the
+ * structured `propType` (ref from `propType.to`, fallback via the legacy string
+ * path on `propType.raw`, V1 kinds via the canonical string) so output is
+ * byte-identical. (CODEGEN-PROP-TYPE-IR-PILOT-01, slice 2)
+ */
+function lowerLitPropType(pt: PropTypeIR): string {
+  switch (pt.kind) {
+    case "ref":
+      return litType(pt.to);
+    case "fallback":
+      return litType(pt.raw);
+    default:
+      return litType(canonicalTsType(pt));
+  }
+}
+
+/** Decorator-option classification from the neutral type (ref/fallback resolve via the existing path). */
+function litPropertyTypeFromPropType(
+  pt: PropTypeIR,
+  definedTypes?: Record<string, ContractTypeDef>,
+): LitPropertyDecorator {
+  switch (pt.kind) {
+    case "ref":
+      return litPropertyType(pt.to, definedTypes);
+    case "fallback":
+      return litPropertyType(pt.raw, definedTypes);
+    default:
+      return litPropertyType(canonicalTsType(pt), definedTypes);
+  }
 }
 
 /**
@@ -457,7 +490,7 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
       // scrollTo, etc.). Preserve the contract's type and default — the
       // field still drives BEM class output, and consumers set the attribute
       // by its kebab name, not via the JS field directly.
-      const t = applyLitTypeRename(litType(p.type), rename);
+      const t = applyLitTypeRename(lowerLitPropType(p.propType), rename);
       const defaultPart =
         p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
       lines.push(`  @property({ attribute: '${toKebab(p.name)}' })`);
@@ -465,8 +498,8 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
       declared.add(p.name);
       continue;
     }
-    const litPropType = litPropertyType(p.type, ir.definedTypes);
-    const t = applyLitTypeRename(litType(p.type), rename);
+    const litPropType = litPropertyTypeFromPropType(p.propType, ir.definedTypes);
+    const t = applyLitTypeRename(lowerLitPropType(p.propType), rename);
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     const defaultPart =
       p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
@@ -1358,6 +1391,7 @@ function generateLitDomTreePropertyDecl(
   p: {
     name: string;
     type: string;
+    propType: PropTypeIR;
     defaultExpr?: string;
     required: boolean;
   },
@@ -1375,10 +1409,14 @@ function generateLitDomTreePropertyDecl(
   // makes no sense, but the property still must be declared so consumer
   // code can set it via JS (`el.onDismiss = handler`) and so lit-analyzer
   // does not flag the render reference as an undeclared property access.
+  // A function-typed prop can only arrive as a `fallback` (functions are not in
+  // the V1 vocabulary); lower from the structured type, not the canonical string.
   const isFunctionType =
-    /=>\s*(void|never|[A-Za-z])/.test(p.type) || /EventHandler/.test(p.type);
+    p.propType.kind === "fallback" &&
+    (/=>\s*(void|never|[A-Za-z])/.test(p.propType.raw) ||
+      /EventHandler/.test(p.propType.raw));
   if (isFunctionType) {
-    const propType = applyLitTypeRename(litType(p.type), rename);
+    const propType = applyLitTypeRename(lowerLitPropType(p.propType), rename);
     const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
     return `  @property({ attribute: false }) ${propName}?: ${propType};`;
   }
@@ -1389,14 +1427,14 @@ function generateLitDomTreePropertyDecl(
     ].join("\n");
   }
   if (LIT_ELEMENT_METHOD_NAMES.has(p.name)) {
-    const propType = applyLitTypeRename(litType(p.type), rename);
+    const propType = applyLitTypeRename(lowerLitPropType(p.propType), rename);
     const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
     return [
       `  @property({ attribute: '${toKebab(p.name)}' })`,
       `  _${p.name}?: ${propType}${defaultPart};`,
     ].join("\n");
   }
-  const propType = applyLitTypeRename(litType(p.type), rename);
+  const propType = applyLitTypeRename(lowerLitPropType(p.propType), rename);
   const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
   // Use the same policy as the legacy emitter (litPropertyType +
   // litPropertyDecoratorOptions): primitives → `{ type: <T> }`,
@@ -1411,7 +1449,7 @@ function generateLitDomTreePropertyDecl(
   // the type field that the converter isn't a fit. In practice
   // contracts don't combine kebab-case names with non-primitive
   // types today, so the conflict is theoretical.
-  const spec = litPropertyType(p.type, definedTypes);
+  const spec = litPropertyTypeFromPropType(p.propType, definedTypes);
   const decoratorArgs: string[] = [];
   const hasKebabName = p.name.includes("-");
   if (spec !== null) {
