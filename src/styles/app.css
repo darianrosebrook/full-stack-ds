@@ -852,11 +852,28 @@ button {
   overflow: hidden;
 }
 
+/* The token explorer renders via the DS Table compound, which wraps the
+   native <table> in `<div class="table tokens-table">`. The genuinely
+   table-scoped rules re-point onto the right elements (DS Table.css already
+   gives the inner <table> width:100% + border-collapse); every other
+   `.tokens-table th/td/tr` rule below is a descendant selector that keeps
+   matching the real generated cells unchanged. */
 .tokens-table {
-  width: 100%;
-  border-collapse: collapse;
   font-size: var(--fsds-core-typography-ramp-2);
+}
+
+/* Fixed column layout lives on the inner <table> so the th:nth-child widths
+   below apply. */
+.tokens-table table {
   table-layout: fixed;
+}
+
+/* Neutralize the DS wrapper's `overflow-x: auto` for this table only — it
+   would otherwise become a scroll container and break the sticky <th>.
+   table-layout:fixed keeps the table within 100% width, so no scroll is lost.
+   `.tokens-table.table` (0,2,0) outranks the DS `.table` (0,1,0). */
+.tokens-table.table {
+  overflow-x: visible;
 }
 
 .tokens-table th {
