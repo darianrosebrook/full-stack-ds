@@ -2,10 +2,11 @@ id: CONTRACT-PROP-SURFACE-BATCH-A-01
 title: 'Prop-surface migration Batch A (leaf/display/glyph): styled→designed + structured propType'
 risk_tier: 3
 mode: refactor
-lifecycle_state: active
-worktree: prop-surface-batch-a-clean
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge prop-surface-batch-a-clean at aed5534e83371763ba9c17c01dd998294fad3278'
 created_at: '2026-06-05T07:58:41.102Z'
-updated_at: '2026-06-05T07:58:41.102Z'
+updated_at: '2026-06-05T09:33:38.812Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components (Batch A: Avatar, Badge, Blockquote, Divider, Icon, Image, Label, Links, List, ProfileFlag, Text, Truncate)'
