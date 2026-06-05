@@ -60,7 +60,6 @@ export class ShowMoreElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-show-more-color-background-default);
       color: var(--fsds-show-more-color-foreground-secondary);
-      border-color: var(--fsds-show-more-color-border-accent);
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
@@ -162,7 +161,6 @@ export class ShowMoreContentElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-show-more-color-background-default);
       color: var(--fsds-show-more-color-foreground-secondary);
-      border-color: var(--fsds-show-more-color-border-accent);
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
@@ -235,7 +233,6 @@ export class ShowMoreTriggerElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       background-color: var(--fsds-show-more-color-background-default);
       color: var(--fsds-show-more-color-foreground-secondary);
-      border-color: var(--fsds-show-more-color-border-accent);
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }

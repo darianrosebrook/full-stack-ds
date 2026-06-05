@@ -71,7 +71,8 @@ export class ChipElement extends LitElement {
       background-color: var(--fsds-chip-color-background-default);
       color: var(--fsds-chip-color-foreground-default);
       border-color: var(--fsds-chip-color-border-default);
-      padding: var(--fsds-chip-size-padding-vertical);
+      padding-block: var(--fsds-chip-size-padding-vertical);
+      padding-inline: var(--fsds-chip-size-padding-horizontal);
       border-radius: var(--fsds-chip-size-radius);
       font-size: var(--fsds-chip-text-size);
       font-weight: var(--fsds-chip-text-weight);

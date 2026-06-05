@@ -274,16 +274,10 @@
       ]
     },
     "width": {
-      "literal": "8px",
-      "platforms": [
-        "web"
-      ]
+      "resolvesTo": "walkthrough.dots.size"
     },
     "height": {
-      "literal": "8px",
-      "platforms": [
-        "web"
-      ]
+      "resolvesTo": "walkthrough.dots.size"
     },
     "border-radius": {
       "literal": "50%",

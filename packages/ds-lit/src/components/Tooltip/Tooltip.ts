@@ -89,7 +89,7 @@ export class TooltipElement extends LitElement {
       padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
       z-index: var(--fsds-tooltip-layer-content);
-      font-size: 0.875em;
+      font-size: var(--fsds-tooltip-typography-fontSize);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
@@ -251,7 +251,7 @@ export class TooltipTriggerElement extends LitElement {
       padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
       z-index: var(--fsds-tooltip-layer-content);
-      font-size: 0.875em;
+      font-size: var(--fsds-tooltip-typography-fontSize);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
@@ -395,7 +395,7 @@ export class TooltipContentElement extends LitElement {
       padding: var(--fsds-tooltip-size-padding-x);
       max-width: var(--fsds-tooltip-size-maxWidth);
       z-index: var(--fsds-tooltip-layer-content);
-      font-size: 0.875em;
+      font-size: var(--fsds-tooltip-typography-fontSize);
       display: inline-block;
       border-style: solid;
       border-width: 1px;
