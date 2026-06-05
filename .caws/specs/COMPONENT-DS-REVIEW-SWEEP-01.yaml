@@ -1,0 +1,25 @@
+id: COMPONENT-DS-REVIEW-SWEEP-01
+title: 'DS-quality judgment review of the 37 unreviewed audit components'
+risk_tier: 3
+mode: chore
+lifecycle_state: active
+created_at: '2026-06-05T19:53:03.143Z'
+updated_at: '2026-06-05T19:53:03.143Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
