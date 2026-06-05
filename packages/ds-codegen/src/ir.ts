@@ -57,6 +57,7 @@ import {
   getRootElement,
   isCompoundPart,
 } from "./semantics.js";
+import { resolveStyleProfile } from "./box-model.js";
 
 // ---------------------------------------------------------------------------
 // IR types
@@ -2746,6 +2747,11 @@ export function computeCssBlocks(
   // longhand defaults.
   const rootSelector = `.${cssPrefix}`;
   const slotDeclarations = renderTokenSlots(tokens);
+  // Morphology profile structure (display / box-sizing / flow) is a DEFAULT
+  // layered before the box-model consumers and the author's styles.root, so a
+  // contract can still override it (MORPHOLOGY-GEOMETRY-PROFILE-01). Empty when
+  // no morphology is declared, so unclassified components are unchanged.
+  const profileStructure = renderProfileStructure(contract);
   const boxModelConsumers = renderBoxModelConsumers();
   const rootStyleDeclarations = renderStyleBlock(
     styles.root,
@@ -2756,6 +2762,7 @@ export function computeCssBlocks(
     selector: rootSelector,
     declarations: {
       ...slotDeclarations,
+      ...profileStructure,
       ...boxModelConsumers,
       ...rootStyleDeclarations,
     },
@@ -2944,6 +2951,24 @@ function renderBoxModelConsumers(): Record<string, string> {
     "min-height": "var(--fsds-box-model-min-height)",
     "max-height": "var(--fsds-box-model-max-height)",
   };
+}
+
+/**
+ * Root structural CSS contributed by a contract's morphology style profile
+ * (MORPHOLOGY-GEOMETRY-PROFILE-01) — display / box-sizing / flow that is NOT a
+ * box-model slot. Emitted into <Name>.css between the slot declarations and
+ * the box-model consumers, so author rules in styles.root still win
+ * (object-spread order at the callsite). Branches on the morphology FACT,
+ * never on component name; returns {} when the contract declares no morphology
+ * (legacy behavior — no structural defaults injected).
+ */
+function renderProfileStructure(
+  contract: ComponentContract,
+): Record<string, string> {
+  const morphology = (contract as { morphology?: string }).morphology;
+  const profile = resolveStyleProfile(morphology);
+  if (!profile) return {};
+  return { ...profile.structure };
 }
 
 /**

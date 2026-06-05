@@ -199,24 +199,166 @@ export function partitionBoxModelTokens(
 }
 
 /**
- * Merge box-model defaults under a component's authored token sidecar.
- * Author-supplied `box-model.*` keys win; missing slots fall back to the
- * primitive's defaults. Non-box-model keys pass through untouched.
+ * Morphology style profile: classifier-driven defaults that sit BETWEEN the
+ * BoxModel primitive defaults and the component token sidecar
+ * (MORPHOLOGY-GEOMETRY-PROFILE-01). A contract's optional `morphology` field
+ * selects one profile, which contributes two things:
  *
- * The merge happens at sidecar-load time (cli.ts) so the contract that
- * reaches buildComponentIR already carries the full slot pool. Downstream
- * code does not need to know about the primitive.
+ *   - `boxModelDefaults` — values for the closed 14-slot box-model pool,
+ *     injected into the merge so they override primitive defaults but LOSE to
+ *     any component-authored sidecar entry (the one-directional merge holds).
+ *   - `structure` — literal root structural CSS (display / box-sizing / flow)
+ *     emitted into <Name>.css by ir.ts#renderProfileStructure.
+ *
+ * Profiles branch on the `morphology` FACT, never on component identity — the
+ * codegen-authority rule. Absent morphology => no profile => the legacy
+ * two-way (primitive < sidecar) merge, so unclassified components are
+ * byte-unchanged.
+ */
+export interface StyleProfile {
+  readonly boxModelDefaults: Readonly<Record<string, TokenResolution>>;
+  readonly structure: Readonly<Record<string, string>>;
+}
+
+// Glyph extent: the square dimension true glyphs (Icon, Avatar) size to —
+// the same resolution the old category-seeded sidecars used, now owned by the
+// profile instead of frozen into each component's tokens sidecar.
+const GLYPH_EXTENT: TokenResolution = {
+  resolvesTo: "semantic.glyph.size.medium.extent",
+  fallback: "16px",
+  layer: "semantic",
+} as TokenResolution;
+
+export const STYLE_PROFILES: Readonly<Record<string, StyleProfile>> = {
+  // True glyphs (Icon, Avatar): fixed square, centered, no padding (padding
+  // stays primitive 0).
+  "fixed-square": {
+    boxModelDefaults: {
+      "box-model.width": GLYPH_EXTENT,
+      "box-model.height": GLYPH_EXTENT,
+    },
+    structure: {
+      display: "inline-flex",
+      "align-items": "center",
+      "justify-content": "center",
+      "flex-shrink": "0",
+      "box-sizing": "border-box",
+    },
+  },
+  // Inline labels (Badge): size to content (width/height stay primitive auto),
+  // with inline padding + a min-height floor so the box wraps the text instead
+  // of clipping it into a glyph square.
+  "content-inline": {
+    boxModelDefaults: {
+      "box-model.padding-block-start": { literal: "2px" },
+      "box-model.padding-block-end": { literal: "2px" },
+      "box-model.padding-inline-start": { literal: "8px" },
+      "box-model.padding-inline-end": { literal: "8px" },
+      "box-model.min-height": GLYPH_EXTENT,
+    },
+    structure: {
+      display: "inline-flex",
+      "align-items": "center",
+      "box-sizing": "border-box",
+    },
+  },
+  // Avatar + text identity rows (ProfileFlag): content width, row flow.
+  "identity-inline": {
+    boxModelDefaults: {
+      "box-model.padding-block-start": { literal: "2px" },
+      "box-model.padding-block-end": { literal: "2px" },
+      "box-model.padding-inline-start": { literal: "4px" },
+      "box-model.padding-inline-end": { literal: "4px" },
+      "box-model.min-height": GLYPH_EXTENT,
+    },
+    structure: {
+      display: "inline-flex",
+      "flex-direction": "row",
+      "align-items": "center",
+      "box-sizing": "border-box",
+    },
+  },
+  // Linear meters (Progress linear): full-width bar with explicit thickness and
+  // no padding, so the track does not collapse to a padded square.
+  "linear-meter": {
+    boxModelDefaults: {
+      "box-model.width": { literal: "100%" },
+      "box-model.height": { literal: "8px" },
+    },
+    structure: {
+      display: "block",
+      "box-sizing": "border-box",
+    },
+  },
+  // Loading blocks (Skeleton): stretch to container width with a min-height
+  // floor; no generic feedback padding.
+  "loading-block": {
+    boxModelDefaults: {
+      "box-model.width": { literal: "100%" },
+      "box-model.min-height": { literal: "1em" },
+    },
+    structure: {
+      display: "block",
+      "box-sizing": "border-box",
+    },
+  },
+  // Replaced media (Image): native replaced-element behavior.
+  "replaced-media": {
+    boxModelDefaults: {
+      "box-model.max-width": { literal: "100%" },
+    },
+    structure: {
+      display: "block",
+    },
+  },
+};
+
+/**
+ * Resolve the style profile for a contract's `morphology` value. Returns null
+ * for an absent or unrecognized morphology (=> legacy two-way merge and no
+ * structural CSS). Branches on the fact, never on component name.
+ */
+export function resolveStyleProfile(
+  morphology: string | undefined,
+): StyleProfile | null {
+  if (!morphology) return null;
+  return STYLE_PROFILES[morphology] ?? null;
+}
+
+/**
+ * Merge box-model defaults under a component's authored token sidecar, with an
+ * optional morphology profile layered BETWEEN:
+ *
+ *   primitive defaults  <  morphology profile defaults  <  authored sidecar
+ *
+ * Author-supplied `box-model.*` keys always win; the profile fills only slots
+ * the author left unset; the primitive backstops the rest. Non-box-model keys
+ * pass through untouched. With no morphology this is byte-identical to the
+ * prior two-way merge (current behavior preserved).
+ *
+ * The merge happens at sidecar-load time (cli.ts) so the contract that reaches
+ * buildComponentIR already carries the full slot pool. Downstream code does
+ * not need to know about the primitive or the profile.
  */
 export function mergeBoxModelDefaults(
   authoredTokens: Record<string, TokenResolution> | undefined,
   primitive: BoxModelPrimitive = loadBoxModelPrimitive(),
+  morphology?: string,
 ): Record<string, TokenResolution> {
   const merged: Record<string, TokenResolution> = {};
-  // Defaults first so authored entries overwrite by key on insert.
+  // 1. Primitive defaults first.
   for (const slot of primitive.slotNames) {
     const def = primitive.defaults[slot];
     if (def) merged[slot] = def;
   }
+  // 2. Morphology profile defaults override the primitive (and lose to sidecar).
+  const profile = resolveStyleProfile(morphology);
+  if (profile) {
+    for (const [name, value] of Object.entries(profile.boxModelDefaults)) {
+      merged[name] = value;
+    }
+  }
+  // 3. Authored sidecar wins on any slot it sets.
   if (authoredTokens) {
     for (const [name, value] of Object.entries(authoredTokens)) {
       merged[name] = value;

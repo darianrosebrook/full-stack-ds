@@ -453,8 +453,14 @@ function main(): void {
       }
       authoredTokens = tokensResult.value as Record<string, TokenResolution>;
     }
-    (result.value as { tokens?: unknown }).tokens =
-      mergeBoxModelDefaults(authoredTokens);
+    // Thread the contract's optional morphology so the box-model merge layers
+    // the style profile's slot defaults between primitive and sidecar
+    // (MORPHOLOGY-GEOMETRY-PROFILE-01). Absent morphology => legacy two-way merge.
+    (result.value as { tokens?: unknown }).tokens = mergeBoxModelDefaults(
+      authoredTokens,
+      undefined,
+      (result.value as { morphology?: string }).morphology,
+    );
     const stylesEntry = findComponentStyles(entry);
     if (stylesEntry) {
       const stylesRaw = JSON.parse(fs.readFileSync(stylesEntry.absPath, "utf-8"));
