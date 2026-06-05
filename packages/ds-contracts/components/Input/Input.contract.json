@@ -86,13 +86,51 @@
       "description": "The current text value of the input."
     }
   },
-  "states": [
-    "default",
-    "hover",
-    "focus",
-    "disabled",
-    "invalid"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      },
+      "validation": {
+        "category": "validation",
+        "values": [
+          "valid",
+          "invalid"
+        ],
+        "initial": "valid",
+        "exclusive": true
+      }
+    }
+  },
   "form": {
     "participates": true,
     "inputType": "text",

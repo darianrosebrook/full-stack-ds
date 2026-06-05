@@ -94,12 +94,44 @@
     }
   },
   "variants": {},
-  "states": [
-    "default",
-    "hover",
-    "focus",
-    "selected"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unselected",
+          "selected"
+        ],
+        "initial": "unselected",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-selected",
+          "values": {
+            "unselected": "false",
+            "selected": "true"
+          }
+        }
+      }
+    }
+  },
   "focus": {
     "strategy": "none",
     "description": "The table itself does not manage focus. Individual interactive cells (sortable headers, checkboxes) are reachable via standard tab order."

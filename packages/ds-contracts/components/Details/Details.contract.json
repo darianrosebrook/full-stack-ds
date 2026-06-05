@@ -141,14 +141,58 @@
       "none"
     ]
   },
-  "states": [
-    "default",
-    "hover",
-    "focus",
-    "disabled",
-    "open",
-    "closed"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      },
+      "disclosure": {
+        "category": "visibility",
+        "values": [
+          "closed",
+          "open"
+        ],
+        "initial": "closed",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-expanded",
+          "values": {
+            "closed": "false",
+            "open": "true"
+          }
+        }
+      }
+    }
+  },
   "slots": {
     "compact": {
       "required": false

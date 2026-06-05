@@ -93,11 +93,34 @@
     }
   },
   "variants": {},
-  "states": [
-    "default",
-    "expanded",
-    "collapsed"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "expansion": {
+        "category": "visibility",
+        "values": [
+          "collapsed",
+          "expanded"
+        ],
+        "initial": "collapsed",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-expanded",
+          "values": {
+            "collapsed": "false",
+            "expanded": "true"
+          }
+        }
+      }
+    }
+  },
   "slots": {
     "content": {
       "required": false

@@ -161,11 +161,28 @@
       "capitalize"
     ]
   },
-  "states": [
-    "default",
-    "error",
-    "success"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "validation": {
+        "category": "validation",
+        "values": [
+          "valid",
+          "error",
+          "success"
+        ],
+        "initial": "valid",
+        "exclusive": true
+      }
+    }
+  },
   "slots": {
     "root": {
       "required": true,

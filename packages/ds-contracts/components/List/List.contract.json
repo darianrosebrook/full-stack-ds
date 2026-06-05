@@ -134,9 +134,18 @@
       "lg"
     ]
   },
-  "states": [
-    "default"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
   "focus": {
     "strategy": "none",
     "description": "ListItem is not focusable itself. Focusable elements (actions, drag handle) inside receive native tab focus managed by the parent list."

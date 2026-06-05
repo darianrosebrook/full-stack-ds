@@ -148,11 +148,36 @@
       "full"
     ]
   },
-  "states": [
-    "default",
-    "loading",
-    "error"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "validation": {
+        "category": "validation",
+        "values": [
+          "valid",
+          "error"
+        ],
+        "initial": "valid",
+        "exclusive": true
+      },
+      "loading": {
+        "category": "data",
+        "values": [
+          "idle",
+          "loading"
+        ],
+        "initial": "idle",
+        "exclusive": true
+      }
+    }
+  },
   "slots": {
     "root": {
       "required": true,

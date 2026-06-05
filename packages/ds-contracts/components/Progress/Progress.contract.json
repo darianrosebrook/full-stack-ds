@@ -145,9 +145,18 @@
       "danger"
     ]
   },
-  "states": [
-    "default"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
   "slots": {
     "root": {
       "required": true,

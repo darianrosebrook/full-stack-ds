@@ -749,6 +749,9 @@ export function normalizeStates(
       // The initial (base/absence) value is the un-modified state — it carries
       // no selector and no boolean modifier, so it stays out of the flat list.
       if (dim.initial !== undefined && v === dim.initial) continue;
+      // Channel-driven values are surfaced through their channel (data-state /
+      // aria-*), not as a CSS modifier class, so they also stay out of `flat`.
+      if (dim.derivesFrom?.[v]?.channel) continue;
       flat.push(v);
     }
   }

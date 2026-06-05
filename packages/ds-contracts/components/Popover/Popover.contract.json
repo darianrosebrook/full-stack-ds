@@ -106,13 +106,53 @@
       "auto"
     ]
   },
-  "states": [
-    "default",
-    "open",
-    "focus",
-    "entering",
-    "leaving"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "disclosure": {
+        "category": "visibility",
+        "values": [
+          "closed",
+          "open"
+        ],
+        "initial": "closed",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-expanded",
+          "values": {
+            "closed": "false",
+            "open": "true"
+          }
+        }
+      },
+      "transition": {
+        "category": "motion",
+        "values": [
+          "idle",
+          "entering",
+          "leaving"
+        ],
+        "initial": "idle",
+        "exclusive": true
+      }
+    }
+  },
   "motion": {
     "reducedMotion": "respect",
     "reducedMotionStrategy": "Duration set to 0; popover appears/disappears instantly without animation.",
