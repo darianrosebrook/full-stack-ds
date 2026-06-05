@@ -92,11 +92,34 @@
   "variants": {},
   "states": {
     "flat": [
-      "default",
-      "expanded",
-      "collapsed"
+      "expanded"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "expansion": {
+        "category": "visibility",
+        "values": [
+          "collapsed",
+          "expanded"
+        ],
+        "initial": "collapsed",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-expanded",
+          "values": {
+            "collapsed": "false",
+            "expanded": "true"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "show-more",

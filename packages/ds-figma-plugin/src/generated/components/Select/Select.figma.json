@@ -206,16 +206,80 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
-      "focus",
       "active",
+      "focus",
       "disabled",
-      "open",
-      "closed",
-      "selected"
+      "selected",
+      "open"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover",
+          "active"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unselected",
+          "selected"
+        ],
+        "initial": "unselected",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-selected",
+          "values": {
+            "unselected": "false",
+            "selected": "true"
+          }
+        }
+      },
+      "disclosure": {
+        "category": "visibility",
+        "values": [
+          "closed",
+          "open"
+        ],
+        "initial": "closed",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-expanded",
+          "values": {
+            "closed": "false",
+            "open": "true"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "select",

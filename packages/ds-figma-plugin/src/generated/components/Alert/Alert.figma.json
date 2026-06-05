@@ -120,10 +120,19 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "alert",

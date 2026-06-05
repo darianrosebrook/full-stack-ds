@@ -146,14 +146,47 @@
       "assertive"
     ]
   },
-  "states": [
-    "default",
-    "hover",
-    "focus",
-    "entering",
-    "visible",
-    "leaving"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "visibility": {
+        "category": "visibility",
+        "values": [
+          "hidden",
+          "visible"
+        ],
+        "initial": "hidden",
+        "exclusive": true
+      },
+      "transition": {
+        "category": "motion",
+        "values": [
+          "idle",
+          "entering",
+          "leaving"
+        ],
+        "initial": "idle",
+        "exclusive": true
+      }
+    }
+  },
   "motion": {
     "reducedMotion": "respect",
     "reducedMotionStrategy": "Duration set to 0 so enter/exit collapses to immediate show/hide.",

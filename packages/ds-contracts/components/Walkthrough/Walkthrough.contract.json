@@ -216,11 +216,33 @@
       "auto"
     ]
   },
-  "states": [
-    "default",
-    "hover",
-    "disabled"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      }
+    }
+  },
   "motion": {
     "reducedMotion": "respect",
     "transitions": [

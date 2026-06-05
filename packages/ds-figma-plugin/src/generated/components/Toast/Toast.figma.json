@@ -143,14 +143,51 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
       "focus",
-      "entering",
       "visible",
+      "entering",
       "leaving"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "visibility": {
+        "category": "visibility",
+        "values": [
+          "hidden",
+          "visible"
+        ],
+        "initial": "hidden",
+        "exclusive": true
+      },
+      "transition": {
+        "category": "motion",
+        "values": [
+          "idle",
+          "entering",
+          "leaving"
+        ],
+        "initial": "idle",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "toast",

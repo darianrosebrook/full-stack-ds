@@ -249,12 +249,51 @@
   "variants": {},
   "states": {
     "flat": [
-      "default",
       "hover",
       "disabled",
       "selected"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unselected",
+          "selected"
+        ],
+        "initial": "unselected",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-selected",
+          "values": {
+            "unselected": "false",
+            "selected": "true"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "command",

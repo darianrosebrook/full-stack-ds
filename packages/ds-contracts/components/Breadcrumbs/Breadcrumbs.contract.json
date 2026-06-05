@@ -51,11 +51,28 @@
     }
   },
   "variants": {},
-  "states": [
-    "default",
-    "hover",
-    "focus"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      }
+    }
+  },
   "slots": {
     "root": {
       "required": true,

@@ -80,10 +80,27 @@
   },
   "states": {
     "flat": [
-      "default",
       "focus"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "avatar",

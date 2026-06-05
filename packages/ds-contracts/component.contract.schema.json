@@ -203,29 +203,20 @@
       }
     },
     "states": {
-      "description": "Interaction/visual states. Prefer the dimensional form when states span multiple orthogonal axes (e.g. interaction vs selection vs validity).",
-      "oneOf": [
-        {
-          "type": "array",
-          "items": { "type": "string" },
-          "description": "Flat list of states (legacy)."
-        },
-        {
+      "type": "object",
+      "description": "Interaction/visual states as orthogonal dimensions (axes). Each dimension is a stackable axis whose values are (by default) mutually exclusive; dimensions compose. This is the sole authoring form — the legacy flat string[] branch has been removed.",
+      "required": ["dimensions"],
+      "additionalProperties": false,
+      "properties": {
+        "dimensions": {
           "type": "object",
-          "required": ["dimensions"],
-          "additionalProperties": false,
-          "properties": {
-            "dimensions": {
-              "type": "object",
-              "description": "Orthogonal state axes keyed by dimension name. By default each dimension is mutually exclusive (one active value at a time).",
-              "additionalProperties": { "$ref": "#/$defs/stateDimension" }
-            },
-            "description": {
-              "type": "string"
-            }
-          }
+          "description": "Orthogonal state axes keyed by axis name (e.g. pointer/focus/availability/selection). By default each dimension is mutually exclusive (one active value at a time).",
+          "additionalProperties": { "$ref": "#/$defs/stateDimension" }
+        },
+        "description": {
+          "type": "string"
         }
-      ]
+      }
     },
     "keyframes": {
       "type": "object",
@@ -754,23 +745,80 @@
     },
     "stateDimension": {
       "type": "object",
-      "required": ["values"],
+      "required": ["category", "values"],
       "additionalProperties": false,
       "properties": {
         "description": { "type": "string" },
+        "category": {
+          "type": "string",
+          "enum": ["interaction", "availability", "selection", "validation", "data", "visibility", "motion", "presentation"],
+          "description": "Semantic domain of this state axis. Component-intrinsic only; app/session/system states stay external to the contract. Cardinality is derived from values.length (2 = boolean, 3+ = enum) — it is not authored."
+        },
         "values": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "Allowed values on this dimension."
+          "minItems": 1,
+          "description": "Allowed values on this dimension. The `initial` value is the base/absence value and is excluded from the derived flat selector projection."
         },
         "initial": {
           "type": "string",
-          "description": "Default value when the component first renders."
+          "description": "Default (base/absence) value when the component first renders. Excluded from the derived flat selector list (so dimension defaults like rest/enabled/unchecked never emit selectors)."
         },
         "exclusive": {
           "type": "boolean",
-          "description": "Whether values on this dimension are mutually exclusive. Defaults to true.",
+          "description": "Whether values on this dimension are mutually exclusive (intra-dimension). Defaults to true. Inter-dimension stackability is structural — dimensions always compose.",
           "default": true
+        },
+        "suppresses": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Cross-dimension suppression: when this dimension holds a non-initial value it masks the affordances of the referenced dimensions (e.g. availability=disabled masks interaction). Lowering is realization-aware per target (native :disabled vs aria-disabled).",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["interaction", "availability", "selection", "validation", "data", "visibility", "motion", "presentation"]
+              },
+              "description": "Suppress dimensions whose category is listed here (the common case: availability suppresses interaction)."
+            },
+            "names": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Suppress specific dimensions by axis name (escape hatch; prefer categories)."
+            }
+          }
+        },
+        "a11y": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["attribute"],
+          "description": "ARIA projection for this dimension. Authored because semantic values (e.g. aria-checked=mixed) must not be fabricated by emitters.",
+          "properties": {
+            "attribute": {
+              "type": "string",
+              "description": "ARIA attribute this dimension drives (e.g. aria-checked, aria-disabled)."
+            },
+            "values": {
+              "type": "object",
+              "description": "Per-value ARIA attribute value mapping (e.g. { \"unchecked\": \"false\", \"checked\": \"true\", \"indeterminate\": \"mixed\" }).",
+              "additionalProperties": { "type": ["string", "boolean"] }
+            }
+          }
+        },
+        "derivesFrom": {
+          "type": "object",
+          "description": "Optional value-level derivation override, keyed by dimension value. Each entry pins how that value lowers to a selector/attribute/channel/prop. Omit to use name-based derivation via the shared state→selector mapping.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "selector": { "type": "string" },
+              "attr": { "type": "string" },
+              "channel": { "type": "string" },
+              "prop": { "type": "string" }
+            }
+          }
         }
       }
     },

@@ -450,14 +450,13 @@ function collectPropNames(contract: ComponentContract): Set<string> {
 
 /**
  * Return the set of "<dimension>=<value>" strings declared by the
- * contract's states block when in dimensional form. Returns null when
- * states is a flat array (the legacy form) — in that case stateMachine
- * references can't be cross-checked because there's no dimension/value
- * pairing to compare against.
+ * contract's states block. Returns null when the contract omits states —
+ * there is then no dimension/value pairing to cross-check stateMachine
+ * references against. (States are always the dimensional object form.)
  */
 function collectStateDimensions(contract: ComponentContract): Set<string> | null {
   const s = contract.states;
-  if (!s || Array.isArray(s)) return null;
+  if (!s) return null;
   const out = new Set<string>();
   for (const [dim, def] of Object.entries(s.dimensions ?? {})) {
     if (def && Array.isArray(def.values)) {

@@ -47,9 +47,18 @@
       "alias": "{ iconName: string; prefix?: string; icon?: unknown }"
     }
   },
-  "states": [
-    "default"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
   "focus": {
     "strategy": "none"
   },

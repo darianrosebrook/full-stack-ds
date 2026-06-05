@@ -117,10 +117,19 @@
       "page"
     ]
   },
-  "states": [
-    "default",
-    "hover"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
   "slots": {
     "body": {
       "required": false

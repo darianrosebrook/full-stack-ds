@@ -37,10 +37,19 @@
     }
   },
   "variants": {},
-  "states": [
-    "default",
-    "hover"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
   "slots": {
     "root": {
       "required": true,

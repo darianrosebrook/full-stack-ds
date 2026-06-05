@@ -101,12 +101,29 @@
       "auto"
     ]
   },
-  "states": [
-    "default",
-    "hover",
-    "entering",
-    "leaving"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "transition": {
+        "category": "motion",
+        "values": [
+          "idle",
+          "entering",
+          "leaving"
+        ],
+        "initial": "idle",
+        "exclusive": true
+      }
+    }
+  },
   "motion": {
     "reducedMotion": "respect",
     "reducedMotionStrategy": "Duration set to 0; tooltip appears/disappears instantly without opacity transition.",

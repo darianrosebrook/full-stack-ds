@@ -123,11 +123,29 @@
   },
   "states": {
     "flat": [
-      "default",
       "error",
       "success"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "validation": {
+        "category": "validation",
+        "values": [
+          "valid",
+          "error",
+          "success"
+        ],
+        "initial": "valid",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "text",

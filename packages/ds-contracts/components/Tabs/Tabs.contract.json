@@ -194,11 +194,44 @@
       "manual"
     ]
   },
-  "states": [
-    "default",
-    "hover",
-    "focus"
-  ],
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unselected",
+          "selected"
+        ],
+        "initial": "unselected",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-selected",
+          "values": {
+            "unselected": "false",
+            "selected": "true"
+          }
+        }
+      }
+    }
+  },
   "events": {
     "activeTabChange": {
       "description": "Fires when the active tab index changes. Under automatic activation this also fires when focus moves via arrow keys.",
@@ -230,25 +263,25 @@
       },
       {
         "event": "arrow.next",
-        "from": "focus=focused",
+        "from": "focus=focus",
         "to": "selection=selected",
         "effect": "emit activeTabChange(nextIndex); move roving tabindex and DOM focus to next tab (wraps at end)"
       },
       {
         "event": "arrow.prev",
-        "from": "focus=focused",
+        "from": "focus=focus",
         "to": "selection=selected",
         "effect": "emit activeTabChange(prevIndex); move roving tabindex and DOM focus to previous tab (wraps at start)"
       },
       {
         "event": "home",
-        "from": "focus=focused",
+        "from": "focus=focus",
         "to": "selection=selected",
         "effect": "emit activeTabChange(0); move focus to first tab"
       },
       {
         "event": "end",
-        "from": "focus=focused",
+        "from": "focus=focus",
         "to": "selection=selected",
         "effect": "emit activeTabChange(tabCount-1); move focus to last tab"
       }

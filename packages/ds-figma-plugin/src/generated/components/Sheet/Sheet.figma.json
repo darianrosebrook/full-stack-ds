@@ -138,13 +138,49 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
       "focus",
-      "open",
-      "closed"
+      "open"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "openness": {
+        "category": "visibility",
+        "values": [
+          "closed",
+          "opening",
+          "open",
+          "closing"
+        ],
+        "initial": "closed",
+        "exclusive": true,
+        "derivesFrom": {
+          "opening": {
+            "channel": "openness"
+          },
+          "closing": {
+            "channel": "openness"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "sheet",
