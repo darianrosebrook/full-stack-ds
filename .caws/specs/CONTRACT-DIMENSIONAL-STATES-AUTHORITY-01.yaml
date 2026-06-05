@@ -3,6 +3,7 @@ title: 'Dimensional states authority: object-only states, extend stateDimension 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: dimensional-states
 created_at: '2026-06-05T20:53:11.125Z'
 updated_at: '2026-06-05T20:53:36.476Z'
 blast_radius:
