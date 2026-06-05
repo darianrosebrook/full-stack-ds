@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { buildComponentIR, normalizePropType, canonicalTsType } from "./ir.js";
 import { generateReactComponentSource } from "./frameworks/react/component-source.js";
+import { generateVueComponentSource } from "./frameworks/vue/component-source.js";
+import { generateSvelteComponentSource } from "./frameworks/svelte/component-source.js";
+import { generateAngularComponentSource } from "./frameworks/angular/component-source.js";
+import { generateLitComponentSource } from "./frameworks/lit/component-source.js";
 import type { ComponentContract } from "./contract.js";
 
 // Contract: rail-coverage... no — CODEGEN-PROP-TYPE-IR-PILOT-01, contract
@@ -65,6 +69,7 @@ function migratedContract(): ComponentContract {
         members: [
           { name: "tone", propType: { kind: "enum", values: ["info", "warn"] }, description: "Tone." },
           { name: "open", propType: { kind: "boolean" }, description: "Open state." },
+          { name: "label", propType: { kind: "string" }, description: "Label." },
           { name: "size", propType: { kind: "ref", to: "ProbeSize" }, description: "Size." },
         ],
       },
@@ -72,6 +77,61 @@ function migratedContract(): ComponentContract {
     types: { ProbeSize: { kind: "union", values: ["sm", "lg"] } },
   } as ComponentContract;
 }
+
+const POISON = "__RAW_TYPE_SHOULD_NOT_APPEAR__";
+
+/** The four non-React emitters migrated in slice 2 (React is slice 1). */
+const NON_REACT_EMITTERS: ReadonlyArray<{ name: string; gen: (ir: ReturnType<typeof buildComponentIR>) => string }> = [
+  { name: "vue", gen: generateVueComponentSource },
+  { name: "svelte", gen: generateSvelteComponentSource },
+  { name: "angular", gen: generateAngularComponentSource },
+  { name: "lit", gen: generateLitComponentSource },
+];
+
+describe("non-React emitters lower from propType, not raw p.type (A3 negative control)", () => {
+  for (const { name, gen } of NON_REACT_EMITTERS) {
+    it(`${name}: a poisoned p.type never leaks; output realizes the lowered propType (boolean/string/ref)`, () => {
+      const ir = buildComponentIR(migratedContract());
+      // Poison the back-compat canonical type on every prop. A correct emitter
+      // lowers from p.propType and must ignore p.type entirely.
+      for (const p of ir.styledProps) p.type = POISON;
+      const src = gen(ir);
+      expect(src).not.toContain(POISON);
+      // boolean (open) and ref->alias (size) realized from propType
+      expect(src).toContain("boolean");
+      expect(src).toContain("ProbeSize");
+      // string (label) realized as a TS string type
+      expect(src).toMatch(/\bstring\b/);
+    });
+  }
+});
+
+describe("fallback{raw} is observable ONLY for propType.kind === 'fallback' (A3 inverse)", () => {
+  for (const { name, gen } of NON_REACT_EMITTERS) {
+    it(`${name}: a legacy styled prop surfaces its raw type; a poisoned non-fallback prop's type does not`, () => {
+      const c = {
+        name: "Probe",
+        layer: "primitive",
+        a2ui: { category: "action" },
+        props: {
+          designed: { members: [{ name: "open", propType: { kind: "boolean" }, description: "x" }] },
+          // legacy styled -> normalizes to fallback{raw: "LegacyKind"}
+          styled: { members: [{ name: "legacyFlag", type: "LegacyKind", description: "x" }] },
+        },
+        types: { LegacyKind: { kind: "union", values: ["x", "y"] } },
+      } as ComponentContract;
+      const ir = buildComponentIR(c);
+      // Poison ONLY non-fallback props' canonical type.
+      for (const p of ir.styledProps) {
+        if (p.propType.kind !== "fallback") p.type = POISON;
+      }
+      const src = gen(ir);
+      expect(src).not.toContain(POISON);
+      // The fallback raw is the only source for legacyFlag and must surface.
+      expect(src).toContain("LegacyKind");
+    });
+  }
+});
 
 describe("IR + React emitter lower from PropTypeIR (A3)", () => {
   it("resolveProps populates structured propType and a derived canonical type", () => {

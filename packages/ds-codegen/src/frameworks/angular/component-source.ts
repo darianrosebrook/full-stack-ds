@@ -34,9 +34,10 @@ import type {
   DomNodeIR,
   IterationIR,
   NormalizedChannelIR,
+  PropTypeIR,
   ResolvedPropIR,
 } from "../../ir.js";
-import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
+import { TABLE_COMPOSITION_TAGS, canonicalTsType } from "../../ir.js";
 import {
   emitNonReactTypeAliases,
   translateNonReactType,
@@ -727,7 +728,7 @@ function generateComponent(ir: ComponentIR): string {
 }
 
 function generateInputProp(p: ResolvedPropIR): string | null {
-  const type = angularType(p.type);
+  const type = lowerAngularPropType(p.propType);
   const defaultPart = p.defaultExpr !== undefined ? ` = ${p.defaultExpr}` : "";
   // Required props with no default need a definite-assignment assertion to
   // satisfy strictPropertyInitialization; optional props use `?:`.
@@ -805,6 +806,23 @@ function toKebab(name: string): string {
  */
 function angularType(typeStr: string): string {
   return translateNonReactType(typeStr);
+}
+
+/**
+ * Lower a framework-neutral PropTypeIR into an Angular/TS type expression. Reads
+ * the structured `propType` (ref from `propType.to`, fallback via the legacy
+ * string path on `propType.raw`, V1 kinds via the canonical string) so output is
+ * byte-identical. (CODEGEN-PROP-TYPE-IR-PILOT-01, slice 2)
+ */
+function lowerAngularPropType(pt: PropTypeIR): string {
+  switch (pt.kind) {
+    case "ref":
+      return angularType(pt.to);
+    case "fallback":
+      return angularType(pt.raw);
+    default:
+      return angularType(canonicalTsType(pt));
+  }
 }
 
 // ---------------------------------------------------------------------------
