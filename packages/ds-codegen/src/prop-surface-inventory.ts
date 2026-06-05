@@ -17,7 +17,25 @@
 import { readFileSync } from "node:fs";
 import { listComponentContracts } from "./contracts-fs.js";
 import { getPropMembers, type ComponentContract } from "./contract.js";
-import { normalizePropType } from "./ir.js";
+import { normalizePropType, type PropTypeIR } from "./ir.js";
+
+/** All type-alias names a PropTypeIR references, recursing through V2 kinds. */
+function collectRefNames(pt: PropTypeIR): string[] {
+  switch (pt.kind) {
+    case "ref":
+      return [pt.to];
+    case "array":
+      return collectRefNames(pt.items);
+    case "promise":
+      return collectRefNames(pt.of);
+    case "union":
+      return pt.of.flatMap(collectRefNames);
+    case "callback":
+      return [...pt.params.flatMap((p) => collectRefNames(p.type)), ...collectRefNames(pt.returns)];
+    default:
+      return [];
+  }
+}
 
 /** All prop buckets the six-bucket schema admits (designed/constrained are the durable surface). */
 export const PROP_BUCKETS = [
@@ -90,9 +108,15 @@ export function inventoryContract(name: string, contract: ComponentContract): Pr
 
     const pt = normalizePropType(m);
     if (pt.kind === "fallback") fallbackCount++;
+    // Every ref this prop references — top-level OR nested inside a V2
+    // callback/array/union/promise — so the scoreboard's resolution check
+    // matches what generate:check enforces over the canonical type string.
+    for (const to of collectRefNames(pt)) {
+      refs.push({ prop: m.name, to, resolves: Boolean(types[to]) });
+    }
+    // The prop's PRIMARY enum domain (a top-level enum, or a ref to a union alias).
     if (pt.kind === "ref") {
       const def = types[pt.to];
-      refs.push({ prop: m.name, to: pt.to, resolves: Boolean(def) });
       if (def && (def.kind === "union" || def.kind === "enum") && Array.isArray(def.values)) {
         enumDomains[m.name] = def.values;
       }

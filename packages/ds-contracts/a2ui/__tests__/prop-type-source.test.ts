@@ -98,3 +98,72 @@ describe('A2UI derives accepts from structured propType (A4)', () => {
     }
   });
 });
+
+// CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01 A4: callbacks are NOT agent capability.
+// A2UI omits callback/void/promise props; collection/union/literal props project
+// as their value kind (preserving the legacy TS-string projection).
+describe('A2UI projection for V2 propType kinds (A4)', () => {
+  it('omits callback props from the agent-settable surface, but keeps the channel event', () => {
+    const c: ComponentContractLike = {
+      name: 'ProbeV2',
+      a2ui: { category: 'display' },
+      props: {
+        designed: {
+          members: [
+            { name: 'expanded', propType: { kind: 'boolean' }, description: 'Controlled expanded state.' },
+            {
+              name: 'onExpandedChange',
+              propType: {
+                kind: 'callback',
+                params: [{ name: 'expanded', type: { kind: 'boolean' } }],
+                returns: { kind: 'void' },
+              },
+              description: 'Called when expanded changes.',
+            },
+          ],
+        },
+      },
+      channels: {
+        expanded: { value: 'expanded', onChange: 'onExpandedChange', valueType: 'boolean' },
+      },
+    };
+    const d = deriveA2UIDescriptor(c);
+    // The callback is dropped from the prop capability surface...
+    expect(d.props.onExpandedChange).toBeUndefined();
+    expect(d.props.expanded.accepts).toEqual(['boolean']);
+    // ...while the channel still projects the semantics as an event.
+    expect(d.events.expanded).toBeDefined();
+    expect(d.events.expanded.onChangeProp).toBe('onExpandedChange');
+  });
+
+  it('void and promise props are omitted; array/union/literal project as their value kind', () => {
+    const c: ComponentContractLike = {
+      name: 'ProbeV2Kinds',
+      a2ui: { category: 'display' },
+      props: {
+        designed: {
+          members: [
+            { name: 'tags', propType: { kind: 'array', items: { kind: 'string' } }, description: 'String tags.' },
+            { name: 'options', propType: { kind: 'array', items: { kind: 'ref', to: 'SelectOption' } }, description: 'Option objects.' },
+            {
+              name: 'value',
+              propType: { kind: 'union', of: [{ kind: 'string' }, { kind: 'array', items: { kind: 'string' } }] },
+              description: 'Single or multiple value.',
+            },
+            { name: 'mode', propType: { kind: 'literal', value: 'auto' }, description: 'Fixed literal.' },
+            { name: 'reset', propType: { kind: 'void' }, description: 'Void marker.' },
+            { name: 'load', propType: { kind: 'promise', of: { kind: 'void' } }, description: 'Async marker.' },
+          ],
+        },
+      },
+    };
+    const d = deriveA2UIDescriptor(c);
+    expect(d.props.tags.accepts).toEqual(['string']); // string[] -> element kind
+    expect(d.props.options.accepts).toEqual(['string']); // SelectOption[] -> unknown ref -> scalar
+    expect(d.props.value.accepts).toEqual(['string']); // string | string[] -> merged scalar
+    expect(d.props.mode.accepts).toEqual(['enum']); // string literal -> enum-of-one
+    expect(d.props.mode.enum).toEqual(['auto']);
+    expect(d.props.reset).toBeUndefined(); // void omitted
+    expect(d.props.load).toBeUndefined(); // promise omitted
+  });
+});

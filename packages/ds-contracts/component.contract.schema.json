@@ -465,14 +465,20 @@
       }
     },
     "propType": {
-      "description": "Framework-neutral structured prop type (PropTypeIR V1). When present it supersedes the legacy TS-string `type` as the agnostic source the IR normalizes and emitters lower. See docs/a2ui-projection.md + CODEGEN-PROP-TYPE-IR-PILOT-01.",
+      "description": "Framework-neutral structured prop type (PropTypeIR). V1 (CODEGEN-PROP-TYPE-IR-PILOT-01): string/number/boolean/enum/node/ref. V2 (CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01, observed-corpus extension): callback/array/union/literal/void/promise. When present it supersedes the legacy TS-string `type` as the agnostic source the IR normalizes and emitters lower. There is deliberately NO inline anonymous-object kind: named object-ish types use {kind:ref} to a contract alias; a genuinely anonymous object type stays a declared residual (legacy `type`). See docs/a2ui-projection.md.",
       "oneOf": [
         { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "string" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "number" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "boolean" } } },
         { "type": "object", "additionalProperties": false, "required": ["kind", "values"], "properties": { "kind": { "const": "enum" }, "values": { "type": "array", "items": { "type": "string" }, "minItems": 1 } } },
         { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "node" }, "of": { "enum": ["content", "icon"] } } },
-        { "type": "object", "additionalProperties": false, "required": ["kind", "to"], "properties": { "kind": { "const": "ref" }, "to": { "type": "string", "minLength": 1 } } }
+        { "type": "object", "additionalProperties": false, "required": ["kind", "to"], "properties": { "kind": { "const": "ref" }, "to": { "type": "string", "minLength": 1 } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "params", "returns"], "properties": { "kind": { "const": "callback" }, "params": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["name", "type"], "properties": { "name": { "type": "string", "minLength": 1 }, "type": { "$ref": "#/$defs/propType" }, "optional": { "type": "boolean" } } } }, "returns": { "$ref": "#/$defs/propType" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "items"], "properties": { "kind": { "const": "array" }, "items": { "$ref": "#/$defs/propType" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "of"], "properties": { "kind": { "const": "union" }, "of": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/propType" } } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "value"], "properties": { "kind": { "const": "literal" }, "value": { "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" }, { "type": "null" } ] } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind"], "properties": { "kind": { "const": "void" } } },
+        { "type": "object", "additionalProperties": false, "required": ["kind", "of"], "properties": { "kind": { "const": "promise" }, "of": { "$ref": "#/$defs/propType" } } }
       ]
     },
     "designedPropMember": {

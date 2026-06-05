@@ -3,18 +3,46 @@
  */
 
 /**
- * Framework-neutral structured prop type (PropTypeIR V1 vocabulary), authored
- * on `designed`/`constrained` members. When present it supersedes the legacy
- * TS-string `type` as the agnostic source the IR normalizes and emitters lower.
- * See docs/a2ui-projection.md + CODEGEN-PROP-TYPE-IR-PILOT-01.
+ * One parameter of a `callback` PropTypeIR (PropTypeIR V2). Mirrors a TS
+ * function parameter: a name, a (recursive) PropTypeIR, and optionality.
+ */
+export interface PropCallbackParam {
+  name: string;
+  type: AuthoredPropType;
+  optional?: boolean;
+}
+
+/**
+ * Framework-neutral structured prop type, authored on `designed`/`constrained`
+ * members. When present it supersedes the legacy TS-string `type` as the
+ * agnostic source the IR normalizes and emitters lower.
+ *
+ * V1 (the closed pilot vocabulary, CODEGEN-PROP-TYPE-IR-PILOT-01):
+ *   string | number | boolean | enum | node | ref
+ * V2 (observed-corpus extension, CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01):
+ *   callback | array | union | literal | void | promise
+ *
+ * V2 adds exactly the shapes the real corpus uses (function/collection/union
+ * props on controlled components). It deliberately does NOT add an inline
+ * anonymous-object kind — named object-ish types stay `ref` to a contract
+ * alias; a genuinely anonymous object type remains a declared residual.
+ * See docs/a2ui-projection.md.
  */
 export type AuthoredPropType =
+  // --- V1 ---
   | { kind: 'string' }
   | { kind: 'number' }
   | { kind: 'boolean' }
   | { kind: 'enum'; values: string[] }
   | { kind: 'node'; of?: 'content' | 'icon' }
-  | { kind: 'ref'; to: string };
+  | { kind: 'ref'; to: string }
+  // --- V2 (observed-corpus extension) ---
+  | { kind: 'callback'; params: PropCallbackParam[]; returns: AuthoredPropType }
+  | { kind: 'array'; items: AuthoredPropType }
+  | { kind: 'union'; of: AuthoredPropType[] }
+  | { kind: 'literal'; value: string | number | boolean | null }
+  | { kind: 'void' }
+  | { kind: 'promise'; of: AuthoredPropType };
 
 export interface StyledPropMember {
   name: string;

@@ -48,18 +48,35 @@ export interface ContractTypeDef {
   alias?: string;
 }
 
+/** One parameter of a `callback` ContractPropType (PropTypeIR V2). */
+export interface ContractCallbackParam {
+  name: string;
+  type: ContractPropType;
+  optional?: boolean;
+}
+
 /**
- * Framework-neutral structured prop type (PropTypeIR V1) authored on migrated
+ * Framework-neutral structured prop type (PropTypeIR) authored on migrated
  * members. Mirrors `AuthoredPropType` in ds-codegen (a2ui must not depend on
- * codegen, so the shape is restated here). See CODEGEN-PROP-TYPE-IR-PILOT-01.
+ * codegen, so the shape is restated here). V1 — string/number/boolean/enum/
+ * node/ref (CODEGEN-PROP-TYPE-IR-PILOT-01); V2 — callback/array/union/literal/
+ * void/promise (CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01).
  */
 export type ContractPropType =
+  // --- V1 ---
   | { kind: 'string' }
   | { kind: 'number' }
   | { kind: 'boolean' }
   | { kind: 'enum'; values: string[] }
   | { kind: 'node'; of?: 'content' | 'icon' }
-  | { kind: 'ref'; to: string };
+  | { kind: 'ref'; to: string }
+  // --- V2 (observed-corpus extension) ---
+  | { kind: 'callback'; params: ContractCallbackParam[]; returns: ContractPropType }
+  | { kind: 'array'; items: ContractPropType }
+  | { kind: 'union'; of: ContractPropType[] }
+  | { kind: 'literal'; value: string | number | boolean | null }
+  | { kind: 'void' }
+  | { kind: 'promise'; of: ContractPropType };
 
 export interface ContractPropMember {
   name: string;
@@ -286,6 +303,44 @@ function parsePropType(
       return { accepts: [pt.of === 'icon' ? 'icon-ref' : 'node-ref'] };
     case 'ref':
       return parseType(pt.to, undefined, types);
+    // --- V2 (observed-corpus extension) ---
+    // Callbacks / void / promise are NOT agent capability: an agent cannot
+    // "set" a function-valued renderer callback or an async result. They may be
+    // part of the framework prop API, but A2UI omits them (null → dropped from
+    // the descriptor). Where the behavior matters, the contract exposes it via
+    // a channel/event, which A2UI projects separately.
+    case 'callback':
+    case 'void':
+    case 'promise':
+      return null;
+    // An array projects as the value kind of its element (`string[]` accepts a
+    // string); preserves the legacy projection where `string[]` / `SelectOption[]`
+    // both fell through to a scalar.
+    case 'array':
+      return parsePropType(pt.items, types);
+    // A union merges the accepted kinds of its members (skipping omitted
+    // callback/void/null members), mirroring how `splitUnion` merged TS unions.
+    case 'union': {
+      const accepts: A2UIValueKind[] = [];
+      const enumValues: string[] = [];
+      for (const m of pt.of) {
+        const sub = parsePropType(m, types);
+        if (!sub) continue;
+        for (const k of sub.accepts) if (!accepts.includes(k)) accepts.push(k);
+        if (sub.enumValues) for (const v of sub.enumValues) if (!enumValues.includes(v)) enumValues.push(v);
+      }
+      if (accepts.length === 0) return null;
+      return enumValues.length > 0 ? { accepts, enumValues } : { accepts };
+    }
+    // A string literal is a closed single-value set → enum-of-one (matches the
+    // legacy `"foo"` → enum projection); numeric/boolean literals project as
+    // their scalar kind; null is not agent-settable.
+    case 'literal': {
+      if (typeof pt.value === 'string') return { accepts: ['enum'], enumValues: [pt.value] };
+      if (typeof pt.value === 'number') return { accepts: ['number'] };
+      if (typeof pt.value === 'boolean') return { accepts: ['boolean'] };
+      return null;
+    }
   }
 }
 
@@ -304,6 +359,30 @@ function canonicalA2uiType(pt: ContractPropType): string {
       return 'ReactNode';
     case 'ref':
       return pt.to;
+    // --- V2 (observed-corpus extension). Mostly for the display `type` field;
+    // callbacks are omitted from the surface so their rendering is discarded. ---
+    case 'void':
+      return 'void';
+    case 'literal':
+      return pt.value === null
+        ? 'null'
+        : typeof pt.value === 'string'
+          ? JSON.stringify(pt.value)
+          : String(pt.value);
+    case 'array':
+      return pt.items.kind === 'union' || pt.items.kind === 'callback'
+        ? `(${canonicalA2uiType(pt.items)})[]`
+        : `${canonicalA2uiType(pt.items)}[]`;
+    case 'promise':
+      return `Promise<${canonicalA2uiType(pt.of)}>`;
+    case 'callback':
+      return `(${pt.params
+        .map((p) => `${p.name}${p.optional ? '?' : ''}: ${canonicalA2uiType(p.type)}`)
+        .join(', ')}) => ${canonicalA2uiType(pt.returns)}`;
+    case 'union':
+      return pt.of
+        .map((m) => (m.kind === 'callback' ? `(${canonicalA2uiType(m)})` : canonicalA2uiType(m)))
+        .join(' | ');
   }
 }
 

@@ -332,13 +332,39 @@ function lowerReactPropType(pt: PropTypeIR, ir: ComponentIR): string {
     case "boolean":
       return pt.kind;
     case "enum":
-      return pt.values.map((v) => `'${v}'`).join(" | ");
+      // Double-quoted to match the corpus generated-TS convention (and
+      // canonicalTsType) — CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01 A2.
+      return pt.values.map((v) => JSON.stringify(v)).join(" | ");
     case "node":
       return "ReactNode";
     case "ref":
       return resolveReactType(pt.to, ir);
     case "fallback":
       return resolveReactType(pt.raw, ir);
+    // --- V2 (observed-corpus extension). Recurses through lowerReactPropType so
+    // nested refs keep React's resolution/namespace-stripping. ---
+    case "void":
+      return "void";
+    case "literal":
+      return pt.value === null
+        ? "null"
+        : typeof pt.value === "string"
+          ? JSON.stringify(pt.value)
+          : String(pt.value);
+    case "array": {
+      const inner = lowerReactPropType(pt.items, ir);
+      return pt.items.kind === "union" || pt.items.kind === "callback" ? `(${inner})[]` : `${inner}[]`;
+    }
+    case "promise":
+      return `Promise<${lowerReactPropType(pt.of, ir)}>`;
+    case "callback":
+      return `(${pt.params
+        .map((p) => `${p.name}${p.optional ? "?" : ""}: ${lowerReactPropType(p.type, ir)}`)
+        .join(", ")}) => ${lowerReactPropType(pt.returns, ir)}`;
+    case "union":
+      return pt.of
+        .map((m) => (m.kind === "callback" ? `(${lowerReactPropType(m, ir)})` : lowerReactPropType(m, ir)))
+        .join(" | ");
   }
 }
 

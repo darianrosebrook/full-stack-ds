@@ -45,14 +45,119 @@ describe("normalizePropType — structured vs explicit fallback (A5)", () => {
 });
 
 describe("canonicalTsType — back-compat TS string per kind", () => {
-  it("derives the canonical string for every PropTypeIR kind", () => {
+  it("derives the canonical string for every V1 PropTypeIR kind", () => {
     expect(canonicalTsType({ kind: "string" })).toBe("string");
     expect(canonicalTsType({ kind: "number" })).toBe("number");
     expect(canonicalTsType({ kind: "boolean" })).toBe("boolean");
-    expect(canonicalTsType({ kind: "enum", values: ["sm", "md"] })).toBe("'sm' | 'md'");
+    // enum lowers to a DOUBLE-quoted union — matching the generated-TS
+    // convention (CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01 A2). The corpus has no
+    // single-quoted inline unions, so double quotes keep migrations byte-clean.
+    expect(canonicalTsType({ kind: "enum", values: ["sm", "md"] })).toBe('"sm" | "md"');
+    expect(canonicalTsType({ kind: "enum", values: ["horizontal", "vertical"] })).toBe(
+      '"horizontal" | "vertical"',
+    );
     expect(canonicalTsType({ kind: "node", of: "icon" })).toBe("ReactNode");
     expect(canonicalTsType({ kind: "ref", to: "ButtonSize" })).toBe("ButtonSize");
     expect(canonicalTsType({ kind: "fallback", raw: "X<Y>" })).toBe("X<Y>");
+  });
+
+  // CODEGEN-PROP-TYPE-IR-OBSERVED-TYPES-01 A1: each V2 kind lowers byte-identically
+  // to the legacy TS-string actually present in the corpus today. Byte-identity of
+  // the whole migration reduces to these — emitters + import scanners consume the
+  // string this produces, so reproducing the legacy string is sufficient.
+  it("lowers every V2 kind byte-identically to observed corpus signatures", () => {
+    // void + simple callbacks
+    expect(canonicalTsType({ kind: "void" })).toBe("void");
+    expect(canonicalTsType({ kind: "callback", params: [], returns: { kind: "void" } })).toBe(
+      "() => void",
+    );
+    expect(
+      canonicalTsType({
+        kind: "callback",
+        params: [{ name: "checked", type: { kind: "boolean" } }],
+        returns: { kind: "void" },
+      }),
+    ).toBe("(checked: boolean) => void"); // Checkbox/Switch/ToggleSwitch
+    expect(
+      canonicalTsType({
+        kind: "callback",
+        params: [{ name: "value", type: { kind: "string" } }],
+        returns: { kind: "void" },
+      }),
+    ).toBe("(value: string) => void"); // Input/OTP/Tabs/TextField/Command
+    expect(
+      canonicalTsType({
+        kind: "callback",
+        params: [
+          { name: "value", type: { kind: "number" } },
+          { name: "max", type: { kind: "number" } },
+        ],
+        returns: { kind: "string" },
+      }),
+    ).toBe("(value: number, max: number) => string"); // Progress.formatValue
+
+    // array kinds
+    expect(canonicalTsType({ kind: "array", items: { kind: "string" } })).toBe("string[]"); // Shuttle
+    expect(canonicalTsType({ kind: "array", items: { kind: "ref", to: "SelectOption" } })).toBe(
+      "SelectOption[]",
+    ); // Select.options
+    expect(canonicalTsType({ kind: "array", items: { kind: "ref", to: "WalkthroughStepSpec" } })).toBe(
+      "WalkthroughStepSpec[]",
+    );
+
+    // union kinds (string | string[], Date | Date[] | null) and literal/null
+    expect(
+      canonicalTsType({
+        kind: "union",
+        of: [{ kind: "string" }, { kind: "array", items: { kind: "string" } }],
+      }),
+    ).toBe("string | string[]"); // Accordion/Select value
+    expect(
+      canonicalTsType({
+        kind: "union",
+        of: [
+          { kind: "ref", to: "Date" },
+          { kind: "array", items: { kind: "ref", to: "Date" } },
+          { kind: "literal", value: null },
+        ],
+      }),
+    ).toBe("Date | Date[] | null"); // Calendar.onChange param
+    expect(
+      canonicalTsType({
+        kind: "callback",
+        params: [
+          {
+            name: "value",
+            type: {
+              kind: "union",
+              of: [{ kind: "string" }, { kind: "array", items: { kind: "string" } }],
+            },
+          },
+        ],
+        returns: { kind: "void" },
+      }),
+    ).toBe("(value: string | string[]) => void"); // Accordion/Select.onValueChange
+
+    // callback inside a union is parenthesized for precedence; promise + literals
+    expect(
+      canonicalTsType({
+        kind: "union",
+        of: [
+          {
+            kind: "callback",
+            params: [
+              { name: "value", type: { kind: "string" } },
+              { name: "search", type: { kind: "string" } },
+            ],
+            returns: { kind: "number" },
+          },
+          { kind: "literal", value: null },
+        ],
+      }),
+    ).toBe("((value: string, search: string) => number) | null");
+    expect(canonicalTsType({ kind: "promise", of: { kind: "void" } })).toBe("Promise<void>");
+    expect(canonicalTsType({ kind: "literal", value: "foo" })).toBe('"foo"');
+    expect(canonicalTsType({ kind: "literal", value: 42 })).toBe("42");
   });
 });
 
@@ -138,8 +243,9 @@ describe("IR + React emitter lower from PropTypeIR (A3)", () => {
     const ir = buildComponentIR(migratedContract());
     const byName = Object.fromEntries(ir.styledProps.map((p) => [p.name, p]));
     expect(byName.tone.propType).toEqual({ kind: "enum", values: ["info", "warn"] });
-    // canonical type is DERIVED from the structured type (not authored)
-    expect(byName.tone.type).toBe("'info' | 'warn'");
+    // canonical type is DERIVED from the structured type (not authored), and
+    // enum now lowers to a DOUBLE-quoted union (observed-corpus convention).
+    expect(byName.tone.type).toBe('"info" | "warn"');
     expect(byName.open.propType).toEqual({ kind: "boolean" });
     expect(byName.size.propType).toEqual({ kind: "ref", to: "ProbeSize" });
     expect(byName.size.type).toBe("ProbeSize");
@@ -149,8 +255,61 @@ describe("IR + React emitter lower from PropTypeIR (A3)", () => {
     const src = generateReactComponentSource(buildComponentIR(migratedContract()), STACK_IMPORT);
     // enum -> inlined union; boolean -> boolean; ref -> alias name.
     // These can ONLY come from the structured propType, since no `type` string exists.
-    expect(src).toContain("tone?: 'info' | 'warn';");
+    expect(src).toContain('tone?: "info" | "warn";');
     expect(src).toContain("open?: boolean;");
     expect(src).toContain("size?: ProbeSize;");
+  });
+});
+
+/** A migrated contract using V2 kinds: a callback prop and an array prop. */
+function v2MigratedContract(): ComponentContract {
+  return {
+    name: "ProbeV2",
+    layer: "primitive",
+    a2ui: { category: "action" },
+    props: {
+      designed: {
+        members: [
+          {
+            name: "onValueChange",
+            propType: {
+              kind: "callback",
+              params: [{ name: "value", type: { kind: "string" } }],
+              returns: { kind: "void" },
+            },
+            description: "Called when the value changes.",
+          },
+          {
+            name: "items",
+            propType: { kind: "array", items: { kind: "ref", to: "ProbeItem" } },
+            description: "Collection of items.",
+          },
+        ],
+      },
+    },
+    types: { ProbeItem: { kind: "alias", alias: "{ id: string }" } },
+  } as ComponentContract;
+}
+
+describe("V2 kinds lower through the emitters from propType (A1/A5)", () => {
+  // Non-React emitters re-lower from propType: poison the cached canonical
+  // string and prove it never leaks while the V2 callback/array still realize.
+  for (const { name, gen } of NON_REACT_EMITTERS) {
+    it(`${name}: a poisoned p.type never leaks; callback + array realize from propType`, () => {
+      const ir = buildComponentIR(v2MigratedContract());
+      for (const p of ir.styledProps) p.type = POISON;
+      const src = gen(ir);
+      expect(src).not.toContain(POISON);
+      expect(src).toContain("(value: string) => void"); // callback lowered byte-identically
+      expect(src).toContain("ProbeItem[]"); // array element ref preserved
+    });
+  }
+
+  // React: the contract authors NO `type` string, so the only possible source
+  // for these exact strings is the structured propType lowering.
+  it("react: callback + array realize from propType (no authored type string)", () => {
+    const src = generateReactComponentSource(buildComponentIR(v2MigratedContract()), STACK_IMPORT);
+    expect(src).toContain("onValueChange?: (value: string) => void;");
+    expect(src).toContain("items?: ProbeItem[];");
   });
 });
