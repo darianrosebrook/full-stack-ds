@@ -2,10 +2,11 @@ id: PREPUSH-SCOPED-GATE-01
 title: 'Change-scope the pre-push gate (skip unaffected steps; dedup token build; fail-fast order)'
 risk_tier: 2
 mode: chore
-lifecycle_state: active
-worktree: prepush-scoped
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge prepush-scoped at d3c0f6804c5032a04fe8c0548286dd8a69cacb3e'
 created_at: '2026-06-05T05:42:00.796Z'
-updated_at: '2026-06-05T05:42:00.796Z'
+updated_at: '2026-06-05T06:23:42.621Z'
 blast_radius:
   modules:
     - '.githooks/pre-push: the local pre-flight gate — restructured to run only the step-groups whose inputs are in the push diff, dedup the double token build, and fail-fast on lint/typecheck'
