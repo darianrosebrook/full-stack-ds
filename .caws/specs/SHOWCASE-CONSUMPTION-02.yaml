@@ -7,19 +7,29 @@ created_at: '2026-06-05T00:52:26.616Z'
 updated_at: '2026-06-05T00:52:26.616Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'src/ (React showcase: consumption guard test + table-bearing views/sections)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
     - 'src/'
-  out: []
+  out:
+    - 'packages/'
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'The Pass 1 consumption fixes cannot silently regress: a committed static-guard test fails if app.css reintroduces a bare .card{} or .tabs{} rule, or if TokensView stops consuming DS Input/Chip.'
+  - 'Rendered data tables in the showcase use the DS Table component family rather than hand-rolled <table> markup, except where a table is documentation content (a code sample) or genuinely not tabular.'
 acceptance:
-  - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+  - id: A7
+    given: 'src/styles/app.css and the Pass 1-touched views'
+    when: 'the consumption guard test runs'
+    then: 'it FAILS if app.css contains a bare .card{} or .tabs{} rule, or if TokensView no longer imports DS Input/Chip — and PASSES on the current tree (proven by a negative control)'
+  - id: A8
+    given: 'a showcase section that renders a data table (PropsTable, TokensTable, A11yPanel, EvidencePanel, A2UIDescriptorPanel, ...)'
+    when: 'it renders'
+    then: 'the table is built from the DS Table/TableHead/TableBody/TableRow/TableHeaderCell/TableCell components, not raw <table>/<thead>/<tr>/<th>/<td>'
+  - id: A9
+    given: 'the migrated views'
+    when: 'typecheck, lint, the full test suite, and a visual pass run'
+    then: 'all are green and the tables render without structural or a11y regression (verified in the running app)'
 non_functional: {}
 contracts: []
