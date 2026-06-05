@@ -48,16 +48,16 @@ explicit `?props=<encoded JSON>` channel added to `parsePropsFromQuery`
 | **Sheet** | react, vue, svelte, lit | same — slide-over host closed by default. |
 | **Angular** (whole framework) | angular | props are baked **before** AOT compile; there is no request-carried prop seam (the R/V/S/L query channel does not apply). |
 
-### Finding surfaced by the rail (follow-up, not this slice)
+### Finding surfaced by the rail — RESOLVED (`LIT-LABEL-HTMLFOR-DOM-ATTR-01`)
 
-- **`lit.Label.htmlFor`** — the Lit emitter emits `htmlFor=` verbatim, which lowers
-  to the **non-standard `htmlfor`** attribute in the DOM, instead of lowering the
-  `htmlFor` binding to the standard DOM **`for`** attribute. React, Vue, and Svelte
-  all produce `for` (verified passing); in Lit the `<label>` for-association is not
-  observable. This is a real **Lit-emitter** defect (htmlFor→for lowering), **not**
-  preview instability — recorded as an annotated residual and flagged for a
-  follow-up emitter slice. The audit's `class-state`/attribute-name handling is
-  unaffected; this is purely the Lit lowering of a JSX-author-facing binding key.
+- **`lit.Label.htmlFor`** — the rail's first catch: the Lit emitter emitted `htmlFor=`
+  verbatim → the **non-standard `htmlfor`** DOM attribute instead of the standard
+  **`for`**, breaking the `<label>` for-association in Lit while React/Vue/Svelte
+  produced `for`. **Fixed** by adding a `litDomAttrName` (`htmlFor`→`for`) lowering to
+  the Lit emitter (mirroring `vueAttrName` / the Svelte equivalent); the value still
+  reads from the `htmlFor` property, only the emitted attribute name is lowered. The
+  rail no longer skips this — it now **asserts** `[lit] Label.htmlFor` as `for` in
+  live DOM and passes. This is the audit→rail→fix loop closing on a real defect.
 
 ## What this proves / does not prove
 

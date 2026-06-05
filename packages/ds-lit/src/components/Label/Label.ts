@@ -67,7 +67,7 @@ export class LabelElement extends LitElement {
   }
 
   override render() {
-    return html`<label class="${this.computeClasses()}" htmlFor=${ifDefined(this.htmlFor)} form=${ifDefined(this.form)}>
+    return html`<label class="${this.computeClasses()}" for=${ifDefined(this.htmlFor)} form=${ifDefined(this.form)}>
   <slot></slot>
 </label>`;
   }
