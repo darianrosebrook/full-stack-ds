@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { ComponentContract } from "../contract.js";
-import { buildComponentIR } from "../ir.js";
+import { buildComponentIR, nativeTableAttrsFor } from "../ir.js";
 import { generateReactComponentSource } from "./react/component-source.js";
 import { generateVueComponentSource, generateVueCompoundPartSource } from "./vue/component-source.js";
 import { generateSvelteComponentSource, generateSvelteCompoundPartSource } from "./svelte/component-source.js";
@@ -239,5 +239,84 @@ describe("Table realization — Lit", () => {
     // Table is now fully native HTML. Stack-class-name strings may appear
     // in unrelated contexts but the actual tag must not.
     expect(litSrc).not.toMatch(/<fsds-stack\b/);
+  });
+});
+
+// CODEGEN-TABLE-CELL-ATTRIBUTES-01 / SHOWCASE-CONSUMPTION-03 A1 — the native
+// cell/header subcomponents own their element, so they must forward the HTML
+// attributes a real data table needs. The policy lives ONCE in the IR
+// (nativeTableAttrsFor, keyed by tag — no per-component lore); the emitters
+// consume it. Runtime DOM proofs live in each package's generated Table test.
+describe("Table cell-attribute forwarding", () => {
+  describe("IR fact: nativeTableAttrsFor (single policy source)", () => {
+    it("td forwards the global id/style + cell-spanning colSpan/rowSpan, no scope", () => {
+      expect(nativeTableAttrsFor("td")).toEqual(["id", "style", "colSpan", "rowSpan"]);
+    });
+    it("th additionally forwards scope (header association direction)", () => {
+      expect(nativeTableAttrsFor("th")).toEqual([
+        "id",
+        "style",
+        "colSpan",
+        "rowSpan",
+        "scope",
+      ]);
+    });
+    it("structural rows/sections forward only the global id, style", () => {
+      for (const tag of ["tr", "thead", "tbody", "tfoot", "caption"]) {
+        expect(nativeTableAttrsFor(tag)).toEqual(["id", "style"]);
+      }
+    });
+    it("returns [] for non-table tags (no leakage to other native leaves)", () => {
+      for (const tag of ["div", "span", "ul", "li", "button"]) {
+        expect(nativeTableAttrsFor(tag)).toEqual([]);
+      }
+      expect(nativeTableAttrsFor(undefined)).toEqual([]);
+    });
+  });
+
+  describe("React/Vue/Svelte emitters consume the fact", () => {
+    const reactSrc = generateReactComponentSource(ir, "../../primitives");
+
+    it("React TableCell forwards colSpan + id onto the <td>", () => {
+      expect(reactSrc).toMatch(
+        /export function TableCell\([\s\S]*?<td[^>]*colSpan=\{colSpan\}/,
+      );
+      expect(reactSrc).toMatch(/export function TableCell\([\s\S]*?<td[^>]*id=\{id\}/);
+    });
+
+    it("React TableHeaderCell forwards scope; TableRow takes id but NOT colSpan", () => {
+      expect(reactSrc).toMatch(
+        /export function TableHeaderCell\([\s\S]*?scope=\{scope\}/,
+      );
+      const rowProps = reactSrc.match(/export interface TableRowProps \{[\s\S]*?\}/)![0];
+      expect(rowProps).toMatch(/id\?: string/);
+      expect(rowProps).not.toMatch(/colSpan/);
+    });
+
+    it("Vue TableCell.vue binds :colspan to the camelCase prop", () => {
+      const cell = ir.parts.find((p) => p.name === "cell")!;
+      const src = generateVueCompoundPartSource(ir.cssPrefix, cell);
+      expect(src).toMatch(/colSpan\?: number/);
+      expect(src).toMatch(/:colspan="props\.colSpan"/);
+    });
+
+    it("Svelte TableHeaderCell.svelte binds scope + colspan", () => {
+      const headerCell = ir.parts.find((p) => p.name === "headerCell")!;
+      const src = generateSvelteCompoundPartSource(ir.cssPrefix, headerCell);
+      expect(src).toMatch(/colspan=\{colSpan\}/);
+      expect(src).toMatch(/ \{scope\}/);
+    });
+  });
+
+  describe("Angular + Lit forward structurally (consumer owns the cell element)", () => {
+    it("Angular cell directive declares no colspan input — the host <td> carries it", () => {
+      const angularSrc = generateAngularComponentSource(ir);
+      const cellClass = angularSrc.match(/export class TableCellComponent \{[\s\S]*?\n\}/)![0];
+      expect(cellClass).not.toMatch(/colSpan|colspan/i);
+    });
+    it("Lit registers no per-cell custom element — consumer authors raw <td>", () => {
+      const litSrc = generateLitComponentSource(ir);
+      expect(litSrc).not.toMatch(/customElements\.define\(['"]fsds-table-cell/);
+    });
   });
 });

@@ -58,5 +58,42 @@ describe("Table — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TableCell from "../TableCell.svelte";
+import TableHeaderCell from "../TableHeaderCell.svelte";
 
+// SHOWCASE-CONSUMPTION-03 A1 — the Svelte cell/header SFCs own their <td>/<th>,
+// so they must forward the HTML attributes a real data table needs.
+describe("Table — cell attribute forwarding", () => {
+  it("TableCell forwards colspan/id/style onto the <td>", () => {
+    const { container } = render(
+      TableCell as unknown as Component<Record<string, unknown>>,
+      { props: { colSpan: 4, id: "cell-1", style: "text-align: center" } },
+    );
+    const td = container.querySelector("td")!;
+    expect(td).not.toBeNull();
+    expect(td.getAttribute("colspan")).toBe("4");
+    expect(td.getAttribute("id")).toBe("cell-1");
+    expect(td.getAttribute("style") ?? "").toContain("text-align");
+  });
+
+  it("TableHeaderCell forwards scope/rowspan onto the <th>", () => {
+    const { container } = render(
+      TableHeaderCell as unknown as Component<Record<string, unknown>>,
+      { props: { scope: "col", rowSpan: 2 } },
+    );
+    const th = container.querySelector("th")!;
+    expect(th.getAttribute("scope")).toBe("col");
+    expect(th.getAttribute("rowspan")).toBe("2");
+  });
+
+  it("omits unset attributes (no empty colspan/id)", () => {
+    const { container } = render(
+      TableCell as unknown as Component<Record<string, unknown>>,
+      { props: {} },
+    );
+    const td = container.querySelector("td")!;
+    expect(td.hasAttribute("colspan")).toBe(false);
+    expect(td.hasAttribute("id")).toBe(false);
+  });
+});
 // @custom:end

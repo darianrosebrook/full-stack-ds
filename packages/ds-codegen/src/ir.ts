@@ -131,6 +131,46 @@ export const TABLE_COMPOSITION_TAGS: ReadonlySet<string> = new Set([
 ]);
 
 /**
+ * Native HTML attributes a table-composition *subcomponent* forwards onto the
+ * element it owns, keyed by tag. The native-realization subcomponents that own
+ * their element (React's `TableCell`, Vue's `TableCell.vue`, Svelte's
+ * `TableCell.svelte`) do NOT extend an HTMLAttributes base or spread `...rest`,
+ * so without this fact a consumer who needs `colspan`/`id`/`scope` is forced
+ * back to raw `<table>` markup — the exact regression CODEGEN-TABLE-CELL-
+ * ATTRIBUTES-01 / SHOWCASE-CONSUMPTION-03 close. Two families:
+ *
+ *   - Global (every table tag): `id`, `style`. `id` carries the CSS `:target`
+ *     and aria anchoring a row needs (the TokensView token explorer highlights
+ *     `tr:target`); `style` is the CSSOM escape hatch every HTML element takes.
+ *   - Cell content-model: `th`/`td` carry `colSpan`/`rowSpan` (spanning); `th`
+ *     additionally carries `scope` (header→cell association direction).
+ *
+ * The IR owns WHICH attributes a tag forwards (the durable HTML fact). Each
+ * emitter lowers them to idiomatic prop names + types — React `colSpan?: number`
+ * / `style?: CSSProperties` vs template `colspan` / `style?: string`. Keyed by
+ * tag, never by component name: no per-component emitter lore. The other two
+ * targets satisfy the same consumer capability *structurally* and so consult no
+ * prop list — Angular's attribute directive sits on the consumer's own `<td>`
+ * (native attrs pass through), and Lit's consumer authors raw light-DOM cells
+ * projected through the shadow `<slot>`.
+ *
+ * Names are the JSX/camelCase spelling (`colSpan`, `rowSpan`); template emitters
+ * map to the lowercase HTML attribute (`colspan`, `rowspan`) at the bind site.
+ *
+ * Source fact: HTML5 table content model + global HTML attributes.
+ * Applies by: tag. Removable when: never (HTML spec constant).
+ */
+export type NativeTableAttr = "id" | "style" | "colSpan" | "rowSpan" | "scope";
+
+export function nativeTableAttrsFor(tag: string | undefined): NativeTableAttr[] {
+  if (tag === undefined || !TABLE_COMPOSITION_TAGS.has(tag)) return [];
+  const attrs: NativeTableAttr[] = ["id", "style"];
+  if (tag === "th" || tag === "td") attrs.push("colSpan", "rowSpan");
+  if (tag === "th") attrs.push("scope");
+  return attrs;
+}
+
+/**
  * Parsed binding expression. The contract author writes a string form
  * (`"prop:disabled"`, `"channel:checked.value"`, `"channel:checked.onChange"`,
  * `"iter:index"`, `"iter:item"`) which the IR builder normalizes into this

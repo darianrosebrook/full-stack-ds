@@ -130,3 +130,65 @@ describe("Table — runtime DOM realization (Angular)", () => {
     expect(stackElements.length).toBe(0);
   });
 });
+
+// SHOWCASE-CONSUMPTION-03 A1 — Angular realizes the cell/header parts as
+// attribute directives on the consumer's OWN native host element. So unlike
+// React/Vue/Svelte (where the subcomponent forwards an explicit prop), the
+// native colspan/rowspan/scope/id/style live directly on the consumer's
+// <td>/<th>/<tr>. This proves the class-binding directive does not strip
+// them — the capability holds structurally, no generated prop required.
+@Component({
+  selector: "fsds-table-attrs-fixture",
+  standalone: true,
+  imports: [
+    TableComponent,
+    TableHeadComponent,
+    TableBodyComponent,
+    TableRowComponent,
+    TableHeaderCellComponent,
+    TableCellComponent,
+  ],
+  template: `
+    <fsds-table ariaLabel="Tokens">
+      <thead fsdsTableHead>
+        <tr fsdsTableRow>
+          <th fsdsTableHeaderCell scope="col" colspan="2">Grouped</th>
+        </tr>
+      </thead>
+      <tbody fsdsTableBody>
+        <tr fsdsTableRow id="row-anchor">
+          <td fsdsTableCell colspan="4" id="cell-1" style="text-align: center">
+            Section
+          </td>
+        </tr>
+      </tbody>
+    </fsds-table>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TableCellAttrsFixture {}
+
+describe("Table — native cell attributes pass through the directive (Angular)", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [TableCellAttrsFixture] });
+  });
+
+  it("preserves colspan/id/style/scope authored on the consumer's host cells", () => {
+    const fixture = TestBed.createComponent(TableCellAttrsFixture);
+    fixture.detectChanges();
+    const host = fixture.nativeElement as HTMLElement;
+
+    // Scope to tbody — the thead also has a tr.table__row (without an id).
+    const row = host.querySelector("tbody tr.table__row")!;
+    expect(row.getAttribute("id")).toBe("row-anchor");
+
+    const cell = host.querySelector("td.table__cell")! as HTMLTableCellElement;
+    expect(cell.getAttribute("colspan")).toBe("4");
+    expect(cell.getAttribute("id")).toBe("cell-1");
+    expect(cell.style.textAlign).toBe("center");
+
+    const th = host.querySelector("th.table__headerCell")!;
+    expect(th.getAttribute("scope")).toBe("col");
+    expect(th.getAttribute("colspan")).toBe("2");
+  });
+});

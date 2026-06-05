@@ -19,7 +19,12 @@ import type {
   NormalizedChannelIR,
   PartIR,
 } from "../../ir.js";
-import { hasChildrenPlaceholder, TABLE_COMPOSITION_TAGS } from "../../ir.js";
+import {
+  hasChildrenPlaceholder,
+  TABLE_COMPOSITION_TAGS,
+  nativeTableAttrsFor,
+  type NativeTableAttr,
+} from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
   getGroupHostPart,
@@ -505,15 +510,42 @@ function collectReactNamedSlots(ir: ComponentIR): string[] {
   return names.sort();
 }
 
+/**
+ * React TS type for a forwarded native table attribute. `style` resolves to
+ * `CSSProperties` (the body-scanner in generateReactComponentSource adds the
+ * import when this identifier appears); the others are their HTML-native shapes.
+ */
+function reactTableAttrType(attr: NativeTableAttr): string {
+  switch (attr) {
+    case "id":
+      return "string";
+    case "style":
+      return "CSSProperties";
+    case "colSpan":
+    case "rowSpan":
+      return "number";
+    case "scope":
+      return '"col" | "row" | "colgroup" | "rowgroup"';
+  }
+}
+
 function generateSubComponentProps(name: string, part: PartIR): string {
   const subName = `${name}${capitalize(part.name)}`;
-  return [
+  const lines = [
     `export interface ${subName}Props {`,
     `  children?: ReactNode;`,
     `  className?: string;`,
     `  "data-testid"?: string;`,
-    `}`,
-  ].join("\n");
+  ];
+  // Native table cells/headers forward the HTML attributes a real data table
+  // needs (colSpan/rowSpan/scope) plus the global id/style — keyed by tag in
+  // the IR so no per-component lore lives here. JSX prop names equal the IR
+  // names (colSpan, rowSpan, scope, id, style).
+  for (const attr of nativeTableAttrsFor(part.nativeTag)) {
+    lines.push(`  ${attr}?: ${reactTableAttrType(attr)};`);
+  }
+  lines.push(`}`);
+  return lines.join("\n");
 }
 
 function generateSubComponent(
@@ -531,15 +563,28 @@ function generateSubComponent(
   // semantics imposed on a native table section/row/cell.
   if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
     const tag = part.nativeTag;
-    return [
-      `export function ${subName}({`,
+    const attrs = nativeTableAttrsFor(tag);
+    const destructure = [
       `  children,`,
       `  className,`,
       `  "data-testid": testId,`,
+      ...attrs.map((a) => `  ${a},`),
+    ];
+    // JSX attribute names equal the IR names; React drops any whose value is
+    // undefined, so forwarding all of them is safe even when the consumer set
+    // none.
+    const jsxAttrs = [
+      `className={classNames}`,
+      `data-testid={testId}`,
+      ...attrs.map((a) => `${a}={${a}}`),
+    ].join(" ");
+    return [
+      `export function ${subName}({`,
+      ...destructure,
       `}: ${subName}Props) {`,
       `  const classNames = ["${cssClass}", className].filter(Boolean).join(" ");`,
       `  return (`,
-      `    <${tag} className={classNames} data-testid={testId}>`,
+      `    <${tag} ${jsxAttrs}>`,
       `      {children}`,
       `    </${tag}>`,
       `  );`,

@@ -144,4 +144,74 @@ describe("Table — runtime DOM realization", () => {
     expect(stackElements.length).toBe(0);
   });
 });
+
+// CODEGEN-TABLE-CELL-ATTRIBUTES-01 / SHOWCASE-CONSUMPTION-03 A1 — the cell
+// and header subcomponents own their <td>/<th>, so they must forward the HTML
+// attributes a real data table needs (colSpan/rowSpan/scope) plus the global
+// id/style. Without this, the TokensView token explorer (`<td colSpan={4}>`
+// section rows, `<tr id>` :target anchoring) would be forced back to raw
+// <table> markup. These assert the rendered DOM, not the emitted source.
+describe("Table — cell attribute forwarding", () => {
+  it("forwards colSpan + id + style onto the data cell, and id onto the row", () => {
+    const { container } = render(
+      <Table ariaLabel="Tokens">
+        <TableBody>
+          <TableRow id="row-anchor">
+            <TableCell colSpan={4} id="cell-1" style={{ textAlign: "center" }}>
+              Section header
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const row = container.querySelector("tr.table__row")!;
+    expect(row.getAttribute("id")).toBe("row-anchor");
+
+    const cell = container.querySelector("td.table__cell")! as HTMLTableCellElement;
+    expect(cell.getAttribute("colspan")).toBe("4");
+    expect(cell.getAttribute("id")).toBe("cell-1");
+    expect(cell.style.textAlign).toBe("center");
+  });
+
+  it("forwards scope + colSpan + rowSpan onto the header cell", () => {
+    const { container } = render(
+      <Table ariaLabel="t">
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell scope="col" colSpan={2}>
+              Grouped
+            </TableHeaderCell>
+            <TableHeaderCell scope="row" rowSpan={2}>
+              Side
+            </TableHeaderCell>
+          </TableRow>
+        </TableHead>
+      </Table>,
+    );
+    const headers = container.querySelectorAll("th.table__headerCell");
+    expect(headers.length).toBe(2);
+    expect(headers[0].getAttribute("scope")).toBe("col");
+    expect(headers[0].getAttribute("colspan")).toBe("2");
+    expect(headers[1].getAttribute("scope")).toBe("row");
+    expect(headers[1].getAttribute("rowspan")).toBe("2");
+  });
+
+  it("omits unset cell attributes from the DOM (no empty colspan/id pollution)", () => {
+    const { container } = render(
+      <Table ariaLabel="t">
+        <TableBody>
+          <TableRow>
+            <TableCell>plain</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>,
+    );
+    const cell = container.querySelector("td.table__cell")!;
+    expect(cell.hasAttribute("colspan")).toBe(false);
+    expect(cell.hasAttribute("rowspan")).toBe(false);
+    expect(cell.hasAttribute("id")).toBe(false);
+    expect(cell.hasAttribute("style")).toBe(false);
+    expect(container.querySelector("tr.table__row")!.hasAttribute("id")).toBe(false);
+  });
+});
 // @custom:end

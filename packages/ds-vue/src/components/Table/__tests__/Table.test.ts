@@ -58,5 +58,37 @@ describe("Table — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import TableCell from "../TableCell.vue";
+import TableHeaderCell from "../TableHeaderCell.vue";
 
+// SHOWCASE-CONSUMPTION-03 A1 — the Vue cell/header SFCs own their <td>/<th>,
+// so they must forward the HTML attributes a real data table needs.
+describe("Table — cell attribute forwarding", () => {
+  it("TableCell forwards colspan/id/style onto the <td>", () => {
+    const wrapper = mount(TableCell as Component, {
+      props: { colSpan: 4, id: "cell-1", style: "text-align: center" },
+      slots: { default: "Section" },
+    });
+    expect(wrapper.element.tagName).toBe("TD");
+    expect(wrapper.attributes("colspan")).toBe("4");
+    expect(wrapper.attributes("id")).toBe("cell-1");
+    expect(wrapper.attributes("style") ?? "").toContain("text-align");
+  });
+
+  it("TableHeaderCell forwards scope/rowspan onto the <th>", () => {
+    const wrapper = mount(TableHeaderCell as Component, {
+      props: { scope: "col", rowSpan: 2 },
+      slots: { default: "H" },
+    });
+    expect(wrapper.element.tagName).toBe("TH");
+    expect(wrapper.attributes("scope")).toBe("col");
+    expect(wrapper.attributes("rowspan")).toBe("2");
+  });
+
+  it("omits unset attributes (no empty colspan/id)", () => {
+    const wrapper = mount(TableCell as Component, { slots: { default: "x" } });
+    expect(wrapper.attributes("colspan")).toBeUndefined();
+    expect(wrapper.attributes("id")).toBeUndefined();
+  });
+});
 // @custom:end
