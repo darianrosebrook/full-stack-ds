@@ -2,10 +2,11 @@ id: MORPHOLOGY-GEOMETRY-PROFILE-01
 title: 'Morphology geometry profile: classifier-driven box-model defaults + strip category-seeded sidecar residue (broken families)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: morphology-geometry
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge morphology-geometry at 26d8da7d45e7b099f77a218d9b9cd1f321fc440b'
 created_at: '2026-06-05T08:21:06.290Z'
-updated_at: '2026-06-05T16:43:01.766Z'
+updated_at: '2026-06-05T17:11:17.304Z'
 blast_radius:
   modules:
     - packages/ds-codegen (morphology StyleProfileIR + three-way box-model merge + profile structural CSS) + packages/ds-contracts (morphology schema + seven broken-family contracts) + regenerated web/figma artifacts for the seven + scripts/seed retirement + geometry audit
