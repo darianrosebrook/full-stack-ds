@@ -1,0 +1,30 @@
+id: FIGMA-COMPONENT-PROPERTY-MATERIALIZER-01
+title: 'Figma component-property materializer: plan-driven state surface (component properties/variants/metadata) via mocked Figma; no semantic reinterpretation, no token resolution, no live mutation'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-05T23:40:58.291Z'
+updated_at: '2026-06-05T23:40:58.291Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'plan-driven-materializer'
+    type: behavior
+    path: 'packages/ds-figma-plugin/src/materialize-state.ts'
+  - name: 'mocked-figma-materialization-evidence'
+    type: contract-test
