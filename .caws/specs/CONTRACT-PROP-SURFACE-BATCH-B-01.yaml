@@ -3,6 +3,7 @@ title: 'Prop-surface migration Batch B (feedback/status/material): styled→desi
 risk_tier: 3
 mode: refactor
 lifecycle_state: active
+worktree: prop-surface-batch-b
 created_at: '2026-06-05T16:04:04.182Z'
 updated_at: '2026-06-05T16:04:04.182Z'
 blast_radius:
