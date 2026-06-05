@@ -2,10 +2,11 @@ id: COMPONENT-AUDIT-TOOL-01
 title: 'Reusable component box-model/sizing/token + rendered-geometry drift audit (CSV review log)'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
-worktree: component-audit
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge component-audit at 8cddcfb2b6c8f63a9491952462379dbdf6834fd3'
 created_at: '2026-06-05T04:12:45.058Z'
-updated_at: '2026-06-05T04:12:45.058Z'
+updated_at: '2026-06-05T05:28:55.200Z'
 blast_radius:
   modules:
     - 'scripts/component-audit/: new standalone Node + Playwright audit harness (read-only over the contract corpus + generated CSS; renders via the existing /preview/react/<Name> dev-server route for geometry)'
