@@ -3,6 +3,7 @@ title: 'Lit emitter lowers htmlFor binding to the DOM for attribute (close rail 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: lit-label-for
 created_at: '2026-06-05T23:50:49.635Z'
 updated_at: '2026-06-05T23:51:07.900Z'
 blast_radius:
