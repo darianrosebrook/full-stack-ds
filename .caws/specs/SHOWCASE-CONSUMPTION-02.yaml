@@ -2,10 +2,11 @@ id: SHOWCASE-CONSUMPTION-02
 title: 'Showcase DS consumption pass 2: A4-A6 regression guard + raw tables -> DS Table'
 risk_tier: 3
 mode: refactor
-lifecycle_state: active
-worktree: showcase-consumption-2
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge showcase-consumption-2 at 3d9494dd7af46a0b80cc6c93a330d3ec759c79ab'
 created_at: '2026-06-05T00:52:26.616Z'
-updated_at: '2026-06-05T00:52:26.616Z'
+updated_at: '2026-06-05T01:47:52.167Z'
 blast_radius:
   modules:
     - 'src/ (React showcase: consumption guard test + table-bearing views/sections)'
