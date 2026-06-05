@@ -2,9 +2,10 @@ id: DOC-RUNTIME-RAIL-ANGULAR-RECONCILE-01
 title: 'Reconcile snapshot + successor-work docs with landed Angular runtime preview/rail'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
 created_at: '2026-06-04T23:55:37.968Z'
-updated_at: '2026-06-04T23:56:01.973Z'
+updated_at: '2026-06-05T00:01:13.781Z'
 blast_radius:
   modules:
     - docs (claim ledger + successor-work ledger)
