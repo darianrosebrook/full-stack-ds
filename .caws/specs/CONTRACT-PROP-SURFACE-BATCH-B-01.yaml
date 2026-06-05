@@ -1,0 +1,33 @@
+id: CONTRACT-PROP-SURFACE-BATCH-B-01
+title: 'Prop-surface migration Batch B (feedback/status/material): styled→designed + structured propType'
+risk_tier: 3
+mode: refactor
+lifecycle_state: active
+created_at: '2026-06-05T16:04:04.182Z'
+updated_at: '2026-06-05T16:04:04.182Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Alert/**'
+    - 'packages/ds-contracts/components/AlertNotice/**'
+    - 'packages/ds-contracts/components/Progress/**'
+    - 'packages/ds-contracts/components/Skeleton/**'
+    - 'packages/ds-contracts/components/Spinner/**'
+    - 'packages/ds-contracts/components/Stat/**'
+    - 'packages/ds-contracts/components/Status/**'
+    - 'packages/ds-contracts/components/Chip/**'
+    - 'packages/ds-contracts/components/Card/**'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
