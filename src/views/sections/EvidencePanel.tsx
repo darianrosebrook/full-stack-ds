@@ -1,3 +1,4 @@
+import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../../types/data";
 import { bundle } from "../../types/bundle";
 
@@ -51,22 +52,22 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
 
       <div className="subsection">
         <h3 className="subsection-title">Generated framework realizations</h3>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Framework</th>
-              <th>Generated source</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="data-table" ariaLabel="Generated framework realizations">
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell>Framework</TableHeaderCell>
+              <TableHeaderCell>Generated source</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {sourceByFramework.map(({ framework, present }) => (
-              <tr key={framework}>
-                <td>{framework}</td>
-                <td>{present ? "present" : "absent"}</td>
-              </tr>
+              <TableRow key={framework}>
+                <TableCell>{framework}</TableCell>
+                <TableCell>{present ? "present" : "absent"}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
         <p className="muted" style={{ marginTop: "var(--fsds-core-spacing-size-04)" }}>
           "Present" means a generated component file exists in the framework
           package for this contract. It is a build-artifact fact, not a runtime

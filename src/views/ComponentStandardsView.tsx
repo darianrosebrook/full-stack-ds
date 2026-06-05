@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Tabs, TabsList, TabsTab, Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import { buildHref, type StandardsTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -1120,16 +1120,16 @@ function AccessibilityPanel() {
       />
 
       <h3>4. Color contrast</h3>
-      <table className="props-table">
-        <thead>
-          <tr><th>Content</th><th>Minimum (AA)</th><th>Enhanced (AAA)</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Normal text</td><td>4.5:1</td><td>7:1</td></tr>
-          <tr><td>Large text (≥18pt or ≥14pt bold)</td><td>3:1</td><td>4.5:1</td></tr>
-          <tr><td>UI components &amp; graphical objects</td><td>3:1</td><td>—</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Color contrast requirements">
+        <TableHead>
+          <TableRow><TableHeaderCell>Content</TableHeaderCell><TableHeaderCell>Minimum (AA)</TableHeaderCell><TableHeaderCell>Enhanced (AAA)</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell>Normal text</TableCell><TableCell>4.5:1</TableCell><TableCell>7:1</TableCell></TableRow>
+          <TableRow><TableCell>Large text (≥18pt or ≥14pt bold)</TableCell><TableCell>3:1</TableCell><TableCell>4.5:1</TableCell></TableRow>
+          <TableRow><TableCell>UI components &amp; graphical objects</TableCell><TableCell>3:1</TableCell><TableCell>—</TableCell></TableRow>
+        </TableBody>
+      </Table>
 
       <h3>5. Focus management</h3>
       <CodeViewer

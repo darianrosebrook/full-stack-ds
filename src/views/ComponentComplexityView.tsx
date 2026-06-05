@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Tabs, TabsList, TabsTab, Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import { buildHref, type ComplexityTab } from "../router";
 import { CodeViewer } from "../components/CodeViewer";
 
@@ -205,17 +205,17 @@ function OverviewPanel() {
         are the rules of combination, and how do we prepare for emergent
         complexity?
       </p>
-      <table className="props-table">
-        <thead>
-          <tr><th>Layer</th><th>Demand</th><th>Focus</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Primitives</td><td>Standards</td><td>Stability, tokens, accessibility</td></tr>
-          <tr><td>Compounds</td><td>Conventions</td><td>Blessed combinations, consistent spacing</td></tr>
-          <tr><td>Composers</td><td>Orchestration</td><td>State management, focus, context</td></tr>
-          <tr><td>Assemblies</td><td>Boundaries</td><td>Product-specific flows, business logic</td></tr>
-        </tbody>
-      </table>
+      <Table className="props-table" ariaLabel="Component layers overview">
+        <TableHead>
+          <TableRow><TableHeaderCell>Layer</TableHeaderCell><TableHeaderCell>Demand</TableHeaderCell><TableHeaderCell>Focus</TableHeaderCell></TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow><TableCell>Primitives</TableCell><TableCell>Standards</TableCell><TableCell>Stability, tokens, accessibility</TableCell></TableRow>
+          <TableRow><TableCell>Compounds</TableCell><TableCell>Conventions</TableCell><TableCell>Blessed combinations, consistent spacing</TableCell></TableRow>
+          <TableRow><TableCell>Composers</TableCell><TableCell>Orchestration</TableCell><TableCell>State management, focus, context</TableCell></TableRow>
+          <TableRow><TableCell>Assemblies</TableCell><TableCell>Boundaries</TableCell><TableCell>Product-specific flows, business logic</TableCell></TableRow>
+        </TableBody>
+      </Table>
       <p>
         When you apply this layered lens, your system stops being a library of
         parts and becomes a <strong>language for products</strong>.
