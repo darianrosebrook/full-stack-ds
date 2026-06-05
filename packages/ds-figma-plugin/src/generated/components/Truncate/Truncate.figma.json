@@ -101,12 +101,46 @@
   "variants": {},
   "states": {
     "flat": [
-      "default",
       "hover",
       "focus",
       "expanded"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "expansion": {
+        "category": "visibility",
+        "values": [
+          "collapsed",
+          "expanded"
+        ],
+        "initial": "collapsed",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-expanded",
+          "values": {
+            "collapsed": "false",
+            "expanded": "true"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "truncate",

@@ -61,11 +61,29 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
       "focus"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "nav-list",

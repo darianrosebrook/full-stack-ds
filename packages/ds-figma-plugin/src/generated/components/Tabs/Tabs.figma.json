@@ -148,11 +148,46 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
-      "focus"
+      "focus",
+      "selected"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unselected",
+          "selected"
+        ],
+        "initial": "unselected",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-selected",
+          "values": {
+            "unselected": "false",
+            "selected": "true"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "tabs",

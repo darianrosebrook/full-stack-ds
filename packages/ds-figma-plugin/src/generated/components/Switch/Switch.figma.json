@@ -115,13 +115,61 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
       "focus",
       "disabled",
       "checked"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unchecked",
+          "checked"
+        ],
+        "initial": "unchecked",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-checked",
+          "values": {
+            "unchecked": "false",
+            "checked": "true"
+          }
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "switch",

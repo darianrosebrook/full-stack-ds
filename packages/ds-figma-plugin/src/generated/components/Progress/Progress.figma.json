@@ -124,10 +124,17 @@
     ]
   },
   "states": {
-    "flat": [
-      "default"
-    ],
-    "dimensions": null
+    "flat": [],
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "progress",

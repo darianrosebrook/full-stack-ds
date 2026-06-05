@@ -133,13 +133,46 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
-      "focus",
       "active",
+      "focus",
       "disabled"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover",
+          "active"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "button",

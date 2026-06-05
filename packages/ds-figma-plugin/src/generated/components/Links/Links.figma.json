@@ -73,13 +73,46 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
-      "focus",
       "visited",
+      "focus",
       "disabled"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover",
+          "visited"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      }
+    }
   },
   "classRecipe": {
     "base": "links",

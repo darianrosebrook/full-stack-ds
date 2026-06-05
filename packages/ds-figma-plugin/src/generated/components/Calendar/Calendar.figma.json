@@ -165,15 +165,81 @@
   },
   "states": {
     "flat": [
-      "default",
       "hover",
       "focus",
-      "selected",
       "disabled",
+      "selected",
       "today",
       "outsideMonth"
     ],
-    "dimensions": null
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default",
+          "hover"
+        ],
+        "initial": "default",
+        "exclusive": true
+      },
+      "focus": {
+        "category": "interaction",
+        "values": [
+          "unfocused",
+          "focus"
+        ],
+        "initial": "unfocused",
+        "exclusive": true
+      },
+      "availability": {
+        "category": "availability",
+        "values": [
+          "enabled",
+          "disabled"
+        ],
+        "initial": "enabled",
+        "exclusive": true,
+        "suppresses": {
+          "categories": [
+            "interaction"
+          ]
+        }
+      },
+      "selection": {
+        "category": "selection",
+        "values": [
+          "unselected",
+          "selected"
+        ],
+        "initial": "unselected",
+        "exclusive": true,
+        "a11y": {
+          "attribute": "aria-selected",
+          "values": {
+            "unselected": "false",
+            "selected": "true"
+          }
+        }
+      },
+      "today": {
+        "category": "presentation",
+        "values": [
+          "other",
+          "today"
+        ],
+        "initial": "other",
+        "exclusive": true
+      },
+      "month": {
+        "category": "presentation",
+        "values": [
+          "inMonth",
+          "outsideMonth"
+        ],
+        "initial": "inMonth",
+        "exclusive": true
+      }
+    }
   },
   "classRecipe": {
     "base": "calendar",
