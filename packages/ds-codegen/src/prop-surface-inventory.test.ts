@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { resolve } from "node:path";
-import { inventoryCorpus, summarize } from "./prop-surface-inventory.js";
+import { inventoryContract, inventoryCorpus, summarize } from "./prop-surface-inventory.js";
+import type { ComponentContract } from "./contract.js";
 
 // CONTRACT-PROP-SURFACE-CORPUS-INVENTORY-01, contract `prop-surface-harness`.
 // Advisory-first: this suite fails on INTERNAL INCONSISTENCY, never on "still
@@ -87,5 +88,50 @@ describe("advisory mode: an unmigrated corpus does not fail the suite (A5)", () 
   it("most components are still legacy and that is reported, not failed", () => {
     expect(sum.migrated).toBeGreaterThanOrEqual(1); // Button
     expect(sum.legacy).toBeGreaterThan(0); // 46 today
+  });
+});
+
+// CODEGEN-PROPTYPE-DEFAULTS-BUILTINREF-01 A2: a propType ref to an ambient
+// builtin (Date, …) resolves — it must not falsely inflate unresolvedRefs the
+// way an unknown contract alias would. Mirrors the IR's BUILTIN_TYPE_NAMES.
+describe("inventory resolves builtin/ambient type refs (Batch C enabler)", () => {
+  it("treats {kind:ref, to:'Date'} — top-level, in array, and in union — as resolved", () => {
+    const contract = {
+      name: "ProbeBuiltin",
+      layer: "primitive",
+      a2ui: { category: "display" },
+      props: {
+        designed: {
+          members: [
+            { name: "minDate", propType: { kind: "ref", to: "Date" }, description: "x" },
+            {
+              name: "value",
+              propType: {
+                kind: "union",
+                of: [
+                  { kind: "ref", to: "Date" },
+                  { kind: "array", items: { kind: "ref", to: "Date" } },
+                  { kind: "literal", value: null },
+                ],
+              },
+              description: "x",
+            },
+          ],
+        },
+      },
+    } as ComponentContract;
+    const report = inventoryContract("ProbeBuiltin", contract);
+    expect(report.refs.length).toBeGreaterThan(0);
+    expect(report.refs.every((r) => r.resolves)).toBe(true);
+    expect(report.refs.filter((r) => !r.resolves)).toEqual([]);
+    // An unknown contract alias still reports unresolved (guard against an
+    // over-broad "everything resolves" regression).
+    const bad = inventoryContract("ProbeBad", {
+      name: "ProbeBad",
+      layer: "primitive",
+      a2ui: { category: "display" },
+      props: { designed: { members: [{ name: "x", propType: { kind: "ref", to: "NotARealAlias" }, description: "x" }] } },
+    } as ComponentContract);
+    expect(bad.refs.some((r) => !r.resolves)).toBe(true);
   });
 });

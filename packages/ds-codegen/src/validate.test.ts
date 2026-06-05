@@ -88,3 +88,48 @@ describe("validator error reporting", () => {
     expect(result.ok).toBe(false);
   });
 });
+
+// CODEGEN-PROPTYPE-DEFAULTS-BUILTINREF-01 A1: designed/constrained members may
+// carry array defaults (matching the legacy propMember default schema), so
+// real corpus props like Select.options ([{value,label}…]) and Shuttle.value
+// (["a","b"]) can move to `designed` without dropping their emitted defaults.
+describe("designed-member array defaults (Batch C enabler)", () => {
+  it("accepts a designed member with an array-of-objects default + a builtin Date ref", () => {
+    const result = validator.validateComponent({
+      name: "ProbeDefaults",
+      layer: "primitive",
+      props: {
+        designed: {
+          members: [
+            {
+              name: "options",
+              propType: { kind: "array", items: { kind: "ref", to: "OptItem" } },
+              description: "Available options.",
+              default: [
+                { value: "alpha", label: "Alpha" },
+                { value: "beta", label: "Beta" },
+              ],
+            },
+            {
+              name: "tags",
+              propType: { kind: "array", items: { kind: "string" } },
+              description: "Selected tags.",
+              default: ["alpha", "beta"],
+            },
+            {
+              name: "when",
+              propType: { kind: "ref", to: "Date" },
+              description: "Reference date.",
+            },
+          ],
+        },
+      },
+      types: { OptItem: { kind: "alias", alias: "{ value: string; label: string }" } },
+    });
+    if (!result.ok) {
+      const detail = result.issues.map((i) => `  ${i.pointer}: ${i.message}`).join("\n");
+      expect.fail(`expected valid, got:\n${detail}`);
+    }
+    expect(result.ok).toBe(true);
+  });
+});
