@@ -24,32 +24,31 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Links> component.",
+    "designed": {
       "members": [
         {
           "name": "href",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Navigation destination URL."
         },
         {
           "name": "target",
-          "type": "LinkTarget",
+          "propType": { "kind": "ref", "to": "LinkTarget" },
           "description": "Where to open the linked document."
         },
         {
           "name": "rel",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Relationship between current document and the linked one (e.g., \"noopener noreferrer\")."
         },
         {
           "name": "size",
-          "type": "LinkSize",
+          "propType": { "kind": "ref", "to": "LinkSize" },
           "description": "Visual size token."
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Visually disables the link. Note: anchors are not natively disable-able; intercept onClick to actually prevent navigation."
         }
       ]

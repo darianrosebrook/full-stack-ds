@@ -41,43 +41,46 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Truncate> component.",
+    "designed": {
       "members": [
         {
           "name": "lines",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Maximum number of visible lines before truncation."
         },
         {
           "name": "expandable",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Whether to render an expand/collapse toggle button."
         },
         {
           "name": "expanded",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Controlled expanded state."
         },
         {
           "name": "defaultExpanded",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Initial expanded state for uncontrolled mode."
         },
         {
           "name": "onExpandedChange",
-          "type": "(expanded: boolean) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "expanded", "type": { "kind": "boolean" } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when expanded changes."
         },
         {
           "name": "expandText",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Custom expand button label.",
           "default": "Show more"
         },
         {
           "name": "collapseText",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Custom collapse button label.",
           "default": "Show less"
         }

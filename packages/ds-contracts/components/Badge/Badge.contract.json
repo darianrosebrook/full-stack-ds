@@ -35,32 +35,31 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Badge> component.",
+    "designed": {
       "members": [
         {
           "name": "variant",
-          "type": "BadgeVariant",
+          "propType": { "kind": "ref", "to": "BadgeVariant" },
           "description": "Visual variant of the badge"
         },
         {
           "name": "intent",
-          "type": "BadgeIntent",
+          "propType": { "kind": "ref", "to": "BadgeIntent" },
           "description": "Intent/severity for status badges"
         },
         {
           "name": "size",
-          "type": "BadgeSize",
+          "propType": { "kind": "ref", "to": "BadgeSize" },
           "description": "Badge size token"
         },
         {
           "name": "icon",
-          "type": "ReactNode",
+          "propType": { "kind": "node", "of": "content" },
           "description": "Icon to display. For status variant, defaults to a star icon if not provided. Pass null to hide."
         },
         {
           "name": "showStatusIcon",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Whether to show the default status icon (only applies to status variant)"
         }
       ]

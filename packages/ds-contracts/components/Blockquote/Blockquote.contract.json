@@ -19,22 +19,21 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Blockquote> component.",
+    "designed": {
       "members": [
         {
           "name": "cite",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Citation or source URL of the quote"
         },
         {
           "name": "variant",
-          "type": "BlockquoteVariant",
+          "propType": { "kind": "ref", "to": "BlockquoteVariant" },
           "description": "Visual variant of the blockquote"
         },
         {
           "name": "size",
-          "type": "BlockquoteSize",
+          "propType": { "kind": "ref", "to": "BlockquoteSize" },
           "description": "Size token"
         }
       ]

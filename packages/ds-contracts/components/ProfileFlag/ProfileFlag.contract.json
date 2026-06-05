@@ -19,12 +19,11 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <ProfileFlag> component.",
+    "designed": {
       "members": [
         {
           "name": "profile",
-          "type": "ProfileFlagData",
+          "propType": { "kind": "ref", "to": "ProfileFlagData" },
           "description": "Profile data object to display."
         }
       ]

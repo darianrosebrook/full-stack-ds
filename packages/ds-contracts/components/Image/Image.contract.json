@@ -25,68 +25,67 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Image> component.",
+    "designed": {
       "members": [
         {
           "name": "src",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Image source URL."
         },
         {
           "name": "alt",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible text describing the image. Use empty string for decorative images.",
           "required": true
         },
         {
           "name": "width",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Pixel width."
         },
         {
           "name": "height",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Pixel height."
         },
         {
           "name": "aspectRatio",
-          "type": "ImageAspectRatio",
+          "propType": { "kind": "ref", "to": "ImageAspectRatio" },
           "description": "Aspect ratio preset or numeric ratio."
         },
         {
           "name": "objectFit",
-          "type": "ImageObjectFit",
+          "propType": { "kind": "ref", "to": "ImageObjectFit" },
           "description": "Object fit behavior"
         },
         {
           "name": "objectPosition",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Object position CSS value"
         },
         {
           "name": "loading",
-          "type": "ImageLoading",
+          "propType": { "kind": "ref", "to": "ImageLoading" },
           "description": "Native image loading hint"
         },
         {
           "name": "sizes",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Native sizes attribute for responsive images"
         },
         {
           "name": "radius",
-          "type": "ImageRadius",
+          "propType": { "kind": "ref", "to": "ImageRadius" },
           "description": "Border radius token"
         },
         {
           "name": "showPlaceholder",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Whether to show a placeholder while loading"
         },
         {
           "name": "fallbackSrc",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Fallback image source on error"
         }
       ]

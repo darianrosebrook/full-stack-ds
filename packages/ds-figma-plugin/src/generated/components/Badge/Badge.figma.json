@@ -68,7 +68,7 @@
       "required": false,
       "description": "Icon to display. For status variant, defaults to a star icon if not provided. Pass null to hide.",
       "defaultExpr": null,
-      "nodeKind": null
+      "nodeKind": "node-ref"
     },
     {
       "name": "showStatusIcon",

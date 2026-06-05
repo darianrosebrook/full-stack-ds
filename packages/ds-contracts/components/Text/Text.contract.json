@@ -14,42 +14,41 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Text> component.",
+    "designed": {
       "members": [
         {
           "name": "as",
-          "type": "TextElement",
+          "propType": { "kind": "ref", "to": "TextElement" },
           "description": "Element tag to render."
         },
         {
           "name": "variant",
-          "type": "TextVariant",
+          "propType": { "kind": "ref", "to": "TextVariant" },
           "description": "Typography variant"
         },
         {
           "name": "size",
-          "type": "TextSize",
+          "propType": { "kind": "ref", "to": "TextSize" },
           "description": "Type-scale size token"
         },
         {
           "name": "weight",
-          "type": "TextWeight",
+          "propType": { "kind": "ref", "to": "TextWeight" },
           "description": "Font weight token"
         },
         {
           "name": "align",
-          "type": "TextAlign",
+          "propType": { "kind": "ref", "to": "TextAlign" },
           "description": "Text alignment"
         },
         {
           "name": "transform",
-          "type": "TextTransform",
+          "propType": { "kind": "ref", "to": "TextTransform" },
           "description": "CSS text-transform"
         },
         {
           "name": "truncate",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Single-line truncation with ellipsis."
         }
       ]

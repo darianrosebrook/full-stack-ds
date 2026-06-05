@@ -23,17 +23,16 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Label> component.",
+    "designed": {
       "members": [
         {
           "name": "htmlFor",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "ID of the form control this label is associated with."
         },
         {
           "name": "form",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "ID of the form this label belongs to."
         }
       ]
