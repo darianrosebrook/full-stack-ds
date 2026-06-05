@@ -89,32 +89,32 @@ async function probeOne(page, s) {
   });
 
   const actual = `class="${m.className}"; disp=${m.display}; pad-i=${m.paddingInlineStart}; pad-b=${m.paddingBlockStart}; min-h=${m.minHeight}; h=${m.height}px; w=${m.width}px; gap=${m.gap}`;
+  return { expected, actual, verdict: computeVerdict(s.expect.display, m) };
+}
 
-  // --- verdict: config-INDEPENDENT correctness checks only ---
+/**
+ * Pure config-independent verdict from an expected root display + a measured
+ * render `m` ({display, height, width, minHeight, visible}). Exported so the
+ * self-test can prove the verdict bites on injected mismatches without a
+ * browser. The preview shell mounts the component as a direct child of
+ * `body { display: flex }`, so the root is a flex ITEM and CSS blockifies its
+ * display (inline-flex->flex, inline-block/inline->block, inline-grid->grid);
+ * we accept the blockified equivalent. A genuine mismatch (grid vs block) and
+ * an unhonored min-height still FLAG.
+ */
+export function computeVerdict(expectDisplay, m) {
   if (!m.visible) {
-    return { expected, actual, verdict: "(root present but zero-size — collapsed/empty default; manual)" };
+    return "(root present but zero-size — collapsed/empty default; manual)";
   }
   const issues = [];
-  // (1) declared root display vs rendered. The preview shell mounts the
-  //     component as a direct child of `body { display: flex }`, so the root is
-  //     a flex ITEM and CSS blockifies its display (inline-flex->flex,
-  //     inline-block->block, inline->block, inline-grid->grid). Accept the
-  //     blockified equivalent; a genuine mismatch (e.g. grid vs block) still flags.
   const blockify = (d) =>
     ({ "inline-flex": "flex", "inline-block": "block", inline: "block", "inline-grid": "grid" }[d] ?? d);
-  if (
-    s.expect.display !== "(default)" &&
-    m.display !== s.expect.display &&
-    m.display !== blockify(s.expect.display)
-  ) {
-    issues.push(`display rendered=${m.display} vs contract ${s.expect.display}`);
+  if (expectDisplay !== "(default)" && m.display !== expectDisplay && m.display !== blockify(expectDisplay)) {
+    issues.push(`display rendered=${m.display} vs contract ${expectDisplay}`);
   }
-  // (2) min-height honored — compare rendered height to the SAME render's
-  //     computed min-height (config-independent: both reflect the demo config)
   const minh = toPx(m.minHeight);
   if (Number.isFinite(minh) && minh > 0 && m.height + 0.5 < minh) {
     issues.push(`height ${m.height}px < computed min-height ${m.minHeight} (not honored)`);
   }
-  const verdict = issues.length ? `FLAG: ${issues.join("; ")}` : `ok (${m.display}, ${m.width}×${m.height}px)`;
-  return { expected, actual, verdict };
+  return issues.length ? `FLAG: ${issues.join("; ")}` : `ok (${m.display}, ${m.width}×${m.height}px)`;
 }

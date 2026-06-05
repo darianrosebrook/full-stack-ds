@@ -28,6 +28,19 @@ node scripts/component-audit/audit.mjs --batch 1 --geometry
 `reviewed` and `notes` columns are **preserved** across runs, so human review
 state survives a re-audit. Changed rows are reported as **drift** on stderr.
 
+### Self-test (negative control)
+
+```bash
+node scripts/component-audit/selftest.mjs
+```
+
+Proves the audit *can* fail (it is otherwise easy for a reporting tool to be
+silently green): the hardcoded-dimension detector must bite on the three
+known-bad components and stay silent on a clean one, and the pure geometry
+verdict must FLAG an injected unhonored-min-height and a genuine display
+mismatch while staying OK on a clean render and on the known harness
+blockification confound. Standalone, **not** wired into CI.
+
 ## What each side means
 
 - **Expectation** is the contract: `<Name>.styles.json` (literal vs `resolvesTo`
