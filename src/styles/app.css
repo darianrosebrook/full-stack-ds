@@ -855,7 +855,15 @@ button {
 
 .tokens-card {
   padding: 0;
-  overflow: hidden;
+  /* `clip`, not `hidden`: both clip the flush table's square corners to the
+     panel's border-radius, but `overflow: hidden` establishes a (programmatically)
+     scrollable container, so the token table's `position: sticky` <th> binds to
+     THIS non-scrolling panel and never pins. `overflow: clip` clips without
+     establishing a scroll container, so the sticky header skips the panel and
+     pins to the real scroller (main.app-main). Fixes SHOWCASE-TOKENS-STICKY-01.
+     The bare .panel keeps overflow:hidden — this overrides it for the tokens
+     card only. */
+  overflow: clip;
 }
 
 /* The token explorer renders via the DS Table compound, which wraps the
