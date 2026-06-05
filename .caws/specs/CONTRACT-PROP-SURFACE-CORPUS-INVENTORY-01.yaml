@@ -3,6 +3,7 @@ title: 'Prop-surface inventory + advisory certification harness (corpus scoreboa
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: prop-surface-inventory
 created_at: '2026-06-05T07:36:30.396Z'
 updated_at: '2026-06-05T07:36:31.426Z'
 blast_radius:
