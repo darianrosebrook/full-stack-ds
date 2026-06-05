@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: token-hygiene
 created_at: '2026-06-05T05:29:26.099Z'
-updated_at: '2026-06-05T05:29:26.099Z'
+updated_at: '2026-06-05T19:19:44.444Z'
 blast_radius:
   modules:
     - 'packages/ds-contracts/components/{Command,OTP,Stat}/: the styles.json that emits the three hardcoded dimensional literals'
@@ -33,6 +33,23 @@ scope:
     - 'packages/ds-react/src/components/Command/'
     - 'packages/ds-react/src/components/OTP/'
     - 'packages/ds-react/src/components/Stat/'
+    - packages/ds-vue/src/components/Command/
+    - packages/ds-vue/src/components/OTP/
+    - packages/ds-vue/src/components/Stat/
+    - packages/ds-svelte/src/components/Command/
+    - packages/ds-svelte/src/components/OTP/
+    - packages/ds-svelte/src/components/Stat/
+    - packages/ds-angular/src/components/Command/
+    - packages/ds-angular/src/components/OTP/
+    - packages/ds-angular/src/components/Stat/
+    - packages/ds-lit/src/components/Command/
+    - packages/ds-lit/src/components/OTP/
+    - packages/ds-lit/src/components/Stat/
+    - packages/ds-figma-plugin/src/generated/components/Command/
+    - packages/ds-figma-plugin/src/generated/components/OTP/
+    - packages/ds-figma-plugin/src/generated/components/Stat/
+    - scripts/component-audit/
+    - docs/component-audit/
   out: []
 invariants:
   - 'Each of the three flagged hardcoded dimensional literals (Command padding-top:10vh, OTP gap:8px, Stat line-height:1.1) either resolves through a design token or is explicitly documented as an intentional non-token value — no silent bare literal remains.'
