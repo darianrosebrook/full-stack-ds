@@ -94,8 +94,8 @@
 
 .walkthrough__dot {
   display: block;
-  width: 8px;
-  height: 8px;
+  width: var(--fsds-walkthrough-dots-size);
+  height: var(--fsds-walkthrough-dots-size);
   border-radius: 50%;
   background-color: var(--fsds-walkthrough-dots-idle);
   border: none;

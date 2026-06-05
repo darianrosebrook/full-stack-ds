@@ -70,8 +70,8 @@
     "layer": "core"
   },
   "walkthrough.dots.size": {
-    "resolvesTo": "core.spacing.size.02",
-    "fallback": "2px",
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
     "layer": "core"
   },
   "walkthrough.dots.gap": {

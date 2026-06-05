@@ -9,8 +9,11 @@
     "border-color": {
       "resolvesTo": "chip.color.border.default"
     },
-    "padding": {
+    "padding-block": {
       "resolvesTo": "chip.size.padding.vertical"
+    },
+    "padding-inline": {
+      "resolvesTo": "chip.size.padding.horizontal"
     },
     "gap": {
       "resolvesTo": "chip.size.gap"

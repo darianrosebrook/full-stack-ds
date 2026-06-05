@@ -31,21 +31,21 @@
     "line-height": {
       "resolvesTo": "text.typography.lineHeight.body"
     },
-    "text.color.foreground.primary": {
+    "color": {
       "resolvesTo": "semantic.color.foreground.secondary",
       "fallback": "#555555"
     }
   },
   "error": {
-    "text.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.danger",
+    "color": {
+      "resolvesTo": "semantic.color.feedback.foreground.danger.default",
       "fallback": "#d9292b"
     }
   },
   "success": {
-    "text.color.foreground.primary": {
-      "resolvesTo": "semantic.color.foreground.success",
-      "fallback": "#487e1e"
+    "color": {
+      "resolvesTo": "semantic.color.feedback.foreground.success.default",
+      "fallback": "#1f8a4c"
     }
   }
 }

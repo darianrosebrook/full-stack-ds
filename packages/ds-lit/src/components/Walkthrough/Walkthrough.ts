@@ -50,7 +50,7 @@ export class WalkthroughElement extends LitElement {
       --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -155,8 +155,8 @@ export class WalkthroughElement extends LitElement {
     
     .walkthrough__dot {
       display: block;
-      width: 8px;
-      height: 8px;
+      width: var(--fsds-walkthrough-dots-size);
+      height: var(--fsds-walkthrough-dots-size);
       border-radius: 50%;
       background-color: var(--fsds-walkthrough-dots-idle);
       border: none;
@@ -254,7 +254,7 @@ export class WalkthroughContentElement extends LitElement {
       --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -359,8 +359,8 @@ export class WalkthroughContentElement extends LitElement {
     
     .walkthrough__dot {
       display: block;
-      width: 8px;
-      height: 8px;
+      width: var(--fsds-walkthrough-dots-size);
+      height: var(--fsds-walkthrough-dots-size);
       border-radius: 50%;
       background-color: var(--fsds-walkthrough-dots-idle);
       border: none;
@@ -412,7 +412,7 @@ export class WalkthroughTitleElement extends LitElement {
       --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -517,8 +517,8 @@ export class WalkthroughTitleElement extends LitElement {
     
     .walkthrough__dot {
       display: block;
-      width: 8px;
-      height: 8px;
+      width: var(--fsds-walkthrough-dots-size);
+      height: var(--fsds-walkthrough-dots-size);
       border-radius: 50%;
       background-color: var(--fsds-walkthrough-dots-idle);
       border: none;
@@ -570,7 +570,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       --fsds-walkthrough-description-marginTop: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-controls-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-walkthrough-controls-marginTop: var(--fsds-core-spacing-size-06, 16px);
-      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-02, 2px);
+      --fsds-walkthrough-dots-size: var(--fsds-core-spacing-size-04, 8px);
       --fsds-walkthrough-dots-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-walkthrough-dots-active: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -675,8 +675,8 @@ export class WalkthroughDescriptionElement extends LitElement {
     
     .walkthrough__dot {
       display: block;
-      width: 8px;
-      height: 8px;
+      width: var(--fsds-walkthrough-dots-size);
+      height: var(--fsds-walkthrough-dots-size);
       border-radius: 50%;
       background-color: var(--fsds-walkthrough-dots-idle);
       border: none;

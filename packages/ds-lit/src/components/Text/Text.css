@@ -27,6 +27,15 @@
 .text--body {
   font-weight: var(--fsds-text-typography-fontWeight-regular);
   line-height: var(--fsds-text-typography-lineHeight-body);
+  color: var(--fsds-semantic-color-foreground-secondary, #555555);
+}
+
+.text__error {
+  color: var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b);
+}
+
+.text__success {
+  color: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
 }
 /* @generated:end */
 

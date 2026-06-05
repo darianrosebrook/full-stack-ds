@@ -48,18 +48,6 @@ export class TextElement extends LitElement {
       --fsds-text-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
     }
     
-    .text--body {
-      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
-    }
-    
-    .text__error {
-      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-danger, #d9292b);
-    }
-    
-    .text__success {
-      --fsds-text-color-foreground-primary: var(--fsds-semantic-color-foreground-success, #487e1e);
-    }
-    
     .text {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -86,6 +74,15 @@ export class TextElement extends LitElement {
     .text--body {
       font-weight: var(--fsds-text-typography-fontWeight-regular);
       line-height: var(--fsds-text-typography-lineHeight-body);
+      color: var(--fsds-semantic-color-foreground-secondary, #555555);
+    }
+    
+    .text__error {
+      color: var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b);
+    }
+    
+    .text__success {
+      color: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
     }
   `;
 

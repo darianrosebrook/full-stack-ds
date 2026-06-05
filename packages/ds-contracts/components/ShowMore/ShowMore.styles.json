@@ -6,9 +6,6 @@
     "color": {
       "resolvesTo": "show-more.color.foreground.secondary"
     },
-    "border-color": {
-      "resolvesTo": "show-more.color.border.accent"
-    },
     "padding": {
       "resolvesTo": "show-more.size.padding.default"
     },
