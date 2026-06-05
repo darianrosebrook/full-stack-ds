@@ -2,10 +2,11 @@ id: SHOWCASE-CONSUMPTION-03
 title: 'DS Table API gaps + selector collision cleanup'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: showcase-consumption-3
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge showcase-consumption-3 at a9eaf5577cde8368a2061bc95b066c6971c9cc2f'
 created_at: '2026-06-05T02:15:14.240Z'
-updated_at: '2026-06-05T02:25:02.784Z'
+updated_at: '2026-06-05T03:13:04.806Z'
 blast_radius:
   modules:
     - 'DS Table component family: contract -> codegen IR/emitters -> generated Table across 5 frameworks (colSpan/rowSpan/scope/style on cells & headers)'
