@@ -3,6 +3,7 @@ title: 'DS-quality judgment review of the 37 unreviewed audit components'
 risk_tier: 3
 mode: chore
 lifecycle_state: active
+worktree: ds-review
 created_at: '2026-06-05T19:53:03.143Z'
 updated_at: '2026-06-05T19:53:04.177Z'
 blast_radius:
