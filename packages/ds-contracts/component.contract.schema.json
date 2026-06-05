@@ -506,7 +506,18 @@
           "oneOf": [
             { "type": "string" },
             { "type": "number" },
-            { "type": "boolean" }
+            { "type": "boolean" },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "number" },
+                  { "type": "boolean" },
+                  { "type": "object", "additionalProperties": { "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" } ] } }
+                ]
+              }
+            }
           ]
         },
         "nodeKind": {
@@ -536,7 +547,18 @@
           "oneOf": [
             { "type": "string" },
             { "type": "number" },
-            { "type": "boolean" }
+            { "type": "boolean" },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "number" },
+                  { "type": "boolean" },
+                  { "type": "object", "additionalProperties": { "oneOf": [ { "type": "string" }, { "type": "number" }, { "type": "boolean" } ] } }
+                ]
+              }
+            }
           ]
         }
       }

@@ -17,7 +17,7 @@
 import { readFileSync } from "node:fs";
 import { listComponentContracts } from "./contracts-fs.js";
 import { getPropMembers, type ComponentContract } from "./contract.js";
-import { normalizePropType, type PropTypeIR } from "./ir.js";
+import { normalizePropType, BUILTIN_TYPE_NAMES, type PropTypeIR } from "./ir.js";
 
 /** All type-alias names a PropTypeIR references, recursing through V2 kinds. */
 function collectRefNames(pt: PropTypeIR): string[] {
@@ -111,8 +111,11 @@ export function inventoryContract(name: string, contract: ComponentContract): Pr
     // Every ref this prop references — top-level OR nested inside a V2
     // callback/array/union/promise — so the scoreboard's resolution check
     // matches what generate:check enforces over the canonical type string.
+    // A ref resolves if it names a contract.types alias OR an ambient builtin
+    // (Date, Promise, …) — mirroring the IR's BUILTIN_TYPE_NAMES so a valid
+    // {kind:ref, to:"Date"} does not falsely inflate unresolvedRefs.
     for (const to of collectRefNames(pt)) {
-      refs.push({ prop: m.name, to, resolves: Boolean(types[to]) });
+      refs.push({ prop: m.name, to, resolves: Boolean(types[to]) || BUILTIN_TYPE_NAMES.has(to) });
     }
     // The prop's PRIMARY enum domain (a top-level enum, or a ref to a union alias).
     if (pt.kind === "ref") {

@@ -2500,7 +2500,7 @@ function resolveNativeTag(opts: {
 // emitter's own translation surface (e.g. `non-react-types.ts` for the
 // non-React emitters, where React-shaped contract types get rewritten
 // before emission).
-const BUILTIN_TYPE_NAMES = new Set([
+export const BUILTIN_TYPE_NAMES = new Set([
   "string",
   "number",
   "boolean",
