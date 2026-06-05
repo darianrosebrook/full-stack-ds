@@ -23,52 +23,55 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Input> component.",
+    "designed": {
       "members": [
         {
           "name": "type",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "HTML input type (text, email, password, number, search, etc.)."
         },
         {
           "name": "value",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Controlled value."
         },
         {
           "name": "defaultValue",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Uncontrolled initial value."
         },
         {
           "name": "onChange",
-          "type": "(value: string) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [{ "name": "value", "type": { "kind": "string" } }],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when value changes."
         },
         {
           "name": "placeholder",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Placeholder text shown when empty."
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Prevents interaction."
         },
         {
           "name": "invalid",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Applies error styling and sets aria-invalid."
         },
         {
           "name": "required",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Sets the native required attribute."
         },
         {
           "name": "name",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Form name for native submission."
         }
       ]

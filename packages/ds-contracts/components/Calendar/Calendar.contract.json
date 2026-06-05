@@ -89,60 +89,89 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Calendar> component.",
+    "designed": {
       "members": [
         {
           "name": "value",
-          "type": "Date | Date[] | null",
+          "propType": {
+            "kind": "union",
+            "of": [
+              { "kind": "ref", "to": "Date" },
+              { "kind": "array", "items": { "kind": "ref", "to": "Date" } },
+              { "kind": "literal", "value": null }
+            ]
+          },
           "description": "Controlled selected date or range."
         },
         {
           "name": "defaultValue",
-          "type": "Date | Date[] | null",
+          "propType": {
+            "kind": "union",
+            "of": [
+              { "kind": "ref", "to": "Date" },
+              { "kind": "array", "items": { "kind": "ref", "to": "Date" } },
+              { "kind": "literal", "value": null }
+            ]
+          },
           "description": "Uncontrolled initial selected date or range."
         },
         {
           "name": "onChange",
-          "type": "(value: Date | Date[] | null) => void",
+          "propType": {
+            "kind": "callback",
+            "params": [
+              {
+                "name": "value",
+                "type": {
+                  "kind": "union",
+                  "of": [
+                    { "kind": "ref", "to": "Date" },
+                    { "kind": "array", "items": { "kind": "ref", "to": "Date" } },
+                    { "kind": "literal", "value": null }
+                  ]
+                }
+              }
+            ],
+            "returns": { "kind": "void" }
+          },
           "description": "Called when the selected date changes."
         },
         {
           "name": "mode",
-          "type": "CalendarMode",
+          "propType": { "kind": "ref", "to": "CalendarMode" },
           "description": "Selection mode: single date or date range.",
           "default": "single"
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Disables all interaction."
         },
         {
           "name": "minDate",
-          "type": "Date",
+          "propType": { "kind": "ref", "to": "Date" },
           "description": "Earliest selectable date."
         },
         {
           "name": "maxDate",
-          "type": "Date",
+          "propType": { "kind": "ref", "to": "Date" },
           "description": "Latest selectable date."
         },
         {
           "name": "locale",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "BCP 47 locale tag for date formatting.",
           "default": "en-US"
         },
         {
           "name": "shouldCloseOnSelect",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "When true, selecting a date closes the popup. Wired to behavior.dismissalTriggers.select.enabledBy.",
           "default": true
         },
         {
           "name": "daysShown",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Number of day cells the grid should render. Drives structural count iteration on the cell node; visible date labels and selection state are NOT yet wired (the binding grammar cannot project a Date into a button label inline). A typical month occupies 42 cells (6 weeks x 7 days), which is the recommended default.",
           "default": 42
         }

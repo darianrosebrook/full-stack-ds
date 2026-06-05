@@ -69,33 +69,32 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Field> form layout wrapper.",
+    "designed": {
       "members": [
         {
           "name": "name",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Form field name used for form submission and as the base for auto-generated element IDs.",
           "required": true
         },
         {
           "name": "id",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Explicit input element ID. Auto-generated from name if omitted."
         },
         {
           "name": "required",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Marks the field as required. Surfaces as aria-required on the control element."
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Disables the field and all of its child controls."
         },
         {
           "name": "readOnly",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Puts the field into read-only mode. The value is visible but not editable."
         },
         {
@@ -120,27 +119,27 @@
         },
         {
           "name": "label",
-          "type": "ReactNode",
+          "propType": { "kind": "node", "of": "content" },
           "description": "Label content rendered by the FieldLabel slot."
         },
         {
           "name": "helpText",
-          "type": "ReactNode",
+          "propType": { "kind": "node", "of": "content" },
           "description": "Supplementary help text rendered in the help slot below the control."
         },
         {
           "name": "error",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Validation error message. When present, the field renders in invalid state."
         },
         {
           "name": "status",
-          "type": "FieldStatus",
+          "propType": { "kind": "ref", "to": "FieldStatus" },
           "description": "Validation status of the field."
         },
         {
           "name": "validating",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "True while async validation is in flight. Drives the validating indicator slot."
         }
       ]
