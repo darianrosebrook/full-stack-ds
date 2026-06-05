@@ -34,12 +34,11 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Status> component.",
+    "designed": {
       "members": [
         {
           "name": "status",
-          "type": "StatusIntent",
+          "propType": { "kind": "ref", "to": "StatusIntent" },
           "description": "Status intent that drives the icon and color scheme.",
           "required": true
         }

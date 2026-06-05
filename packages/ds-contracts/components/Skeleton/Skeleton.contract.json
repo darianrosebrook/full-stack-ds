@@ -23,51 +23,50 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Skeleton> component.",
+    "designed": {
       "members": [
         {
           "name": "variant",
-          "type": "SkeletonVariant",
+          "propType": { "kind": "ref", "to": "SkeletonVariant" },
           "description": "Visual variant",
           "default": "block"
         },
         {
           "name": "animate",
-          "type": "SkeletonAnimate",
+          "propType": { "kind": "ref", "to": "SkeletonAnimate" },
           "description": "Animation style",
           "default": "shimmer"
         },
         {
           "name": "density",
-          "type": "SkeletonDensity",
+          "propType": { "kind": "ref", "to": "SkeletonDensity" },
           "description": "Spacing density to match surrounding content",
           "default": "regular"
         },
         {
           "name": "aspectRatio",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "CSS aspect-ratio value to size the placeholder"
         },
         {
           "name": "lines",
-          "type": "SkeletonLines",
+          "propType": { "kind": "ref", "to": "SkeletonLines" },
           "description": "Number of lines to render for text variant. Pass a number or {min, max} range."
         },
         {
           "name": "radius",
-          "type": "SkeletonRadius",
+          "propType": { "kind": "ref", "to": "SkeletonRadius" },
           "description": "Border radius token"
         },
         {
           "name": "decorative",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Set true for decorative skeletons that should not announce to screen readers.",
           "default": true
         },
         {
           "name": "ariaLabel",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Localized loading label when decorative is false."
         }
       ]

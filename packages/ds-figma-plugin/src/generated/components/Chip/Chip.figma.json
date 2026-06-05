@@ -77,7 +77,7 @@
       "required": false,
       "description": "Icon node to render. Omit for text-only chips.",
       "defaultExpr": null,
-      "nodeKind": null
+      "nodeKind": "node-ref"
     },
     {
       "name": "title",

@@ -42,52 +42,51 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Chip> component.",
+    "designed": {
       "members": [
         {
           "name": "type",
-          "type": "ChipType",
+          "propType": { "kind": "ref", "to": "ChipType" },
           "description": "HTML button type attribute"
         },
         {
           "name": "variant",
-          "type": "ChipVariant",
+          "propType": { "kind": "ref", "to": "ChipVariant" },
           "description": "Visual variant"
         },
         {
           "name": "size",
-          "type": "ChipSize",
+          "propType": { "kind": "ref", "to": "ChipSize" },
           "description": "Size token"
         },
         {
           "name": "disabled",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Disables the chip"
         },
         {
           "name": "icon",
-          "type": "ReactNode",
+          "propType": { "kind": "node", "of": "content" },
           "description": "Icon node to render. Omit for text-only chips."
         },
         {
           "name": "title",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Title attribute. Use to expose a tooltip-equivalent label."
         },
         {
           "name": "ariaLabel",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible label when content is not descriptive enough on its own."
         },
         {
           "name": "ariaExpanded",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Sets aria-expanded for chips that toggle a popover/menu."
         },
         {
           "name": "ariaPressed",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Sets aria-pressed for chips used as toggle buttons."
         }
       ]
