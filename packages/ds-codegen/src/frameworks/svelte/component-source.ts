@@ -26,7 +26,42 @@ import type {
   IterationIR,
   NormalizedChannelIR,
 } from "../../ir.js";
-import { hasChildrenPlaceholder, TABLE_COMPOSITION_TAGS } from "../../ir.js";
+import {
+  hasChildrenPlaceholder,
+  TABLE_COMPOSITION_TAGS,
+  nativeTableAttrsFor,
+  type NativeTableAttr,
+} from "../../ir.js";
+
+/** Svelte prop TS type for a forwarded native table attribute (template `style` is a string). */
+function svelteTableAttrType(attr: NativeTableAttr): string {
+  switch (attr) {
+    case "id":
+    case "style":
+      return "string";
+    case "colSpan":
+    case "rowSpan":
+      return "number";
+    case "scope":
+      return '"col" | "row" | "colgroup" | "rowgroup"';
+  }
+}
+
+/**
+ * Svelte template attribute for a forwarded native table attribute. `id`,
+ * `style`, `scope` use the `{name}` shorthand (var name === HTML attribute);
+ * `colSpan`/`rowSpan` bind the lowercase HTML attribute to the camelCase var.
+ */
+function svelteTableAttrBinding(attr: NativeTableAttr): string {
+  switch (attr) {
+    case "colSpan":
+      return "colspan={colSpan}";
+    case "rowSpan":
+      return "rowspan={rowSpan}";
+    default:
+      return `{${attr}}`; // id, style, scope
+  }
+}
 import { translateNonReactType } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
@@ -743,6 +778,13 @@ export function generateSvelteCompoundPartSource(
   // Native-tag branch: emit native HTML element directly, no Stack.
   if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
     const tag = part.nativeTag;
+    const attrs = nativeTableAttrsFor(tag);
+    const attrPropLines = attrs.map((a) => `  ${a}?: ${svelteTableAttrType(a)};`);
+    const destructured = ["class: className", `"data-testid": dataTestid`, "children", ...attrs];
+    // Svelte omits an attribute whose bound value is undefined.
+    const attrBindings = attrs
+      .map((a) => ` ${svelteTableAttrBinding(a)}`)
+      .join("");
     return [
       `<script lang="ts">`,
       `// @generated:start imports`,
@@ -757,9 +799,10 @@ export function generateSvelteCompoundPartSource(
       `  class?: string;`,
       `  "data-testid"?: string;`,
       `  children?: import('svelte').Snippet;`,
+      ...attrPropLines,
       `}`,
       ``,
-      `let { class: className, "data-testid": dataTestid, children }: Props = $props();`,
+      `let { ${destructured.join(", ")} }: Props = $props();`,
       `// @generated:end`,
       ``,
       `// @generated:start classes`,
@@ -771,7 +814,7 @@ export function generateSvelteCompoundPartSource(
       `// @custom:end`,
       `</script>`,
       ``,
-      `<${tag} class={classes} data-testid={dataTestid}>`,
+      `<${tag} class={classes} data-testid={dataTestid}${attrBindings}>`,
       `  {@render children?.()}`,
       `</${tag}>`,
       ``,

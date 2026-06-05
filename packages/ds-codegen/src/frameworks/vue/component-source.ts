@@ -26,7 +26,37 @@ import type {
   IterationIR,
   NormalizedChannelIR,
 } from "../../ir.js";
-import { TABLE_COMPOSITION_TAGS } from "../../ir.js";
+import {
+  TABLE_COMPOSITION_TAGS,
+  nativeTableAttrsFor,
+  type NativeTableAttr,
+} from "../../ir.js";
+
+/** Vue prop TS type for a forwarded native table attribute (template `style` is a string). */
+function vueTableAttrType(attr: NativeTableAttr): string {
+  switch (attr) {
+    case "id":
+    case "style":
+      return "string";
+    case "colSpan":
+    case "rowSpan":
+      return "number";
+    case "scope":
+      return '"col" | "row" | "colgroup" | "rowgroup"';
+  }
+}
+
+/** Lowercase HTML attribute spelling used at the Vue template bind site. */
+function vueTableAttrHtmlName(attr: NativeTableAttr): string {
+  switch (attr) {
+    case "colSpan":
+      return "colspan";
+    case "rowSpan":
+      return "rowspan";
+    default:
+      return attr; // id, style, scope
+  }
+}
 import {
   emitNonReactTypeAliases,
   translateNonReactType,
@@ -390,6 +420,13 @@ export function generateVueCompoundPartSource(
   // doc in ir.ts for the realization rules.
   if (part.nativeTag && TABLE_COMPOSITION_TAGS.has(part.nativeTag)) {
     const tag = part.nativeTag;
+    const attrs = nativeTableAttrsFor(tag);
+    const attrPropLines = attrs.map((a) => `  ${a}?: ${vueTableAttrType(a)};`);
+    // Bind each to its lowercase HTML attribute; Vue omits an attribute whose
+    // bound value is undefined.
+    const attrBindings = attrs
+      .map((a) => ` :${vueTableAttrHtmlName(a)}="props.${a}"`)
+      .join("");
     return [
       `<script setup lang="ts">`,
       `// @generated:start imports`,
@@ -404,6 +441,7 @@ export function generateVueCompoundPartSource(
       `interface Props {`,
       `  class?: string;`,
       `  "data-testid"?: string;`,
+      ...attrPropLines,
       `}`,
       ``,
       `const props = defineProps<Props>();`,
@@ -421,7 +459,7 @@ export function generateVueCompoundPartSource(
       `</script>`,
       ``,
       `<template>`,
-      `  <${tag} :class="classNames" :data-testid="props['data-testid']">`,
+      `  <${tag} :class="classNames" :data-testid="props['data-testid']"${attrBindings}>`,
       `    <slot />`,
       `  </${tag}>`,
       `</template>`,

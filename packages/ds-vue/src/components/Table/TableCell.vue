@@ -11,6 +11,10 @@ import { computed } from "vue";
 interface Props {
   class?: string;
   "data-testid"?: string;
+  id?: string;
+  style?: string;
+  colSpan?: number;
+  rowSpan?: number;
 }
 
 const props = defineProps<Props>();
@@ -28,7 +32,7 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <td :class="classNames" :data-testid="props['data-testid']">
+  <td :class="classNames" :data-testid="props['data-testid']" :id="props.id" :style="props.style" :colspan="props.colSpan" :rowspan="props.rowSpan">
     <slot />
   </td>
 </template>

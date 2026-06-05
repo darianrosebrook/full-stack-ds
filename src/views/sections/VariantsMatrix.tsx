@@ -60,7 +60,7 @@ export function VariantsMatrix({ component }: VariantsMatrixProps) {
               </div>
               <div className="matrix-meta">
                 {keys.map((k) => (
-                  <span className="chip chip--mono" key={k}>
+                  <span className="pill pill--mono" key={k}>
                     {k}={String(props[k])}
                   </span>
                 ))}

@@ -16,8 +16,8 @@
  * we strip CSS comments first so the explanatory comment that mentions
  * `.card`/`.tabs` by name does not trip the guard.
  */
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
@@ -29,6 +29,35 @@ const stripCssComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
 // Exported so the negative-control test can prove these patterns actually bite.
 export const BARE_CARD_RULE = /\.card(?![-\w])\s*[^{}]*\{/g;
 export const BARE_TABS_RULE = /\.tabs(?![-\w])\s*[^{}]*\{/g;
+// SHOWCASE-CONSUMPTION-03 A3/A4: DS Chip renders `class="chip chip--<variant>"`,
+// so a bare `.chip {}` app rule cascades onto every DS Chip — same failure mode
+// as .card/.tabs. The app pill family is `.pill`.
+export const BARE_CHIP_RULE = /\.chip(?![-\w])\s*[^{}]*\{/g;
+
+// A hand-rolled data table is signalled by a raw `<table>` element in the JSX.
+// After SHOWCASE-CONSUMPTION-02/03 every showcase data table renders via the DS
+// Table compound (`<Table>`, capital T) whose `<table>` lives in the generated
+// package, never in src/. Code samples that show raw `<table>` markup as a
+// string are not real DOM, so we strip template literals + comments first.
+export const RAW_DATA_TABLE_TAG = /<table[\s/>]/g;
+
+const stripCodeSamples = (src: string) =>
+  src
+    .replace(/\/\*[\s\S]*?\*\//g, "") // block comments
+    .replace(/\/\/[^\n]*/g, "") // line comments
+    .replace(/`(?:\\[\s\S]|[^`\\])*`/g, "``"); // template-literal bodies
+
+function collectTsx(dir: string, acc: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const full = resolve(dir, entry);
+    if (statSync(full).isDirectory()) {
+      collectTsx(full, acc);
+    } else if (/\.tsx$/.test(entry) && !/\.(test|spec)\.tsx$/.test(entry)) {
+      acc.push(full);
+    }
+  }
+  return acc;
+}
 
 describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress", () => {
   it("A5: app.css does not reintroduce a bare `.card {}` rule (collides with DS Card.css)", () => {
@@ -66,15 +95,53 @@ describe("DS consumption guard (A7) — Pass 1 fixes must not silently regress",
     );
   });
 
-  it("negative control: the .card/.tabs guard regexes actually match a reintroduced collision", () => {
-    // If someone pasted these back into app.css, the guards above MUST fire.
-    const regressed = ".card { border: 1px solid red; }\n.tabs { display: flex; }";
+  it("SHOWCASE-CONSUMPTION-03 A3: app.css does not declare a bare `.chip {}` rule (collides with DS Chip.css)", () => {
+    const css = stripCssComments(read("styles/app.css"));
+    const hits = css.match(BARE_CHIP_RULE) ?? [];
+    expect(
+      hits,
+      `app.css declared a .chip rule (use .pill for the app pill label): ${hits.join(" | ")}`,
+    ).toEqual([]);
+  });
+
+  it("SHOWCASE-CONSUMPTION-03 A4: no showcase view/section renders a raw data <table> (use the DS Table compound)", () => {
+    const roots = [resolve(SRC, "views"), resolve(SRC, "layout")];
+    const offenders: string[] = [];
+    for (const root of roots) {
+      for (const file of collectTsx(root)) {
+        if (stripCodeSamples(readFileSync(file, "utf8")).match(RAW_DATA_TABLE_TAG)) {
+          offenders.push(relative(SRC, file));
+        }
+      }
+    }
+    expect(
+      offenders,
+      `raw <table> markup found — render data tables via the DS Table compound (<Table>/<TableRow>/<TableCell>): ${offenders.join(", ")}`,
+    ).toEqual([]);
+  });
+
+  it("negative control: the collision + raw-table guards actually bite, and stay silent on legitimate code", () => {
+    // If someone pasted these back into app.css, the CSS guards MUST fire.
+    const regressed =
+      ".card { border: 1px solid red; }\n.tabs { display: flex; }\n.chip { padding: 2px; }";
     expect(regressed.match(BARE_CARD_RULE)).not.toBeNull();
     expect(regressed.match(BARE_TABS_RULE)).not.toBeNull();
+    expect(regressed.match(BARE_CHIP_RULE)).not.toBeNull();
     // ...and they must NOT fire on the legitimately-renamed classes.
     const renamed =
-      ".panel { border: 0 } .card--inset {} .card-toolbar {} .tokens-card {} .view-tabs {} .fw-tabs {}";
+      ".panel {} .card--inset {} .card-toolbar {} .tokens-card {} .view-tabs {} .fw-tabs {} .pill {} .pill--mono {} .tokens-layer-dot {}";
     expect(renamed.match(BARE_CARD_RULE)).toBeNull();
     expect(renamed.match(BARE_TABS_RULE)).toBeNull();
+    expect(renamed.match(BARE_CHIP_RULE)).toBeNull();
+
+    // The raw-table guard fires on a hand-rolled <table> but not on the DS
+    // compound (<Table>) nor on a <table> shown inside a doc code-sample string.
+    expect(`<table className="x">`.match(RAW_DATA_TABLE_TAG)).not.toBeNull();
+    expect(`<Table ariaLabel="x">`.match(RAW_DATA_TABLE_TAG)).toBeNull();
+    expect(
+      stripCodeSamples("const sample = `<table><tr><td>x</td></tr></table>`;").match(
+        RAW_DATA_TABLE_TAG,
+      ),
+    ).toBeNull();
   });
 });

@@ -1,6 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
 import type { MouseEvent } from "react";
-import { Chip, Input } from "@full-stack-ds/react";
+import {
+  Chip,
+  Input,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableHeaderCell,
+  TableCell,
+} from "@full-stack-ds/react";
 import type { Bundle, FoundationToken } from "../types/data";
 
 interface TokensViewProps {
@@ -290,22 +299,22 @@ export function TokensView({ bundle }: TokensViewProps) {
       </div>
 
       <div className="panel tokens-card">
-        <table className="tokens-table">
-          <thead>
-            <tr>
-              <th>Token</th>
-              <th>Value</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table className="tokens-table" ariaLabel="Design tokens">
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell>Token</TableHeaderCell>
+              <TableHeaderCell>Value</TableHeaderCell>
+              <TableHeaderCell>Type</TableHeaderCell>
+              <TableHeaderCell>Description</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {LAYER_ORDER.flatMap((layer) => {
               const items = grouped[layer];
               if (!items.length) return [] as React.ReactNode[];
               return [
-                <tr key={`hdr-${layer}`} className="tokens-section-row">
-                  <td colSpan={4}>
+                <TableRow key={`hdr-${layer}`} className="tokens-section-row">
+                  <TableCell colSpan={4}>
                     <div className="tokens-section-row-inner">
                       <span className={`tokens-layer-dot tokens-layer-dot--${layer}`} aria-hidden />
                       <span className="tokens-section-title">{LAYER_LABEL[layer]}</span>
@@ -314,13 +323,13 @@ export function TokensView({ bundle }: TokensViewProps) {
                       )}
                       <span className="muted tokens-section-count">{items.length}</span>
                     </div>
-                  </td>
-                </tr>,
+                  </TableCell>
+                </TableRow>,
                 ...items.map((t) => {
                   const anchor = anchorId(layer, t.path);
                   return (
-                    <tr key={`${layer}.${t.path}`} id={anchor}>
-                      <td className="tokens-name-cell">
+                    <TableRow key={`${layer}.${t.path}`} id={anchor}>
+                      <TableCell className="tokens-name-cell">
                         <a
                           className="tokens-name-anchor"
                           href={`#${anchor}`}
@@ -328,26 +337,26 @@ export function TokensView({ bundle }: TokensViewProps) {
                         >
                           {t.path}
                         </a>
-                      </td>
-                      <td>
+                      </TableCell>
+                      <TableCell>
                         <ValueCell token={t} index={refIndex} onJump={jumpToRow} />
-                      </td>
-                      <td className="muted">{t.type ?? "—"}</td>
-                      <td className="muted tokens-desc-cell">{t.description ?? ""}</td>
-                    </tr>
+                      </TableCell>
+                      <TableCell className="muted">{t.type ?? "—"}</TableCell>
+                      <TableCell className="muted tokens-desc-cell">{t.description ?? ""}</TableCell>
+                    </TableRow>
                   );
                 }),
               ];
             })}
             {filtered.length === 0 && (
-              <tr>
-                <td colSpan={4} className="subtle tokens-empty">
+              <TableRow>
+                <TableCell colSpan={4} className="subtle tokens-empty">
                   No tokens match {filter ? `"${filter}"` : "the current layer selection"}.
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ export function PropsTable({ members }: PropsTableProps) {
               <TableCell>
                 <code>{m.name}</code>
                 {m.required && (
-                  <span className="chip chip--accent" style={{ marginLeft: "var(--fsds-core-spacing-size-05)" }}>
+                  <span className="pill pill--accent" style={{ marginLeft: "var(--fsds-core-spacing-size-05)" }}>
                     required
                   </span>
                 )}

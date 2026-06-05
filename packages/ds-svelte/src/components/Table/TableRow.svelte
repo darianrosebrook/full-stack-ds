@@ -12,9 +12,11 @@ interface Props {
   class?: string;
   "data-testid"?: string;
   children?: import('svelte').Snippet;
+  id?: string;
+  style?: string;
 }
 
-let { class: className, "data-testid": dataTestid, children }: Props = $props();
+let { class: className, "data-testid": dataTestid, children, id, style }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -26,6 +28,6 @@ const classes = $derived(["table__row", className].filter(Boolean).join(" "));
 // @custom:end
 </script>
 
-<tr class={classes} data-testid={dataTestid}>
+<tr class={classes} data-testid={dataTestid} {id} {style}>
   {@render children?.()}
 </tr>

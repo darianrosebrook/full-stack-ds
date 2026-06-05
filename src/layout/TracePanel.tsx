@@ -21,7 +21,7 @@ export function TracePanel({ component, selection, onClear }: TracePanelProps) {
       <h3 className="trace-title">Contract</h3>
       {selection ? (
         <div style={{ marginBottom: "var(--fsds-core-spacing-size-06)", fontSize: "var(--fsds-core-typography-ramp-2)" }}>
-          <Chip size="small" variant="selected" className="chip--mono" style={{ marginBottom: "var(--fsds-core-spacing-size-05)" }}>
+          <Chip size="small" variant="selected" style={{ fontFamily: "var(--fsds-core-typography-font-family-mono)", marginBottom: "var(--fsds-core-spacing-size-05)" }}>
             {selection.hit.kind}
           </Chip>
           <div style={{ color: "var(--fsds-semantic-color-foreground-primary)", marginBottom: "var(--fsds-core-spacing-size-04)" }}>
