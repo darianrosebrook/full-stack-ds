@@ -52,12 +52,12 @@ const REGRESSION = [
 ];
 
 // Documented residuals surfaced by this rail — keyed `${framework}.${Component}.${prop}`.
-// These are REAL findings the rail caught, deferred to a follow-up (this slice does
-// not widen into emitter fixes). They are recorded (annotated), not silently passed.
-const KNOWN_RESIDUALS: Record<string, string> = {
-  "lit.Label.htmlFor":
-    "FINDING (follow-up): the Lit emitter emits `htmlFor=` verbatim — an HTML attribute binding that lowercases to the non-standard `htmlfor` attribute — instead of lowering the `htmlFor` binding to the DOM `for` attribute. React/Vue/Svelte all produce `for`; in Lit the <label> for-association is not observable. A Lit-emitter (htmlFor->for) fix, NOT preview instability.",
-};
+// REAL findings the rail caught, recorded (annotated) rather than silently passed.
+// Empty: the rail's first finding — `lit.Label.htmlFor` (Lit emitted the non-standard
+// `htmlfor` attribute instead of the DOM `for`) — was closed by
+// LIT-LABEL-HTMLFOR-DOM-ATTR-01, so the rail now ASSERTS Lit's <label> for-association
+// in live DOM (no longer skipped).
+const KNOWN_RESIDUALS: Record<string, string> = {};
 
 // ---- pull obligations from the matrix (authority; no re-inference) ----
 type Obligation = { component: string; prop: string; propType: string; bucket: string; attr: string; sentinel: string | boolean | number };

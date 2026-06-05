@@ -1747,11 +1747,26 @@ function isAttributeOnlyBinding(attr: string): boolean {
   return LIT_READONLY_IDL_NAMES.has(attr);
 }
 
+/**
+ * Lower a React-style camelCase contract binding key to its HTML-native DOM
+ * attribute name for Lit templates. Lit (like Vue/Svelte) passes attribute
+ * names through to the rendered HTML, so a `htmlFor` binding key would emit the
+ * non-standard `htmlfor` attribute instead of the DOM `for` — breaking the
+ * <label> for-association. Mirrors vueAttrName and the Svelte equivalent. The
+ * value still reads from the `htmlFor` @property; only the emitted attribute
+ * name is lowered. (className is handled separately by the class recipe.)
+ */
+function litDomAttrName(name: string): string {
+  if (name === "htmlFor") return "for";
+  return name;
+}
+
 function renderLitBinding(
-  attr: string,
+  rawAttr: string,
   expr: BindingExpression,
   ctx: LitRenderContext,
 ): string | null {
+  const attr = litDomAttrName(rawAttr);
   switch (expr.kind) {
     case "prop": {
       const prop = ctx.styledByName.get(expr.prop);
