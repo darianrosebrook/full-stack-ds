@@ -49,38 +49,37 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <AlertNotice> component.",
+    "designed": {
       "members": [
         {
           "name": "status",
-          "type": "AlertNoticeStatus",
+          "propType": { "kind": "ref", "to": "AlertNoticeStatus" },
           "description": "Status severity of the alert notice"
         },
         {
           "name": "level",
-          "type": "AlertNoticeLevel",
+          "propType": { "kind": "ref", "to": "AlertNoticeLevel" },
           "description": "Display level affecting layout and emphasis"
         },
         {
           "name": "dismissible",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Whether the alert notice can be dismissed by the user"
         },
         {
           "name": "onDismiss",
-          "type": "() => void",
+          "propType": { "kind": "callback", "params": [], "returns": { "kind": "void" } },
           "description": "Called when the user clicks the dismiss control. Required surface for `dismissible`; consumers handle removing/hiding the notice."
         },
         {
           "name": "dismissLabel",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible label for the dismiss control. Defaults to \"Dismiss\".",
           "default": "Dismiss"
         },
         {
           "name": "icon",
-          "type": "ReactNode",
+          "propType": { "kind": "node", "of": "content" },
           "description": "Optional icon node rendered before the alert content"
         }
       ]

@@ -19,22 +19,21 @@
     ]
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Card> component.",
+    "designed": {
       "members": [
         {
           "name": "interactive",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Enable hover affordances (shadow lift, translate)"
         },
         {
           "name": "status",
-          "type": "CardStatus",
+          "propType": { "kind": "ref", "to": "CardStatus" },
           "description": "Visual status variant of the card"
         },
         {
           "name": "density",
-          "type": "CardDensity",
+          "propType": { "kind": "ref", "to": "CardDensity" },
           "description": "Padding and border treatment. Use 'inset' for compact tiles inside a list or grid where the surrounding container provides primary structure.",
           "default": "default"
         }

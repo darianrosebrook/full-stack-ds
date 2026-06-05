@@ -102,7 +102,7 @@
       "required": false,
       "description": "Optional icon node rendered before the alert content",
       "defaultExpr": null,
-      "nodeKind": null
+      "nodeKind": "node-ref"
     }
   ],
   "variants": {

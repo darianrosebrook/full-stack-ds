@@ -19,18 +19,17 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Stat> component.",
+    "designed": {
       "members": [
         {
           "name": "size",
-          "type": "StatSize",
+          "propType": { "kind": "ref", "to": "StatSize" },
           "description": "Visual size of the metric value.",
           "default": "md"
         },
         {
           "name": "trend",
-          "type": "StatTrend",
+          "propType": { "kind": "ref", "to": "StatTrend" },
           "description": "Optional direction-of-change indicator. Drives the value's color via a data attribute; consumers may render a trend arrow as inline children."
         }
       ]

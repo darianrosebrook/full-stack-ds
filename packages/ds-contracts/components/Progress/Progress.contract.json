@@ -54,42 +54,48 @@
     }
   },
   "props": {
-    "styled": {
-      "description": "Props for the <Progress> component.",
+    "designed": {
       "members": [
         {
           "name": "value",
-          "type": "number",
+          "propType": { "kind": "number" },
           "description": "Progress value (0-100). Omit for indeterminate progress."
         },
         {
           "name": "variant",
-          "type": "ProgressVariant",
+          "propType": { "kind": "ref", "to": "ProgressVariant" },
           "description": "Progress variant."
         },
         {
           "name": "size",
-          "type": "ProgressSize",
+          "propType": { "kind": "ref", "to": "ProgressSize" },
           "description": "Size token."
         },
         {
           "name": "intent",
-          "type": "ProgressIntent",
+          "propType": { "kind": "ref", "to": "ProgressIntent" },
           "description": "Visual intent / color."
         },
         {
           "name": "label",
-          "type": "string",
+          "propType": { "kind": "string" },
           "description": "Accessible label."
         },
         {
           "name": "showValue",
-          "type": "boolean",
+          "propType": { "kind": "boolean" },
           "description": "Show the percentage label inside the component."
         },
         {
           "name": "formatValue",
-          "type": "(value: number, max: number) => string",
+          "propType": {
+            "kind": "callback",
+            "params": [
+              { "name": "value", "type": { "kind": "number" } },
+              { "name": "max", "type": { "kind": "number" } }
+            ],
+            "returns": { "kind": "string" }
+          },
           "description": "Custom value formatter."
         }
       ]
