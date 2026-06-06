@@ -775,6 +775,12 @@ button {
   padding: var(--fsds-core-spacing-size-07) var(--fsds-core-spacing-size-06);
 }
 
+/* The Properties tab hosts the PropertiesPanel, which manages its own section
+   padding — drop the tab-body padding so the panel sits flush to the edges. */
+.app-trace .trace-panel-body--flush {
+  padding: 0;
+}
+
 /* Tokens page */
 .tokens-controls {
   display: flex;

@@ -15,9 +15,11 @@ import { EvidencePanel } from "./sections/EvidencePanel";
 interface DesignViewProps {
   component: ComponentBundle;
   route: Route;
+  /** Live token overrides from the Properties tab; re-skin the variant previews. */
+  tokenOverrides?: Record<string, string>;
 }
 
-export function DesignView({ component }: DesignViewProps) {
+export function DesignView({ component, tokenOverrides }: DesignViewProps) {
   const hasUsage = component.usage.length > 0;
 
   return (
@@ -78,7 +80,10 @@ export function DesignView({ component }: DesignViewProps) {
             <h2 className="section-title">Variants</h2>
             <span className="section-meta">contract.variants</span>
           </header>
-          <VariantsMatrix component={component} />
+          <VariantsMatrix
+            component={component}
+            tokenOverrides={tokenOverrides}
+          />
         </section>
       )}
 

@@ -6,12 +6,21 @@ import { TracePanel } from "../TracePanel";
 import type { ComponentBundle } from "../../types/data";
 import type { TraceSelection } from "../../trace/types";
 
-// TRACE-PANEL-TABS-01 — the right-hand inspector is a two-tab surface
-// (Properties default-selected, then Contract). The contract JSON tree and the
-// trace-selection controls live inside the Contract tab; Properties is reserved
-// but intentionally blank for this slice. These tests assert the rendered DOM
-// against acceptance A1–A5, not against mocks: they query for the real tab
-// roles, the real tree text, and drive a real click on Clear selection.
+// TRACE-PANEL-TABS-01 / TRACE-PANEL-PROPERTIES-LAND-01 — the right-hand
+// inspector is a two-tab surface (Properties default-selected, then Contract).
+// The contract JSON tree + trace-selection controls live in the Contract tab;
+// the Properties tab now renders the real PropertiesPanel (was a placeholder).
+// These tests assert the rendered DOM against acceptance, not against mocks.
+
+// Default props for the live-edit state lifted to App. Tests that don't
+// exercise editing pass these no-op defaults.
+const panelProps = {
+  propValues: {},
+  onPropChange: () => {},
+  tokenValues: {},
+  onTokenChange: () => {},
+  foundationTokens: [],
+};
 
 function makeComponent(): ComponentBundle {
   return {
@@ -45,7 +54,7 @@ function makeSelection(): TraceSelection {
 
 describe("TracePanel two-tab inspector (TRACE-PANEL-TABS-01)", () => {
   it("A1: renders exactly two tabs — Properties then Contract — with Properties selected by default", () => {
-    render(<TracePanel component={makeComponent()} selection={null} onClear={() => {}} />);
+    render(<TracePanel component={makeComponent()} selection={null} onClear={() => {}} {...panelProps} />);
 
     const tabs = screen.getAllByRole("tab");
     expect(tabs).toHaveLength(2);
@@ -60,21 +69,24 @@ describe("TracePanel two-tab inspector (TRACE-PANEL-TABS-01)", () => {
     expect(screen.queryByRole("heading", { name: /^contract$/i })).toBeNull();
   });
 
-  it("A3: the default (Properties) panel shows placeholder copy only — no contract tree", () => {
-    render(<TracePanel component={makeComponent()} selection={null} onClear={() => {}} />);
+  it("A3 (LAND-01): the default (Properties) panel renders the PropertiesPanel — not the old placeholder, not the contract tree", () => {
+    render(<TracePanel component={makeComponent()} selection={null} onClear={() => {}} {...panelProps} />);
 
-    // The visible (non-hidden) tabpanel is Properties; it must not contain the
-    // contract marker text from the tree.
     const panels = screen.getAllByRole("tabpanel", { hidden: true });
-    const visiblePanel = panels.find((p) => !p.hasAttribute("hidden"));
+    const visiblePanel = panels.find((p) => !p.hasAttribute("hidden"))!;
     expect(visiblePanel).toBeTruthy();
-    expect(visiblePanel!).toHaveTextContent(/properties will appear here/i);
-    expect(visiblePanel!).not.toHaveTextContent("ACCORDION_CONTRACT_MARKER");
+
+    // The real PropertiesPanel renders the component header (name + layer); the
+    // old placeholder copy is gone and the contract tree stays in its own tab.
+    expect(visiblePanel).toHaveTextContent("Accordion");
+    expect(visiblePanel).toHaveTextContent("composer"); // contract.layer in the panel header
+    expect(visiblePanel).not.toHaveTextContent(/properties will appear here/i);
+    expect(visiblePanel).not.toHaveTextContent("ACCORDION_CONTRACT_MARKER");
   });
 
   it("A2: activating the Contract tab reveals the contract JSON tree", async () => {
     const user = userEvent.setup();
-    render(<TracePanel component={makeComponent()} selection={null} onClear={() => {}} />);
+    render(<TracePanel component={makeComponent()} selection={null} onClear={() => {}} {...panelProps} />);
 
     await user.click(screen.getByRole("tab", { name: "Contract" }));
 
@@ -94,7 +106,7 @@ describe("TracePanel two-tab inspector (TRACE-PANEL-TABS-01)", () => {
     const user = userEvent.setup();
     const onClear = vi.fn();
     render(
-      <TracePanel component={makeComponent()} selection={makeSelection()} onClear={onClear} />,
+      <TracePanel component={makeComponent()} selection={makeSelection()} onClear={onClear} {...panelProps} />,
     );
 
     await user.click(screen.getByRole("tab", { name: "Contract" }));
@@ -112,7 +124,7 @@ describe("TracePanel two-tab inspector (TRACE-PANEL-TABS-01)", () => {
   });
 
   it("A5: with no component, renders the empty-state message and no tabs", () => {
-    render(<TracePanel component={null} selection={null} onClear={() => {}} />);
+    render(<TracePanel component={null} selection={null} onClear={() => {}} {...panelProps} />);
 
     expect(screen.getByText(/select a component to inspect its contract/i)).toBeInTheDocument();
     expect(screen.queryAllByRole("tab")).toHaveLength(0);
@@ -120,7 +132,7 @@ describe("TracePanel two-tab inspector (TRACE-PANEL-TABS-01)", () => {
 
   it("has no axe violations in the default rendered state", async () => {
     const { container } = render(
-      <TracePanel component={makeComponent()} selection={null} onClear={() => {}} />,
+      <TracePanel component={makeComponent()} selection={null} onClear={() => {}} {...panelProps} />,
     );
     expect(await axe(container)).toHaveNoViolations();
   });

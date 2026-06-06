@@ -37,6 +37,15 @@ interface FrameworkPreviewProps {
    * default baked-props behavior (unchanged). Currently React-only.
    */
   config?: PreviewConfig;
+  /**
+   * Live token-override CSS injected into the iframe document AFTER load as a
+   * `<style data-fsds="overrides">` element. Unlike `tokensCss` (baked into the
+   * server-built shell at the `src` URL, keyed by component), this re-applies on
+   * change without reloading — so editing a token in the Properties tab re-skins
+   * baked-props previews (e.g. the variant matrix) live. Works for same-origin
+   * new-pipeline iframes; a no-op for the legacy srcdoc (opaque-origin) path.
+   */
+  overrideCss?: string;
 }
 
 /**
@@ -61,6 +70,7 @@ export function FrameworkPreview({
   componentSource,
   css,
   tokensCss,
+  overrideCss,
   demo,
   height = 200,
   interactive = true,
@@ -159,6 +169,29 @@ export function FrameworkPreview({
     postConfig();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config, status]);
+
+  // Inject live token-override CSS into the iframe document once it's ready.
+  // Same-origin (new-pipeline) iframes let us write a <style> directly; this
+  // re-skins baked-props previews (the variant matrix) without reloading. The
+  // legacy srcdoc path is opaque-origin, so contentDocument access throws — we
+  // swallow it (override is a new-pipeline-only enhancement).
+  useEffect(() => {
+    if (status !== "ready" || overrideCss === undefined) return;
+    const doc = iframeRef.current?.contentDocument;
+    if (!doc) return;
+    try {
+      let el = doc.getElementById("__fsds_overrides") as HTMLStyleElement | null;
+      if (!el) {
+        el = doc.createElement("style");
+        el.id = "__fsds_overrides";
+        el.setAttribute("data-fsds", "overrides");
+        doc.head.appendChild(el);
+      }
+      el.textContent = overrideCss;
+    } catch {
+      // cross-origin (legacy srcdoc) — override injection not supported there.
+    }
+  }, [overrideCss, status]);
 
   // New-pipeline iframes require `allow-same-origin` because they load a
   // same-origin URL whose script makes module fetches; an opaque origin
