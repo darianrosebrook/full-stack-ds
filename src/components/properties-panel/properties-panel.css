@@ -497,10 +497,11 @@
   user-select: none;
   overflow: hidden;
   border-radius: 10px;
-  /* The diagram is a self-contained LIGHT surface (like Figma's), independent
-     of the app theme, so the bright cyan/green/pink zones and dark value text
-     always composite correctly — they don't read on a dark app background. */
-  background: #f3f3f5;
+  /* The diagram is a self-contained LIGHT surface (like the reference editor's),
+     independent of the app theme, so the soft cyan/green/pink zones and dark
+     value text always composite correctly on a dark app background. Colors +
+     proportions match the live interactive-ui-editor (localhost:3000). */
+  background: #ececf0; /* reference container bg */
   color: #1a1a1a;
 }
 
@@ -524,15 +525,16 @@
   background: #3c4ce4; /* blue axis */
 }
 
-/* cyan padding box (border band) — the outer colored zone. Scaled up to fill
-   the panel; the nested green zone + center scale with it via inset/percent. */
+/* cyan padding box (border band) — the outer colored zone. Reference colors
+   (Tailwind cyan-200 via oklch) + faint border; scaled up ~1.35x to fill the
+   panel. The nested green zone + center scale with it via inset/percent. */
 .fsds-bme__padding-box {
   position: absolute;
-  width: 264px;
-  height: 176px;
+  width: 260px;
+  height: 174px;
   border-radius: 14px;
-  background: #8af7ff;
-  border: 1px solid #3a3a3a;
+  background: oklch(0.917 0.08 205.041); /* reference cyan-200 */
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* green dashed padding zone, inset inside the cyan box (opaque so it reads as a
@@ -541,18 +543,19 @@
   position: absolute;
   inset: 30px 12%;
   border-radius: 6px;
-  background: #d8ffb0; /* opaque green */
+  background: oklab(0.925 -0.0767348 0.0341726); /* reference green-200 (opaque) */
   border: 1px dashed #aaa;
 }
 
-/* white content card (the element) — shows the resolved size, read-only */
+/* white content card (the element) — shows the resolved size, read-only.
+   Reference: centered, white, dashed. Scaled with the box. */
 .fsds-bme__center {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 132px;
-  height: 64px;
+  width: 136px;
+  height: 66px;
   border-radius: 4px;
   background: #ffffff; /* opaque white */
   border: 1px dashed #aaa;
@@ -571,40 +574,44 @@
   font-size: 8px;
 }
 
-/* padding value labels — on the inner (green-zone) edges */
+/* padding value labels — centered ON each edge of the GREEN padding zone, just
+   inside it (reference: padding values sit on the green band, not the cyan). */
 .fsds-bme__pad {
   position: absolute;
-  z-index: 12;
+  z-index: 14;
 }
-.fsds-bme__pad--top { top: -2px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__pad--bottom { bottom: -2px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__pad--left { left: 2px; top: 50%; transform: translateY(-50%); }
-.fsds-bme__pad--right { right: 2px; top: 50%; transform: translateY(-50%); }
+/* positioned relative to the green pad-zone (its containing block) */
+.fsds-bme__pad--top { top: 3px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--bottom { bottom: 3px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--left { left: 5px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--right { right: 5px; top: 50%; transform: translateY(-50%); }
 
-/* border value labels — on the cyan-box edges (between cyan edge and green) */
+/* border value labels — bare text on the cyan-box edges (between the cyan edge
+   and the green zone). Reference: top ~10% / bottom ~90% / sides mid. */
 .fsds-bme__border-val {
   position: absolute;
   z-index: 12;
 }
-.fsds-bme__border-val--top { top: 1px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__border-val--bottom { bottom: 1px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__border-val--left { left: 4px; top: 50%; transform: translateY(-50%); }
-.fsds-bme__border-val--right { right: 4px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__border-val--top { top: 12px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__border-val--bottom { bottom: 12px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__border-val--left { left: 9px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__border-val--right { right: 9px; top: 50%; transform: translateY(-50%); }
 
-/* pink corner radius circles — 24x24, overlapping the cyan box corners */
+/* pink corner radius circles — 24x24, INSET inside the cyan box corners
+   (reference: radius values sit ~8px in from each corner, not overflowing). */
 .fsds-bme__radius {
   position: absolute;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 24px;
-  background: #ffe3f3; /* pink */
+  border-radius: 12px;
+  background: oklch(0.948 0.028 342.258); /* reference pink-100 */
   border: 1px dashed #aaa;
   z-index: 20;
 }
-.fsds-bme__radius--tl { top: -1px; left: -1px; }
-.fsds-bme__radius--tr { top: -1px; right: -1px; }
-.fsds-bme__radius--bl { bottom: -1px; left: -1px; }
-.fsds-bme__radius--br { bottom: -1px; right: -1px; }
+.fsds-bme__radius--tl { top: 4px; left: 4px; }
+.fsds-bme__radius--tr { top: 4px; right: 4px; }
+.fsds-bme__radius--bl { bottom: 4px; left: 4px; }
+.fsds-bme__radius--br { bottom: 4px; right: 4px; }
