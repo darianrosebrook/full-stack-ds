@@ -16,15 +16,46 @@ import { PropertiesScratchView } from "./views/PropertiesScratchView";
 import { useRoute } from "./router";
 import type { TraceSelection } from "./trace/types";
 
+// Stable empty references so a component with no overrides doesn't get a fresh
+// object each render (which would churn memoized preview/panel consumers).
+const EMPTY_PROPS: Record<string, unknown> = {};
+const EMPTY_TOKENS: Record<string, string> = {};
+
 export function App() {
   const [route] = useRoute();
   const [trace, setTrace] = useState<TraceSelection | null>(null);
+
+  // Per-component live-edit overrides from the Properties tab, keyed by
+  // component name so switching components preserves each one's edits for the
+  // session. propOverrides drive prop controls; tokenOverrides drive the
+  // box-model/fill/etc. token edits and re-skin DesignView's live previews.
+  const [propOverrides, setPropOverrides] = useState<
+    Record<string, Record<string, unknown>>
+  >({});
+  const [tokenOverrides, setTokenOverrides] = useState<
+    Record<string, Record<string, string>>
+  >({});
 
   const activeComponent = useMemo(() => {
     if (route.kind !== "component") return null;
     const name = route.name;
     return bundle.components.find((c) => c.name === name) ?? null;
   }, [route]);
+
+  const activeName = activeComponent?.name ?? "";
+  const activeProps = propOverrides[activeName] ?? EMPTY_PROPS;
+  const activeTokens = tokenOverrides[activeName] ?? EMPTY_TOKENS;
+
+  const onPropChange = (name: string, value: unknown) =>
+    setPropOverrides((prev) => ({
+      ...prev,
+      [activeName]: { ...(prev[activeName] ?? {}), [name]: value },
+    }));
+  const onTokenChange = (slot: string, value: string) =>
+    setTokenOverrides((prev) => ({
+      ...prev,
+      [activeName]: { ...(prev[activeName] ?? {}), [slot]: value },
+    }));
 
   const activePrimitive = useMemo(() => {
     if (route.kind !== "primitive") return null;
@@ -65,7 +96,11 @@ export function App() {
         )}
         {route.kind === "component" && activeComponent && (
           route.tab === "design" ? (
-            <DesignView component={activeComponent} route={route} />
+            <DesignView
+              component={activeComponent}
+              route={route}
+              tokenOverrides={activeTokens}
+            />
           ) : (
             <DeveloperView
               component={activeComponent}
@@ -89,6 +124,11 @@ export function App() {
             component={activeComponent}
             selection={trace}
             onClear={() => setTrace(null)}
+            propValues={activeProps}
+            onPropChange={onPropChange}
+            tokenValues={activeTokens}
+            onTokenChange={onTokenChange}
+            foundationTokens={bundle.foundationTokens}
           />
         </aside>
       )}

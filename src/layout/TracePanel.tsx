@@ -1,15 +1,31 @@
 import { Chip, Button, Tabs, TabsList, TabsTab, TabsPanel } from "@full-stack-ds/react";
-import type { ComponentBundle } from "../types/data";
+import type { ComponentBundle, FoundationToken } from "../types/data";
 import type { TraceSelection } from "../trace/types";
 import { JsonTreeViewer } from "../components/JsonTreeViewer";
+import { PropertiesPanel } from "../components/properties-panel/PropertiesPanel";
 
 interface TracePanelProps {
   component: ComponentBundle | null;
   selection: TraceSelection | null;
   onClear: () => void;
+  /** Live-edit override state for the Properties tab (lifted to App). */
+  propValues: Record<string, unknown>;
+  onPropChange: (name: string, value: unknown) => void;
+  tokenValues: Record<string, string>;
+  onTokenChange: (slot: string, value: string) => void;
+  foundationTokens: FoundationToken[];
 }
 
-export function TracePanel({ component, selection, onClear }: TracePanelProps) {
+export function TracePanel({
+  component,
+  selection,
+  onClear,
+  propValues,
+  onPropChange,
+  tokenValues,
+  onTokenChange,
+  foundationTokens,
+}: TracePanelProps) {
   if (!component) {
     return (
       <div className="trace-empty">Select a component to inspect its contract.</div>
@@ -30,10 +46,15 @@ export function TracePanel({ component, selection, onClear }: TracePanelProps) {
         </TabsList>
       </div>
 
-      <TabsPanel value="properties" className="trace-panel-body">
-        <p className="muted" style={{ fontSize: "var(--fsds-core-typography-ramp-2)", marginTop: 0 }}>
-          Component properties will appear here.
-        </p>
+      <TabsPanel value="properties" className="trace-panel-body trace-panel-body--flush">
+        <PropertiesPanel
+          component={component}
+          propValues={propValues}
+          onPropChange={onPropChange}
+          tokenValues={tokenValues}
+          onTokenChange={onTokenChange}
+          foundationTokens={foundationTokens}
+        />
       </TabsPanel>
 
       <TabsPanel value="contract" className="trace-panel-body">

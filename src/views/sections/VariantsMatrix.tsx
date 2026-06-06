@@ -2,9 +2,19 @@ import type { ComponentBundle } from "../../types/data";
 import { bundle } from "../../types/bundle";
 import { FrameworkPreview } from "../../runtime/FrameworkPreview";
 import { buildReactDemo } from "../../runtime/demos";
+import {
+  deriveControls,
+  tokenOverridesToCss,
+} from "../../components/properties-panel/control-derivation";
 
 interface VariantsMatrixProps {
   component: ComponentBundle;
+  /**
+   * Live token overrides from the Properties tab (slot → value). Appended to the
+   * preview's tokensCss as CSS-custom-property overrides so editing a token
+   * re-skins every variant cell live, with no module rebuild.
+   */
+  tokenOverrides?: Record<string, string>;
 }
 
 function cartesian<T>(arrays: T[][]): T[][] {
@@ -13,10 +23,25 @@ function cartesian<T>(arrays: T[][]): T[][] {
   }, [[]]);
 }
 
-export function VariantsMatrix({ component }: VariantsMatrixProps) {
+export function VariantsMatrix({
+  component,
+  tokenOverrides,
+}: VariantsMatrixProps) {
   const variants = component.contract.variants ?? {};
   const keys = Object.keys(variants);
   const reactSource = component.sources.react;
+
+  // Live token-override CSS, appended after the global tokens so it wins. Uses
+  // the derived token rows so each override also targets its resolvesTo semantic
+  // var (variant rules re-derive the slot var — see tokenOverridesToCss).
+  const { tokens } = deriveControls(component.contract);
+  const overrideCss =
+    tokenOverrides && Object.keys(tokenOverrides).length > 0
+      ? tokenOverridesToCss(tokenOverrides, tokens)
+      : "";
+  const previewTokensCss = overrideCss
+    ? `${bundle.tokensCss}\n${overrideCss}`
+    : bundle.tokensCss;
 
   if (keys.length === 0) return null;
 
@@ -49,7 +74,7 @@ export function VariantsMatrix({ component }: VariantsMatrixProps) {
                     componentName={component.name}
                     componentSource={reactSource.component}
                     css={reactSource.css}
-                    tokensCss={bundle.tokensCss}
+                    tokensCss={previewTokensCss}
                     demo={buildReactDemo(component, props)}
                     height={120}
                     interactive={false}
