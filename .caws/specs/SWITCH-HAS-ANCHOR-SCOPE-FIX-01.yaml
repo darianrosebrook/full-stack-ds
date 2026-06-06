@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: switch-has-anchor
 created_at: '2026-06-06T06:47:33.070Z'
-updated_at: '2026-06-06T06:48:02.074Z'
+updated_at: '2026-06-06T06:56:00.953Z'
 blast_radius:
   modules:
     - Switch component (contract styles sidecar + regenerated CSS across react/vue/svelte/lit/angular)
@@ -19,6 +19,7 @@ scope:
     - packages/ds-lit/src/components/Switch/
     - packages/ds-svelte/src/components/Switch/
     - packages/ds-angular/src/components/Switch/
+    - packages/ds-figma-plugin/src/generated/components/Switch/
   out: []
 invariants:
   - 'Every `:has(.switch__input:checked)` / `:has(.switch__input:disabled)` selector in Switch.styles.json is anchored to the `.switch` root (`.switch:has(...)`), so the state selector matches only the individual switch instance that contains the checked/disabled input — not any shared ancestor. The default (`md`) state rule is anchored the same way the existing `.switch--sm`/`.switch--lg` state rules already are.'
