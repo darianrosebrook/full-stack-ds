@@ -3,6 +3,7 @@ title: 'Live Figma materialization + idempotency: real figma.* adapter consuming
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: live-mat
 created_at: '2026-06-06T01:39:10.525Z'
 updated_at: '2026-06-06T01:39:11.560Z'
 blast_radius:
