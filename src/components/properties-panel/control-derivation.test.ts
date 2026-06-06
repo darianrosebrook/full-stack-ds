@@ -7,6 +7,7 @@ import {
   tokenOverridesToCss,
   slotToCssVar,
   resolvesToCssVar,
+  resolveBoxModel,
 } from "./control-derivation";
 import type { ComponentContract, TokenDefinition } from "../../types/data";
 
@@ -152,6 +153,44 @@ describe("slotToCssVar", () => {
       "--fsds-button-color-background-default",
     );
     expect(slotToCssVar("box-model.gap")).toBe("--fsds-box-model-gap");
+  });
+});
+
+describe("resolveBoxModel", () => {
+  it("maps padding sides + gap + min-width + radius + border from Button's real tokens, and omits margins", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const bindings = resolveBoxModel(tokens);
+    const byRole = Object.fromEntries(bindings.map((b) => [b.role, b.row.slot]));
+
+    expect(byRole["padding-top"]).toBe("box-model.padding-block-start");
+    expect(byRole["padding-bottom"]).toBe("box-model.padding-block-end");
+    expect(byRole["padding-left"]).toBe("box-model.padding-inline-start");
+    expect(byRole["padding-right"]).toBe("box-model.padding-inline-end");
+    expect(byRole["gap"]).toBe("box-model.gap");
+    expect(byRole["min-width"]).toBe("box-model.min-width");
+    // Button has a component-prefixed radius + border (not box-model.*).
+    expect(byRole["radius"]).toBe("button.size.radius");
+    expect(byRole["border"]).toBe("button.size.border");
+    // No margin role exists at all — components don't own outer margin.
+    expect(bindings.find((b) => String(b.role).includes("margin"))).toBeUndefined();
+
+    console.log("Button box-model bindings:", JSON.stringify(byRole, null, 2));
+  });
+
+  it("resolves Dialog's component-prefixed radius (dialog.size.radius.default)", () => {
+    const { tokens } = deriveControls(loadContract("Dialog"));
+    const byRole = Object.fromEntries(
+      resolveBoxModel(tokens).map((b) => [b.role, b.row.slot]),
+    );
+    expect(byRole["padding-top"]).toBe("box-model.padding-block-start");
+    expect(byRole["radius"]).toBe("dialog.size.radius.default");
+    console.log("Dialog box-model bindings:", JSON.stringify(byRole, null, 2));
+  });
+
+  it("does not reuse one slot for two roles", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const slots = resolveBoxModel(tokens).map((b) => b.row.slot);
+    expect(new Set(slots).size).toBe(slots.length);
   });
 });
 

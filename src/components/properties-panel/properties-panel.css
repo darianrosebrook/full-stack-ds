@@ -306,3 +306,268 @@
   position: sticky;
   top: var(--fsds-core-spacing-size-06, 16px);
 }
+
+/* ---- TokenValueControl (shared ◇ token-linked value editor) ---- */
+
+.fsds-tvc__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  width: 100%;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.fsds-tvc__trigger:hover {
+  border-color: var(--fsds-semantic-color-border-default);
+  background: var(--fsds-semantic-color-background-elevated);
+}
+
+.fsds-tvc__trigger--compact {
+  padding: 0 var(--fsds-core-spacing-size-02, 4px);
+  gap: var(--fsds-core-spacing-size-02, 4px);
+  border-radius: 4px;
+  background: transparent;
+  border-color: transparent;
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  width: auto;
+  min-width: 2ch;
+  justify-content: center;
+}
+
+.fsds-tvc__trigger--compact:hover {
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
+.fsds-tvc__swatch {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 3px;
+  flex: none;
+}
+
+.fsds-tvc__value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fsds-tvc__diamond {
+  flex: none;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-tvc__diamond--linked {
+  color: var(--fsds-semantic-color-foreground-accent);
+}
+
+.fsds-tvc__popover {
+  width: 23rem;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.fsds-tvc__editor {
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-tvc__stepper {
+  display: grid;
+  grid-template-columns: 2rem 1fr 2rem;
+  align-items: stretch;
+  gap: var(--fsds-core-spacing-size-02, 4px);
+}
+
+.fsds-tvc__step {
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-tvc__step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fsds-tvc__color-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  align-items: center;
+}
+
+.fsds-tvc__color-swatch {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-tvc__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  text-align: center;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-tvc__picker {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The picker inside the popover should fill, not float as its own dialog. */
+.fsds-tvc__picker .fsds-token-picker {
+  width: 100%;
+  max-height: 50vh;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ---- BoxModelEditor (nested padding/radius/border diagram) ---- */
+
+.fsds-bme {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
+/* center axes — pink vertical, blue horizontal (from the Figma reference) */
+.fsds-bme__axis {
+  position: absolute;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.fsds-bme__axis--v {
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  background: #e60076; /* pink axis */
+}
+.fsds-bme__axis--h {
+  left: 0;
+  right: 0;
+  top: calc(50% + 0.5px);
+  height: 1px;
+  background: #155dfc; /* blue axis */
+}
+
+/* border tag: outer ring control */
+.fsds-bme__border-tag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 4;
+}
+
+/* cyan padding box */
+.fsds-bme__padding-box {
+  position: absolute;
+  width: 196px;
+  height: 130px;
+  border-radius: 12px;
+  background: color-mix(in srgb, #a2f4fd 55%, transparent); /* cyan-200-ish */
+  border: 1px solid var(--fsds-semantic-color-border-subtle);
+  box-shadow: 0 1px 2px color-mix(in srgb, black 8%, transparent);
+}
+
+/* dashed green inner content zone */
+.fsds-bme__content-box {
+  position: absolute;
+  inset: 26px 11%;
+  border-radius: 4px;
+  background: color-mix(in srgb, #4ade80 30%, transparent); /* green-200/30 */
+  border: 1px dashed color-mix(in srgb, var(--fsds-semantic-color-foreground-tertiary) 40%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* center card: size proxy + gap */
+.fsds-bme__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 88px;
+  height: 46px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--fsds-semantic-color-background-elevated) 80%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--fsds-semantic-color-foreground-tertiary) 40%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  z-index: 10;
+}
+.fsds-bme__center-size {
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+.fsds-bme__gap {
+  font-size: 9px;
+}
+
+/* padding side controls on the cyan band */
+.fsds-bme__pad {
+  position: absolute;
+  z-index: 5;
+}
+.fsds-bme__pad--top { top: 4px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--bottom { bottom: 4px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--left { left: 6px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--right { right: 6px; top: 50%; transform: translateY(-50%); }
+
+/* pink corner radius circles */
+.fsds-bme__radius {
+  position: absolute;
+  width: 30px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: color-mix(in srgb, #fce7f3 80%, transparent); /* pink-100 */
+  border: 1px dashed color-mix(in srgb, var(--fsds-semantic-color-foreground-tertiary) 40%, transparent);
+  z-index: 20;
+}
+.fsds-bme__radius--tl { top: -3px; left: -3px; }
+.fsds-bme__radius--tr { top: -3px; right: -3px; }
+.fsds-bme__radius--bl { bottom: -3px; left: -3px; }
+.fsds-bme__radius--br { bottom: -3px; right: -3px; }

@@ -323,3 +323,73 @@ export function tokenOverridesToCss(
     .join("\n");
   return `:root {\n${body}\n}\n`;
 }
+
+// ---- Box-model role resolution -------------------------------------------
+//
+// The BoxModelEditor edits semantic roles (padding sides, gap, min/max width,
+// radius, border) but token SLOT NAMES vary per component: padding/gap/min-width
+// are conventionally `box-model.*`, while radius/border/width live under a
+// component-prefixed slot (`button.size.radius`, `dialog.size.radius.default`,
+// `button.size.border`, `dialog.size.md.width`). Rather than special-case
+// component names (which the repo's core invariant forbids), we DISCOVER the
+// slot for each role from the component's token map by matching slot-name
+// patterns. A role with no matching slot is simply absent (e.g. margins never
+// map — components don't own outer margin).
+
+export type BoxModelRole =
+  | "padding-top"
+  | "padding-right"
+  | "padding-bottom"
+  | "padding-left"
+  | "gap"
+  | "min-width"
+  | "max-width"
+  | "radius"
+  | "border";
+
+/** A box-model role resolved to a concrete token row, or absent. */
+export interface BoxModelBinding {
+  role: BoxModelRole;
+  row: TokenRowDescriptor;
+}
+
+// Ordered matchers per role. The first slot whose name matches wins, so more
+// specific patterns are listed first. Patterns are tested against the lowercased
+// slot name. `box-model.*` is preferred; component-prefixed fallbacks follow.
+const ROLE_MATCHERS: Record<BoxModelRole, RegExp[]> = {
+  "padding-top": [/(^|\.)padding-block-start$/, /(^|\.)padding-top$/],
+  "padding-bottom": [/(^|\.)padding-block-end$/, /(^|\.)padding-bottom$/],
+  "padding-left": [/(^|\.)padding-inline-start$/, /(^|\.)padding-left$/],
+  "padding-right": [/(^|\.)padding-inline-end$/, /(^|\.)padding-right$/],
+  gap: [/(^|\.)gap$/, /(^|\.)gap\./],
+  "min-width": [/(^|\.)min-width$/, /(^|\.)minwidth/],
+  "max-width": [/(^|\.)max-width$/, /(^|\.)maxwidth/, /\.size\..*\.width$/],
+  radius: [/(^|\.)radius$/, /(^|\.)radius\b/, /\.radius\./],
+  border: [/(^|\.)border$/, /\.size\.border$/, /\.border\.width$/],
+};
+
+/**
+ * Resolve box-model roles to the component's token rows. Returns one binding
+ * per role that has a matching slot — roles without a slot are omitted. Used by
+ * the BoxModelEditor to know which positions are editable and which token each
+ * drives. Pure projection over deriveControls(contract).tokens.
+ */
+export function resolveBoxModel(tokens: TokenRowDescriptor[]): BoxModelBinding[] {
+  const out: BoxModelBinding[] = [];
+  const used = new Set<string>();
+  for (const role of Object.keys(ROLE_MATCHERS) as BoxModelRole[]) {
+    const matchers = ROLE_MATCHERS[role];
+    let found: TokenRowDescriptor | undefined;
+    for (const re of matchers) {
+      found = tokens.find(
+        (t) => !used.has(t.slot) && re.test(t.slot.toLowerCase()),
+      );
+      if (found) break;
+    }
+    if (found) {
+      used.add(found.slot);
+      out.push({ role, row: found });
+    }
+  }
+  return out;
+}

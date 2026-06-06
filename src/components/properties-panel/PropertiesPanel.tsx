@@ -23,6 +23,7 @@ import {
   type TokenRowDescriptor,
 } from "./control-derivation";
 import { TokenPicker, type TokenPick } from "./TokenPicker";
+import { BoxModelEditor } from "./BoxModelEditor";
 import "./properties-panel.css";
 
 export interface PropertiesPanelProps {
@@ -185,6 +186,17 @@ export function PropertiesPanel({
         <span className="fsds-pp__title">{component.name}</span>
         <span className="fsds-pp__layer">{component.contract.layer}</span>
       </div>
+
+      <section className="fsds-pp__section" aria-label="Box model">
+        <h3 className="fsds-pp__section-title">Box model</h3>
+        <BoxModelEditor
+          tokens={tokens}
+          values={tokenValues}
+          onChange={onTokenChange}
+          onBindToken={(slot, pick) => onTokenChange(slot, pick.value)}
+          foundationTokens={foundationTokens}
+        />
+      </section>
 
       {variantAxes.length > 0 && (
         <section className="fsds-pp__section" aria-label="Variants">
