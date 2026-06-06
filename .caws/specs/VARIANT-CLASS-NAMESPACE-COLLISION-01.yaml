@@ -3,6 +3,7 @@ title: 'Namespace colliding variant-class axes so .prefix--value emission is una
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: variant-class-namespace
 created_at: '2026-06-06T03:57:24.956Z'
 updated_at: '2026-06-06T03:57:24.956Z'
 blast_radius:
