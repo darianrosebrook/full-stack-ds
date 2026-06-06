@@ -84,15 +84,19 @@ function PropControl({
         </select>
       );
     case "boolean":
+      // NOT a <label>: the DS Switch renders its own <label>+input, so wrapping
+      // it in another <label> nests labels — clicking the wrapper misroutes to
+      // other switches (toggling several at once). A plain <span> is just layout;
+      // the Switch carries its own labeling via aria-label.
       return (
-        <label className="fsds-pp__toggle">
+        <span className="fsds-pp__toggle">
           <Switch
             checked={Boolean(value)}
             onChange={(checked) => onChange(checked)}
             aria-label={control.label}
           />
           <span>{value ? "on" : "off"}</span>
-        </label>
+        </span>
       );
     case "number":
       return (
