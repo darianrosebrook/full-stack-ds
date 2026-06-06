@@ -2,10 +2,11 @@ id: SWITCH-HAS-ANCHOR-SCOPE-FIX-01
 title: 'Anchor Switch :has(:checked) selectors to .switch root so one switch''s checked state doesn''t re-skin sibling switches'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: switch-has-anchor
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge switch-has-anchor at 8f7667fc9c79cfa6b6dbef8a4c1ad00ba8013229'
 created_at: '2026-06-06T06:47:33.070Z'
-updated_at: '2026-06-06T06:56:00.953Z'
+updated_at: '2026-06-06T06:57:35.695Z'
 blast_radius:
   modules:
     - Switch component (contract styles sidecar + regenerated CSS across react/vue/svelte/lit/angular)
