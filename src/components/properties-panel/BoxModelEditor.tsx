@@ -93,12 +93,15 @@ export function BoxModelEditor({
   const minWidth = byRole.get("min-width");
   const border = byRole.get("border");
 
-  // The center card shows the resolved min-width (a real token) as the size
-  // proxy; components don't carry an explicit width/height the way canvas nodes
-  // do, so min-width is the closest contract fact.
-  const centerLabel = minWidth
-    ? `min ${shownValue(minWidth.row, values)}`
-    : "size";
+  // Center card: a W × H proxy from the component's min-width/min-height tokens
+  // (components don't carry explicit width/height like canvas nodes; min-* is
+  // the closest contract fact). Mirrors the Figma "80 × 80" center label.
+  const minWidthRow = tokens.find((t) => /(^|\.)min-width$/.test(t.slot));
+  const minHeightRow = tokens.find((t) => /(^|\.)min-height$/.test(t.slot));
+  const w = minWidthRow ? shownValue(minWidthRow, values) : null;
+  const h = minHeightRow ? shownValue(minHeightRow, values) : null;
+  const centerLabel =
+    w && h ? `${w} × ${h}` : w ?? h ?? (minWidth ? "min" : "size");
 
   return (
     <div className="fsds-bme" role="group" aria-label="Box model">
@@ -106,14 +109,7 @@ export function BoxModelEditor({
       <div className="fsds-bme__axis fsds-bme__axis--v" aria-hidden />
       <div className="fsds-bme__axis fsds-bme__axis--h" aria-hidden />
 
-      {/* border ring control (outer), shown only if a border token exists */}
-      {border && (
-        <div className="fsds-bme__border-tag" title="border width">
-          {control("border")}
-        </div>
-      )}
-
-      {/* cyan padding box */}
+      {/* cyan padding box (border band) */}
       <div className="fsds-bme__padding-box">
         {/* corner radius circles — all bound to the single radius token */}
         {radius &&
@@ -126,23 +122,42 @@ export function BoxModelEditor({
             </div>
           ))}
 
-        {/* padding side controls, on the cyan band */}
-        <div className="fsds-bme__pad fsds-bme__pad--top">
-          {control("padding-top")}
-        </div>
-        <div className="fsds-bme__pad fsds-bme__pad--bottom">
-          {control("padding-bottom")}
-        </div>
-        <div className="fsds-bme__pad fsds-bme__pad--left">
-          {control("padding-left")}
-        </div>
-        <div className="fsds-bme__pad fsds-bme__pad--right">
-          {control("padding-right")}
-        </div>
+        {/* border value labels on the cyan-box edges (all bound to one border
+            token, so editing any updates the single border slot) */}
+        {border && (
+          <>
+            <div className="fsds-bme__border-val fsds-bme__border-val--top">
+              {control("border")}
+            </div>
+            <div className="fsds-bme__border-val fsds-bme__border-val--bottom">
+              {control("border")}
+            </div>
+            <div className="fsds-bme__border-val fsds-bme__border-val--left">
+              {control("border")}
+            </div>
+            <div className="fsds-bme__border-val fsds-bme__border-val--right">
+              {control("border")}
+            </div>
+          </>
+        )}
 
-        {/* dashed green inner content zone */}
-        <div className="fsds-bme__content-box">
-          {/* center card: resolved size proxy (read-only) + gap control */}
+        {/* green dashed padding zone */}
+        <div className="fsds-bme__pad-zone">
+          {/* padding value labels on the green-zone edges */}
+          <div className="fsds-bme__pad fsds-bme__pad--top">
+            {control("padding-top")}
+          </div>
+          <div className="fsds-bme__pad fsds-bme__pad--bottom">
+            {control("padding-bottom")}
+          </div>
+          <div className="fsds-bme__pad fsds-bme__pad--left">
+            {control("padding-left")}
+          </div>
+          <div className="fsds-bme__pad fsds-bme__pad--right">
+            {control("padding-right")}
+          </div>
+
+          {/* white content card: resolved size proxy (read-only) + gap */}
           <div className="fsds-bme__center" aria-label="size">
             <span className="fsds-bme__center-size">{centerLabel}</span>
             {byRole.get("gap") && (

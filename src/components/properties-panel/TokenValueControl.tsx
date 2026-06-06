@@ -95,7 +95,15 @@ export function TokenValueControl({
               aria-hidden
             />
           )}
-          <span className="fsds-tvc__value">{value === "" ? "0" : value}</span>
+          <span className="fsds-tvc__value">
+            {value === ""
+              ? "0"
+              : compact && kind === "dimension"
+                ? // On the dense diagram, show the bare number (strip the `px`
+                  // unit) like the Figma — the full value is in the popover.
+                  value.replace(/px$/i, "")
+                : value}
+          </span>
           <span
             className={
               "fsds-tvc__diamond" +

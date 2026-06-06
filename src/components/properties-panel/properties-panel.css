@@ -329,20 +329,50 @@
   background: var(--fsds-semantic-color-background-elevated);
 }
 
+/* Compact trigger = a bare text label that sits ON the box-model zones, so the
+   colored zones show through (matches the Figma: values are plain 8px text, not
+   chips). No background/border at rest; a faint hover ring shows it's editable. */
 .fsds-tvc__trigger--compact {
-  padding: 0 var(--fsds-core-spacing-size-02, 4px);
-  gap: var(--fsds-core-spacing-size-02, 4px);
-  border-radius: 4px;
+  padding: 1px 2px;
+  gap: 2px;
+  border-radius: 3px;
   background: transparent;
   border-color: transparent;
-  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  font-size: 9px;
+  line-height: 1.2;
+  color: #1a1a1a; /* dark text reads on the light cyan/green/pink zones */
   width: auto;
-  min-width: 2ch;
+  min-width: 1ch;
   justify-content: center;
 }
 
 .fsds-tvc__trigger--compact:hover {
-  background: var(--fsds-semantic-color-background-subtle);
+  background: color-mix(in srgb, white 55%, transparent);
+  outline: 1px solid color-mix(in srgb, black 25%, transparent);
+}
+
+/* The ◇ on a compact (on-zone) trigger is tiny and dark to stay legible. */
+.fsds-tvc__trigger--compact .fsds-tvc__diamond {
+  font-size: 7px;
+  color: color-mix(in srgb, #1a1a1a 55%, transparent);
+}
+.fsds-tvc__trigger--compact .fsds-tvc__diamond--linked {
+  color: #d5006b; /* the pink accent from the diagram axes */
+}
+
+/* The DS Popover root (.popover) carries default panel chrome (light bg +
+   radius + shadow). Inside the box-model diagram that boxes every on-zone
+   value into a chip — strip it so only the bare trigger text shows. The popover
+   CONTENT (the floating editor) is portaled/positioned separately and keeps its
+   own styling; this only neutralizes the inline anchor wrapper. */
+.fsds-bme .popover {
+  display: inline-block;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  width: auto;
+  height: auto;
 }
 
 .fsds-tvc__swatch {
@@ -450,25 +480,33 @@
   box-shadow: none;
 }
 
-/* ---- BoxModelEditor (nested padding/radius/border diagram) ---- */
+/* ---- BoxModelEditor (nested padding/radius/border diagram) ----
+   Recreated to match the Figma "Box model": the colored ZONES are the visual
+   hero and every value is a bare on-zone text label (the TokenValueControl
+   compact trigger), never a chip that swallows the zone. Exact measurements +
+   colors from the Figma node (cyan #8af7ff padding box 193x129, green dashed
+   padding zone, white content card, pink #ffe3f3 corner circles). */
 
 .fsds-bme {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 260px;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   overflow: hidden;
   border-radius: 10px;
-  background: var(--fsds-semantic-color-background-subtle);
+  /* The diagram is a self-contained LIGHT surface (like Figma's), independent
+     of the app theme, so the bright cyan/green/pink zones and dark value text
+     always composite correctly — they don't read on a dark app background. */
+  background: #f3f3f5;
+  color: #1a1a1a;
 }
 
-/* center axes — pink vertical, blue horizontal (from the Figma reference) */
+/* center axes — pink vertical, blue horizontal */
 .fsds-bme__axis {
   position: absolute;
-  opacity: 0.5;
   pointer-events: none;
 }
 .fsds-bme__axis--v {
@@ -476,98 +514,97 @@
   bottom: 0;
   left: calc(50% - 0.5px);
   width: 1px;
-  background: #e60076; /* pink axis */
+  background: #d5006b; /* pink axis */
 }
 .fsds-bme__axis--h {
   left: 0;
   right: 0;
   top: calc(50% + 0.5px);
   height: 1px;
-  background: #155dfc; /* blue axis */
+  background: #3c4ce4; /* blue axis */
 }
 
-/* border tag: outer ring control */
-.fsds-bme__border-tag {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  z-index: 4;
-}
-
-/* cyan padding box */
+/* cyan padding box (border band) — the outer colored zone. Scaled up to fill
+   the panel; the nested green zone + center scale with it via inset/percent. */
 .fsds-bme__padding-box {
   position: absolute;
-  width: 196px;
-  height: 130px;
-  border-radius: 12px;
-  background: color-mix(in srgb, #a2f4fd 55%, transparent); /* cyan-200-ish */
-  border: 1px solid var(--fsds-semantic-color-border-subtle);
-  box-shadow: 0 1px 2px color-mix(in srgb, black 8%, transparent);
+  width: 264px;
+  height: 176px;
+  border-radius: 14px;
+  background: #8af7ff;
+  border: 1px solid #3a3a3a;
 }
 
-/* dashed green inner content zone */
-.fsds-bme__content-box {
+/* green dashed padding zone, inset inside the cyan box (opaque so it reads as a
+   filled zone, not a translucent cutout over the dark app background) */
+.fsds-bme__pad-zone {
   position: absolute;
-  inset: 26px 11%;
-  border-radius: 4px;
-  background: color-mix(in srgb, #4ade80 30%, transparent); /* green-200/30 */
-  border: 1px dashed color-mix(in srgb, var(--fsds-semantic-color-foreground-tertiary) 40%, transparent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  inset: 30px 12%;
+  border-radius: 6px;
+  background: #d8ffb0; /* opaque green */
+  border: 1px dashed #aaa;
 }
 
-/* center card: size proxy + gap */
+/* white content card (the element) — shows the resolved size, read-only */
 .fsds-bme__center {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  min-width: 88px;
-  height: 46px;
-  padding: 0 6px;
+  width: 132px;
+  height: 64px;
   border-radius: 4px;
-  background: color-mix(in srgb, var(--fsds-semantic-color-background-elevated) 80%, transparent);
-  border: 1px dashed color-mix(in srgb, var(--fsds-semantic-color-foreground-tertiary) 40%, transparent);
+  background: #ffffff; /* opaque white */
+  border: 1px dashed #aaa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 1px;
   z-index: 10;
 }
 .fsds-bme__center-size {
-  font-size: var(--fsds-core-typography-ramp-1, 11px);
-  color: var(--fsds-semantic-color-foreground-secondary);
+  font-size: 9px;
+  color: #1a1a1a;
 }
 .fsds-bme__gap {
-  font-size: 9px;
+  font-size: 8px;
 }
 
-/* padding side controls on the cyan band */
+/* padding value labels — on the inner (green-zone) edges */
 .fsds-bme__pad {
   position: absolute;
-  z-index: 5;
+  z-index: 12;
 }
-.fsds-bme__pad--top { top: 4px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__pad--bottom { bottom: 4px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__pad--left { left: 6px; top: 50%; transform: translateY(-50%); }
-.fsds-bme__pad--right { right: 6px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--top { top: -2px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--bottom { bottom: -2px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--left { left: 2px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--right { right: 2px; top: 50%; transform: translateY(-50%); }
 
-/* pink corner radius circles */
+/* border value labels — on the cyan-box edges (between cyan edge and green) */
+.fsds-bme__border-val {
+  position: absolute;
+  z-index: 12;
+}
+.fsds-bme__border-val--top { top: 1px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__border-val--bottom { bottom: 1px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__border-val--left { left: 4px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__border-val--right { right: 4px; top: 50%; transform: translateY(-50%); }
+
+/* pink corner radius circles — 24x24, overlapping the cyan box corners */
 .fsds-bme__radius {
   position: absolute;
-  width: 30px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 14px;
-  background: color-mix(in srgb, #fce7f3 80%, transparent); /* pink-100 */
-  border: 1px dashed color-mix(in srgb, var(--fsds-semantic-color-foreground-tertiary) 40%, transparent);
+  border-radius: 24px;
+  background: #ffe3f3; /* pink */
+  border: 1px dashed #aaa;
   z-index: 20;
 }
-.fsds-bme__radius--tl { top: -3px; left: -3px; }
-.fsds-bme__radius--tr { top: -3px; right: -3px; }
-.fsds-bme__radius--bl { bottom: -3px; left: -3px; }
-.fsds-bme__radius--br { bottom: -3px; right: -3px; }
+.fsds-bme__radius--tl { top: -1px; left: -1px; }
+.fsds-bme__radius--tr { top: -1px; right: -1px; }
+.fsds-bme__radius--bl { bottom: -1px; left: -1px; }
+.fsds-bme__radius--br { bottom: -1px; right: -1px; }
