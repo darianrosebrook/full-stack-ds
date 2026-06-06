@@ -6,6 +6,7 @@ import {
   deriveControls,
   tokenOverridesToCss,
   slotToCssVar,
+  resolvesToCssVar,
 } from "./control-derivation";
 import type { ComponentContract, TokenDefinition } from "../../types/data";
 
@@ -154,6 +155,17 @@ describe("slotToCssVar", () => {
   });
 });
 
+describe("resolvesToCssVar", () => {
+  it("maps a resolvesTo path to the semantic/core var the component reads", () => {
+    expect(
+      resolvesToCssVar("semantic.color.action.background.primary.default"),
+    ).toBe("--fsds-semantic-color-action-background-primary-default");
+    expect(resolvesToCssVar("core.spacing.size.04")).toBe(
+      "--fsds-core-spacing-size-04",
+    );
+  });
+});
+
 describe("tokenOverridesToCss", () => {
   it("emits exact :root custom-property declarations for non-blank overrides", () => {
     const css = tokenOverridesToCss({
@@ -183,5 +195,33 @@ describe("tokenOverridesToCss", () => {
         "box-model.gap": "",
       }),
     ).toBe(":root {\n  --fsds-button-color-background-default: #fff;\n}\n");
+  });
+
+  it("ALSO overrides the semantic var (resolvesTo) when rows are supplied, so the override wins over variant rules", () => {
+    // Regression guard for the cascade bug found in live verification: a :root
+    // override of the slot var alone is masked by `.button--primary` re-deriving
+    // it from the semantic token. Emitting the semantic var too fixes it.
+    const { tokens } = deriveControls(loadContract("Button"));
+    const css = tokenOverridesToCss(
+      { "button.color.background.default": "#0a7d4f" },
+      tokens,
+    );
+    // Slot var (for non-variant components) AND the semantic var the variant
+    // rule reads (button.color.background.default resolvesTo
+    // semantic.color.action.background.primary.default).
+    expect(css).toContain("--fsds-button-color-background-default: #0a7d4f;");
+    expect(css).toContain(
+      "--fsds-semantic-color-action-background-primary-default: #0a7d4f;",
+    );
+    console.log("tokenOverridesToCss (with rows) output:\n" + css);
+  });
+
+  it("emits only the slot var for a token with no resolvesTo, even with rows", () => {
+    const rows = [
+      { slot: "custom.thing", cssVar: "--fsds-custom-thing", isColor: false },
+    ] as Parameters<typeof tokenOverridesToCss>[1];
+    expect(tokenOverridesToCss({ "custom.thing": "4px" }, rows)).toBe(
+      ":root {\n  --fsds-custom-thing: 4px;\n}\n",
+    );
   });
 });

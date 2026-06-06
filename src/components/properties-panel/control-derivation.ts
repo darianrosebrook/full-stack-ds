@@ -98,6 +98,21 @@ export function slotToCssVar(slot: string): string {
   return "--fsds-" + slot.replace(/\./g, "-");
 }
 
+/**
+ * Map a token's `resolvesTo` path (e.g. "semantic.color.action.background.
+ * primary.default") to the CSS custom property the generated component CSS
+ * ultimately READS. This matters because variant rules re-derive a component's
+ * slot var FROM its semantic token at closer cascade proximity than a :root
+ * slot override — e.g. `.button--primary { --fsds-button-color-background-default:
+ * var(--fsds-semantic-color-action-background-primary-default); }`. Overriding
+ * the semantic var is what actually re-skins a variant-styled component live.
+ * Same dot→dash lowering as slotToCssVar; the path already carries its
+ * semantic/core layer prefix.
+ */
+export function resolvesToCssVar(resolvesTo: string): string {
+  return "--fsds-" + resolvesTo.replace(/\./g, "-");
+}
+
 /** A literal value that reads as a CSS color (drives swatch vs. text input). */
 function looksLikeColor(value: string | undefined): boolean {
   if (!value) return false;
@@ -275,15 +290,36 @@ export function deriveControls(contract: ComponentContract): DerivedControls {
  * declaration. Output is deterministic (insertion order preserved by the
  * caller's map) and ends each declaration with a newline for readability in
  * devtools.
+ *
+ * When `rows` is supplied, each overridden slot that has a `resolvesTo` ALSO
+ * emits a declaration for its semantic/core var. This is what makes the live
+ * override win for variant-styled components: a variant rule re-derives the
+ * component slot var from the semantic token at closer cascade proximity, so a
+ * :root override of the SLOT var alone is masked — but overriding the SEMANTIC
+ * var (the leaf the variant rule itself reads) re-skins it. Dimensional tokens
+ * with no variant re-derivation still apply via the slot var, so emitting both
+ * is safe and strictly more effective. Without `rows`, behavior is unchanged
+ * (slot var only) — preserved for callers/tests that pass a bare map.
  */
 export function tokenOverridesToCss(
   overrides: Record<string, string>,
+  rows?: TokenRowDescriptor[],
 ): string {
-  const decls: string[] = [];
+  const resolvesBySlot = new Map(
+    (rows ?? []).map((r) => [r.slot, r.resolvesTo]),
+  );
+  // Use a Map so a slot var and its semantic var don't duplicate, and so the
+  // last write wins deterministically.
+  const decls = new Map<string, string>();
   for (const [slot, value] of Object.entries(overrides)) {
     if (value == null || String(value).trim() === "") continue;
-    decls.push(`  ${slotToCssVar(slot)}: ${value};`);
+    decls.set(slotToCssVar(slot), value);
+    const resolvesTo = resolvesBySlot.get(slot);
+    if (resolvesTo) decls.set(resolvesToCssVar(resolvesTo), value);
   }
-  if (decls.length === 0) return "";
-  return `:root {\n${decls.join("\n")}\n}\n`;
+  if (decls.size === 0) return "";
+  const body = [...decls.entries()]
+    .map(([cssVar, value]) => `  ${cssVar}: ${value};`)
+    .join("\n");
+  return `:root {\n${body}\n}\n`;
 }

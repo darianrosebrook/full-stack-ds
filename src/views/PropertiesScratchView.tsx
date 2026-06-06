@@ -70,9 +70,13 @@ export function PropertiesScratchView() {
 
   const config = useMemo(() => {
     if (!component) return undefined;
+    // Pass the derived token rows so overrides also target each slot's
+    // resolvesTo semantic var — the leaf a variant rule reads, which is what
+    // makes the live re-skin win over variant modifiers (e.g. .button--primary).
+    const { tokens } = deriveControls(component.contract);
     return {
       props: buildPropMap(component, propValues),
-      tokenCss: tokenOverridesToCss(tokenValues),
+      tokenCss: tokenOverridesToCss(tokenValues, tokens),
     };
   }, [component, propValues, tokenValues]);
 
