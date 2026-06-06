@@ -3,6 +3,7 @@ title: 'Realize size axes (Spinner/Avatar/Stat/List) + Progress.intent via per-v
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: batch2-size-intent
 created_at: '2026-06-06T02:59:51.245Z'
 updated_at: '2026-06-06T03:00:00.456Z'
 blast_radius:
