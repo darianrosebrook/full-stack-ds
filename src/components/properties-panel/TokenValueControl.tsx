@@ -36,6 +36,11 @@ export interface TokenValueControlProps {
   label: string;
   /** Compact trigger (used inside the dense box-model diagram). */
   compact?: boolean;
+  /**
+   * Restrict the rebind picker to a token-path family (e.g. /shape\.radius/ for
+   * a radius control). Forwarded to TokenPicker.pathPattern.
+   */
+  pathPattern?: RegExp;
 }
 
 const DIM_RE = /^(-?\d*\.?\d+)([a-z%]*)$/i;
@@ -61,6 +66,7 @@ export function TokenValueControl({
   step = 1,
   label,
   compact,
+  pathPattern,
 }: TokenValueControlProps) {
   const [open, setOpen] = useState(false);
   const [num, unit] = splitDimension(value);
@@ -155,6 +161,7 @@ export function TokenValueControl({
           <TokenPicker
             tokens={foundationTokens}
             valueKind={kind === "color" ? "color" : "dimension"}
+            pathPattern={pathPattern}
             onPick={(pick) => {
               onBindToken(pick);
               setOpen(false);

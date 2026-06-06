@@ -393,3 +393,31 @@ export function resolveBoxModel(tokens: TokenRowDescriptor[]): BoxModelBinding[]
   }
   return out;
 }
+
+// Token-PATH family per box-model role. When rebinding a role to a token, the
+// picker should offer only that role's semantically correct family — a radius
+// rebind shows `*.shape.radius.*`, NOT density/color/effect; padding shows the
+// `*.spacing.*` scale; border-width shows `*.border.width*`; min/max-width show
+// the sizing scale. Tested against the path of bundle.foundationTokens (which
+// carries the `core.`/`semantic.` layer prefix, e.g. "core.shape.radius.04").
+const ROLE_PATH_PATTERNS: Record<BoxModelRole, RegExp> = {
+  "padding-top": /\bspacing\b/i,
+  "padding-bottom": /\bspacing\b/i,
+  "padding-left": /\bspacing\b/i,
+  "padding-right": /\bspacing\b/i,
+  gap: /\bspacing\b/i,
+  // sizing scale for widths — spacing.size or a size.* family, not radius/color
+  "min-width": /\b(spacing|size|dimension)\b/i,
+  "max-width": /\b(spacing|size|dimension|maxwidth|measure)\b/i,
+  radius: /shape\.radius\b/i,
+  border: /border\.width\b/i,
+};
+
+/**
+ * The token-path family pattern a given box-model role should rebind within.
+ * Passed to the picker as `pathPattern` so a radius control only lists radius
+ * tokens, a padding control only spacing tokens, etc.
+ */
+export function boxModelRolePathPattern(role: BoxModelRole): RegExp {
+  return ROLE_PATH_PATTERNS[role];
+}

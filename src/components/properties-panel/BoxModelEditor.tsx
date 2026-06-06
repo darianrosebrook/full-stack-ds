@@ -20,6 +20,7 @@
 import type { FoundationToken } from "../../types/data";
 import {
   resolveBoxModel,
+  boxModelRolePathPattern,
   type BoxModelBinding,
   type BoxModelRole,
   type TokenRowDescriptor,
@@ -83,6 +84,7 @@ export function BoxModelEditor({
         onChange={(v) => onChange(row.slot, v)}
         onBindToken={(pick) => onBindToken(row.slot, pick)}
         foundationTokens={foundationTokens}
+        pathPattern={boxModelRolePathPattern(role)}
       />
     );
   }

@@ -33,6 +33,13 @@ interface TokenPickerProps {
    * pass "dimension" so its picker offers spacing/size tokens, not colors.
    */
   valueKind?: "color" | "dimension";
+  /**
+   * Restrict the palette to tokens whose PATH matches this pattern — the
+   * semantic family for the value being edited (e.g. /shape\.radius/ for a
+   * radius control so it never lists density/spacing/color tokens). Applied in
+   * addition to valueKind.
+   */
+  pathPattern?: RegExp;
   onPick: (pick: TokenPick) => void;
   onClose: () => void;
 }
@@ -59,6 +66,7 @@ export function TokenPicker({
   tokens,
   colorOnly,
   valueKind,
+  pathPattern,
   onPick,
   onClose,
 }: TokenPickerProps) {
@@ -74,6 +82,7 @@ export function TokenPicker({
       if (t.value == null) return false; // branch-only nodes carry no value
       if (kind === "color" && !isColorValue(t.value)) return false;
       if (kind === "dimension" && !isDimensionValue(t.value)) return false;
+      if (pathPattern && !pathPattern.test(t.path)) return false;
       if (q && !t.path.toLowerCase().includes(q) && !String(t.value).toLowerCase().includes(q))
         return false;
       return true;

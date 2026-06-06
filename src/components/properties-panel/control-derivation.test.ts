@@ -8,6 +8,7 @@ import {
   slotToCssVar,
   resolvesToCssVar,
   resolveBoxModel,
+  boxModelRolePathPattern,
 } from "./control-derivation";
 import type { ComponentContract, TokenDefinition } from "../../types/data";
 
@@ -191,6 +192,41 @@ describe("resolveBoxModel", () => {
     const { tokens } = deriveControls(loadContract("Button"));
     const slots = resolveBoxModel(tokens).map((b) => b.row.slot);
     expect(new Set(slots).size).toBe(slots.length);
+  });
+});
+
+describe("boxModelRolePathPattern — rebind picker offers the right token family", () => {
+  // Real resolved-token paths (carry the core./semantic. layer prefix), so the
+  // pattern is tested against the actual shape of bundle.foundationTokens.
+  const RADIUS = "core.shape.radius.04"; // 16px
+  const SPACING = "core.spacing.size.04"; // 8px
+  const BORDER_W = "core.shape.border.width.hairline"; // 1px
+  const DENSITY = "core.density.scale.comfortable";
+  const COLOR = "core.color.palette.red.500";
+
+  it("radius role matches shape.radius tokens and NOT density/color/spacing/border", () => {
+    const re = boxModelRolePathPattern("radius");
+    expect(re.test(RADIUS)).toBe(true);
+    expect(re.test(DENSITY)).toBe(false);
+    expect(re.test(COLOR)).toBe(false);
+    expect(re.test(SPACING)).toBe(false);
+    expect(re.test(BORDER_W)).toBe(false);
+  });
+
+  it("padding/gap roles match spacing tokens and NOT radius/color", () => {
+    for (const role of ["padding-top", "padding-left", "gap"] as const) {
+      const re = boxModelRolePathPattern(role);
+      expect(re.test(SPACING)).toBe(true);
+      expect(re.test(RADIUS)).toBe(false);
+      expect(re.test(COLOR)).toBe(false);
+    }
+  });
+
+  it("border role matches border.width tokens only", () => {
+    const re = boxModelRolePathPattern("border");
+    expect(re.test(BORDER_W)).toBe(true);
+    expect(re.test(RADIUS)).toBe(false);
+    expect(re.test(SPACING)).toBe(false);
   });
 });
 
