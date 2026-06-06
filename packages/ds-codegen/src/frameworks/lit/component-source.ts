@@ -538,7 +538,7 @@ function generateClassMapObject(ir: ComponentIR): string {
 
   for (const mod of classRecipe.valueModifiers) {
     const acc = propAccessor(mod.propName);
-    entries.push(`      [\`${classRecipe.base}--\${${acc}}\`]: !!${acc},`);
+    entries.push(`      [\`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\`]: !!${acc},`);
   }
 
   for (const mod of classRecipe.booleanModifiers) {
@@ -1357,7 +1357,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   for (const mod of ir.classRecipe.valueModifiers) {
     const acc = propAccessor(mod.propName);
     lines.push(
-      `      ${acc} ? \`${ir.classRecipe.base}--\${${acc}}\` : null,`,
+      `      ${acc} ? \`${ir.classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\` : null,`,
     );
   }
   for (const mod of ir.classRecipe.booleanModifiers) {

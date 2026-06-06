@@ -72,10 +72,10 @@ export class ListElement extends LitElement {
     return [
       "list",
       this.as ? `list--${this.as}` : null,
-      this.variant ? `list--${this.variant}` : null,
-      this.marker ? `list--${this.marker}` : null,
-      this.spacing ? `list--${this.spacing}` : null,
-      this.size ? `list--${this.size}` : null,
+      this.variant ? `list--variant-${this.variant}` : null,
+      this.marker ? `list--marker-${this.marker}` : null,
+      this.spacing ? `list--spacing-${this.spacing}` : null,
+      this.size ? `list--size-${this.size}` : null,
     ].filter(Boolean).join(" ");
   }
 

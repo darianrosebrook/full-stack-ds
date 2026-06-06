@@ -7,7 +7,7 @@ import type {
   NormalizedDismissalTriggerIR,
   ResolvedPropIR,
 } from "./ir.js";
-import { hasChildrenPlaceholder } from "./ir.js";
+import { computeTaintedAxes, hasChildrenPlaceholder } from "./ir.js";
 
 /**
  * Roles that are conventionally bound to an inner element (input, button,
@@ -213,13 +213,18 @@ export function buildComponentTestPlan(ir: ComponentIR): ComponentTestPlan {
       hasBehaviorTests &&
       channels.some((testCase) => testCase.interaction === "click"),
     role,
-    variants: Object.entries(ir.variants).flatMap(([dimension, values]) =>
-      values.map((value) => ({
-        dimension,
-        value,
-        className: `${ir.cssPrefix}--${value}`,
-      })),
-    ),
+    variants: ((taintedAxes) =>
+      Object.entries(ir.variants).flatMap(([dimension, values]) =>
+        values.map((value) => ({
+          dimension,
+          value,
+          // Colliding axes emit a namespaced class so the generated smoke test
+          // asserts the same unambiguous token the component template renders.
+          className: taintedAxes.has(dimension)
+            ? `${ir.cssPrefix}--${dimension}-${value}`
+            : `${ir.cssPrefix}--${value}`,
+        })),
+      ))(computeTaintedAxes(ir.variants)),
     channels,
     escapeDismissals,
     overlayClickDismissals,

@@ -31,57 +31,57 @@ describe("Image — unit", () => {
 
   it("applies size=xs variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "xs" } });
-    expect(container.firstElementChild?.className).toContain("image--xs");
+    expect(container.firstElementChild?.className).toContain("image--size-xs");
   });
 
   it("applies size=sm variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "sm" } });
-    expect(container.firstElementChild?.className).toContain("image--sm");
+    expect(container.firstElementChild?.className).toContain("image--size-sm");
   });
 
   it("applies size=md variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "md" } });
-    expect(container.firstElementChild?.className).toContain("image--md");
+    expect(container.firstElementChild?.className).toContain("image--size-md");
   });
 
   it("applies size=lg variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "lg" } });
-    expect(container.firstElementChild?.className).toContain("image--lg");
+    expect(container.firstElementChild?.className).toContain("image--size-lg");
   });
 
   it("applies size=xl variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "xl" } });
-    expect(container.firstElementChild?.className).toContain("image--xl");
+    expect(container.firstElementChild?.className).toContain("image--size-xl");
   });
 
   it("applies size=full variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "size": "full" } });
-    expect(container.firstElementChild?.className).toContain("image--full");
+    expect(container.firstElementChild?.className).toContain("image--size-full");
   });
 
   it("applies radius=none variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "none" } });
-    expect(container.firstElementChild?.className).toContain("image--none");
+    expect(container.firstElementChild?.className).toContain("image--radius-none");
   });
 
   it("applies radius=sm variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "sm" } });
-    expect(container.firstElementChild?.className).toContain("image--sm");
+    expect(container.firstElementChild?.className).toContain("image--radius-sm");
   });
 
   it("applies radius=md variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "md" } });
-    expect(container.firstElementChild?.className).toContain("image--md");
+    expect(container.firstElementChild?.className).toContain("image--radius-md");
   });
 
   it("applies radius=lg variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "lg" } });
-    expect(container.firstElementChild?.className).toContain("image--lg");
+    expect(container.firstElementChild?.className).toContain("image--radius-lg");
   });
 
   it("applies radius=full variant class", () => {
     const { container } = render(Image as unknown as Component<Record<string, unknown>>, { props: { "radius": "full" } });
-    expect(container.firstElementChild?.className).toContain("image--full");
+    expect(container.firstElementChild?.className).toContain("image--radius-full");
   });
 });
 

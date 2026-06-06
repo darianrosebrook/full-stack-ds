@@ -55,10 +55,10 @@ export function List({
   const classNames = [
     "list",
     as && `list--${as}`,
-    variant && `list--${variant}`,
-    marker && `list--${marker}`,
-    spacing && `list--${spacing}`,
-    size && `list--${size}`,
+    variant && `list--variant-${variant}`,
+    marker && `list--marker-${marker}`,
+    spacing && `list--spacing-${spacing}`,
+    size && `list--size-${size}`,
     className,
   ]
     .filter(Boolean)

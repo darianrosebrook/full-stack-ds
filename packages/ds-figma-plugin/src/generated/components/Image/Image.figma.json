@@ -209,11 +209,13 @@
     "valueModifiers": [
       {
         "propName": "radius",
-        "safeName": "radius"
+        "safeName": "radius",
+        "valuePrefix": "radius-"
       },
       {
         "propName": "size",
-        "safeName": "size"
+        "safeName": "size",
+        "valuePrefix": "size-"
       }
     ],
     "booleanModifiers": []

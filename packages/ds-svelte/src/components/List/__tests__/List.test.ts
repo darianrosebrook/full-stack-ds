@@ -41,102 +41,102 @@ describe("List — unit", () => {
 
   it("applies variant=default variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "variant": "default" } });
-    expect(container.firstElementChild?.className).toContain("list--default");
+    expect(container.firstElementChild?.className).toContain("list--variant-default");
   });
 
   it("applies variant=unstyled variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "variant": "unstyled" } });
-    expect(container.firstElementChild?.className).toContain("list--unstyled");
+    expect(container.firstElementChild?.className).toContain("list--variant-unstyled");
   });
 
   it("applies variant=inline variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "variant": "inline" } });
-    expect(container.firstElementChild?.className).toContain("list--inline");
+    expect(container.firstElementChild?.className).toContain("list--variant-inline");
   });
 
   it("applies variant=divided variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "variant": "divided" } });
-    expect(container.firstElementChild?.className).toContain("list--divided");
+    expect(container.firstElementChild?.className).toContain("list--variant-divided");
   });
 
   it("applies variant=spaced variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "variant": "spaced" } });
-    expect(container.firstElementChild?.className).toContain("list--spaced");
+    expect(container.firstElementChild?.className).toContain("list--variant-spaced");
   });
 
   it("applies marker=default variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "default" } });
-    expect(container.firstElementChild?.className).toContain("list--default");
+    expect(container.firstElementChild?.className).toContain("list--marker-default");
   });
 
   it("applies marker=none variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "none" } });
-    expect(container.firstElementChild?.className).toContain("list--none");
+    expect(container.firstElementChild?.className).toContain("list--marker-none");
   });
 
   it("applies marker=disc variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "disc" } });
-    expect(container.firstElementChild?.className).toContain("list--disc");
+    expect(container.firstElementChild?.className).toContain("list--marker-disc");
   });
 
   it("applies marker=circle variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "circle" } });
-    expect(container.firstElementChild?.className).toContain("list--circle");
+    expect(container.firstElementChild?.className).toContain("list--marker-circle");
   });
 
   it("applies marker=square variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "square" } });
-    expect(container.firstElementChild?.className).toContain("list--square");
+    expect(container.firstElementChild?.className).toContain("list--marker-square");
   });
 
   it("applies marker=decimal variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "decimal" } });
-    expect(container.firstElementChild?.className).toContain("list--decimal");
+    expect(container.firstElementChild?.className).toContain("list--marker-decimal");
   });
 
   it("applies marker=alpha variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "alpha" } });
-    expect(container.firstElementChild?.className).toContain("list--alpha");
+    expect(container.firstElementChild?.className).toContain("list--marker-alpha");
   });
 
   it("applies marker=roman variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "marker": "roman" } });
-    expect(container.firstElementChild?.className).toContain("list--roman");
+    expect(container.firstElementChild?.className).toContain("list--marker-roman");
   });
 
   it("applies spacing=none variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "spacing": "none" } });
-    expect(container.firstElementChild?.className).toContain("list--none");
+    expect(container.firstElementChild?.className).toContain("list--spacing-none");
   });
 
   it("applies spacing=sm variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "spacing": "sm" } });
-    expect(container.firstElementChild?.className).toContain("list--sm");
+    expect(container.firstElementChild?.className).toContain("list--spacing-sm");
   });
 
   it("applies spacing=md variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "spacing": "md" } });
-    expect(container.firstElementChild?.className).toContain("list--md");
+    expect(container.firstElementChild?.className).toContain("list--spacing-md");
   });
 
   it("applies spacing=lg variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "spacing": "lg" } });
-    expect(container.firstElementChild?.className).toContain("list--lg");
+    expect(container.firstElementChild?.className).toContain("list--spacing-lg");
   });
 
   it("applies size=sm variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "size": "sm" } });
-    expect(container.firstElementChild?.className).toContain("list--sm");
+    expect(container.firstElementChild?.className).toContain("list--size-sm");
   });
 
   it("applies size=md variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "size": "md" } });
-    expect(container.firstElementChild?.className).toContain("list--md");
+    expect(container.firstElementChild?.className).toContain("list--size-md");
   });
 
   it("applies size=lg variant class", () => {
     const { container } = render(List as unknown as Component<Record<string, unknown>>, { props: { "size": "lg" } });
-    expect(container.firstElementChild?.className).toContain("list--lg");
+    expect(container.firstElementChild?.className).toContain("list--size-lg");
   });
 });
 

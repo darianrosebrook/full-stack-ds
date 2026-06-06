@@ -955,7 +955,7 @@ function generateCompoundStateRootComponent(ir: ComponentIR): string {
     const def = resolved?.defaultExpr ?? mod.defaultExpr;
     const aliased = mod.propName;
     destructured.push(def ? `${aliased} = ${def}` : aliased);
-    classExprs.push(`${mod.safeName} && \`${classRecipe.base}--\${${mod.safeName}}\``);
+    classExprs.push(`${mod.safeName} && \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${mod.safeName}}\``);
     handled.add(mod.propName);
   }
 
@@ -1057,7 +1057,7 @@ function generateRootComponent(ir: ComponentIR): string {
     const def = resolved?.defaultExpr ?? mod.defaultExpr;
     destructured.push(def ? `${aliased} = ${def}` : aliased);
     classExprs.push(
-      `${mod.safeName} && \`${classRecipe.base}--\${${mod.safeName}}\``,
+      `${mod.safeName} && \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${mod.safeName}}\``,
     );
     handled.add(mod.propName);
   }
@@ -1207,7 +1207,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     const def = resolved?.defaultExpr ?? mod.defaultExpr;
     destructured.push(def ? `${aliased} = ${def}` : aliased);
     classExprs.push(
-      `${mod.safeName} && \`${classRecipe.base}--\${${mod.safeName}}\``,
+      `${mod.safeName} && \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${mod.safeName}}\``,
     );
     handled.add(mod.propName);
   }

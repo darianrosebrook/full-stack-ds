@@ -20,31 +20,31 @@ describe("Image — unit", () => {
   it("applies radius=none variant class", async () => {
     const { element } = await renderElement("fsds-image", { "radius": "none" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("image--none");
+    expect(classTokens(root)).toContain("image--radius-none");
   });
 
   it("applies radius=sm variant class", async () => {
     const { element } = await renderElement("fsds-image", { "radius": "sm" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("image--sm");
+    expect(classTokens(root)).toContain("image--radius-sm");
   });
 
   it("applies radius=md variant class", async () => {
     const { element } = await renderElement("fsds-image", { "radius": "md" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("image--md");
+    expect(classTokens(root)).toContain("image--radius-md");
   });
 
   it("applies radius=lg variant class", async () => {
     const { element } = await renderElement("fsds-image", { "radius": "lg" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("image--lg");
+    expect(classTokens(root)).toContain("image--radius-lg");
   });
 
   it("applies radius=full variant class", async () => {
     const { element } = await renderElement("fsds-image", { "radius": "full" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("image--full");
+    expect(classTokens(root)).toContain("image--radius-full");
   });
 });
 

@@ -173,7 +173,7 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
   const classModifierLines: string[] = [];
   for (const mod of classRecipe.valueModifiers) {
     classModifierLines.push(
-      `      this.${mod.propName} ? \`${classRecipe.base}--\${this.${mod.propName}}\` : null,`,
+      `      this.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.propName}}\` : null,`,
     );
   }
   for (const mod of classRecipe.booleanModifiers) {
@@ -762,7 +762,7 @@ function generateClassesComputed(ir: ComponentIR): string[] {
 
   for (const mod of classRecipe.valueModifiers) {
     lines.push(
-      `    if (this.${mod.safeName}) parts.push(\`${classRecipe.base}--\${this.${mod.safeName}}\`);`,
+      `    if (this.${mod.safeName}) parts.push(\`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.safeName}}\`);`,
     );
   }
 
@@ -1165,7 +1165,7 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
       ];
   for (const mod of classRecipe.valueModifiers) {
     lines.push(
-      `      this.${mod.propName} ? \`${classRecipe.base}--\${this.${mod.propName}}\` : null,`,
+      `      this.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.propName}}\` : null,`,
     );
   }
   for (const mod of classRecipe.booleanModifiers) {

@@ -264,7 +264,7 @@ function generateClassesDerived(ir: ComponentIR): string {
     // valid JS accessor.
     const accessor = mod.safeName;
     lines.push(
-      `    ${accessor} ? \`${classRecipe.base}--\${${accessor}}\` : null,`,
+      `    ${accessor} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${accessor}}\` : null,`,
     );
   }
 
@@ -436,7 +436,7 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
   // Classes derived
   const classExprs: string[] = [`"${cssPrefix}"`];
   for (const mod of ir.classRecipe.valueModifiers) {
-    classExprs.push(`${jsAccessorFor(mod.propName)} ? \`${cssPrefix}--\${${jsAccessorFor(mod.propName)}}\` : null`);
+    classExprs.push(`${jsAccessorFor(mod.propName)} ? \`${cssPrefix}--${mod.valuePrefix ?? ""}\${${jsAccessorFor(mod.propName)}}\` : null`);
   }
   classExprs.push("className");
   const classesBody = [
@@ -963,7 +963,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   for (const mod of classRecipe.valueModifiers) {
     const accessor = jsAccessorFor(mod.propName);
     classExprs.push(
-      `${accessor} ? \`${classRecipe.base}--\${${accessor}}\` : null`,
+      `${accessor} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${accessor}}\` : null`,
     );
   }
   for (const mod of classRecipe.booleanModifiers) {

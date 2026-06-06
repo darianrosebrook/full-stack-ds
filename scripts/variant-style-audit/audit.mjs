@@ -64,11 +64,47 @@ function cssPrefix(component) {
   return m ? m[1] : component.toLowerCase();
 }
 
-/** Does a `.<prefix>--<value>` selector exist (boundary-safe, so --sm ≠ --small)? */
-function hasVariantSelector(cssText, prefix, value) {
+/**
+ * Does a `.<prefix>--<suffix>` selector exist (boundary-safe, so --sm ≠ --small)?
+ * `suffix` is the bare value for non-colliding axes (`sm`) or the axis-qualified
+ * form for colliding axes (`size-sm`), so the same matcher recognizes both the
+ * legacy and the namespaced realization shapes.
+ */
+function hasVariantSelector(cssText, prefix, suffix) {
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const re = new RegExp(`\\.${esc(prefix)}--${esc(value)}(?![A-Za-z0-9_-])`);
+  const re = new RegExp(`\\.${esc(prefix)}--${esc(suffix)}(?![A-Za-z0-9_-])`);
   return re.test(cssText);
+}
+
+/**
+ * Returns the set of variant axes that COLLIDE within a component — i.e. share
+ * at least one value with another axis (e.g. List `size:[sm,md,lg]` ×
+ * `spacing:[none,sm,md,lg]` collide on sm/md/lg). A colliding axis emits the
+ * namespaced class `.<prefix>--<axis>-<value>` (the codegen does the same via
+ * `computeTaintedAxes` in ir.ts), so a bare `.<prefix>--<value>` selector is
+ * ambiguous and must NOT be treated as realizing such an axis. Pure function of
+ * the contract `variants`; mirrors the codegen so the audit and the generator
+ * agree on which axes are namespaced.
+ */
+export function computeTaintedAxes(variants) {
+  const valueToAxes = new Map();
+  for (const [axis, values] of Object.entries(variants)) {
+    if (!Array.isArray(values)) continue;
+    for (const v of values) {
+      const key = String(v);
+      if (!valueToAxes.has(key)) valueToAxes.set(key, new Set());
+      valueToAxes.get(key).add(axis);
+    }
+  }
+  const tainted = new Set();
+  const collisions = []; // { value, axes }
+  for (const [value, axes] of valueToAxes) {
+    if (axes.size >= 2) {
+      collisions.push({ value, axes: [...axes].sort() });
+      for (const a of axes) tainted.add(a);
+    }
+  }
+  return { tainted, collisions };
 }
 
 export function classify(component) {
@@ -96,34 +132,59 @@ export function classify(component) {
     if (m) styleVariantNames.add(m[1]);
   }
 
+  // Collision substrate: a colliding axis is realized by `.<prefix>--<axis>-<value>`,
+  // not the ambiguous bare `.<prefix>--<value>`. The audit checks the same form
+  // the generator emits, and separately flags any realization still authored
+  // against the bare form on a colliding axis (which a styling fix must not do).
+  const { tainted: taintedAxes, collisions } = computeTaintedAxes(variants);
+
   const dims = [];
   for (const [dim, values] of Object.entries(variants)) {
     if (!Array.isArray(values)) continue;
     const def = variantDefault(contract, dim);
+    const tainted = taintedAxes.has(dim);
     const stylingIntent = values.some((v) => tokenSegments.has(String(v)) || styleVariantNames.has(String(v)));
     const rows = values.map((value) => {
-      const realized = hasVariantSelector(both, prefix, value);
-      const isDefault = def !== null && String(value) === def;
+      const v = String(value);
+      // For a tainted axis only the namespaced selector counts as realization;
+      // for a clean axis the bare selector does, exactly as the codegen emits.
+      const namespacedRealized = tainted && hasVariantSelector(both, prefix, `${dim}-${v}`);
+      const bareRealized = hasVariantSelector(both, prefix, v);
+      const realized = tainted ? namespacedRealized : bareRealized;
+      // A colliding axis realized via the ambiguous bare selector — unsafe; the
+      // selector can be matched by another axis's identical value.
+      const ambiguousRealization = tainted && bareRealized && !namespacedRealized;
+      const isDefault = def !== null && v === def;
       // a genuine gap: a non-default value with no consuming selector, on an
       // axis that has styling intent (token/styles per-value). The default is
       // realized by the base rule; no-styling-intent axes are behavioral.
       const gap = !realized && !isDefault && stylingIntent;
-      return { value: String(value), class: `${prefix}--${value}`, realized, isDefault, gap };
+      return {
+        value: v,
+        class: tainted ? `${prefix}--${dim}-${v}` : `${prefix}--${v}`,
+        realized,
+        isDefault,
+        gap,
+        ...(ambiguousRealization ? { ambiguousRealization: true } : {}),
+      };
     });
     const realizedCount = rows.filter((r) => r.realized).length;
     const gaps = rows.filter((r) => r.gap);
+    const ambiguous = rows.filter((r) => r.ambiguousRealization);
     dims.push({
       dim,
       default: def,
+      tainted,
       stylingIntent,
       values: rows,
       realizedCount,
       total: rows.length,
       fullyUnrealized: realizedCount === 0,
       gaps: gaps.map((r) => r.value),
+      ...(ambiguous.length ? { ambiguousRealizations: ambiguous.map((r) => r.value) } : {}),
     });
   }
-  return { component, prefix, dims };
+  return { component, prefix, dims, collisions, taintedAxes: [...taintedAxes].sort() };
 }
 
 // ---- run (only when executed directly; importable for the locked test) ----
@@ -143,6 +204,24 @@ if (RUN_DIRECTLY) {
   const gapValues = failing.reduce((n, f) => n + f.gaps.length, 0);
   const fullyDeadAxes = failing.filter((f) => f.fullyUnrealized);
 
+  // Variant-class collisions (axes that share a value → namespaced emission)
+  // and any realization still authored against the ambiguous bare selector.
+  const collidingComponents = components
+    .filter((c) => c.collisions.length > 0)
+    .map((c) => ({
+      component: c.component,
+      taintedAxes: c.taintedAxes,
+      collisions: c.collisions,
+    }));
+  const ambiguousFindings = [];
+  for (const c of components) {
+    for (const d of c.dims) {
+      if (d.ambiguousRealizations?.length) {
+        ambiguousFindings.push({ component: c.component, dim: d.dim, values: d.ambiguousRealizations });
+      }
+    }
+  }
+
   mkdirSync(OUT_DIR, { recursive: true });
   const json = {
     spec: "VARIANT-STYLE-REALIZATION-AUDIT-01",
@@ -151,6 +230,8 @@ if (RUN_DIRECTLY) {
     totalValues,
     failing,
     fullyUnrealizedAxes: fullyDeadAxes,
+    collidingComponents,
+    ambiguousRealizations: ambiguousFindings,
     components,
   };
   writeFileSync(resolve(OUT_DIR, "variant-style-matrix.json"), JSON.stringify(json, null, 2) + "\n");
@@ -160,8 +241,32 @@ if (RUN_DIRECTLY) {
   md.push("");
   md.push("`VARIANT-STYLE-REALIZATION-AUDIT-01` — read-only. A variant VALUE is realized iff a `.<prefix>--<value>` selector exists in `<Name>.css` or `<Name>.tokens.css` (var re-scoping or direct property). The DEFAULT value is realized by the base rule and needs no per-value selector; only NON-DEFAULT values without a consuming selector are genuine gaps.");
   md.push("");
-  md.push(`Components with variants: **${components.length}** · variant axes: **${totalAxes}** · values: **${totalValues}** · unrealized non-default values: **${gapValues}** · fully-dead axes: **${fullyDeadAxes.length}**`);
+  md.push(`Components with variants: **${components.length}** · variant axes: **${totalAxes}** · values: **${totalValues}** · unrealized non-default values: **${gapValues}** · fully-dead axes: **${fullyDeadAxes.length}** · colliding components: **${collidingComponents.length}**`);
   md.push("");
+  md.push("## Variant-class collisions (axes that share a value → namespaced emission)");
+  md.push("");
+  md.push("These axes share at least one value within the component, so a bare `.<prefix>--<value>` would be ambiguous. The codegen emits the namespaced class `.<prefix>--<axis>-<value>` for them, and realization is detected against that form. `VARIANT-CLASS-NAMESPACE-COLLISION-01`.");
+  md.push("");
+  if (collidingComponents.length) {
+    md.push("| component | colliding value | shared by axes (now namespaced) |");
+    md.push("|---|---|---|");
+    for (const c of collidingComponents) {
+      for (const col of c.collisions) {
+        md.push(`| ${c.component} | \`${col.value}\` | ${col.axes.map((a) => `\`${a}\``).join(" × ")} |`);
+      }
+    }
+  } else md.push("_none_");
+  md.push("");
+  if (ambiguousFindings.length) {
+    md.push("### ⚠ Ambiguous realization — colliding axis realized via a bare selector");
+    md.push("");
+    md.push("A colliding axis is realized through the ambiguous `.<prefix>--<value>` form instead of `.<prefix>--<axis>-<value>`. This selector can be matched by another axis's identical value and must be rewritten to the namespaced form.");
+    md.push("");
+    md.push("| component | axis | values |");
+    md.push("|---|---|---|");
+    for (const f of ambiguousFindings) md.push(`| ${f.component} | \`${f.dim}\` | ${f.values.join(", ")} |`);
+    md.push("");
+  }
   md.push("## Failing — declared variant axis with no realization (fully-dead axes)");
   md.push("");
   if (fullyDeadAxes.length) {
@@ -199,5 +304,11 @@ if (RUN_DIRECTLY) {
   for (const f of fullyDeadAxes) console.log(`  - ${f.component}.${f.dim}: ${f.gaps.join(", ")} (default ${f.default ?? "?"})`);
   console.log(`\nPartially-realized axes (non-default values without a selector): ${partial.length}`);
   for (const f of partial) console.log(`  - ${f.component}.${f.dim}: ${f.gaps.join(", ")}`);
+  console.log(`\nVariant-class collisions (axes namespaced): ${collidingComponents.length} component(s)`);
+  for (const c of collidingComponents) console.log(`  - ${c.component}: ${c.taintedAxes.join(", ")} (collide on ${c.collisions.map((x) => x.value).join(", ")})`);
+  if (ambiguousFindings.length) {
+    console.log(`\n⚠ Ambiguous realizations (colliding axis via bare selector): ${ambiguousFindings.length}`);
+    for (const f of ambiguousFindings) console.log(`  - ${f.component}.${f.dim}: ${f.values.join(", ")}`);
+  }
   console.log(`\nReport: ${resolve(OUT_DIR, "variant-style-matrix.md")}`);
 }

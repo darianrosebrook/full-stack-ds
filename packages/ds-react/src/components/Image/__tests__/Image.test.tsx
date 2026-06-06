@@ -35,57 +35,57 @@ describe("Image — unit", () => {
 
   it("applies size=xs variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="xs" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--xs");
+    expect(screen.getByTestId("image")).toHaveClass("image--size-xs");
   });
 
   it("applies size=sm variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="sm" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--sm");
+    expect(screen.getByTestId("image")).toHaveClass("image--size-sm");
   });
 
   it("applies size=md variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="md" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--md");
+    expect(screen.getByTestId("image")).toHaveClass("image--size-md");
   });
 
   it("applies size=lg variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="lg" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--lg");
+    expect(screen.getByTestId("image")).toHaveClass("image--size-lg");
   });
 
   it("applies size=xl variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="xl" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--xl");
+    expect(screen.getByTestId("image")).toHaveClass("image--size-xl");
   });
 
   it("applies size=full variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} size="full" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--full");
+    expect(screen.getByTestId("image")).toHaveClass("image--size-full");
   });
 
   it("applies radius=none variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} radius="none" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--none");
+    expect(screen.getByTestId("image")).toHaveClass("image--radius-none");
   });
 
   it("applies radius=sm variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} radius="sm" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--sm");
+    expect(screen.getByTestId("image")).toHaveClass("image--radius-sm");
   });
 
   it("applies radius=md variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} radius="md" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--md");
+    expect(screen.getByTestId("image")).toHaveClass("image--radius-md");
   });
 
   it("applies radius=lg variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} radius="lg" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--lg");
+    expect(screen.getByTestId("image")).toHaveClass("image--radius-lg");
   });
 
   it("applies radius=full variant class", () => {
     render(<Image data-testid="image" alt={"placeholder"} radius="full" />);
-    expect(screen.getByTestId("image")).toHaveClass("image--full");
+    expect(screen.getByTestId("image")).toHaveClass("image--radius-full");
   });
 });
 

@@ -41,102 +41,102 @@ describe("List — unit", () => {
 
   it("applies variant=default variant class", () => {
     const wrapper = mount(List as Component, { props: { "variant": "default" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--default");
+    expect(wrapper.classes()).toContain("list--variant-default");
   });
 
   it("applies variant=unstyled variant class", () => {
     const wrapper = mount(List as Component, { props: { "variant": "unstyled" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--unstyled");
+    expect(wrapper.classes()).toContain("list--variant-unstyled");
   });
 
   it("applies variant=inline variant class", () => {
     const wrapper = mount(List as Component, { props: { "variant": "inline" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--inline");
+    expect(wrapper.classes()).toContain("list--variant-inline");
   });
 
   it("applies variant=divided variant class", () => {
     const wrapper = mount(List as Component, { props: { "variant": "divided" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--divided");
+    expect(wrapper.classes()).toContain("list--variant-divided");
   });
 
   it("applies variant=spaced variant class", () => {
     const wrapper = mount(List as Component, { props: { "variant": "spaced" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--spaced");
+    expect(wrapper.classes()).toContain("list--variant-spaced");
   });
 
   it("applies marker=default variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "default" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--default");
+    expect(wrapper.classes()).toContain("list--marker-default");
   });
 
   it("applies marker=none variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "none" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--none");
+    expect(wrapper.classes()).toContain("list--marker-none");
   });
 
   it("applies marker=disc variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "disc" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--disc");
+    expect(wrapper.classes()).toContain("list--marker-disc");
   });
 
   it("applies marker=circle variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "circle" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--circle");
+    expect(wrapper.classes()).toContain("list--marker-circle");
   });
 
   it("applies marker=square variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "square" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--square");
+    expect(wrapper.classes()).toContain("list--marker-square");
   });
 
   it("applies marker=decimal variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "decimal" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--decimal");
+    expect(wrapper.classes()).toContain("list--marker-decimal");
   });
 
   it("applies marker=alpha variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "alpha" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--alpha");
+    expect(wrapper.classes()).toContain("list--marker-alpha");
   });
 
   it("applies marker=roman variant class", () => {
     const wrapper = mount(List as Component, { props: { "marker": "roman" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--roman");
+    expect(wrapper.classes()).toContain("list--marker-roman");
   });
 
   it("applies spacing=none variant class", () => {
     const wrapper = mount(List as Component, { props: { "spacing": "none" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--none");
+    expect(wrapper.classes()).toContain("list--spacing-none");
   });
 
   it("applies spacing=sm variant class", () => {
     const wrapper = mount(List as Component, { props: { "spacing": "sm" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--sm");
+    expect(wrapper.classes()).toContain("list--spacing-sm");
   });
 
   it("applies spacing=md variant class", () => {
     const wrapper = mount(List as Component, { props: { "spacing": "md" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--md");
+    expect(wrapper.classes()).toContain("list--spacing-md");
   });
 
   it("applies spacing=lg variant class", () => {
     const wrapper = mount(List as Component, { props: { "spacing": "lg" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--lg");
+    expect(wrapper.classes()).toContain("list--spacing-lg");
   });
 
   it("applies size=sm variant class", () => {
     const wrapper = mount(List as Component, { props: { "size": "sm" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--sm");
+    expect(wrapper.classes()).toContain("list--size-sm");
   });
 
   it("applies size=md variant class", () => {
     const wrapper = mount(List as Component, { props: { "size": "md" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--md");
+    expect(wrapper.classes()).toContain("list--size-md");
   });
 
   it("applies size=lg variant class", () => {
     const wrapper = mount(List as Component, { props: { "size": "lg" }, attrs: { "data-testid": "list" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("list--lg");
+    expect(wrapper.classes()).toContain("list--size-lg");
   });
 });
 

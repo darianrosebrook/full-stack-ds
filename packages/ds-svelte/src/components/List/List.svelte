@@ -38,10 +38,10 @@ const classes = $derived(
   [
     "list",
     as ? `list--${as}` : null,
-    variant ? `list--${variant}` : null,
-    marker ? `list--${marker}` : null,
-    spacing ? `list--${spacing}` : null,
-    size ? `list--${size}` : null,
+    variant ? `list--variant-${variant}` : null,
+    marker ? `list--marker-${marker}` : null,
+    spacing ? `list--spacing-${spacing}` : null,
+    size ? `list--size-${size}` : null,
     className,
   ].filter(Boolean).join(" ")
 );

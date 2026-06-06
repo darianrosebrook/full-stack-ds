@@ -507,13 +507,26 @@ export interface ClassRecipeIR {
   base: string;
   /**
    * Props whose *value* becomes the modifier suffix:
-   *   class = `${base}--${value}` when `value` is truthy.
+   *   class = `${base}--${valuePrefix}${value}` when `value` is truthy.
+   *
+   * `valuePrefix` is normally absent (the class is `${base}--${value}`). It is
+   * set ONLY when the axis collides with another variant axis in the same
+   * component — i.e. they share at least one value, so a bare `${base}--sm`
+   * could not tell which axis it came from. For a colliding axis the prefix is
+   * `${propName}-` (e.g. `size-`), making the class `${base}--size-${value}`,
+   * which disambiguates it. Non-colliding axes leave `valuePrefix` undefined,
+   * so their emitted bytes are unchanged. See `computeTaintedAxes`.
    */
   valueModifiers: Array<{
     propName: string;
     safeName: string;
     /** Default expression, copied from the resolved prop when present. */
     defaultExpr?: string;
+    /**
+     * `${propName}-` when this axis collides with another variant axis in the
+     * same component; otherwise undefined (legacy `${base}--${value}` shape).
+     */
+    valuePrefix?: string;
   }>;
   /**
    * Props whose *presence* (truthy boolean) adds a fixed modifier class:
@@ -2628,9 +2641,46 @@ interface ClassRecipeInputs {
   flatStates: string[];
 }
 
+/**
+ * Returns the set of variant axes that COLLIDE within a single component —
+ * i.e. share at least one value with another axis. A colliding axis must emit
+ * a namespaced class (`${prefix}--${axis}-${value}`) because a bare
+ * `${prefix}--${value}` cannot tell which axis it came from. For example List
+ * declares `size:[sm,md,lg]` and `spacing:[none,sm,md,lg]`, so a bare
+ * `.list--sm` is ambiguous between the two; both axes are returned as tainted.
+ *
+ * Pure function of the contract's declared `variants`. Shared by the class
+ * recipe (which drives the component templates) and the test-plan (which
+ * drives the generated per-value smoke tests) so the namespacing decision is
+ * made in exactly one place and the two cannot drift apart.
+ */
+export function computeTaintedAxes(
+  variants: Record<string, string[]>,
+): Set<string> {
+  const valueToAxes = new Map<string, Set<string>>();
+  for (const [axis, values] of Object.entries(variants)) {
+    for (const value of values) {
+      let axes = valueToAxes.get(value);
+      if (!axes) {
+        axes = new Set();
+        valueToAxes.set(value, axes);
+      }
+      axes.add(axis);
+    }
+  }
+  const tainted = new Set<string>();
+  for (const axes of valueToAxes.values()) {
+    if (axes.size >= 2) {
+      for (const axis of axes) tainted.add(axis);
+    }
+  }
+  return tainted;
+}
+
 function buildClassRecipe(inputs: ClassRecipeInputs): ClassRecipeIR {
   const { cssPrefix, styledProps, variants, flatStates } = inputs;
   const propNames = new Set(styledProps.map((p) => p.name));
+  const taintedAxes = computeTaintedAxes(variants);
 
   const valueModifiers: ClassRecipeIR["valueModifiers"] = [];
   const seenValueProps = new Set<string>();
@@ -2647,6 +2697,7 @@ function buildClassRecipe(inputs: ClassRecipeInputs): ClassRecipeIR {
         propName: p.name,
         safeName: p.safeName,
         defaultExpr: p.defaultExpr,
+        ...(taintedAxes.has(p.name) ? { valuePrefix: `${p.name}-` } : {}),
       });
       seenValueProps.add(p.name);
     }
@@ -2657,6 +2708,7 @@ function buildClassRecipe(inputs: ClassRecipeInputs): ClassRecipeIR {
       valueModifiers.push({
         propName: dim,
         safeName: toSafeIdentifier(dim),
+        ...(taintedAxes.has(dim) ? { valuePrefix: `${dim}-` } : {}),
       });
       seenValueProps.add(dim);
     }
