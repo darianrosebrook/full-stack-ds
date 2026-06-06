@@ -207,13 +207,13 @@
       ]
     }
   },
-  ":has(.switch__input:checked) .switch__track": {
+  ".switch:has(.switch__input:checked) .switch__track": {
     "switch.color.track.background.default": {
       "resolvesTo": "semantic.color.foreground.accent",
       "fallback": "#d9292b"
     }
   },
-  ":has(.switch__input:checked) .switch__thumb": {
+  ".switch:has(.switch__input:checked) .switch__thumb": {
     "translate": {
       "resolvesTo": "switch.size.md.thumb.translate.on"
     },
@@ -222,7 +222,7 @@
       "fallback": "#ffffff"
     }
   },
-  ":has(.switch__input:disabled) .switch__track": {
+  ".switch:has(.switch__input:disabled) .switch__track": {
     "switch.color.track.background.default": {
       "resolvesTo": "semantic.color.background.disabled",
       "fallback": "#efefef"

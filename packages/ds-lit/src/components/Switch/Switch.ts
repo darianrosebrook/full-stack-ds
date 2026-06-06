@@ -67,18 +67,18 @@ export class SwitchElement extends LitElement {
       --fsds-switch-size-md-thumb-translate-on: 24px;
       --fsds-switch-size-lg-thumb-translate-off: 0;
       --fsds-switch-size-lg-thumb-translate-on: 36px;
-    }
     
-    :has(.switch__input:checked) .switch__track {
-      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d9292b);
-    }
+      &:has(.switch__input:checked) .switch__track {
+        --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d9292b);
+      }
     
-    :has(.switch__input:checked) .switch__thumb {
-      --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-    }
+      &:has(.switch__input:checked) .switch__thumb {
+        --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+      }
     
-    :has(.switch__input:disabled) .switch__track {
-      --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #efefef);
+      &:has(.switch__input:disabled) .switch__track {
+        --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #efefef);
+      }
     }
     
     .switch {
@@ -97,6 +97,10 @@ export class SwitchElement extends LitElement {
       align-items: center;
       cursor: pointer;
       position: relative;
+    
+      &:has(.switch__input:checked) .switch__thumb {
+        translate: var(--fsds-switch-size-md-thumb-translate-on);
+      }
     }
     
     .switch__track {
@@ -140,10 +144,6 @@ export class SwitchElement extends LitElement {
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
-    }
-    
-    :has(.switch__input:checked) .switch__thumb {
-      translate: var(--fsds-switch-size-md-thumb-translate-on);
     }
     
     .switch--sm .switch__track {
