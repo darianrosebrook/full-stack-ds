@@ -2,10 +2,11 @@ id: SPINNER-VARIANT-CONTRACT-DECISION-01
 title: 'Constrain Spinner to the implemented ring morphology — remove the dots/bars variant overclaim'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: spinner-ring
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge spinner-ring at d3d8f25b9f5388a06ea0980238d6aa7852a5277e'
 created_at: '2026-06-06T06:24:55.502Z'
-updated_at: '2026-06-06T06:24:55.502Z'
+updated_at: '2026-06-06T06:32:34.635Z'
 blast_radius:
   modules:
     - 'Spinner contract sidecars: remove the `variant` prop, the `SpinnerVariant` type, and the `variant` entry from `variants` (the contract promised ring|dots|bars but the anatomy only ever rendered a single ring visual — a contract↔impl overclaim, not a styling gap). Remove the vestigial `spinner.dots.gap` token + the no-op root `gap` that consumed it. Regenerate Spinner across all five frameworks + figma; the generated variant smoke tests disappear with the axis.'
