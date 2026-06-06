@@ -18,6 +18,16 @@
   --fsds-image-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-image-size-icon: var(--fsds-core-spacing-size-08, 32px);
   --fsds-image-typography-error-fontSize: var(--fsds-semantic-typography-body-04, 12px);
+  --fsds-image-size-xs: 24px;
+  --fsds-image-size-sm: 32px;
+  --fsds-image-size-md: 48px;
+  --fsds-image-size-lg: 64px;
+  --fsds-image-size-xl: 96px;
+  --fsds-image-radius-none: var(--fsds-semantic-shape-radius-none, 0px);
+  --fsds-image-radius-sm: var(--fsds-semantic-shape-radius-small, 4px);
+  --fsds-image-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
+  --fsds-image-radius-lg: var(--fsds-semantic-shape-radius-large, 16px);
+  --fsds-image-radius-full: var(--fsds-semantic-shape-radius-full, 9999px);
 }
 /* @generated:end */
 

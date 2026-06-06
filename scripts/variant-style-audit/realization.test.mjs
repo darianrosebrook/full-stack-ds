@@ -8,9 +8,7 @@
  *     realized Spinner.size, Avatar.size, Stat.size and Progress.intent via
  *     per-value tokens — all now fully realized (regression lock for the fixes);
  *   - the canary remainder is still flagged: Spinner.variant (ring/dots/bars →
- *     contract decision) and List.size (still unrealized — no visual styles
- *     authored yet; VARIANT-CLASS-NAMESPACE-COLLISION-01 fixed the AMBIGUITY by
- *     namespacing the class, but realization is a later slice);
+ *     contract decision);
  *   - a fully-realized component (Button: `.button--primary` etc. scope vars in
  *     tokens.css) is NOT flagged (false-positive control);
  *   - a behavioral axis (Calendar `mode`, NavList `orientation`) has no styling
@@ -23,6 +21,12 @@
  *   - namespaced emission across react/vue/svelte/angular/lit: colliding axes
  *     emit `.<prefix>--<axis>-<value>` and never the bare ambiguous form, while
  *     the non-colliding `as` keeps `.list--<as>`.
+ *
+ * VARIANT-STYLE-LIST-IMAGE-REALIZATION-01 locks the visual realization:
+ *   - List.{size,spacing,marker,variant} + Image.{size,radius} are realized
+ *     THROUGH the namespaced selectors (tainted axes, no gaps), positively
+ *     exercising the namespaced-realization detection path; the generated CSS
+ *     contains `.<prefix>--<axis>-<value>` rules and no bare ambiguous rule.
  *
  * Standalone (named *.test.mjs → exempt from the shortcut-language guard).
  * Run: node scripts/variant-style-audit/realization.test.mjs
@@ -67,8 +71,45 @@ for (const [c, d] of [
   });
 }
 
-console.log("\nstill unrealized — Spinner.variant (contract decision) + List.size (collision now namespaced; visual realization is a later slice):");
-for (const [c, d] of [["Spinner", "variant"], ["List", "size"]]) {
+console.log("\nVARIANT-STYLE-LIST-IMAGE-REALIZATION-01 — List/Image visual axes realized via the NAMESPACED selectors (A4):");
+// tainted=true means the audit only counts `.<prefix>--<axis>-<value>` as realizing,
+// so realizedCount>=1 here proves the namespaced-realization detection path fired.
+for (const [c, d, minRealized] of [
+  ["List", "size", 3], ["List", "spacing", 4], ["List", "marker", 7], ["List", "variant", 4],
+  ["Image", "size", 6], ["Image", "radius", 5],
+]) {
+  check(`${c}.${d} is realized through namespaced selectors (tainted, no gaps)`, () => {
+    const x = dim(c, d);
+    assert.ok(x, `no ${c}.${d} axis`);
+    assert.equal(x.tainted, true, `${c}.${d} should be a tainted (collision) axis`);
+    assert.equal(x.gaps.length, 0, `unexpected gaps: ${JSON.stringify(x.gaps)}`);
+    assert.ok(
+      x.realizedCount >= minRealized,
+      `${c}.${d} realizedCount=${x.realizedCount} (expected >=${minRealized} via namespaced selectors)`,
+    );
+    assert.ok(x.ambiguousRealizations === undefined, `${c}.${d} must not realize via the bare ambiguous form`);
+  });
+}
+
+console.log("\nrealizing selectors are the NAMESPACED form in the generated CSS, never the bare ambiguous form (A3):");
+check("List.css/Image.css contain `.<prefix>--<axis>-<value>` and no bare colliding-axis rule", () => {
+  const listCss = readGen("packages/ds-react/src/components/List/List.css");
+  const imageCss = readGen("packages/ds-react/src/components/Image/Image.css");
+  for (const sel of [".list--size-sm", ".list--spacing-md", ".list--marker-disc", ".list--variant-divided"]) {
+    assert.ok(listCss.includes(sel), `List.css missing namespaced selector ${sel}`);
+  }
+  for (const sel of [".image--size-md", ".image--radius-lg"]) {
+    assert.ok(imageCss.includes(sel), `Image.css missing namespaced selector ${sel}`);
+  }
+  // bare ambiguous colliding-axis rules must not exist (boundary-safe)
+  const bareList = /\.list--(sm|md|lg|none|disc|circle|square|decimal|alpha|roman|inline|divided|spaced|unstyled)(?![A-Za-z0-9_-])/;
+  const bareImage = /\.image--(xs|sm|md|lg|xl|full|none)(?![A-Za-z0-9_-])/;
+  assert.ok(!bareList.test(listCss), "List.css authored a bare ambiguous colliding-axis selector");
+  assert.ok(!bareImage.test(imageCss), "Image.css authored a bare ambiguous colliding-axis selector");
+});
+
+console.log("\nstill unrealized — Spinner.variant (contract decision, dots/bars DOM vs constrain to ring):");
+for (const [c, d] of [["Spinner", "variant"]]) {
   check(`${c}.${d} is still an unrealized axis`, () => {
     const x = dim(c, d);
     assert.ok(x, `no ${c}.${d} axis`);

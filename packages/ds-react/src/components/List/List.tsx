@@ -43,8 +43,8 @@ export interface ListProps extends Omit<HTMLAttributes<HTMLUListElement>, "as" |
 // @generated:start component
 export function List({
   as,
-  variant,
-  marker,
+  variant = "default",
+  marker = "default",
   spacing,
   size,
   className,

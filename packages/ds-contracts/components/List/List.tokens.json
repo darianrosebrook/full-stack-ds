@@ -19,9 +19,39 @@
     "fallback": "16px",
     "layer": "core"
   },
+  "list.size.sm": {
+    "resolvesTo": "semantic.typography.body.03",
+    "fallback": "14px",
+    "layer": "semantic"
+  },
+  "list.size.md": {
+    "resolvesTo": "semantic.typography.body.02",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "list.size.lg": {
+    "resolvesTo": "semantic.typography.body.01",
+    "fallback": "18px",
+    "layer": "semantic"
+  },
+  "list.spacing.none": {
+    "resolvesTo": "core.spacing.size.00",
+    "fallback": "0px",
+    "layer": "core"
+  },
+  "list.spacing.sm": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
   "list.spacing.md": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
+    "layer": "core"
+  },
+  "list.spacing.lg": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
     "layer": "core"
   }
 }

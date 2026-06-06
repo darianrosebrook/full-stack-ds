@@ -18,5 +18,44 @@
     "color": {
       "resolvesTo": "image.color.foreground.primary"
     }
+  },
+  ".image--size-xs": {
+    "width": { "resolvesTo": "image.size.xs" },
+    "height": { "resolvesTo": "image.size.xs" }
+  },
+  ".image--size-sm": {
+    "width": { "resolvesTo": "image.size.sm" },
+    "height": { "resolvesTo": "image.size.sm" }
+  },
+  ".image--size-md": {
+    "width": { "resolvesTo": "image.size.md" },
+    "height": { "resolvesTo": "image.size.md" }
+  },
+  ".image--size-lg": {
+    "width": { "resolvesTo": "image.size.lg" },
+    "height": { "resolvesTo": "image.size.lg" }
+  },
+  ".image--size-xl": {
+    "width": { "resolvesTo": "image.size.xl" },
+    "height": { "resolvesTo": "image.size.xl" }
+  },
+  ".image--size-full": {
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "height": { "literal": "auto", "platforms": ["web"] }
+  },
+  ".image--radius-none": {
+    "border-radius": { "resolvesTo": "image.radius.none" }
+  },
+  ".image--radius-sm": {
+    "border-radius": { "resolvesTo": "image.radius.sm" }
+  },
+  ".image--radius-md": {
+    "border-radius": { "resolvesTo": "image.radius.md" }
+  },
+  ".image--radius-lg": {
+    "border-radius": { "resolvesTo": "image.radius.lg" }
+  },
+  ".image--radius-full": {
+    "border-radius": { "resolvesTo": "image.radius.full" }
   }
 }

@@ -29,12 +29,14 @@
         {
           "name": "variant",
           "propType": { "kind": "ref", "to": "ListVariant" },
-          "description": "Visual variant"
+          "description": "Visual variant",
+          "default": "default"
         },
         {
           "name": "marker",
           "propType": { "kind": "ref", "to": "ListMarker" },
-          "description": "Marker style for ordered/unordered lists"
+          "description": "Marker style for ordered/unordered lists",
+          "default": "default"
         },
         {
           "name": "spacing",
