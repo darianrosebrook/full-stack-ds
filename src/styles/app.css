@@ -746,9 +746,10 @@ button {
  * flex column so the tab bar pins to the top and the active panel body scrolls.
  * Override the DS box-model height vars (which default to auto/none) to claim
  * the full aside height — without this the panel can't flex-grow to a scroll
- * region.
+ * region. Scoped via the .app-trace ancestor (not compounded with the DS-owned
+ * .tabs class) so the app never depends on a DS selector — see consumption-guard.
  */
-.trace-tabs.tabs {
+.app-trace .trace-tabs {
   flex: 1;
   min-height: 0;
   height: 100%;
@@ -757,16 +758,17 @@ button {
   gap: 0;
 }
 
-/* Tab bar: fixed header row. Padding here (not on .tabs) keeps the list inset
-   while the panel body owns its own padding. */
+/* Tab bar: fixed header row. Padding here (not on the Tabs root) keeps the list
+   inset while the panel body owns its own padding. */
 .trace-tabbar {
   flex: 0 0 auto;
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06) 0;
 }
 
 /* Active panel body: the single scroll region. Inactive panels are hidden by
-   the DS Tabs component, so only the active one participates in flex layout. */
-.trace-panel-body.tabs__panel {
+   the DS Tabs component, so only the active one participates in flex layout.
+   Scoped via .app-trace (not .tabs__panel) to avoid depending on a DS class. */
+.app-trace .trace-panel-body {
   flex: 1;
   min-height: 0;
   overflow: auto;
