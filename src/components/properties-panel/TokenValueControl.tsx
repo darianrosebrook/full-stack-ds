@@ -154,7 +154,7 @@ export function TokenValueControl({
         <div className="fsds-tvc__picker">
           <TokenPicker
             tokens={foundationTokens}
-            colorOnly={kind === "color"}
+            valueKind={kind === "color" ? "color" : "dimension"}
             onPick={(pick) => {
               onBindToken(pick);
               setOpen(false);

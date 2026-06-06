@@ -26,14 +26,27 @@ interface TokenPickerProps {
   tokens: FoundationToken[];
   /** When set, only tokens whose resolved value looks like a color are shown. */
   colorOnly?: boolean;
+  /**
+   * Restrict the palette to a value KIND. "color" → color-valued tokens;
+   * "dimension" → length-valued tokens (px/rem/em/%). Omit to show all. Takes
+   * precedence over `colorOnly` when both are set. A dimension control should
+   * pass "dimension" so its picker offers spacing/size tokens, not colors.
+   */
+  valueKind?: "color" | "dimension";
   onPick: (pick: TokenPick) => void;
   onClose: () => void;
 }
 
 const COLOR_RE = /^(#|rgb|hsl|oklch|color\()/i;
+// A length: optional sign, number, a length/percentage unit. Unitless 0 counts.
+const DIMENSION_RE = /^-?\d*\.?\d+(px|rem|em|%|vh|vw|ch|pt)?$/i;
 
 function isColorValue(v: string | undefined): boolean {
   return !!v && COLOR_RE.test(v.trim());
+}
+
+function isDimensionValue(v: string | undefined): boolean {
+  return !!v && DIMENSION_RE.test(v.trim());
 }
 
 /** First path segment, used as the collection group header (color, spacing…). */
@@ -45,16 +58,22 @@ function groupKey(t: FoundationToken): string {
 export function TokenPicker({
   tokens,
   colorOnly,
+  valueKind,
   onPick,
   onClose,
 }: TokenPickerProps) {
   const [query, setQuery] = useState("");
 
+  // Resolve the effective kind filter: explicit valueKind wins; else legacy
+  // colorOnly maps to "color"; else no kind restriction.
+  const kind = valueKind ?? (colorOnly ? "color" : undefined);
+
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase();
     const filtered = tokens.filter((t) => {
       if (t.value == null) return false; // branch-only nodes carry no value
-      if (colorOnly && !isColorValue(t.value)) return false;
+      if (kind === "color" && !isColorValue(t.value)) return false;
+      if (kind === "dimension" && !isDimensionValue(t.value)) return false;
       if (q && !t.path.toLowerCase().includes(q) && !String(t.value).toLowerCase().includes(q))
         return false;
       return true;
