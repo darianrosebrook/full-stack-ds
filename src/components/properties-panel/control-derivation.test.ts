@@ -10,6 +10,7 @@ import {
   resolveBoxModel,
   boxModelRolePathPattern,
   resolveFillColor,
+  resolveTypography,
 } from "./control-derivation";
 import type { ComponentContract, TokenDefinition } from "../../types/data";
 
@@ -221,6 +222,24 @@ describe("resolveFillColor", () => {
       { slot: "box-model.gap", fallback: "8px", isColor: false, cssVar: "--x" },
     ] as Parameters<typeof resolveFillColor>[0];
     expect(resolveFillColor(dims)).toBeNull();
+  });
+});
+
+describe("resolveTypography", () => {
+  it("resolves Button's font-size + font-weight tokens", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const byRole = Object.fromEntries(
+      resolveTypography(tokens).map((b) => [b.role, b.row.slot]),
+    );
+    expect(byRole["font-size"]).toBe("button.size.fontSize.medium");
+    expect(byRole["font-weight"]).toBe("button.text.weight");
+    console.log("Button typography:", JSON.stringify(byRole, null, 2));
+  });
+
+  it("omits roles a component has no token for (no font-family on Button)", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const roles = resolveTypography(tokens).map((b) => b.role);
+    expect(roles).not.toContain("font-family");
   });
 });
 

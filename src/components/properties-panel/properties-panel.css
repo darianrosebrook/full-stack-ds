@@ -156,6 +156,11 @@
   font-family: var(--fsds-core-typography-font-family-mono, monospace);
 }
 
+/* Full-width field (e.g. the font-family row in Typography) */
+.fsds-pp__wh-field--wide {
+  flex: 1 1 100%;
+}
+
 /* The value control inside a W·H field is borderless (the field is the chrome) */
 .fsds-pp__wh-field .fsds-tvc__trigger {
   background: transparent;

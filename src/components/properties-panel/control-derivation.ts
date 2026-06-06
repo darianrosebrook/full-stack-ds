@@ -464,3 +464,62 @@ export function resolveFillColor(
   }
   return colorRows[0] ?? null;
 }
+
+// ---- Typography role resolution -------------------------------------------
+//
+// The Typography section edits the component's text facts. As with box-model
+// and fill, slot names vary per component (`button.size.fontSize.medium`,
+// `button.text.weight`, …), so each role is DISCOVERED by pattern. Components
+// commonly own font-size and font-weight; font-family is rarer. Roles with no
+// matching slot are omitted (the section only shows what the contract carries).
+
+export type TypographyRole = "font-size" | "font-weight" | "font-family";
+
+const TYPOGRAPHY_MATCHERS: Record<TypographyRole, RegExp[]> = {
+  "font-size": [/(^|\.)fontsize/i, /(^|\.)font-size/i, /\.size\.fontsize/i],
+  "font-weight": [/(^|\.)font\.weight/i, /(^|\.)text\.weight$/i, /(^|\.)fontweight/i, /(^|\.)weight$/i],
+  "font-family": [/(^|\.)font\.family/i, /(^|\.)fontfamily/i, /(^|\.)family$/i],
+};
+
+// Token-path family per typography role for the rebind picker.
+const TYPOGRAPHY_PATH_PATTERNS: Record<TypographyRole, RegExp> = {
+  "font-size": /(typography\.ramp|fontsize|font-size)/i,
+  "font-weight": /(font\.weight|fontweight)/i,
+  "font-family": /(font\.family|fontfamily)/i,
+};
+
+export interface TypographyBinding {
+  role: TypographyRole;
+  row: TokenRowDescriptor;
+}
+
+/**
+ * Resolve typography roles to the component's token rows (font-size,
+ * font-weight, font-family). One binding per role that has a matching slot.
+ * Pure projection over deriveControls(contract).tokens.
+ */
+export function resolveTypography(
+  tokens: TokenRowDescriptor[],
+): TypographyBinding[] {
+  const out: TypographyBinding[] = [];
+  const used = new Set<string>();
+  for (const role of Object.keys(TYPOGRAPHY_MATCHERS) as TypographyRole[]) {
+    let found: TokenRowDescriptor | undefined;
+    for (const re of TYPOGRAPHY_MATCHERS[role]) {
+      found = tokens.find(
+        (t) => !used.has(t.slot) && re.test(t.slot.toLowerCase()),
+      );
+      if (found) break;
+    }
+    if (found) {
+      used.add(found.slot);
+      out.push({ role, row: found });
+    }
+  }
+  return out;
+}
+
+/** The token-path family pattern a typography role rebinds within. */
+export function typographyRolePathPattern(role: TypographyRole): RegExp {
+  return TYPOGRAPHY_PATH_PATTERNS[role];
+}

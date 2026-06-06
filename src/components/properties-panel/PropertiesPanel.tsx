@@ -21,9 +21,12 @@ import {
   deriveControls,
   resolveBoxModel,
   resolveFillColor,
+  resolveTypography,
   boxModelRolePathPattern,
+  typographyRolePathPattern,
   FILL_PATH_PATTERN,
   type BoxModelRole,
+  type TypographyRole,
   type ControlDescriptor,
   type TokenRowDescriptor,
 } from "./control-derivation";
@@ -31,6 +34,7 @@ import { TokenPicker, type TokenPick } from "./TokenPicker";
 import { TokenValueControl } from "./TokenValueControl";
 import { BoxModelEditor } from "./BoxModelEditor";
 import { PropertySection } from "./PropertySection";
+import { Switch } from "@full-stack-ds/react";
 import "./properties-panel.css";
 
 export interface PropertiesPanelProps {
@@ -82,10 +86,9 @@ function PropControl({
     case "boolean":
       return (
         <label className="fsds-pp__toggle">
-          <input
-            type="checkbox"
+          <Switch
             checked={Boolean(value)}
-            onChange={(e) => onChange(e.target.checked)}
+            onChange={(checked) => onChange(checked)}
             aria-label={control.label}
           />
           <span>{value ? "on" : "off"}</span>
@@ -194,6 +197,17 @@ export function PropertiesPanel({
   const fillRow = resolveFillColor(tokens);
   const hasLayout = !!(widthRow || heightRow);
 
+  // Typography roles (font-size / font-weight / font-family) — same match-by-use
+  // resolution; the section shows only the roles the component owns.
+  const typography = resolveTypography(tokens);
+  const typoByRole = new Map<TypographyRole, TokenRowDescriptor>(
+    typography.map((b) => [b.role, b.row]),
+  );
+  const fontSizeRow = typoByRole.get("font-size");
+  const fontWeightRow = typoByRole.get("font-weight");
+  const fontFamilyRow = typoByRole.get("font-family");
+  const hasTypography = typography.length > 0;
+
   function applyPick(pick: TokenPick) {
     if (pickerSlot) onTokenChange(pickerSlot, pick.value);
     setPickerSlot(null);
@@ -284,7 +298,9 @@ export function PropertiesPanel({
           <div className="fsds-pp__wh">
             {widthRow && (
               <div className="fsds-pp__wh-field">
-                <span className="fsds-pp__wh-label" aria-hidden>W</span>
+                <span className="fsds-pp__wh-label" aria-hidden>
+                  W
+                </span>
                 {tokenField(widthRow, "Width", {
                   kind: "dimension",
                   pathPattern: boxModelRolePathPattern("min-width"),
@@ -293,7 +309,9 @@ export function PropertiesPanel({
             )}
             {heightRow && (
               <div className="fsds-pp__wh-field">
-                <span className="fsds-pp__wh-label" aria-hidden>H</span>
+                <span className="fsds-pp__wh-label" aria-hidden>
+                  H
+                </span>
                 {tokenField(heightRow, "Height", {
                   kind: "dimension",
                   pathPattern: boxModelRolePathPattern("min-height"),
@@ -308,7 +326,10 @@ export function PropertiesPanel({
         <PropertySection title="Shape">
           <div className="fsds-pp__wh">
             <div className="fsds-pp__wh-field">
-              <span className="fsds-pp__wh-label fsds-pp__wh-label--icon" aria-hidden>
+              <span
+                className="fsds-pp__wh-label fsds-pp__wh-label--icon"
+                aria-hidden
+              >
                 ⌜⌟
               </span>
               {tokenField(radiusRow, "Corner radius", {
@@ -331,11 +352,59 @@ export function PropertiesPanel({
         </PropertySection>
       )}
 
+      {hasTypography && (
+        <PropertySection title="Typography">
+          {fontFamilyRow && (
+            <div className="fsds-pp__wh">
+              <div className="fsds-pp__wh-field fsds-pp__wh-field--wide">
+                <span className="fsds-pp__wh-label fsds-pp__wh-label--icon" aria-hidden>
+                  Aa
+                </span>
+                {tokenField(fontFamilyRow, "Font family", {
+                  kind: "dimension",
+                  pathPattern: typographyRolePathPattern("font-family"),
+                })}
+              </div>
+            </div>
+          )}
+          <div className="fsds-pp__wh">
+            {fontSizeRow && (
+              <div className="fsds-pp__wh-field">
+                <span className="fsds-pp__wh-label fsds-pp__wh-label--icon" aria-hidden>
+                  S
+                </span>
+                {tokenField(fontSizeRow, "Font size", {
+                  kind: "dimension",
+                  pathPattern: typographyRolePathPattern("font-size"),
+                })}
+              </div>
+            )}
+            {fontWeightRow && (
+              <div className="fsds-pp__wh-field">
+                <span className="fsds-pp__wh-label fsds-pp__wh-label--icon" aria-hidden>
+                  W
+                </span>
+                {tokenField(fontWeightRow, "Font weight", {
+                  kind: "dimension",
+                  pathPattern: typographyRolePathPattern("font-weight"),
+                })}
+              </div>
+            )}
+          </div>
+        </PropertySection>
+      )}
+
       {tokens.length > 0 && (
         <PropertySection title="Component tokens" defaultOpen={false}>
           {tokens.map((row) => (
-            <div className="fsds-pp__field fsds-pp__field--token" key={row.slot}>
-              <label className="fsds-pp__label fsds-pp__label--token" title={row.resolvesTo}>
+            <div
+              className="fsds-pp__field fsds-pp__field--token"
+              key={row.slot}
+            >
+              <label
+                className="fsds-pp__label fsds-pp__label--token"
+                title={row.resolvesTo}
+              >
                 {row.slot}
               </label>
               <TokenRow
@@ -350,7 +419,10 @@ export function PropertiesPanel({
       )}
 
       {pickerRow && (
-        <div className="fsds-pp__picker-overlay" onClick={() => setPickerSlot(null)}>
+        <div
+          className="fsds-pp__picker-overlay"
+          onClick={() => setPickerSlot(null)}
+        >
           <div onClick={(e) => e.stopPropagation()}>
             <TokenPicker
               tokens={foundationTokens}
