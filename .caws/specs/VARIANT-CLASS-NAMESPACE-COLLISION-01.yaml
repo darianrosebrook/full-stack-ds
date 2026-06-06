@@ -2,10 +2,11 @@ id: VARIANT-CLASS-NAMESPACE-COLLISION-01
 title: 'Namespace colliding variant-class axes so .prefix--value emission is unambiguous (List/Image as proof cases)'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: variant-class-namespace
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge variant-class-namespace at c2a736e7ccbfa9fe077c30a7346a40d47ca63191'
 created_at: '2026-06-06T03:57:24.956Z'
-updated_at: '2026-06-06T03:57:24.956Z'
+updated_at: '2026-06-06T04:19:07.577Z'
 blast_radius:
   modules:
     - 'Codegen engine: ir.ts (ClassRecipeIR.valueModifiers gains an optional valuePrefix; buildClassRecipe computes intra-component variant-value collisions and namespaces colliding axes) + test-plan.ts (per-value smoke-test className honors the same namespacing). The five component-source.ts emitters (react/vue/svelte/angular/lit) inject the prefix into the dynamic value-modifier class template — non-colliding axes emit byte-identical output. Plus the variant-style audit (collision detection + namespaced-realization recognition) and its locked discriminator test.'
