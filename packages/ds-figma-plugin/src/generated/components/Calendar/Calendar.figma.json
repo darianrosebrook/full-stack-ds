@@ -193,6 +193,7 @@
       },
       "availability": {
         "category": "availability",
+        "effect": "restyle",
         "values": [
           "enabled",
           "disabled"
@@ -207,6 +208,7 @@
       },
       "selection": {
         "category": "selection",
+        "effect": "restyle",
         "values": [
           "unselected",
           "selected"
@@ -223,6 +225,7 @@
       },
       "today": {
         "category": "presentation",
+        "effect": "overlay",
         "values": [
           "other",
           "today"
@@ -232,6 +235,7 @@
       },
       "month": {
         "category": "presentation",
+        "effect": "restyle",
         "values": [
           "inMonth",
           "outsideMonth"

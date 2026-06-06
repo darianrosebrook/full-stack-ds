@@ -127,6 +127,7 @@
       },
       "disclosure": {
         "category": "visibility",
+        "effect": "channel",
         "values": [
           "closed",
           "open"
@@ -143,6 +144,7 @@
       },
       "transition": {
         "category": "motion",
+        "effect": "channel",
         "values": [
           "idle",
           "entering",

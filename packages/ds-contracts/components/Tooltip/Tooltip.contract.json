@@ -114,6 +114,7 @@
       },
       "transition": {
         "category": "motion",
+        "effect": "channel",
         "values": [
           "idle",
           "entering",

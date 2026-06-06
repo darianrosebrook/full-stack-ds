@@ -156,6 +156,7 @@
       },
       "availability": {
         "category": "availability",
+        "effect": "restyle",
         "values": [
           "enabled",
           "disabled"

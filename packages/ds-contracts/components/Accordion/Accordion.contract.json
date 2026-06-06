@@ -152,6 +152,7 @@
       },
       "availability": {
         "category": "availability",
+        "effect": "restyle",
         "values": [
           "enabled",
           "disabled"
@@ -166,6 +167,7 @@
       },
       "disclosure": {
         "category": "visibility",
+        "effect": "channel",
         "values": [
           "closed",
           "open"
