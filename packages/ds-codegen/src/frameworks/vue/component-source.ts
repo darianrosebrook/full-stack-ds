@@ -309,7 +309,7 @@ function generateClassesComputed(ir: ComponentIR): string {
   for (const mod of classRecipe.valueModifiers) {
     const accessor = propAccessor(mod.propName);
     lines.push(
-      `  ${accessor} ? \`${classRecipe.base}--\${${accessor}}\` : null,`,
+      `  ${accessor} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${accessor}}\` : null,`,
     );
   }
 
@@ -612,7 +612,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
   // Class recipe
   const classExprs: string[] = [`"${classRecipe.base}"`];
   for (const mod of classRecipe.valueModifiers) {
-    classExprs.push(`props.${mod.propName} ? \`${classRecipe.base}--\${props.${mod.propName}}\` : null`);
+    classExprs.push(`props.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${props.${mod.propName}}\` : null`);
   }
   classExprs.push(`props.class`);
   const classesBody = [
@@ -1113,7 +1113,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   const classExprs: string[] = [`"${classRecipe.base}"`];
   for (const mod of classRecipe.valueModifiers) {
     classExprs.push(
-      `props.${mod.propName} ? \`${classRecipe.base}--\${props.${mod.propName}}\` : null`,
+      `props.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${props.${mod.propName}}\` : null`,
     );
   }
   const channelNamesSet = new Set(channels.map((c) => c.name));

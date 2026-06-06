@@ -79,8 +79,8 @@ export class ImageElement extends LitElement {
   private computeClasses(): string {
     return [
       "image",
-      this.radius ? `image--${this.radius}` : null,
-      this.size ? `image--${this.size}` : null,
+      this.radius ? `image--radius-${this.radius}` : null,
+      this.size ? `image--size-${this.size}` : null,
     ].filter(Boolean).join(" ");
   }
 

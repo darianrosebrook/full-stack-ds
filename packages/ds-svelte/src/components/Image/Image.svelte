@@ -43,8 +43,8 @@ let { src, alt, width, height, aspectRatio, objectFit, objectPosition, loading, 
 const classes = $derived(
   [
     "image",
-    radius ? `image--${radius}` : null,
-    size ? `image--${size}` : null,
+    radius ? `image--radius-${radius}` : null,
+    size ? `image--size-${size}` : null,
     className,
   ].filter(Boolean).join(" ")
 );

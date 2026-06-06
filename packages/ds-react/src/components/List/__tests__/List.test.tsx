@@ -45,102 +45,102 @@ describe("List — unit", () => {
 
   it("applies variant=default variant class", () => {
     render(<List data-testid="list" variant="default">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--default");
+    expect(screen.getByTestId("list")).toHaveClass("list--variant-default");
   });
 
   it("applies variant=unstyled variant class", () => {
     render(<List data-testid="list" variant="unstyled">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--unstyled");
+    expect(screen.getByTestId("list")).toHaveClass("list--variant-unstyled");
   });
 
   it("applies variant=inline variant class", () => {
     render(<List data-testid="list" variant="inline">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--inline");
+    expect(screen.getByTestId("list")).toHaveClass("list--variant-inline");
   });
 
   it("applies variant=divided variant class", () => {
     render(<List data-testid="list" variant="divided">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--divided");
+    expect(screen.getByTestId("list")).toHaveClass("list--variant-divided");
   });
 
   it("applies variant=spaced variant class", () => {
     render(<List data-testid="list" variant="spaced">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--spaced");
+    expect(screen.getByTestId("list")).toHaveClass("list--variant-spaced");
   });
 
   it("applies marker=default variant class", () => {
     render(<List data-testid="list" marker="default">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--default");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-default");
   });
 
   it("applies marker=none variant class", () => {
     render(<List data-testid="list" marker="none">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--none");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-none");
   });
 
   it("applies marker=disc variant class", () => {
     render(<List data-testid="list" marker="disc">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--disc");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-disc");
   });
 
   it("applies marker=circle variant class", () => {
     render(<List data-testid="list" marker="circle">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--circle");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-circle");
   });
 
   it("applies marker=square variant class", () => {
     render(<List data-testid="list" marker="square">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--square");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-square");
   });
 
   it("applies marker=decimal variant class", () => {
     render(<List data-testid="list" marker="decimal">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--decimal");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-decimal");
   });
 
   it("applies marker=alpha variant class", () => {
     render(<List data-testid="list" marker="alpha">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--alpha");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-alpha");
   });
 
   it("applies marker=roman variant class", () => {
     render(<List data-testid="list" marker="roman">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--roman");
+    expect(screen.getByTestId("list")).toHaveClass("list--marker-roman");
   });
 
   it("applies spacing=none variant class", () => {
     render(<List data-testid="list" spacing="none">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--none");
+    expect(screen.getByTestId("list")).toHaveClass("list--spacing-none");
   });
 
   it("applies spacing=sm variant class", () => {
     render(<List data-testid="list" spacing="sm">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--sm");
+    expect(screen.getByTestId("list")).toHaveClass("list--spacing-sm");
   });
 
   it("applies spacing=md variant class", () => {
     render(<List data-testid="list" spacing="md">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--md");
+    expect(screen.getByTestId("list")).toHaveClass("list--spacing-md");
   });
 
   it("applies spacing=lg variant class", () => {
     render(<List data-testid="list" spacing="lg">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--lg");
+    expect(screen.getByTestId("list")).toHaveClass("list--spacing-lg");
   });
 
   it("applies size=sm variant class", () => {
     render(<List data-testid="list" size="sm">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--sm");
+    expect(screen.getByTestId("list")).toHaveClass("list--size-sm");
   });
 
   it("applies size=md variant class", () => {
     render(<List data-testid="list" size="md">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--md");
+    expect(screen.getByTestId("list")).toHaveClass("list--size-md");
   });
 
   it("applies size=lg variant class", () => {
     render(<List data-testid="list" size="lg">content</List>);
-    expect(screen.getByTestId("list")).toHaveClass("list--lg");
+    expect(screen.getByTestId("list")).toHaveClass("list--size-lg");
   });
 });
 

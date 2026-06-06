@@ -2,7 +2,23 @@
 
 `VARIANT-STYLE-REALIZATION-AUDIT-01` — read-only. A variant VALUE is realized iff a `.<prefix>--<value>` selector exists in `<Name>.css` or `<Name>.tokens.css` (var re-scoping or direct property). The DEFAULT value is realized by the base rule and needs no per-value selector; only NON-DEFAULT values without a consuming selector are genuine gaps.
 
-Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **47** · fully-dead axes: **10**
+Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **47** · fully-dead axes: **10** · colliding components: **2**
+
+## Variant-class collisions (axes that share a value → namespaced emission)
+
+These axes share at least one value within the component, so a bare `.<prefix>--<value>` would be ambiguous. The codegen emits the namespaced class `.<prefix>--<axis>-<value>` for them, and realization is detected against that form. `VARIANT-CLASS-NAMESPACE-COLLISION-01`.
+
+| component | colliding value | shared by axes (now namespaced) |
+|---|---|---|
+| Image | `sm` | `radius` × `size` |
+| Image | `md` | `radius` × `size` |
+| Image | `lg` | `radius` × `size` |
+| Image | `full` | `radius` × `size` |
+| List | `default` | `marker` × `variant` |
+| List | `none` | `marker` × `spacing` |
+| List | `sm` | `size` × `spacing` |
+| List | `md` | `size` × `spacing` |
+| List | `lg` | `size` × `spacing` |
 
 ## Failing — declared variant axis with no realization (fully-dead axes)
 

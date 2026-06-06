@@ -271,6 +271,92 @@
       "default": null
     }
   ],
+  "collidingComponents": [
+    {
+      "component": "Image",
+      "taintedAxes": [
+        "radius",
+        "size"
+      ],
+      "collisions": [
+        {
+          "value": "sm",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        },
+        {
+          "value": "md",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        },
+        {
+          "value": "lg",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        },
+        {
+          "value": "full",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "List",
+      "taintedAxes": [
+        "marker",
+        "size",
+        "spacing",
+        "variant"
+      ],
+      "collisions": [
+        {
+          "value": "default",
+          "axes": [
+            "marker",
+            "variant"
+          ]
+        },
+        {
+          "value": "none",
+          "axes": [
+            "marker",
+            "spacing"
+          ]
+        },
+        {
+          "value": "sm",
+          "axes": [
+            "size",
+            "spacing"
+          ]
+        },
+        {
+          "value": "md",
+          "axes": [
+            "size",
+            "spacing"
+          ]
+        },
+        {
+          "value": "lg",
+          "axes": [
+            "size",
+            "spacing"
+          ]
+        }
+      ]
+    }
+  ],
+  "ambiguousRealizations": [],
   "components": [
     {
       "component": "Accordion",
@@ -279,6 +365,7 @@
         {
           "dim": "type",
           "default": "single",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -301,7 +388,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Alert",
@@ -310,6 +399,7 @@
         {
           "dim": "intent",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -349,6 +439,7 @@
         {
           "dim": "level",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -378,7 +469,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "AlertNotice",
@@ -387,6 +480,7 @@
         {
           "dim": "status",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -426,6 +520,7 @@
         {
           "dim": "level",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -455,7 +550,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Avatar",
@@ -464,6 +561,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -500,7 +598,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Badge",
@@ -509,6 +609,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -553,6 +654,7 @@
         {
           "dim": "intent",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -592,6 +694,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -621,7 +724,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Blockquote",
@@ -630,6 +735,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -666,6 +772,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -695,7 +802,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Button",
@@ -704,6 +813,7 @@
         {
           "dim": "size",
           "default": "medium",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -736,6 +846,7 @@
         {
           "dim": "variant",
           "default": "primary",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -786,7 +897,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Calendar",
@@ -795,6 +908,7 @@
         {
           "dim": "mode",
           "default": "single",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -817,7 +931,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Card",
@@ -826,6 +942,7 @@
         {
           "dim": "status",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -879,6 +996,7 @@
         {
           "dim": "density",
           "default": "default",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -901,7 +1019,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Checkbox",
@@ -910,6 +1030,7 @@
         {
           "dim": "size",
           "default": "md",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -939,7 +1060,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Chip",
@@ -948,6 +1071,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -984,6 +1108,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1013,7 +1138,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Details",
@@ -1022,6 +1149,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -1058,6 +1186,7 @@
         {
           "dim": "icon",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1087,7 +1216,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Dialog",
@@ -1096,6 +1227,7 @@
         {
           "dim": "size",
           "default": "md",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -1139,7 +1271,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Divider",
@@ -1148,6 +1282,7 @@
         {
           "dim": "orientation",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -1172,7 +1307,9 @@
             "horizontal"
           ]
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Field",
@@ -1181,6 +1318,7 @@
         {
           "dim": "status",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1217,7 +1355,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Image",
@@ -1226,46 +1366,47 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": true,
           "stylingIntent": false,
           "values": [
             {
               "value": "xs",
-              "class": "image--xs",
+              "class": "image--size-xs",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "sm",
-              "class": "image--sm",
+              "class": "image--size-sm",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "md",
-              "class": "image--md",
+              "class": "image--size-md",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "lg",
-              "class": "image--lg",
+              "class": "image--size-lg",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "xl",
-              "class": "image--xl",
+              "class": "image--size-xl",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "full",
-              "class": "image--full",
+              "class": "image--size-full",
               "realized": false,
               "isDefault": false,
               "gap": false
@@ -1279,39 +1420,40 @@
         {
           "dim": "radius",
           "default": null,
+          "tainted": true,
           "stylingIntent": false,
           "values": [
             {
               "value": "none",
-              "class": "image--none",
+              "class": "image--radius-none",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "sm",
-              "class": "image--sm",
+              "class": "image--radius-sm",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "md",
-              "class": "image--md",
+              "class": "image--radius-md",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "lg",
-              "class": "image--lg",
+              "class": "image--radius-lg",
               "realized": false,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "full",
-              "class": "image--full",
+              "class": "image--radius-full",
               "realized": false,
               "isDefault": false,
               "gap": false
@@ -1322,6 +1464,40 @@
           "fullyUnrealized": true,
           "gaps": []
         }
+      ],
+      "collisions": [
+        {
+          "value": "sm",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        },
+        {
+          "value": "md",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        },
+        {
+          "value": "lg",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        },
+        {
+          "value": "full",
+          "axes": [
+            "radius",
+            "size"
+          ]
+        }
+      ],
+      "taintedAxes": [
+        "radius",
+        "size"
       ]
     },
     {
@@ -1331,6 +1507,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1360,7 +1537,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "List",
@@ -1369,6 +1548,7 @@
         {
           "dim": "as",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1401,39 +1581,40 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": true,
           "stylingIntent": true,
           "values": [
             {
               "value": "default",
-              "class": "list--default",
+              "class": "list--variant-default",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "unstyled",
-              "class": "list--unstyled",
+              "class": "list--variant-unstyled",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "inline",
-              "class": "list--inline",
+              "class": "list--variant-inline",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "divided",
-              "class": "list--divided",
+              "class": "list--variant-divided",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "spaced",
-              "class": "list--spaced",
+              "class": "list--variant-spaced",
               "realized": false,
               "isDefault": false,
               "gap": true
@@ -1453,60 +1634,61 @@
         {
           "dim": "marker",
           "default": null,
+          "tainted": true,
           "stylingIntent": true,
           "values": [
             {
               "value": "default",
-              "class": "list--default",
+              "class": "list--marker-default",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "none",
-              "class": "list--none",
+              "class": "list--marker-none",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "disc",
-              "class": "list--disc",
+              "class": "list--marker-disc",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "circle",
-              "class": "list--circle",
+              "class": "list--marker-circle",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "square",
-              "class": "list--square",
+              "class": "list--marker-square",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "decimal",
-              "class": "list--decimal",
+              "class": "list--marker-decimal",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "alpha",
-              "class": "list--alpha",
+              "class": "list--marker-alpha",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "roman",
-              "class": "list--roman",
+              "class": "list--marker-roman",
               "realized": false,
               "isDefault": false,
               "gap": true
@@ -1529,32 +1711,33 @@
         {
           "dim": "spacing",
           "default": null,
+          "tainted": true,
           "stylingIntent": true,
           "values": [
             {
               "value": "none",
-              "class": "list--none",
+              "class": "list--spacing-none",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "sm",
-              "class": "list--sm",
+              "class": "list--spacing-sm",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "md",
-              "class": "list--md",
+              "class": "list--spacing-md",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "lg",
-              "class": "list--lg",
+              "class": "list--spacing-lg",
               "realized": false,
               "isDefault": false,
               "gap": true
@@ -1573,25 +1756,26 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": true,
           "stylingIntent": true,
           "values": [
             {
               "value": "sm",
-              "class": "list--sm",
+              "class": "list--size-sm",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "md",
-              "class": "list--md",
+              "class": "list--size-md",
               "realized": false,
               "isDefault": false,
               "gap": true
             },
             {
               "value": "lg",
-              "class": "list--lg",
+              "class": "list--size-lg",
               "realized": false,
               "isDefault": false,
               "gap": true
@@ -1606,6 +1790,49 @@
             "lg"
           ]
         }
+      ],
+      "collisions": [
+        {
+          "value": "default",
+          "axes": [
+            "marker",
+            "variant"
+          ]
+        },
+        {
+          "value": "none",
+          "axes": [
+            "marker",
+            "spacing"
+          ]
+        },
+        {
+          "value": "sm",
+          "axes": [
+            "size",
+            "spacing"
+          ]
+        },
+        {
+          "value": "md",
+          "axes": [
+            "size",
+            "spacing"
+          ]
+        },
+        {
+          "value": "lg",
+          "axes": [
+            "size",
+            "spacing"
+          ]
+        }
+      ],
+      "taintedAxes": [
+        "marker",
+        "size",
+        "spacing",
+        "variant"
       ]
     },
     {
@@ -1615,6 +1842,7 @@
         {
           "dim": "orientation",
           "default": "vertical",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1637,7 +1865,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "OTP",
@@ -1646,6 +1876,7 @@
         {
           "dim": "mode",
           "default": "numeric",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1668,7 +1899,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Popover",
@@ -1677,6 +1910,7 @@
         {
           "dim": "placement",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1720,7 +1954,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Postcard",
@@ -1729,6 +1965,7 @@
         {
           "dim": "type",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1758,7 +1995,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Progress",
@@ -1767,6 +2006,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1792,6 +2032,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1824,6 +2065,7 @@
         {
           "dim": "intent",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -1860,7 +2102,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Select",
@@ -1869,6 +2113,7 @@
         {
           "dim": "size",
           "default": "md",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -1901,6 +2146,7 @@
         {
           "dim": "position",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1930,7 +2176,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Sheet",
@@ -1939,6 +2187,7 @@
         {
           "dim": "side",
           "default": "right",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -1975,7 +2224,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Skeleton",
@@ -1984,6 +2235,7 @@
         {
           "dim": "variant",
           "default": "block",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2037,6 +2289,7 @@
         {
           "dim": "animate",
           "default": "shimmer",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2076,6 +2329,7 @@
         {
           "dim": "density",
           "default": "regular",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2105,7 +2359,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Spinner",
@@ -2114,6 +2370,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2153,6 +2410,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2189,6 +2447,7 @@
         {
           "dim": "thickness",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2218,7 +2477,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Stat",
@@ -2227,6 +2488,7 @@
         {
           "dim": "size",
           "default": "md",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2259,6 +2521,7 @@
         {
           "dim": "trend",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2288,7 +2551,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Status",
@@ -2297,6 +2562,7 @@
         {
           "dim": "status",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2340,7 +2606,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Switch",
@@ -2349,6 +2617,7 @@
         {
           "dim": "size",
           "default": "md",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2378,7 +2647,9 @@
           "fullyUnrealized": false,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Tabs",
@@ -2387,6 +2658,7 @@
         {
           "dim": "orientation",
           "default": "horizontal",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2412,6 +2684,7 @@
         {
           "dim": "appearance",
           "default": "underline",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2437,6 +2710,7 @@
         {
           "dim": "activationMode",
           "default": "automatic",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2459,7 +2733,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Text",
@@ -2468,6 +2744,7 @@
         {
           "dim": "variant",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2534,6 +2811,7 @@
         {
           "dim": "size",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2594,6 +2872,7 @@
         {
           "dim": "weight",
           "default": null,
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2646,6 +2925,7 @@
         {
           "dim": "align",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2685,6 +2965,7 @@
         {
           "dim": "transform",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2721,7 +3002,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Toast",
@@ -2730,6 +3013,7 @@
         {
           "dim": "variant",
           "default": "info",
+          "tainted": false,
           "stylingIntent": true,
           "values": [
             {
@@ -2769,6 +3053,7 @@
         {
           "dim": "politeness",
           "default": "polite",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2791,7 +3076,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "ToggleSwitch",
@@ -2800,6 +3087,7 @@
         {
           "dim": "size",
           "default": "medium",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2829,7 +3117,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Tooltip",
@@ -2838,6 +3128,7 @@
         {
           "dim": "placement",
           "default": null,
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2881,7 +3172,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     },
     {
       "component": "Walkthrough",
@@ -2890,6 +3183,7 @@
         {
           "dim": "placement",
           "default": "auto",
+          "tainted": false,
           "stylingIntent": false,
           "values": [
             {
@@ -2933,7 +3227,9 @@
           "fullyUnrealized": true,
           "gaps": []
         }
-      ]
+      ],
+      "collisions": [],
+      "taintedAxes": []
     }
   ]
 }

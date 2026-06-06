@@ -39,10 +39,10 @@ const props = defineProps<Props>();
 const classNames = computed(() => [
   "list",
   props.as ? `list--${props.as}` : null,
-  props.variant ? `list--${props.variant}` : null,
-  props.marker ? `list--${props.marker}` : null,
-  props.spacing ? `list--${props.spacing}` : null,
-  props.size ? `list--${props.size}` : null,
+  props.variant ? `list--variant-${props.variant}` : null,
+  props.marker ? `list--marker-${props.marker}` : null,
+  props.spacing ? `list--spacing-${props.spacing}` : null,
+  props.size ? `list--size-${props.size}` : null,
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end

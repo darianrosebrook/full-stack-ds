@@ -121,19 +121,23 @@
       },
       {
         "propName": "variant",
-        "safeName": "variant"
+        "safeName": "variant",
+        "valuePrefix": "variant-"
       },
       {
         "propName": "marker",
-        "safeName": "marker"
+        "safeName": "marker",
+        "valuePrefix": "marker-"
       },
       {
         "propName": "spacing",
-        "safeName": "spacing"
+        "safeName": "spacing",
+        "valuePrefix": "spacing-"
       },
       {
         "propName": "size",
-        "safeName": "size"
+        "safeName": "size",
+        "valuePrefix": "size-"
       }
     ],
     "booleanModifiers": []

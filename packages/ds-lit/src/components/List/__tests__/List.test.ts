@@ -38,121 +38,121 @@ describe("List — unit", () => {
   it("applies variant=default variant class", async () => {
     const { element } = await renderElement("fsds-list", { "variant": "default" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--default");
+    expect(classTokens(root)).toContain("list--variant-default");
   });
 
   it("applies variant=unstyled variant class", async () => {
     const { element } = await renderElement("fsds-list", { "variant": "unstyled" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--unstyled");
+    expect(classTokens(root)).toContain("list--variant-unstyled");
   });
 
   it("applies variant=inline variant class", async () => {
     const { element } = await renderElement("fsds-list", { "variant": "inline" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--inline");
+    expect(classTokens(root)).toContain("list--variant-inline");
   });
 
   it("applies variant=divided variant class", async () => {
     const { element } = await renderElement("fsds-list", { "variant": "divided" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--divided");
+    expect(classTokens(root)).toContain("list--variant-divided");
   });
 
   it("applies variant=spaced variant class", async () => {
     const { element } = await renderElement("fsds-list", { "variant": "spaced" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--spaced");
+    expect(classTokens(root)).toContain("list--variant-spaced");
   });
 
   it("applies marker=default variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "default" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--default");
+    expect(classTokens(root)).toContain("list--marker-default");
   });
 
   it("applies marker=none variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "none" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--none");
+    expect(classTokens(root)).toContain("list--marker-none");
   });
 
   it("applies marker=disc variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "disc" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--disc");
+    expect(classTokens(root)).toContain("list--marker-disc");
   });
 
   it("applies marker=circle variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "circle" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--circle");
+    expect(classTokens(root)).toContain("list--marker-circle");
   });
 
   it("applies marker=square variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "square" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--square");
+    expect(classTokens(root)).toContain("list--marker-square");
   });
 
   it("applies marker=decimal variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "decimal" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--decimal");
+    expect(classTokens(root)).toContain("list--marker-decimal");
   });
 
   it("applies marker=alpha variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "alpha" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--alpha");
+    expect(classTokens(root)).toContain("list--marker-alpha");
   });
 
   it("applies marker=roman variant class", async () => {
     const { element } = await renderElement("fsds-list", { "marker": "roman" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--roman");
+    expect(classTokens(root)).toContain("list--marker-roman");
   });
 
   it("applies spacing=none variant class", async () => {
     const { element } = await renderElement("fsds-list", { "spacing": "none" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--none");
+    expect(classTokens(root)).toContain("list--spacing-none");
   });
 
   it("applies spacing=sm variant class", async () => {
     const { element } = await renderElement("fsds-list", { "spacing": "sm" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--sm");
+    expect(classTokens(root)).toContain("list--spacing-sm");
   });
 
   it("applies spacing=md variant class", async () => {
     const { element } = await renderElement("fsds-list", { "spacing": "md" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--md");
+    expect(classTokens(root)).toContain("list--spacing-md");
   });
 
   it("applies spacing=lg variant class", async () => {
     const { element } = await renderElement("fsds-list", { "spacing": "lg" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--lg");
+    expect(classTokens(root)).toContain("list--spacing-lg");
   });
 
   it("applies size=sm variant class", async () => {
     const { element } = await renderElement("fsds-list", { "size": "sm" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--sm");
+    expect(classTokens(root)).toContain("list--size-sm");
   });
 
   it("applies size=md variant class", async () => {
     const { element } = await renderElement("fsds-list", { "size": "md" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--md");
+    expect(classTokens(root)).toContain("list--size-md");
   });
 
   it("applies size=lg variant class", async () => {
     const { element } = await renderElement("fsds-list", { "size": "lg" });
     const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("list--lg");
+    expect(classTokens(root)).toContain("list--size-lg");
   });
 });
 

@@ -66,8 +66,8 @@ export function Image({
 }: ImageProps) {
   const classNames = [
     "image",
-    radius && `image--${radius}`,
-    size && `image--${size}`,
+    radius && `image--radius-${radius}`,
+    size && `image--size-${size}`,
     className,
   ]
     .filter(Boolean)

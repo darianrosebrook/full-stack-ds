@@ -23,67 +23,67 @@ describe("Image — unit", () => {
   it("applies size=xs variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.size = "xs";
-    expect(classTokens(fixture.componentInstance)).toContain("image--xs");
+    expect(classTokens(fixture.componentInstance)).toContain("image--size-xs");
   });
 
   it("applies size=sm variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.size = "sm";
-    expect(classTokens(fixture.componentInstance)).toContain("image--sm");
+    expect(classTokens(fixture.componentInstance)).toContain("image--size-sm");
   });
 
   it("applies size=md variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.size = "md";
-    expect(classTokens(fixture.componentInstance)).toContain("image--md");
+    expect(classTokens(fixture.componentInstance)).toContain("image--size-md");
   });
 
   it("applies size=lg variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.size = "lg";
-    expect(classTokens(fixture.componentInstance)).toContain("image--lg");
+    expect(classTokens(fixture.componentInstance)).toContain("image--size-lg");
   });
 
   it("applies size=xl variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.size = "xl";
-    expect(classTokens(fixture.componentInstance)).toContain("image--xl");
+    expect(classTokens(fixture.componentInstance)).toContain("image--size-xl");
   });
 
   it("applies size=full variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.size = "full";
-    expect(classTokens(fixture.componentInstance)).toContain("image--full");
+    expect(classTokens(fixture.componentInstance)).toContain("image--size-full");
   });
 
   it("applies radius=none variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.radius = "none";
-    expect(classTokens(fixture.componentInstance)).toContain("image--none");
+    expect(classTokens(fixture.componentInstance)).toContain("image--radius-none");
   });
 
   it("applies radius=sm variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.radius = "sm";
-    expect(classTokens(fixture.componentInstance)).toContain("image--sm");
+    expect(classTokens(fixture.componentInstance)).toContain("image--radius-sm");
   });
 
   it("applies radius=md variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.radius = "md";
-    expect(classTokens(fixture.componentInstance)).toContain("image--md");
+    expect(classTokens(fixture.componentInstance)).toContain("image--radius-md");
   });
 
   it("applies radius=lg variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.radius = "lg";
-    expect(classTokens(fixture.componentInstance)).toContain("image--lg");
+    expect(classTokens(fixture.componentInstance)).toContain("image--radius-lg");
   });
 
   it("applies radius=full variant class", () => {
     const fixture = TestBed.createComponent(ImageComponent);
     fixture.componentInstance.radius = "full";
-    expect(classTokens(fixture.componentInstance)).toContain("image--full");
+    expect(classTokens(fixture.componentInstance)).toContain("image--radius-full");
   });
 });
 

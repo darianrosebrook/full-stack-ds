@@ -47,8 +47,8 @@ const props = withDefaults(defineProps<Props>(), {
 // @generated:start classes
 const classNames = computed(() => [
   "image",
-  props.radius ? `image--${props.radius}` : null,
-  props.size ? `image--${props.size}` : null,
+  props.radius ? `image--radius-${props.radius}` : null,
+  props.size ? `image--size-${props.size}` : null,
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end
