@@ -54,6 +54,26 @@
       ]
     }
   },
+  "--xs": {
+    "font-size": {
+      "resolvesTo": "spinner.size.xs"
+    }
+  },
+  "--sm": {
+    "font-size": {
+      "resolvesTo": "spinner.size.sm"
+    }
+  },
+  "--md": {
+    "font-size": {
+      "resolvesTo": "spinner.size.md"
+    }
+  },
+  "--lg": {
+    "font-size": {
+      "resolvesTo": "spinner.size.lg"
+    }
+  },
   ".spinner--hairline .spinner__visual": {
     "border-width": {
       "resolvesTo": "spinner.thickness.hairline"

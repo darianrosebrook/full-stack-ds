@@ -43,6 +43,9 @@ export class ProgressElement extends LitElement {
       --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
       --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-progress-color-fill-success: var(--fsds-semantic-color-status-success, #487e1e);
+      --fsds-progress-color-fill-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
+      --fsds-progress-color-fill-danger: var(--fsds-semantic-color-status-danger, #d9292b);
     }
     
     .progress {
@@ -83,6 +86,22 @@ export class ProgressElement extends LitElement {
       color: var(--fsds-progress-color-text-default);
       font-size: 0.875em;
       margin-left: var(--fsds-progress-spacing-gap);
+    }
+    
+    .progress--info .progress__fill {
+      background-color: var(--fsds-progress-color-fill-info);
+    }
+    
+    .progress--success .progress__fill {
+      background-color: var(--fsds-progress-color-fill-success);
+    }
+    
+    .progress--warning .progress__fill {
+      background-color: var(--fsds-progress-color-fill-warning);
+    }
+    
+    .progress--danger .progress__fill {
+      background-color: var(--fsds-progress-color-fill-danger);
     }
   `;
 

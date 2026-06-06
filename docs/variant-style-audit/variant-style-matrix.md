@@ -2,13 +2,12 @@
 
 `VARIANT-STYLE-REALIZATION-AUDIT-01` — read-only. A variant VALUE is realized iff a `.<prefix>--<value>` selector exists in `<Name>.css` or `<Name>.tokens.css` (var re-scoping or direct property). The DEFAULT value is realized by the base rule and needs no per-value selector; only NON-DEFAULT values without a consuming selector are genuine gaps.
 
-Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **61** · fully-dead axes: **14**
+Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **47** · fully-dead axes: **10**
 
 ## Failing — declared variant axis with no realization (fully-dead axes)
 
 | component | axis | values (all unrealized) | default |
 |---|---|---|---|
-| Avatar | `size` | small, medium, large, extra-large | — |
 | Badge | `variant` | default, status, counter, tag | — |
 | Blockquote | `variant` | default, bordered, highlighted | — |
 | Chip | `variant` | default, selected, dismissible | — |
@@ -17,10 +16,7 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 | List | `marker` | default, none, disc, circle, square, decimal, alpha, roman | — |
 | List | `spacing` | none, sm, md, lg | — |
 | List | `size` | sm, md, lg | — |
-| Progress | `intent` | info, success, warning, danger | — |
-| Spinner | `size` | xs, sm, md, lg | — |
 | Spinner | `variant` | ring, dots, bars | — |
-| Stat | `size` | sm, lg | md |
 | Text | `weight` | light, normal, medium, semibold, bold | — |
 
 ## Review — partially-realized axes (some non-default values lack a selector)
@@ -56,7 +52,7 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 
 | axis | default | values (✓ realized · ✗ gap · ·default) |
 |---|---|---|
-| `size` | — | small✗ medium✗ large✗ extra-large✗ |
+| `size` | — | small✓ medium✓ large✓ extra-large✓ |
 
 ### Badge  `.badge`
 
@@ -184,7 +180,7 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 |---|---|---|
 | `variant` | — | linear✗ circular✗ |
 | `size` | — | sm✗ md✗ lg✗ |
-| `intent` | — | info✗ success✗ warning✗ danger✗ |
+| `intent` | — | info✓ success✓ warning✓ danger✓ |
 
 ### Select  `.select`
 
@@ -211,7 +207,7 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 
 | axis | default | values (✓ realized · ✗ gap · ·default) |
 |---|---|---|
-| `size` | — | xs✗ sm✗ md✗ lg✗ |
+| `size` | — | xs✓ sm✓ md✓ lg✓ |
 | `variant` | — | ring✗ dots✗ bars✗ |
 | `thickness` | — | hairline✓ regular✓ bold✓ |
 
@@ -219,7 +215,7 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 
 | axis | default | values (✓ realized · ✗ gap · ·default) |
 |---|---|---|
-| `size` | md | sm✗ md·(default) lg✗ |
+| `size` | md | sm✓ md·(default) lg✓ |
 | `trend` | — | up✓ down✓ neutral✓ |
 
 ### Status  `.status`

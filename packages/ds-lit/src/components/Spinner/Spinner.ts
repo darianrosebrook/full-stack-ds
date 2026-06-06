@@ -36,7 +36,10 @@ export class SpinnerElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-spinner-size-md: 20px;
+      --fsds-spinner-size-xs: var(--fsds-semantic-glyph-size-small-extent, 12px);
+      --fsds-spinner-size-sm: var(--fsds-core-icon-size-sm, 16px);
+      --fsds-spinner-size-md: var(--fsds-core-icon-size-md, 20px);
+      --fsds-spinner-size-lg: var(--fsds-core-icon-size-lg, 24px);
       --fsds-spinner-thickness-hairline: 2px;
       --fsds-spinner-thickness-regular: 3px;
       --fsds-spinner-thickness-bold: 4px;
@@ -71,6 +74,22 @@ export class SpinnerElement extends LitElement {
       border-color: var(--fsds-spinner-color-track);
       border-top-color: var(--fsds-spinner-color-accent);
       animation: spin var(--fsds-spinner-anim-duration, 800ms) linear infinite;
+    }
+    
+    .spinner--xs {
+      font-size: var(--fsds-spinner-size-xs);
+    }
+    
+    .spinner--sm {
+      font-size: var(--fsds-spinner-size-sm);
+    }
+    
+    .spinner--md {
+      font-size: var(--fsds-spinner-size-md);
+    }
+    
+    .spinner--lg {
+      font-size: var(--fsds-spinner-size-lg);
     }
     
     .spinner--hairline .spinner__visual {

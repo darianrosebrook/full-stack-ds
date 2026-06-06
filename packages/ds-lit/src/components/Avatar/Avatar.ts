@@ -36,6 +36,10 @@ export class AvatarElement extends LitElement {
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
       --fsds-avatar-size-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-avatar-size-small: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-avatar-size-medium: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-avatar-size-large: var(--fsds-core-spacing-size-08, 32px);
+      --fsds-avatar-size-extra-large: var(--fsds-core-spacing-size-09, 48px);
       --fsds-avatar-size-radius-default: var(--fsds-core-shape-radius-full, 9999px);
       --fsds-avatar-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-avatar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
@@ -80,6 +84,26 @@ export class AvatarElement extends LitElement {
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+    
+    .avatar--small {
+      width: var(--fsds-avatar-size-small);
+      height: var(--fsds-avatar-size-small);
+    }
+    
+    .avatar--medium {
+      width: var(--fsds-avatar-size-medium);
+      height: var(--fsds-avatar-size-medium);
+    }
+    
+    .avatar--large {
+      width: var(--fsds-avatar-size-large);
+      height: var(--fsds-avatar-size-large);
+    }
+    
+    .avatar--extra-large {
+      width: var(--fsds-avatar-size-extra-large);
+      height: var(--fsds-avatar-size-extra-large);
     }
   `;
 

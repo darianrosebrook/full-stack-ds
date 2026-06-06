@@ -28,6 +28,22 @@
   animation: spin var(--fsds-spinner-anim-duration, 800ms) linear infinite;
 }
 
+.spinner--xs {
+  font-size: var(--fsds-spinner-size-xs);
+}
+
+.spinner--sm {
+  font-size: var(--fsds-spinner-size-sm);
+}
+
+.spinner--md {
+  font-size: var(--fsds-spinner-size-md);
+}
+
+.spinner--lg {
+  font-size: var(--fsds-spinner-size-lg);
+}
+
 .spinner--hairline .spinner__visual {
   border-width: var(--fsds-spinner-thickness-hairline);
 }

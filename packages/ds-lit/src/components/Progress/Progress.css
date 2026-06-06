@@ -40,6 +40,22 @@
   font-size: 0.875em;
   margin-left: var(--fsds-progress-spacing-gap);
 }
+
+.progress--info .progress__fill {
+  background-color: var(--fsds-progress-color-fill-info);
+}
+
+.progress--success .progress__fill {
+  background-color: var(--fsds-progress-color-fill-success);
+}
+
+.progress--warning .progress__fill {
+  background-color: var(--fsds-progress-color-fill-warning);
+}
+
+.progress--danger .progress__fill {
+  background-color: var(--fsds-progress-color-fill-danger);
+}
 /* @generated:end */
 
 /* @custom:start overrides */

@@ -37,5 +37,25 @@
     "margin-left": {
       "resolvesTo": "progress.spacing.gap"
     }
+  },
+  ".progress--info .progress__fill": {
+    "background-color": {
+      "resolvesTo": "progress.color.fill.info"
+    }
+  },
+  ".progress--success .progress__fill": {
+    "background-color": {
+      "resolvesTo": "progress.color.fill.success"
+    }
+  },
+  ".progress--warning .progress__fill": {
+    "background-color": {
+      "resolvesTo": "progress.color.fill.warning"
+    }
+  },
+  ".progress--danger .progress__fill": {
+    "background-color": {
+      "resolvesTo": "progress.color.fill.danger"
+    }
   }
 }

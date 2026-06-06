@@ -36,6 +36,26 @@
   object-fit: cover;
   display: block;
 }
+
+.avatar--small {
+  width: var(--fsds-avatar-size-small);
+  height: var(--fsds-avatar-size-small);
+}
+
+.avatar--medium {
+  width: var(--fsds-avatar-size-medium);
+  height: var(--fsds-avatar-size-medium);
+}
+
+.avatar--large {
+  width: var(--fsds-avatar-size-large);
+  height: var(--fsds-avatar-size-large);
+}
+
+.avatar--extra-large {
+  width: var(--fsds-avatar-size-extra-large);
+  height: var(--fsds-avatar-size-extra-large);
+}
 /* @generated:end */
 
 /* @custom:start overrides */
