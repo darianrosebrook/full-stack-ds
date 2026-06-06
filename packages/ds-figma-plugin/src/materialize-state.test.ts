@@ -82,11 +82,9 @@ describe("materialize-state: plan-driven Figma state surface", () => {
       expect(a!.suppressedDimensions.sort()).toEqual(["focus", "pointer"]);
       expect(a!.suppressedDimensions).not.toContain("selection");
     });
-    it("the boolean-refused residual is surfaced as plugin data (A8)", () => {
+    it("availability has NO residual now that effect:restyle is an authored fact (A6/A8)", () => {
       const res = pd<Array<{ dimension: string; code: string }>>(node, "fsds.state.residuals");
-      expect(res).toContainEqual(
-        expect.objectContaining({ dimension: "availability", code: "boolean-refused-restyle" }),
-      );
+      expect(res.find((r) => r.dimension === "availability")).toBeUndefined();
     });
   });
 
@@ -116,12 +114,12 @@ describe("materialize-state: plan-driven Figma state surface", () => {
       expect(node.pluginData["fsds.state.dim.openness.omitted"]).toBe("true");
       expect(node.pluginData["fsds.state.dim.openness.channel"]).toBe("openness");
     });
-    it("Sheet: openness is a BOOLEAN property; the mixed-channel residual is preserved (A4)", () => {
+    it("Sheet: openness is a BOOLEAN property; the precise mixed-value-effects residual is preserved (A4)", () => {
       const node = materialize("Sheet");
       expect(prop(node, "State/openness")?.type).toBe("BOOLEAN");
       const res = pd<Array<{ dimension: string; code: string }>>(node, "fsds.state.residuals");
       expect(res).toContainEqual(
-        expect.objectContaining({ dimension: "openness", code: "mixed-channel-and-visual" }),
+        expect.objectContaining({ dimension: "openness", code: "mixed-value-effects" }),
       );
     });
   });
@@ -151,7 +149,7 @@ describe("materialize-state: plan-driven Figma state surface", () => {
         { name: "meta", category: "presentation", cardinality: 1, activeValues: [], initial: "x", lowering: { kind: "metadata-only" } },
       ],
       suppressions: [],
-      residuals: [{ dimension: "alpha", code: "boolean-refused-restyle", reason: "test" }],
+      residuals: [{ dimension: "alpha", code: "mixed-value-effects", reason: "test" }],
     };
     const node = mockNode();
     materializeComponentSurface(node, plan);
@@ -174,7 +172,7 @@ describe("materialize-state: plan-driven Figma state surface", () => {
     });
     it("residuals are recorded even on a synthetic plan (A8)", () => {
       const res = pd<Array<{ code: string }>>(node, "fsds.state.residuals");
-      expect(res[0].code).toBe("boolean-refused-restyle");
+      expect(res[0].code).toBe("mixed-value-effects");
     });
     it("classification keys off lowering.kind, not names: alpha vs omega behave identically", () => {
       expect(prop(node, "State/alpha")?.type).toBe(prop(node, "State/omega")?.type);

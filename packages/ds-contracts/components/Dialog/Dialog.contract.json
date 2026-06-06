@@ -197,6 +197,7 @@
       },
       "openness": {
         "category": "visibility",
+        "effect": "channel",
         "values": [
           "closed",
           "opening",
