@@ -70,7 +70,11 @@ export function BoxModelEditor({
 
   // Helper: render a TokenValueControl for a role, or null if the component has
   // no token for it (so the diagram only shows what the contract owns).
-  function control(role: BoxModelRole, kind: "dimension" | "color" = "dimension") {
+  function control(
+    role: BoxModelRole,
+    kind: "dimension" | "color" = "dimension",
+    title: string,
+  ) {
     const b = byRole.get(role);
     if (!b) return null;
     const row = b.row;
@@ -85,6 +89,7 @@ export function BoxModelEditor({
         onBindToken={(pick) => onBindToken(row.slot, pick)}
         foundationTokens={foundationTokens}
         pathPattern={boxModelRolePathPattern(role)}
+        title={title}
       />
     );
   }
@@ -101,7 +106,7 @@ export function BoxModelEditor({
   const w = minWidthRow ? shownValue(minWidthRow, values) : null;
   const h = minHeightRow ? shownValue(minHeightRow, values) : null;
   const centerLabel =
-    w && h ? `${w} × ${h}` : w ?? h ?? (minWidth ? "min" : "size");
+    w && h ? `${w} × ${h}` : (w ?? h ?? (minWidth ? "min" : "size"));
 
   return (
     <div className="fsds-bme" role="group" aria-label="Box model">
@@ -118,7 +123,7 @@ export function BoxModelEditor({
               key={corner}
               className={`fsds-bme__radius fsds-bme__radius--${corner}`}
             >
-              {control("radius")}
+              {control("radius", "dimension", `Radius ${corner}`)}
             </div>
           ))}
 
@@ -127,16 +132,16 @@ export function BoxModelEditor({
         {border && (
           <>
             <div className="fsds-bme__border-val fsds-bme__border-val--top">
-              {control("border")}
+              {control("border", "dimension", `Border top`)}
             </div>
             <div className="fsds-bme__border-val fsds-bme__border-val--bottom">
-              {control("border")}
+              {control("border", "dimension", `Border bottom`)}
             </div>
             <div className="fsds-bme__border-val fsds-bme__border-val--left">
-              {control("border")}
+              {control("border", "dimension", `Border left`)}
             </div>
             <div className="fsds-bme__border-val fsds-bme__border-val--right">
-              {control("border")}
+              {control("border", "dimension", `Border right`)}
             </div>
           </>
         )}
@@ -145,16 +150,16 @@ export function BoxModelEditor({
         <div className="fsds-bme__pad-zone">
           {/* padding value labels on the green-zone edges */}
           <div className="fsds-bme__pad fsds-bme__pad--top">
-            {control("padding-top")}
+            {control("padding-top", "dimension", "Padding top")}
           </div>
           <div className="fsds-bme__pad fsds-bme__pad--bottom">
-            {control("padding-bottom")}
+            {control("padding-bottom", "dimension", "Padding bottom")}
           </div>
           <div className="fsds-bme__pad fsds-bme__pad--left">
-            {control("padding-left")}
+            {control("padding-left", "dimension", "Padding left")}
           </div>
           <div className="fsds-bme__pad fsds-bme__pad--right">
-            {control("padding-right")}
+            {control("padding-right", "dimension", "Padding right")}
           </div>
 
           {/* white content card: resolved size proxy (read-only) + gap */}
@@ -162,7 +167,7 @@ export function BoxModelEditor({
             <span className="fsds-bme__center-size">{centerLabel}</span>
             {byRole.get("gap") && (
               <span className="fsds-bme__gap" title="gap">
-                {control("gap")}
+                {control("gap", "dimension", "Gap")}
               </span>
             )}
           </div>

@@ -41,6 +41,7 @@ export interface TokenValueControlProps {
    * a radius control). Forwarded to TokenPicker.pathPattern.
    */
   pathPattern?: RegExp;
+  title: string;
 }
 
 const DIM_RE = /^(-?\d*\.?\d+)([a-z%]*)$/i;
@@ -67,6 +68,7 @@ export function TokenValueControl({
   label,
   compact,
   pathPattern,
+  title,
 }: TokenValueControlProps) {
   const [open, setOpen] = useState(false);
   const [num, unit] = splitDimension(value);
@@ -106,8 +108,7 @@ export function TokenValueControl({
           </span>
           <span
             className={
-              "fsds-tvc__diamond" +
-              (linked ? " fsds-tvc__diamond--linked" : "")
+              "fsds-tvc__diamond" + (linked ? " fsds-tvc__diamond--linked" : "")
             }
             aria-hidden
           >
@@ -118,6 +119,9 @@ export function TokenValueControl({
 
       <Popover.Content className="fsds-tvc__popover">
         <div className="fsds-tvc__editor">
+          <div className="fsds-tvc__title">
+            <h3 className="fsds-tvc__section-title">{title}</h3>
+          </div>
           {kind === "dimension" ? (
             <div className="fsds-tvc__stepper">
               <button

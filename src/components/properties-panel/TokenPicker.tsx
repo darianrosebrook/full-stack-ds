@@ -83,7 +83,11 @@ export function TokenPicker({
       if (kind === "color" && !isColorValue(t.value)) return false;
       if (kind === "dimension" && !isDimensionValue(t.value)) return false;
       if (pathPattern && !pathPattern.test(t.path)) return false;
-      if (q && !t.path.toLowerCase().includes(q) && !String(t.value).toLowerCase().includes(q))
+      if (
+        q &&
+        !t.path.toLowerCase().includes(q) &&
+        !String(t.value).toLowerCase().includes(q)
+      )
         return false;
       return true;
     });
