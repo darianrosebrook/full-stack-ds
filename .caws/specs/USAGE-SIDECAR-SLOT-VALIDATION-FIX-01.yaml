@@ -2,10 +2,11 @@ id: USAGE-SIDECAR-SLOT-VALIDATION-FIX-01
 title: 'Fix invalid usage-sidecar slot refs (OTP.separator, Table.header) so generate:validate-usage is green'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: usage-slot-fix
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge usage-slot-fix at d4d24032e295f3d4f614af69b04d3e29013adb48'
 created_at: '2026-06-06T06:37:38.717Z'
-updated_at: '2026-06-06T06:37:38.717Z'
+updated_at: '2026-06-06T06:39:53.423Z'
 blast_radius:
   modules:
     - 'Two curated usage sidecars only. OTP.usage.jsonl references slot `separator` (not an OTP anatomy part: root/group/field) with no semantic mapping -> drop the annotation. Table.usage.jsonl references slot `header` (not a part) where the real part is `headerCell` (the example content is the column header "Name") -> remap header->headerCell. Both introduced by 92cbb3d (PR3c). No contracts, generated code, emitters, styles, or audit touched.'
