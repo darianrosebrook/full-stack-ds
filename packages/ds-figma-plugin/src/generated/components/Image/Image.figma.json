@@ -184,6 +184,7 @@
       },
       "validation": {
         "category": "validation",
+        "effect": "restyle",
         "values": [
           "valid",
           "error"
@@ -193,6 +194,7 @@
       },
       "loading": {
         "category": "data",
+        "effect": "overlay",
         "values": [
           "idle",
           "loading"

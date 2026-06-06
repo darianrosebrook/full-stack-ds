@@ -122,6 +122,7 @@
       },
       "availability": {
         "category": "availability",
+        "effect": "restyle",
         "values": [
           "enabled",
           "disabled"
@@ -136,6 +137,7 @@
       },
       "selection": {
         "category": "selection",
+        "effect": "restyle",
         "values": [
           "unchecked",
           "checked"

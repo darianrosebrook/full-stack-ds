@@ -170,6 +170,7 @@
       },
       "visibility": {
         "category": "visibility",
+        "effect": "channel",
         "values": [
           "hidden",
           "visible"
@@ -179,6 +180,7 @@
       },
       "transition": {
         "category": "motion",
+        "effect": "channel",
         "values": [
           "idle",
           "entering",

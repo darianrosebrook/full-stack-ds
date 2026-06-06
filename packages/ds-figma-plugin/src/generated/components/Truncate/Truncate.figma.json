@@ -126,6 +126,7 @@
       },
       "expansion": {
         "category": "visibility",
+        "effect": "channel",
         "values": [
           "collapsed",
           "expanded"

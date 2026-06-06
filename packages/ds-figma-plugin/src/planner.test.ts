@@ -7,6 +7,7 @@ import {
   type FigmaStatePlan,
   type PlannedDimension,
 } from "./planner.js";
+import { figmaComponentRegistry } from "./generated/components/index.js";
 
 // FIGMA-DIMENSIONAL-STATE-PLANNER-01: the planner is a PURE descriptor->plan
 // layer. These tests run it against the real generated descriptors (which now
@@ -149,5 +150,43 @@ describe("planFigmaStateSurface", () => {
     expect(Array.isArray(plan.dimensions)).toBe(true);
     expect(Array.isArray(plan.residuals)).toBe(true);
     expect(Array.isArray(plan.suppressions)).toBe(true);
+  });
+});
+
+// FIGMA-STATE-EFFECT-CORPUS-COMPLETION-01: scan the whole generated descriptor
+// registry. The corpus must carry enough effect facts that the planner never
+// falls back to the category heuristic — i.e. zero effect-missing residuals.
+describe("corpus effect-authority", () => {
+  const descriptors = Object.values(
+    figmaComponentRegistry,
+  ) as unknown as PlannerDescriptor[];
+  const residuals = descriptors.flatMap((d) => {
+    const plan = planFigmaStateSurface(d);
+    return plan.residuals.map((r) => ({
+      component: plan.component,
+      code: r.code,
+      dimension: r.dimension,
+    }));
+  });
+
+  it("A2: zero effect-missing residuals across the registry", () => {
+    const missing = residuals
+      .filter((r) => r.code === "effect-missing")
+      .map((r) => `${r.component}.${r.dimension}`);
+    if (missing.length > 0) {
+      // Surface the worklist when this fails.
+      // eslint-disable-next-line no-console
+      console.error(`effect-missing (${missing.length}):\n  ${missing.join("\n  ")}`);
+    }
+    expect(missing).toEqual([]);
+  });
+
+  it("A3: any remaining residuals are structural, never missing-authority", () => {
+    const byCode: Record<string, number> = {};
+    for (const r of residuals) byCode[r.code] = (byCode[r.code] ?? 0) + 1;
+    // Only structural residuals may remain: no-active-values (state-less
+    // components) and mixed-value-effects (deliberate per-value mixes like
+    // Sheet's openness). Never effect-missing.
+    expect(byCode["effect-missing"] ?? 0).toBe(0);
   });
 });

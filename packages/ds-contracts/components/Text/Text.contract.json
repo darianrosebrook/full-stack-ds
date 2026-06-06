@@ -173,6 +173,7 @@
       },
       "validation": {
         "category": "validation",
+        "effect": "restyle",
         "values": [
           "valid",
           "error",

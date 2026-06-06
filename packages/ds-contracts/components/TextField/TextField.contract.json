@@ -168,6 +168,7 @@
       },
       "availability": {
         "category": "availability",
+        "effect": "restyle",
         "values": [
           "enabled",
           "disabled"
@@ -182,6 +183,7 @@
       },
       "validation": {
         "category": "validation",
+        "effect": "restyle",
         "values": [
           "valid",
           "invalid"
