@@ -161,25 +161,21 @@
   flex: 1 1 100%;
 }
 
-/* The value control inside a W·H field is borderless (the field is the chrome) */
+/* The value control inside a field is borderless + shadowless — the FIELD is
+   the single chrome surface (one consistent treatment across Layout / Shape /
+   Fill / Typography: a gray well with a border, no shadow, no nested chip). */
 .fsds-pp__wh-field .fsds-tvc__trigger {
   background: transparent;
   border: none;
   box-shadow: none;
   padding: 0;
   flex: 1;
+  width: 100%;
+  justify-content: flex-start;
 }
 .fsds-pp__wh-field .fsds-tvc__trigger:hover {
   background: transparent;
   border: none;
-}
-
-.fsds-pp__fill-row {
-  display: flex;
-}
-.fsds-pp__fill-row .fsds-tvc__trigger {
-  width: 100%;
-  justify-content: flex-start;
 }
 
 /* Two-column label → control grid, like Figma's variant rows. */

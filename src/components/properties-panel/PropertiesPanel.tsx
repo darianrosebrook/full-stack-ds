@@ -347,11 +347,13 @@ export function PropertiesPanel({
 
       {fillRow && (
         <PropertySection title="Fill">
-          <div className="fsds-pp__fill-row">
-            {tokenField(fillRow, "Fill", {
-              kind: "color",
-              pathPattern: FILL_PATH_PATTERN,
-            })}
+          <div className="fsds-pp__wh">
+            <div className="fsds-pp__wh-field fsds-pp__wh-field--wide">
+              {tokenField(fillRow, "Fill", {
+                kind: "color",
+                pathPattern: FILL_PATH_PATTERN,
+              })}
+            </div>
           </div>
         </PropertySection>
       )}
