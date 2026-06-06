@@ -12,6 +12,17 @@ interface A2UIDescriptorPanelProps {
 }
 
 /**
+ * Render-safe cell value: a string passes through; anything else (a payload
+ * object/array that slipped past the deriver) is stringified so React can
+ * render it as text instead of throwing. Nullish renders an em dash.
+ */
+function coerceCell(value: unknown): string {
+  if (value == null) return "—";
+  if (typeof value === "string") return value;
+  return JSON.stringify(value);
+}
+
+/**
  * Renders the agent-facing A2UI projection of a component contract, derived at
  * render time via `deriveA2UIDescriptor` (packages/ds-contracts/a2ui). No baked
  * artifact: the descriptor is recomputed from the live contract each render.
@@ -145,7 +156,13 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
                     <code>{key}</code>
                   </TableCell>
                   <TableCell>{e.source}</TableCell>
-                  <TableCell>{e.valueType ?? "—"}</TableCell>
+                  {/*
+                    valueType is typed string | undefined and the deriver
+                    guarantees a string (see payloadToValueType). Coerce
+                    defensively anyway: a non-string here must degrade to text,
+                    never throw "Objects are not valid as a React child".
+                  */}
+                  <TableCell>{coerceCell(e.valueType)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -100,9 +100,22 @@ export interface ContractChannel {
   notes?: string;
 }
 
+/** One typed member of an array-shaped event payload. */
+export interface ContractEventPayloadMember {
+  name: string;
+  type: string;
+  description?: string;
+}
+
 export interface ContractEvent {
   description?: string;
-  payload?: string;
+  /**
+   * Either a plain type string (`"string"`) or an array of typed members
+   * (`[{ name, type, description }]`). The corpus uses the array shape for
+   * structured payloads (e.g. Tabs `activeTabChange`); both must collapse to a
+   * string `valueType` on the derived descriptor — see `payloadToValueType`.
+   */
+  payload?: string | ContractEventPayloadMember[];
   emittedVia?: string;
 }
 
@@ -412,6 +425,28 @@ function collectA2UIPropMembers(contract: ComponentContractLike): ContractPropMe
   return [...byName.values()];
 }
 
+/**
+ * Collapse a contract event `payload` into a string `valueType` for the
+ * descriptor. A plain string passes through; an array of typed members is
+ * reduced to its members' `type`s (comma-joined). The A2UIEvent.valueType
+ * field is `string | undefined`, so this guarantees we never leak a raw
+ * object/array onto the descriptor (which the Design view would then try to
+ * render as a React child and crash on).
+ */
+export function payloadToValueType(
+  payload: ContractEvent['payload'],
+): string | undefined {
+  if (payload == null) return undefined;
+  if (typeof payload === 'string') return payload;
+  if (Array.isArray(payload)) {
+    const types = payload
+      .map((m) => (m && typeof m.type === 'string' ? m.type : null))
+      .filter((t): t is string => t !== null);
+    return types.length > 0 ? types.join(', ') : undefined;
+  }
+  return undefined;
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -474,7 +509,8 @@ export function deriveA2UIDescriptor(contract: ComponentContractLike): A2UIDescr
       if (!evDef) continue;
       const ev: A2UIEvent = { source: 'event', key: name };
       if (evDef.description) ev.description = evDef.description;
-      if (evDef.payload) ev.valueType = evDef.payload;
+      const valueType = payloadToValueType(evDef.payload);
+      if (valueType) ev.valueType = valueType;
       events[name] = ev;
     }
   }
