@@ -819,6 +819,19 @@
               "prop": { "type": "string" }
             }
           }
+        },
+        "effect": {
+          "type": "string",
+          "enum": ["restyle", "overlay", "metadata", "channel"],
+          "description": "Neutral state-surface effect for the whole dimension. restyle = changes the component's visual treatment (needs a variant axis or styled state layer); overlay = an additive toggled layer representable as a boolean without changing the base style recipe; metadata = retained for documentation/tooling, not a control; channel = runtime/channel-driven, not a user-facing control. valueEffects overrides per value."
+        },
+        "valueEffects": {
+          "type": "object",
+          "description": "Value-level effect override, keyed by dimension value. Overrides the dimension-level effect for that value (e.g. openness: open=overlay while opening/closing=channel).",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["restyle", "overlay", "metadata", "channel"]
+          }
         }
       }
     },

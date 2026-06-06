@@ -186,6 +186,11 @@
         ],
         "initial": "closed",
         "exclusive": true,
+        "valueEffects": {
+          "open": "overlay",
+          "opening": "channel",
+          "closing": "channel"
+        },
         "derivesFrom": {
           "opening": { "channel": "openness" },
           "closing": { "channel": "openness" }

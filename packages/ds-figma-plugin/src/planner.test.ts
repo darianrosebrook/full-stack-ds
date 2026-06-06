@@ -72,14 +72,14 @@ describe("planFigmaStateSurface", () => {
       expect(dim(plan, "pointer").activeValues).toContain("active");
       expect(dim(plan, "focus").activeValues).not.toContain("hover");
     });
-    it("availability is a variant axis with a boolean-refused residual (A5)", () => {
+    it("availability is a variant axis from effect:restyle — no residual (fact-driven, A5/A6)", () => {
       expect(dim(plan, "availability").lowering).toEqual({
         kind: "variant-axis",
         activeValues: ["disabled"],
       });
-      expect(plan.residuals).toContainEqual(
-        expect.objectContaining({ dimension: "availability", code: "boolean-refused-restyle" }),
-      );
+      // effect=restyle makes the lowering definitive — the old boolean-refused
+      // heuristic residual is gone.
+      expect(plan.residuals.find((r) => r.dimension === "availability")).toBeUndefined();
     });
     it("availability suppresses ONLY interaction dimensions, never semantic ones (A3)", () => {
       const s = plan.suppressions.find((x) => x.sourceDimension === "availability");
@@ -91,14 +91,12 @@ describe("planFigmaStateSurface", () => {
 
   describe("A6 fixture: Checkbox + Switch (selection)", () => {
     for (const name of ["Checkbox", "Switch"]) {
-      it(`${name}: selection is a variant axis (semantic restyle, A5) with a11y retained as metadata`, () => {
+      it(`${name}: selection is a variant axis from effect:restyle (no residual) with a11y metadata`, () => {
         const plan = planFor(name);
         const sel = dim(plan, "selection");
         expect(sel.lowering.kind).toBe("variant-axis");
         expect(sel.a11y?.attribute).toBe("aria-checked");
-        expect(plan.residuals).toContainEqual(
-          expect.objectContaining({ dimension: "selection", code: "boolean-refused-restyle" }),
-        );
+        expect(plan.residuals.find((r) => r.dimension === "selection")).toBeUndefined();
       });
       it(`${name}: disabled suppression does NOT reach the selection dimension (A3)`, () => {
         const plan = planFor(name);
@@ -119,14 +117,14 @@ describe("planFigmaStateSurface", () => {
       });
       expect(plan.residuals.find((r) => r.dimension === "openness")).toBeUndefined();
     });
-    it("Sheet: openness mixes a visual open state with channel transition phases (A5 residual)", () => {
+    it("Sheet: openness lowers open->boolean (overlay) with a precise mixed-value-effects residual (A6)", () => {
       const plan = planFor("Sheet");
       const o = dim(plan, "openness");
-      // `open` is the visual state (a boolean toggle); opening/closing are channel-driven.
+      // valueEffects: open=overlay (a boolean toggle); opening/closing=channel (omitted).
       expect(o.lowering).toEqual({ kind: "boolean-property", activeValue: "open" });
-      expect(plan.residuals).toContainEqual(
-        expect.objectContaining({ dimension: "openness", code: "mixed-channel-and-visual" }),
-      );
+      const res = plan.residuals.find((r) => r.dimension === "openness");
+      expect(res?.code).toBe("mixed-value-effects");
+      expect(res?.detail).toEqual({ open: "overlay", opening: "channel", closing: "channel" });
     });
   });
 

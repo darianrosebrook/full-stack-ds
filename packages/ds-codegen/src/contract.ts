@@ -112,6 +112,13 @@ export type StateCategory =
   | "motion"
   | "presentation";
 
+/**
+ * Neutral state-surface effect — what the active state DOES, independent of any
+ * target (Figma/CSS) language. Lets the planner stop guessing restyle-vs-toggle
+ * from category.
+ */
+export type StateEffect = "restyle" | "overlay" | "metadata" | "channel";
+
 export interface ContractStateDimension {
   description?: string;
   /** Semantic domain of this axis. Cardinality derives from values.length. */
@@ -130,6 +137,10 @@ export interface ContractStateDimension {
     string,
     { selector?: string; attr?: string; channel?: string; prop?: string }
   >;
+  /** Neutral state-surface effect for the whole dimension. */
+  effect?: StateEffect;
+  /** Value-level effect override, keyed by dimension value (overrides `effect`). */
+  valueEffects?: Record<string, StateEffect>;
 }
 
 /**

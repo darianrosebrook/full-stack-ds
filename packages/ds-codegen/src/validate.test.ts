@@ -157,6 +157,49 @@ describe("dimensional states authority", () => {
     const result = validator.validateComponent(json);
     expect(result.ok).toBe(true);
   });
+
+  // FIGMA-STATE-EFFECT-DESCRIPTOR-ENRICHMENT-01 A1: stateDimension accepts the
+  // neutral effect / valueEffects facts (closed value set) and rejects invalid
+  // values; additionalProperties stays closed.
+  it("accepts effect + valueEffects with the closed value set", () => {
+    const result = validator.validateComponent({
+      name: "ProbeEffect",
+      layer: "primitive",
+      states: {
+        dimensions: {
+          availability: {
+            category: "availability",
+            effect: "restyle",
+            values: ["enabled", "disabled"],
+            initial: "enabled",
+          },
+          openness: {
+            category: "visibility",
+            values: ["closed", "opening", "open", "closing"],
+            initial: "closed",
+            valueEffects: { open: "overlay", opening: "channel", closing: "channel" },
+          },
+        },
+      },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects an effect value outside the closed set", () => {
+    const result = validator.validateComponent({
+      name: "ProbeBadEffect",
+      layer: "primitive",
+      states: {
+        dimensions: {
+          x: { category: "data", effect: "sparkle", values: ["a", "b"], initial: "a" },
+        },
+      },
+    });
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.issues.some((i) => i.pointer.includes("effect"))).toBe(true);
+    }
+  });
 });
 
 // CODEGEN-PROPTYPE-DEFAULTS-BUILTINREF-01 A1: designed/constrained members may

@@ -216,6 +216,7 @@
       },
       "selection": {
         "category": "selection",
+        "effect": "restyle",
         "values": [
           "unselected",
           "selected"

@@ -27,6 +27,9 @@ export type StateCategory =
 // --- Planner input: a structural subset of a generated Figma descriptor. ---
 // (Decoupled from the materializer's descriptor type, which lives in plugin.ts.)
 
+/** Neutral state-surface effect — what the active state DOES (not Figma terms). */
+export type StateEffect = "restyle" | "overlay" | "metadata" | "channel";
+
 export interface PlannerStateDimension {
   category: StateCategory;
   values: string[];
@@ -38,6 +41,10 @@ export interface PlannerStateDimension {
     string,
     { selector?: string; attr?: string; channel?: string; prop?: string }
   >;
+  /** Dimension-level effect fact. */
+  effect?: StateEffect;
+  /** Value-level effect override, keyed by dimension value (overrides `effect`). */
+  valueEffects?: Record<string, StateEffect>;
 }
 
 export interface PlannerDescriptor {
@@ -79,11 +86,12 @@ export interface SuppressionRelation {
 }
 
 export type ResidualCode =
-  /** A 2-value semantic dimension that restyles; a Figma boolean property (a
-   *  visibility toggle) would be unsound. Lowered as a variant axis instead. */
-  | "boolean-refused-restyle"
-  /** A dimension mixes channel-driven transition phases with a visual state. */
-  | "mixed-channel-and-visual"
+  /** A dimension value has no effect fact, so the lowering fell back to the
+   *  category heuristic. Author effect/valueEffects to make it definitive. */
+  | "effect-missing"
+  /** A dimension's active values carry more than one distinct effect (e.g. some
+   *  channel, some overlay); the precise per-value map is reported. */
+  | "mixed-value-effects"
   /** A dimension has no active (non-initial) values to plan. */
   | "no-active-values";
 
@@ -91,6 +99,9 @@ export interface Residual {
   dimension: string;
   code: ResidualCode;
   reason: string;
+  /** Structured detail: per-value effect map (mixed-value-effects) or the
+   *  values lacking an effect fact (effect-missing). */
+  detail?: Record<string, string> | string[];
 }
 
 export interface FigmaStatePlan {
@@ -100,9 +111,9 @@ export interface FigmaStatePlan {
   residuals: Residual[];
 }
 
-// Categories whose active value typically RESTYLES the component (not an
-// additive overlay), so a Figma boolean property (a visibility toggle) cannot
-// faithfully represent it. Decided by category, never by value name.
+// FALLBACK heuristic ONLY: categories whose active value typically restyles.
+// Consulted solely when a dimension lacks an authored effect fact (and an
+// effect-missing residual is emitted). Enriched dimensions never reach this.
 const RESTYLE_CATEGORIES: ReadonlySet<StateCategory> = new Set([
   "availability",
   "validation",
@@ -113,8 +124,16 @@ function activeValuesOf(dim: PlannerStateDimension): string[] {
   return dim.values.filter((v) => v !== dim.initial);
 }
 
-function channelOf(dim: PlannerStateDimension, value: string): string | null {
-  return dim.derivesFrom?.[value]?.channel ?? null;
+/** Dimension/value-level effect fact (valueEffects overrides effect). */
+function effectOf(dim: PlannerStateDimension, value: string): StateEffect | null {
+  return dim.valueEffects?.[value] ?? dim.effect ?? null;
+}
+
+/** Effect, treating a `derivesFrom.channel` as an implicit channel effect. */
+function resolvedEffect(dim: PlannerStateDimension, value: string): StateEffect | null {
+  const e = effectOf(dim, value);
+  if (e) return e;
+  return dim.derivesFrom?.[value]?.channel ? "channel" : null;
 }
 
 /**
@@ -137,15 +156,15 @@ export function planFigmaStateSurface(
     const active = activeValuesOf(dim);
     const cardinality = dim.values.length;
 
-    // Partition active values into channel-driven vs visual.
+    // Partition active values into channel-driven vs visual, using effect facts
+    // (effect/valueEffects === "channel") plus the existing derivesFrom.channel.
     const channelValues: string[] = [];
     const visualValues: string[] = [];
     let channel: string | null = null;
     for (const v of active) {
-      const ch = channelOf(dim, v);
-      if (ch) {
+      if (resolvedEffect(dim, v) === "channel") {
         channelValues.push(v);
-        channel = channel ?? ch;
+        channel = channel ?? dim.derivesFrom?.[v]?.channel ?? name;
       } else {
         visualValues.push(v);
       }
@@ -164,35 +183,14 @@ export function planFigmaStateSurface(
       // Fully channel-driven (e.g. Dialog openness) -> not a Figma control.
       lowering = { kind: "channel-bound", channel: channel!, values: channelValues };
     } else if (dim.category === "interaction") {
-      // Interaction phase (pointer/focus). Kept as separate axes so e.g.
-      // hover+focus is representable across dimensions while values within a
-      // single interaction axis stay mutually exclusive.
+      // Interaction phase (pointer/focus). Separate axes so hover+focus is
+      // representable while values within one axis stay mutually exclusive.
       lowering = { kind: "interaction-axis", activeValues: active };
-    } else if (channelValues.length > 0) {
-      // Mixed: some channel-driven transition phases + a visual state
-      // (e.g. Sheet openness: open is visual; opening/closing are channel-driven).
-      lowering = classifyVisual(name, dim, visualValues);
-      residuals.push({
-        dimension: name,
-        code: "mixed-channel-and-visual",
-        reason:
-          `${name} mixes a visual state (${visualValues.join(", ") || "—"}) with ` +
-          `channel-driven transition phases (${channelValues.join(", ")}); ` +
-          `the transition phases are omitted from Figma controls.`,
-      });
     } else {
-      lowering = classifyVisual(name, dim, visualValues);
-      if (lowering.kind === "variant-axis" && cardinality === 2 && RESTYLE_CATEGORIES.has(dim.category)) {
-        residuals.push({
-          dimension: name,
-          code: "boolean-refused-restyle",
-          reason:
-            `${name} is a 2-value ${dim.category} state that restyles the component; ` +
-            `a Figma boolean property (visibility toggle) would be unsound. Lowered as a ` +
-            `2-variant axis. A descriptor "effect: overlay|restyle" fact would let the ` +
-            `planner choose a boolean property definitively.`,
-        });
-      }
+      // Visual classification driven by effect FACTS (not category heuristics).
+      lowering = classifyVisualByEffect(dim, visualValues);
+      const residual = effectResidual(dim, name, active);
+      if (residual) residuals.push(residual);
     }
 
     planned.push({
@@ -227,25 +225,80 @@ export function planFigmaStateSurface(
 }
 
 /**
- * Classify a non-interaction, non-fully-channel dimension's VISUAL values into
- * a Figma lowering. Decided by visual cardinality + category, never by name.
+ * Classify a dimension's VISUAL (non-channel) values into a Figma lowering from
+ * authored effect facts: restyle -> variant axis; overlay -> boolean (when 2
+ * effective values); metadata -> metadata-only. When the effect fact is missing,
+ * fall back to the category heuristic (flagged via an effect-missing residual).
+ * Never branches on value names.
  */
-function classifyVisual(
-  _name: string,
+function classifyVisualByEffect(
   dim: PlannerStateDimension,
   visualValues: string[],
 ): DimensionLowering {
-  // Effective visual cardinality includes the (visual) initial base.
-  const effective = visualValues.length + (dim.initial !== undefined ? 1 : 0);
+  if (visualValues.length === 0) return { kind: "metadata-only" };
+  const effects = visualValues.map((v) => effectOf(dim, v));
+  const effectiveVisual = visualValues.length + (dim.initial !== undefined ? 1 : 0);
 
-  if (effective >= 3) {
-    return { kind: "variant-axis", activeValues: visualValues };
+  if (effects.some((e) => e == null)) {
+    return fallbackHeuristic(dim, visualValues, effectiveVisual);
   }
-  // 2 effective values.
+  if (effects.every((e) => e === "metadata")) return { kind: "metadata-only" };
+  if (effects.every((e) => e === "overlay") && effectiveVisual <= 2) {
+    return { kind: "boolean-property", activeValue: visualValues[0] };
+  }
+  // restyle, >=3 values, or mixed visual effects -> a variant axis (faithful).
+  return { kind: "variant-axis", activeValues: visualValues };
+}
+
+/** Category heuristic — consulted ONLY when an effect fact is missing. */
+function fallbackHeuristic(
+  dim: PlannerStateDimension,
+  visualValues: string[],
+  effectiveVisual: number,
+): DimensionLowering {
+  if (effectiveVisual >= 3) return { kind: "variant-axis", activeValues: visualValues };
   if (RESTYLE_CATEGORIES.has(dim.category) || dim.a11y) {
-    // Semantic / restyling 2-value state -> a 2-variant axis, NOT a boolean.
     return { kind: "variant-axis", activeValues: visualValues };
   }
-  // Additive/overlay 2-value state (e.g. loading spinner) -> boolean property.
   return { kind: "boolean-property", activeValue: visualValues[0] };
+}
+
+/**
+ * Compute the residual for a visual/mixed dimension from its effect facts:
+ * effect-missing when a value lacks a fact (lowering fell back to the heuristic);
+ * mixed-value-effects when active values carry >1 distinct effect (precise map).
+ */
+function effectResidual(
+  dim: PlannerStateDimension,
+  name: string,
+  active: string[],
+): Residual | null {
+  const map: Record<string, string> = {};
+  const missing: string[] = [];
+  for (const v of active) {
+    const e = resolvedEffect(dim, v);
+    if (e == null) missing.push(v);
+    else map[v] = e;
+  }
+  if (missing.length > 0) {
+    return {
+      dimension: name,
+      code: "effect-missing",
+      reason: `${name} lacks an effect fact for: ${missing.join(", ")}. Lowered via the category heuristic; author effect/valueEffects to make it definitive.`,
+      detail: missing,
+    };
+  }
+  const distinct = new Set(Object.values(map));
+  if (distinct.size > 1) {
+    const pairs = Object.entries(map)
+      .map(([v, e]) => `${v}=${e}`)
+      .join(", ");
+    return {
+      dimension: name,
+      code: "mixed-value-effects",
+      reason: `${name} has heterogeneous value effects: ${pairs}. Overlay value(s) lower to a control; channel/metadata values are omitted.`,
+      detail: map,
+    };
+  }
+  return null;
 }
