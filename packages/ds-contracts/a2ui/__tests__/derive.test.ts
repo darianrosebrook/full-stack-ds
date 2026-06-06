@@ -16,6 +16,7 @@ import * as path from 'path';
 import {
   deriveA2UIDescriptor,
   deriveA2UIRegistry,
+  payloadToValueType,
   type ComponentContractLike,
 } from '../derive';
 import {
@@ -393,6 +394,18 @@ describe('deriveA2UIDescriptor — corpus sanity', () => {
           `${contract.name}.${propName} has empty accepts`,
         ).toBeGreaterThan(0);
       }
+      // Every derived event valueType MUST be a string (or absent). An object
+      // or array here is what crashed the Design view's Events table for
+      // array-payload events (Dialog/Sheet/Tabs). This assertion is the guard
+      // that was missing when the bug shipped.
+      for (const [evName, ev] of Object.entries(desc.events)) {
+        if (ev.valueType !== undefined) {
+          expect(
+            typeof ev.valueType,
+            `${contract.name}.events.${evName}.valueType must be a string, got ${typeof ev.valueType}`,
+          ).toBe('string');
+        }
+      }
     }
 
     // Warn rather than hard-fail when no contracts are upgraded yet, so this
@@ -402,6 +415,90 @@ describe('deriveA2UIDescriptor — corpus sanity', () => {
         'No contracts in ds-contracts/ have an a2ui block yet. ' +
         'Add `"a2ui": { "category": "..." }` to at least one contract to exercise the corpus path.',
       );
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// A2UI-EVENT-PAYLOAD-VALUETYPE-FIX-01 — array-shaped event payloads
+// ---------------------------------------------------------------------------
+
+describe('payloadToValueType (A2UI-EVENT-PAYLOAD-VALUETYPE-FIX-01)', () => {
+  it('A1: collapses an array of typed members to a comma-joined type string', () => {
+    expect(
+      payloadToValueType([
+        { name: 'activeTab', type: 'number', description: 'Zero-based index.' },
+      ]),
+    ).toBe('number');
+    expect(
+      payloadToValueType([
+        { name: 'a', type: 'string' },
+        { name: 'b', type: 'boolean' },
+      ]),
+    ).toBe('string, boolean');
+  });
+
+  it('A2: passes a plain string payload through unchanged', () => {
+    expect(payloadToValueType('string | string[]')).toBe('string | string[]');
+  });
+
+  it('returns undefined for nullish or an empty/typeless array', () => {
+    expect(payloadToValueType(undefined)).toBeUndefined();
+    expect(payloadToValueType([])).toBeUndefined();
+    // member with no usable type string → filtered out → undefined
+    expect(
+      payloadToValueType([{ name: 'x' } as unknown as { name: string; type: string }]),
+    ).toBeUndefined();
+  });
+});
+
+describe('deriveA2UIDescriptor — corpus contracts with array-shaped event payloads', () => {
+  // These three corpus contracts crashed the Design view before the fix: their
+  // events block carries an array payload ([{name,type,description}]), which the
+  // deriver previously assigned verbatim to a string-typed valueType.
+  const cases: Array<{ component: string; event: string; expected: string }> = [
+    { component: 'Tabs', event: 'activeTabChange', expected: 'number' },
+  ];
+
+  for (const { component, event, expected } of cases) {
+    it(`A1/A3: ${component}.${event}.valueType is the string "${expected}"`, () => {
+      const contractPath = path.join(
+        CONTRACTS_DIR,
+        'components',
+        component,
+        `${component}.contract.json`,
+      );
+      const contract: ComponentContractLike = JSON.parse(
+        fs.readFileSync(contractPath, 'utf8'),
+      );
+      const desc = deriveA2UIDescriptor(contract);
+      const ev = desc.events[event];
+      expect(ev, `${component}.events.${event} missing`).toBeDefined();
+      expect(typeof ev.valueType).toBe('string');
+      expect(ev.valueType).toBe(expected);
+    });
+  }
+
+  it('A3: Dialog and Sheet (array-payload events) derive without leaking objects', () => {
+    for (const component of ['Dialog', 'Sheet']) {
+      const contractPath = path.join(
+        CONTRACTS_DIR,
+        'components',
+        component,
+        `${component}.contract.json`,
+      );
+      const contract: ComponentContractLike = JSON.parse(
+        fs.readFileSync(contractPath, 'utf8'),
+      );
+      const desc = deriveA2UIDescriptor(contract);
+      for (const [evName, ev] of Object.entries(desc.events)) {
+        if (ev.valueType !== undefined) {
+          expect(
+            typeof ev.valueType,
+            `${component}.events.${evName}.valueType`,
+          ).toBe('string');
+        }
+      }
     }
   });
 });
