@@ -1,0 +1,26 @@
+id: PSEUDO-STATE-STYLING-RAIL-01
+title: 'Pseudo-state styling realization audit — classify + prove declared state/pseudo obligations vs generated CSS'
+risk_tier: 3
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-06T06:48:50.845Z'
+updated_at: '2026-06-06T06:48:50.845Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'scripts/pseudo-state-audit/'
+    - 'docs/pseudo-state-audit/'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
