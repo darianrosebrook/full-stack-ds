@@ -1,0 +1,29 @@
+id: A2UI-EVENT-PAYLOAD-VALUETYPE-FIX-01
+title: 'Fix A2UI event valueType: array-shaped event payloads crash the Design view (Dialog/Sheet/Tabs)'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-06T01:22:58.756Z'
+updated_at: '2026-06-06T01:22:58.756Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/a2ui/derive.ts'
+    - 'packages/ds-contracts/a2ui/__tests__/'
+    - 'src/views/sections/A2UIDescriptorPanel.tsx'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'a2ui-event-valuetype-string'
+    type: behavior
