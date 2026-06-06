@@ -1,0 +1,3124 @@
+{
+  "spec": "VARIANT-STYLE-REALIZATION-AUDIT-01",
+  "componentsWithVariants": 36,
+  "totalAxes": 65,
+  "totalValues": 239,
+  "failing": [
+    {
+      "component": "Avatar",
+      "dim": "size",
+      "gaps": [
+        "small",
+        "medium",
+        "large",
+        "extra-large"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Badge",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "status",
+        "counter",
+        "tag"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Blockquote",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "bordered",
+        "highlighted"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Chip",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "selected",
+        "dismissible"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Details",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "inline",
+        "compact"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Divider",
+      "dim": "orientation",
+      "gaps": [
+        "horizontal"
+      ],
+      "fullyUnrealized": false,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "unstyled",
+        "inline",
+        "divided",
+        "spaced"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "marker",
+      "gaps": [
+        "default",
+        "none",
+        "disc",
+        "circle",
+        "square",
+        "decimal",
+        "alpha",
+        "roman"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "spacing",
+      "gaps": [
+        "none",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "size",
+      "gaps": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Progress",
+      "dim": "intent",
+      "gaps": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Select",
+      "dim": "size",
+      "gaps": [
+        "sm",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": "md"
+    },
+    {
+      "component": "Spinner",
+      "dim": "size",
+      "gaps": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Spinner",
+      "dim": "variant",
+      "gaps": [
+        "ring",
+        "dots",
+        "bars"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Spinner",
+      "dim": "thickness",
+      "gaps": [
+        "hairline",
+        "regular",
+        "bold"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Stat",
+      "dim": "size",
+      "gaps": [
+        "sm",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": "md"
+    },
+    {
+      "component": "Stat",
+      "dim": "trend",
+      "gaps": [
+        "up",
+        "down",
+        "neutral"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Text",
+      "dim": "variant",
+      "gaps": [
+        "display",
+        "headline",
+        "caption",
+        "overline",
+        "code"
+      ],
+      "fullyUnrealized": false,
+      "default": null
+    },
+    {
+      "component": "Text",
+      "dim": "weight",
+      "gaps": [
+        "light",
+        "normal",
+        "medium",
+        "semibold",
+        "bold"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    }
+  ],
+  "fullyUnrealizedAxes": [
+    {
+      "component": "Avatar",
+      "dim": "size",
+      "gaps": [
+        "small",
+        "medium",
+        "large",
+        "extra-large"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Badge",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "status",
+        "counter",
+        "tag"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Blockquote",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "bordered",
+        "highlighted"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Chip",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "selected",
+        "dismissible"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Details",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "inline",
+        "compact"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "variant",
+      "gaps": [
+        "default",
+        "unstyled",
+        "inline",
+        "divided",
+        "spaced"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "marker",
+      "gaps": [
+        "default",
+        "none",
+        "disc",
+        "circle",
+        "square",
+        "decimal",
+        "alpha",
+        "roman"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "spacing",
+      "gaps": [
+        "none",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "List",
+      "dim": "size",
+      "gaps": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Progress",
+      "dim": "intent",
+      "gaps": [
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Select",
+      "dim": "size",
+      "gaps": [
+        "sm",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": "md"
+    },
+    {
+      "component": "Spinner",
+      "dim": "size",
+      "gaps": [
+        "xs",
+        "sm",
+        "md",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Spinner",
+      "dim": "variant",
+      "gaps": [
+        "ring",
+        "dots",
+        "bars"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Spinner",
+      "dim": "thickness",
+      "gaps": [
+        "hairline",
+        "regular",
+        "bold"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Stat",
+      "dim": "size",
+      "gaps": [
+        "sm",
+        "lg"
+      ],
+      "fullyUnrealized": true,
+      "default": "md"
+    },
+    {
+      "component": "Stat",
+      "dim": "trend",
+      "gaps": [
+        "up",
+        "down",
+        "neutral"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    },
+    {
+      "component": "Text",
+      "dim": "weight",
+      "gaps": [
+        "light",
+        "normal",
+        "medium",
+        "semibold",
+        "bold"
+      ],
+      "fullyUnrealized": true,
+      "default": null
+    }
+  ],
+  "components": [
+    {
+      "component": "Accordion",
+      "prefix": "accordion",
+      "dims": [
+        {
+          "dim": "type",
+          "default": "single",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "single",
+              "class": "accordion--single",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "multiple",
+              "class": "accordion--multiple",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Alert",
+      "prefix": "alert",
+      "dims": [
+        {
+          "dim": "intent",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "info",
+              "class": "alert--info",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "success",
+              "class": "alert--success",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "warning",
+              "class": "alert--warning",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "danger",
+              "class": "alert--danger",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 4,
+          "total": 4,
+          "fullyUnrealized": false,
+          "gaps": []
+        },
+        {
+          "dim": "level",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "inline",
+              "class": "alert--inline",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "section",
+              "class": "alert--section",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "page",
+              "class": "alert--page",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "AlertNotice",
+      "prefix": "alert-notice",
+      "dims": [
+        {
+          "dim": "status",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "info",
+              "class": "alert-notice--info",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "success",
+              "class": "alert-notice--success",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "warning",
+              "class": "alert-notice--warning",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "error",
+              "class": "alert-notice--error",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 4,
+          "total": 4,
+          "fullyUnrealized": false,
+          "gaps": []
+        },
+        {
+          "dim": "level",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "page",
+              "class": "alert-notice--page",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "section",
+              "class": "alert-notice--section",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "inline",
+              "class": "alert-notice--inline",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Avatar",
+      "prefix": "avatar",
+      "dims": [
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "small",
+              "class": "avatar--small",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "medium",
+              "class": "avatar--medium",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "large",
+              "class": "avatar--large",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "extra-large",
+              "class": "avatar--extra-large",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": [
+            "small",
+            "medium",
+            "large",
+            "extra-large"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Badge",
+      "prefix": "badge",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "badge--default",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "status",
+              "class": "badge--status",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "counter",
+              "class": "badge--counter",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "tag",
+              "class": "badge--tag",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": [
+            "default",
+            "status",
+            "counter",
+            "tag"
+          ]
+        },
+        {
+          "dim": "intent",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "info",
+              "class": "badge--info",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "success",
+              "class": "badge--success",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "warning",
+              "class": "badge--warning",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "danger",
+              "class": "badge--danger",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "sm",
+              "class": "badge--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "badge--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "badge--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Blockquote",
+      "prefix": "blockquote",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "blockquote--default",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "bordered",
+              "class": "blockquote--bordered",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "highlighted",
+              "class": "blockquote--highlighted",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "default",
+            "bordered",
+            "highlighted"
+          ]
+        },
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "sm",
+              "class": "blockquote--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "blockquote--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "blockquote--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Button",
+      "prefix": "button",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "medium",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "small",
+              "class": "button--small",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "medium",
+              "class": "button--medium",
+              "realized": true,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "large",
+              "class": "button--large",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 3,
+          "total": 3,
+          "fullyUnrealized": false,
+          "gaps": []
+        },
+        {
+          "dim": "variant",
+          "default": "primary",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "primary",
+              "class": "button--primary",
+              "realized": true,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "secondary",
+              "class": "button--secondary",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "tertiary",
+              "class": "button--tertiary",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "ghost",
+              "class": "button--ghost",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "destructive",
+              "class": "button--destructive",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "outline",
+              "class": "button--outline",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 6,
+          "total": 6,
+          "fullyUnrealized": false,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Calendar",
+      "prefix": "calendar",
+      "dims": [
+        {
+          "dim": "mode",
+          "default": "single",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "single",
+              "class": "calendar--single",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "range",
+              "class": "calendar--range",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Card",
+      "prefix": "card",
+      "dims": [
+        {
+          "dim": "status",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "completed",
+              "class": "card--completed",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "in-progress",
+              "class": "card--in-progress",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "planned",
+              "class": "card--planned",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "deprecated",
+              "class": "card--deprecated",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "category",
+              "class": "card--category",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "complexity",
+              "class": "card--complexity",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 6,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "density",
+          "default": "default",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "card--default",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "inset",
+              "class": "card--inset",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 1,
+          "total": 2,
+          "fullyUnrealized": false,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Checkbox",
+      "prefix": "checkbox",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "md",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "sm",
+              "class": "checkbox--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "checkbox--md",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "checkbox--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Chip",
+      "prefix": "chip",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "chip--default",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "selected",
+              "class": "chip--selected",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "dismissible",
+              "class": "chip--dismissible",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "default",
+            "selected",
+            "dismissible"
+          ]
+        },
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "small",
+              "class": "chip--small",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "medium",
+              "class": "chip--medium",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "large",
+              "class": "chip--large",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Details",
+      "prefix": "details",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "details--default",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "inline",
+              "class": "details--inline",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "compact",
+              "class": "details--compact",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "default",
+            "inline",
+            "compact"
+          ]
+        },
+        {
+          "dim": "icon",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "left",
+              "class": "details--left",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "right",
+              "class": "details--right",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "none",
+              "class": "details--none",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Dialog",
+      "prefix": "dialog",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "md",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "sm",
+              "class": "dialog--sm",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "dialog--md",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "dialog--lg",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "xl",
+              "class": "dialog--xl",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "full",
+              "class": "dialog--full",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 4,
+          "total": 5,
+          "fullyUnrealized": false,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Divider",
+      "prefix": "divider",
+      "dims": [
+        {
+          "dim": "orientation",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "horizontal",
+              "class": "divider--horizontal",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "vertical",
+              "class": "divider--vertical",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 1,
+          "total": 2,
+          "fullyUnrealized": false,
+          "gaps": [
+            "horizontal"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Field",
+      "prefix": "field",
+      "dims": [
+        {
+          "dim": "status",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "idle",
+              "class": "field--idle",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "validating",
+              "class": "field--validating",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "valid",
+              "class": "field--valid",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "invalid",
+              "class": "field--invalid",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 2,
+          "total": 4,
+          "fullyUnrealized": false,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Image",
+      "prefix": "image",
+      "dims": [
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "xs",
+              "class": "image--xs",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "sm",
+              "class": "image--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "image--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "image--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "xl",
+              "class": "image--xl",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "full",
+              "class": "image--full",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 6,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "radius",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "none",
+              "class": "image--none",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "sm",
+              "class": "image--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "image--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "image--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "full",
+              "class": "image--full",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Links",
+      "prefix": "links",
+      "dims": [
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "small",
+              "class": "links--small",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "medium",
+              "class": "links--medium",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "large",
+              "class": "links--large",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "List",
+      "prefix": "list",
+      "dims": [
+        {
+          "dim": "as",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "ul",
+              "class": "list--ul",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "ol",
+              "class": "list--ol",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "dl",
+              "class": "list--dl",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "list--default",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "unstyled",
+              "class": "list--unstyled",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "inline",
+              "class": "list--inline",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "divided",
+              "class": "list--divided",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "spaced",
+              "class": "list--spaced",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": [
+            "default",
+            "unstyled",
+            "inline",
+            "divided",
+            "spaced"
+          ]
+        },
+        {
+          "dim": "marker",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "default",
+              "class": "list--default",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "none",
+              "class": "list--none",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "disc",
+              "class": "list--disc",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "circle",
+              "class": "list--circle",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "square",
+              "class": "list--square",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "decimal",
+              "class": "list--decimal",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "alpha",
+              "class": "list--alpha",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "roman",
+              "class": "list--roman",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 8,
+          "fullyUnrealized": true,
+          "gaps": [
+            "default",
+            "none",
+            "disc",
+            "circle",
+            "square",
+            "decimal",
+            "alpha",
+            "roman"
+          ]
+        },
+        {
+          "dim": "spacing",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "none",
+              "class": "list--none",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "sm",
+              "class": "list--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "md",
+              "class": "list--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "lg",
+              "class": "list--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": [
+            "none",
+            "sm",
+            "md",
+            "lg"
+          ]
+        },
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "sm",
+              "class": "list--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "md",
+              "class": "list--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "lg",
+              "class": "list--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "sm",
+            "md",
+            "lg"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "NavList",
+      "prefix": "nav-list",
+      "dims": [
+        {
+          "dim": "orientation",
+          "default": "vertical",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "vertical",
+              "class": "nav-list--vertical",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "horizontal",
+              "class": "nav-list--horizontal",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "OTP",
+      "prefix": "otp",
+      "dims": [
+        {
+          "dim": "mode",
+          "default": "numeric",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "numeric",
+              "class": "otp--numeric",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "alphanumeric",
+              "class": "otp--alphanumeric",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Popover",
+      "prefix": "popover",
+      "dims": [
+        {
+          "dim": "placement",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "top",
+              "class": "popover--top",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "bottom",
+              "class": "popover--bottom",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "left",
+              "class": "popover--left",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "right",
+              "class": "popover--right",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "auto",
+              "class": "popover--auto",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Postcard",
+      "prefix": "postcard",
+      "dims": [
+        {
+          "dim": "type",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "image",
+              "class": "postcard--image",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "video",
+              "class": "postcard--video",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "audio",
+              "class": "postcard--audio",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Progress",
+      "prefix": "progress",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "linear",
+              "class": "progress--linear",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "circular",
+              "class": "progress--circular",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "sm",
+              "class": "progress--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "progress--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "progress--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "intent",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "info",
+              "class": "progress--info",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "success",
+              "class": "progress--success",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "warning",
+              "class": "progress--warning",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "danger",
+              "class": "progress--danger",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": [
+            "info",
+            "success",
+            "warning",
+            "danger"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Select",
+      "prefix": "select",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "md",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "sm",
+              "class": "select--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "md",
+              "class": "select--md",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "select--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "sm",
+            "lg"
+          ]
+        },
+        {
+          "dim": "position",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "bottom",
+              "class": "select--bottom",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "top",
+              "class": "select--top",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "auto",
+              "class": "select--auto",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Sheet",
+      "prefix": "sheet",
+      "dims": [
+        {
+          "dim": "side",
+          "default": "right",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "top",
+              "class": "sheet--top",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "right",
+              "class": "sheet--right",
+              "realized": true,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "bottom",
+              "class": "sheet--bottom",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "left",
+              "class": "sheet--left",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 4,
+          "total": 4,
+          "fullyUnrealized": false,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Skeleton",
+      "prefix": "skeleton",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": "block",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "block",
+              "class": "skeleton--block",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "text",
+              "class": "skeleton--text",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "avatar",
+              "class": "skeleton--avatar",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "media",
+              "class": "skeleton--media",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "dataviz",
+              "class": "skeleton--dataviz",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "actions",
+              "class": "skeleton--actions",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 6,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "animate",
+          "default": "shimmer",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "shimmer",
+              "class": "skeleton--shimmer",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "wipe",
+              "class": "skeleton--wipe",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "pulse",
+              "class": "skeleton--pulse",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "none",
+              "class": "skeleton--none",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "density",
+          "default": "regular",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "compact",
+              "class": "skeleton--compact",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "regular",
+              "class": "skeleton--regular",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "spacious",
+              "class": "skeleton--spacious",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Spinner",
+      "prefix": "spinner",
+      "dims": [
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "xs",
+              "class": "spinner--xs",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "sm",
+              "class": "spinner--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "md",
+              "class": "spinner--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "lg",
+              "class": "spinner--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": [
+            "xs",
+            "sm",
+            "md",
+            "lg"
+          ]
+        },
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "ring",
+              "class": "spinner--ring",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "dots",
+              "class": "spinner--dots",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "bars",
+              "class": "spinner--bars",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "ring",
+            "dots",
+            "bars"
+          ]
+        },
+        {
+          "dim": "thickness",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "hairline",
+              "class": "spinner--hairline",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "regular",
+              "class": "spinner--regular",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "bold",
+              "class": "spinner--bold",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "hairline",
+            "regular",
+            "bold"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Stat",
+      "prefix": "stat",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "md",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "sm",
+              "class": "stat--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "md",
+              "class": "stat--md",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "stat--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "sm",
+            "lg"
+          ]
+        },
+        {
+          "dim": "trend",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "up",
+              "class": "stat--up",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "down",
+              "class": "stat--down",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "neutral",
+              "class": "stat--neutral",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": [
+            "up",
+            "down",
+            "neutral"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Status",
+      "prefix": "status",
+      "dims": [
+        {
+          "dim": "status",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "info",
+              "class": "status--info",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "success",
+              "class": "status--success",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "warning",
+              "class": "status--warning",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "danger",
+              "class": "status--danger",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "error",
+              "class": "status--error",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Switch",
+      "prefix": "switch",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "md",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "sm",
+              "class": "switch--sm",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "switch--md",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "switch--lg",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 2,
+          "total": 3,
+          "fullyUnrealized": false,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Tabs",
+      "prefix": "tabs",
+      "dims": [
+        {
+          "dim": "orientation",
+          "default": "horizontal",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "horizontal",
+              "class": "tabs--horizontal",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "vertical",
+              "class": "tabs--vertical",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "appearance",
+          "default": "underline",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "underline",
+              "class": "tabs--underline",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "pills",
+              "class": "tabs--pills",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 1,
+          "total": 2,
+          "fullyUnrealized": false,
+          "gaps": []
+        },
+        {
+          "dim": "activationMode",
+          "default": "automatic",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "automatic",
+              "class": "tabs--automatic",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "manual",
+              "class": "tabs--manual",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Text",
+      "prefix": "text",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "display",
+              "class": "text--display",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "headline",
+              "class": "text--headline",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "title",
+              "class": "text--title",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "body",
+              "class": "text--body",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "caption",
+              "class": "text--caption",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "overline",
+              "class": "text--overline",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "code",
+              "class": "text--code",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 2,
+          "total": 7,
+          "fullyUnrealized": false,
+          "gaps": [
+            "display",
+            "headline",
+            "caption",
+            "overline",
+            "code"
+          ]
+        },
+        {
+          "dim": "size",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "xs",
+              "class": "text--xs",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "sm",
+              "class": "text--sm",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "md",
+              "class": "text--md",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lg",
+              "class": "text--lg",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "xl",
+              "class": "text--xl",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "2xl",
+              "class": "text--2xl",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "3xl",
+              "class": "text--3xl",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 7,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "weight",
+          "default": null,
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "light",
+              "class": "text--light",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "normal",
+              "class": "text--normal",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "medium",
+              "class": "text--medium",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "semibold",
+              "class": "text--semibold",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            },
+            {
+              "value": "bold",
+              "class": "text--bold",
+              "realized": false,
+              "isDefault": false,
+              "gap": true
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": [
+            "light",
+            "normal",
+            "medium",
+            "semibold",
+            "bold"
+          ]
+        },
+        {
+          "dim": "align",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "left",
+              "class": "text--left",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "center",
+              "class": "text--center",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "right",
+              "class": "text--right",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "justify",
+              "class": "text--justify",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": []
+        },
+        {
+          "dim": "transform",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "none",
+              "class": "text--none",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "uppercase",
+              "class": "text--uppercase",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "lowercase",
+              "class": "text--lowercase",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "capitalize",
+              "class": "text--capitalize",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 4,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Toast",
+      "prefix": "toast",
+      "dims": [
+        {
+          "dim": "variant",
+          "default": "info",
+          "stylingIntent": true,
+          "values": [
+            {
+              "value": "info",
+              "class": "toast--info",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "success",
+              "class": "toast--success",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "warning",
+              "class": "toast--warning",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "error",
+              "class": "toast--error",
+              "realized": true,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 3,
+          "total": 4,
+          "fullyUnrealized": false,
+          "gaps": []
+        },
+        {
+          "dim": "politeness",
+          "default": "polite",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "polite",
+              "class": "toast--polite",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "assertive",
+              "class": "toast--assertive",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 2,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "ToggleSwitch",
+      "prefix": "toggle-switch",
+      "dims": [
+        {
+          "dim": "size",
+          "default": "medium",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "small",
+              "class": "toggle-switch--small",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "medium",
+              "class": "toggle-switch--medium",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            },
+            {
+              "value": "large",
+              "class": "toggle-switch--large",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 3,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Tooltip",
+      "prefix": "tooltip",
+      "dims": [
+        {
+          "dim": "placement",
+          "default": null,
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "top",
+              "class": "tooltip--top",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "bottom",
+              "class": "tooltip--bottom",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "left",
+              "class": "tooltip--left",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "right",
+              "class": "tooltip--right",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "auto",
+              "class": "tooltip--auto",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    },
+    {
+      "component": "Walkthrough",
+      "prefix": "walkthrough",
+      "dims": [
+        {
+          "dim": "placement",
+          "default": "auto",
+          "stylingIntent": false,
+          "values": [
+            {
+              "value": "top",
+              "class": "walkthrough--top",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "bottom",
+              "class": "walkthrough--bottom",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "left",
+              "class": "walkthrough--left",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "right",
+              "class": "walkthrough--right",
+              "realized": false,
+              "isDefault": false,
+              "gap": false
+            },
+            {
+              "value": "auto",
+              "class": "walkthrough--auto",
+              "realized": false,
+              "isDefault": true,
+              "gap": false
+            }
+          ],
+          "realizedCount": 0,
+          "total": 5,
+          "fullyUnrealized": true,
+          "gaps": []
+        }
+      ]
+    }
+  ]
+}
