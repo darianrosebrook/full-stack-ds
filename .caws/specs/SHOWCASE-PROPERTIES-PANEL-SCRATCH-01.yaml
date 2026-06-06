@@ -7,12 +7,11 @@ created_at: '2026-06-06T01:54:23.708Z'
 updated_at: '2026-06-06T01:54:30.729Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - showcase-app (src/views, src/components, src/runtime, src/router, src/app)
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - src/views/PropertiesScratchView.tsx
     - src/components/properties-panel/
     - src/runtime/react-preview/
@@ -21,11 +20,21 @@ scope:
     - src/app.tsx
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - The scratch page is reachable only by URL (#/scratch/properties-panel) and is NOT added to the showcase Sidebar navigation; TracePanel's Properties tab is unchanged in this slice.
+  - The existing baked-props preview pipeline (buildReactDemo one-shot render, preview-props encode/decode) and the generated-artifact admission rail are byte-unchanged; the config channel is additive and opt-in via a query flag.
+  - The fsds:config channel only carries declared props (matching the component contract) and component-token CSS-custom-property overrides; it never rewrites contract resolvesTo bindings or persists edits to disk.
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'a component contract with variant axes, designed props, and a tokens sidecar (e.g. Button)'
+    when: 'control-derivation runs over it'
+    then: 'it yields variant-axis selects, typed prop controls (bool->toggle, number->stepper, enum/ref->select, string->text) and component-token rows, and tokenOverridesToCss emits exact CSS custom-property declarations of the form --fsds-NAME value (proven by unit tests).'
+  - id: A2
+    given: 'the config-mode preview iframe is mounted and has posted fsds:ready'
+    when: 'the parent posts an fsds:config message with new props and tokenOverrides'
+    then: 'the iframe re-renders the component with the merged props and applies the overrides via a style element with data-fsds=overrides, without a module rebuild (proven by a DOM/style assertion, not a mock).'
+  - id: A3
+    given: 'the running dev server at #/scratch/properties-panel'
+    when: 'a variant dropdown, a prop control, and a token swatch are changed, and a token is re-bound via the picker'
+    then: 'the live preview visibly updates for each, and the over-the-wire fsds:config payloads are captured as evidence (chrome-devtools screenshots + console payloads) for design sign-off before landing in TracePanel.'
 non_functional: {}
 contracts: []
