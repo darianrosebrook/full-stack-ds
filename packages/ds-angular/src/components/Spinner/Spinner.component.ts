@@ -9,7 +9,6 @@ import { NgClass } from "@angular/common";
 
 // @generated:start types
 export type SpinnerSize = "xs" | "sm" | "md" | "lg";
-export type SpinnerVariant = "ring" | "dots" | "bars";
 export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:end
 
@@ -29,7 +28,6 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 })
 export class SpinnerComponent {
   @Input() size?: SpinnerSize;
-  @Input() variant?: SpinnerVariant;
   @Input() thickness?: SpinnerThickness;
   @Input() ariaHidden?: boolean;
   @Input() label?: string;
@@ -41,7 +39,6 @@ export class SpinnerComponent {
     return [
       "spinner",
       this.size ? `spinner--${this.size}` : null,
-      this.variant ? `spinner--${this.variant}` : null,
       this.thickness ? `spinner--${this.thickness}` : null,
       this.class,
     ].filter(Boolean).join(" ");

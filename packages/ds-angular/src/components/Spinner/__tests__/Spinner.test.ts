@@ -44,24 +44,6 @@ describe("Spinner — unit", () => {
     expect(classTokens(fixture.componentInstance)).toContain("spinner--lg");
   });
 
-  it("applies variant=ring variant class", () => {
-    const fixture = TestBed.createComponent(SpinnerComponent);
-    fixture.componentInstance.variant = "ring";
-    expect(classTokens(fixture.componentInstance)).toContain("spinner--ring");
-  });
-
-  it("applies variant=dots variant class", () => {
-    const fixture = TestBed.createComponent(SpinnerComponent);
-    fixture.componentInstance.variant = "dots";
-    expect(classTokens(fixture.componentInstance)).toContain("spinner--dots");
-  });
-
-  it("applies variant=bars variant class", () => {
-    const fixture = TestBed.createComponent(SpinnerComponent);
-    fixture.componentInstance.variant = "bars";
-    expect(classTokens(fixture.componentInstance)).toContain("spinner--bars");
-  });
-
   it("applies thickness=hairline variant class", () => {
     const fixture = TestBed.createComponent(SpinnerComponent);
     fixture.componentInstance.thickness = "hairline";

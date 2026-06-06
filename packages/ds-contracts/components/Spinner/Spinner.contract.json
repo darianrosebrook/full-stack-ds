@@ -32,11 +32,6 @@
           "description": "Visual size token"
         },
         {
-          "name": "variant",
-          "propType": { "kind": "ref", "to": "SpinnerVariant" },
-          "description": "Visual variant: ring, dots, or bars"
-        },
-        {
           "name": "thickness",
           "propType": { "kind": "ref", "to": "SpinnerThickness" },
           "description": "Stroke thickness token"
@@ -74,14 +69,6 @@
         "lg"
       ]
     },
-    "SpinnerVariant": {
-      "kind": "union",
-      "values": [
-        "ring",
-        "dots",
-        "bars"
-      ]
-    },
     "SpinnerThickness": {
       "kind": "union",
       "values": [
@@ -97,11 +84,6 @@
       "sm",
       "md",
       "lg"
-    ],
-    "variant": [
-      "ring",
-      "dots",
-      "bars"
     ],
     "thickness": [
       "hairline",

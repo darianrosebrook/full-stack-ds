@@ -9,7 +9,6 @@
 
 // @generated:start types
 type SpinnerSize = "xs" | "sm" | "md" | "lg";
-type SpinnerVariant = "ring" | "dots" | "bars";
 type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:end
 
@@ -20,7 +19,6 @@ type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:start props
 interface Props {
   size?: SpinnerSize;
-  variant?: SpinnerVariant;
   thickness?: SpinnerThickness;
   ariaHidden?: boolean;
   label?: string;
@@ -29,7 +27,7 @@ interface Props {
   class?: string;
 }
 
-let { size, variant, thickness, ariaHidden, label, inline, showAfterMs, class: className }: Props = $props();
+let { size, thickness, ariaHidden, label, inline, showAfterMs, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -37,7 +35,6 @@ const classes = $derived(
   [
     "spinner",
     size ? `spinner--${size}` : null,
-    variant ? `spinner--${variant}` : null,
     thickness ? `spinner--${thickness}` : null,
     className,
   ].filter(Boolean).join(" ")

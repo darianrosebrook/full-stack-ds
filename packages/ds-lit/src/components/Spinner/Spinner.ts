@@ -9,7 +9,6 @@ import { property } from 'lit/decorators.js';
 
 // @generated:start types
 export type SpinnerSize = "xs" | "sm" | "md" | "lg";
-export type SpinnerVariant = "ring" | "dots" | "bars";
 export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:end
 
@@ -45,7 +44,6 @@ export class SpinnerElement extends LitElement {
       --fsds-spinner-thickness-bold: 4px;
       --fsds-spinner-color-accent: var(--fsds-semantic-color-background-accent, #d9292b);
       --fsds-spinner-color-track: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-spinner-dots-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-spinner-anim-duration: 800ms;
     }
     
@@ -54,7 +52,7 @@ export class SpinnerElement extends LitElement {
       padding-block-end: var(--fsds-box-model-padding-block-end);
       padding-inline-start: var(--fsds-box-model-padding-inline-start);
       padding-inline-end: var(--fsds-box-model-padding-inline-end);
-      gap: var(--fsds-spinner-dots-gap);
+      gap: var(--fsds-box-model-gap);
       width: var(--fsds-box-model-width);
       min-width: var(--fsds-box-model-min-width);
       max-width: var(--fsds-box-model-max-width);
@@ -115,7 +113,6 @@ export class SpinnerElement extends LitElement {
   `;
 
   @property({ type: String }) size?: SpinnerSize;
-  @property({ type: String }) variant?: SpinnerVariant;
   @property({ type: String }) thickness?: SpinnerThickness;
   @property({ attribute: 'aria-hidden', reflect: true })
   override ariaHidden: string | null = null;
@@ -127,7 +124,6 @@ export class SpinnerElement extends LitElement {
     return [
       "spinner",
       this.size ? `spinner--${this.size}` : null,
-      this.variant ? `spinner--${this.variant}` : null,
       this.thickness ? `spinner--${this.thickness}` : null,
     ].filter(Boolean).join(" ");
   }

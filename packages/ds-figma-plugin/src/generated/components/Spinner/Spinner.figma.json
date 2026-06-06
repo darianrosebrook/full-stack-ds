@@ -36,15 +36,6 @@
       "nodeKind": null
     },
     {
-      "name": "variant",
-      "safeName": "variant",
-      "type": "SpinnerVariant",
-      "required": false,
-      "description": "Visual variant: ring, dots, or bars",
-      "defaultExpr": null,
-      "nodeKind": null
-    },
-    {
       "name": "thickness",
       "safeName": "thickness",
       "type": "SpinnerThickness",
@@ -97,11 +88,6 @@
       "md",
       "lg"
     ],
-    "variant": [
-      "ring",
-      "dots",
-      "bars"
-    ],
     "thickness": [
       "hairline",
       "regular",
@@ -127,10 +113,6 @@
       {
         "propName": "size",
         "safeName": "size"
-      },
-      {
-        "propName": "variant",
-        "safeName": "variant"
       },
       {
         "propName": "thickness",
@@ -176,13 +158,12 @@
           "--fsds-spinner-thickness-bold": "4px",
           "--fsds-spinner-color-accent": "var(--fsds-semantic-color-background-accent, #d9292b)",
           "--fsds-spinner-color-track": "var(--fsds-semantic-color-border-subtle, #cecece)",
-          "--fsds-spinner-dots-gap": "var(--fsds-core-spacing-size-04, 8px)",
           "--fsds-spinner-anim-duration": "800ms",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
           "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
-          "gap": "var(--fsds-spinner-dots-gap)",
+          "gap": "var(--fsds-box-model-gap)",
           "width": "var(--fsds-box-model-width)",
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",

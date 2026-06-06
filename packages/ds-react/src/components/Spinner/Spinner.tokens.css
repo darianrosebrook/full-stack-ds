@@ -23,7 +23,6 @@
   --fsds-spinner-thickness-bold: 4px;
   --fsds-spinner-color-accent: var(--fsds-semantic-color-background-accent, #d9292b);
   --fsds-spinner-color-track: var(--fsds-semantic-color-border-subtle, #cecece);
-  --fsds-spinner-dots-gap: var(--fsds-core-spacing-size-04, 8px);
   --fsds-spinner-anim-duration: 800ms;
 }
 /* @generated:end */

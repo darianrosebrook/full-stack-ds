@@ -38,11 +38,6 @@
     "fallback": "#cecece",
     "layer": "semantic"
   },
-  "spinner.dots.gap": {
-    "resolvesTo": "core.spacing.size.04",
-    "fallback": "8px",
-    "layer": "core"
-  },
   "spinner.anim.duration": {
     "literal": "800ms"
   }

@@ -7,8 +7,10 @@
  *     Stat.trend, Select.size; Batch 2 (VARIANT-STYLE-SIZE-INTENT-BATCH-02)
  *     realized Spinner.size, Avatar.size, Stat.size and Progress.intent via
  *     per-value tokens — all now fully realized (regression lock for the fixes);
- *   - the canary remainder is still flagged: Spinner.variant (ring/dots/bars →
- *     contract decision);
+ *   - Spinner.variant (the ring/dots/bars overclaim) was REMOVED by
+ *     SPINNER-VARIANT-CONTRACT-DECISION-01 — the anatomy only ever rendered a
+ *     ring, so the prop/type/values were dropped; it is no longer a tracked axis
+ *     while Spinner.size + Spinner.thickness stay realized;
  *   - a fully-realized component (Button: `.button--primary` etc. scope vars in
  *     tokens.css) is NOT flagged (false-positive control);
  *   - a behavioral axis (Calendar `mode`, NavList `orientation`) has no styling
@@ -108,14 +110,16 @@ check("List.css/Image.css contain `.<prefix>--<axis>-<value>` and no bare collid
   assert.ok(!bareImage.test(imageCss), "Image.css authored a bare ambiguous colliding-axis selector");
 });
 
-console.log("\nstill unrealized — Spinner.variant (contract decision, dots/bars DOM vs constrain to ring):");
-for (const [c, d] of [["Spinner", "variant"]]) {
-  check(`${c}.${d} is still an unrealized axis`, () => {
-    const x = dim(c, d);
-    assert.ok(x, `no ${c}.${d} axis`);
-    assert.equal(x.realizedCount, 0, `realizedCount=${x.realizedCount} (expected 0)`);
-  });
-}
+console.log("\nSPINNER-VARIANT-CONTRACT-DECISION-01 — the dots/bars overclaim is removed (variant is no longer a tracked axis):");
+check("Spinner.variant no longer exists as a variant axis", () => {
+  assert.equal(dim("Spinner", "variant"), undefined, "Spinner.variant should be removed from the contract (constrained to the single ring morphology)");
+});
+check("Spinner keeps its realized size + thickness axes (no regression from the variant removal)", () => {
+  const size = dim("Spinner", "size");
+  const thickness = dim("Spinner", "thickness");
+  assert.ok(size && size.realizedCount >= 1 && size.gaps.length === 0, "Spinner.size regressed");
+  assert.ok(thickness && thickness.realizedCount >= 1 && thickness.gaps.length === 0, "Spinner.thickness regressed");
+});
 
 console.log("\nfalse-positive control — a fully-realized component is NOT flagged:");
 check("Button has no realization gaps (variants scope vars in tokens.css)", () => {
