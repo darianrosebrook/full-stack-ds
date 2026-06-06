@@ -19,6 +19,9 @@
   --fsds-progress-motion-duration-indeterminate: var(--fsds-core-motion-duration-extra-long1, 1500ms);
   --fsds-progress-color-track-background: var(--fsds-semantic-color-background-secondary, #efefef);
   --fsds-progress-color-fill-info: var(--fsds-semantic-color-status-info, #0a65fe);
+  --fsds-progress-color-fill-success: var(--fsds-semantic-color-status-success, #487e1e);
+  --fsds-progress-color-fill-warning: var(--fsds-semantic-color-status-warning, #ac5c00);
+  --fsds-progress-color-fill-danger: var(--fsds-semantic-color-status-danger, #d9292b);
 }
 /* @generated:end */
 

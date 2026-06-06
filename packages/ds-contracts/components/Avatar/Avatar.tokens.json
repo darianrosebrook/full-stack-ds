@@ -4,6 +4,26 @@
     "fallback": "16px",
     "layer": "core"
   },
+  "avatar.size.small": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "avatar.size.medium": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "avatar.size.large": {
+    "resolvesTo": "core.spacing.size.08",
+    "fallback": "32px",
+    "layer": "core"
+  },
+  "avatar.size.extra-large": {
+    "resolvesTo": "core.spacing.size.09",
+    "fallback": "48px",
+    "layer": "core"
+  },
   "avatar.size.radius.default": {
     "resolvesTo": "core.shape.radius.full",
     "fallback": "9999px",

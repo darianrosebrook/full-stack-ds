@@ -42,5 +42,15 @@
     "color": {
       "resolvesTo": "stat.color.foreground.trend.neutral"
     }
+  },
+  "--sm": {
+    "font-size": {
+      "resolvesTo": "stat.size.value.sm"
+    }
+  },
+  "--lg": {
+    "font-size": {
+      "resolvesTo": "stat.size.value.lg"
+    }
   }
 }

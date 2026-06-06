@@ -32,6 +32,14 @@
 .stat--neutral {
   color: var(--fsds-stat-color-foreground-trend-neutral);
 }
+
+.stat--sm {
+  font-size: var(--fsds-stat-size-value-sm);
+}
+
+.stat--lg {
+  font-size: var(--fsds-stat-size-value-lg);
+}
 /* @generated:end */
 
 /* @custom:start overrides */

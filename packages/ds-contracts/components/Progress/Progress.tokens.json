@@ -23,5 +23,20 @@
     "resolvesTo": "semantic.color.status.info",
     "fallback": "#0a65fe",
     "layer": "semantic"
+  },
+  "progress.color.fill.success": {
+    "resolvesTo": "semantic.color.status.success",
+    "fallback": "#487e1e",
+    "layer": "semantic"
+  },
+  "progress.color.fill.warning": {
+    "resolvesTo": "semantic.color.status.warning",
+    "fallback": "#ac5c00",
+    "layer": "semantic"
+  },
+  "progress.color.fill.danger": {
+    "resolvesTo": "semantic.color.status.danger",
+    "fallback": "#d9292b",
+    "layer": "semantic"
   }
 }

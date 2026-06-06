@@ -89,5 +89,21 @@
         "web"
       ]
     }
+  },
+  "--small": {
+    "width": { "resolvesTo": "avatar.size.small" },
+    "height": { "resolvesTo": "avatar.size.small" }
+  },
+  "--medium": {
+    "width": { "resolvesTo": "avatar.size.medium" },
+    "height": { "resolvesTo": "avatar.size.medium" }
+  },
+  "--large": {
+    "width": { "resolvesTo": "avatar.size.large" },
+    "height": { "resolvesTo": "avatar.size.large" }
+  },
+  "--extra-large": {
+    "width": { "resolvesTo": "avatar.size.extra-large" },
+    "height": { "resolvesTo": "avatar.size.extra-large" }
   }
 }

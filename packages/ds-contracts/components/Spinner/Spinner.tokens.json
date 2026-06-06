@@ -1,6 +1,23 @@
 {
+  "spinner.size.xs": {
+    "resolvesTo": "semantic.glyph.size.small.extent",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "spinner.size.sm": {
+    "resolvesTo": "core.icon.size.sm",
+    "fallback": "16px",
+    "layer": "core"
+  },
   "spinner.size.md": {
-    "literal": "20px"
+    "resolvesTo": "core.icon.size.md",
+    "fallback": "20px",
+    "layer": "core"
+  },
+  "spinner.size.lg": {
+    "resolvesTo": "core.icon.size.lg",
+    "fallback": "24px",
+    "layer": "core"
   },
   "spinner.thickness.hairline": {
     "literal": "2px"
