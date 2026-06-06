@@ -17,6 +17,10 @@
   align-items: center;
   cursor: pointer;
   position: relative;
+
+  &:has(.switch__input:checked) .switch__thumb {
+    translate: var(--fsds-switch-size-md-thumb-translate-on);
+  }
 }
 
 .switch__track {
@@ -60,10 +64,6 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-:has(.switch__input:checked) .switch__thumb {
-  translate: var(--fsds-switch-size-md-thumb-translate-on);
 }
 
 .switch--sm .switch__track {

@@ -45,18 +45,18 @@
   --fsds-switch-size-md-thumb-translate-on: 24px;
   --fsds-switch-size-lg-thumb-translate-off: 0;
   --fsds-switch-size-lg-thumb-translate-on: 36px;
-}
 
-:has(.switch__input:checked) .switch__track {
-  --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d9292b);
-}
+  &:has(.switch__input:checked) .switch__track {
+    --fsds-switch-color-track-background-default: var(--fsds-semantic-color-foreground-accent, #d9292b);
+  }
 
-:has(.switch__input:checked) .switch__thumb {
-  --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
-}
+  &:has(.switch__input:checked) .switch__thumb {
+    --fsds-switch-color-thumb-background-default: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+  }
 
-:has(.switch__input:disabled) .switch__track {
-  --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #efefef);
+  &:has(.switch__input:disabled) .switch__track {
+    --fsds-switch-color-track-background-default: var(--fsds-semantic-color-background-disabled, #efefef);
+  }
 }
 /* @generated:end */
 

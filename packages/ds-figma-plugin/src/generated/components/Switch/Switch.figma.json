@@ -324,20 +324,20 @@
         }
       },
       {
-        "selector": ":has(.switch__input:checked) .switch__track",
+        "selector": ".switch:has(.switch__input:checked) .switch__track",
         "declarations": {
           "--fsds-switch-color-track-background-default": "var(--fsds-semantic-color-foreground-accent, #d9292b)"
         }
       },
       {
-        "selector": ":has(.switch__input:checked) .switch__thumb",
+        "selector": ".switch:has(.switch__input:checked) .switch__thumb",
         "declarations": {
           "translate": "var(--fsds-switch-size-md-thumb-translate-on)",
           "--fsds-switch-color-thumb-background-default": "var(--fsds-semantic-color-foreground-on-brand, #ffffff)"
         }
       },
       {
-        "selector": ":has(.switch__input:disabled) .switch__track",
+        "selector": ".switch:has(.switch__input:disabled) .switch__track",
         "declarations": {
           "--fsds-switch-color-track-background-default": "var(--fsds-semantic-color-background-disabled, #efefef)"
         }
