@@ -1,0 +1,40 @@
+id: VARIANT-STYLE-LIST-IMAGE-REALIZATION-01
+title: 'Realize List (size/spacing/marker/variant) + Image (size/radius) visuals exclusively via the new namespaced selectors'
+risk_tier: 3
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-06T04:57:56.510Z'
+updated_at: '2026-06-06T04:57:56.510Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/List/'
+    - 'packages/ds-contracts/components/Image/'
+    - 'packages/ds-react/src/components/List/'
+    - 'packages/ds-react/src/components/Image/'
+    - 'packages/ds-vue/src/components/List/'
+    - 'packages/ds-vue/src/components/Image/'
+    - 'packages/ds-svelte/src/components/List/'
+    - 'packages/ds-svelte/src/components/Image/'
+    - 'packages/ds-angular/src/components/List/'
+    - 'packages/ds-angular/src/components/Image/'
+    - 'packages/ds-lit/src/components/List/'
+    - 'packages/ds-lit/src/components/Image/'
+    - 'packages/ds-figma-plugin/src/generated/components/List/'
+    - 'packages/ds-figma-plugin/src/generated/components/Image/'
+    - 'scripts/variant-style-audit/'
+    - 'docs/variant-style-audit/'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
