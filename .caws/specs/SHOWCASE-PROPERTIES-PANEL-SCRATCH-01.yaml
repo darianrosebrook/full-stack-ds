@@ -2,10 +2,11 @@ id: SHOWCASE-PROPERTIES-PANEL-SCRATCH-01
 title: 'Scratch-page Figma-style properties panel with config-over-the-wire postMessage live render'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
-worktree: props-panel-scratch
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge props-panel-scratch at 45047c71acaff7666c418fb13212d3279f59dd45'
 created_at: '2026-06-06T01:54:23.708Z'
-updated_at: '2026-06-06T01:54:30.729Z'
+updated_at: '2026-06-06T06:20:22.485Z'
 blast_radius:
   modules:
     - showcase-app (src/views, src/components, src/runtime, src/router, src/app)
