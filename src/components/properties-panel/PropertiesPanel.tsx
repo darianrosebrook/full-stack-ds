@@ -19,11 +19,18 @@ import { useState } from "react";
 import type { ComponentBundle, FoundationToken } from "../../types/data";
 import {
   deriveControls,
+  resolveBoxModel,
+  resolveFillColor,
+  boxModelRolePathPattern,
+  FILL_PATH_PATTERN,
+  type BoxModelRole,
   type ControlDescriptor,
   type TokenRowDescriptor,
 } from "./control-derivation";
 import { TokenPicker, type TokenPick } from "./TokenPicker";
+import { TokenValueControl } from "./TokenValueControl";
 import { BoxModelEditor } from "./BoxModelEditor";
+import { PropertySection } from "./PropertySection";
 import "./properties-panel.css";
 
 export interface PropertiesPanelProps {
@@ -175,9 +182,52 @@ export function PropertiesPanel({
   const [pickerSlot, setPickerSlot] = useState<string | null>(null);
   const pickerRow = tokens.find((t) => t.slot === pickerSlot) ?? null;
 
+  // Role-resolved tokens for the Layout / Shape / Fill sections. Each maps to
+  // the contract token that serves that role (match-by-use), discovered the same
+  // way the box-model roles are — never hardcoded to a component.
+  const byRole = new Map<BoxModelRole, TokenRowDescriptor>(
+    resolveBoxModel(tokens).map((b) => [b.role, b.row]),
+  );
+  const widthRow = byRole.get("min-width");
+  const heightRow = byRole.get("min-height");
+  const radiusRow = byRole.get("radius");
+  const fillRow = resolveFillColor(tokens);
+  const hasLayout = !!(widthRow || heightRow);
+
   function applyPick(pick: TokenPick) {
     if (pickerSlot) onTokenChange(pickerSlot, pick.value);
     setPickerSlot(null);
+  }
+
+  /** The effective value for a token row: override → fallback → "". */
+  function rowValue(row: TokenRowDescriptor): string {
+    return tokenValues[row.slot] ?? row.fallback ?? "";
+  }
+  /** A row is token-linked (◆) when it resolvesTo and has no raw override. */
+  function rowLinked(row: TokenRowDescriptor): boolean {
+    return !!row.resolvesTo && !(row.slot in tokenValues);
+  }
+
+  /** Render a (non-compact) TokenValueControl for a resolved token row. */
+  function tokenField(
+    row: TokenRowDescriptor,
+    title: string,
+    opts: { kind?: "dimension" | "color"; pathPattern?: RegExp } = {},
+  ) {
+    const kind = opts.kind ?? (row.isColor ? "color" : "dimension");
+    return (
+      <TokenValueControl
+        kind={kind}
+        title={title}
+        label={row.slot}
+        value={rowValue(row)}
+        linked={rowLinked(row)}
+        onChange={(v) => onTokenChange(row.slot, v)}
+        onBindToken={(pick) => onTokenChange(row.slot, pick.value)}
+        foundationTokens={foundationTokens}
+        pathPattern={opts.pathPattern}
+      />
+    );
   }
 
   return (
@@ -187,8 +237,7 @@ export function PropertiesPanel({
         <span className="fsds-pp__layer">{component.contract.layer}</span>
       </div>
 
-      <section className="fsds-pp__section" aria-label="Box model">
-        <h3 className="fsds-pp__section-title">Box model</h3>
+      <PropertySection title="Box model">
         <BoxModelEditor
           tokens={tokens}
           values={tokenValues}
@@ -196,11 +245,10 @@ export function PropertiesPanel({
           onBindToken={(slot, pick) => onTokenChange(slot, pick.value)}
           foundationTokens={foundationTokens}
         />
-      </section>
+      </PropertySection>
 
       {variantAxes.length > 0 && (
-        <section className="fsds-pp__section" aria-label="Variants">
-          <h3 className="fsds-pp__section-title">Variants</h3>
+        <PropertySection title="Variants">
           {variantAxes.map((axis) => (
             <div className="fsds-pp__field" key={axis.name}>
               <label className="fsds-pp__label">{axis.label}</label>
@@ -211,12 +259,11 @@ export function PropertiesPanel({
               />
             </div>
           ))}
-        </section>
+        </PropertySection>
       )}
 
       {props.length > 0 && (
-        <section className="fsds-pp__section" aria-label="Properties">
-          <h3 className="fsds-pp__section-title">Properties</h3>
+        <PropertySection title="Properties">
           {props.map((control) => (
             <div className="fsds-pp__field" key={control.name}>
               <label className="fsds-pp__label" title={control.description}>
@@ -229,12 +276,63 @@ export function PropertiesPanel({
               />
             </div>
           ))}
-        </section>
+        </PropertySection>
+      )}
+
+      {hasLayout && (
+        <PropertySection title="Layout">
+          <div className="fsds-pp__wh">
+            {widthRow && (
+              <div className="fsds-pp__wh-field">
+                <span className="fsds-pp__wh-label" aria-hidden>W</span>
+                {tokenField(widthRow, "Width", {
+                  kind: "dimension",
+                  pathPattern: boxModelRolePathPattern("min-width"),
+                })}
+              </div>
+            )}
+            {heightRow && (
+              <div className="fsds-pp__wh-field">
+                <span className="fsds-pp__wh-label" aria-hidden>H</span>
+                {tokenField(heightRow, "Height", {
+                  kind: "dimension",
+                  pathPattern: boxModelRolePathPattern("min-height"),
+                })}
+              </div>
+            )}
+          </div>
+        </PropertySection>
+      )}
+
+      {radiusRow && (
+        <PropertySection title="Shape">
+          <div className="fsds-pp__wh">
+            <div className="fsds-pp__wh-field">
+              <span className="fsds-pp__wh-label fsds-pp__wh-label--icon" aria-hidden>
+                ⌜⌟
+              </span>
+              {tokenField(radiusRow, "Corner radius", {
+                kind: "dimension",
+                pathPattern: boxModelRolePathPattern("radius"),
+              })}
+            </div>
+          </div>
+        </PropertySection>
+      )}
+
+      {fillRow && (
+        <PropertySection title="Fill">
+          <div className="fsds-pp__fill-row">
+            {tokenField(fillRow, "Fill", {
+              kind: "color",
+              pathPattern: FILL_PATH_PATTERN,
+            })}
+          </div>
+        </PropertySection>
       )}
 
       {tokens.length > 0 && (
-        <section className="fsds-pp__section" aria-label="Component tokens">
-          <h3 className="fsds-pp__section-title">Component tokens</h3>
+        <PropertySection title="Component tokens" defaultOpen={false}>
           {tokens.map((row) => (
             <div className="fsds-pp__field fsds-pp__field--token" key={row.slot}>
               <label className="fsds-pp__label fsds-pp__label--token" title={row.resolvesTo}>
@@ -248,7 +346,7 @@ export function PropertiesPanel({
               />
             </div>
           ))}
-        </section>
+        </PropertySection>
       )}
 
       {pickerRow && (

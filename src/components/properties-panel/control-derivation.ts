@@ -344,6 +344,8 @@ export type BoxModelRole =
   | "gap"
   | "min-width"
   | "max-width"
+  | "min-height"
+  | "max-height"
   | "radius"
   | "border";
 
@@ -364,6 +366,8 @@ const ROLE_MATCHERS: Record<BoxModelRole, RegExp[]> = {
   gap: [/(^|\.)gap$/, /(^|\.)gap\./],
   "min-width": [/(^|\.)min-width$/, /(^|\.)minwidth/],
   "max-width": [/(^|\.)max-width$/, /(^|\.)maxwidth/, /\.size\..*\.width$/],
+  "min-height": [/(^|\.)min-height$/, /(^|\.)minheight/],
+  "max-height": [/(^|\.)max-height$/, /(^|\.)maxheight/, /\.size\..*\.height$/],
   radius: [/(^|\.)radius$/, /(^|\.)radius\b/, /\.radius\./],
   border: [/(^|\.)border$/, /\.size\.border$/, /\.border\.width$/],
 };
@@ -406,9 +410,12 @@ const ROLE_PATH_PATTERNS: Record<BoxModelRole, RegExp> = {
   "padding-left": /\bspacing\b/i,
   "padding-right": /\bspacing\b/i,
   gap: /\bspacing\b/i,
-  // sizing scale for widths — spacing.size or a size.* family, not radius/color
+  // sizing scale for widths/heights — spacing.size or a size.* family, not
+  // radius/color
   "min-width": /\b(spacing|size|dimension)\b/i,
   "max-width": /\b(spacing|size|dimension|maxwidth|measure)\b/i,
+  "min-height": /\b(spacing|size|dimension)\b/i,
+  "max-height": /\b(spacing|size|dimension)\b/i,
   radius: /shape\.radius\b/i,
   border: /border\.width\b/i,
 };
@@ -420,4 +427,40 @@ const ROLE_PATH_PATTERNS: Record<BoxModelRole, RegExp> = {
  */
 export function boxModelRolePathPattern(role: BoxModelRole): RegExp {
   return ROLE_PATH_PATTERNS[role];
+}
+
+// ---- Fill / color role resolution -----------------------------------------
+//
+// The Fill section edits the component's primary surface color. As with the
+// box-model roles, the slot name varies per component (`button.color.background
+// .default`, `dialog.color.background.default`, …) so we DISCOVER the default
+// background color token by pattern rather than hardcoding. Preference order:
+// an explicit "background.default" slot, then any "background" color slot, then
+// the first color-valued token. Returns null when the component has no color
+// token (e.g. a pure layout primitive).
+
+/** The token-path family the Fill picker rebinds within (color tokens). */
+export const FILL_PATH_PATTERN = /\bcolor\b/i;
+
+const FILL_MATCHERS: RegExp[] = [
+  /(^|\.)background\.default$/,
+  /(^|\.)color\.background\.default$/,
+  /(^|\.)background\b/,
+  /(^|\.)fill\b/,
+];
+
+/**
+ * Resolve the component's primary fill (background) color token row. Only rows
+ * whose value reads as a color qualify. Used by the Fill section. Pure
+ * projection over deriveControls(contract).tokens.
+ */
+export function resolveFillColor(
+  tokens: TokenRowDescriptor[],
+): TokenRowDescriptor | null {
+  const colorRows = tokens.filter((t) => t.isColor);
+  for (const re of FILL_MATCHERS) {
+    const hit = colorRows.find((t) => re.test(t.slot.toLowerCase()));
+    if (hit) return hit;
+  }
+  return colorRows[0] ?? null;
 }

@@ -41,11 +41,140 @@
 
 .fsds-pp__section-title, .fsds-tvc__section-title {
   margin: 0;
-  font-size: var(--fsds-core-typography-ramp-1, 11px);
-  font-weight: 600;
-  text-transform: uppercase;
+  font-size: var(--fsds-core-typography-ramp-2, 11px);
+  font-weight: 600; 
   letter-spacing: 0.04em;
-  color: var(--fsds-semantic-color-foreground-secondary);
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+
+/* ---- Collapsible PropertySection (accordion) ---- */
+
+.fsds-ps {
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-ps__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  padding: var(--fsds-core-spacing-size-04, 8px) var(--fsds-core-spacing-size-05, 12px);
+}
+
+.fsds-ps__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  flex: 1;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--fsds-semantic-color-foreground-primary);
+  cursor: pointer;
+}
+
+.fsds-ps__chevron {
+  display: inline-flex;
+  width: 0.9rem;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  transition: transform 0.15s ease;
+  transform: rotate(-90deg); /* collapsed → pointing right */
+}
+
+.fsds-ps--open .fsds-ps__chevron {
+  transform: rotate(0deg); /* open → pointing down */
+}
+
+.fsds-ps__title {
+  margin: 0;
+  font-size: var(--fsds-core-typography-ramp-3, 14px);
+  font-weight: 600;
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+
+.fsds-ps__action {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* grid-rows 0fr → 1fr animates to intrinsic content height with no JS measure */
+.fsds-ps__collapser {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease;
+}
+
+.fsds-ps--open .fsds-ps__collapser {
+  grid-template-rows: 1fr;
+}
+
+.fsds-ps__collapser-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.fsds-ps__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  padding: 0 var(--fsds-core-spacing-size-05, 12px) var(--fsds-core-spacing-size-05, 12px);
+}
+
+/* ---- Layout / Shape: W·H pill fields (icon-label + value) ---- */
+
+.fsds-pp__wh {
+  display: flex;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  flex-wrap: wrap;
+}
+
+.fsds-pp__wh-field {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-02, 4px);
+  flex: 1 1 0;
+  min-width: 6rem;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 8px;
+}
+
+.fsds-pp__wh-label {
+  width: 1rem;
+  flex: none;
+  text-align: center;
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__wh-label--icon {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+}
+
+/* The value control inside a W·H field is borderless (the field is the chrome) */
+.fsds-pp__wh-field .fsds-tvc__trigger {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  flex: 1;
+}
+.fsds-pp__wh-field .fsds-tvc__trigger:hover {
+  background: transparent;
+  border: none;
+}
+
+.fsds-pp__fill-row {
+  display: flex;
+}
+.fsds-pp__fill-row .fsds-tvc__trigger {
+  width: 100%;
+  justify-content: flex-start;
 }
 
 /* Two-column label → control grid, like Figma's variant rows. */

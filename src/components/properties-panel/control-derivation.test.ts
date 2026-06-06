@@ -9,6 +9,7 @@ import {
   resolvesToCssVar,
   resolveBoxModel,
   boxModelRolePathPattern,
+  resolveFillColor,
 } from "./control-derivation";
 import type { ComponentContract, TokenDefinition } from "../../types/data";
 
@@ -192,6 +193,34 @@ describe("resolveBoxModel", () => {
     const { tokens } = deriveControls(loadContract("Button"));
     const slots = resolveBoxModel(tokens).map((b) => b.row.slot);
     expect(new Set(slots).size).toBe(slots.length);
+  });
+
+  it("resolves min-height for the Layout H field", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const byRole = Object.fromEntries(
+      resolveBoxModel(tokens).map((b) => [b.role, b.row.slot]),
+    );
+    expect(byRole["min-height"]).toBe("box-model.min-height");
+    expect(byRole["min-width"]).toBe("box-model.min-width");
+  });
+});
+
+describe("resolveFillColor", () => {
+  it("resolves Button's primary background color token (background.default)", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const fill = resolveFillColor(tokens);
+    expect(fill?.slot).toBe("button.color.background.default");
+    expect(fill?.isColor).toBe(true);
+    expect(fill?.fallback?.startsWith("#")).toBe(true);
+    console.log("Button fill:", JSON.stringify(fill, null, 2));
+  });
+
+  it("returns null for a component with no color tokens", () => {
+    // A synthetic token set with only dimensions → no fill.
+    const dims = [
+      { slot: "box-model.gap", fallback: "8px", isColor: false, cssVar: "--x" },
+    ] as Parameters<typeof resolveFillColor>[0];
+    expect(resolveFillColor(dims)).toBeNull();
   });
 });
 
