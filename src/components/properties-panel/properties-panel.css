@@ -329,26 +329,29 @@
   background: var(--fsds-semantic-color-background-elevated);
 }
 
-/* Compact trigger = a bare text label that sits ON the box-model zones, so the
-   colored zones show through (matches the Figma: values are plain 8px text, not
-   chips). No background/border at rest; a faint hover ring shows it's editable. */
+/* Compact trigger = a small INPUT-like chip that sits on the box-model zones.
+   It needs a subtle surface + border to read as an editable value against the
+   colored zone (our values — "8", "12", "9999" — are wider than the reference's
+   single "0"s, so bare transparent text would float ambiguously). Sized tight
+   to content, centered on the property it controls. */
 .fsds-tvc__trigger--compact {
-  padding: 1px 2px;
+  padding: 1px 4px;
   gap: 2px;
-  border-radius: 3px;
-  background: transparent;
-  border-color: transparent;
+  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
   font-size: 9px;
-  line-height: 1.2;
-  color: #1a1a1a; /* dark text reads on the light cyan/green/pink zones */
+  line-height: 1.3;
+  color: #1a1a1a;
   width: auto;
   min-width: 1ch;
   justify-content: center;
 }
 
 .fsds-tvc__trigger--compact:hover {
-  background: color-mix(in srgb, white 55%, transparent);
-  outline: 1px solid color-mix(in srgb, black 25%, transparent);
+  border-color: rgba(0, 0, 0, 0.35);
+  background: #fff;
 }
 
 /* The ◇ on a compact (on-zone) trigger is tiny and dark to stay legible. */
@@ -373,6 +376,12 @@
   box-shadow: none;
   width: auto;
   height: auto;
+  /* The DS .popover anchor carries min-width:64px + padding:16px by default,
+     which is what was bloating each on-zone value to a 64x50 hitbox that
+     overlapped the diagram. Collapse it to its content. */
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
 }
 
 .fsds-tvc__swatch {
@@ -554,8 +563,8 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 136px;
-  height: 66px;
+  width: 118px;
+  height: 44px;
   border-radius: 4px;
   background: #ffffff; /* opaque white */
   border: 1px dashed #aaa;
@@ -574,17 +583,18 @@
   font-size: 8px;
 }
 
-/* padding value labels — centered ON each edge of the GREEN padding zone, just
-   inside it (reference: padding values sit on the green band, not the cyan). */
+/* padding value labels — centered on each edge of the GREEN padding zone,
+   sitting in the band BETWEEN the green edge and the white center card so each
+   value clearly belongs to the padding side it controls (not piled on center).
+   Positioned relative to the green pad-zone (its containing block). */
 .fsds-bme__pad {
   position: absolute;
   z-index: 14;
 }
-/* positioned relative to the green pad-zone (its containing block) */
-.fsds-bme__pad--top { top: 3px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__pad--bottom { bottom: 3px; left: 50%; transform: translateX(-50%); }
-.fsds-bme__pad--left { left: 5px; top: 50%; transform: translateY(-50%); }
-.fsds-bme__pad--right { right: 5px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--top { top: 4px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--bottom { bottom: 4px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--left { left: 4px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--right { right: 4px; top: 50%; transform: translateY(-50%); }
 
 /* border value labels — bare text on the cyan-box edges (between the cyan edge
    and the green zone). Reference: top ~10% / bottom ~90% / sides mid. */
