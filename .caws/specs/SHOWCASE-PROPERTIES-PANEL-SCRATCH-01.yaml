@@ -4,7 +4,7 @@ risk_tier: 3
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-06T01:54:23.708Z'
-updated_at: '2026-06-06T01:54:23.708Z'
+updated_at: '2026-06-06T01:54:30.729Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,6 +13,12 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
+    - src/views/PropertiesScratchView.tsx
+    - src/components/properties-panel/
+    - src/runtime/react-preview/
+    - src/runtime/FrameworkPreview.tsx
+    - src/router.tsx
+    - src/app.tsx
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
