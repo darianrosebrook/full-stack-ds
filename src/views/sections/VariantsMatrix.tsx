@@ -31,17 +31,15 @@ export function VariantsMatrix({
   const keys = Object.keys(variants);
   const reactSource = component.sources.react;
 
-  // Live token-override CSS, appended after the global tokens so it wins. Uses
-  // the derived token rows so each override also targets its resolvesTo semantic
-  // var (variant rules re-derive the slot var — see tokenOverridesToCss).
+  // Live token-override CSS, injected into each preview iframe AFTER load (via
+  // FrameworkPreview.overrideCss) so it re-skins without reloading the cell.
+  // Uses the derived token rows so each override also targets its resolvesTo
+  // semantic var (variant rules re-derive the slot var — see tokenOverridesToCss).
   const { tokens } = deriveControls(component.contract);
   const overrideCss =
     tokenOverrides && Object.keys(tokenOverrides).length > 0
       ? tokenOverridesToCss(tokenOverrides, tokens)
       : "";
-  const previewTokensCss = overrideCss
-    ? `${bundle.tokensCss}\n${overrideCss}`
-    : bundle.tokensCss;
 
   if (keys.length === 0) return null;
 
@@ -74,7 +72,8 @@ export function VariantsMatrix({
                     componentName={component.name}
                     componentSource={reactSource.component}
                     css={reactSource.css}
-                    tokensCss={previewTokensCss}
+                    tokensCss={bundle.tokensCss}
+                    overrideCss={overrideCss}
                     demo={buildReactDemo(component, props)}
                     height={120}
                     interactive={false}
