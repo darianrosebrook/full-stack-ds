@@ -31,8 +31,8 @@ export type ListSize = "sm" | "md" | "lg";
 })
 export class ListComponent {
   @Input() as?: ListElement;
-  @Input() variant?: ListVariant;
-  @Input() marker?: ListMarker;
+  @Input() variant?: ListVariant = "default";
+  @Input() marker?: ListMarker = "default";
   @Input() spacing?: ListSpacing;
   @Input() size?: ListSize;
   @Input() class?: string;

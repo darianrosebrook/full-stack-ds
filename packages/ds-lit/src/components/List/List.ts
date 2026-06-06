@@ -41,7 +41,13 @@ export class ListElement extends LitElement {
       --fsds-list-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-list-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-list-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-list-size-sm: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-list-size-md: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-list-size-lg: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-list-spacing-none: var(--fsds-core-spacing-size-00, 0px);
+      --fsds-list-spacing-sm: var(--fsds-core-spacing-size-04, 8px);
       --fsds-list-spacing-md: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-list-spacing-lg: var(--fsds-core-spacing-size-07, 24px);
     }
     
     .list {
@@ -60,11 +66,90 @@ export class ListElement extends LitElement {
       border-color: var(--fsds-list-color-border-default);
       padding: var(--fsds-list-size-padding-default);
     }
+    
+    .list--size-sm {
+      font-size: var(--fsds-list-size-sm);
+    }
+    
+    .list--size-md {
+      font-size: var(--fsds-list-size-md);
+    }
+    
+    .list--size-lg {
+      font-size: var(--fsds-list-size-lg);
+    }
+    
+    .list--spacing-none > * + * {
+      margin-block-start: var(--fsds-list-spacing-none);
+    }
+    
+    .list--spacing-sm > * + * {
+      margin-block-start: var(--fsds-list-spacing-sm);
+    }
+    
+    .list--spacing-md > * + * {
+      margin-block-start: var(--fsds-list-spacing-md);
+    }
+    
+    .list--spacing-lg > * + * {
+      margin-block-start: var(--fsds-list-spacing-lg);
+    }
+    
+    .list--marker-none {
+      list-style-type: none;
+    }
+    
+    .list--marker-disc {
+      list-style-type: disc;
+    }
+    
+    .list--marker-circle {
+      list-style-type: circle;
+    }
+    
+    .list--marker-square {
+      list-style-type: square;
+    }
+    
+    .list--marker-decimal {
+      list-style-type: decimal;
+    }
+    
+    .list--marker-alpha {
+      list-style-type: lower-alpha;
+    }
+    
+    .list--marker-roman {
+      list-style-type: lower-roman;
+    }
+    
+    .list--variant-unstyled {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .list--variant-inline {
+      display: flex;
+      flex-direction: row;
+      list-style: none;
+      gap: var(--fsds-list-spacing-md);
+    }
+    
+    .list--variant-divided > * + * {
+      border-block-start-width: 1px;
+      border-block-start-style: solid;
+      border-block-start-color: var(--fsds-list-color-border-default);
+    }
+    
+    .list--variant-spaced > * {
+      margin-block: var(--fsds-list-spacing-lg);
+    }
   `;
 
   @property({ type: String }) as?: ListAs;
-  @property({ type: String }) variant?: ListVariant;
-  @property({ type: String }) marker?: ListMarker;
+  @property({ type: String }) variant?: ListVariant = "default";
+  @property({ type: String }) marker?: ListMarker = "default";
   @property({ type: String }) spacing?: ListSpacing;
   @property({ type: String }) size?: ListSize;
 

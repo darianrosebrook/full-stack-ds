@@ -17,7 +17,13 @@
   --fsds-list-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-list-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
   --fsds-list-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-list-size-sm: var(--fsds-semantic-typography-body-03, 14px);
+  --fsds-list-size-md: var(--fsds-semantic-typography-body-02, 16px);
+  --fsds-list-size-lg: var(--fsds-semantic-typography-body-01, 18px);
+  --fsds-list-spacing-none: var(--fsds-core-spacing-size-00, 0px);
+  --fsds-list-spacing-sm: var(--fsds-core-spacing-size-04, 8px);
   --fsds-list-spacing-md: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-list-spacing-lg: var(--fsds-core-spacing-size-07, 24px);
 }
 /* @generated:end */
 

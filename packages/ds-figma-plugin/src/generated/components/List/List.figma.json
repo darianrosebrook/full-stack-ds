@@ -33,7 +33,7 @@
       "type": "ListVariant",
       "required": false,
       "description": "Visual variant",
-      "defaultExpr": null,
+      "defaultExpr": "\"default\"",
       "nodeKind": null
     },
     {
@@ -42,7 +42,7 @@
       "type": "ListMarker",
       "required": false,
       "description": "Marker style for ordered/unordered lists",
-      "defaultExpr": null,
+      "defaultExpr": "\"default\"",
       "nodeKind": null
     },
     {
@@ -122,11 +122,13 @@
       {
         "propName": "variant",
         "safeName": "variant",
+        "defaultExpr": "\"default\"",
         "valuePrefix": "variant-"
       },
       {
         "propName": "marker",
         "safeName": "marker",
+        "defaultExpr": "\"default\"",
         "valuePrefix": "marker-"
       },
       {
@@ -181,7 +183,13 @@
           "--fsds-list-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-list-color-border-default": "var(--fsds-semantic-color-border-subtle, #cecece)",
           "--fsds-list-size-padding-default": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-list-size-sm": "var(--fsds-semantic-typography-body-03, 14px)",
+          "--fsds-list-size-md": "var(--fsds-semantic-typography-body-02, 16px)",
+          "--fsds-list-size-lg": "var(--fsds-semantic-typography-body-01, 18px)",
+          "--fsds-list-spacing-none": "var(--fsds-core-spacing-size-00, 0px)",
+          "--fsds-list-spacing-sm": "var(--fsds-core-spacing-size-04, 8px)",
           "--fsds-list-spacing-md": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-list-spacing-lg": "var(--fsds-core-spacing-size-07, 24px)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -196,6 +204,121 @@
           "color": "var(--fsds-list-color-foreground-primary)",
           "border-color": "var(--fsds-list-color-border-default)",
           "padding": "var(--fsds-list-size-padding-default)"
+        }
+      },
+      {
+        "selector": ".list--size-sm",
+        "declarations": {
+          "font-size": "var(--fsds-list-size-sm)"
+        }
+      },
+      {
+        "selector": ".list--size-md",
+        "declarations": {
+          "font-size": "var(--fsds-list-size-md)"
+        }
+      },
+      {
+        "selector": ".list--size-lg",
+        "declarations": {
+          "font-size": "var(--fsds-list-size-lg)"
+        }
+      },
+      {
+        "selector": ".list--spacing-none > * + *",
+        "declarations": {
+          "margin-block-start": "var(--fsds-list-spacing-none)"
+        }
+      },
+      {
+        "selector": ".list--spacing-sm > * + *",
+        "declarations": {
+          "margin-block-start": "var(--fsds-list-spacing-sm)"
+        }
+      },
+      {
+        "selector": ".list--spacing-md > * + *",
+        "declarations": {
+          "margin-block-start": "var(--fsds-list-spacing-md)"
+        }
+      },
+      {
+        "selector": ".list--spacing-lg > * + *",
+        "declarations": {
+          "margin-block-start": "var(--fsds-list-spacing-lg)"
+        }
+      },
+      {
+        "selector": ".list--marker-none",
+        "declarations": {
+          "list-style-type": "none"
+        }
+      },
+      {
+        "selector": ".list--marker-disc",
+        "declarations": {
+          "list-style-type": "disc"
+        }
+      },
+      {
+        "selector": ".list--marker-circle",
+        "declarations": {
+          "list-style-type": "circle"
+        }
+      },
+      {
+        "selector": ".list--marker-square",
+        "declarations": {
+          "list-style-type": "square"
+        }
+      },
+      {
+        "selector": ".list--marker-decimal",
+        "declarations": {
+          "list-style-type": "decimal"
+        }
+      },
+      {
+        "selector": ".list--marker-alpha",
+        "declarations": {
+          "list-style-type": "lower-alpha"
+        }
+      },
+      {
+        "selector": ".list--marker-roman",
+        "declarations": {
+          "list-style-type": "lower-roman"
+        }
+      },
+      {
+        "selector": ".list--variant-unstyled",
+        "declarations": {
+          "list-style": "none",
+          "padding": "0",
+          "margin": "0"
+        }
+      },
+      {
+        "selector": ".list--variant-inline",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "row",
+          "list-style": "none",
+          "gap": "var(--fsds-list-spacing-md)"
+        }
+      },
+      {
+        "selector": ".list--variant-divided > * + *",
+        "declarations": {
+          "border-block-start-width": "1px",
+          "border-block-start-style": "solid",
+          "border-block-start-color": "var(--fsds-list-color-border-default)"
+        }
+      },
+      {
+        "selector": ".list--variant-spaced > *",
+        "declarations": {
+          "margin-block": "var(--fsds-list-spacing-lg)"
         }
       }
     ],

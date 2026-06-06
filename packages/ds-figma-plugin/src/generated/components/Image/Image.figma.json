@@ -253,6 +253,16 @@
           "--fsds-image-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-image-size-icon": "var(--fsds-core-spacing-size-08, 32px)",
           "--fsds-image-typography-error-fontSize": "var(--fsds-semantic-typography-body-04, 12px)",
+          "--fsds-image-size-xs": "24px",
+          "--fsds-image-size-sm": "32px",
+          "--fsds-image-size-md": "48px",
+          "--fsds-image-size-lg": "64px",
+          "--fsds-image-size-xl": "96px",
+          "--fsds-image-radius-none": "var(--fsds-semantic-shape-radius-none, 0px)",
+          "--fsds-image-radius-sm": "var(--fsds-semantic-shape-radius-small, 4px)",
+          "--fsds-image-radius-md": "var(--fsds-semantic-shape-radius-medium, 8px)",
+          "--fsds-image-radius-lg": "var(--fsds-semantic-shape-radius-large, 16px)",
+          "--fsds-image-radius-full": "var(--fsds-semantic-shape-radius-full, 9999px)",
           "display": "block",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
@@ -267,6 +277,78 @@
           "max-height": "var(--fsds-box-model-max-height)",
           "background-color": "var(--fsds-image-color-background-default)",
           "color": "var(--fsds-image-color-foreground-primary)"
+        }
+      },
+      {
+        "selector": ".image--size-xs",
+        "declarations": {
+          "width": "var(--fsds-image-size-xs)",
+          "height": "var(--fsds-image-size-xs)"
+        }
+      },
+      {
+        "selector": ".image--size-sm",
+        "declarations": {
+          "width": "var(--fsds-image-size-sm)",
+          "height": "var(--fsds-image-size-sm)"
+        }
+      },
+      {
+        "selector": ".image--size-md",
+        "declarations": {
+          "width": "var(--fsds-image-size-md)",
+          "height": "var(--fsds-image-size-md)"
+        }
+      },
+      {
+        "selector": ".image--size-lg",
+        "declarations": {
+          "width": "var(--fsds-image-size-lg)",
+          "height": "var(--fsds-image-size-lg)"
+        }
+      },
+      {
+        "selector": ".image--size-xl",
+        "declarations": {
+          "width": "var(--fsds-image-size-xl)",
+          "height": "var(--fsds-image-size-xl)"
+        }
+      },
+      {
+        "selector": ".image--size-full",
+        "declarations": {
+          "width": "100%",
+          "height": "auto"
+        }
+      },
+      {
+        "selector": ".image--radius-none",
+        "declarations": {
+          "border-radius": "var(--fsds-image-radius-none)"
+        }
+      },
+      {
+        "selector": ".image--radius-sm",
+        "declarations": {
+          "border-radius": "var(--fsds-image-radius-sm)"
+        }
+      },
+      {
+        "selector": ".image--radius-md",
+        "declarations": {
+          "border-radius": "var(--fsds-image-radius-md)"
+        }
+      },
+      {
+        "selector": ".image--radius-lg",
+        "declarations": {
+          "border-radius": "var(--fsds-image-radius-lg)"
+        }
+      },
+      {
+        "selector": ".image--radius-full",
+        "declarations": {
+          "border-radius": "var(--fsds-image-radius-full)"
         }
       }
     ],

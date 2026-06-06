@@ -23,5 +23,45 @@
     "resolvesTo": "semantic.typography.body.04",
     "fallback": "12px",
     "layer": "semantic"
+  },
+  "image.size.xs": {
+    "literal": "24px"
+  },
+  "image.size.sm": {
+    "literal": "32px"
+  },
+  "image.size.md": {
+    "literal": "48px"
+  },
+  "image.size.lg": {
+    "literal": "64px"
+  },
+  "image.size.xl": {
+    "literal": "96px"
+  },
+  "image.radius.none": {
+    "resolvesTo": "semantic.shape.radius.none",
+    "fallback": "0px",
+    "layer": "semantic"
+  },
+  "image.radius.sm": {
+    "resolvesTo": "semantic.shape.radius.small",
+    "fallback": "4px",
+    "layer": "semantic"
+  },
+  "image.radius.md": {
+    "resolvesTo": "semantic.shape.radius.medium",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "image.radius.lg": {
+    "resolvesTo": "semantic.shape.radius.large",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "image.radius.full": {
+    "resolvesTo": "semantic.shape.radius.full",
+    "fallback": "9999px",
+    "layer": "semantic"
   }
 }

@@ -30,7 +30,7 @@ interface Props {
   children?: import('svelte').Snippet;
 }
 
-let { as, variant, marker, spacing, size, class: className, children }: Props = $props();
+let { as, variant = "default", marker = "default", spacing, size, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes

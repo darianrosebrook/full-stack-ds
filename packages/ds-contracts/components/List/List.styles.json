@@ -9,5 +9,66 @@
     "padding": {
       "resolvesTo": "list.size.padding.default"
     }
+  },
+  ".list--size-sm": {
+    "font-size": { "resolvesTo": "list.size.sm" }
+  },
+  ".list--size-md": {
+    "font-size": { "resolvesTo": "list.size.md" }
+  },
+  ".list--size-lg": {
+    "font-size": { "resolvesTo": "list.size.lg" }
+  },
+  ".list--spacing-none > * + *": {
+    "margin-block-start": { "resolvesTo": "list.spacing.none" }
+  },
+  ".list--spacing-sm > * + *": {
+    "margin-block-start": { "resolvesTo": "list.spacing.sm" }
+  },
+  ".list--spacing-md > * + *": {
+    "margin-block-start": { "resolvesTo": "list.spacing.md" }
+  },
+  ".list--spacing-lg > * + *": {
+    "margin-block-start": { "resolvesTo": "list.spacing.lg" }
+  },
+  ".list--marker-none": {
+    "list-style-type": { "literal": "none", "platforms": ["web"] }
+  },
+  ".list--marker-disc": {
+    "list-style-type": { "literal": "disc", "platforms": ["web"] }
+  },
+  ".list--marker-circle": {
+    "list-style-type": { "literal": "circle", "platforms": ["web"] }
+  },
+  ".list--marker-square": {
+    "list-style-type": { "literal": "square", "platforms": ["web"] }
+  },
+  ".list--marker-decimal": {
+    "list-style-type": { "literal": "decimal", "platforms": ["web"] }
+  },
+  ".list--marker-alpha": {
+    "list-style-type": { "literal": "lower-alpha", "platforms": ["web"] }
+  },
+  ".list--marker-roman": {
+    "list-style-type": { "literal": "lower-roman", "platforms": ["web"] }
+  },
+  ".list--variant-unstyled": {
+    "list-style": { "literal": "none", "platforms": ["web"] },
+    "padding": { "literal": "0", "platforms": ["web"] },
+    "margin": { "literal": "0", "platforms": ["web"] }
+  },
+  ".list--variant-inline": {
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "flex-direction": { "literal": "row", "platforms": ["web"] },
+    "list-style": { "literal": "none", "platforms": ["web"] },
+    "gap": { "resolvesTo": "list.spacing.md" }
+  },
+  ".list--variant-divided > * + *": {
+    "border-block-start-width": { "literal": "1px", "platforms": ["web"] },
+    "border-block-start-style": { "literal": "solid", "platforms": ["web"] },
+    "border-block-start-color": { "resolvesTo": "list.color.border.default" }
+  },
+  ".list--variant-spaced > *": {
+    "margin-block": { "resolvesTo": "list.spacing.lg" }
   }
 }

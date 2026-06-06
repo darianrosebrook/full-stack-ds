@@ -59,58 +59,6 @@
       "default": null
     },
     {
-      "component": "List",
-      "dim": "variant",
-      "gaps": [
-        "default",
-        "unstyled",
-        "inline",
-        "divided",
-        "spaced"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "marker",
-      "gaps": [
-        "default",
-        "none",
-        "disc",
-        "circle",
-        "square",
-        "decimal",
-        "alpha",
-        "roman"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "spacing",
-      "gaps": [
-        "none",
-        "sm",
-        "md",
-        "lg"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "size",
-      "gaps": [
-        "sm",
-        "md",
-        "lg"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
       "component": "Spinner",
       "dim": "variant",
       "gaps": [
@@ -190,58 +138,6 @@
         "default",
         "inline",
         "compact"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "variant",
-      "gaps": [
-        "default",
-        "unstyled",
-        "inline",
-        "divided",
-        "spaced"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "marker",
-      "gaps": [
-        "default",
-        "none",
-        "disc",
-        "circle",
-        "square",
-        "decimal",
-        "alpha",
-        "roman"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "spacing",
-      "gaps": [
-        "none",
-        "sm",
-        "md",
-        "lg"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "List",
-      "dim": "size",
-      "gaps": [
-        "sm",
-        "md",
-        "lg"
       ],
       "fullyUnrealized": true,
       "default": null
@@ -1367,101 +1263,101 @@
           "dim": "size",
           "default": null,
           "tainted": true,
-          "stylingIntent": false,
+          "stylingIntent": true,
           "values": [
             {
               "value": "xs",
               "class": "image--size-xs",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "sm",
               "class": "image--size-sm",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "md",
               "class": "image--size-md",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "lg",
               "class": "image--size-lg",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "xl",
               "class": "image--size-xl",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "full",
               "class": "image--size-full",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 6,
           "total": 6,
-          "fullyUnrealized": true,
+          "fullyUnrealized": false,
           "gaps": []
         },
         {
           "dim": "radius",
           "default": null,
           "tainted": true,
-          "stylingIntent": false,
+          "stylingIntent": true,
           "values": [
             {
               "value": "none",
               "class": "image--radius-none",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "sm",
               "class": "image--radius-sm",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "md",
               "class": "image--radius-md",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "lg",
               "class": "image--radius-lg",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             },
             {
               "value": "full",
               "class": "image--radius-full",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
               "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 5,
           "total": 5,
-          "fullyUnrealized": true,
+          "fullyUnrealized": false,
           "gaps": []
         }
       ],
@@ -1580,7 +1476,7 @@
         },
         {
           "dim": "variant",
-          "default": null,
+          "default": "default",
           "tainted": true,
           "stylingIntent": true,
           "values": [
@@ -1588,52 +1484,46 @@
               "value": "default",
               "class": "list--variant-default",
               "realized": false,
-              "isDefault": false,
-              "gap": true
+              "isDefault": true,
+              "gap": false
             },
             {
               "value": "unstyled",
               "class": "list--variant-unstyled",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "inline",
               "class": "list--variant-inline",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "divided",
               "class": "list--variant-divided",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "spaced",
               "class": "list--variant-spaced",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 4,
           "total": 5,
-          "fullyUnrealized": true,
-          "gaps": [
-            "default",
-            "unstyled",
-            "inline",
-            "divided",
-            "spaced"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         },
         {
           "dim": "marker",
-          "default": null,
+          "default": "default",
           "tainted": true,
           "stylingIntent": true,
           "values": [
@@ -1641,72 +1531,63 @@
               "value": "default",
               "class": "list--marker-default",
               "realized": false,
-              "isDefault": false,
-              "gap": true
+              "isDefault": true,
+              "gap": false
             },
             {
               "value": "none",
               "class": "list--marker-none",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "disc",
               "class": "list--marker-disc",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "circle",
               "class": "list--marker-circle",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "square",
               "class": "list--marker-square",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "decimal",
               "class": "list--marker-decimal",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "alpha",
               "class": "list--marker-alpha",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "roman",
               "class": "list--marker-roman",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 7,
           "total": 8,
-          "fullyUnrealized": true,
-          "gaps": [
-            "default",
-            "none",
-            "disc",
-            "circle",
-            "square",
-            "decimal",
-            "alpha",
-            "roman"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         },
         {
           "dim": "spacing",
@@ -1717,41 +1598,36 @@
             {
               "value": "none",
               "class": "list--spacing-none",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "sm",
               "class": "list--spacing-sm",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "md",
               "class": "list--spacing-md",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "lg",
               "class": "list--spacing-lg",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 4,
           "total": 4,
-          "fullyUnrealized": true,
-          "gaps": [
-            "none",
-            "sm",
-            "md",
-            "lg"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         },
         {
           "dim": "size",
@@ -1762,33 +1638,29 @@
             {
               "value": "sm",
               "class": "list--size-sm",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "md",
               "class": "list--size-md",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "lg",
               "class": "list--size-lg",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 3,
           "total": 3,
-          "fullyUnrealized": true,
-          "gaps": [
-            "sm",
-            "md",
-            "lg"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         }
       ],
       "collisions": [
