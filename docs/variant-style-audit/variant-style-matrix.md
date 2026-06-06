@@ -2,7 +2,7 @@
 
 `VARIANT-STYLE-REALIZATION-AUDIT-01` — read-only. A variant VALUE is realized iff a `.<prefix>--<value>` selector exists in `<Name>.css` or `<Name>.tokens.css` (var re-scoping or direct property). The DEFAULT value is realized by the base rule and needs no per-value selector; only NON-DEFAULT values without a consuming selector are genuine gaps.
 
-Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **27** · fully-dead axes: **6** · colliding components: **2**
+Components with variants: **36** · variant axes: **64** · values: **236** · unrealized non-default values: **24** · fully-dead axes: **5** · colliding components: **2**
 
 ## Variant-class collisions (axes that share a value → namespaced emission)
 
@@ -28,7 +28,6 @@ These axes share at least one value within the component, so a bare `.<prefix>--
 | Blockquote | `variant` | default, bordered, highlighted | — |
 | Chip | `variant` | default, selected, dismissible | — |
 | Details | `variant` | default, inline, compact | — |
-| Spinner | `variant` | ring, dots, bars | — |
 | Text | `weight` | light, normal, medium, semibold, bold | — |
 
 ## Review — partially-realized axes (some non-default values lack a selector)
@@ -220,7 +219,6 @@ These axes share at least one value within the component, so a bare `.<prefix>--
 | axis | default | values (✓ realized · ✗ gap · ·default) |
 |---|---|---|
 | `size` | — | xs✓ sm✓ md✓ lg✓ |
-| `variant` | — | ring✗ dots✗ bars✗ |
 | `thickness` | — | hairline✓ regular✓ bold✓ |
 
 ### Stat  `.stat`

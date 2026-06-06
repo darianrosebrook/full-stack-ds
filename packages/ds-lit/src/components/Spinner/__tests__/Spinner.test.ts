@@ -41,24 +41,6 @@ describe("Spinner — unit", () => {
     expect(classTokens(root)).toContain("spinner--lg");
   });
 
-  it("applies variant=ring variant class", async () => {
-    const { element } = await renderElement("fsds-spinner", { "variant": "ring" });
-    const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("spinner--ring");
-  });
-
-  it("applies variant=dots variant class", async () => {
-    const { element } = await renderElement("fsds-spinner", { "variant": "dots" });
-    const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("spinner--dots");
-  });
-
-  it("applies variant=bars variant class", async () => {
-    const { element } = await renderElement("fsds-spinner", { "variant": "bars" });
-    const root = element.shadowRoot?.firstElementChild ?? element;
-    expect(classTokens(root)).toContain("spinner--bars");
-  });
-
   it("applies thickness=hairline variant class", async () => {
     const { element } = await renderElement("fsds-spinner", { "thickness": "hairline" });
     const root = element.shadowRoot?.firstElementChild ?? element;

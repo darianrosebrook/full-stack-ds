@@ -10,8 +10,6 @@ import "./Spinner.css";
 // @generated:start types
 export type SpinnerSize = "xs" | "sm" | "md" | "lg";
 
-export type SpinnerVariant = "ring" | "dots" | "bars";
-
 export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:end
 
@@ -20,9 +18,8 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @custom:end
 
 // @generated:start props
-export interface SpinnerProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaHidden" | "children" | "className" | "data-testid" | "inline" | "label" | "showAfterMs" | "size" | "thickness" | "variant"> {
+export interface SpinnerProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaHidden" | "children" | "className" | "data-testid" | "inline" | "label" | "showAfterMs" | "size" | "thickness"> {
   size?: SpinnerSize;
-  variant?: SpinnerVariant;
   thickness?: SpinnerThickness;
   ariaHidden?: boolean;
   label?: string;
@@ -40,7 +37,6 @@ export interface SpinnerProps extends Omit<HTMLAttributes<HTMLDivElement>, "aria
 // @generated:start component
 export function Spinner({
   size,
-  variant,
   thickness,
   className,
   "data-testid": testId,
@@ -53,7 +49,6 @@ export function Spinner({
   const classNames = [
     "spinner",
     size && `spinner--${size}`,
-    variant && `spinner--${variant}`,
     thickness && `spinner--${thickness}`,
     className,
   ]

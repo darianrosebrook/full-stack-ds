@@ -1,2 +1,2 @@
-{"name":"default","description":"Medium ring spinner for a page-level loading state with a screen-reader label.","tree":{"fsds.Spinner":{"props":{"variant":"ring","size":"md","label":"Loading content"}}}}
-{"name":"inline-button","description":"Small inline spinner placed inside a button during a form submit, hidden from assistive tech since the button label conveys state.","tree":{"fsds.Spinner":{"props":{"variant":"ring","size":"sm","inline":true,"ariaHidden":true,"showAfterMs":200}}}}
+{"name":"default","description":"Medium ring spinner for a page-level loading state with a screen-reader label.","tree":{"fsds.Spinner":{"props":{"size":"md","label":"Loading content"}}}}
+{"name":"inline-button","description":"Small inline spinner placed inside a button during a form submit, hidden from assistive tech since the button label conveys state.","tree":{"fsds.Spinner":{"props":{"size":"sm","inline":true,"ariaHidden":true,"showAfterMs":200}}}}

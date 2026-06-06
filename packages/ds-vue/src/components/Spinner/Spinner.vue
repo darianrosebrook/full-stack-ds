@@ -9,7 +9,6 @@ import { computed } from "vue";
 
 // @generated:start types
 export type SpinnerSize = "xs" | "sm" | "md" | "lg";
-export type SpinnerVariant = "ring" | "dots" | "bars";
 export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:end
 
@@ -20,7 +19,6 @@ export type SpinnerThickness = "hairline" | "regular" | "bold";
 // @generated:start props
 interface Props {
   size?: SpinnerSize;
-  variant?: SpinnerVariant;
   thickness?: SpinnerThickness;
   ariaHidden?: boolean;
   label?: string;
@@ -42,7 +40,6 @@ const props = withDefaults(defineProps<Props>(), {
 const classNames = computed(() => [
   "spinner",
   props.size ? `spinner--${props.size}` : null,
-  props.variant ? `spinner--${props.variant}` : null,
   props.thickness ? `spinner--${props.thickness}` : null,
   props.class,
 ].filter(Boolean).join(" "));

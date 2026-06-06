@@ -1,8 +1,8 @@
 {
   "spec": "VARIANT-STYLE-REALIZATION-AUDIT-01",
   "componentsWithVariants": 36,
-  "totalAxes": 65,
-  "totalValues": 239,
+  "totalAxes": 64,
+  "totalValues": 236,
   "failing": [
     {
       "component": "Badge",
@@ -56,17 +56,6 @@
         "horizontal"
       ],
       "fullyUnrealized": false,
-      "default": null
-    },
-    {
-      "component": "Spinner",
-      "dim": "variant",
-      "gaps": [
-        "ring",
-        "dots",
-        "bars"
-      ],
-      "fullyUnrealized": true,
       "default": null
     },
     {
@@ -138,17 +127,6 @@
         "default",
         "inline",
         "compact"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
-      "component": "Spinner",
-      "dim": "variant",
-      "gaps": [
-        "ring",
-        "dots",
-        "bars"
       ],
       "fullyUnrealized": true,
       "default": null
@@ -2278,43 +2256,6 @@
           "total": 4,
           "fullyUnrealized": false,
           "gaps": []
-        },
-        {
-          "dim": "variant",
-          "default": null,
-          "tainted": false,
-          "stylingIntent": true,
-          "values": [
-            {
-              "value": "ring",
-              "class": "spinner--ring",
-              "realized": false,
-              "isDefault": false,
-              "gap": true
-            },
-            {
-              "value": "dots",
-              "class": "spinner--dots",
-              "realized": false,
-              "isDefault": false,
-              "gap": true
-            },
-            {
-              "value": "bars",
-              "class": "spinner--bars",
-              "realized": false,
-              "isDefault": false,
-              "gap": true
-            }
-          ],
-          "realizedCount": 0,
-          "total": 3,
-          "fullyUnrealized": true,
-          "gaps": [
-            "ring",
-            "dots",
-            "bars"
-          ]
         },
         {
           "dim": "thickness",

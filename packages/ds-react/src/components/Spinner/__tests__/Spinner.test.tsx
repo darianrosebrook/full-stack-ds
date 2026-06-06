@@ -53,21 +53,6 @@ describe("Spinner — unit", () => {
     expect(screen.getByTestId("spinner")).toHaveClass("spinner--lg");
   });
 
-  it("applies variant=ring variant class", () => {
-    render(<Spinner data-testid="spinner" variant="ring" />);
-    expect(screen.getByTestId("spinner")).toHaveClass("spinner--ring");
-  });
-
-  it("applies variant=dots variant class", () => {
-    render(<Spinner data-testid="spinner" variant="dots" />);
-    expect(screen.getByTestId("spinner")).toHaveClass("spinner--dots");
-  });
-
-  it("applies variant=bars variant class", () => {
-    render(<Spinner data-testid="spinner" variant="bars" />);
-    expect(screen.getByTestId("spinner")).toHaveClass("spinner--bars");
-  });
-
   it("applies thickness=hairline variant class", () => {
     render(<Spinner data-testid="spinner" thickness="hairline" />);
     expect(screen.getByTestId("spinner")).toHaveClass("spinner--hairline");

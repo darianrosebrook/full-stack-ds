@@ -49,21 +49,6 @@ describe("Spinner — unit", () => {
     expect(wrapper.classes()).toContain("spinner--lg");
   });
 
-  it("applies variant=ring variant class", () => {
-    const wrapper = mount(Spinner as Component, { props: { "variant": "ring" }, attrs: { "data-testid": "spinner" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("spinner--ring");
-  });
-
-  it("applies variant=dots variant class", () => {
-    const wrapper = mount(Spinner as Component, { props: { "variant": "dots" }, attrs: { "data-testid": "spinner" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("spinner--dots");
-  });
-
-  it("applies variant=bars variant class", () => {
-    const wrapper = mount(Spinner as Component, { props: { "variant": "bars" }, attrs: { "data-testid": "spinner" }, slots: { default: "content" } });
-    expect(wrapper.classes()).toContain("spinner--bars");
-  });
-
   it("applies thickness=hairline variant class", () => {
     const wrapper = mount(Spinner as Component, { props: { "thickness": "hairline" }, attrs: { "data-testid": "spinner" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("spinner--hairline");

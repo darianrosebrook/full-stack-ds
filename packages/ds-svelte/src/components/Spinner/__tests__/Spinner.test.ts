@@ -49,21 +49,6 @@ describe("Spinner — unit", () => {
     expect(container.firstElementChild?.className).toContain("spinner--lg");
   });
 
-  it("applies variant=ring variant class", () => {
-    const { container } = render(Spinner as unknown as Component<Record<string, unknown>>, { props: { "variant": "ring" } });
-    expect(container.firstElementChild?.className).toContain("spinner--ring");
-  });
-
-  it("applies variant=dots variant class", () => {
-    const { container } = render(Spinner as unknown as Component<Record<string, unknown>>, { props: { "variant": "dots" } });
-    expect(container.firstElementChild?.className).toContain("spinner--dots");
-  });
-
-  it("applies variant=bars variant class", () => {
-    const { container } = render(Spinner as unknown as Component<Record<string, unknown>>, { props: { "variant": "bars" } });
-    expect(container.firstElementChild?.className).toContain("spinner--bars");
-  });
-
   it("applies thickness=hairline variant class", () => {
     const { container } = render(Spinner as unknown as Component<Record<string, unknown>>, { props: { "thickness": "hairline" } });
     expect(container.firstElementChild?.className).toContain("spinner--hairline");
