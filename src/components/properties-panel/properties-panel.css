@@ -499,20 +499,27 @@
    value into a chip — strip it so only the bare trigger text shows. The popover
    CONTENT (the floating editor) is portaled/positioned separately and keeps its
    own styling; this only neutralizes the inline anchor wrapper. */
-.fsds-bme .popover {
+/* The DS Popover root (.popover) is used here only as the inline ANCHOR for a
+   TokenValueControl trigger — but the generated .popover class carries full
+   panel chrome (background, border, box-shadow, padding, min-width/height) that
+   leaks into the field well and the box-model diagram. Neutralize the wrapper
+   to a bare inline box wherever it hosts a TVC trigger (matched via :has), so
+   only the trigger shows. The popover CONTENT (the floating editor) is a
+   separate, portaled element and keeps its own styling — this rule does not
+   touch it. */
+.popover:has(> .fsds-tvc__trigger) {
   display: inline-block;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  padding: 0;
+  gap: 0;
   background: transparent;
   border: none;
   border-radius: 0;
   box-shadow: none;
-  width: auto;
-  height: auto;
-  /* The DS .popover anchor carries min-width:64px + padding:16px by default,
-     which is what was bloating each on-zone value to a 64x50 hitbox that
-     overlapped the diagram. Collapse it to its content. */
-  min-width: 0;
-  min-height: 0;
-  padding: 0;
 }
 
 .fsds-tvc__title {
