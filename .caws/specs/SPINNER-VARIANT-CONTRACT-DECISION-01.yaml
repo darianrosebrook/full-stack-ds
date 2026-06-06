@@ -1,0 +1,33 @@
+id: SPINNER-VARIANT-CONTRACT-DECISION-01
+title: 'Constrain Spinner to the implemented ring morphology — remove the dots/bars variant overclaim'
+risk_tier: 3
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-06T06:24:55.502Z'
+updated_at: '2026-06-06T06:24:55.502Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/components/Spinner/'
+    - 'packages/ds-react/src/components/Spinner/'
+    - 'packages/ds-vue/src/components/Spinner/'
+    - 'packages/ds-svelte/src/components/Spinner/'
+    - 'packages/ds-angular/src/components/Spinner/'
+    - 'packages/ds-lit/src/components/Spinner/'
+    - 'packages/ds-figma-plugin/src/generated/components/Spinner/'
+    - 'scripts/variant-style-audit/'
+    - 'docs/variant-style-audit/'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
