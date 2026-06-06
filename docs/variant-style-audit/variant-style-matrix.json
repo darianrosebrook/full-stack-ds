@@ -135,16 +135,6 @@
       "default": null
     },
     {
-      "component": "Select",
-      "dim": "size",
-      "gaps": [
-        "sm",
-        "lg"
-      ],
-      "fullyUnrealized": true,
-      "default": "md"
-    },
-    {
       "component": "Spinner",
       "dim": "size",
       "gaps": [
@@ -168,17 +158,6 @@
       "default": null
     },
     {
-      "component": "Spinner",
-      "dim": "thickness",
-      "gaps": [
-        "hairline",
-        "regular",
-        "bold"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
       "component": "Stat",
       "dim": "size",
       "gaps": [
@@ -187,17 +166,6 @@
       ],
       "fullyUnrealized": true,
       "default": "md"
-    },
-    {
-      "component": "Stat",
-      "dim": "trend",
-      "gaps": [
-        "up",
-        "down",
-        "neutral"
-      ],
-      "fullyUnrealized": true,
-      "default": null
     },
     {
       "component": "Text",
@@ -349,16 +317,6 @@
       "default": null
     },
     {
-      "component": "Select",
-      "dim": "size",
-      "gaps": [
-        "sm",
-        "lg"
-      ],
-      "fullyUnrealized": true,
-      "default": "md"
-    },
-    {
       "component": "Spinner",
       "dim": "size",
       "gaps": [
@@ -382,17 +340,6 @@
       "default": null
     },
     {
-      "component": "Spinner",
-      "dim": "thickness",
-      "gaps": [
-        "hairline",
-        "regular",
-        "bold"
-      ],
-      "fullyUnrealized": true,
-      "default": null
-    },
-    {
       "component": "Stat",
       "dim": "size",
       "gaps": [
@@ -401,17 +348,6 @@
       ],
       "fullyUnrealized": true,
       "default": "md"
-    },
-    {
-      "component": "Stat",
-      "dim": "trend",
-      "gaps": [
-        "up",
-        "down",
-        "neutral"
-      ],
-      "fullyUnrealized": true,
-      "default": null
     },
     {
       "component": "Text",
@@ -2040,32 +1976,29 @@
             {
               "value": "sm",
               "class": "select--sm",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "md",
               "class": "select--md",
-              "realized": false,
+              "realized": true,
               "isDefault": true,
               "gap": false
             },
             {
               "value": "lg",
               "class": "select--lg",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 3,
           "total": 3,
-          "fullyUnrealized": true,
-          "gaps": [
-            "sm",
-            "lg"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         },
         {
           "dim": "position",
@@ -2368,33 +2301,29 @@
             {
               "value": "hairline",
               "class": "spinner--hairline",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "regular",
               "class": "spinner--regular",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "bold",
               "class": "spinner--bold",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 3,
           "total": 3,
-          "fullyUnrealized": true,
-          "gaps": [
-            "hairline",
-            "regular",
-            "bold"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         }
       ]
     },
@@ -2445,33 +2374,29 @@
             {
               "value": "up",
               "class": "stat--up",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "down",
               "class": "stat--down",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             },
             {
               "value": "neutral",
               "class": "stat--neutral",
-              "realized": false,
+              "realized": true,
               "isDefault": false,
-              "gap": true
+              "gap": false
             }
           ],
-          "realizedCount": 0,
+          "realizedCount": 3,
           "total": 3,
-          "fullyUnrealized": true,
-          "gaps": [
-            "up",
-            "down",
-            "neutral"
-          ]
+          "fullyUnrealized": false,
+          "gaps": []
         }
       ]
     },

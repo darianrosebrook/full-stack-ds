@@ -560,6 +560,24 @@
           "--fsds-select-color-background-default": "var(--fsds-semantic-color-background-highlight, #f7c1c2)",
           "--fsds-select-color-foreground-default": "var(--fsds-semantic-color-foreground-accent, #d9292b)"
         }
+      },
+      {
+        "selector": ".select--sm .select__trigger",
+        "declarations": {
+          "height": "var(--fsds-select-size-sm-height)"
+        }
+      },
+      {
+        "selector": ".select--md .select__trigger",
+        "declarations": {
+          "height": "var(--fsds-select-size-md-height)"
+        }
+      },
+      {
+        "selector": ".select--lg .select__trigger",
+        "declarations": {
+          "height": "var(--fsds-select-size-lg-height)"
+        }
       }
     ],
     "keyframes": []

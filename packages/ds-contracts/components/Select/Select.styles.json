@@ -392,5 +392,20 @@
       "resolvesTo": "semantic.color.foreground.accent",
       "fallback": "#d9292b"
     }
+  },
+  ".select--sm .select__trigger": {
+    "height": {
+      "resolvesTo": "select.size.sm.height"
+    }
+  },
+  ".select--md .select__trigger": {
+    "height": {
+      "resolvesTo": "select.size.md.height"
+    }
+  },
+  ".select--lg .select__trigger": {
+    "height": {
+      "resolvesTo": "select.size.lg.height"
+    }
   }
 }

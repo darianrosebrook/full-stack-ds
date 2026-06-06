@@ -129,6 +129,24 @@
           "line-height": "var(--fsds-stat-typography-lineHeight-value)",
           "letter-spacing": "-0.02em"
         }
+      },
+      {
+        "selector": ".stat--up",
+        "declarations": {
+          "color": "var(--fsds-stat-color-foreground-trend-up)"
+        }
+      },
+      {
+        "selector": ".stat--down",
+        "declarations": {
+          "color": "var(--fsds-stat-color-foreground-trend-down)"
+        }
+      },
+      {
+        "selector": ".stat--neutral",
+        "declarations": {
+          "color": "var(--fsds-stat-color-foreground-trend-neutral)"
+        }
       }
     ],
     "keyframes": []

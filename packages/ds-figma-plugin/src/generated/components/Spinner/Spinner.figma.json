@@ -202,6 +202,24 @@
           "border-top-color": "var(--fsds-spinner-color-accent)",
           "animation": "spin var(--fsds-spinner-anim-duration, 800ms) linear infinite"
         }
+      },
+      {
+        "selector": ".spinner--hairline .spinner__visual",
+        "declarations": {
+          "border-width": "var(--fsds-spinner-thickness-hairline)"
+        }
+      },
+      {
+        "selector": ".spinner--regular .spinner__visual",
+        "declarations": {
+          "border-width": "var(--fsds-spinner-thickness-regular)"
+        }
+      },
+      {
+        "selector": ".spinner--bold .spinner__visual",
+        "declarations": {
+          "border-width": "var(--fsds-spinner-thickness-bold)"
+        }
       }
     ],
     "keyframes": [

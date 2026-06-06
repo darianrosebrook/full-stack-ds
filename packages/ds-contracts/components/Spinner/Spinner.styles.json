@@ -53,5 +53,20 @@
         "web"
       ]
     }
+  },
+  ".spinner--hairline .spinner__visual": {
+    "border-width": {
+      "resolvesTo": "spinner.thickness.hairline"
+    }
+  },
+  ".spinner--regular .spinner__visual": {
+    "border-width": {
+      "resolvesTo": "spinner.thickness.regular"
+    }
+  },
+  ".spinner--bold .spinner__visual": {
+    "border-width": {
+      "resolvesTo": "spinner.thickness.bold"
+    }
   }
 }

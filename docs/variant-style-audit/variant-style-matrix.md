@@ -2,7 +2,7 @@
 
 `VARIANT-STYLE-REALIZATION-AUDIT-01` — read-only. A variant VALUE is realized iff a `.<prefix>--<value>` selector exists in `<Name>.css` or `<Name>.tokens.css` (var re-scoping or direct property). The DEFAULT value is realized by the base rule and needs no per-value selector; only NON-DEFAULT values without a consuming selector are genuine gaps.
 
-Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **69** · fully-dead axes: **17**
+Components with variants: **36** · variant axes: **65** · values: **239** · unrealized non-default values: **61** · fully-dead axes: **14**
 
 ## Failing — declared variant axis with no realization (fully-dead axes)
 
@@ -18,12 +18,9 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 | List | `spacing` | none, sm, md, lg | — |
 | List | `size` | sm, md, lg | — |
 | Progress | `intent` | info, success, warning, danger | — |
-| Select | `size` | sm, lg | md |
 | Spinner | `size` | xs, sm, md, lg | — |
 | Spinner | `variant` | ring, dots, bars | — |
-| Spinner | `thickness` | hairline, regular, bold | — |
 | Stat | `size` | sm, lg | md |
-| Stat | `trend` | up, down, neutral | — |
 | Text | `weight` | light, normal, medium, semibold, bold | — |
 
 ## Review — partially-realized axes (some non-default values lack a selector)
@@ -193,7 +190,7 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 
 | axis | default | values (✓ realized · ✗ gap · ·default) |
 |---|---|---|
-| `size` | md | sm✗ md·(default) lg✗ |
+| `size` | md | sm✓ md✓ lg✓ |
 | `position` | — | bottom✗ top✗ auto✗ |
 
 ### Sheet  `.sheet`
@@ -216,14 +213,14 @@ Components with variants: **36** · variant axes: **65** · values: **239** · u
 |---|---|---|
 | `size` | — | xs✗ sm✗ md✗ lg✗ |
 | `variant` | — | ring✗ dots✗ bars✗ |
-| `thickness` | — | hairline✗ regular✗ bold✗ |
+| `thickness` | — | hairline✓ regular✓ bold✓ |
 
 ### Stat  `.stat`
 
 | axis | default | values (✓ realized · ✗ gap · ·default) |
 |---|---|---|
 | `size` | md | sm✗ md·(default) lg✗ |
-| `trend` | — | up✗ down✗ neutral✗ |
+| `trend` | — | up✓ down✓ neutral✓ |
 
 ### Status  `.status`
 
