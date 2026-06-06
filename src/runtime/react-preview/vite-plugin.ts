@@ -18,12 +18,13 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { buildReactDemo, type DemoProps } from "../demos";
+import { buildReactDemo, childLabel, type DemoProps } from "../demos";
 import {
   decodePropsParam,
   encodePropsParam,
   parsePropsFromQuery,
 } from "../preview-props";
+import { buildConfigEntrySource } from "./config-entry";
 
 // NOTE: the URL prefix is inlined here as a string literal — Vite's config
 // loader doesn't reliably follow .ts → .ts imports inside the
@@ -45,12 +46,21 @@ interface ParsedShellRequest {
   componentName: string;
   /** Non-default prop overrides parsed from the request query string. */
   overrideProps: DemoProps;
+  /**
+   * Config-mode flag (`?config=1`). When set, the entry mounts a persistent
+   * render target driven by `fsds:config` postMessages instead of baking props
+   * once. Used by the scratch Properties panel; the default baked-props path
+   * (config=false) is byte-unchanged so the runtime rail is unaffected.
+   */
+  config: boolean;
 }
 
 interface ParsedVirtualEntryId {
   componentName: string;
   /** Non-default prop overrides decoded from the entry id's props payload. */
   overrideProps: DemoProps;
+  /** Config-mode flag carried in the entry id (see ParsedShellRequest). */
+  config: boolean;
 }
 
 function parseShellRequest(url: string): ParsedShellRequest | null {
@@ -65,6 +75,7 @@ function parseShellRequest(url: string): ParsedShellRequest | null {
   return {
     componentName: tail.replace(/\/$/, ""),
     overrideProps: parsePropsFromQuery(query),
+    config: new URLSearchParams(query).get("config") === "1",
   };
 }
 
@@ -89,8 +100,13 @@ function parseVirtualEntryId(id: string): ParsedVirtualEntryId | null {
   // The shell builder uses the same suffix when generating the entry URL.
   const match = /^([A-Z][A-Za-z0-9]*)\/entry\.tsx$/.exec(modulePath);
   if (!match) return null;
-  const propsParam = new URLSearchParams(propsQuery).get("props");
-  return { componentName: match[1], overrideProps: decodePropsParam(propsParam) };
+  const params = new URLSearchParams(propsQuery);
+  const propsParam = params.get("props");
+  return {
+    componentName: match[1],
+    overrideProps: decodePropsParam(propsParam),
+    config: params.get("config") === "1",
+  };
 }
 
 /**
@@ -104,10 +120,18 @@ function buildEntrySource(
   componentName: string,
   bundle: Awaited<ReturnType<typeof buildBundle>>,
   overrideProps: DemoProps,
+  config: boolean,
 ): string {
   const component = bundle.components.find((c) => c.name === componentName);
   if (!component) {
     throw new Error(`fsds-react-preview: unknown component "${componentName}"`);
+  }
+  // Config mode: a persistent render target driven by fsds:config messages.
+  // Built from the same component facts (childLabel) as the baked-props demo,
+  // but with no props baked in — the panel sends them over the wire.
+  if (config) {
+    const child = childLabel(component);
+    return buildConfigEntrySource(componentName, child === "" ? null : child);
   }
   const demo = buildReactDemo(component, overrideProps);
   // The workspace alias `@full-stack-ds/react` points at packages/ds-react/src/index.ts,
@@ -160,7 +184,12 @@ export function reactPreviewPlugin(): Plugin {
       // doesn't carry an extension — the plugin uses moduleType detection,
       // which falls back to JSX-aware parsing for virtual modules. If that
       // ever changes upstream, we'd add an extension hint here.
-      return buildEntrySource(parsed.componentName, bundle, parsed.overrideProps);
+      return buildEntrySource(
+        parsed.componentName,
+        bundle,
+        parsed.overrideProps,
+        parsed.config,
+      );
     },
 
     configureServer(server: ViteDevServer) {
@@ -185,10 +214,17 @@ export function reactPreviewPlugin(): Plugin {
           // skip server.transformIndexHtml — that pass triggers Vite's
           // import-analysis on inline <script type="module"> blocks, which
           // can't normalize /@id/<virtual:...> URLs with literal colons.
+          // Carry props (baked) and/or config (live) flags in the entry id so
+          // distinct previews resolve to distinct virtual modules. Config-mode
+          // and baked-props are mutually exclusive in practice (the scratch
+          // panel never bakes props), but the id construction tolerates both.
           const propsParam = encodePropsParam(parsed.overrideProps);
-          const entryId = propsParam
-            ? `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.tsx?props=${propsParam}`
-            : `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.tsx`;
+          const entryQuery: string[] = [];
+          if (propsParam) entryQuery.push(`props=${propsParam}`);
+          if (parsed.config) entryQuery.push("config=1");
+          const entryId =
+            `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.tsx` +
+            (entryQuery.length ? `?${entryQuery.join("&")}` : "");
           const html = buildReactPreviewShellHtml({
             componentName: parsed.componentName,
             componentCss: component.sources.react?.css?.code,
