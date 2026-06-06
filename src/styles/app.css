@@ -140,7 +140,11 @@ button {
   grid-area: trace;
   border-left: 1px solid var(--fsds-semantic-color-border-subtle);
   background: var(--fsds-semantic-color-background-elevated);
-  overflow: auto;
+  /* The tab bar stays fixed; the active panel body owns the scroll, so the
+     aside itself must not scroll. */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   min-height: 0;
 }
 
@@ -729,10 +733,6 @@ button {
 .lang-jetpack { color: #325cff; }
 
 /* Trace panel */
-.trace {
-  padding: var(--fsds-core-spacing-size-07) var(--fsds-core-spacing-size-06);
-}
-
 .trace-empty {
   padding: var(--fsds-core-spacing-size-08) var(--fsds-core-spacing-size-06);
   text-align: center;
@@ -741,20 +741,36 @@ button {
   line-height: var(--fsds-semantic-typography-line-height-loose);
 }
 
-.trace-title {
-  font-size: var(--fsds-core-typography-ramp-2);
-  font-weight: var(--fsds-semantic-typography-font-weight-medium);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--fsds-semantic-color-foreground-tertiary);
-  margin: 0 0 var(--fsds-core-spacing-size-05);
+/*
+ * The inspector is the DS Tabs component. It fills the .app-trace aside as a
+ * flex column so the tab bar pins to the top and the active panel body scrolls.
+ * Override the DS box-model height vars (which default to auto/none) to claim
+ * the full aside height — without this the panel can't flex-grow to a scroll
+ * region.
+ */
+.trace-tabs.tabs {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  padding: 0;
+  gap: 0;
 }
 
-.trace-body {
-  font-family: var(--fsds-core-typography-font-family-mono);
-  font-size: var(--fsds-core-typography-ramp-2);
-  line-height: var(--fsds-semantic-typography-line-height-loose);
-  color: var(--fsds-semantic-color-foreground-primary);
+/* Tab bar: fixed header row. Padding here (not on .tabs) keeps the list inset
+   while the panel body owns its own padding. */
+.trace-tabbar {
+  flex: 0 0 auto;
+  padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06) 0;
+}
+
+/* Active panel body: the single scroll region. Inactive panels are hidden by
+   the DS Tabs component, so only the active one participates in flex layout. */
+.trace-panel-body.tabs__panel {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--fsds-core-spacing-size-07) var(--fsds-core-spacing-size-06);
 }
 
 /* Tokens page */
