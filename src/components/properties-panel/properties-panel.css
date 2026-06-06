@@ -1,0 +1,767 @@
+/* Figma-style properties panel chrome for the scratch page (and, later, the
+   TracePanel Properties tab). Uses the app's semantic token vars so it sits in
+   the showcase visual language. Scoped under .fsds-pp / .fsds-token-picker. */
+
+.fsds-pp {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--fsds-core-typography-ramp-2, 12px);
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-primary);
+  width: 100%;
+}
+
+.fsds-pp__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  padding: var(--fsds-core-spacing-size-05, 12px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-pp__title {
+  font-weight: 600;
+  font-size: var(--fsds-core-typography-ramp-3, 14px);
+}
+
+.fsds-pp__layer {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__section {
+  padding: var(--fsds-core-spacing-size-05, 12px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+}
+
+.fsds-pp__section-title, .fsds-tvc__section-title {
+  margin: 0;
+  font-size: var(--fsds-core-typography-ramp-2, 11px);
+  font-weight: 600; 
+  letter-spacing: 0.04em;
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+
+/* ---- Collapsible PropertySection (accordion) ---- */
+
+.fsds-ps {
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-ps__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  padding: var(--fsds-core-spacing-size-04, 8px) var(--fsds-core-spacing-size-05, 12px);
+}
+
+.fsds-ps__toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  flex: 1;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--fsds-semantic-color-foreground-primary);
+  cursor: pointer;
+}
+
+.fsds-ps__chevron {
+  display: inline-flex;
+  width: 0.9rem;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  transition: transform 0.15s ease;
+  transform: rotate(-90deg); /* collapsed → pointing right */
+}
+
+.fsds-ps--open .fsds-ps__chevron {
+  transform: rotate(0deg); /* open → pointing down */
+}
+
+.fsds-ps__title {
+  margin: 0;
+  font-size: var(--fsds-core-typography-ramp-3, 14px);
+  font-weight: 600;
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+
+.fsds-ps__action {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* grid-rows 0fr → 1fr animates to intrinsic content height with no JS measure */
+.fsds-ps__collapser {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.2s ease;
+}
+
+.fsds-ps--open .fsds-ps__collapser {
+  grid-template-rows: 1fr;
+}
+
+.fsds-ps__collapser-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.fsds-ps__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  padding: 0 var(--fsds-core-spacing-size-05, 12px) var(--fsds-core-spacing-size-05, 12px);
+}
+
+/* ---- Layout / Shape: W·H pill fields (icon-label + value) ---- */
+
+.fsds-pp__wh {
+  display: flex;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  flex-wrap: wrap;
+}
+
+.fsds-pp__wh-field {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-02, 4px);
+  flex: 1 1 0;
+  min-width: 6rem;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 8px;
+}
+
+.fsds-pp__wh-label {
+  width: 1rem;
+  flex: none;
+  text-align: center;
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__wh-label--icon {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+}
+
+/* Full-width field (e.g. the font-family row in Typography) */
+.fsds-pp__wh-field--wide {
+  flex: 1 1 100%;
+}
+
+/* The value control inside a field is borderless + shadowless — the FIELD is
+   the single chrome surface (one consistent treatment across Layout / Shape /
+   Fill / Typography: a gray well with a border, no shadow, no nested chip). */
+.fsds-pp__wh-field .fsds-tvc__trigger {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  flex: 1;
+  width: 100%;
+  justify-content: flex-start;
+}
+.fsds-pp__wh-field .fsds-tvc__trigger:hover {
+  background: transparent;
+  border: none;
+}
+
+/* Two-column label → control grid, like Figma's variant rows. */
+.fsds-pp__field {
+  display: grid;
+  grid-template-columns: minmax(0, 5rem) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+}
+
+.fsds-pp__field--token {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--fsds-core-spacing-size-02, 4px);
+}
+
+.fsds-pp__label {
+  color: var(--fsds-semantic-color-foreground-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fsds-pp__label--token {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__input,
+.fsds-pp__token-value {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-pp__input:focus,
+.fsds-pp__token-value:focus {
+  outline: 2px solid var(--fsds-semantic-color-foreground-accent);
+  outline-offset: -1px;
+}
+
+.fsds-pp__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+/* Token row: swatch | value | bind button */
+.fsds-pp__token-row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) 1.5rem;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+}
+
+.fsds-pp__swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fsds-pp__swatch--dim {
+  background: var(--fsds-semantic-color-background-subtle);
+  cursor: default;
+}
+
+.fsds-pp__bind {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-pp__bind:hover {
+  color: var(--fsds-semantic-color-foreground-accent);
+  border-color: var(--fsds-semantic-color-border-default);
+}
+
+/* ---- Token picker dialog ---- */
+
+.fsds-pp__picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, black 30%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.fsds-token-picker {
+  width: 22rem;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fsds-semantic-color-background-elevated);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px color-mix(in srgb, black 24%, transparent);
+  overflow: hidden;
+}
+
+.fsds-token-picker__head {
+  display: flex;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-token-picker__search {
+  flex: 1;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-token-picker__close {
+  width: 1.75rem;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.fsds-token-picker__body {
+  overflow-y: auto;
+  padding: var(--fsds-core-spacing-size-03, 6px);
+}
+
+.fsds-token-picker__group-name {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  padding: var(--fsds-core-spacing-size-03, 6px) var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-02, 4px);
+}
+
+.fsds-token-picker__item {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  width: 100%;
+  padding: var(--fsds-core-spacing-size-02, 4px);
+  font: inherit;
+  text-align: left;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-token-picker__item:hover {
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
+.fsds-token-picker__swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-token-picker__path {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fsds-token-picker__value {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-token-picker__empty {
+  padding: var(--fsds-core-spacing-size-05, 12px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+/* ---- Scratch page two-pane layout (stage | inspector) ---- */
+
+.fsds-scratch {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--fsds-core-spacing-size-06, 16px);
+  margin-top: var(--fsds-core-spacing-size-06, 16px);
+  align-items: start;
+}
+
+.fsds-scratch__stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-05, 12px);
+}
+
+.fsds-scratch__picker {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  font-size: var(--fsds-core-typography-ramp-2, 12px);
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+.fsds-scratch__picker select {
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-scratch__preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: var(--fsds-core-spacing-size-06, 16px);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-subtle);
+  border-radius: 8px;
+}
+
+.fsds-scratch__inspector {
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 8px;
+  overflow: hidden;
+  position: sticky;
+  top: var(--fsds-core-spacing-size-06, 16px);
+}
+
+/* ---- TokenValueControl (shared ◇ token-linked value editor) ---- */
+
+.fsds-tvc__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  width: 100%;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.fsds-tvc__trigger:hover {
+  border-color: var(--fsds-semantic-color-border-default);
+  background: var(--fsds-semantic-color-background-elevated);
+}
+
+/* Compact trigger = a small INPUT-like chip that sits on the box-model zones.
+   It needs a subtle surface + border to read as an editable value against the
+   colored zone (our values — "8", "12", "9999" — are wider than the reference's
+   single "0"s, so bare transparent text would float ambiguously). Sized tight
+   to content, centered on the property it controls. */
+.fsds-tvc__trigger--compact {
+  padding: 1px 4px;
+  gap: 2px;
+  border-radius: 4px;
+  background: var(--fsds-semantic-color-background-subtle);
+  border-color: transparent;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+  font-size: 9px;
+  line-height: 1.3;
+  color: var(--fsds-semantic-color-foreground-primary);
+  width: auto;
+  min-width: 1ch;
+  justify-content: center;
+}
+
+.fsds-tvc__trigger--compact:hover {
+  border-color: rgba(0, 0, 0, 0.35);
+  background: #fff;
+}
+
+/* The ◇ on a compact (on-zone) trigger is tiny and dark to stay legible. */
+.fsds-tvc__trigger--compact .fsds-tvc__diamond {
+  font-size: 7px;
+  color: color-mix(in srgb, #1a1a1a 55%, transparent);
+}
+.fsds-tvc__trigger--compact .fsds-tvc__diamond--linked {
+  color: #d5006b; /* the pink accent from the diagram axes */
+}
+
+/* The DS Popover root (.popover) carries default panel chrome (light bg +
+   radius + shadow). Inside the box-model diagram that boxes every on-zone
+   value into a chip — strip it so only the bare trigger text shows. The popover
+   CONTENT (the floating editor) is portaled/positioned separately and keeps its
+   own styling; this only neutralizes the inline anchor wrapper. */
+/* The DS Popover root (.popover) is used here only as the inline ANCHOR for a
+   TokenValueControl trigger — but the generated .popover class carries full
+   panel chrome (background, border, box-shadow, padding, min-width/height) that
+   leaks into the field well and the box-model diagram. Neutralize the wrapper
+   to a bare inline box wherever it hosts a TVC trigger (matched via :has), so
+   only the trigger shows. The popover CONTENT (the floating editor) is a
+   separate, portaled element and keeps its own styling — this rule does not
+   touch it. */
+.popover:has(> .fsds-tvc__trigger) {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  padding: 0;
+  gap: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.fsds-tvc__title {
+  padding-bottom: 1rem;
+}
+
+.fsds-tvc__swatch {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 3px;
+  flex: none;
+}
+
+.fsds-tvc__value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fsds-tvc__diamond {
+  flex: none;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-tvc__diamond--linked {
+  color: var(--fsds-semantic-color-foreground-accent);
+}
+
+.fsds-tvc__popover {
+  width: 23rem;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+.fsds-tvc__editor {
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-tvc__stepper {
+  display: grid;
+  grid-template-columns: 2rem 1fr 2rem;
+  align-items: stretch;
+  gap: var(--fsds-core-spacing-size-02, 4px);
+}
+
+.fsds-tvc__step {
+  font: inherit;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-tvc__step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fsds-tvc__color-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  align-items: center;
+}
+
+.fsds-tvc__color-swatch {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-tvc__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  text-align: center;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-tvc__picker {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* The picker inside the popover should fill, not float as its own dialog. */
+.fsds-tvc__picker .fsds-token-picker {
+  width: 100%;
+  max-height: 50vh;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ---- BoxModelEditor (nested padding/radius/border diagram) ----
+   Recreated to match the Figma "Box model": the colored ZONES are the visual
+   hero and every value is a bare on-zone text label (the TokenValueControl
+   compact trigger), never a chip that swallows the zone. Exact measurements +
+   colors from the Figma node (cyan #8af7ff padding box 193x129, green dashed
+   padding zone, white content card, pink #ffe3f3 corner circles). */
+
+.fsds-bme {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  overflow: hidden;
+  border-radius: 10px;
+  /* The diagram is a self-contained LIGHT surface (like the reference editor's),
+     independent of the app theme, so the soft cyan/green/pink zones and dark
+     value text always composite correctly on a dark app background. Colors +
+     proportions match the live interactive-ui-editor (localhost:3000). */
+  background: var(--fsds-semantic-color-background-subtle); /* reference container bg */
+  color: #1a1a1a;
+}
+
+/* center axes — pink vertical, blue horizontal */
+.fsds-bme__axis {
+  position: absolute;
+  pointer-events: none;
+}
+.fsds-bme__axis--v {
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 0.5px);
+  width: 1px;
+  background: #d5006b; /* pink axis */
+}
+.fsds-bme__axis--h {
+  left: 0;
+  right: 0;
+  top: calc(50% + 0.5px);
+  height: 1px;
+  background: #3c4ce4; /* blue axis */
+}
+
+/* cyan border box (border band) — the outer colored zone. Reference colors
+  The nested green zone + center scale with it via inset/percent. */
+.fsds-bme__padding-box {
+  position: relative;
+  width: 95%;
+  height: 174px;
+  border-radius: 14px;
+  background: oklch(0.917 0.08 205.041); 
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* green dashed padding zone, inset inside the cyan box (opaque so it reads as a
+   filled zone, not a translucent cutout over the dark app background) */
+.fsds-bme__pad-zone {
+  position: absolute;
+  inset: 32px 13%;
+  border-radius: 6px;
+  background: oklab(0.925 -0.0767348 0.0341726); /* reference green-200 (opaque) */
+  border: 1px dashed #aaa;
+}
+
+/* white content card (the element) — shows the resolved size, read-only.
+   Reference: centered, white, dashed. Scaled with the box. */
+.fsds-bme__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 66%;
+  height: 50%;
+  border-radius: 4px;
+  background: #ffffff; /* opaque white */
+  border: 1px dashed #aaa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  z-index: 10;
+}
+.fsds-bme__center-size {
+  font-size: 9px;
+  color: #1a1a1a;
+}
+.fsds-bme__gap {
+  font-size: 8px;
+}
+
+/* padding value labels — centered in each edge of the GREEN padding zone,
+   sitting in the band BETWEEN the green edge and the white center card so each
+   value clearly belongs to the padding side it controls (not piled on center).
+   Positioned relative to the green pad-zone (its containing block). */
+.fsds-bme__pad {
+  position: absolute;
+  z-index: 14;
+}
+.fsds-bme__pad--top { top: 3px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--bottom { bottom: 4px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__pad--left { left: 6px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__pad--right { right: 6px; top: 50%; transform: translateY(-50%); }
+
+/* border value labels — bare text on the cyan-box edges (between the cyan edge
+   and the green zone). Reference: top ~10% / bottom ~90% / sides mid. */
+.fsds-bme__border-val {
+  position: absolute;
+  z-index: 12;
+}
+.fsds-bme__border-val--top { top: 8px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__border-val--bottom { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.fsds-bme__border-val--left { left: 9px; top: 50%; transform: translateY(-50%); }
+.fsds-bme__border-val--right { right: 9px; top: 50%; transform: translateY(-50%); }
+
+/* pink corner radius circles — 24x24, INSET inside the cyan box corners
+   (reference: radius values sit ~8px in from each corner, not overflowing). */
+.fsds-bme__radius {
+  position: absolute;
+  height: 26px;
+  max-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px dashed #aaa;
+  z-index: 20;
+}
+.fsds-bme__radius--tl { top: 0; left: 0; }
+.fsds-bme__radius--tr { top: 0; right: 0; }
+.fsds-bme__radius--bl { bottom: 0; left: 0; }
+.fsds-bme__radius--br { bottom: 0; right: 0; }

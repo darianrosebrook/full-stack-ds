@@ -12,6 +12,7 @@ import { TokensPhilosophyView } from "./views/TokensPhilosophyView";
 import { ComponentComplexityView } from "./views/ComponentComplexityView";
 import { ComponentStandardsView } from "./views/ComponentStandardsView";
 import { PrimitiveView } from "./views/PrimitiveView";
+import { PropertiesScratchView } from "./views/PropertiesScratchView";
 import { useRoute } from "./router";
 import type { TraceSelection } from "./trace/types";
 
@@ -50,6 +51,9 @@ export function App() {
         )}
         {route.kind === "standards" && (
           <ComponentStandardsView tab={route.tab} />
+        )}
+        {route.kind === "scratch" && route.name === "properties-panel" && (
+          <PropertiesScratchView />
         )}
         {route.kind === "primitive" && activePrimitive && (
           <PrimitiveView primitive={activePrimitive} />

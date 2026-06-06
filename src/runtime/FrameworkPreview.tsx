@@ -6,6 +6,20 @@ import { VUE_PREVIEW_URL_PREFIX } from "./vue-preview/constants";
 import { SVELTE_PREVIEW_URL_PREFIX } from "./svelte-preview/constants";
 import { LIT_PREVIEW_URL_PREFIX } from "./lit-preview/constants";
 
+/**
+ * Live configuration pushed to a config-mode preview iframe over the wire.
+ * When `config` is supplied, the iframe is loaded in config mode (?config=1)
+ * as a persistent render target: instead of rebuilding the module per change,
+ * the parent posts this payload as an `fsds:config` message and the iframe
+ * re-renders + re-skins live. Used by the scratch Properties panel.
+ */
+export interface PreviewConfig {
+  /** Full current prop map for the component (replaces, not merges). */
+  props: Record<string, unknown>;
+  /** Component-token CSS-custom-property override block (from tokenOverridesToCss). */
+  tokenCss: string;
+}
+
 interface FrameworkPreviewProps {
   framework: Framework;
   componentName: string;
@@ -16,6 +30,13 @@ interface FrameworkPreviewProps {
   demo: string;
   height?: number;
   interactive?: boolean;
+  /**
+   * When present, drives the iframe in config mode: the iframe mounts a
+   * persistent render target and this payload is sent as an `fsds:config`
+   * message on change and on the iframe's `fsds:ready` handshake. Omit for the
+   * default baked-props behavior (unchanged). Currently React-only.
+   */
+  config?: PreviewConfig;
 }
 
 /**
@@ -43,6 +64,7 @@ export function FrameworkPreview({
   demo,
   height = 200,
   interactive = true,
+  config,
 }: FrameworkPreviewProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -73,7 +95,12 @@ export function FrameworkPreview({
     demo,
   ]);
 
-  const src = useNewPipeline ? `${newPipelinePrefix}${componentName}` : null;
+  // In config mode the shell URL carries ?config=1 so the dev-server plugin
+  // serves the persistent-render-target entry instead of the baked-props one.
+  const configMode = config !== undefined;
+  const src = useNewPipeline
+    ? `${newPipelinePrefix}${componentName}${configMode ? "?config=1" : ""}`
+    : null;
 
   // Reset to loading whenever the iframe reloads. The reload trigger differs
   // by pipeline: under the new pipeline it's the `src` URL changing; under
@@ -85,12 +112,36 @@ export function FrameworkPreview({
     setErrMsg(null);
   }, [previewKey]);
 
+  // Keep the latest config in a ref so the ready-handshake handler (registered
+  // once, empty deps) can flush the current value without re-subscribing.
+  const configRef = useRef(config);
+  configRef.current = config;
+
+  // Post the current config to the iframe. Safe to call before ready — but we
+  // only call it from the ready handler and on config change after ready, so a
+  // pre-mount message is never dropped silently.
+  function postConfig() {
+    const cfg = configRef.current;
+    if (!cfg) return;
+    const win = iframeRef.current?.contentWindow;
+    if (!win) return;
+    win.postMessage(
+      { type: "fsds:config", props: cfg.props, tokenCss: cfg.tokenCss },
+      "*",
+    );
+  }
+
   // Listen for ready/error messages from this iframe only. The source-window
   // filter is what isolates multiple FrameworkPreviews mounted in the same page.
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       if (!iframeRef.current || e.source !== iframeRef.current.contentWindow) return;
-      if (e.data?.type === "fsds:ready") setStatus("ready");
+      if (e.data?.type === "fsds:ready") {
+        setStatus("ready");
+        // Handshake: the iframe just mounted — flush current config so a config
+        // set before the iframe booted is applied (fixes the late-mount race).
+        postConfig();
+      }
       if (e.data?.type === "fsds:error") {
         setStatus("error");
         setErrMsg(String(e.data.message ?? "unknown error"));
@@ -98,7 +149,16 @@ export function FrameworkPreview({
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Push config to the iframe whenever it changes, once the iframe is ready.
+  // Pre-ready changes are caught by the ready handshake above.
+  useEffect(() => {
+    if (status !== "ready") return;
+    postConfig();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config, status]);
 
   // New-pipeline iframes require `allow-same-origin` because they load a
   // same-origin URL whose script makes module fetches; an opaque origin
