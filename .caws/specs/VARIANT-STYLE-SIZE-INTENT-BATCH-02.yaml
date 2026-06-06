@@ -1,0 +1,25 @@
+id: VARIANT-STYLE-SIZE-INTENT-BATCH-02
+title: 'Realize size axes (Spinner/Avatar/Stat/List) + Progress.intent via per-value tokens from existing semantic/core tokens'
+risk_tier: 3
+mode: fix
+lifecycle_state: active
+created_at: '2026-06-06T02:59:51.245Z'
+updated_at: '2026-06-06T02:59:51.245Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
