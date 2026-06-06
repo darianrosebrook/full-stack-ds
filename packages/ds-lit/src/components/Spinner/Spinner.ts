@@ -73,6 +73,18 @@ export class SpinnerElement extends LitElement {
       animation: spin var(--fsds-spinner-anim-duration, 800ms) linear infinite;
     }
     
+    .spinner--hairline .spinner__visual {
+      border-width: var(--fsds-spinner-thickness-hairline);
+    }
+    
+    .spinner--regular .spinner__visual {
+      border-width: var(--fsds-spinner-thickness-regular);
+    }
+    
+    .spinner--bold .spinner__visual {
+      border-width: var(--fsds-spinner-thickness-bold);
+    }
+    
     @keyframes spin {
       from {
         transform: rotate(0deg);

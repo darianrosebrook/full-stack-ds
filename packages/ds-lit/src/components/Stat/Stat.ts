@@ -67,6 +67,18 @@ export class StatElement extends LitElement {
       line-height: var(--fsds-stat-typography-lineHeight-value);
       letter-spacing: -0.02em;
     }
+    
+    .stat--up {
+      color: var(--fsds-stat-color-foreground-trend-up);
+    }
+    
+    .stat--down {
+      color: var(--fsds-stat-color-foreground-trend-down);
+    }
+    
+    .stat--neutral {
+      color: var(--fsds-stat-color-foreground-trend-neutral);
+    }
   `;
 
   @property({ type: String }) size?: StatSize = "md";

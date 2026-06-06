@@ -3,8 +3,12 @@
  * VARIANT-STYLE-REALIZATION-AUDIT-01 — locked discriminator test.
  *
  * Locks the audit's classification on REAL contracts/CSS:
- *   - the canary (Spinner) is flagged: a visual variant axis with styling
- *     intent but no consuming `.prefix--value` selector;
+ *   - Batch 1 (VARIANT-STYLE-VAR-RESCOPE-BATCH-01) realized Spinner.thickness,
+ *     Stat.trend and Select.size via var-rescope/consuming selectors — those
+ *     three axes are now fully realized (regression lock for the fix);
+ *   - the canary remainder (Spinner.size/variant) is still flagged: a visual
+ *     variant axis with styling intent but no consuming `.prefix--value` selector
+ *     (Spinner.size → Batch 2; Spinner.variant → contract decision);
  *   - a fully-realized component (Button: `.button--primary` etc. scope vars in
  *     tokens.css) is NOT flagged (false-positive control);
  *   - a behavioral axis (Calendar `mode`, NavList `orientation`) has no styling
@@ -30,17 +34,27 @@ const check = (name, fn) => {
 };
 const dim = (c, d) => classify(c).dims.find((x) => x.dim === d);
 
-console.log("canary — Spinner visual axes flagged (styling intent, no consuming selector):");
-for (const d of ["thickness", "size", "variant"]) {
-  check(`Spinner.${d} is an unrealized axis`, () => {
+console.log("Batch 1 (VARIANT-STYLE-VAR-RESCOPE-BATCH-01) — var-rescope axes now realized:");
+for (const [c, d] of [["Spinner", "thickness"], ["Stat", "trend"], ["Select", "size"]]) {
+  check(`${c}.${d} is fully realized (every value has a consuming selector)`, () => {
+    const x = dim(c, d);
+    assert.ok(x, `no ${c}.${d} axis`);
+    assert.equal(x.gaps.length, 0, `unexpected gaps: ${JSON.stringify(x.gaps)}`);
+    assert.equal(x.realizedCount, x.total, `realizedCount=${x.realizedCount} of ${x.total}`);
+  });
+}
+
+console.log("\ncanary remainder — Spinner.size/variant still unrealized (Batch 2 + contract decision):");
+for (const d of ["size", "variant"]) {
+  check(`Spinner.${d} is still an unrealized axis`, () => {
     const x = dim("Spinner", d);
     assert.ok(x, `no Spinner.${d} axis`);
     assert.equal(x.realizedCount, 0, `realizedCount=${x.realizedCount} (expected 0)`);
   });
 }
-check("Spinner.thickness has styling intent (per-value tokens) -> genuine gaps", () => {
-  const x = dim("Spinner", "thickness");
-  assert.equal(x.stylingIntent, true, "expected styling intent (thickness tokens exist)");
+check("Spinner.size has styling intent (per-value size tokens) -> genuine gaps", () => {
+  const x = dim("Spinner", "size");
+  assert.equal(x.stylingIntent, true, "expected styling intent (size token segment exists)");
   assert.ok(x.gaps.length > 0, `expected gaps, got ${JSON.stringify(x.gaps)}`);
 });
 

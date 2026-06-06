@@ -196,6 +196,18 @@ export class SelectElement extends LitElement {
       cursor: not-allowed;
       opacity: 0.5;
     }
+    
+    .select--sm .select__trigger {
+      height: var(--fsds-select-size-sm-height);
+    }
+    
+    .select--md .select__trigger {
+      height: var(--fsds-select-size-md-height);
+    }
+    
+    .select--lg .select__trigger {
+      height: var(--fsds-select-size-lg-height);
+    }
   `;
 
   @property({ attribute: false }) options?: SelectOption[] = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}];
@@ -439,6 +451,18 @@ export class SelectTriggerElement extends LitElement {
       cursor: not-allowed;
       opacity: 0.5;
     }
+    
+    .select--sm .select__trigger {
+      height: var(--fsds-select-size-sm-height);
+    }
+    
+    .select--md .select__trigger {
+      height: var(--fsds-select-size-md-height);
+    }
+    
+    .select--lg .select__trigger {
+      height: var(--fsds-select-size-lg-height);
+    }
   `;
 
   override render() {
@@ -625,6 +649,18 @@ export class SelectContentElement extends LitElement {
       cursor: not-allowed;
       opacity: 0.5;
     }
+    
+    .select--sm .select__trigger {
+      height: var(--fsds-select-size-sm-height);
+    }
+    
+    .select--md .select__trigger {
+      height: var(--fsds-select-size-md-height);
+    }
+    
+    .select--lg .select__trigger {
+      height: var(--fsds-select-size-lg-height);
+    }
   `;
 
   override render() {
@@ -810,6 +846,18 @@ export class SelectOptionElement extends LitElement {
     .select--disabled .select__trigger {
       cursor: not-allowed;
       opacity: 0.5;
+    }
+    
+    .select--sm .select__trigger {
+      height: var(--fsds-select-size-sm-height);
+    }
+    
+    .select--md .select__trigger {
+      height: var(--fsds-select-size-md-height);
+    }
+    
+    .select--lg .select__trigger {
+      height: var(--fsds-select-size-lg-height);
     }
   `;
 

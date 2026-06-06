@@ -27,5 +27,20 @@
         "web"
       ]
     }
+  },
+  "--up": {
+    "color": {
+      "resolvesTo": "stat.color.foreground.trend.up"
+    }
+  },
+  "--down": {
+    "color": {
+      "resolvesTo": "stat.color.foreground.trend.down"
+    }
+  },
+  "--neutral": {
+    "color": {
+      "resolvesTo": "stat.color.foreground.trend.neutral"
+    }
   }
 }
