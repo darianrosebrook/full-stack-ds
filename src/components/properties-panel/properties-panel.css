@@ -1,0 +1,308 @@
+/* Figma-style properties panel chrome for the scratch page (and, later, the
+   TracePanel Properties tab). Uses the app's semantic token vars so it sits in
+   the showcase visual language. Scoped under .fsds-pp / .fsds-token-picker. */
+
+.fsds-pp {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--fsds-core-typography-ramp-2, 12px);
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-primary);
+  width: 100%;
+}
+
+.fsds-pp__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  padding: var(--fsds-core-spacing-size-05, 12px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-pp__title {
+  font-weight: 600;
+  font-size: var(--fsds-core-typography-ramp-3, 14px);
+}
+
+.fsds-pp__layer {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__section {
+  padding: var(--fsds-core-spacing-size-05, 12px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+}
+
+.fsds-pp__section-title {
+  margin: 0;
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+/* Two-column label → control grid, like Figma's variant rows. */
+.fsds-pp__field {
+  display: grid;
+  grid-template-columns: minmax(0, 5rem) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+}
+
+.fsds-pp__field--token {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--fsds-core-spacing-size-02, 4px);
+}
+
+.fsds-pp__label {
+  color: var(--fsds-semantic-color-foreground-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fsds-pp__label--token {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__input,
+.fsds-pp__token-value {
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-pp__input:focus,
+.fsds-pp__token-value:focus {
+  outline: 2px solid var(--fsds-semantic-color-foreground-accent);
+  outline-offset: -1px;
+}
+
+.fsds-pp__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+/* Token row: swatch | value | bind button */
+.fsds-pp__token-row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) 1.5rem;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+}
+
+.fsds-pp__swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.fsds-pp__swatch--dim {
+  background: var(--fsds-semantic-color-background-subtle);
+  cursor: default;
+}
+
+.fsds-pp__bind {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-pp__bind:hover {
+  color: var(--fsds-semantic-color-foreground-accent);
+  border-color: var(--fsds-semantic-color-border-default);
+}
+
+/* ---- Token picker dialog ---- */
+
+.fsds-pp__picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, black 30%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.fsds-token-picker {
+  width: 22rem;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--fsds-semantic-color-background-elevated);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px color-mix(in srgb, black 24%, transparent);
+  overflow: hidden;
+}
+
+.fsds-token-picker__head {
+  display: flex;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  padding: var(--fsds-core-spacing-size-04, 8px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-token-picker__search {
+  flex: 1;
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-token-picker__close {
+  width: 1.75rem;
+  font-size: 16px;
+  line-height: 1;
+  color: var(--fsds-semantic-color-foreground-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.fsds-token-picker__body {
+  overflow-y: auto;
+  padding: var(--fsds-core-spacing-size-03, 6px);
+}
+
+.fsds-token-picker__group-name {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  padding: var(--fsds-core-spacing-size-03, 6px) var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-02, 4px);
+}
+
+.fsds-token-picker__item {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-03, 6px);
+  width: 100%;
+  padding: var(--fsds-core-spacing-size-02, 4px);
+  font: inherit;
+  text-align: left;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fsds-token-picker__item:hover {
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
+.fsds-token-picker__swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-token-picker__path {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fsds-token-picker__value {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-token-picker__empty {
+  padding: var(--fsds-core-spacing-size-05, 12px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+/* ---- Scratch page two-pane layout (stage | inspector) ---- */
+
+.fsds-scratch {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--fsds-core-spacing-size-06, 16px);
+  margin-top: var(--fsds-core-spacing-size-06, 16px);
+  align-items: start;
+}
+
+.fsds-scratch__stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-05, 12px);
+}
+
+.fsds-scratch__picker {
+  display: flex;
+  align-items: center;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  font-size: var(--fsds-core-typography-ramp-2, 12px);
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+.fsds-scratch__picker select {
+  padding: var(--fsds-core-spacing-size-02, 4px) var(--fsds-core-spacing-size-03, 6px);
+  font: inherit;
+  color: var(--fsds-semantic-color-foreground-primary);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 4px;
+}
+
+.fsds-scratch__preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  padding: var(--fsds-core-spacing-size-06, 16px);
+  background: var(--fsds-semantic-color-background-subtle);
+  border: 1px solid var(--fsds-semantic-color-border-subtle);
+  border-radius: 8px;
+}
+
+.fsds-scratch__inspector {
+  border: 1px solid var(--fsds-semantic-color-border-default);
+  border-radius: 8px;
+  overflow: hidden;
+  position: sticky;
+  top: var(--fsds-core-spacing-size-06, 16px);
+}

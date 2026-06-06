@@ -36,7 +36,10 @@ export type Route =
   | { kind: "primitive"; name: string }
   | { kind: "tokens-philosophy"; tab: TokensTab }
   | { kind: "complexity"; tab: ComplexityTab }
-  | { kind: "standards"; tab: StandardsTab };
+  | { kind: "standards"; tab: StandardsTab }
+  // Scratch surfaces — reachable by URL only, not in the Sidebar nav. Used to
+  // design UI (e.g. the properties panel) before it lands in the app.
+  | { kind: "scratch"; name: "properties-panel" };
 
 const TOKENS_TABS = new Set<TokensTab>([
   "overview",
@@ -80,6 +83,9 @@ function parseHash(hash: string): Route {
   }
   if (parts[0] === "primitive" && parts[1]) {
     return { kind: "primitive", name: parts[1] };
+  }
+  if (parts[0] === "scratch" && parts[1] === "properties-panel") {
+    return { kind: "scratch", name: "properties-panel" };
   }
   if (parts[0] === "tokens") return { kind: "tokens" };
   if (parts[0] === "architecture") return { kind: "architecture" };
@@ -131,6 +137,8 @@ function buildHref(route: Route): string {
       return route.tab === "overview"
         ? "#/standards"
         : `#/standards/${route.tab}`;
+    case "scratch":
+      return `#/scratch/${route.name}`;
   }
 }
 
