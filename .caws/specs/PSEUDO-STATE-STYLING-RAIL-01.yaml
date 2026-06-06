@@ -3,6 +3,7 @@ title: 'Pseudo-state styling realization audit — classify + prove declared sta
 risk_tier: 3
 mode: feature
 lifecycle_state: active
+worktree: pseudo-state-rail
 created_at: '2026-06-06T06:48:50.845Z'
 updated_at: '2026-06-06T06:48:50.845Z'
 blast_radius:
