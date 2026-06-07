@@ -22,6 +22,7 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   svelte: { framework: "svelte", sources: [] },
   lit: { framework: "lit", sources: [] },
   angular: { framework: "angular", sources: [] },
+  "react-native": { framework: "react-native", sources: [] },
 };
 
 const STUB_ENVIRONMENT: EnvironmentProvenance = {
@@ -136,6 +137,19 @@ function baseReport(): RailReport {
         knownGaps: [],
         status: "pass",
       },
+      "react-native": {
+        framework: "react-native",
+        scope: "workspace",
+        artifactSelection: "by_manifest",
+        artifactManifest: { groupCount: 0 },
+        command: "x",
+        commandRuns: [],
+        checks: { typecheck: "pass" },
+        durationMs: 1,
+        diagnostics: [],
+        knownGaps: [],
+        status: "pass",
+      },
     },
     knownGaps: [],
     overall: "pass",
@@ -146,7 +160,7 @@ describe("renderMarkdownReport", () => {
   it("includes the verbatim 'JSON is canonical' header line", () => {
     const md = renderMarkdownReport(baseReport());
     expect(md).toContain(
-      "> Derived from RailReport at 2026-05-21T00:00:00.000Z; manifest schemaVersion v5. The JSON is canonical.",
+      "> Derived from RailReport at 2026-05-21T00:00:00.000Z; manifest schemaVersion v6. The JSON is canonical.",
     );
   });
 
@@ -191,6 +205,7 @@ describe("renderMarkdownReport", () => {
       svelte: { framework: "svelte", sources: [] },
       lit: { framework: "lit", sources: [] },
       angular: { framework: "angular", sources: [] },
+      "react-native": { framework: "react-native", sources: [] },
     };
     const md = renderMarkdownReport(r);
     expect(md).toContain("## Per-framework emitter provenance");
@@ -199,10 +214,10 @@ describe("renderMarkdownReport", () => {
     expect(md).toContain("| vue | 0 |");
   });
 
-  it("renders the per-framework summary table with all five frameworks", () => {
+  it("renders the per-framework summary table with all rail frameworks", () => {
     const md = renderMarkdownReport(baseReport());
     expect(md).toContain("## Per-framework summary");
-    for (const fw of ["react", "vue", "svelte", "lit", "angular"]) {
+    for (const fw of ["react", "vue", "svelte", "lit", "angular", "react-native"]) {
       expect(md).toContain(`| ${fw} |`);
     }
   });
@@ -210,12 +225,12 @@ describe("renderMarkdownReport", () => {
   it("renders the per-component table when componentsIndex is present", () => {
     const md = renderMarkdownReport(baseReport());
     expect(md).toContain("## Per-component admission index");
-    // Header row includes Component + all five frameworks.
+    // Header row includes Component + all rail frameworks.
     expect(md).toMatch(
-      /\| Component \| react \| vue \| svelte \| lit \| angular \|/,
+      /\| Component \| react \| vue \| svelte \| lit \| angular \| react-native \|/,
     );
     // Button row: pass [pkg] under react, em-dash elsewhere.
-    expect(md).toContain("| Button | pass [pkg] | — | — | — | — |");
+    expect(md).toContain("| Button | pass [pkg] | — | — | — | — | — |");
   });
 
   it("omits the per-component table when componentsIndex is absent (legacy mode)", () => {

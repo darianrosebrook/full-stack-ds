@@ -43,6 +43,7 @@ describe("buildComponentIndex", () => {
       svelte: baseResult("svelte"),
       lit: baseResult("lit"),
       angular: baseResult("angular"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     expect(buildComponentIndex(results)).toBeUndefined();
   });
@@ -70,6 +71,7 @@ describe("buildComponentIndex", () => {
       svelte: baseResult("svelte"),
       lit: baseResult("lit"),
       angular: baseResult("angular"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     const idx = buildComponentIndex(results);
     expect(idx).toBeDefined();
@@ -112,6 +114,7 @@ describe("buildComponentIndex", () => {
       vue: baseResult("vue"),
       svelte: baseResult("svelte"),
       angular: baseResult("angular"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     const idx = buildComponentIndex(results)!;
     expect(idx.Input.lit!.coverages).toEqual([
@@ -144,6 +147,7 @@ describe("buildComponentIndex", () => {
       vue: baseResult("vue"),
       svelte: baseResult("svelte"),
       lit: baseResult("lit"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     const idx = buildComponentIndex(results)!;
     expect(idx.FixtureOnly.angular).toEqual({
@@ -177,6 +181,7 @@ describe("buildComponentIndex", () => {
       svelte: baseResult("svelte"),
       lit: baseResult("lit"),
       angular: baseResult("angular"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     const idx = buildComponentIndex(results)!;
     expect(idx.Broken.react!.status).toBe("fail");
@@ -213,6 +218,7 @@ describe("buildComponentIndex", () => {
       vue: baseResult("vue"),
       svelte: baseResult("svelte"),
       angular: baseResult("angular"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     const idx = buildComponentIndex(results)!;
     expect([...idx.Dup.lit!.knownRuleNarrowings].sort()).toEqual([
@@ -257,6 +263,7 @@ describe("buildComponentIndex", () => {
       svelte: baseResult("svelte"),
       lit: baseResult("lit"),
       angular: baseResult("angular"),
+      "react-native": baseResult("react-native"),
     } as Record<FrameworkId, FrameworkValidationResult>;
     const idx = buildComponentIndex(results)!;
     expect(Object.keys(idx).sort()).toEqual(["A", "B"]);

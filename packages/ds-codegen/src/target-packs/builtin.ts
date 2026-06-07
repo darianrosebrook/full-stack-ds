@@ -187,6 +187,56 @@ export const BUILTIN_TARGET_PACKS: Readonly<Record<BuiltinTargetId, TargetPackMa
       ],
     },
   },
+  "react-native": {
+    schemaVersion: TARGET_PACK_MANIFEST_SCHEMA_VERSION,
+    target: {
+      id: "react-native",
+      family: "native-view",
+      label: "React Native",
+      maturity: "experimental",
+    },
+    compatibility: {
+      codegenProtocol: "builtin-framework-emitter-v1",
+      componentIR: "ComponentIR@v1",
+      targetFamilyIR: "native-view@react-native-experimental",
+    },
+    entrypoints: {
+      emitter: "packages/ds-codegen/src/frameworks/react-native/factory.ts",
+    },
+    outputs: {
+      componentsRoot: "src/components",
+      barrelFile: "index.ts",
+      fileKinds: ["component-source", "test-source", "style-source", "token-source", "barrel"],
+    },
+    capabilities: {
+      components: true,
+      tests: true,
+      behavior: false,
+      compoundParts: false,
+      surface: false,
+      tokens: "native-theme-module",
+      customRegions: true,
+    },
+    permissions: SAFE_BUILTIN_PERMISSIONS,
+    admission: {
+      commands: [
+        {
+          check: "typecheck",
+          command: ["pnpm", "--filter", "@full-stack-ds/react-native", "run", "typecheck"],
+          scope: {
+            packageRoot: "packages/ds-react-native/",
+            extensions: [".ts", ".tsx", ".json"],
+            coverage: "covered_by_package_check",
+          },
+        },
+      ],
+      knownGaps: [
+        "Experimental opt-in target; not part of --target=all or the default five-web-framework governed rail.",
+        "Package typecheck admits generated RN source, styles, token modules, and smoke tests; it does not prove simulator/device runtime behavior or visual parity.",
+        "Surface behavior and compound-part parity remain unadmitted for React Native.",
+      ],
+    },
+  },
 };
 
 export function getBuiltinTargetPackManifest(id: BuiltinTargetId): TargetPackManifestV1 {

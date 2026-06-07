@@ -87,7 +87,13 @@
  *     recorded, and required mode rejects drift on any of those.
  */
 
-export type FrameworkId = "react" | "vue" | "svelte" | "lit" | "angular";
+export type FrameworkId =
+  | "react"
+  | "vue"
+  | "svelte"
+  | "lit"
+  | "angular"
+  | "react-native";
 
 /**
  * What a single check produced. `direct` means the framework
@@ -531,8 +537,12 @@ export interface EmittedArtifactGroup {
  *       major, codegen package version, and lockfile digest at
  *       generate time. v4 manifests fall through SCHEMA_MISMATCH
  *       (same migration policy as previous boundaries).
+ *   v6 (CODEGEN-RAIL-REACT-NATIVE-ADMISSION-01): widens
+ *       FrameworkId to include the opt-in React Native target so
+ *       manifests can attribute native generated artifacts to the
+ *       RN emitter source set and package typecheck lane.
  */
-export const EMISSION_MANIFEST_SCHEMA_VERSION = 5 as const;
+export const EMISSION_MANIFEST_SCHEMA_VERSION = 6 as const;
 
 /**
  * Record produced by the codegen CLI after a successful generate
@@ -1055,7 +1065,7 @@ export interface RailReport {
    * Derived from `frameworks[].artifacts[]`; this surface adds no
    * new pass/fail behavior, only a citation-friendly index for
    * closure notes asking "what happened to component X across
-   * all five frameworks" — a question the existing report shape
+   * admitted framework lanes" — a question the existing report shape
    * answers only by walking every framework and filtering.
    */
   componentsIndex?: ComponentAdmissionIndex;

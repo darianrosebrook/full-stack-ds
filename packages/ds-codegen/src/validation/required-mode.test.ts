@@ -43,6 +43,7 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   svelte: { framework: "svelte", sources: [] },
   lit: { framework: "lit", sources: [] },
   angular: { framework: "angular", sources: [] },
+  "react-native": { framework: "react-native", sources: [] },
 };
 
 /**
@@ -72,6 +73,10 @@ const STUB_VALID_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   angular: {
     framework: "angular",
     sources: [{ path: "packages/ds-codegen/src/stub-angular.ts", sha256: "a".repeat(64) }],
+  },
+  "react-native": {
+    framework: "react-native",
+    sources: [{ path: "packages/ds-codegen/src/stub-react-native.ts", sha256: "a".repeat(64) }],
   },
 };
 
@@ -1085,9 +1090,9 @@ describe("readManifestForVerification", () => {
   // verifier silently skip emitter-source integrity for that
   // framework, undercutting the slice's claim that "each generated
   // artifact group is covered by a framework emitter source set."
-  it("returns parse_error when a v4 manifest omits a framework key in emitterSourceSets", () => {
-    // Manifest with only react+vue+svelte+lit keys — missing
-    // angular. Verifier-loop would have happily skipped angular
+  it("returns parse_error when a manifest omits a framework key in emitterSourceSets", () => {
+    // Manifest with web keys only — missing react-native.
+    // Verifier-loop would have happily skipped react-native
     // emitter integrity; reader must refuse the manifest first.
     fs.writeFileSync(
       manifestPath,
@@ -1099,6 +1104,7 @@ describe("readManifestForVerification", () => {
           vue: { framework: "vue", sources: [{ path: "x", sha256: "a".repeat(64) }] },
           svelte: { framework: "svelte", sources: [{ path: "x", sha256: "a".repeat(64) }] },
           lit: { framework: "lit", sources: [{ path: "x", sha256: "a".repeat(64) }] },
+          angular: { framework: "angular", sources: [{ path: "x", sha256: "a".repeat(64) }] },
         },
         groups: [],
       }),
@@ -1106,7 +1112,7 @@ describe("readManifestForVerification", () => {
     const out = readManifestForVerification(manifestPath);
     expect(out.kind).toBe("parse_error");
     if (out.kind === "parse_error") {
-      expect(out.message).toMatch(/emitterSourceSets\["angular"\] is missing/);
+      expect(out.message).toMatch(/emitterSourceSets\["react-native"\] is missing/);
     }
   });
 

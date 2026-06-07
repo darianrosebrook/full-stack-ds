@@ -26,6 +26,7 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   svelte: { framework: "svelte", sources: [] },
   lit: { framework: "lit", sources: [] },
   angular: { framework: "angular", sources: [] },
+  "react-native": { framework: "react-native", sources: [] },
 };
 
 const STUB_ENVIRONMENT: EnvironmentProvenance = {
@@ -76,6 +77,7 @@ function emptyResults(): Record<FrameworkId, FrameworkValidationResult> {
     svelte: base("svelte"),
     lit: base("lit"),
     angular: base("angular"),
+    "react-native": base("react-native"),
   };
 }
 

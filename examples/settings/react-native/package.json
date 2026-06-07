@@ -1,0 +1,18 @@
+{
+  "name": "@full-stack-ds/example-settings-react-native",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@full-stack-ds/react-native": "workspace:*",
+    "react": "^19.2.5",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "typescript": "^6.0.2"
+  }
+}

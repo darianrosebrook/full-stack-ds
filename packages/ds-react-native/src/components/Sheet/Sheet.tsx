@@ -1,0 +1,93 @@
+// @generated:start imports
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
+import { useFsdsTheme } from "../../tokens";
+import { createSheetStyles } from "./Sheet.styles";
+// @generated:end
+
+// @generated:start types
+export type SheetSide = "top" | "right" | "bottom" | "left";
+// @generated:end
+
+// @generated:start props
+export interface SheetProps {
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  side?: SheetSide;
+  modal?: boolean;
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  testID?: string;
+  accessibilityLabel?: string;
+  accessibilityLabelledBy?: string | string[];
+}
+// @generated:end
+
+// @generated:start component
+export function Sheet({
+  open: controlledOpenness,
+  defaultOpen = false,
+  children,
+  style,
+  testID,
+  accessibilityLabel,
+  accessibilityLabelledBy,
+}: SheetProps) {
+  const fsdsTheme = useFsdsTheme();
+  const styles = useMemo(() => createSheetStyles(fsdsTheme), [fsdsTheme]);
+  const [uncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const openness = controlledOpenness ?? uncontrolledOpenness;
+
+  return (
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+    >
+      {openness ? (
+      <View
+        style={styles.overlay}
+        accessible={false}
+      />
+      ) : null}
+      {openness ? (
+      <View
+        style={styles.content}
+        accessibilityLabelledBy={"sheet-title-id"}
+      >
+        <View
+          style={styles.header}
+        >
+          <View
+            style={styles.title}
+          >
+            {typeof children === "string" ? <RNText>{children}</RNText> : children}
+          </View>
+          <RNText
+            style={styles.description}
+            accessibilityRole="text"
+          >
+            {children}
+          </RNText>
+          <Pressable
+            style={styles.close}
+            accessibilityRole="button"
+          />
+        </View>
+        <View
+          style={styles.body}
+        >
+          {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        </View>
+        <View
+          style={styles.footer}
+        />
+      </View>
+      ) : null}
+    </View>
+  );
+}
+// @generated:end

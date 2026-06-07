@@ -31,6 +31,7 @@ export default defineConfig({
       "packages/ds-vue/**",
       "packages/ds-angular/**",
       "packages/ds-lit/**",
+      "packages/ds-react-native/**",
       "packages/ds-svelte/**",
     ],
   },

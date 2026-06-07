@@ -28,7 +28,10 @@ export interface TargetRegistryConfigV1 {
 
 export const DEFAULT_TARGET_REGISTRY_CONFIG: TargetRegistryConfigV1 = {
   schemaVersion: TARGET_REGISTRY_CONFIG_SCHEMA_VERSION,
-  targets: KNOWN_TARGETS.map((id) => ({ id, source: { kind: "builtin" } })),
+  targets: KNOWN_TARGETS.filter((id) => id !== "react-native").map((id) => ({
+    id,
+    source: { kind: "builtin" },
+  })),
 };
 
 export type LoadedTargetRegistryConfigV1 = {
