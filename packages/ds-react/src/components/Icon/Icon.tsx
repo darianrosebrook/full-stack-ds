@@ -46,7 +46,12 @@ export function Icon({
     .join(" ");
 
   return (
-  <span className={`${classNames}`} aria-hidden="true" data-testid={testId} {...rest} />
+  <span className={`${classNames}`} aria-hidden="true" data-testid={testId} {...rest}>
+    <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" width={width} height={height}>
+      <circle cx="8.5" cy="8.5" r="8" stroke="currentColor" strokeLinecap="round" strokeDasharray="2 4" />
+      <circle cx="8.5" cy="8.5" r="3" stroke="currentColor" strokeLinecap="round" strokeDasharray=".125 3" />
+    </svg>
+  </span>
   );
 }
 // @generated:end

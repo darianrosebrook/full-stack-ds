@@ -14,7 +14,45 @@
       "part": "root",
       "attrs": {
         "aria-hidden": "true"
-      }
+      },
+      "children": [
+        {
+          "tag": "svg",
+          "attrs": {
+            "viewBox": "0 0 17 17",
+            "fill": "none",
+            "xmlns": "http://www.w3.org/2000/svg"
+          },
+          "bindings": {
+            "width": "prop:width",
+            "height": "prop:height"
+          },
+          "children": [
+            {
+              "tag": "circle",
+              "attrs": {
+                "cx": "8.5",
+                "cy": "8.5",
+                "r": "8",
+                "stroke": "currentColor",
+                "stroke-linecap": "round",
+                "stroke-dasharray": "2 4"
+              }
+            },
+            {
+              "tag": "circle",
+              "attrs": {
+                "cx": "8.5",
+                "cy": "8.5",
+                "r": "3",
+                "stroke": "currentColor",
+                "stroke-linecap": "round",
+                "stroke-dasharray": ".125 3"
+              }
+            }
+          ]
+        }
+      ]
     }
   },
   "props": {
