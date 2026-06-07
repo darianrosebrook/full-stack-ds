@@ -343,6 +343,7 @@
         "isCompound": true,
         "isRootOnly": false,
         "details": {
+          "description": "Interactive anchor that toggles the popover and owns the expanded relationship.",
           "role": "trigger",
           "interactive": true,
           "focusable": true
@@ -357,6 +358,7 @@
         "isCompound": true,
         "isRootOnly": false,
         "details": {
+          "description": "Anchored popover surface containing interactive content without trapping focus.",
           "role": "content",
           "interactive": true,
           "focusable": true

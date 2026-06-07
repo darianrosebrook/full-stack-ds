@@ -284,6 +284,7 @@
         "isCompound": true,
         "isRootOnly": false,
         "details": {
+          "description": "Element that opens the tooltip on hover or focus and owns the described-by relationship.",
           "role": "trigger",
           "interactive": true,
           "focusable": true
@@ -298,6 +299,7 @@
         "isCompound": true,
         "isRootOnly": false,
         "details": {
+          "description": "Non-interactive supplemental text surface anchored to the trigger.",
           "role": "content",
           "aria": {
             "role": "tooltip"

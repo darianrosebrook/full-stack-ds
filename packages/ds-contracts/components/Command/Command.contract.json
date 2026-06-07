@@ -38,7 +38,7 @@
       "dialog": {
         "tag": "div",
         "description": "Modal command palette panel containing the search input and result list.",
-        "role": "region",
+        "role": "content",
         "aria": {
           "role": "dialog",
           "attributes": [

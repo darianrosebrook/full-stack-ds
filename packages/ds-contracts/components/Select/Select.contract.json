@@ -45,7 +45,7 @@
       "content": {
         "tag": "div",
         "description": "Floating listbox surface rendered while the select is open.",
-        "role": "region",
+        "role": "content",
         "aria": {
           "role": "listbox"
         }

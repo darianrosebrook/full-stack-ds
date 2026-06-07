@@ -22,7 +22,7 @@
       "root": {
         "tag": "div",
         "description": "Guided-tour status region for the active walkthrough step.",
-        "role": "region",
+        "role": "root",
         "aria": {
           "role": "status",
           "attributes": [

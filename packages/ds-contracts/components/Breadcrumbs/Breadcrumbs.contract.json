@@ -17,7 +17,7 @@
       "root": {
         "tag": "nav",
         "description": "Navigation landmark labeled for the breadcrumb trail.",
-        "role": "region",
+        "role": "root",
         "aria": {
           "role": "navigation",
           "attributes": [
