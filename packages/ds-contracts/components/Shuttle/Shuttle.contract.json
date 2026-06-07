@@ -9,6 +9,32 @@
       "root",
       "item"
     ],
+    "details": {
+      "root": {
+        "tag": "ul",
+        "description": "Listbox representing the current transferred selection.",
+        "role": "group",
+        "aria": {
+          "role": "listbox",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "item": {
+        "tag": "li",
+        "description": "Selected listbox option rendered from the selection channel.",
+        "role": "item",
+        "multiple": true,
+        "focusable": "roving",
+        "aria": {
+          "role": "option",
+          "attributes": [
+            "aria-selected"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "ul",
       "part": "root",

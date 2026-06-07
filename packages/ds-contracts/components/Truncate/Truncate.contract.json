@@ -10,6 +10,30 @@
       "content",
       "toggle"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Text truncation host that coordinates line clamping and optional expansion.",
+        "role": "root"
+      },
+      "content": {
+        "tag": "span",
+        "description": "Text content clamped to the configured number of visible lines.",
+        "role": "content"
+      },
+      "toggle": {
+        "tag": "button",
+        "description": "Optional button that expands or collapses the truncated content.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-expanded"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

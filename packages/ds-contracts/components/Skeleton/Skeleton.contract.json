@@ -12,6 +12,33 @@
       "row",
       "shape"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Loading placeholder host that carries busy state and optional loading label.",
+        "role": "root",
+        "aria": {
+          "attributes": [
+            "aria-busy",
+            "aria-label"
+          ]
+        }
+      },
+      "stack": {
+        "description": "Layout stack used by multi-line or compound skeleton variants.",
+        "role": "group"
+      },
+      "row": {
+        "description": "Repeated skeleton row used to mimic text or list content.",
+        "role": "decoration",
+        "multiple": true
+      },
+      "shape": {
+        "description": "Placeholder shape representing the eventual content block, avatar, media, or action.",
+        "role": "decoration",
+        "multiple": true
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

@@ -12,14 +12,17 @@
     ],
     "details": {
       "root": {
+        "description": "Tooltip host that coordinates trigger and ephemeral content visibility.",
         "role": "group"
       },
       "trigger": {
+        "description": "Element that opens the tooltip on hover or focus and owns the described-by relationship.",
         "role": "trigger",
         "interactive": true,
         "focusable": true
       },
       "content": {
+        "description": "Non-interactive supplemental text surface anchored to the trigger.",
         "role": "content",
         "aria": {
           "role": "tooltip"

@@ -8,6 +8,13 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Prominent metric value display intended to be paired with an external label or caption.",
+        "role": "content"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

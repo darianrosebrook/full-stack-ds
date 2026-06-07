@@ -8,6 +8,13 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "p",
+        "description": "Polymorphic text element rendered with the requested semantic tag and typography variant.",
+        "role": "content"
+      }
+    },
     "dom": {
       "tag": "p",
       "part": "root"

@@ -10,6 +10,32 @@
       "label",
       "input"
     ],
+    "details": {
+      "root": {
+        "tag": "button",
+        "description": "Button-based switch control that toggles the checked channel.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "role": "switch",
+          "attributes": [
+            "aria-checked",
+            "aria-label",
+            "aria-describedby"
+          ]
+        }
+      },
+      "label": {
+        "description": "Adjacent visible text label for the switch.",
+        "role": "label"
+      },
+      "input": {
+        "description": "Switch state carrier represented by the button root in the current DOM realization.",
+        "role": "context",
+        "collapsibleTo": "native-toggle-affordance"
+      }
+    },
     "dom": {
       "tag": "button",
       "part": "root",

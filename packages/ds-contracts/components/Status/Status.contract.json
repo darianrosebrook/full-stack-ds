@@ -10,6 +10,23 @@
       "icon",
       "label"
     ],
+    "details": {
+      "root": {
+        "tag": "span",
+        "description": "Inline status pair grouping the visual status icon and text label.",
+        "role": "root"
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Visual status glyph derived from the status prop; hidden from assistive technology.",
+        "role": "decoration"
+      },
+      "label": {
+        "tag": "span",
+        "description": "Visible status text supplied by the component content.",
+        "role": "label"
+      }
+    },
     "dom": {
       "tag": "span",
       "part": "root",

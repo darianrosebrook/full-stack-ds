@@ -9,6 +9,24 @@
       "root",
       "visual"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Loading status wrapper that may expose a localized label when not decorative.",
+        "role": "region",
+        "aria": {
+          "role": "status",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "visual": {
+        "tag": "span",
+        "description": "Animated visual spinner mark; hidden from assistive technology.",
+        "role": "decoration"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

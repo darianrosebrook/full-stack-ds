@@ -18,6 +18,83 @@
       "dot",
       "counter"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Guided-tour status region for the active walkthrough step.",
+        "role": "region",
+        "aria": {
+          "role": "status",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "content": {
+        "tag": "div",
+        "description": "Panel content containing the active step title and description.",
+        "role": "content"
+      },
+      "title": {
+        "tag": "h3",
+        "description": "Heading for the active walkthrough step.",
+        "role": "label"
+      },
+      "description": {
+        "tag": "p",
+        "description": "Supporting explanatory text for the active walkthrough step.",
+        "role": "content"
+      },
+      "controls": {
+        "tag": "div",
+        "description": "Control group for skipping, navigating, and indicating walkthrough progress.",
+        "role": "group"
+      },
+      "skip": {
+        "tag": "button",
+        "description": "Button that exits or skips the walkthrough.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "prev": {
+        "tag": "button",
+        "description": "Button that moves to the previous walkthrough step.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "next": {
+        "tag": "button",
+        "description": "Button that advances to the next walkthrough step or completes the tour.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "dots": {
+        "tag": "div",
+        "description": "Progress-dot group representing the full step sequence.",
+        "role": "group"
+      },
+      "dot": {
+        "tag": "button",
+        "description": "Step navigation dot for a single walkthrough step.",
+        "role": "trigger",
+        "multiple": true,
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "counter": {
+        "tag": "span",
+        "description": "Visible current-step count within the walkthrough sequence.",
+        "role": "context"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

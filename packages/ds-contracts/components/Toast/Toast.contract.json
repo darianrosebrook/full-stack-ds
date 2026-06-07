@@ -15,6 +15,65 @@
       "action",
       "close"
     ],
+    "details": {
+      "root": {
+        "description": "Toast system host represented by the notification viewport and visible toast item.",
+        "role": "root"
+      },
+      "viewport": {
+        "tag": "div",
+        "description": "Live notification region that contains transient toast items.",
+        "role": "region",
+        "aria": {
+          "attributes": [
+            "aria-live",
+            "aria-label"
+          ]
+        }
+      },
+      "item": {
+        "tag": "div",
+        "description": "Single visible toast notification.",
+        "role": "region",
+        "aria": {
+          "role": "status"
+        }
+      },
+      "title": {
+        "tag": "div",
+        "description": "Optional short heading for the toast.",
+        "role": "label"
+      },
+      "description": {
+        "tag": "div",
+        "description": "Primary toast message content.",
+        "role": "content"
+      },
+      "row": {
+        "tag": "div",
+        "description": "Layout row grouping message text, optional action, and close control.",
+        "role": "group"
+      },
+      "action": {
+        "tag": "div",
+        "description": "Optional action area for a consumer-provided toast action.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "close": {
+        "tag": "button",
+        "description": "Dismissal control for hiding the toast.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "viewport",

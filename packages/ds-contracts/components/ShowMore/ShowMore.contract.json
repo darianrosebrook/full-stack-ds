@@ -10,6 +10,30 @@
       "content",
       "trigger"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Expandable content host that coordinates truncation and expanded state.",
+        "role": "root"
+      },
+      "content": {
+        "tag": "div",
+        "description": "Content region clamped to maxLines while collapsed and fully revealed when expanded.",
+        "role": "content"
+      },
+      "trigger": {
+        "tag": "button",
+        "description": "Button that toggles whether the full content is revealed.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-expanded"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

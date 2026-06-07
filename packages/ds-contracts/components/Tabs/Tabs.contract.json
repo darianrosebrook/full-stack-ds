@@ -13,7 +13,13 @@
       "panel"
     ],
     "details": {
+      "root": {
+        "tag": "div",
+        "description": "Tabs host that coordinates active tab state and associated panels.",
+        "role": "root"
+      },
       "list": {
+        "tag": "div",
         "description": "Container for tab buttons. Hosts keyboard navigation (arrow keys, Home/End).",
         "role": "group",
         "aria": {
@@ -21,6 +27,7 @@
         }
       },
       "tab": {
+        "tag": "button",
         "description": "Single tab button. Auto-registers with the parent Tabs context.",
         "role": "item",
         "multiple": true,
@@ -35,7 +42,13 @@
           ]
         }
       },
+      "indicator": {
+        "tag": "span",
+        "description": "Decorative visual indicator for the active tab.",
+        "role": "decoration"
+      },
       "panel": {
+        "tag": "div",
         "description": "Content panel associated with a tab.",
         "role": "region",
         "multiple": true,

@@ -12,6 +12,44 @@
       "description",
       "error"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Form-field wrapper that coordinates label, native input, helper text, and error state.",
+        "role": "root"
+      },
+      "label": {
+        "tag": "label",
+        "description": "Visible label associated with the input field.",
+        "role": "label"
+      },
+      "field": {
+        "tag": "input",
+        "description": "Native input carrying value, disabled, required, validation, name, and description wiring.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-invalid",
+            "aria-describedby"
+          ]
+        }
+      },
+      "description": {
+        "tag": "span",
+        "description": "Optional helper text that describes the expected input.",
+        "role": "content"
+      },
+      "error": {
+        "tag": "span",
+        "description": "Validation error message announced as an alert when present.",
+        "role": "content",
+        "aria": {
+          "role": "alert"
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",
