@@ -1,5 +1,6 @@
 // @generated:start imports
-import { GestureResponderEvent, Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createButtonStyles } from "./Button.styles";
@@ -33,15 +34,10 @@ export interface ButtonProps {
 
 // @generated:start component
 export function Button({
-  size = "medium",
-  variant = "primary",
-  type = "button",
   loading,
   disabled,
   ariaLabel,
   ariaExpanded,
-  ariaPressed,
-  title,
   children,
   onPress,
   style,
@@ -56,8 +52,9 @@ export function Button({
       testID={testID}
       style={[styles.root, style]}
       disabled={disabled}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="button"
       accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), busy: Boolean(loading) }}
     >

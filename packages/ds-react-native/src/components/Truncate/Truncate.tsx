@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTruncateStyles } from "./Truncate.styles";
 // @generated:end
@@ -31,10 +32,7 @@ export function Truncate({
   lines,
   expandable,
   expanded: controlledExpanded,
-  defaultExpanded,
-  onExpandedChange,
-  expandText = "Show more",
-  collapseText = "Show less",
+  defaultExpanded = false,
   children,
   style,
   testID,
@@ -43,28 +41,28 @@ export function Truncate({
 }: TruncateProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createTruncateStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledExpanded, setUncontrolledExpanded] = useState<boolean>((defaultExpanded ?? false) as boolean);
+  const [uncontrolledExpanded] = useState<boolean>((defaultExpanded ?? false) as boolean);
   const expanded = controlledExpanded ?? uncontrolledExpanded;
-  const setExpandedValue = useCallback((next: boolean) => {
-    if (controlledExpanded === undefined) setUncontrolledExpanded(next);
-    onExpandedChange?.(next);
-  }, [controlledExpanded, onExpandedChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.content}
       >
-        {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        {typeof children === "string" ? <RNText numberOfLines={expanded ? undefined : lines}>{children}</RNText> : children}
       </View>
+      {expandable ? (
       <Pressable
         style={styles.toggle}
         accessibilityRole="button"
         accessibilityState={{ expanded: Boolean(expanded) }}
       />
+      ) : null}
     </View>
   );
 }

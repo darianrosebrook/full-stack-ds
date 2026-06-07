@@ -1,6 +1,7 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createFieldStyles } from "./Field.styles";
 // @generated:end
@@ -35,19 +36,10 @@ export interface FieldProps {
 
 // @generated:start component
 export function Field({
-  name,
   id,
-  required,
-  disabled,
-  readOnly,
-  value: controlledValue,
-  defaultValue,
-  onChange,
-  validate,
   label,
   helpText,
   error,
-  status,
   validating,
   children,
   style,
@@ -57,15 +49,13 @@ export function Field({
 }: FieldProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createFieldStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledValue, setUncontrolledValue] = useState<unknown>((defaultValue ?? undefined) as unknown);
-  const value = controlledValue ?? uncontrolledValue;
-  const setValueValue = useCallback((next: unknown) => {
-    if (controlledValue === undefined) setUncontrolledValue(next);
-    onChange?.(next);
-  }, [controlledValue, onChange]);
-
   return (
-    <View testID={testID} style={[styles.root, style]}>
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+    >
       {label ? (
         <RNText nativeID={id ? `${id}-label` : undefined} style={styles.label}>
           {label}

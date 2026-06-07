@@ -1,6 +1,7 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createShuttleStyles } from "./Shuttle.styles";
 // @generated:end
@@ -27,9 +28,7 @@ export interface ShuttleProps {
 export function Shuttle({
   ariaLabel,
   value: controlledSelection,
-  defaultValue = ["alpha","beta","gamma"],
-  onValueChange,
-  children,
+  defaultValue = undefined,
   style,
   testID,
   accessibilityLabel,
@@ -37,21 +36,19 @@ export function Shuttle({
 }: ShuttleProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createShuttleStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledSelection, setUncontrolledSelection] = useState<string[]>((defaultValue ?? undefined) as string[]);
+  const [uncontrolledSelection] = useState<string[]>((defaultValue ?? undefined) as string[]);
   const selection = controlledSelection ?? uncontrolledSelection;
-  const setSelectionValue = useCallback((next: string[]) => {
-    if (controlledSelection === undefined) setUncontrolledSelection(next);
-    onValueChange?.(next);
-  }, [controlledSelection, onValueChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       {(selection ?? []).map((item, index) => (
           <View
+            key={index}
             style={styles.item}
           >
             <View

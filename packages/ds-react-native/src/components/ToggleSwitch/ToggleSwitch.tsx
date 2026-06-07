@@ -1,5 +1,6 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createToggleSwitchStyles } from "./ToggleSwitch.styles";
@@ -29,12 +30,10 @@ export interface ToggleSwitchProps {
 // @generated:start component
 export function ToggleSwitch({
   checked: controlledChecked,
-  defaultChecked,
-  onChange,
-  size = "medium",
   disabled,
   ariaLabel,
-  ariaDescribedby,
+  defaultChecked = false,
+  onChange,
   children,
   style,
   testID,
@@ -54,9 +53,10 @@ export function ToggleSwitch({
     <Pressable
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
       disabled={disabled}
       onPress={() => setCheckedValue(!checked)}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="button"
       accessibilityState={{ checked: Boolean(checked), disabled: disabled }}
     >

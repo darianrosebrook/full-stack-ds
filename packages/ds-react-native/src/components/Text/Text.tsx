@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, TextStyle, View, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle } from "react-native";
+import { Text as RNText } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTextStyles } from "./Text.styles";
@@ -33,13 +34,6 @@ export interface TextProps {
 
 // @generated:start component
 export function Text({
-  as,
-  variant,
-  size,
-  weight,
-  align,
-  transform,
-  truncate,
   children,
   style,
   testID,
@@ -52,6 +46,8 @@ export function Text({
     <RNText
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="text"
     >
       {children}

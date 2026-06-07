@@ -1,12 +1,13 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createIconStyles } from "./Icon.styles";
 // @generated:end
 
 // @generated:start types
-export type IconDefinition = unknown;
+export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown };
 // @generated:end
 
 // @generated:start props
@@ -24,9 +25,6 @@ export interface IconProps {
 
 // @generated:start component
 export function Icon({
-  icon,
-  width = 20,
-  height = 20,
   children,
   style,
   testID,
@@ -40,6 +38,8 @@ export function Icon({
       testID={testID}
       style={[styles.root, style]}
       accessible={false}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
     </View>

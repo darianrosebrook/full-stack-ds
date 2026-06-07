@@ -1,14 +1,15 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createPostcardStyles } from "./Postcard.styles";
 // @generated:end
 
 // @generated:start types
-export type PostcardAuthor = unknown;
-export type PostcardStats = unknown;
-export type PostcardEmbed = unknown;
+export type PostcardAuthor = { name: string; handle: string; avatar: string };
+export type PostcardStats = { likes: number; replies: number; reposts: number };
+export type PostcardEmbed = { type: 'image' | 'video' | 'audio'; url: string; aspectRatio: { width: number; height: number } };
 // @generated:end
 
 // @generated:start props
@@ -28,11 +29,6 @@ export interface PostcardProps {
 
 // @generated:start component
 export function Postcard({
-  postId,
-  author,
-  timestamp,
-  stats,
-  embed,
   children,
   style,
   testID,
@@ -45,6 +41,8 @@ export function Postcard({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.header}

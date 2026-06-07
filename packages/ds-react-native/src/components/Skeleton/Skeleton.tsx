@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSkeletonStyles } from "./Skeleton.styles";
@@ -10,7 +11,7 @@ export type SkeletonVariant = "block" | "text" | "avatar" | "media" | "dataviz" 
 export type SkeletonAnimate = "shimmer" | "wipe" | "pulse" | "none";
 export type SkeletonDensity = "compact" | "regular" | "spacious";
 export type SkeletonRadius = "sm" | "md" | "lg";
-export type SkeletonLines = unknown;
+export type SkeletonLines = number | { min: number; max: number };
 // @generated:end
 
 // @generated:start props
@@ -33,13 +34,6 @@ export interface SkeletonProps {
 
 // @generated:start component
 export function Skeleton({
-  variant = "block",
-  animate = "shimmer",
-  density = "regular",
-  aspectRatio,
-  lines,
-  radius,
-  decorative = true,
   ariaLabel,
   children,
   style,
@@ -53,7 +47,8 @@ export function Skeleton({
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
     </View>

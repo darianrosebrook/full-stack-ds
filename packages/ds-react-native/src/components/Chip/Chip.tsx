@@ -1,5 +1,6 @@
 // @generated:start imports
-import { GestureResponderEvent, Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createChipStyles } from "./Chip.styles";
@@ -33,15 +34,10 @@ export interface ChipProps {
 
 // @generated:start component
 export function Chip({
-  type,
-  variant,
-  size,
   disabled,
   icon,
-  title,
   ariaLabel,
   ariaExpanded,
-  ariaPressed,
   children,
   onPress,
   style,
@@ -56,15 +52,18 @@ export function Chip({
       testID={testID}
       style={[styles.root, style]}
       disabled={disabled}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="button"
       accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded) }}
     >
+      {icon ? (
       <View
         style={styles.icon}
         accessible={false}
       />
+      ) : null}
       <View
         style={styles.text}
       >

@@ -1,5 +1,6 @@
 // @generated:start imports
-import { Image as RNImage, ImageStyle, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { ImageStyle, StyleProp } from "react-native";
+import { Image as RNImage } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createImageStyles } from "./Image.styles";
@@ -40,15 +41,6 @@ export function Image({
   alt,
   width,
   height,
-  aspectRatio,
-  objectFit,
-  objectPosition,
-  loading,
-  sizes,
-  radius,
-  showPlaceholder,
-  fallbackSrc,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -59,7 +51,10 @@ export function Image({
   return (
     <RNImage
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, { width: Number(width ?? 0) || undefined, height: Number(height ?? 0) || undefined }, style]}
+      source={src ? { uri: String(src) } : undefined}
+      accessibilityLabel={accessibilityLabel ?? alt}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     />
   );
 }

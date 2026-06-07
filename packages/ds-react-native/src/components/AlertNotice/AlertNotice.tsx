@@ -1,5 +1,6 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createAlertNoticeStyles } from "./AlertNotice.styles";
@@ -28,8 +29,6 @@ export interface AlertNoticeProps {
 
 // @generated:start component
 export function AlertNotice({
-  status,
-  level,
   dismissible,
   onDismiss,
   dismissLabel = "Dismiss",
@@ -46,21 +45,27 @@ export function AlertNotice({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="alert"
     >
+      {icon ? (
       <View
         style={styles.icon}
         accessible={false}
       >
         <RNText>{icon}</RNText>
       </View>
+      ) : null}
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {dismissible ? (
       <Pressable
         style={styles.dismiss}
         accessibilityLabel={dismissLabel}
-        onPress={() => undefined}
+        onPress={() => onDismiss?.()}
         accessibilityRole="button"
       />
+      ) : null}
     </View>
   );
 }

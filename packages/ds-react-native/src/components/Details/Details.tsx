@@ -1,6 +1,7 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createDetailsStyles } from "./Details.styles";
 // @generated:end
@@ -31,11 +32,7 @@ export interface DetailsProps {
 export function Details({
   summary,
   open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
-  disabled,
-  variant,
-  icon,
+  defaultOpen = false,
   children,
   style,
   testID,
@@ -44,17 +41,15 @@ export function Details({
 }: DetailsProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createDetailsStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
-  const setOpenValue = useCallback((next: boolean) => {
-    if (controlledOpen === undefined) setUncontrolledOpen(next);
-    onOpenChange?.(next);
-  }, [controlledOpen, onOpenChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.summary}
@@ -72,11 +67,13 @@ export function Details({
           </View>
         </View>
       </View>
+      {open ? (
       <View
         style={styles.content}
       >
         {typeof children === "string" ? <RNText>{children}</RNText> : children}
       </View>
+      ) : null}
     </View>
   );
 }

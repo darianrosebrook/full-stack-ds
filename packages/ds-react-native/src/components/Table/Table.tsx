@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTableStyles } from "./Table.styles";
@@ -23,7 +24,6 @@ export interface TableProps {
 
 // @generated:start component
 export function Table({
-  responsive,
   ariaLabel,
   children,
   style,
@@ -37,6 +37,8 @@ export function Table({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.container}

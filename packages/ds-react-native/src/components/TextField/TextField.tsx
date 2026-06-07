@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, TextInput, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, TextInput, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTextFieldStyles } from "./TextField.styles";
@@ -38,13 +39,9 @@ export function TextField({
   error,
   type,
   value: controlledValue,
-  defaultValue,
-  onChange,
-  invalid,
   disabled,
-  required,
-  name,
-  ariaDescribedby,
+  defaultValue = "",
+  onChange,
   children,
   style,
   testID,
@@ -64,31 +61,39 @@ export function TextField({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {label ? (
       <View
         style={styles.label}
       >
         {typeof children === "string" ? <RNText>{children}</RNText> : children}
       </View>
+      ) : null}
       <TextInput
         style={styles.field}
         secureTextEntry={type === "password"}
         value={String(value ?? "")}
-        editable={!disabled}
+        editable={!(disabled)}
         onChangeText={(next: string) => setValueValue(next)}
         accessibilityState={{ disabled: disabled }}
       />
+      {description ? (
       <View
         style={styles.description}
       >
         {typeof children === "string" ? <RNText>{children}</RNText> : children}
       </View>
+      ) : null}
+      {error ? (
       <View
         style={styles.error}
         accessibilityRole="alert"
       >
         {typeof children === "string" ? <RNText>{children}</RNText> : children}
       </View>
+      ) : null}
     </View>
   );
 }

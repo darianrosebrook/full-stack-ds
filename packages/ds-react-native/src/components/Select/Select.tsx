@@ -1,13 +1,14 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, TextInput, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, TextInput, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSelectStyles } from "./Select.styles";
 // @generated:end
 
 // @generated:start types
 export type SelectSize = "sm" | "md" | "lg";
-export type SelectOption = unknown;
+export type SelectOption = { value: string; label: string; disabled?: boolean };
 // @generated:end
 
 // @generated:start props
@@ -37,18 +38,12 @@ export interface SelectProps {
 export function Select({
   options = [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}],
   value: controlledSelection,
-  defaultValue = "beta",
-  onChange,
   open: controlledOpen,
-  defaultOpen = true,
-  onOpenChange,
-  multiple,
   disabled,
-  size = "md",
-  filterFn,
   searchable,
   empty,
-  children,
+  defaultValue = undefined,
+  defaultOpen = false,
   style,
   testID,
   accessibilityLabel,
@@ -56,24 +51,18 @@ export function Select({
 }: SelectProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createSelectStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledSelection, setUncontrolledSelection] = useState<string | string[]>((defaultValue ?? undefined) as string | string[]);
+  const [uncontrolledSelection] = useState<string | string[]>((defaultValue ?? undefined) as string | string[]);
   const selection = controlledSelection ?? uncontrolledSelection;
-  const setSelectionValue = useCallback((next: string | string[]) => {
-    if (controlledSelection === undefined) setUncontrolledSelection(next);
-    onChange?.(next);
-  }, [controlledSelection, onChange]);
 
-  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
-  const setOpenValue = useCallback((next: boolean) => {
-    if (controlledOpen === undefined) setUncontrolledOpen(next);
-    onOpenChange?.(next);
-  }, [controlledOpen, onOpenChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityState={{ expanded: Boolean(open) }}
     >
       <Pressable
@@ -86,10 +75,12 @@ export function Select({
           style={styles.text}
         />
       </Pressable>
+      {open ? (
       <View
         style={styles.content}
         nativeID="fsds-select-listbox"
       >
+        {searchable ? (
         <View
           style={styles.search}
         >
@@ -97,26 +88,31 @@ export function Select({
             style={styles.root}
           />
         </View>
+        ) : null}
         <View
           style={styles.options}
         >
           {(options ?? []).map((item, index) => (
               <View
+                key={index}
                 style={styles.option}
-                accessibilityState={{ selected: Boolean(Array.isArray(selection) ? selection.includes((item as any).value) : (item as any).value === selection) }}
+                accessibilityState={{ selected: Boolean(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection) }}
               >
                 <View
                   style={styles.root}
                 >
-                  <RNText>{(item as any).label}</RNText>
+                  <RNText>{item.label}</RNText>
                 </View>
               </View>
             ))}
         </View>
+        {empty ? (
         <View
           style={styles.emptyState}
         />
+        ) : null}
       </View>
+      ) : null}
     </View>
   );
 }

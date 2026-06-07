@@ -1,5 +1,6 @@
 // @generated:start imports
-import { Image as RNImage, StyleProp, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Image as RNImage, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createAvatarStyles } from "./Avatar.styles";
@@ -26,8 +27,6 @@ export interface AvatarProps {
 export function Avatar({
   src,
   name,
-  priority,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -39,11 +38,16 @@ export function Avatar({
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={name}
+      accessibilityLabel={accessibilityLabel ?? name}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {src ? (
       <RNImage
         style={styles.image}
+        source={src ? { uri: String(src) } : undefined}
+        accessibilityLabel={""}
       />
+      ) : null}
     </View>
   );
 }

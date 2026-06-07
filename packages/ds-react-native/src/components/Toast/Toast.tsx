@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createToastStyles } from "./Toast.styles";
 // @generated:end
@@ -29,10 +30,7 @@ export interface ToastProps {
 // @generated:start component
 export function Toast({
   open: controlledOpen,
-  onOpenChange,
   title,
-  variant = "info",
-  politeness = "polite",
   action,
   children,
   style,
@@ -42,41 +40,45 @@ export function Toast({
 }: ToastProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createToastStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((false) as boolean);
+  const [uncontrolledOpen] = useState<boolean>((false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
-  const setOpenValue = useCallback((next: boolean) => {
-    if (controlledOpen === undefined) setUncontrolledOpen(next);
-    onOpenChange?.(next);
-  }, [controlledOpen, onOpenChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.viewport, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {open ? (
       <View
         style={styles.item}
       >
         <View
           style={styles.row}
         >
+          {title ? (
           <View
             style={styles.title}
           />
+          ) : null}
           <View
             style={styles.description}
           >
             {typeof children === "string" ? <RNText>{children}</RNText> : children}
           </View>
+          {action ? (
           <View
             style={styles.action}
           />
+          ) : null}
           <Pressable
             style={styles.close}
             accessibilityRole="button"
           />
         </View>
       </View>
+      ) : null}
     </View>
   );
 }

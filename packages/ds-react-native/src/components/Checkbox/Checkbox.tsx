@@ -1,5 +1,6 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCheckboxStyles } from "./Checkbox.styles";
@@ -29,14 +30,11 @@ export interface CheckboxProps {
 
 // @generated:start component
 export function Checkbox({
-  size = "md",
   checked: controlledChecked,
-  defaultChecked,
-  onChange,
   indeterminate,
   disabled,
-  name,
-  value,
+  defaultChecked = false,
+  onChange,
   children,
   style,
   testID,

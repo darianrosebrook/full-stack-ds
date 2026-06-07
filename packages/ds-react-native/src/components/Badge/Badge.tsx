@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createBadgeStyles } from "./Badge.styles";
@@ -28,11 +29,7 @@ export interface BadgeProps {
 
 // @generated:start component
 export function Badge({
-  variant,
-  intent,
-  size,
   icon,
-  showStatusIcon,
   children,
   style,
   testID,
@@ -45,11 +42,15 @@ export function Badge({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {icon ? (
       <View
         style={styles.icon}
         accessible={false}
       />
+      ) : null}
       <View
         style={styles.content}
       >

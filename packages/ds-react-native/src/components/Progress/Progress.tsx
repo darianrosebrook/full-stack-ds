@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createProgressStyles } from "./Progress.styles";
@@ -31,12 +32,8 @@ export interface ProgressProps {
 // @generated:start component
 export function Progress({
   value,
-  variant,
-  size,
-  intent,
   label,
   showValue,
-  formatValue,
   children,
   style,
   testID,
@@ -50,7 +47,8 @@ export function Progress({
       testID={testID}
       style={[styles.root, style]}
       accessibilityValue={{ min: 0, max: 100, now: Number(value ?? 0) }}
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="progressbar"
     >
       <View
@@ -61,11 +59,13 @@ export function Progress({
           style={[styles.fill, { width: `${Math.max(0, Math.min(100, Number(value ?? 0)))}%` }]}
         />
       </View>
+      {showValue ? (
       <View
         style={styles.value}
       >
         {typeof children === "string" ? <RNText>{children}</RNText> : children}
       </View>
+      ) : null}
     </View>
   );
 }

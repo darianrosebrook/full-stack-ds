@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, TextInput, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { TextInput, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCommandStyles } from "./Command.styles";
@@ -33,17 +34,12 @@ export interface CommandProps {
 // @generated:start component
 export function Command({
   open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
   search: controlledSearch,
-  defaultSearch,
-  onSearchChange,
   placeholder = "Search...",
-  emptyMessage = "No results found.",
   label = "Command palette",
-  shouldFilter = true,
-  filter,
-  children,
+  defaultOpen = false,
+  defaultSearch = "",
+  onSearchChange,
   style,
   testID,
   accessibilityLabel,
@@ -51,12 +47,8 @@ export function Command({
 }: CommandProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createCommandStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
-  const setOpenValue = useCallback((next: boolean) => {
-    if (controlledOpen === undefined) setUncontrolledOpen(next);
-    onOpenChange?.(next);
-  }, [controlledOpen, onOpenChange]);
 
   const [uncontrolledSearch, setUncontrolledSearch] = useState<string>((defaultSearch ?? "") as string);
   const search = controlledSearch ?? uncontrolledSearch;
@@ -69,11 +61,16 @@ export function Command({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {open ? (
       <View
         style={styles.overlay}
         accessible={false}
       />
+      ) : null}
+      {open ? (
       <View
         style={styles.dialog}
         accessibilityLabel={label}
@@ -134,6 +131,7 @@ export function Command({
           />
         </View>
       </View>
+      ) : null}
     </View>
   );
 }

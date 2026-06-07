@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createBreadcrumbsStyles } from "./Breadcrumbs.styles";
@@ -24,7 +25,6 @@ export interface BreadcrumbsProps {
 // @generated:start component
 export function Breadcrumbs({
   ariaLabel = "Breadcrumb",
-  separator,
   children,
   style,
   testID,
@@ -37,7 +37,8 @@ export function Breadcrumbs({
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.list}

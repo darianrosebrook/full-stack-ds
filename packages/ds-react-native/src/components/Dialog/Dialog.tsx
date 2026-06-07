@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createDialogStyles } from "./Dialog.styles";
 // @generated:end
@@ -32,15 +33,7 @@ export interface DialogProps {
 // @generated:start component
 export function Dialog({
   open: controlledOpenness,
-  defaultOpen,
-  onOpenChange,
-  modal = true,
-  size = "md",
-  dismissible = true,
-  closeOnEscape = true,
-  closeOnBackdropClick = true,
-  initialFocus,
-  returnFocus,
+  defaultOpen = false,
   children,
   style,
   testID,
@@ -49,22 +42,23 @@ export function Dialog({
 }: DialogProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createDialogStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpenness, setUncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
   const openness = controlledOpenness ?? uncontrolledOpenness;
-  const setOpennessValue = useCallback((next: boolean) => {
-    if (controlledOpenness === undefined) setUncontrolledOpenness(next);
-    onOpenChange?.(next);
-  }, [controlledOpenness, onOpenChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {openness ? (
       <View
         style={styles.backdrop}
         accessible={false}
       />
+      ) : null}
+      {openness ? (
       <View
         style={styles.modal}
         accessibilityLabelledBy={"dialog-title-id"}
@@ -91,6 +85,7 @@ export function Dialog({
           style={styles.footer}
         />
       </View>
+      ) : null}
     </View>
   );
 }

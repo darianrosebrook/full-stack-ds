@@ -1,5 +1,6 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createShowMoreStyles } from "./ShowMore.styles";
@@ -28,11 +29,11 @@ export interface ShowMoreProps {
 // @generated:start component
 export function ShowMore({
   expanded: controlledExpanded,
-  defaultExpanded,
-  onExpandedChange,
   maxLines = 3,
   showMoreLabel = "Show more",
   showLessLabel = "Show less",
+  defaultExpanded = false,
+  onExpandedChange,
   children,
   style,
   testID,
@@ -52,6 +53,8 @@ export function ShowMore({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.content}

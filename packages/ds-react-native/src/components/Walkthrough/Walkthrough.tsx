@@ -1,13 +1,14 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createWalkthroughStyles } from "./Walkthrough.styles";
 // @generated:end
 
 // @generated:start types
 export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
-export type WalkthroughStepSpec = unknown;
+export type WalkthroughStepSpec = { anchor: string; title: string; description?: string };
 // @generated:end
 
 // @generated:start props
@@ -34,16 +35,7 @@ export interface WalkthroughProps {
 // @generated:start component
 export function Walkthrough({
   steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}],
-  index: controlledStep,
-  defaultIndex = 0,
-  onStepChange,
-  onComplete,
-  onSkip,
   label = "Feature tour",
-  storageKey,
-  autoStart = false,
-  closeOnOutsideClick = false,
-  placement = "auto",
   children,
   style,
   testID,
@@ -52,18 +44,12 @@ export function Walkthrough({
 }: WalkthroughProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createWalkthroughStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledStep, setUncontrolledStep] = useState<number>((defaultIndex ?? 0) as number);
-  const step = controlledStep ?? uncontrolledStep;
-  const setStepValue = useCallback((next: number) => {
-    if (controlledStep === undefined) setUncontrolledStep(next);
-    onStepChange?.(next);
-  }, [controlledStep, onStepChange]);
-
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.content}
@@ -96,8 +82,9 @@ export function Walkthrough({
         >
           {(steps ?? []).map((item, index) => (
               <Pressable
+                key={index}
                 style={styles.dot}
-                accessibilityLabel={(item as any).title}
+                accessibilityLabel={item.title}
                 accessibilityRole="button"
               />
             ))}

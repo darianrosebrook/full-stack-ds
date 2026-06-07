@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTabsStyles } from "./Tabs.styles";
 // @generated:end
@@ -33,14 +34,7 @@ export interface TabsProps {
 // @generated:start component
 export function Tabs({
   value: controlledActiveTab,
-  defaultValue,
-  onValueChange,
-  orientation = "horizontal",
-  appearance = "underline",
-  activationMode = "automatic",
-  loop = true,
-  unmountInactive,
-  idBase,
+  defaultValue = "",
   children,
   style,
   testID,
@@ -49,17 +43,15 @@ export function Tabs({
 }: TabsProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createTabsStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledActiveTab, setUncontrolledActiveTab] = useState<string>((defaultValue ?? "") as string);
+  const [uncontrolledActiveTab] = useState<string>((defaultValue ?? "") as string);
   const activeTab = controlledActiveTab ?? uncontrolledActiveTab;
-  const setActiveTabValue = useCallback((next: string) => {
-    if (controlledActiveTab === undefined) setUncontrolledActiveTab(next);
-    onValueChange?.(next);
-  }, [controlledActiveTab, onValueChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.list}

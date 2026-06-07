@@ -1,6 +1,7 @@
 // @generated:start imports
-import { StyleProp, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { View } from "react-native";
+import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTooltipStyles } from "./Tooltip.styles";
 // @generated:end
@@ -28,13 +29,6 @@ export interface TooltipProps {
 
 // @generated:start component
 export function Tooltip({
-  open: controlledOpen,
-  defaultOpen,
-  onOpenChange,
-  placement,
-  disabled,
-  closeOnEscape = true,
-  closeOnBlur = true,
   children,
   style,
   testID,
@@ -43,15 +37,15 @@ export function Tooltip({
 }: TooltipProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createTooltipStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
-  const open = controlledOpen ?? uncontrolledOpen;
-  const setOpenValue = useCallback((next: boolean) => {
-    if (controlledOpen === undefined) setUncontrolledOpen(next);
-    onOpenChange?.(next);
-  }, [controlledOpen, onOpenChange]);
-
   return (
-    <View testID={testID} style={[styles.root, style]}>{children}</View>
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+    >
+      {children}
+    </View>
   );
 }
 // @generated:end

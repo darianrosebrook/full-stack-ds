@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSheetStyles } from "./Sheet.styles";
 // @generated:end
@@ -27,10 +28,7 @@ export interface SheetProps {
 // @generated:start component
 export function Sheet({
   open: controlledOpenness,
-  defaultOpen,
-  onOpenChange,
-  side = "right",
-  modal = true,
+  defaultOpen = false,
   children,
   style,
   testID,
@@ -39,22 +37,23 @@ export function Sheet({
 }: SheetProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createSheetStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpenness, setUncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
   const openness = controlledOpenness ?? uncontrolledOpenness;
-  const setOpennessValue = useCallback((next: boolean) => {
-    if (controlledOpenness === undefined) setUncontrolledOpenness(next);
-    onOpenChange?.(next);
-  }, [controlledOpenness, onOpenChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
+      {openness ? (
       <View
         style={styles.overlay}
         accessible={false}
       />
+      ) : null}
+      {openness ? (
       <View
         style={styles.content}
         accessibilityLabelledBy={"sheet-title-id"}
@@ -87,6 +86,7 @@ export function Sheet({
           style={styles.footer}
         />
       </View>
+      ) : null}
     </View>
   );
 }

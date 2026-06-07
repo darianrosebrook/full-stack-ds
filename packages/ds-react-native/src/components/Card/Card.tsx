@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCardStyles } from "./Card.styles";
@@ -25,9 +26,6 @@ export interface CardProps {
 
 // @generated:start component
 export function Card({
-  interactive,
-  status,
-  density = "default",
   children,
   style,
   testID,
@@ -37,7 +35,14 @@ export function Card({
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createCardStyles(fsdsTheme), [fsdsTheme]);
   return (
-    <View testID={testID} style={[styles.root, style]}>{children}</View>
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+    >
+      {children}
+    </View>
   );
 }
 // @generated:end

@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Linking, Pressable, Text as RNText } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createLinksStyles } from "./Links.styles";
@@ -28,10 +29,6 @@ export interface LinksProps {
 // @generated:start component
 export function Links({
   href,
-  target,
-  rel,
-  size,
-  disabled,
   children,
   style,
   testID,
@@ -41,12 +38,16 @@ export function Links({
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createLinksStyles(fsdsTheme), [fsdsTheme]);
   return (
-    <View
+    <Pressable
       testID={testID}
       style={[styles.root, style]}
+      onPress={() => { if (href) void Linking.openURL(String(href)); }}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
+      accessibilityRole="link"
     >
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
-    </View>
+    </Pressable>
   );
 }
 // @generated:end

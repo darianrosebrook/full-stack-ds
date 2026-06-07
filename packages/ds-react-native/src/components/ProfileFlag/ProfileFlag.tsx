@@ -1,12 +1,13 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createProfileFlagStyles } from "./ProfileFlag.styles";
 // @generated:end
 
 // @generated:start types
-export type ProfileFlagData = unknown;
+export type ProfileFlagData = { id: string; username: string; full_name: string; first_name: string | null; last_name: string | null; avatar_url: string | null; bio: string; occupation: string | null; account_status: string; created_at: string; updated_at: string | null };
 // @generated:end
 
 // @generated:start props
@@ -22,7 +23,6 @@ export interface ProfileFlagProps {
 
 // @generated:start component
 export function ProfileFlag({
-  profile,
   children,
   style,
   testID,
@@ -35,6 +35,8 @@ export function ProfileFlag({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
     </View>

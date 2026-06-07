@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSpinnerStyles } from "./Spinner.styles";
@@ -28,13 +29,6 @@ export interface SpinnerProps {
 
 // @generated:start component
 export function Spinner({
-  size,
-  thickness,
-  ariaHidden,
-  label,
-  inline,
-  showAfterMs,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -46,6 +40,8 @@ export function Spinner({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.visual}

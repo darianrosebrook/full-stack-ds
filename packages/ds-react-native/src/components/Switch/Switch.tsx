@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Switch as RNSwitch, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Switch as RNSwitch } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSwitchStyles } from "./Switch.styles";
@@ -30,13 +31,10 @@ export interface SwitchProps {
 // @generated:start component
 export function Switch({
   checked: controlledChecked,
-  defaultChecked,
-  onChange,
   size = "md",
   disabled,
-  name,
-  value,
-  children,
+  defaultChecked = false,
+  onChange,
   style,
   testID,
   accessibilityLabel,

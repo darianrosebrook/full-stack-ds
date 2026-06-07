@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, Text as RNText, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createAccordionStyles } from "./Accordion.styles";
 // @generated:end
@@ -27,12 +28,8 @@ export interface AccordionProps {
 
 // @generated:start component
 export function Accordion({
-  type = "single",
   value: controlledOpenness,
-  defaultValue,
-  onValueChange,
-  collapsible = false,
-  disabled,
+  defaultValue = undefined,
   children,
   style,
   testID,
@@ -41,17 +38,15 @@ export function Accordion({
 }: AccordionProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createAccordionStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpenness, setUncontrolledOpenness] = useState<string | string[]>((defaultValue ?? undefined) as string | string[]);
+  const [uncontrolledOpenness] = useState<string | string[]>((defaultValue ?? undefined) as string | string[]);
   const openness = controlledOpenness ?? uncontrolledOpenness;
-  const setOpennessValue = useCallback((next: string | string[]) => {
-    if (controlledOpenness === undefined) setUncontrolledOpenness(next);
-    onValueChange?.(next);
-  }, [controlledOpenness, onValueChange]);
 
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.item}

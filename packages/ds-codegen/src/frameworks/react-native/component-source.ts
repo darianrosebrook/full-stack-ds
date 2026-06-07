@@ -29,6 +29,12 @@ const GLOBAL_TYPE_NAMES = new Set([
   "Required",
 ]);
 
+interface RuntimeUsage {
+  props: Set<string>;
+  channels: Set<string>;
+  channelSetters: Set<string>;
+}
+
 export function generateReactNativeComponentSource(
   ir: ComponentIR,
 ): ReactNativeComponentFiles {
@@ -49,31 +55,42 @@ function generateReactNativeComponentFile(ir: ComponentIR): string {
 }
 
 function emitImports(ir: ComponentIR): string {
-  const rnImports = new Set(["StyleProp", "View", "ViewStyle"]);
-  rnImports.add(rootStyleType(ir));
+  const usage = collectRuntimeUsage(ir);
+  const rnValueImports = new Set<string>();
+  const rnTypeImports = new Set<string>(["StyleProp", rootStyleType(ir)]);
   if (usesNativeToggle(ir)) {
-    rnImports.add("Switch as RNSwitch");
+    rnValueImports.add("Switch as RNSwitch");
   } else {
-    collectRnComponents(ir.dom, rnImports);
+    collectRnComponents(ir.dom, rnValueImports);
   }
+  if (usesLinking(ir.dom)) rnValueImports.add("Linking");
   if (
     hasChildrenSlotUnderNonTextParent(ir.dom) ||
     isFieldLayoutPattern(ir) ||
     isCheckboxRootPattern(ir)
   ) {
-    rnImports.add("Text as RNText");
+    rnValueImports.add("Text as RNText");
   }
-  if (rootPressableAcceptsOnPress(ir)) rnImports.add("GestureResponderEvent");
+  if (isFieldLayoutPattern(ir) || isCheckboxRootPattern(ir)) rnValueImports.add("View");
+  if (isCheckboxRootPattern(ir)) rnValueImports.add("Pressable");
+  if (rootPressableAcceptsOnPress(ir)) rnTypeImports.add("GestureResponderEvent");
   const reactImports = new Set(["ReactNode"]);
-  if (ir.behavior.normalizedChannels.length > 0) {
+  if (usage.channelSetters.size > 0) {
     reactImports.add("useCallback");
+  }
+  if (usage.channels.size > 0) {
     reactImports.add("useState");
   }
   reactImports.add("useMemo");
 
   return [
     "// @generated:start imports",
-    `import { ${Array.from(rnImports).sort().join(", ")} } from "react-native";`,
+    rnTypeImports.size > 0
+      ? `import type { ${Array.from(rnTypeImports).sort().join(", ")} } from "react-native";`
+      : "",
+    rnValueImports.size > 0
+      ? `import { ${Array.from(rnValueImports).sort().join(", ")} } from "react-native";`
+      : "",
     `import { ${Array.from(reactImports)
       .sort()
       .map((name) => (name === "ReactNode" ? "type ReactNode" : name))
@@ -92,6 +109,7 @@ function collectRnComponents(node: DomNodeIR | undefined, imports: Set<string>):
     imports.add("View");
     return;
   }
+  if (node.tag === "children" || node.tag === "slot") return;
   if (node.content) imports.add("Text as RNText");
   const component = rnComponentForNode(node);
   imports.add(
@@ -104,10 +122,21 @@ function collectRnComponents(node: DomNodeIR | undefined, imports: Set<string>):
   for (const child of node.children) collectRnComponents(child, imports);
 }
 
+function usesLinking(node: DomNodeIR | undefined): boolean {
+  if (!node) return false;
+  if (node.tag === "a" && Boolean(node.bindings.href)) return true;
+  return node.children.some((child) => usesLinking(child));
+}
+
 function hasChildrenSlotUnderNonTextParent(node: DomNodeIR | undefined): boolean {
   if (!node) return false;
   const component = rnComponentForNode(node);
-  if (component !== "RNText" && node.children.length === 0 && node.part === "root") {
+  if (
+    component !== "RNText" &&
+    !VOID_RN_COMPONENTS.has(component) &&
+    node.children.length === 0 &&
+    node.part === "root"
+  ) {
     return true;
   }
   if (
@@ -127,6 +156,9 @@ function emitTypes(ir: ComponentIR): string {
       lines.push(
         `export type ${typeName} = ${def.values.map((v) => JSON.stringify(v)).join(" | ")};`,
       );
+      emitted.add(typeName);
+    } else if (def.kind === "alias" && def.alias) {
+      lines.push(`export type ${typeName} = ${stripReactNamespace(def.alias)};`);
       emitted.add(typeName);
     } else {
       lines.push(`export type ${typeName} = unknown;`);
@@ -152,6 +184,10 @@ function collectTypeRefs(prop: ResolvedPropIR): string[] {
   }
   for (const global of GLOBAL_TYPE_NAMES) refs.delete(global);
   return [...refs];
+}
+
+function stripReactNamespace(value: string): string {
+  return value.replace(/\bReact\.ReactNode\b/g, "ReactNode");
 }
 
 function emitProps(ir: ComponentIR): string {
@@ -182,9 +218,144 @@ function rnPropType(ir: ComponentIR, prop: ResolvedPropIR): string {
   return prop.type.replace(/\bReactNode\b/g, "ReactNode");
 }
 
+function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
+  const usage: RuntimeUsage = {
+    props: new Set(["style", "testID", "accessibilityLabel", "accessibilityLabelledBy"]),
+    channels: new Set(),
+    channelSetters: new Set(),
+  };
+  if (rootPressableAcceptsOnPress(ir)) usage.props.add("onPress");
+
+  if (usesNativeToggle(ir)) {
+    const channel = ir.behavior.normalizedChannels[0];
+    if (channel) {
+      usage.channels.add(channel.name);
+      usage.channelSetters.add(channel.name);
+    }
+    addPropIfPresent(ir, usage, "disabled");
+    addPropIfPresent(ir, usage, "size");
+    return usage;
+  }
+
+  if (isFieldLayoutPattern(ir)) {
+    for (const prop of ["id", "label", "helpText", "error", "validating"]) {
+      addPropIfPresent(ir, usage, prop);
+    }
+    usage.props.add("children");
+    return usage;
+  }
+
+  if (isCheckboxRootPattern(ir)) {
+    const channel = ir.behavior.normalizedChannels[0];
+    if (channel) {
+      usage.channels.add(channel.name);
+      usage.channelSetters.add(channel.name);
+    }
+    addPropIfPresent(ir, usage, "disabled");
+    addPropIfPresent(ir, usage, "indeterminate");
+    usage.props.add("children");
+    return usage;
+  }
+
+  collectNodeRuntimeUsage(ir.dom, ir, usage);
+  if (!ir.dom) usage.props.add("children");
+  return usage;
+}
+
+function addPropIfPresent(ir: ComponentIR, usage: RuntimeUsage, propName: string): void {
+  const prop = findProp(ir, propName);
+  if (prop) usage.props.add(prop.safeName);
+}
+
+function collectNodeRuntimeUsage(
+  node: DomNodeIR | undefined,
+  ir: ComponentIR,
+  usage: RuntimeUsage,
+): void {
+  if (!node) return;
+  if (node.tag === "children" || node.tag === "slot") {
+    usage.props.add("children");
+    return;
+  }
+  const component = rnComponentForNode(node);
+  if (node.ifProp) collectGuardRuntimeUsage(node.ifProp, ir, usage);
+  if (node.iteration) collectBindingRuntimeUsage(node.iteration.source, ir, usage);
+  if (node.content) collectBindingRuntimeUsage(node.content, ir, usage);
+  for (const binding of node.cssVarBindings) {
+    collectBindingRuntimeUsage(binding.value, ir, usage);
+  }
+  for (const [name, binding] of Object.entries(node.bindings)) {
+    if (!isSupportedBindingForComponent(name, component)) continue;
+    collectBindingRuntimeUsage(binding, ir, usage);
+  }
+  for (const [eventName, binding] of Object.entries(node.events)) {
+    if (!eventPropFor(component, eventName)) continue;
+    collectBindingRuntimeUsage(binding, ir, usage, "setter");
+  }
+  for (const child of node.children) {
+    collectNodeRuntimeUsage(child, ir, usage);
+  }
+  if (
+    node.children.length === 0 &&
+    node.part === "root" &&
+    !VOID_RN_COMPONENTS.has(component)
+  ) {
+    usage.props.add("children");
+  }
+}
+
+function collectBindingRuntimeUsage(
+  binding: BindingExpression,
+  ir: ComponentIR,
+  usage: RuntimeUsage,
+  channelPurpose: "value" | "setter" = "value",
+): void {
+  if (binding.kind === "prop") {
+    const safeName = safePropName(ir, binding.prop);
+    usage.props.add(safeName);
+    if (
+      safeName === "showMoreLabel" &&
+      ir.styledProps.some((prop) => prop.safeName === "showLessLabel") &&
+      ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded")
+    ) {
+      usage.props.add("showLessLabel");
+      usage.channels.add("expanded");
+    }
+    return;
+  }
+  if (binding.kind === "channel") {
+    usage.channels.add(binding.channel);
+    if (channelPurpose === "setter" || binding.field === "onChange") {
+      usage.channelSetters.add(binding.channel);
+    }
+    return;
+  }
+  if (binding.kind === "iterationLocal" || binding.kind === "literal") return;
+  collectBindingRuntimeUsage(binding.left, ir, usage, channelPurpose);
+  collectBindingRuntimeUsage(binding.right, ir, usage, channelPurpose);
+}
+
+function collectGuardRuntimeUsage(
+  ifProp: string,
+  ir: ComponentIR,
+  usage: RuntimeUsage,
+): void {
+  if (ifProp === "children") {
+    usage.props.add("children");
+    return;
+  }
+  const channel = channelForIfProp(ir, ifProp);
+  if (channel) {
+    usage.channels.add(channel.name);
+    return;
+  }
+  usage.props.add(safePropName(ir, ifProp));
+}
+
 function emitComponent(ir: ComponentIR): string {
   const lines = ["// @generated:start component"];
-  const destructured = propDestructureEntries(ir);
+  const usage = collectRuntimeUsage(ir);
+  const destructured = propDestructureEntries(ir, usage);
   lines.push(`export function ${ir.name}({`);
   for (const entry of destructured) lines.push(`${INDENT}${entry},`);
   lines.push(`}: ${ir.name}Props) {`);
@@ -193,8 +364,10 @@ function emitComponent(ir: ComponentIR): string {
   if (usesNativeToggle(ir)) {
     lines.push(`${INDENT}const tokens = useMemo(() => resolve${ir.name}Tokens(fsdsTheme), [fsdsTheme]);`);
   }
-  for (const channel of ir.behavior.normalizedChannels) {
-    lines.push(...emitChannelState(ir, channel));
+  for (const channel of ir.behavior.normalizedChannels.filter((candidate) =>
+    usage.channels.has(candidate.name),
+  )) {
+    lines.push(...emitChannelState(ir, channel, usage.channelSetters.has(channel.name)));
   }
   if (usesNativeToggle(ir)) {
     lines.push(...emitNativeToggleReturn(ir));
@@ -203,7 +376,16 @@ function emitComponent(ir: ComponentIR): string {
   } else if (isCheckboxRootPattern(ir)) {
     lines.push(...emitCheckboxReturn(ir));
   } else {
-    const rendered = emitNode(ir.dom, ir, 2) ?? `${INDENT}${INDENT}<View testID={testID} style={[styles.root, style]}>{children}</View>`;
+    const rendered = emitNode(ir.dom, ir, 2) ?? [
+      `${INDENT}${INDENT}<View`,
+      `${INDENT}${INDENT}${INDENT}testID={testID}`,
+      `${INDENT}${INDENT}${INDENT}style={[styles.root, style]}`,
+      `${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`,
+      `${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`,
+      `${INDENT}${INDENT}>`,
+      `${INDENT}${INDENT}${INDENT}{children}`,
+      `${INDENT}${INDENT}</View>`,
+    ].join("\n");
     lines.push(`${INDENT}return (`);
     lines.push(rendered);
     lines.push(`${INDENT});`);
@@ -216,7 +398,12 @@ function emitComponent(ir: ComponentIR): string {
 function emitFieldLayoutReturn(): string[] {
   const lines: string[] = [];
   lines.push(`${INDENT}return (`);
-  lines.push(`${INDENT}${INDENT}<View testID={testID} style={[styles.root, style]}>`);
+  lines.push(`${INDENT}${INDENT}<View`);
+  lines.push(`${INDENT}${INDENT}${INDENT}testID={testID}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}style={[styles.root, style]}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`);
+  lines.push(`${INDENT}${INDENT}>`);
   lines.push(`${INDENT}${INDENT}${INDENT}{label ? (`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}<RNText nativeID={id ? \`\${id}-label\` : undefined} style={styles.label}>`);
   lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{label}`);
@@ -265,13 +452,15 @@ function emitCheckboxReturn(ir: ComponentIR): string[] {
   return lines;
 }
 
-function propDestructureEntries(ir: ComponentIR): string[] {
+function propDestructureEntries(ir: ComponentIR, usage: RuntimeUsage): string[] {
   const entries: string[] = [];
   const emitted = new Set<string>();
   for (const prop of ir.styledProps) {
     if (RESERVED_PROPS.has(prop.name)) continue;
     const channel = ir.behavior.normalizedChannels.find((c) => c.valueProp === prop.name);
-    if (channel) {
+    const channelIsUsed = channel ? usage.channels.has(channel.name) : false;
+    if (!usage.props.has(prop.safeName) && !channelIsUsed) continue;
+    if (channel && channelIsUsed) {
       entries.push(`${prop.safeName}: controlled${capitalize(channel.name)}`);
     } else {
       const suffix = prop.defaultExpr ? ` = ${prop.defaultExpr}` : "";
@@ -280,24 +469,29 @@ function propDestructureEntries(ir: ComponentIR): string[] {
     emitted.add(prop.safeName);
   }
   for (const channel of ir.behavior.normalizedChannels) {
+    if (!usage.channels.has(channel.name)) continue;
     if (channel.defaultValueProp && !emitted.has(channel.defaultValueProp)) {
       entries.push(
         `${channel.defaultValueProp} = ${defaultForChannel(channel)}`,
       );
       emitted.add(channel.defaultValueProp);
     }
-    if (!emitted.has(channel.changeHandlerProp)) {
+    if (usage.channelSetters.has(channel.name) && !emitted.has(channel.changeHandlerProp)) {
       entries.push(channel.changeHandlerProp);
       emitted.add(channel.changeHandlerProp);
     }
   }
-  entries.push("children");
+  if (usage.props.has("children")) entries.push("children");
   if (rootPressableAcceptsOnPress(ir)) entries.push("onPress");
   entries.push("style", "testID", "accessibilityLabel", "accessibilityLabelledBy");
   return entries;
 }
 
-function emitChannelState(ir: ComponentIR, channel: NormalizedChannelIR): string[] {
+function emitChannelState(
+  ir: ComponentIR,
+  channel: NormalizedChannelIR,
+  needsSetter: boolean,
+): string[] {
   const cap = capitalize(channel.name);
   const controlled = `controlled${cap}`;
   const value = channel.name;
@@ -310,12 +504,16 @@ function emitChannelState(ir: ComponentIR, channel: NormalizedChannelIR): string
     ? `${channel.defaultValueProp} ?? ${defaultForChannel(channel)}`
     : defaultForChannel(channel);
   const lines: string[] = [];
-  lines.push(`${INDENT}const [${internal}, ${setInternal}] = useState<${type}>((${initial}) as ${type});`);
+  lines.push(
+    `${INDENT}const [${internal}${needsSetter ? `, ${setInternal}` : ""}] = useState<${type}>((${initial}) as ${type});`,
+  );
   lines.push(`${INDENT}const ${value} = ${controlled} ?? ${internal};`);
-  lines.push(`${INDENT}const ${setter} = useCallback((next: ${type}) => {`);
-  lines.push(`${INDENT}${INDENT}if (${controlled} === undefined) ${setInternal}(next);`);
-  lines.push(`${INDENT}${INDENT}${handler}?.(next);`);
-  lines.push(`${INDENT}}, [${controlled}, ${handler}]);`);
+  if (needsSetter) {
+    lines.push(`${INDENT}const ${setter} = useCallback((next: ${type}) => {`);
+    lines.push(`${INDENT}${INDENT}if (${controlled} === undefined) ${setInternal}(next);`);
+    lines.push(`${INDENT}${INDENT}${handler}?.(next);`);
+    lines.push(`${INDENT}}, [${controlled}, ${handler}]);`);
+  }
   lines.push("");
   return lines;
 }
@@ -368,19 +566,27 @@ function emitNativeToggleReturn(ir: ComponentIR): string[] {
   return lines;
 }
 
-function emitNode(node: DomNodeIR | undefined, ir: ComponentIR, depth: number): string | null {
+function emitNode(
+  node: DomNodeIR | undefined,
+  ir: ComponentIR,
+  depth: number,
+  keyExpr?: string,
+): string | null {
   if (!node) return null;
   if (node.tag === "children" || node.tag === "slot") return `${INDENT.repeat(depth)}{children}`;
   if (node.iteration) return emitIteration(node, ir, depth);
 
   const component = rnComponentForNode(node);
-  const attrs = emitNodeProps(node, ir, component, depth + 1);
+  const attrs = emitNodeProps(node, ir, component, depth + 1, keyExpr);
   const childLines = emitNodeChildren(node, ir, depth + 1);
   const pad = INDENT.repeat(depth);
+  let rendered: string;
   if (VOID_RN_COMPONENTS.has(component) || childLines.length === 0) {
-    return [`${pad}<${component}`, ...attrs, `${pad}/>`].join("\n");
+    rendered = [`${pad}<${component}`, ...attrs, `${pad}/>`].join("\n");
+  } else {
+    rendered = [`${pad}<${component}`, ...attrs, `${pad}>`, ...childLines, `${pad}</${component}>`].join("\n");
   }
-  return [`${pad}<${component}`, ...attrs, `${pad}>`, ...childLines, `${pad}</${component}>`].join("\n");
+  return applyIfGuard(rendered, node, ir, pad);
 }
 
 function emitNodeChildren(node: DomNodeIR, ir: ComponentIR, depth: number): string[] {
@@ -422,11 +628,16 @@ function emitNodeProps(
   ir: ComponentIR,
   component: string,
   depth: number,
+  keyExpr?: string,
 ): string[] {
   const pad = INDENT.repeat(depth);
   const props: string[] = [];
   const styleKey = styleKeyForPart(node.part);
   const isRootNode = node === ir.dom;
+  const dynamicStyleEntries = rnDynamicStyleEntries(node, ir, component);
+  const dynamicStyle = dynamicStyleEntries.length > 0
+    ? `, { ${dynamicStyleEntries.join(", ")} }`
+    : "";
   const fillWidthBinding = node.cssVarBindings.find((binding) =>
     binding.varName.includes("fill-width"),
   );
@@ -435,12 +646,17 @@ function emitNodeProps(
     props.push(`${pad}style={[styles.${styleKey}, { width: \`\${Math.max(0, Math.min(100, Number(${fillExpr} ?? 0)))}%\` }]}`);
   } else if (isRootNode) {
     props.push(`${pad}testID={testID}`);
-    props.push(`${pad}style={[styles.${styleKey}, style]}`);
+    props.push(`${pad}style={[styles.${styleKey}${dynamicStyle}, style]}`);
+  } else if (dynamicStyleEntries.length > 0) {
+    props.push(`${pad}style={[styles.${styleKey}${dynamicStyle}]}`);
   } else {
     props.push(`${pad}style={styles.${styleKey}}`);
   }
+  if (keyExpr) props.unshift(`${pad}key={${keyExpr}}`);
 
   const accessibilityState: string[] = [];
+  let hasAccessibilityLabel = false;
+  let hasAccessibilityLabelledBy = false;
   for (const [name, value] of Object.entries(node.attrs)) {
     const mapped = staticAttributeProp(name, value);
     if (mapped) props.push(`${pad}${mapped}`);
@@ -448,17 +664,26 @@ function emitNodeProps(
   for (const [name, binding] of Object.entries(node.bindings)) {
     const expr = bindingExpr(binding, ir);
     if (name === "disabled") {
-      if (component === "TextInput") props.push(`${pad}editable={!${expr}}`);
+      if (component === "TextInput") {
+        const readOnly = textInputReadOnlyExpr(node, ir);
+        props.push(`${pad}editable={!(${expr}${readOnly ? ` || ${readOnly}` : ""})}`);
+      }
       else props.push(`${pad}disabled={${expr}}`);
       accessibilityState.push(`disabled: ${expr}`);
       continue;
     }
     if (name === "aria-label") {
-      props.push(`${pad}accessibilityLabel={${expr}}`);
+      props.push(
+        `${pad}accessibilityLabel={${isRootNode ? `accessibilityLabel ?? ${expr}` : expr}}`,
+      );
+      hasAccessibilityLabel = true;
       continue;
     }
     if (name === "aria-labelledby") {
-      props.push(`${pad}accessibilityLabelledBy={${expr}}`);
+      props.push(
+        `${pad}accessibilityLabelledBy={${isRootNode ? `accessibilityLabelledBy ?? ${expr}` : expr}}`,
+      );
+      hasAccessibilityLabelledBy = true;
       continue;
     }
     if (name === "aria-checked") {
@@ -496,8 +721,34 @@ function emitNodeProps(
       props.push(`${pad}placeholder={${expr}}`);
       continue;
     }
+    if (name === "src" && component === "RNImage") {
+      props.push(`${pad}source={${expr} ? { uri: String(${expr}) } : undefined}`);
+      continue;
+    }
+    if (name === "alt" && component === "RNImage") {
+      props.push(
+        `${pad}accessibilityLabel={${isRootNode ? `accessibilityLabel ?? ${expr}` : expr}}`,
+      );
+      hasAccessibilityLabel = true;
+      continue;
+    }
+    if ((name === "width" || name === "height") && component === "RNImage") {
+      continue;
+    }
+    if ((name === "loading" || name === "sizes") && component === "RNImage") {
+      continue;
+    }
     if (name === "type" && component === "TextInput") {
       props.push(`${pad}secureTextEntry={${expr} === "password"}`);
+      continue;
+    }
+    if ((name === "aria-readonly" || name === "readonly") && component === "TextInput") {
+      props.push(`${pad}readOnly={Boolean(${expr})}`);
+      continue;
+    }
+    if (name === "href" && component === "Pressable") {
+      props.push(`${pad}onPress={() => { if (${expr}) void Linking.openURL(String(${expr})); }}`);
+      continue;
     }
   }
   for (const [eventName, binding] of Object.entries(node.events)) {
@@ -508,8 +759,14 @@ function emitNodeProps(
   const hasOnPressEvent = Object.keys(node.events).some(
     (eventName) => eventPropFor(component, eventName) === "onPress",
   );
-  if (isRootNode && component === "Pressable" && !hasOnPressEvent) {
+  if (isRootNode && component === "Pressable" && node.tag !== "a" && !hasOnPressEvent) {
     props.push(`${pad}onPress={onPress}`);
+  }
+  if (isRootNode && !hasAccessibilityLabel) {
+    props.push(`${pad}accessibilityLabel={accessibilityLabel}`);
+  }
+  if (isRootNode && !hasAccessibilityLabelledBy) {
+    props.push(`${pad}accessibilityLabelledBy={accessibilityLabelledBy}`);
   }
   const role = node.attrs.role ?? roleFromNode(node);
   const accessibilityRole = rnAccessibilityRole(role, component);
@@ -521,6 +778,7 @@ function emitNodeProps(
 }
 
 function rnComponentForNode(node: DomNodeIR): string {
+  if (node.tag === "a") return "Pressable";
   if (node.tag === "input" && (node.attrs.type === "checkbox" || node.attrs.type === "radio")) return "Pressable";
   if (node.tag === "input") return "TextInput";
   if (node.tag === "img" || node.tag === "image") return "RNImage";
@@ -529,7 +787,73 @@ function rnComponentForNode(node: DomNodeIR): string {
   return "View";
 }
 
+function isSupportedBindingForComponent(name: string, component: string): boolean {
+  if (name.startsWith("data-")) return false;
+  if (name === "aria-pressed") return false;
+  if (name === "aria-describedby") return false;
+  if (name === "name" || name === "required" || name === "aria-invalid") return false;
+  if (name === "htmlFor" || name === "form") return false;
+  if (name === "type") return component === "TextInput";
+  if (component === "RNImage") {
+    return ["src", "alt", "width", "height"].includes(name);
+  }
+  if (component === "Pressable" && name === "href") return true;
+  if (name === "target" || name === "rel") return false;
+  if ((name === "aria-readonly" || name === "readonly") && component === "TextInput") {
+    return true;
+  }
+  return !["src", "alt", "width", "height", "loading", "sizes"].includes(name);
+}
+
+function textInputReadOnlyExpr(node: DomNodeIR, ir: ComponentIR): string | undefined {
+  const binding = node.bindings["aria-readonly"] ?? node.bindings.readonly;
+  return binding ? `Boolean(${bindingExpr(binding, ir)})` : undefined;
+}
+
+function applyIfGuard(
+  rendered: string,
+  node: DomNodeIR,
+  ir: ComponentIR,
+  pad: string,
+): string {
+  if (!node.ifProp) return rendered;
+  const expr = ifGuardExpr(node.ifProp, ir);
+  const guard = node.ifNegated ? `!(${expr})` : expr;
+  return [`${pad}{${guard} ? (`, rendered, `${pad}) : null}`].join("\n");
+}
+
+function ifGuardExpr(ifProp: string, ir: ComponentIR): string {
+  if (ifProp === "children") return "children";
+  const channel = channelForIfProp(ir, ifProp);
+  if (channel) return channel.name;
+  return safePropName(ir, ifProp);
+}
+
+function channelForIfProp(
+  ir: ComponentIR,
+  ifProp: string,
+): NormalizedChannelIR | undefined {
+  return ir.behavior.normalizedChannels.find(
+    (channel) => channel.name === ifProp || channel.valueProp === ifProp,
+  );
+}
+
+function rnDynamicStyleEntries(
+  node: DomNodeIR,
+  ir: ComponentIR,
+  component: string,
+): string[] {
+  if (component !== "RNImage") return [];
+  const entries: string[] = [];
+  const width = node.bindings.width;
+  const height = node.bindings.height;
+  if (width) entries.push(`width: Number(${bindingExpr(width, ir)} ?? 0) || undefined`);
+  if (height) entries.push(`height: Number(${bindingExpr(height, ir)} ?? 0) || undefined`);
+  return entries;
+}
+
 function roleFromNode(node: DomNodeIR): string | undefined {
+  if (node.tag === "a") return "link";
   if (node.tag === "button") return "button";
   if (node.tag === "img") return "image";
   if (node.tag === "input" && node.attrs.type === "checkbox") return "checkbox";
@@ -554,6 +878,7 @@ function rnAccessibilityRole(role: string | undefined, component: string): strin
 
 function rootPressableAcceptsOnPress(ir: ComponentIR): boolean {
   if (!ir.dom) return false;
+  if (ir.dom.tag === "a") return false;
   return rnComponentForNode(ir.dom) === "Pressable" && Object.keys(ir.dom.events).length === 0;
 }
 
@@ -590,6 +915,10 @@ function eventHandlerExpr(
   binding: BindingExpression,
   ir: ComponentIR,
 ): string {
+  if (binding.kind === "prop") {
+    const propName = safePropName(ir, binding.prop);
+    return `() => ${propName}?.()`;
+  }
   if (binding.kind === "channel" && binding.field === "onChange") {
       const channel = ir.behavior.normalizedChannels.find((c) => c.name === binding.channel);
     if (channel) {
@@ -628,9 +957,7 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   }
   if (binding.kind === "literal") return JSON.stringify(binding.value);
   if (binding.kind === "iterationLocal") {
-    return binding.local === "item"
-      ? pathExprAny(binding.local, binding.path)
-      : pathExpr(binding.local, binding.path);
+    return pathExpr(binding.local, binding.path);
   }
   const left = bindingExpr(binding.left, ir);
   const right = bindingExpr(binding.right, ir);
@@ -644,11 +971,6 @@ function pathExpr(base: string, path: string[] | undefined): string {
   return [base, ...path].join(".");
 }
 
-function pathExprAny(base: string, path: string[] | undefined): string {
-  if (!path || path.length === 0) return base;
-  return [`(${base} as any)`, ...path].join(".");
-}
-
 function safePropName(ir: ComponentIR, propName: string): string {
   return ir.styledProps.find((p) => p.name === propName)?.safeName ?? propName;
 }
@@ -658,8 +980,8 @@ function emitIteration(node: DomNodeIR, ir: ComponentIR, depth: number): string 
   if (!iteration) return emitNode({ ...node, iteration: undefined }, ir, depth) ?? "";
   const pad = INDENT.repeat(depth);
   const childNode: DomNodeIR = { ...node, iteration: undefined };
-  const rendered = emitNode(childNode, ir, depth + 2) ?? "";
   const indexVar = iteration.indexVar;
+  const rendered = emitNode(childNode, ir, depth + 2, indexVar) ?? "";
   if (iteration.kind === "array") {
     const source = bindingExpr(iteration.source, ir);
     const itemVar = iteration.itemVar ?? "item";
@@ -997,7 +1319,9 @@ function hasToken(ir: ComponentIR, scope: string, name: string): boolean {
 }
 
 function maxLinesExpressionForNode(node: DomNodeIR, ir: ComponentIR): string | undefined {
-  const binding = node.cssVarBindings.find((item) => item.varName.includes("max-lines"));
+  const binding = node.cssVarBindings.find((item) =>
+    item.varName.includes("max-lines") || item.varName.includes("content-lines"),
+  );
   if (!binding) return undefined;
   const maxLines = bindingExpr(binding.value, ir);
   const expandedChannel = ir.behavior.normalizedChannels.find(

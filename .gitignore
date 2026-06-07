@@ -72,6 +72,7 @@ CLAUDE.md
 .claude/worktrees/
 .claude/transcripts/
 .claude/cache/
+.claude/hooks/state/
 
 # Codex agent runtime — per-machine agent tooling (hooks, worktrees,
 # claim oracle). Not repo source; eslint also ignores .codex/** (see

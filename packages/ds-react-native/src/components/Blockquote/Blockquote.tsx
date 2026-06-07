@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createBlockquoteStyles } from "./Blockquote.styles";
@@ -25,9 +26,6 @@ export interface BlockquoteProps {
 
 // @generated:start component
 export function Blockquote({
-  cite,
-  variant,
-  size,
   children,
   style,
   testID,
@@ -40,6 +38,8 @@ export function Blockquote({
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
     </View>

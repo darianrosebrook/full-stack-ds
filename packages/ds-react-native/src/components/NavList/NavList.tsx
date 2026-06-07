@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createNavListStyles } from "./NavList.styles";
@@ -23,7 +24,6 @@ export interface NavListProps {
 
 // @generated:start component
 export function NavList({
-  orientation = "vertical",
   ariaLabel,
   children,
   style,
@@ -37,7 +37,8 @@ export function NavList({
     <View
       testID={testID}
       style={[styles.root, style]}
-      accessibilityLabel={ariaLabel}
+      accessibilityLabel={accessibilityLabel ?? ariaLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.list}

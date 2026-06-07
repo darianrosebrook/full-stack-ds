@@ -1,6 +1,7 @@
 // @generated:start imports
-import { Pressable, StyleProp, View, ViewStyle } from "react-native";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Pressable, View } from "react-native";
+import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCalendarStyles } from "./Calendar.styles";
 // @generated:end
@@ -31,17 +32,7 @@ export interface CalendarProps {
 
 // @generated:start component
 export function Calendar({
-  value: controlledValue,
-  defaultValue,
-  onChange,
-  mode = "single",
-  disabled,
-  minDate,
-  maxDate,
-  locale = "en-US",
-  shouldCloseOnSelect = true,
   daysShown = 42,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -49,17 +40,12 @@ export function Calendar({
 }: CalendarProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createCalendarStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledValue, setUncontrolledValue] = useState<Date | Date[] | null>((defaultValue ?? undefined) as Date | Date[] | null);
-  const value = controlledValue ?? uncontrolledValue;
-  const setValueValue = useCallback((next: Date | Date[] | null) => {
-    if (controlledValue === undefined) setUncontrolledValue(next);
-    onChange?.(next);
-  }, [controlledValue, onChange]);
-
   return (
     <View
       testID={testID}
       style={[styles.root, style]}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
     >
       <View
         style={styles.header}
@@ -87,6 +73,7 @@ export function Calendar({
           >
             {Array.from({ length: Number(daysShown ?? 0) }).map((_, index) => (
                 <View
+                  key={index}
                   style={styles.cell}
                 >
                   <Pressable

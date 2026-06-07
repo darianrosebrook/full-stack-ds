@@ -1,5 +1,6 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, TextInput, View, ViewStyle } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { TextInput } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createInputStyles } from "./Input.styles";
@@ -32,14 +33,10 @@ export interface InputProps {
 export function Input({
   type,
   value: controlledValue,
-  defaultValue,
-  onChange,
   placeholder,
   disabled,
-  invalid,
-  required,
-  name,
-  children,
+  defaultValue = "",
+  onChange,
   style,
   testID,
   accessibilityLabel,
@@ -59,10 +56,12 @@ export function Input({
       testID={testID}
       style={[styles.root, style]}
       value={String(value ?? "")}
-      editable={!disabled}
+      editable={!(disabled)}
       secureTextEntry={type === "password"}
       placeholder={placeholder}
       onChangeText={(next: string) => setValueValue(next)}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityState={{ disabled: disabled }}
     />
   );
