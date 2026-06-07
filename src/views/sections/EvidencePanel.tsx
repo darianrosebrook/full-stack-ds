@@ -85,11 +85,11 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
         </p>
       </div>
 
-      <div className="subsection">
+      <div className="subsection nutrition-facts">
         <h3 className="subsection-title">Runtime-rail coverage</h3>
         {railEntry ? (
           <>
-            <Table className="data-table" ariaLabel="Runtime-rail coverage">
+            <Table className="data-table nutrition-table" ariaLabel="Runtime-rail coverage">
               <TableHead>
                 <TableRow>
                   <TableHeaderCell>Framework</TableHeaderCell>

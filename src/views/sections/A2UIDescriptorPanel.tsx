@@ -137,11 +137,11 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
       )}
 
       {eventEntries.length > 0 && (
-        <div className="subsection">
+        <div className="subsection nutrition-facts">
           <h3 className="subsection-title">
             Events &amp; channels ({eventEntries.length})
           </h3>
-          <Table className="data-table" ariaLabel="Events and channels">
+          <Table className="data-table nutrition-table" ariaLabel="Events and channels">
             <TableHead>
               <TableRow>
                 <TableHeaderCell>Key</TableHeaderCell>

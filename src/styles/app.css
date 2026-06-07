@@ -512,37 +512,38 @@ button {
 }
 
 .nutrition-facts {
-  --fsds-nutrition-facts-background: var(--fsds-semantic-color-background-elevated);
-  --fsds-nutrition-facts-ink: var(--fsds-semantic-color-foreground-primary);
-  --fsds-nutrition-facts-muted: var(--fsds-semantic-color-foreground-secondary);
-  --fsds-nutrition-facts-rule: var(--fsds-semantic-color-foreground-primary);
-  --fsds-nutrition-facts-hairline: var(--fsds-semantic-color-border-default);
+  --fsds-nutrition-facts-background: #fff;
+  --fsds-nutrition-facts-ink: #000;
+  --fsds-nutrition-facts-muted: #333;
+  --fsds-nutrition-facts-rule: #000;
+  --fsds-nutrition-facts-hairline: #000;
   --fsds-nutrition-facts-padding: var(--fsds-core-spacing-size-05);
-  --fsds-nutrition-facts-title-size: var(--fsds-core-typography-ramp-6);
+  --fsds-nutrition-facts-title-size: 1.5rem;
   --fsds-nutrition-facts-body-size: var(--fsds-core-typography-ramp-2);
 
   max-width: 720px;
   padding: var(--fsds-nutrition-facts-padding);
   color: var(--fsds-nutrition-facts-ink);
   background: var(--fsds-nutrition-facts-background);
-  border: 2px solid var(--fsds-nutrition-facts-rule);
+  border: 3px solid var(--fsds-nutrition-facts-rule);
   border-radius: 0;
+  min-width: 0;
 }
 
 .nutrition-facts .subsection-title {
   margin: 0;
-  padding: 0 0 var(--fsds-core-spacing-size-03);
+  padding: 0 0 var(--fsds-core-spacing-size-04);
   color: var(--fsds-nutrition-facts-ink);
   font-size: var(--fsds-nutrition-facts-title-size);
-  line-height: 1;
-  font-weight: var(--fsds-semantic-typography-font-weight-bold);
+  line-height: 0.95;
+  font-weight: 900;
   letter-spacing: 0;
-  border-bottom: 8px solid var(--fsds-nutrition-facts-rule);
+  border-bottom: 4px solid var(--fsds-nutrition-facts-rule);
 }
 
 .nutrition-table {
   padding: 0;
-  margin-top: var(--fsds-core-spacing-size-03);
+  margin-top: var(--fsds-core-spacing-size-04);
   color: var(--fsds-nutrition-facts-ink);
   font-size: var(--fsds-nutrition-facts-body-size);
   line-height: var(--fsds-semantic-typography-line-height-tight);
@@ -567,11 +568,12 @@ button {
   padding: var(--fsds-core-spacing-size-02) var(--fsds-core-spacing-size-03);
   color: var(--fsds-nutrition-facts-muted);
   font-size: var(--fsds-core-typography-ramp-1);
-  font-weight: var(--fsds-semantic-typography-font-weight-bold);
+  font-weight: 800;
   line-height: 1.1;
   text-transform: uppercase;
   letter-spacing: 0;
   border-bottom: 4px solid var(--fsds-nutrition-facts-rule);
+  background: transparent;
 }
 
 .nutrition-table .table__cell {
@@ -580,6 +582,8 @@ button {
   line-height: 1.2;
   border-bottom: 1px solid var(--fsds-nutrition-facts-hairline);
   vertical-align: top;
+  background: transparent;
+  overflow-wrap: anywhere;
 }
 
 .nutrition-table .table__body .table__row:last-child .table__cell {
@@ -587,7 +591,7 @@ button {
 }
 
 .nutrition-table .table__cell:first-child {
-  font-weight: var(--fsds-semantic-typography-font-weight-bold);
+  font-weight: 800;
 }
 
 .nutrition-table code {
