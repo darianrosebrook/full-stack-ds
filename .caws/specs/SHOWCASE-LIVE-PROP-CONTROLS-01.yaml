@@ -3,7 +3,6 @@ title: 'Showcase live prop controls over iframe postMessage'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
-worktree: live-preview-props
 created_at: '2026-06-05T22:42:55.225Z'
 updated_at: '2026-06-05T22:42:55.225Z'
 blast_radius:
