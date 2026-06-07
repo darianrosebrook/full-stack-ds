@@ -7,7 +7,10 @@ import {
   executeOrphanRemoval,
   type HandEditPolicy,
 } from "./orphans.js";
-import type { EmissionManifest } from "../validation/types.js";
+import {
+  EMISSION_MANIFEST_SCHEMA_VERSION,
+  type EmissionManifest,
+} from "../validation/types.js";
 
 /**
  * Build a fake workspace on a tmp dir, populated to match the
@@ -71,7 +74,7 @@ function manifest(
   groups: { framework: "react" | "vue"; component: string; contractPath: string; files: string[] }[],
 ): EmissionManifest {
   return {
-    schemaVersion: 5,
+    schemaVersion: EMISSION_MANIFEST_SCHEMA_VERSION,
     generatedAt: "2026-05-21T05:10:26.572Z",
     environment: {
       nodeMajor: 22,

@@ -37,6 +37,7 @@ const EMPTY_EMITTER_SOURCE_SETS: Record<FrameworkId, EmitterSourceSet> = {
   svelte: { framework: "svelte", sources: [] },
   lit: { framework: "lit", sources: [] },
   angular: { framework: "angular", sources: [] },
+  "react-native": { framework: "react-native", sources: [] },
 };
 
 const STUB_ENVIRONMENT: EnvironmentProvenance = {
@@ -283,6 +284,7 @@ describe("joinManifestAgainstResults", () => {
       svelte: { framework: "svelte", command: ["x"], checks: { typecheck: "direct" } },
       lit: { framework: "lit", command: ["x"], checks: { typecheck: "direct" } },
       angular: { framework: "angular", command: ["x"], checks: { typecheck: "direct" } },
+      "react-native": { framework: "react-native", command: ["x"], checks: { typecheck: "direct" } },
     };
     const baseResult: Omit<FrameworkValidationResult, "framework" | "commandRuns"> = {
       scope: "workspace",
@@ -301,6 +303,7 @@ describe("joinManifestAgainstResults", () => {
       svelte: { framework: "svelte", commandRuns: [], ...baseResult },
       lit: { framework: "lit", commandRuns: [], ...baseResult },
       angular: { framework: "angular", commandRuns: [], ...baseResult },
+      "react-native": { framework: "react-native", commandRuns: [], ...baseResult },
     };
     const out = joinManifestAgainstResults(manifest, plans, results);
     expect(out.has("react")).toBe(true);

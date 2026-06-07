@@ -36,7 +36,7 @@ pnpm run generate -- --target=all \
 
 Two phases:
 
-1. **Generate** all five frameworks from contracts. Writes the v5 manifest at `packages/ds-codegen/.emission-manifest.json` as the last step.
+1. **Generate** all five Web DOM frameworks from contracts. Writes the v6 manifest at `packages/ds-codegen/.emission-manifest.json` as the last step.
 2. **Validate** in required mode. Refuses to pass unless every integrity invariant holds (see admission-rail.md's diagnostic-code reading guide).
 
 Exit code 0 = the bytes on disk match the manifest's claims across all four evidence rungs (artifact, contract, emitter source, environment). Exit 1 = at least one rung drifted; stderr names the specific diagnostics with their codes and paths.
@@ -61,6 +61,21 @@ Same two phases. Same exit code semantics. Same JSON canonical output. The addit
 
 **The rail still admits the FULL workspace in scoped mode.** This bears repeating in operator documentation: the scoped report is reviewer ergonomic, NOT a reduced gate. Operators tempted to "make CI faster" by scoping are misreading the surface; the rail's overall verdict is independent of the projection.
 
+### `pnpm run governed:rail:react-native`
+
+React Native has a separate opt-in admission lane while it remains experimental:
+
+```bash
+pnpm run generate:react-native \
+  && node packages/ds-codegen/dist/validation/validate-cli.js \
+       --require-artifact-manifest \
+       --framework=react-native
+```
+
+This admits the generated RN package through package typecheck, focused generated RN render tests, and required-mode manifest integrity scoped to the RN framework id. The render tests use a Vitest-only native host shim and cover the first primitive/form slice, not the full corpus. The lane does not prove simulator or device runtime behavior, native visual parity, platform accessibility parity, or RN surface behavior.
+
+`pnpm run governed:rail:react-native:changed` adds the same git-range projection as the web changed rail.
+
 ## Anatomy of a rail run
 
 ```
@@ -71,7 +86,7 @@ Same two phases. Same exit code semantics. Same JSON canonical output. The addit
 │    • Build IR per contract.                                     │
 │    • For each framework, emit 5 file groups (source, hook,      │
 │      tests, css, etc.).                                         │
-│    • Write .emission-manifest.json with v5 environment +        │
+│    • Write .emission-manifest.json with v6 environment +        │
 │      emitterSourceSets + groups + per-file digests.             │
 └─────────────────────────────────────────────────────────────────┘
                               │

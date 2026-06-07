@@ -12,17 +12,13 @@
  * (e.g. `useControllableState`), and divergent for those that do
  * (focus, scroll lock, portal, dismissal).
  *
- * NOT YET REGISTERED: `"react-native"` is not a member of `TargetId`. The
- * factory casts its `id` so the object satisfies `FrameworkEmitter` in
- * isolation; wiring into the CLI requires widening `TargetId` and
- * `KNOWN_TARGETS` in `../../emitter.ts` and adding a binding in
- * `../../registry.ts`.
  */
+import fs from "node:fs";
+import path from "node:path";
 import type {
   EmitOptions,
   FrameworkEmitter,
   GeneratedFile,
-  TargetId,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
 import { generateReactNativeComponentSource } from "./component-source.js";
@@ -37,7 +33,7 @@ import { generateReactNativeSurfaceTest } from "./surface-tests.js";
 
 export function createReactNativeEmitter(): FrameworkEmitter {
   return {
-    id: "react-native" as TargetId,
+    id: "react-native",
 
     emitComponent(ir: ComponentIR, _opts: EmitOptions): GeneratedFile[] {
       if (isSurfaceComponent(ir)) {
@@ -55,7 +51,7 @@ export function createReactNativeEmitter(): FrameworkEmitter {
           },
         ];
       }
-      const { componentFile, stylesFile } =
+      const { componentFile, stylesFile, tokensFile } =
         generateReactNativeComponentSource(ir);
       return [
         {
@@ -66,6 +62,11 @@ export function createReactNativeEmitter(): FrameworkEmitter {
         {
           relativePath: `${ir.name}/${ir.name}.styles.ts`,
           contents: stylesFile,
+          preservable: true,
+        },
+        {
+          relativePath: `${ir.name}/${ir.name}.tokens.ts`,
+          contents: tokensFile,
           preservable: true,
         },
       ];
@@ -118,9 +119,15 @@ export function createReactNativeEmitter(): FrameworkEmitter {
     },
 
     discoverComponentIds(_componentsRoot: string): string[] {
-      // TODO: walk `${componentsRoot}/<Name>/<Name>.tsx` once the
-      // workspace package exists.
-      return [];
+      if (!fs.existsSync(_componentsRoot)) return [];
+      return fs
+        .readdirSync(_componentsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) =>
+          fs.existsSync(path.join(_componentsRoot, name, `${name}.tsx`)),
+        )
+        .sort();
     },
   };
 }

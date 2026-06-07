@@ -1,9 +1,65 @@
-# React Native framework emitter (scaffold)
+# React Native framework emitter
 
-Status: **scaffold only — not wired into `TargetId`, `registry.ts`, or the
-`--target=react-native` CLI flag.** Imports compile in isolation; the factory
-casts `id` to `TargetId` so the emitter conforms to `FrameworkEmitter` without
-touching `emitter.ts`.
+Status: **experimental opt-in executable target.** React Native is a built-in
+target-pack and can be generated with:
+
+```bash
+pnpm run generate:react-native
+pnpm run typecheck:react-native
+pnpm --filter @full-stack-ds/react-native run test
+pnpm run governed:rail:react-native
+```
+
+It is deliberately not listed in `fsds.targets.json`, so `--target=all` and the
+default governed rail still cover only the admitted Web DOM family plus Figma
+descriptors. React Native becomes executable for a run when requested explicitly
+as `--target=react-native`; its admission rail is likewise opt-in through
+`--framework=react-native`.
+
+## Current slice
+
+- Emits all 47 current component contracts into `packages/ds-react-native/`.
+- Typechecks against real React Native package types; the old local
+  `declare module "react-native"` shim is not part of the rail.
+- Emits Vitest suites for every component. Non-admitted components keep type
+  surface smokes; the first primitive/form slice gets focused host-render
+  assertions through `react-test-renderer`.
+- Emits per-component sibling `.tokens.ts` files that mirror the web
+  `<Component>.tokens.css` artifact as typed native token scopes.
+- Emits per-component sibling `.styles.ts` factories with `StyleSheet.create`.
+  Structural style factories consume the typed token scopes through the RN
+  theme context rather than hardcoded CSS fallbacks.
+- Participates in the admission rail when invoked with
+  `pnpm run governed:rail:react-native`. This binds generated RN artifacts to
+  contract bytes, RN emitter source bytes, environment provenance, and the RN
+  package typecheck/test commands.
+- Collapses contracts that declare `native-toggle-affordance` to RN's native
+  `Switch` primitive.
+- Walks `ComponentIR.dom` for the rest of the corpus, lowering common HTML-ish
+  hosts to `View`, `Pressable`, `TextInput`, `RNText`, and `RNImage`.
+- Keeps channel state inside the generated component body for now; no separate
+  RN behavior hooks are emitted yet.
+- `examples/settings/react-native` is a public-export consumer typecheck lane
+  for the first slice. It intentionally avoids overlays while surfaces remain
+  unadmitted.
+
+## Known gaps
+
+- Surface behavior is not admitted. `surface-emit.ts` intentionally keeps
+  surfaces on the generic component path until a native `Modal`/`BackHandler`
+  substrate is implemented.
+- Token realization is native and per-component, but still narrow. The RN
+  target consumes `ComponentIR.tokenScopes` and `FsdsTheme` overrides; it does
+  not yet project every CSS property into native `ViewStyle`/`TextStyle`.
+- Contract object aliases are emitted as `unknown` when no native data shape is
+  available. This preserves typecheck without inventing schema semantics.
+- `aria-labelledby` maps to `accessibilityLabelledBy`, which is Android-only in
+  React Native. Cross-platform label derivation remains a follow-up.
+- Runtime tests use a Vitest-only host shim for `View`/`Text`/`Pressable` etc.
+  because Vite does not parse React Native's Flow runtime entrypoint directly.
+  Type admission still resolves the real `react-native` package types.
+- RN rail admission does not prove simulator/device execution, native visual
+  parity, or platform accessibility parity.
 
 ## Layout
 
@@ -17,58 +73,3 @@ react-native/
 ├── surface-tests.ts
 └── barrel.ts
 ```
-
-Each module is a stub: function signatures match the React/Vue/Svelte/Lit
-counterparts, bodies throw `NotImplementedError`.
-
-## Why this isn't just "React with different imports"
-
-React Native shares the React component model (functional components, hooks,
-JSX, controlled state), so the React emitter is the closest analogue. But the
-output surface diverges enough that copying React verbatim won't work:
-
-- **No DOM, no CSS.** `<div>` / `<button>` / `<input>` become `<View>` /
-  `<Pressable>` / `<TextInput>`. There is no `className`; styles are JS
-  objects passed via `style={...}`. The `emitCss(ir)` path used by the web
-  targets is replaced by a per-component `StyleSheet.create({ ... })` block.
-- **Stack ≠ flexbox-with-CSS.** RN's layout engine is flexbox-only and lives
-  in JS — Stack maps to a `<View style={{ flexDirection, gap, ... }}>`
-  wrapper, not a styled element.
-- **Accessibility API is different.** `role` → `accessibilityRole`,
-  `aria-*` → `accessibility*` props (`accessibilityLabel`,
-  `accessibilityState`, `accessibilityValue`). ARIA projection happens at IR
-  consumption time, not in the contract.
-- **Behavior primitives.** `useControllableState` ports cleanly (it's
-  framework-agnostic React). `useDismissal`, `useFocusTrap`, `usePortal`,
-  `useScrollLock`, `useAnchorToggle` all need RN-native rewrites — there
-  is no `document`, no real portal, no global focus model. Modal /
-  Popover surfaces likely use RN's built-in `<Modal>` for the portal layer
-  and `BackHandler` for Android escape.
-- **No `<head>`, no global styles.** Theme tokens flow through a
-  `ThemeProvider` context or are resolved at codegen time into the
-  per-component `StyleSheet`.
-
-## Outstanding decisions (not resolved by this scaffold)
-
-- **`TargetId` union.** `"react-native"` must be added to `TargetId` and
-  `KNOWN_TARGETS` in `packages/ds-codegen/src/emitter.ts` before the CLI can
-  dispatch.
-- **Workspace package.** `packages/ds-react-native/` needs to exist with
-  `src/components/` and a peer `react-native` dep before
-  `createDefaultRegistry` can bind output paths.
-- **Stack primitive port.** `Stack.primitive.json` needs an
-  `implementation.targets.react-native` entry — RN's Stack is a `<View>`
-  wrapper with flexbox style props, not a CSS-driven element.
-- **Behavior primitives.** Port `useControllableState` (works as-is) and
-  rewrite the rest for RN. Likely lives in `packages/ds-react-native/src/primitives/`.
-- **CSS analogue.** `emitCss(ir)` does not apply. Either:
-  - emit `StyleSheet.create({ ... })` per component in the same `.tsx` file, or
-  - emit a sibling `${Name}.styles.ts` for token + style separation.
-- **Test runner.** `@testing-library/react-native` + jest. Behavioral tests
-  consume the same `buildComponentTestPlan` output; channel/escape/a11y
-  coverage stays in sync with the web targets where the semantics overlap
-  (e.g. there is no "Escape closes" on iOS — that surface is
-  platform-conditional).
-- **Surface family.** Tooltip has no native RN equivalent; Popover maps to
-  `<Modal transparent>`. `surface-emit.ts` will need to branch on platform
-  more aggressively than the web emitters do.

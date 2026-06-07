@@ -1,0 +1,36 @@
+{
+  "name": "@full-stack-ds/react-native",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "React Native implementation of Full Stack DS (experimental opt-in target)",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./primitives": {
+      "types": "./src/primitives/index.ts",
+      "import": "./src/primitives/index.ts"
+    },
+    "./tokens": {
+      "types": "./src/tokens/index.tsx",
+      "import": "./src/tokens/index.tsx"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-test-renderer": "^19.1.0",
+    "react-test-renderer": "^19.2.6",
+    "typescript": "^6.0.2",
+    "vitest": "^3.2.4"
+  }
+}

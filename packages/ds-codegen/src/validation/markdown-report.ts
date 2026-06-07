@@ -31,6 +31,7 @@ const FRAMEWORKS_IN_ORDER: readonly FrameworkId[] = [
   "svelte",
   "lit",
   "angular",
+  "react-native",
 ];
 
 /**
@@ -303,6 +304,7 @@ const FRAMEWORK_RANK: Record<FrameworkId, number> = {
   svelte: 2,
   lit: 3,
   angular: 4,
+  "react-native": 5,
 };
 
 function compareScopedGroup(

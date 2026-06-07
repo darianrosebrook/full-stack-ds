@@ -129,7 +129,7 @@ Top-level `emitterSourceSets` records the per-framework material codegen source 
 
 Verifier gained `RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_MISSING` and `RAIL_REQUIRE_MANIFEST_EMITTER_SOURCE_HASH_MISMATCH`. Cross-set dedupe applies the same way as contract dedupe: `frameworks/react/hook-source.ts` is in four framework sets (it's imported by vue/svelte/angular), but a drift on that file surfaces once with one path.
 
-Hardening follow-up (CODEGEN-RAIL-EMITTER-PROVENANCE-SCHEMA-HARDEN-01) tightened the v4 reader: all five FrameworkId keys must be present, each set's `framework` field must equal its key, `sources[]` must be non-empty, every item must have `{ path: string; sha256: string }`, and the sha256 must match the digest grammar. v4-stamped manifests violating these surface as MALFORMED, not as a silent skip.
+Hardening follow-up (CODEGEN-RAIL-EMITTER-PROVENANCE-SCHEMA-HARDEN-01) tightened the v4 reader: every FrameworkId key must be present, each set's `framework` field must equal its key, `sources[]` must be non-empty, every item must have `{ path: string; sha256: string }`, and the sha256 must match the digest grammar. v4-stamped manifests violating these surface as MALFORMED, not as a silent skip.
 
 **Rung-specific non-claim (emitter source attribution):** v4 binds each artifact group to a bounded codegen source set, and required mode rejects drift on those bytes. It does NOT prove the source set is **complete by construction** — the set is a static declaration in [`packages/ds-codegen/src/cli.ts`](../packages/ds-codegen/src/cli.ts) (`SHARED_EMITTER_SOURCES` + `FRAMEWORK_EMITTER_SOURCES`), not a runtime import-graph scan. If a contributor adds a new emitter helper and forgets to declare it, the manifest silently under-claims coverage and a drift on the un-declared file would not fire EMITTER_SOURCE_HASH_MISMATCH. The completeness invariant is contributor-enforced via code review, not mechanically enforced.
 
@@ -166,7 +166,13 @@ Hardening follow-up (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01) added
 
 **Rung-specific non-claim (environment attribution):** v5 binds each manifest to a runtime/dependency fingerprint and required mode rejects drift on Node major, codegen package version, and lockfile bytes. It does NOT model OS, architecture, container image, registry mirror state, network conditions, or the resolver's transitive behavior at install time. The honest claim is bounded to those three fields. Closing the determinism gap requires a future "environment attestation" rung that captures container digest, OS, arch — none of which exists today.
 
-## v5 reference
+### v6 (CODEGEN-RAIL-REACT-NATIVE-ADMISSION-01)
+
+v6 widens `FrameworkId` with the opt-in `"react-native"` rail id. The manifest can now attribute RN generated artifacts to the React Native emitter source set, package typecheck lane, and focused generated RN render-test lane. This is an admission rail for generated source shape plus a small host-render slice, not simulator/device runtime proof.
+
+Default `governed:rail` still runs the five Web DOM framework plans. The RN lane is invoked explicitly through `pnpm run governed:rail:react-native`, which generates `--target=react-native` and validates required-mode integrity scoped to `--framework=react-native`.
+
+## v6 reference
 
 This section is the structural reference for the current schema. Type declarations live in [`packages/ds-codegen/src/validation/types.ts`](../packages/ds-codegen/src/validation/types.ts); this doc summarizes them with semantic guidance the type docstrings do not repeat.
 
@@ -174,10 +180,10 @@ This section is the structural reference for the current schema. Type declaratio
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `schemaVersion` | `5` (literal) | yes | Must equal `EMISSION_MANIFEST_SCHEMA_VERSION`. Any other value → `RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH`. |
+| `schemaVersion` | `6` (literal) | yes | Must equal `EMISSION_MANIFEST_SCHEMA_VERSION`. Any other value → `RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH`. |
 | `generatedAt` | ISO 8601 string | yes | When the producer wrote the manifest. Informational only — not used in verification logic. |
 | `environment` | `EnvironmentProvenance` | yes | Generate-time runtime/dependency fingerprint. |
-| `emitterSourceSets` | `Record<FrameworkId, EmitterSourceSet>` | yes | Per-framework material source set. ALL five FrameworkId keys must be present with non-empty `sources`. |
+| `emitterSourceSets` | `Record<FrameworkId, EmitterSourceSet>` | yes | Per-framework material source set. Every FrameworkId key, including opt-in `react-native`, must be present with non-empty `sources`. |
 | `groups` | `readonly EmittedArtifactGroup[]` | yes | One entry per (framework, component) pair emitted in this run. |
 
 ### `EmittedArtifactGroup`
@@ -193,7 +199,7 @@ This section is the structural reference for the current schema. Type declaratio
 
 | Field | Required | Notes |
 |---|---|---|
-| `framework` | yes | One of `"react" \| "vue" \| "svelte" \| "lit" \| "angular"`. |
+| `framework` | yes | One of `"react" \| "vue" \| "svelte" \| "lit" \| "angular" \| "react-native"`. |
 | `component` | yes | Contract name (e.g. `"Button"`, `"Popover"`). |
 | `contract` | yes | The contract file that produced this group. Multiple groups (one per framework) share one contract; the verifier dedupes contract diagnostics per path. |
 | `files` | yes | Every file written for this component on this framework, in emission order. Each carries the post-write sha256 of on-disk bytes. |

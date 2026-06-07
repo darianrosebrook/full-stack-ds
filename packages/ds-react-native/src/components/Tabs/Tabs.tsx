@@ -1,0 +1,85 @@
+// @generated:start imports
+import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { useFsdsTheme } from "../../tokens";
+import { createTabsStyles } from "./Tabs.styles";
+// @generated:end
+
+// @generated:start types
+export type TabsOrientation = "horizontal" | "vertical";
+export type TabsAppearance = "underline" | "pills";
+export type TabsActivationMode = "automatic" | "manual";
+// @generated:end
+
+// @generated:start props
+export interface TabsProps {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  orientation?: TabsOrientation;
+  appearance?: TabsAppearance;
+  activationMode?: TabsActivationMode;
+  loop?: boolean;
+  unmountInactive?: boolean;
+  idBase?: string;
+  children?: ReactNode;
+  style?: StyleProp<ViewStyle>;
+  testID?: string;
+  accessibilityLabel?: string;
+  accessibilityLabelledBy?: string | string[];
+}
+// @generated:end
+
+// @generated:start component
+export function Tabs({
+  value: controlledActiveTab,
+  defaultValue,
+  onValueChange,
+  orientation = "horizontal",
+  appearance = "underline",
+  activationMode = "automatic",
+  loop = true,
+  unmountInactive,
+  idBase,
+  children,
+  style,
+  testID,
+  accessibilityLabel,
+  accessibilityLabelledBy,
+}: TabsProps) {
+  const fsdsTheme = useFsdsTheme();
+  const styles = useMemo(() => createTabsStyles(fsdsTheme), [fsdsTheme]);
+  const [uncontrolledActiveTab, setUncontrolledActiveTab] = useState<string>((defaultValue ?? "") as string);
+  const activeTab = controlledActiveTab ?? uncontrolledActiveTab;
+  const setActiveTabValue = useCallback((next: string) => {
+    if (controlledActiveTab === undefined) setUncontrolledActiveTab(next);
+    onValueChange?.(next);
+  }, [controlledActiveTab, onValueChange]);
+
+  return (
+    <View
+      testID={testID}
+      style={[styles.root, style]}
+    >
+      <View
+        style={styles.list}
+      >
+        <Pressable
+          style={styles.tab}
+          accessibilityRole="tab"
+          accessibilityState={{ selected: Boolean(activeTab) }}
+        />
+        <View
+          style={styles.indicator}
+          accessible={false}
+        />
+      </View>
+      <View
+        style={styles.panel}
+      >
+        {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      </View>
+    </View>
+  );
+}
+// @generated:end

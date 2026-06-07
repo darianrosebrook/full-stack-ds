@@ -32,7 +32,9 @@ import {
 import {
   type FrameworkEmitter,
   type GeneratedFile,
+  type BuiltinTargetId,
   type TargetId,
+  isBuiltinTargetId,
   parseTargetArg,
 } from "./emitter.js";
 import { buildComponentIR, type ComponentIR } from "./ir.js";
@@ -181,6 +183,15 @@ const FRAMEWORK_EMITTER_SOURCES: Record<FrameworkId, readonly string[]> = {
     "packages/ds-codegen/src/frameworks/lit/surface-tests.ts",
     "packages/ds-codegen/src/frameworks/lit/tests.ts",
     "packages/ds-codegen/src/non-react-types.ts",
+  ],
+  "react-native": [
+    "packages/ds-codegen/src/frameworks/react-native/barrel.ts",
+    "packages/ds-codegen/src/frameworks/react-native/component-source.ts",
+    "packages/ds-codegen/src/frameworks/react-native/factory.ts",
+    "packages/ds-codegen/src/frameworks/react-native/hook-source.ts",
+    "packages/ds-codegen/src/frameworks/react-native/surface-emit.ts",
+    "packages/ds-codegen/src/frameworks/react-native/surface-tests.ts",
+    "packages/ds-codegen/src/frameworks/react-native/tests.ts",
   ],
 };
 
@@ -559,6 +570,7 @@ function main(): void {
   const registry = createDefaultRegistry({
     workspaceRoot: cwd,
     contractsRoot: CONTRACTS_DIR,
+    explicitBuiltinTargets: explicitBuiltinTargets(args.targets),
   });
   const available = registry.available();
 
@@ -636,6 +648,19 @@ function main(): void {
     startWatch(args, requestedTargets, registry, validator);
     return; // keep process alive
   }
+}
+
+function explicitBuiltinTargets(rawTargetArg: string | undefined): BuiltinTargetId[] {
+  if (!rawTargetArg || rawTargetArg === "all") return [];
+  const result: BuiltinTargetId[] = [];
+  const seen = new Set<BuiltinTargetId>();
+  for (const entry of rawTargetArg.split(",").map((t) => t.trim()).filter(Boolean)) {
+    if (!isBuiltinTargetId(entry)) continue;
+    if (seen.has(entry)) continue;
+    seen.add(entry);
+    result.push(entry);
+  }
+  return result;
 }
 
 /**

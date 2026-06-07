@@ -119,6 +119,7 @@ const COMPONENT_TREES: ReadonlyArray<{ framework: FrameworkId; relPath: string }
   { framework: "svelte", relPath: "packages/ds-svelte/src/components" },
   { framework: "lit", relPath: "packages/ds-lit/src/components" },
   { framework: "angular", relPath: "packages/ds-angular/src/components" },
+  { framework: "react-native", relPath: "packages/ds-react-native/src/components" },
 ];
 
 /**
@@ -192,7 +193,13 @@ const CODEGEN_PACKAGE_JSON_RELATIVE_PATH = "packages/ds-codegen/package.json";
 export function verifyManifestAgainstDisk(
   manifestRead: ManifestReadResult,
   workspaceRoot: string,
+  opts: { frameworks?: readonly FrameworkId[] } = {},
 ): RailDiagnostic[] {
+  const selectedFrameworks = new Set(opts.frameworks);
+  const repairCommand =
+    selectedFrameworks.size === 1 && selectedFrameworks.has("react-native")
+      ? "pnpm run generate:react-native"
+      : "pnpm run generate -- --target=all";
   // Short-circuit cases: manifest missing or schema-mismatched
   // make all other checks meaningless.
   if (manifestRead.kind === "absent") {
@@ -201,7 +208,7 @@ export function verifyManifestAgainstDisk(
         code: "RAIL_REQUIRE_MANIFEST_MISSING",
         message:
           "The emission manifest is required in this mode but was not found on disk. " +
-          "Repair: run `pnpm run generate -- --target=all` before `validate:generated --require-artifact-manifest`.",
+          `Repair: run \`${repairCommand}\` before \`validate:generated --require-artifact-manifest\`.`,
       },
     ];
   }
@@ -228,13 +235,15 @@ export function verifyManifestAgainstDisk(
         code: "RAIL_REQUIRE_MANIFEST_MALFORMED",
         message:
           `The emission manifest exists but could not be consumed: ${manifestRead.message}. ` +
-          "Repair: regenerate (`pnpm run generate -- --target=all`); the manifest will be rewritten.",
+          `Repair: regenerate (\`${repairCommand}\`); the manifest will be rewritten.`,
       },
     ];
   }
 
   const { manifest } = manifestRead;
   const diagnostics: RailDiagnostic[] = [];
+  const frameworkSelected = (framework: FrameworkId) =>
+    selectedFrameworks.size === 0 || selectedFrameworks.has(framework);
 
   // Checks 1 + 3: manifest paths that don't exist on disk +
   // hash mismatches. Unified into one pass driven by
@@ -248,6 +257,7 @@ export function verifyManifestAgainstDisk(
   const manifestPathSet = new Set<string>();
   const mismatchPaths: string[] = [];
   for (const group of manifest.groups) {
+    if (!frameworkSelected(group.framework)) continue;
     for (const file of group.files) {
       manifestPathSet.add(file.path);
       const abs = path.join(workspaceRoot, file.path);
@@ -267,7 +277,7 @@ export function verifyManifestAgainstDisk(
       message:
         `${missingPaths.length} path(s) in the manifest do not exist on disk (or exist but are not regular files). ` +
         "Most common cause: a generated file was deleted, or the manifest is stale. " +
-        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+        `Repair: regenerate (\`${repairCommand}\`).`,
       paths: missingPaths,
     });
   }
@@ -275,7 +285,10 @@ export function verifyManifestAgainstDisk(
   // Check 2: on-disk generated files (containing the
   // @generated:start marker) not in the manifest. Walks each
   // framework's components tree and tests every regular file.
-  const onDiskGenerated = collectOnDiskGeneratedPaths(workspaceRoot);
+  const onDiskGenerated = collectOnDiskGeneratedPaths(
+    workspaceRoot,
+    selectedFrameworks,
+  );
   const untrackedPaths = onDiskGenerated.filter((p) => !manifestPathSet.has(p));
   if (untrackedPaths.length > 0) {
     diagnostics.push({
@@ -283,7 +296,7 @@ export function verifyManifestAgainstDisk(
       message:
         `${untrackedPaths.length} on-disk generated file(s) are NOT in the manifest. ` +
         "Most common cause: the manifest was produced by a partial-target generate run. " +
-        "Repair: regenerate with `--target=all`.",
+        `Repair: regenerate (\`${repairCommand}\`).`,
       paths: untrackedPaths,
     });
   }
@@ -314,6 +327,7 @@ export function verifyManifestAgainstDisk(
   const contractMissing = new Set<string>();
   const contractMismatch = new Set<string>();
   for (const group of manifest.groups) {
+    if (!frameworkSelected(group.framework)) continue;
     const c = group.contract;
     const abs = path.join(workspaceRoot, c.path);
     const result = safeSha256OfRegularFile(abs);
@@ -332,7 +346,7 @@ export function verifyManifestAgainstDisk(
       message:
         `${sorted.length} contract path(s) named by the manifest do not exist on disk (or exist but are not regular files). ` +
         "Most common cause: a contract was deleted or renamed after generation. " +
-        "Repair: restore the contract or regenerate (`pnpm run generate -- --target=all`).",
+        `Repair: restore the contract or regenerate (\`${repairCommand}\`).`,
       paths: sorted,
     });
   }
@@ -343,7 +357,7 @@ export function verifyManifestAgainstDisk(
       message:
         `${sorted.length} contract(s) have on-disk bytes that do not match the manifest's recorded digest. ` +
         "The contract was edited after the generated output was produced; the checked-in generated files reflect the previous contract revision. " +
-        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+        `Repair: regenerate (\`${repairCommand}\`).`,
       paths: sorted,
     });
   }
@@ -364,6 +378,7 @@ export function verifyManifestAgainstDisk(
   const emitterMissing = new Set<string>();
   const emitterMismatch = new Set<string>();
   for (const set of Object.values(manifest.emitterSourceSets)) {
+    if (!frameworkSelected(set.framework)) continue;
     for (const src of set.sources) {
       const abs = path.join(workspaceRoot, src.path);
       const result = safeSha256OfRegularFile(abs);
@@ -383,7 +398,7 @@ export function verifyManifestAgainstDisk(
       message:
         `${sorted.length} declared emitter source file(s) named by the manifest are missing on disk (or exist but are not regular files). ` +
         "Most common cause: an emitter helper was renamed or removed without a regenerate. " +
-        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+        `Repair: regenerate (\`${repairCommand}\`).`,
       paths: sorted,
     });
   }
@@ -395,7 +410,7 @@ export function verifyManifestAgainstDisk(
         `${sorted.length} emitter source file(s) have on-disk bytes that do not match the manifest's recorded digest. ` +
         "The codegen module was edited after the generated output was produced; the manifest's attribution is stale until regenerate. " +
         "NOT itself a code-correctness assertion — the new emitter may produce byte-identical output — but the rail's evidence is honest only after regenerate. " +
-        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+        `Repair: regenerate (\`${repairCommand}\`).`,
       paths: sorted,
     });
   }
@@ -448,7 +463,7 @@ export function verifyManifestAgainstDisk(
       code: "RAIL_REQUIRE_MANIFEST_CODEGEN_VERSION_MISMATCH",
       message:
         `Manifest was produced under codegen ${env.codegenPackageVersion}, but the on-disk codegen package is ${codegenPkgRead.version}. ` +
-        "Repair: regenerate (`pnpm run generate -- --target=all`).",
+        `Repair: regenerate (\`${repairCommand}\`).`,
     });
   }
   const lockfileAbs = path.join(workspaceRoot, env.lockfile.path);
@@ -469,7 +484,7 @@ export function verifyManifestAgainstDisk(
         `On-disk lockfile (\`${env.lockfile.path}\`) does not match the manifest's recorded digest. ` +
         "A direct dependency, transitive dependency, pnpm version, or registry resolution has changed since the manifest was written. " +
         "NOT itself a code-correctness assertion — the dep change may produce byte-identical output — but the rail's attribution is stale until regenerate. " +
-        `Repair: regenerate (\`pnpm run generate -- --target=all\`). Use \`git diff ${env.lockfile.path}\` to see which dep moved.`,
+        `Repair: regenerate (\`${repairCommand}\`). Use \`git diff ${env.lockfile.path}\` to see which dep moved.`,
       paths: [env.lockfile.path],
     });
   }
@@ -559,9 +574,15 @@ function readCodegenPackageVersion(
 }
 
 /** Recursively walk a components tree, returning POSIX-relative paths of generated files. */
-function collectOnDiskGeneratedPaths(workspaceRoot: string): string[] {
+function collectOnDiskGeneratedPaths(
+  workspaceRoot: string,
+  selectedFrameworks: ReadonlySet<FrameworkId>,
+): string[] {
   const out: string[] = [];
-  for (const { relPath } of COMPONENT_TREES) {
+  for (const { framework, relPath } of COMPONENT_TREES) {
+    if (selectedFrameworks.size > 0 && !selectedFrameworks.has(framework)) {
+      continue;
+    }
     const treeAbs = path.join(workspaceRoot, relPath);
     if (!fs.existsSync(treeAbs)) continue;
     walkTree(treeAbs, workspaceRoot, out);
@@ -820,17 +841,17 @@ export function readManifestForVerification(
   // every FrameworkId the rail knows about must have a
   // non-empty source set whose `framework` self-identifier
   // matches its key. The producer (`computeEmitterSourceSets`
-  // in cli.ts) always writes all five sets, so a manifest
+  // in cli.ts) always writes every framework source set, so a manifest
   // missing one is either a producer regression or an
   // externally-mutated manifest — either way it must NOT
   // be admitted as `ok`, because the verifier would then
   // silently skip emitter-source integrity for that framework.
   //
-  // We enforce coverage for all five framework ids rather than
+  // We enforce coverage for every framework id rather than
   // only frameworks present in `groups`, because: (1) governed
   // CI is full-target oriented; (2) a partial-target manifest
   // would also under-claim emitter coverage on regenerate; and
-  // (3) producer behavior is "always write all five," so a
+  // (3) producer behavior is "always write every framework set," so a
   // missing key is the load-bearing signal of malformedness.
   for (const { framework } of COMPONENT_TREES) {
     const set = manifestParsed.emitterSourceSets[framework];

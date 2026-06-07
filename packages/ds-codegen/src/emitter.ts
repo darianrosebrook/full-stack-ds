@@ -12,7 +12,14 @@
 
 import type { ComponentIR } from "./ir.js";
 
-export type BuiltinTargetId = "react" | "vue" | "lit" | "svelte" | "angular" | "figma";
+export type BuiltinTargetId =
+  | "react"
+  | "vue"
+  | "lit"
+  | "svelte"
+  | "angular"
+  | "figma"
+  | "react-native";
 export type TargetId = string;
 
 /**
@@ -90,6 +97,7 @@ export const KNOWN_TARGETS: readonly BuiltinTargetId[] = [
   "svelte",
   "angular",
   "figma",
+  "react-native",
 ];
 
 export function isBuiltinTargetId(value: string): value is BuiltinTargetId {

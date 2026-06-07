@@ -602,6 +602,33 @@ export interface TokenFactIR {
   isLiteral: boolean;
 }
 
+/**
+ * One component-local token definition at a scope. This is the typed
+ * counterpart to `<Component>.tokens.css`: web lowers it to custom-property
+ * declarations; native targets lower it to theme-resolved JS values.
+ */
+export interface TokenScopeValueIR {
+  /** Component-local slot path, e.g. `switch.color.track.background.default`. */
+  name: string;
+  /** CSS custom-property name for the same slot, e.g. `--fsds-switch-color-track-background-default`. */
+  cssVar: string;
+  /** Selector whose scope owns this value in the web token artifact. */
+  selector: string;
+  /** Stable scope key for non-CSS consumers (`root`, `checked`, `size_sm`, etc.). */
+  scope: string;
+  layer: "core" | "semantic" | "brand" | "density";
+  source: "tokens-sidecar" | "styles-sidecar";
+  resolvesTo?: string;
+  rawValue?: string;
+  isLiteral: boolean;
+}
+
+export interface TokenScopeIR {
+  selector: string;
+  scope: string;
+  values: TokenScopeValueIR[];
+}
+
 export interface RootSemanticsIR {
   /** Resolved root HTML element for the component. */
   element: string;
@@ -889,6 +916,13 @@ export interface ComponentIR {
    */
   tokenFacts: TokenFactIR[];
 
+  /**
+   * Component-local token scopes as typed data. This mirrors the web
+   * `<Component>.tokens.css` artifact without requiring native targets to
+   * inspect CSS text or selector syntax.
+   */
+  tokenScopes: TokenScopeIR[];
+
   /** Higher-level behavior metadata. Emitters can ignore for now. */
   behavior: BehaviorIR;
 
@@ -1037,6 +1071,7 @@ export function buildComponentIR(
   const cssBlocks = buildCssBlocks(contract, cssPrefix);
   const keyframes = buildKeyframes(contract);
   const tokenFacts = buildTokenFacts(contract.tokens ?? {});
+  const tokenScopes = buildTokenScopes(contract, cssPrefix);
 
   const behavior = buildBehaviorIR(contract, styledProps);
   const surface = buildSurfaceIR(contract, parts);
@@ -1102,6 +1137,7 @@ export function buildComponentIR(
     cssBlocks,
     keyframes,
     tokenFacts,
+    tokenScopes,
     behavior,
     surface,
     dom,
@@ -3064,6 +3100,150 @@ function buildTokenFacts(
     }
   }
   return facts;
+}
+
+function buildTokenScopes(
+  contract: ComponentContract,
+  cssPrefix: string,
+): TokenScopeIR[] {
+  const scopes = new Map<string, TokenScopeIR>();
+  const rootSelector = `.${cssPrefix}`;
+
+  const add = (value: TokenScopeValueIR): void => {
+    const key = value.scope;
+    const existing = scopes.get(key) ?? {
+      selector: value.selector,
+      scope: value.scope,
+      values: [],
+    };
+    existing.values.push(value);
+    scopes.set(key, existing);
+  };
+
+  for (const [name, token] of Object.entries(contract.tokens ?? {})) {
+    if (!token || typeof token !== "object") continue;
+    const base = tokenScopeBase({
+      name,
+      selector: rootSelector,
+      scope: "root",
+      layer: token.layer ?? "semantic",
+      source: "tokens-sidecar",
+    });
+    if (typeof token.literal === "string") {
+      add({ ...base, isLiteral: true, rawValue: token.literal });
+      continue;
+    }
+    if (typeof token.resolvesTo === "string") {
+      add({
+        ...base,
+        isLiteral: false,
+        resolvesTo: token.resolvesTo,
+        ...(typeof token.fallback === "string" ? { rawValue: token.fallback } : {}),
+      });
+    }
+  }
+
+  for (const [key, rawBlock] of Object.entries(contract.styles ?? {})) {
+    const selector =
+      key === "root"
+        ? rootSelector
+        : expandStylesKey(
+            key,
+            cssPrefix,
+            contract.portal?.enabled === true
+              ? { portalContentSelector: `[data-${cssPrefix}-content]` }
+              : undefined,
+          );
+    const scope = tokenScopeKeyFromSelector(selector, cssPrefix);
+    for (const [property, entry] of Object.entries(rawBlock)) {
+      if (!property.includes(".")) continue;
+      const projected = projectStyleEntryTokenScope({
+        entry,
+        property,
+        selector,
+        scope,
+      });
+      if (projected) add(projected);
+    }
+  }
+
+  return [...scopes.values()].map((scope) => ({
+    ...scope,
+    values: dedupeTokenScopeValues(scope.values),
+  }));
+}
+
+function tokenScopeBase(input: {
+  name: string;
+  selector: string;
+  scope: string;
+  layer: "core" | "semantic" | "brand" | "density";
+  source: "tokens-sidecar" | "styles-sidecar";
+}): Omit<TokenScopeValueIR, "isLiteral" | "rawValue" | "resolvesTo"> {
+  return {
+    name: input.name,
+    cssVar: `--${tokenSlug(input.name)}`,
+    selector: input.selector,
+    scope: input.scope,
+    layer: input.layer,
+    source: input.source,
+  };
+}
+
+function projectStyleEntryTokenScope(input: {
+  property: string;
+  entry: StyleEntry;
+  selector: string;
+  scope: string;
+}): TokenScopeValueIR | null {
+  const { property, entry, selector, scope } = input;
+  if (!entry || typeof entry !== "object") return null;
+  if (entry.platforms && !entry.platforms.some((p) => p === "ios" || p === "android")) {
+    return null;
+  }
+  const base = tokenScopeBase({
+    name: property,
+    selector,
+    scope,
+    layer: "semantic",
+    source: "styles-sidecar",
+  });
+  if (typeof entry.literal === "string") {
+    return { ...base, isLiteral: true, rawValue: entry.literal };
+  }
+  if (typeof entry.resolvesTo === "string") {
+    return {
+      ...base,
+      isLiteral: false,
+      resolvesTo: entry.resolvesTo,
+      ...(typeof entry.fallback === "string" ? { rawValue: entry.fallback } : {}),
+    };
+  }
+  return null;
+}
+
+function dedupeTokenScopeValues(values: TokenScopeValueIR[]): TokenScopeValueIR[] {
+  const byName = new Map<string, TokenScopeValueIR>();
+  for (const value of values) byName.set(value.name, value);
+  return [...byName.values()];
+}
+
+function tokenScopeKeyFromSelector(selector: string, cssPrefix: string): string {
+  const rootSelector = `.${cssPrefix}`;
+  if (selector === rootSelector) return "root";
+  const valueModifier = new RegExp(`\\.${cssPrefix}--([A-Za-z0-9_-]+)`).exec(selector);
+  if (valueModifier) return `variant_${sanitizeScopeKey(valueModifier[1]!)}`;
+  if (selector.includes(":checked")) return "checked";
+  if (selector.includes(":disabled")) return "disabled";
+  if (selector.includes(":hover")) return "hover";
+  if (selector.includes(":focus")) return "focus";
+  const part = new RegExp(`\\.${cssPrefix}__([A-Za-z0-9_-]+)`).exec(selector);
+  if (part) return `part_${sanitizeScopeKey(part[1]!)}`;
+  return sanitizeScopeKey(selector);
+}
+
+function sanitizeScopeKey(value: string): string {
+  return value.replace(/[^A-Za-z0-9_]/g, "_");
 }
 
 function renderTokenSlots(

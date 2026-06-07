@@ -34,12 +34,13 @@ import type {
  * required-mode.ts but local-to-this-module so the two concerns
  * remain decoupled.
  */
-const GENERATED_TREE_PREFIXES: readonly string[] = [
-  "packages/ds-react/src/components/",
-  "packages/ds-vue/src/components/",
-  "packages/ds-svelte/src/components/",
-  "packages/ds-lit/src/components/",
-  "packages/ds-angular/src/components/",
+const GENERATED_TREE_PREFIXES: ReadonlyArray<{ framework: FrameworkId; prefix: string }> = [
+  { framework: "react", prefix: "packages/ds-react/src/components/" },
+  { framework: "vue", prefix: "packages/ds-vue/src/components/" },
+  { framework: "svelte", prefix: "packages/ds-svelte/src/components/" },
+  { framework: "lit", prefix: "packages/ds-lit/src/components/" },
+  { framework: "angular", prefix: "packages/ds-angular/src/components/" },
+  { framework: "react-native", prefix: "packages/ds-react-native/src/components/" },
 ];
 
 /**
@@ -59,6 +60,7 @@ export interface ProjectGitRangeArgs {
   workspaceRoot: string;
   manifest: EmissionManifest;
   results: Readonly<Record<FrameworkId, FrameworkValidationResult>>;
+  frameworks?: readonly FrameworkId[];
   /**
    * Test seam — overrides the default `git` execution for unit
    * tests. Receives the argv to git (minus the binary itself);
@@ -78,13 +80,18 @@ export interface ProjectGitRangeArgs {
 export function projectGitRange(args: ProjectGitRangeArgs): ScopedProjection {
   const { rangeNotation, manifest, results } = args;
   const mode: RailScopeMode = { kind: "git_range", rangeNotation };
+  const selectedFrameworks = new Set(args.frameworks);
+  const frameworkSelected = (framework: FrameworkId) =>
+    selectedFrameworks.size === 0 || selectedFrameworks.has(framework);
 
   const allChanged = runGitDiff(args, [rangeNotation]);
-  const generatedChanged = allChanged.filter(isGeneratedTreePath);
+  const generatedChanged = allChanged.filter((p) =>
+    isGeneratedTreePath(p, selectedFrameworks),
+  );
   const generatedChangedSet = new Set(generatedChanged);
 
   const nonGeneratedChanged = allChanged
-    .filter((p) => !isGeneratedTreePath(p))
+    .filter((p) => !isGeneratedTreePath(p, selectedFrameworks))
     .filter((p) => !isExcludedFromContext(p));
 
   // Collect every contract path the manifest knows about so we
@@ -95,6 +102,7 @@ export function projectGitRange(args: ProjectGitRangeArgs): ScopedProjection {
   // drift.
   const knownContractPaths = new Set<string>();
   for (const group of manifest.groups) {
+    if (!frameworkSelected(group.framework)) continue;
     knownContractPaths.add(group.contract.path);
   }
   const changedContractPaths = allChanged.filter((p) =>
@@ -113,6 +121,7 @@ export function projectGitRange(args: ProjectGitRangeArgs): ScopedProjection {
   const matchedGroups: ScopedArtifactGroup[] = [];
   const matchedPathSet = new Set<string>();
   for (const group of manifest.groups) {
+    if (!frameworkSelected(group.framework)) continue;
     const filesIntersect = group.files.some((f) =>
       generatedChangedSet.has(f.path),
     );
@@ -170,8 +179,15 @@ function findAdmissionFor(
   return [];
 }
 
-function isGeneratedTreePath(p: string): boolean {
-  return GENERATED_TREE_PREFIXES.some((prefix) => p.startsWith(prefix));
+function isGeneratedTreePath(
+  p: string,
+  selectedFrameworks: ReadonlySet<FrameworkId>,
+): boolean {
+  return GENERATED_TREE_PREFIXES.some(
+    ({ framework, prefix }) =>
+      (selectedFrameworks.size === 0 || selectedFrameworks.has(framework)) &&
+      p.startsWith(prefix),
+  );
 }
 
 function isExcludedFromContext(p: string): boolean {

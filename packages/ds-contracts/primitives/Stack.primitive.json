@@ -51,6 +51,11 @@
         "module": "@full-stack-ds/svelte/primitives",
         "export": "Stack",
         "relativeFromComponents": "../../primitives"
+      },
+      "react-native": {
+        "module": "@full-stack-ds/react-native/primitives",
+        "export": "Stack",
+        "relativeFromComponents": "../../primitives"
       }
     }
   }

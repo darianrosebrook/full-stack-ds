@@ -16,6 +16,7 @@ import type { BuiltinTargetId, FrameworkEmitter, TargetId } from "./emitter.js";
 import { createAngularEmitter } from "./frameworks/angular/factory.js";
 import { createFigmaEmitter } from "./frameworks/figma/factory.js";
 import { createLitEmitter } from "./frameworks/lit/factory.js";
+import { createReactNativeEmitter } from "./frameworks/react-native/factory.js";
 import { createReactEmitter } from "./frameworks/react/factory.js";
 import { createSvelteEmitter } from "./frameworks/svelte/factory.js";
 import { createVueEmitter } from "./frameworks/vue/factory.js";
@@ -62,6 +63,12 @@ export interface RegistryOptions {
   workspaceRoot: string;
   /** Absolute path to the contracts directory. */
   contractsRoot: string;
+  /**
+   * Built-in targets requested explicitly by the current CLI invocation.
+   * These become executable for this run without joining the configured
+   * default target set that powers --target=all.
+   */
+  explicitBuiltinTargets?: readonly BuiltinTargetId[];
 }
 
 export interface TargetRegistry {
@@ -87,7 +94,10 @@ type BuiltinTargetBindingInput = Omit<TargetBinding, "id" | "targetPack"> & {
  */
 export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
   const loadedConfig = loadTargetRegistryConfigV1(opts.workspaceRoot);
-  const configuredTargets = new Set(configuredBuiltinTargets(loadedConfig.config));
+  const configuredTargets = new Set([
+    ...configuredBuiltinTargets(loadedConfig.config),
+    ...(opts.explicitBuiltinTargets ?? []),
+  ]);
   const bindings = new Map<TargetId, TargetBinding>();
   const declarations = new Map<TargetId, TargetDeclaration>();
 
@@ -214,6 +224,28 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
       id: "figma",
       emitter: createFigmaEmitter(),
       componentsRoot: figmaRoot,
+      barrelFile: "index.ts",
+    });
+  }
+
+  // React Native target — opt-in while experimental. It is executable when
+  // explicitly requested or when a future registry config includes it.
+  const reactNativeRoot = path.join(
+    opts.workspaceRoot,
+    "packages",
+    "ds-react-native",
+    "src",
+    "components",
+  );
+  if (
+    configuredTargets.has("react-native") &&
+    workspaceExists(path.join(opts.workspaceRoot, "packages", "ds-react-native"))
+  ) {
+    registerBuiltinTarget(bindings, declarations, {
+      id: "react-native",
+      railFrameworkId: "react-native",
+      emitter: createReactNativeEmitter(),
+      componentsRoot: reactNativeRoot,
       barrelFile: "index.ts",
     });
   }

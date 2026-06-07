@@ -53,6 +53,7 @@ import { vueValidationPlan } from "./frameworks/vue.js";
 import { svelteValidationPlan } from "./frameworks/svelte.js";
 import { litValidationPlan } from "./frameworks/lit.js";
 import { angularValidationPlan } from "./frameworks/angular.js";
+import { reactNativeValidationPlan } from "./frameworks/react-native.js";
 import { emissionManifestAbsolutePath } from "./emission-manifest-path.js";
 import { joinManifestAgainstResults } from "./artifact-join.js";
 import {
@@ -66,14 +67,15 @@ const PLANS_BY_ID: Record<FrameworkId, FrameworkValidationPlan> = {
   svelte: svelteValidationPlan,
   lit: litValidationPlan,
   angular: angularValidationPlan,
+  "react-native": reactNativeValidationPlan,
 };
 
-const PLANS = [
-  reactValidationPlan,
-  vueValidationPlan,
-  svelteValidationPlan,
-  litValidationPlan,
-  angularValidationPlan,
+const DEFAULT_FRAMEWORKS: readonly FrameworkId[] = [
+  "react",
+  "vue",
+  "svelte",
+  "lit",
+  "angular",
 ] as const;
 
 async function main(): Promise<void> {
@@ -81,6 +83,8 @@ async function main(): Promise<void> {
     "--require-artifact-manifest",
   );
   const scopeToGitRange = parseScopeToGitRangeArg(process.argv);
+  const selectedFrameworks = parseFrameworkFilterArg(process.argv);
+  const selectedPlans = selectedFrameworks.map((fw) => PLANS_BY_ID[fw]);
 
   process.stderr.write("[validate:generated] starting framework-admission rail\n");
   if (requireArtifactManifest) {
@@ -93,6 +97,9 @@ async function main(): Promise<void> {
       `[validate:generated] scope projection: git range \`${scopeToGitRange}\` (rail still admits full workspace)\n`,
     );
   }
+  process.stderr.write(
+    `[validate:generated] frameworks: ${selectedFrameworks.join(", ")}\n`,
+  );
 
   // Read the EmissionManifest in a structured way: distinct
   // result kinds let us tell "absent" from "schema mismatched"
@@ -147,7 +154,9 @@ async function main(): Promise<void> {
   let requiredModeDiagnostics: RailDiagnostic[] | undefined;
   let shortCircuitFrameworkPlans = false;
   if (requireArtifactManifest) {
-    requiredModeDiagnostics = verifyManifestAgainstDisk(manifestRead, cwd);
+    requiredModeDiagnostics = verifyManifestAgainstDisk(manifestRead, cwd, {
+      frameworks: selectedFrameworks,
+    });
     for (const d of requiredModeDiagnostics) {
       process.stderr.write(
         `[validate:generated] [${d.code}] ${d.message}\n`,
@@ -184,7 +193,7 @@ async function main(): Promise<void> {
     // frameworks shape stays valid. Plans contribute no command
     // runs and no checks — the diagnostic is the load-bearing
     // evidence in this mode.
-    for (const plan of PLANS) {
+    for (const plan of selectedPlans) {
       results[plan.framework] = {
         framework: plan.framework,
         scope: "workspace",
@@ -199,7 +208,7 @@ async function main(): Promise<void> {
         status: "fail",
       };
     }
-  } else for (const plan of PLANS) {
+  } else for (const plan of selectedPlans) {
     const commandSummary = plan.command
       ? plan.command.join(" ")
       : (plan.commands ?? [])
@@ -255,6 +264,7 @@ async function main(): Promise<void> {
           workspaceRoot: cwd,
           manifest,
           results: results as Record<FrameworkId, FrameworkValidationResult>,
+          frameworks: selectedFrameworks,
         })
       : undefined;
   if (scopedProjection) {
@@ -267,7 +277,7 @@ async function main(): Promise<void> {
     );
   }
 
-  const frameworksPass = PLANS.every(
+  const frameworksPass = selectedPlans.every(
     (plan) => results[plan.framework]?.status === "pass",
   );
   const requiredModePass =
@@ -336,6 +346,45 @@ function parseScopeToGitRangeArg(argv: readonly string[]): string | undefined {
     }
   }
   return undefined;
+}
+
+function parseFrameworkFilterArg(argv: readonly string[]): readonly FrameworkId[] {
+  const raw = parseEqualsOrNextArg(argv, "--framework") ??
+    parseEqualsOrNextArg(argv, "--frameworks");
+  if (!raw) return DEFAULT_FRAMEWORKS;
+
+  const out: FrameworkId[] = [];
+  const seen = new Set<FrameworkId>();
+  for (const value of raw.split(",").map((v) => v.trim()).filter(Boolean)) {
+    if (!isFrameworkId(value)) {
+      const valid = Object.keys(PLANS_BY_ID).join(", ");
+      throw new Error(`Unknown framework "${value}". Valid frameworks: ${valid}.`);
+    }
+    if (seen.has(value)) continue;
+    seen.add(value);
+    out.push(value);
+  }
+  if (out.length === 0) {
+    throw new Error("--framework/--frameworks must name at least one framework.");
+  }
+  return out;
+}
+
+function parseEqualsOrNextArg(
+  argv: readonly string[],
+  flag: "--framework" | "--frameworks",
+): string | undefined {
+  const eq = `${flag}=`;
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg.startsWith(eq)) return arg.slice(eq.length);
+    if (arg === flag) return argv[i + 1];
+  }
+  return undefined;
+}
+
+function isFrameworkId(value: string): value is FrameworkId {
+  return Object.prototype.hasOwnProperty.call(PLANS_BY_ID, value);
 }
 
 /**
