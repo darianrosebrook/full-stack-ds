@@ -35,6 +35,9 @@ const __dirname = path.dirname(__filename);
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
 const CACHE_DIR = path.join(REPO_ROOT, "node_modules", ".fsds-angular-cache");
+const VENDOR_SUBDIR = "vendor";
+const VENDOR_PREFIX = `${VENDOR_SUBDIR}/`;
+const ANGULAR_VENDOR_ROOT = path.join(angularPackageRoot(), "node_modules");
 
 interface PluginState {
   /** Resolves with the most recent compile result. Rejects on hard compile errors. */
@@ -116,6 +119,62 @@ export function angularPreviewPlugin(): Plugin {
     }, 100);
   }
 
+  function resolveTslibEsm(): string | null {
+    const direct = path.join(REPO_ROOT, "node_modules", "tslib", "tslib.es6.mjs");
+    if (fs.existsSync(direct)) return direct;
+
+    const pnpmRoot = path.join(REPO_ROOT, "node_modules", ".pnpm");
+    try {
+      const entry = fs
+        .readdirSync(pnpmRoot)
+        .filter((name) => name.startsWith("tslib@"))
+        .sort()[0];
+      if (!entry) return null;
+      const candidate = path.join(
+        pnpmRoot,
+        entry,
+        "node_modules",
+        "tslib",
+        "tslib.es6.mjs",
+      );
+      return fs.existsSync(candidate) ? candidate : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function resolveVendorFile(vendorRelPath: string): string | null {
+    const normalized = path.normalize(vendorRelPath);
+    if (
+      normalized === "." ||
+      normalized.startsWith("..") ||
+      path.isAbsolute(normalized)
+    ) {
+      return null;
+    }
+
+    if (normalized === "tslib/tslib.es6.mjs") {
+      return resolveTslibEsm();
+    }
+
+    const absPath = path.join(ANGULAR_VENDOR_ROOT, normalized);
+    if (!absPath.startsWith(ANGULAR_VENDOR_ROOT + path.sep)) return null;
+
+    const candidates = [absPath];
+    if (path.extname(absPath) === "") {
+      candidates.push(`${absPath}.js`, `${absPath}.mjs`);
+    }
+
+    for (const candidate of candidates) {
+      try {
+        if (fs.statSync(candidate).isFile()) return candidate;
+      } catch {
+        // Try the next extension fallback.
+      }
+    }
+    return absPath;
+  }
+
   return {
     name: "fsds-angular-preview",
 
@@ -141,6 +200,37 @@ export function angularPreviewPlugin(): Plugin {
 
         // Strip prefix and query string, guard against traversal.
         const relPath = decodeURIComponent(req.url.slice(URL_PREFIX.length).split("?")[0]);
+
+        // Local Angular/RxJS vendor proxy for the srcdoc shell importmap.
+        // The shell cannot rely on Vite's normal bare-specifier rewriting, and
+        // using esm.sh made dev previews depend on network/CDN availability.
+        if (relPath.startsWith(VENDOR_PREFIX)) {
+          const vendorRelPath = relPath.slice(VENDOR_PREFIX.length);
+          const absPath = resolveVendorFile(vendorRelPath);
+          if (!absPath) {
+            res.statusCode = 403;
+            res.end("forbidden");
+            return;
+          }
+          let isFile = false;
+          try {
+            isFile = fs.statSync(absPath).isFile();
+          } catch {
+            isFile = false;
+          }
+          if (!isFile) {
+            res.statusCode = 404;
+            res.setHeader("Content-Type", "text/plain");
+            res.end(`not found in Angular preview vendor tree: ${vendorRelPath}`);
+            return;
+          }
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "application/javascript; charset=utf-8");
+          res.setHeader("Cache-Control", "no-store");
+          res.setHeader("Access-Control-Allow-Origin", "*");
+          fs.createReadStream(absPath).pipe(res);
+          return;
+        }
 
         // Navigable preview-page branch. A bare PascalCase segment (optionally
         // trailing-slashed) is a per-component preview HTML PAGE — the

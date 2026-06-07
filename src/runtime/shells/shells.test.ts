@@ -7,9 +7,8 @@ import { buildAngularShell } from "./angular";
 // src/runtime/<fw>-preview/. Tests for those live alongside each plugin.
 //
 // Angular keeps its own shell because the bootstrap path needs an explicit
-// importmap, JIT-compiler fallback (esm.sh ships partial-linker output for
-// @angular/common), and zoneless change detection — none of which fits the
-// uniform Vite-middleware shape the four other plugins share.
+// importmap, JIT-compiler fallback, and zoneless change detection — none of
+// which fits the uniform Vite-middleware shape the four other plugins share.
 
 describe("buildAngularShell", () => {
   // The shell signature accepts componentSource and demo for API symmetry
@@ -33,10 +32,9 @@ describe("buildAngularShell", () => {
   });
 
   it("loads @angular/compiler before platform-browser for JIT fallback", () => {
-    // esm.sh ships @angular/common as partial-linker output; without the
-    // compiler in scope, internal injectables (_PlatformLocation et al)
-    // throw "needs to be compiled using the JIT compiler" at bootstrap.
-    // This test guards against accidental reordering during future cleanup.
+    // Without the compiler in scope, internal injectables (_PlatformLocation
+    // et al) can throw "needs to be compiled using the JIT compiler" at
+    // bootstrap. This test guards against accidental reordering.
     const html = buildAngularShell(baseInput);
     const compilerIdx = html.indexOf('import("@angular/compiler")');
     const platformIdx = html.indexOf('import("@angular/platform-browser")');
@@ -62,12 +60,27 @@ describe("buildAngularShell", () => {
     for (const spec of [
       "@angular/core",
       "@angular/core/primitives/signals",
+      "@angular/core/primitives/di",
       "@angular/compiler",
       "@angular/common",
+      "@angular/common/http",
       "@angular/platform-browser",
+      "rxjs",
+      "rxjs/operators",
+      "tslib",
     ]) {
       expect(html).toContain(`"${spec}":`);
     }
+  });
+
+  it("loads Angular runtime modules from the local preview middleware, not esm.sh", () => {
+    const html = buildAngularShell(baseInput);
+    expect(html).not.toContain("https://esm.sh/");
+    expect(html).toContain(
+      '"/preview/angular/vendor/@angular/compiler/fesm2022/compiler.mjs"',
+    );
+    expect(html).toContain('"/preview/angular/vendor/rxjs/dist/esm/index.js"');
+    expect(html).toContain('"/preview/angular/vendor/tslib/tslib.es6.mjs"');
   });
 
   it("posts fsds:ready after successful bootstrap and fsds:error on failure", () => {

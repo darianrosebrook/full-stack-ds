@@ -4,7 +4,10 @@ import {
   angularPreviewPlugin,
   angularPreviewCacheDir,
 } from "./vite-plugin";
-import { ANGULAR_PREVIEW_URL_PREFIX } from "./constants";
+import {
+  ANGULAR_PREVIEW_URL_PREFIX,
+  ANGULAR_PREVIEW_VENDOR_SUBDIR,
+} from "./constants";
 
 describe("angularPreviewPlugin", () => {
   it("returns a Vite plugin with a name and a configureServer hook", () => {
@@ -19,6 +22,7 @@ describe("angularPreviewPlugin", () => {
     // dev-server restarts. Both must stay stable — changing them is a coupled
     // change with shells/angular.ts.
     expect(ANGULAR_PREVIEW_URL_PREFIX).toBe("/preview/angular/");
+    expect(ANGULAR_PREVIEW_VENDOR_SUBDIR).toBe("vendor");
     expect(angularPreviewCacheDir()).toMatch(/node_modules\/\.fsds-angular-cache$/);
     expect(path.isAbsolute(angularPreviewCacheDir())).toBe(true);
   });
@@ -36,5 +40,6 @@ describe("angularPreviewPlugin", () => {
       "utf8",
     );
     expect(pluginSrc).toContain(`const URL_PREFIX = "${ANGULAR_PREVIEW_URL_PREFIX}"`);
+    expect(pluginSrc).toContain(`const VENDOR_SUBDIR = "${ANGULAR_PREVIEW_VENDOR_SUBDIR}"`);
   });
 });

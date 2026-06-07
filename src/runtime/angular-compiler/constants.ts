@@ -9,3 +9,6 @@ export const ANGULAR_PREVIEW_URL_PREFIX = "/preview/angular/";
 
 /** Subdirectory (under the URL prefix) holding synthesized host modules. */
 export const ANGULAR_PREVIEW_HOSTS_SUBDIR = ".fsds-preview-hosts";
+
+/** Subdirectory (under the URL prefix) that proxies local Angular/RxJS ESM. */
+export const ANGULAR_PREVIEW_VENDOR_SUBDIR = "vendor";

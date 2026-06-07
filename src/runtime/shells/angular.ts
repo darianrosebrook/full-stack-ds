@@ -1,6 +1,7 @@
 import {
   ANGULAR_PREVIEW_URL_PREFIX,
   ANGULAR_PREVIEW_HOSTS_SUBDIR,
+  ANGULAR_PREVIEW_VENDOR_SUBDIR,
 } from "../angular-compiler/constants";
 
 interface AngularShellInput {
@@ -10,16 +11,20 @@ interface AngularShellInput {
   demo: string;
 }
 
-// Pinned to ds-angular's devDependency. esm.sh serves these via importmap;
-// the JIT compiler is loaded eagerly because @angular/common ships from
-// esm.sh as partial-linker output and its internal injectables need JIT
-// fallback (see the spike trail under packages/ds-angular/spike-*).
-const ANGULAR_VERSION = "21.2.13";
-const NG_CORE = `https://esm.sh/@angular/core@${ANGULAR_VERSION}?dev`;
-const NG_CORE_SIGNALS = `https://esm.sh/@angular/core@${ANGULAR_VERSION}/primitives/signals?dev`;
-const NG_COMPILER = `https://esm.sh/@angular/compiler@${ANGULAR_VERSION}?dev&deps=@angular/core@${ANGULAR_VERSION}`;
-const NG_COMMON = `https://esm.sh/@angular/common@${ANGULAR_VERSION}?dev&deps=@angular/core@${ANGULAR_VERSION}`;
-const NG_PLATFORM_BROWSER = `https://esm.sh/@angular/platform-browser@${ANGULAR_VERSION}?dev&deps=@angular/core@${ANGULAR_VERSION},@angular/common@${ANGULAR_VERSION}`;
+// The shell runs inside a srcdoc iframe, so Vite cannot rewrite bare imports
+// in its inline module script. Keep the importmap same-origin by pointing at
+// the Angular preview middleware's local vendor proxy rather than a CDN.
+const ANGULAR_VENDOR_URL = `${ANGULAR_PREVIEW_URL_PREFIX}${ANGULAR_PREVIEW_VENDOR_SUBDIR}`;
+const NG_CORE = `${ANGULAR_VENDOR_URL}/@angular/core/fesm2022/core.mjs`;
+const NG_CORE_SIGNALS = `${ANGULAR_VENDOR_URL}/@angular/core/fesm2022/primitives-signals.mjs`;
+const NG_CORE_DI = `${ANGULAR_VENDOR_URL}/@angular/core/fesm2022/primitives-di.mjs`;
+const NG_COMPILER = `${ANGULAR_VENDOR_URL}/@angular/compiler/fesm2022/compiler.mjs`;
+const NG_COMMON = `${ANGULAR_VENDOR_URL}/@angular/common/fesm2022/common.mjs`;
+const NG_COMMON_HTTP = `${ANGULAR_VENDOR_URL}/@angular/common/fesm2022/http.mjs`;
+const NG_PLATFORM_BROWSER = `${ANGULAR_VENDOR_URL}/@angular/platform-browser/fesm2022/platform-browser.mjs`;
+const RXJS = `${ANGULAR_VENDOR_URL}/rxjs/dist/esm/index.js`;
+const RXJS_OPERATORS = `${ANGULAR_VENDOR_URL}/rxjs/dist/esm/operators/index.js`;
+const TSLIB = `${ANGULAR_VENDOR_URL}/tslib/tslib.es6.mjs`;
 
 /**
  * Builds the in-iframe Angular bootstrap HTML.
@@ -56,9 +61,14 @@ ${css ? `<style data-fsds="component-css">${css.replace(/<\/style>/g, "<\\/style
   "imports": {
     "@angular/core": "${NG_CORE}",
     "@angular/core/primitives/signals": "${NG_CORE_SIGNALS}",
+    "@angular/core/primitives/di": "${NG_CORE_DI}",
     "@angular/compiler": "${NG_COMPILER}",
     "@angular/common": "${NG_COMMON}",
-    "@angular/platform-browser": "${NG_PLATFORM_BROWSER}"
+    "@angular/common/http": "${NG_COMMON_HTTP}",
+    "@angular/platform-browser": "${NG_PLATFORM_BROWSER}",
+    "rxjs": "${RXJS}",
+    "rxjs/operators": "${RXJS_OPERATORS}",
+    "tslib": "${TSLIB}"
   }
 }
 </script>
@@ -77,8 +87,8 @@ window.addEventListener("error", (e) => showError(e.error?.stack || e.message));
 window.addEventListener("unhandledrejection", (e) => showError(e.reason?.stack || e.reason));
 
 try {
-  // Critical: load @angular/compiler BEFORE platform-browser. esm.sh ships
-  // partial-linker output for @angular/common; without the JIT compiler
+  // Critical: load @angular/compiler BEFORE platform-browser. Angular's
+  // common/platform internals can still require JIT fallback; without it
   // present at module-import time the bootstrap throws on internal
   // injectables (e.g. _PlatformLocation).
   await import("@angular/compiler");
