@@ -30,13 +30,7 @@ export function Home({ bundle }: HomeProps) {
   const tokenCount = bundle.components.reduce((acc, c) => {
     const tokens = c.contract.tokens;
     if (!tokens) return acc;
-    return (
-      acc +
-      Object.values(tokens).reduce(
-        (sum, group) => sum + Object.keys(group ?? {}).length,
-        0,
-      )
-    );
+    return acc + Object.keys(tokens).length;
   }, 0);
 
   const samples = bundle.components.slice(0, 6);

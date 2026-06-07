@@ -7,6 +7,7 @@ import { Home } from "./views/Home";
 import { ArchitectureView } from "./views/ArchitectureView";
 import { DesignView } from "./views/DesignView";
 import { DeveloperView } from "./views/DeveloperView";
+import { ComponentTokensView } from "./views/ComponentTokensView";
 import { TokensView } from "./views/TokensView";
 import { TokensPhilosophyView } from "./views/TokensPhilosophyView";
 import { ComponentComplexityView } from "./views/ComponentComplexityView";
@@ -98,16 +99,16 @@ export function App() {
           route.tab === "design" ? (
             <DesignView
               component={activeComponent}
-              route={route}
               tokenOverrides={activeTokens}
             />
-          ) : (
+          ) : route.tab === "developer" ? (
             <DeveloperView
               component={activeComponent}
-              route={route}
               trace={trace}
               onTrace={setTrace}
             />
+          ) : (
+            <ComponentTokensView component={activeComponent} />
           )
         )}
         {route.kind === "component" && !activeComponent && (

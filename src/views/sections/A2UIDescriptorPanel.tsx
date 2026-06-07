@@ -107,11 +107,11 @@ export function A2UIDescriptorPanel({ contract }: A2UIDescriptorPanelProps) {
       </dl>
 
       {propEntries.length > 0 && (
-        <div className="subsection">
+        <div className="subsection nutrition-facts">
           <h3 className="subsection-title">
             Agent-fillable props ({propEntries.length})
           </h3>
-          <Table className="data-table" ariaLabel="Agent-fillable props">
+          <Table className="data-table nutrition-table" ariaLabel="Agent-fillable props">
             <TableHead>
               <TableRow>
                 <TableHeaderCell>Prop</TableHeaderCell>

@@ -107,7 +107,7 @@ export interface ComponentContract {
   variants?: Record<string, string[]>;
   states?: string[];
   a11y?: A11y;
-  tokens?: Record<string, Record<string, TokenDefinition>>;
+  tokens?: Record<string, TokenDefinition>;
   props?: Record<string, PropsBlock>;
   types?: Record<string, unknown>;
   behavior?: Record<string, unknown>;

@@ -148,11 +148,49 @@ button {
   min-height: 0;
 }
 
+@media (max-width: 900px) {
+  .app-shell,
+  .app-shell--no-trace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: var(--fsds-app-header-h) auto minmax(0, 1fr);
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main";
+  }
+
+  .app-header {
+    gap: var(--fsds-core-spacing-size-04);
+    padding-inline: var(--fsds-core-spacing-size-05);
+  }
+
+  .brand-meta {
+    display: none;
+  }
+
+  .app-sidebar {
+    max-height: 180px;
+    border-right: 0;
+    border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+    overflow: auto;
+  }
+
+  .app-trace {
+    display: none;
+  }
+}
+
 /* Header controls */
 .header-actions {
   display: flex;
   gap: var(--fsds-core-spacing-size-05);
   align-items: center;
+}
+
+@media (max-width: 900px) {
+  .header-actions {
+    gap: var(--fsds-core-spacing-size-03);
+  }
 }
 
 .icon-btn {
@@ -471,6 +509,104 @@ button {
 
 .kbd-action-cell {
   padding: var(--fsds-core-spacing-size-04) 0;
+}
+
+.nutrition-facts {
+  --fsds-nutrition-facts-background: var(--fsds-semantic-color-background-elevated);
+  --fsds-nutrition-facts-ink: var(--fsds-semantic-color-foreground-primary);
+  --fsds-nutrition-facts-muted: var(--fsds-semantic-color-foreground-secondary);
+  --fsds-nutrition-facts-rule: var(--fsds-semantic-color-foreground-primary);
+  --fsds-nutrition-facts-hairline: var(--fsds-semantic-color-border-default);
+  --fsds-nutrition-facts-padding: var(--fsds-core-spacing-size-05);
+  --fsds-nutrition-facts-title-size: var(--fsds-core-typography-ramp-6);
+  --fsds-nutrition-facts-body-size: var(--fsds-core-typography-ramp-2);
+
+  max-width: 720px;
+  padding: var(--fsds-nutrition-facts-padding);
+  color: var(--fsds-nutrition-facts-ink);
+  background: var(--fsds-nutrition-facts-background);
+  border: 2px solid var(--fsds-nutrition-facts-rule);
+  border-radius: 0;
+}
+
+.nutrition-facts .subsection-title {
+  margin: 0;
+  padding: 0 0 var(--fsds-core-spacing-size-03);
+  color: var(--fsds-nutrition-facts-ink);
+  font-size: var(--fsds-nutrition-facts-title-size);
+  line-height: 1;
+  font-weight: var(--fsds-semantic-typography-font-weight-bold);
+  letter-spacing: 0;
+  border-bottom: 8px solid var(--fsds-nutrition-facts-rule);
+}
+
+.nutrition-table {
+  padding: 0;
+  margin-top: var(--fsds-core-spacing-size-03);
+  color: var(--fsds-nutrition-facts-ink);
+  font-size: var(--fsds-nutrition-facts-body-size);
+  line-height: var(--fsds-semantic-typography-line-height-tight);
+  background: transparent;
+}
+
+.nutrition-table:hover {
+  background: transparent;
+}
+
+.nutrition-table .table__container {
+  border-collapse: collapse;
+  border-radius: 0;
+  border: 0;
+}
+
+.nutrition-table .table__head {
+  background: transparent;
+}
+
+.nutrition-table .table__headerCell {
+  padding: var(--fsds-core-spacing-size-02) var(--fsds-core-spacing-size-03);
+  color: var(--fsds-nutrition-facts-muted);
+  font-size: var(--fsds-core-typography-ramp-1);
+  font-weight: var(--fsds-semantic-typography-font-weight-bold);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  border-bottom: 4px solid var(--fsds-nutrition-facts-rule);
+}
+
+.nutrition-table .table__cell {
+  padding: var(--fsds-core-spacing-size-02) var(--fsds-core-spacing-size-03);
+  color: var(--fsds-nutrition-facts-ink);
+  line-height: 1.2;
+  border-bottom: 1px solid var(--fsds-nutrition-facts-hairline);
+  vertical-align: top;
+}
+
+.nutrition-table .table__body .table__row:last-child .table__cell {
+  border-bottom: 0;
+}
+
+.nutrition-table .table__cell:first-child {
+  font-weight: var(--fsds-semantic-typography-font-weight-bold);
+}
+
+.nutrition-table code {
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border-radius: 0;
+  font-family: var(--fsds-core-typography-font-family-mono);
+  font-size: inherit;
+}
+
+.nutrition-facts > .muted,
+.nutrition-facts > p.muted {
+  margin-top: var(--fsds-core-spacing-size-03);
+  padding-top: var(--fsds-core-spacing-size-03);
+  color: var(--fsds-nutrition-facts-muted);
+  font-size: var(--fsds-core-typography-ramp-1);
+  line-height: var(--fsds-semantic-typography-line-height-normal);
+  border-top: 4px solid var(--fsds-nutrition-facts-rule);
 }
 
 .muted {
@@ -1072,6 +1208,170 @@ button {
 
 .tokens-table tr:target > td {
   background: rgba(91, 141, 239, 0.06);
+}
+
+/* Component token facts */
+.component-token-facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-06);
+}
+
+.component-token-facts__masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--fsds-core-spacing-size-06);
+  padding: var(--fsds-core-spacing-size-06) 0;
+  border-top: 8px solid var(--fsds-semantic-color-foreground-primary);
+  border-bottom: 2px solid var(--fsds-semantic-color-foreground-primary);
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+
+.component-token-facts__masthead h3 {
+  margin: 0;
+  font-size: 2.25rem;
+  line-height: 0.95;
+  letter-spacing: 0;
+  font-weight: 900;
+}
+
+.component-token-facts__masthead p {
+  margin: var(--fsds-core-spacing-size-03) 0 0;
+  font-family: var(--fsds-core-typography-font-family-mono);
+  font-size: var(--fsds-core-typography-ramp-2);
+}
+
+.component-token-facts__masthead strong {
+  font-size: 2.75rem;
+  line-height: 0.9;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.component-token-facts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: var(--fsds-core-spacing-size-07);
+  align-items: start;
+}
+
+.token-facts-label {
+  background: #fff;
+  color: #000;
+  border: 3px solid #000;
+  padding: var(--fsds-core-spacing-size-05);
+  min-width: 0;
+}
+
+.token-facts-label__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--fsds-core-spacing-size-05);
+  border-bottom: 4px solid #000;
+  padding-bottom: var(--fsds-core-spacing-size-04);
+}
+
+.token-facts-label__header h4 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 0.95;
+  letter-spacing: 0;
+  font-weight: 900;
+}
+
+.token-facts-label__header span {
+  font-size: var(--fsds-core-typography-ramp-1);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.token-facts-label__bar {
+  height: 14px;
+  background: #000;
+  margin: var(--fsds-core-spacing-size-04) 0;
+}
+
+.token-facts-label__rows {
+  margin: 0;
+}
+
+.token-facts-label__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--fsds-core-spacing-size-03) var(--fsds-core-spacing-size-05);
+  padding: var(--fsds-core-spacing-size-04) 0;
+  border-top: 1px solid #000;
+}
+
+.token-facts-label__row:first-child {
+  border-top: 0;
+}
+
+.token-facts-label__row dt {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  font-weight: 800;
+}
+
+.token-facts-label__row code,
+.token-facts-label__row dt span,
+.token-facts-label__resolve {
+  font-family: var(--fsds-core-typography-font-family-mono);
+}
+
+.token-facts-label__row code {
+  color: #000;
+  font-size: var(--fsds-core-typography-ramp-2);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.token-facts-label__row dt span,
+.token-facts-label__resolve {
+  color: #333;
+  font-size: var(--fsds-core-typography-ramp-1);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.token-facts-label__row dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 2px;
+  min-width: 96px;
+  text-align: right;
+  font-size: var(--fsds-core-typography-ramp-1);
+  font-weight: 800;
+}
+
+.token-facts-label__value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: end;
+  gap: var(--fsds-core-spacing-size-03);
+  font-size: var(--fsds-core-typography-ramp-2);
+  color: #000;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.token-facts-label__value .token-swatch {
+  flex: 0 0 auto;
+}
+
+.token-facts-label__resolve {
+  grid-column: 1 / -1;
+  align-items: start;
+  text-align: left;
+  padding-top: var(--fsds-core-spacing-size-03);
+  border-top: 1px solid #000;
 }
 
 /* A11y panel */

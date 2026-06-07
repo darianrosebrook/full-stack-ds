@@ -1,18 +1,16 @@
 import { useMemo, useState } from "react";
-import { Links, Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
+import { Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
-import type { Route } from "../router";
-import { buildHref } from "../router";
 import { bundle } from "../types/bundle";
 import { FrameworkPreview } from "../runtime/FrameworkPreview";
 import { CodeViewer } from "../components/CodeViewer";
 import { buildTraceIndex } from "../trace/buildTraceIndex";
 import { buildDemo } from "../runtime/demos";
 import type { TraceSelection } from "../trace/types";
+import { ComponentViewTabs } from "./ComponentViewTabs";
 
 interface DeveloperViewProps {
   component: ComponentBundle;
-  route: Route;
   trace: TraceSelection | null;
   onTrace: (selection: TraceSelection | null) => void;
 }
@@ -58,21 +56,7 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
         click any to see the contract path in the panel on the right.
       </p>
 
-      <nav className="view-tabs" aria-label="View mode">
-        <Links
-          className="view-tab"
-          href={buildHref({ kind: "component", name: component.name, tab: "design" })}
-        >
-          Design
-        </Links>
-        <Links
-          className="view-tab view-tab--active"
-          href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
-          aria-current="page"
-        >
-          Developer
-        </Links>
-      </nav>
+      <ComponentViewTabs componentName={component.name} activeTab="developer" />
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "var(--fsds-core-spacing-size-08) 0 var(--fsds-core-spacing-size-06)" }}>
         <Tabs

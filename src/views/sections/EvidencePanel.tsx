@@ -60,9 +60,9 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
         </dl>
       </div>
 
-      <div className="subsection">
+      <div className="subsection nutrition-facts">
         <h3 className="subsection-title">Generated framework realizations</h3>
-        <Table className="data-table" ariaLabel="Generated framework realizations">
+        <Table className="data-table nutrition-table" ariaLabel="Generated framework realizations">
           <TableHead>
             <TableRow>
               <TableHeaderCell>Framework</TableHeaderCell>

@@ -1,8 +1,40 @@
-import { Table, TableHead, TableBody, TableRow, TableHeaderCell, TableCell } from "@full-stack-ds/react";
 import type { TokenDefinition } from "../../types/data";
 
 interface TokensTableProps {
-  tokens: Record<string, Record<string, TokenDefinition>>;
+  tokens: Record<string, TokenDefinition>;
+}
+
+interface TokenEntry {
+  slot: string;
+  definition: TokenDefinition;
+}
+
+const GROUP_ORDER = [
+  "box-model",
+  "color",
+  "size",
+  "typography",
+  "motion",
+  "other",
+] as const;
+
+const GROUP_LABEL: Record<(typeof GROUP_ORDER)[number], string> = {
+  "box-model": "Box model",
+  color: "Color",
+  size: "Size",
+  typography: "Typography",
+  motion: "Motion",
+  other: "Other",
+};
+
+function groupKey(slot: string): (typeof GROUP_ORDER)[number] {
+  if (slot.startsWith("box-model.")) return "box-model";
+  if (slot.includes(".color.")) return "color";
+  if (slot.includes(".size.")) return "size";
+  if (slot.includes(".text.") || slot.includes(".typography."))
+    return "typography";
+  if (slot.includes(".motion.")) return "motion";
+  return "other";
 }
 
 function isColorish(val: string | undefined): boolean {
@@ -10,65 +42,68 @@ function isColorish(val: string | undefined): boolean {
   return /^#|^rgb|^hsl|^var\(/.test(val);
 }
 
+function cssVarForSlot(slot: string): string {
+  return `--fsds-${slot.replace(/\./g, "-")}`;
+}
+
 export function TokensTable({ tokens }: TokensTableProps) {
-  const groups = Object.entries(tokens);
+  const groups = new Map<(typeof GROUP_ORDER)[number], TokenEntry[]>();
+  for (const [slot, definition] of Object.entries(tokens)) {
+    const key = groupKey(slot);
+    groups.set(key, [...(groups.get(key) ?? []), { slot, definition }]);
+  }
+  const visibleGroups = GROUP_ORDER.map((key) => ({
+    key,
+    label: GROUP_LABEL[key],
+    entries: groups.get(key) ?? [],
+  })).filter((group) => group.entries.length > 0);
+  const tokenCount = Object.keys(tokens).length;
 
   return (
-    <div className="panel">
-      <div className="panel-toolbar">
-        <span>{groups.length} state group{groups.length === 1 ? "" : "s"}</span>
-        <span className="subtle">
-          token → resolves → CSS property
-        </span>
-      </div>
-      {groups.map(([groupName, entries]) => (
-        <div key={groupName}>
-          <div
-            style={{
-              padding: "var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06)",
-              fontSize: "var(--fsds-core-typography-ramp-2)",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-              color: "var(--fsds-semantic-color-foreground-tertiary)",
-              borderBottom: "1px solid var(--fsds-semantic-color-border-subtle)",
-              background: "var(--fsds-semantic-color-background-primary)",
-            }}
-          >
-            {groupName}
-          </div>
-          <Table className="tokens-table" ariaLabel="Token definitions">
-            <TableHead>
-              <TableRow>
-                <TableHeaderCell>Token</TableHeaderCell>
-                <TableHeaderCell>Resolves to</TableHeaderCell>
-                <TableHeaderCell>Fallback</TableHeaderCell>
-                <TableHeaderCell>Property</TableHeaderCell>
-                <TableHeaderCell>Layer</TableHeaderCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Object.entries(entries).map(([name, def]) => (
-                <TableRow key={name}>
-                  <TableCell>{name}</TableCell>
-                  <TableCell className="muted">{def.resolvesTo ?? "—"}</TableCell>
-                  <TableCell>
-                    {isColorish(def.fallback) && (
-                      <span
-                        className="token-swatch"
-                        style={{ background: def.fallback }}
-                        aria-hidden
-                      />
-                    )}
-                    {def.fallback ?? "—"}
-                  </TableCell>
-                  <TableCell className="muted">{def.property ?? "—"}</TableCell>
-                  <TableCell className="muted">{def.layer ?? "—"}</TableCell>
-                </TableRow>
+    <div
+      className="component-token-facts"
+      aria-label="Component-level token slots"
+    >
+      <div className="component-token-facts__grid">
+        {visibleGroups.map((group) => (
+          <section className="token-facts-label" key={group.key}>
+            <header className="token-facts-label__header">
+              <h4>{group.label} token slots</h4>
+              <span>
+                {group.entries.length} slot
+                {group.entries.length === 1 ? "" : "s"}
+              </span>
+            </header>
+            <div className="token-facts-label__bar" aria-hidden />
+            <dl className="token-facts-label__rows">
+              {group.entries.map(({ slot, definition }) => (
+                <div className="token-facts-label__row" key={slot}>
+                  <dt>
+                    <code>{slot}</code>
+                    <span>{cssVarForSlot(slot)}</span>
+                  </dt>
+                  <dd>
+                    <span className="token-facts-label__value">
+                      {isColorish(definition.fallback) && (
+                        <span
+                          className="token-swatch"
+                          style={{ background: definition.fallback }}
+                          aria-hidden
+                        />
+                      )}
+                      {definition.fallback ?? "none"}
+                    </span>
+                    <span>{definition.layer ?? "unlayered"}</span>
+                  </dd>
+                  <dd className="token-facts-label__resolve">
+                    {definition.resolvesTo ?? "No resolving token"}
+                  </dd>
+                </div>
               ))}
-            </TableBody>
-          </Table>
-        </div>
-      ))}
+            </dl>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }

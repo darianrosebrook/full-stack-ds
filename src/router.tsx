@@ -28,10 +28,12 @@ export type StandardsTab =
   | "usage"
   | "accessibility";
 
+export type ComponentTab = "design" | "developer" | "tokens";
+
 export type Route =
   | { kind: "home" }
   | { kind: "architecture" }
-  | { kind: "component"; name: string; tab: "design" | "developer" }
+  | { kind: "component"; name: string; tab: ComponentTab }
   | { kind: "tokens" }
   | { kind: "primitive"; name: string }
   | { kind: "tokens-philosophy"; tab: TokensTab }
@@ -72,14 +74,20 @@ const STANDARDS_TABS = new Set<StandardsTab>([
   "accessibility",
 ]);
 
+const COMPONENT_TABS = new Set<ComponentTab>(["design", "developer", "tokens"]);
+
 function parseHash(hash: string): Route {
   const raw = hash.startsWith("#") ? hash.slice(1) : hash;
   const cleaned = raw.startsWith("/") ? raw.slice(1) : raw;
   if (!cleaned) return { kind: "home" };
   const parts = cleaned.split("/").filter(Boolean);
   if (parts[0] === "component" && parts[1]) {
-    const tab = parts[2] === "developer" ? "developer" : "design";
-    return { kind: "component", name: parts[1], tab };
+    const tab = (parts[2] ?? "design") as ComponentTab;
+    return {
+      kind: "component",
+      name: parts[1],
+      tab: COMPONENT_TABS.has(tab) ? tab : "design",
+    };
   }
   if (parts[0] === "primitive" && parts[1]) {
     return { kind: "primitive", name: parts[1] };

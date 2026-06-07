@@ -1,20 +1,16 @@
-import { Links } from "@full-stack-ds/react";
 import type { ComponentBundle } from "../types/data";
-import type { Route } from "../router";
-import { buildHref } from "../router";
 import { Anatomy } from "./sections/Anatomy";
 import { PropsTable } from "./sections/PropsTable";
 import { VariantsMatrix } from "./sections/VariantsMatrix";
 import { StatesGrid } from "./sections/StatesGrid";
-import { TokensTable } from "./sections/TokensTable";
 import { A11yPanel } from "./sections/A11yPanel";
 import { UsageExamples } from "./sections/UsageExamples";
 import { A2UIDescriptorPanel } from "./sections/A2UIDescriptorPanel";
 import { EvidencePanel } from "./sections/EvidencePanel";
+import { ComponentViewTabs } from "./ComponentViewTabs";
 
 interface DesignViewProps {
   component: ComponentBundle;
-  route: Route;
   /** Live token overrides from the Properties tab; re-skin the variant previews. */
   tokenOverrides?: Record<string, string>;
 }
@@ -30,21 +26,7 @@ export function DesignView({ component, tokenOverrides }: DesignViewProps) {
         {component.contract.description ?? "Component contract."}
       </p>
 
-      <nav className="view-tabs" aria-label="View mode">
-        <Links
-          className="view-tab view-tab--active"
-          href={buildHref({ kind: "component", name: component.name, tab: "design" })}
-          aria-current="page"
-        >
-          Design
-        </Links>
-        <Links
-          className="view-tab"
-          href={buildHref({ kind: "component", name: component.name, tab: "developer" })}
-        >
-          Developer
-        </Links>
-      </nav>
+      <ComponentViewTabs componentName={component.name} activeTab="design" />
 
       {hasUsage ? (
         <section className="section">
@@ -114,16 +96,6 @@ export function DesignView({ component, tokenOverrides }: DesignViewProps) {
             <span className="section-meta">contract.a11y</span>
           </header>
           <A11yPanel a11y={component.contract.a11y} />
-        </section>
-      )}
-
-      {component.contract.tokens && Object.keys(component.contract.tokens).length > 0 && (
-        <section className="section">
-          <header className="section-header">
-            <h2 className="section-title">Design tokens</h2>
-            <span className="section-meta">contract.tokens</span>
-          </header>
-          <TokensTable tokens={component.contract.tokens} />
         </section>
       )}
 
