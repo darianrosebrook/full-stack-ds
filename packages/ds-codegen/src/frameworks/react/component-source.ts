@@ -1804,6 +1804,8 @@ function formatAttrs(attrs: string[]): string {
 function jsxAttrName(name: string): string {
   if (name === "for") return "htmlFor";
   if (name === "class") return "className";
+  if (name === "stroke-linecap") return "strokeLinecap";
+  if (name === "stroke-dasharray") return "strokeDasharray";
   if (name === "tabindex") return "tabIndex";
   if (name === "readonly") return "readOnly";
   if (name === "maxlength") return "maxLength";

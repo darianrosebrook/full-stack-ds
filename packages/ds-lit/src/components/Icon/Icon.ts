@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -71,7 +72,12 @@ export class IconElement extends LitElement {
   }
 
   override render() {
-    return html`<span class="${this.computeClasses()}" aria-hidden="true"></span>`;
+    return html`<span class="${this.computeClasses()}" aria-hidden="true">
+  <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" width=${ifDefined(this.width)} height=${ifDefined(this.height)}>
+    <circle cx="8.5" cy="8.5" r="8" stroke="currentColor" stroke-linecap="round" stroke-dasharray="2 4"></circle>
+    <circle cx="8.5" cy="8.5" r="3" stroke="currentColor" stroke-linecap="round" stroke-dasharray=".125 3"></circle>
+  </svg>
+</span>`;
   }
 }
 
