@@ -26,6 +26,7 @@
   border-color: var(--fsds-button-color-border-default);
   border-radius: var(--fsds-button-size-radius);
   border-width: var(--fsds-button-size-border);
+  font-size: var(--fsds-button-size-fontSize-medium);
   font-weight: var(--fsds-button-text-weight);
   transition-duration: var(--fsds-button-motion-duration-fast);
   transition-timing-function: var(--fsds-button-motion-easing-standard);

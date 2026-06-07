@@ -17,7 +17,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { buildComponentIR } from "./ir.js";
-import { emitTokensCss } from "./css.js";
+import { emitCss, emitTokensCss } from "./css.js";
 import {
   _resetBoxModelCache,
   isBoxModelKey,
@@ -26,7 +26,7 @@ import {
   partitionBoxModelTokens,
 } from "./box-model.js";
 import { createContractValidator } from "./validate.js";
-import type { ComponentContract, TokenResolution } from "./contract.js";
+import type { ComponentContract, StyleEntry, TokenResolution } from "./contract.js";
 
 const CONTRACTS_ROOT = resolve(__dirname, "../../ds-contracts");
 const validator = createContractValidator({ contractsRoot: CONTRACTS_ROOT });
@@ -60,6 +60,43 @@ function loadButtonContract(): ComponentContract {
     throw new Error("Button contract failed validation in test setup");
   }
   return result.value;
+}
+
+function loadButtonContractWithSidecars(): ComponentContract {
+  const contract = loadButtonContract();
+  const tokensRaw = JSON.parse(
+    readFileSync(
+      resolve(CONTRACTS_ROOT, "components/Button/Button.tokens.json"),
+      "utf-8",
+    ),
+  );
+  const tokensResult = validator.validateTokens(tokensRaw);
+  if (!tokensResult.ok) {
+    throw new Error("Button tokens sidecar failed validation in test setup");
+  }
+  const authoredTokens = tokensResult.value as Record<string, TokenResolution>;
+  const partitioned = partitionBoxModelTokens(authoredTokens);
+  const boxResult = validator.validateBoxModelTokens(partitioned.boxModel);
+  if (!boxResult.ok) {
+    throw new Error("Button box-model tokens failed validation in test setup");
+  }
+
+  const stylesRaw = JSON.parse(
+    readFileSync(
+      resolve(CONTRACTS_ROOT, "components/Button/Button.styles.json"),
+      "utf-8",
+    ),
+  );
+  const stylesResult = validator.validateStyles(stylesRaw);
+  if (!stylesResult.ok) {
+    throw new Error("Button styles sidecar failed validation in test setup");
+  }
+
+  return {
+    ...contract,
+    tokens: mergeBoxModelDefaults(authoredTokens),
+    styles: stylesResult.value as Record<string, Record<string, StyleEntry>>,
+  };
 }
 
 describe("loadBoxModelPrimitive", () => {
@@ -185,6 +222,24 @@ describe("emitTokensCss with box-model defaults", () => {
     );
     // Other defaults still literal.
     expect(out).toContain("--fsds-box-model-padding-inline-end: 0;");
+  });
+
+  it("emits Button size variants as box-model slot redefinitions", () => {
+    const contract = loadButtonContractWithSidecars();
+    const ir = buildComponentIR(contract);
+    const tokensCss = emitTokensCss(ir);
+    const css = emitCss(ir);
+
+    expect(css).toContain("font-size: var(--fsds-button-size-fontSize-medium);");
+    expect(tokensCss).toContain(
+      "--fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightSmall, 28px);",
+    );
+    expect(tokensCss).toContain(
+      "--fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightLarge, 48px);",
+    );
+    expect(tokensCss).toContain(
+      "--fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);",
+    );
   });
 });
 

@@ -66,6 +66,9 @@
     "border-width": {
       "resolvesTo": "button.size.border"
     },
+    "font-size": {
+      "resolvesTo": "button.size.fontSize.medium"
+    },
     "font-weight": {
       "resolvesTo": "button.text.weight"
     },
@@ -77,6 +80,26 @@
     }
   },
   "--small": {
+    "box-model.padding-block-start": {
+      "resolvesTo": "core.spacing.size.03",
+      "fallback": "4px"
+    },
+    "box-model.padding-block-end": {
+      "resolvesTo": "core.spacing.size.03",
+      "fallback": "4px"
+    },
+    "box-model.padding-inline-start": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "box-model.padding-inline-end": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "box-model.min-height": {
+      "resolvesTo": "core.dimension.actionMinHeightSmall",
+      "fallback": "28px"
+    },
     "button.size.padding-block.medium": {
       "resolvesTo": "core.spacing.size.03",
       "fallback": "4px"
@@ -95,6 +118,26 @@
     }
   },
   "--medium": {
+    "box-model.padding-block-start": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "box-model.padding-block-end": {
+      "resolvesTo": "core.spacing.size.04",
+      "fallback": "8px"
+    },
+    "box-model.padding-inline-start": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "box-model.padding-inline-end": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "box-model.min-height": {
+      "resolvesTo": "core.dimension.actionMinHeight",
+      "fallback": "36px"
+    },
     "button.size.padding-block.medium": {
       "resolvesTo": "core.spacing.size.04",
       "fallback": "8px"
@@ -113,6 +156,26 @@
     }
   },
   "--large": {
+    "box-model.padding-block-start": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "box-model.padding-block-end": {
+      "resolvesTo": "core.spacing.size.05",
+      "fallback": "12px"
+    },
+    "box-model.padding-inline-start": {
+      "resolvesTo": "core.spacing.size.06",
+      "fallback": "16px"
+    },
+    "box-model.padding-inline-end": {
+      "resolvesTo": "core.spacing.size.06",
+      "fallback": "16px"
+    },
+    "box-model.min-height": {
+      "resolvesTo": "core.dimension.actionMinHeightLarge",
+      "fallback": "48px"
+    },
     "button.size.padding-block.medium": {
       "resolvesTo": "core.spacing.size.05",
       "fallback": "12px"

@@ -59,6 +59,11 @@ export class ButtonElement extends LitElement {
     }
     
     .button--small {
+      --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-03, 4px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-04, 8px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
@@ -66,6 +71,11 @@ export class ButtonElement extends LitElement {
     }
     
     .button--medium {
+      --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeight, 36px);
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
@@ -73,6 +83,11 @@ export class ButtonElement extends LitElement {
     }
     
     .button--large {
+      --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
@@ -149,6 +164,7 @@ export class ButtonElement extends LitElement {
       border-color: var(--fsds-button-color-border-default);
       border-radius: var(--fsds-button-size-radius);
       border-width: var(--fsds-button-size-border);
+      font-size: var(--fsds-button-size-fontSize-medium);
       font-weight: var(--fsds-button-text-weight);
       transition-duration: var(--fsds-button-motion-duration-fast);
       transition-timing-function: var(--fsds-button-motion-easing-standard);

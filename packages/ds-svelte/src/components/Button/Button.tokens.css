@@ -36,6 +36,11 @@
 }
 
 .button--small {
+  --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-03, 4px);
+  --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-03, 4px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-04, 8px);
   --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
@@ -43,6 +48,11 @@
 }
 
 .button--medium {
+  --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-04, 8px);
+  --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeight, 36px);
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
   --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
@@ -50,6 +60,11 @@
 }
 
 .button--large {
+  --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-05, 12px);
+  --fsds-box-model-padding-inline-start: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-box-model-padding-inline-end: var(--fsds-core-spacing-size-06, 16px);
+  --fsds-box-model-min-height: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
   --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
   --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);
   --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
