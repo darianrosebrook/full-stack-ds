@@ -1,5 +1,5 @@
 // @generated:start imports
-import { StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import { StyleProp, Text as RNText, TextStyle, View, ViewStyle } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTextStyles } from "./Text.styles";
@@ -24,7 +24,7 @@ export interface TextProps {
   transform?: TextTransform;
   truncate?: boolean;
   children?: ReactNode;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
   testID?: string;
   accessibilityLabel?: string;
   accessibilityLabelledBy?: string | string[];

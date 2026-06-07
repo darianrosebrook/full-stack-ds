@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Image as RNImage, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
+import { Image as RNImage, ImageStyle, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createImageStyles } from "./Image.styles";
@@ -27,7 +27,7 @@ export interface ImageProps {
   showPlaceholder?: boolean;
   fallbackSrc?: string;
   children?: ReactNode;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ImageStyle>;
   testID?: string;
   accessibilityLabel?: string;
   accessibilityLabelledBy?: string | string[];

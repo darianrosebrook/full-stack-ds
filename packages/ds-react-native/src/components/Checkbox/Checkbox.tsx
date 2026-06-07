@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Pressable, StyleProp, View, ViewStyle } from "react-native";
+import { Pressable, StyleProp, Text as RNText, View, ViewStyle } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createCheckboxStyles } from "./Checkbox.styles";
@@ -58,9 +58,16 @@ export function Checkbox({
       style={[styles.input, style]}
       disabled={disabled}
       onPress={() => setCheckedValue(!checked)}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="checkbox"
-      accessibilityState={{ checked: Boolean(checked), disabled: disabled }}
-    />
+      accessibilityState={{ checked: indeterminate ? "mixed" : Boolean(checked), disabled: disabled }}
+    >
+      <View style={[styles.indicator, checked || indeterminate ? styles.indicator_checked : undefined]}>
+        <RNText style={styles.indicatorMark}>{indeterminate ? "-" : checked ? "x" : ""}</RNText>
+      </View>
+      {typeof children === "string" ? <RNText style={styles.label}>{children}</RNText> : children}
+    </Pressable>
   );
 }
 // @generated:end

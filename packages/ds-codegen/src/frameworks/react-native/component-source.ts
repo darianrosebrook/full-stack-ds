@@ -50,12 +50,19 @@ function generateReactNativeComponentFile(ir: ComponentIR): string {
 
 function emitImports(ir: ComponentIR): string {
   const rnImports = new Set(["StyleProp", "View", "ViewStyle"]);
+  rnImports.add(rootStyleType(ir));
   if (usesNativeToggle(ir)) {
     rnImports.add("Switch as RNSwitch");
   } else {
     collectRnComponents(ir.dom, rnImports);
   }
-  if (hasChildrenSlotUnderNonTextParent(ir.dom)) rnImports.add("Text as RNText");
+  if (
+    hasChildrenSlotUnderNonTextParent(ir.dom) ||
+    isFieldLayoutPattern(ir) ||
+    isCheckboxRootPattern(ir)
+  ) {
+    rnImports.add("Text as RNText");
+  }
   if (rootPressableAcceptsOnPress(ir)) rnImports.add("GestureResponderEvent");
   const reactImports = new Set(["ReactNode"]);
   if (ir.behavior.normalizedChannels.length > 0) {
@@ -159,7 +166,7 @@ function emitProps(ir: ComponentIR): string {
   if (rootPressableAcceptsOnPress(ir)) {
     lines.push(`${INDENT}onPress?: (event: GestureResponderEvent) => void;`);
   }
-  lines.push(`${INDENT}style?: StyleProp<ViewStyle>;`);
+  lines.push(`${INDENT}style?: StyleProp<${rootStyleType(ir)}>;`);
   lines.push(`${INDENT}testID?: string;`);
   lines.push(`${INDENT}accessibilityLabel?: string;`);
   lines.push(`${INDENT}accessibilityLabelledBy?: string | string[];`);
@@ -191,6 +198,10 @@ function emitComponent(ir: ComponentIR): string {
   }
   if (usesNativeToggle(ir)) {
     lines.push(...emitNativeToggleReturn(ir));
+  } else if (isFieldLayoutPattern(ir)) {
+    lines.push(...emitFieldLayoutReturn());
+  } else if (isCheckboxRootPattern(ir)) {
+    lines.push(...emitCheckboxReturn(ir));
   } else {
     const rendered = emitNode(ir.dom, ir, 2) ?? `${INDENT}${INDENT}<View testID={testID} style={[styles.root, style]}>{children}</View>`;
     lines.push(`${INDENT}return (`);
@@ -200,6 +211,58 @@ function emitComponent(ir: ComponentIR): string {
   lines.push("}");
   lines.push("// @generated:end");
   return lines.join("\n");
+}
+
+function emitFieldLayoutReturn(): string[] {
+  const lines: string[] = [];
+  lines.push(`${INDENT}return (`);
+  lines.push(`${INDENT}${INDENT}<View testID={testID} style={[styles.root, style]}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}{label ? (`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}<RNText nativeID={id ? \`\${id}-label\` : undefined} style={styles.label}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{label}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}</RNText>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}) : null}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}<View style={styles.control}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}{children}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}{helpText || error || validating ? (`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}<View style={styles.meta}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{helpText ? <RNText style={styles.help}>{helpText}</RNText> : null}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{error ? <RNText accessibilityRole="alert" style={styles.error}>{error}</RNText> : null}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{validating ? <RNText style={styles.validatingIndicator}>Validating</RNText> : null}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}) : null}`);
+  lines.push(`${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT});`);
+  return lines;
+}
+
+function emitCheckboxReturn(ir: ComponentIR): string[] {
+  const channel = ir.behavior.normalizedChannels[0];
+  if (!channel) return [];
+  const valueName = channel.name;
+  const setterName = `set${capitalize(channel.name)}Value`;
+  const disabledProp = findProp(ir, "disabled") ? "disabled" : "false";
+  const indeterminateProp = findProp(ir, "indeterminate") ? "indeterminate" : "false";
+  const lines: string[] = [];
+  lines.push(`${INDENT}return (`);
+  lines.push(`${INDENT}${INDENT}<Pressable`);
+  lines.push(`${INDENT}${INDENT}${INDENT}testID={testID}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}style={[styles.input, style]}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}disabled={${disabledProp}}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}onPress={() => ${setterName}(!${valueName})}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityRole="checkbox"`);
+  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityState={{ checked: ${indeterminateProp} ? "mixed" : Boolean(${valueName}), disabled: ${disabledProp} }}`);
+  lines.push(`${INDENT}${INDENT}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}<View style={[styles.indicator, ${valueName} || ${indeterminateProp} ? styles.indicator_checked : undefined]}>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}<RNText style={styles.indicatorMark}>{${indeterminateProp} ? "-" : ${valueName} ? "x" : ""}</RNText>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}</View>`);
+  lines.push(`${INDENT}${INDENT}${INDENT}{typeof children === "string" ? <RNText style={styles.label}>{children}</RNText> : children}`);
+  lines.push(`${INDENT}${INDENT}</Pressable>`);
+  lines.push(`${INDENT});`);
+  return lines;
 }
 
 function propDestructureEntries(ir: ComponentIR): string[] {
@@ -494,6 +557,13 @@ function rootPressableAcceptsOnPress(ir: ComponentIR): boolean {
   return rnComponentForNode(ir.dom) === "Pressable" && Object.keys(ir.dom.events).length === 0;
 }
 
+function rootStyleType(ir: ComponentIR): "ImageStyle" | "TextStyle" | "ViewStyle" {
+  const component = ir.dom ? rnComponentForNode(ir.dom) : "View";
+  if (component === "RNImage") return "ImageStyle";
+  if (component === "RNText") return "TextStyle";
+  return "ViewStyle";
+}
+
 function staticAttributeProp(name: string, value: string): string | null {
   if (name === "id") return `nativeID=${JSON.stringify(value)}`;
   if (name === "aria-hidden" && value === "true") return "accessible={false}";
@@ -610,6 +680,11 @@ function emitIteration(node: DomNodeIR, ir: ComponentIR, depth: number): string 
 function generateReactNativeStylesFile(ir: ComponentIR): string {
   const keys = new Set<string>(["root"]);
   for (const part of ir.parts) keys.add(styleKeyForPart(part.name));
+  if (isCheckboxRootPattern(ir)) {
+    keys.add("indicator_checked");
+    keys.add("indicatorMark");
+    keys.add("label");
+  }
   if (usesNativeToggle(ir)) {
     for (const value of Object.values(ir.variants).flat()) {
       keys.add(`root_${sanitizeStyleKey(value)}`);
@@ -630,7 +705,7 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
   for (const key of Array.from(keys).sort()) {
     const style = usesNativeToggle(ir) && key.startsWith("root_")
       ? nativeToggleSizeStyle(ir, key.slice("root_".length))
-      : "{}";
+      : nativeStyleForKey(ir, key);
     lines.push(`${INDENT}${INDENT}${key}: ${style},`);
   }
   lines.push(`${INDENT}});`);
@@ -639,6 +714,157 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
   lines.push(`export const styles = create${ir.name}Styles();`);
   lines.push("// @generated:end");
   return lines.join("\n") + "\n";
+}
+
+function nativeStyleForKey(ir: ComponentIR, key: string): string {
+  const entries: string[] = [];
+  const scope = key.includes("_") ? key.slice(0, key.indexOf("_")) : key;
+  if (key === "root" || key === "input" || key === "control") {
+    const isCheckboxInput = key === "input" && isCheckboxRootPattern(ir);
+    if (!isCheckboxInput) {
+      pushStyle(entries, "paddingTop", tokenNumberAccessForStyle(ir, scope, "box-model.padding-block-start"));
+      pushStyle(entries, "paddingBottom", tokenNumberAccessForStyle(ir, scope, "box-model.padding-block-end"));
+      pushStyle(entries, "minHeight", tokenNumberAccessForStyle(ir, scope, "box-model.min-height"));
+    }
+    pushStyle(entries, "paddingLeft", tokenNumberAccessForStyle(ir, scope, "box-model.padding-inline-start"));
+    pushStyle(entries, "paddingRight", tokenNumberAccessForStyle(ir, scope, "box-model.padding-inline-end"));
+    pushStyle(entries, "gap", tokenNumberAccessForStyle(ir, scope, "box-model.gap"));
+    pushStyle(entries, "minWidth", tokenNumberAccessForStyle(ir, scope, "box-model.min-width"));
+    if (!isCheckboxInput) {
+      pushStyle(entries, "backgroundColor", tokenStringByName(ir, scope, [
+        ".color.background.default",
+        ".color.bg.default",
+        ".color.bg",
+      ]));
+      pushStyle(entries, "borderColor", tokenStringByName(ir, scope, [
+        ".color.border.default",
+        ".color.border",
+      ]));
+      pushStyle(entries, "borderWidth", tokenNumberByName(ir, scope, [
+        ".border.width",
+        ".size.border",
+      ]));
+      pushStyle(entries, "borderRadius", tokenNumberByName(ir, scope, [
+        ".border.radius",
+        ".size.radius",
+        ".radius.default",
+        ".radius",
+      ]));
+    }
+  }
+  if (key === "root" && rnComponentForNode(ir.dom ?? fallbackViewNode()) === "Pressable") {
+    entries.push("alignItems: \"center\"", "justifyContent: \"center\"");
+  }
+  if (key === "input" && isCheckboxRootPattern(ir)) {
+    entries.push("alignItems: \"center\"", "flexDirection: \"row\"");
+  }
+  if (key === "indicator") {
+    entries.push("alignItems: \"center\"", "height: 20", "justifyContent: \"center\"", "width: 20");
+    pushStyle(entries, "backgroundColor", tokenStringByName(ir, "root", [".color.background.default"]));
+    pushStyle(entries, "borderColor", tokenStringByName(ir, "root", [".color.border.default"]));
+    pushStyle(entries, "borderWidth", tokenNumberByName(ir, "root", [".border.width"]));
+    pushStyle(entries, "borderRadius", tokenNumberByName(ir, "root", [".border.radius"]));
+  }
+  if (key === "indicator_checked") {
+    pushStyle(entries, "backgroundColor", tokenStringByName(ir, "root", [
+      ".color.border.default",
+      ".color.background.default",
+    ]));
+  }
+  if (key === "indicatorMark") {
+    entries.push("color: \"#ffffff\"", "fontSize: 12", "fontWeight: \"700\"", "lineHeight: 16");
+  }
+  if (key === "label" || key === "help" || key === "error" || key === "validatingIndicator") {
+    pushStyle(entries, "color", tokenStringByName(ir, "root", [
+      key === "error" ? ".color.invalid-text" : "",
+      key === "label" ? ".label.color" : "",
+      ".color.fg",
+      ".color.text.default",
+      ".color.foreground.default",
+    ].filter(Boolean)));
+  }
+  if (key === "root" && isFieldLayoutPattern(ir)) {
+    entries.push("flexDirection: \"column\"");
+    pushStyle(entries, "gap", tokenNumberByName(ir, "root", [".gap.y", ".gap"]));
+  }
+  if (key === "meta") {
+    entries.push("flexDirection: \"column\"");
+    pushStyle(entries, "gap", tokenNumberByName(ir, "root", [".gap.meta"]));
+  }
+  return entries.length > 0 ? `{ ${entries.join(", ")} }` : "{}";
+}
+
+function fallbackViewNode(): DomNodeIR {
+  return {
+    attrs: {},
+    bindings: {},
+    children: [],
+    content: undefined,
+    cssVarBindings: [],
+    events: {},
+    ifNegated: false,
+    ifProp: undefined,
+    iteration: undefined,
+    part: "root",
+    slotName: undefined,
+    tag: "div",
+  };
+}
+
+function pushStyle(entries: string[], prop: string, value: string | undefined): void {
+  if (value === undefined) return;
+  const existingIndex = entries.findIndex((entry) => entry.startsWith(`${prop}: `));
+  const next = `${prop}: ${value}`;
+  if (existingIndex >= 0) {
+    entries[existingIndex] = next;
+  } else {
+    entries.push(next);
+  }
+}
+
+function tokenNumberAccessForStyle(
+  ir: ComponentIR,
+  scope: string,
+  name: string,
+): string | undefined {
+  return tokenNumberAccess(ir, scope, name) ?? tokenNumberAccess(ir, "root", name);
+}
+
+function tokenByName(
+  ir: ComponentIR,
+  scope: string,
+  predicates: string[],
+): string | undefined {
+  const scopes = [scope, "root"].filter((value, index, array) => array.indexOf(value) === index);
+  for (const scopeName of scopes) {
+    const tokenScope = ir.tokenScopes.find((candidate) => candidate.scope === scopeName);
+    if (!tokenScope) continue;
+    for (const predicate of predicates) {
+      const match = tokenScope.values.find((value) =>
+        value.name.endsWith(predicate) || value.name.includes(predicate),
+      );
+      if (match) return match.name;
+    }
+  }
+  return undefined;
+}
+
+function tokenNumberByName(
+  ir: ComponentIR,
+  scope: string,
+  predicates: string[],
+): string | undefined {
+  const name = tokenByName(ir, scope, predicates);
+  return name ? tokenNumberAccess(ir, scope, name) ?? tokenNumberAccess(ir, "root", name) : undefined;
+}
+
+function tokenStringByName(
+  ir: ComponentIR,
+  scope: string,
+  predicates: string[],
+): string | undefined {
+  const name = tokenByName(ir, scope, predicates);
+  return name ? tokenStringAccess(ir, scope, name) ?? tokenStringAccess(ir, "root", name) : undefined;
 }
 
 function nativeToggleSizeStyle(ir: ComponentIR, variant: string): string {
@@ -705,6 +931,23 @@ function usesNativeToggle(ir: ComponentIR): boolean {
   return collectCollapseIntents(ir).has("native-toggle-affordance");
 }
 
+function isCheckboxRootPattern(ir: ComponentIR): boolean {
+  return ir.dom?.tag === "input" && ir.dom.attrs.type === "checkbox";
+}
+
+function isFieldLayoutPattern(ir: ComponentIR): boolean {
+  const partNames = new Set(ir.parts.map((part) => part.name));
+  const propNames = new Set(ir.styledProps.map((prop) => prop.safeName));
+  return (
+    partNames.has("label") &&
+    partNames.has("control") &&
+    partNames.has("meta") &&
+    propNames.has("label") &&
+    propNames.has("helpText") &&
+    propNames.has("error")
+  );
+}
+
 function findProp(ir: ComponentIR, name: string): ResolvedPropIR | undefined {
   return ir.styledProps.find((p) => p.name === name);
 }
@@ -764,8 +1007,11 @@ function maxLinesExpressionForNode(node: DomNodeIR, ir: ComponentIR): string | u
 }
 
 function nativeTokenLiteral(rawValue: string): string {
+  if (rawValue.trim() === "0") return "0";
   const px = /^(-?\d+(?:\.\d+)?)px$/.exec(rawValue.trim());
   if (px) return px[1]!;
+  const rem = /^(-?\d+(?:\.\d+)?)rem$/.exec(rawValue.trim());
+  if (rem) return String(Number(rem[1]) * 16);
   return JSON.stringify(rawValue);
 }
 

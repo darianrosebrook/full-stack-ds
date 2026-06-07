@@ -15,6 +15,7 @@ describe("Checkbox React Native", () => {
     expect(subject.props.accessibilityRole).toBe("checkbox");
     expect(subject.props.accessibilityState).toMatchObject({ checked: true });
     expect(subject.props.onPress).toEqual(expect.any(Function));
+    expect(renderer!.root.findAll((node) => node.props.children === "x").length).toBeGreaterThan(0);
   });
 });
 // @generated:end

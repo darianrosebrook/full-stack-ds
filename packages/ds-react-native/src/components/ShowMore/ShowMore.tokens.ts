@@ -8,12 +8,12 @@ export const showMoreTokenScopes = {
     "box-model.padding": {
       name: "box-model.padding",
       cssVar: "--fsds-box-model-padding",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-block": {
       name: "box-model.padding-block",
       cssVar: "--fsds-box-model-padding-block",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
@@ -30,7 +30,7 @@ export const showMoreTokenScopes = {
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
       cssVar: "--fsds-box-model-padding-inline",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",

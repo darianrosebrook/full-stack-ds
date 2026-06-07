@@ -8,12 +8,12 @@ export const switchTokenScopes = {
     "box-model.padding": {
       name: "box-model.padding",
       cssVar: "--fsds-box-model-padding",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-block": {
       name: "box-model.padding-block",
       cssVar: "--fsds-box-model-padding-block",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
@@ -30,7 +30,7 @@ export const switchTokenScopes = {
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
       cssVar: "--fsds-box-model-padding-inline",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -235,7 +235,7 @@ export const switchTokenScopes = {
     "switch.size.sm.thumb.translate.off": {
       name: "switch.size.sm.thumb.translate.off",
       cssVar: "--fsds-switch-size-sm-thumb-translate-off",
-      literal: "0",
+      literal: 0,
     },
     "switch.size.sm.thumb.translate.on": {
       name: "switch.size.sm.thumb.translate.on",
@@ -245,7 +245,7 @@ export const switchTokenScopes = {
     "switch.size.md.thumb.translate.off": {
       name: "switch.size.md.thumb.translate.off",
       cssVar: "--fsds-switch-size-md-thumb-translate-off",
-      literal: "0",
+      literal: 0,
     },
     "switch.size.md.thumb.translate.on": {
       name: "switch.size.md.thumb.translate.on",
@@ -255,7 +255,7 @@ export const switchTokenScopes = {
     "switch.size.lg.thumb.translate.off": {
       name: "switch.size.lg.thumb.translate.off",
       cssVar: "--fsds-switch-size-lg-thumb-translate-off",
-      literal: "0",
+      literal: 0,
     },
     "switch.size.lg.thumb.translate.on": {
       name: "switch.size.lg.thumb.translate.on",

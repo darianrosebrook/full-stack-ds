@@ -65,37 +65,22 @@ export function Field({
   }, [controlledValue, onChange]);
 
   return (
-    <View
-      testID={testID}
-      style={[styles.root, style]}
-    >
-      <View
-        style={styles.header}
-      >
-        <View
-          style={styles.label}
-        >
-          {typeof children === "string" ? <RNText>{children}</RNText> : children}
+    <View testID={testID} style={[styles.root, style]}>
+      {label ? (
+        <RNText nativeID={id ? `${id}-label` : undefined} style={styles.label}>
+          {label}
+        </RNText>
+      ) : null}
+      <View style={styles.control}>
+        {children}
+      </View>
+      {helpText || error || validating ? (
+        <View style={styles.meta}>
+          {helpText ? <RNText style={styles.help}>{helpText}</RNText> : null}
+          {error ? <RNText accessibilityRole="alert" style={styles.error}>{error}</RNText> : null}
+          {validating ? <RNText style={styles.validatingIndicator}>Validating</RNText> : null}
         </View>
-      </View>
-      <View
-        style={styles.control}
-      >
-        {typeof children === "string" ? <RNText>{children}</RNText> : children}
-      </View>
-      <View
-        style={styles.meta}
-      >
-        <View
-          style={styles.help}
-        />
-        <View
-          style={styles.error}
-        />
-        <View
-          style={styles.validatingIndicator}
-        />
-      </View>
+      ) : null}
     </View>
   );
 }

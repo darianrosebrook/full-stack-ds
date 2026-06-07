@@ -28,6 +28,7 @@ function runtimeTestBody(ir: ComponentIR): string | null {
   if (isNativeToggle(ir)) return nativeToggleTest(ir);
   if (isTextInput(ir)) return textInputTest(ir);
   if (isCheckbox(ir)) return checkboxTest(ir);
+  if (isFieldLayoutPattern(ir)) return fieldLayoutTest(ir);
   if (isButton(ir)) return buttonTest(ir);
   if (isProgressbar(ir)) return progressTest(ir);
   if (isExpandableDisclosure(ir)) return expandableTest(ir);
@@ -103,6 +104,25 @@ function checkboxTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}expect(subject.props.accessibilityRole).toBe("checkbox");`,
     `${INDENT}${INDENT}expect(subject.props.accessibilityState).toMatchObject({ checked: true });`,
     `${INDENT}${INDENT}expect(subject.props.onPress).toEqual(expect.any(Function));`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "x").length).toBeGreaterThan(0);`,
+    `${INDENT}});`,
+    `});`,
+    ...renderFooter(),
+  ].join("\n");
+}
+
+function fieldLayoutTest(ir: ComponentIR): string {
+  return [
+    ...renderImports(ir),
+    `describe("${ir.name} React Native", () => {`,
+    `${INDENT}it("renders label, control, help, and error slots from props", () => {`,
+    ...rendererHelper(`<${ir.name} name="email" label="Email" helpText="Use work email" error="Required" testID="subject">Control</${ir.name}>`),
+    `${INDENT}${INDENT}const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(subject).toBeTruthy();`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Email").length).toBeGreaterThan(0);`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Control").length).toBeGreaterThan(0);`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Use work email").length).toBeGreaterThan(0);`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Required").length).toBeGreaterThan(0);`,
     `${INDENT}});`,
     `});`,
     ...renderFooter(),
@@ -186,5 +206,18 @@ function isExpandableDisclosure(ir: ComponentIR): boolean {
   return (
     ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded") &&
     ir.styledProps.some((prop) => prop.safeName === "maxLines")
+  );
+}
+
+function isFieldLayoutPattern(ir: ComponentIR): boolean {
+  const partNames = new Set(ir.parts.map((part) => part.name));
+  const propNames = new Set(ir.styledProps.map((prop) => prop.safeName));
+  return (
+    partNames.has("label") &&
+    partNames.has("control") &&
+    partNames.has("meta") &&
+    propNames.has("label") &&
+    propNames.has("helpText") &&
+    propNames.has("error")
   );
 }

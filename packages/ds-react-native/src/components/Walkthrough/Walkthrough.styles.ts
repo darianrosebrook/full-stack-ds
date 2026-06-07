@@ -16,7 +16,7 @@ export function createWalkthroughStyles(theme?: FsdsTheme) {
     dots: {},
     next: {},
     prev: {},
-    root: {},
+    root: { paddingTop: (tokens.root?.["box-model.padding-block-start"] as number | undefined), paddingBottom: (tokens.root?.["box-model.padding-block-end"] as number | undefined), minHeight: (tokens.root?.["box-model.min-height"] as number | undefined), paddingLeft: (tokens.root?.["box-model.padding-inline-start"] as number | undefined), paddingRight: (tokens.root?.["box-model.padding-inline-end"] as number | undefined), gap: (tokens.root?.["box-model.gap"] as number | undefined), minWidth: (tokens.root?.["box-model.min-width"] as number | undefined), borderRadius: (tokens.root?.["walkthrough.surface.radius"] as number | undefined) },
     skip: {},
     title: {},
   });

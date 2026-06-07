@@ -8,12 +8,12 @@ export const buttonTokenScopes = {
     "box-model.padding": {
       name: "box-model.padding",
       cssVar: "--fsds-box-model-padding",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-block": {
       name: "box-model.padding-block",
       cssVar: "--fsds-box-model-padding-block",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-block-start": {
       name: "box-model.padding-block-start",
@@ -30,7 +30,7 @@ export const buttonTokenScopes = {
     "box-model.padding-inline": {
       name: "box-model.padding-inline",
       cssVar: "--fsds-box-model-padding-inline",
-      literal: "0",
+      literal: 0,
     },
     "box-model.padding-inline-start": {
       name: "box-model.padding-inline-start",
@@ -194,7 +194,7 @@ export const buttonTokenScopes = {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
       ref: "core.typography.ramp.4",
-      fallback: "1rem",
+      fallback: 16,
     },
   },
   "variant_small": {
@@ -220,7 +220,7 @@ export const buttonTokenScopes = {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
       ref: "core.typography.ramp.3",
-      fallback: "0.875rem",
+      fallback: 14,
     },
   },
   "variant_medium": {
@@ -246,7 +246,7 @@ export const buttonTokenScopes = {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
       ref: "core.typography.ramp.4",
-      fallback: "1rem",
+      fallback: 16,
     },
   },
   "variant_large": {
@@ -272,7 +272,7 @@ export const buttonTokenScopes = {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
       ref: "core.typography.ramp.5",
-      fallback: "1.125rem",
+      fallback: 18,
     },
   },
   "variant_primary": {
