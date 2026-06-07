@@ -8,6 +8,15 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "a",
+        "description": "Anchor element that navigates to the linked document and carries target/relationship metadata.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      }
+    },
     "dom": {
       "tag": "a",
       "part": "root",

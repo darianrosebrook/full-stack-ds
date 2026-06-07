@@ -12,14 +12,17 @@
     ],
     "details": {
       "root": {
+        "description": "Non-modal anchored surface host that coordinates trigger and content open state.",
         "role": "group"
       },
       "trigger": {
+        "description": "Interactive anchor that toggles the popover and owns the expanded relationship.",
         "role": "trigger",
         "interactive": true,
         "focusable": true
       },
       "content": {
+        "description": "Anchored popover surface containing interactive content without trapping focus.",
         "role": "content",
         "interactive": true,
         "focusable": true

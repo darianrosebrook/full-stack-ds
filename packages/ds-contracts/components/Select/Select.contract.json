@@ -15,6 +15,73 @@
       "option",
       "emptyState"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Combobox host that coordinates trigger state, selected value, and listbox visibility.",
+        "role": "root",
+        "aria": {
+          "role": "combobox",
+          "attributes": [
+            "aria-haspopup",
+            "aria-controls",
+            "aria-expanded",
+            "aria-disabled"
+          ]
+        }
+      },
+      "trigger": {
+        "tag": "button",
+        "description": "Button control that opens or closes the select listbox.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "text": {
+        "tag": "span",
+        "description": "Visible selected-option text or placeholder inside the trigger.",
+        "role": "label"
+      },
+      "content": {
+        "tag": "div",
+        "description": "Floating listbox surface rendered while the select is open.",
+        "role": "region",
+        "aria": {
+          "role": "listbox"
+        }
+      },
+      "search": {
+        "tag": "div",
+        "description": "Optional search field wrapper for filtering available options.",
+        "role": "group",
+        "interactive": true,
+        "focusable": true
+      },
+      "options": {
+        "tag": "div",
+        "description": "Container for the rendered option set.",
+        "role": "group"
+      },
+      "option": {
+        "tag": "div",
+        "description": "Selectable option row bound to an option value.",
+        "role": "item",
+        "multiple": true,
+        "interactive": true,
+        "focusable": "roving",
+        "aria": {
+          "role": "option",
+          "attributes": [
+            "aria-selected"
+          ]
+        }
+      },
+      "emptyState": {
+        "tag": "div",
+        "description": "Message region shown when no options are available.",
+        "role": "content"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

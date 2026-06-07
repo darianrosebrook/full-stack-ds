@@ -17,6 +17,59 @@
       "stats",
       "stat"
     ],
+    "details": {
+      "root": {
+        "tag": "article",
+        "description": "Article-like post container grouping author, timestamp, content, and engagement stats.",
+        "role": "region"
+      },
+      "header": {
+        "tag": "div",
+        "description": "Post header containing author identity and publishing time.",
+        "role": "group"
+      },
+      "userInfo": {
+        "tag": "div",
+        "description": "Author identity cluster containing display name and handle.",
+        "role": "group"
+      },
+      "displayName": {
+        "tag": "span",
+        "description": "Visible author display name.",
+        "role": "label"
+      },
+      "handle": {
+        "tag": "span",
+        "description": "Author handle or username.",
+        "role": "context"
+      },
+      "timestamp": {
+        "tag": "time",
+        "description": "Machine-readable post publication time.",
+        "role": "context"
+      },
+      "content": {
+        "tag": "div",
+        "description": "Primary post body and optional media content.",
+        "role": "content"
+      },
+      "footer": {
+        "tag": "div",
+        "description": "Footer region for engagement metadata.",
+        "role": "group"
+      },
+      "stats": {
+        "tag": "div",
+        "description": "Engagement statistics group such as replies, reposts, and likes.",
+        "role": "group"
+      },
+      "stat": {
+        "tag": "span",
+        "description": "Single engagement statistic value or label.",
+        "role": "item",
+        "multiple": true
+      }
+    },
     "dom": {
       "tag": "article",
       "part": "root",

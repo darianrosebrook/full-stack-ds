@@ -10,6 +10,38 @@
       "group",
       "field"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Labeled one-time-password input group that coordinates the assembled value.",
+        "role": "group",
+        "aria": {
+          "role": "group",
+          "attributes": [
+            "aria-label",
+            "aria-describedby"
+          ]
+        }
+      },
+      "group": {
+        "tag": "div",
+        "description": "Layout group containing the individual single-character input fields.",
+        "role": "group"
+      },
+      "field": {
+        "tag": "input",
+        "description": "Single-character input cell for one position in the OTP value.",
+        "role": "item",
+        "multiple": true,
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-readonly"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

@@ -16,6 +16,68 @@
       "footer",
       "close"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Sheet host that coordinates open state, modal behavior, and edge placement.",
+        "role": "root"
+      },
+      "overlay": {
+        "tag": "div",
+        "description": "Modal backdrop behind the sheet; hidden from assistive technology.",
+        "role": "overlay"
+      },
+      "content": {
+        "tag": "div",
+        "description": "Sliding dialog panel that traps focus while open.",
+        "role": "region",
+        "aria": {
+          "role": "dialog",
+          "attributes": [
+            "aria-modal",
+            "aria-labelledby",
+            "aria-describedby"
+          ]
+        }
+      },
+      "header": {
+        "tag": "div",
+        "description": "Introductory region containing title, description, and close control.",
+        "role": "group"
+      },
+      "title": {
+        "tag": "h2",
+        "description": "Sheet heading used as the dialog's accessible name.",
+        "role": "label"
+      },
+      "description": {
+        "tag": "p",
+        "description": "Supporting text used as the dialog's accessible description.",
+        "role": "content"
+      },
+      "body": {
+        "tag": "div",
+        "description": "Primary sheet content area.",
+        "role": "content"
+      },
+      "footer": {
+        "tag": "div",
+        "description": "Optional footer region for sheet actions or secondary content.",
+        "role": "group"
+      },
+      "close": {
+        "tag": "button",
+        "description": "Dismissal control for closing the sheet.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

@@ -8,6 +8,13 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "ul",
+        "description": "Semantic list container rendered as ul, ol, or dl according to the as prop.",
+        "role": "group"
+      }
+    },
     "dom": {
       "tag": "ul",
       "part": "root",

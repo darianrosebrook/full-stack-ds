@@ -9,6 +9,13 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Inline identity surface for a profile name, avatar, and optional status content.",
+        "role": "root"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

@@ -8,6 +8,13 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "label",
+        "description": "Native form label associated with a control through htmlFor and optional form ownership.",
+        "role": "label"
+      }
+    },
     "dom": {
       "tag": "label",
       "part": "root",

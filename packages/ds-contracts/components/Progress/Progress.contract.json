@@ -12,6 +12,37 @@
       "fill",
       "value"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Progressbar region carrying current value, min/max range, and accessible label.",
+        "role": "region",
+        "aria": {
+          "role": "progressbar",
+          "attributes": [
+            "aria-valuenow",
+            "aria-valuemin",
+            "aria-valuemax",
+            "aria-label"
+          ]
+        }
+      },
+      "track": {
+        "tag": "span",
+        "description": "Visual track showing the total progress range; hidden from assistive technology.",
+        "role": "decoration"
+      },
+      "fill": {
+        "tag": "span",
+        "description": "Visual fill segment sized from the current progress value.",
+        "role": "decoration"
+      },
+      "value": {
+        "tag": "span",
+        "description": "Optional visible formatted progress value.",
+        "role": "label"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",
