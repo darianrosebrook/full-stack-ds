@@ -99,6 +99,7 @@ export function App() {
           route.tab === "design" ? (
             <DesignView
               component={activeComponent}
+              propOverrides={activeProps}
               tokenOverrides={activeTokens}
             />
           ) : route.tab === "developer" ? (

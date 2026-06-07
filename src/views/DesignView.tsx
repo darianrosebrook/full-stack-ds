@@ -11,16 +11,25 @@ import { ComponentViewTabs } from "./ComponentViewTabs";
 
 interface DesignViewProps {
   component: ComponentBundle;
+  /** Live prop overrides from the Properties tab; drive rendered examples. */
+  propOverrides?: Record<string, unknown>;
   /** Live token overrides from the Properties tab; re-skin the variant previews. */
   tokenOverrides?: Record<string, string>;
 }
 
-export function DesignView({ component, tokenOverrides }: DesignViewProps) {
+export function DesignView({
+  component,
+  propOverrides,
+  tokenOverrides,
+}: DesignViewProps) {
   const hasUsage = component.usage.length > 0;
+  const showVariantMatrix = shouldShowVariantMatrix(component);
 
   return (
     <div className="page">
-      <p className="page-eyebrow">{(component.contract.layer ?? "component").toUpperCase()}</p>
+      <p className="page-eyebrow">
+        {(component.contract.layer ?? "component").toUpperCase()}
+      </p>
       <h1 className="page-title">{component.name}</h1>
       <p className="page-lede">
         {component.contract.description ?? "Component contract."}
@@ -36,11 +45,17 @@ export function DesignView({ component, tokenOverrides }: DesignViewProps) {
               {component.name}.usage.jsonl · rendered with @full-stack-ds/react
             </span>
           </header>
-          <UsageExamples component={component} />
+          <UsageExamples component={component} propOverrides={propOverrides} />
         </section>
       ) : (
         <section className="section">
-          <div className="muted" style={{ padding: "var(--fsds-core-spacing-size-08)", textAlign: "center" }}>
+          <div
+            className="muted"
+            style={{
+              padding: "var(--fsds-core-spacing-size-08)",
+              textAlign: "center",
+            }}
+          >
             No usage examples curated yet for {component.name}.
           </div>
         </section>
@@ -56,7 +71,7 @@ export function DesignView({ component, tokenOverrides }: DesignViewProps) {
         </section>
       )}
 
-      {component.contract.variants && Object.keys(component.contract.variants).length > 0 && (
+      {showVariantMatrix && component.contract.variants && Object.keys(component.contract.variants).length > 0 && (
         <section className="section">
           <header className="section-header">
             <h2 className="section-title">Variants</h2>
@@ -116,4 +131,8 @@ export function DesignView({ component, tokenOverrides }: DesignViewProps) {
       </section>
     </div>
   );
+}
+
+function shouldShowVariantMatrix(_component: ComponentBundle) {
+  return false;
 }

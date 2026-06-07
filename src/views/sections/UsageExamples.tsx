@@ -1,8 +1,67 @@
-import type { ComponentBundle } from "../../types/data";
+import type {
+  ComponentBundle,
+  UsageLine,
+  UsagePropValue,
+  UsageTreeNode,
+} from "../../types/data";
 import { renderUsageTree } from "../../lib/render-usage";
 
 interface UsageExamplesProps {
   component: ComponentBundle;
+  /**
+   * Live prop overrides from the right-rail Properties tab. These are merged
+   * into the root component of each curated example at render time only; the
+   * usage sidecar remains the authored source of truth.
+   */
+  propOverrides?: Record<string, unknown>;
+}
+
+function coerceUsagePropOverride(value: unknown): UsagePropValue | undefined {
+  if (
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean" ||
+    value === null
+  ) {
+    return value;
+  }
+  return undefined;
+}
+
+function sanitizedUsagePropOverrides(
+  overrides: Record<string, unknown> | undefined,
+): Record<string, UsagePropValue> {
+  const out: Record<string, UsagePropValue> = {};
+  for (const [key, value] of Object.entries(overrides ?? {})) {
+    const coerced = coerceUsagePropOverride(value);
+    if (coerced !== undefined) out[key] = coerced;
+  }
+  return out;
+}
+
+export function applyRootUsagePropOverrides(
+  tree: UsageTreeNode,
+  componentName: string,
+  propOverrides: Record<string, unknown> | undefined,
+): UsageTreeNode {
+  const overrides = sanitizedUsagePropOverrides(propOverrides);
+  if (Object.keys(overrides).length === 0) return tree;
+
+  const entries = Object.entries(tree);
+  if (entries.length !== 1) return tree;
+
+  const [ref, body] = entries[0];
+  if (ref !== `fsds.${componentName}`) return tree;
+
+  return {
+    [ref]: {
+      ...body,
+      props: {
+        ...(body.props ?? {}),
+        ...overrides,
+      },
+    },
+  };
 }
 
 /**
@@ -14,7 +73,10 @@ interface UsageExamplesProps {
  * callers should gate on `component.usage.length` to decide whether to show
  * the surrounding section chrome.
  */
-export function UsageExamples({ component }: UsageExamplesProps) {
+export function UsageExamples({
+  component,
+  propOverrides,
+}: UsageExamplesProps) {
   if (component.usage.length === 0) return null;
   const [hero, ...rest] = component.usage;
 
@@ -24,6 +86,7 @@ export function UsageExamples({ component }: UsageExamplesProps) {
         example={hero}
         emphasize
         componentName={component.name}
+        propOverrides={propOverrides}
       />
       {rest.length > 0 && (
         <div style={{ display: "grid", gap: "var(--fsds-core-spacing-size-06)", marginTop: "var(--fsds-core-spacing-size-07)" }}>
@@ -32,6 +95,7 @@ export function UsageExamples({ component }: UsageExamplesProps) {
               key={ex.name}
               example={ex}
               componentName={component.name}
+              propOverrides={propOverrides}
             />
           ))}
         </div>
@@ -41,12 +105,24 @@ export function UsageExamples({ component }: UsageExamplesProps) {
 }
 
 interface ExampleFrameProps {
-  example: ComponentBundle["usage"][number];
+  example: UsageLine;
   emphasize?: boolean;
   componentName: string;
+  propOverrides?: Record<string, unknown>;
 }
 
-function ExampleFrame({ example, emphasize, componentName }: ExampleFrameProps) {
+function ExampleFrame({
+  example,
+  emphasize,
+  componentName,
+  propOverrides,
+}: ExampleFrameProps) {
+  const renderedTree = applyRootUsagePropOverrides(
+    example.tree,
+    componentName,
+    propOverrides,
+  );
+
   return (
     <div className="panel">
       <div className="panel-toolbar">
@@ -68,7 +144,7 @@ function ExampleFrame({ example, emphasize, componentName }: ExampleFrameProps) 
           justifyContent: "center",
         }}
       >
-        {renderUsageTree(example.tree)}
+        {renderUsageTree(renderedTree)}
       </div>
     </div>
   );
