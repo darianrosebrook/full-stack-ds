@@ -10,6 +10,23 @@
       "input",
       "indicator"
     ],
+    "details": {
+      "root": {
+        "description": "Checkbox control surface that groups the native input with its visual indicator.",
+        "role": "root"
+      },
+      "input": {
+        "tag": "input",
+        "description": "Native checkbox input carrying checked state, disabled state, and form submission values.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "indicator": {
+        "description": "Visual checked or indeterminate mark paired with the native input state.",
+        "role": "decoration"
+      }
+    },
     "dom": {
       "tag": "input",
       "part": "input",

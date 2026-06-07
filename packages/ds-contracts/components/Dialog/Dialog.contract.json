@@ -15,6 +15,63 @@
       "footer",
       "closeButton"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Dialog host that coordinates open state, dismissal policy, and modal rendering.",
+        "role": "root"
+      },
+      "backdrop": {
+        "tag": "div",
+        "description": "Modal backdrop behind the dialog; hidden from assistive technology.",
+        "role": "overlay"
+      },
+      "modal": {
+        "tag": "div",
+        "description": "Dialog panel that traps focus while open and exposes modal semantics.",
+        "role": "region",
+        "aria": {
+          "role": "dialog",
+          "attributes": [
+            "aria-modal",
+            "aria-labelledby",
+            "aria-describedby"
+          ]
+        }
+      },
+      "header": {
+        "tag": "div",
+        "description": "Top region containing the dialog title and optional close control.",
+        "role": "group"
+      },
+      "title": {
+        "tag": "h2",
+        "description": "Dialog heading used as the modal's accessible name.",
+        "role": "label"
+      },
+      "body": {
+        "tag": "div",
+        "description": "Primary dialog content region used as the modal description target.",
+        "role": "content"
+      },
+      "footer": {
+        "tag": "div",
+        "description": "Optional trailing region for dialog actions or secondary content.",
+        "role": "group"
+      },
+      "closeButton": {
+        "tag": "button",
+        "description": "Dismissal control for closing the dialog when dismissal is allowed.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

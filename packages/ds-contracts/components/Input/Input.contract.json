@@ -8,6 +8,20 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "input",
+        "description": "Native text input carrying value, validation, required, disabled, and form-name state.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-invalid"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "input",
       "part": "root",

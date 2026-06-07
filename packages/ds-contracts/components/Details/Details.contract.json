@@ -15,7 +15,37 @@
     ],
     "details": {
       "root": {
+        "tag": "details",
+        "description": "Native disclosure container that owns the open state.",
+        "role": "root",
         "collapsibleTo": "native-disclosure"
+      },
+      "summary": {
+        "tag": "summary",
+        "description": "Native disclosure trigger that toggles the details content.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "summaryContent": {
+        "tag": "span",
+        "description": "Layout wrapper for summary icon and text.",
+        "role": "group"
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Optional decorative disclosure indicator.",
+        "role": "decoration"
+      },
+      "summaryText": {
+        "tag": "span",
+        "description": "Visible summary label for the disclosure trigger.",
+        "role": "label"
+      },
+      "content": {
+        "tag": "div",
+        "description": "Content region revealed when the disclosure is open.",
+        "role": "content"
       }
     },
     "dom": {

@@ -8,6 +8,19 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "hr",
+        "description": "Separator element dividing adjacent content sections; may be semantic or decorative.",
+        "role": "decoration",
+        "aria": {
+          "role": "separator",
+          "attributes": [
+            "aria-orientation"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "hr",
       "part": "root"

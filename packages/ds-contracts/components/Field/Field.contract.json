@@ -15,6 +15,48 @@
       "meta",
       "validatingIndicator"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Form-field wrapper coordinating label, control, help text, validation, and metadata.",
+        "role": "root"
+      },
+      "label": {
+        "tag": "label",
+        "description": "Field label associated with the child control.",
+        "role": "label"
+      },
+      "header": {
+        "tag": "div",
+        "description": "Header row that hosts the field label.",
+        "role": "group"
+      },
+      "control": {
+        "tag": "div",
+        "description": "Slot host for the input, select, or other form control.",
+        "role": "content"
+      },
+      "help": {
+        "tag": "span",
+        "description": "Supplementary guidance text for the field.",
+        "role": "content"
+      },
+      "error": {
+        "tag": "span",
+        "description": "Validation message shown when the field is invalid.",
+        "role": "content"
+      },
+      "meta": {
+        "tag": "div",
+        "description": "Metadata region containing help, error, and validation-progress messages.",
+        "role": "group"
+      },
+      "validatingIndicator": {
+        "tag": "span",
+        "description": "Indicator shown while asynchronous validation is in progress.",
+        "role": "decoration"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

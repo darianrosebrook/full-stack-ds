@@ -12,6 +12,25 @@
       "placeholder",
       "errorState"
     ],
+    "details": {
+      "root": {
+        "tag": "img",
+        "description": "Rendered image element carrying source, alt text, sizing, loading, and responsive hints.",
+        "role": "content"
+      },
+      "img": {
+        "description": "Image media payload represented by the root element in the current DOM realization.",
+        "role": "content"
+      },
+      "placeholder": {
+        "description": "Optional temporary visual shown while the image is loading.",
+        "role": "decoration"
+      },
+      "errorState": {
+        "description": "Fallback visual or source used when the primary image fails to load.",
+        "role": "content"
+      }
+    },
     "dom": {
       "tag": "img",
       "part": "root",

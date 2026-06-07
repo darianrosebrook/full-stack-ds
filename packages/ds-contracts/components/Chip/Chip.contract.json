@@ -10,6 +10,32 @@
       "icon",
       "text"
     ],
+    "details": {
+      "root": {
+        "tag": "button",
+        "description": "Compact button-like control for tag, filter, or choice interactions.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label",
+            "aria-expanded",
+            "aria-pressed"
+          ]
+        }
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Optional leading glyph for the chip; hidden from assistive technology.",
+        "role": "decoration"
+      },
+      "text": {
+        "tag": "span",
+        "description": "Visible chip label supplied by children.",
+        "role": "label"
+      }
+    },
     "dom": {
       "tag": "button",
       "part": "root",

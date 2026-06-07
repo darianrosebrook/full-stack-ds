@@ -9,6 +9,19 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "span",
+        "description": "Glyph wrapper for the rendered SVG icon; decorative by default unless labeled by the consumer.",
+        "role": "decoration",
+        "aria": {
+          "attributes": [
+            "aria-hidden",
+            "aria-label"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "span",
       "part": "root",

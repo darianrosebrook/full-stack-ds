@@ -24,6 +24,129 @@
       "separator",
       "empty"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Command palette host that coordinates open state, search state, and modal rendering.",
+        "role": "root"
+      },
+      "overlay": {
+        "tag": "div",
+        "description": "Modal backdrop behind the command dialog; hidden from assistive technology.",
+        "role": "overlay"
+      },
+      "dialog": {
+        "tag": "div",
+        "description": "Modal command palette panel containing the search input and result list.",
+        "role": "region",
+        "aria": {
+          "role": "dialog",
+          "attributes": [
+            "aria-modal",
+            "aria-label"
+          ]
+        }
+      },
+      "inputWrapper": {
+        "tag": "div",
+        "description": "Layout wrapper that pairs the search icon with the search input.",
+        "role": "group"
+      },
+      "searchIcon": {
+        "tag": "span",
+        "description": "Decorative search glyph preceding the command input.",
+        "role": "decoration"
+      },
+      "input": {
+        "tag": "input",
+        "description": "Search field that filters command results and controls the listbox relationship.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "role": "combobox",
+          "attributes": [
+            "aria-autocomplete",
+            "aria-controls",
+            "aria-expanded"
+          ]
+        }
+      },
+      "list": {
+        "tag": "div",
+        "description": "Listbox containing grouped command options and empty-state feedback.",
+        "role": "group",
+        "aria": {
+          "role": "listbox"
+        }
+      },
+      "group": {
+        "tag": "div",
+        "description": "Logical grouping for related command options.",
+        "role": "group",
+        "multiple": true
+      },
+      "groupHeading": {
+        "tag": "div",
+        "description": "Label for a command option group.",
+        "role": "label",
+        "multiple": true
+      },
+      "groupItems": {
+        "tag": "div",
+        "description": "Container for the command options inside a group.",
+        "role": "group",
+        "multiple": true
+      },
+      "item": {
+        "tag": "div",
+        "description": "Selectable command option.",
+        "role": "item",
+        "multiple": true,
+        "interactive": true,
+        "focusable": "roving",
+        "aria": {
+          "role": "option"
+        }
+      },
+      "itemIcon": {
+        "tag": "span",
+        "description": "Optional glyph associated with a command option.",
+        "role": "decoration",
+        "multiple": true
+      },
+      "itemContent": {
+        "tag": "div",
+        "description": "Text content wrapper for a command option label and description.",
+        "role": "content",
+        "multiple": true
+      },
+      "itemLabel": {
+        "tag": "span",
+        "description": "Primary text label for a command option.",
+        "role": "label",
+        "multiple": true
+      },
+      "itemDescription": {
+        "tag": "span",
+        "description": "Secondary explanatory text for a command option.",
+        "role": "content",
+        "multiple": true
+      },
+      "separator": {
+        "tag": "div",
+        "description": "Visual divider between command groups or sections.",
+        "role": "decoration",
+        "aria": {
+          "role": "separator"
+        }
+      },
+      "empty": {
+        "tag": "div",
+        "description": "Empty-state message shown when the current search has no matching commands.",
+        "role": "content"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",
