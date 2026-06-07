@@ -55,6 +55,7 @@ export interface DomNode {
 
 export interface PartDetails {
   description?: string;
+  tag?: string;
   role?:
     | "root"
     | "trigger"
@@ -74,6 +75,7 @@ export interface PartDetails {
     role?: string;
     attributes?: string[];
   };
+  collapsibleTo?: "native-toggle-affordance" | "native-disclosure";
 }
 
 export interface AnatomyDetailed {

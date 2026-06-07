@@ -59,4 +59,28 @@ describe("Anatomy typed-details evidence", () => {
     expect(screen.getByText("Only the root is documented.")).toBeInTheDocument();
     expect(screen.getByText("Anatomy part declared by the contract.")).toBeInTheDocument();
   });
+
+  it("surfaces typed part metadata when prose description is absent", () => {
+    const contract: ComponentContract = {
+      name: "Test",
+      layer: "primitive",
+      anatomy: {
+        parts: ["track"],
+        details: {
+          track: {
+            tag: "span",
+            role: "decoration",
+            collapsibleTo: "native-toggle-affordance",
+          },
+        },
+      },
+    };
+
+    render(<Anatomy contract={contract} />);
+
+    expect(screen.getByText("<span>")).toBeInTheDocument();
+    expect(screen.getByText("Plays the decoration role; collapses to toggle affordance where native platforms provide it.")).toBeInTheDocument();
+    expect(screen.getByText("role: decoration")).toBeInTheDocument();
+    expect(screen.getByText("native: toggle affordance")).toBeInTheDocument();
+  });
 });

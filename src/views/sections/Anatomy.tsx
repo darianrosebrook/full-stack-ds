@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { AnatomyDetailed, ComponentContract, DomNode } from "../../types/data";
+import type { AnatomyDetailed, ComponentContract, DomNode, PartDetails } from "../../types/data";
 
 interface AnatomyProps {
   contract: ComponentContract;
@@ -30,17 +30,69 @@ export function Anatomy({ contract }: AnatomyProps) {
         )}
       </div>
       <div className="anatomy-key">
-        {parts.map((p) => (
-          <div className="anatomy-key-item" key={p}>
-            <code>{p}</code>
-            <span className="muted">
-              {details?.[p]?.description ?? "Anatomy part declared by the contract."}
-            </span>
-          </div>
-        ))}
+        {parts.map((p) => {
+          const partDetails = details?.[p];
+          return (
+            <div className="anatomy-key-item" key={p}>
+              <div className="anatomy-key-heading">
+                <code>{p}</code>
+                {partDetails?.tag && <span className="pill pill--mono">&lt;{partDetails.tag}&gt;</span>}
+              </div>
+              <span className="muted">
+                {partDetails?.description ?? semanticPartSummary(partDetails)}
+              </span>
+              {partDetails && <AnatomyPartMeta details={partDetails} />}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
+}
+
+function semanticPartSummary(details?: PartDetails) {
+  if (!details || Object.keys(details).length === 0) {
+    return "Anatomy part declared by the contract.";
+  }
+
+  const fragments: string[] = [];
+  if (details.role) fragments.push(`Plays the ${details.role} role`);
+  if (details.interactive) fragments.push("handles user interaction");
+  if (details.focusable === "roving") fragments.push("participates in roving focus");
+  else if (details.focusable) fragments.push("receives focus");
+  if (details.multiple) fragments.push("renders multiple instances");
+  if (details.portalTarget) fragments.push("renders through a portal");
+  if (details.collapsibleTo) fragments.push(`collapses to ${formatEnum(details.collapsibleTo)} where native platforms provide it`);
+
+  if (fragments.length === 0) return "Anatomy part declared by the contract.";
+  return `${fragments.join("; ")}.`;
+}
+
+function AnatomyPartMeta({ details }: { details: PartDetails }) {
+  const metadata = [
+    details.role && `role: ${details.role}`,
+    details.interactive && "interactive",
+    details.focusable && `focus: ${details.focusable === true ? "yes" : details.focusable}`,
+    details.multiple && "multiple",
+    details.portalTarget && "portal target",
+    details.aria?.role && `aria: ${details.aria.role}`,
+    details.aria?.attributes?.length && `attrs: ${details.aria.attributes.join(", ")}`,
+    details.collapsibleTo && `native: ${formatEnum(details.collapsibleTo)}`,
+  ].filter(Boolean);
+
+  if (metadata.length === 0) return null;
+
+  return (
+    <div className="anatomy-key-meta">
+      {metadata.map((item) => (
+        <span className="pill pill--mono" key={String(item)}>{item}</span>
+      ))}
+    </div>
+  );
+}
+
+function formatEnum(value: string) {
+  return value.replace(/^native-/, "").replace(/-/g, " ");
 }
 
 function renderDom(node: DomNode, depth: number): JSX.Element {

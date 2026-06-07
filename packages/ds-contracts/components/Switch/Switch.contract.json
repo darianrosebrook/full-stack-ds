@@ -12,11 +12,30 @@
       "input"
     ],
     "details": {
+      "root": {
+        "tag": "label",
+        "description": "Label wrapper that makes the switch affordance and native input share one click target.",
+        "role": "root"
+      },
+      "input": {
+        "tag": "input",
+        "description": "Native checkbox input carrying switch semantics, form participation, focus, and checked-state updates.",
+        "role": "trigger",
+        "focusable": true,
+        "interactive": true,
+        "aria": {
+          "role": "switch"
+        }
+      },
       "track": {
+        "tag": "span",
+        "description": "Visual rail for the on/off affordance; hidden from assistive technology.",
         "role": "decoration",
         "collapsibleTo": "native-toggle-affordance"
       },
       "thumb": {
+        "tag": "span",
+        "description": "Visual handle that moves across the track as the checked state changes.",
         "role": "decoration",
         "collapsibleTo": "native-toggle-affordance"
       }
