@@ -11,6 +11,23 @@
       "icon",
       "content"
     ],
+    "details": {
+      "root": {
+        "tag": "span",
+        "description": "Inline badge wrapper that groups status, count, or category content.",
+        "role": "root"
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Optional visual glyph for badge intent or status; hidden from assistive technology.",
+        "role": "decoration"
+      },
+      "content": {
+        "tag": "span",
+        "description": "Visible badge label, count, or short status text.",
+        "role": "content"
+      }
+    },
     "dom": {
       "tag": "span",
       "part": "root",

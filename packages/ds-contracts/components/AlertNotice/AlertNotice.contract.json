@@ -12,6 +12,41 @@
       "title",
       "dismiss"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Notice region announced as an alert for status, warning, success, or error messages.",
+        "role": "region",
+        "aria": {
+          "role": "alert"
+        }
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Optional visual status cue; hidden from assistive technology.",
+        "role": "decoration"
+      },
+      "body": {
+        "description": "Main notice message content supplied by children.",
+        "role": "content"
+      },
+      "title": {
+        "description": "Optional short heading that names the notice.",
+        "role": "label"
+      },
+      "dismiss": {
+        "tag": "button",
+        "description": "Optional control that asks the consumer to remove or hide the notice.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

@@ -13,6 +13,51 @@
       "separator",
       "overflow"
     ],
+    "details": {
+      "root": {
+        "tag": "nav",
+        "description": "Navigation landmark labeled for the breadcrumb trail.",
+        "role": "region",
+        "aria": {
+          "role": "navigation",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "list": {
+        "tag": "ol",
+        "description": "Ordered list that preserves hierarchy order from the root page to the current page.",
+        "role": "group"
+      },
+      "link": {
+        "description": "Navigable breadcrumb item for an ancestor page.",
+        "role": "item",
+        "multiple": true,
+        "interactive": true,
+        "focusable": true
+      },
+      "current": {
+        "description": "Terminal breadcrumb item representing the current page.",
+        "role": "item",
+        "aria": {
+          "attributes": [
+            "aria-current"
+          ]
+        }
+      },
+      "separator": {
+        "description": "Visual divider between breadcrumb items.",
+        "role": "decoration",
+        "multiple": true
+      },
+      "overflow": {
+        "description": "Optional overflow affordance for collapsed middle breadcrumb items.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      }
+    },
     "dom": {
       "tag": "nav",
       "part": "root",

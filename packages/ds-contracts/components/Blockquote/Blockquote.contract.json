@@ -8,6 +8,13 @@
     "parts": [
       "root"
     ],
+    "details": {
+      "root": {
+        "tag": "blockquote",
+        "description": "Native block quotation element containing the quoted passage.",
+        "role": "root"
+      }
+    },
     "dom": {
       "tag": "blockquote",
       "part": "root",

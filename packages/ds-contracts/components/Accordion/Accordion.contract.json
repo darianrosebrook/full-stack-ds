@@ -14,6 +14,54 @@
       "content",
       "contentInner"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Container for the accordion item set and the shared open-value channel.",
+        "role": "root"
+      },
+      "item": {
+        "tag": "div",
+        "description": "Single accordion section pairing one trigger with one collapsible content region.",
+        "role": "item",
+        "multiple": true
+      },
+      "trigger": {
+        "tag": "button",
+        "description": "Interactive control that expands or collapses its associated content region.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-expanded"
+          ]
+        }
+      },
+      "header": {
+        "tag": "h3",
+        "description": "Heading wrapper that gives the trigger structural position in the accordion.",
+        "role": "label",
+        "multiple": true
+      },
+      "chevron": {
+        "tag": "span",
+        "description": "Decorative disclosure indicator that reflects the expanded state visually.",
+        "role": "decoration"
+      },
+      "content": {
+        "tag": "div",
+        "description": "Collapsible panel region controlled by the trigger.",
+        "role": "region",
+        "multiple": true
+      },
+      "contentInner": {
+        "tag": "div",
+        "description": "Inner content wrapper used to preserve spacing and animation boundaries inside the panel.",
+        "role": "content",
+        "multiple": true
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

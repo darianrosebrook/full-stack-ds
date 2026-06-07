@@ -10,6 +10,31 @@
       "spinner",
       "loadingText"
     ],
+    "details": {
+      "root": {
+        "tag": "button",
+        "description": "Native button control that triggers the consumer action and carries button ARIA state.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label",
+            "aria-expanded",
+            "aria-pressed",
+            "aria-busy"
+          ]
+        }
+      },
+      "spinner": {
+        "description": "Loading indicator shown while the button action is pending.",
+        "role": "decoration"
+      },
+      "loadingText": {
+        "description": "Accessible or visible text paired with the loading state.",
+        "role": "label"
+      }
+    },
     "dom": {
       "tag": "button",
       "part": "root",

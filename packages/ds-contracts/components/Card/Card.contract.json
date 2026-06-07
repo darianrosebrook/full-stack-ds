@@ -16,7 +16,58 @@
       "description",
       "link",
       "note"
-    ]
+    ],
+    "details": {
+      "root": {
+        "description": "Surface container that groups related card content and optional affordances.",
+        "role": "region",
+        "aria": {
+          "role": "group",
+          "attributes": [
+            "aria-label",
+            "aria-labelledby"
+          ]
+        }
+      },
+      "header": {
+        "description": "Introductory area for title, heading, or primary metadata.",
+        "role": "label"
+      },
+      "media": {
+        "description": "Optional visual media area, typically an image or illustration associated with the card.",
+        "role": "content"
+      },
+      "content": {
+        "description": "Primary body content for the card.",
+        "role": "content"
+      },
+      "footer": {
+        "description": "Secondary footer area for supporting metadata or trailing content.",
+        "role": "group"
+      },
+      "actions": {
+        "description": "Action group for controls that operate on the card subject.",
+        "role": "group"
+      },
+      "badge": {
+        "description": "Compact status, category, or count marker associated with the card.",
+        "role": "context"
+      },
+      "description": {
+        "description": "Short supporting copy that explains or summarizes the card subject.",
+        "role": "content"
+      },
+      "link": {
+        "description": "Optional navigation affordance that can make the card subject reachable.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true
+      },
+      "note": {
+        "description": "Supplementary note or annotation attached to the card.",
+        "role": "context"
+      }
+    }
   },
   "props": {
     "designed": {

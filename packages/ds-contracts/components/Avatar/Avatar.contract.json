@@ -12,6 +12,32 @@
       "initials",
       "status"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Accessible image-like wrapper labeled by the represented person or entity name.",
+        "role": "root",
+        "aria": {
+          "role": "img",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "image": {
+        "tag": "img",
+        "description": "Optional photo source rendered with empty alt text because the root owns the accessible label.",
+        "role": "content"
+      },
+      "initials": {
+        "description": "Text fallback derived from the name when no image source is available.",
+        "role": "label"
+      },
+      "status": {
+        "description": "Optional presence or status adornment attached to the avatar.",
+        "role": "decoration"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

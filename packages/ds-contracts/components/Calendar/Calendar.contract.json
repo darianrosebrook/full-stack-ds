@@ -14,6 +14,67 @@
       "day",
       "caption"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Interactive calendar surface that owns month navigation and date selection.",
+        "role": "root",
+        "aria": {
+          "role": "application"
+        }
+      },
+      "header": {
+        "tag": "div",
+        "description": "Header row containing month navigation controls and the current month caption.",
+        "role": "group"
+      },
+      "nav": {
+        "tag": "button",
+        "description": "Previous/next month control.",
+        "role": "trigger",
+        "multiple": true,
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "grid": {
+        "tag": "table",
+        "description": "Calendar date grid labeled for assistive technology.",
+        "role": "group",
+        "aria": {
+          "role": "grid",
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      },
+      "cell": {
+        "tag": "td",
+        "description": "Grid cell for one visible calendar day slot.",
+        "role": "item",
+        "multiple": true,
+        "aria": {
+          "role": "gridcell"
+        }
+      },
+      "day": {
+        "tag": "button",
+        "description": "Selectable day button inside a calendar grid cell.",
+        "role": "trigger",
+        "multiple": true,
+        "interactive": true,
+        "focusable": true
+      },
+      "caption": {
+        "tag": "span",
+        "description": "Visible label for the currently displayed month or range.",
+        "role": "label"
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",

@@ -12,6 +12,41 @@
       "title",
       "dismiss"
     ],
+    "details": {
+      "root": {
+        "tag": "div",
+        "description": "Alert region announced as an assertive status message.",
+        "role": "region",
+        "aria": {
+          "role": "alert"
+        }
+      },
+      "icon": {
+        "tag": "span",
+        "description": "Optional visual severity cue; hidden from assistive technology.",
+        "role": "decoration"
+      },
+      "body": {
+        "description": "Main alert message content supplied by children.",
+        "role": "content"
+      },
+      "title": {
+        "description": "Optional short heading that summarizes the alert message.",
+        "role": "label"
+      },
+      "dismiss": {
+        "tag": "button",
+        "description": "Optional control that asks the consumer to remove or hide the alert.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
+      }
+    },
     "dom": {
       "tag": "div",
       "part": "root",
