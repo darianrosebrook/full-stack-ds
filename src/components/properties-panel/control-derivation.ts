@@ -346,6 +346,31 @@ export function tokenOverridesToCss(
   return `:root {\n${body}\n}\n`;
 }
 
+/**
+ * Inline-style sibling of `tokenOverridesToCss` for previews that render in
+ * the HOST document rather than an iframe (the Design tab's usage examples).
+ * There is no :root to write to without leaking into the whole app, so the
+ * overrides become scoped custom properties spread onto a wrapper element.
+ * Same semantics: blanks dropped, and each slot with a `resolvesTo` also sets
+ * its semantic var so variant rules pick the override up.
+ */
+export function tokenOverridesToStyle(
+  overrides: Record<string, string>,
+  rows?: TokenRowDescriptor[],
+): Record<string, string> {
+  const resolvesBySlot = new Map(
+    (rows ?? []).map((r) => [r.slot, r.resolvesTo]),
+  );
+  const out: Record<string, string> = {};
+  for (const [slot, value] of Object.entries(overrides)) {
+    if (value == null || String(value).trim() === "") continue;
+    out[slotToCssVar(slot)] = value;
+    const resolvesTo = resolvesBySlot.get(slot);
+    if (resolvesTo) out[resolvesToCssVar(resolvesTo)] = value;
+  }
+  return out;
+}
+
 // ---- Box-model role resolution -------------------------------------------
 //
 // The BoxModelEditor edits semantic roles (padding sides, gap, min/max width,

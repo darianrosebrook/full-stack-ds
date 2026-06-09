@@ -5,6 +5,10 @@ import type {
   UsageTreeNode,
 } from "../../types/data";
 import { renderUsageTree } from "../../lib/render-usage";
+import {
+  deriveControls,
+  tokenOverridesToStyle,
+} from "../../components/properties-panel/control-derivation";
 
 interface UsageExamplesProps {
   component: ComponentBundle;
@@ -14,6 +18,12 @@ interface UsageExamplesProps {
    * usage sidecar remains the authored source of truth.
    */
   propOverrides?: Record<string, unknown>;
+  /**
+   * Live token overrides (slot → literal). Examples render in the host
+   * document — not an iframe — so the overrides apply as scoped inline custom
+   * properties on each example frame (see tokenOverridesToStyle), never :root.
+   */
+  tokenOverrides?: Record<string, string>;
 }
 
 function coerceUsagePropOverride(value: unknown): UsagePropValue | undefined {
@@ -76,9 +86,21 @@ export function applyRootUsagePropOverrides(
 export function UsageExamples({
   component,
   propOverrides,
+  tokenOverrides,
 }: UsageExamplesProps) {
   if (component.usage.length === 0) return null;
   const [hero, ...rest] = component.usage;
+
+  // Lower token overrides once for all frames; pass the derived rows so each
+  // overridden slot also sets its resolvesTo semantic var (variant rules read
+  // the semantic leaf, not the slot var — see tokenOverridesToCss).
+  const tokenStyle =
+    tokenOverrides && Object.keys(tokenOverrides).length > 0
+      ? tokenOverridesToStyle(
+          tokenOverrides,
+          deriveControls(component.contract).tokens,
+        )
+      : undefined;
 
   return (
     <div>
@@ -87,6 +109,7 @@ export function UsageExamples({
         emphasize
         componentName={component.name}
         propOverrides={propOverrides}
+        tokenStyle={tokenStyle}
       />
       {rest.length > 0 && (
         <div style={{ display: "grid", gap: "var(--fsds-core-spacing-size-06)", marginTop: "var(--fsds-core-spacing-size-07)" }}>
@@ -96,6 +119,7 @@ export function UsageExamples({
               example={ex}
               componentName={component.name}
               propOverrides={propOverrides}
+              tokenStyle={tokenStyle}
             />
           ))}
         </div>
@@ -109,6 +133,8 @@ interface ExampleFrameProps {
   emphasize?: boolean;
   componentName: string;
   propOverrides?: Record<string, unknown>;
+  /** Scoped custom-property overrides spread onto the preview frame. */
+  tokenStyle?: Record<string, string>;
 }
 
 function ExampleFrame({
@@ -116,6 +142,7 @@ function ExampleFrame({
   emphasize,
   componentName,
   propOverrides,
+  tokenStyle,
 }: ExampleFrameProps) {
   const renderedTree = applyRootUsagePropOverrides(
     example.tree,
@@ -142,6 +169,7 @@ function ExampleFrame({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          ...tokenStyle,
         }}
       >
         {renderUsageTree(renderedTree)}

@@ -45,7 +45,11 @@ export function DesignView({
               {component.name}.usage.jsonl · rendered with @full-stack-ds/react
             </span>
           </header>
-          <UsageExamples component={component} propOverrides={propOverrides} />
+          <UsageExamples
+            component={component}
+            propOverrides={propOverrides}
+            tokenOverrides={tokenOverrides}
+          />
         </section>
       ) : (
         <section className="section">

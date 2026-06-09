@@ -5,6 +5,7 @@ import path from "node:path";
 import {
   deriveControls,
   tokenOverridesToCss,
+  tokenOverridesToStyle,
   slotToCssVar,
   resolvesToCssVar,
   resolveBoxModel,
@@ -385,5 +386,22 @@ describe("tokenOverridesToCss", () => {
     expect(tokenOverridesToCss({ "custom.thing": "4px" }, rows)).toBe(
       ":root {\n  --fsds-custom-thing: 4px;\n}\n",
     );
+  });
+});
+
+describe("tokenOverridesToStyle", () => {
+  it("lowers overrides to scoped custom-property pairs, expanding resolvesTo", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const style = tokenOverridesToStyle(
+      { "button.color.background.default": "#0a7d4f", "box-model.gap": "" },
+      tokens,
+    );
+    // Blank gap dropped; slot var AND its semantic leaf both set, same
+    // semantics as tokenOverridesToCss but as an inline-style object.
+    expect(style).toEqual({
+      "--fsds-button-color-background-default": "#0a7d4f",
+      "--fsds-semantic-color-action-background-primary-default": "#0a7d4f",
+    });
+    console.log("tokenOverridesToStyle output:", JSON.stringify(style, null, 2));
   });
 });
