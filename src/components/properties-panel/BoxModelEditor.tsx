@@ -20,6 +20,7 @@
 import type { FoundationToken } from "../../types/data";
 import {
   resolveBoxModel,
+  deriveBoxConstraints,
   boxModelRolePathPattern,
   type BoxModelBinding,
   type BoxModelRole,
@@ -67,6 +68,7 @@ export function BoxModelEditor({
   const byRole = new Map<BoxModelRole, BoxModelBinding>(
     bindings.map((b) => [b.role, b]),
   );
+  const constraints = deriveBoxConstraints(bindings);
 
   // Helper: render a TokenValueControl for a role, or null if the component has
   // no token for it (so the diagram only shows what the contract owns).
@@ -109,6 +111,7 @@ export function BoxModelEditor({
     w && h ? `${w} × ${h}` : (w ?? h ?? (minWidth ? "min" : "size"));
 
   return (
+    <>
     <div className="fsds-bme" role="group" aria-label="Box model">
       {/* center axes */}
       <div className="fsds-bme__axis fsds-bme__axis--v" aria-hidden />
@@ -174,5 +177,45 @@ export function BoxModelEditor({
         </div>
       </div>
     </div>
+
+    {/* per-axis constraint captions: why a small padding edit can look inert */}
+    {constraints.length > 0 && (
+      <ul className="fsds-bme-constraints" aria-label="Dimensional constraints">
+        {constraints.map((c) => {
+          const floorVal = c.floor ? shownValue(c.floor, values) : "";
+          const capVal = c.cap ? shownValue(c.cap, values) : "";
+          return (
+            <li key={c.axis} className="fsds-bme-constraint">
+              <span className="fsds-bme-constraint__dim">{c.label}</span>
+              {c.floor && (
+                <span className="fsds-bme-constraint__bound">
+                  ≥ {floorVal || "min"}
+                  <span
+                    className="fsds-bme-constraint__diamond"
+                    aria-hidden
+                    title={
+                      isLinked(c.floor, values)
+                        ? `bound to ${c.floor.resolvesTo}`
+                        : "literal override"
+                    }
+                  >
+                    {isLinked(c.floor, values) ? "◆" : "◇"}
+                  </span>
+                </span>
+              )}
+              {c.cap && (
+                <span className="fsds-bme-constraint__bound">
+                  ≤ {capVal || "max"}
+                </span>
+              )}
+              <span className="fsds-bme-constraint__note">
+                padding only grows past the {c.floor ? "floor" : "cap"}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    )}
+    </>
   );
 }

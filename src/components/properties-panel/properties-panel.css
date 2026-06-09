@@ -765,3 +765,35 @@
 .fsds-bme__radius--tr { top: 0; right: 0; }
 .fsds-bme__radius--bl { bottom: 0; left: 0; }
 .fsds-bme__radius--br { bottom: 0; right: 0; }
+
+/* dimensional-constraint captions below the box-model diagram: one line per
+   axis explaining what absorbs small padding edits (min/max floor or cap). */
+.fsds-bme-constraints {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fsds-bme-constraint {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+}
+.fsds-bme-constraint__dim {
+  font-weight: 600;
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+.fsds-bme-constraint__bound {
+  font-family: var(--fsds-core-typography-font-family-mono, monospace);
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+.fsds-bme-constraint__diamond {
+  margin-left: 2px;
+  color: var(--fsds-semantic-color-foreground-accent);
+}
+.fsds-bme-constraint__note {
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}

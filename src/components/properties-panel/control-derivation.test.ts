@@ -8,6 +8,7 @@ import {
   slotToCssVar,
   resolvesToCssVar,
   resolveBoxModel,
+  deriveBoxConstraints,
   boxModelRolePathPattern,
   resolveFillColor,
   resolveTypography,
@@ -203,6 +204,44 @@ describe("resolveBoxModel", () => {
     );
     expect(byRole["min-height"]).toBe("box-model.min-height");
     expect(byRole["min-width"]).toBe("box-model.min-width");
+  });
+});
+
+describe("deriveBoxConstraints", () => {
+  it("reports Button's block axis floored by min-height", () => {
+    const { tokens } = deriveControls(loadContract("Button"));
+    const constraints = deriveBoxConstraints(resolveBoxModel(tokens));
+    const byAxis = Object.fromEntries(constraints.map((c) => [c.axis, c]));
+
+    const block = byAxis.block;
+    expect(block).toBeDefined();
+    expect(block.label).toBe("Height");
+    expect(block.floor?.slot).toBe("box-model.min-height");
+    expect(block.paddingRoles).toEqual(["padding-top", "padding-bottom"]);
+
+    const inline = byAxis.inline;
+    expect(inline?.floor?.slot).toBe("box-model.min-width");
+    console.log("Button constraints:", JSON.stringify(constraints, null, 2));
+  });
+
+  it("omits an axis that has padding but no floor/cap token", () => {
+    // Synthetic padding-only rows: an edit can't be absorbed by anything, so
+    // there is nothing to caption.
+    const rows = [
+      {
+        slot: "box-model.padding-block-start",
+        fallback: "8px",
+        isColor: false,
+        cssVar: "--x1",
+      },
+      {
+        slot: "box-model.padding-inline-start",
+        fallback: "12px",
+        isColor: false,
+        cssVar: "--x2",
+      },
+    ] as Parameters<typeof resolveBoxModel>[0];
+    expect(deriveBoxConstraints(resolveBoxModel(rows))).toEqual([]);
   });
 });
 

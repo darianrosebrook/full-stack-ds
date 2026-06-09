@@ -429,6 +429,67 @@ export function boxModelRolePathPattern(role: BoxModelRole): RegExp {
   return ROLE_PATH_PATTERNS[role];
 }
 
+// ---- Dimensional constraints ----------------------------------------------
+//
+// A padding edit can look inert: when the content plus padding is still under
+// the component's min-height/min-width floor, the floor absorbs the change
+// (Button: 8px padding-block inside a 36px min-height leaves ~20px of slack).
+// Rather than dimming the padding controls (the edit DOES apply — it only
+// grows the box past the floor), the editor surfaces a caption per axis
+// explaining what the dimension is constrained by. Derived purely from the
+// component's resolved box-model bindings — no per-component knowledge.
+
+export type BoxAxis = "block" | "inline";
+
+const AXIS_SPEC: Record<
+  BoxAxis,
+  { padding: BoxModelRole[]; floor: BoxModelRole; cap: BoxModelRole; label: string }
+> = {
+  block: {
+    padding: ["padding-top", "padding-bottom"],
+    floor: "min-height",
+    cap: "max-height",
+    label: "Height",
+  },
+  inline: {
+    padding: ["padding-left", "padding-right"],
+    floor: "min-width",
+    cap: "max-width",
+    label: "Width",
+  },
+};
+
+/** One axis worth of constraint facts for the BoxModelEditor's captions. */
+export interface BoxConstraint {
+  axis: BoxAxis;
+  label: string;
+  /** The padding roles whose edits the floor/cap can absorb. */
+  paddingRoles: BoxModelRole[];
+  floor?: TokenRowDescriptor;
+  cap?: TokenRowDescriptor;
+}
+
+/**
+ * Project box-model bindings into per-axis constraints worth explaining. An
+ * axis is reported only when it has BOTH a padding binding (an edit that could
+ * surprise) and a floor or cap (something doing the absorbing) — otherwise
+ * there is nothing to caption.
+ */
+export function deriveBoxConstraints(bindings: BoxModelBinding[]): BoxConstraint[] {
+  const byRole = new Map(bindings.map((b) => [b.role, b.row]));
+  const out: BoxConstraint[] = [];
+  for (const axis of Object.keys(AXIS_SPEC) as BoxAxis[]) {
+    const spec = AXIS_SPEC[axis];
+    const paddingRoles = spec.padding.filter((r) => byRole.has(r));
+    const floor = byRole.get(spec.floor);
+    const cap = byRole.get(spec.cap);
+    if (paddingRoles.length === 0) continue;
+    if (!floor && !cap) continue;
+    out.push({ axis, label: spec.label, paddingRoles, floor, cap });
+  }
+  return out;
+}
+
 // ---- Fill / color role resolution -----------------------------------------
 //
 // The Fill section edits the component's primary surface color. As with the
