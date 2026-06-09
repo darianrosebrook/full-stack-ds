@@ -57,6 +57,16 @@ export function App() {
       ...prev,
       [activeName]: { ...(prev[activeName] ?? {}), [slot]: value },
     }));
+  const onResetOverrides = () => {
+    setPropOverrides((prev) => {
+      const { [activeName]: _, ...rest } = prev;
+      return rest;
+    });
+    setTokenOverrides((prev) => {
+      const { [activeName]: _, ...rest } = prev;
+      return rest;
+    });
+  };
 
   const activePrimitive = useMemo(() => {
     if (route.kind !== "primitive") return null;
@@ -130,6 +140,7 @@ export function App() {
             onPropChange={onPropChange}
             tokenValues={activeTokens}
             onTokenChange={onTokenChange}
+            onResetOverrides={onResetOverrides}
             foundationTokens={bundle.foundationTokens}
           />
         </aside>

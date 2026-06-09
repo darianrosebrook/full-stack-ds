@@ -45,6 +45,8 @@ export interface PropertiesPanelProps {
   /** Current token overrides (slot → literal value). Controlled by the parent. */
   tokenValues: Record<string, string>;
   onTokenChange: (slot: string, value: string) => void;
+  /** Clear every prop + token override for this component. */
+  onResetOverrides?: () => void;
   /** Resolved palette for the "Apply variable" picker. */
   foundationTokens: FoundationToken[];
 }
@@ -182,9 +184,12 @@ export function PropertiesPanel({
   onPropChange,
   tokenValues,
   onTokenChange,
+  onResetOverrides,
   foundationTokens,
 }: PropertiesPanelProps) {
   const { variantAxes, props, tokens } = deriveControls(component.contract);
+  const overrideCount =
+    Object.keys(propValues).length + Object.keys(tokenValues).length;
   // Which token row's picker is open (by slot), and whether it's color-only.
   const [pickerSlot, setPickerSlot] = useState<string | null>(null);
   const pickerRow = tokens.find((t) => t.slot === pickerSlot) ?? null;
@@ -254,6 +259,24 @@ export function PropertiesPanel({
         <span className="fsds-pp__title">{component.name}</span>
         <span className="fsds-pp__layer">{component.contract.layer}</span>
       </div>
+
+      {onResetOverrides && (
+        <div className="fsds-pp__overrides">
+          <span className="fsds-pp__overrides-count">
+            {overrideCount === 0
+              ? "No overrides"
+              : `${overrideCount} override${overrideCount === 1 ? "" : "s"}`}
+          </span>
+          <button
+            type="button"
+            className="fsds-pp__reset"
+            onClick={onResetOverrides}
+            disabled={overrideCount === 0}
+          >
+            Reset
+          </button>
+        </div>
+      )}
 
       <PropertySection title="Box model">
         <BoxModelEditor

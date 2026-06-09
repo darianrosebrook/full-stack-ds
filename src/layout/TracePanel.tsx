@@ -13,6 +13,8 @@ interface TracePanelProps {
   onPropChange: (name: string, value: unknown) => void;
   tokenValues: Record<string, string>;
   onTokenChange: (slot: string, value: string) => void;
+  /** Clear every override for the active component. */
+  onResetOverrides: () => void;
   foundationTokens: FoundationToken[];
 }
 
@@ -24,6 +26,7 @@ export function TracePanel({
   onPropChange,
   tokenValues,
   onTokenChange,
+  onResetOverrides,
   foundationTokens,
 }: TracePanelProps) {
   if (!component) {
@@ -53,6 +56,7 @@ export function TracePanel({
           onPropChange={onPropChange}
           tokenValues={tokenValues}
           onTokenChange={onTokenChange}
+          onResetOverrides={onResetOverrides}
           foundationTokens={foundationTokens}
         />
       </TabsPanel>

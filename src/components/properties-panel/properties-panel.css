@@ -31,6 +31,41 @@
   color: var(--fsds-semantic-color-foreground-tertiary);
 }
 
+/* overrides sub-panel: count + Reset, between the header and the box model */
+.fsds-pp__overrides {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fsds-core-spacing-size-04, 8px);
+  padding: var(--fsds-core-spacing-size-03, 6px)
+    var(--fsds-core-spacing-size-05, 12px);
+  border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
+}
+
+.fsds-pp__overrides-count {
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
+
+.fsds-pp__reset {
+  font-size: var(--fsds-core-typography-ramp-1, 11px);
+  padding: 2px 8px;
+  border: 1px solid var(--fsds-semantic-color-border-subtle);
+  border-radius: var(--fsds-core-shape-radius-02, 4px);
+  background: transparent;
+  color: var(--fsds-semantic-color-foreground-primary);
+  cursor: pointer;
+}
+
+.fsds-pp__reset:disabled {
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  cursor: default;
+}
+
+.fsds-pp__reset:not(:disabled):hover {
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
 .fsds-pp__section {
   padding: var(--fsds-core-spacing-size-05, 12px);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
