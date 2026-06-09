@@ -278,6 +278,28 @@ export function deriveControls(contract: ComponentContract): DerivedControls {
 }
 
 /**
+ * Full prop map for a config-mode preview = derived defaults (variant axes +
+ * props) overlaid with the user's overrides. Config-mode previews REPLACE
+ * props wholesale on each message, so callers must always send the complete
+ * map; an explicit `undefined` override clears the prop.
+ */
+export function buildPropMap(
+  contract: ComponentContract,
+  overrides: Record<string, unknown>,
+): Record<string, unknown> {
+  const { variantAxes, props } = deriveControls(contract);
+  const out: Record<string, unknown> = {};
+  for (const c of [...variantAxes, ...props]) {
+    if (c.defaultValue !== undefined) out[c.name] = c.defaultValue;
+  }
+  for (const [k, v] of Object.entries(overrides)) {
+    if (v === undefined) delete out[k];
+    else out[k] = v;
+  }
+  return out;
+}
+
+/**
  * Lower a token-override map (slot → literal value) into a CSS custom-property
  * block scoped to `:root`. The preview iframe writes this into a
  * `<style data-fsds="overrides">` element; because the generated component CSS

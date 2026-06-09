@@ -2,10 +2,18 @@ import { useMemo, useState } from "react";
 import { Tabs, TabsList, TabsTab } from "@full-stack-ds/react";
 import type { ComponentBundle, Framework } from "../types/data";
 import { bundle } from "../types/bundle";
-import { FrameworkPreview } from "../runtime/FrameworkPreview";
+import {
+  FrameworkPreview,
+  type PreviewConfig,
+} from "../runtime/FrameworkPreview";
 import { CodeViewer } from "../components/CodeViewer";
 import { buildTraceIndex } from "../trace/buildTraceIndex";
 import { buildDemo } from "../runtime/demos";
+import {
+  buildPropMap,
+  deriveControls,
+  tokenOverridesToCss,
+} from "../components/properties-panel/control-derivation";
 import type { TraceSelection } from "../trace/types";
 import { ComponentViewTabs } from "./ComponentViewTabs";
 
@@ -13,6 +21,9 @@ interface DeveloperViewProps {
   component: ComponentBundle;
   trace: TraceSelection | null;
   onTrace: (selection: TraceSelection | null) => void;
+  /** Live overrides from the Properties tab (lifted to App). */
+  propOverrides?: Record<string, unknown>;
+  tokenOverrides?: Record<string, string>;
 }
 
 const FRAMEWORK_TABS: { key: Framework; label: string; dot: string }[] = [
@@ -23,7 +34,13 @@ const FRAMEWORK_TABS: { key: Framework; label: string; dot: string }[] = [
   { key: "lit", label: "Lit", dot: "lang-lit" },
 ];
 
-export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps) {
+export function DeveloperView({
+  component,
+  trace,
+  onTrace,
+  propOverrides,
+  tokenOverrides,
+}: DeveloperViewProps) {
   const availableFrameworks = useMemo<Framework[]>(
     () => FRAMEWORK_TABS.filter((t) => component.sources[t.key]?.component).map((t) => t.key),
     [component],
@@ -41,6 +58,28 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
   }, [framework, componentFile, component]);
 
   const demo = useMemo(() => buildDemo(framework, component), [framework, component]);
+
+  // Properties-tab overrides → preview. The React preview runs in config mode
+  // (fsds:config wire; props + token CSS re-apply with no module rebuild),
+  // EXCEPT for compound components — config mode renders a single root + text
+  // child, which is wrong for them. Non-react frameworks and compounds fall
+  // back to overrideCss injection: token re-skin works, prop overrides don't
+  // reach the baked-props demo (an accepted limit; Angular's srcdoc path is a
+  // no-op even for overrideCss).
+  const isCompound = Boolean(component.contract.compoundParts);
+  const useConfigMode = framework === "react" && !isCompound;
+  const tokenCss = useMemo(() => {
+    const { tokens } = deriveControls(component.contract);
+    return tokenOverridesToCss(tokenOverrides ?? {}, tokens);
+  }, [component, tokenOverrides]);
+  const config = useMemo<PreviewConfig | undefined>(() => {
+    if (!useConfigMode) return undefined;
+    return {
+      props: buildPropMap(component.contract, propOverrides ?? {}),
+      tokenCss,
+    };
+  }, [useConfigMode, component, propOverrides, tokenCss]);
+  const overrideCss = useConfigMode ? undefined : tokenCss || undefined;
 
   const handleHitClick = (hit: import("../trace/types").TraceHit) => {
     onTrace({ hit, framework, componentName: component.name });
@@ -131,6 +170,8 @@ export function DeveloperView({ component, trace, onTrace }: DeveloperViewProps)
                   tokensCss={bundle.tokensCss}
                   demo={demo}
                   height={280}
+                  config={config}
+                  overrideCss={overrideCss}
                 />
               </div>
             </div>

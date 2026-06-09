@@ -9,10 +9,10 @@
 
 import { useMemo, useState } from "react";
 import { bundle } from "../types/bundle";
-import type { ComponentBundle } from "../types/data";
 import { FrameworkPreview } from "../runtime/FrameworkPreview";
 import { PropertiesPanel } from "../components/properties-panel/PropertiesPanel";
 import {
+  buildPropMap,
   deriveControls,
   tokenOverridesToCss,
 } from "../components/properties-panel/control-derivation";
@@ -22,24 +22,6 @@ import {
 // number/boolean/text props; Switch adds a single-axis + boolean/callback mix.
 // The remaining corpus is wired in once the mechanism is proven.
 const SEED_COMPONENTS = ["Button", "Truncate", "Switch"];
-
-/** Full prop map = derived defaults overlaid with the user's overrides. */
-function buildPropMap(
-  component: ComponentBundle,
-  overrides: Record<string, unknown>,
-): Record<string, unknown> {
-  const { variantAxes, props } = deriveControls(component.contract);
-  const out: Record<string, unknown> = {};
-  for (const c of [...variantAxes, ...props]) {
-    if (c.defaultValue !== undefined) out[c.name] = c.defaultValue;
-  }
-  // Overrides win; an explicit `undefined` clears the prop.
-  for (const [k, v] of Object.entries(overrides)) {
-    if (v === undefined) delete out[k];
-    else out[k] = v;
-  }
-  return out;
-}
 
 export function PropertiesScratchView() {
   const seed = useMemo(
@@ -75,7 +57,7 @@ export function PropertiesScratchView() {
     // makes the live re-skin win over variant modifiers (e.g. .button--primary).
     const { tokens } = deriveControls(component.contract);
     return {
-      props: buildPropMap(component, propValues),
+      props: buildPropMap(component.contract, propValues),
       tokenCss: tokenOverridesToCss(tokenValues, tokens),
     };
   }, [component, propValues, tokenValues]);

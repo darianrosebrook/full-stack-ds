@@ -117,6 +117,8 @@ export function App() {
               component={activeComponent}
               trace={trace}
               onTrace={setTrace}
+              propOverrides={activeProps}
+              tokenOverrides={activeTokens}
             />
           ) : (
             <ComponentTokensView component={activeComponent} />
