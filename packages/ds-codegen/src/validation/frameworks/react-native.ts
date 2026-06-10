@@ -28,8 +28,8 @@ export const reactNativeValidationPlan: FrameworkValidationPlan = {
     parse: "covered_by_typecheck",
   },
   knownGaps: [
-    "React Native admission is opt-in and is not part of the default five-web-framework governed rail.",
-    "Runtime evidence is limited to generated React Native render tests for the admitted primitive/form slice; it does not prove simulator or device execution, native visual parity, or platform accessibility parity.",
-    "Surface behavior and compound-part parity remain unadmitted for React Native.",
+    "Runtime evidence is limited to generated React Native render tests (host-render archetypes + variant style realization); it does not prove simulator or device execution, native visual parity, or platform accessibility parity.",
+    "Surface behavior (Dialog/Sheet/Popover/Toast need a native Modal/BackHandler substrate) and compound-part emission (Tabs/Accordion subcomponents) remain unadmitted for React Native.",
+    "Part-scoped variant styling, boolean-modifier styling (e.g. Card --inset), and interactive state styling (pressed/disabled) are not yet realized natively.",
   ],
 };

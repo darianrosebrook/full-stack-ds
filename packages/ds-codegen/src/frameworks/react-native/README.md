@@ -1,20 +1,16 @@
 # React Native framework emitter
 
-Status: **experimental opt-in executable target.** React Native is a built-in
-target-pack and can be generated with:
+Status: **default rail target** (FEAT-MOBILE-RN-001). React Native is a
+built-in target-pack listed in `fsds.targets.json`, so `--target=all`, the
+default `governed:rail`, and the CI/pre-push generated-tree drift checks all
+cover `packages/ds-react-native/`. Targeted runs remain available:
 
 ```bash
 pnpm run generate:react-native
 pnpm run typecheck:react-native
-pnpm --filter @full-stack-ds/react-native run test
+pnpm run test:react-native
 pnpm run governed:rail:react-native
 ```
-
-It is deliberately not listed in `fsds.targets.json`, so `--target=all` and the
-default governed rail still cover only the admitted Web DOM family plus Figma
-descriptors. React Native becomes executable for a run when requested explicitly
-as `--target=react-native`; its admission rail is likewise opt-in through
-`--framework=react-native`.
 
 ## Current slice
 
@@ -29,10 +25,16 @@ as `--target=react-native`; its admission rail is likewise opt-in through
 - Emits per-component sibling `.styles.ts` factories with `StyleSheet.create`.
   Structural style factories consume the typed token scopes through the RN
   theme context rather than hardcoded CSS fallbacks.
-- Participates in the admission rail when invoked with
-  `pnpm run governed:rail:react-native`. This binds generated RN artifacts to
-  contract bytes, RN emitter source bytes, environment provenance, and the RN
-  package typecheck/test commands.
+- Realizes variant styling from IR facts: per-variant StyleSheet entries are
+  joined from root `cssBlocks` declarations × `variant_*` token scopes (the
+  Button/Alert token-re-declaration pattern), or dereferenced through the
+  owning scope when the variant block declares CSS properties directly (the
+  Avatar/Text pattern). Variant axes without a contract prop get a
+  synthesized union-typed prop from the class recipe, mirroring web. Text
+  props land on a `rootText` style applied to the root text wrapper.
+- Participates in the default admission rail (`pnpm run governed:rail`). This
+  binds generated RN artifacts to contract bytes, RN emitter source bytes,
+  environment provenance, and the RN package typecheck/test commands.
 - Collapses contracts that declare `native-toggle-affordance` to RN's native
   `Switch` primitive.
 - Walks `ComponentIR.dom` for the rest of the corpus, lowering common HTML-ish
@@ -51,6 +53,10 @@ as `--target=react-native`; its admission rail is likewise opt-in through
 - Token realization is native and per-component, but still narrow. The RN
   target consumes `ComponentIR.tokenScopes` and `FsdsTheme` overrides; it does
   not yet project every CSS property into native `ViewStyle`/`TextStyle`.
+- Variant realization covers root-scoped value modifiers only. Part-scoped
+  variant styling (Toast intents, Tabs pills), boolean modifiers (Card
+  `--inset`), interactive state styling (pressed/disabled scopes), and
+  em-relative sizing (Spinner's font-size trick) are not yet realized.
 - Contract object aliases are emitted as `unknown` when no native data shape is
   available. This preserves typecheck without inventing schema semantics.
 - `aria-labelledby` maps to `accessibilityLabelledBy`, which is Android-only in

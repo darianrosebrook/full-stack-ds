@@ -162,7 +162,8 @@ jobs:
             packages/ds-vue/src \
             packages/ds-svelte/src \
             packages/ds-angular/src \
-            packages/ds-lit/src
+            packages/ds-lit/src \
+            packages/ds-react-native/src
 
   runtime-rail:
     name: Runtime visual proof rail
