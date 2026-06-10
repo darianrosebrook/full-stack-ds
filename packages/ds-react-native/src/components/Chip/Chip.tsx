@@ -50,7 +50,7 @@ export function Chip({
   return (
     <Pressable
       testID={testID}
-      style={[styles.root, style]}
+      style={({ pressed }) => [styles.root, pressed ? styles.root_state_pressed : undefined, style]}
       disabled={disabled}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}

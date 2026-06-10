@@ -4,18 +4,19 @@ authority: roadmap
 status: draft
 title: Scoping mobile targets (Swift, Jetpack Compose, React Native) to admission-rail parity
 owner: "@darianrosebrook"
-updated: 2026-06-02
+updated: 2026-06-09
 verified_at_commit: 5103447
 # Phase 0 has landed. FEAT-MOBILE-IR-001 (typed token facts) and the Phase 0.3
 # FEAT-MOBILE-DISCLOSURE-001 (native-disclosure collapse intent) are authored,
-# merged, and closed. The Phase 1 emitter-completion + rail-admission specs
-# below remain future work and are NOT yet authored. See the forward-pointer
-# note under "Status reconciliation" near the top of the body.
+# merged, and closed. FEAT-MOBILE-RN-001 (React Native Phase 1) is authored and
+# landed: variant style realization + default-rail graduation (registry, CI/
+# pre-push drift coverage). SwiftUI and Compose Phase 1 specs remain future
+# work and are NOT yet authored. See "Status reconciliation" in the body.
 caws_specs:
   - FEAT-MOBILE-IR-001      # Phase 0.2 — typed token facts IR (CLOSED eb933df)
   - FEAT-MOBILE-DISCLOSURE-001 # Phase 0.3 — native-disclosure collapse intent, Details proof (CLOSED f00110c)
   - FEAT-MOBILE-SWIFTUI-001 # Phase 1 — SwiftUI emitter completion + rail admission (FUTURE — not authored)
-  - FEAT-MOBILE-RN-001      # Phase 1 — React Native emitter completion + rail admission (FUTURE — not authored)
+  - FEAT-MOBILE-RN-001      # Phase 1 — React Native variant-style realization + default-rail graduation (LANDED)
   - FEAT-MOBILE-COMPOSE-001 # Phase 1 — Jetpack Compose emitter completion + rail admission (FUTURE — not authored)
 governs:
   - packages/ds-codegen/src/frameworks/swift/**
@@ -52,12 +53,18 @@ not as a statement that the work is unstarted:
 - **Phase 0.3 (collapse intents):** **landed** — `FEAT-MOBILE-DISCLOSURE-001`
   (closed `f00110c`) proved a second collapse-intent vocabulary member
   (`native-disclosure`) on Details; the collector required zero change.
-- **Phase 1 (emitter completion + rail admission):** still **future** and
-  **not authored**. The measured asymmetry (web = governed generated system;
-  native = callable emitter code, zero admission infrastructure) is recorded
-  in the parity matrix `REF-MOBILE-PARITY-MATRIX-001`
+- **Phase 1, React Native (`FEAT-MOBILE-RN-001`):** **landed.** RN realizes
+  variant styling from IR facts (cssBlocks × token-scope join, synthesized
+  axis props) and graduated into the default rail: registered in
+  `fsds.targets.json`, covered by `governed:rail` and the CI/pre-push
+  six-tree drift check. Residuals (surfaces, compound parts, state styling,
+  part-scoped variants) are recorded as validation-plan knownGaps.
+- **Phase 1, SwiftUI/Compose:** still **future** and **not authored**. The
+  parity matrix `REF-MOBILE-PARITY-MATRIX-001`
   (`docs/successor-work-mobile-parity-matrix.md`,
-  `MOBILE-PARITY-QUALITY-RECON-01` closed `2788873`). The lane decision
+  `MOBILE-PARITY-QUALITY-RECON-01` closed `2788873`) now records the updated
+  asymmetry: web five + react-native admitted; swiftui/jetpack-compose
+  callable emitter code with zero admission infrastructure. The lane decision
   (SwiftUI package/admission vs. Native View IR recon) is open.
 
 This is not primarily a plumbing exercise. The web targets are admitted

@@ -26,6 +26,7 @@ export interface SelectProps {
   filterFn?: ((option: SelectOption, searchTerm: string) => boolean);
   searchable?: boolean;
   empty?: boolean;
+  position?: "bottom" | "top" | "auto";
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;

@@ -1,5 +1,11 @@
 import type { ComponentIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
+import {
+  stateStyleFacts,
+  variantStyleFacts,
+  type JoinedStyleEntry,
+  type VariantStyleFact,
+} from "./component-source.js";
 
 export function generateReactNativeTest(ir: ComponentIR): string {
   const runtimeTest = runtimeTestBody(ir);
@@ -130,8 +136,17 @@ function fieldLayoutTest(ir: ComponentIR): string {
 }
 
 function buttonTest(ir: ComponentIR): string {
+  const proof = variantBackgroundProof(ir);
+  const imports = renderImports(ir);
+  if (proof) {
+    imports.splice(
+      imports.indexOf("// @generated:end"),
+      0,
+      `import { FsdsThemeProvider } from "../../../tokens";`,
+    );
+  }
   return [
-    ...renderImports(ir),
+    ...imports,
     `describe("${ir.name} React Native", () => {`,
     `${INDENT}it("renders button semantics and press passthrough", () => {`,
     ...rendererHelper(`<${ir.name} onPress={() => undefined} testID="subject">Save</${ir.name}>`),
@@ -140,9 +155,132 @@ function buttonTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}expect(subject.props.onPress).toEqual(expect.any(Function));`,
     `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Save").length).toBeGreaterThan(0);`,
     `${INDENT}});`,
+    ...(proof ? variantBackgroundTestBody(ir, proof) : []),
+    ...pressedStateTestBody(ir),
     `});`,
     ...renderFooter(),
   ].join("\n");
+}
+
+/**
+ * When the root realizes a pressed state with a themeless-resolvable
+ * background distinct from the rest background, prove the style-function
+ * lowering by invoking it for both states.
+ */
+function pressedStateTestBody(ir: ComponentIR): string[] {
+  const pressedState = stateStyleFacts(ir).find((state) => state.stateKey === "pressed");
+  const pressedBg = pressedState?.rootEntries.find(
+    (entry) => entry.rnProp === "backgroundColor" && entry.rawValue !== undefined,
+  );
+  const restBg = rootBackgroundRawValue(ir);
+  if (!pressedBg?.rawValue || !restBg || pressedBg.rawValue === restBg) return [];
+  return [
+    `${INDENT}it("realizes pressed state styles via the style function", () => {`,
+    ...rendererHelper(`<${ir.name} testID="subject">Save</${ir.name}>`),
+    `${INDENT}${INDENT}const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(typeof subject.props.style).toBe("function");`,
+    `${INDENT}${INDENT}const styleOf = subject.props.style as (state: { pressed: boolean }) => unknown;`,
+    `${INDENT}${INDENT}const flatten = (style: unknown): Record<string, unknown> =>`,
+    `${INDENT}${INDENT}${INDENT}Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));`,
+    `${INDENT}${INDENT}expect(flatten(styleOf({ pressed: true })).backgroundColor).toBe(${JSON.stringify(pressedBg.rawValue)});`,
+    `${INDENT}${INDENT}expect(flatten(styleOf({ pressed: false })).backgroundColor).toBe(${JSON.stringify(restBg)});`,
+    `${INDENT}});`,
+  ];
+}
+
+/** Themeless-resolved root background (the token's committed fallback). */
+function rootBackgroundRawValue(ir: ComponentIR): string | undefined {
+  for (const scope of ir.tokenScopes) {
+    if (scope.scope !== "root") continue;
+    const token = scope.values.find((value) =>
+      [".color.background.default", ".color.bg.default", ".color.bg"].some((suffix) =>
+        value.name.endsWith(suffix),
+      ),
+    );
+    return token?.rawValue;
+  }
+  return undefined;
+}
+
+interface VariantProof {
+  axisSafeName: string;
+  a: { value: string; expected: string };
+  b: { value: string; expected: string };
+  themeTokens: Record<string, string>;
+}
+
+/**
+ * Pick two values of one variant axis whose backgroundColor realizations have
+ * distinct sources (different refs, or ref vs literal), and derive the theme
+ * + expected colors that prove both lower through the token scopes.
+ */
+function variantBackgroundProof(ir: ComponentIR): VariantProof | null {
+  const withBackground = variantStyleFacts(ir).filter((fact) =>
+    fact.viewEntries.some((entry) => entry.rnProp === "backgroundColor"),
+  );
+  const byAxis = new Map<string, VariantStyleFact[]>();
+  for (const fact of withBackground) {
+    byAxis.set(fact.axis, [...(byAxis.get(fact.axis) ?? []), fact]);
+  }
+  const background = (fact: VariantStyleFact): JoinedStyleEntry =>
+    fact.viewEntries.find((entry) => entry.rnProp === "backgroundColor")!;
+  const sourceKey = (entry: JoinedStyleEntry): string =>
+    entry.resolvesTo ?? `literal:${entry.rawValue ?? ""}`;
+  const PALETTE = ["#101010", "#202020"];
+  for (const facts of byAxis.values()) {
+    for (let i = 0; i < facts.length; i++) {
+      for (let j = i + 1; j < facts.length; j++) {
+        const entryA = background(facts[i]!);
+        const entryB = background(facts[j]!);
+        if (sourceKey(entryA) === sourceKey(entryB)) continue;
+        const themeTokens: Record<string, string> = {};
+        const expectedFor = (entry: JoinedStyleEntry, color: string): string | null => {
+          if (!entry.isLiteral && entry.resolvesTo) {
+            themeTokens[entry.resolvesTo] = color;
+            return color;
+          }
+          return entry.rawValue ?? null;
+        };
+        const expectedA = expectedFor(entryA, PALETTE[0]!);
+        const expectedB = expectedFor(entryB, PALETTE[1]!);
+        if (expectedA === null || expectedB === null || expectedA === expectedB) continue;
+        return {
+          axisSafeName: facts[i]!.axisSafeName,
+          a: { value: facts[i]!.value, expected: expectedA },
+          b: { value: facts[j]!.value, expected: expectedB },
+          themeTokens,
+        };
+      }
+    }
+  }
+  return null;
+}
+
+function variantBackgroundTestBody(ir: ComponentIR, proof: VariantProof): string[] {
+  const themeLiteral = JSON.stringify({ tokens: proof.themeTokens });
+  return [
+    `${INDENT}it("realizes distinct ${proof.axisSafeName} backgrounds from token scopes", () => {`,
+    `${INDENT}${INDENT}let renderer: ReactTestRenderer | undefined;`,
+    `${INDENT}${INDENT}act(() => {`,
+    `${INDENT}${INDENT}${INDENT}renderer = TestRenderer.create(`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}<FsdsThemeProvider value={${themeLiteral}}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}<${ir.name} ${proof.axisSafeName}=${JSON.stringify(proof.a.value)} testID="variant-a">A</${ir.name}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}<${ir.name} ${proof.axisSafeName}=${JSON.stringify(proof.b.value)} testID="variant-b">B</${ir.name}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}</FsdsThemeProvider>,`,
+    `${INDENT}${INDENT}${INDENT});`,
+    `${INDENT}${INDENT}});`,
+    `${INDENT}${INDENT}const flatten = (style: unknown): Record<string, unknown> =>`,
+    `${INDENT}${INDENT}${INDENT}Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));`,
+    `${INDENT}${INDENT}const restStyle = (node: { props: { style?: unknown } }): unknown =>`,
+    `${INDENT}${INDENT}${INDENT}typeof node.props.style === "function"`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}? (node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false })`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}: node.props.style;`,
+    `${INDENT}${INDENT}const variantA = renderer!.root.findAllByProps({ testID: "variant-a" }).at(-1)!;`,
+    `${INDENT}${INDENT}const variantB = renderer!.root.findAllByProps({ testID: "variant-b" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(flatten(restStyle(variantA)).backgroundColor).toBe(${JSON.stringify(proof.a.expected)});`,
+    `${INDENT}${INDENT}expect(flatten(restStyle(variantB)).backgroundColor).toBe(${JSON.stringify(proof.b.expected)});`,
+    `${INDENT}});`,
+  ];
 }
 
 function progressTest(ir: ComponentIR): string {
@@ -163,6 +301,10 @@ function progressTest(ir: ComponentIR): string {
 }
 
 function expandableTest(ir: ComponentIR): string {
+  const channel = ir.behavior.normalizedChannels.find(
+    (candidate) => candidate.name === "expanded",
+  );
+  const handlerProp = channel?.changeHandlerProp;
   return [
     ...renderImports(ir),
     `describe("${ir.name} React Native", () => {`,
@@ -174,6 +316,22 @@ function expandableTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}const content = renderer!.root.findAll((node) => node.props.children === "Long copy").at(-1);`,
     `${INDENT}${INDENT}expect(content?.props.numberOfLines).toBe(2);`,
     `${INDENT}});`,
+    ...(handlerProp
+      ? [
+          `${INDENT}it("updates uncontrolled state and fires the change callback on trigger press", () => {`,
+          `${INDENT}${INDENT}const seen: boolean[] = [];`,
+          ...rendererHelper(
+            `<${ir.name} maxLines={2} showMoreLabel="More" showLessLabel="Less" ${handlerProp}={(next: boolean) => seen.push(next)} testID="subject">Long copy</${ir.name}>`,
+          ),
+          `${INDENT}${INDENT}const trigger = renderer!.root.findByProps({ accessibilityRole: "button" });`,
+          `${INDENT}${INDENT}expect(trigger.props.accessibilityState).toMatchObject({ expanded: false });`,
+          `${INDENT}${INDENT}act(() => { trigger.props.onPress(); });`,
+          `${INDENT}${INDENT}expect(seen).toEqual([true]);`,
+          `${INDENT}${INDENT}const pressed = renderer!.root.findByProps({ accessibilityRole: "button" });`,
+          `${INDENT}${INDENT}expect(pressed.props.accessibilityState).toMatchObject({ expanded: true });`,
+          `${INDENT}});`,
+        ]
+      : []),
     `});`,
     ...renderFooter(),
   ].join("\n");

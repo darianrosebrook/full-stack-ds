@@ -26,6 +26,7 @@ export interface DividerProps {
 
 // @generated:start component
 export function Divider({
+  orientation,
   children,
   style,
   testID,
@@ -34,10 +35,11 @@ export function Divider({
 }: DividerProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createDividerStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForOrientation = orientation !== undefined ? ({ "vertical": styles.root_variant_vertical } as Record<string, ViewStyle | undefined>)[orientation] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForOrientation, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

@@ -6,6 +6,7 @@
     { "id": "lit", "source": { "kind": "builtin" } },
     { "id": "svelte", "source": { "kind": "builtin" } },
     { "id": "angular", "source": { "kind": "builtin" } },
-    { "id": "figma", "source": { "kind": "builtin" } }
+    { "id": "figma", "source": { "kind": "builtin" } },
+    { "id": "react-native", "source": { "kind": "builtin" } }
   ]
 }

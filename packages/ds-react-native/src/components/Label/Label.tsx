@@ -39,7 +39,7 @@ export function Label({
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={styles.rootText}>{children}</RNText> : children}
     </View>
   );
 }

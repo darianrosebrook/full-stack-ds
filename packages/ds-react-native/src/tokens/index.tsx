@@ -58,6 +58,21 @@ export function resolveComponentTokens<T extends ComponentTokenScopes>(
   return out as ResolvedTokenScopes<T>;
 }
 
+/**
+ * Drop undefined values from a style object before StyleSheet registration.
+ * Joined variant/state styles read theme-reactive token scopes; without a
+ * theme, a ref-only token resolves undefined, and React Native's style
+ * flattening would let that undefined clobber an earlier layer's committed
+ * fallback (e.g. variant_primary unsetting root's backgroundColor).
+ */
+export function definedStyle<const T extends Record<string, unknown>>(style: T): T {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(style)) {
+    if (value !== undefined) out[key] = value;
+  }
+  return out as T;
+}
+
 export function resolveTokenValue(
   definition: ComponentTokenDefinition,
   theme?: FsdsTheme,

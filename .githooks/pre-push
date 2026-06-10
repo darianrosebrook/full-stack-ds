@@ -151,7 +151,8 @@ if [ "${RUN_RAIL:-false}" = true ]; then
       packages/ds-vue/src \
       packages/ds-svelte/src \
       packages/ds-angular/src \
-      packages/ds-lit/src; then
+      packages/ds-lit/src \
+      packages/ds-react-native/src; then
     echo ""
     echo "[pre-push] generated framework src trees have uncommitted drift after"
     echo "[pre-push] running the rail. Commit the regen output before pushing."

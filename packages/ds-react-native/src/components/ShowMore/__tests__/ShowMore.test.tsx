@@ -17,5 +17,18 @@ describe("ShowMore React Native", () => {
     const content = renderer!.root.findAll((node) => node.props.children === "Long copy").at(-1);
     expect(content?.props.numberOfLines).toBe(2);
   });
+  it("updates uncontrolled state and fires the change callback on trigger press", () => {
+    const seen: boolean[] = [];
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<ShowMore maxLines={2} showMoreLabel="More" showLessLabel="Less" onExpandedChange={(next: boolean) => seen.push(next)} testID="subject">Long copy</ShowMore>);
+  });
+    const trigger = renderer!.root.findByProps({ accessibilityRole: "button" });
+    expect(trigger.props.accessibilityState).toMatchObject({ expanded: false });
+    act(() => { trigger.props.onPress(); });
+    expect(seen).toEqual([true]);
+    const pressed = renderer!.root.findByProps({ accessibilityRole: "button" });
+    expect(pressed.props.accessibilityState).toMatchObject({ expanded: true });
+  });
 });
 // @generated:end
