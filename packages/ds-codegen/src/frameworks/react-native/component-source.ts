@@ -7,7 +7,12 @@ import type {
   ResolvedPropIR,
 } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
-import { rnSurfaceLowering, type RnSurfaceLowering } from "./surface-emit.js";
+import {
+  rnAnchoredSurface,
+  rnSurfaceLowering,
+  type RnAnchoredSurfaceLowering,
+  type RnSurfaceLowering,
+} from "./surface-emit.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 
 export interface ReactNativeComponentFiles {
@@ -82,6 +87,13 @@ function emitImports(ir: ComponentIR): string {
     rnValueImports.add("Modal");
     if (surfaceOverlayDismiss(ir)) rnValueImports.add("Pressable");
   }
+  if (rnAnchoredSurface(ir)) {
+    rnValueImports.add("Dimensions");
+    rnValueImports.add("Modal");
+    rnValueImports.add("Pressable");
+    rnValueImports.add("Text as RNText");
+    rnValueImports.add("View");
+  }
   if (
     !usesNativeToggle(ir) &&
     !isFieldLayoutPattern(ir) &&
@@ -99,6 +111,11 @@ function emitImports(ir: ComponentIR): string {
   }
   if (rnAutoDismiss(ir)) {
     reactImports.add("useEffect");
+  }
+  if (rnAnchoredSurface(ir)) {
+    reactImports.add("useCallback");
+    reactImports.add("useRef");
+    reactImports.add("useState");
   }
   if (usage.channels.size > 0) {
     reactImports.add("useState");
@@ -220,6 +237,13 @@ function emitProps(ir: ComponentIR): string {
     lines.push(`${INDENT}${prop.safeName}${prop.required ? "" : "?"}: ${rnPropType(ir, prop)};`);
     emitted.add(prop.safeName);
   }
+  // Anchored surfaces host their content part through a synthesized
+  // `content` slot prop — the RN platform adaptation for the web compound
+  // <Surface.Content> API (the contract stays neutral).
+  if (rnAnchoredSurface(ir) && !emitted.has("content")) {
+    lines.push(`${INDENT}content?: ReactNode;`);
+    emitted.add("content");
+  }
   // Variant axes without a contract-declared prop still get a prop on web
   // (the class recipe synthesizes it); mirror that here with the value union.
   for (const modifier of synthesizedVariantProps(ir)) {
@@ -286,6 +310,23 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     addPropIfPresent(ir, usage, "disabled");
     addPropIfPresent(ir, usage, "indeterminate");
     usage.props.add("children");
+    return usage;
+  }
+
+  const anchored = rnAnchoredSurface(ir);
+  if (anchored) {
+    usage.channels.add(anchored.openChannel.name);
+    usage.channelSetters.add(anchored.openChannel.name);
+    usage.props.add("children");
+    usage.props.add("content");
+    if (anchored.placementProp) addPropIfPresent(ir, usage, anchored.placementProp);
+    addPropIfPresent(ir, usage, "disabled");
+    if (anchored.escapeDeclared && anchored.escapeTrigger?.enabledByProp) {
+      addPropIfPresent(ir, usage, anchored.escapeTrigger.enabledByProp);
+    }
+    if (anchored.backdropDismiss && anchored.backdropTrigger?.enabledByProp) {
+      addPropIfPresent(ir, usage, anchored.backdropTrigger.enabledByProp);
+    }
     return usage;
   }
 
@@ -439,7 +480,10 @@ function emitComponent(ir: ComponentIR): string {
       "",
     );
   }
-  if (usesNativeToggle(ir)) {
+  const anchoredSurface = rnAnchoredSurface(ir);
+  if (anchoredSurface) {
+    lines.push(...emitAnchoredSurfaceReturn(ir, anchoredSurface));
+  } else if (usesNativeToggle(ir)) {
     lines.push(...emitNativeToggleReturn(ir));
   } else if (isFieldLayoutPattern(ir)) {
     lines.push(...emitFieldLayoutReturn());
@@ -629,6 +673,10 @@ function propDestructureEntries(ir: ComponentIR, usage: RuntimeUsage): string[] 
       entries.push(channel.changeHandlerProp);
       emitted.add(channel.changeHandlerProp);
     }
+  }
+  if (rnAnchoredSurface(ir) && !emitted.has("content")) {
+    entries.push("content");
+    emitted.add("content");
   }
   if (usage.props.has("children")) entries.push("children");
   if (rootPressableAcceptsOnPress(ir)) entries.push("onPress");
@@ -831,6 +879,111 @@ function rootTextStyleExpression(ir: ComponentIR): string | null {
   }
   if (parts.length === 0) return null;
   return parts.length === 1 ? parts[0]! : `[${parts.join(", ")}]`;
+}
+
+/**
+ * Anchored presence surface (tooltip/popover) — RN platform adaptation.
+ * The trigger renders children inside a Pressable whose position is
+ * measured via measureInWindow when opening; the surface content renders
+ * in a transparent Modal absolutely positioned from that rect. Divergences
+ * (documented; contract-neutral): outside content is inert while open,
+ * hover/focus open-triggers lower to long-press, pointer-leave dismissal
+ * lowers to backdrop press.
+ */
+function emitAnchoredSurfaceReturn(
+  ir: ComponentIR,
+  lowering: RnAnchoredSurfaceLowering,
+): string[] {
+  const channel = lowering.openChannel;
+  const value = channel.name;
+  const setter = `set${capitalize(channel.name)}Value`;
+  const placement = lowering.placementProp
+    ? safePropName(ir, lowering.placementProp)
+    : undefined;
+  const hasDisabled = Boolean(findProp(ir, "disabled"));
+  const triggerToggle =
+    lowering.triggerEvent === "onPress"
+      ? `() => { if (${value}) { ${setter}(false); } else { openFromAnchor(); } }`
+      : `() => openFromAnchor()`;
+  const escapeHandler = lowering.escapeDeclared
+    ? lowering.escapeTrigger?.enabledByProp
+      ? `() => { if (${safePropName(ir, lowering.escapeTrigger.enabledByProp)} ?? ${lowering.escapeTrigger.defaultEnabled}) ${setter}(false); }`
+      : `() => ${setter}(false)`
+    : undefined;
+  const backdropHandler = lowering.backdropDismiss
+    ? lowering.backdropTrigger?.enabledByProp
+      ? `() => { if (${safePropName(ir, lowering.backdropTrigger.enabledByProp)} ?? ${lowering.backdropTrigger.defaultEnabled}) ${setter}(false); }`
+      : `() => ${setter}(false)`
+    : undefined;
+
+  const lines: string[] = [];
+  lines.push(
+    `${INDENT}const anchorRef = useRef<View>(null);`,
+    `${INDENT}const [anchorRect, setAnchorRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);`,
+    `${INDENT}const openFromAnchor = useCallback(() => {`,
+    ...(hasDisabled ? [`${INDENT}${INDENT}if (disabled) return;`] : []),
+    `${INDENT}${INDENT}const node = anchorRef.current;`,
+    `${INDENT}${INDENT}if (!node) {`,
+    `${INDENT}${INDENT}${INDENT}${setter}(true);`,
+    `${INDENT}${INDENT}${INDENT}return;`,
+    `${INDENT}${INDENT}}`,
+    `${INDENT}${INDENT}node.measureInWindow((x, y, width, height) => {`,
+    `${INDENT}${INDENT}${INDENT}setAnchorRect({ x, y, width, height });`,
+    `${INDENT}${INDENT}${INDENT}${setter}(true);`,
+    `${INDENT}${INDENT}});`,
+    `${INDENT}}, [${hasDisabled ? "disabled, " : ""}${setter}]);`,
+    `${INDENT}const contentPosition = (() => {`,
+    `${INDENT}${INDENT}if (!anchorRect) return { position: "absolute" as const, left: 0, top: 0 };`,
+    `${INDENT}${INDENT}const gap = 8;`,
+    `${INDENT}${INDENT}const windowSize = Dimensions.get("window");`,
+    ...(placement
+      ? [
+          `${INDENT}${INDENT}if (${placement} === "top") return { position: "absolute" as const, left: anchorRect.x, bottom: windowSize.height - anchorRect.y + gap };`,
+          `${INDENT}${INDENT}if (${placement} === "left") return { position: "absolute" as const, right: windowSize.width - anchorRect.x + gap, top: anchorRect.y };`,
+          `${INDENT}${INDENT}if (${placement} === "right") return { position: "absolute" as const, left: anchorRect.x + anchorRect.width + gap, top: anchorRect.y };`,
+        ]
+      : []),
+    `${INDENT}${INDENT}void windowSize;`,
+    `${INDENT}${INDENT}return { position: "absolute" as const, left: anchorRect.x, top: anchorRect.y + anchorRect.height + gap };`,
+    `${INDENT}})();`,
+    "",
+    `${INDENT}return (`,
+    `${INDENT}${INDENT}<>`,
+    `${INDENT}${INDENT}${INDENT}<Pressable`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}ref={anchorRef}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}testID={testID}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}style={[styles.trigger, style]}`,
+    ...(hasDisabled ? [`${INDENT}${INDENT}${INDENT}${INDENT}disabled={disabled}`] : []),
+    `${INDENT}${INDENT}${INDENT}${INDENT}${lowering.triggerEvent}={${triggerToggle}}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`,
+    `${INDENT}${INDENT}${INDENT}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}{typeof children === "string" ? <RNText>{children}</RNText> : children}`,
+    `${INDENT}${INDENT}${INDENT}</Pressable>`,
+    `${INDENT}${INDENT}${INDENT}<Modal`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}visible={Boolean(${value})}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}transparent`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}animationType="fade"`,
+    ...(escapeHandler
+      ? [`${INDENT}${INDENT}${INDENT}${INDENT}onRequestClose={${escapeHandler}}`]
+      : []),
+    `${INDENT}${INDENT}${INDENT}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}<Pressable`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}`,
+    ...(backdropHandler
+      ? [`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}onPress={${backdropHandler}}`]
+      : []),
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}accessible={false}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}<View style={[styles.content, contentPosition]}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{typeof content === "string" ? <RNText>{content}</RNText> : content}`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}</View>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}</Pressable>`,
+    `${INDENT}${INDENT}${INDENT}</Modal>`,
+    `${INDENT}${INDENT}</>`,
+    `${INDENT});`,
+  );
+  return lines;
 }
 
 function emitNativeToggleReturn(ir: ComponentIR): string[] {
