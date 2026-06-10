@@ -11,7 +11,7 @@ import { buildTraceIndex } from "../trace/buildTraceIndex";
 import { buildDemo } from "../runtime/demos";
 import {
   buildPropMap,
-  deriveControls,
+  materialTokenRows,
   tokenOverridesToCss,
 } from "../components/properties-panel/control-derivation";
 import type { TraceSelection } from "../trace/types";
@@ -69,8 +69,10 @@ export function DeveloperView({
   const isCompound = Boolean(component.contract.compoundParts);
   const useConfigMode = framework === "react" && !isCompound;
   const tokenCss = useMemo(() => {
-    const { tokens } = deriveControls(component.contract);
-    return tokenOverridesToCss(tokenOverrides ?? {}, tokens);
+    // Material rows so inherited box-model slots also expand resolvesTo —
+    // a profile-sourced ref override must hit its semantic var to win over
+    // the component-scoped declaration in <Name>.tokens.css.
+    return tokenOverridesToCss(tokenOverrides ?? {}, materialTokenRows(component));
   }, [component, tokenOverrides]);
   const config = useMemo<PreviewConfig | undefined>(() => {
     if (!useConfigMode) return undefined;

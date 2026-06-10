@@ -405,3 +405,129 @@ describe("tokenOverridesToStyle", () => {
     console.log("tokenOverridesToStyle output:", JSON.stringify(style, null, 2));
   });
 });
+
+// ---- Material-surface projection (MATERIAL-SURFACE-PROJECTION-AUTHORITY-01) --
+//
+// The editor must read the normalized primitive < morphology-profile <
+// authored-sidecar surface, with provenance — not raw sidecar presence.
+
+import { materialTokenRows } from "./control-derivation";
+import { buildBoxModelSurface } from "../../../material-surface";
+import { mergeBoxModelDefaults } from "../../../packages/ds-codegen/src/box-model.js";
+
+function materialRowsFor(name: string) {
+  const contract = loadContract(name);
+  return materialTokenRows({
+    contract,
+    boxModelSurface: buildBoxModelSurface(contract.tokens, contract.morphology),
+  });
+}
+
+describe("material surface projection", () => {
+  it("keeps Button's authored semantic floors intact (A4 regression)", () => {
+    const rows = materialRowsFor("Button");
+    const byRole = Object.fromEntries(
+      resolveBoxModel(rows).map((b) => [b.role, b.row]),
+    );
+    expect(byRole["min-height"].slot).toBe("box-model.min-height");
+    expect(byRole["min-height"].source).toBe("authored");
+    expect(byRole["min-height"].resolvesTo).toBe(
+      "semantic.action.size.medium.min-height",
+    );
+    // Constraint captions unchanged: block axis floored at the authored 36px.
+    const constraints = deriveBoxConstraints(resolveBoxModel(rows));
+    const block = constraints.find((c) => c.axis === "block");
+    expect(block?.floor?.fallback).toBe("36px");
+  });
+
+  it("surfaces Badge's inherited slots without authored sidecar entries (A4)", () => {
+    const rows = materialRowsFor("Badge");
+    const byRole = Object.fromEntries(
+      resolveBoxModel(rows).map((b) => [b.role, b.row]),
+    );
+    // content-inline morphology profile supplies padding + the min-height
+    // floor; the primitive backstops min-width at 0.
+    expect(byRole["padding-top"]).toMatchObject({
+      slot: "box-model.padding-block-start",
+      fallback: "2px",
+      source: "morphology-profile",
+    });
+    expect(byRole["min-height"]).toMatchObject({
+      resolvesTo: "semantic.glyph.size.medium.extent",
+      source: "morphology-profile",
+    });
+    expect(byRole["min-width"]).toMatchObject({
+      fallback: "0",
+      source: "primitive-default",
+    });
+    console.log(
+      "Badge material box-model:",
+      JSON.stringify(
+        Object.fromEntries(
+          Object.entries(byRole).map(([role, r]) => [
+            role,
+            { slot: r.slot, value: r.fallback ?? "", source: r.source },
+          ]),
+        ),
+        null,
+        2,
+      ),
+    );
+  });
+
+  it("only captions meaningful floors: Badge gets a block constraint, not an inline one", () => {
+    const constraints = deriveBoxConstraints(
+      resolveBoxModel(materialRowsFor("Badge")),
+    );
+    const axes = constraints.map((c) => c.axis);
+    expect(axes).toContain("block"); // glyph-extent floor from the profile
+    expect(axes).not.toContain("inline"); // primitive 0 floors caption nothing
+  });
+
+  it("projects values byte-equal to codegen's mergeBoxModelDefaults (anti-drift)", () => {
+    for (const name of ["Button", "Badge", "Avatar", "Progress", "Skeleton"]) {
+      const contract = loadContract(name);
+      const surface = buildBoxModelSurface(contract.tokens, contract.morphology);
+      const merged = mergeBoxModelDefaults(
+        Object.fromEntries(
+          Object.entries(contract.tokens ?? {}).filter(([k]) =>
+            k.startsWith("box-model."),
+          ),
+        ),
+        undefined,
+        contract.morphology,
+      );
+      for (const slot of surface) {
+        const expected = merged[slot.slot];
+        expect(
+          { resolvesTo: slot.resolvesTo, fallback: slot.fallback, literal: slot.literal },
+          `${name} ${slot.slot}`,
+        ).toMatchObject({
+          resolvesTo: expected.resolvesTo,
+          fallback: expected.fallback,
+          literal: expected.literal,
+        });
+      }
+      expect(surface.length).toBe(Object.keys(merged).length);
+    }
+  });
+
+  it("fixed-square / linear-meter extents resolve to width/height roles", () => {
+    const avatar = Object.fromEntries(
+      resolveBoxModel(materialRowsFor("Avatar")).map((b) => [b.role, b.row]),
+    );
+    expect(avatar["width"]).toMatchObject({
+      slot: "box-model.width",
+      resolvesTo: "semantic.glyph.size.medium.extent",
+      source: "morphology-profile",
+    });
+    const progress = Object.fromEntries(
+      resolveBoxModel(materialRowsFor("Progress")).map((b) => [b.role, b.row]),
+    );
+    expect(progress["height"]).toMatchObject({
+      slot: "box-model.height",
+      fallback: "8px",
+      source: "morphology-profile",
+    });
+  });
+});

@@ -19,6 +19,7 @@
 //                       sidecar verbatim — see vite-plugin-fsds-data.ts)
 
 import type {
+  BoxModelSurfaceSlot,
   ComponentContract,
   TokenDefinition,
 } from "../../types/data";
@@ -60,6 +61,16 @@ export type ControlDescriptor =
     };
 
 /** A component-scoped token row (one entry of the flat tokens sidecar). */
+/**
+ * Which merge layer supplied a token row's value (see BoxModelSurfaceSlot).
+ * `authored` = the component's sidecar; the other two are inherited and mean
+ * "real, overridable slot — but not component-authored design intent".
+ */
+export type TokenProvenance =
+  | "authored"
+  | "morphology-profile"
+  | "primitive-default";
+
 export interface TokenRowDescriptor {
   /** Dotted slot name, e.g. "button.color.background.default". */
   slot: string;
@@ -77,6 +88,8 @@ export interface TokenRowDescriptor {
    * This is the variable the preview override block sets.
    */
   cssVar: string;
+  /** Merge-layer provenance. Rows derived from the raw sidecar are authored. */
+  source?: TokenProvenance;
 }
 
 /** The full derived control surface for one component. */
@@ -271,10 +284,40 @@ export function deriveControls(contract: ComponentContract): DerivedControls {
       layer: def.layer,
       isColor: looksLikeColor(def.fallback),
       cssVar: slotToCssVar(slot),
+      source: "authored" as const,
     }),
   );
 
   return { variantAxes, props, tokens };
+}
+
+/**
+ * The token rows the box-model editor inspects: the component's authored
+ * sidecar rows PLUS the inherited box-model slots from the normalized material
+ * surface (primitive < morphology profile < sidecar, computed by the data
+ * plugin). Authored rows keep their original order and win on slot collisions;
+ * inherited slots append after, mapped to display rows (a `literal` becomes
+ * the shown fallback). This is what makes the editor read the same surface
+ * codegen realizes, instead of inferring "no sidecar key = no box model".
+ */
+export function materialTokenRows(component: {
+  contract: ComponentContract;
+  boxModelSurface?: BoxModelSurfaceSlot[];
+}): TokenRowDescriptor[] {
+  const authored = deriveControls(component.contract).tokens;
+  const authoredSlots = new Set(authored.map((r) => r.slot));
+  const inherited: TokenRowDescriptor[] = (component.boxModelSurface ?? [])
+    .filter((s) => !authoredSlots.has(s.slot))
+    .map((s) => ({
+      slot: s.slot,
+      resolvesTo: s.resolvesTo,
+      fallback: s.fallback ?? s.literal,
+      layer: s.layer,
+      isColor: false,
+      cssVar: slotToCssVar(s.slot),
+      source: s.source,
+    }));
+  return [...authored, ...inherited];
 }
 
 /**
@@ -391,8 +434,10 @@ export type BoxModelRole =
   | "gap"
   | "min-width"
   | "max-width"
+  | "width"
   | "min-height"
   | "max-height"
+  | "height"
   | "radius"
   | "border";
 
@@ -413,8 +458,14 @@ const ROLE_MATCHERS: Record<BoxModelRole, RegExp[]> = {
   gap: [/(^|\.)gap$/, /(^|\.)gap\./],
   "min-width": [/(^|\.)min-width$/, /(^|\.)minwidth/],
   "max-width": [/(^|\.)max-width$/, /(^|\.)maxwidth/, /\.size\..*\.width$/],
+  // Explicit width/height come AFTER min/max in iteration order so those
+  // claim their slots first (the used-set prevents double-binding). They exist
+  // for surfaces where the profile fixes the extent (fixed-square glyphs,
+  // linear meters) rather than flooring it.
+  width: [/(^|\.)width$/],
   "min-height": [/(^|\.)min-height$/, /(^|\.)minheight/],
   "max-height": [/(^|\.)max-height$/, /(^|\.)maxheight/, /\.size\..*\.height$/],
+  height: [/(^|\.)height$/],
   radius: [/(^|\.)radius$/, /(^|\.)radius\b/, /\.radius\./],
   border: [/(^|\.)border$/, /\.size\.border$/, /\.border\.width$/],
 };
@@ -461,8 +512,10 @@ const ROLE_PATH_PATTERNS: Record<BoxModelRole, RegExp> = {
   // radius/color
   "min-width": /\b(spacing|size|dimension)\b/i,
   "max-width": /\b(spacing|size|dimension|maxwidth|measure)\b/i,
+  width: /\b(spacing|size|dimension|glyph)\b/i,
   "min-height": /\b(spacing|size|dimension)\b/i,
   "max-height": /\b(spacing|size|dimension)\b/i,
+  height: /\b(spacing|size|dimension|glyph)\b/i,
   radius: /shape\.radius\b/i,
   border: /border\.width\b/i,
 };
@@ -524,12 +577,18 @@ export interface BoxConstraint {
  */
 export function deriveBoxConstraints(bindings: BoxModelBinding[]): BoxConstraint[] {
   const byRole = new Map(bindings.map((b) => [b.role, b.row]));
+  // A primitive-default floor/cap ("0"/"none") constrains nothing — with the
+  // material surface every component carries those rows, so only authored or
+  // profile-sourced bounds are worth captioning. Rows without a source tag
+  // (bare sidecar derivations) keep the legacy behavior: counted.
+  const meaningful = (row?: TokenRowDescriptor): TokenRowDescriptor | undefined =>
+    row && row.source !== "primitive-default" ? row : undefined;
   const out: BoxConstraint[] = [];
   for (const axis of Object.keys(AXIS_SPEC) as BoxAxis[]) {
     const spec = AXIS_SPEC[axis];
     const paddingRoles = spec.padding.filter((r) => byRole.has(r));
-    const floor = byRole.get(spec.floor);
-    const cap = byRole.get(spec.cap);
+    const floor = meaningful(byRole.get(spec.floor));
+    const cap = meaningful(byRole.get(spec.cap));
     if (paddingRoles.length === 0) continue;
     if (!floor && !cap) continue;
     out.push({ axis, label: spec.label, paddingRoles, floor, cap });

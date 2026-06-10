@@ -6,7 +6,7 @@ import type {
 } from "../../types/data";
 import { renderUsageTree } from "../../lib/render-usage";
 import {
-  deriveControls,
+  materialTokenRows,
   tokenOverridesToStyle,
 } from "../../components/properties-panel/control-derivation";
 
@@ -96,10 +96,7 @@ export function UsageExamples({
   // the semantic leaf, not the slot var — see tokenOverridesToCss).
   const tokenStyle =
     tokenOverrides && Object.keys(tokenOverrides).length > 0
-      ? tokenOverridesToStyle(
-          tokenOverrides,
-          deriveControls(component.contract).tokens,
-        )
+      ? tokenOverridesToStyle(tokenOverrides, materialTokenRows(component))
       : undefined;
 
   return (

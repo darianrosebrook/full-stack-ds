@@ -119,6 +119,13 @@ export interface ComponentContract {
    */
   category?: string;
   /**
+   * Geometry morphology axis (MORPHOLOGY-GEOMETRY-PROFILE-01). Selects a
+   * codegen StyleProfile whose boxModelDefaults layer between the box-model
+   * primitive and the authored sidecar. Read by the data plugin to build
+   * `ComponentBundle.boxModelSurface`.
+   */
+  morphology?: string;
+  /**
    * Agent-facing authoring metadata. Present in all corpus contracts. The
    * A2UI Descriptor section feeds this (plus props/channels/events/form) to
    * `deriveA2UIDescriptor`. Declared optional + untyped-deep so it stays
@@ -180,6 +187,27 @@ export interface UsageLine {
   tree: UsageTreeNode;
 }
 
+/**
+ * One slot of a component's normalized box-model material surface — the same
+ * primitive < morphology-profile < authored-sidecar merge codegen realizes
+ * into `<Name>.tokens.css`, projected for the showcase with provenance. The
+ * editor inspects THIS, never raw sidecar presence: a component without
+ * authored `box-model.*` keys still has a full surface, it is just inherited.
+ */
+export interface BoxModelSurfaceSlot {
+  /** Slot name from the closed pool (e.g. `box-model.min-height`). */
+  slot: string;
+  /** Dotted token-graph path, when the winning layer binds a token. */
+  resolvesTo?: string;
+  /** `var()` fallback paired with `resolvesTo`. */
+  fallback?: string;
+  /** Intentional literal value (mutually exclusive with resolvesTo). */
+  literal?: string;
+  layer?: "core" | "semantic" | "brand" | "density";
+  /** Which merge layer supplied the winning value. */
+  source: "authored" | "morphology-profile" | "primitive-default";
+}
+
 export interface ComponentBundle {
   name: string;
   contract: ComponentContract;
@@ -191,6 +219,12 @@ export interface ComponentBundle {
    * treat that as "no examples to show" without erroring.
    */
   usage: UsageLine[];
+  /**
+   * Normalized box-model material surface (see BoxModelSurfaceSlot). Computed
+   * at bundle-build time by the data plugin using the codegen merge as the
+   * single authority. Always the full closed slot pool.
+   */
+  boxModelSurface: BoxModelSurfaceSlot[];
 }
 
 export interface PrimitiveBundle {
