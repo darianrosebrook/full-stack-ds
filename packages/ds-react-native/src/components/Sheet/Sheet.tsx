@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Pressable, Text as RNText, View } from "react-native";
+import { Modal, Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSheetStyles } from "./Sheet.styles";
@@ -46,54 +46,62 @@ export function Sheet({
   }, [controlledOpenness, onOpenChange]);
 
   return (
-    <View
-      testID={testID}
-      style={[styles.root, style]}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityLabelledBy={accessibilityLabelledBy}
+    <Modal
+      visible={Boolean(openness)}
+      transparent
+      animationType="slide"
+      onRequestClose={() => setOpennessValue(false)}
     >
-      {openness ? (
       <View
-        style={styles.overlay}
-        accessible={false}
-      />
-      ) : null}
-      {openness ? (
-      <View
-        style={styles.content}
-        accessibilityLabelledBy={"sheet-title-id"}
+        testID={testID}
+        style={[styles.root, style]}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityLabelledBy={accessibilityLabelledBy}
       >
+        {openness ? (
+        <Pressable
+          style={styles.overlay}
+          onPress={() => setOpennessValue(false)}
+          accessible={false}
+        />
+        ) : null}
+        {openness ? (
         <View
-          style={styles.header}
+          style={styles.content}
+          accessibilityLabelledBy={"sheet-title-id"}
         >
           <View
-            style={styles.title}
+            style={styles.header}
+          >
+            <View
+              style={styles.title}
+            >
+              {typeof children === "string" ? <RNText>{children}</RNText> : children}
+            </View>
+            <RNText
+              style={styles.description}
+              accessibilityRole="text"
+            >
+              {children}
+            </RNText>
+            <Pressable
+              style={styles.close}
+              onPress={() => setOpennessValue(!openness)}
+              accessibilityRole="button"
+            />
+          </View>
+          <View
+            style={styles.body}
           >
             {typeof children === "string" ? <RNText>{children}</RNText> : children}
           </View>
-          <RNText
-            style={styles.description}
-            accessibilityRole="text"
-          >
-            {children}
-          </RNText>
-          <Pressable
-            style={styles.close}
-            onPress={() => setOpennessValue(!openness)}
-            accessibilityRole="button"
+          <View
+            style={styles.footer}
           />
         </View>
-        <View
-          style={styles.body}
-        >
-          {typeof children === "string" ? <RNText>{children}</RNText> : children}
-        </View>
-        <View
-          style={styles.footer}
-        />
+        ) : null}
       </View>
-      ) : null}
-    </View>
+    </Modal>
   );
 }
 // @generated:end

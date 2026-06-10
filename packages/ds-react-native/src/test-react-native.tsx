@@ -16,6 +16,7 @@ export const Pressable = host("Pressable");
 export const TextInput = host("TextInput");
 export const Image = host("Image");
 export const Switch = host("Switch");
+export const Modal = host("Modal");
 export const GestureResponderEvent = undefined;
 
 export const StyleSheet = {

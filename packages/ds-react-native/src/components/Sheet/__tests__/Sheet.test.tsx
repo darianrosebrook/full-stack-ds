@@ -1,15 +1,41 @@
 // @generated:start imports
-import { describe, it } from "vitest";
-import type { ComponentProps } from "react";
+import { describe, expect, it } from "vitest";
+import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";
+import { Modal } from "react-native";
 import { Sheet } from "../Sheet";
 // @generated:end
 
 // @generated:start tests
-describe("Sheet React Native type surface", () => {
-  it("accepts generated props", () => {
-    type SheetSmokeProps = ComponentProps<typeof Sheet>;
-    const smokeProps = {} as SheetSmokeProps;
-    void smokeProps;
+describe("Sheet React Native", () => {
+  it("renders a native modal bound to the open channel", () => {
+    const seen: boolean[] = [];
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Sheet open onOpenChange={(next: boolean) => seen.push(next)} testID="subject">Body</Sheet>);
+  });
+    const modal = renderer!.root.findByType(Modal);
+    expect(modal.props.visible).toBe(true);
+    expect(modal.props.transparent).toBe(true);
+    act(() => { modal.props.onRequestClose(); });
+    expect(seen).toEqual([false]);
+  });
+  it("hides the modal when closed", () => {
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Sheet open={false} testID="subject">Body</Sheet>);
+  });
+    const modal = renderer!.root.findByType(Modal);
+    expect(modal.props.visible).toBe(false);
+  });
+  it("dismisses on overlay press", () => {
+    const seen: boolean[] = [];
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Sheet open onOpenChange={(next: boolean) => seen.push(next)} testID="subject">Body</Sheet>);
+  });
+    const overlay = renderer!.root.findAll((node) => node.props.accessible === false && typeof node.props.onPress === "function").at(-1)!;
+    act(() => { overlay.props.onPress(); });
+    expect(seen).toEqual([false]);
   });
 });
 // @generated:end

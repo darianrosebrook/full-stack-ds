@@ -6,6 +6,7 @@ import {
   type JoinedStyleEntry,
   type VariantStyleFact,
 } from "./component-source.js";
+import { rnSurfaceLowering, type RnSurfaceLowering } from "./surface-emit.js";
 
 export function generateReactNativeTest(ir: ComponentIR): string {
   const runtimeTest = runtimeTestBody(ir);
@@ -31,6 +32,8 @@ export function generateReactNativeTest(ir: ComponentIR): string {
 }
 
 function runtimeTestBody(ir: ComponentIR): string | null {
+  const surface = rnSurfaceLowering(ir);
+  if (surface?.openChannel) return surfaceTest(ir, surface);
   if (isNativeToggle(ir)) return nativeToggleTest(ir);
   if (isTextInput(ir)) return textInputTest(ir);
   if (isCheckbox(ir)) return checkboxTest(ir);
@@ -335,6 +338,84 @@ function expandableTest(ir: ComponentIR): string {
     `});`,
     ...renderFooter(),
   ].join("\n");
+}
+
+/**
+ * Presence-surface tests, derived from the lowering facts:
+ *   modal mode    → Modal visibility binding, onRequestClose (escape),
+ *                   overlay press (outside-click) each fire the change
+ *                   callback with false.
+ *   non-blocking  → no Modal in the tree; content toggles with the channel.
+ */
+function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
+  const channel = lowering.openChannel!;
+  const openProp = channel.valueProp;
+  const handler = channel.changeHandlerProp;
+  const lines: string[] = [
+    "// @generated:start imports",
+    `import { describe, expect, it } from "vitest";`,
+    `import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";`,
+    `import { Modal } from "react-native";`,
+    `import { ${ir.name} } from "../${ir.name}";`,
+    "// @generated:end",
+    "",
+    "// @generated:start tests",
+    `describe("${ir.name} React Native", () => {`,
+  ];
+  if (lowering.mode === "modal") {
+    lines.push(
+      `${INDENT}it("renders a native modal bound to the open channel", () => {`,
+      `${INDENT}${INDENT}const seen: boolean[] = [];`,
+      ...rendererHelper(
+        `<${ir.name} ${openProp} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`,
+      ),
+      `${INDENT}${INDENT}const modal = renderer!.root.findByType(Modal);`,
+      `${INDENT}${INDENT}expect(modal.props.visible).toBe(true);`,
+      `${INDENT}${INDENT}expect(modal.props.transparent).toBe(true);`,
+    );
+    if (lowering.escapeDeclared) {
+      lines.push(
+        `${INDENT}${INDENT}act(() => { modal.props.onRequestClose(); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([false]);`,
+      );
+    }
+    lines.push(`${INDENT}});`);
+    lines.push(
+      `${INDENT}it("hides the modal when closed", () => {`,
+      ...rendererHelper(`<${ir.name} ${openProp}={false} testID="subject">Body</${ir.name}>`),
+      `${INDENT}${INDENT}const modal = renderer!.root.findByType(Modal);`,
+      `${INDENT}${INDENT}expect(modal.props.visible).toBe(false);`,
+      `${INDENT}});`,
+    );
+    if (lowering.outsideDeclared) {
+      lines.push(
+        `${INDENT}it("dismisses on overlay press", () => {`,
+        `${INDENT}${INDENT}const seen: boolean[] = [];`,
+        ...rendererHelper(
+          `<${ir.name} ${openProp} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`,
+        ),
+        `${INDENT}${INDENT}const overlay = renderer!.root.findAll((node) => node.props.accessible === false && typeof node.props.onPress === "function").at(-1)!;`,
+        `${INDENT}${INDENT}act(() => { overlay.props.onPress(); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([false]);`,
+        `${INDENT}});`,
+      );
+    }
+  } else {
+    lines.push(
+      `${INDENT}it("renders a non-blocking live region without a modal host", () => {`,
+      ...rendererHelper(`<${ir.name} ${openProp} testID="subject">Body</${ir.name}>`),
+      `${INDENT}${INDENT}expect(renderer!.root.findAllByType(Modal)).toHaveLength(0);`,
+      `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.accessibilityLiveRegion !== undefined).length).toBeGreaterThan(0);`,
+      `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body").length).toBeGreaterThan(0);`,
+      `${INDENT}});`,
+      `${INDENT}it("hides content when the open channel is false", () => {`,
+      ...rendererHelper(`<${ir.name} ${openProp}={false} testID="subject">Body</${ir.name}>`),
+      `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body")).toHaveLength(0);`,
+      `${INDENT}});`,
+    );
+  }
+  lines.push(`});`, ...renderFooter());
+  return lines.join("\n");
 }
 
 function isNativeToggle(ir: ComponentIR): boolean {

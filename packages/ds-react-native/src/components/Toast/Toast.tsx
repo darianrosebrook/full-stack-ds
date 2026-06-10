@@ -52,6 +52,7 @@ export function Toast({
     <View
       testID={testID}
       style={[styles.viewport, style]}
+      accessibilityLiveRegion="polite"
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
