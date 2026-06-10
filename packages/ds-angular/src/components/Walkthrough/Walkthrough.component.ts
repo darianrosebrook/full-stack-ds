@@ -76,10 +76,6 @@ export class WalkthroughComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleStepChange(event: Event): void {
-    this.behavior.setStep(Number((event.target as HTMLInputElement).value));
-  }
 }
 
 @Component({

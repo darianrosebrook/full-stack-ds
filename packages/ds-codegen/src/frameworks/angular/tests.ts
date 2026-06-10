@@ -1,4 +1,4 @@
-import type { ComponentIR } from "../../ir.js";
+import type { ComponentIR, DomNodeIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
 
@@ -44,6 +44,33 @@ export function generateAngularTest(ir: ComponentIR): string {
     lines.push(`    const fixture = TestBed.createComponent(${className});`);
     lines.push(`    expect(classTokens(fixture.componentInstance)).toContain("${plan.cssPrefix}");`);
     lines.push(`  });`);
+
+    // FIX-CHANNEL-EVENT-LOWERING-001: a boolean channel click on a
+    // non-form host must toggle through the change callback. Only emitted
+    // for unguarded hosts (rendered by default) so the click is reachable.
+    const channelClick = findUnguardedBooleanChannelClick(ir);
+    if (channelClick) {
+      const selector =
+        channelClick.node === ir.dom
+          ? `.${plan.cssPrefix}`
+          : `.${plan.cssPrefix}__${channelClick.node.part}`;
+      lines.push(``);
+      lines.push(
+        `  it("toggles the ${channelClick.channel.name} channel from the ${channelClick.node.part ?? "root"} click", () => {`,
+      );
+      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(`    const seen: boolean[] = [];`);
+      lines.push(
+        `    fixture.componentInstance.${channelClick.channel.changeHandlerProp} = (v: boolean) => seen.push(v);`,
+      );
+      lines.push(`    fixture.detectChanges();`);
+      lines.push(
+        `    const host = fixture.nativeElement.querySelector("${selector}") as HTMLElement;`,
+      );
+      lines.push(`    host.click();`);
+      lines.push(`    expect(seen).toEqual([true]);`);
+      lines.push(`  });`);
+    }
 
     for (const variant of plan.variants) {
       lines.push(``);
@@ -157,4 +184,37 @@ export function generateAngularTest(ir: ComponentIR): string {
     { kind: "between", body: "" },
   ];
   return renderSections(sections, "line");
+}
+
+
+/**
+ * First dom node with a boolean-channel click event on a non-form host
+ * and no if-guard on itself or any ancestor (so a generated test can
+ * click it without arranging state first).
+ */
+function findUnguardedBooleanChannelClick(
+  ir: ComponentIR,
+): { node: DomNodeIR; channel: NormalizedChannelIR } | null {
+  const FORM_HOSTS = new Set(["input", "textarea", "select"]);
+  const channelByName = new Map(
+    ir.behavior.normalizedChannels.map((c) => [c.name, c]),
+  );
+  const visit = (
+    node: DomNodeIR | undefined,
+  ): { node: DomNodeIR; channel: NormalizedChannelIR } | null => {
+    if (!node || node.ifProp) return null;
+    const click = node.events["click"];
+    if (click && click.kind === "channel" && !FORM_HOSTS.has(node.tag)) {
+      const channel = channelByName.get(click.channel);
+      if (channel?.valueType === "boolean" && channel.callbackKind !== "event") {
+        return { node, channel };
+      }
+    }
+    for (const child of node.children) {
+      const found = visit(child);
+      if (found) return found;
+    }
+    return null;
+  };
+  return visit(ir.dom);
 }

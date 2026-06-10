@@ -111,10 +111,6 @@ export class ToggleSwitchElement extends LitElement {
     onChange: (v) => this.onChange?.(v),
   });
 
-  private handleCheckedChange(event: Event): void {
-    this.behavior.setChecked((event.target as HTMLInputElement).checked);
-  }
-
   private computeClasses(): string {
     return [
       "toggle-switch",
@@ -125,7 +121,7 @@ export class ToggleSwitchElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" type="button" role="switch" @click=${(e: Event) => this.handleCheckedChange(e)} aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-describedby=${ifDefined(this.ariaDescribedby)} ?disabled=${this.disabled ?? false}></button>`;
+    return html`<button class="${this.computeClasses()}" type="button" role="switch" @click=${() => this.behavior.setChecked(!this.behavior.checked)} aria-checked=${this.behavior.checked ? 'true' : 'false'} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-describedby=${ifDefined(this.ariaDescribedby)} ?disabled=${this.disabled ?? false}></button>`;
   }
 }
 

@@ -96,10 +96,6 @@ export class ShowMoreElement extends LitElement {
     onExpandedChange: (v) => this.onExpandedChange?.(v),
   });
 
-  private handleExpandedChange(event: Event): void {
-    this.behavior.setExpanded((event.target as HTMLInputElement).checked);
-  }
-
   private computeClasses(): string {
     return [
       "show-more",
@@ -112,7 +108,7 @@ export class ShowMoreElement extends LitElement {
   <div class=${'show-more__content'} style=${styleMap({ '--fsds-show-more-content-max-lines': this.maxLines === undefined ? undefined : String(this.maxLines) })}>
     <slot></slot>
   </div>
-  <button class=${'show-more__trigger'} type="button" @click=${(e: Event) => this.handleExpandedChange(e)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${this.showMoreLabel}</button>
+  <button class=${'show-more__trigger'} type="button" @click=${() => this.behavior.setExpanded(!this.behavior.expanded)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${this.showMoreLabel}</button>
 </div>`;
   }
 }

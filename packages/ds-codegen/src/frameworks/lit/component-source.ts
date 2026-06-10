@@ -1578,7 +1578,7 @@ function renderLitDomNode(
   // callback props. ifDefined() would wrap the listener-producing
   // function itself, breaking listener installation.
   for (const [eventName, expr] of Object.entries(node.events)) {
-    const rendered = renderLitEvent(eventName, expr, ctx);
+    const rendered = renderLitEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1590,7 +1590,7 @@ function renderLitDomNode(
       const evt = key.slice(2).toLowerCase();
       if (node.events[evt]) continue;
     }
-    const rendered = renderLitBinding(key, expr, ctx);
+    const rendered = renderLitBinding(key, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1798,10 +1798,35 @@ function litDomAttrName(name: string): string {
   return name;
 }
 
+const LIT_FORM_HOSTS = new Set(["input", "textarea", "select"]);
+
+/**
+ * Host-aware channel event lowering (FIX-CHANNEL-EVENT-LOWERING-001):
+ * reading element state (.checked/.value) is only valid on form hosts.
+ * A channel click on a button/div host toggles the boolean channel,
+ * matching react/vue/svelte/react-native.
+ */
+function litChannelEventBinding(
+  eventName: string,
+  ch: NormalizedChannelIR,
+  tag: string | undefined,
+): string {
+  if (ch.callbackKind === "event") {
+    return `@${eventName}=\${(e: Event) => this.${ch.changeHandlerProp}?.(e)}`;
+  }
+  if (!LIT_FORM_HOSTS.has(tag ?? "") && ch.valueType === "boolean") {
+    const setter = `set${capitalizeLit(ch.name)}`;
+    return `@${eventName}=\${() => this.behavior.${setter}(!this.behavior.${ch.name})}`;
+  }
+  const handlerName = `handle${capitalizeLit(ch.name)}Change`;
+  return `@${eventName}=\${(e: Event) => this.${handlerName}(e)}`;
+}
+
 function renderLitBinding(
   rawAttr: string,
   expr: BindingExpression,
   ctx: LitRenderContext,
+  tag?: string,
 ): string | null {
   const attr = litDomAttrName(rawAttr);
   switch (expr.kind) {
@@ -1943,11 +1968,7 @@ function renderLitBinding(
       // Event-shaped channels pass the raw event to the consumer's
       // change handler property; consumer drives state externally.
       const eventName = mapJsxEventToLit(attr);
-      if (ch.callbackKind === "event") {
-        return `@${eventName}=\${(e: Event) => this.${ch.changeHandlerProp}?.(e)}`;
-      }
-      const handlerName = `handle${capitalizeLit(ch.name)}Change`;
-      return `@${eventName}=\${(e: Event) => this.${handlerName}(e)}`;
+      return litChannelEventBinding(eventName, ch, tag);
     }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. Predicate result is
@@ -2074,6 +2095,7 @@ function renderLitEvent(
   eventName: string,
   expr: BindingExpression,
   ctx: LitRenderContext,
+  tag?: string,
 ): string | null {
   switch (expr.kind) {
     case "prop":
@@ -2092,11 +2114,7 @@ function renderLitEvent(
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (ch.callbackKind === "event") {
-        return `@${eventName}=\${(e: Event) => this.${ch.changeHandlerProp}?.(e)}`;
-      }
-      const handlerName = `handle${capitalizeLit(ch.name)}Change`;
-      return `@${eventName}=\${(e: Event) => this.${handlerName}(e)}`;
+      return litChannelEventBinding(eventName, ch, tag);
     }
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at

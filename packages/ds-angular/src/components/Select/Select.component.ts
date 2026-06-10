@@ -90,10 +90,6 @@ export class SelectComponent {
     ].filter(Boolean).join(" "),
   );
 
-  protected handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
-
   // BindingExpressionV2 predicate:memberOf helper. Adapts to the runtime
   // shape of `selection`: scalar equality when not an array, set
   // membership otherwise. Used for channels typed `T | T[]`.

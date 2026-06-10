@@ -26,7 +26,7 @@ import { useShowMore } from "./useShowMore.js";
   <div [ngClass]="'show-more__content'" [style.--fsds-show-more-content-max-lines]="maxLines">
     <ng-content />
   </div>
-  <button [ngClass]="'show-more__trigger'" type="button" (click)="handleExpandedChange($event)" [attr.aria-expanded]="behavior.expanded()">
+  <button [ngClass]="'show-more__trigger'" type="button" (click)="behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
     {{ showMoreLabel }}
   </button>
 </div>`,
@@ -56,10 +56,6 @@ export class ShowMoreComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleExpandedChange(event: Event): void {
-    this.behavior.setExpanded((event.target as HTMLInputElement).checked);
-  }
 }
 
 @Component({

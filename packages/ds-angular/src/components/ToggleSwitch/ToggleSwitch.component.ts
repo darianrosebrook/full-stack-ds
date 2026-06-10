@@ -21,7 +21,7 @@ export type ToggleSwitchSize = "small" | "medium" | "large";
   selector: "fsds-toggle-switch",
   standalone: true,
   imports: [NgClass],
-  template: `<button [ngClass]="classes()" type="button" (click)="handleCheckedChange($event)" [attr.aria-checked]="behavior.checked()" [attr.aria-label]="ariaLabel" [attr.aria-describedby]="ariaDescribedby" [disabled]="disabled"></button>`,
+  template: `<button [ngClass]="classes()" type="button" (click)="behavior.setChecked(!behavior.checked())" [attr.aria-checked]="behavior.checked()" [attr.aria-label]="ariaLabel" [attr.aria-describedby]="ariaDescribedby" [disabled]="disabled"></button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToggleSwitchComponent {
@@ -51,10 +51,6 @@ export class ToggleSwitchComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleCheckedChange(event: Event): void {
-    this.behavior.setChecked((event.target as HTMLInputElement).checked);
-  }
 }
 // @generated:end
 
