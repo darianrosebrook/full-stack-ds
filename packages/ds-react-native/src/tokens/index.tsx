@@ -90,5 +90,7 @@ function normalizeNativeToken(
   if (typeof value !== "string") return value;
   const px = /^(-?\d+(?:\.\d+)?)px$/.exec(value.trim());
   if (px) return Number(px[1]);
+  const ms = /^(-?\d+(?:\.\d+)?)ms$/.exec(value.trim());
+  if (ms) return Number(ms[1]);
   return value;
 }

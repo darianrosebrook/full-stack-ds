@@ -109,7 +109,7 @@ export const checkboxTokenScopes = {
       name: "checkbox.transition.duration",
       cssVar: "--fsds-checkbox-transition-duration",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "checkbox.focus.ring.width": {
       name: "checkbox.focus.ring.width",

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";
 import { Modal } from "react-native";
 import { Toast } from "../Toast";
@@ -22,6 +22,30 @@ describe("Toast React Native", () => {
     renderer = TestRenderer.create(<Toast open={false} testID="subject">Body</Toast>);
   });
     expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body")).toHaveLength(0);
+  });
+  it("auto-dismisses after the token presence budget elapses", () => {
+    vi.useFakeTimers();
+    const seen: boolean[] = [];
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Toast open onOpenChange={(next: boolean) => seen.push(next)} testID="subject">Body</Toast>);
+  });
+    act(() => { vi.advanceTimersByTime(5999); });
+    expect(seen).toEqual([]);
+    act(() => { vi.advanceTimersByTime(1); });
+    expect(seen).toEqual([false]);
+    vi.useRealTimers();
+  });
+  it("never auto-dismisses when duration is null", () => {
+    vi.useFakeTimers();
+    const seen: boolean[] = [];
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Toast open duration={null} onOpenChange={(next: boolean) => seen.push(next)} testID="subject">Body</Toast>);
+  });
+    act(() => { vi.advanceTimersByTime(600000); });
+    expect(seen).toEqual([]);
+    vi.useRealTimers();
   });
 });
 // @generated:end

@@ -116,7 +116,7 @@ export const linksTokenScopes = {
       name: "links.motion.duration.fast",
       cssVar: "--fsds-links-motion-duration-fast",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "links.focus.ring.width": {
       name: "links.focus.ring.width",

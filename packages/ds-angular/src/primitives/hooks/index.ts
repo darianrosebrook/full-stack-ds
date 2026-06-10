@@ -10,3 +10,5 @@ export type { ControllableStateOptions, ControllableStateResult } from './create
 export type { AnchorToggleOptions, AnchorToggleResult } from './createAnchorToggle.js';
 export type { FocusTrapOptions } from './createFocusTrap.js';
 export type { PortalOptions, PortalResult } from './createPortal.js';
+export { createAutoDismiss } from './createAutoDismiss.js';
+export type { AutoDismissOptions, AutoDismissResult } from './createAutoDismiss.js';

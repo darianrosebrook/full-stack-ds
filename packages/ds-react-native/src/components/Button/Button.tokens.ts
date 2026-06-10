@@ -164,7 +164,7 @@ export const buttonTokenScopes = {
       name: "button.motion.duration.fast",
       cssVar: "--fsds-button-motion-duration-fast",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "button.motion.easing.standard": {
       name: "button.motion.easing.standard",

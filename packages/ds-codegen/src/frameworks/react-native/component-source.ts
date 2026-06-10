@@ -8,6 +8,7 @@ import type {
 } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
 import { rnSurfaceLowering, type RnSurfaceLowering } from "./surface-emit.js";
+import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 
 export interface ReactNativeComponentFiles {
   componentFile: string;
@@ -96,6 +97,9 @@ function emitImports(ir: ComponentIR): string {
   if (usage.channelSetters.size > 0) {
     reactImports.add("useCallback");
   }
+  if (rnAutoDismiss(ir)) {
+    reactImports.add("useEffect");
+  }
   if (usage.channels.size > 0) {
     reactImports.add("useState");
   }
@@ -115,7 +119,7 @@ function emitImports(ir: ComponentIR): string {
       .join(", ")} } from "react";`,
     `import { useFsdsTheme } from "../../tokens";`,
     `import { create${ir.name}Styles } from "./${ir.name}.styles";`,
-    usesNativeToggle(ir)
+    usesNativeToggle(ir) || rnAutoDismiss(ir)
       ? `import { resolve${ir.name}Tokens } from "./${ir.name}.tokens";`
       : "",
     "// @generated:end",
@@ -299,6 +303,8 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     if (lowering?.openChannel) {
       usage.channels.add(lowering.openChannel.name);
       usage.channelSetters.add(lowering.openChannel.name);
+      const autoDismiss = rnAutoDismiss(ir);
+      if (autoDismiss) addPropIfPresent(ir, usage, autoDismiss.durationProp);
       if (lowering.escapeDeclared && lowering.escapeTrigger?.enabledByProp) {
         addPropIfPresent(ir, usage, lowering.escapeTrigger.enabledByProp);
       }
@@ -409,13 +415,29 @@ function emitComponent(ir: ComponentIR): string {
   lines.push(`}: ${ir.name}Props) {`);
   lines.push(`${INDENT}const fsdsTheme = useFsdsTheme();`);
   lines.push(`${INDENT}const styles = useMemo(() => create${ir.name}Styles(fsdsTheme), [fsdsTheme]);`);
-  if (usesNativeToggle(ir)) {
+  if (usesNativeToggle(ir) || rnAutoDismiss(ir)) {
     lines.push(`${INDENT}const tokens = useMemo(() => resolve${ir.name}Tokens(fsdsTheme), [fsdsTheme]);`);
   }
   for (const channel of ir.behavior.normalizedChannels.filter((candidate) =>
     usage.channels.has(candidate.name),
   )) {
     lines.push(...emitChannelState(ir, channel, usage.channelSetters.has(channel.name)));
+  }
+  const autoDismiss = rnAutoDismiss(ir);
+  if (autoDismiss) {
+    const setter = `set${capitalize(autoDismiss.channel.name)}Value`;
+    const tokenExpr = autoDismiss.tokenSlot
+      ? `(tokens.root?.[${JSON.stringify(autoDismiss.tokenSlot)}] as number | undefined)`
+      : String(autoDismiss.defaultMs ?? "undefined");
+    lines.push(
+      `${INDENT}const autoDismissDuration = ${autoDismiss.durationProp} === undefined ? ${tokenExpr} : ${autoDismiss.durationProp};`,
+      `${INDENT}useEffect(() => {`,
+      `${INDENT}${INDENT}if (!${autoDismiss.channel.name} || typeof autoDismissDuration !== "number" || autoDismissDuration <= 0) return;`,
+      `${INDENT}${INDENT}const timer = setTimeout(() => ${setter}(false), autoDismissDuration);`,
+      `${INDENT}${INDENT}return () => clearTimeout(timer);`,
+      `${INDENT}}, [${autoDismiss.channel.name}, autoDismissDuration, ${setter}]);`,
+      "",
+    );
   }
   if (usesNativeToggle(ir)) {
     lines.push(...emitNativeToggleReturn(ir));
@@ -469,6 +491,24 @@ function rnSurfaceModalLowering(ir: ComponentIR): RnSurfaceLowering | null {
   const lowering = rnSurfaceLowering(ir);
   if (!lowering || lowering.mode !== "modal" || !lowering.openChannel) return null;
   return lowering;
+}
+
+/**
+ * Auto-dismiss lowering: an open-channel surface with timeout dismissal and
+ * a timing.autoDismissProp. The budget reads the *.timing.auto-dismiss token
+ * scope (theme-reactive) with the duration prop as consumer override.
+ */
+export function rnAutoDismiss(ir: ComponentIR): {
+  durationProp: string;
+  tokenSlot: string | undefined;
+  defaultMs: number | undefined;
+  channel: NormalizedChannelIR;
+} | null {
+  const lowering = rnSurfaceLowering(ir);
+  if (!lowering?.openChannel) return null;
+  const policy = resolveSurfaceAutoDismiss(ir);
+  if (!policy) return null;
+  return { ...policy, channel: lowering.openChannel };
 }
 
 /** Anatomy part lowering to a dismissing Pressable overlay (outside-click). */
@@ -2097,6 +2137,8 @@ function nativeTokenLiteral(rawValue: string): string {
   if (px) return px[1]!;
   const rem = /^(-?\d+(?:\.\d+)?)rem$/.exec(rawValue.trim());
   if (rem) return String(Number(rem[1]) * 16);
+  const ms = /^(-?\d+(?:\.\d+)?)ms$/.exec(rawValue.trim());
+  if (ms) return ms[1]!;
   return JSON.stringify(rawValue);
 }
 

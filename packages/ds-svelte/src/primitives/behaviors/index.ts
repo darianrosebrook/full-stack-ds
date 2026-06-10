@@ -16,3 +16,8 @@ export type {
 } from './createAnchorToggle.svelte.js';
 export type { FocusTrapOptions } from './createFocusTrap.svelte.js';
 export type { PortalOptions, PortalResult } from './createPortal.svelte.js';
+export { createAutoDismiss } from './createAutoDismiss.svelte.js';
+export type {
+  AutoDismissOptions,
+  AutoDismissResult,
+} from './createAutoDismiss.svelte.js';

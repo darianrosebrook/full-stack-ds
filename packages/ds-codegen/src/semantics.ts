@@ -329,6 +329,55 @@ export interface SurfacePolicyInput {
  * when the kind is not in the anchored family — emitters should
  * gate on `isAnchoredPresenceKind` before calling.
  */
+/**
+ * Auto-dismiss policy for ephemeral surfaces (FEAT-SURFACE-DWELL-ANCHOR-001).
+ * Present when the surface declares timeout dismissal plus a
+ * timing.autoDismissProp. The design default flows from the component's
+ * `*.timing.auto-dismiss` token slot (root scope), parsed from its
+ * committed fallback (e.g. "6000ms" -> 6000) at generation time.
+ */
+export interface SurfaceAutoDismissPolicy {
+  /** Consumer-facing prop holding the override (ms; null/0 disables). */
+  durationProp: string;
+  /** Generation-resolved default budget in ms, when the token slot exists. */
+  defaultMs: number | undefined;
+  /** Root-scope token slot name (theme-reactive consumption, e.g. RN). */
+  tokenSlot: string | undefined;
+}
+
+/** Structural slice of ComponentIR — keeps semantics.ts free of ir.js imports. */
+export interface SurfaceAutoDismissInput {
+  surface:
+    | {
+        timing: { autoDismissProp: string | undefined } | undefined;
+        dismissal: ContractSurfaceDismissalMode[];
+      }
+    | undefined;
+  tokenScopes: Array<{
+    scope: string;
+    values: Array<{ name: string; rawValue?: string }>;
+  }>;
+}
+
+export function resolveSurfaceAutoDismiss(
+  ir: SurfaceAutoDismissInput,
+): SurfaceAutoDismissPolicy | null {
+  const surface = ir.surface;
+  if (!surface?.timing?.autoDismissProp) return null;
+  if (!surface.dismissal.includes("timeout")) return null;
+  const slot = ir.tokenScopes
+    .find((scope) => scope.scope === "root")
+    ?.values.find((value) => value.name.endsWith(".timing.auto-dismiss"));
+  const raw = slot?.rawValue?.trim();
+  const match = raw ? /^(\d+(?:\.\d+)?)ms$/.exec(raw) : null;
+  const defaultMs = match ? Number(match[1]) : undefined;
+  return {
+    durationProp: surface.timing.autoDismissProp,
+    defaultMs: Number.isFinite(defaultMs) ? defaultMs : undefined,
+    tokenSlot: slot?.name,
+  };
+}
+
 export function resolveAnchoredSurfacePolicy(
   surface: SurfacePolicyInput,
 ): AnchoredSurfacePolicy {

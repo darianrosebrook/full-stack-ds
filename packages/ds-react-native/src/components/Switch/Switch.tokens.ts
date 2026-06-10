@@ -86,7 +86,7 @@ export const switchTokenScopes = {
       name: "switch.motion.duration",
       cssVar: "--fsds-switch-motion-duration",
       ref: "semantic.motion.interaction.press.duration",
-      fallback: "100ms",
+      fallback: 100,
     },
     "switch.motion.easing": {
       name: "switch.motion.easing",

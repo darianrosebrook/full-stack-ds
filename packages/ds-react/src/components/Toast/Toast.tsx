@@ -2,6 +2,7 @@
 import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useToast } from "./useToast";
+import { useAutoDismiss } from "../../primitives/hooks";
 import "./Toast.css";
 // @generated:end
 
@@ -112,6 +113,12 @@ export function Toast({
     onOpenChange,
   });
 
+  const autoDismissPauseProps = useAutoDismiss({
+    open: Boolean(open),
+    durationMs: duration === undefined ? 6000 : duration,
+    onDismiss: () => setOpen(false),
+  }).getPauseProps();
+
   const classNames = [
     "toast",
     variant && `toast--${variant}`,
@@ -122,7 +129,7 @@ export function Toast({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} aria-live="polite" aria-label="Notifications" role="alert" data-testid={testId} {...rest}>
+  <div className={`${classNames}`} aria-live="polite" aria-label="Notifications" role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
     {open && (
       <div className="toast__item" role="status">
         <div className="toast__row">

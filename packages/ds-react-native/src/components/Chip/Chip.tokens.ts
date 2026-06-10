@@ -152,7 +152,7 @@ export const chipTokenScopes = {
       name: "chip.motion.duration.fast",
       cssVar: "--fsds-chip-motion-duration-fast",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "chip.focus.ring.width": {
       name: "chip.focus.ring.width",

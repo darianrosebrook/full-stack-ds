@@ -1,6 +1,7 @@
 import type { ComponentIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
 import {
+  rnAutoDismiss,
   stateStyleFacts,
   variantStyleFacts,
   type JoinedStyleEntry,
@@ -351,9 +352,11 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
   const channel = lowering.openChannel!;
   const openProp = channel.valueProp;
   const handler = channel.changeHandlerProp;
+  const usesTimers =
+    lowering.mode !== "modal" && rnAutoDismiss(ir)?.defaultMs !== undefined;
   const lines: string[] = [
     "// @generated:start imports",
-    `import { describe, expect, it } from "vitest";`,
+    `import { describe, expect, it${usesTimers ? ", vi" : ""} } from "vitest";`,
     `import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";`,
     `import { Modal } from "react-native";`,
     `import { ${ir.name} } from "../${ir.name}";`,
@@ -413,6 +416,33 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
       `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body")).toHaveLength(0);`,
       `${INDENT}});`,
     );
+    const autoDismiss = rnAutoDismiss(ir);
+    if (autoDismiss?.defaultMs !== undefined) {
+      lines.push(
+        `${INDENT}it("auto-dismisses after the token presence budget elapses", () => {`,
+        `${INDENT}${INDENT}vi.useFakeTimers();`,
+        `${INDENT}${INDENT}const seen: boolean[] = [];`,
+        ...rendererHelper(
+          `<${ir.name} ${openProp} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`,
+        ),
+        `${INDENT}${INDENT}act(() => { vi.advanceTimersByTime(${autoDismiss.defaultMs - 1}); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([]);`,
+        `${INDENT}${INDENT}act(() => { vi.advanceTimersByTime(1); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([false]);`,
+        `${INDENT}${INDENT}vi.useRealTimers();`,
+        `${INDENT}});`,
+        `${INDENT}it("never auto-dismisses when ${autoDismiss.durationProp} is null", () => {`,
+        `${INDENT}${INDENT}vi.useFakeTimers();`,
+        `${INDENT}${INDENT}const seen: boolean[] = [];`,
+        ...rendererHelper(
+          `<${ir.name} ${openProp} ${autoDismiss.durationProp}={null} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`,
+        ),
+        `${INDENT}${INDENT}act(() => { vi.advanceTimersByTime(600000); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([]);`,
+        `${INDENT}${INDENT}vi.useRealTimers();`,
+        `${INDENT}});`,
+      );
+    }
   }
   lines.push(`});`, ...renderFooter());
   return lines.join("\n");

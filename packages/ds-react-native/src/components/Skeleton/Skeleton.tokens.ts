@@ -109,7 +109,7 @@ export const skeletonTokenScopes = {
       name: "skeleton.anim.duration",
       cssVar: "--fsds-skeleton-anim-duration",
       ref: "core.motion.duration.long",
-      fallback: "400ms",
+      fallback: 400,
     },
     "skeleton.anim.easing": {
       name: "skeleton.anim.easing",
