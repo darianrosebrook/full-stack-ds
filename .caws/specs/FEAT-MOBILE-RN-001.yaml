@@ -2,10 +2,11 @@ id: FEAT-MOBILE-RN-001
 title: 'React Native emitter completion + default governed-rail graduation'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: rn-rail
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge rn-rail at ac0673757ca90b1d69ea0292d1782ad20bb7e270'
 created_at: '2026-06-10T02:07:14.228Z'
-updated_at: '2026-06-10T02:07:24.157Z'
+updated_at: '2026-06-10T03:22:42.615Z'
 blast_radius:
   modules:
     - ds-codegen react-native emitter
