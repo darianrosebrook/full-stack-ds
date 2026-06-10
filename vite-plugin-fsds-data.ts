@@ -13,6 +13,7 @@ import type {
   SourceFile,
   UsageLine,
 } from "./src/types/data";
+import { buildBoxModelSurface } from "./material-surface";
 
 /**
  * Parse a `<Name>.usage.jsonl` file. One example per line; blank lines are
@@ -390,12 +391,21 @@ export async function buildBundle(rootDir: string) {
     const usageText = await safeRead(usagePath);
     const usage = usageText ? parseUsageJsonl(usageText) : [];
 
+    // Normalized box-model material surface: the codegen merge (primitive <
+    // morphology profile < authored sidecar) with provenance per slot. The
+    // editor reads this, never raw sidecar presence.
+    const boxModelSurface = buildBoxModelSurface(
+      contract.tokens,
+      contract.morphology,
+    );
+
     components.push({
       name,
       contract,
       contractPath: path.relative(rootDir, full),
       sources,
       usage,
+      boxModelSurface,
     });
   }
 
