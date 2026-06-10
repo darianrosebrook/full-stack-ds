@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -29,6 +29,7 @@ export interface AlertNoticeProps {
 
 // @generated:start component
 export function AlertNotice({
+  status,
   dismissible,
   onDismiss,
   dismissLabel = "Dismiss",
@@ -41,10 +42,12 @@ export function AlertNotice({
 }: AlertNoticeProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createAlertNoticeStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForStatus = status !== undefined ? ({ "info": styles.root_variant_info, "success": styles.root_variant_success, "warning": styles.root_variant_warning, "error": styles.root_variant_error } as Record<string, ViewStyle | undefined>)[status] : undefined;
+  const textVariantStyleForStatus = status !== undefined ? ({ "info": styles.rootText_variant_info, "success": styles.rootText_variant_success, "warning": styles.rootText_variant_warning, "error": styles.rootText_variant_error } as Record<string, TextStyle | undefined>)[status] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForStatus, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="alert"
@@ -57,7 +60,7 @@ export function AlertNotice({
         <RNText>{icon}</RNText>
       </View>
       ) : null}
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForStatus]}>{children}</RNText> : children}
       {dismissible ? (
       <Pressable
         style={styles.dismiss}

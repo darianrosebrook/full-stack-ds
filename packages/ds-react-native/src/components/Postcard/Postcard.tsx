@@ -19,6 +19,7 @@ export interface PostcardProps {
   timestamp: string;
   stats: PostcardStats;
   embed?: PostcardEmbed;
+  type?: "image" | "video" | "audio";
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;

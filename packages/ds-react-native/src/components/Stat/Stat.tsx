@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -25,6 +25,8 @@ export interface StatProps {
 
 // @generated:start component
 export function Stat({
+  size = "md",
+  trend,
   children,
   style,
   testID,
@@ -33,6 +35,8 @@ export function Stat({
 }: StatProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createStatStyles(fsdsTheme), [fsdsTheme]);
+  const textVariantStyleForSize = size !== undefined ? ({ "sm": styles.rootText_variant_sm, "lg": styles.rootText_variant_lg } as Record<string, TextStyle | undefined>)[size] : undefined;
+  const textVariantStyleForTrend = trend !== undefined ? ({ "up": styles.rootText_variant_up, "down": styles.rootText_variant_down, "neutral": styles.rootText_variant_neutral } as Record<string, TextStyle | undefined>)[trend] : undefined;
   return (
     <View
       testID={testID}
@@ -40,7 +44,7 @@ export function Stat({
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForSize, textVariantStyleForTrend]}>{children}</RNText> : children}
     </View>
   );
 }

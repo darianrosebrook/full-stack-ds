@@ -9,6 +9,10 @@ export function createSpinnerStyles(theme?: FsdsTheme) {
   const tokens = resolveSpinnerTokens(theme);
   return StyleSheet.create({
     root: { paddingTop: (tokens.root?.["box-model.padding-block-start"] as number | undefined), paddingBottom: (tokens.root?.["box-model.padding-block-end"] as number | undefined), minHeight: (tokens.root?.["box-model.min-height"] as number | undefined), paddingLeft: (tokens.root?.["box-model.padding-inline-start"] as number | undefined), paddingRight: (tokens.root?.["box-model.padding-inline-end"] as number | undefined), gap: (tokens.root?.["box-model.gap"] as number | undefined), minWidth: (tokens.root?.["box-model.min-width"] as number | undefined) },
+    rootText_variant_lg: { fontSize: (tokens.root?.["spinner.size.lg"] as number | undefined) },
+    rootText_variant_md: { fontSize: (tokens.root?.["spinner.size.md"] as number | undefined) },
+    rootText_variant_sm: { fontSize: (tokens.root?.["spinner.size.sm"] as number | undefined) },
+    rootText_variant_xs: { fontSize: (tokens.root?.["spinner.size.xs"] as number | undefined) },
     visual: {},
   });
 }

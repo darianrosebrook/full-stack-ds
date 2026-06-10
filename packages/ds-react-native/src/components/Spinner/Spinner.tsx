@@ -29,6 +29,7 @@ export interface SpinnerProps {
 
 // @generated:start component
 export function Spinner({
+  size,
   style,
   testID,
   accessibilityLabel,

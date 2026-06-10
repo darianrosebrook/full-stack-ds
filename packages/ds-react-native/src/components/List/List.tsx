@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -31,6 +31,8 @@ export interface ListProps {
 
 // @generated:start component
 export function List({
+  variant = "default",
+  size,
   children,
   style,
   testID,
@@ -39,14 +41,16 @@ export function List({
 }: ListProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createListStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForVariant = variant !== undefined ? ({ "inline": styles.root_variant_variant_inline } as Record<string, ViewStyle | undefined>)[variant] : undefined;
+  const textVariantStyleForSize = size !== undefined ? ({ "sm": styles.rootText_variant_size_sm, "md": styles.rootText_variant_size_md, "lg": styles.rootText_variant_size_lg } as Record<string, TextStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForVariant, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForSize]}>{children}</RNText> : children}
     </View>
   );
 }

@@ -46,7 +46,7 @@ export function Links({
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="link"
     >
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={styles.rootText}>{children}</RNText> : children}
     </Pressable>
   );
 }

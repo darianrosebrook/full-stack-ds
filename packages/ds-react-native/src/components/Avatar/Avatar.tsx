@@ -15,6 +15,7 @@ export interface AvatarProps {
   src?: string;
   name: string;
   priority?: boolean;
+  size?: "small" | "medium" | "large" | "extra-large";
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -27,6 +28,7 @@ export interface AvatarProps {
 export function Avatar({
   src,
   name,
+  size,
   style,
   testID,
   accessibilityLabel,
@@ -34,10 +36,11 @@ export function Avatar({
 }: AvatarProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createAvatarStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForSize = size !== undefined ? ({ "small": styles.root_variant_small, "medium": styles.root_variant_medium, "large": styles.root_variant_large, "extra-large": styles.root_variant_extra_large } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForSize, style]}
       accessibilityLabel={accessibilityLabel ?? name}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

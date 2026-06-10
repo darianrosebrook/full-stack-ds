@@ -34,6 +34,7 @@ export interface TextProps {
 
 // @generated:start component
 export function Text({
+  variant,
   children,
   style,
   testID,
@@ -42,10 +43,11 @@ export function Text({
 }: TextProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createTextStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForVariant = variant !== undefined ? ({ "title": styles.root_variant_title, "body": styles.root_variant_body } as Record<string, TextStyle | undefined>)[variant] : undefined;
   return (
     <RNText
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForVariant, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="text"

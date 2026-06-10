@@ -1,5 +1,10 @@
 import type { ComponentIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
+import {
+  variantStyleFacts,
+  type JoinedStyleEntry,
+  type VariantStyleFact,
+} from "./component-source.js";
 
 export function generateReactNativeTest(ir: ComponentIR): string {
   const runtimeTest = runtimeTestBody(ir);
@@ -130,8 +135,17 @@ function fieldLayoutTest(ir: ComponentIR): string {
 }
 
 function buttonTest(ir: ComponentIR): string {
+  const proof = variantBackgroundProof(ir);
+  const imports = renderImports(ir);
+  if (proof) {
+    imports.splice(
+      imports.indexOf("// @generated:end"),
+      0,
+      `import { FsdsThemeProvider } from "../../../tokens";`,
+    );
+  }
   return [
-    ...renderImports(ir),
+    ...imports,
     `describe("${ir.name} React Native", () => {`,
     `${INDENT}it("renders button semantics and press passthrough", () => {`,
     ...rendererHelper(`<${ir.name} onPress={() => undefined} testID="subject">Save</${ir.name}>`),
@@ -140,9 +154,87 @@ function buttonTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}expect(subject.props.onPress).toEqual(expect.any(Function));`,
     `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Save").length).toBeGreaterThan(0);`,
     `${INDENT}});`,
+    ...(proof ? variantBackgroundTestBody(ir, proof) : []),
     `});`,
     ...renderFooter(),
   ].join("\n");
+}
+
+interface VariantProof {
+  axisSafeName: string;
+  a: { value: string; expected: string };
+  b: { value: string; expected: string };
+  themeTokens: Record<string, string>;
+}
+
+/**
+ * Pick two values of one variant axis whose backgroundColor realizations have
+ * distinct sources (different refs, or ref vs literal), and derive the theme
+ * + expected colors that prove both lower through the token scopes.
+ */
+function variantBackgroundProof(ir: ComponentIR): VariantProof | null {
+  const withBackground = variantStyleFacts(ir).filter((fact) =>
+    fact.viewEntries.some((entry) => entry.rnProp === "backgroundColor"),
+  );
+  const byAxis = new Map<string, VariantStyleFact[]>();
+  for (const fact of withBackground) {
+    byAxis.set(fact.axis, [...(byAxis.get(fact.axis) ?? []), fact]);
+  }
+  const background = (fact: VariantStyleFact): JoinedStyleEntry =>
+    fact.viewEntries.find((entry) => entry.rnProp === "backgroundColor")!;
+  const sourceKey = (entry: JoinedStyleEntry): string =>
+    entry.resolvesTo ?? `literal:${entry.rawValue ?? ""}`;
+  const PALETTE = ["#101010", "#202020"];
+  for (const facts of byAxis.values()) {
+    for (let i = 0; i < facts.length; i++) {
+      for (let j = i + 1; j < facts.length; j++) {
+        const entryA = background(facts[i]!);
+        const entryB = background(facts[j]!);
+        if (sourceKey(entryA) === sourceKey(entryB)) continue;
+        const themeTokens: Record<string, string> = {};
+        const expectedFor = (entry: JoinedStyleEntry, color: string): string | null => {
+          if (!entry.isLiteral && entry.resolvesTo) {
+            themeTokens[entry.resolvesTo] = color;
+            return color;
+          }
+          return entry.rawValue ?? null;
+        };
+        const expectedA = expectedFor(entryA, PALETTE[0]!);
+        const expectedB = expectedFor(entryB, PALETTE[1]!);
+        if (expectedA === null || expectedB === null || expectedA === expectedB) continue;
+        return {
+          axisSafeName: facts[i]!.axisSafeName,
+          a: { value: facts[i]!.value, expected: expectedA },
+          b: { value: facts[j]!.value, expected: expectedB },
+          themeTokens,
+        };
+      }
+    }
+  }
+  return null;
+}
+
+function variantBackgroundTestBody(ir: ComponentIR, proof: VariantProof): string[] {
+  const themeLiteral = JSON.stringify({ tokens: proof.themeTokens });
+  return [
+    `${INDENT}it("realizes distinct ${proof.axisSafeName} backgrounds from token scopes", () => {`,
+    `${INDENT}${INDENT}let renderer: ReactTestRenderer | undefined;`,
+    `${INDENT}${INDENT}act(() => {`,
+    `${INDENT}${INDENT}${INDENT}renderer = TestRenderer.create(`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}<FsdsThemeProvider value={${themeLiteral}}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}<${ir.name} ${proof.axisSafeName}=${JSON.stringify(proof.a.value)} testID="variant-a">A</${ir.name}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}<${ir.name} ${proof.axisSafeName}=${JSON.stringify(proof.b.value)} testID="variant-b">B</${ir.name}>`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}</FsdsThemeProvider>,`,
+    `${INDENT}${INDENT}${INDENT});`,
+    `${INDENT}${INDENT}});`,
+    `${INDENT}${INDENT}const flatten = (style: unknown): Record<string, unknown> =>`,
+    `${INDENT}${INDENT}${INDENT}Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));`,
+    `${INDENT}${INDENT}const variantA = renderer!.root.findAllByProps({ testID: "variant-a" }).at(-1)!;`,
+    `${INDENT}${INDENT}const variantB = renderer!.root.findAllByProps({ testID: "variant-b" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(flatten(variantA.props.style).backgroundColor).toBe(${JSON.stringify(proof.a.expected)});`,
+    `${INDENT}${INDENT}expect(flatten(variantB.props.style).backgroundColor).toBe(${JSON.stringify(proof.b.expected)});`,
+    `${INDENT}});`,
+  ];
 }
 
 function progressTest(ir: ComponentIR): string {
