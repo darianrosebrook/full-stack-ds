@@ -330,11 +330,21 @@ Estimated total for F-1 through F-3: 10-12 days. This document does not commit t
   (`rnSurfaceLowering`): blocking → `Modal` (escape → onRequestClose,
   outside-click → overlay Pressable, both enabledBy-gated); non-blocking →
   in-tree live region. Anchored kinds on RN remain future work.
-- Toast declares `presence: ephemeral` with **no timing block**: no target
-  implements auto-dismiss today (no duration prop exists). Adding the
-  duration prop + timeout dismissal on web and RN together is the named
-  follow-up. Menu/Dropdown, Select, Command, Coachmark/Walkthrough
-  migrations also remain.
+- **Auto-dismiss timing landed (FEAT-SURFACE-DWELL-ANCHOR-001):** Toast
+  declares `timing.autoDismissProp: "duration"` + timeout dismissal; the
+  budget flows from `toast.timing.auto-dismiss` →
+  `semantic.motion.dwell.notification` (the `motion.dwell.*` presence-budget
+  token subfamily) into the `autoDismiss` behavior primitive, mirrored in
+  all five web packages + RN, with hover/focus pausing (WCAG 2.2.1) and
+  remaining-budget bookkeeping. Web resolves the token default at
+  generation time (not runtime-themeable); RN reads it theme-reactively
+  from the typed token scope.
+- **RN anchored substrate landed:** Tooltip/Popover lower to a trigger
+  Pressable + transparent Modal positioned via measureInWindow, with a
+  synthesized `content` slot prop. Emitter-level divergences (contracts
+  neutral): outside inert while open, hover/focus → long-press,
+  pointer-leave → backdrop press; collision (flip/shift) unimplemented.
+- Menu/Dropdown, Select, Command, Coachmark/Walkthrough migrations remain.
 
 ## References
 
