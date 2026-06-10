@@ -59,10 +59,12 @@ acceptance:
       Dialog declares kind dialog / persistent / blocking / centered with
       escape + outside-click + close-button dismissal; Sheet declares kind
       sheet / persistent / blocking / viewport-edge with escape +
-      outside-click dismissal; Toast declares kind toast / ephemeral /
-      non-blocking / viewport-edge with timeout (+ close-button) dismissal and
-      a timing.autoDismissProp; generate:check passes and buildSurfaceIR
-      accepts all three.
+      outside-click + close-button dismissal; Toast declares kind toast /
+      ephemeral / non-blocking / viewport-edge with escape + close-button
+      dismissal and NO timing block — the web Toast implements no auto-dismiss
+      timer today, so declaring timeout/autoDismissProp would fabricate a
+      fact; ephemeral records the design class with consumer-managed timing.
+      generate:check passes and buildSurfaceIR accepts all three.
   - id: A2
     given: the surface blocks from A1
     when: pnpm run governed:rail regenerates all targets
@@ -84,10 +86,12 @@ acceptance:
     given: an ephemeral+non-blocking surface contract (Toast)
     when: the RN emitter lowers it
     then: >-
-      the generated component renders a non-blocking positioned host (no
-      Modal) with accessibilityLiveRegion, honors the timing autoDismiss prop
-      via a timer that fires the dismiss callback, and a generated fake-timer
-      test proves auto-dismissal.
+      the generated component renders a non-blocking host (no Modal) with
+      accessibilityLiveRegion derived from the politeness prop, visibility
+      bound to the open channel, and a generated test proves the host is not
+      modal and toggles with the channel. Auto-dismiss timing (a duration
+      prop + timer on web AND RN together) is a named follow-up, not claimed
+      here.
   - id: A5
     given: the full slice
     when: gates and rails run
