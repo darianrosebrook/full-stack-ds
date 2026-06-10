@@ -2,6 +2,7 @@ export { StackElement } from './Stack.js';
 export {
   ControllableStateController,
   AnchorToggleController,
+  AutoDismissController,
   DismissalController,
   FocusTrapController,
   ScrollLockController,

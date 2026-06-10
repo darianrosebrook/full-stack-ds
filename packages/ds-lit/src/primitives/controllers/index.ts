@@ -11,3 +11,5 @@ export type { AnchorToggleOptions } from './AnchorToggleController.js';
 export type { FocusTrapOptions } from './FocusTrapController.js';
 export type { ScrollLockOptions } from './ScrollLockController.js';
 export type { PortalControllerOptions } from './PortalController.js';
+export { AutoDismissController } from './AutoDismissController.js';
+export type { AutoDismissOptions } from './AutoDismissController.js';

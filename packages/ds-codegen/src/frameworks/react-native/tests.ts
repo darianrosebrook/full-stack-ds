@@ -1,12 +1,18 @@
 import type { ComponentIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
 import {
+  rnAutoDismiss,
   stateStyleFacts,
   variantStyleFacts,
   type JoinedStyleEntry,
   type VariantStyleFact,
 } from "./component-source.js";
-import { rnSurfaceLowering, type RnSurfaceLowering } from "./surface-emit.js";
+import {
+  rnAnchoredSurface,
+  rnSurfaceLowering,
+  type RnAnchoredSurfaceLowering,
+  type RnSurfaceLowering,
+} from "./surface-emit.js";
 
 export function generateReactNativeTest(ir: ComponentIR): string {
   const runtimeTest = runtimeTestBody(ir);
@@ -32,6 +38,8 @@ export function generateReactNativeTest(ir: ComponentIR): string {
 }
 
 function runtimeTestBody(ir: ComponentIR): string | null {
+  const anchored = rnAnchoredSurface(ir);
+  if (anchored) return anchoredSurfaceTest(ir, anchored);
   const surface = rnSurfaceLowering(ir);
   if (surface?.openChannel) return surfaceTest(ir, surface);
   if (isNativeToggle(ir)) return nativeToggleTest(ir);
@@ -341,6 +349,61 @@ function expandableTest(ir: ComponentIR): string {
 }
 
 /**
+ * Anchored-surface tests (tooltip/popover RN adaptation): trigger
+ * interaction opens through the channel, the content renders in a
+ * transparent Modal, and backdrop press dismisses.
+ */
+function anchoredSurfaceTest(ir: ComponentIR, lowering: RnAnchoredSurfaceLowering): string {
+  const channel = lowering.openChannel;
+  const handler = channel.changeHandlerProp;
+  const trigger = lowering.triggerEvent;
+  const lines: string[] = [
+    "// @generated:start imports",
+    `import { describe, expect, it } from "vitest";`,
+    `import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";`,
+    `import { Modal } from "react-native";`,
+    `import { ${ir.name} } from "../${ir.name}";`,
+    "// @generated:end",
+    "",
+    "// @generated:start tests",
+    `describe("${ir.name} React Native", () => {`,
+    `${INDENT}it("opens the anchored surface from the trigger interaction", () => {`,
+    `${INDENT}${INDENT}const seen: boolean[] = [];`,
+    ...rendererHelper(
+      `<${ir.name} ${handler}={(next: boolean) => seen.push(next)} content="Surface body" testID="subject">Anchor</${ir.name}>`,
+    ),
+    `${INDENT}${INDENT}const modalBefore = renderer!.root.findByType(Modal);`,
+    `${INDENT}${INDENT}expect(modalBefore.props.visible).toBe(false);`,
+    `${INDENT}${INDENT}const anchor = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
+    `${INDENT}${INDENT}act(() => { anchor.props.${trigger}(); });`,
+    `${INDENT}${INDENT}expect(seen).toEqual([true]);`,
+    `${INDENT}${INDENT}const modal = renderer!.root.findByType(Modal);`,
+    `${INDENT}${INDENT}expect(modal.props.visible).toBe(true);`,
+    `${INDENT}${INDENT}expect(modal.props.transparent).toBe(true);`,
+    `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Surface body").length).toBeGreaterThan(0);`,
+    `${INDENT}});`,
+  ];
+  if (lowering.backdropDismiss) {
+    lines.push(
+      `${INDENT}it("dismisses on backdrop press", () => {`,
+      `${INDENT}${INDENT}const seen: boolean[] = [];`,
+      ...rendererHelper(
+        `<${ir.name} ${handler}={(next: boolean) => seen.push(next)} content="Surface body" testID="subject">Anchor</${ir.name}>`,
+      ),
+      `${INDENT}${INDENT}const anchor = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
+      `${INDENT}${INDENT}act(() => { anchor.props.${trigger}(); });`,
+      `${INDENT}${INDENT}const backdrop = renderer!.root.findAll((node) => typeof node.type === "string" && node.props.accessible === false && typeof node.props.onPress === "function").at(-1)!;`,
+      `${INDENT}${INDENT}act(() => { backdrop.props.onPress(); });`,
+      `${INDENT}${INDENT}expect(seen).toEqual([true, false]);`,
+      `${INDENT}${INDENT}expect(renderer!.root.findByType(Modal).props.visible).toBe(false);`,
+      `${INDENT}});`,
+    );
+  }
+  lines.push(`});`, ...renderFooter());
+  return lines.join("\n");
+}
+
+/**
  * Presence-surface tests, derived from the lowering facts:
  *   modal mode    → Modal visibility binding, onRequestClose (escape),
  *                   overlay press (outside-click) each fire the change
@@ -351,9 +414,11 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
   const channel = lowering.openChannel!;
   const openProp = channel.valueProp;
   const handler = channel.changeHandlerProp;
+  const usesTimers =
+    lowering.mode !== "modal" && rnAutoDismiss(ir)?.defaultMs !== undefined;
   const lines: string[] = [
     "// @generated:start imports",
-    `import { describe, expect, it } from "vitest";`,
+    `import { describe, expect, it${usesTimers ? ", vi" : ""} } from "vitest";`,
     `import TestRenderer, { act, type ReactTestRenderer } from "react-test-renderer";`,
     `import { Modal } from "react-native";`,
     `import { ${ir.name} } from "../${ir.name}";`,
@@ -413,6 +478,33 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
       `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body")).toHaveLength(0);`,
       `${INDENT}});`,
     );
+    const autoDismiss = rnAutoDismiss(ir);
+    if (autoDismiss?.defaultMs !== undefined) {
+      lines.push(
+        `${INDENT}it("auto-dismisses after the token presence budget elapses", () => {`,
+        `${INDENT}${INDENT}vi.useFakeTimers();`,
+        `${INDENT}${INDENT}const seen: boolean[] = [];`,
+        ...rendererHelper(
+          `<${ir.name} ${openProp} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`,
+        ),
+        `${INDENT}${INDENT}act(() => { vi.advanceTimersByTime(${autoDismiss.defaultMs - 1}); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([]);`,
+        `${INDENT}${INDENT}act(() => { vi.advanceTimersByTime(1); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([false]);`,
+        `${INDENT}${INDENT}vi.useRealTimers();`,
+        `${INDENT}});`,
+        `${INDENT}it("never auto-dismisses when ${autoDismiss.durationProp} is null", () => {`,
+        `${INDENT}${INDENT}vi.useFakeTimers();`,
+        `${INDENT}${INDENT}const seen: boolean[] = [];`,
+        ...rendererHelper(
+          `<${ir.name} ${openProp} ${autoDismiss.durationProp}={null} ${handler}={(next: boolean) => seen.push(next)} testID="subject">Body</${ir.name}>`,
+        ),
+        `${INDENT}${INDENT}act(() => { vi.advanceTimersByTime(600000); });`,
+        `${INDENT}${INDENT}expect(seen).toEqual([]);`,
+        `${INDENT}${INDENT}vi.useRealTimers();`,
+        `${INDENT}});`,
+      );
+    }
   }
   lines.push(`});`, ...renderFooter());
   return lines.join("\n");

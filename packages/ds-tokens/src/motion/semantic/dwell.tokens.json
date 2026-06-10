@@ -1,0 +1,12 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "dwell": {
+      "notification": {
+        "$type": "duration",
+        "$value": "{motion.dwell.medium}",
+        "$description": "Presence budget for auto-dismissing notifications (Toast). Consumed by the behavior layer (auto-dismiss timers), not by CSS."
+      }
+    }
+  }
+}

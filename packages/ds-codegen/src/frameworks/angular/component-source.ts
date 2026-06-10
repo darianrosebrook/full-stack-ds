@@ -43,6 +43,7 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { toKebab as sharedToKebab } from "../../contract.js";
 import {
   isCompoundStateContainer,
@@ -893,6 +894,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
     "inject",
     "ChangeDetectionStrategy",
   ];
+  if (
+    resolveSurfaceAutoDismiss(ir) &&
+    ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")
+  ) {
+    coreNames.push("effect");
+  }
   // When any dom node uses `if: "children"`, the component needs AfterContentInit
   // and ElementRef to detect content projection at runtime.
   if (ir.dom && treeHasChildrenGuard(ir.dom)) {
@@ -920,6 +927,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (ir.behavior.normalizedChannels.length > 0) {
     lines.push(`import { use${ir.name} } from "./use${ir.name}.js";`);
   }
+  if (
+    resolveSurfaceAutoDismiss(ir) &&
+    ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")
+  ) {
+    lines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
+  }
   return lines.join("\n");
 }
 
@@ -936,10 +949,14 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     (t) => t.event === "overlayClick",
   );
   const booleanChannel = channels.find((c) => c.valueType === "boolean");
+  const autoDismissActive = Boolean(
+    resolveSurfaceAutoDismiss(ir) && booleanChannel,
+  );
   const ctx: AngularRenderContext = {
     classRecipe: ir.classRecipe.base,
     channelByName,
     isRoot: true,
+    autoDismissPause: autoDismissActive,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
@@ -1027,6 +1044,25 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     }
     lines.push(`    destroyRef: this.destroyRef,`);
     lines.push(`  });`);
+    // Ephemeral-surface auto-dismiss (WCAG 2.2.1). The effect tracks the
+    // behavior's open signal; sync() restarts/clears the timer; pause
+    // listeners land on the template root.
+    const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
+    const autoDismissChannel = autoDismissPolicy
+      ? channels.find((c) => c.valueType === "boolean")
+      : undefined;
+    if (autoDismissPolicy && autoDismissChannel) {
+      lines.push(
+        ``,
+        `  protected autoDismiss = createAutoDismiss({`,
+        `    open: () => Boolean(this.behavior.${autoDismissChannel.name}()),`,
+        `    durationMs: () => this.${autoDismissPolicy.durationProp} === undefined ? ${autoDismissPolicy.defaultMs ?? "undefined"} : this.${autoDismissPolicy.durationProp},`,
+        `    onDismiss: () => this.behavior.set${capitalizeAngular(autoDismissChannel.name)}(false),`,
+        `    destroyRef: this.destroyRef,`,
+        `  });`,
+        `  private autoDismissEffect = effect(() => this.autoDismiss.sync());`,
+      );
+    }
   }
 
   // classes computed
@@ -1203,6 +1239,8 @@ interface AngularRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
+  /** When true, bind auto-dismiss pause listeners on the template root. */
+  autoDismissPause?: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
   /**
@@ -1307,6 +1345,14 @@ function renderAngularDomNode(
 
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
+    if (ctx.autoDismissPause) {
+      attrs.push(
+        `(pointerenter)="autoDismiss.pauseListeners.pointerenter()"`,
+        `(pointerleave)="autoDismiss.pauseListeners.pointerleave()"`,
+        `(focusin)="autoDismiss.pauseListeners.focusin()"`,
+        `(focusout)="autoDismiss.pauseListeners.focusout()"`,
+      );
+    }
   } else if (
     ctx.overlayClickSetter &&
     (node.part === "overlay" || node.part === "backdrop")

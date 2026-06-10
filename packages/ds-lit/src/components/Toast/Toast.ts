@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ToastBehavior } from './ToastBehavior.js';
+import { AutoDismissController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -48,6 +49,7 @@ export class ToastElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {
@@ -145,10 +147,17 @@ export class ToastElement extends LitElement {
   @property({ type: String }) variant?: ToastVariant = "info";
   @property({ type: String }) politeness?: ToastPoliteness = "polite";
   @property({ attribute: false }) action?: unknown;
+  @property({ attribute: false }) duration?: number | null;
 
   private behavior = new ToastBehavior(this, {
     open: () => this.open,
     onOpenChange: (v) => this.onOpenChange?.(v),
+  });
+
+  private autoDismiss = new AutoDismissController(this, {
+    open: () => Boolean(this.behavior.open),
+    durationMs: () => this.duration === undefined ? 6000 : this.duration,
+    onDismiss: () => this.behavior.setOpen(false),
   });
 
   private handleOpenChange(event: Event): void {
@@ -164,7 +173,7 @@ export class ToastElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-live="polite" aria-label="Notifications" role="alert">
+    return html`<div class="${this.computeClasses()}" aria-live="polite" aria-label="Notifications" role="alert" @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
   ${this.behavior.open ? html`
   <div class=${'toast__item'} role="status" data-fsds-channel-renders="open">
     <div class=${'toast__row'}>
@@ -217,6 +226,7 @@ export class ToastItemElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {
@@ -346,6 +356,7 @@ export class ToastTitleElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {
@@ -475,6 +486,7 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {

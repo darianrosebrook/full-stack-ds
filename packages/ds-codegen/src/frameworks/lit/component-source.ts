@@ -40,6 +40,7 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { toKebab } from "../../contract.js";
 import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
 import {
@@ -1154,6 +1155,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (ir.behavior.normalizedChannels.length > 0) {
     lines.push(`import { ${ir.name}Behavior } from './${ir.name}Behavior.js';`);
   }
+  if (
+    resolveSurfaceAutoDismiss(ir) &&
+    ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")
+  ) {
+    lines.push(`import { AutoDismissController } from '../../primitives/index.js';`);
+  }
   return lines.join("\n");
 }
 
@@ -1187,6 +1194,10 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     channelByName,
     styledByName,
     isRoot: true,
+    autoDismissPause: Boolean(
+      resolveSurfaceAutoDismiss(ir) &&
+        channels.some((c) => c.valueType === "boolean"),
+    ),
     hasOverlayClick,
   };
   // Inject the contract's effective ARIA role onto the root node if the
@@ -1280,6 +1291,22 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       );
     }
     lines.push(`  });`);
+    // Ephemeral-surface auto-dismiss (WCAG 2.2.1). The controller re-syncs
+    // on host updates; pause listeners land on the template root.
+    const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
+    const autoDismissChannel = autoDismissPolicy
+      ? channels.find((c) => c.valueType === "boolean")
+      : undefined;
+    if (autoDismissPolicy && autoDismissChannel) {
+      lines.push(
+        ``,
+        `  private autoDismiss = new AutoDismissController(this, {`,
+        `    open: () => Boolean(this.behavior.${autoDismissChannel.name}),`,
+        `    durationMs: () => this.${autoDismissPolicy.durationProp} === undefined ? ${autoDismissPolicy.defaultMs ?? "undefined"} : this.${autoDismissPolicy.durationProp},`,
+        `    onDismiss: () => this.behavior.set${capitalizeLit(autoDismissChannel.name)}(false),`,
+        `  });`,
+      );
+    }
   }
 
   // Event handler methods (Lit templates can host arrow fns inline, but
@@ -1481,6 +1508,8 @@ interface LitRenderContext {
   channelByName: Map<string, NormalizedChannelIR>;
   styledByName: Map<string, { type: string }>;
   isRoot: boolean;
+  /** When true, bind auto-dismiss pause listeners on the template root. */
+  autoDismissPause?: boolean;
   hasOverlayClick?: boolean;
   /**
    * Identifier names introduced by enclosing iteration. After
@@ -1622,6 +1651,14 @@ function renderLitDomNode(
 
   if (ctx.isRoot) {
     attrs.unshift(`class="\${this.computeClasses()}"`);
+    if (ctx.autoDismissPause) {
+      attrs.push(
+        `@pointerenter=\${this.autoDismiss.pauseListeners.pointerenter}`,
+        `@pointerleave=\${this.autoDismiss.pauseListeners.pointerleave}`,
+        `@focusin=\${this.autoDismiss.pauseListeners.focusin}`,
+        `@focusout=\${this.autoDismiss.pauseListeners.focusout}`,
+      );
+    }
   } else if (classParts.length > 0) {
     if (classParts.length === 1) {
       attrs.unshift(`class=\${${classParts[0]}}`);

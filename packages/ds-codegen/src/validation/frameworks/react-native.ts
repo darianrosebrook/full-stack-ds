@@ -29,8 +29,7 @@ export const reactNativeValidationPlan: FrameworkValidationPlan = {
   },
   knownGaps: [
     "Runtime evidence is limited to generated React Native render tests (host-render archetypes, variant style realization, surface substrate); it does not prove simulator or device execution, native visual parity, or platform accessibility parity.",
-    "Non-anchored presence surfaces are admitted (Dialog/Sheet via Modal, Toast via live region); anchored kinds (Tooltip, Popover, coachmark/Walkthrough) need an anchor-measurement substrate and stay on the generic path. Compound-part emission (Tabs/Accordion subcomponents) remains unadmitted.",
-    "Toast auto-dismiss timing is not implemented on any target (no duration prop exists); the surface contract honestly declares no timeout dismissal until web and RN implement it together.",
+    "Presence surfaces are admitted: Dialog/Sheet via Modal, Toast via live region with the dwell-token auto-dismiss timer, Tooltip/Popover via the anchored Modal substrate. Documented anchored divergences: outside content is inert while open, hover/focus open-triggers lower to long-press, pointer-leave dismissal lowers to backdrop press, and collision handling (flip/shift) is not implemented. Walkthrough/coachmark and compound-part emission (Tabs/Accordion) remain unadmitted.",
     "Part-scoped variant styling and boolean-modifier styling (e.g. Card --inset) are not yet realized natively.",
   ],
 };

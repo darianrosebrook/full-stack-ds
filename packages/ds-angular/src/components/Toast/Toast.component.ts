@@ -1,8 +1,9 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, effect } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useToast } from "./useToast.js";
+import { createAutoDismiss } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +24,7 @@ export type ToastPoliteness = "polite" | "assertive";
   selector: "fsds-toast",
   standalone: true,
   imports: [NgClass, NgIf],
-  template: `<div [ngClass]="classes()" aria-live="polite" aria-label="Notifications">
+  template: `<div [ngClass]="classes()" aria-live="polite" aria-label="Notifications" (pointerenter)="autoDismiss.pauseListeners.pointerenter()" (pointerleave)="autoDismiss.pauseListeners.pointerleave()" (focusin)="autoDismiss.pauseListeners.focusin()" (focusout)="autoDismiss.pauseListeners.focusout()">
   <ng-container *ngIf="behavior.open()">
     <div [ngClass]="'toast__item'" role="status">
       <div [ngClass]="'toast__row'">
@@ -50,6 +51,7 @@ export class ToastComponent {
   @Input() variant?: ToastVariant = "info";
   @Input() politeness?: ToastPoliteness = "polite";
   @Input() action?: unknown;
+  @Input() duration?: number | null;
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);
@@ -58,6 +60,14 @@ export class ToastComponent {
     onOpenChange: (v) => this.onOpenChange?.(v),
     destroyRef: this.destroyRef,
   });
+
+  protected autoDismiss = createAutoDismiss({
+    open: () => Boolean(this.behavior.open()),
+    durationMs: () => this.duration === undefined ? 6000 : this.duration,
+    onDismiss: () => this.behavior.setOpen(false),
+    destroyRef: this.destroyRef,
+  });
+  private autoDismissEffect = effect(() => this.autoDismiss.sync());
 
   classes = computed(() =>
     [

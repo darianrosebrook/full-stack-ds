@@ -227,6 +227,9 @@
   --fsds-core-motion-duration-medium0: 300ms;
   --fsds-core-motion-duration-long0: 600ms;
   --fsds-core-motion-duration-extra-long1: 1500ms;
+  --fsds-core-motion-dwell-short: 4000ms;
+  --fsds-core-motion-dwell-medium: 6000ms;
+  --fsds-core-motion-dwell-long: 8000ms;
   --fsds-core-motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --fsds-core-motion-easing-emphasized-in: cubic-bezier(0.2, 0, 0, 1);
   --fsds-core-motion-easing-emphasized-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -452,6 +455,7 @@
   --fsds-semantic-input-size-large-padding-inline: var(--fsds-semantic-control-size-lg-padding-x);
   --fsds-semantic-input-size-large-gap: var(--fsds-core-spacing-size-05);
   --fsds-semantic-interaction-disabled-opacity: var(--fsds-core-interaction-disabled-opacity);
+  --fsds-semantic-motion-dwell-notification: var(--fsds-core-motion-dwell-medium);
   --fsds-semantic-motion-icon-scale-enter: var(--fsds-core-scale-080);
   --fsds-semantic-motion-icon-scale-exit: var(--fsds-core-scale-080);
   --fsds-semantic-motion-interaction-press-duration: var(--fsds-core-motion-duration-instant);

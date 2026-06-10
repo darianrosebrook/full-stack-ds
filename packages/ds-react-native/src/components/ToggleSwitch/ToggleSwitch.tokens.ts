@@ -110,7 +110,7 @@ export const toggleSwitchTokenScopes = {
       name: "toggle-switch.motion.duration.fast",
       cssVar: "--fsds-toggle-switch-motion-duration-fast",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "toggle-switch.color.background.hover": {
       name: "toggle-switch.color.background.hover",

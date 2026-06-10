@@ -12,6 +12,7 @@
   --fsds-toast-size-maxWidth: 400px;
   --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
   --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+  --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
 }
 
 .toast {

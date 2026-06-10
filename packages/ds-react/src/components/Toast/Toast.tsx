@@ -2,6 +2,7 @@
 import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useToast } from "./useToast";
+import { useAutoDismiss } from "../../primitives/hooks";
 import "./Toast.css";
 // @generated:end
 
@@ -20,13 +21,14 @@ export type ToastPoliteness = "polite" | "assertive";
 // @custom:end
 
 // @generated:start props
-export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "action" | "children" | "className" | "data-testid" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
+export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "action" | "children" | "className" | "data-testid" | "duration" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
   action?: ReactNode;
+  duration?: number | null;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -103,12 +105,19 @@ export function Toast({
   children,
   title,
   action,
+  duration,
   ...rest
 }: ToastProps) {
   const { open, setOpen } = useToast({
     open: controlledOpen,
     onOpenChange,
   });
+
+  const autoDismissPauseProps = useAutoDismiss({
+    open: Boolean(open),
+    durationMs: duration === undefined ? 6000 : duration,
+    onDismiss: () => setOpen(false),
+  }).getPauseProps();
 
   const classNames = [
     "toast",
@@ -120,7 +129,7 @@ export function Toast({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} aria-live="polite" aria-label="Notifications" role="alert" data-testid={testId} {...rest}>
+  <div className={`${classNames}`} aria-live="polite" aria-label="Notifications" role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
     {open && (
       <div className="toast__item" role="status">
         <div className="toast__row">

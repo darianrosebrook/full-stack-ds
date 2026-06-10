@@ -13,3 +13,8 @@ export { useScrollLock } from "./useScrollLock";
 export { useFocusTrap, type UseFocusTrapOptions } from "./useFocusTrap";
 export { usePortal, type UsePortalOptions, type UsePortalResult } from "./usePortal";
 export { createCompoundContext } from "./createCompoundContext";
+export {
+  useAutoDismiss,
+  type UseAutoDismissOptions,
+  type UseAutoDismissResult,
+} from "./useAutoDismiss";

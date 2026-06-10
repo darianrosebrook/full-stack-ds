@@ -93,6 +93,54 @@ function findPartIfProp(node: DomNodeIR, partName: string): string | undefined {
 }
 
 /**
+ * Anchored-surface lowering (tooltip, popover). RN hosts the content in a
+ * transparent Modal positioned from measureInWindow of the trigger — a
+ * documented platform divergence: while open, outside content is inert
+ * even for non-blocking modality, and touch has no hover/pointer-leave, so
+ * hover/focus open-triggers lower to long-press and pointer-leave
+ * dismissal lowers to backdrop press. The contract stays platform-neutral.
+ */
+export interface RnAnchoredSurfaceLowering {
+  surface: SurfaceIR;
+  openChannel: NormalizedChannelIR;
+  /** click → onPress (toggles); hover/focus → onLongPress (opens). */
+  triggerEvent: "onPress" | "onLongPress";
+  placementProp: string | undefined;
+  escapeTrigger: NormalizedDismissalTriggerIR | undefined;
+  escapeDeclared: boolean;
+  /** Backdrop press closes: outside-click when declared, else the
+   * pointer-leave touch analog. */
+  backdropTrigger: NormalizedDismissalTriggerIR | undefined;
+  backdropDismiss: boolean;
+}
+
+export function rnAnchoredSurface(ir: ComponentIR): RnAnchoredSurfaceLowering | null {
+  const surface = ir.surface;
+  if (!surface) return null;
+  if (surface.positioning?.strategy !== "anchored") return null;
+  if (!surface.anchor || !surface.content) return null;
+  const openChannel = ir.behavior.normalizedChannels.find(
+    (channel) => channel.valueType === "boolean",
+  );
+  if (!openChannel) return null;
+  const triggers = ir.behavior.normalizedDismissalTriggers;
+  return {
+    surface,
+    openChannel,
+    triggerEvent: surface.openTriggers.includes("click") ? "onPress" : "onLongPress",
+    placementProp: surface.positioning.placementProp,
+    escapeTrigger: triggers.find((trigger) => trigger.event === "escape"),
+    escapeDeclared: surface.dismissal.includes("escape"),
+    backdropTrigger: triggers.find(
+      (trigger) => trigger.event === "outsideClick" || trigger.event === "overlayClick",
+    ),
+    backdropDismiss:
+      surface.dismissal.includes("outside-click") ||
+      surface.dismissal.includes("pointer-leave"),
+  };
+}
+
+/**
  * Factory-level surface routing stays disabled: the substrate integrates
  * through the generic component path (component-source.ts consumes
  * rnSurfaceLowering), which keeps the tokens/styles/test plumbing shared

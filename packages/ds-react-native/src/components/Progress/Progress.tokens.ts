@@ -91,7 +91,7 @@ export const progressTokenScopes = {
       name: "progress.motion.duration.indeterminate",
       cssVar: "--fsds-progress-motion-duration-indeterminate",
       ref: "core.motion.duration.extra.long1",
-      fallback: "1500ms",
+      fallback: 1500,
     },
     "progress.color.track.background": {
       name: "progress.color.track.background",

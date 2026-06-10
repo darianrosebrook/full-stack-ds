@@ -127,7 +127,7 @@ export const tabsTokenScopes = {
       name: "tabs.motion.indicator",
       cssVar: "--fsds-tabs-motion-indicator",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "tabs.color.hover.bg": {
       name: "tabs.color.hover.bg",

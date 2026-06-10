@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "motion": {
+    "dwell": {
+      "short": {
+        "$type": "duration",
+        "$value": "4000ms",
+        "$description": "Short presence budget — auto-dismissing surfaces with terse content"
+      },
+      "medium": {
+        "$type": "duration",
+        "$value": "6000ms",
+        "$description": "Default presence budget for auto-dismissing surfaces (toasts)"
+      },
+      "long": {
+        "$type": "duration",
+        "$value": "8000ms",
+        "$description": "Long presence budget — surfaces carrying actions or longer copy"
+      }
+    }
+  }
+}

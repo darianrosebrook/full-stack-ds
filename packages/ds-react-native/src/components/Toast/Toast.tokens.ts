@@ -144,13 +144,19 @@ export const toastTokenScopes = {
       name: "toast.motion.enter",
       cssVar: "--fsds-toast-motion-enter",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
     },
     "toast.motion.leave": {
       name: "toast.motion.leave",
       cssVar: "--fsds-toast-motion-leave",
       ref: "core.motion.duration.short",
-      fallback: "150ms",
+      fallback: 150,
+    },
+    "toast.timing.auto-dismiss": {
+      name: "toast.timing.auto-dismiss",
+      cssVar: "--fsds-toast-timing-auto-dismiss",
+      ref: "semantic.motion.dwell.notification",
+      fallback: 6000,
     },
   },
   "variant_success": {

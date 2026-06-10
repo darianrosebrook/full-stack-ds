@@ -12,3 +12,8 @@ export type { UseFocusTrapOptions } from "./useFocusTrap";
 export { usePortal } from "./usePortal";
 export type { UsePortalOptions } from "./usePortal";
 export { createCompoundContext } from "./createCompoundContext";
+export { useAutoDismiss } from "./useAutoDismiss";
+export type {
+  UseAutoDismissOptions,
+  UseAutoDismissResult,
+} from "./useAutoDismiss";

@@ -27,6 +27,7 @@ import {
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import {
   getGroupHostPart,
   getGroupHostOrnamentPart,
@@ -143,6 +144,9 @@ export function generateReactComponentSource(
   }
   if (isCompound) {
     importLines.push(`import { createCompoundContext } from "../../primitives/hooks";`);
+  }
+  if (resolveSurfaceAutoDismiss(ir) && ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")) {
+    importLines.push(`import { useAutoDismiss } from "../../primitives/hooks";`);
   }
   importLines.push(`import "./${ir.name}.css";`);
   const importsBody = importLines.join("\n");
@@ -1327,6 +1331,24 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(`  });`);
     lines.push(``);
   }
+  // Ephemeral-surface auto-dismiss: the presence budget flows from the
+  // *.timing.auto-dismiss token (generation-resolved default) with the
+  // contract's duration prop as the consumer override; pause props land on
+  // the root element (WCAG 2.2.1 Timing Adjustable).
+  const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
+  const autoDismissChannel = autoDismissPolicy
+    ? channels.find((c) => c.valueType === "boolean")
+    : undefined;
+  if (autoDismissPolicy && autoDismissChannel) {
+    lines.push(
+      `  const autoDismissPauseProps = useAutoDismiss({`,
+      `    open: Boolean(${autoDismissChannel.name}),`,
+      `    durationMs: ${autoDismissPolicy.durationProp} === undefined ? ${autoDismissPolicy.defaultMs ?? "undefined"} : ${autoDismissPolicy.durationProp},`,
+      `    onDismiss: () => set${capitalize(autoDismissChannel.name)}(false),`,
+      `  }).getPauseProps();`,
+      ``,
+    );
+  }
   lines.push(`  const classNames = [`);
   for (const expr of classExprs) lines.push(`    ${expr},`);
   lines.push(`  ]`);
@@ -1363,6 +1385,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     classRecipe: classRecipe.base,
     channelByName,
     isRoot: true,
+    autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     overlayClickSetter,
     overlayClickEnabledProp: overlayClickTrigger?.enabledByProp,
     forwardAriaLabel: hasDialogNode,
@@ -1405,6 +1428,8 @@ interface ReactRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
+  /** When true, spread the auto-dismiss pause props onto the root element. */
+  autoDismissPause?: boolean;
   /** When set, emit onClick to dismiss the overlay on root click. */
   overlayClickSetter?: string;
   /** Prop name that controls whether overlay click dismissal is enabled. */
@@ -1639,6 +1664,9 @@ function renderReactDomNode(
       attrs.push(
         `onClick={${guard}(e) => { if (e.target === e.currentTarget) ${ctx.overlayClickSetter}(false); }${tail}}`,
       );
+    }
+    if (ctx.autoDismissPause) {
+      attrs.push(`{...autoDismissPauseProps}`);
     }
     attrs.push(`{...rest}`);
   } else if (classParts.length > 0) {

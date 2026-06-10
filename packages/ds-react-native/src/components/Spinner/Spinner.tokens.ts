@@ -129,7 +129,7 @@ export const spinnerTokenScopes = {
     "spinner.anim.duration": {
       name: "spinner.anim.duration",
       cssVar: "--fsds-spinner-anim-duration",
-      literal: "800ms",
+      literal: 800,
     },
   },
 } satisfies ComponentTokenScopes;
