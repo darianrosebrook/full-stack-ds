@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 13
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 10
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -24,7 +24,7 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -32,9 +32,18 @@ from typing import Any
 NOISE_PREFIXES = (
     "<local-command",
     "<command-name",
+    "<command-message",
     "<local-command-stdout",
     "<local-command-caveat",
     "This session is being continued",
+    # Slash-command body + hook-block echoes. A hook-intercepted command
+    # (/copy-turn, /replay-last, /reorient) is delivered as a user-role event in
+    # three shapes — a <command-message>/<command-name> wrapper (covered above),
+    # the skill body text, and the block reason echoed back as "Operation
+    # stopped by hook:". None of these are agent work; left unfiltered they open
+    # phantom turns (an empty turn-NNN.json) that persisted into the session log.
+    "This slash command's behavior is handled entirely by",
+    "Operation stopped by hook:",
 )
 
 SESSION_EVENT_PREFIXES = (
@@ -81,21 +90,6 @@ MEANINGFUL_COMMAND_KW = (
     "make",
 )
 
-
-def command_is_of_interest(entry: dict[str, Any]) -> bool:
-    """A command is worth surfacing in the handoff/log if it matches the
-    meaningful-keyword allowlist OR if it ERRORED. Errors are always
-    meaningful: a blocked/failed command is exactly what a continuing agent
-    needs to see, even when the command itself is not on the curated list
-    (e.g. a bare `git worktree list` that tripped a guard, or an `ls` into a
-    missing worktree dir). Without this, non-allowlisted failures vanish from
-    the handoff and first-contact debugging has to reconstruct them from raw
-    transcript JSONL (SESSION-LOG-ERROR-VISIBILITY-001).
-    """
-    command = entry.get("command") or ""
-    if entry.get("is_error"):
-        return True
-    return any(keyword in command for keyword in MEANINGFUL_COMMAND_KW)
 
 DECISION_PATTERNS = [
     re.compile(r"(?:^|\n)\s*(?:decision|decided|choosing|will use|going with)[:\s]+(.+?)(?:\n|$)", re.IGNORECASE),
@@ -607,39 +601,6 @@ def build_turn_payload(turn: dict[str, Any], number: int) -> dict[str, Any]:
     }
 
 
-def collect_indexes(turn_payloads: list[dict[str, Any]]) -> dict[str, Any]:
-    file_index: dict[str, dict[str, list[int]]] = {}
-    command_index = []
-    search_index = []
-    agent_index = []
-    artifact_index = []
-
-    for payload in turn_payloads:
-        turn_number = payload["turn"]
-        for path in payload["refs"]["files"]["edited"]:
-            file_index.setdefault(path, {"edited_in": [], "read_in": []})
-            file_index[path]["edited_in"].append(turn_number)
-        for path in payload["refs"]["files"]["read"]:
-            file_index.setdefault(path, {"edited_in": [], "read_in": []})
-            file_index[path]["read_in"].append(turn_number)
-        for command in payload["refs"]["commands"]:
-            command_index.append({"turn": turn_number, **command})
-        for search in payload["refs"]["searches"]:
-            search_index.append({"turn": turn_number, **search})
-        for agent in payload["refs"]["agents"]:
-            agent_index.append({"turn": turn_number, **agent})
-        for artifact in payload["refs"]["artifacts"]:
-            artifact_index.append({"turn": turn_number, **artifact})
-
-    return {
-        "files": file_index,
-        "commands": command_index,
-        "searches": search_index,
-        "agents": agent_index,
-        "artifacts": artifact_index,
-    }
-
-
 def run_git(cwd: str, args: list[str], max_output: int = 12000) -> str:
     try:
         result = subprocess.run(
@@ -682,157 +643,6 @@ def cleanup_generated_outputs(log_dir: Path) -> None:
             path.unlink(missing_ok=True)
 
 
-def write_session_txt(
-    path: Path,
-    *,
-    project_name: str,
-    session_id: str,
-    started_at: str,
-    model: str,
-    branch: str,
-    head_sha: str,
-    start_sha: str,
-    turn_index: list[dict[str, Any]],
-    session_events: list[dict[str, Any]],
-    indexes: dict[str, Any],
-) -> None:
-    lines = [
-        f"# Session Log: {project_name}",
-        "",
-        "| Field | Value |",
-        "|-------|-------|",
-        f"| Session ID | `{session_id}` |",
-        f"| Started | {started_at} |",
-        f"| Model | {model} |",
-        f"| Branch | `{branch}` @ `{head_sha}` |",
-    ]
-    if start_sha:
-        lines.append(f"| Start SHA | `{start_sha}` |")
-    lines.extend(
-        [
-            f"| Substantive turns | {len(turn_index)} |",
-            f"| Session events | {len(session_events)} |",
-            "",
-            "Canonical JSON: `session.json` plus `turn-###.json` files.",
-            "",
-            "## Turns",
-            "",
-        ]
-    )
-
-    for item in turn_index:
-        status = f" [{item['status']}]" if item["status"] != "ok" else ""
-        lines.append(
-            f"- **[Turn {item['turn']}](turn-{item['turn']:03d}.json)**{status} — {item['user_preview']}"
-        )
-        meta = f"  _{item['reasoning_count']} msgs, {item['tool_count']} tools"
-        if item["edited_preview"]:
-            meta += f" | {item['edited_preview']}"
-        meta += "_"
-        lines.append(meta)
-        if item.get("summary_preview"):
-            lines.append(f"  > {item['summary_preview']}")
-
-    if session_events:
-        lines.extend(["", "## Session Events", ""])
-        for event in session_events[-12:]:
-            prefix = f"`{event['type']}`"
-            task_tag = f" `{event['task_id']}`" if event.get("task_id") else ""
-            lines.append(f"- {prefix}{task_tag} {event['preview']}")
-
-    lines.extend(["", "## Focus", ""])
-    for path_key, refs in list(indexes["files"].items())[:20]:
-        markers = []
-        if refs["edited_in"]:
-            markers.append("edit " + ",".join(str(v) for v in refs["edited_in"][:4]))
-        if refs["read_in"]:
-            markers.append("read " + ",".join(str(v) for v in refs["read_in"][:4]))
-        lines.append(f"- `{path_key}` ({'; '.join(markers)})")
-
-    lines.extend(["", "## Commands", ""])
-    for command in indexes["commands"]:
-        text = command.get("command", "")
-        if command_is_of_interest(command):
-            # Flag failures so a scanning reader spots them without parsing
-            # output (SESSION-LOG-ERROR-VISIBILITY-001).
-            marker = " ❌ FAILED" if command.get("is_error") else ""
-            lines.append(f"- turn {command['turn']}: `{truncate(text, 120)}`{marker}")
-
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def build_handoff(
-    *,
-    session_id: str,
-    model: str,
-    turn_payloads: list[dict[str, Any]],
-    session_events: list[dict[str, Any]],
-    indexes: dict[str, Any],
-    git_snapshot: dict[str, Any],
-    transcript_path: str,
-) -> dict[str, Any]:
-    decisions: list[dict[str, str]] = []
-    next_actions = []
-    blocking = []
-    for payload in turn_payloads:
-        decisions.extend(payload["decisions"])
-        if payload.get("next_action"):
-            next_actions.append({"turn": payload["turn"], "text": payload["next_action"]})
-        if payload.get("blocking_issue"):
-            blocking.append({"turn": payload["turn"], "text": payload["blocking_issue"]})
-
-    files_of_interest = sorted(
-        indexes["files"].items(),
-        key=lambda item: len(item[1]["edited_in"]) + len(item[1]["read_in"]),
-        reverse=True,
-    )
-
-    return {
-        "schema_version": 2,
-        "session_id": session_id,
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "session_file": "session.json",
-        "transcript_path": transcript_path,
-        "model": model,
-        "git": git_snapshot,
-        "continuation": {
-            "recent_turns": [
-                {
-                    "turn": payload["turn"],
-                    "path": f"turn-{payload['turn']:03d}.json",
-                    "status": payload["status"],
-                    "summary": payload.get("turn_summary"),
-                }
-                for payload in turn_payloads[-8:]
-            ],
-            "blocking_issues": blocking,
-            "next_actions": next_actions[-12:],
-            "decisions": decisions[-20:],
-            "files_of_interest": [
-                {
-                    "path": path,
-                    "edited_in": refs["edited_in"],
-                    "read_in": refs["read_in"],
-                }
-                for path, refs in files_of_interest[:20]
-            ],
-            "commands_of_interest": [
-                {
-                    "turn": entry["turn"],
-                    "command": entry.get("command"),
-                    "output_preview": entry.get("output_preview"),
-                    "is_error": bool(entry.get("is_error")),
-                    "duration_s": entry.get("duration_s"),
-                }
-                for entry in indexes["commands"]
-                if command_is_of_interest(entry)
-            ][-20:],
-            "agent_reports": indexes["agents"][-20:],
-            "session_events": session_events[-20:],
-        },
-    }
-
-
 def render_session(
     *,
     log_dir: str,
@@ -846,111 +656,29 @@ def render_session(
     start_sha: str,
     transcript_path: str,
 ) -> None:
+    # Turn files are the only emitted artifact. The aggregate views
+    # (session.json / handoff.json / session.txt) were write-only duplication
+    # of the numbered turn-NNN.json files — nothing read them, and an unused
+    # session (no transcript / no substantive turns) used to leave an empty
+    # session.json + session.txt behind. Now an unused session writes zero
+    # turn files; the per-session pointer files (.session-envelope.json /
+    # .caller-session.json / .meta.json) are written by parse-input.sh, not
+    # here, and are untouched. Errored-command visibility (SESSION-LOG-ERROR-
+    # VISIBILITY-001) is preserved in each turn payload's `commands` list and in
+    # per-tool `is_error`/`duration_s` fields — a continuing agent reads the
+    # turn files directly instead of a re-projected handoff.
     output_dir = Path(log_dir)
     cleanup_generated_outputs(output_dir)
 
     if not transcript_path or not os.path.isfile(transcript_path):
-        session_payload = {
-            "schema_version": 2,
-            "session_id": session_id,
-            "started_at": started_at,
-            "model": model,
-            "cwd": cwd,
-            "branch": branch,
-            "head_sha": head_sha,
-            "start_sha": start_sha,
-            "transcript_path": transcript_path,
-            "turn_index": [],
-            "session_events": [],
-            "indexes": {"files": {}, "commands": [], "searches": [], "agents": [], "artifacts": []},
-            "git": build_git_snapshot(cwd, start_sha, branch, head_sha, dirty_count),
-        }
-        (output_dir / "session.json").write_text(json.dumps(session_payload, indent=2), encoding="utf-8")
-        write_session_txt(
-            output_dir / "session.txt",
-            project_name=os.path.basename(cwd),
-            session_id=session_id,
-            started_at=started_at,
-            model=model,
-            branch=branch,
-            head_sha=head_sha,
-            start_sha=start_sha,
-            turn_index=[],
-            session_events=[],
-            indexes=session_payload["indexes"],
-        )
         return
 
-    turns, session_events = accumulate_turns(parse_transcript_events(transcript_path), cwd)
+    turns, _session_events = accumulate_turns(parse_transcript_events(transcript_path), cwd)
     turn_payloads = [build_turn_payload(turn, idx + 1) for idx, turn in enumerate(turns)]
 
     for payload in turn_payloads:
         target = output_dir / f"turn-{payload['turn']:03d}.json"
         target.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-
-    indexes = collect_indexes(turn_payloads)
-    git_snapshot = build_git_snapshot(cwd, start_sha, branch, head_sha, dirty_count)
-    turn_index = []
-    for payload in turn_payloads:
-        edited = payload["refs"]["files"]["edited"]
-        edited_preview = ", ".join(f"`{path}`" for path in edited[:3])
-        if len(edited) > 3:
-            edited_preview += f" +{len(edited) - 3} more"
-        turn_index.append(
-            {
-                "turn": payload["turn"],
-                "path": f"turn-{payload['turn']:03d}.json",
-                "ts_start": payload["ts_start"],
-                "status": payload["status"],
-                "user_preview": compact_ws(payload.get("user"), 140) or "(no user message)",
-                "summary_preview": payload.get("turn_summary"),
-                "reasoning_count": sum(1 for item in payload["timeline"] if item.get("kind") == "reasoning"),
-                "tool_count": sum(1 for item in payload["timeline"] if item.get("kind") == "tool_call"),
-                "edited_preview": edited_preview,
-            }
-        )
-
-    session_payload = {
-        "schema_version": 2,
-        "session_id": session_id,
-        "started_at": started_at,
-        "model": model,
-        "cwd": cwd,
-        "branch": branch,
-        "head_sha": head_sha,
-        "start_sha": start_sha,
-        "transcript_path": transcript_path,
-        "turn_index": turn_index,
-        "session_events": session_events,
-        "indexes": indexes,
-        "git": git_snapshot,
-    }
-
-    (output_dir / "session.json").write_text(json.dumps(session_payload, indent=2), encoding="utf-8")
-    write_session_txt(
-        output_dir / "session.txt",
-        project_name=os.path.basename(cwd),
-        session_id=session_id,
-        started_at=started_at,
-        model=model,
-        branch=branch,
-        head_sha=head_sha,
-        start_sha=start_sha,
-        turn_index=turn_index,
-        session_events=session_events,
-        indexes=indexes,
-    )
-
-    handoff_payload = build_handoff(
-        session_id=session_id,
-        model=model,
-        turn_payloads=turn_payloads,
-        session_events=session_events,
-        indexes=indexes,
-        git_snapshot=git_snapshot,
-        transcript_path=transcript_path,
-    )
-    (output_dir / "handoff.json").write_text(json.dumps(handoff_payload, indent=2), encoding="utf-8")
 
 
 def main() -> int:
