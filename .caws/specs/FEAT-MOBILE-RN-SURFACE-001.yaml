@@ -2,10 +2,11 @@ id: FEAT-MOBILE-RN-SURFACE-001
 title: 'Presence-surface taxonomy migration (Dialog/Sheet/Toast) + RN native Modal substrate'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: rn-surface
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge rn-surface at 3fd83a27d67041185b63b202aaaea3dfb529fe25'
 created_at: '2026-06-10T16:00:29.750Z'
-updated_at: '2026-06-10T16:09:50.682Z'
+updated_at: '2026-06-10T16:32:54.982Z'
 blast_radius:
   modules:
     - Dialog/Sheet/Toast contracts (surface taxonomy blocks)
