@@ -2,6 +2,7 @@ export { default as Stack } from './Stack.svelte';
 export {
   createControllableState,
   createAnchorToggle,
+  createAutoDismiss,
   createDismissal,
   createFocusTrap,
   createScrollLock,

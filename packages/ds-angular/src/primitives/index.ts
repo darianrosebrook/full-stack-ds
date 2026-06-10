@@ -2,6 +2,7 @@ export { StackComponent } from './Stack.component.js';
 export {
   createControllableState,
   createAnchorToggle,
+  createAutoDismiss,
   createDismissal,
   createFocusTrap,
   createScrollLock,

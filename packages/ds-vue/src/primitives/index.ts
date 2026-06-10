@@ -3,6 +3,7 @@ export type { StackProps } from "./Stack.vue";
 export {
   createCompoundContext,
   useAnchorToggle,
+  useAutoDismiss,
   useControllableState,
   useDismissal,
   useFocusTrap,

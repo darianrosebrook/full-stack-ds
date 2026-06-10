@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useToast } from "./useToast.svelte.js";
+import { createAutoDismiss } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -37,6 +38,16 @@ const behavior = useToast({
   open: () => open,
   onOpenChange: () => onOpenChange,
 });
+
+const autoDismiss = createAutoDismiss({
+  open: () => Boolean(behavior.open),
+  durationMs: () => duration === undefined ? 6000 : duration,
+  onDismiss: () => behavior.setOpen(false),
+});
+$effect(() => {
+  autoDismiss.sync();
+  return () => autoDismiss.destroy();
+});
 // @generated:end
 
 // @generated:start classes
@@ -55,7 +66,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} aria-live="polite" aria-label="Notifications" role="alert">
+<div class={classes} aria-live="polite" aria-label="Notifications" onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
   {#if behavior.open}
   <div class={'toast__item'} role="status">
     <div class={'toast__row'}>

@@ -66,6 +66,7 @@ function svelteTableAttrBinding(attr: NativeTableAttr): string {
 }
 import { translateNonReactType } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
 import {
   isCompoundStateContainer,
@@ -928,6 +929,14 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   if (hasHook) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}.svelte.js";`);
   }
+  const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
+  const autoDismissChannel =
+    autoDismissPolicy && hasHook
+      ? channels.find((c) => c.valueType === "boolean")
+      : undefined;
+  if (autoDismissPolicy && autoDismissChannel) {
+    importLines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = generateTypeAliases(ir);
@@ -954,6 +963,25 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       hookLines.push(`  ${trigger.enabledByProp}: () => ${accessor},`);
     }
     hookLines.push(`});`);
+  }
+  // Ephemeral-surface auto-dismiss (WCAG 2.2.1). House style: the behavior
+  // takes getters and the component drives reactivity with $effect calling
+  // sync(); pause listeners land on the root element.
+  if (autoDismissPolicy && autoDismissChannel) {
+    const setter = `set${capitalizeSvelte(autoDismissChannel.name)}`;
+    const durationAccessor = jsAccessorFor(autoDismissPolicy.durationProp);
+    hookLines.push(
+      ``,
+      `const autoDismiss = createAutoDismiss({`,
+      `  open: () => Boolean(${hookVar}.${autoDismissChannel.name}),`,
+      `  durationMs: () => ${durationAccessor} === undefined ? ${autoDismissPolicy.defaultMs ?? "undefined"} : ${durationAccessor},`,
+      `  onDismiss: () => ${hookVar}.${setter}(false),`,
+      `});`,
+      `$effect(() => {`,
+      `  autoDismiss.sync();`,
+      `  return () => autoDismiss.destroy();`,
+      `});`,
+    );
   }
   const hookBody = hookLines.join("\n");
 
@@ -999,6 +1027,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     channelByName,
     hookVar,
     isRoot: true,
+    autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole ?? undefined,
     ...(overlayClickTrigger && booleanChannel
       ? {
@@ -1051,6 +1080,8 @@ interface SvelteRenderContext {
   channelByName: Map<string, NormalizedChannelIR>;
   hookVar: string;
   isRoot: boolean;
+  /** When true, attach auto-dismiss pause listeners to the root element. */
+  autoDismissPause?: boolean;
   // `a11y.role` from the contract — emitted on the root element when set.
   // React/Lit/Angular all forward this; Svelte was the odd one out and lost
   // the role attribute on dom-tree components.
@@ -1174,6 +1205,14 @@ function renderSvelteDomNode(
 
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
+    if (ctx.autoDismissPause) {
+      attrs.push(
+        `onpointerenter={autoDismiss.pauseListeners.onpointerenter}`,
+        `onpointerleave={autoDismiss.pauseListeners.onpointerleave}`,
+        `onfocusin={autoDismiss.pauseListeners.onfocusin}`,
+        `onfocusout={autoDismiss.pauseListeners.onfocusout}`,
+      );
+    }
     // Only emit role if the anatomy.dom.attrs doesn't already declare one
     // (avoids duplicate `role="..."` when contract specifies both
     // a11y.role and an explicit attrs.role on the root node).

@@ -64,6 +64,7 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import {
   getGroupHostOrnamentPart,
   getGroupHostPart,
@@ -1074,6 +1075,14 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
 
   const importLines = [`import { computed } from "vue";`];
   if (hasHook) importLines.push(`import { use${ir.name} } from "./use${ir.name}.js";`);
+  const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
+  const autoDismissChannel =
+    autoDismissPolicy && hasHook
+      ? channels.find((c) => c.valueType === "boolean")
+      : undefined;
+  if (autoDismissPolicy && autoDismissChannel) {
+    importLines.push(`import { useAutoDismiss } from "../../primitives/index.js";`);
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");
@@ -1103,6 +1112,19 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       hookLines.push(`  ${trigger.enabledByProp}: props.${propAccess(trigger.enabledByProp)},`);
     }
     hookLines.push(`});`);
+  }
+  // Ephemeral-surface auto-dismiss (WCAG 2.2.1: pause listeners land on the
+  // root via v-on). The presence budget flows from the *.timing.auto-dismiss
+  // token (generation-resolved default) with the duration prop as override.
+  if (autoDismissPolicy && autoDismissChannel) {
+    hookLines.push(
+      ``,
+      `const autoDismiss = useAutoDismiss({`,
+      `  open: () => Boolean(behavior.${autoDismissChannel.name}.value),`,
+      `  durationMs: () => props.${autoDismissPolicy.durationProp} === undefined ? ${autoDismissPolicy.defaultMs ?? "undefined"} : props.${autoDismissPolicy.durationProp},`,
+      `  onDismiss: () => behavior.set${capitalize(autoDismissChannel.name)}(false),`,
+      `});`,
+    );
   }
   const hookBody = hookLines.join("\n");
 
@@ -1150,6 +1172,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     classRecipe: classRecipe.base,
     channelByName,
     isRoot: true,
+    autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole,
     ...(overlayClickTrigger && booleanChannel
       ? {
@@ -1200,6 +1223,8 @@ interface VueRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
+  /** When true, bind the auto-dismiss pause listeners on the root via v-on. */
+  autoDismissPause?: boolean;
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
   /**
@@ -1358,6 +1383,9 @@ function renderVueDomNode(
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`:data-testid="props['data-testid']"`);
+    if (ctx.autoDismissPause) {
+      attrs.push(`v-on="autoDismiss.pauseListeners"`);
+    }
     if (ctx.overlayClickSetter) {
       const guardExpr = ctx.overlayClickEnabledProp
         ? `props.${propAccess(ctx.overlayClickEnabledProp)} !== false && ${ctx.overlayClickSetter}(false)`

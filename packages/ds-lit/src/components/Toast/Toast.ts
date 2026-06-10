@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { ToastBehavior } from './ToastBehavior.js';
+import { AutoDismissController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -153,6 +154,12 @@ export class ToastElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
+  private autoDismiss = new AutoDismissController(this, {
+    open: () => Boolean(this.behavior.open),
+    durationMs: () => this.duration === undefined ? 6000 : this.duration,
+    onDismiss: () => this.behavior.setOpen(false),
+  });
+
   private handleOpenChange(event: Event): void {
     this.behavior.setOpen((event.target as HTMLInputElement).checked);
   }
@@ -166,7 +173,7 @@ export class ToastElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-live="polite" aria-label="Notifications" role="alert">
+    return html`<div class="${this.computeClasses()}" aria-live="polite" aria-label="Notifications" role="alert" @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
   ${this.behavior.open ? html`
   <div class=${'toast__item'} role="status" data-fsds-channel-renders="open">
     <div class=${'toast__row'}>

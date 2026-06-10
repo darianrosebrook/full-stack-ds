@@ -21,12 +21,12 @@ export interface UseAutoDismissOptions {
 export interface UseAutoDismissResult {
   pause: () => void;
   resume: () => void;
-  /** Bind to the surface element to wire interaction pausing. */
+  /** Bind to the surface element via `v-on` to wire interaction pausing. */
   pauseListeners: {
-    onPointerenter: () => void;
-    onPointerleave: () => void;
-    onFocusin: () => void;
-    onFocusout: () => void;
+    pointerenter: () => void;
+    pointerleave: () => void;
+    focusin: () => void;
+    focusout: () => void;
   };
 }
 
@@ -88,16 +88,16 @@ export function useAutoDismiss(options: UseAutoDismissOptions): UseAutoDismissRe
     pause,
     resume,
     pauseListeners: {
-      onPointerenter: () => {
+      pointerenter: () => {
         if (pauseOnInteraction) pause();
       },
-      onPointerleave: () => {
+      pointerleave: () => {
         if (pauseOnInteraction) resume();
       },
-      onFocusin: () => {
+      focusin: () => {
         if (pauseOnInteraction) pause();
       },
-      onFocusout: () => {
+      focusout: () => {
         if (pauseOnInteraction) resume();
       },
     },

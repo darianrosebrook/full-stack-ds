@@ -2,6 +2,7 @@
 // @generated:start imports
 import { computed } from "vue";
 import { useToast } from "./useToast.js";
+import { useAutoDismiss } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -44,6 +45,12 @@ const behavior = useToast({
   open: () => props.open,
   onOpenChange: props.onOpenChange,
 });
+
+const autoDismiss = useAutoDismiss({
+  open: () => Boolean(behavior.open.value),
+  durationMs: () => props.duration === undefined ? 6000 : props.duration,
+  onDismiss: () => behavior.setOpen(false),
+});
 // @generated:end
 
 // @generated:start classes
@@ -61,7 +68,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" aria-live="polite" aria-label="Notifications" role="alert" :data-testid="props['data-testid']">
+  <div :class="classNames" aria-live="polite" aria-label="Notifications" role="alert" :data-testid="props['data-testid']" v-on="autoDismiss.pauseListeners">
     <div v-if="behavior.open.value" :class="'toast__item'" role="status">
       <div :class="'toast__row'">
         <div v-if="props.title" :class="'toast__title'"></div>
