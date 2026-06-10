@@ -285,6 +285,9 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
       if (fact.viewEntries.length === 0 && fact.textEntries.length === 0) continue;
       usage.props.add(fact.axisSafeName);
     }
+    if (loweredStateKeys(ir).includes("disabled")) {
+      addPropIfPresent(ir, usage, "disabled");
+    }
   }
   return usage;
 }
@@ -586,6 +589,20 @@ function emitVariantStyleConsts(ir: ComponentIR): string[] {
         );
       }
     }
+    for (const state of stateStyleFacts(ir)) {
+      if (!loweredStateKeys(ir).includes(state.stateKey)) continue;
+      const statePairs = axisFacts
+        .filter((fact) => state.variantEntries.has(fact.styleKey))
+        .map(
+          (fact) =>
+            `${JSON.stringify(fact.value)}: styles.${fact.styleKey}_${state.stateKey}`,
+        );
+      if (statePairs.length > 0) {
+        lines.push(
+          `${INDENT}const ${stateVariantStyleConstName(state.stateKey, safeName)} = ${safeName} !== undefined ? ({ ${statePairs.join(", ")} } as Record<string, ${rootStyleType(ir)} | undefined>)[${safeName}] : undefined;`,
+        );
+      }
+    }
   }
   return lines;
 }
@@ -619,6 +636,50 @@ function rootRendersTextWrapper(ir: ComponentIR): boolean {
   return node.children.some(
     (child) => child.tag === "children" || child.tag === "slot",
   );
+}
+
+/**
+ * Whether each interactive state can be lowered for this component's root:
+ * pressed needs a Pressable host; disabled needs a disabled prop to read.
+ */
+function loweredStateKeys(ir: ComponentIR): RnStateKey[] {
+  if (!ir.dom || usesNativeToggle(ir)) return [];
+  const rootIsPressable = rnComponentForNode(ir.dom) === "Pressable";
+  const hasDisabledProp = Boolean(findProp(ir, "disabled"));
+  return stateStyleFacts(ir)
+    .map((state) => state.stateKey)
+    .filter((stateKey) =>
+      stateKey === "pressed" ? rootIsPressable : hasDisabledProp,
+    );
+}
+
+/**
+ * Per-state style expressions joining the root style array, in emit order:
+ * the root-scope state entry first, then per-axis variant-state lookup
+ * consts (emitted by emitVariantStyleConsts).
+ */
+function stateStyleExpressions(ir: ComponentIR): Map<RnStateKey, string[]> {
+  const out = new Map<RnStateKey, string[]>();
+  const lowered = new Set(loweredStateKeys(ir));
+  for (const state of stateStyleFacts(ir)) {
+    if (!lowered.has(state.stateKey)) continue;
+    const exprs: string[] = [];
+    if (state.rootEntries.length > 0) {
+      exprs.push(`styles.root_state_${state.stateKey}`);
+    }
+    for (const axis of realizedVariantAxes(ir)) {
+      const axisFacts = variantStyleFacts(ir).filter((fact) => fact.axis === axis);
+      if (axisFacts.some((fact) => state.variantEntries.has(fact.styleKey))) {
+        exprs.push(stateVariantStyleConstName(state.stateKey, axisFacts[0]!.axisSafeName));
+      }
+    }
+    if (exprs.length > 0) out.set(state.stateKey, exprs);
+  }
+  return out;
+}
+
+function stateVariantStyleConstName(stateKey: RnStateKey, axisSafeName: string): string {
+  return `${stateKey}StyleFor${capitalize(axisSafeName)}`;
 }
 
 /** Variant style const names that should join the root style array. */
@@ -795,8 +856,23 @@ function emitNodeProps(
     const variantConsts = rootVariantStyleConstNames(ir)
       .map((name) => `, ${name}`)
       .join("");
+    const stateExprs = stateStyleExpressions(ir);
+    const pressedExprs = stateExprs.get("pressed") ?? [];
+    const disabledExprs = stateExprs.get("disabled") ?? [];
+    const stateParts = [
+      ...pressedExprs.map((expr) => `pressed ? ${expr} : undefined`),
+      ...disabledExprs.map((expr) => `disabled ? ${expr} : undefined`),
+    ]
+      .map((part) => `, ${part}`)
+      .join("");
     props.push(`${pad}testID={testID}`);
-    props.push(`${pad}style={[styles.${styleKey}${variantConsts}${dynamicStyle}, style]}`);
+    if (pressedExprs.length > 0) {
+      props.push(
+        `${pad}style={({ pressed }) => [styles.${styleKey}${variantConsts}${stateParts}${dynamicStyle}, style]}`,
+      );
+    } else {
+      props.push(`${pad}style={[styles.${styleKey}${variantConsts}${stateParts}${dynamicStyle}, style]}`);
+    }
   } else if (dynamicStyleEntries.length > 0) {
     props.push(`${pad}style={[styles.${styleKey}${dynamicStyle}]}`);
   } else {
@@ -1185,6 +1261,14 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
         extraStyles.set(fact.textStyleKey, styleObjectLiteral(fact.textEntries));
       }
     }
+    for (const state of stateStyleFacts(ir)) {
+      if (state.rootEntries.length > 0) {
+        extraStyles.set(`root_state_${state.stateKey}`, styleObjectLiteral(state.rootEntries));
+      }
+      for (const [variantStyleKey, entries] of state.variantEntries) {
+        extraStyles.set(`${variantStyleKey}_${state.stateKey}`, styleObjectLiteral(entries));
+      }
+    }
     for (const key of extraStyles.keys()) keys.add(key);
   }
 
@@ -1209,6 +1293,9 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
     ...(needsTextStyleImport ? ["TextStyle"] : []),
     ...(needsViewStyleImport ? ["ViewStyle"] : []),
   ].sort();
+  const needsDefinedStyle = [...styleByKey.values()].some((style) =>
+    style.includes("definedStyle("),
+  );
 
   const lines = [
     "// @generated:start imports",
@@ -1216,7 +1303,9 @@ function generateReactNativeStylesFile(ir: ComponentIR): string {
     ...(styleTypeImports.length > 0
       ? [`import type { ${styleTypeImports.join(", ")} } from "react-native";`]
       : []),
-    `import type { FsdsTheme } from "../../tokens";`,
+    needsDefinedStyle
+      ? `import { definedStyle, type FsdsTheme } from "../../tokens";`
+      : `import type { FsdsTheme } from "../../tokens";`,
     `import { resolve${ir.name}Tokens } from "./${ir.name}.tokens";`,
     "// @generated:end",
     "",
@@ -1249,7 +1338,7 @@ function mergeRootTextIntoRootStyle(ir: ComponentIR): string {
   if (textEntries.length === 0) return base;
   const textLiteral = styleObjectLiteral(textEntries);
   if (base === "{}") return textLiteral;
-  return `${base.slice(0, -2)}, ${textLiteral.slice(2)}`;
+  return `{ ...${base}, ...${textLiteral} }`;
 }
 
 /**
@@ -1505,6 +1594,97 @@ function rootIsTextComponent(ir: ComponentIR): boolean {
   return rnComponentForNode(ir.dom ?? fallbackViewNode()) === "RNText";
 }
 
+/**
+ * Interactive state realization (FEAT-MOBILE-RN-001 slice 3). Web state
+ * blocks (`.button:active { background-color: var(--…-active) }`) lower to
+ * Pressable state styles: `:active` → pressed (style-function form),
+ * `:disabled` → the disabled prop. `:hover` / `:focus-visible` have no
+ * Pressable analog and are intentionally not realized. View-layer only —
+ * text-layer state styling would need state plumbed into the text wrapper.
+ */
+const RN_STATE_PSEUDOS = [
+  { pseudo: "active", stateKey: "pressed" },
+  { pseudo: "disabled", stateKey: "disabled" },
+] as const;
+
+type RnStateKey = (typeof RN_STATE_PSEUDOS)[number]["stateKey"];
+
+function stateBlockEntries(
+  ir: ComponentIR,
+  pseudo: string,
+  scopeKey: string,
+): JoinedStyleEntry[] {
+  const block = ir.cssBlocks.find(
+    (candidate) => candidate.selector === `.${ir.cssPrefix}:${pseudo}`,
+  );
+  if (!block) return [];
+  const scope = ir.tokenScopes.find((candidate) => candidate.scope === scopeKey);
+  const out: JoinedStyleEntry[] = [];
+  for (const [cssProp, declValue] of Object.entries(block.declarations)) {
+    const mapping = CSS_TO_RN_STYLE[cssProp];
+    if (!mapping || mapping.layer !== "view") continue;
+    const varName = cssVarReference(declValue);
+    if (varName) {
+      const token = scope?.values.find((candidate) => candidate.cssVar === varName);
+      if (!token) continue;
+      if (
+        token.isLiteral &&
+        token.rawValue !== undefined &&
+        CSS_ONLY_LITERALS.has(token.rawValue.trim())
+      ) {
+        continue;
+      }
+      out.push({
+        rnProp: mapping.prop,
+        layer: mapping.layer,
+        expr: `(tokens.${scopeKey}?.[${JSON.stringify(token.name)}] as ${mapping.cast})`,
+        tokenName: token.name,
+        ...(token.resolvesTo !== undefined && { resolvesTo: token.resolvesTo }),
+        ...(token.rawValue !== undefined && { rawValue: token.rawValue }),
+        isLiteral: token.isLiteral,
+      });
+    } else if (scopeKey === "root") {
+      const literal = nativeStyleLiteral(declValue.trim());
+      if (literal !== null) {
+        out.push({
+          rnProp: mapping.prop,
+          layer: mapping.layer,
+          expr: literal,
+          tokenName: cssProp,
+          rawValue: declValue.trim(),
+          isLiteral: true,
+        });
+      }
+    }
+  }
+  return out;
+}
+
+export interface StateStyleFact {
+  stateKey: RnStateKey;
+  /** Entries for the root scope (the default-variant state realization). */
+  rootEntries: JoinedStyleEntry[];
+  /** Per-variant overrides keyed by the variant fact's styleKey. */
+  variantEntries: Map<string, JoinedStyleEntry[]>;
+}
+
+export function stateStyleFacts(ir: ComponentIR): StateStyleFact[] {
+  if (usesNativeToggle(ir)) return [];
+  const out: StateStyleFact[] = [];
+  for (const { pseudo, stateKey } of RN_STATE_PSEUDOS) {
+    const rootEntries = stateBlockEntries(ir, pseudo, "root");
+    const variantEntries = new Map<string, JoinedStyleEntry[]>();
+    for (const fact of variantStyleFacts(ir)) {
+      const entries = stateBlockEntries(ir, pseudo, fact.scopeKey);
+      if (entries.length > 0) variantEntries.set(fact.styleKey, entries);
+    }
+    if (rootEntries.length > 0 || variantEntries.size > 0) {
+      out.push({ stateKey, rootEntries, variantEntries });
+    }
+  }
+  return out;
+}
+
 /** Axes (in contract order) that realized at least one variant style entry. */
 function realizedVariantAxes(ir: ComponentIR): string[] {
   const axes: string[] = [];
@@ -1529,7 +1709,9 @@ function styleObjectLiteral(entries: JoinedStyleEntry[]): string {
     if (parts.some((existing) => existing.startsWith(`${entry.rnProp}: `))) continue;
     parts.push(`${entry.rnProp}: ${entry.expr}`);
   }
-  return parts.length > 0 ? `{ ${parts.join(", ")} }` : "{}";
+  // definedStyle drops undefined values so a themeless ref-only token can
+  // never clobber an earlier style layer's committed fallback.
+  return parts.length > 0 ? `definedStyle({ ${parts.join(", ")} })` : "{}";
 }
 
 function nativeStyleForKey(ir: ComponentIR, key: string): string {

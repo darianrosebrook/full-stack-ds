@@ -1,6 +1,7 @@
 import type { ComponentIR } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
 import {
+  stateStyleFacts,
   variantStyleFacts,
   type JoinedStyleEntry,
   type VariantStyleFact,
@@ -155,9 +156,50 @@ function buttonTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Save").length).toBeGreaterThan(0);`,
     `${INDENT}});`,
     ...(proof ? variantBackgroundTestBody(ir, proof) : []),
+    ...pressedStateTestBody(ir),
     `});`,
     ...renderFooter(),
   ].join("\n");
+}
+
+/**
+ * When the root realizes a pressed state with a themeless-resolvable
+ * background distinct from the rest background, prove the style-function
+ * lowering by invoking it for both states.
+ */
+function pressedStateTestBody(ir: ComponentIR): string[] {
+  const pressedState = stateStyleFacts(ir).find((state) => state.stateKey === "pressed");
+  const pressedBg = pressedState?.rootEntries.find(
+    (entry) => entry.rnProp === "backgroundColor" && entry.rawValue !== undefined,
+  );
+  const restBg = rootBackgroundRawValue(ir);
+  if (!pressedBg?.rawValue || !restBg || pressedBg.rawValue === restBg) return [];
+  return [
+    `${INDENT}it("realizes pressed state styles via the style function", () => {`,
+    ...rendererHelper(`<${ir.name} testID="subject">Save</${ir.name}>`),
+    `${INDENT}${INDENT}const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(typeof subject.props.style).toBe("function");`,
+    `${INDENT}${INDENT}const styleOf = subject.props.style as (state: { pressed: boolean }) => unknown;`,
+    `${INDENT}${INDENT}const flatten = (style: unknown): Record<string, unknown> =>`,
+    `${INDENT}${INDENT}${INDENT}Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));`,
+    `${INDENT}${INDENT}expect(flatten(styleOf({ pressed: true })).backgroundColor).toBe(${JSON.stringify(pressedBg.rawValue)});`,
+    `${INDENT}${INDENT}expect(flatten(styleOf({ pressed: false })).backgroundColor).toBe(${JSON.stringify(restBg)});`,
+    `${INDENT}});`,
+  ];
+}
+
+/** Themeless-resolved root background (the token's committed fallback). */
+function rootBackgroundRawValue(ir: ComponentIR): string | undefined {
+  for (const scope of ir.tokenScopes) {
+    if (scope.scope !== "root") continue;
+    const token = scope.values.find((value) =>
+      [".color.background.default", ".color.bg.default", ".color.bg"].some((suffix) =>
+        value.name.endsWith(suffix),
+      ),
+    );
+    return token?.rawValue;
+  }
+  return undefined;
 }
 
 interface VariantProof {
@@ -229,10 +271,14 @@ function variantBackgroundTestBody(ir: ComponentIR, proof: VariantProof): string
     `${INDENT}${INDENT}});`,
     `${INDENT}${INDENT}const flatten = (style: unknown): Record<string, unknown> =>`,
     `${INDENT}${INDENT}${INDENT}Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));`,
+    `${INDENT}${INDENT}const restStyle = (node: { props: { style?: unknown } }): unknown =>`,
+    `${INDENT}${INDENT}${INDENT}typeof node.props.style === "function"`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}? (node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false })`,
+    `${INDENT}${INDENT}${INDENT}${INDENT}: node.props.style;`,
     `${INDENT}${INDENT}const variantA = renderer!.root.findAllByProps({ testID: "variant-a" }).at(-1)!;`,
     `${INDENT}${INDENT}const variantB = renderer!.root.findAllByProps({ testID: "variant-b" }).at(-1)!;`,
-    `${INDENT}${INDENT}expect(flatten(variantA.props.style).backgroundColor).toBe(${JSON.stringify(proof.a.expected)});`,
-    `${INDENT}${INDENT}expect(flatten(variantB.props.style).backgroundColor).toBe(${JSON.stringify(proof.b.expected)});`,
+    `${INDENT}${INDENT}expect(flatten(restStyle(variantA)).backgroundColor).toBe(${JSON.stringify(proof.a.expected)});`,
+    `${INDENT}${INDENT}expect(flatten(restStyle(variantB)).backgroundColor).toBe(${JSON.stringify(proof.b.expected)});`,
     `${INDENT}});`,
   ];
 }

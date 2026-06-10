@@ -53,10 +53,12 @@ export function Button({
   const textVariantStyleForSize = size !== undefined ? ({ "small": styles.rootText_variant_small, "medium": styles.rootText_variant_medium, "large": styles.rootText_variant_large } as Record<string, TextStyle | undefined>)[size] : undefined;
   const variantStyleForVariant = variant !== undefined ? ({ "primary": styles.root_variant_primary, "secondary": styles.root_variant_secondary, "tertiary": styles.root_variant_tertiary, "ghost": styles.root_variant_ghost, "destructive": styles.root_variant_destructive, "outline": styles.root_variant_outline } as Record<string, ViewStyle | undefined>)[variant] : undefined;
   const textVariantStyleForVariant = variant !== undefined ? ({ "primary": styles.rootText_variant_primary, "secondary": styles.rootText_variant_secondary, "tertiary": styles.rootText_variant_tertiary, "ghost": styles.rootText_variant_ghost, "destructive": styles.rootText_variant_destructive, "outline": styles.rootText_variant_outline } as Record<string, TextStyle | undefined>)[variant] : undefined;
+  const pressedStyleForVariant = variant !== undefined ? ({ "primary": styles.root_variant_primary_pressed, "secondary": styles.root_variant_secondary_pressed, "destructive": styles.root_variant_destructive_pressed } as Record<string, ViewStyle | undefined>)[variant] : undefined;
+  const disabledStyleForVariant = variant !== undefined ? ({ "primary": styles.root_variant_primary_disabled } as Record<string, ViewStyle | undefined>)[variant] : undefined;
   return (
     <Pressable
       testID={testID}
-      style={[styles.root, variantStyleForSize, variantStyleForVariant, style]}
+      style={({ pressed }) => [styles.root, variantStyleForSize, variantStyleForVariant, pressed ? styles.root_state_pressed : undefined, pressed ? pressedStyleForVariant : undefined, disabled ? styles.root_state_disabled : undefined, disabled ? disabledStyleForVariant : undefined, style]}
       disabled={disabled}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}

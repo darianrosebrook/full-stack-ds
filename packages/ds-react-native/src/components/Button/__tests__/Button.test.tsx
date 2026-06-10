@@ -29,10 +29,27 @@ describe("Button React Native", () => {
     });
     const flatten = (style: unknown): Record<string, unknown> =>
       Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));
+    const restStyle = (node: { props: { style?: unknown } }): unknown =>
+      typeof node.props.style === "function"
+        ? (node.props.style as (state: { pressed: boolean }) => unknown)({ pressed: false })
+        : node.props.style;
     const variantA = renderer!.root.findAllByProps({ testID: "variant-a" }).at(-1)!;
     const variantB = renderer!.root.findAllByProps({ testID: "variant-b" }).at(-1)!;
-    expect(flatten(variantA.props.style).backgroundColor).toBe("#101010");
-    expect(flatten(variantB.props.style).backgroundColor).toBe("#202020");
+    expect(flatten(restStyle(variantA)).backgroundColor).toBe("#101010");
+    expect(flatten(restStyle(variantB)).backgroundColor).toBe("#202020");
+  });
+  it("realizes pressed state styles via the style function", () => {
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Button testID="subject">Save</Button>);
+  });
+    const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;
+    expect(typeof subject.props.style).toBe("function");
+    const styleOf = subject.props.style as (state: { pressed: boolean }) => unknown;
+    const flatten = (style: unknown): Record<string, unknown> =>
+      Object.assign({}, ...(Array.isArray(style) ? style.flat(Infinity) : [style]).filter(Boolean));
+    expect(flatten(styleOf({ pressed: true })).backgroundColor).toBe("#cecece");
+    expect(flatten(styleOf({ pressed: false })).backgroundColor).toBe("#d9292b");
   });
 });
 // @generated:end
