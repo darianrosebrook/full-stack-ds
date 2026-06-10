@@ -152,6 +152,12 @@ export const toastTokenScopes = {
       ref: "core.motion.duration.short",
       fallback: "150ms",
     },
+    "toast.timing.auto-dismiss": {
+      name: "toast.timing.auto-dismiss",
+      cssVar: "--fsds-toast-timing-auto-dismiss",
+      ref: "semantic.motion.dwell.notification",
+      fallback: "6000ms",
+    },
   },
   "variant_success": {
     "toast.color.default": {

@@ -25,6 +25,7 @@ interface Props {
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
   action?: unknown;
+  duration?: number | null;
   class?: string;
   "data-testid"?: string;
 }

@@ -20,13 +20,14 @@ export type ToastPoliteness = "polite" | "assertive";
 // @custom:end
 
 // @generated:start props
-export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "action" | "children" | "className" | "data-testid" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
+export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, "action" | "children" | "className" | "data-testid" | "duration" | "onOpenChange" | "open" | "politeness" | "title" | "variant"> {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   title?: string;
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
   action?: ReactNode;
+  duration?: number | null;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -103,6 +104,7 @@ export function Toast({
   children,
   title,
   action,
+  duration,
   ...rest
 }: ToastProps) {
   const { open, setOpen } = useToast({

@@ -1176,6 +1176,23 @@
           }
         }
       },
+      "dwell": {
+        "short": {
+          "$type": "duration",
+          "$description": "Short presence budget — auto-dismissing surfaces with terse content",
+          "$value": "4000ms"
+        },
+        "medium": {
+          "$type": "duration",
+          "$description": "Default presence budget for auto-dismissing surfaces (toasts)",
+          "$value": "6000ms"
+        },
+        "long": {
+          "$type": "duration",
+          "$description": "Long presence budget — surfaces carrying actions or longer copy",
+          "$value": "8000ms"
+        }
+      },
       "easing": {
         "standard": {
           "$type": "cubicBezier",
@@ -3500,6 +3517,13 @@
       }
     },
     "motion": {
+      "dwell": {
+        "notification": {
+          "$type": "duration",
+          "$description": "Presence budget for auto-dismissing notifications (Toast). Consumed by the behavior layer (auto-dismiss timers), not by CSS.",
+          "$value": "6000ms"
+        }
+      },
       "icon": {
         "scale": {
           "enter": {

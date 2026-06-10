@@ -127,6 +127,15 @@
       "description": "Optional action slot rendered next to the toast description (e.g. an undo button).",
       "defaultExpr": null,
       "nodeKind": null
+    },
+    {
+      "name": "duration",
+      "safeName": "duration",
+      "type": "number | null",
+      "required": false,
+      "description": "Auto-dismiss budget in milliseconds. undefined uses the design token default (toast.timing.auto-dismiss → semantic.motion.dwell.notification); null or 0 disables auto-dismissal. The timer pauses while the toast is hovered or contains focus (WCAG 2.2.1).",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {
@@ -255,6 +264,7 @@
           "--fsds-toast-size-maxWidth": "400px",
           "--fsds-toast-motion-enter": "var(--fsds-core-motion-duration-short, 150ms)",
           "--fsds-toast-motion-leave": "var(--fsds-core-motion-duration-short, 150ms)",
+          "--fsds-toast-timing-auto-dismiss": "var(--fsds-semantic-motion-dwell-notification, 6000ms)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -427,9 +437,13 @@
     },
     "dismissal": [
       "escape",
-      "close-button"
+      "close-button",
+      "timeout"
     ],
-    "openTriggers": []
+    "openTriggers": [],
+    "timing": {
+      "autoDismissProp": "duration"
+    }
   },
   "figma": {
     "intendedUse": "figma-library-materialization",

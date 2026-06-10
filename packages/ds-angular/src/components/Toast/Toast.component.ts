@@ -50,6 +50,7 @@ export class ToastComponent {
   @Input() variant?: ToastVariant = "info";
   @Input() politeness?: ToastPoliteness = "polite";
   @Input() action?: unknown;
+  @Input() duration?: number | null;
   @Input() class?: string;
 
   private destroyRef = inject(DestroyRef);

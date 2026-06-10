@@ -24,11 +24,12 @@ interface Props {
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
   action?: unknown;
+  duration?: number | null;
   class?: string;
   children?: import('svelte').Snippet;
 }
 
-let { open, onOpenChange, title, variant = "info", politeness = "polite", action, class: className, children }: Props = $props();
+let { open, onOpenChange, title, variant = "info", politeness = "polite", action, duration, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start hook

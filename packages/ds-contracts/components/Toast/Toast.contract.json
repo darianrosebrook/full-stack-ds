@@ -166,6 +166,11 @@
           "name": "action",
           "type": "ReactNode",
           "description": "Optional action slot rendered next to the toast description (e.g. an undo button)."
+        },
+        {
+          "name": "duration",
+          "type": "number | null",
+          "description": "Auto-dismiss budget in milliseconds. undefined uses the design token default (toast.timing.auto-dismiss → semantic.motion.dwell.notification); null or 0 disables auto-dismissal. The timer pauses while the toast is hovered or contains focus (WCAG 2.2.1)."
         }
       ]
     }
@@ -296,8 +301,12 @@
     },
     "dismissal": [
       "escape",
-      "close-button"
-    ]
+      "close-button",
+      "timeout"
+    ],
+    "timing": {
+      "autoDismissProp": "duration"
+    }
   },
   "portal": {
     "enabled": true,

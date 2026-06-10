@@ -86,5 +86,10 @@
     "resolvesTo": "core.motion.duration.short",
     "fallback": "150ms",
     "layer": "core"
+  },
+  "toast.timing.auto-dismiss": {
+    "resolvesTo": "semantic.motion.dwell.notification",
+    "fallback": "6000ms",
+    "layer": "semantic"
   }
 }

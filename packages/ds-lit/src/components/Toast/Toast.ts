@@ -48,6 +48,7 @@ export class ToastElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {
@@ -145,6 +146,7 @@ export class ToastElement extends LitElement {
   @property({ type: String }) variant?: ToastVariant = "info";
   @property({ type: String }) politeness?: ToastPoliteness = "polite";
   @property({ attribute: false }) action?: unknown;
+  @property({ attribute: false }) duration?: number | null;
 
   private behavior = new ToastBehavior(this, {
     open: () => this.open,
@@ -217,6 +219,7 @@ export class ToastItemElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {
@@ -346,6 +349,7 @@ export class ToastTitleElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {
@@ -475,6 +479,7 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-toast-size-maxWidth: 400px;
       --fsds-toast-motion-enter: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
+      --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
     .toast--success {

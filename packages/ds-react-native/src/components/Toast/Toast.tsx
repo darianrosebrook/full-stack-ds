@@ -19,6 +19,7 @@ export interface ToastProps {
   variant?: ToastVariant;
   politeness?: ToastPoliteness;
   action?: unknown;
+  duration?: number | null;
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
