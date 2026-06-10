@@ -380,6 +380,23 @@
     "scrollLock": true,
     "wrap": true
   },
+  "surface": {
+    "kind": "dialog",
+    "presence": "persistent",
+    "modality": "blocking",
+    "content": {
+      "part": "modal",
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "centered"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click",
+      "close-button"
+    ]
+  },
   "portal": {
     "enabled": true,
     "defaultTarget": "body",

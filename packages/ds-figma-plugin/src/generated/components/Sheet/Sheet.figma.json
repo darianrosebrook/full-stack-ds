@@ -515,7 +515,44 @@
       "backdrop": true
     }
   },
-  "surface": null,
+  "surface": {
+    "kind": "sheet",
+    "presence": "persistent",
+    "modality": "blocking",
+    "content": {
+      "part": {
+        "name": "content",
+        "semanticElement": "div",
+        "isCompound": true,
+        "isRootOnly": false,
+        "nativeTag": "div",
+        "details": {
+          "tag": "div",
+          "description": "Sliding dialog panel that traps focus while open.",
+          "role": "region",
+          "aria": {
+            "role": "dialog",
+            "attributes": [
+              "aria-modal",
+              "aria-labelledby",
+              "aria-describedby"
+            ]
+          }
+        }
+      },
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "viewport-edge",
+      "placementProp": "side"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click",
+      "close-button"
+    ],
+    "openTriggers": []
+  },
   "figma": {
     "intendedUse": "figma-library-materialization",
     "documentationFrame": "Sheet / Documentation",

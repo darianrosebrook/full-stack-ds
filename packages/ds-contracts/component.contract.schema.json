@@ -1144,8 +1144,8 @@
           "properties": {
             "strategy": {
               "type": "string",
-              "enum": ["anchored", "centered", "viewport-edge", "inline"],
-              "description": "anchored: relative to the trigger element. centered: viewport-centered. viewport-edge: pinned to a viewport edge (toasts). inline: rendered in document flow (no portal)."
+              "enum": ["anchored", "centered", "viewport-edge", "fullscreen", "inline"],
+              "description": "anchored: relative to the trigger element. centered: viewport-centered. viewport-edge: pinned to a viewport edge (toasts, side sheets). fullscreen: occupies the entire viewport (full-screen takeover; vocabulary reserved — no corpus contract uses it yet). inline: rendered in document flow (no portal)."
             },
             "placementProp": {
               "type": "string",

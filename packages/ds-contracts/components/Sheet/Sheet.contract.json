@@ -367,6 +367,24 @@
     "scrollLock": true,
     "wrap": true
   },
+  "surface": {
+    "kind": "sheet",
+    "presence": "persistent",
+    "modality": "blocking",
+    "content": {
+      "part": "content",
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "viewport-edge",
+      "placementProp": "side"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click",
+      "close-button"
+    ]
+  },
   "portal": {
     "enabled": true,
     "defaultTarget": "body",

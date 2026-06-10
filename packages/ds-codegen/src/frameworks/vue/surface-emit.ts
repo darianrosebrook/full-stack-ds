@@ -43,7 +43,10 @@ export interface VueSurfaceFiles {
 }
 
 export function isSurfaceComponent(ir: ComponentIR): boolean {
-  return ir.surface !== undefined;
+  // Kind-aware like svelte/angular/lit: non-anchored kinds (dialog, sheet,
+  // toast, …) may declare a surface taxonomy block for fact-tracking while
+  // keeping the existing generic/hook emission path on web.
+  return ir.surface !== undefined && isAnchoredPresenceKind(ir.surface.kind);
 }
 
 export function generateVueSurfaceFiles(ir: ComponentIR): VueSurfaceFiles {

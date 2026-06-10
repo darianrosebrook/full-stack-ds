@@ -27,6 +27,7 @@ import {
   pickPrimaryDisclosureChannel,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { isSurfaceComponent } from "./surface-emit.js";
 
 // ---------------------------------------------------------------------------
 // Compound-state-container pattern detection
@@ -622,8 +623,9 @@ function capitalize(s: string): string {
  */
 export function generateReactHookSource(ir: ComponentIR): string | null {
   // Presence-surface family: substrate is imported directly by the
-  // generated component file; no per-component hook is emitted.
-  if (ir.surface) return null;
+  // generated component file; no per-component hook is emitted. Kind-aware:
+  // non-anchored kinds (dialog, sheet, toast) keep their behavior hooks.
+  if (isSurfaceComponent(ir)) return null;
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
 

@@ -280,6 +280,22 @@
     "strategy": "none",
     "description": "ToastViewport is an ARIA live region. Toasts appear without moving keyboard focus."
   },
+  "surface": {
+    "kind": "toast",
+    "presence": "ephemeral",
+    "modality": "non-blocking",
+    "content": {
+      "part": "item",
+      "interactive": false
+    },
+    "positioning": {
+      "strategy": "viewport-edge"
+    },
+    "dismissal": [
+      "escape",
+      "close-button"
+    ]
+  },
   "portal": {
     "enabled": true,
     "defaultTarget": "body",
