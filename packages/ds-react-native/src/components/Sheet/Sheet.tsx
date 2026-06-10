@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSheetStyles } from "./Sheet.styles";
 // @generated:end
@@ -29,6 +29,7 @@ export interface SheetProps {
 export function Sheet({
   open: controlledOpenness,
   defaultOpen = false,
+  onOpenChange,
   children,
   style,
   testID,
@@ -37,8 +38,12 @@ export function Sheet({
 }: SheetProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createSheetStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpenness, setUncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
   const openness = controlledOpenness ?? uncontrolledOpenness;
+  const setOpennessValue = useCallback((next: boolean) => {
+    if (controlledOpenness === undefined) setUncontrolledOpenness(next);
+    onOpenChange?.(next);
+  }, [controlledOpenness, onOpenChange]);
 
   return (
     <View
@@ -74,6 +79,7 @@ export function Sheet({
           </RNText>
           <Pressable
             style={styles.close}
+            onPress={() => setOpennessValue(!openness)}
             accessibilityRole="button"
           />
         </View>

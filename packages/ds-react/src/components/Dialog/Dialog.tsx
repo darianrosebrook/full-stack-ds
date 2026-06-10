@@ -165,7 +165,7 @@ export function Dialog({
           <h2 className="dialog__title">
             {slots?.title}
           </h2>
-          <button className="dialog__closeButton" type="button" aria-label="Close dialog" />
+          <button className="dialog__closeButton" type="button" aria-label="Close dialog" onClick={() => setOpenness(!openness)} />
         </div>
         <div className="dialog__body">
           {children}

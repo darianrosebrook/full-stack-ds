@@ -67,7 +67,7 @@ const classes = $derived(
       {#if action}
       <div class={'toast__action'}></div>
       {/if}
-      <button class={'toast__close'} type="button" aria-label="Dismiss"></button>
+      <button class={'toast__close'} type="button" aria-label="Dismiss" onclick={() => behavior.setOpen(!behavior.open)}></button>
     </div>
   </div>
   {/if}

@@ -222,6 +222,10 @@ export class DialogElement extends LitElement {
     closeOnBackdropClick: this.closeOnBackdropClick,
   });
 
+  private handleOpennessChange(event: Event): void {
+    this.behavior.setOpenness((event.target as HTMLInputElement).checked);
+  }
+
   private _handleOverlayClick = (): void => {
     if (this.closeOnBackdropClick !== false) {
       this.behavior.setOpenness(false);
@@ -256,7 +260,7 @@ export class DialogElement extends LitElement {
       <h2 class=${'dialog__title'}>
         <slot name="title"></slot>
       </h2>
-      <button class=${'dialog__closeButton'} type="button" aria-label="Close dialog"></button>
+      <button class=${'dialog__closeButton'} type="button" aria-label="Close dialog" @click=${(e: Event) => this.handleOpennessChange(e)}></button>
     </div>
     <div class=${'dialog__body'}>
       <slot></slot>

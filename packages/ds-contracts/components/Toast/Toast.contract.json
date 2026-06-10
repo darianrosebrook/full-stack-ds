@@ -119,6 +119,9 @@
                   "attrs": {
                     "type": "button",
                     "aria-label": "Dismiss"
+                  },
+                  "events": {
+                    "click": "channel:open.onChange"
                   }
                 }
               ]

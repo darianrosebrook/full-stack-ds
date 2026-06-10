@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createToastStyles } from "./Toast.styles";
 // @generated:end
@@ -32,6 +32,7 @@ export function Toast({
   open: controlledOpen,
   title,
   action,
+  onOpenChange,
   children,
   style,
   testID,
@@ -40,8 +41,12 @@ export function Toast({
 }: ToastProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createToastStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpen] = useState<boolean>((false) as boolean);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
+  const setOpenValue = useCallback((next: boolean) => {
+    if (controlledOpen === undefined) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  }, [controlledOpen, onOpenChange]);
 
   return (
     <View
@@ -74,6 +79,7 @@ export function Toast({
           ) : null}
           <Pressable
             style={styles.close}
+            onPress={() => setOpenValue(!open)}
             accessibilityRole="button"
           />
         </View>

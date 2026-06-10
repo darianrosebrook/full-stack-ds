@@ -72,7 +72,7 @@ const classNames = computed(() => [
         <p :class="'sheet__description'">
           <slot name="description" />
         </p>
-        <button :class="'sheet__close'" type="button" aria-label="Close sheet"></button>
+        <button :class="'sheet__close'" type="button" aria-label="Close sheet" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
       </div>
       <div :class="'sheet__body'">
         <slot />

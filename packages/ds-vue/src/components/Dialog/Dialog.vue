@@ -78,7 +78,7 @@ const classNames = computed(() => [
         <h2 :class="'dialog__title'">
           <slot name="title" />
         </h2>
-        <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog"></button>
+        <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
       </div>
       <div :class="'dialog__body'">
         <slot />

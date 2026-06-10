@@ -134,6 +134,9 @@
                   "attrs": {
                     "type": "button",
                     "aria-label": "Close sheet"
+                  },
+                  "events": {
+                    "click": "channel:openness.onChange"
                   }
                 }
               ]

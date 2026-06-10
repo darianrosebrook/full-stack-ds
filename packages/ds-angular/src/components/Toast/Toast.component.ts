@@ -36,7 +36,7 @@ export type ToastPoliteness = "polite" | "assertive";
         <ng-container *ngIf="action">
           <div [ngClass]="'toast__action'"></div>
         </ng-container>
-        <button [ngClass]="'toast__close'" type="button" aria-label="Dismiss"></button>
+        <button [ngClass]="'toast__close'" type="button" aria-label="Dismiss" (click)="handleOpenChange($event)"></button>
       </div>
     </div>
   </ng-container>

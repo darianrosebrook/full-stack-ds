@@ -133,7 +133,7 @@ export function Toast({
           {action && (
             <div className="toast__action" />
           )}
-          <button className="toast__close" type="button" aria-label="Dismiss" />
+          <button className="toast__close" type="button" aria-label="Dismiss" onClick={() => setOpen(!open)} />
         </div>
       </div>
     )}

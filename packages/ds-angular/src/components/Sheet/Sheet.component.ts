@@ -35,7 +35,7 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
         <p [ngClass]="'sheet__description'">
           <ng-content select="[slot=description]" />
         </p>
-        <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet"></button>
+        <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet" (click)="handleOpennessChange($event)"></button>
       </div>
       <div [ngClass]="'sheet__body'">
         <ng-content />

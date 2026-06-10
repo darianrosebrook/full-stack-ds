@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createDialogStyles } from "./Dialog.styles";
 // @generated:end
@@ -34,6 +34,7 @@ export interface DialogProps {
 export function Dialog({
   open: controlledOpenness,
   defaultOpen = false,
+  onOpenChange,
   children,
   style,
   testID,
@@ -42,8 +43,12 @@ export function Dialog({
 }: DialogProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createDialogStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpenness, setUncontrolledOpenness] = useState<boolean>((defaultOpen ?? false) as boolean);
   const openness = controlledOpenness ?? uncontrolledOpenness;
+  const setOpennessValue = useCallback((next: boolean) => {
+    if (controlledOpenness === undefined) setUncontrolledOpenness(next);
+    onOpenChange?.(next);
+  }, [controlledOpenness, onOpenChange]);
 
   return (
     <View
@@ -73,6 +78,7 @@ export function Dialog({
           </View>
           <Pressable
             style={styles.closeButton}
+            onPress={() => setOpennessValue(!openness)}
             accessibilityRole="button"
           />
         </View>
