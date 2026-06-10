@@ -301,6 +301,10 @@ function progressTest(ir: ComponentIR): string {
 }
 
 function expandableTest(ir: ComponentIR): string {
+  const channel = ir.behavior.normalizedChannels.find(
+    (candidate) => candidate.name === "expanded",
+  );
+  const handlerProp = channel?.changeHandlerProp;
   return [
     ...renderImports(ir),
     `describe("${ir.name} React Native", () => {`,
@@ -312,6 +316,22 @@ function expandableTest(ir: ComponentIR): string {
     `${INDENT}${INDENT}const content = renderer!.root.findAll((node) => node.props.children === "Long copy").at(-1);`,
     `${INDENT}${INDENT}expect(content?.props.numberOfLines).toBe(2);`,
     `${INDENT}});`,
+    ...(handlerProp
+      ? [
+          `${INDENT}it("updates uncontrolled state and fires the change callback on trigger press", () => {`,
+          `${INDENT}${INDENT}const seen: boolean[] = [];`,
+          ...rendererHelper(
+            `<${ir.name} maxLines={2} showMoreLabel="More" showLessLabel="Less" ${handlerProp}={(next: boolean) => seen.push(next)} testID="subject">Long copy</${ir.name}>`,
+          ),
+          `${INDENT}${INDENT}const trigger = renderer!.root.findByProps({ accessibilityRole: "button" });`,
+          `${INDENT}${INDENT}expect(trigger.props.accessibilityState).toMatchObject({ expanded: false });`,
+          `${INDENT}${INDENT}act(() => { trigger.props.onPress(); });`,
+          `${INDENT}${INDENT}expect(seen).toEqual([true]);`,
+          `${INDENT}${INDENT}const pressed = renderer!.root.findByProps({ accessibilityRole: "button" });`,
+          `${INDENT}${INDENT}expect(pressed.props.accessibilityState).toMatchObject({ expanded: true });`,
+          `${INDENT}});`,
+        ]
+      : []),
     `});`,
     ...renderFooter(),
   ].join("\n");
