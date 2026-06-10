@@ -3,6 +3,7 @@ title: 'React Native emitter completion + default governed-rail graduation'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: rn-rail
 created_at: '2026-06-10T02:07:14.228Z'
 updated_at: '2026-06-10T02:07:24.157Z'
 blast_radius:
