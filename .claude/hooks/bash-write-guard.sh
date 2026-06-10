@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 14
+# hook_pack_version: 15
 # caws_min_major: 11
 # lineage_refs: 4,8,13,20,32
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -93,8 +93,19 @@ extract_targets() {
   # rule cannot re-split it (a naive "s/>>/ >> /; s/([^>])>/.../" splits the
   # padded ">>" into "> >" because the inserted space matches [^>]). Pad single
   # ">", then restore the sentinel as a padded ">>".
+  # BASH-WRITE-GUARD-FD-REDIRECT-FP-001: file-descriptor redirections are
+  # read-only fd plumbing, NOT file writes — `2>&1`, `>&2`, `1>&2`, `2>&-`,
+  # `N>&M` duplicate/close a descriptor and create no file target. The redirect
+  # splitter below treats the token after `>` as a write target; without
+  # excluding fd-redirects, `... 2>&1` splits into `2 > &1` and extracts a
+  # phantom `&1` target, which the ownership oracle then mis-resolves to a
+  # worktree payload path and asks for confirmation on a benign read (e.g.
+  # `caws status 2>&1 | head`, `pytest ... 2>&1 | tail`). Neutralize fd-redirect
+  # forms to a sentinel BEFORE splitting `>` so they are never tokenized as a
+  # file redirection. This mirrors block-dangerous.sh's `(>>|>)[^&]` rule.
   local padded
   padded="$(printf '%s' "$cmd" \
+    | sed -E 's/[0-9]*>&[0-9-]+/ /g; s/&>>?[0-9]*/ /g' \
     | sed -E 's/>>/ __CAWS_APPEND__ /g; s/>/ > /g; s/__CAWS_APPEND__/>>/g; s/\|/ | /g')"
   # shellcheck disable=SC2206
   local toks=( $padded )

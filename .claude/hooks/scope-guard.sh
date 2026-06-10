@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 14
+# hook_pack_version: 15
 # caws_min_major: 11
 # lineage_refs: 8,11,12,16
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -184,12 +184,43 @@ if [[ ! -d "$SPECS_BASE/.caws/specs" ]]; then
   exit 0
 fi
 
+FOREIGN_REPO=0
 if [[ "$FILE_PATH" == "$WORK_DIR"/* ]]; then
   REL_PATH="${FILE_PATH#$WORK_DIR/}"
 elif [[ "$FILE_PATH" == "$PROJECT_DIR"/* ]]; then
   REL_PATH="${FILE_PATH#$PROJECT_DIR/}"
+elif [[ "$FILE_PATH" == /* ]]; then
+  # SCOPE-GUARD-FOREIGN-REPO-CONTAINMENT-001: an ABSOLUTE path under neither
+  # this session's WORK_DIR nor PROJECT_DIR belongs to a DIFFERENT repository
+  # (e.g. a caws-rooted session editing a sibling repo). The guard's authority
+  # is over how the agent behaves IN THIS repo; reaching OUT to WRITE another
+  # repo's files is itself the dangerous act — a thrashing agent must not
+  # silently create/modify files (especially executables) outside its governing
+  # repo. So a foreign-repo WRITE/EDIT HARD-BLOCKS, immediately and absolutely
+  # (no 3-strike ramp, no in-band escape). This guard only fires on Write/Edit;
+  # cross-repo READS are never blocked (reading sibling repos is useful and
+  # safe). The sanctioned way to make a cross-repo CHANGE is to hand it off: an
+  # agent rooted in THAT repo does the edit. The block message below instructs
+  # the agent to write an explicit handoff (what/why/how) for that agent.
+  REL_PATH="$FILE_PATH"
+  FOREIGN_REPO=1
 else
   REL_PATH="$FILE_PATH"
+fi
+
+# SCOPE-GUARD-FOREIGN-REPO-CONTAINMENT-001: hard-block a Write/Edit to a file in
+# a DIFFERENT repository, immediately — before the ALLOW_PREFIXES list, the
+# kernel scope-check, and the 3-strike ramp. There is no in-band escape: the
+# guard governs THIS repo, and a cross-repo write is out of bounds regardless
+# of any local spec. The legitimate path for a cross-repo CHANGE is a HANDOFF —
+# an agent rooted in the target repo makes the edit.
+if [[ "$FOREIGN_REPO" == "1" ]]; then
+  _id="CAWS scope-guard"
+  command -v guard_identity >/dev/null 2>&1 && _id="$(guard_identity scope-guard)"
+  _note="This is a CAWS governance decision, not a Claude Code harness prompt."
+  command -v guard_not_harness_note >/dev/null 2>&1 && _note="$(guard_not_harness_note)"
+  emit_block "$_id: BLOCKED — '$FILE_PATH' is in a DIFFERENT repository than this session's project ($PROJECT_DIR). $_note This guard governs edits within the current repo; a session may READ sibling repos freely but must NOT WRITE into another repo from here, so it cannot silently mutate files (especially executables) outside its governing repo. There is no in-band override. To make this change: write an explicit HANDOFF for an agent rooted in that repo — state WHAT to change, WHY, and HOW (the exact edit), then have that repo's own session (or the user) apply it. Do NOT route around this via Bash (sed -i / cp / output redirect / node -e / python write) — those hit the same boundary and are a guard bypass."
+  exit 2
 fi
 
 if [[ "$REL_PATH" != */* ]]; then
