@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 4,8,13,20,32
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -11,7 +11,7 @@
 # (echo >> file, sed -i, rm, mv, git restore, ...) were an UNGUARDED side door
 # into worktree-owned payload. This guard self-filters on Bash, extracts write
 # TARGETS for a deliberately NARROW set of high-value mutation forms, and routes
-# each target through the SAME ownership oracle (lib/worktree-claim-oracle.js)
+# each target through the SAME ownership oracle (lib/worktree-claim-oracle.cjs)
 # that worktree-write-guard uses for Write/Edit — so a Bash mutation and a
 # Write/Edit of the same path get the same owner-vs-session answer.
 #
@@ -56,7 +56,7 @@ if [[ "$TOOL_NAME" != "Bash" ]] || [[ -z "$COMMAND" ]]; then
   exit 0
 fi
 
-CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.js"
+CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.cjs"
 # No oracle or no node -> cannot decide ownership; fail OPEN (the enforcement
 # claim is only made when the oracle is present). This matches the
 # worktree-write-guard payload arm.
@@ -265,11 +265,32 @@ escalate() {
 while IFS= read -r cand; do
   [[ -z "$cand" ]] && continue
   abs="$(abspath "$cand")"
+  # Capture the oracle's stdout (the decision). The previous form sent stderr to
+  # /dev/null, so a node crash — e.g. a CommonJS oracle loaded as ESM under a
+  # consumer repo's package.json "type":"module" (ReferenceError: require is not
+  # defined) — surfaced only as the opaque "error_fail_closed:oracle-spawn". We
+  # now merge stderr into the captured output (2>&1); on a normal run the oracle
+  # prints exactly one decision line to stdout and nothing to stderr, so the
+  # decision parse is unchanged. On a spawn failure stdout is empty and the
+  # captured value is the node error — we fold its first line into the
+  # error_fail_closed detail so the ask reason names the underlying cause
+  # (FIX-HOOKPACK-CONSUMER-INSTALL-001 A3).
   out="$(CAWS_ORACLE_PROJECT_DIR="$PROJECT_DIR" \
     CAWS_ORACLE_CURRENT_BRANCH="" \
     CAWS_ORACLE_REL_PATH="$abs" \
     CAWS_ORACLE_SESSION_ID="${HOOK_SESSION_ID:-}" \
-    node "$CAWS_CLAIM_ORACLE" 2>/dev/null || echo "error_fail_closed:oracle-spawn")"
+    node "$CAWS_CLAIM_ORACLE" 2>&1 || true)"
+  # A well-formed decision is "<outcome>:<detail>" on a single line with a known
+  # outcome token. Anything else (empty, or a node stack trace) is a spawn
+  # failure: keep the sentinel but append the real first-line cause.
+  _first="${out%%$'\n'*}"
+  case "${_first%%:*}" in
+    pass|block_foreign_worktree|block_claimed|ask_uncertain|error_fail_closed)
+      out="$_first" ;;
+    *)
+      _reason="$(printf '%s' "$_first" | cut -c1-200)"
+      out="error_fail_closed:oracle-spawn (${_reason:-no output})" ;;
+  esac
   outcome="${out%%:*}"
   detail="${out#*:}"
   case "$outcome" in

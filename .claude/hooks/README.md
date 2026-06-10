@@ -1,191 +1,123 @@
-# CAWS Claude-Code hooks — what governs a session here
+<!--
+# CAWS-MANAGED-HOOK
+# hook_pack: claude-code
+# hook_pack_version: 13
+# caws_min_major: 11
+# lineage_refs: 8,11,16,17,19,22,23,24,27
+# do_not_edit_directly: update via `caws init --agent-surface claude-code`
+-->
 
-This directory is the **CAWS claude-code hook pack** (`hook_pack_version: 11`).
-Every file with a `# CAWS-MANAGED-HOOK` header is installed and maintained by
-`caws init --agent-surface claude-code` and carries `do_not_edit_directly`.
-**Do not hand-edit hook scripts** — `protected-paths.sh` hard-blocks
-`Write`/`Edit` under `.claude/hooks/*`, and `block-dangerous.sh` arms a sticky
-latch if a `Bash` command mutates a guard file. To change hook behavior, re-run
-`caws init` or ask the user; do not weaken a guard by local judgment.
+# CAWS Claude Code Hook Pack — Inventory
 
-This README is **reference documentation**, derived by reading the code at the
-current commit. It is not itself a hook. If a hook's behavior and this doc
-disagree, the code wins — update this doc.
+Human-facing inventory of the v11 Claude Code hook pack. For the **agent
+doctrine** (managed-file rules, spec-authoring traps, v10/v11 state model,
+`settings.json` wiring) see [`CLAUDE.md`](./CLAUDE.md) in this directory —
+that file is authoritative for behavior; this README is the at-a-glance map.
 
-## How the wiring works
+These are CAWS-managed files. **Do not hand-edit them.** Update the pack with
+`caws init --agent-surface claude-code`. Hand-editing a managed file turns it
+into an unmanaged snowflake the installer will then refuse to touch.
 
-`.claude/settings.json` registers exactly **one dispatcher per event**, all
-under `caws_dispatch/`:
+## How the pack runs
 
-| Event | Dispatcher | Tool matcher |
-|---|---|---|
-| `PreToolUse` | `caws_dispatch/pre_tool_use.sh` | `Bash\|Read\|Write\|Edit\|Glob\|Grep\|NotebookEdit` |
-| `PostToolUse` | `caws_dispatch/post_tool_use.sh` | `Write\|Edit\|Bash\|ExitPlanMode` |
-| `SessionStart` | `caws_dispatch/session_start.sh` | (all) |
-| `Stop` | `caws_dispatch/stop.sh` | (all) |
-| `PreCompact` | `session-log.sh` (direct) | (all) |
+Claude Code reads `.claude/settings.json` at session start and invokes four
+dispatchers under `caws_dispatch/`. Each reads stdin once via
+`lib/parse-input.sh`, then fans out to a registered handler list via
+`lib/run-handlers.sh`.
 
-> The sibling `dispatch/` directory is an **inactive copy** — not referenced by
-> `settings.json` or any active dispatcher. Only `caws_dispatch/` runs.
-
-Each dispatcher reads stdin once (`lib/parse-input.sh`), then fans out to an
-ordered `HANDLERS` array (`lib/run-handlers.sh`). Every handler **self-filters**
-on `$HOOK_TOOL_NAME` and returns a cheap `exit 0` when it doesn't apply.
-
-**Aggregation rules (`lib/run-handlers.sh`):**
-
-- `PreToolUse` runs `--short-circuit-on-block`: the first handler exiting **2**
-  stops the chain and the dispatcher returns 2 (the tool call is **blocked**).
-- A handler can also block via **structured stdout**: JSON with
-  `decision: "block"` (priority 3) wins over `ask` (2) over plain
-  `additionalContext` (1) — a later advisory handler cannot erase an earlier
-  block.
-- Non-2 non-zero exits are **warnings**; the dispatcher continues and returns
-  the max.
-- `PostToolUse`/`SessionStart`/`Stop`: exit 2 still short-circuits + propagates
-  stderr, but the tool already ran — so these are effectively non-blocking for
-  the *current* call (PostToolUse blocks surface as guidance/strikes, not undo).
-- **Fail-open:** if the dispatcher or a lib errors before handlers run, it exits
-  0. Guard infrastructure must not turn its own bugs into tool blocks.
-
-`HOOK_*` env vars (e.g. `HOOK_TOOL_NAME`, `HOOK_FILE_PATH`, `HOOK_SESSION_ID`)
-are exported by the parser from the sanitized payload.
-
----
-
-## PreToolUse handlers (these can BLOCK a tool call before it runs)
-
-Order matters — listed as they run. `agent-heartbeat.sh` runs first (so peer
-presence is refreshed even if a later guard blocks); `quiet-merge.sh` runs last
-(it rewrites input and must not be clobbered).
-
-### Blocking / asking guards
-
-| Hook | Fires on | What it does | Outcome | Escape hatch |
-|---|---|---|---|---|
-| **cwd-guard.sh** | all | Blocks if `$(pwd)` no longer exists (e.g. you were inside a worktree that got destroyed). | **BLOCK** (exit 2) | `cd $(git rev-parse --show-toplevel)` or `cd $HOME`; clears automatically |
-| **block-dangerous.sh** | `Bash` | Routes the command through `classify_command.py`. `deny` → block; `ask`+`confirm` → block + **arms a sticky per-session danger latch**; `ask`+`advisory` → stderr warning only. Also blocks any command that mutates `worktree-write-guard.sh`. Once latched, **all mutating commands block** until reset. | **BLOCK** + latch / **ASK** / advisory | `bash .claude/hooks/reset-danger-latch.sh --current --reason "…"` (or `--session <id>` / `--all`) |
-| **worktree-guard.sh** | `Bash` | When active CAWS worktrees exist (or cwd is the canonical checkout): blocks history-rewriting / cross-worktree git (`commit --amend`, `stash`, `reset --hard`, `restore`, `checkout -- <path>`, `clean`, `push --force`, base-branch push, `checkout`/`switch`/`branch -f`/`reset` from canonical). Always blocks `--scope` worktree creation and `git sparse-checkout`. Advises (non-block) on base-branch `git merge`/`git commit`. | **BLOCK** (exit 2) | None; clears when worktrees are destroyed or you move into a worktree |
-| **scope-guard.sh** | `Write`,`Edit` | Checks the target path against the active spec's `scope.in`/`scope.out` (via `caws scope check`, falling back to inline spec parse). Out-of-scope edits **escalate by strike**: 1st = advise, 2nd = ask, 3rd+ = block. Always-allowed: `.caws/`, `.claude/`, `docs/`, `tests/`, `scripts/`, `tmp/`, `.archive/`, root-level files, and `non_governed_zones` from `.caws/policy.yaml`. | **strike → ADVISE/ASK/BLOCK** | Fix scope: `caws specs amend-scope <id> --add <path>`; clear stale strikes: `bash .claude/hooks/reset-strikes.sh --current` |
-| **worktree-write-guard.sh** | `Write`,`Edit` | Base-branch write isolation via the shared **claim oracle** (`lib/worktree-claim-oracle.cjs`). Hard-blocks writing a linked worktree's own `.caws/specs/`. For `.caws/worktrees/*` payloads: `block_foreign_worktree`/`block_claimed` → block, `pass` → allow. For other base-branch paths claimed by another active spec's `scope.in` → block. Allowlist passes `.claude/*`, `.caws/*` (non-worktree), `docs/*`, `CLAUDE.md`, `.githooks/*`, `.github/*`, etc. Bypassed while a merge is in progress (`MERGE_HEAD`). | **BLOCK** / **ASK** | `CAWS_GUARD_NO_ASK=1` forces ask→block; use `caws specs amend-scope` to claim the path in your own worktree |
-| **bash-write-guard.sh** | `Bash` | The `Bash` counterpart to the write guard: extracts write targets from recognized mutation forms (`>`/`>>`, `tee`, `sed -i`, `perl -pi`, `truncate`, `touch`, `rm`, `mv`, `cp`, `dd of=`, `git restore/checkout/reset/clean`) and routes each through the same oracle. Worst outcome across targets wins. | **BLOCK** / **ASK** | `CAWS_GUARD_NO_ASK=1` forces ask→block |
-| **protected-paths.sh** | `Write`,`Edit` | Pure path match. Blocks any write under `*/.claude/hooks/*` (exit 1) and to `*/.claude/logs/guard-strikes-*.json` (exit 2). | **BLOCK** | None programmatic; ask the user / re-run `caws init` for hook changes |
-
-### Non-blocking PreToolUse handlers
-
-| Hook | Fires on | What it does | Outcome |
+| Dispatcher | Claude Code event | Matcher | Timeout |
 |---|---|---|---|
-| **agent-heartbeat.sh** | all | Refreshes this session's CAWS lease (`caws agents heartbeat`); emits a **MULTI-AGENT NOTICE** when other live sessions are detected and the peer set changes. | ADVISE (never blocks). Tune with `HEARTBEAT_EMIT_MIN_INTERVAL_MS` (default 60000) |
-| **scan-secrets.sh** | any tool w/ `file_path` | Advises if the path looks secret-prone (`.env*`, `*.pem`, `*.key`, `id_rsa`, `credentials.json`, `.ssh/`, `.aws/`, `.kube/`, …). | ADVISE only |
-| **quiet-merge.sh** | `Bash` | Rewrites bare `caws worktree merge\|destroy <name>` to `cd <root> && <cmd> 2>/dev/null \| tail -3; echo '---'; git log --oneline -1` — moving cwd out of the worktree before it's destroyed so PostToolUse hooks don't ENOENT. | **MUTATES input** (`updatedInput`) |
+| `caws_dispatch/pre_tool_use.sh` | `PreToolUse` | Bash, Read, Write, Edit, Glob, Grep, NotebookEdit | 45 s |
+| `caws_dispatch/post_tool_use.sh` | `PostToolUse` | Write, Edit, Bash, ExitPlanMode | 60 s |
+| `caws_dispatch/session_start.sh` | `SessionStart` | — | 30 s |
+| `caws_dispatch/stop.sh` | `Stop` | — | 30 s |
 
----
+`session-log.sh` is additionally wired on `PreCompact` so transcripts survive
+context compaction.
 
-## The shared claim oracle (`lib/worktree-claim-oracle.cjs`)
+**Exit-code contract** (per handler, aggregated by the dispatcher): `2` =
+hard block (short-circuits remaining handlers, tool call refused); `1` =
+non-blocking warning (message shown, dispatcher continues, returns the max
+non-2 code); `0` = pass. The dispatcher itself fails **open** — if it errors
+before any handler runs, it exits 0 rather than turning its own bug into a
+block.
 
-Both write guards delegate the ownership decision to one CommonJS oracle (it's
-`.cjs` by design — no TypeScript/build dependency in installed hooks). It emits
-one of a closed outcome set to stdout (exit always 0; the caller decides):
+## PreToolUse handlers (in dispatch order)
 
-| Outcome | Meaning |
+Handlers self-filter on `$HOOK_TOOL_NAME`; a non-matching tool is a cheap exit 0.
+
+| Handler | Self-filters to | What it does |
+|---|---|---|
+| `agent-heartbeat.sh` | all | Heartbeats the session lease; surfaces parallel-agent presence via `additionalContext` when more than one agent is active. Never blocks. |
+| `cwd-guard.sh` | all | Blocks (exit 2) when the working directory no longer exists on disk (e.g. a worktree was deleted while the session was inside it), with a recovery hint. |
+| `block-dangerous.sh` + `classify_command.py` | Bash | Classifies catastrophic git ops, tokenized-argv bypasses, pipe-to-shell, and the protected-guard self-mod set; arms a per-session **danger latch** that blocks all subsequent Bash until a human runs `reset-danger-latch.sh`. |
+| `worktree-guard.sh` | Bash | When worktrees are active: blocks amend/stash/reset/force-push, canonical-checkout mutating git, `git sparse-checkout` (any subcommand — points to `caws worktree repair-sparse`), and the path-restore family (`git restore <path>`, `git checkout -- <path>`, `git clean`). |
+| `scope-guard.sh` | Write, Edit, Bash | Blocks edits outside the bound spec's `scope.in`; in union mode (no binding) checks all active specs. Applies progressive strikes via the `guard-strikes.sh` library. |
+| `worktree-write-guard.sh` | Write, Edit | Blocks base-branch writes when worktrees are active; refuses `<worktree>/.caws/specs/*` writes (canonical authority); routes `.caws/worktrees/<name>/*` payload writes through `lib/worktree-claim-oracle.cjs` so a foreign session's write hard-blocks. |
+| `bash-write-guard.sh` | Bash | Extracts mutation targets (redirection, `tee`, `sed -i`, `perl -pi`, `truncate`, `touch`, `rm`, `mv`, `cp`, `dd of=`, git path-restore) and routes each through the same `worktree-claim-oracle.cjs` — a Bash mutation of a foreign worktree's payload blocks at the same boundary as a foreign Write/Edit. |
+| `protected-paths.sh` | Write, Edit | Blocks hook **scripts** under `.claude/hooks/` (`*.sh`/`*.py`/`*.cjs`, exit 1) and strike-state `.claude/logs/guard-strikes-*.json` (exit 2). Documentation (`*.md`) under `.claude/hooks/` is admitted; every other extension stays blocked (fail-closed). |
+| `scan-secrets.sh` | Write, Edit, Bash | Advisory (exit 0): warns via `additionalContext` when a target path matches common secret-bearing patterns (`.env*`, `*.pem`, `*.key`, SSH/cloud config dirs). Does not block. |
+| `quiet-merge.sh` | Bash | Must run **last** — emits `updatedInput`. Rewrites `caws worktree merge`/`destroy` to `cd <repo-root> && <cmd> 2>/dev/null | tail -3` so the CWD survives the directory being destroyed mid-command, and trims verbose output. |
+
+## PostToolUse handlers
+
+| Handler | Self-filters to | What it does |
+|---|---|---|
+| `naming-check.sh` | Write (new files) | Advisory (exit 0): flags shadow-file naming — banned modifier suffixes (`-new`, `-enhanced`, `-v2`, `-final`, `-copy`, …), version suffixes, date stamps. Test files with canonical extensions are exempted. |
+| `god-object-check.sh` | Write, Edit | Advisory (exit 0): flags a file whose SLOC exceeds `CAWS_GOD_OBJECT_LOC` (default 2000). |
+| `shortcut-language-check.sh` | Write, Edit | Progressive (warn→ask→block via the `guard-strikes.sh` library): flags TODO/FIXME/XXX/placeholder/"not implemented" stub language in non-test source. |
+| `duplicate-export-check.sh` | Write (new JS/TS) | Advisory (exit 0): flags an exported symbol whose exact name already exists in the enclosing package's src tree (generic-name allowlist). |
+| `loc-delta-check.sh` | Edit | Advisory (exit 0): flags an added-line delta over `CAWS_LOC_DELTA_WARN_THRESHOLD` (default 300) from the new/old payload diff. |
+| `plan-transcript-snapshot.sh` | ExitPlanMode | Snapshots the conversation transcript next to the plan when a plan is presented; companion to `plan-transcript-finalize.sh`. |
+
+`quality-check.sh` and `validate-spec.sh` exist in the pack but are **commented
+out** of the PostToolUse handler list (opt-in). Wire them in
+`caws_dispatch/post_tool_use.sh` if you want them.
+
+## SessionStart / Stop handlers
+
+| Handler | Event | What it does |
+|---|---|---|
+| `session-caws-status.sh` | SessionStart | Surfaces inherited dirty-state collision, foreign-claim soft-block, and CLI/pack version skew. Warnings only. |
+| `agent-register.sh` | SessionStart | Registers the session into the `.caws/leases/` liveness substrate via `caws agents register`. Non-blocking. |
+| `agent-stop.sh` | Stop | Marks the lease stopped on clean exit via `caws agents stop`. Best-effort — a crashed session never reaches Stop; heartbeat TTL is the primary liveness signal. |
+| `plan-transcript-finalize.sh` | Stop | Overwrites each pending plan snapshot with the final turn-end transcript. |
+
+`audit.sh` runs on both PreToolUse and PostToolUse, appending a per-tool-call
+audit entry. `session-log.sh` runs on PostToolUse and `PreCompact`, writing the
+per-turn narrative and structured transcripts via `session_log_renderer.py`.
+
+## Shared libraries (`lib/`) — sourced, not wired
+
+These are **not** handlers in any dispatcher list. Other hooks `source` them.
+
+| Library | Sourced by | Provides |
+|---|---|---|
+| `lib/parse-input.sh` | every handler / dispatcher | parses the tool-call JSON into `HOOK_*` env vars |
+| `lib/run-handlers.sh` | the four dispatchers | the handler fan-out loop + exit-code aggregation |
+| `lib/caws-state.sh` | state-reading hooks | v10/v11 dual-shape registry + canonical-root resolution |
+| `lib/emit.sh` | hooks that emit envelopes | the three Claude Code hook-output envelope shapes |
+| `lib/guard-message.sh` | the write/exec guards | stable, greppable guard-identity + remediation strings |
+| `lib/worktree-claim-oracle.cjs` | `worktree-write-guard.sh`, `bash-write-guard.sh` | the single owner-vs-session ownership answer (`.cjs` so it loads as CommonJS under `"type":"module"`) |
+
+`guard-strikes.sh` is likewise a **sourced library** (used by `scope-guard.sh`
+and `shortcut-language-check.sh`), not a standalone handler — it implements the
+strike-1-warn → strike-3-block progression and writes per-checkout strike state.
+
+## Human-run escape hatches (not hooks)
+
+These are invoked by a human at the terminal, never by the agent:
+
+| Script | Purpose |
 |---|---|
-| `pass` | unclaimed path, or you own the worktree payload, or no active worktrees |
-| `block_claimed` | canonical-root write to a path another **active** spec claims via `scope.in` (session-independent) |
-| `block_foreign_worktree` | write into `.caws/worktrees/<name>/…` whose owner session ≠ yours |
-| `ask_uncertain` | looks like worktree payload but no live owner stamped → caller asks |
-| `error_fail_closed` | registry/yaml unreadable → caller asks (never silent-allow) |
+| `reset-strikes.sh` | Reset accumulated guard strikes: `--current` / `--session <uuid>` / `--worktree <name>` / `--all --confirm`. Resets are logged. |
+| `reset-danger-latch.sh` | Clear the danger latch armed by `block-dangerous.sh`. |
 
-Reads `.caws/worktrees.json` and `.caws/specs/<id>.yaml`; only `lifecycle_state: active` specs confer a claim, and only `scope.in` (never `scope.out`/`scope.support`).
+## If a hook blocks you
 
----
-
-## PostToolUse handlers (after Write/Edit/Bash — advisory + strikes)
-
-These cannot undo the tool. Most emit `additionalContext`; one escalates by
-strike. Active handlers, in order:
-
-| Hook | Fires on | What it checks | Outcome | Threshold env |
-|---|---|---|---|---|
-| **naming-check.sh** | `Write` | Shadow/throwaway filenames: banned modifiers (`enhanced`, `v2`-style, `new`, `final`, `copy`, `wip`, `tmp`, `old`, `backup`, …, word-boundary), version suffix `-v<N>.`, datestamp `YYYY-MM-DD`. | ADVISE | — |
-| **god-object-check.sh** | `Write`,`Edit` | Warns if file SLOC ≥ threshold (comments/blanks stripped). | ADVISE | `CAWS_GOD_OBJECT_LOC` (default 2000) |
-| **shortcut-language-check.sh** | `Write`,`Edit` | Flags `TODO`/`FIXME`/`XXX`/`HACK`/`TBD`, "not implemented / coming soon / placeholder", and `throw new Error("not implemented")` in non-doc/non-test source. Has a determiner filter to skip "the TODO" prose. | **strike → ADVISE/ASK/BLOCK** | — (3-strike threshold fixed) |
-| **duplicate-export-check.sh** | `Write` | Warns if an exported symbol name already exists elsewhere in the (scoped) package tree. Allowlists generic names (`main`, `init`, `render`, …). | ADVISE | — |
-| **loc-delta-check.sh** | `Edit` | Warns if a single Edit adds more than the threshold of net lines. | ADVISE | `CAWS_LOC_DELTA_WARN_THRESHOLD` (default 300) |
-| **plan-transcript-snapshot.sh** | `ExitPlanMode` | Snapshots the transcript next to the plan file for later finalization. | non-blocking |
-| **session-log.sh** | all | Re-renders session artifacts (also runs on SessionStart/Stop/PreCompact). | non-blocking |
-
----
-
-## SessionStart / Stop / PreCompact (session-state, never block)
-
-| Hook | Event | What it does | State written |
-|---|---|---|---|
-| **audit.sh session-start** | SessionStart | Appends a session-start record. (`tool-use`/`stop` argv variants exist but are **commented out**.) | `.claude/logs/audit.log`, `audit-YYYY-MM-DD.log` |
-| **session-log.sh** | SessionStart, Stop, PreCompact, PostToolUse | Writes `.meta.json` + renders session/turn/handoff artifacts via `session_log_renderer.py`. | `.caws/sessions/<session-id>/` |
-| **agent-register.sh** | SessionStart | `caws agents register` — adds this session to the liveness lease substrate. | `.caws/leases/` (via CLI) |
-| **agent-stop.sh** | Stop | `caws agents stop` — marks the lease stopped (not deleted; `caws agents prune` removes). Does not fire on crash/SIGKILL. | `.caws/leases/` (via CLI) |
-| **plan-transcript-finalize.sh** | Stop | Overwrites each pending plan-transcript snapshot with the final transcript, then drains the pending list. | `$HOME/.claude/.pending-plan-snapshots` |
-
----
-
-## Present but DORMANT (commented out in dispatchers)
-
-These ship in the pack but are **not wired** right now. Listed so we know they
-exist and what flipping them on (via the dispatcher HANDLERS arrays) would do.
-None except `quality-check.sh` would block.
-
-| Hook | Would fire on | If re-enabled |
-|---|---|---|
-| **quality-check.sh** | PostToolUse | Runs `caws gates run --spec <id>` on source edits; **blocks** on real gate violations (advisory on bootstrap errors). The only dormant hook that can block. |
-| **validate-spec.sh** | PostToolUse | Advises on `.caws/**/*.yaml` syntax errors and terminal-state specs whose ACs lack `test_nodeids`/`evidence`. Non-blocking. |
-| **doc-frontmatter-check.sh** | PostToolUse | V1–V6 frontmatter validation on `docs/**/*.md` (required fields, authority/status enums, `governs`, `verified_at_commit`, `superseded_by`, `caws_specs` on roadmap docs). Non-blocking advisory. |
-| **session-caws-status.sh** | SessionStart | Prints active-worktree warnings, a risk briefing, CLI/repo version-skew check, and `caws status`. Non-blocking. |
-| **stop-worktree-check.sh** | Stop | Reminds about leftover active worktrees or the lack of one. Non-blocking. |
-
-Manual-only utilities (never dispatcher-wired) — invoked by the user from a
-shell:
-
-- **reset-danger-latch.sh** — clears the `block-dangerous.sh` sticky latch
-  (`danger-latch-<session>.json` + `danger-warn-<session>.json` under
-  `.claude/hooks/state/`). Modes: `--current` / `--session <id>` / `--all`,
-  plus mandatory `--reason`. Resets logged to `.claude/logs/danger-latch-resets.log`.
-- **reset-strikes.sh** — clears `scope-guard` / `shortcut-language` strike
-  counters (`guard-strikes-<session>.json`). Modes: `--current` /
-  `--session <uuid>` / `--worktree <name>` / `--all --confirm` /
-  `--stale --older-than <days>`, optional `--guard <name>`, `--dry-run`.
-  Default (no args) lists state. Resets logged to `.claude/logs/strike-resets.log`.
-
----
-
-## State & log locations (all gitignored regenerable runtime)
-
-| Path | Written by | Contents |
-|---|---|---|
-| `.claude/hooks/state/danger-latch-<session>.json` | block-dangerous.sh | armed danger latch (currently empty dir = no latch) |
-| `.claude/logs/guard-strikes-<session>.json` | guard-strikes.sh (canonical) | per-(session,guard) strike counts |
-| `.git/worktrees/<name>/caws-guard-strikes/…` | guard-strikes.sh (in-worktree) | strikes kept **outside** the tree so `git add -A` can't commit them |
-| `.claude/logs/audit*.log` | audit.sh | session-start audit records |
-| `.claude/logs/*-resets.log` | reset-*.sh | latch/strike reset audit trail |
-| `.caws/sessions/<id>/` | session-log.sh | session/turn/handoff render artifacts |
-| `.caws/leases/` | agent-register/stop, heartbeat | multi-agent liveness leases |
-| `.caws/cache/risk-<branch>.txt` | worktree-write-guard.sh | throttled risk-line cache (`CAWS_RISK_THROTTLE_SECS`, default 30s) |
-
----
-
-## Quick reference: "I'm blocked — what do I do?"
-
-- **"CWD does not exist"** → `cd $(git rev-parse --show-toplevel)`.
-- **Danger latch armed / mutating commands all blocked** → ask the user to run
-  `bash .claude/hooks/reset-danger-latch.sh --current --reason "…"`. Do **not**
-  edit the latch file.
-- **Out-of-scope Write/Edit (strike 2/3)** → widen the spec with
-  `caws specs amend-scope <id> --add <path>` and work in your worktree; if the
-  strikes are stale, ask the user to run `bash .claude/hooks/reset-strikes.sh --current`.
-- **Foreign-worktree / claimed-path write blocked** → you're writing a path
-  owned by another session/spec. Claim it in your own spec or coordinate; don't
-  force it.
-- **Write to `.claude/hooks/*` blocked** → hooks are managed; re-run `caws init`
-  or ask the user. Never edit a guard to weaken it.
-
-Never use `--no-verify`, never edit a hook or strike/latch file to get past a
-guard. If a guard is genuinely wrong, say so and ask the user.
+1. Read the block message — it names the guard and the remediation.
+2. Do not bypass by deleting/editing hook files or using `--no-verify`.
+3. If the scope is wrong, widen it with `caws specs amend-scope <id> --add <path>`.
+4. If strikes are stale after a legitimate scope fix, ask the user to run
+   `bash .claude/hooks/reset-strikes.sh --current`.
+5. See [`CLAUDE.md`](./CLAUDE.md) for the full doctrine.

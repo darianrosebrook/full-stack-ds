@@ -1,14 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 17
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
 # Human-authorized reset for the dangerous-command latch written by
 # block-dangerous.sh. Clears latch sentinel(s) under
 # .claude/hooks/state/ and records each reset (with a mandatory reason)
-# to .claude/logs/danger-latch-resets.log. See failure-lineage Entry 17.
+# to .claude/logs/danger-latch-resets.log.
 
 set -euo pipefail
 

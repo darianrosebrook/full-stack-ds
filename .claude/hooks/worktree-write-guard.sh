@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 4,8,13
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -74,7 +74,7 @@ source "$SCRIPT_DIR/lib/emit.sh" 2>/dev/null || true
 # the same answer. Absent (older install) -> the worktree-payload arm below
 # degrades to the prior allowlist behavior (fail open on the helper, never a
 # silent enforcement claim).
-CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.js"
+CAWS_CLAIM_ORACLE="$SCRIPT_DIR/lib/worktree-claim-oracle.cjs"
 
 TOOL_NAME="$HOOK_TOOL_NAME"
 FILE_PATH="$HOOK_FILE_PATH"
@@ -209,11 +209,25 @@ if [[ -n "$FILE_PATH" ]]; then
     # MUST precede the ".caws/*) exit 0" arm.
     "$PROJECT_DIR"/.caws/worktrees/*|.caws/worktrees/*)
       if [[ -f "$CAWS_CLAIM_ORACLE" ]] && command -v node >/dev/null 2>&1; then
+        # Merge stderr into the captured output (2>&1) instead of discarding it,
+        # so a node spawn crash — e.g. a CommonJS oracle loaded as ESM under a
+        # consumer repo's package.json "type":"module" — surfaces its real cause
+        # rather than the opaque "oracle-spawn". On a normal run the oracle prints
+        # one decision line to stdout and nothing to stderr, so the parse below is
+        # unchanged (FIX-HOOKPACK-CONSUMER-INSTALL-001 A3).
         _ORACLE_OUT="$(CAWS_ORACLE_PROJECT_DIR="$PROJECT_DIR" \
           CAWS_ORACLE_CURRENT_BRANCH="" \
           CAWS_ORACLE_REL_PATH="$FILE_PATH_FOR_ALLOWLIST" \
           CAWS_ORACLE_SESSION_ID="${HOOK_SESSION_ID:-}" \
-          node "$CAWS_CLAIM_ORACLE" 2>/dev/null || echo "error_fail_closed:oracle-spawn")"
+          node "$CAWS_CLAIM_ORACLE" 2>&1 || true)"
+        _ORACLE_FIRST="${_ORACLE_OUT%%$'\n'*}"
+        case "${_ORACLE_FIRST%%:*}" in
+          pass|block_foreign_worktree|block_claimed|ask_uncertain|error_fail_closed)
+            _ORACLE_OUT="$_ORACLE_FIRST" ;;
+          *)
+            _ORACLE_REASON="$(printf '%s' "$_ORACLE_FIRST" | cut -c1-200)"
+            _ORACLE_OUT="error_fail_closed:oracle-spawn (${_ORACLE_REASON:-no output})" ;;
+        esac
         _ORACLE_OUTCOME="${_ORACLE_OUT%%:*}"
         _ORACLE_DETAIL="${_ORACLE_OUT#*:}"
         case "$_ORACLE_OUTCOME" in

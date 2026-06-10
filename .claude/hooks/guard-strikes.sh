@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 8,16
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -17,8 +17,8 @@
 # Strikes therefore do NOT bleed across worktrees: a strike in worktree A does
 # not corner an edit in worktree B, and a worktree's count is not visible in the
 # canonical .claude/logs file. This per-checkout isolation is intentional —
-# cross-worktree strike bleed was a high-severity control-plane collapse in the
-# failure lineage. (If a block says "strike 3" but the canonical .claude/logs
+# cross-worktree strike bleed is a high-severity control-plane collapse risk.
+# (If a block says "strike 3" but the canonical .claude/logs
 # file shows fewer, you're reading the wrong file: the live count is in your
 # current checkout's strike file.)
 #

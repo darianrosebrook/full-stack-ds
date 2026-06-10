@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 1,17
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -106,9 +106,9 @@ DENY_SEGMENT_PATTERNS: list[tuple[str, str]] = [
     (r"\binit\s+[06]\b", "system runlevel change"),
     # CAWS-DANGER-LATCH-CATASTROPHIC-ONLY-001: catastrophic git/shell ops
     # promoted here from CONFIRM (ask) so they HARD-BLOCK. These are the
-    # irreversible / history-rewriting / credential-exposing operations that
-    # the failure lineage (Entry 1 force-push origin, Entry 17, Entry 34)
-    # treats as deny-class. Previously they were "ask" and relied on the
+    # irreversible / history-rewriting / credential-exposing operations
+    # (force-push to origin, history rewrite, deleted-tag push) that are
+    # treated as deny-class. Previously they were "ask" and relied on the
     # warn-then-latch path for enforcement; now that ask-class is allowed
     # without latching, they must be deny to stay enforced.
     (r"\bgit\s+reset\s+--hard\b", "git reset --hard"),
@@ -224,15 +224,13 @@ ALLOWED_SIMPLE_COMMANDS: set[str] = {
 #   - Read-only inspection: status, log, diff, show, branch, tag, remote,
 #     config, rev-parse, ls-files, blame (gated to read-only forms in
 #     classify_allow_list).
-#   - Everyday-workflow writes whose plain form the failure-lineage corpus
-#     has NEVER recorded as a loss or attribution incident
-#     (DANGER-LATCH-WORKFLOW-CALIBRATION-001): "add" and "commit". These
-#     mutate the index / create a new commit object but do not rewrite
-#     history, discard working-tree state, or touch a remote. Their
-#     dangerous variants ("commit" with --amend) are special-cased to
-#     "ask" in classify_allow_list, and worktree-guard.sh independently
-#     governs commit-on-main / inherited-dirty-state coordination
-#     (failure-lineage Entry 17 intro, Entry 18). Branch-creating
+#   - Everyday-workflow writes that have never been a loss or attribution
+#     risk: "add" and "commit". These mutate the index / create a new commit
+#     object but do not rewrite history, discard working-tree state, or touch
+#     a remote. Their dangerous variants ("commit" with --amend) are
+#     special-cased to "ask" in classify_allow_list, and worktree-guard.sh
+#     independently governs commit-on-main / inherited-dirty-state
+#     coordination. Branch-creating
 #     "checkout -b" / "switch -c" are admitted by their own special-cases;
 #     bare "checkout <path>" / "checkout ." stay denied by
 #     CONFIRM_SEGMENT_PATTERNS because they discard changes.
@@ -243,9 +241,9 @@ ALLOWED_SIMPLE_COMMANDS: set[str] = {
 # happy path (commit the spec on main, then create the worktree): the
 # first commit of real work latched the session and hard-blocked every
 # subsequent Bash call. The latch must fire on panic/bypass patterns
-# (the flag-split git-bootstrap of Entry 17, force-push, rm -rf), not on
-# calm everyday commits. See failure-lineage Entry 17 "What it doesn't
-# catch" for why the latch -- not the allow-list -- is the deep control.
+# (flag-split git-bootstrap, force-push, rm -rf), not on calm everyday
+# commits. The latch -- not the allow-list -- is the deep control: the
+# allow-list keeps the happy path calm, the latch catches the bypass.
 ALLOWED_GIT_SUBCOMMANDS: set[str] = {
     "status", "log", "diff", "show", "branch", "tag",
     "remote", "config", "rev-parse", "ls-files", "blame",
@@ -419,12 +417,26 @@ DEFAULT_ADAPTERS: dict[str, list[tuple[tuple[str, ...], dict]]] = {
                       "reversibility": "partial", "blast": "single", "trace": "K8S_MUTATE"}),
         (("patch",), {"kind": "MUTATE", "domain": "remote_orchestrator",
                       "reversibility": "partial", "blast": "single", "trace": "K8S_MUTATE"}),
+        # HOOK-CAPABILITY-ENGINE-003: exec-into-pod runs an arbitrary payload
+        # inside the container (doc trace K8S_EXEC) — ask-class.
+        (("exec",), {"kind": "MUTATE", "domain": "remote_orchestrator",
+                     "reversibility": "partial", "blast": "single", "trace": "K8S_EXEC"}),
     ],
     "helm": [
         (("uninstall",), {"kind": "DESTROY", "domain": "remote_orchestrator",
                           "reversibility": "partial", "blast": "multi", "trace": "K8S_DELETE"}),
         (("delete",), {"kind": "DESTROY", "domain": "remote_orchestrator",
                        "reversibility": "partial", "blast": "multi", "trace": "K8S_DELETE"}),
+        # HOOK-CAPABILITY-ENGINE-003: terminal-use corpus surfaced the mutating
+        # bring-up verbs of already-governed families as silent allows (the
+        # adapter table only covered their destroy verbs). install/upgrade/
+        # rollback deploy or rewrite cluster releases -> MUTATE (ask-class).
+        (("install",), {"kind": "MUTATE", "domain": "remote_orchestrator",
+                        "reversibility": "partial", "blast": "multi", "trace": "K8S_MUTATE"}),
+        (("upgrade",), {"kind": "MUTATE", "domain": "remote_orchestrator",
+                        "reversibility": "partial", "blast": "multi", "trace": "K8S_MUTATE"}),
+        (("rollback",), {"kind": "MUTATE", "domain": "remote_orchestrator",
+                         "reversibility": "partial", "blast": "multi", "trace": "K8S_MUTATE"}),
     ],
     "docker": [
         (("system", "prune"), {"kind": "DESTROY", "domain": "container",
@@ -435,6 +447,90 @@ DEFAULT_ADAPTERS: dict[str, list[tuple[tuple[str, ...], dict]]] = {
                             "reversibility": "irreversible", "blast": "single", "trace": "CONTAINER_VOLUME_RM"}),
         (("image", "prune"), {"kind": "DESTROY", "domain": "container",
                               "reversibility": "partial", "blast": "multi", "trace": "CONTAINER_PRUNE"}),
+        # HOOK-CAPABILITY-ENGINE-003 corpus closure: container bring-up/teardown.
+        (("run",), {"kind": "MUTATE", "domain": "container",
+                    "reversibility": "reversible", "blast": "single", "trace": "CONTAINER_RUN"}),
+        (("rm",), {"kind": "DESTROY", "domain": "container",
+                   "reversibility": "partial", "blast": "single", "trace": "CONTAINER_RM"}),
+        (("rmi",), {"kind": "DESTROY", "domain": "container",
+                    "reversibility": "partial", "blast": "single", "trace": "CONTAINER_RM"}),
+        (("compose", "up"), {"kind": "MUTATE", "domain": "container",
+                             "reversibility": "reversible", "blast": "multi", "trace": "CONTAINER_RUN"}),
+        (("compose", "down"), {"kind": "DESTROY", "domain": "container",
+                               "reversibility": "partial", "blast": "multi", "trace": "CONTAINER_RM"}),
+    ],
+    "docker-compose": [
+        (("up",), {"kind": "MUTATE", "domain": "container",
+                   "reversibility": "reversible", "blast": "multi", "trace": "CONTAINER_RUN"}),
+        (("down",), {"kind": "DESTROY", "domain": "container",
+                     "reversibility": "partial", "blast": "multi", "trace": "CONTAINER_RM"}),
+    ],
+    "podman": [
+        (("run",), {"kind": "MUTATE", "domain": "container",
+                    "reversibility": "reversible", "blast": "single", "trace": "CONTAINER_RUN"}),
+        (("rm",), {"kind": "DESTROY", "domain": "container",
+                   "reversibility": "partial", "blast": "single", "trace": "CONTAINER_RM"}),
+    ],
+    "kind": [
+        (("create",), {"kind": "MUTATE", "domain": "remote_orchestrator",
+                       "reversibility": "reversible", "blast": "single", "trace": "K8S_MUTATE"}),
+        (("delete",), {"kind": "DESTROY", "domain": "remote_orchestrator",
+                       "reversibility": "partial", "blast": "single", "trace": "K8S_DELETE"}),
+    ],
+    "minikube": [
+        (("start",), {"kind": "MUTATE", "domain": "container",
+                      "reversibility": "reversible", "blast": "single", "trace": "CONTAINER_RUN"}),
+        (("delete",), {"kind": "DESTROY", "domain": "container",
+                       "reversibility": "partial", "blast": "single", "trace": "CONTAINER_RM"}),
+    ],
+    "ansible-playbook": [
+        # An ansible playbook applies arbitrary remote state. () catch-all:
+        # every invocation is at least MUTATE over potentially many hosts.
+        ((), {"kind": "MUTATE", "domain": "remote_orchestrator",
+              "reversibility": "partial", "blast": "multi", "trace": "ANSIBLE_APPLY"}),
+    ],
+    # HOOK-CAPABILITY-ENGINE-003: privilege/kernel/identity surface the corpus
+    # found silently allowed. doas is sudo-equivalent -> PRIV_ESC (lattice
+    # denies, same posture as the sudo regex). Kernel-module and namespace ops
+    # mutate host state -> ask-class. ssh-copy-id writes a credential to a
+    # remote host -> ask-class.
+    "doas": [
+        ((), {"kind": "PRIV_ESC", "domain": "local",
+              "reversibility": "unknown", "blast": "host", "trace": "PRIV_ESC"}),
+    ],
+    "modprobe": [
+        ((), {"kind": "MUTATE", "domain": "local",
+              "reversibility": "partial", "blast": "host", "trace": "KERNEL_MODULE"}),
+    ],
+    "insmod": [
+        ((), {"kind": "MUTATE", "domain": "local",
+              "reversibility": "partial", "blast": "host", "trace": "KERNEL_MODULE"}),
+    ],
+    "rmmod": [
+        ((), {"kind": "MUTATE", "domain": "local",
+              "reversibility": "partial", "blast": "host", "trace": "KERNEL_MODULE"}),
+    ],
+    "chroot": [
+        ((), {"kind": "MUTATE", "domain": "process",
+              "reversibility": "partial", "blast": "host", "trace": "NS_ENTER"}),
+    ],
+    "unshare": [
+        ((), {"kind": "MUTATE", "domain": "process",
+              "reversibility": "partial", "blast": "host", "trace": "NS_ENTER"}),
+    ],
+    "nsenter": [
+        ((), {"kind": "MUTATE", "domain": "process",
+              "reversibility": "partial", "blast": "host", "trace": "NS_ENTER"}),
+    ],
+    "ssh-copy-id": [
+        ((), {"kind": "MUTATE", "domain": "remote_orchestrator",
+              "reversibility": "partial", "blast": "single", "trace": "REMOTE_CRED_WRITE"}),
+    ],
+    "dd": [
+        # Plain file-to-file dd is a recoverable write (ask-class). dd onto a
+        # block device is covered by the existing deny patterns.
+        ((), {"kind": "MUTATE", "domain": "filesystem",
+              "reversibility": "partial", "blast": "single", "trace": "FS_DD"}),
     ],
     "terraform": [
         (("destroy",), {"kind": "DESTROY", "domain": "iac",
@@ -1339,18 +1435,16 @@ def classify_allow_list(segment: str) -> tuple[str, str] | None:
             return None
         # Special-case `git commit` — admit plain commit (creates a new
         # commit object; not destructive). REJECT --amend, which rewrites
-        # the last commit and is the attribution-theft vector of
-        # failure-lineage Entry 17's intro and Entry 18. --amend falls
-        # through to "ask" and is additionally blocked by worktree-guard.sh
-        # while worktrees are active.
+        # the last commit (history-rewrite + attribution-loss risk). --amend
+        # falls through to "ask" and is additionally blocked by
+        # worktree-guard.sh while worktrees are active.
         if sub == "commit":
             try:
                 tokens = shlex.split(segment)
             except ValueError:
                 return None
             # `--amend` rewrites the last commit (history-rewrite +
-            # attribution-theft vector, failure-lineage Entry 17 intro /
-            # Entry 18). Return None so it falls through to the
+            # attribution-loss risk). Return None so it falls through to the
             # governed-family default → "ask"; the allow-list is suppress-
             # only and cannot itself escalate.
             if any(t == "--amend" or t.startswith("--amend=") for t in tokens):
@@ -1522,8 +1616,7 @@ def classify_governed_family_default(segment: str) -> tuple[str, str] | None:
                 return (
                     "ask",
                     "git commit --amend rewrites the last commit — a "
-                    "history-rewrite and attribution-theft vector "
-                    "(failure-lineage Entry 17/18); ask before invoking",
+                    "history-rewrite and attribution-loss risk; ask before invoking",
                 )
             if sub == "switch":
                 return (
@@ -2172,14 +2265,42 @@ def derive_facets(fact: "CommandFact", adapters: dict | None) -> None:
                     "blast": "single", "trace": "HTTP_MUTATE"}
 
     # 2. cloud CLIs: verb scan over positionals (open-ended services).
+    #    HOOK-CAPABILITY-ENGINE-003: compare the first hyphen-segment of each
+    #    positional too — service CLIs hyphenate verbs (aws s3api put-object,
+    #    delete-bucket, create-stack), which the exact-token scan missed.
     if base is None and exe in CLOUD_CLIS:
         positional = fact.targets
-        if any(v in DESTROY_VERBS for v in positional):
+        verb_heads = {v.split("-", 1)[0] for v in positional}
+        if any(v in DESTROY_VERBS for v in positional) or verb_heads & DESTROY_VERBS:
             base = {"kind": "DESTROY", "domain": "cloud", "reversibility": "partial",
                     "blast": "single", "trace": "CLOUD_DELETE"}
-        elif any(v in MUTATE_VERBS for v in positional):
+        elif any(v in MUTATE_VERBS for v in positional) or verb_heads & MUTATE_VERBS:
             base = {"kind": "MUTATE", "domain": "cloud", "reversibility": "partial",
                     "blast": "single", "trace": "CLOUD_MUTATE"}
+
+    # 2.5 calibrations ahead of the adapter table (HOOK-CAPABILITY-ENGINE-003).
+    #     NOTE: `kill <numeric-pid>` is NOT carved out to allow. The
+    #     terminal-use.deduped corpus rates it intended-allow, but the
+    #     load-bearing 80-FN falsification set (HOOK-CAPABILITY-ENGINE-002,
+    #     PROC_FORCE_KILL rows) is the safety FLOOR and treats `kill -9 <pid>`
+    #     as a must-not-silent-allow. The floor wins: a forced kill stays
+    #     ask-class (DESTROY adapter row below). The field FPs that motivated a
+    #     carve-out latched under the OLD immediate-latch regime; under
+    #     HOOK-ASK-ENFORCEMENT-001 a kill is confirm (single-command), and the
+    #     warn-first grace lets a first kill warn rather than freeze. This is a
+    #     documented corpus-vs-floor adjudication — the floor is authoritative.
+    #     sysctl only mutates with -w / a key=value assignment; bare queries read.
+    if base is None and exe == "sysctl":
+        if "-w" in fact.flags or any("=" in t for t in fact.targets):
+            base = {"kind": "MUTATE", "domain": "local", "reversibility": "partial",
+                    "blast": "host", "trace": "KERNEL_MUTATE"}
+    #     ansible-playbook with a read-only flag (--version/--help/--check/
+    #     --syntax-check/--list-*) does not apply state; only a real run does.
+    #     Suppress the () MUTATE catch-all for those (corpus FP: --version).
+    _ANSIBLE_READ_FLAGS = {"--version", "--help", "-h", "--check", "-C",
+                           "--syntax-check", "--list-tasks", "--list-hosts", "--list-tags"}
+    if exe == "ansible-playbook" and (fact.flags & _ANSIBLE_READ_FLAGS):
+        return
 
     # 3. built-in subcommand-prefix table (longest matching prefix wins; () catch-all).
     if base is None and exe in DEFAULT_ADAPTERS:

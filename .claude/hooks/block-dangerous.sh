@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 1,17
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -70,6 +70,17 @@ danger_latch_file() {
   local safe_session
   safe_session=$(_danger_safe_session "$1")
   printf '%s/danger-latch-%s.json\n' "$(danger_state_dir)" "$safe_session"
+}
+
+# Warn-marker sibling of the latch file. DANGER-LATCH-APPROVAL-AND-FEEDBACK-001
+# (restored in HOOK-CAPABILITY-ENGINE-003): a confirm-class ask WARNS on its
+# first occurrence in a session and LATCHES on the second. The reset script
+# (reset-danger-latch.sh) already sweeps danger-warn-*.json — this is the writer
+# that was missing, which is why every first confirm-ask froze the session.
+danger_warn_file() {
+  local safe_session
+  safe_session=$(_danger_safe_session "$1")
+  printf '%s/danger-warn-%s.json\n' "$(danger_state_dir)" "$safe_session"
 }
 
 # Thin adapters over the canonical lib/emit.sh primitives. Kept as named
@@ -243,11 +254,22 @@ if printf '%s' "$COMMAND" | grep -qF "$PROTECTED_HOOK_REL" || printf '%s' "$COMM
     record_danger_latch "$LATCH_FILE" "block" "shell redirect into protected guard (destination)" "$COMMAND"
     emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not redirect output into it. Ask the user for permission before modifying this hook. Command was: $COMMAND"
     exit 0
-  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(rm|sed|perl|tee|touch|truncate|install|chmod)[[:space:]]'; then
-    # In-place file mutators name the operand AS the target. The guard appearing
-    # as an operand of these IS a destination mutation → latch.
+  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(rm|tee|touch|truncate|install|chmod)[[:space:]]'; then
+    # In-place file mutators that ALWAYS name the operand AS the write target.
+    # The guard appearing as an operand of these IS a destination mutation → latch.
+    # NOTE: sed/perl are NOT here — they only mutate in place with -i (handled
+    # in the next arm). HOOK-CAPABILITY-ENGINE-003: `sed -n 40,90p <guard>` is a
+    # READ (print mode) and was the dominant protected-guard false positive.
     record_danger_latch "$LATCH_FILE" "block" "shell edit of protected guard (in-place mutator)" "$COMMAND"
     emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not modify it via the shell. Ask the user for permission before modifying this hook. Command was: $COMMAND"
+    exit 0
+  elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(sed|perl)[[:space:]]' \
+       && printf '%s' "$COMMAND" | grep -qE '(^|[[:space:]])(-i|-pi|-ip|--in-place)([[:space:]]|=|$)'; then
+    # sed/perl ONLY with an in-place flag (-i / -pi / --in-place) write the file.
+    # Without it (sed -n, sed -e, perl -ne, perl -pe printing to stdout) they
+    # READ the guard, which is allowed. Latch only the proven in-place write.
+    record_danger_latch "$LATCH_FILE" "block" "shell edit of protected guard (in-place sed/perl)" "$COMMAND"
+    emit_block_json "$PROTECTED_HOOK_REL is protected from Bash-based edits — it is the guard that enforces worktree write boundaries. Do not modify it in place. Ask the user for permission before modifying this hook. Command was: $COMMAND"
     exit 0
   elif printf '%s' "$COMMAND" | grep -qE '(^|[;&|[:space:]])(cp|mv)[[:space:]]' && [[ "$_GUARD_IS_DEST" == "1" ]]; then
     # cp/mv ONLY when the guard is the DESTINATION (last operand). cp/mv with
@@ -348,8 +370,42 @@ case "$DECISION" in
     # bare `ask -> block` rule is explicitly rejected — it would recreate the
     # over-governance CATASTROPHIC-ONLY-001 correctly removed.
     if [[ "$ENFORCEMENT" == "confirm" ]]; then
+      # DANGER-LATCH-APPROVAL-AND-FEEDBACK-001 (restored, HOOK-CAPABILITY-ENGINE-003):
+      # warn-first grace for CAPABILITY-derived confirm asks. The first such ask
+      # in a session WARNS (non-blocking, exit 0) and drops a session warn
+      # marker; the SECOND distinct capability ask LATCHES. Rationale from the
+      # field + corpus audit: a single capability ask (kill a dev server, one
+      # `docker run`, a read-only `python3 -c` the opacity heuristic can't prove)
+      # is routine and was the dominant false-positive freeze. A SECOND capability
+      # ask in the same session is the thrash signature the latch exists to stop.
+      #
+      # Fail-closed asks (classifier_error / sidecar_error) do NOT get the grace —
+      # we cannot prove they are safe, so they latch immediately (preserved below).
+      if [[ "$SOURCE" == "capability" ]]; then
+        WARN_FILE="$(danger_warn_file "$SESSION_ID")"
+        if [[ ! -f "$WARN_FILE" ]]; then
+          # First capability ask: warn, record the marker, let it run.
+          mkdir -p "$(dirname "$WARN_FILE")"
+          jq -n \
+            --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg reason "$REASON" \
+            --arg command "$COMMAND" \
+            '{ts: $ts, hook: "block-dangerous.sh", kind: "capability-warn", reason: $reason, command: $command}' \
+            > "$WARN_FILE" 2>/dev/null || true
+          printf 'caws command-safety (WARN, first capability ask — not blocked): %s\n' "$REASON" >&2
+          printf '  A SECOND capability-risk command this session will ARM the danger latch. Command was: %s\n' "$COMMAND" >&2
+          exit 0
+        fi
+        # Second (or later) capability ask this session: latch now.
+        record_danger_latch "$LATCH_FILE" "ask" "$REASON" "$COMMAND"
+        FULL_REASON="CAWS command-safety: $REASON. This is the SECOND capability-risk command this session — the first was a non-blocking warning; this one ARMS the session danger latch. $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: bash .claude/hooks/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe / approved>\", then proceed. Command was: $COMMAND"
+        emit_block_json "$FULL_REASON"
+        exit 0
+      fi
+      # Non-capability confirm (classifier_error / sidecar_error): fail-closed,
+      # no grace — latch on first occurrence.
       record_danger_latch "$LATCH_FILE" "ask" "$REASON" "$COMMAND"
-      FULL_REASON="CAWS command-safety: $REASON. This requires USER CONFIRMATION before it runs — it is NOT denied as catastrophic, but the command-safety classifier flagged a real capability risk (e.g. a destructive or mutating operation against an external/system resource) that a human should approve. The session danger latch is NOW ARMED: $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: bash .claude/hooks/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe / approved>\", then proceed. Command was: $COMMAND"
+      FULL_REASON="CAWS command-safety: $REASON. This requires USER CONFIRMATION before it runs and the session danger latch is NOW ARMED (fail-closed: the classifier could not verify this command). $_LATCH_SCOPE_NOTE — you CANNOT reset it yourself. Do not rephrase, wrap, reorder, alias, or indirectly invoke the command to evade this. Ask the USER to confirm and run: bash .claude/hooks/reset-danger-latch.sh --session $SESSION_ID --reason \"<why this is safe / approved>\", then proceed. Command was: $COMMAND"
       emit_block_json "$FULL_REASON"
       exit 0
     fi

@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 11
+# hook_pack_version: 13
 # caws_min_major: 11
 # lineage_refs: 8,16,23
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -9,9 +9,23 @@
 # CAWS Protected Paths Guard for Claude Code
 #
 # Blocks direct Write/Edit access to:
-#   - hook scripts under .claude/hooks/* (no agent-side hook editing)
+#   - hook SCRIPTS under .claude/hooks/* (no agent-side hook editing):
+#     *.sh, *.py, *.cjs — the executable guard artifacts
 #   - strike-state files .claude/logs/guard-strikes-*.json (no manual
 #     manipulation of progressive-strike counters)
+#
+# Documentation under .claude/hooks/ (*.md — e.g. the installer-managed
+# CLAUDE.md, or a hand-authored README.md) is NOT a guard artifact and is
+# explicitly ADMITTED. The doctrine this hook enforces protects the
+# executable guards from being removed or weakened, not the docs that
+# describe them (CAWS-PROTECTED-PATHS-DOCS-NOT-SCRIPTS-001). Blocking a
+# legitimate doc edit was the over-match defect: it refused the very
+# CLAUDE.md `caws init` itself ships and re-writes, pushing the agent
+# toward a bypass — the exact failure mode CAWS exists to prevent.
+#
+# The match keys on the artifact CLASS, not the directory: docs are
+# allowlisted, every other extension under .claude/hooks/ stays blocked
+# (fail-closed — an unrecognized extension defaults to protected).
 #
 # This is the structural enforcement of the doctrine that hooks
 # "may not be removed or weakened by an agent's local judgment"
@@ -40,7 +54,15 @@ if [[ -z "$HOOK_FILE_PATH" ]]; then
 fi
 
 case "$HOOK_FILE_PATH" in
+  */.claude/hooks/*.md)
+    # Documentation under the hooks dir (CLAUDE.md, README.md, ...) is not a
+    # guard artifact. Admit it — the doctrine protects executable guards, not
+    # the docs describing them (CAWS-PROTECTED-PATHS-DOCS-NOT-SCRIPTS-001).
+    exit 0
+    ;;
   */.claude/hooks/*)
+    # Everything else under .claude/hooks/ is a guard artifact (*.sh, *.py,
+    # *.cjs, lib/, caws_dispatch/, or an unrecognized extension). Fail closed.
     echo "BLOCKED: $HOOK_FILE_PATH is protected." >&2
     echo "Ask the user for permission before editing Claude hook scripts." >&2
     exit 1
