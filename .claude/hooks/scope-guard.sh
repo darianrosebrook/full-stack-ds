@@ -1,7 +1,7 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: claude-code
-# hook_pack_version: 15
+# hook_pack_version: 16
 # caws_min_major: 11
 # lineage_refs: 8,11,12,16
 # do_not_edit_directly: update via `caws init --agent-surface claude-code`
@@ -209,12 +209,28 @@ else
 fi
 
 # SCOPE-GUARD-FOREIGN-REPO-CONTAINMENT-001: hard-block a Write/Edit to a file in
-# a DIFFERENT repository, immediately — before the ALLOW_PREFIXES list, the
-# kernel scope-check, and the 3-strike ramp. There is no in-band escape: the
-# guard governs THIS repo, and a cross-repo write is out of bounds regardless
-# of any local spec. The legitimate path for a cross-repo CHANGE is a HANDOFF —
-# an agent rooted in the target repo makes the edit.
+# a DIFFERENT repository, immediately — before the kernel scope-check and the
+# 3-strike ramp. There is no in-band escape: the guard governs THIS repo, and a
+# cross-repo write is out of bounds regardless of any local spec. The legitimate
+# path for a cross-repo CHANGE is a HANDOFF — an agent rooted in the target repo
+# makes the edit.
+#
+# SCOPE-GUARD-FOREIGN-REPO-ALLOWPREFIX-ORDER-001: BUT an absolute path under an
+# always-allowed ABSOLUTE prefix (e.g. `$HOME/.claude/` — the harness's own
+# state: agent memory, logs, projects) is NOT a foreign-repo write to govern; it
+# is legitimate harness state the ALLOW_PREFIXES list already exempts. The
+# foreign block ran before that list and shadowed it, blocking e.g. an agent
+# writing its own `~/.claude/.../memory/*.md`. Honor absolute allow-prefixes
+# here, before the foreign block, so harness-state writes pass.
 if [[ "$FOREIGN_REPO" == "1" ]]; then
+  for _prefix in "${ALLOW_PREFIXES[@]}"; do
+    # Only ABSOLUTE allow-prefixes can match an absolute foreign path; relative
+    # prefixes (".caws/", "tests/", …) are in-repo and never match here.
+    [[ "$_prefix" == /* ]] || continue
+    if [[ "$FILE_PATH" == "${_prefix}"* ]]; then
+      exit 0
+    fi
+  done
   _id="CAWS scope-guard"
   command -v guard_identity >/dev/null 2>&1 && _id="$(guard_identity scope-guard)"
   _note="This is a CAWS governance decision, not a Claude Code harness prompt."
