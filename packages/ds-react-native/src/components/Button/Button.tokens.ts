@@ -198,6 +198,36 @@ export const buttonTokenScopes = {
     },
   },
   "variant_small": {
+    "box-model.padding-block-start": {
+      name: "box-model.padding-block-start",
+      cssVar: "--fsds-box-model-padding-block-start",
+      ref: "core.spacing.size.03",
+      fallback: 4,
+    },
+    "box-model.padding-block-end": {
+      name: "box-model.padding-block-end",
+      cssVar: "--fsds-box-model-padding-block-end",
+      ref: "core.spacing.size.03",
+      fallback: 4,
+    },
+    "box-model.padding-inline-start": {
+      name: "box-model.padding-inline-start",
+      cssVar: "--fsds-box-model-padding-inline-start",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "box-model.padding-inline-end": {
+      name: "box-model.padding-inline-end",
+      cssVar: "--fsds-box-model-padding-inline-end",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "core.dimension.actionMinHeightSmall",
+      fallback: 28,
+    },
     "button.size.padding-block.medium": {
       name: "button.size.padding-block.medium",
       cssVar: "--fsds-button-size-padding-block-medium",
@@ -224,6 +254,36 @@ export const buttonTokenScopes = {
     },
   },
   "variant_medium": {
+    "box-model.padding-block-start": {
+      name: "box-model.padding-block-start",
+      cssVar: "--fsds-box-model-padding-block-start",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "box-model.padding-block-end": {
+      name: "box-model.padding-block-end",
+      cssVar: "--fsds-box-model-padding-block-end",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "box-model.padding-inline-start": {
+      name: "box-model.padding-inline-start",
+      cssVar: "--fsds-box-model-padding-inline-start",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "box-model.padding-inline-end": {
+      name: "box-model.padding-inline-end",
+      cssVar: "--fsds-box-model-padding-inline-end",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "core.dimension.actionMinHeight",
+      fallback: 36,
+    },
     "button.size.padding-block.medium": {
       name: "button.size.padding-block.medium",
       cssVar: "--fsds-button-size-padding-block-medium",
@@ -250,6 +310,36 @@ export const buttonTokenScopes = {
     },
   },
   "variant_large": {
+    "box-model.padding-block-start": {
+      name: "box-model.padding-block-start",
+      cssVar: "--fsds-box-model-padding-block-start",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "box-model.padding-block-end": {
+      name: "box-model.padding-block-end",
+      cssVar: "--fsds-box-model-padding-block-end",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "box-model.padding-inline-start": {
+      name: "box-model.padding-inline-start",
+      cssVar: "--fsds-box-model-padding-inline-start",
+      ref: "core.spacing.size.06",
+      fallback: 16,
+    },
+    "box-model.padding-inline-end": {
+      name: "box-model.padding-inline-end",
+      cssVar: "--fsds-box-model-padding-inline-end",
+      ref: "core.spacing.size.06",
+      fallback: 16,
+    },
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "core.dimension.actionMinHeightLarge",
+      fallback: 48,
+    },
     "button.size.padding-block.medium": {
       name: "button.size.padding-block.medium",
       cssVar: "--fsds-button-size-padding-block-medium",

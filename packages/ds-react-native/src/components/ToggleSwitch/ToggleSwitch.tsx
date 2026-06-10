@@ -1,9 +1,10 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Pressable, Text as RNText } from "react-native";
+import { Switch as RNSwitch, Text as RNText } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createToggleSwitchStyles } from "./ToggleSwitch.styles";
+import { resolveToggleSwitchTokens } from "./ToggleSwitch.tokens";
 // @generated:end
 
 // @generated:start types
@@ -30,11 +31,10 @@ export interface ToggleSwitchProps {
 // @generated:start component
 export function ToggleSwitch({
   checked: controlledChecked,
+  size = "medium",
   disabled,
-  ariaLabel,
   defaultChecked = false,
   onChange,
-  children,
   style,
   testID,
   accessibilityLabel,
@@ -42,6 +42,7 @@ export function ToggleSwitch({
 }: ToggleSwitchProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createToggleSwitchStyles(fsdsTheme), [fsdsTheme]);
+  const tokens = useMemo(() => resolveToggleSwitchTokens(fsdsTheme), [fsdsTheme]);
   const [uncontrolledChecked, setUncontrolledChecked] = useState<boolean>((defaultChecked ?? false) as boolean);
   const checked = controlledChecked ?? uncontrolledChecked;
   const setCheckedValue = useCallback((next: boolean) => {
@@ -50,18 +51,17 @@ export function ToggleSwitch({
   }, [controlledChecked, onChange]);
 
   return (
-    <Pressable
+    <RNSwitch
       testID={testID}
-      style={[styles.root, style]}
-      accessibilityLabel={accessibilityLabel ?? ariaLabel}
+      style={[styles[`root_${size}`] ?? styles.root, style]}
+      value={checked}
+      onValueChange={setCheckedValue}
       disabled={disabled}
-      onPress={() => setCheckedValue(!checked)}
+      accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
-      accessibilityRole="button"
-      accessibilityState={{ checked: Boolean(checked), disabled: disabled }}
-    >
-      {typeof children === "string" ? <RNText>{children}</RNText> : children}
-    </Pressable>
+      accessibilityRole="switch"
+      accessibilityState={{ checked: checked, disabled: disabled }}
+    />
   );
 }
 // @generated:end
