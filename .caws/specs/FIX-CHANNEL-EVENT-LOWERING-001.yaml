@@ -3,6 +3,7 @@ title: 'Angular/Lit channel click events on non-input hosts must toggle, not rea
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: channel-fix
 created_at: '2026-06-10T21:30:00.538Z'
 updated_at: '2026-06-10T21:30:07.095Z'
 blast_radius:
