@@ -400,7 +400,37 @@
       "layering": "popover"
     }
   },
-  "surface": null,
+  "surface": {
+    "kind": "toast",
+    "presence": "ephemeral",
+    "modality": "non-blocking",
+    "content": {
+      "part": {
+        "name": "item",
+        "semanticElement": "li",
+        "isCompound": true,
+        "isRootOnly": false,
+        "nativeTag": "div",
+        "details": {
+          "tag": "div",
+          "description": "Single visible toast notification.",
+          "role": "region",
+          "aria": {
+            "role": "status"
+          }
+        }
+      },
+      "interactive": false
+    },
+    "positioning": {
+      "strategy": "viewport-edge"
+    },
+    "dismissal": [
+      "escape",
+      "close-button"
+    ],
+    "openTriggers": []
+  },
   "figma": {
     "intendedUse": "figma-library-materialization",
     "documentationFrame": "Toast / Documentation",

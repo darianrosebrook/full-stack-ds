@@ -196,7 +196,7 @@ export function Sheet({
           <p className="sheet__description">
             {slots?.description}
           </p>
-          <button className="sheet__close" type="button" aria-label="Close sheet" />
+          <button className="sheet__close" type="button" aria-label="Close sheet" onClick={() => setOpenness(!openness)} />
         </div>
         <div className="sheet__body">
           {children}

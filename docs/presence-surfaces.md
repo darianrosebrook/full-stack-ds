@@ -4,7 +4,7 @@ authority: architecture
 status: draft
 title: Presence Surfaces — the architectural family for tooltips, popovers, dialogs, menus, selects, toasts, coachmarks, and sheets
 owner: "@darianrosebrook"
-updated: 2026-05-17
+updated: 2026-06-10
 governs:
   - packages/ds-contracts/Tooltip.contract.json
   - packages/ds-contracts/Popover.contract.json
@@ -316,6 +316,25 @@ This document is the architecture lock. It does **not** change any generated com
 - **Phase F-3 — Popover, Dialog/ModalDialog, Menu/Dropdown, Select, Toast, Coachmark, Sheet**: Each is a contract addition/migration + controller wiring on top of F-2's substrate.
 
 Estimated total for F-1 through F-3: 10-12 days. This document does not commit to that timeline; it commits to the architecture.
+
+### Status reconciliation (2026-06-10, FEAT-MOBILE-RN-SURFACE-001)
+
+- F-1 (schema) and F-2 (Tooltip + Popover anchored substrate on web) landed
+  earlier. The positioning-strategy vocabulary now includes `fullscreen`
+  (full-screen takeover; reserved, unused by the corpus).
+- **Dialog, Sheet, and Toast now declare `surface` blocks** (taxonomy
+  fact-tracking; their web emission is unchanged — react/vue gates are
+  kind-aware like svelte/angular/lit). Their close-button parts are wired
+  through dom-tree channel events on every target.
+- **React Native consumes the taxonomy as its surface substrate**
+  (`rnSurfaceLowering`): blocking → `Modal` (escape → onRequestClose,
+  outside-click → overlay Pressable, both enabledBy-gated); non-blocking →
+  in-tree live region. Anchored kinds on RN remain future work.
+- Toast declares `presence: ephemeral` with **no timing block**: no target
+  implements auto-dismiss today (no duration prop exists). Adding the
+  duration prop + timeout dismissal on web and RN together is the named
+  follow-up. Menu/Dropdown, Select, Command, Coachmark/Walkthrough
+  migrations also remain.
 
 ## References
 

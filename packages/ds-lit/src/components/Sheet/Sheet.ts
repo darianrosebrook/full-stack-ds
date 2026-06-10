@@ -214,6 +214,10 @@ export class SheetElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
+  private handleOpennessChange(event: Event): void {
+    this.behavior.setOpenness((event.target as HTMLInputElement).checked);
+  }
+
   private _handleOverlayClick = (): void => {
     this.behavior.setOpenness(false);
   };
@@ -250,7 +254,7 @@ export class SheetElement extends LitElement {
       <p class=${'sheet__description'}>
         <slot name="description"></slot>
       </p>
-      <button class=${'sheet__close'} type="button" aria-label="Close sheet"></button>
+      <button class=${'sheet__close'} type="button" aria-label="Close sheet" @click=${(e: Event) => this.handleOpennessChange(e)}></button>
     </div>
     <div class=${'sheet__body'}>
       <slot></slot>

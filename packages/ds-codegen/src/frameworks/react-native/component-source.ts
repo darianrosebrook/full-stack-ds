@@ -3,9 +3,11 @@ import type {
   ComponentIR,
   DomNodeIR,
   NormalizedChannelIR,
+  NormalizedDismissalTriggerIR,
   ResolvedPropIR,
 } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
+import { rnSurfaceLowering, type RnSurfaceLowering } from "./surface-emit.js";
 
 export interface ReactNativeComponentFiles {
   componentFile: string;
@@ -74,6 +76,11 @@ function emitImports(ir: ComponentIR): string {
   if (isFieldLayoutPattern(ir) || isCheckboxRootPattern(ir)) rnValueImports.add("View");
   if (isCheckboxRootPattern(ir)) rnValueImports.add("Pressable");
   if (rootPressableAcceptsOnPress(ir)) rnTypeImports.add("GestureResponderEvent");
+  const surfaceLowering = rnSurfaceLowering(ir);
+  if (surfaceLowering?.mode === "modal") {
+    rnValueImports.add("Modal");
+    if (surfaceOverlayDismiss(ir)) rnValueImports.add("Pressable");
+  }
   if (
     !usesNativeToggle(ir) &&
     !isFieldLayoutPattern(ir) &&
@@ -288,6 +295,17 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     if (loweredStateKeys(ir).includes("disabled")) {
       addPropIfPresent(ir, usage, "disabled");
     }
+    const lowering = rnSurfaceLowering(ir);
+    if (lowering?.openChannel) {
+      usage.channels.add(lowering.openChannel.name);
+      usage.channelSetters.add(lowering.openChannel.name);
+      if (lowering.escapeDeclared && lowering.escapeTrigger?.enabledByProp) {
+        addPropIfPresent(ir, usage, lowering.escapeTrigger.enabledByProp);
+      }
+      if (lowering.outsideDeclared && lowering.outsideTrigger?.enabledByProp) {
+        addPropIfPresent(ir, usage, lowering.outsideTrigger.enabledByProp);
+      }
+    }
   }
   return usage;
 }
@@ -407,7 +425,9 @@ function emitComponent(ir: ComponentIR): string {
     lines.push(...emitCheckboxReturn(ir));
   } else {
     lines.push(...emitVariantStyleConsts(ir));
-    const rendered = emitNode(ir.dom, ir, 2) ?? [
+    const surfaceModal =
+      ir.dom !== undefined ? rnSurfaceModalLowering(ir) : null;
+    const rendered = emitNode(ir.dom, ir, surfaceModal ? 3 : 2) ?? [
       `${INDENT}${INDENT}<View`,
       `${INDENT}${INDENT}${INDENT}testID={testID}`,
       `${INDENT}${INDENT}${INDENT}style={[styles.root, style]}`,
@@ -418,12 +438,64 @@ function emitComponent(ir: ComponentIR): string {
       `${INDENT}${INDENT}</View>`,
     ].join("\n");
     lines.push(`${INDENT}return (`);
-    lines.push(rendered);
+    if (surfaceModal) {
+      const channel = surfaceModal.openChannel!;
+      const animation =
+        surfaceModal.surface.positioning?.strategy === "centered" ? "fade" : "slide";
+      lines.push(`${INDENT}${INDENT}<Modal`);
+      lines.push(`${INDENT}${INDENT}${INDENT}visible={Boolean(${channel.name})}`);
+      lines.push(`${INDENT}${INDENT}${INDENT}transparent`);
+      lines.push(`${INDENT}${INDENT}${INDENT}animationType=${JSON.stringify(animation)}`);
+      if (surfaceModal.escapeDeclared) {
+        lines.push(
+          `${INDENT}${INDENT}${INDENT}onRequestClose={${surfaceDismissHandlerExpr(ir, surfaceModal, surfaceModal.escapeTrigger)}}`,
+        );
+      }
+      lines.push(`${INDENT}${INDENT}>`);
+      lines.push(rendered);
+      lines.push(`${INDENT}${INDENT}</Modal>`);
+    } else {
+      lines.push(rendered);
+    }
     lines.push(`${INDENT});`);
   }
   lines.push("}");
   lines.push("// @generated:end");
   return lines.join("\n");
+}
+
+/** Modal-mode surface lowering, present only when the open channel resolved. */
+function rnSurfaceModalLowering(ir: ComponentIR): RnSurfaceLowering | null {
+  const lowering = rnSurfaceLowering(ir);
+  if (!lowering || lowering.mode !== "modal" || !lowering.openChannel) return null;
+  return lowering;
+}
+
+/** Anatomy part lowering to a dismissing Pressable overlay (outside-click). */
+function surfaceOverlayPartName(ir: ComponentIR): string | undefined {
+  const lowering = rnSurfaceModalLowering(ir);
+  if (!lowering || !lowering.outsideDeclared) return undefined;
+  return ir.parts.find((part) => part.details?.role === "overlay")?.name;
+}
+
+function surfaceOverlayDismiss(ir: ComponentIR): boolean {
+  return surfaceOverlayPartName(ir) !== undefined;
+}
+
+/**
+ * Dismiss handler expression, gated by the dismissal trigger's enabledBy
+ * prop when the contract declares one (e.g. closeOnBackdropClick).
+ */
+function surfaceDismissHandlerExpr(
+  ir: ComponentIR,
+  lowering: RnSurfaceLowering,
+  trigger: NormalizedDismissalTriggerIR | undefined,
+): string {
+  const setter = `set${capitalize(lowering.openChannel!.name)}Value`;
+  if (trigger?.enabledByProp) {
+    return `() => { if (${safePropName(ir, trigger.enabledByProp)} ?? ${trigger.defaultEnabled}) ${setter}(false); }`;
+  }
+  return `() => ${setter}(false)`;
 }
 
 function emitFieldLayoutReturn(): string[] {
@@ -779,7 +851,10 @@ function emitNode(
   if (node.tag === "children" || node.tag === "slot") return `${INDENT.repeat(depth)}{children}`;
   if (node.iteration) return emitIteration(node, ir, depth);
 
-  const component = rnComponentForNode(node);
+  const component =
+    node.part !== undefined && node.part === surfaceOverlayPartName(ir)
+      ? "Pressable"
+      : rnComponentForNode(node);
   const attrs = emitNodeProps(node, ir, component, depth + 1, keyExpr);
   const childLines = emitNodeChildren(node, ir, depth + 1);
   const pad = INDENT.repeat(depth);
@@ -879,6 +954,13 @@ function emitNodeProps(
     props.push(`${pad}style={styles.${styleKey}}`);
   }
   if (keyExpr) props.unshift(`${pad}key={${keyExpr}}`);
+
+  if (node.part !== undefined && node.part === surfaceOverlayPartName(ir)) {
+    const lowering = rnSurfaceModalLowering(ir)!;
+    props.push(
+      `${pad}onPress={${surfaceDismissHandlerExpr(ir, lowering, lowering.outsideTrigger)}}`,
+    );
+  }
 
   const accessibilityState: string[] = [];
   let hasAccessibilityLabel = false;
@@ -1119,6 +1201,9 @@ function staticAttributeProp(name: string, value: string): string | null {
   if (name === "id") return `nativeID=${JSON.stringify(value)}`;
   if (name === "aria-hidden" && value === "true") return "accessible={false}";
   if (name === "alt") return `accessibilityLabel=${JSON.stringify(value)}`;
+  if (name === "aria-live" && (value === "polite" || value === "assertive")) {
+    return `accessibilityLiveRegion=${JSON.stringify(value)}`;
+  }
   return null;
 }
 

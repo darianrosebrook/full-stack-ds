@@ -151,6 +151,10 @@ export class ToastElement extends LitElement {
     onOpenChange: (v) => this.onOpenChange?.(v),
   });
 
+  private handleOpenChange(event: Event): void {
+    this.behavior.setOpen((event.target as HTMLInputElement).checked);
+  }
+
   private computeClasses(): string {
     return [
       "toast",
@@ -173,7 +177,7 @@ export class ToastElement extends LitElement {
       ${this.action ? html`
       <div class=${'toast__action'}></div>
       ` : nothing}
-      <button class=${'toast__close'} type="button" aria-label="Dismiss"></button>
+      <button class=${'toast__close'} type="button" aria-label="Dismiss" @click=${(e: Event) => this.handleOpenChange(e)}></button>
     </div>
   </div>
   ` : nothing}

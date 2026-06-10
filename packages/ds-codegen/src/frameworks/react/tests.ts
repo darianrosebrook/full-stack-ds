@@ -7,6 +7,7 @@
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
+import { isSurfaceComponent } from "./surface-emit.js";
 import { generateReactSurfaceTest } from "./surface-tests.js";
 
 /**
@@ -72,8 +73,9 @@ function channelValuePlaceholder(valueType: string | undefined): string {
 
 export function generateReactTest(ir: ComponentIR): string {
   // Presence-surface family: behavioral test plan replaces the legacy
-  // class-token-only plan.
-  if (ir.surface) {
+  // class-token-only plan. Kind-aware: non-anchored kinds (dialog, sheet,
+  // toast) keep the generic test plan; their surface block is fact-tracking.
+  if (isSurfaceComponent(ir)) {
     return generateReactSurfaceTest(ir);
   }
   const plan = buildComponentTestPlan(ir);

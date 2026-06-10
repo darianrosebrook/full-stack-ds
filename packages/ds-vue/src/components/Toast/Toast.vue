@@ -68,7 +68,7 @@ const classNames = computed(() => [
           <slot />
         </div>
         <div v-if="props.action" :class="'toast__action'"></div>
-        <button :class="'toast__close'" type="button" aria-label="Dismiss"></button>
+        <button :class="'toast__close'" type="button" aria-label="Dismiss" @click="() => behavior.setOpen(!behavior.open.value)"></button>
       </div>
     </div>
   </div>

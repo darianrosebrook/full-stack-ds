@@ -70,7 +70,7 @@ const classes = $derived(
       <h2 class={'dialog__title'}>
         {@render title?.()}
       </h2>
-      <button class={'dialog__closeButton'} type="button" aria-label="Close dialog"></button>
+      <button class={'dialog__closeButton'} type="button" aria-label="Close dialog" onclick={() => behavior.setOpenness(!behavior.openness)}></button>
     </div>
     <div class={'dialog__body'}>
       {@render children?.()}

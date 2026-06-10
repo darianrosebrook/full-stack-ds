@@ -446,6 +446,7 @@ export type ContractSurfacePositioningStrategy =
   | 'anchored'
   | 'centered'
   | 'viewport-edge'
+  | 'fullscreen'
   | 'inline';
 
 export type ContractSurfaceCollision = 'none' | 'flip' | 'shift' | 'flip-shift';

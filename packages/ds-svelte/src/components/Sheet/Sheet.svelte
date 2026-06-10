@@ -68,7 +68,7 @@ const classes = $derived(
       <p class={'sheet__description'}>
         {@render description?.()}
       </p>
-      <button class={'sheet__close'} type="button" aria-label="Close sheet"></button>
+      <button class={'sheet__close'} type="button" aria-label="Close sheet" onclick={() => behavior.setOpenness(!behavior.openness)}></button>
     </div>
     <div class={'sheet__body'}>
       {@render children?.()}

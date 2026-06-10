@@ -47,9 +47,13 @@ pnpm run governed:rail:react-native
 
 ## Known gaps
 
-- Surface behavior is not admitted. `surface-emit.ts` intentionally keeps
-  surfaces on the generic component path until a native `Modal`/`BackHandler`
-  substrate is implemented.
+- Non-anchored presence surfaces are admitted through the generic path
+  (`rnSurfaceLowering` in `surface-emit.ts`): blocking surfaces (Dialog,
+  Sheet) render an RN `Modal` host with escape → `onRequestClose` and
+  outside-click → overlay Pressable, both gated by the contract's enabledBy
+  props; non-blocking surfaces (Toast) render an in-tree live region.
+  Anchored kinds (Tooltip, Popover, coachmark) still need an
+  anchor-measurement substrate and remain unadmitted.
 - Token realization is native and per-component, but still narrow. The RN
   target consumes `ComponentIR.tokenScopes` and `FsdsTheme` overrides; it does
   not yet project every CSS property into native `ViewStyle`/`TextStyle`.
