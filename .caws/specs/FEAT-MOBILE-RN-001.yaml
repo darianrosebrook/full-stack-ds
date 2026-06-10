@@ -1,0 +1,31 @@
+id: FEAT-MOBILE-RN-001
+title: 'React Native emitter completion + default governed-rail graduation'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-10T02:07:14.228Z'
+updated_at: '2026-06-10T02:07:14.228Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'rn-variant-style-realization'
+    type: behavior
+    path: 'packages/ds-react-native/src/components'
+  - name: 'rn-rail-graduation'
+    type: contract-test
+    path: 'fsds.targets.json'
