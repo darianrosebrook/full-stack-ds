@@ -4,7 +4,7 @@ authority: reference
 status: draft
 title: Mobile-vs-web target parity quality matrix
 owner: "@darianrosebrook"
-updated: 2026-06-02
+updated: 2026-06-09
 ---
 
 # Mobile-vs-web target parity — measured quality matrix
@@ -34,11 +34,13 @@ roadmap: it states what is true now and recommends no future work.
 | `unmeasured` | this script **does not measure** this dimension — it is **not** a claim of absence. The accompanying evidence anchor says where to look. |
 | `n/a (no generated output)` | the dimension is structurally inapplicable because no generated artifact exists for it to apply to |
 
-The distinction between `unmeasured` and absence is load-bearing: the three
-native emitters are **callable emitter code with zero admission
-infrastructure** — emitter source files exist, but registry admission, rail
-plans, and generated package roots do not. "Unsupported" / "missing" / "not
-implemented" would all misstate that.
+The distinction between `unmeasured` and absence is load-bearing. React
+Native graduated into the default rail (`FEAT-MOBILE-RN-001`): registered
+target, generated package root, rail plan, CI/pre-push drift coverage. The
+two remaining native emitters (swiftui, jetpack-compose) are **callable
+emitter code with zero admission infrastructure** — emitter source files
+exist, but registry admission, rail plans, and generated package roots do
+not. "Unsupported" / "missing" / "not implemented" would all misstate that.
 
 ## The matrix
 
@@ -51,27 +53,27 @@ parity comparison: it is a descriptor target, not a web-or-native UI framework.
 
 | Dimension | react | vue | svelte | angular | lit | swiftui | react-native | jetpack-compose | Derived? |
 |---|---|---|---|---|---|---|---|---|---|
-| **Component coverage** | full | full | full | full | full | none | none | none | ✅ |
+| **Component coverage** | full | full | full | full | full | none | full | none | ✅ |
 | **Emitter completeness** | `unmeasured`¹ | `unmeasured`¹ | `unmeasured`¹ | `unmeasured`¹ | `unmeasured`¹ | `unmeasured`¹ | `unmeasured`¹ | `unmeasured`¹ | ❌ (file presence ✅) |
-| **Compile / admission** | admitted | admitted | admitted | admitted | admitted | not-admitted | not-admitted | not-admitted | ✅ |
+| **Compile / admission** | admitted | admitted | admitted | admitted | admitted | not-admitted | admitted | not-admitted | ✅ |
 | **Token realization** | `unmeasured`² | `unmeasured`² | `unmeasured`² | `unmeasured`² | `unmeasured`² | `unmeasured`³ | `unmeasured`³ | `unmeasured`³ | ❌ |
 | **Behavior / controller** | `unmeasured`⁴ | `unmeasured`⁴ | `unmeasured`⁴ | `unmeasured`⁴ | `unmeasured`⁴ | `unmeasured`⁵ | `unmeasured`⁵ | `unmeasured`⁵ | ❌ |
 | **Surface support** | `unmeasured`⁶ | `unmeasured`⁶ | `unmeasured`⁶ | `unmeasured`⁶ | `unmeasured`⁶ | `unmeasured`⁷ | `unmeasured`⁷ | `unmeasured`⁷ | ❌ |
-| **Preservation** | yes | yes | yes | yes | yes | n/a | n/a | n/a | ✅ |
-| **Rail provenance** | plan | plan | plan | plan | plan | no plan | no plan | no plan | ✅ |
+| **Preservation** | yes | yes | yes | yes | yes | n/a | yes | n/a | ✅ |
+| **Rail provenance** | plan | plan | plan | plan | plan | no plan | plan | no plan | ✅ |
 
 ### Derivable facts behind the cells
 
-- **Component coverage** = does a generated package root (`packages/ds-<target>/src`) hold generated output? Web: all five present. Native: none exist.
-- **Compile / admission** = is the target in the `BuiltinTargetId` union (`packages/ds-codegen/src/emitter.ts`) **and** has a rail plan **and** a package root? The script reports the triple. Native targets fail all three: `{admittedTarget:false, railPlan:false, packageRoot:false}`.
-- **Rail provenance** = does `packages/ds-codegen/src/validation/frameworks/<target>.ts` exist? Web: five plans (+ `figma.ts`). Native: none (probed both the sub-target id and the `swift` family id).
+- **Component coverage** = does a generated package root (`packages/ds-<target>/src`) hold generated output? Web: all five present. Native: react-native present (47 components); swiftui/jetpack-compose absent.
+- **Compile / admission** = is the target in the `BuiltinTargetId` union (`packages/ds-codegen/src/emitter.ts`) **and** has a rail plan **and** a package root? The script reports the triple. react-native passes all three; swiftui/jetpack-compose fail all three.
+- **Rail provenance** = does `packages/ds-codegen/src/validation/frameworks/<target>.ts` exist? Web: five plans (+ `figma.ts`). Native: `react-native.ts` present; swiftui/jetpack-compose none (probed both the sub-target id and the `swift` family id).
 - **Preservation** = `packages/ds-codegen/src/preserve.ts` is a shared, target-neutral module; a target has preserved output only where a generated package root exists. So this tracks package-root presence; it is **not** a per-target preservation engine.
 
 ### Evidence anchors for the `unmeasured` cells
 
 1. **Emitter completeness** — emitter *files* are present for all eight: react/vue/svelte 8 `.ts`, angular/lit 7, **swiftui 8, react-native 7, jetpack-compose 7** (`packages/ds-codegen/src/frameworks/<target>/`). The script reports the count; it does **not** judge whether the emitter produces correct/complete output. That is the "callable emitter code" fact — present for native, completeness unscored.
 2. **Token realization (web)** — web token output is exercised by the `tokens:*` gates and the rail diff; this script does not score depth.
-3. **Token realization (native)** — typed token *facts* are available in the IR (`FEAT-MOBILE-IR-001`, closed). Native *realization* — Swift `Color`/`CGFloat`, Kotlin `Color`/`Dp`, RN style surfaces — is not built and not measured here. Typed facts solved availability, not realization.
+3. **Token realization (native)** — typed token *facts* are available in the IR (`FEAT-MOBILE-IR-001`, closed). React Native realizes box-model tokens, default-variant tokens, and per-variant style entries (root-scoped value modifiers) through `FsdsTheme`-reactive `StyleSheet` factories (`FEAT-MOBILE-RN-001`); part-scoped/boolean/state styling is not yet realized. Swift `Color`/`CGFloat` and Kotlin `Color`/`Dp` realization is not built. Depth is not scored here.
 4. **Behavior/controller (web)** — behavior primitives are mirrored across the five web frameworks (`useFocusTrap`/`createFocusTrap`/…); depth unscored.
 5. **Behavior/controller (native)** — `docs/successor-work-mobile-rail-sweep.md @ 8c19a4d` categorizes **D=9** runtime/controller components; native controller support is not measured here.
 6. **Surface support (web)** — DOM gives slots/events/document-focus/positioning; depth unscored.
@@ -89,14 +91,16 @@ corpus, which `--check` verifies):
 Reconciled with the live emitter-surface inventory: the **swift** family has
 two sub-targets (`swiftui/` + `uikit/`); **swiftui** carries the native-primitive
 proof (Switch → `native-toggle-affordance`, Details → `native-disclosure`).
-**jetpack-compose** and **react-native** each have an 8-file-shape emitter
-directory (7 `.ts` each here) but **no registered target, no package root, no
+**react-native** is a registered default-rail target with a generated package
+root and rail plan (`FEAT-MOBILE-RN-001`). **jetpack-compose** has an
+emitter directory (7 `.ts`) but **no registered target, no package root, no
 rail plan** — callable code, zero admission infrastructure.
 
 ## The measured asymmetry
 
 - **Web** (react, vue, svelte, angular, lit): a **governed generated system**. All five are admitted targets with generated package roots, rail plans, preservation-bearing output, and the manifest/diff discipline. Not "done" in a product sense, but governed end-to-end.
-- **Native** (swiftui, react-native, jetpack-compose): **callable emitter code, zero admission infrastructure.** Emitter source exists for all three; zero generated package roots, zero registered targets, zero rail plans. SwiftUI carries narrow high-quality semantic proofs (native-primitive collapse, typed-token availability); React Native and Jetpack Compose have emitter scaffolding only.
+- **React Native**: a **governed generated target** in the default rail — registered, package root, rail plan, manifest/diff discipline, generated host-render + variant-style tests. Its runtime claims stay narrow: no simulator/device execution, no visual parity, no surfaces, no compound parts.
+- **Remaining native** (swiftui, jetpack-compose): **callable emitter code, zero admission infrastructure.** SwiftUI carries narrow high-quality semantic proofs (native-primitive collapse, typed-token availability); Jetpack Compose has emitter scaffolding only.
 
 The two sides are **not comparable as generated systems**. The architectural
 wins on the native side (role-elision blocker refuted 0/47, typed-token gap
@@ -113,7 +117,7 @@ recommended** — the lane decision is a separate later conversation:
 
 - **Lane A** — SwiftUI package + admission for the 21 IR-sufficient (sweep category A) components.
 - **Lane B** — Native View IR recon for the 17 composite-layout (category C) components.
-- React Native / Jetpack Compose elevation, native token realization, and `SurfaceIR` substrate-neutrality for overlays remain unsized future work.
+- React Native elevation landed (`FEAT-MOBILE-RN-001`); its surface/compound/state-styling residuals, Jetpack Compose elevation, SwiftUI native token realization, and `SurfaceIR` substrate-neutrality for overlays remain unsized future work.
 
 No parity claim is made. No "next best work" is asserted. The matrix is a
 diagnostic surface only.

@@ -92,16 +92,18 @@ const EMITTER_DIR = {
   "jetpack-compose": "jetpack-compose",
 };
 
-// Map a parity-target id to its generated package root (web only have these).
+// Map a parity-target id to its generated package root.
 const PACKAGE_ROOT = {
   react: "packages/ds-react/src",
   vue: "packages/ds-vue/src",
   svelte: "packages/ds-svelte/src",
   angular: "packages/ds-angular/src",
   lit: "packages/ds-lit/src",
-  // No mobile package roots exist; null = "no generated package root."
+  // React Native generates into a real package root and sits in the default
+  // rail (FEAT-MOBILE-RN-001). SwiftUI/Compose remain recon: null = "no
+  // generated package root."
+  "react-native": "packages/ds-react-native/src",
   swiftui: null,
-  "react-native": null,
   "jetpack-compose": null,
 };
 
@@ -347,15 +349,20 @@ function selfCheck(result) {
       }
     }
   }
-  // Every web target must be admitted; no native target may be admitted (the
-  // measured asymmetry). If this ever flips, the matrix is stale.
+  // Every web target must be admitted. React Native graduated into the
+  // default rail (FEAT-MOBILE-RN-001); SwiftUI/Compose remain recon and must
+  // NOT be admitted. If either side flips, the matrix is stale.
+  const ADMITTED_NATIVE = new Set(["react-native"]);
   for (const row of result.rows) {
     const adm = row.cells.compileAdmission.verdict === "admitted";
     if (row.family === "web" && !adm) {
       problems.push(`web target ${row.target} unexpectedly not admitted`);
     }
-    if (row.family === "native" && adm) {
+    if (row.family === "native" && adm && !ADMITTED_NATIVE.has(row.target)) {
       problems.push(`native target ${row.target} unexpectedly admitted (asymmetry changed)`);
+    }
+    if (row.family === "native" && !adm && ADMITTED_NATIVE.has(row.target)) {
+      problems.push(`native target ${row.target} expected admitted (FEAT-MOBILE-RN-001) but is not`);
     }
   }
   return problems;
