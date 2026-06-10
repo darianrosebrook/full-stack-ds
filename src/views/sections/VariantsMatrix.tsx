@@ -3,7 +3,7 @@ import { bundle } from "../../types/bundle";
 import { FrameworkPreview } from "../../runtime/FrameworkPreview";
 import { buildReactDemo } from "../../runtime/demos";
 import {
-  deriveControls,
+  materialTokenRows,
   tokenOverridesToCss,
 } from "../../components/properties-panel/control-derivation";
 
@@ -35,7 +35,7 @@ export function VariantsMatrix({
   // FrameworkPreview.overrideCss) so it re-skins without reloading the cell.
   // Uses the derived token rows so each override also targets its resolvesTo
   // semantic var (variant rules re-derive the slot var — see tokenOverridesToCss).
-  const { tokens } = deriveControls(component.contract);
+  const tokens = materialTokenRows(component);
   const overrideCss =
     tokenOverrides && Object.keys(tokenOverrides).length > 0
       ? tokenOverridesToCss(tokenOverrides, tokens)
