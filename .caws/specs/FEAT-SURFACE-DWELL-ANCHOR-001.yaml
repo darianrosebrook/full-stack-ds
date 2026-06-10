@@ -1,0 +1,34 @@
+id: FEAT-SURFACE-DWELL-ANCHOR-001
+title: 'Auto-dismiss dwell timing (tokens->contract->logic, all targets) + RN anchored-surface substrate'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-10T18:17:17.077Z'
+updated_at: '2026-06-10T18:17:17.077Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'dwell-token-flow'
+    type: schema
+    path: 'packages/ds-tokens/src/motion'
+  - name: 'auto-dismiss-primitive'
+    type: behavior
+    path: 'packages/ds-react/src/primitives'
+  - name: 'rn-anchored-substrate'
+    type: behavior
+    path: 'packages/ds-react-native/src/components'
