@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-10T16:00:29.750Z'
-updated_at: '2026-06-10T16:00:29.750Z'
+updated_at: '2026-06-10T16:00:42.137Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,6 +13,20 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
+    - packages/ds-contracts/components/Dialog/**
+    - packages/ds-contracts/components/Sheet/**
+    - packages/ds-contracts/components/Toast/**
+    - packages/ds-contracts/component.contract.schema.json
+    - packages/ds-codegen/src/contract.ts
+    - packages/ds-codegen/src/ir.ts
+    - packages/ds-codegen/src/semantics.ts
+    - packages/ds-codegen/src/frameworks/react/surface-emit.ts
+    - packages/ds-codegen/src/frameworks/vue/surface-emit.ts
+    - packages/ds-codegen/src/frameworks/react-native/**
+    - packages/ds-codegen/src/validation/frameworks/react-native.ts
+    - packages/ds-react-native/**
+    - docs/presence-surfaces.md
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
