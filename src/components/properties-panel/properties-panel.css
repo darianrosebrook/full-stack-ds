@@ -587,6 +587,18 @@
   color: var(--fsds-semantic-color-foreground-accent);
 }
 
+/* Provenance modifiers: a profile-inherited value is real but not
+   component-authored (secondary), a primitive default is the inherited
+   backstop (dimmed tertiary). Both stay overridable. */
+.fsds-tvc__diamond--profile {
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+.fsds-tvc__diamond--primitive {
+  color: var(--fsds-semantic-color-foreground-tertiary);
+  opacity: 0.6;
+}
+
 .fsds-tvc__popover {
   width: 23rem;
   max-height: 75vh;

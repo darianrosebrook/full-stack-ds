@@ -15,6 +15,7 @@
 import { useState } from "react";
 import { Popover } from "@full-stack-ds/react";
 import type { FoundationToken } from "../../types/data";
+import type { TokenProvenance } from "./control-derivation";
 import { TokenPicker, type TokenPick } from "./TokenPicker";
 
 export interface TokenValueControlProps {
@@ -22,6 +23,15 @@ export interface TokenValueControlProps {
   value: string;
   /** True when this value is currently bound to a token (drives ◇ fill). */
   linked: boolean;
+  /**
+   * Merge-layer provenance of the underlying row. Distinguishes "this
+   * component authored this binding" (solid accent ◆) from values inherited
+   * via the morphology profile or the box-model primitive — real, overridable
+   * slots, but not component-authored design intent.
+   */
+  provenance?: TokenProvenance;
+  /** True when the panel holds a raw literal override for this slot. */
+  overridden?: boolean;
   /** "dimension" → number stepper; "color" → hex + swatch. */
   kind: "dimension" | "color";
   /** Commit a literal value edit. */
@@ -60,6 +70,8 @@ function isHex(v: string): boolean {
 export function TokenValueControl({
   value,
   linked,
+  provenance,
+  overridden,
   kind,
   onChange,
   onBindToken,
@@ -72,6 +84,29 @@ export function TokenValueControl({
 }: TokenValueControlProps) {
   const [open, setOpen] = useState(false);
   const [num, unit] = splitDimension(value);
+
+  // Marker semantics: the glyph states binding truth (◆ bound / ◇ not), the
+  // modifier + text state provenance. A local override always reads as the
+  // open-diamond override state regardless of where the base value came from.
+  const markerState = overridden
+    ? "override"
+    : provenance === "morphology-profile"
+      ? "profile"
+      : provenance === "primitive-default"
+        ? "primitive"
+        : "authored";
+  const markerTitle =
+    markerState === "override"
+      ? `${label} — literal override`
+      : markerState === "profile"
+        ? linked
+          ? `${label} — token-linked via morphology profile`
+          : `${label} — morphology profile default`
+        : markerState === "primitive"
+          ? `${label} — primitive default`
+          : linked
+            ? `${label} — token-linked`
+            : label;
 
   function bump(delta: number) {
     if (Number.isNaN(num)) return;
@@ -88,7 +123,7 @@ export function TokenValueControl({
             "fsds-tvc__trigger" + (compact ? " fsds-tvc__trigger--compact" : "")
           }
           aria-label={`Edit ${label}`}
-          title={linked ? `${label} — token-linked` : label}
+          title={markerTitle}
         >
           {kind === "color" && isHex(value) && (
             <span
@@ -108,7 +143,13 @@ export function TokenValueControl({
           </span>
           <span
             className={
-              "fsds-tvc__diamond" + (linked ? " fsds-tvc__diamond--linked" : "")
+              "fsds-tvc__diamond" +
+              (linked ? " fsds-tvc__diamond--linked" : "") +
+              (markerState === "profile"
+                ? " fsds-tvc__diamond--profile"
+                : markerState === "primitive"
+                  ? " fsds-tvc__diamond--primitive"
+                  : "")
             }
             aria-hidden
           >

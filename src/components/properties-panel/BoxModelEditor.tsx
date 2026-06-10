@@ -87,6 +87,8 @@ export function BoxModelEditor({
         label={row.slot}
         value={shownValue(row, values)}
         linked={isLinked(row, values)}
+        provenance={row.source}
+        overridden={row.slot in values}
         onChange={(v) => onChange(row.slot, v)}
         onBindToken={(pick) => onBindToken(row.slot, pick)}
         foundationTokens={foundationTokens}
@@ -97,18 +99,29 @@ export function BoxModelEditor({
   }
 
   const radius = byRole.get("radius");
-  const minWidth = byRole.get("min-width");
   const border = byRole.get("border");
 
-  // Center card: a W × H proxy from the component's min-width/min-height tokens
-  // (components don't carry explicit width/height like canvas nodes; min-* is
-  // the closest contract fact). Mirrors the Figma "80 × 80" center label.
-  const minWidthRow = tokens.find((t) => /(^|\.)min-width$/.test(t.slot));
-  const minHeightRow = tokens.find((t) => /(^|\.)min-height$/.test(t.slot));
-  const w = minWidthRow ? shownValue(minWidthRow, values) : null;
-  const h = minHeightRow ? shownValue(minHeightRow, values) : null;
-  const centerLabel =
-    w && h ? `${w} × ${h}` : (w ?? h ?? (minWidth ? "min" : "size"));
+  // Center card: a W × H proxy per axis — the min-* floor when one is
+  // meaningfully set, else the fixed extent (fixed-square glyphs, linear
+  // meters). With the material surface every component carries primitive
+  // min-* rows valued "0"; those are real slots but not a meaningful size to
+  // headline, so an axis only contributes when its row is authored/profile
+  // sourced or carries a live override.
+  function axisRow(...roles: BoxModelRole[]): TokenRowDescriptor | null {
+    for (const role of roles) {
+      const b = byRole.get(role);
+      if (!b) continue;
+      if (b.row.source !== "primitive-default" || b.row.slot in values) {
+        return b.row;
+      }
+    }
+    return null;
+  }
+  const wRow = axisRow("min-width", "width");
+  const hRow = axisRow("min-height", "height");
+  const w = wRow ? shownValue(wRow, values) : null;
+  const h = hRow ? shownValue(hRow, values) : null;
+  const centerLabel = w && h ? `${w} × ${h}` : (w ?? h ?? "auto");
 
   return (
     <>

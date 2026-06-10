@@ -19,6 +19,7 @@ import { useState } from "react";
 import type { ComponentBundle, FoundationToken } from "../../types/data";
 import {
   deriveControls,
+  materialTokenRows,
   resolveBoxModel,
   resolveFillColor,
   resolveTypography,
@@ -188,20 +189,28 @@ export function PropertiesPanel({
   foundationTokens,
 }: PropertiesPanelProps) {
   const { variantAxes, props, tokens } = deriveControls(component.contract);
+  // The box-model sections read the normalized MATERIAL surface (authored
+  // sidecar rows + inherited primitive/profile slots from the data plugin),
+  // not raw sidecar presence. The Component-tokens section keeps `tokens`
+  // (authored-only): the sidecar is the authoring surface, the material rows
+  // are the realized one.
+  const materialRows = materialTokenRows(component);
   const overrideCount =
     Object.keys(propValues).length + Object.keys(tokenValues).length;
   // Which token row's picker is open (by slot), and whether it's color-only.
   const [pickerSlot, setPickerSlot] = useState<string | null>(null);
-  const pickerRow = tokens.find((t) => t.slot === pickerSlot) ?? null;
+  const pickerRow = materialRows.find((t) => t.slot === pickerSlot) ?? null;
 
   // Role-resolved tokens for the Layout / Shape / Fill sections. Each maps to
-  // the contract token that serves that role (match-by-use), discovered the same
+  // the material row that serves that role (match-by-use), discovered the same
   // way the box-model roles are — never hardcoded to a component.
   const byRole = new Map<BoxModelRole, TokenRowDescriptor>(
-    resolveBoxModel(tokens).map((b) => [b.role, b.row]),
+    resolveBoxModel(materialRows).map((b) => [b.role, b.row]),
   );
-  const widthRow = byRole.get("min-width");
-  const heightRow = byRole.get("min-height");
+  // Layout W/H: a min-* floor when the component declares one, else the fixed
+  // extent (fixed-square glyphs, linear meters).
+  const widthRow = byRole.get("min-width") ?? byRole.get("width");
+  const heightRow = byRole.get("min-height") ?? byRole.get("height");
   const radiusRow = byRole.get("radius");
   const fillRow = resolveFillColor(tokens);
   const hasLayout = !!(widthRow || heightRow);
@@ -245,6 +254,8 @@ export function PropertiesPanel({
         label={row.slot}
         value={rowValue(row)}
         linked={rowLinked(row)}
+        provenance={row.source}
+        overridden={row.slot in tokenValues}
         onChange={(v) => onTokenChange(row.slot, v)}
         onBindToken={(pick) => onTokenChange(row.slot, pick.value)}
         foundationTokens={foundationTokens}
@@ -280,7 +291,7 @@ export function PropertiesPanel({
 
       <PropertySection title="Box model">
         <BoxModelEditor
-          tokens={tokens}
+          tokens={materialRows}
           values={tokenValues}
           onChange={onTokenChange}
           onBindToken={(slot, pick) => onTokenChange(slot, pick.value)}
