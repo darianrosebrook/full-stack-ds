@@ -37,7 +37,7 @@ export type ToastPoliteness = "polite" | "assertive";
         <ng-container *ngIf="action">
           <div [ngClass]="'toast__action'"></div>
         </ng-container>
-        <button [ngClass]="'toast__close'" type="button" aria-label="Dismiss" (click)="handleOpenChange($event)"></button>
+        <button [ngClass]="'toast__close'" type="button" aria-label="Dismiss" (click)="behavior.setOpen(!behavior.open())"></button>
       </div>
     </div>
   </ng-container>
@@ -77,10 +77,6 @@ export class ToastComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
 }
 
 @Component({

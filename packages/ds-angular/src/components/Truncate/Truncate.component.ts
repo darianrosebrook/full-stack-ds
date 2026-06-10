@@ -57,10 +57,6 @@ export class TruncateComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleExpandedChange(event: Event): void {
-    this.behavior.setExpanded((event.target as HTMLInputElement).checked);
-  }
 }
 
 @Component({

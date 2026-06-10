@@ -1080,8 +1080,12 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // Templates currently don't bind these handlers anyway; consumers wire
   // their own when they need custom input handling.
   const PRIMITIVE_VALUE_TYPES = new Set(["string", "number", "boolean"]);
+  const handlerChannels = channelsNeedingInputHandlers(ir);
   for (const ch of channels) {
     if (!PRIMITIVE_VALUE_TYPES.has(ch.valueType ?? "")) continue;
+    // Host-aware lowering inlines a toggle for non-form hosts; only form
+    // hosts still route through the element-state handler.
+    if (!handlerChannels.has(ch.name)) continue;
     const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
     const setter = `set${capitalizeAngular(ch.name)}`;
     const valueExpr =
@@ -1313,7 +1317,7 @@ function renderAngularDomNode(
   // produces `(click)="behavior.X()"`. Legacy `bindings.onX` is filtered
   // below to avoid double-emit.
   for (const [eventName, expr] of Object.entries(node.events)) {
-    const rendered = renderAngularEvent(eventName, expr, ctx);
+    const rendered = renderAngularEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1602,6 +1606,49 @@ function angularIterationLocalName(
   return it.itemVar ?? null;
 }
 
+const ANGULAR_FORM_HOSTS = new Set(["input", "textarea", "select"]);
+
+/** Channels whose onChange is bound on a form host somewhere in the dom tree. */
+function channelsNeedingInputHandlers(ir: ComponentIR): Set<string> {
+  const out = new Set<string>();
+  const visit = (node: DomNodeIR | undefined): void => {
+    if (!node) return;
+    const isFormHost = ANGULAR_FORM_HOSTS.has(node.tag);
+    const collect = (expr: BindingExpression): void => {
+      if (expr.kind === "channel" && isFormHost) out.add(expr.channel);
+    };
+    for (const expr of Object.values(node.events)) collect(expr);
+    for (const [name, expr] of Object.entries(node.bindings)) {
+      if (name.startsWith("on")) collect(expr);
+    }
+    for (const child of node.children) visit(child);
+  };
+  visit(ir.dom);
+  return out;
+}
+
+/**
+ * Host-aware channel event lowering (FIX-CHANNEL-EVENT-LOWERING-001):
+ * reading element state (.checked/.value) is only valid on form hosts.
+ * A channel click on a button/div host toggles the boolean channel,
+ * matching react/vue/svelte/react-native.
+ */
+function angularChannelEventBinding(
+  eventName: string,
+  ch: NormalizedChannelIR,
+  tag: string | undefined,
+): string {
+  if (ch.callbackKind === "event") {
+    return `(${eventName})="${ch.changeHandlerProp}?.($event)"`;
+  }
+  if (!ANGULAR_FORM_HOSTS.has(tag ?? "") && ch.valueType === "boolean") {
+    const setter = `set${capitalizeAngular(ch.name)}`;
+    return `(${eventName})="behavior.${setter}(!behavior.${ch.name}())"`;
+  }
+  const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
+  return `(${eventName})="${handlerName}($event)"`;
+}
+
 function renderAngularBinding(
   attr: string,
   expr: BindingExpression,
@@ -1631,11 +1678,7 @@ function renderAngularBinding(
       // Event-shaped channels pass the raw event to the consumer's
       // @Input handler; consumer drives state externally.
       const eventName = mapJsxEventToAngular(attr);
-      if (ch.callbackKind === "event") {
-        return `(${eventName})="${ch.changeHandlerProp}?.($event)"`;
-      }
-      const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
-      return `(${eventName})="${handlerName}($event)"`;
+      return angularChannelEventBinding(eventName, ch, tag);
     }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01.
@@ -1725,6 +1768,7 @@ function renderAngularEvent(
   eventName: string,
   expr: BindingExpression,
   ctx: AngularRenderContext,
+  tag?: string,
 ): string | null {
   switch (expr.kind) {
     case "prop":
@@ -1743,11 +1787,7 @@ function renderAngularEvent(
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
-      if (ch.callbackKind === "event") {
-        return `(${eventName})="${ch.changeHandlerProp}?.($event)"`;
-      }
-      const handlerName = `handle${capitalizeAngular(ch.name)}Change`;
-      return `(${eventName})="${handlerName}($event)"`;
+      return angularChannelEventBinding(eventName, ch, tag);
     }
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at

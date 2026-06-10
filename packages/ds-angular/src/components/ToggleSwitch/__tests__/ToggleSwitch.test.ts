@@ -20,6 +20,16 @@ describe("ToggleSwitch — unit", () => {
     expect(classTokens(fixture.componentInstance)).toContain("toggle-switch");
   });
 
+  it("toggles the checked channel from the root click", () => {
+    const fixture = TestBed.createComponent(ToggleSwitchComponent);
+    const seen: boolean[] = [];
+    fixture.componentInstance.onChange = (v: boolean) => seen.push(v);
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector(".toggle-switch") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([true]);
+  });
+
   it("applies size=small variant class", () => {
     const fixture = TestBed.createComponent(ToggleSwitchComponent);
     fixture.componentInstance.size = "small";

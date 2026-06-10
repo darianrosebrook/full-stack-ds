@@ -60,10 +60,6 @@ export class OTPComponent {
     ].filter(Boolean).join(" "),
   );
 
-  protected handleValueChange(event: Event): void {
-    this.behavior.setValue((event.target as HTMLInputElement).value);
-  }
-
   // Materializes an array of length N for *ngFor count-iteration.
   // Memoized by length so re-renders don't churn the iteration source.
   private _arrayFromCountCache = new Map<number, ReadonlyArray<undefined>>();

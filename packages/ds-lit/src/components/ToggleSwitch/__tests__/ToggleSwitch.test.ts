@@ -17,6 +17,16 @@ describe("ToggleSwitch — unit", () => {
     expect(classTokens(root)).toContain("toggle-switch");
   });
 
+  it("toggles the checked channel from the root click", async () => {
+    const { element } = await renderElement("fsds-toggle-switch");
+    const seen: boolean[] = [];
+    (element as LitTestElement & { onChange?: (v: boolean) => void }).onChange = (v: boolean) => seen.push(v);
+    await (element as LitTestElement).updateComplete;
+    const host = element.shadowRoot?.querySelector(".toggle-switch") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([true]);
+  });
+
   it("applies size=small variant class", async () => {
     const { element } = await renderElement("fsds-toggle-switch", { "size": "small" });
     const root = element.shadowRoot?.firstElementChild ?? element;

@@ -85,10 +85,6 @@ export class CommandComponent {
     ].filter(Boolean).join(" "),
   );
 
-  protected handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
-
   protected handleSearchChange(event: Event): void {
     this.behavior.setSearch((event.target as HTMLInputElement).value);
   }

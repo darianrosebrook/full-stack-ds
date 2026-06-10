@@ -32,7 +32,7 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
         <h2 [ngClass]="'dialog__title'">
           <ng-content select="[slot=title]" />
         </h2>
-        <button [ngClass]="'dialog__closeButton'" type="button" aria-label="Close dialog" (click)="handleOpennessChange($event)"></button>
+        <button [ngClass]="'dialog__closeButton'" type="button" aria-label="Close dialog" (click)="behavior.setOpenness(!behavior.openness())"></button>
       </div>
       <div [ngClass]="'dialog__body'">
         <ng-content />
@@ -73,10 +73,6 @@ export class DialogComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleOpennessChange(event: Event): void {
-    this.behavior.setOpenness((event.target as HTMLInputElement).checked);
-  }
 }
 
 @Component({

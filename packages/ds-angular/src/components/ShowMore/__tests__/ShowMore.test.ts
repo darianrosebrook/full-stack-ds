@@ -19,6 +19,16 @@ describe("ShowMore — unit", () => {
     const fixture = TestBed.createComponent(ShowMoreComponent);
     expect(classTokens(fixture.componentInstance)).toContain("show-more");
   });
+
+  it("toggles the expanded channel from the trigger click", () => {
+    const fixture = TestBed.createComponent(ShowMoreComponent);
+    const seen: boolean[] = [];
+    fixture.componentInstance.onExpandedChange = (v: boolean) => seen.push(v);
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector(".show-more__trigger") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([true]);
+  });
 });
 
 function classTokens(component: { classes: () => string }): string[] {

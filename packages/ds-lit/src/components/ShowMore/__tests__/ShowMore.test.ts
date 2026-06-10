@@ -17,6 +17,16 @@ describe("ShowMore — unit", () => {
     expect(classTokens(root)).toContain("show-more");
   });
 
+  it("toggles the expanded channel from the trigger click", async () => {
+    const { element } = await renderElement("fsds-show-more");
+    const seen: boolean[] = [];
+    (element as LitTestElement & { onExpandedChange?: (v: boolean) => void }).onExpandedChange = (v: boolean) => seen.push(v);
+    await (element as LitTestElement).updateComplete;
+    const host = element.shadowRoot?.querySelector(".show-more__trigger") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([true]);
+  });
+
   it("reflects expanded=true after behavior.setExpanded(true)", async () => {
     const { element } = await renderElement("fsds-show-more");
     const el = element as LitTestElement & {

@@ -35,7 +35,7 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
         <p [ngClass]="'sheet__description'">
           <ng-content select="[slot=description]" />
         </p>
-        <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet" (click)="handleOpennessChange($event)"></button>
+        <button [ngClass]="'sheet__close'" type="button" aria-label="Close sheet" (click)="behavior.setOpenness(!behavior.openness())"></button>
       </div>
       <div [ngClass]="'sheet__body'">
         <ng-content />
@@ -70,10 +70,6 @@ export class SheetComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleOpennessChange(event: Event): void {
-    this.behavior.setOpenness((event.target as HTMLInputElement).checked);
-  }
 }
 
 @Component({

@@ -68,10 +68,6 @@ export class DetailsComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-
-  protected handleOpenChange(event: Event): void {
-    this.behavior.setOpen((event.target as HTMLInputElement).checked);
-  }
 }
 
 @Component({
