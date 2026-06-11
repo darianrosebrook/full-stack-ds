@@ -2,9 +2,10 @@ id: DOC-TREE-LAYOUT-001
 title: 'Codify docs tree layout + draft-authority policy; re-home specs; restore claim ledger'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
 created_at: '2026-06-11T07:46:09.377Z'
-updated_at: '2026-06-11T07:49:42.099Z'
+updated_at: '2026-06-11T07:51:20.768Z'
 blast_radius:
   modules:
     - docs tree layout + governance spec sections (no code)
