@@ -7,7 +7,7 @@ owner: "@darianrosebrook"
 updated: 2026-06-11
 governs:
   - src/runtime/FrameworkPreview.tsx
-  - docs/architecture/adr/preview-pipeline-architecture.md
+  - src/runtime/FrameworkPreview.tsx
   - packages/ds-contracts/a2ui/derive.ts
   - packages/ds-contracts/components/**/*.contract.json
 ---

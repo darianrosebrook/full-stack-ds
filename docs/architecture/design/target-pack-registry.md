@@ -16,7 +16,7 @@ governs:
 
 Full Stack DS currently generates framework packages through built-in emitters. That path is useful, but hardcoding framework names in core codegen is the wrong long-term extension model. A target should become available because an admitted target pack declares what it can emit and what evidence admits that output, not because core codegen imports a new factory by name.
 
-This document defines the target-pack seam landed by this slice.
+This document defines the target-pack seam.
 
 ## Authority split
 
@@ -74,9 +74,9 @@ This distinguishes undeclared targets, declared local targets, and executable ta
 
 ## Rail boundary
 
-The current emission manifest and admission rail still use the older five-framework `FrameworkId` vocabulary: React, Vue, Svelte, Lit, and Angular. That vocabulary is not widened by this slice.
+The emission manifest and admission rail use the `FrameworkId` vocabulary: react, vue, svelte, lit, angular, and react-native (manifest schema v6).
 
-`TargetBinding` therefore carries an optional `railFrameworkId`. Targets that participate in the existing framework-admission rail set this field. Targets such as Figma can generate descriptor artifacts without being forced into the five-framework emission manifest. A later manifest-v6/provenance slice should add target-pack provenance rather than pretending every target is a framework rail member.
+`TargetBinding` carries an optional `railFrameworkId`. Targets that participate in the framework-admission rail set this field. Descriptor targets such as Figma generate artifacts without joining the framework rail.
 
 ## Safety posture
 
@@ -88,7 +88,7 @@ The local loader additionally rejects non-local source kinds, missing package ro
 
 ## Tests and evidence surface
 
-The target-pack test surface now covers built-in manifest validation, closed vocabulary enforcement, registry config loading, duplicate id refusal, local partitioning, path escape refusal, registry-admitted CLI target parsing, default target selection, local manifest loading, SHA-256 fingerprinting, metadata-only status, id mismatch refusal, missing entrypoint refusal, disallowed permission refusal, and registry behavior where local packs are declared/describable but not executable.
+The target-pack test surface covers built-in manifest validation, closed vocabulary enforcement, registry config loading, duplicate id refusal, local partitioning, path escape refusal, registry-admitted CLI target parsing, default target selection, local manifest loading, SHA-256 fingerprinting, metadata-only status, id mismatch refusal, missing entrypoint refusal, disallowed permission refusal, and registry behavior where local packs are declared/describable but not executable.
 
 The intended targeted validation is:
 

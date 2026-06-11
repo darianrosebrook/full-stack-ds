@@ -6,19 +6,15 @@ title: Presence Surfaces — the architectural family for tooltips, popovers, di
 owner: "@darianrosebrook"
 updated: 2026-06-11
 governs:
-  - packages/ds-contracts/Tooltip.contract.json
-  - packages/ds-contracts/Popover.contract.json
-  - packages/ds-contracts/Dialog.contract.json
-  - packages/ds-contracts/Modal.contract.json
-  - packages/ds-contracts/Menu.contract.json
-  - packages/ds-contracts/Dropdown.contract.json
-  - packages/ds-contracts/Select.contract.json
-  - packages/ds-contracts/Toast.contract.json
-  - packages/ds-contracts/Coachmark.contract.json
-  - packages/ds-contracts/Sheet.contract.json
+  - packages/ds-contracts/components/Tooltip/Tooltip.contract.json
+  - packages/ds-contracts/components/Popover/Popover.contract.json
+  - packages/ds-contracts/components/Dialog/Dialog.contract.json
+  - packages/ds-contracts/components/Sheet/Sheet.contract.json
+  - packages/ds-contracts/components/Toast/Toast.contract.json
   - packages/ds-contracts/component.contract.schema.json
   - packages/ds-codegen/src/ir.ts
-caws_specs: []
+  - packages/ds-codegen/src/semantics.ts
+  - packages/ds-codegen/src/frameworks/react-native/surface-emit.ts
 ---
 
 # Presence Surfaces
@@ -307,47 +303,59 @@ The IR builder copies `contract.surface` into `SurfaceIR`, resolving the `anchor
 - **A taxonomy consumers can reason about.** "Is this surface ephemeral or persistent? Blocking or non-blocking?" answers most behavior questions without reading source.
 - **Forward compatibility.** New surface kinds (e.g. a `command-palette` surface, an `inline-edit` surface) are added by extending the `kind` enum and the controller hierarchy — not by reshaping the family.
 
-## Implementation phasing (forward-looking, not part of this commit)
+## Platform realization
 
-This document is the architecture lock. It does **not** change any generated component output and does **not** wire any codegen. Subsequent phases:
+The taxonomy is consumed at three layers. The contract declares facts; the
+IR (`buildSurfaceIR`) validates and normalizes them; each emitter lowers
+them in its platform's idiom. Platform divergences live at the emitter and
+its documentation, never in the contract.
 
-- **Phase F-1 — Schema landing**: Add the `surface` schema to `component.contract.schema.json` with validation only. No IR builder consumes it yet.
-- **Phase F-2 — Tooltip migration**: Move `Tooltip.contract.json` to compound anatomy (`trigger`, `content`, `arrow`). Add `surface` block. Build `SurfaceController` + `AnchoredSurfaceController`. React reference implementation; then 4 framework agents serially (post-Tabs lessons learned).
-- **Phase F-3 — Popover, Dialog/ModalDialog, Menu/Dropdown, Select, Toast, Coachmark, Sheet**: Each is a contract addition/migration + controller wiring on top of F-2's substrate.
+**Contract adoption.** Tooltip, Popover, Dialog, Sheet, and Toast declare
+`surface` blocks. A contract without a `surface` block emits through the
+generic component path on every target — the block is required only for
+surface-substrate lowering, and adding one to a non-anchored kind does not
+change web emission (the web surface gates are kind-aware via
+`isAnchoredPresenceKind`). Close-affordance trigger parts bind their click
+to the open channel in the dom tree, so dismissal-by-close-button lowers
+through each framework's ordinary channel machinery.
 
-Estimated total for F-1 through F-3: 10-12 days. This document does not commit to that timeline; it commits to the architecture.
+**Web.** Anchored kinds (tooltip, popover) route through the anchored
+surface emitters in all five frameworks: compound trigger/content API,
+`AnchoredSurfacePolicy`-driven, positioned by
+`useAnchoredSurface`/`useAnchoredPosition`. Non-anchored kinds (dialog,
+sheet, toast) keep their portal/dismissal/focus realization; their surface
+block is taxonomy fact-tracking.
 
-### Status reconciliation (2026-06-10, FEAT-MOBILE-RN-SURFACE-001)
+**React Native.** `rnSurfaceLowering` derives the substrate from the
+taxonomy facts:
 
-- F-1 (schema) and F-2 (Tooltip + Popover anchored substrate on web) landed
-  earlier. The positioning-strategy vocabulary now includes `fullscreen`
-  (full-screen takeover; reserved, unused by the corpus).
-- **Dialog, Sheet, and Toast now declare `surface` blocks** (taxonomy
-  fact-tracking; their web emission is unchanged — react/vue gates are
-  kind-aware like svelte/angular/lit). Their close-button parts are wired
-  through dom-tree channel events on every target.
-- **React Native consumes the taxonomy as its surface substrate**
-  (`rnSurfaceLowering`): blocking → `Modal` (escape → onRequestClose,
-  outside-click → overlay Pressable, both enabledBy-gated); non-blocking →
-  in-tree live region. Anchored kinds on RN remain future work.
-- **Auto-dismiss timing landed (FEAT-SURFACE-DWELL-ANCHOR-001):** Toast
-  declares `timing.autoDismissProp: "duration"` + timeout dismissal; the
-  budget flows from `toast.timing.auto-dismiss` →
-  `semantic.motion.dwell.notification` (the `motion.dwell.*` presence-budget
-  token subfamily) into the `autoDismiss` behavior primitive, mirrored in
-  all five web packages + RN, with hover/focus pausing (WCAG 2.2.1) and
-  remaining-budget bookkeeping. Web resolves the token default at
-  generation time (not runtime-themeable); RN reads it theme-reactively
-  from the typed token scope.
-- **RN anchored substrate landed:** Tooltip/Popover lower to a trigger
-  Pressable + transparent Modal positioned via measureInWindow, with a
-  synthesized `content` slot prop. Emitter-level divergences (contracts
-  neutral): outside inert while open, hover/focus → long-press,
-  pointer-leave → backdrop press; collision (flip/shift) unimplemented.
-- Menu/Dropdown, Select, Command, Coachmark/Walkthrough migrations remain.
+- *Blocking* (dialog, sheet) → an RN `Modal` host: `visible` bound to the
+  open channel; escape dismissal lowers to `onRequestClose` (Android
+  back); outside-click dismissal lowers to an overlay-part `Pressable`;
+  both gated by their declared `enabledBy` props.
+- *Non-blocking ephemeral* (toast) → an in-tree live region
+  (`accessibilityLiveRegion`), no Modal.
+- *Anchored* (tooltip, popover) → a trigger `Pressable` plus a transparent
+  `Modal` positioned from `measureInWindow` of the anchor, with a
+  synthesized `content` slot prop standing in for the web compound
+  content API. Documented touch divergences: outside content is inert
+  while open, hover/focus open-triggers lower to long-press, and
+  pointer-leave dismissal lowers to backdrop press. Collision handling
+  (flip/shift) is not realized on RN.
+
+**Timing.** Ephemeral surfaces declare `timing.autoDismissProp` plus
+`timeout` dismissal. The presence budget flows from the component's
+`*.timing.auto-dismiss` token slot (semantic `motion.dwell.*` family) into
+the `autoDismiss` behavior primitive, mirrored across all five web
+packages and RN, with hover/focus pausing (WCAG 2.2.1 Timing Adjustable)
+and remaining-budget bookkeeping. Web resolves the token default at
+generation time (not runtime-themeable); RN reads it theme-reactively from
+the typed token scope.
+
+**Reserved vocabulary.** `positioning.strategy: "fullscreen"` expresses a
+full-screen takeover; no corpus contract uses it.
 
 ## References
 
 - `docs/normal-form.md` — the compositional-system architecture that this family slots into.
-- `docs/lit-alpha-component-roadmap.md` — historical Gap 3 (Tabs, closed) and the original Gap 4 (Tooltip) scoping.
-- `packages/ds-contracts/component.contract.schema.json` — existing schema; presence-surface contracts will add the `surface` block alongside existing `portal`, `dismissal`, `focus` blocks.
+- `packages/ds-contracts/component.contract.schema.json` — the `surface` block schema, alongside the `portal`, `dismissal`, and `focus` blocks it coordinates with.

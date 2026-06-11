@@ -4,7 +4,7 @@ authority: architecture
 status: active
 title: Codegen Semantic Authority
 owner: "@darianrosebrook"
-updated: 2026-05-18
+updated: 2026-06-11
 governs:
   - packages/ds-codegen/src/ir.ts
   - packages/ds-codegen/src/test-plan.ts
@@ -76,7 +76,7 @@ The first three are framework realization. The last three would be hidden produc
 
 ### Admission rail owns detection, not generation policy
 
-The admission rail (`pnpm run validate:generated`, originally `FRAMEWORK-EMIT-VALIDATE-01`; now invoked in governed CI as `pnpm run governed:rail`) proves that emitted artifacts are accepted by the framework compiler/parser/language server. It does not become a place where hidden generation policy lives. It can tell us "Svelte rejects this," but it should not silently decide "therefore `ShowMore` should be emitted differently."
+The admission rail (`pnpm run governed:rail`) proves that emitted artifacts are accepted by the framework compiler/parser/language server. It does not become a place where hidden generation policy lives. It can tell us "Svelte rejects this," but it should not silently decide "therefore `ShowMore` should be emitted differently."
 
 For the rail itself — what it proves, the four evidence rungs (artifact / contract / emitter / environment attribution), the diagnostic-code reading guide, the doctrinal non-claims (no determinism, no environment attestation, no per-file proof, no semantic correctness, changed-artifact scope ≠ reduced gate), and the verifier-never-throws posture — see [`docs/specifications/admission-rail.md`](./admission-rail.md).
 
@@ -170,22 +170,18 @@ These rules are not component-specific, but their authority lives in the wrong p
 | `textContent` binding rendered as child text | Svelte emitter local | DOM semantics: text-node assignment | IR `binding.kind = "text_child"` | CODEGEN-IR-TEXT-CHILD-01 |
 | `ARIA_BOOLEANISH_ATTRS` coercion | Svelte emitter local | DOM/ARIA semantics | Shared DOM/ARIA semantics table OR contract projection (`{ "from": "channel:x.value", "projection": "truthy" }`) | CODEGEN-ARIA-PROJECTION-01 |
 
-**Retired smells (promoted upstream):**
+All five web surface emitters gate on `isAnchoredPresenceKind` and consume
+`AnchoredSurfacePolicy` from shared `semantics.ts` — no per-framework kind
+allowlists, no hardcoded content roles, no hardcoded `closeOn*` prop maps.
+Event-value strategy (button-host toggle vs input-host element-state read)
+is likewise shared (`resolveEventValueStrategy` on web; the React Native
+emitter applies the same host-aware rule).
 
-| Rule | Was | Now lives in | Promoted by |
-|---|---|---|---|
-| `eventValueStrategy` (button-host toggle vs input-host `.checked`) | Svelte emitter local (`isFormControlHost`) | `resolveEventValueStrategy` in shared `semantics.ts` | CODEGEN-SEMANTIC-AUTHORITY-01 (df45fb8) |
-| `SUPPORTED_ANCHORED_KINDS` allowlist | React + Vue surface emitter locals | `isAnchoredPresenceKind` + `AnchoredSurfacePolicy` in shared `semantics.ts` | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
-| `DISMISSAL_PROP_SPECS` map (React) + identical map in Vue | React + Vue surface emitter locals | `AnchoredSurfacePolicy.publicDismissalProps` (from `DISMISSAL_PROP_TABLE` in shared `semantics.ts`) | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
-| Default content role per surface kind | React + Vue surface emitter locals | `AnchoredSurfacePolicy.defaultContentRole` in shared `semantics.ts` | CODEGEN-SURFACE-KIND-POLICY-01 (this atom) |
+### Fabricated semantics (forbidden in emitters)
 
-The Angular surface emitter still gates locally on `kind === "tooltip"` because its Popover port hasn't landed yet. After F-3B-4 ships, that guard should also be replaced with `isAnchoredPresenceKind`. Svelte (F-3B-2-B) and Lit (F-3B-3-B) now consume `AnchoredSurfacePolicy` (no kind allowlist, no hardcoded content role, no hardcoded `closeOnX` props).
+These patterns encode product semantics inside a framework emitter. They are rejected on sight; each row records why the pattern is wrong and where the authority belongs.
 
-### Reverted as fabricated semantics
-
-These working-tree changes from `SVELTE-ADMISSION-A11Y-WARNINGS-01` were reverted as part of CODEGEN-SEMANTIC-AUTHORITY-01 because they encode product semantics inside a framework emitter.
-
-| Reverted rule | Why |
+| Forbidden pattern | Why |
 |---|---|
 | `isImplicitRoleForSvelteElement` (Svelte-only second implicit-role table) | Duplicates `IMPLICIT_ROLES_BY_ELEMENT` from `semantics.ts`. Future readers asking "is this safe to remove?" have two authorities in disagreement. Promote to the central table (CODEGEN-IMPLICIT-ROLES-EXTEND-01) instead. |
 | `humanizeForAriaLabel` + auto `aria-label` synthesis on empty buttons | Fabricates accessible names from part names. The contract should declare the label source (`"aria-label": "literal:Skip"` or `"aria-label": "prop:skipLabel"`) or declare that children must provide one. The emitter has no authority to invent accessible names. |
@@ -193,7 +189,7 @@ These working-tree changes from `SVELTE-ADMISSION-A11Y-WARNINGS-01` were reverte
 | Overlay-click `<!-- svelte-ignore -->` directives | The product semantics (backdrop has no keyboard equivalent because Escape lives on document) should be derivable from `surface.dismissal: ["outside-click"]` in the contract — and was emitter-local without that derivation. Restore only when the contract derivation is explicit. |
 | Tablist `<!-- svelte-ignore -->` directive | Same shape: a Svelte-local suppression for a generic ARIA rule. Should be expressed as "role X is exempt from interactive-focus rule" in a shared a11y table consumed by all framework emitters that have a similar checker. |
 
-The hard-error fixes from `SVELTE-ADMISSION-TYPECHECK-ERRORS-01` (commit `c559f1a`) **remain in place** — they are real framework realization law (Svelte grammar rejects `textContent` as attribute) plus generic facts (host capability for event extraction, Booleanish coercion) that will be promoted upstream over the follow-up atoms listed above. They are not reverted; they are documented as standing in for not-yet-promoted IR facts under the temporary-exception protocol.
+Distinct from fabrication: real framework realization law (Svelte grammar rejects `textContent` as an attribute) and generic host-capability facts (event-value extraction, Booleanish coercion) are legitimate emitter knowledge. Where such a fact currently lives in one emitter but is generic, it stands as a temporary exception under the exception protocol, with its promotion target listed in the smells table above.
 
 ## How to use this document
 

@@ -4,7 +4,7 @@ authority: spec
 status: implemented
 title: Emission manifest schema
 owner: "@darianrosebrook"
-updated: 2026-05-20
+updated: 2026-06-11
 verified_at_commit: f8cbecb
 governs:
   - packages/ds-codegen/src/validation/types.ts
@@ -47,7 +47,7 @@ The migration policy at every version boundary is the same: **previous versions 
 
 Groups carried `paths: readonly string[]` directly. No `schemaVersion` field on disk. The verifier had no notion of structural integrity beyond "the manifest exists and parses."
 
-Removed entirely in v2. v1 manifests on disk now fall through SCHEMA_MISMATCH (foundVersion: `undefined`).
+Removed in v2. v1 manifests on disk fall through SCHEMA_MISMATCH (foundVersion: `undefined`).
 
 **Rung-specific non-claim:** at v1 the rail made no integrity claim beyond presence. A v1 manifest could not detect file-content drift, contract-bytes drift, emitter-source drift, or environment drift.
 
@@ -98,7 +98,7 @@ interface EmissionManifest {
 }
 ```
 
-Every group now records the contract file that produced it. The verifier gained `RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING` and `RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH`. Contract integrity is checked independently of output integrity: a contract edit without regenerate fires `CONTRACT_HASH_MISMATCH` but NOT `HASH_MISMATCH`, because the on-disk output bytes are still what was recorded.
+Every group records the contract file that produced it. The verifier emits `RAIL_REQUIRE_MANIFEST_CONTRACT_MISSING` and `RAIL_REQUIRE_MANIFEST_CONTRACT_HASH_MISMATCH`. Contract integrity is checked independently of output integrity: a contract edit without regenerate fires `CONTRACT_HASH_MISMATCH` but NOT `HASH_MISMATCH`, because the on-disk output bytes are still what was recorded.
 
 Contract dedupe: the verifier deduplicates contract diagnostics per contract path. The five framework groups for one component share one contract; if that contract drifts, one diagnostic surfaces with one path, not five.
 
@@ -168,9 +168,9 @@ Hardening follow-up (CODEGEN-RAIL-ENVIRONMENT-PROVENANCE-SCHEMA-HARDEN-01) added
 
 ### v6 (CODEGEN-RAIL-REACT-NATIVE-ADMISSION-01)
 
-v6 widens `FrameworkId` with the opt-in `"react-native"` rail id. The manifest can now attribute RN generated artifacts to the React Native emitter source set, package typecheck lane, and focused generated RN render-test lane. This is an admission rail for generated source shape plus a small host-render slice, not simulator/device runtime proof.
+v6 adds `"react-native"` to `FrameworkId`. The manifest attributes RN generated artifacts to the React Native emitter source set, package typecheck lane, and generated RN render-test lane. This is an admission rail for generated source shape plus host-render behavior slices, not simulator/device runtime proof.
 
-Default `governed:rail` still runs the five Web DOM framework plans. The RN lane is invoked explicitly through `pnpm run governed:rail:react-native`, which generates `--target=react-native` and validates required-mode integrity scoped to `--framework=react-native`.
+React Native is registered in `fsds.targets.json`, so the default `governed:rail` generates and verifies it alongside the web targets. `pnpm run governed:rail:react-native` runs the RN lane in isolation (`--target=react-native`, required-mode integrity scoped to `--framework=react-native`).
 
 ## v6 reference
 

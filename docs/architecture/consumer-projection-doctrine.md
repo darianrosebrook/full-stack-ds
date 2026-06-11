@@ -9,7 +9,7 @@ governs:
   - docs/normal-form.md
   - docs/architecture/component-layering.md
   - docs/architecture/tokens-architecture.md
-  - docs/architecture/adr/preview-pipeline-architecture.md
+  - src/runtime/FrameworkPreview.tsx
   - packages/ds-contracts/a2ui/derive.ts
 ---
 
