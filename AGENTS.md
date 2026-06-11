@@ -14,7 +14,7 @@ Read `docs/current-implementation-snapshot.md` first to know what is currently p
 2. Code at the cited commit
 3. Docs with `verified_at_commit` frontmatter
 4. Other architecture/reference docs
-5. `docs/successor-work.md` — for *remaining* work only; do not read it as a list of unimplemented surfaces.
+5. the machine-local successor ledger (`docs/internal/successor-work.md`, untracked; present only where an agent maintains it) — for *remaining* work only; do not read it as a list of unimplemented surfaces.
 
 If an older doc says "future work" but the snapshot says "implemented," treat the older doc as stale.
 

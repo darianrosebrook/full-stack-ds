@@ -23,7 +23,7 @@
  * that is the separate state/pseudo-styling rail. This audit covers `variants`.
  *
  * Usage: node scripts/variant-style-audit/audit.mjs
- * Output: docs/variant-style-audit/variant-style-matrix.{json,md}
+ * Output: docs/internal/variant-style-audit/variant-style-matrix.{json,md}
  */
 import { readFileSync, readdirSync, existsSync, statSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -33,7 +33,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "../..");
 const CONTRACTS = resolve(REPO, "packages/ds-contracts/components");
 const REACT = resolve(REPO, "packages/ds-react/src/components");
-const OUT_DIR = resolve(REPO, "docs/variant-style-audit");
+const OUT_DIR = resolve(REPO, "docs/internal/variant-style-audit");
 
 const readJSON = (p) => (existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null);
 const readText = (p) => (existsSync(p) ? readFileSync(p, "utf8") : "");

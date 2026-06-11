@@ -75,7 +75,7 @@ parity comparison: it is a descriptor target, not a web-or-native UI framework.
 2. **Token realization (web)** — web token output is exercised by the `tokens:*` gates and the rail diff; this script does not score depth.
 3. **Token realization (native)** — typed token *facts* are available in the IR (`FEAT-MOBILE-IR-001`, closed). React Native realizes box-model tokens, default-variant tokens, and per-variant style entries (root-scoped value modifiers) through `FsdsTheme`-reactive `StyleSheet` factories (`FEAT-MOBILE-RN-001`); part-scoped/boolean/state styling is not yet realized. Swift `Color`/`CGFloat` and Kotlin `Color`/`Dp` realization is not built. Depth is not scored here.
 4. **Behavior/controller (web)** — behavior primitives are mirrored across the five web frameworks (`useFocusTrap`/`createFocusTrap`/…); depth unscored.
-5. **Behavior/controller (native)** — `docs/successor-work-mobile-rail-sweep.md @ 8c19a4d` categorizes **D=9** runtime/controller components; native controller support is not measured here.
+5. **Behavior/controller (native)** — the machine-local IR-parity sweep (`SWEEP-MOBILE-IR-PARITY-001` @ 8c19a4d) categorizes **D=9** runtime/controller components; native controller support is not measured here.
 6. **Surface support (web)** — DOM gives slots/events/document-focus/positioning; depth unscored.
 7. **Surface support (native)** — `surface-emit.ts` exists under each native emitter dir, but `SurfaceIR` substrate-neutrality is **unproven** for native host-adoption (Tooltip/Popover/Dialog/Menu, focus, dismissal, portal/anchor, geometry). Not measured here; named as the real future parity test.
 
@@ -85,8 +85,8 @@ The corpus split below is **cited** from prior measurement slices; this script
 does not recompute it (it only asserts the counts partition the 47-component
 corpus, which `--check` verifies):
 
-- `docs/successor-work-mobile-rail-sweep.md @ 8c19a4d`: role-loss **0/47**; **A=21** IR-sufficient single shapes, **C=17** composite/collapse, **D=9** runtime/surface.
-- `docs/successor-work-mobile-collapse-triage.md @ 7fee739`: **C1**=Details (proven via `FEAT-MOBILE-DISCLOSURE-001`), **C2**=ShowMore/Truncate/TextField, **C3**=11, **C4**=Badge.
+- machine-local sweep `SWEEP-MOBILE-IR-PARITY-001` @ 8c19a4d: role-loss **0/47**; **A=21** IR-sufficient single shapes, **C=17** composite/collapse, **D=9** runtime/surface.
+- machine-local triage `TRIAGE-MOBILE-COLLAPSE-001` @ 7fee739: **C1**=Details (proven via `FEAT-MOBILE-DISCLOSURE-001`), **C2**=ShowMore/Truncate/TextField, **C3**=11, **C4**=Badge.
 
 Reconciled with the live emitter-surface inventory: the **swift** family has
 two sub-targets (`swiftui/` + `uikit/`); **swiftui** carries the native-primitive

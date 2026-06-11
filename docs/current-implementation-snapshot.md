@@ -31,7 +31,7 @@ Use this order when answering "what is true now?":
 2. Code and workflow surfaces at the cited commit.
 3. Implemented/proven docs with `verified_at_commit`.
 4. Architecture and reference docs.
-5. `successor-work.md` only for remaining work, not as a statement that everything listed is unimplemented.
+5. the machine-local successor ledger (`docs/internal/successor-work.md`, when present) only for remaining work, not as a statement that everything listed is unimplemented.
 
 If an older doc says a surface is future work but this snapshot identifies a landed implementation, treat the older language as stale until that specific doc is reconciled.
 
@@ -57,7 +57,7 @@ If an older doc says a surface is future work but this snapshot identifies a lan
 
 Several older docs are still useful, but their frontmatter/status or prose lags the code:
 
-- `docs/successor-work.md` should no longer be read as "all listed surfaces are unimplemented." Some items are now partial or promoted, especially target-pack registry, component evidence pages, usage examples, and runtime rail.
+- the machine-local successor ledger (`docs/internal/successor-work.md`) should no longer be read as "all listed surfaces are unimplemented." Some items are now partial or promoted, especially target-pack registry, component evidence pages, usage examples, and runtime rail.
 - README still contains hand-maintained component-count language. Treat loader discovery under `packages/ds-codegen/src/contracts-fs.ts` as authoritative until the README count is generated or removed.
 - The five-framework claim is still true but narrower than the broader target story. The current executable family is Web DOM; target packs and Figma descriptors extend the projection model but do not yet prove external pack execution or non-web runtime semantics.
 - Runtime rail evidence is newer than the original architecture docs. Any answer that treats runtime preview/fact testing as future work is stale.

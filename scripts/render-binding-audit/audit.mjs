@@ -7,7 +7,7 @@
  * bindings/events/content, channels, variants, propType, form) plus a
  * host-capability map, then reports whether the obligation is satisfied —
  * per framework. It classifies; it does NOT fix and writes nothing outside
- * docs/render-binding-audit/.
+ * docs/internal/render-binding-audit/.
  *
  * Obligation buckets (the realization kind a prop demands):
  *   native-attr  bind directly to a host element attribute (type, name, src, value-ish)
@@ -21,7 +21,7 @@
  *   bound | derived | consumed | missing | not-applicable
  *
  * Usage: node scripts/render-binding-audit/audit.mjs
- * Output: docs/render-binding-audit/render-binding-matrix.{json,md}
+ * Output: docs/internal/render-binding-audit/render-binding-matrix.{json,md}
  */
 import { readFileSync, readdirSync, existsSync, statSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -30,7 +30,7 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "../..");
 const CONTRACTS = resolve(REPO, "packages/ds-contracts/components");
-const OUT_DIR = resolve(REPO, "docs/render-binding-audit");
+const OUT_DIR = resolve(REPO, "docs/internal/render-binding-audit");
 const HOST_CAPS = JSON.parse(readFileSync(resolve(HERE, "fixtures/host-capabilities.json"), "utf8"));
 
 export const FRAMEWORKS = [
