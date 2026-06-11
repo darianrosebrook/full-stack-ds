@@ -7,21 +7,34 @@ created_at: '2026-06-11T00:36:15.179Z'
 updated_at: '2026-06-11T00:36:16.569Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - docs (roadmap authoring only; no code changes)
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - docs/successor-work-residual-admission.md
     - docs/current-implementation-snapshot.md
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - >-
+    Documentation only: no emitter, schema, contract, or generated-package
+    bytes change under this spec; the five implementation slices are FUTURE
+    specs the doc reserves.
+  - >-
+    Every factual claim in the doc is grounded in verified code facts
+    (file:line) — especially the honesty claims that Accordion and
+    Walkthrough are currently typecheck-green but behaviorally
+    unproven/broken on web.
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: the verified exploration facts
+    when: docs/successor-work-residual-admission.md is authored
+    then: >-
+      it carries house-style roadmap frontmatter (SCOPE-RESIDUAL-ADMISSION-001,
+      authority roadmap, five reserved FUTURE spec ids), one section per slice
+      with scope/architectural calls/acceptance sketch/non-claims/dependencies,
+      an ordering table, and a framing-corrections section; the snapshot ledger
+      gains a one-line forward pointer; docs:check-claims passes and gates run
+      OK.
 non_functional: {}
 contracts: []
