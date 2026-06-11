@@ -1,3 +1,12 @@
+---
+doc_id: REF-RENDER-BINDING-MATRIX-001
+authority: reference
+status: draft
+title: Render prop-to-DOM binding obligation matrix (measured)
+owner: "@darianrosebrook"
+updated: 2026-06-05
+---
+
 # Render prop->DOM binding obligation matrix
 
 `RENDER-PROP-BINDING-BLAST-RADIUS-01` — read-only. Each declared prop's render obligation is derived from the contract's own declared structure (anatomy.dom bindings/events/content, channels, variants, propType, form) plus a host-capability map; per-framework status is verified against the generated artifacts. No fixes are made here.

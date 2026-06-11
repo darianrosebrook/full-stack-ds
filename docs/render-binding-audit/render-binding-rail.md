@@ -1,3 +1,12 @@
+---
+doc_id: REF-RENDER-BINDING-RAIL-001
+authority: reference
+status: draft
+title: Render-binding rail — per-framework binding verification surface
+owner: "@darianrosebrook"
+updated: 2026-06-05
+---
+
 # Render prop→DOM binding — live rail
 
 `RENDER-PROP-BINDING-PLAYWRIGHT-RAIL-01` — the runtime half of the binding audit.

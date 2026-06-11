@@ -1,3 +1,12 @@
+---
+doc_id: REF-VARIANT-STYLE-TRIAGE-001
+authority: reference
+status: draft
+title: Variant-realization candidate triage (measured)
+owner: "@darianrosebrook"
+updated: 2026-06-05
+---
+
 # Variant-realization candidate triage
 
 `VARIANT-STYLE-CANDIDATE-TRIAGE-01` — converts the 17 fully-unrealized + 2 partial

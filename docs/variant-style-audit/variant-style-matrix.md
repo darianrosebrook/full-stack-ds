@@ -1,3 +1,12 @@
+---
+doc_id: REF-VARIANT-STYLE-MATRIX-001
+authority: reference
+status: draft
+title: Variant-style realization matrix (measured)
+owner: "@darianrosebrook"
+updated: 2026-06-05
+---
+
 # Variant/style realization matrix
 
 `VARIANT-STYLE-REALIZATION-AUDIT-01` — read-only. A variant VALUE is realized iff a `.<prefix>--<value>` selector exists in `<Name>.css` or `<Name>.tokens.css` (var re-scoping or direct property). The DEFAULT value is realized by the base rule and needs no per-value selector; only NON-DEFAULT values without a consuming selector are genuine gaps.
