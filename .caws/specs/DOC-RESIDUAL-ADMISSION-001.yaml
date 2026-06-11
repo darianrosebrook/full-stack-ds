@@ -1,0 +1,25 @@
+id: DOC-RESIDUAL-ADMISSION-001
+title: 'Residual admission roadmap: Tabs (RN), Accordion (web-first), Walkthrough (taxonomy + anchoring)'
+risk_tier: 3
+mode: doc
+lifecycle_state: active
+created_at: '2026-06-11T00:36:15.179Z'
+updated_at: '2026-06-11T00:36:15.179Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
