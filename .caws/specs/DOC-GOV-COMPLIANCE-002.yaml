@@ -2,9 +2,10 @@ id: DOC-GOV-COMPLIANCE-002
 title: 'Content-class pass: successor-work ledger + recon docs are machine-local (mislabelled reference)'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
 created_at: '2026-06-11T07:13:49.222Z'
-updated_at: '2026-06-11T07:17:15.158Z'
+updated_at: '2026-06-11T07:17:36.818Z'
 blast_radius:
   modules:
     - docs tree + CLAUDE.md authority-order wording (no code)
