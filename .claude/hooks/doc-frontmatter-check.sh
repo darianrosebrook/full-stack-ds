@@ -3,7 +3,7 @@
 # Warns when docs/**/*.md files are written/edited without proper frontmatter.
 # Advisory only — does not block.
 #
-# See docs/specifications/document_governance.md for the full schema.
+# See docs/document_governance.md for the full schema.
 # @author @darianrosebrook
 
 set -euo pipefail
@@ -54,7 +54,7 @@ if [[ "$FIRST_LINE" != "---" ]]; then
   echo '{
     "hookSpecificOutput": {
       "hookEventName": "PostToolUse",
-      "additionalContext": "Doc governance (V1): '"$FILE_PATH"' is missing YAML frontmatter. All docs under docs/ (except README.md) must start with --- delimiters containing doc_id, authority, status, title, owner, and updated fields. See docs/specifications/document_governance.md."
+      "additionalContext": "Doc governance (V1): '"$FILE_PATH"' is missing YAML frontmatter. All docs under docs/ (except README.md) must start with --- delimiters containing doc_id, authority, status, title, owner, and updated fields. See docs/document_governance.md."
     }
   }'
   exit 0
@@ -85,7 +85,7 @@ if [[ -n "$MISSING" ]]; then
   echo '{
     "hookSpecificOutput": {
       "hookEventName": "PostToolUse",
-      "additionalContext": "Doc governance (V2): '"$FILE_PATH"' is missing required frontmatter fields:'"$MISSING"'. See docs/specifications/document_governance.md."
+      "additionalContext": "Doc governance (V2): '"$FILE_PATH"' is missing required frontmatter fields:'"$MISSING"'. See docs/document_governance.md."
     }
   }'
   exit 0

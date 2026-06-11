@@ -65,7 +65,7 @@ HANDLERS=(
   "shortcut-language-check.sh"
   "duplicate-export-check.sh"
   "loc-delta-check.sh"
-  # "doc-frontmatter-check.sh"
+  "doc-frontmatter-check.sh"
   # "audit.sh tool-use"
   "plan-transcript-snapshot.sh"
   "session-log.sh"
