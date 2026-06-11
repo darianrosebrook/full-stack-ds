@@ -16,7 +16,7 @@ governs:
 
 > CODEGEN-RAIL-DOCS-GOVERNED-CI-01
 
-This doc is the operator-facing companion to [`docs/admission-rail.md`](./admission-rail.md) (the rail's concept) and [`docs/manifest-schema.md`](./manifest-schema.md) (the manifest's reference). Read those first if you haven't — this doc assumes you know what the rail proves and what the manifest carries.
+This doc is the operator-facing companion to [`docs/specifications/admission-rail.md`](./admission-rail.md) (the rail's concept) and [`docs/specifications/manifest-schema.md`](./manifest-schema.md) (the manifest's reference). Read those first if you haven't — this doc assumes you know what the rail proves and what the manifest carries.
 
 This doc owns: what the operator runs, what CI runs, how the two compose, and how to read the rail's outputs in a way that's citable in closure notes.
 
@@ -249,7 +249,7 @@ These fields are public API for closure-note tooling; they are not renamed witho
 - `componentsIndex[<name>][<framework>].status` — `"pass" | "fail" | "not_admitted"`.
 - `scopedProjection.matchedGroups[i]` shape (component, framework, contract, files, admission).
 
-Other fields (timestamps, manifest sub-shapes) follow the schema version in [`docs/manifest-schema.md`](./manifest-schema.md).
+Other fields (timestamps, manifest sub-shapes) follow the schema version in [`docs/specifications/manifest-schema.md`](./manifest-schema.md).
 
 ## Reading the markdown report
 
@@ -354,6 +354,6 @@ The point of these recipes is to make closure-note authorship mechanical. The ra
 
 ## Where to read next
 
-- [`docs/admission-rail.md`](./admission-rail.md) — the conceptual entry point. What the rail proves, the four evidence rungs, the doctrinal non-claims, the diagnostic-code reading guide.
-- [`docs/manifest-schema.md`](./manifest-schema.md) — the manifest's field-by-field reference and schema version history.
+- [`docs/specifications/admission-rail.md`](./admission-rail.md) — the conceptual entry point. What the rail proves, the four evidence rungs, the doctrinal non-claims, the diagnostic-code reading guide.
+- [`docs/specifications/manifest-schema.md`](./manifest-schema.md) — the manifest's field-by-field reference and schema version history.
 - [`docs/codegen-authority.md`](./codegen-authority.md) — the authority split that frames the rail's "validation evidence, not generation policy" role.

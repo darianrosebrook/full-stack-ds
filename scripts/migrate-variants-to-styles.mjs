@@ -4,7 +4,7 @@
  *
  * Converts the variant-keyed slot pattern in component tokens/styles to
  * the slot-redirection pattern documented in
- * docs/box-model-primitive.md.
+ * docs/architecture/design/box-model-primitive.md.
  *
  * Before (Button):
  *   tokens.json: button.color.background.{default, primary, secondary, ...}
@@ -109,7 +109,7 @@ const CANONICAL_KEYS = ["default", "medium", "md", "primary", "lg"];
 // redirections. The state pseudo-class rules in `.css`
 // (e.g. `.button:hover { background-color: var(--...-hover); }`) read
 // the state-specific slot. Variants redefine ALL state slots at
-// variant scope. See docs/box-model-primitive.md state-layering rule.
+// variant scope. See docs/architecture/design/box-model-primitive.md state-layering rule.
 const VARIANT_SUFFIXES = new Set([
   // size variants
   "small", "medium", "large", "xs", "sm", "md", "lg", "xl",

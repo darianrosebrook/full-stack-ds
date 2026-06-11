@@ -1,10 +1,10 @@
 ---
 doc_id: SPEC-DOC-GOV-001
 authority: spec
-status: draft
+status: active
 title: Document Governance
 owner: "@darianrosebrook"
-updated: 2026-05-21
+updated: 2026-06-11
 governs:
   - docs/**/*.md
 ---
@@ -72,6 +72,44 @@ The `authority` value determines where the doc lives on disk. The tree is partit
 **Collaboration.** `docs/internal/` is contributor-local. Teams that need to share roadmaps or working notes do so through an out-of-band surface (a team doc folder, an issue tracker, a wiki) — not through this repository.
 
 **Enforcement.** Currently advisory: the hook (`.claude/hooks/doc-frontmatter-check.sh`) does not yet check authority-vs-location consistency. Contributors are expected to honor the partition on Write. A future hook extension could enforce it mechanically by warning when a `docs/*.md` file declares `authority: roadmap | working | ephemeral`, or when a `docs/internal/*.md` file declares a durable authority.
+
+## Tree layout
+
+Minimal subdivision at the root keeps the study surface scannable. The
+tracked tree is exactly:
+
+| Location | Holds |
+|---|---|
+| `docs/` (root) | Orientation (`README.md`), the claim ledger (`current-implementation-snapshot.md`, canonical), system-wide doctrine (`normal-form.md`, `codegen-authority.md`), and this governance spec. Nothing else lands at root. |
+| `docs/specifications/` | Every `authority: spec` doc — concrete contracts for components, schemas, rails, and interfaces. |
+| `docs/architecture/` | Cross-cutting `authority: architecture` docs (system shape, taxonomies, doctrines). |
+| `docs/architecture/design/` | Subsystem-scoped architecture docs (one primitive, one pipeline, one registry). |
+| `docs/architecture/adr/` | `authority: adr` decision records. |
+| `docs/internal/` | Machine-local, untracked (see Location above): roadmaps, working notes, recon, agent-maintained measurements, audit output. |
+
+A doc whose authority and location disagree with this table is misfiled —
+fix the location or the label, whichever is lying. The cautionary tale is
+real: a sibling project accumulated ~1,500 markdown files by letting
+in-flight thinking land on the durable surface.
+
+## Drafts confer no authority
+
+`status: draft` means *proposal in the shape of its authority class*. A
+draft `spec` is a proposed contract; a draft `architecture` doc is a
+proposed shape. Drafts are **not citable as authority** — do not defer to
+them, and do not let tooling enforce them.
+
+The lifecycle obligation that follows:
+
+- A doc that is **ratified in practice** — its claims are implemented,
+  other docs defer to it, or tooling enforces it — must be promoted to
+  `active` (or `implemented`/`proven` with `verified_at_commit`). A
+  perpetual draft that everything obeys is mislabelled, and the label is a
+  trust hazard in both directions.
+- A draft **nobody will ratify** is working material: relabel
+  `authority: working` and move it to `docs/internal/`.
+- A draft whose content has been **superseded by landed work** does not get
+  promoted on age — reconcile it or demote it.
 
 ## `status` enum
 

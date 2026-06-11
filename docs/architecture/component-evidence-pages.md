@@ -1,13 +1,13 @@
 ---
 doc_id: ARCH-COMPONENT-EVIDENCE-PAGES-001
 authority: architecture
-status: draft
+status: active
 title: Component Evidence Pages
 owner: "@darianrosebrook"
-updated: 2026-05-24
+updated: 2026-06-11
 governs:
   - src/runtime/FrameworkPreview.tsx
-  - docs/preview-pipeline-architecture.md
+  - docs/architecture/adr/preview-pipeline-architecture.md
   - packages/ds-contracts/a2ui/derive.ts
   - packages/ds-contracts/components/**/*.contract.json
 ---

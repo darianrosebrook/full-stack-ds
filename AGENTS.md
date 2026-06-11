@@ -171,7 +171,7 @@ The rail binds emitted bytes to four evidence rungs: artifact, contract, codegen
 
 The emission manifest at `packages/ds-codegen/.emission-manifest.json` is **gitignored** runtime state. It is "what the last `generate` run produced on this machine." Schema migrations are regenerate-driven (no data migration) — a stale manifest triggers `RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH`, repair is `pnpm run generate -- --target=all`.
 
-Read `docs/admission-rail.md`, `docs/governed-ci.md`, `docs/manifest-schema.md` before touching anything under `packages/ds-codegen/src/validation/`.
+Read `docs/specifications/admission-rail.md`, `docs/specifications/governed-ci.md`, `docs/specifications/manifest-schema.md` before touching anything under `packages/ds-codegen/src/validation/`.
 
 ### Token graph
 

@@ -15,7 +15,7 @@ governs:
 
 > CODEGEN-RAIL-DOCS-MANIFEST-SCHEMA-01
 
-This is the field-by-field reference for the on-disk emission manifest the codegen CLI writes after every successful `generate` run. The conceptual entry point lives in [`docs/admission-rail.md`](./admission-rail.md) — read that first if you're new to the rail. This doc owns the schema's literal structure, its version history, and the rung-specific non-claims that live alongside each schema version.
+This is the field-by-field reference for the on-disk emission manifest the codegen CLI writes after every successful `generate` run. The conceptual entry point lives in [`docs/specifications/admission-rail.md`](./admission-rail.md) — read that first if you're new to the rail. This doc owns the schema's literal structure, its version history, and the rung-specific non-claims that live alongside each schema version.
 
 ## Where the manifest lives
 
@@ -343,6 +343,6 @@ The same policy will apply at the v5→v6 boundary if a future slice (e.g. envir
 
 ## Where to read next
 
-- [`docs/admission-rail.md`](./admission-rail.md) — the conceptual entry point. Read this if you're new to the rail or want the doctrinal non-claims before encountering the schema.
-- [`docs/governed-ci.md`](./governed-ci.md) — the operator workflow. How `governed:rail` and `governed:rail:changed` are invoked, how to read a JSON/markdown report, what to cite in closure notes.
+- [`docs/specifications/admission-rail.md`](./admission-rail.md) — the conceptual entry point. Read this if you're new to the rail or want the doctrinal non-claims before encountering the schema.
+- [`docs/specifications/governed-ci.md`](./governed-ci.md) — the operator workflow. How `governed:rail` and `governed:rail:changed` are invoked, how to read a JSON/markdown report, what to cite in closure notes.
 - [`docs/codegen-authority.md`](./codegen-authority.md) — the authority split this rail's "validation evidence, not generation policy" line refers to.

@@ -1,15 +1,15 @@
 ---
 doc_id: ARCH-CONSUMER-PROJECTION-001
 authority: architecture
-status: draft
+status: active
 title: Consumer Projection Doctrine
 owner: "@darianrosebrook"
-updated: 2026-05-24
+updated: 2026-06-11
 governs:
   - docs/normal-form.md
-  - docs/component-layering.md
-  - docs/tokens-architecture.md
-  - docs/preview-pipeline-architecture.md
+  - docs/architecture/component-layering.md
+  - docs/architecture/tokens-architecture.md
+  - docs/architecture/adr/preview-pipeline-architecture.md
   - packages/ds-contracts/a2ui/derive.ts
 ---
 

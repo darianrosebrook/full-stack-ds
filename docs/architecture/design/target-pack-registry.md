@@ -1,10 +1,10 @@
 ---
 doc_id: ARCH-CODEGEN-TARGET-PACK-REGISTRY-001
 authority: architecture
-status: draft
+status: active
 title: Governed Target-Pack Registry
 owner: "@darianrosebrook"
-updated: 2026-05-25
+updated: 2026-06-11
 governs:
   - fsds.targets.json
   - packages/ds-codegen/src/emitter.ts

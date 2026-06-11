@@ -1,10 +1,10 @@
 ---
 doc_id: ARCH-FIGMA-PLUGIN-001
 authority: architecture
-status: draft
+status: active
 title: Contract-to-Figma Plugin Scaffold
 owner: "@darianrosebrook"
-updated: 2026-05-24
+updated: 2026-06-11
 governs:
   - packages/ds-codegen/src/frameworks/figma/**
   - packages/ds-codegen/src/validation/frameworks/figma.ts

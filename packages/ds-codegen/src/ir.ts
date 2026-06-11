@@ -818,7 +818,7 @@ export interface BehaviorIR {
 }
 
 /**
- * IR for the presence-surface family (see docs/presence-surfaces.md).
+ * IR for the presence-surface family (see docs/architecture/presence-surfaces.md).
  * Built only when `contract.surface` is present. Resolves the
  * `anchor.part` and `content.part` strings against `PartIR[]` so
  * emitters do not re-resolve. Validates that the referenced parts'
@@ -928,7 +928,7 @@ export interface ComponentIR {
 
   /**
    * Presence-surface IR — present only when `contract.surface` is set
-   * (see docs/presence-surfaces.md). Emitters MUST NOT read this in
+   * (see docs/architecture/presence-surfaces.md). Emitters MUST NOT read this in
    * Phase F-1; the field is plumbed for forward compatibility and is
    * consumed starting with Phase F-2 (Tooltip migration).
    */
@@ -2224,7 +2224,7 @@ const SURFACE_CONTENT_PART_ROLES = new Set<string>([
 ]);
 
 /**
- * Build the presence-surface IR (see docs/presence-surfaces.md). Returns
+ * Build the presence-surface IR (see docs/architecture/presence-surfaces.md). Returns
  * `undefined` when the contract declares no `surface` block. Resolves
  * `anchor.part` and `content.part` strings against the already-built
  * `PartIR[]`, and fails loud when the referenced part is missing or
@@ -3357,7 +3357,7 @@ function renderStyleBlock(
  * Caller prepends `--` (e.g. `--${tokenSlug(...)}`) so the IR never carries
  * the leading dashes — same convention as packages/ds-tokens/build/core/
  * index.ts:tokenPathToCSSVar (which is the authority for the prefix
- * choice; see docs/tokens-architecture.md §Decision 2).
+ * choice; see docs/architecture/tokens-architecture.md §Decision 2).
  *
  * The prefix is identical on every call. Threading it as a parameter
  * would just push the constant up to every caller without unlocking

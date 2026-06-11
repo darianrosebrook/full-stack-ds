@@ -415,7 +415,7 @@ export interface ContractDismissal {
 }
 
 /**
- * Presence-surface family (see docs/presence-surfaces.md).
+ * Presence-surface family (see docs/architecture/presence-surfaces.md).
  * Semantic classifier + controller-selection descriptor. Coordinates
  * anatomy part roles with presence, modality, anchoring, positioning,
  * and dismissal mode list. Does NOT duplicate the existing portal,

@@ -1,10 +1,10 @@
 ---
 doc_id: ARCH-A2UI-PROJECTION-001
-authority: architecture
-status: draft
+authority: spec
+status: active
 title: A2UI Projection
 owner: "@darianrosebrook"
-updated: 2026-05-24
+updated: 2026-06-11
 governs:
   - packages/ds-contracts/a2ui/derive.ts
   - packages/ds-contracts/a2ui/types.ts

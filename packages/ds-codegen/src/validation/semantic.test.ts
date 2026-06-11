@@ -332,7 +332,7 @@ describe("validateContractSemantics — layer-conditional rules", () => {
 });
 
 // ---------------------------------------------------------------------
-// Cross-axis obligation rules (docs/contract-group-axes.md).
+// Cross-axis obligation rules (docs/architecture/contract-group-axes.md).
 //
 // These tests are loaded from real contract JSON fixtures under
 // test/fixtures/obligation-axes so the rules are exercised against the

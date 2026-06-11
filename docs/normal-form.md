@@ -1,10 +1,10 @@
 ---
 doc_id: ARCH-NORMAL-FORM-001
 authority: architecture
-status: draft
+status: active
 title: The Normal Form of Compositional Systems
 owner: "@darianrosebrook"
-updated: 2026-05-15
+updated: 2026-06-11
 governs:
   - packages/ds-contracts/**/*.contract.json
   - packages/ds-contracts/component.contract.schema.json

@@ -313,9 +313,9 @@ Every action component's box-model padding shifts accordingly.
 
 ## Cross-references
 
-- [`docs/tokens-architecture.md`](./tokens-architecture.md) — the global token graph. Slot resolutions in `.tokens.css` walk up through this graph.
-- [`docs/box-model-primitive.md`](./box-model-primitive.md) — the closed slot pool every component inherits. The box-model slots follow the same layering rule as component-local slots.
-- [`docs/states-to-css.md`](./states-to-css.md) — the state→pseudo-class mapping. Defines which `styles.json` selector keys are eligible for the structural-state-rule emission described here.
+- [`docs/architecture/tokens-architecture.md`](./tokens-architecture.md) — the global token graph. Slot resolutions in `.tokens.css` walk up through this graph.
+- [`docs/architecture/design/box-model-primitive.md`](./box-model-primitive.md) — the closed slot pool every component inherits. The box-model slots follow the same layering rule as component-local slots.
+- [`docs/specifications/states-to-css.md`](./states-to-css.md) — the state→pseudo-class mapping. Defines which `styles.json` selector keys are eligible for the structural-state-rule emission described here.
 - [`docs/codegen-authority.md`](./codegen-authority.md) — codegen layer authority. The dot-count disambiguation rule (Decision 4) follows that doc's "rules branch on grammar, not on identity" principle.
 
 ## When in doubt

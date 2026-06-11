@@ -1,10 +1,10 @@
 ---
 doc_id: ARCH-PRESENCE-SURFACES-001
 authority: architecture
-status: draft
+status: active
 title: Presence Surfaces — the architectural family for tooltips, popovers, dialogs, menus, selects, toasts, coachmarks, and sheets
 owner: "@darianrosebrook"
-updated: 2026-06-10
+updated: 2026-06-11
 governs:
   - packages/ds-contracts/Tooltip.contract.json
   - packages/ds-contracts/Popover.contract.json

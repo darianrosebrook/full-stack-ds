@@ -1,10 +1,10 @@
 ---
 doc_id: ARCH-CONTRACT-GROUP-AXES-001
 authority: architecture
-status: draft
+status: active
 title: Contract Group Axes
 owner: "@darianrosebrook"
-updated: 2026-05-24
+updated: 2026-06-11
 governs:
   - packages/ds-contracts/component.contract.schema.json
   - packages/ds-contracts/components/**/*.contract.json

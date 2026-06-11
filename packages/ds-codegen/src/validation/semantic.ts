@@ -40,7 +40,7 @@
  * rule. The blueprint draws the line at multi-step orchestration, not
  * the presence of any channel.
  *
- *   (4) Cross-axis obligation rules (docs/contract-group-axes.md, the
+ *   (4) Cross-axis obligation rules (docs/architecture/contract-group-axes.md, the
  *       "Obligation rules" section). These prove that *combinations*
  *       across the contract's axes are coherent, not just that each
  *       axis is individually shaped. Each emits a typed diagnostic
@@ -258,7 +258,7 @@ export function validateContractSemantics(
   }
 
   // --- Cross-axis obligation rules ---------------------------------
-  // (docs/contract-group-axes.md "Obligation rules"). Coherent
+  // (docs/architecture/contract-group-axes.md "Obligation rules"). Coherent
   // combinations across axes, not just per-axis shape. Each pushes a
   // [CODE]-prefixed message so the family is greppable through the
   // existing formatIssues path.
