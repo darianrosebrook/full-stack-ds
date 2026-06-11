@@ -9,6 +9,7 @@ scripts/migrate-tokens-to-styles.mjs
 
 # Dependencies
 node_modules/
+node_modules
 
 # This project uses pnpm — block stray npm/yarn lockfiles
 package-lock.json
