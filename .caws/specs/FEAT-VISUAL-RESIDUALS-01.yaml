@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: visual-residuals
 created_at: '2026-06-13T08:57:50.867Z'
-updated_at: '2026-06-13T09:36:43.059Z'
+updated_at: '2026-06-13T09:36:44.092Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/react-native (CSS_TO_RN_STYLE logical-border map + root accent-stripe assembler)'
@@ -32,10 +32,10 @@ scope:
     - packages/ds-tokens/src/
     - packages/ds-tokens/generated/
     - packages/ds-tokens/package.json
-    - package.json
   out: []
   support:
     - pnpm-lock.yaml
+    - package.json
 invariants:
   - 'The CSS_TO_RN_STYLE map additions (border-inline-start/end width+color -> borderLeft/Right) and the root accent-stripe assembler are allowlist-driven: they emit RN style props only where the component declares the corresponding token slot, so non-accent components produce no spurious output.'
   - 'border-inline-start logical borders now cross to React Native StyleSheet (Card status stripe, Blockquote bordered variant) with borderLeftWidth+borderLeftColor; RN package typechecks against ViewStyle.'
