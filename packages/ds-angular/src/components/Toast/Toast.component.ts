@@ -24,7 +24,7 @@ export type ToastPoliteness = "polite" | "assertive";
   selector: "fsds-toast",
   standalone: true,
   imports: [NgClass, NgIf],
-  template: `<div [ngClass]="classes()" aria-live="polite" aria-label="Notifications" (pointerenter)="autoDismiss.pauseListeners.pointerenter()" (pointerleave)="autoDismiss.pauseListeners.pointerleave()" (focusin)="autoDismiss.pauseListeners.focusin()" (focusout)="autoDismiss.pauseListeners.focusout()">
+  template: `<div [ngClass]="classes()" aria-label="Notifications" [attr.aria-live]="politeness" (pointerenter)="autoDismiss.pauseListeners.pointerenter()" (pointerleave)="autoDismiss.pauseListeners.pointerleave()" (focusin)="autoDismiss.pauseListeners.focusin()" (focusout)="autoDismiss.pauseListeners.focusout()">
   <ng-container *ngIf="behavior.open()">
     <div [ngClass]="'toast__item'" role="status">
       <div [ngClass]="'toast__row'">

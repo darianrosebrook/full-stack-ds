@@ -33,6 +33,7 @@ export interface ToastProps {
 export function Toast({
   open: controlledOpen,
   title,
+  politeness = "polite",
   action,
   duration,
   onOpenChange,
@@ -63,7 +64,7 @@ export function Toast({
     <View
       testID={testID}
       style={[styles.viewport, style]}
-      accessibilityLiveRegion="polite"
+      accessibilityLiveRegion={politeness}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

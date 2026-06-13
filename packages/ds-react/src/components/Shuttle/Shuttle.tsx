@@ -73,7 +73,7 @@ export function Shuttle({
     .join(" ");
 
   return (
-  <ul className={`${classNames}`} role="listbox" aria-label={ariaLabel} data-testid={testId} {...rest}>
+  <Stack layout="native" as="ul" className={`${classNames}`} role="listbox" aria-label={ariaLabel} data-testid={testId} {...rest}>
     {(selection ?? []).map((item, index) => (
       <li className="shuttle__item" role="option" aria-selected="true" key={index}>
         <span>
@@ -81,7 +81,7 @@ export function Shuttle({
         </span>
       </li>
     ))}
-  </ul>
+  </Stack>
   );
 }
 // @generated:end

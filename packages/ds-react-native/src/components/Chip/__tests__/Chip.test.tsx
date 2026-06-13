@@ -12,9 +12,18 @@ describe("Chip React Native", () => {
     renderer = TestRenderer.create(<Chip onPress={() => undefined} testID="subject">Save</Chip>);
   });
     const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;
-    expect(subject.props.accessibilityRole).toBe("button");
+    expect(subject.props.accessibilityRole).toBe("togglebutton");
     expect(subject.props.onPress).toEqual(expect.any(Function));
     expect(renderer!.root.findAll((node) => node.props.children === "Save").length).toBeGreaterThan(0);
+  });
+  it("maps aria-pressed to React Native toggle-button accessibility state", () => {
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Chip ariaPressed={true} testID="subject">Save</Chip>);
+  });
+    const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;
+    expect(subject.props.accessibilityRole).toBe("togglebutton");
+    expect(subject.props.accessibilityState).toMatchObject({ selected: true });
   });
   it("realizes pressed state styles via the style function", () => {
   let renderer: ReactTestRenderer | undefined;

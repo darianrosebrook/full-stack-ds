@@ -228,8 +228,9 @@ export function createDefaultRegistry(opts: RegistryOptions): TargetRegistry {
     });
   }
 
-  // React Native target — opt-in while experimental. It is executable when
-  // explicitly requested or when a future registry config includes it.
+  // React Native target — default-rail native target when declared in
+  // fsds.targets.json. Still experimental in maturity because simulator/device
+  // runtime and native visual parity are outside the current rail.
   const reactNativeRoot = path.join(
     opts.workspaceRoot,
     "packages",

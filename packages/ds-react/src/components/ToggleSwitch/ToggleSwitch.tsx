@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import { useToggleSwitch } from "./useToggleSwitch";
 import "./ToggleSwitch.css";
 // @generated:end
@@ -64,7 +65,7 @@ export function ToggleSwitch({
     .join(" ");
 
   return (
-  <button className={`${classNames}`} type="button" onClick={() => setChecked(!checked)} aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} role="switch" data-testid={testId} {...rest} />
+  <Stack layout="native" as="button" className={`${classNames}`} type="button" onClick={() => setChecked(!checked)} aria-checked={checked} aria-label={ariaLabel} aria-describedby={ariaDescribedby} disabled={disabled} role="switch" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

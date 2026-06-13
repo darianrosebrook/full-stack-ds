@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type BlockquoteHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Blockquote.css";
 // @generated:end
 
@@ -52,9 +53,9 @@ export function Blockquote({
     .join(" ");
 
   return (
-  <blockquote className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="blockquote" className={`${classNames}`} data-testid={testId} {...rest}>
     {children}
-  </blockquote>
+  </Stack>
   );
 }
 // @generated:end

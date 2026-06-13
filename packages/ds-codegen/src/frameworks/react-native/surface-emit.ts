@@ -18,9 +18,8 @@ import type {
  *   - non-blocking modality (toast)            → in-tree host, no Modal
  *       aria-live on the dom tree lowers to accessibilityLiveRegion
  *
- * Anchored kinds (tooltip, popover, coachmark) need an anchor-measurement
- * substrate React Native does not have yet; they stay on the generic path
- * and are documented as a known gap.
+ * Anchored tooltip/popover surfaces lower through `rnAnchoredSurface` below.
+ * Coachmark/Walkthrough and collision handling remain residual work.
  */
 export type RnSurfaceMode = "modal" | "non-blocking";
 

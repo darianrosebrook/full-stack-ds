@@ -40,6 +40,7 @@ export function Button({
   disabled,
   ariaLabel,
   ariaExpanded,
+  ariaPressed,
   children,
   onPress,
   style,
@@ -63,8 +64,8 @@ export function Button({
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}
       accessibilityLabelledBy={accessibilityLabelledBy}
-      accessibilityRole="button"
-      accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), busy: Boolean(loading) }}
+      accessibilityRole="togglebutton"
+      accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), selected: Boolean(ariaPressed), busy: Boolean(loading) }}
     >
       {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForSize, textVariantStyleForVariant]}>{children}</RNText> : children}
     </Pressable>

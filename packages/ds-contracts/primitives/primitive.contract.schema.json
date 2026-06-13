@@ -28,6 +28,7 @@
             "enum": [
               "elementType",
               "layoutVariant",
+              "layoutMode",
               "string",
               "boolean",
               "children",

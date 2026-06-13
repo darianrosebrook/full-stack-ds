@@ -134,7 +134,7 @@ export function Walkthrough({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="status" aria-label={label} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} {...rest}>
     <div className="walkthrough__content">
       <h3 className="walkthrough__title">
         {slots?.title}
@@ -152,7 +152,7 @@ export function Walkthrough({
       <span className="walkthrough__counter" />
       <button className="walkthrough__next" type="button" />
     </div>
-  </div>
+  </Stack>
   );
 }
 // @generated:end

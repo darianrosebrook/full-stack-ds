@@ -76,6 +76,7 @@ const DEFAULT_FRAMEWORKS: readonly FrameworkId[] = [
   "svelte",
   "lit",
   "angular",
+  "react-native",
 ] as const;
 
 async function main(): Promise<void> {

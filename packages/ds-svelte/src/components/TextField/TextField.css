@@ -19,8 +19,9 @@
 
 .text-field__label {
   display: inline-block;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: var(--fsds-text-field-typography-label-size);
+  font-weight: var(--fsds-text-field-typography-label-weight);
+  line-height: var(--fsds-text-field-typography-label-line-height);
   color: var(--fsds-text-field-color-input-text);
 }
 
@@ -29,26 +30,45 @@
   width: 100%;
   box-sizing: border-box;
   border-style: solid;
+  background-color: var(--fsds-text-field-color-input-background);
+  border-color: var(--fsds-text-field-color-input-border);
   border-width: var(--fsds-text-field-border-width);
   border-radius: var(--fsds-text-field-border-radius);
   color: var(--fsds-text-field-color-input-text);
-  font-size: 1rem;
-  padding: 8px 12px;
+  font-size: var(--fsds-text-field-typography-field-size);
+  line-height: var(--fsds-text-field-typography-field-line-height);
+  min-height: var(--fsds-text-field-field-min-height);
+  padding-block: var(--fsds-text-field-field-padding-block);
+  padding-inline: var(--fsds-text-field-field-padding-inline);
+  transition-property: background-color, border-color, color, outline-color;
+  transition-duration: var(--fsds-text-field-motion-duration-fast);
+  transition-timing-function: var(--fsds-text-field-motion-easing-standard);
 }
 
 .text-field__description {
   display: block;
-  font-size: 0.875em;
-  color: var(--fsds-text-field-color-input-text);
+  font-size: var(--fsds-text-field-typography-supporting-size);
+  line-height: var(--fsds-text-field-typography-supporting-line-height);
+  color: var(--fsds-text-field-color-supporting-text);
 }
 
 .text-field__error {
   display: block;
-  font-size: 0.875em;
+  font-size: var(--fsds-text-field-typography-supporting-size);
+  line-height: var(--fsds-text-field-typography-supporting-line-height);
   color: var(--fsds-text-field-color-error);
 }
 
+.text-field__field::placeholder {
+  color: var(--fsds-text-field-color-input-placeholder);
+}
+
+.text-field__field:hover:not(:disabled) {
+  border-color: var(--fsds-text-field-color-input-borderHover);
+}
+
 .text-field__field:focus-visible {
+  border-color: var(--fsds-text-field-focus-ring-color);
   outline-width: var(--fsds-text-field-focus-ring-width);
   outline-color: var(--fsds-text-field-focus-ring-color);
   outline-style: var(--fsds-text-field-focus-ring-style);
@@ -59,8 +79,16 @@
   border-color: var(--fsds-text-field-color-input-borderError);
 }
 
+.text-field--invalid .text-field__field:focus-visible {
+  border-color: var(--fsds-text-field-color-input-borderError);
+  outline-color: var(--fsds-text-field-color-input-borderError);
+}
+
 .text-field__field:disabled {
-  opacity: 0.5;
+  background-color: var(--fsds-text-field-color-input-backgroundDisabled);
+  border-color: var(--fsds-text-field-color-input-borderDisabled);
+  color: var(--fsds-text-field-color-input-textDisabled);
+  opacity: var(--fsds-text-field-opacity-disabled);
   cursor: not-allowed;
 }
 /* @generated:end */

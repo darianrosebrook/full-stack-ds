@@ -64,11 +64,11 @@ export function Breadcrumbs({
     .join(" ");
 
   return (
-  <nav className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} {...rest}>
+  <Stack layout="native" as="nav" className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} {...rest}>
     <ol className="breadcrumbs__list">
       {children}
     </ol>
-  </nav>
+  </Stack>
   );
 }
 // @generated:end

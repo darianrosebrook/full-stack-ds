@@ -93,7 +93,7 @@ export function TextField({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
     {label && (
       <label className="text-field__label">
         {children}
@@ -110,7 +110,7 @@ export function TextField({
         {children}
       </span>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Text.css";
 // @generated:end
 
@@ -71,7 +72,7 @@ export function Text({
   const As = as ?? "p";
 
   return (
-  <As className={`${classNames}`} data-testid={testId} {...rest} />
+  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} {...rest} />
   );
 }
 // @generated:end

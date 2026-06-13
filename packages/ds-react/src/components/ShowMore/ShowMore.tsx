@@ -99,14 +99,14 @@ export function ShowMore({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
     <div className="show-more__content" style={{ "--fsds-show-more-content-max-lines": maxLines } as CSSProperties}>
       {children}
     </div>
     <button className="show-more__trigger" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
       {showMoreLabel}
     </button>
-  </div>
+  </Stack>
   );
 }
 // @generated:end

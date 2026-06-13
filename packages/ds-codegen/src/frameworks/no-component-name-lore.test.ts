@@ -21,7 +21,7 @@ import { describe, expect, it } from "vitest";
 // reads or, if genuinely realization-level, refactored to dispatch on an
 // IR flag rather than the component name.
 
-const ADMITTED_FRAMEWORKS = ["react", "vue", "svelte", "angular", "lit"];
+const ADMITTED_FRAMEWORKS = ["react", "vue", "svelte", "angular", "lit", "react-native"];
 
 // Patterns that indicate component-name lore. We catch the common
 // shapes that appeared in the historical violations:
@@ -36,6 +36,8 @@ const COMPONENT_NAME_LORE_PATTERNS: RegExp[] = [
   /\b(?:ir|component|contract)\.name\s*===\s*"[A-Z][a-zA-Z0-9]*"/,
   /(?<![\w.])name\s*===\s*"[A-Z][a-zA-Z0-9]*"/,
 ];
+
+const ALLOWED_PLATFORM_TYPE_LITERALS = new Set(["ReactNode"]);
 
 function walk(dir: string): string[] {
   const out: string[] = [];
@@ -63,6 +65,8 @@ function findViolations(
     const line = lines[i];
     for (const pattern of COMPONENT_NAME_LORE_PATTERNS) {
       if (pattern.test(line)) {
+        const literal = line.match(/"([A-Z][a-zA-Z0-9]*)"/)?.[1];
+        if (literal && ALLOWED_PLATFORM_TYPE_LITERALS.has(literal)) continue;
         out.push({ line: i + 1, text: line.trim(), pattern });
       }
     }

@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Progress.css";
 // @generated:end
 
@@ -63,7 +64,7 @@ export function Progress({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100} aria-label={label} data-testid={testId} {...rest}>
     <span className="progress__track" aria-hidden="true">
       <span className="progress__fill" style={{ "--fsds-progress-fill-width": value } as CSSProperties} />
     </span>
@@ -72,7 +73,7 @@ export function Progress({
         {children}
       </span>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

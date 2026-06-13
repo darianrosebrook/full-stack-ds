@@ -1196,6 +1196,7 @@ function emitNodeProps(
       continue;
     }
     if (name === "aria-pressed") {
+      accessibilityState.push(`selected: Boolean(${expr})`);
       continue;
     }
     if (name === "aria-selected") {
@@ -1204,6 +1205,10 @@ function emitNodeProps(
     }
     if (name === "aria-busy") {
       accessibilityState.push(`busy: Boolean(${expr})`);
+      continue;
+    }
+    if (name === "aria-live") {
+      props.push(`${pad}accessibilityLiveRegion={${expr}}`);
       continue;
     }
     if (name === "checked") {
@@ -1270,7 +1275,11 @@ function emitNodeProps(
     props.push(`${pad}accessibilityLabelledBy={accessibilityLabelledBy}`);
   }
   const role = node.attrs.role ?? roleFromNode(node);
-  const accessibilityRole = rnAccessibilityRole(role, component);
+  const accessibilityRole = rnAccessibilityRole(
+    role,
+    component,
+    node.bindings["aria-pressed"] !== undefined,
+  );
   if (accessibilityRole) props.push(`${pad}accessibilityRole=${JSON.stringify(accessibilityRole)}`);
   if (accessibilityState.length > 0) {
     props.push(`${pad}accessibilityState={{ ${accessibilityState.join(", ")} }}`);
@@ -1290,7 +1299,6 @@ function rnComponentForNode(node: DomNodeIR): string {
 
 function isSupportedBindingForComponent(name: string, component: string): boolean {
   if (name.startsWith("data-")) return false;
-  if (name === "aria-pressed") return false;
   if (name === "aria-describedby") return false;
   if (name === "name" || name === "required" || name === "aria-invalid") return false;
   if (name === "htmlFor" || name === "form") return false;
@@ -1361,10 +1369,15 @@ function roleFromNode(node: DomNodeIR): string | undefined {
   return undefined;
 }
 
-function rnAccessibilityRole(role: string | undefined, component: string): string | undefined {
+function rnAccessibilityRole(
+  role: string | undefined,
+  component: string,
+  hasPressedState = false,
+): string | undefined {
   if (!role) return component === "RNText" ? "text" : undefined;
   if (role === "presentation") return "none";
   if (role === "switch") return "switch";
+  if (role === "button" && hasPressedState) return "togglebutton";
   if (role === "button") return "button";
   if (role === "checkbox") return "checkbox";
   if (role === "progressbar") return "progressbar";

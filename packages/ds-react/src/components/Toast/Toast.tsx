@@ -129,7 +129,7 @@ export function Toast({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} aria-live="polite" aria-label="Notifications" role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
+  <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
     {open && (
       <div className="toast__item" role="status">
         <div className="toast__row">
@@ -146,7 +146,7 @@ export function Toast({
         </div>
       </div>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

@@ -54,7 +54,7 @@ export function Input({
   return (
     <TextInput
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, disabled ? styles.root_state_disabled : undefined, style]}
       value={String(value ?? "")}
       editable={!(disabled)}
       secureTextEntry={type === "password"}

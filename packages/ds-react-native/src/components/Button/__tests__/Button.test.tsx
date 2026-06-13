@@ -13,9 +13,18 @@ describe("Button React Native", () => {
     renderer = TestRenderer.create(<Button onPress={() => undefined} testID="subject">Save</Button>);
   });
     const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;
-    expect(subject.props.accessibilityRole).toBe("button");
+    expect(subject.props.accessibilityRole).toBe("togglebutton");
     expect(subject.props.onPress).toEqual(expect.any(Function));
     expect(renderer!.root.findAll((node) => node.props.children === "Save").length).toBeGreaterThan(0);
+  });
+  it("maps aria-pressed to React Native toggle-button accessibility state", () => {
+  let renderer: ReactTestRenderer | undefined;
+  act(() => {
+    renderer = TestRenderer.create(<Button ariaPressed={true} testID="subject">Save</Button>);
+  });
+    const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;
+    expect(subject.props.accessibilityRole).toBe("togglebutton");
+    expect(subject.props.accessibilityState).toMatchObject({ selected: true });
   });
   it("realizes distinct variant backgrounds from token scopes", () => {
     let renderer: ReactTestRenderer | undefined;

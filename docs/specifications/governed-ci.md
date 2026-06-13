@@ -63,7 +63,8 @@ Same two phases. Same exit code semantics. Same JSON canonical output. The addit
 
 ### `pnpm run governed:rail:react-native`
 
-React Native has a separate opt-in admission lane while it remains experimental:
+React Native is part of the default rail, and also has a targeted admission
+lane for RN-only iteration:
 
 ```bash
 pnpm run generate:react-native \
@@ -72,7 +73,7 @@ pnpm run generate:react-native \
        --framework=react-native
 ```
 
-This admits the generated RN package through package typecheck, focused generated RN render tests, and required-mode manifest integrity scoped to the RN framework id. The render tests use a Vitest-only native host shim and cover the first primitive/form slice, not the full corpus. The lane does not prove simulator or device runtime behavior, native visual parity, platform accessibility parity, or RN surface behavior.
+This admits the generated RN package through package typecheck, focused generated RN render tests, and required-mode manifest integrity scoped to the RN framework id. The render tests use a Vitest-only native host shim and cover host-render archetypes, variant/state style slices, and admitted presence surfaces. The lane does not prove simulator/device runtime behavior, native visual parity, platform accessibility parity, anchored collision handling, or compound-part emission.
 
 `pnpm run governed:rail:react-native:changed` adds the same git-range projection as the web changed rail.
 

@@ -78,8 +78,10 @@
       "tag": "div",
       "part": "viewport",
       "attrs": {
-        "aria-live": "polite",
         "aria-label": "Notifications"
+      },
+      "bindings": {
+        "aria-live": "prop:politeness"
       },
       "children": [
         {

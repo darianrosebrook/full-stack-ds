@@ -33,8 +33,9 @@ Run the example consumer typecheck from the repository root:
 pnpm run typecheck:example:react-native
 ```
 
-The full opt-in React Native rail regenerates the RN target, validates the
-generated package, runs the package tests, and typechecks this example:
+The targeted React Native rail regenerates the RN target, validates the
+generated package, and runs the package tests. The example typecheck remains a
+separate public-export consumer check:
 
 ```bash
 pnpm run governed:rail:react-native

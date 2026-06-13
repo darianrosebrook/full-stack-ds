@@ -18,12 +18,13 @@
       "platforms": ["web"]
     },
     "font-size": {
-      "literal": "0.875rem",
-      "platforms": ["web"]
+      "resolvesTo": "text-field.typography.label.size"
     },
     "font-weight": {
-      "literal": "500",
-      "platforms": ["web"]
+      "resolvesTo": "text-field.typography.label.weight"
+    },
+    "line-height": {
+      "resolvesTo": "text-field.typography.label.line-height"
     },
     "color": {
       "resolvesTo": "text-field.color.input.text"
@@ -46,6 +47,12 @@
       "literal": "solid",
       "platforms": ["web"]
     },
+    "background-color": {
+      "resolvesTo": "text-field.color.input.background"
+    },
+    "border-color": {
+      "resolvesTo": "text-field.color.input.border"
+    },
     "border-width": {
       "resolvesTo": "text-field.border.width"
     },
@@ -56,12 +63,29 @@
       "resolvesTo": "text-field.color.input.text"
     },
     "font-size": {
-      "literal": "1rem",
+      "resolvesTo": "text-field.typography.field.size"
+    },
+    "line-height": {
+      "resolvesTo": "text-field.typography.field.line-height"
+    },
+    "min-height": {
+      "resolvesTo": "text-field.field.min-height"
+    },
+    "padding-block": {
+      "resolvesTo": "text-field.field.padding-block"
+    },
+    "padding-inline": {
+      "resolvesTo": "text-field.field.padding-inline"
+    },
+    "transition-property": {
+      "literal": "background-color, border-color, color, outline-color",
       "platforms": ["web"]
     },
-    "padding": {
-      "literal": "8px 12px",
-      "platforms": ["web"]
+    "transition-duration": {
+      "resolvesTo": "text-field.motion.duration.fast"
+    },
+    "transition-timing-function": {
+      "resolvesTo": "text-field.motion.easing.standard"
     }
   },
   "description": {
@@ -70,11 +94,13 @@
       "platforms": ["web"]
     },
     "font-size": {
-      "literal": "0.875em",
-      "platforms": ["web"]
+      "resolvesTo": "text-field.typography.supporting.size"
+    },
+    "line-height": {
+      "resolvesTo": "text-field.typography.supporting.line-height"
     },
     "color": {
-      "resolvesTo": "text-field.color.input.text"
+      "resolvesTo": "text-field.color.supporting.text"
     }
   },
   "error": {
@@ -83,14 +109,29 @@
       "platforms": ["web"]
     },
     "font-size": {
-      "literal": "0.875em",
-      "platforms": ["web"]
+      "resolvesTo": "text-field.typography.supporting.size"
+    },
+    "line-height": {
+      "resolvesTo": "text-field.typography.supporting.line-height"
     },
     "color": {
       "resolvesTo": "text-field.color.error"
     }
   },
+  ".text-field__field::placeholder": {
+    "color": {
+      "resolvesTo": "text-field.color.input.placeholder"
+    }
+  },
+  ".text-field__field:hover:not(:disabled)": {
+    "border-color": {
+      "resolvesTo": "text-field.color.input.borderHover"
+    }
+  },
   ".text-field__field:focus-visible": {
+    "border-color": {
+      "resolvesTo": "text-field.focus.ring.color"
+    },
     "outline-width": {
       "resolvesTo": "text-field.focus.ring.width"
     },
@@ -109,10 +150,26 @@
       "resolvesTo": "text-field.color.input.borderError"
     }
   },
+  ".text-field--invalid .text-field__field:focus-visible": {
+    "border-color": {
+      "resolvesTo": "text-field.color.input.borderError"
+    },
+    "outline-color": {
+      "resolvesTo": "text-field.color.input.borderError"
+    }
+  },
   ".text-field__field:disabled": {
+    "background-color": {
+      "resolvesTo": "text-field.color.input.backgroundDisabled"
+    },
+    "border-color": {
+      "resolvesTo": "text-field.color.input.borderDisabled"
+    },
+    "color": {
+      "resolvesTo": "text-field.color.input.textDisabled"
+    },
     "opacity": {
-      "literal": "0.5",
-      "platforms": ["web"]
+      "resolvesTo": "text-field.opacity.disabled"
     },
     "cursor": {
       "literal": "not-allowed",

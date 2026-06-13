@@ -16,6 +16,12 @@
       "notes": "Maps to stack--vertical | stack--horizontal layout classes."
     },
     {
+      "name": "layout",
+      "kind": "layoutMode",
+      "default": "stack",
+      "notes": "Platform-neutral layout intent. stack applies the primitive's axis layout; native lets the rendered host keep its own display/layout behavior."
+    },
+    {
       "name": "className",
       "kind": "string",
       "notes": "Merged with stack layout classes."

@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type LabelHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Label.css";
 // @generated:end
 
@@ -46,9 +47,9 @@ export function Label({
     .join(" ");
 
   return (
-  <label className={`${classNames}`} htmlFor={htmlFor} form={form} data-testid={testId} {...rest}>
+  <Stack layout="native" as="label" className={`${classNames}`} htmlFor={htmlFor} form={form} data-testid={testId} {...rest}>
     {children}
-  </label>
+  </Stack>
   );
 }
 // @generated:end

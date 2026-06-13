@@ -347,10 +347,10 @@ taxonomy facts:
 `timeout` dismissal. The presence budget flows from the component's
 `*.timing.auto-dismiss` token slot (semantic `motion.dwell.*` family) into
 the `autoDismiss` behavior primitive, mirrored across all five web
-packages and RN, with hover/focus pausing (WCAG 2.2.1 Timing Adjustable)
-and remaining-budget bookkeeping. Web resolves the token default at
-generation time (not runtime-themeable); RN reads it theme-reactively from
-the typed token scope.
+packages and RN. Web behavior includes hover/focus pausing (WCAG 2.2.1
+Timing Adjustable) and remaining-budget bookkeeping. Web resolves the token
+default at generation time (not runtime-themeable); RN reads it
+theme-reactively from the typed token scope.
 
 **Reserved vocabulary.** `positioning.strategy: "fullscreen"` expresses a
 full-screen takeover; no corpus contract uses it.

@@ -537,10 +537,10 @@ export interface EmittedArtifactGroup {
  *       major, codegen package version, and lockfile digest at
  *       generate time. v4 manifests fall through SCHEMA_MISMATCH
  *       (same migration policy as previous boundaries).
- *   v6 (CODEGEN-RAIL-REACT-NATIVE-ADMISSION-01): widens
- *       FrameworkId to include the opt-in React Native target so
- *       manifests can attribute native generated artifacts to the
- *       RN emitter source set and package typecheck lane.
+   *   v6 (CODEGEN-RAIL-REACT-NATIVE-ADMISSION-01): widens
+   *       FrameworkId to include the React Native target so manifests
+   *       can attribute native generated artifacts to the RN emitter
+   *       source set and package typecheck/test lanes.
  */
 export const EMISSION_MANIFEST_SCHEMA_VERSION = 6 as const;
 

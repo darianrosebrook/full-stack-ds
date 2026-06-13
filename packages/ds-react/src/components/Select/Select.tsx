@@ -140,7 +140,7 @@ export function Select({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
     <button className="select__trigger" type="button" disabled={disabled}>
       <span className="select__text" />
     </button>
@@ -165,7 +165,7 @@ export function Select({
         )}
       </div>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

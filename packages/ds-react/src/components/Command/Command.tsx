@@ -132,7 +132,7 @@ export function Command({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
     {open && (
       <div className="command__overlay" aria-hidden="true" />
     )}
@@ -160,7 +160,7 @@ export function Command({
         </div>
       </div>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

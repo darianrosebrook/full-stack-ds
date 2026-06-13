@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Skeleton.css";
 // @generated:end
 
@@ -67,7 +68,7 @@ export function Skeleton({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} aria-busy="true" aria-label={ariaLabel} role="status" data-testid={testId} {...rest} />
+  <Stack layout="native" className={`${classNames}`} aria-busy="true" aria-label={ariaLabel} role="status" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

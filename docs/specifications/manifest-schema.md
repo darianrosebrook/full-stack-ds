@@ -183,7 +183,7 @@ This section is the structural reference for the current schema. Type declaratio
 | `schemaVersion` | `6` (literal) | yes | Must equal `EMISSION_MANIFEST_SCHEMA_VERSION`. Any other value → `RAIL_REQUIRE_MANIFEST_SCHEMA_MISMATCH`. |
 | `generatedAt` | ISO 8601 string | yes | When the producer wrote the manifest. Informational only — not used in verification logic. |
 | `environment` | `EnvironmentProvenance` | yes | Generate-time runtime/dependency fingerprint. |
-| `emitterSourceSets` | `Record<FrameworkId, EmitterSourceSet>` | yes | Per-framework material source set. Every FrameworkId key, including opt-in `react-native`, must be present with non-empty `sources`. |
+| `emitterSourceSets` | `Record<FrameworkId, EmitterSourceSet>` | yes | Per-framework material source set. Every FrameworkId key, including `react-native`, must be present with non-empty `sources`. |
 | `groups` | `readonly EmittedArtifactGroup[]` | yes | One entry per (framework, component) pair emitted in this run. |
 
 ### `EmittedArtifactGroup`

@@ -12,7 +12,7 @@ Read this as a proving-ground portfolio, not a demo gallery. Every app shape mus
 
 | App shape | Implementations | Standing | Primary claim |
 |---|---|---|---|
-| `settings/` | `react/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The RN lane is typecheck-only and intentionally omits overlays while surfaces remain unadmitted. |
+| `settings/` | `react/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
 
 The five-framework app-parity claim is not proven by `examples/` yet. The repo's admitted five-framework evidence lives in codegen, generated packages, the governed rail, and the runtime fact rail. The examples directory is the consumer-transfer lane that should eventually make those claims more app-shaped.
 

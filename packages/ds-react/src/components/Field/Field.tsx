@@ -97,7 +97,7 @@ export function Field({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="group" data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} {...rest}>
     <div className="field__header">
       {label && (
         <label className="field__label">
@@ -119,7 +119,7 @@ export function Field({
         <span className="field__validatingIndicator" />
       )}
     </div>
-  </div>
+  </Stack>
   );
 }
 // @generated:end

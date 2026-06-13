@@ -82,14 +82,14 @@ export function Truncate({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
     <span className="truncate__content" style={{ "--fsds-truncate-content-lines": lines } as CSSProperties}>
       {children}
     </span>
     {expandable && (
       <button className="truncate__toggle" type="button" aria-expanded={expanded} />
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type InputHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import { useInput } from "./useInput";
 import "./Input.css";
 // @generated:end
@@ -67,7 +68,7 @@ export function Input({
     .join(" ");
 
   return (
-  <input className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} {...rest} />
+  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

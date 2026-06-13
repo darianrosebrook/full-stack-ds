@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Divider.css";
 // @generated:end
 
@@ -49,7 +50,7 @@ export function Divider({
     .join(" ");
 
   return (
-  <hr className={`${classNames}`} role="separator" data-testid={testId} {...rest} />
+  <Stack layout="native" as="hr" className={`${classNames}`} role="separator" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

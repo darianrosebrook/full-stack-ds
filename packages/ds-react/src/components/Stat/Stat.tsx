@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Stat.css";
 // @generated:end
 
@@ -50,9 +51,9 @@ export function Stat({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
     {children}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

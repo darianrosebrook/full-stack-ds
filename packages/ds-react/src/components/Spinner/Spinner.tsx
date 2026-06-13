@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Spinner.css";
 // @generated:end
 
@@ -56,9 +57,9 @@ export function Spinner({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="status" data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="status" data-testid={testId} {...rest}>
     <span className="spinner__visual" aria-hidden="true" />
-  </div>
+  </Stack>
   );
 }
 // @generated:end

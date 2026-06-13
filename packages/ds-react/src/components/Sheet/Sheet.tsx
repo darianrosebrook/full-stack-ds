@@ -183,7 +183,7 @@ export function Sheet({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
     {openness && (
       <div className="sheet__overlay" aria-hidden="true" />
     )}
@@ -204,7 +204,7 @@ export function Sheet({
         <div className="sheet__footer" />
       </div>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

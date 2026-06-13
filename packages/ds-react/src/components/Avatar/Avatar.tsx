@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Avatar.css";
 // @generated:end
 
@@ -49,11 +50,11 @@ export function Avatar({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} aria-label={name} role="img" data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} aria-label={name} role="img" data-testid={testId} {...rest}>
     {src && (
       <img className="avatar__image" src={src} alt={""} />
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

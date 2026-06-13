@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type LabelHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import { useSwitch } from "./useSwitch";
 import "./Switch.css";
 // @generated:end
@@ -64,12 +65,12 @@ export function Switch({
     .join(" ");
 
   return (
-  <label className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="label" className={`${classNames}`} data-testid={testId} {...rest}>
     <input className="switch__input" type="checkbox" role="switch" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} />
     <span className="switch__track" aria-hidden="true">
       <span className="switch__thumb" />
     </span>
-  </label>
+  </Stack>
   );
 }
 // @generated:end

@@ -215,11 +215,11 @@ export function Table({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
     <table className="table__container" aria-label={ariaLabel}>
       {children}
     </table>
-  </div>
+  </Stack>
   );
 }
 // @generated:end

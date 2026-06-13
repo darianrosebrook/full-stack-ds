@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Chip.css";
 // @generated:end
 
@@ -67,14 +68,14 @@ export function Chip({
     .join(" ");
 
   return (
-  <button className={`${classNames}`} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} data-testid={testId} {...rest}>
+  <Stack layout="native" as="button" className={`${classNames}`} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} data-testid={testId} {...rest}>
     {icon && (
       <span className="chip__icon" aria-hidden="true" />
     )}
     <span className="chip__text">
       {children}
     </span>
-  </button>
+  </Stack>
   );
 }
 // @generated:end

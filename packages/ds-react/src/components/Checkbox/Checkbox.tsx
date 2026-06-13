@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type InputHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import { useCheckbox } from "./useCheckbox";
 import "./Checkbox.css";
 // @generated:end
@@ -66,7 +67,7 @@ export function Checkbox({
     .join(" ");
 
   return (
-  <input className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} role="checkbox" data-testid={testId} {...rest} />
+  <Stack layout="native" as="input" className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} role="checkbox" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

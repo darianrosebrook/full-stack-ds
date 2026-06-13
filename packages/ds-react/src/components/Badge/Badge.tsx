@@ -77,14 +77,14 @@ export function Badge({
     .join(" ");
 
   return (
-  <span className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} {...rest}>
     {icon && (
       <span className="badge__icon" aria-hidden="true" />
     )}
     <span className="badge__content">
       {children}
     </span>
-  </span>
+  </Stack>
   );
 }
 // @generated:end

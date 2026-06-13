@@ -95,7 +95,7 @@ export function Alert({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="alert" data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="alert" data-testid={testId} {...rest}>
     {icon && (
       <span className="alert__icon" aria-hidden="true">
         {icon}
@@ -105,7 +105,7 @@ export function Alert({
     {dismissible && (
       <button className="alert__dismiss" type="button" onClick={onDismiss} aria-label={dismissLabel} />
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

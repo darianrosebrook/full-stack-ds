@@ -87,7 +87,7 @@ export function Details({
     .join(" ");
 
   return (
-  <details className={`${classNames}`} open={open} role="group" data-testid={testId} {...rest}>
+  <Stack layout="native" as="details" className={`${classNames}`} open={open} role="group" data-testid={testId} {...rest}>
     <summary className="details__summary">
       <span className="details__summaryContent">
         <span className="details__icon" />
@@ -101,7 +101,7 @@ export function Details({
         {children}
       </div>
     )}
-  </details>
+  </Stack>
   );
 }
 // @generated:end

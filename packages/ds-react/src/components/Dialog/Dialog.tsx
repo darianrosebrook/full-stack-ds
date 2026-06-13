@@ -155,7 +155,7 @@ export function Dialog({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
+  <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
     {openness && (
       <div className="dialog__backdrop" aria-hidden="true" />
     )}
@@ -173,7 +173,7 @@ export function Dialog({
         <div className="dialog__footer" />
       </div>
     )}
-  </div>
+  </Stack>
   );
 }
 // @generated:end

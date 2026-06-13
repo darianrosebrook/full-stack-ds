@@ -34,6 +34,21 @@
     "fallback": "8px",
     "layer": "core"
   },
+  "text-field.field.padding-block": {
+    "resolvesTo": "semantic.input.size.medium.padding-block",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "text-field.field.padding-inline": {
+    "resolvesTo": "semantic.input.size.medium.padding-inline",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "text-field.field.min-height": {
+    "resolvesTo": "semantic.input.size.medium.min-height",
+    "fallback": "36px",
+    "layer": "semantic"
+  },
   "text-field.border.width": {
     "resolvesTo": "core.shape.border.width.hairline",
     "fallback": "1px",
@@ -43,6 +58,11 @@
     "resolvesTo": "core.shape.radius.medium",
     "fallback": "8px",
     "layer": "core"
+  },
+  "text-field.color.input.background": {
+    "resolvesTo": "semantic.color.background.primary",
+    "fallback": "#ffffff",
+    "layer": "semantic"
   },
   "text-field.color.input.text": {
     "resolvesTo": "semantic.color.foreground.primary",
@@ -54,6 +74,31 @@
     "fallback": "#717171",
     "layer": "semantic"
   },
+  "text-field.color.input.border": {
+    "resolvesTo": "semantic.color.border.default",
+    "fallback": "#aeaeae",
+    "layer": "semantic"
+  },
+  "text-field.color.input.borderHover": {
+    "resolvesTo": "semantic.color.border.hover",
+    "fallback": "#8f8f8f",
+    "layer": "semantic"
+  },
+  "text-field.color.input.backgroundDisabled": {
+    "resolvesTo": "semantic.interaction.background.disabled",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "text-field.color.input.textDisabled": {
+    "resolvesTo": "semantic.color.foreground.disabled",
+    "fallback": "#717171",
+    "layer": "semantic"
+  },
+  "text-field.color.input.borderDisabled": {
+    "resolvesTo": "semantic.color.border.disabled",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
   "text-field.color.input.borderError": {
     "resolvesTo": "semantic.color.status.danger",
     "fallback": "#d9292b",
@@ -62,6 +107,51 @@
   "text-field.color.error": {
     "resolvesTo": "semantic.color.foreground.danger",
     "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "text-field.color.supporting.text": {
+    "resolvesTo": "semantic.color.foreground.tertiary",
+    "fallback": "#717171",
+    "layer": "semantic"
+  },
+  "text-field.typography.label.size": {
+    "resolvesTo": "semantic.typography.caption.01",
+    "fallback": "0.875rem",
+    "layer": "semantic"
+  },
+  "text-field.typography.label.weight": {
+    "resolvesTo": "semantic.typography.font.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
+  },
+  "text-field.typography.label.line-height": {
+    "resolvesTo": "semantic.typography.line.height.normal",
+    "fallback": "1.5",
+    "layer": "semantic"
+  },
+  "text-field.typography.field.size": {
+    "resolvesTo": "semantic.typography.body.02",
+    "fallback": "1rem",
+    "layer": "semantic"
+  },
+  "text-field.typography.field.line-height": {
+    "resolvesTo": "semantic.typography.line.height.body",
+    "fallback": "1.5",
+    "layer": "semantic"
+  },
+  "text-field.typography.supporting.size": {
+    "resolvesTo": "semantic.typography.caption.01",
+    "fallback": "0.875rem",
+    "layer": "semantic"
+  },
+  "text-field.typography.supporting.line-height": {
+    "resolvesTo": "semantic.typography.line.height.normal",
+    "fallback": "1.5",
+    "layer": "semantic"
+  },
+  "text-field.opacity.disabled": {
+    "resolvesTo": "semantic.interaction.disabled.opacity",
+    "fallback": "0.5",
     "layer": "semantic"
   },
   "text-field.focus.ring.width": {
@@ -83,5 +173,15 @@
     "resolvesTo": "semantic.focus.ring.offset",
     "fallback": "2px",
     "layer": "semantic"
+  },
+  "text-field.motion.duration.fast": {
+    "resolvesTo": "core.motion.duration.short",
+    "fallback": "150ms",
+    "layer": "core"
+  },
+  "text-field.motion.easing.standard": {
+    "resolvesTo": "core.motion.easing.standard",
+    "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "layer": "core"
   }
 }

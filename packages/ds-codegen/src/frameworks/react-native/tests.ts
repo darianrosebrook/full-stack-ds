@@ -149,6 +149,7 @@ function fieldLayoutTest(ir: ComponentIR): string {
 function buttonTest(ir: ComponentIR): string {
   const proof = variantBackgroundProof(ir);
   const imports = renderImports(ir);
+  const expectedRole = ir.dom?.bindings["aria-pressed"] ? "togglebutton" : "button";
   if (proof) {
     imports.splice(
       imports.indexOf("// @generated:end"),
@@ -162,15 +163,32 @@ function buttonTest(ir: ComponentIR): string {
     `${INDENT}it("renders button semantics and press passthrough", () => {`,
     ...rendererHelper(`<${ir.name} onPress={() => undefined} testID="subject">Save</${ir.name}>`),
     `${INDENT}${INDENT}const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
-    `${INDENT}${INDENT}expect(subject.props.accessibilityRole).toBe("button");`,
+    `${INDENT}${INDENT}expect(subject.props.accessibilityRole).toBe(${JSON.stringify(expectedRole)});`,
     `${INDENT}${INDENT}expect(subject.props.onPress).toEqual(expect.any(Function));`,
     `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Save").length).toBeGreaterThan(0);`,
     `${INDENT}});`,
+    ...pressedAccessibilityStateTestBody(ir),
     ...(proof ? variantBackgroundTestBody(ir, proof) : []),
     ...pressedStateTestBody(ir),
     `});`,
     ...renderFooter(),
   ].join("\n");
+}
+
+function pressedAccessibilityStateTestBody(ir: ComponentIR): string[] {
+  const root = ir.dom;
+  if (!root) return [];
+  const binding = root.bindings["aria-pressed"];
+  if (!binding || binding.kind !== "prop") return [];
+  const propName = binding.prop;
+  return [
+    `${INDENT}it("maps aria-pressed to React Native toggle-button accessibility state", () => {`,
+    ...rendererHelper(`<${ir.name} ${propName}={true} testID="subject">Save</${ir.name}>`),
+    `${INDENT}${INDENT}const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
+    `${INDENT}${INDENT}expect(subject.props.accessibilityRole).toBe("togglebutton");`,
+    `${INDENT}${INDENT}expect(subject.props.accessibilityState).toMatchObject({ selected: true });`,
+    `${INDENT}});`,
+  ];
 }
 
 /**
@@ -380,6 +398,8 @@ function anchoredSurfaceTest(ir: ComponentIR, lowering: RnAnchoredSurfaceLowerin
     `${INDENT}${INDENT}const modal = renderer!.root.findByType(Modal);`,
     `${INDENT}${INDENT}expect(modal.props.visible).toBe(true);`,
     `${INDENT}${INDENT}expect(modal.props.transparent).toBe(true);`,
+    `${INDENT}${INDENT}const content = renderer!.root.findAll((node) => typeof node.type === "string" && Array.isArray(node.props.style) && node.props.style.some((entry: { left?: number; top?: number }) => entry?.left === 24 && entry?.top === 62)).at(-1);`,
+    `${INDENT}${INDENT}expect(content).toBeTruthy();`,
     `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Surface body").length).toBeGreaterThan(0);`,
     `${INDENT}});`,
   ];
@@ -414,6 +434,12 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
   const channel = lowering.openChannel!;
   const openProp = channel.valueProp;
   const handler = channel.changeHandlerProp;
+  const liveRegionBinding = ir.dom?.bindings["aria-live"];
+  const liveRegionProp = liveRegionBinding?.kind === "prop" ? liveRegionBinding.prop : null;
+  const liveRegionProps = liveRegionProp ? ` ${liveRegionProp}="assertive"` : "";
+  const liveRegionExpectation = liveRegionProp
+    ? `node.props.accessibilityLiveRegion === "assertive"`
+    : `node.props.accessibilityLiveRegion !== undefined`;
   const usesTimers =
     lowering.mode !== "modal" && rnAutoDismiss(ir)?.defaultMs !== undefined;
   const lines: string[] = [
@@ -468,9 +494,9 @@ function surfaceTest(ir: ComponentIR, lowering: RnSurfaceLowering): string {
   } else {
     lines.push(
       `${INDENT}it("renders a non-blocking live region without a modal host", () => {`,
-      ...rendererHelper(`<${ir.name} ${openProp} testID="subject">Body</${ir.name}>`),
+      ...rendererHelper(`<${ir.name} ${openProp}${liveRegionProps} testID="subject">Body</${ir.name}>`),
       `${INDENT}${INDENT}expect(renderer!.root.findAllByType(Modal)).toHaveLength(0);`,
-      `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.accessibilityLiveRegion !== undefined).length).toBeGreaterThan(0);`,
+      `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => ${liveRegionExpectation}).length).toBeGreaterThan(0);`,
       `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => typeof node.type === "string" && node.props.children === "Body").length).toBeGreaterThan(0);`,
       `${INDENT}});`,
       `${INDENT}it("hides content when the open channel is false", () => {`,

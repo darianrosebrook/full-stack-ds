@@ -34,9 +34,24 @@
     "fallback": "#ffffff",
     "layer": "semantic"
   },
+  "input.color.bg.disabled": {
+    "resolvesTo": "semantic.interaction.background.disabled",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
   "input.color.text.default": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "input.color.text.placeholder": {
+    "resolvesTo": "semantic.color.foreground.placeholder",
+    "fallback": "#717171",
+    "layer": "semantic"
+  },
+  "input.color.text.disabled": {
+    "resolvesTo": "semantic.color.foreground.disabled",
+    "fallback": "#717171",
     "layer": "semantic"
   },
   "input.color.border.default": {
@@ -44,14 +59,39 @@
     "fallback": "#aeaeae",
     "layer": "semantic"
   },
+  "input.color.border.hover": {
+    "resolvesTo": "semantic.color.border.hover",
+    "fallback": "#8f8f8f",
+    "layer": "semantic"
+  },
+  "input.color.border.disabled": {
+    "resolvesTo": "semantic.color.border.disabled",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
   "input.size.height.default": {
-    "resolvesTo": "semantic.control.size.lg.height",
-    "fallback": "48px",
+    "resolvesTo": "semantic.input.size.medium.min-height",
+    "fallback": "36px",
+    "layer": "semantic"
+  },
+  "input.size.padding-block.default": {
+    "resolvesTo": "semantic.input.size.medium.padding-block",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "input.size.padding-inline.default": {
+    "resolvesTo": "semantic.input.size.medium.padding-inline",
+    "fallback": "12px",
     "layer": "semantic"
   },
   "input.size.radius.default": {
     "resolvesTo": "core.shape.radius.medium",
     "fallback": "8px",
+    "layer": "core"
+  },
+  "input.size.border.default": {
+    "resolvesTo": "core.shape.border.width.hairline",
+    "fallback": "1px",
     "layer": "core"
   },
   "input.space.inline.default": {
@@ -68,5 +108,50 @@
     "resolvesTo": "semantic.color.border.danger",
     "fallback": "#ae0001",
     "layer": "semantic"
+  },
+  "input.typography.size.default": {
+    "resolvesTo": "semantic.typography.body.02",
+    "fallback": "1rem",
+    "layer": "semantic"
+  },
+  "input.typography.line-height.default": {
+    "resolvesTo": "semantic.typography.line.height.body",
+    "fallback": "1.5",
+    "layer": "semantic"
+  },
+  "input.opacity.disabled": {
+    "resolvesTo": "semantic.interaction.disabled.opacity",
+    "fallback": "0.5",
+    "layer": "semantic"
+  },
+  "input.focus.ring.width": {
+    "resolvesTo": "semantic.focus.ring.width",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "input.focus.ring.color": {
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#0a65fe",
+    "layer": "semantic"
+  },
+  "input.focus.ring.style": {
+    "resolvesTo": "semantic.focus.ring.style",
+    "fallback": "solid",
+    "layer": "semantic"
+  },
+  "input.focus.ring.offset": {
+    "resolvesTo": "semantic.focus.ring.offset",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "input.motion.duration.fast": {
+    "resolvesTo": "core.motion.duration.short",
+    "fallback": "150ms",
+    "layer": "core"
+  },
+  "input.motion.easing.standard": {
+    "resolvesTo": "core.motion.easing.standard",
+    "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "layer": "core"
   }
 }

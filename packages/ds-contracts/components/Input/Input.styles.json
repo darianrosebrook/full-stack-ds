@@ -1,5 +1,16 @@
 {
   "root": {
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": ["web"]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "input.size.border.default"
+    },
     "background-color": {
       "resolvesTo": "input.color.bg.default"
     },
@@ -15,18 +26,85 @@
     "border-radius": {
       "resolvesTo": "input.size.radius.default"
     },
-    "padding": {
-      "resolvesTo": "input.space.inline.default"
+    "font-size": {
+      "resolvesTo": "input.typography.size.default"
+    },
+    "line-height": {
+      "resolvesTo": "input.typography.line-height.default"
+    },
+    "padding-block": {
+      "resolvesTo": "input.size.padding-block.default"
+    },
+    "padding-inline": {
+      "resolvesTo": "input.size.padding-inline.default"
+    },
+    "transition-property": {
+      "literal": "background-color, border-color, color, outline-color",
+      "platforms": ["web"]
+    },
+    "transition-duration": {
+      "resolvesTo": "input.motion.duration.fast"
+    },
+    "transition-timing-function": {
+      "resolvesTo": "input.motion.easing.standard"
+    }
+  },
+  "::placeholder": {
+    "color": {
+      "resolvesTo": "input.color.text.placeholder"
+    }
+  },
+  "hover": {
+    "border-color": {
+      "resolvesTo": "input.color.border.hover"
     }
   },
   "focus": {
     "border-color": {
       "resolvesTo": "input.color.focus.default"
+    },
+    "outline-width": {
+      "resolvesTo": "input.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "input.focus.ring.color"
+    },
+    "outline-style": {
+      "resolvesTo": "input.focus.ring.style"
+    },
+    "outline-offset": {
+      "resolvesTo": "input.focus.ring.offset"
     }
   },
-  "invalid": {
+  "--invalid": {
     "border-color": {
       "resolvesTo": "input.color.invalid.default"
+    }
+  },
+  ".input--invalid:focus-visible": {
+    "border-color": {
+      "resolvesTo": "input.color.invalid.default"
+    },
+    "outline-color": {
+      "resolvesTo": "input.color.invalid.default"
+    }
+  },
+  "disabled": {
+    "background-color": {
+      "resolvesTo": "input.color.bg.disabled"
+    },
+    "border-color": {
+      "resolvesTo": "input.color.border.disabled"
+    },
+    "color": {
+      "resolvesTo": "input.color.text.disabled"
+    },
+    "opacity": {
+      "resolvesTo": "input.opacity.disabled"
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": ["web"]
     }
   }
 }

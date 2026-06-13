@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type AnchorHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Links.css";
 // @generated:end
 
@@ -56,9 +57,9 @@ export function Links({
     .join(" ");
 
   return (
-  <a className={`${classNames}`} href={href} target={target} rel={rel} data-testid={testId} {...rest}>
+  <Stack layout="native" as="a" className={`${classNames}`} href={href} target={target} rel={rel} data-testid={testId} {...rest}>
     {children}
-  </a>
+  </Stack>
   );
 }
 // @generated:end

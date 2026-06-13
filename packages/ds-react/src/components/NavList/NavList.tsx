@@ -84,11 +84,11 @@ export function NavList({
     .join(" ");
 
   return (
-  <nav className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} {...rest}>
+  <Stack layout="native" as="nav" className={`${classNames}`} aria-label={ariaLabel} data-testid={testId} {...rest}>
     <ul className="nav-list__list">
       {children}
     </ul>
-  </nav>
+  </Stack>
   );
 }
 // @generated:end

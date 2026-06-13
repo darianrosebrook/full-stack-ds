@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type ImgHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Image.css";
 // @generated:end
 
@@ -74,7 +75,7 @@ export function Image({
     .join(" ");
 
   return (
-  <img className={`${classNames}`} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" data-testid={testId} {...rest} />
+  <Stack layout="native" as="img" className={`${classNames}`} src={src} alt={alt} width={width} height={height} loading={loading} sizes={sizes} role="img" data-testid={testId} {...rest} />
   );
 }
 // @generated:end

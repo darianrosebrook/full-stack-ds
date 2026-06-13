@@ -68,7 +68,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" aria-live="polite" aria-label="Notifications" role="alert" :data-testid="props['data-testid']" v-on="autoDismiss.pauseListeners">
+  <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="alert" :data-testid="props['data-testid']" v-on="autoDismiss.pauseListeners">
     <div v-if="behavior.open.value" :class="'toast__item'" role="status">
       <div :class="'toast__row'">
         <div v-if="props.title" :class="'toast__title'"></div>

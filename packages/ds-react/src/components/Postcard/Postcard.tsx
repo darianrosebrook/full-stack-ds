@@ -115,7 +115,7 @@ export function Postcard({
     .join(" ");
 
   return (
-  <article className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as="article" className={`${classNames}`} data-testid={testId} {...rest}>
     <div className="postcard__header">
       <div className="postcard__userInfo">
         <span className="postcard__displayName" />
@@ -131,7 +131,7 @@ export function Postcard({
         <span className="postcard__stat" />
       </div>
     </div>
-  </article>
+  </Stack>
   );
 }
 // @generated:end

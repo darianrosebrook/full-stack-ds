@@ -138,7 +138,7 @@ export function Accordion({
     .join(" ");
 
   return (
-  <div className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
     <div className="accordion__item">
       <h3 className="accordion__header">
         <button className="accordion__trigger" type="button" aria-expanded={openness !== undefined ? (String(openness) as "true" | "false") : undefined}>
@@ -152,7 +152,7 @@ export function Accordion({
         </div>
       </div>
     </div>
-  </div>
+  </Stack>
   );
 }
 // @generated:end

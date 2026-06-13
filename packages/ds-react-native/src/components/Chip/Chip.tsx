@@ -38,6 +38,7 @@ export function Chip({
   icon,
   ariaLabel,
   ariaExpanded,
+  ariaPressed,
   children,
   onPress,
   style,
@@ -55,8 +56,8 @@ export function Chip({
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}
       accessibilityLabelledBy={accessibilityLabelledBy}
-      accessibilityRole="button"
-      accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded) }}
+      accessibilityRole="togglebutton"
+      accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), selected: Boolean(ariaPressed) }}
     >
       {icon ? (
       <View

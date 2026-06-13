@@ -117,16 +117,17 @@ export function generateReactComponentSource(
   } else {
     importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
   }
-  // Stack is needed for legacy single-root output AND for compound parts
-  // (ModalHeader etc. still use <Stack as="header"> regardless of whether
-  // the parent has a dom tree). Compound-state-container components use
-  // plain HTML elements (div, button) so Stack is not needed.
+  // Stack is needed for legacy single-root output, DOM-tree roots that can be
+  // polymorphically hosted by Stack, and compound parts (ModalHeader etc.
+  // still use <Stack as="header"> regardless of whether the parent has a dom
+  // tree). Compound-state-container components use plain HTML elements (div,
+  // button) so Stack is not needed.
   //
   // Native-table-tag exception: when all compound parts have a nativeTag
   // in TABLE_COMPOSITION_TAGS, the emitter renders native elements
   // directly (no Stack), so the Stack import is omitted to avoid an
-  // unused-import warning. The root component itself uses anatomy.dom
-  // and also doesn't need Stack.
+  // unused-import warning. Root DOM trees also stay raw when their root is a
+  // native table-composition tag.
   const allCompoundPartsNative =
     ir.compoundParts.length > 0 &&
     ir.compoundParts.every(
@@ -135,7 +136,7 @@ export function generateReactComponentSource(
   const needsStackImport =
     !isCompound &&
     !allCompoundPartsNative &&
-    (!ir.dom || ir.compoundParts.length > 0);
+    (!ir.dom || reactDomRootUsesStack(ir) || ir.compoundParts.length > 0);
   if (needsStackImport) {
     importLines.push(`import { Stack } from "${stackImportPath}";`);
   }
@@ -1154,6 +1155,10 @@ function domTreeHasRole(node: DomNodeIR | null | undefined, role: string): boole
   return node.children.some((child) => domTreeHasRole(child, role));
 }
 
+function reactDomRootUsesStack(ir: ComponentIR): boolean {
+  return Boolean(ir.dom && !TABLE_COMPOSITION_TAGS.has(ir.dom.tag));
+}
+
 /**
  * Generate a React component that renders the contract's `dom` tree. Native
  * HTML elements with attribute and event bindings; consumer-provided children
@@ -1385,6 +1390,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     classRecipe: classRecipe.base,
     channelByName,
     isRoot: true,
+    useStackRoot: reactDomRootUsesStack(ir),
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     overlayClickSetter,
     overlayClickEnabledProp: overlayClickTrigger?.enabledByProp,
@@ -1428,6 +1434,8 @@ interface ReactRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
   isRoot: boolean;
+  /** Render the root DOM node through <Stack as="..."> without imposing layout. */
+  useStackRoot?: boolean;
   /** When true, spread the auto-dismiss pause props onto the root element. */
   autoDismissPause?: boolean;
   /** When set, emit onClick to dismiss the overlay on root click. */
@@ -1719,18 +1727,28 @@ function renderReactDomNode(
   const tag = ctx.isRoot && ctx.rootTagOverride
     ? ctx.rootTagOverride
     : node.tag;
+  const useStackRoot = ctx.isRoot && ctx.useStackRoot;
+  if (useStackRoot) {
+    if (ctx.rootTagOverride) {
+      attrs.unshift(`as={${ctx.rootTagOverride}}`);
+    } else if (node.tag !== "div") {
+      attrs.unshift(`as="${node.tag}"`);
+    }
+    attrs.unshift(`layout="native"`);
+  }
+  const emittedTag = useStackRoot ? "Stack" : tag;
   const isVoidEl = VOID_HTML_ELEMENTS.has(node.tag);
 
   let body: string;
-  if (allChildren.length === 0 && isVoidEl) {
-    body = `${pad}<${tag}${formatAttrs(attrs)} />`;
+  if (allChildren.length === 0 && (isVoidEl || useStackRoot)) {
+    body = `${pad}<${emittedTag}${formatAttrs(attrs)} />`;
   } else if (allChildren.length === 0) {
-    body = `${pad}<${tag}${formatAttrs(attrs)} />`;
+    body = `${pad}<${emittedTag}${formatAttrs(attrs)} />`;
   } else {
     body = [
-      `${pad}<${tag}${formatAttrs(attrs)}>`,
+      `${pad}<${emittedTag}${formatAttrs(attrs)}>`,
       ...allChildren,
-      `${pad}</${tag}>`,
+      `${pad}</${emittedTag}>`,
     ].join("\n");
   }
 

@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./List.css";
 // @generated:end
 
@@ -67,9 +68,9 @@ export function List({
   const As = as ?? "ul";
 
   return (
-  <As className={`${classNames}`} data-testid={testId} {...rest}>
+  <Stack layout="native" as={As} className={`${classNames}`} data-testid={testId} {...rest}>
     {children}
-  </As>
+  </Stack>
   );
 }
 // @generated:end

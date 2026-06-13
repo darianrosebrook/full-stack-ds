@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type ButtonHTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Button.css";
 // @generated:end
 
@@ -67,9 +68,9 @@ export function Button({
     .join(" ");
 
   return (
-  <button className={`${classNames}`} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} {...rest}>
+  <Stack layout="native" as="button" className={`${classNames}`} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} {...rest}>
     {children}
-  </button>
+  </Stack>
   );
 }
 // @generated:end
