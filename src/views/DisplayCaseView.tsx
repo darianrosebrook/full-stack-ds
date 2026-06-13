@@ -8,11 +8,7 @@ import * as DS from "@full-stack-ds/react";
 import { defaultPropsFromContract, childLabel } from "../runtime/demos";
 import { resolveRootComponent } from "../lib/usage-registry";
 import placeholderUrl from "../assets/placeholder.svg";
-import type {
-  Bundle,
-  ComponentBundle,
-  UsagePropValue,
-} from "../types/data";
+import type { Bundle, ComponentBundle } from "../types/data";
 
 interface DisplayCaseViewProps {
   bundle: Bundle;
@@ -21,7 +17,7 @@ interface DisplayCaseViewProps {
 type VariantCase = {
   id: string;
   label: string;
-  props: Record<string, UsagePropValue>;
+  props: Record<string, unknown>;
 };
 
 const CATEGORY_ORDER = [
@@ -107,7 +103,7 @@ function ComponentTile({ component }: { component: ComponentBundle }) {
 
 function renderComponentSample(
   component: ComponentBundle,
-  overrideProps: Record<string, UsagePropValue>,
+  overrideProps: Record<string, unknown>,
 ): ReactNode {
   const Root = resolveRootComponent(`fsds.${component.name}`);
   if (!Root) {
@@ -123,11 +119,16 @@ function renderComponentSample(
     return renderTableSample(props);
   }
 
+  const richSample = renderRichSample(component.name, props);
+  if (richSample) {
+    return richSample;
+  }
+
   const child = childLabel(component);
   return child ? createElement(Root, props, child) : createElement(Root, props);
 }
 
-function renderTableSample(props: Record<string, UsagePropValue>) {
+function renderTableSample(props: Record<string, unknown>) {
   return (
     <DS.Table {...props} ariaLabel="Display case table">
       <DS.TableCaption>Quarterly usage</DS.TableCaption>
@@ -147,8 +148,133 @@ function renderTableSample(props: Record<string, UsagePropValue>) {
   );
 }
 
-function sampleProps(component: ComponentBundle): Record<string, UsagePropValue> {
-  const props = defaultPropsFromContract(component) as Record<string, UsagePropValue>;
+function renderRichSample(name: string, props: Record<string, unknown>): ReactNode | null {
+  switch (name) {
+    case "Accordion":
+      return (
+        <DS.Accordion {...props} defaultValue="tokens">
+          <span className="display-case-copy-strong">Token decisions</span>
+          <span className="display-case-copy-muted">
+            Spacing, elevation, and states stay visible across variants.
+          </span>
+        </DS.Accordion>
+      );
+    case "Breadcrumbs":
+      return (
+        <DS.Breadcrumbs {...props} ariaLabel="Display case breadcrumbs">
+          <li><a href="#/tokens">Tokens</a></li>
+          <li><a href="#/component/Button/design">Button</a></li>
+          <li aria-current="page">Variants</li>
+        </DS.Breadcrumbs>
+      );
+    case "Card":
+      return (
+        <DS.Card {...props}>
+          <DS.CardHeader>
+            <span className="display-case-copy-strong">Release readiness</span>
+            <DS.Badge intent="success" variant="status">Live</DS.Badge>
+          </DS.CardHeader>
+          <DS.CardContent>
+            <DS.CardDescription>
+              Component output, contract coverage, and visual states are ready for review.
+            </DS.CardDescription>
+          </DS.CardContent>
+          <DS.CardFooter>
+            <DS.Button size="small" variant="secondary">Inspect</DS.Button>
+            <DS.Button size="small" variant="primary">Approve</DS.Button>
+          </DS.CardFooter>
+        </DS.Card>
+      );
+    case "Field":
+      return (
+        <DS.Field
+          {...props}
+          name="workspace"
+          label="Workspace"
+          helpText="Visible label, control, and helper regions."
+        >
+          <DS.Input name="workspace" placeholder="Design systems" />
+        </DS.Field>
+      );
+    case "List":
+      if (props.as === "dl") {
+        return (
+          <DS.List {...props} as="dl">
+            <dt>Primitive</dt>
+            <dd>Stack</dd>
+            <dt>Target</dt>
+            <dd>React</dd>
+          </DS.List>
+        );
+      }
+      return (
+        <DS.List {...props}>
+          <li>Contract declares the visual axis.</li>
+          <li>Stack carries the layout primitive.</li>
+          <li>Generated output stays inspectable.</li>
+        </DS.List>
+      );
+    case "NavList":
+      return (
+        <DS.NavList {...props} ariaLabel="Display case navigation">
+          <DS.NavListItem><a href="#/architecture">Architecture</a></DS.NavListItem>
+          <DS.NavListItem><a href="#/tokens" aria-current="page">Tokens</a></DS.NavListItem>
+          <DS.NavListItem><a href="#/component/Button/design">Components</a></DS.NavListItem>
+        </DS.NavList>
+      );
+    case "Shuttle":
+      return (
+        <DS.Shuttle
+          {...props}
+          ariaLabel="Assign reviewers"
+          defaultValue={["Design lead", "Accessibility reviewer", "Platform owner"]}
+        />
+      );
+    case "Tabs":
+      return (
+        <DS.Tabs {...props} defaultValue="contract" idBase="display-case-tabs">
+          <DS.TabsList>
+            <DS.TabsTab value="contract">Contract</DS.TabsTab>
+            <DS.TabsTab value="tokens">Tokens</DS.TabsTab>
+            <DS.TabsTab value="runtime">Runtime</DS.TabsTab>
+          </DS.TabsList>
+          <DS.TabsPanel value="contract">
+            Semantic props, children, and state channels.
+          </DS.TabsPanel>
+          <DS.TabsPanel value="tokens">Resolved visual tokens.</DS.TabsPanel>
+          <DS.TabsPanel value="runtime">Generated React output.</DS.TabsPanel>
+        </DS.Tabs>
+      );
+    case "Tooltip":
+      return (
+        <DS.Tooltip {...props}>
+          <DS.Tooltip.Trigger>Inspect hint</DS.Tooltip.Trigger>
+          <DS.Tooltip.Content>Contracts map to live component structure.</DS.Tooltip.Content>
+        </DS.Tooltip>
+      );
+    case "Walkthrough":
+      return (
+        <DS.Walkthrough
+          {...props}
+          defaultIndex={1}
+          steps={[
+            { anchor: "#contract", title: "Read the contract" },
+            { anchor: "#tokens", title: "Check tokens" },
+            { anchor: "#runtime", title: "Verify output" },
+          ]}
+          slots={{
+            title: "Check tokens",
+            description: "Review spacing, state, and child content before approving output.",
+          }}
+        />
+      );
+  }
+
+  return null;
+}
+
+function sampleProps(component: ComponentBundle): Record<string, unknown> {
+  const props = defaultPropsFromContract(component) as Record<string, unknown>;
 
   switch (component.name) {
     case "TextField":
@@ -187,6 +313,9 @@ function sampleProps(component: ComponentBundle): Record<string, UsagePropValue>
       break;
     case "Avatar":
       props.name = "Jordan Rivera";
+      break;
+    case "Select":
+      props.defaultOpen = false;
       break;
   }
 
