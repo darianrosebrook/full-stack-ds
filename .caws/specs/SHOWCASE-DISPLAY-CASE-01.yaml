@@ -2,9 +2,10 @@ id: SHOWCASE-DISPLAY-CASE-01
 title: 'Hidden display-case visual grid for React component variants'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
 created_at: '2026-06-13T00:00:00.000Z'
-updated_at: '2026-06-13T00:00:00.000Z'
+updated_at: '2026-06-13T07:59:21.369Z'
 blast_radius:
   modules:
     - 'Showcase app route, display-case view, and app CSS only. No generated component or contract changes.'
