@@ -3,6 +3,7 @@ title: 'Recursive component composition: componentRef in contracts, lowered acro
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: recursive-composition
 created_at: '2026-06-13T04:49:58.476Z'
 updated_at: '2026-06-13T04:51:36.953Z'
 blast_radius:
