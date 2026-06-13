@@ -92,5 +92,76 @@ describe("Chip — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+// CHIP-DISMISS-COMPOSITION-01: Chip is a non-interactive container that owns
+// two fsds.Button children (action + dismiss) by componentRef. The former
+// design made Chip's root itself a <button>; a dismiss control would then have
+// nested a <button> inside a <button> (invalid, an a11y defect). These tests
+// prove the composed structure: action + dismiss are SEPARATE sibling buttons,
+// each event reaches its own handler, the dismiss label reaches the composed
+// Button's accessible name, and there is NO nested interactive content.
+import { fireEvent } from "@testing-library/react";
 
+describe("Chip — composed action + dismiss Buttons", () => {
+  it("renders the action as a button and forwards its click to onClick", () => {
+    let clicked = 0;
+    render(
+      <Chip onClick={() => { clicked += 1; }}>Filter</Chip>,
+    );
+    const action = screen.getByRole("button", { name: "Filter" });
+    fireEvent.click(action);
+    expect(clicked).toBe(1);
+  });
+
+  it("forwards the dismiss Button click to onDismiss, not onClick", () => {
+    let dismissed = 0;
+    let actionClicked = 0;
+    render(
+      <Chip
+        dismissible
+        dismissLabel="Remove tag"
+        onClick={() => { actionClicked += 1; }}
+        onDismiss={() => { dismissed += 1; }}
+      >
+        Tag
+      </Chip>,
+    );
+    const dismiss = screen.getByRole("button", { name: "Remove tag" });
+    fireEvent.click(dismiss);
+    expect(dismissed).toBe(1);
+    // Clicking the X must not activate the chip action — they are distinct
+    // siblings, not the X nested inside the action button.
+    expect(actionClicked).toBe(0);
+  });
+
+  it("forwards dismissLabel to the composed dismiss Button's accessible name", () => {
+    render(
+      <Chip dismissible dismissLabel="Clear filter" onDismiss={() => {}}>
+        Filter
+      </Chip>,
+    );
+    expect(
+      screen.getByRole("button", { name: "Clear filter" }),
+    ).toBeInTheDocument();
+  });
+
+  it("does not render a dismiss control unless dismissible is set", () => {
+    render(<Chip onClick={() => {}}>Tag</Chip>);
+    // Only the action button exists.
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+  });
+
+  it("renders dismiss + action as two SEPARATE buttons with no nesting", () => {
+    const { container } = render(
+      <Chip dismissible dismissLabel="Remove" onDismiss={() => {}}>
+        Tag
+      </Chip>,
+    );
+    const buttons = screen.getAllByRole("button");
+    expect(buttons).toHaveLength(2);
+    // The structural invariant this whole restructure exists to guarantee:
+    // no <button> is a descendant of another <button>. A nested-interactive
+    // chip (the pre-composition shape) would match this selector.
+    expect(container.querySelector("button button")).toBeNull();
+  });
+});
 // @custom:end
