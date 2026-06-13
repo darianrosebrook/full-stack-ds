@@ -11,40 +11,40 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "link": {
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "linkHover": {
         "$type": "color",
         "$value": "{color.palette.violet.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.600}",
-          "design.paths.dark": "{color.palette.violet.300}"
+          "fsds.light": "{color.palette.violet.600}",
+          "fsds.dark": "{color.palette.violet.300}"
         }
       },
       "linkVisited": {
         "$type": "color",
         "$value": "{color.palette.violet.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.violet.400}",
+          "fsds.dark": "{color.palette.violet.500}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.violet.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.700}",
-          "design.paths.dark": "{color.palette.violet.200}"
+          "fsds.light": "{color.palette.violet.700}",
+          "fsds.dark": "{color.palette.violet.200}"
         }
       }
     },
@@ -53,24 +53,24 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.violet.100}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.100}",
-          "design.paths.dark": "{color.palette.violet.800}"
+          "fsds.light": "{color.palette.violet.100}",
+          "fsds.dark": "{color.palette.violet.800}"
         }
       },
       "brand": {
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       }
     },
@@ -79,54 +79,54 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "default": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.indigo.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.300}",
-          "design.paths.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.indigo.300}",
+          "fsds.dark": "{color.palette.indigo.700}"
         },
-        "$description": "Default input border - simple neutral gray"
+        "$description": "Default border - cool indigo depth instead of neutral gray"
       },
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.violet.400}",
+        "$value": "{color.palette.indigo.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.indigo.500}",
+          "fsds.dark": "{color.palette.indigo.400}"
         },
-        "$description": "Input hover border - deeper violet"
+        "$description": "Hover border - mid indigo, cool counterpoint to violet accent"
       },
       "focus": {
         "$type": "color",
-        "$value": "{color.palette.violet.500}",
+        "$value": "{color.palette.violet.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.600}",
+          "fsds.dark": "{color.palette.violet.400}"
         },
-        "$description": "Input focus border - premium violet accent"
+        "$description": "Focus border - deeper violet for decisive focus ring"
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.violet.200}",
+        "$value": "{color.palette.indigo.200}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.200}",
-          "design.paths.dark": "{color.palette.violet.700}"
+          "fsds.light": "{color.palette.indigo.200}",
+          "fsds.dark": "{color.palette.indigo.800}"
         },
-        "$description": "Light input border - very subtle violet"
+        "$description": "Light border - whisper indigo tint"
       },
       "primary": {
         "$type": "color",
-        "$value": "{color.palette.violet.400}",
+        "$value": "{color.palette.indigo.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.indigo.400}",
+          "fsds.dark": "{color.palette.indigo.600}"
         },
-        "$description": "Primary input border - medium violet"
+        "$description": "Primary border - medium indigo structural line"
       }
     },
     "navigation": {
@@ -135,8 +135,8 @@
           "$type": "color",
           "$value": "{color.palette.violet.500}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.500}",
-            "design.paths.dark": "{color.palette.violet.400}"
+            "fsds.light": "{color.palette.violet.500}",
+            "fsds.dark": "{color.palette.violet.400}"
           }
         }
       }
@@ -146,15 +146,30 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.violet.500}"
+            "$value": "{color.palette.violet.600}",
+            "$extensions": {
+              "fsds.light": "{color.palette.violet.600}",
+              "fsds.dark": "{color.palette.violet.500}"
+            },
+            "$description": "Primary action fill - deep violet 600 (AA white contrast light; 500 dark)"
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.violet.600}"
+            "$value": "{color.palette.violet.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.violet.700}",
+              "fsds.dark": "{color.palette.violet.600}"
+            },
+            "$description": "Primary action hover - violet 700 for decisive depth"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.violet.700}"
+            "$value": "{color.palette.violet.800}",
+            "$extensions": {
+              "fsds.light": "{color.palette.violet.800}",
+              "fsds.dark": "{color.palette.violet.700}"
+            },
+            "$description": "Primary action pressed - violet 800 for maximum depth"
           }
         }
       },
@@ -162,11 +177,20 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.violet.500}"
+            "$value": "{color.palette.violet.600}",
+            "$extensions": {
+              "fsds.light": "{color.palette.violet.600}",
+              "fsds.dark": "{color.palette.violet.500}"
+            }
           },
           "focus": {
             "$type": "color",
-            "$value": "{color.palette.violet.400}"
+            "$value": "{color.palette.indigo.500}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.500}",
+              "fsds.dark": "{color.palette.indigo.400}"
+            },
+            "$description": "Focus ring - indigo 500 provides cool contrast against violet fill"
           }
         }
       }
@@ -176,8 +200,46 @@
         "$type": "color",
         "$value": "{color.palette.violet.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.violet.400}",
+          "fsds.dark": "{color.palette.violet.500}"
+        }
+      }
+    },
+    "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.500}"
+        },
+        "$description": "Accent fill — violet.500 in both themes (not .400) so white on-color text clears WCAG AA (4.82:1 vs 3.5:1)."
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.violet.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.100}",
+          "fsds.dark": "{color.palette.violet.800}"
+        }
+      },
+      "info": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.indigo.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.indigo.50}",
+            "fsds.dark": "{color.palette.indigo.900}"
+          },
+          "$description": "Info softer wash - indigo-tinted for midnight brand"
         }
       }
     }
@@ -201,61 +263,61 @@
       "border": {
         "light": {
           "$type": "color",
-          "$value": "{color.palette.violet.200}",
+          "$value": "{color.palette.indigo.200}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.200}",
-            "design.paths.dark": "{color.palette.violet.700}"
+            "fsds.light": "{color.palette.indigo.200}",
+            "fsds.dark": "{color.palette.indigo.800}"
           },
-          "$description": "Light card border - very subtle violet"
+          "$description": "Light card border - cool indigo whisper (depth without violet competition)"
         },
         "medium": {
           "$type": "color",
-          "$value": "{color.palette.violet.300}",
+          "$value": "{color.palette.indigo.300}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.300}",
-            "design.paths.dark": "{color.palette.violet.600}"
+            "fsds.light": "{color.palette.indigo.300}",
+            "fsds.dark": "{color.palette.indigo.700}"
           },
-          "$description": "Medium card border - subtle mysterious violet"
+          "$description": "Medium card border - indigo structural line, cool and decisive"
         },
         "dark": {
           "$type": "color",
-          "$value": "{color.palette.violet.500}",
+          "$value": "{color.palette.violet.600}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.500}",
-            "design.paths.dark": "{color.palette.violet.400}"
+            "fsds.light": "{color.palette.violet.600}",
+            "fsds.dark": "{color.palette.violet.500}"
           },
-          "$description": "Dark card border - premium violet"
+          "$description": "Dark card border - deep violet accent, premium drama"
         },
         "transparent": {
           "$type": "color",
           "$value": "{color.mode.transparent}",
           "$extensions": {
-            "design.paths.light": "{color.mode.transparent}",
-            "design.paths.dark": "{color.mode.transparent}"
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
           },
-          "$description": "Transparent card border - sophisticated, dramatic"
+          "$description": "Transparent card border - sophisticated, no border"
         }
       },
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Near elevation - subtle shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Near elevation - cards resting above the page plane"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Default elevation - premium shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Default elevation - dramatic floating surface (midnight signature)"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.3}",
-          "$description": "Far elevation - dramatic shadow"
+          "$value": "{elevation.surface.dialog}",
+          "$description": "Far elevation - full dialog-level shadow, maximum drama"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - sharp, sophisticated"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation - flush with the page plane"
         }
       }
     },
@@ -365,17 +427,21 @@
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.bold}",
-        "$description": "Bold body weight (700) - strong, confident"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.bold}",
+          "$description": "Bold body weight (700) - strong, confident"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.bold}",
-        "$description": "Bold heading weight (700) - strong presence"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.bold}",
+          "$description": "Bold heading weight (700) - strong presence"
+        }
       }
     }
   }

@@ -250,6 +250,12 @@ export type BindingExpression =
   | { kind: "literal"; value: string }
   | { kind: "iterationLocal"; local: "index" | "item"; path?: string[] }
   | {
+      kind: "conditional";
+      condition: BindingExpression;
+      whenTrue: BindingExpression;
+      whenFalse: BindingExpression;
+    }
+  | {
       kind: "predicate";
       op: BindingPredicateOp;
       left: BindingExpression;
@@ -1707,6 +1713,36 @@ function validateBindingAgainstScope(
     );
     return;
   }
+  if (binding.kind === "conditional") {
+    validateBindingAgainstScope(
+      binding.condition,
+      `${siteLabel} conditional condition`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      true,
+    );
+    validateBindingAgainstScope(
+      binding.whenTrue,
+      `${siteLabel} conditional true branch`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+    );
+    validateBindingAgainstScope(
+      binding.whenFalse,
+      `${siteLabel} conditional false branch`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      false,
+    );
+    return;
+  }
   // literal: always accepted.
 }
 
@@ -2285,6 +2321,12 @@ function parseIfGuard(value: string | undefined): { ifProp: string | undefined; 
  * in `validateDomNode`, not here, because this function is context-free.
  */
 export function parseBindingExpression(expr: string): BindingExpression {
+  const conditionalMatch = expr.match(/^conditional:(.*)$/);
+  if (conditionalMatch) {
+    const parsed = tryParseConditional(conditionalMatch[1]);
+    if (parsed) return parsed;
+  }
+
   // Path: zero or more `.segment` tails. Anchored to consume the rest of
   // the string after the root so an unexpected suffix (operators, brackets,
   // optional chaining) falls through to `literal` instead of being
@@ -2386,6 +2428,32 @@ function tryParsePredicate(opName: string, inner: string): BindingExpression | n
 }
 
 /**
+ * BINDING-EXPRESSION-V2-CONDITIONAL-01.
+ *
+ * Value-position conditional with a closed delimiter grammar:
+ *
+ *   conditional:<condition>|<whenTrue>|<whenFalse>
+ *
+ * The pipe delimiter is intentionally chosen because existing binding
+ * operands (`prop:`, `channel:`, `iter:`, `literal:`) already use `:`.
+ * Nested conditionals are held for a future expression-tree grammar.
+ */
+function tryParseConditional(inner: string): BindingExpression | null {
+  const parts = inner.split("|").map((s) => s.trim());
+  if (parts.length !== 3 || parts.some((part) => part.length === 0)) {
+    return null;
+  }
+  const [conditionRaw, trueRaw, falseRaw] = parts;
+  const condition = parseBindingExpression(conditionRaw);
+  const whenTrue = parseBindingExpression(trueRaw);
+  const whenFalse = parseBindingExpression(falseRaw);
+  if (condition.kind === "conditional") return null;
+  if (whenTrue.kind === "predicate" || whenTrue.kind === "conditional") return null;
+  if (whenFalse.kind === "predicate" || whenFalse.kind === "conditional") return null;
+  return { kind: "conditional", condition, whenTrue, whenFalse };
+}
+
+/**
  * Closed set of operand kinds legal inside a predicate. Predicates and
  * literals are rejected: nesting is explicitly held; literals carry no
  * useful comparison semantics in the V2 grammar.
@@ -2447,6 +2515,14 @@ export function promoteIterationLocals(
     const right = promoteIterationLocals(binding.right, iteration);
     if (left === binding.left && right === binding.right) return binding;
     return { kind: "predicate", op: binding.op, left, right };
+  }
+  if (binding.kind === "conditional") {
+    return {
+      kind: "conditional",
+      condition: promoteIterationLocals(binding.condition, iteration),
+      whenTrue: promoteIterationLocals(binding.whenTrue, iteration),
+      whenFalse: promoteIterationLocals(binding.whenFalse, iteration),
+    };
   }
   if (binding.kind !== "prop") return binding;
   // Preserve the path field across promotion. V1 contracts never wrote

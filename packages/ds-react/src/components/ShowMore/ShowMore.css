@@ -27,6 +27,12 @@
   line-clamp: var(--fsds-show-more-content-max-lines, 3);
 }
 
+.show-more--expanded .show-more__content {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+}
+
 .show-more__trigger {
   display: inline-flex;
   align-items: center;

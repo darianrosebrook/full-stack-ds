@@ -24,6 +24,12 @@
   overflow: hidden;
 }
 
+.truncate--expanded .truncate__content {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+}
+
 .truncate__toggle {
   display: inline-flex;
   align-items: center;

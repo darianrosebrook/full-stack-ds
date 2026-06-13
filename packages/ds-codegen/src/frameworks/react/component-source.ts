@@ -1931,6 +1931,9 @@ function inferBindingValueType(
     // (`eq`, `contains`, `memberOf`) evaluates to a boolean.
     return "boolean";
   }
+  if (expr.kind === "conditional") {
+    return inferBindingValueType(expr.whenTrue, ctx) ?? inferBindingValueType(expr.whenFalse, ctx);
+  }
   return undefined;
 }
 
@@ -2016,6 +2019,13 @@ function renderReactBinding(
       const right = renderReactBinding("__predicate_operand__", expr.right, ctx);
       if (left === null || right === null) return null;
       return loweredPredicate(expr.op, left, right);
+    }
+    case "conditional": {
+      const condition = renderReactBinding("__conditional_condition__", expr.condition, ctx);
+      const whenTrue = renderReactBinding("__conditional_true__", expr.whenTrue, ctx);
+      const whenFalse = renderReactBinding("__conditional_false__", expr.whenFalse, ctx);
+      if (condition === null || whenTrue === null || whenFalse === null) return null;
+      return `(${condition} ? ${whenTrue} : ${whenFalse})`;
     }
   }
 }

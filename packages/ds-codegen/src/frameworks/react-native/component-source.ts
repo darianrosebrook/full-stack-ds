@@ -437,14 +437,6 @@ function collectBindingRuntimeUsage(
   if (binding.kind === "prop") {
     const safeName = safePropName(ir, binding.prop);
     usage.props.add(safeName);
-    if (
-      safeName === "showMoreLabel" &&
-      ir.styledProps.some((prop) => prop.safeName === "showLessLabel") &&
-      ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded")
-    ) {
-      usage.props.add("showLessLabel");
-      usage.channels.add("expanded");
-    }
     return;
   }
   if (binding.kind === "channel") {
@@ -455,6 +447,12 @@ function collectBindingRuntimeUsage(
     return;
   }
   if (binding.kind === "iterationLocal" || binding.kind === "literal") return;
+  if (binding.kind === "conditional") {
+    collectBindingRuntimeUsage(binding.condition, ir, usage, channelPurpose);
+    collectBindingRuntimeUsage(binding.whenTrue, ir, usage, channelPurpose);
+    collectBindingRuntimeUsage(binding.whenFalse, ir, usage, channelPurpose);
+    return;
+  }
   collectBindingRuntimeUsage(binding.left, ir, usage, channelPurpose);
   collectBindingRuntimeUsage(binding.right, ir, usage, channelPurpose);
 }
@@ -1547,13 +1545,6 @@ function eventHandlerExpr(
 function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   if (binding.kind === "prop") {
     const propName = safePropName(ir, binding.prop);
-    if (
-      propName === "showMoreLabel" &&
-      ir.styledProps.some((prop) => prop.safeName === "showLessLabel") &&
-      ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded")
-    ) {
-      return "(expanded ? showLessLabel : showMoreLabel)";
-    }
     return pathExpr(propName, binding.path);
   }
   if (binding.kind === "channel") {
@@ -1564,6 +1555,9 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   if (binding.kind === "literal") return JSON.stringify(binding.value);
   if (binding.kind === "iterationLocal") {
     return pathExpr(binding.local, binding.path);
+  }
+  if (binding.kind === "conditional") {
+    return `(${bindingExpr(binding.condition, ir)} ? ${bindingExpr(binding.whenTrue, ir)} : ${bindingExpr(binding.whenFalse, ir)})`;
   }
   const left = bindingExpr(binding.left, ir);
   const right = bindingExpr(binding.right, ir);
@@ -1745,6 +1739,10 @@ const CSS_TO_RN_STYLE: Record<string, RnStylePropMapping> = {
   "border-color": { prop: "borderColor", cast: "string | undefined", layer: "view" },
   "border-width": { prop: "borderWidth", cast: "number | undefined", layer: "view" },
   "border-radius": { prop: "borderRadius", cast: "number | undefined", layer: "view" },
+  "border-inline-start-width": { prop: "borderLeftWidth", cast: "number | undefined", layer: "view" },
+  "border-inline-start-color": { prop: "borderLeftColor", cast: "string | undefined", layer: "view" },
+  "border-inline-end-width": { prop: "borderRightWidth", cast: "number | undefined", layer: "view" },
+  "border-inline-end-color": { prop: "borderRightColor", cast: "string | undefined", layer: "view" },
   "padding-block-start": { prop: "paddingTop", cast: "number | undefined", layer: "view" },
   "padding-block-end": { prop: "paddingBottom", cast: "number | undefined", layer: "view" },
   "padding-inline-start": { prop: "paddingLeft", cast: "number | undefined", layer: "view" },
@@ -2127,6 +2125,17 @@ function nativeStyleForKey(ir: ComponentIR, key: string): string {
         ".size.radius",
         ".radius.default",
         ".radius",
+      ]));
+      // Inline-start accent stripe (logical border-inline-start → physical borderLeft on RN).
+      // Emitted only when the contract declares an accent-stripe width slot, so the
+      // variant blocks' borderLeftColor has a base width to render against.
+      pushStyle(entries, "borderLeftWidth", tokenNumberByName(ir, scope, [
+        ".size.statusAccent.width",
+        ".statusAccent.width",
+      ]));
+      pushStyle(entries, "borderLeftColor", tokenStringByName(ir, scope, [
+        ".color.statusAccent.default",
+        ".statusAccent.default",
       ]));
     }
   }

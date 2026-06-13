@@ -64,29 +64,33 @@ export class AlertNoticeElement extends LitElement {
       --fsds-alert-notice-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-notice-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .alert-notice--inline {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
     }
-    
+
     .alert-notice--section {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
-    
+
     .alert-notice--page {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-07, 24px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-notice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-softer, #eef7ff);
+      --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-softer, #eef7ea);
+      --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-softer, #fff4e0);
+      --fsds-alert-notice-color-background-danger: var(--fsds-semantic-color-background-danger-softer, #fdf0f0);
     }
-    
+
     .alert-notice {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -112,21 +116,21 @@ export class AlertNoticeElement extends LitElement {
       font-size: var(--fsds-alert-notice-text-size);
       font-weight: var(--fsds-alert-notice-text-weight);
     }
-    
+
     .alert-notice__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    
+
     .alert-notice__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-notice-spacing-gap);
     }
-    
+
     .alert-notice__dismiss {
       display: inline-flex;
       align-items: center;
@@ -141,40 +145,40 @@ export class AlertNoticeElement extends LitElement {
       font: inherit;
       line-height: 1;
     }
-    
+
     .alert-notice__dismiss:hover {
       opacity: 0.7;
     }
-    
+
     .alert-notice__dismiss:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-    
+
     .alert-notice__title {
       margin: 0;
       font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
       font-size: var(--fsds-alert-notice-typography-title-fontSize);
     }
-    
+
     .alert-notice--info {
       background-color: var(--fsds-alert-notice-color-background-info);
       color: var(--fsds-alert-notice-color-foreground-info);
       border-color: var(--fsds-alert-notice-color-border-info);
     }
-    
+
     .alert-notice--success {
       background-color: var(--fsds-alert-notice-color-background-success);
       color: var(--fsds-alert-notice-color-foreground-success);
       border-color: var(--fsds-alert-notice-color-border-success);
     }
-    
+
     .alert-notice--warning {
       background-color: var(--fsds-alert-notice-color-background-warning);
       color: var(--fsds-alert-notice-color-foreground-warning);
       border-color: var(--fsds-alert-notice-color-border-warning);
     }
-    
+
     .alert-notice--error {
       background-color: var(--fsds-alert-notice-color-background-danger);
       color: var(--fsds-alert-notice-color-foreground-danger);
@@ -258,29 +262,33 @@ export class AlertNoticeBodyElement extends LitElement {
       --fsds-alert-notice-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-notice-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .alert-notice--inline {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
     }
-    
+
     .alert-notice--section {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
-    
+
     .alert-notice--page {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-07, 24px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-notice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-softer, #eef7ff);
+      --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-softer, #eef7ea);
+      --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-softer, #fff4e0);
+      --fsds-alert-notice-color-background-danger: var(--fsds-semantic-color-background-danger-softer, #fdf0f0);
     }
-    
+
     .alert-notice {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -306,21 +314,21 @@ export class AlertNoticeBodyElement extends LitElement {
       font-size: var(--fsds-alert-notice-text-size);
       font-weight: var(--fsds-alert-notice-text-weight);
     }
-    
+
     .alert-notice__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    
+
     .alert-notice__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-notice-spacing-gap);
     }
-    
+
     .alert-notice__dismiss {
       display: inline-flex;
       align-items: center;
@@ -335,40 +343,40 @@ export class AlertNoticeBodyElement extends LitElement {
       font: inherit;
       line-height: 1;
     }
-    
+
     .alert-notice__dismiss:hover {
       opacity: 0.7;
     }
-    
+
     .alert-notice__dismiss:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-    
+
     .alert-notice__title {
       margin: 0;
       font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
       font-size: var(--fsds-alert-notice-typography-title-fontSize);
     }
-    
+
     .alert-notice--info {
       background-color: var(--fsds-alert-notice-color-background-info);
       color: var(--fsds-alert-notice-color-foreground-info);
       border-color: var(--fsds-alert-notice-color-border-info);
     }
-    
+
     .alert-notice--success {
       background-color: var(--fsds-alert-notice-color-background-success);
       color: var(--fsds-alert-notice-color-foreground-success);
       border-color: var(--fsds-alert-notice-color-border-success);
     }
-    
+
     .alert-notice--warning {
       background-color: var(--fsds-alert-notice-color-background-warning);
       color: var(--fsds-alert-notice-color-foreground-warning);
       border-color: var(--fsds-alert-notice-color-border-warning);
     }
-    
+
     .alert-notice--error {
       background-color: var(--fsds-alert-notice-color-background-danger);
       color: var(--fsds-alert-notice-color-foreground-danger);
@@ -429,29 +437,33 @@ export class AlertNoticeTitleElement extends LitElement {
       --fsds-alert-notice-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-notice-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .alert-notice--inline {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
     }
-    
+
     .alert-notice--section {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
-    
+
     .alert-notice--page {
       --fsds-alert-notice-size-padding: var(--fsds-core-spacing-size-07, 24px);
       --fsds-alert-notice-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
       --fsds-alert-notice-text-size: var(--fsds-semantic-typography-body-02, 16px);
       --fsds-alert-notice-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-notice-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
+      --fsds-alert-notice-color-background-info: var(--fsds-semantic-color-background-info-softer, #eef7ff);
+      --fsds-alert-notice-color-background-success: var(--fsds-semantic-color-background-success-softer, #eef7ea);
+      --fsds-alert-notice-color-background-warning: var(--fsds-semantic-color-background-warning-softer, #fff4e0);
+      --fsds-alert-notice-color-background-danger: var(--fsds-semantic-color-background-danger-softer, #fdf0f0);
     }
-    
+
     .alert-notice {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -477,21 +489,21 @@ export class AlertNoticeTitleElement extends LitElement {
       font-size: var(--fsds-alert-notice-text-size);
       font-weight: var(--fsds-alert-notice-text-weight);
     }
-    
+
     .alert-notice__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    
+
     .alert-notice__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-notice-spacing-gap);
     }
-    
+
     .alert-notice__dismiss {
       display: inline-flex;
       align-items: center;
@@ -506,40 +518,40 @@ export class AlertNoticeTitleElement extends LitElement {
       font: inherit;
       line-height: 1;
     }
-    
+
     .alert-notice__dismiss:hover {
       opacity: 0.7;
     }
-    
+
     .alert-notice__dismiss:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-    
+
     .alert-notice__title {
       margin: 0;
       font-weight: var(--fsds-alert-notice-typography-title-fontWeight);
       font-size: var(--fsds-alert-notice-typography-title-fontSize);
     }
-    
+
     .alert-notice--info {
       background-color: var(--fsds-alert-notice-color-background-info);
       color: var(--fsds-alert-notice-color-foreground-info);
       border-color: var(--fsds-alert-notice-color-border-info);
     }
-    
+
     .alert-notice--success {
       background-color: var(--fsds-alert-notice-color-background-success);
       color: var(--fsds-alert-notice-color-foreground-success);
       border-color: var(--fsds-alert-notice-color-border-success);
     }
-    
+
     .alert-notice--warning {
       background-color: var(--fsds-alert-notice-color-background-warning);
       color: var(--fsds-alert-notice-color-foreground-warning);
       border-color: var(--fsds-alert-notice-color-border-warning);
     }
-    
+
     .alert-notice--error {
       background-color: var(--fsds-alert-notice-color-background-danger);
       color: var(--fsds-alert-notice-color-foreground-danger);

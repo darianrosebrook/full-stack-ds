@@ -54,7 +54,7 @@
         "$value": "{color.palette.red.500}",
         "$extensions": {
           "fsds.light": "{color.palette.red.500}",
-          "fsds.dark": "{color.palette.red.400}"
+          "fsds.dark": "{color.palette.red.500}"
         }
       },
       "highlight": {
@@ -130,6 +130,23 @@
             "fsds.light": "{color.palette.red.500}",
             "fsds.dark": "{color.palette.red.400}"
           }
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}",
+          "$description": "Nav hover state-layer opacity — tonal red overlay on hover"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}",
+          "$description": "Nav selected/active state-layer opacity — tonal red overlay for active item"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}",
+          "$description": "Nav pressed state-layer opacity — stronger tonal red overlay on press"
         }
       }
     },
@@ -231,23 +248,23 @@
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Near elevation - subtle shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Near elevation - resting card surface, light raised shadow"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Default elevation - standard shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Default elevation - standard raised shadow"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.3}",
-          "$description": "Far elevation - prominent shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Far elevation - floating surface, prominent shadow"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - flat cards"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation - flat cards, flush with page"
         }
       }
     },

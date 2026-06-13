@@ -325,7 +325,7 @@
       "gradient": {
         "brandPrimary": {
           "$type": "gradient",
-          "$value": "#1d91fb"
+          "$value": "#0089fe"
         }
       },
       "mode": {
@@ -367,389 +367,607 @@
         "brand": {
           "$type": "color",
           "primary": {
+            "50": {
+              "$type": "color",
+              "$value": "#cfeefe"
+            },
             "100": {
               "$type": "color",
-              "$value": "#d9f3fe"
+              "$value": "#95dafb"
             },
             "200": {
               "$type": "color",
-              "$value": "#8ad9fc"
+              "$value": "#5cc2fb"
             },
             "300": {
               "$type": "color",
-              "$value": "#2eb9f9"
+              "$value": "#00a9fb"
             },
             "400": {
               "$type": "color",
-              "$value": "#1d91fb"
+              "$value": "#0089fe"
             },
             "500": {
               "$type": "color",
-              "$value": "#0a65fe"
+              "$value": "#0566fe"
             },
             "600": {
               "$type": "color",
-              "$value": "#0042dc"
+              "$value": "#034fd6"
             },
             "700": {
               "$type": "color",
-              "$value": "#002d99"
+              "$value": "#013ab0"
             },
             "800": {
               "$type": "color",
-              "$value": "#001b5a"
+              "$value": "#002782"
+            },
+            "900": {
+              "$type": "color",
+              "$value": "#000a69"
             }
           }
         },
         "neutral": {
+          "50": {
+            "$type": "color",
+            "$value": "#e9e9e9"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the neutral color scale, a very light shade.",
-            "$value": "#efefef"
+            "$value": "#d0d0d0"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the neutral color scale, a light shade.",
-            "$value": "#cecece"
+            "$value": "#b8b8b8"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the neutral color scale, a medium-light shade.",
-            "$value": "#aeaeae"
+            "$value": "#a0a0a1"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the neutral color scale, a medium shade.",
-            "$value": "#8f8f8f"
+            "$value": "#888889"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the neutral color scale, a medium-dark shade.",
-            "$value": "#717171"
+            "$value": "#727272"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the neutral color scale, a dark shade.",
-            "$value": "#555555"
+            "$value": "#5c5b5c"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the neutral color scale, a very dark shade.",
-            "$value": "#3a3a3a"
+            "$value": "#474647"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the neutral color scale, the darkest shade.",
-            "$value": "#212121"
+            "$value": "#313131"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#1d1d1d"
           },
           "$type": "color"
         },
         "red": {
+          "50": {
+            "$type": "color",
+            "$value": "#fee4e4"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the red color scale, a very light red.",
-            "$value": "#fceaea"
+            "$value": "#fac2c2"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the red color scale, a light red.",
-            "$value": "#f7c1c2"
+            "$value": "#f5a2a1"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the red color scale, a medium-light red.",
-            "$value": "#f29495"
+            "$value": "#ee8181"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the red color scale, a medium red.",
-            "$value": "#ea6465"
+            "$value": "#e55b5a"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the red color scale, a medium-dark red.",
-            "$value": "#d9292b"
+            "$value": "#d92d2e"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the red color scale, a dark red.",
-            "$value": "#ae0001"
+            "$value": "#b31b1b"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the red color scale, a very dark red.",
-            "$value": "#7b0000"
+            "$value": "#900909"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the red color scale, the darkest red.",
-            "$value": "#4b0000"
+            "$value": "#6a0000"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#440000"
           },
           "$type": "color"
         },
         "orange": {
+          "50": {
+            "$type": "color",
+            "$value": "#ffe6c8"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the orange color scale, a very light orange.",
-            "$value": "#ffedcc"
+            "$value": "#fdc67f"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the orange color scale, a light orange.",
-            "$value": "#ffc458"
+            "$value": "#f4a850"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the orange color scale, a medium-light orange.",
-            "$value": "#fe9400"
+            "$value": "#ec8802"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the orange color scale, a medium orange.",
-            "$value": "#d77600"
+            "$value": "#cc7201"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the orange color scale, a medium-dark orange.",
-            "$value": "#ac5c00"
+            "$value": "#ae5d00"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the orange color scale, a dark orange.",
-            "$value": "#824500"
+            "$value": "#8b4b00"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the orange color scale, a very dark orange.",
-            "$value": "#593000"
+            "$value": "#6c3a00"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the orange color scale, the darkest orange.",
-            "$value": "#331b00"
+            "$value": "#4b2900"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#341400"
           },
           "$type": "color"
         },
         "yellow": {
+          "50": {
+            "$type": "color",
+            "$value": "#fee9b3"
+          },
           "100": {
             "$type": "color",
-            "$description": "very light yellow",
-            "$value": "#fff8cc"
+            "$value": "#fcca30"
           },
           "200": {
             "$type": "color",
-            "$description": "light yellow",
-            "$value": "#ffe680"
+            "$value": "#e8af1b"
           },
           "300": {
             "$type": "color",
-            "$description": "medium-light yellow",
-            "$value": "#ffce33"
+            "$value": "#d39500"
           },
           "400": {
             "$type": "color",
-            "$description": "medium yellow",
-            "$value": "#ffb300"
+            "$value": "#b28000"
           },
           "500": {
             "$type": "color",
-            "$description": "medium-dark yellow",
-            "$value": "#da9a00"
+            "$value": "#946b00"
           },
           "600": {
             "$type": "color",
-            "$description": "dark yellow",
-            "$value": "#a97a00"
+            "$value": "#755600"
           },
           "700": {
             "$type": "color",
-            "$description": "very dark yellow",
-            "$value": "#7a5a00"
+            "$value": "#594300"
           },
           "800": {
             "$type": "color",
-            "$description": "darkest yellow",
-            "$value": "#4d3a00"
+            "$value": "#412e00"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#2c1900"
           },
           "$type": "color"
         },
         "green": {
+          "50": {
+            "$type": "color",
+            "$value": "#ddefd8"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the green color scale, a very light green.",
-            "$value": "#e4f2e0"
+            "$value": "#b3dba7"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the green color scale, a light green.",
-            "$value": "#b0daa4"
+            "$value": "#91c680"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the green color scale, a medium-light green.",
-            "$value": "#79bf65"
+            "$value": "#6eb157"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the green color scale, a medium green.",
-            "$value": "#609e41"
+            "$value": "#5b973c"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the green color scale, a medium-dark green.",
-            "$value": "#487e1e"
+            "$value": "#497f21"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the green color scale, a dark green.",
-            "$value": "#336006"
+            "$value": "#3a6614"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the green color scale, a very dark green.",
-            "$value": "#234104"
+            "$value": "#2c4f09"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the green color scale, the darkest green.",
-            "$value": "#142502"
+            "$value": "#1e3703"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#0b2200"
           },
           "$type": "color"
         },
         "blue": {
+          "50": {
+            "$type": "color",
+            "$value": "#cfeefe"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the blue color scale, a very light blue.",
-            "$value": "#d9f3fe"
+            "$value": "#95dafb"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the blue color scale, a light blue.",
-            "$value": "#8ad9fc"
+            "$value": "#5cc2fb"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the blue color scale, a medium-light blue.",
-            "$value": "#2eb9f9"
+            "$value": "#00a9fb"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the blue color scale, a medium blue.",
-            "$value": "#1d91fb"
+            "$value": "#0089fe"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the blue color scale, a medium-dark blue.",
-            "$value": "#0a65fe"
+            "$value": "#0566fe"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the blue color scale, a dark blue.",
-            "$value": "#0042dc"
+            "$value": "#034fd6"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the blue color scale, a very dark blue.",
-            "$value": "#002d99"
+            "$value": "#013ab0"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the blue color scale, the darkest blue.",
-            "$value": "#001b5a"
+            "$value": "#002782"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#000a69"
           },
           "$type": "color"
         },
         "teal": {
+          "50": {
+            "$type": "color",
+            "$value": "#cff0ef"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the teal color scale, a very light teal.",
-            "$value": "#caf8f7"
+            "$value": "#95dddc"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the teal color scale, a light teal.",
-            "$value": "#18dbdb"
+            "$value": "#64c7c6"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the teal color scale, a medium-light teal.",
-            "$value": "#22b4b4"
+            "$value": "#22b2b2"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the teal color scale, a medium teal.",
-            "$value": "#258f8e"
+            "$value": "#249797"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the teal color scale, a medium-dark teal.",
-            "$value": "#236f6f"
+            "$value": "#247e7e"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the teal color scale, a dark teal.",
-            "$value": "#205353"
+            "$value": "#226464"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the teal color scale, a very dark teal.",
-            "$value": "#1a3a3a"
+            "$value": "#1e4d4d"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the teal color scale, the darkest teal.",
-            "$value": "#121d1d"
+            "$value": "#193535"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#052122"
           },
           "$type": "color"
         },
         "violet": {
+          "50": {
+            "$type": "color",
+            "$value": "#ffe0ff"
+          },
           "100": {
             "$type": "color",
-            "$description": "Level 100 of the violet color scale, a very light violet.",
-            "$value": "#ffe9fe"
+            "$value": "#ffbafe"
           },
           "200": {
             "$type": "color",
-            "$description": "Level 200 of the violet color scale, a light violet.",
-            "$value": "#ffb5fc"
+            "$value": "#f994f6"
           },
           "300": {
             "$type": "color",
-            "$description": "Level 300 of the violet color scale, a medium-light violet.",
-            "$value": "#ff7bfa"
+            "$value": "#f26bec"
           },
           "400": {
             "$type": "color",
-            "$description": "Level 400 of the violet color scale, a medium violet.",
-            "$value": "#f431ed"
+            "$value": "#da4dd4"
           },
           "500": {
             "$type": "color",
-            "$description": "Level 500 of the violet color scale, a medium-dark violet.",
-            "$value": "#c127bc"
+            "$value": "#c22abd"
           },
           "600": {
             "$type": "color",
-            "$description": "Level 600 of the violet color scale, a dark violet.",
-            "$value": "#931d8f"
+            "$value": "#9c2199"
           },
           "700": {
             "$type": "color",
-            "$description": "Level 700 of the violet color scale, a very dark violet.",
-            "$value": "#661463"
+            "$value": "#7b1878"
           },
           "800": {
             "$type": "color",
-            "$description": "Level 800 of the violet color scale, the darkest violet.",
-            "$value": "#3b0c3a"
+            "$value": "#571155"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#3b003b"
           },
           "$type": "color"
+        },
+        "pink": {
+          "50": {
+            "$type": "color",
+            "$value": "#fde4ed"
+          },
+          "100": {
+            "$type": "color",
+            "$value": "#fac1d6"
+          },
+          "200": {
+            "$type": "color",
+            "$value": "#f69ebf"
+          },
+          "300": {
+            "$type": "color",
+            "$value": "#ef7ba8"
+          },
+          "400": {
+            "$type": "color",
+            "$value": "#e4558e"
+          },
+          "500": {
+            "$type": "color",
+            "$value": "#d81e73"
+          },
+          "600": {
+            "$type": "color",
+            "$value": "#af155c"
+          },
+          "700": {
+            "$type": "color",
+            "$value": "#891048"
+          },
+          "800": {
+            "$type": "color",
+            "$value": "#660030"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#430015"
+          }
+        },
+        "lime": {
+          "50": {
+            "$type": "color",
+            "$value": "#def0be"
+          },
+          "100": {
+            "$type": "color",
+            "$value": "#badc83"
+          },
+          "200": {
+            "$type": "color",
+            "$value": "#9bc55e"
+          },
+          "300": {
+            "$type": "color",
+            "$value": "#82ae47"
+          },
+          "400": {
+            "$type": "color",
+            "$value": "#69952c"
+          },
+          "500": {
+            "$type": "color",
+            "$value": "#557d1b"
+          },
+          "600": {
+            "$type": "color",
+            "$value": "#446416"
+          },
+          "700": {
+            "$type": "color",
+            "$value": "#364d10"
+          },
+          "800": {
+            "$type": "color",
+            "$value": "#213700"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#0e2200"
+          }
+        },
+        "emerald": {
+          "50": {
+            "$type": "color",
+            "$value": "#ccf3e2"
+          },
+          "100": {
+            "$type": "color",
+            "$value": "#8ce1be"
+          },
+          "200": {
+            "$type": "color",
+            "$value": "#55cd9d"
+          },
+          "300": {
+            "$type": "color",
+            "$value": "#38b483"
+          },
+          "400": {
+            "$type": "color",
+            "$value": "#0f9c6a"
+          },
+          "500": {
+            "$type": "color",
+            "$value": "#0c8258"
+          },
+          "600": {
+            "$type": "color",
+            "$value": "#0a6847"
+          },
+          "700": {
+            "$type": "color",
+            "$value": "#005134"
+          },
+          "800": {
+            "$type": "color",
+            "$value": "#00391e"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#00230a"
+          }
+        },
+        "cyan": {
+          "50": {
+            "$type": "color",
+            "$value": "#d0effb"
+          },
+          "100": {
+            "$type": "color",
+            "$value": "#96daf3"
+          },
+          "200": {
+            "$type": "color",
+            "$value": "#5ac5ea"
+          },
+          "300": {
+            "$type": "color",
+            "$value": "#3eacd2"
+          },
+          "400": {
+            "$type": "color",
+            "$value": "#1a94ba"
+          },
+          "500": {
+            "$type": "color",
+            "$value": "#087b9e"
+          },
+          "600": {
+            "$type": "color",
+            "$value": "#07637f"
+          },
+          "700": {
+            "$type": "color",
+            "$value": "#004c63"
+          },
+          "800": {
+            "$type": "color",
+            "$value": "#00354b"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#001f34"
+          }
+        },
+        "indigo": {
+          "50": {
+            "$type": "color",
+            "$value": "#e7e8fe"
+          },
+          "100": {
+            "$type": "color",
+            "$value": "#cbcdfb"
+          },
+          "200": {
+            "$type": "color",
+            "$value": "#b0b2f7"
+          },
+          "300": {
+            "$type": "color",
+            "$value": "#9698f2"
+          },
+          "400": {
+            "$type": "color",
+            "$value": "#797dec"
+          },
+          "500": {
+            "$type": "color",
+            "$value": "#5d62e5"
+          },
+          "600": {
+            "$type": "color",
+            "$value": "#4548d0"
+          },
+          "700": {
+            "$type": "color",
+            "$value": "#3637a3"
+          },
+          "800": {
+            "$type": "color",
+            "$value": "#26247a"
+          },
+          "900": {
+            "$type": "color",
+            "$value": "#170862"
+          }
         }
       },
       "selection": {
         "background": {
           "$type": "color",
-          "$value": "#8ad9fc"
+          "$value": "#5cc2fb"
         },
         "foreground": {
           "$type": "color",
@@ -2013,24 +2231,24 @@
             "default": {
               "$type": "color",
               "$description": "Primary action background",
-              "$value": "#0a65fe"
+              "$value": "#0566fe"
             },
             "hover": {
               "$type": "color",
               "$description": "Primary action hover state",
-              "$value": "#0042dc"
+              "$value": "#034fd6"
             },
             "active": {
               "$type": "color",
               "$description": "Primary action active state",
-              "$value": "#002d99"
+              "$value": "#013ab0"
             },
             "disabled": {
               "$type": "color",
               "$description": "Primary action disabled state",
               "$value": {
-                "light": "#cecece",
-                "dark": "#3a3a3a"
+                "light": "#b8b8b8",
+                "dark": "#474647"
               }
             }
           },
@@ -2047,16 +2265,16 @@
               "$type": "color",
               "$description": "Secondary action hover state",
               "$value": {
-                "light": "#efefef",
-                "dark": "#212121"
+                "light": "#d0d0d0",
+                "dark": "#313131"
               }
             },
             "active": {
               "$type": "color",
               "$description": "Secondary action active state",
               "$value": {
-                "light": "#cecece",
-                "dark": "#3a3a3a"
+                "light": "#b8b8b8",
+                "dark": "#474647"
               }
             }
           },
@@ -2064,17 +2282,17 @@
             "default": {
               "$type": "color",
               "$description": "Destructive action background",
-              "$value": "#d9292b"
+              "$value": "#d92d2e"
             },
             "hover": {
               "$type": "color",
               "$description": "Destructive action hover state",
-              "$value": "#ae0001"
+              "$value": "#b31b1b"
             },
             "active": {
               "$type": "color",
               "$description": "Destructive action active state",
-              "$value": "#7b0000"
+              "$value": "#900909"
             }
           }
         },
@@ -2088,7 +2306,7 @@
             "disabled": {
               "$type": "color",
               "$description": "Primary action disabled text",
-              "$value": "#8f8f8f"
+              "$value": "#888889"
             }
           },
           "secondary": {
@@ -2114,12 +2332,12 @@
             "default": {
               "$type": "color",
               "$description": "Primary action border",
-              "$value": "#0a65fe"
+              "$value": "#0566fe"
             },
             "focus": {
               "$type": "color",
               "$description": "Primary action focus ring",
-              "$value": "#1d91fb"
+              "$value": "#0089fe"
             }
           },
           "secondary": {
@@ -2127,16 +2345,16 @@
               "$type": "color",
               "$description": "Secondary action border",
               "$value": {
-                "light": "#aeaeae",
-                "dark": "#555555"
+                "light": "#a0a0a1",
+                "dark": "#5c5b5c"
               }
             },
             "hover": {
               "$type": "color",
               "$description": "Secondary action border hover",
               "$value": {
-                "light": "#8f8f8f",
-                "dark": "#717171"
+                "light": "#888889",
+                "dark": "#727272"
               }
             }
           },
@@ -2144,7 +2362,7 @@
             "default": {
               "$type": "color",
               "$description": "Destructive action border",
-              "$value": "#d9292b"
+              "$value": "#d92d2e"
             }
           }
         }
@@ -2162,40 +2380,40 @@
           "$type": "color",
           "$description": "Secondary background color",
           "$value": {
-            "light": "#efefef",
-            "dark": "#212121"
+            "light": "#d0d0d0",
+            "dark": "#313131"
           }
         },
         "tertiary": {
           "$type": "color",
           "$description": "Tertiary background color",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         },
         "highlight": {
           "$type": "color",
           "$description": "Highlight background color",
           "$value": {
-            "light": "#f7c1c2",
-            "dark": "#7b0000"
+            "light": "#f5a2a1",
+            "dark": "#900909"
           }
         },
         "accent": {
           "$type": "color",
-          "$description": "Accent background color",
+          "$description": "Accent background color. Kept at red.500 in dark mode (not red.400) so white on-color text clears WCAG AA (4.68:1 vs 3.09:1).",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#ea6465"
+            "light": "#d92d2e",
+            "dark": "#d92d2e"
           }
         },
         "hover": {
           "$type": "color",
           "$description": "Hover background color",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         },
         "danger": {
@@ -2203,16 +2421,24 @@
             "$type": "color",
             "$description": "Strong danger background color",
             "$value": {
-              "light": "#ae0001",
-              "dark": "#d9292b"
+              "light": "#b31b1b",
+              "dark": "#d92d2e"
             }
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle danger background color",
+            "$description": "Subtle danger background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
-              "light": "#fceaea",
-              "dark": "#4b0000"
+              "light": "#fac2c2",
+              "dark": "#440000"
+            }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer danger background — the lightest intent wash (palette .50/.900). For large-area surfaces (full-width alert/toast banners) where .subtle reads too strong. on-danger-subtle text clears AA on it (~7.8:1).",
+            "$value": {
+              "light": "#fee4e4",
+              "dark": "#440000"
             }
           }
         },
@@ -2228,8 +2454,8 @@
           "$type": "color",
           "$description": "Brand background color",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#1d91fb"
+            "light": "#0566fe",
+            "dark": "#0089fe"
           }
         },
         "onColor": {
@@ -2255,16 +2481,24 @@
             "$type": "color",
             "$description": "Strong info background color",
             "$value": {
-              "light": "#0042dc",
-              "dark": "#0a65fe"
+              "light": "#034fd6",
+              "dark": "#0566fe"
             }
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle info background color",
+            "$description": "Subtle info background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
-              "light": "#d9f3fe",
-              "dark": "#001b5a"
+              "light": "#95dafb",
+              "dark": "#000a69"
+            }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer info background — lightest intent wash (palette .50/.900) for large-area surfaces. on-info-subtle text clears AA (~7.8:1).",
+            "$value": {
+              "light": "#cfeefe",
+              "dark": "#000a69"
             }
           }
         },
@@ -2273,16 +2507,24 @@
             "$type": "color",
             "$description": "Strong success background color",
             "$value": {
-              "light": "#336006",
-              "dark": "#487e1e"
+              "light": "#3a6614",
+              "dark": "#497f21"
             }
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle success background color",
+            "$description": "Subtle success background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
-              "light": "#e4f2e0",
-              "dark": "#142502"
+              "light": "#b3dba7",
+              "dark": "#0b2200"
+            }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer success background — lightest intent wash (palette .50/.900) for large-area surfaces. on-success-subtle text clears AA (~7.7:1).",
+            "$value": {
+              "light": "#ddefd8",
+              "dark": "#0b2200"
             }
           }
         },
@@ -2291,16 +2533,24 @@
             "$type": "color",
             "$description": "Strong warning background color",
             "$value": {
-              "light": "#d77600",
-              "dark": "#ac5c00"
+              "light": "#cc7201",
+              "dark": "#ae5d00"
             }
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle warning background color",
+            "$description": "Subtle warning background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
-              "light": "#ffedcc",
-              "dark": "#331b00"
+              "light": "#fdc67f",
+              "dark": "#341400"
+            }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer warning background — lightest intent wash (palette .50/.900) for large-area surfaces. on-warning-subtle text clears AA (~7.8:1).",
+            "$value": {
+              "light": "#ffe6c8",
+              "dark": "#341400"
             }
           }
         },
@@ -2308,32 +2558,32 @@
           "$type": "color",
           "$description": "Active state background color",
           "$value": {
-            "light": "#aeaeae",
-            "dark": "#555555"
+            "light": "#a0a0a1",
+            "dark": "#5c5b5c"
           }
         },
         "disabled": {
           "$type": "color",
-          "$description": "Disabled state background color",
+          "$description": "Disabled state background color. light=neutral.100, dark=neutral.800 (widened one stop from 200/700) so disabled foreground (neutral.500/400) keeps AA_LARGE 3:1 against it under the contrast-targeted 10-stop ramp.",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#d0d0d0",
+            "dark": "#313131"
           }
         },
         "placeholder": {
           "$type": "color",
           "$description": "Placeholder background color",
           "$value": {
-            "light": "#efefef",
-            "dark": "#212121"
+            "light": "#d0d0d0",
+            "dark": "#313131"
           }
         },
         "readOnly": {
           "$type": "color",
           "$description": "Read-only background color",
           "$value": {
-            "light": "#efefef",
-            "dark": "#212121"
+            "light": "#d0d0d0",
+            "dark": "#313131"
           }
         },
         "inverse": {
@@ -2356,16 +2606,16 @@
           "$type": "color",
           "$description": "Subtle background tint — used for hover states on otherwise-transparent surfaces (NavList item hover).",
           "$value": {
-            "light": "#efefef",
-            "dark": "#212121"
+            "light": "#d0d0d0",
+            "dark": "#313131"
           }
         },
         "accentSubtle": {
           "$type": "color",
           "$description": "Subtle accent tint — used to mark current/selected items on otherwise-transparent surfaces (NavList current item).",
           "$value": {
-            "light": "#d9f3fe",
-            "dark": "#001b5a"
+            "light": "#95dafb",
+            "dark": "#002782"
           }
         }
       },
@@ -2374,88 +2624,88 @@
           "$type": "color",
           "$description": "Default border color",
           "$value": {
-            "light": "#aeaeae",
-            "dark": "#555555"
+            "light": "#a0a0a1",
+            "dark": "#5c5b5c"
           }
         },
         "subtle": {
           "$type": "color",
           "$description": "Subtle border color",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         },
         "bold": {
           "$type": "color",
           "$description": "Bold border color",
           "$value": {
-            "light": "#8f8f8f",
-            "dark": "#717171"
+            "light": "#888889",
+            "dark": "#727272"
           }
         },
         "disabled": {
           "$type": "color",
           "$description": "Disabled border color",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         },
         "light": {
           "$type": "color",
           "$description": "Light border color",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         },
         "primary": {
           "$type": "color",
           "$description": "Primary border color",
           "$value": {
-            "light": "#aeaeae",
-            "dark": "#555555"
+            "light": "#a0a0a1",
+            "dark": "#5c5b5c"
           }
         },
         "hover": {
           "$type": "color",
           "$description": "Hover border color",
           "$value": {
-            "light": "#8f8f8f",
-            "dark": "#717171"
+            "light": "#888889",
+            "dark": "#727272"
           }
         },
         "accent": {
           "$type": "color",
           "$description": "Accent border color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#ea6465"
+            "light": "#d92d2e",
+            "dark": "#e55b5a"
           }
         },
         "focus": {
           "$type": "color",
           "$description": "Focus border color",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#1d91fb"
+            "light": "#0566fe",
+            "dark": "#0089fe"
           }
         },
         "danger": {
           "$type": "color",
           "$description": "Danger border color",
           "$value": {
-            "light": "#ae0001",
-            "dark": "#d9292b"
+            "light": "#b31b1b",
+            "dark": "#d92d2e"
           }
         },
         "info": {
           "$type": "color",
           "$description": "Info border color",
           "$value": {
-            "light": "#0042dc",
-            "dark": "#0a65fe"
+            "light": "#034fd6",
+            "dark": "#0566fe"
           }
         },
         "onColor": {
@@ -2470,24 +2720,24 @@
           "$type": "color",
           "$description": "Success border color",
           "$value": {
-            "light": "#336006",
-            "dark": "#487e1e"
+            "light": "#3a6614",
+            "dark": "#497f21"
           }
         },
         "warning": {
           "$type": "color",
           "$description": "Warning border color",
           "$value": {
-            "light": "#824500",
-            "dark": "#ac5c00"
+            "light": "#8b4b00",
+            "dark": "#ae5d00"
           }
         },
         "strong": {
           "$type": "color",
           "$description": "Strong border color for emphasis",
           "$value": {
-            "light": "#8f8f8f",
-            "dark": "#717171"
+            "light": "#888889",
+            "dark": "#727272"
           }
         }
       },
@@ -2496,22 +2746,22 @@
           "default": {
             "$type": "color",
             "$description": "Default trend indicator",
-            "$value": "#1d91fb"
+            "$value": "#0089fe"
           },
           "up": {
             "$type": "color",
             "$description": "Positive trend indicator",
-            "$value": "#487e1e"
+            "$value": "#497f21"
           },
           "down": {
             "$type": "color",
             "$description": "Negative trend indicator",
-            "$value": "#d9292b"
+            "$value": "#d92d2e"
           },
           "neutral": {
             "$type": "color",
             "$description": "Neutral trend indicator",
-            "$value": "#717171"
+            "$value": "#727272"
           }
         }
       },
@@ -2521,14 +2771,14 @@
             "strong": {
               "$type": "color",
               "$description": "Strong success background",
-              "$value": "#336006"
+              "$value": "#3a6614"
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle success background",
+              "$description": "Subtle success background. Dark uses palette .900 (not .800) so alert/toast success surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
-                "light": "#e4f2e0",
-                "dark": "#142502"
+                "light": "#b3dba7",
+                "dark": "#0b2200"
               }
             }
           },
@@ -2537,16 +2787,16 @@
               "$type": "color",
               "$description": "Strong warning background",
               "$value": {
-                "light": "#d77600",
-                "dark": "#824500"
+                "light": "#cc7201",
+                "dark": "#8b4b00"
               }
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle warning background",
+              "$description": "Subtle warning background. Dark uses palette .900 (not .800) so alert/toast warning surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
-                "light": "#ffedcc",
-                "dark": "#331b00"
+                "light": "#fdc67f",
+                "dark": "#341400"
               }
             }
           },
@@ -2554,14 +2804,14 @@
             "strong": {
               "$type": "color",
               "$description": "Strong danger background",
-              "$value": "#ae0001"
+              "$value": "#b31b1b"
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle danger background",
+              "$description": "Subtle danger background. Dark uses palette .900 (not .800) so alert/toast danger surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
-                "light": "#fceaea",
-                "dark": "#4b0000"
+                "light": "#fac2c2",
+                "dark": "#440000"
               }
             }
           },
@@ -2569,14 +2819,14 @@
             "strong": {
               "$type": "color",
               "$description": "Strong info background",
-              "$value": "#0042dc"
+              "$value": "#034fd6"
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle info background",
+              "$description": "Subtle info background. Dark uses palette .900 (not .800) so alert/toast info surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
-                "light": "#d9f3fe",
-                "dark": "#001b5a"
+                "light": "#95dafb",
+                "dark": "#000a69"
               }
             }
           }
@@ -2587,16 +2837,16 @@
               "$type": "color",
               "$description": "Success text color",
               "$value": {
-                "light": "#487e1e",
-                "dark": "#609e41"
+                "light": "#497f21",
+                "dark": "#5b973c"
               }
             },
             "onSubtle": {
               "$type": "color",
               "$description": "Success text on subtle background",
               "$value": {
-                "light": "#234104",
-                "dark": "#b0daa4"
+                "light": "#2c4f09",
+                "dark": "#91c680"
               }
             }
           },
@@ -2605,16 +2855,16 @@
               "$type": "color",
               "$description": "Warning text color",
               "$value": {
-                "light": "#ac5c00",
-                "dark": "#d77600"
+                "light": "#ae5d00",
+                "dark": "#cc7201"
               }
             },
             "onSubtle": {
               "$type": "color",
               "$description": "Warning text on subtle background",
               "$value": {
-                "light": "#593000",
-                "dark": "#ffc458"
+                "light": "#6c3a00",
+                "dark": "#f4a850"
               }
             }
           },
@@ -2623,16 +2873,16 @@
               "$type": "color",
               "$description": "Danger text color",
               "$value": {
-                "light": "#d9292b",
-                "dark": "#ea6465"
+                "light": "#d92d2e",
+                "dark": "#e55b5a"
               }
             },
             "onSubtle": {
               "$type": "color",
               "$description": "Danger text on subtle background",
               "$value": {
-                "light": "#7b0000",
-                "dark": "#f7c1c2"
+                "light": "#900909",
+                "dark": "#f5a2a1"
               }
             }
           },
@@ -2641,16 +2891,16 @@
               "$type": "color",
               "$description": "Info text color",
               "$value": {
-                "light": "#0a65fe",
-                "dark": "#1d91fb"
+                "light": "#0566fe",
+                "dark": "#0089fe"
               }
             },
             "onSubtle": {
               "$type": "color",
               "$description": "Info text on subtle background",
               "$value": {
-                "light": "#002d99",
-                "dark": "#8ad9fc"
+                "light": "#013ab0",
+                "dark": "#5cc2fb"
               }
             }
           }
@@ -2659,22 +2909,22 @@
           "success": {
             "$type": "color",
             "$description": "Success border color",
-            "$value": "#336006"
+            "$value": "#3a6614"
           },
           "warning": {
             "$type": "color",
             "$description": "Warning border color",
-            "$value": "#824500"
+            "$value": "#8b4b00"
           },
           "danger": {
             "$type": "color",
             "$description": "Danger border color",
-            "$value": "#ae0001"
+            "$value": "#b31b1b"
           },
           "info": {
             "$type": "color",
             "$description": "Info border color",
-            "$value": "#0042dc"
+            "$value": "#034fd6"
           }
         }
       },
@@ -2691,64 +2941,64 @@
           "$type": "color",
           "$description": "Secondary foreground color",
           "$value": {
-            "light": "#555555",
-            "dark": "#aeaeae"
+            "light": "#5c5b5c",
+            "dark": "#a0a0a1"
           }
         },
         "tertiary": {
           "$type": "color",
           "$description": "Tertiary foreground color",
           "$value": {
-            "light": "#717171",
-            "dark": "#8f8f8f"
+            "light": "#727272",
+            "dark": "#888889"
           }
         },
         "accent": {
           "$type": "color",
           "$description": "Accent foreground color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#ea6465"
+            "light": "#d92d2e",
+            "dark": "#e55b5a"
           }
         },
         "danger": {
           "$type": "color",
           "$description": "Danger foreground color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#ea6465"
+            "light": "#d92d2e",
+            "dark": "#e55b5a"
           }
         },
         "hover": {
           "$type": "color",
           "$description": "Hover foreground color",
           "$value": {
-            "light": "#3a3a3a",
-            "dark": "#aeaeae"
+            "light": "#474647",
+            "dark": "#a0a0a1"
           }
         },
         "link": {
           "$type": "color",
           "$description": "Link foreground color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#ea6465"
+            "light": "#d92d2e",
+            "dark": "#e55b5a"
           }
         },
         "linkHover": {
           "$type": "color",
           "$description": "Link hover foreground color",
           "$value": {
-            "light": "#ae0001",
-            "dark": "#f29495"
+            "light": "#b31b1b",
+            "dark": "#ee8181"
           }
         },
         "linkVisited": {
           "$type": "color",
           "$description": "Link visited foreground color",
           "$value": {
-            "light": "#ea6465",
-            "dark": "#d9292b"
+            "light": "#e55b5a",
+            "dark": "#d92d2e"
           }
         },
         "on": {
@@ -2765,8 +3015,8 @@
               "$type": "color",
               "$description": "Foreground color on subtle danger backgrounds",
               "$value": {
-                "light": "#7b0000",
-                "dark": "#f29495"
+                "light": "#900909",
+                "dark": "#ee8181"
               }
             }
           },
@@ -2775,8 +3025,8 @@
               "$type": "color",
               "$description": "Foreground color on subtle info backgrounds",
               "$value": {
-                "light": "#002d99",
-                "dark": "#2eb9f9"
+                "light": "#013ab0",
+                "dark": "#00a9fb"
               }
             }
           },
@@ -2785,8 +3035,8 @@
               "$type": "color",
               "$description": "Foreground color on subtle success backgrounds",
               "$value": {
-                "light": "#234104",
-                "dark": "#79bf65"
+                "light": "#2c4f09",
+                "dark": "#6eb157"
               }
             }
           },
@@ -2795,50 +3045,50 @@
               "$type": "color",
               "$description": "Foreground color on subtle warning backgrounds",
               "$value": {
-                "light": "#593000",
-                "dark": "#fe9400"
+                "light": "#6c3a00",
+                "dark": "#ec8802"
               }
             }
           }
         },
         "onColor": {
           "$type": "color",
-          "$description": "Foreground color for text on colored backgrounds",
+          "$description": "Foreground color for text on saturated colored/accent fills. Fixed white in both themes (not theme-primary text) so it clears WCAG AA on accent/strong backgrounds (4.68:1 on red.500). Mirrors foreground.on.brand.",
           "$value": {
-            "light": "#141414",
-            "dark": "#141414"
+            "light": "#ffffff",
+            "dark": "#ffffff"
           }
         },
         "info": {
           "$type": "color",
           "$description": "Info foreground color",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#1d91fb"
+            "light": "#0566fe",
+            "dark": "#0089fe"
           }
         },
         "success": {
           "$type": "color",
           "$description": "Success foreground color",
           "$value": {
-            "light": "#487e1e",
-            "dark": "#609e41"
+            "light": "#497f21",
+            "dark": "#5b973c"
           }
         },
         "warning": {
           "$type": "color",
           "$description": "Warning foreground color",
           "$value": {
-            "light": "#ac5c00",
-            "dark": "#d77600"
+            "light": "#ae5d00",
+            "dark": "#cc7201"
           }
         },
         "highlight": {
           "$type": "color",
           "$description": "Highlight foreground color",
           "$value": {
-            "light": "#7b0000",
-            "dark": "#f7c1c2"
+            "light": "#900909",
+            "dark": "#f5a2a1"
           }
         },
         "syntax": {
@@ -2855,8 +3105,8 @@
               "$type": "color",
               "$description": "Comment color in syntax highlighting",
               "$value": {
-                "light": "#717171",
-                "dark": "#717171"
+                "light": "#727272",
+                "dark": "#727272"
               }
             }
           },
@@ -2864,56 +3114,56 @@
             "$type": "color",
             "$description": "Keyword color in syntax highlighting",
             "$value": {
-              "light": "#0a65fe",
-              "dark": "#0a65fe"
+              "light": "#0566fe",
+              "dark": "#0566fe"
             }
           },
           "definition": {
             "$type": "color",
             "$description": "Definition color in syntax highlighting",
             "$value": {
-              "light": "#d9292b",
-              "dark": "#d9292b"
+              "light": "#d92d2e",
+              "dark": "#d92d2e"
             }
           },
           "punctuation": {
             "$type": "color",
             "$description": "Punctuation color in syntax highlighting",
             "$value": {
-              "light": "#0a65fe",
-              "dark": "#0a65fe"
+              "light": "#0566fe",
+              "dark": "#0566fe"
             }
           },
           "property": {
             "$type": "color",
             "$description": "Property color in syntax highlighting",
             "$value": {
-              "light": "#ac5c00",
-              "dark": "#ac5c00"
+              "light": "#ae5d00",
+              "dark": "#ae5d00"
             }
           },
           "tag": {
             "$type": "color",
             "$description": "Tag color in syntax highlighting",
             "$value": {
-              "light": "#d9292b",
-              "dark": "#d9292b"
+              "light": "#d92d2e",
+              "dark": "#d92d2e"
             }
           },
           "static": {
             "$type": "color",
             "$description": "Static color in syntax highlighting",
             "$value": {
-              "light": "#d9292b",
-              "dark": "#d9292b"
+              "light": "#d92d2e",
+              "dark": "#d92d2e"
             }
           },
           "string": {
             "$type": "color",
             "$description": "Highlight color in syntax highlighting",
             "$value": {
-              "light": "#7b0000",
-              "dark": "#7b0000"
+              "light": "#900909",
+              "dark": "#900909"
             }
           }
         },
@@ -2921,16 +3171,16 @@
           "$type": "color",
           "$description": "Disabled foreground color. Bumped from neutral.300/500 to neutral.500/400 to meet 3:1 against background.disabled (neutral.200/700). WCAG SC 1.4.3 exempts disabled controls from contrast minimums, but unreadable disabled labels are usability debt — this satisfies AA_LARGE (3:1) so disabled state stays visibly de-emphasized without becoming invisible.",
           "$value": {
-            "light": "#717171",
-            "dark": "#8f8f8f"
+            "light": "#727272",
+            "dark": "#888889"
           }
         },
         "placeholder": {
           "$type": "color",
           "$description": "Placeholder text color",
           "$value": {
-            "light": "#8f8f8f",
-            "dark": "#717171"
+            "light": "#888889",
+            "dark": "#727272"
           }
         },
         "inverse": {
@@ -2947,7 +3197,7 @@
           "primary": {
             "$type": "gradient",
             "$description": "Primary brand gradient",
-            "$value": "#1d91fb"
+            "$value": "#0089fe"
           }
         }
       },
@@ -2965,8 +3215,8 @@
             "$type": "color",
             "$description": "Secondary navigation background",
             "$value": {
-              "light": "#efefef",
-              "dark": "#212121"
+              "light": "#d0d0d0",
+              "dark": "#313131"
             }
           }
         },
@@ -2983,24 +3233,24 @@
             "$type": "color",
             "$description": "Secondary navigation text",
             "$value": {
-              "light": "#555555",
-              "dark": "#aeaeae"
+              "light": "#5c5b5c",
+              "dark": "#a0a0a1"
             }
           },
           "active": {
             "$type": "color",
             "$description": "Active navigation item",
             "$value": {
-              "light": "#d9292b",
-              "dark": "#ea6465"
+              "light": "#d92d2e",
+              "dark": "#e55b5a"
             }
           },
           "hover": {
             "$type": "color",
             "$description": "Navigation item hover state",
             "$value": {
-              "light": "#3a3a3a",
-              "dark": "#aeaeae"
+              "light": "#474647",
+              "dark": "#a0a0a1"
             }
           }
         },
@@ -3009,8 +3259,8 @@
             "$type": "color",
             "$description": "Navigation border",
             "$value": {
-              "light": "#aeaeae",
-              "dark": "#555555"
+              "light": "#a0a0a1",
+              "dark": "#5c5b5c"
             }
           }
         }
@@ -3042,40 +3292,40 @@
           "$type": "color",
           "$description": "Info status color",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#1d91fb"
+            "light": "#0566fe",
+            "dark": "#0089fe"
           }
         },
         "success": {
           "$type": "color",
           "$description": "Success status color",
           "$value": {
-            "light": "#487e1e",
-            "dark": "#609e41"
+            "light": "#497f21",
+            "dark": "#5b973c"
           }
         },
         "warning": {
           "$type": "color",
           "$description": "Warning status color",
           "$value": {
-            "light": "#ac5c00",
-            "dark": "#d77600"
+            "light": "#ae5d00",
+            "dark": "#cc7201"
           }
         },
         "danger": {
           "$type": "color",
           "$description": "Danger status color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#ea6465"
+            "light": "#d92d2e",
+            "dark": "#e55b5a"
           }
         },
         "highlight": {
           "$type": "color",
           "$description": "Highlight status color",
           "$value": {
-            "light": "#1d91fb",
-            "dark": "#0a65fe"
+            "light": "#0089fe",
+            "dark": "#0566fe"
           }
         }
       },
@@ -3093,8 +3343,8 @@
             "$type": "color",
             "$description": "Comment syntax color",
             "$value": {
-              "light": "#717171",
-              "dark": "#717171"
+              "light": "#727272",
+              "dark": "#727272"
             }
           },
           "fontStyle": "italic"
@@ -3103,56 +3353,56 @@
           "$type": "color",
           "$description": "Keyword syntax color",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#0a65fe"
+            "light": "#0566fe",
+            "dark": "#0566fe"
           }
         },
         "definition": {
           "$type": "color",
           "$description": "Definition syntax color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#d9292b"
+            "light": "#d92d2e",
+            "dark": "#d92d2e"
           }
         },
         "punctuation": {
           "$type": "color",
           "$description": "Punctuation syntax color",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#0a65fe"
+            "light": "#0566fe",
+            "dark": "#0566fe"
           }
         },
         "property": {
           "$type": "color",
           "$description": "Property syntax color",
           "$value": {
-            "light": "#ac5c00",
-            "dark": "#ac5c00"
+            "light": "#ae5d00",
+            "dark": "#ae5d00"
           }
         },
         "tag": {
           "$type": "color",
           "$description": "Tag syntax color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#d9292b"
+            "light": "#d92d2e",
+            "dark": "#d92d2e"
           }
         },
         "static": {
           "$type": "color",
           "$description": "Static syntax color",
           "$value": {
-            "light": "#d9292b",
-            "dark": "#d9292b"
+            "light": "#d92d2e",
+            "dark": "#d92d2e"
           }
         },
         "string": {
           "$type": "color",
           "$description": "String syntax color",
           "$value": {
-            "light": "#002d99",
-            "dark": "#1d91fb"
+            "light": "#013ab0",
+            "dark": "#0089fe"
           }
         }
       }
@@ -3360,8 +3610,8 @@
           "$type": "color",
           "$description": "Focus ring color — references theme-aware semantic border-focus so dark/light themes invert correctly.",
           "$value": {
-            "light": "#0a65fe",
-            "dark": "#0a65fe"
+            "light": "#0566fe",
+            "dark": "#0566fe"
           }
         },
         "style": {
@@ -3572,32 +3822,32 @@
           "$type": "color",
           "$description": "Secondary action hover state",
           "$value": {
-            "light": "#efefef",
-            "dark": "#212121"
+            "light": "#d0d0d0",
+            "dark": "#313131"
           }
         },
         "active": {
           "$type": "color",
           "$description": "Secondary action active state",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         },
         "selected": {
           "$type": "color",
           "$description": "Highlight background for selections",
           "$value": {
-            "light": "#8ad9fc",
-            "dark": "#001b5a"
+            "light": "#5cc2fb",
+            "dark": "#002782"
           }
         },
         "disabled": {
           "$type": "color",
           "$description": "Primary action disabled state",
           "$value": {
-            "light": "#cecece",
-            "dark": "#3a3a3a"
+            "light": "#b8b8b8",
+            "dark": "#474647"
           }
         }
       },
@@ -3606,17 +3856,17 @@
           "$type": "color",
           "$description": "Secondary action border hover",
           "$value": {
-            "light": "#8f8f8f",
-            "dark": "#717171"
+            "light": "#888889",
+            "dark": "#727272"
           }
         },
         "active": {
           "$type": "color",
-          "$value": "#8f8f8f"
+          "$value": "#888889"
         },
         "disabled": {
           "$type": "color",
-          "$value": "#cecece"
+          "$value": "#b8b8b8"
         }
       },
       "disabled": {
@@ -3651,7 +3901,7 @@
       "text": {
         "hover": {
           "$type": "color",
-          "$value": "#555555"
+          "$value": "#5c5b5c"
         },
         "active": {
           "$type": "color",
@@ -3659,7 +3909,7 @@
         },
         "disabled": {
           "$type": "color",
-          "$value": "#8f8f8f"
+          "$value": "#888889"
         }
       }
     },

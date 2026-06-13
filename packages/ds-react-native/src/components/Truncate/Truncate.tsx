@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, View } from "react-native";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createTruncateStyles } from "./Truncate.styles";
 // @generated:end
@@ -32,7 +32,10 @@ export function Truncate({
   lines,
   expandable,
   expanded: controlledExpanded,
+  expandText = "Show more",
+  collapseText = "Show less",
   defaultExpanded = false,
+  onExpandedChange,
   children,
   style,
   testID,
@@ -41,8 +44,12 @@ export function Truncate({
 }: TruncateProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createTruncateStyles(fsdsTheme), [fsdsTheme]);
-  const [uncontrolledExpanded] = useState<boolean>((defaultExpanded ?? false) as boolean);
+  const [uncontrolledExpanded, setUncontrolledExpanded] = useState<boolean>((defaultExpanded ?? false) as boolean);
   const expanded = controlledExpanded ?? uncontrolledExpanded;
+  const setExpandedValue = useCallback((next: boolean) => {
+    if (controlledExpanded === undefined) setUncontrolledExpanded(next);
+    onExpandedChange?.(next);
+  }, [controlledExpanded, onExpandedChange]);
 
   return (
     <View
@@ -59,9 +66,12 @@ export function Truncate({
       {expandable ? (
       <Pressable
         style={styles.toggle}
+        onPress={() => setExpandedValue(!expanded)}
         accessibilityRole="button"
         accessibilityState={{ expanded: Boolean(expanded) }}
-      />
+      >
+        <RNText>{(expanded ? collapseText : expandText)}</RNText>
+      </Pressable>
       ) : null}
     </View>
   );

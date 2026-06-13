@@ -14,9 +14,9 @@
             "$value": "{color.palette.green.100}",
             "$extensions": {
               "fsds.light": "{color.palette.green.100}",
-              "fsds.dark": "{color.palette.green.800}"
+              "fsds.dark": "{color.palette.green.900}"
             },
-            "$description": "Subtle success background"
+            "$description": "Subtle success background. Dark uses palette .900 (not .800) so alert/toast success surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises."
           }
         },
         "warning": {
@@ -34,9 +34,9 @@
             "$value": "{color.palette.orange.100}",
             "$extensions": {
               "fsds.light": "{color.palette.orange.100}",
-              "fsds.dark": "{color.palette.orange.800}"
+              "fsds.dark": "{color.palette.orange.900}"
             },
-            "$description": "Subtle warning background"
+            "$description": "Subtle warning background. Dark uses palette .900 (not .800) so alert/toast warning surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises."
           }
         },
         "danger": {
@@ -50,9 +50,9 @@
             "$value": "{color.palette.red.100}",
             "$extensions": {
               "fsds.light": "{color.palette.red.100}",
-              "fsds.dark": "{color.palette.red.800}"
+              "fsds.dark": "{color.palette.red.900}"
             },
-            "$description": "Subtle danger background"
+            "$description": "Subtle danger background. Dark uses palette .900 (not .800) so alert/toast danger surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises."
           }
         },
         "info": {
@@ -66,9 +66,9 @@
             "$value": "{color.palette.blue.100}",
             "$extensions": {
               "fsds.light": "{color.palette.blue.100}",
-              "fsds.dark": "{color.palette.blue.800}"
+              "fsds.dark": "{color.palette.blue.900}"
             },
-            "$description": "Subtle info background"
+            "$description": "Subtle info background. Dark uses palette .900 (not .800) so alert/toast info surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises."
           }
         }
       },

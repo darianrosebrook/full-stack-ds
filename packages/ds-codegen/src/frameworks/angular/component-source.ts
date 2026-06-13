@@ -1740,6 +1740,12 @@ function renderAngularBinding(
         ? null
         : `${angularAttrBinding(attr, tag)}="${escapeAngularAttr(lowered)}"`;
     }
+    case "conditional": {
+      const lowered = renderAngularBindingValue(expr, ctx);
+      return lowered === null
+        ? null
+        : `${angularAttrBinding(attr, tag)}="${escapeAngularAttr(lowered)}"`;
+    }
   }
 }
 
@@ -1773,6 +1779,13 @@ function renderAngularBindingValue(
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderAngularPredicate(expr, ctx);
+    case "conditional": {
+      const condition = renderAngularBindingValue(expr.condition, ctx);
+      const whenTrue = renderAngularBindingValue(expr.whenTrue, ctx);
+      const whenFalse = renderAngularBindingValue(expr.whenFalse, ctx);
+      if (condition === null || whenTrue === null || whenFalse === null) return null;
+      return `(${condition} ? ${whenTrue} : ${whenFalse})`;
+    }
   }
 }
 
@@ -1845,6 +1858,8 @@ function renderAngularEvent(
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at
       // IR-build; the case keeps the switch exhaustive.
+      return null;
+    case "conditional":
       return null;
   }
 }

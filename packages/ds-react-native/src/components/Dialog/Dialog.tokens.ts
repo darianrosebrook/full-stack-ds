@@ -164,8 +164,8 @@ export const dialogTokenScopes = {
     "dialog.elevation.default": {
       name: "dialog.elevation.default",
       cssVar: "--fsds-dialog-elevation-default",
-      ref: "semantic.elevation.surface.floating",
-      fallback: "0 8px 32px rgba(0,0,0,0.16)",
+      ref: "semantic.elevation.surface.dialog",
+      fallback: "0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15)",
     },
     "dialog.spacing.header.paddingTop": {
       name: "dialog.spacing.header.paddingTop",

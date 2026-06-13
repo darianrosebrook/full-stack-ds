@@ -43,9 +43,9 @@
         "$value": "{color.palette.red.500}",
         "$extensions": {
           "fsds.light": "{color.palette.red.500}",
-          "fsds.dark": "{color.palette.red.400}"
+          "fsds.dark": "{color.palette.red.500}"
         },
-        "$description": "Accent background color"
+        "$description": "Accent background color. Kept at red.500 in dark mode (not red.400) so white on-color text clears WCAG AA (4.68:1 vs 3.09:1)."
       },
       "hover": {
         "$type": "color",
@@ -71,9 +71,18 @@
           "$value": "{color.palette.red.100}",
           "$extensions": {
             "fsds.light": "{color.palette.red.100}",
-            "fsds.dark": "{color.palette.red.800}"
+            "fsds.dark": "{color.palette.red.900}"
           },
-          "$description": "Subtle danger background color"
+          "$description": "Subtle danger background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.red.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.50}",
+            "fsds.dark": "{color.palette.red.900}"
+          },
+          "$description": "Softer danger background — the lightest intent wash (palette .50/.900). For large-area surfaces (full-width alert/toast banners) where .subtle reads too strong. on-danger-subtle text clears AA on it (~7.8:1)."
         }
       },
       "elevated": {
@@ -137,9 +146,18 @@
           "$value": "{color.palette.blue.100}",
           "$extensions": {
             "fsds.light": "{color.palette.blue.100}",
-            "fsds.dark": "{color.palette.blue.800}"
+            "fsds.dark": "{color.palette.blue.900}"
           },
-          "$description": "Subtle info background color"
+          "$description": "Subtle info background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.blue.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.blue.50}",
+            "fsds.dark": "{color.palette.blue.900}"
+          },
+          "$description": "Softer info background — lightest intent wash (palette .50/.900) for large-area surfaces. on-info-subtle text clears AA (~7.8:1)."
         }
       },
       "success": {
@@ -157,9 +175,18 @@
           "$value": "{color.palette.green.100}",
           "$extensions": {
             "fsds.light": "{color.palette.green.100}",
-            "fsds.dark": "{color.palette.green.800}"
+            "fsds.dark": "{color.palette.green.900}"
           },
-          "$description": "Subtle success background color"
+          "$description": "Subtle success background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.green.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.green.50}",
+            "fsds.dark": "{color.palette.green.900}"
+          },
+          "$description": "Softer success background — lightest intent wash (palette .50/.900) for large-area surfaces. on-success-subtle text clears AA (~7.7:1)."
         }
       },
       "warning": {
@@ -177,9 +204,18 @@
           "$value": "{color.palette.orange.100}",
           "$extensions": {
             "fsds.light": "{color.palette.orange.100}",
-            "fsds.dark": "{color.palette.orange.800}"
+            "fsds.dark": "{color.palette.orange.900}"
           },
-          "$description": "Subtle warning background color"
+          "$description": "Subtle warning background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.orange.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.50}",
+            "fsds.dark": "{color.palette.orange.900}"
+          },
+          "$description": "Softer warning background — lightest intent wash (palette .50/.900) for large-area surfaces. on-warning-subtle text clears AA (~7.8:1)."
         }
       },
       "active": {
@@ -193,12 +229,12 @@
       },
       "disabled": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.200}",
-          "fsds.dark": "{color.palette.neutral.700}"
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
         },
-        "$description": "Disabled state background color"
+        "$description": "Disabled state background color. light=neutral.100, dark=neutral.800 (widened one stop from 200/700) so disabled foreground (neutral.500/400) keeps AA_LARGE 3:1 against it under the contrast-targeted 10-stop ramp."
       },
       "placeholder": {
         "$type": "color",

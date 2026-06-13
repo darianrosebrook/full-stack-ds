@@ -66,7 +66,7 @@ const classNames = computed(() => [
       <slot />
     </div>
     <button :class="'show-more__trigger'" type="button" @click="() => behavior.setExpanded(!behavior.expanded.value)" :aria-expanded="behavior.expanded.value">
-      {{ props.showMoreLabel }}
+      {{ (behavior.expanded.value ? props.showLessLabel : props.showMoreLabel) }}
     </button>
   </div>
 </template>

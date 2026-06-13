@@ -67,5 +67,48 @@ describe("Truncate — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Truncate — expandable behavior", () => {
+  it("toggles the toggle label and expanded class in uncontrolled mode", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    render(
+      <Truncate
+        data-testid="truncate"
+        expandable
+        expandText="Expand"
+        collapseText="Collapse"
+      >
+        Long content that should become unclamped when expanded.
+      </Truncate>,
+    );
+
+    const root = screen.getByTestId("truncate");
+    const toggle = screen.getByRole("button", { name: "Expand" });
+
+    expect(root).not.toHaveClass("truncate--expanded");
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(toggle);
+
+    expect(root).toHaveClass("truncate--expanded");
+    expect(screen.getByRole("button", { name: "Collapse" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+  });
+
+  it("reports the requested next expanded value in controlled mode", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    const onExpandedChange = vi.fn();
+    render(
+      <Truncate expanded={false} onExpandedChange={onExpandedChange} expandable>
+        Controlled content
+      </Truncate>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Show more" }));
+
+    expect(onExpandedChange).toHaveBeenCalledWith(true);
+  });
+});
 
 // @custom:end

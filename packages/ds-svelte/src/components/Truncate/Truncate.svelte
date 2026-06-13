@@ -51,6 +51,6 @@ const classes = $derived(
     {@render children?.()}
   </span>
   {#if expandable}
-  <button class={'truncate__toggle'} type="button" aria-expanded={behavior.expanded}></button>
+  <button class={'truncate__toggle'} type="button" onclick={() => behavior.setExpanded(!behavior.expanded)} aria-expanded={behavior.expanded}>{(behavior.expanded ? collapseText : expandText)}</button>
   {/if}
 </div>

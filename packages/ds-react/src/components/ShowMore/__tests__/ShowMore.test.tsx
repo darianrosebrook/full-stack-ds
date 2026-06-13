@@ -67,5 +67,47 @@ describe("ShowMore — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("ShowMore — expandable behavior", () => {
+  it("toggles the trigger label and expanded class in uncontrolled mode", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    render(
+      <ShowMore
+        data-testid="show-more"
+        showMoreLabel="Read more"
+        showLessLabel="Read less"
+      >
+        Long content that should become unclamped when expanded.
+      </ShowMore>,
+    );
+
+    const root = screen.getByTestId("show-more");
+    const trigger = screen.getByRole("button", { name: "Read more" });
+
+    expect(root).not.toHaveClass("show-more--expanded");
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(trigger);
+
+    expect(root).toHaveClass("show-more--expanded");
+    expect(screen.getByRole("button", { name: "Read less" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+  });
+
+  it("reports the requested next expanded value in controlled mode", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    const onExpandedChange = vi.fn();
+    render(
+      <ShowMore expanded={false} onExpandedChange={onExpandedChange}>
+        Controlled content
+      </ShowMore>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Show more" }));
+
+    expect(onExpandedChange).toHaveBeenCalledWith(true);
+  });
+});
 
 // @custom:end

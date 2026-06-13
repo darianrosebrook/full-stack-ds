@@ -338,7 +338,11 @@
           "--fsds-alert-notice-spacing-gap": "var(--fsds-core-spacing-size-05, 12px)",
           "--fsds-alert-notice-text-size": "var(--fsds-semantic-typography-body-02, 16px)",
           "--fsds-alert-notice-typography-title-fontSize": "var(--fsds-semantic-typography-body-01, 18px)",
-          "--fsds-alert-notice-typography-title-fontWeight": "var(--fsds-semantic-typography-font-weight-bold, 700)"
+          "--fsds-alert-notice-typography-title-fontWeight": "var(--fsds-semantic-typography-font-weight-bold, 700)",
+          "--fsds-alert-notice-color-background-info": "var(--fsds-semantic-color-background-info-softer, #eef7ff)",
+          "--fsds-alert-notice-color-background-success": "var(--fsds-semantic-color-background-success-softer, #eef7ea)",
+          "--fsds-alert-notice-color-background-warning": "var(--fsds-semantic-color-background-warning-softer, #fff4e0)",
+          "--fsds-alert-notice-color-background-danger": "var(--fsds-semantic-color-background-danger-softer, #fdf0f0)"
         }
       }
     ],

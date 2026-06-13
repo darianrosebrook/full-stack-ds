@@ -26,6 +26,11 @@
       "platforms": ["web"]
     }
   },
+  ".show-more--expanded .show-more__content": {
+    "display": { "literal": "block", "platforms": ["web"] },
+    "-webkit-line-clamp": { "literal": "unset", "platforms": ["web"] },
+    "line-clamp": { "literal": "unset", "platforms": ["web"] }
+  },
   "trigger": {
     "display": { "literal": "inline-flex", "platforms": ["web"] },
     "align-items": { "literal": "center", "platforms": ["web"] },

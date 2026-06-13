@@ -66,6 +66,8 @@ const classNames = computed(() => [
     <span :class="'truncate__content'" :style="{ '--fsds-truncate-content-lines': props.lines }">
       <slot />
     </span>
-    <button v-if="props.expandable" :class="'truncate__toggle'" type="button" :aria-expanded="behavior.expanded.value"></button>
+    <button v-if="props.expandable" :class="'truncate__toggle'" type="button" @click="() => behavior.setExpanded(!behavior.expanded.value)" :aria-expanded="behavior.expanded.value">
+      {{ (behavior.expanded.value ? props.collapseText : props.expandText) }}
+    </button>
   </div>
 </template>

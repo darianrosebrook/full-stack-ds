@@ -42,7 +42,7 @@ export class TruncateElement extends LitElement {
       --fsds-truncate-spacing-toggle: var(--fsds-core-spacing-size-02, 2px);
       --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-color-foreground-linkHover, #ae0001);
     }
-    
+
     .truncate {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -57,7 +57,7 @@ export class TruncateElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: block;
     }
-    
+
     .truncate__content {
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -65,7 +65,13 @@ export class TruncateElement extends LitElement {
       line-clamp: var(--fsds-truncate-content-lines, 3);
       overflow: hidden;
     }
-    
+
+    .truncate--expanded .truncate__content {
+      display: block;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+
     .truncate__toggle {
       display: inline-flex;
       align-items: center;
@@ -106,7 +112,7 @@ export class TruncateElement extends LitElement {
     <slot></slot>
   </span>
   ${this.expandable ? html`
-  <button class=${'truncate__toggle'} type="button" aria-expanded=${this.behavior.expanded ? 'true' : 'false'}></button>
+  <button class=${'truncate__toggle'} type="button" @click=${() => this.behavior.setExpanded(!this.behavior.expanded)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${(this.behavior.expanded ? this.collapseText : this.expandText)}</button>
   ` : nothing}
 </div>`;
   }
@@ -138,7 +144,7 @@ export class TruncateContentElement extends LitElement {
       --fsds-truncate-spacing-toggle: var(--fsds-core-spacing-size-02, 2px);
       --fsds-truncate-color-foreground-linkHover: var(--fsds-semantic-color-foreground-linkHover, #ae0001);
     }
-    
+
     .truncate {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -153,7 +159,7 @@ export class TruncateContentElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: block;
     }
-    
+
     .truncate__content {
       display: -webkit-box;
       -webkit-box-orient: vertical;
@@ -161,7 +167,13 @@ export class TruncateContentElement extends LitElement {
       line-clamp: var(--fsds-truncate-content-lines, 3);
       overflow: hidden;
     }
-    
+
+    .truncate--expanded .truncate__content {
+      display: block;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+
     .truncate__toggle {
       display: inline-flex;
       align-items: center;
