@@ -281,6 +281,7 @@ button {
   padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-06);
   font-size: var(--fsds-core-typography-ramp-3);
   color: var(--fsds-semantic-color-foreground-secondary);
+  border: 2px solid transparent;
   border-left: 2px solid transparent;
   text-decoration: none;
   transition:
@@ -339,7 +340,6 @@ button {
       calc(var(--fsds-semantic-interaction-state-layer-selected, 0.08) * 100%),
     transparent
   );
-  border: 2px solid transparent;
   border-left-color: var(--fsds-semantic-color-background-accent);
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
 }
