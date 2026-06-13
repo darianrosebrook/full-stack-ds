@@ -89,11 +89,11 @@ describe("resolveComponentRefImport", () => {
     ).toBe("../Image/Image.svelte");
   });
 
-  it("Angular: imports the <Ref>Component class from .js", () => {
+  it("Angular: imports the <Ref>Component class from <Ref>.component.js", () => {
     expect(resolveComponentRefImport("Avatar", "Image", "angular")).toEqual({
       refName: "Image",
       identifier: "ImageComponent",
-      specifier: "../Image/Image.js",
+      specifier: "../Image/Image.component.js",
       kind: "named",
     });
   });

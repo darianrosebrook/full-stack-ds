@@ -65,6 +65,7 @@ function svelteTableAttrBinding(attr: NativeTableAttr): string {
   }
 }
 import { translateNonReactType } from "../../non-react-types.js";
+import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
@@ -937,6 +938,14 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   if (autoDismissPolicy && autoDismissChannel) {
     importLines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
   }
+  // componentRef: import each referenced component (CODEGEN-RECURSIVE-
+  // COMPOSITION-01). A Svelte component is a default export from its .svelte
+  // file; the imported identifier is usable as a capitalized tag in markup.
+  for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "svelte")) {
+    importLines.push(
+      `import ${refImport.identifier} from "${refImport.specifier}";`,
+    );
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = generateTypeAliases(ir);
@@ -1247,8 +1256,13 @@ function renderSvelteDomNode(
     renderSvelteDomNode(c, childCtx, indent + 2),
   );
 
-  const tag = node.tag;
-  const isVoidEl = VOID_HTML_ELEMENTS_SVELTE.has(tag);
+  // componentRef: render the referenced component by its PascalCase name.
+  // Svelte resolves a capitalized tag to an imported component; `attr={expr}`
+  // bindings pass identically to a component prop or an HTML attribute.
+  const tag = node.componentRef ?? node.tag;
+  const isVoidEl = node.componentRef
+    ? true
+    : VOID_HTML_ELEMENTS_SVELTE.has(tag);
 
   let body: string;
   if (renderedChildren.length === 0 && isVoidEl) {

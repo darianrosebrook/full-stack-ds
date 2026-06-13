@@ -65,6 +65,7 @@ import {
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   getGroupHostOrnamentPart,
   getGroupHostPart,
@@ -1083,6 +1084,14 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
   if (autoDismissPolicy && autoDismissChannel) {
     importLines.push(`import { useAutoDismiss } from "../../primitives/index.js";`);
   }
+  // componentRef: import each referenced component (CODEGEN-RECURSIVE-
+  // COMPOSITION-01). `<script setup>` makes the named import available to
+  // the template by its PascalCase identifier.
+  for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "vue")) {
+    importLines.push(
+      `import ${refImport.identifier} from "${refImport.specifier}";`,
+    );
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");
@@ -1470,8 +1479,15 @@ function renderVueDomNode(
   );
   const allChildren = [...textChildLines, ...renderedChildren];
 
-  const tag = node.tag;
-  const isVoidEl = VOID_HTML_ELEMENTS_VUE.has(tag);
+  // componentRef: render the referenced component by its PascalCase name.
+  // Vue SFC templates resolve a PascalCase tag to the imported component;
+  // `:attr` bindings pass identically to a component prop or an HTML attr.
+  const tag = node.componentRef ?? node.tag;
+  // A childless componentRef self-closes (`<Image ... />`); `node.tag` is ""
+  // for a componentRef so the void-element set never matches it.
+  const isVoidEl = node.componentRef
+    ? true
+    : VOID_HTML_ELEMENTS_VUE.has(tag);
 
   let body: string;
   if (allChildren.length === 0 && isVoidEl) {

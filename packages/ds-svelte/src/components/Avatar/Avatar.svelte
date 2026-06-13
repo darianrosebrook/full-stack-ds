@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import Image from "../Image/Image.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -36,6 +36,6 @@ const classes = $derived(
 
 <div class={classes} aria-label={name} role="img">
   {#if src}
-  <img class={'avatar__image'} src={src} alt="" />
+  <Image class={'avatar__image'} src={src} alt="" />
   {/if}
 </div>

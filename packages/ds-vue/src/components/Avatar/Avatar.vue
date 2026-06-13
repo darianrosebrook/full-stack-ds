@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import Image from "../Image/Image.vue";
 // @generated:end
 
 // @custom:start imports
@@ -47,6 +48,6 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" :aria-label="props.name" role="img" :data-testid="props['data-testid']">
-    <img v-if="props.src" :class="'avatar__image'" :src="props.src" alt="" />
+    <Image v-if="props.src" :class="'avatar__image'" :src="props.src" alt="" />
   </div>
 </template>

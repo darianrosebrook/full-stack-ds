@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import '../Image/Image.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
@@ -122,7 +123,7 @@ export class AvatarElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="img" aria-label=${ifDefined(this.name)}>
   ${this.src ? html`
-  <img class=${'avatar__image'} src=${ifDefined(this.src)} alt="" />
+  <fsds-image class=${'avatar__image'} .src=${ifDefined(this.src)} alt=""></fsds-image>
   ` : nothing}
 </div>`;
   }

@@ -42,6 +42,7 @@ import {
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { toKebab } from "../../contract.js";
+import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
 import {
   isCompoundStateContainer,
@@ -1152,6 +1153,13 @@ function generateDomTreeImports(ir: ComponentIR): string {
     decorators.push("state");
   }
   lines.push(`import { ${decorators.join(", ")} } from 'lit/decorators.js';`);
+  // componentRef: side-effect import each referenced custom element so it
+  // self-registers via customElements.define at module load (CODEGEN-
+  // RECURSIVE-COMPOSITION-01). The template addresses it by its fsds-<kebab>
+  // custom element name.
+  for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "lit")) {
+    lines.push(`import '${refImport.specifier}';`);
+  }
   if (ir.behavior.normalizedChannels.length > 0) {
     lines.push(`import { ${ir.name}Behavior } from './${ir.name}Behavior.js';`);
   }
@@ -1590,7 +1598,13 @@ function renderLitDomNode(
       const evt = key.slice(2).toLowerCase();
       if (node.events[evt]) continue;
     }
-    const rendered = renderLitBinding(key, expr, ctx, node.tag);
+    const rendered = renderLitBinding(
+      key,
+      expr,
+      ctx,
+      node.tag,
+      node.componentRef !== undefined,
+    );
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1690,8 +1704,20 @@ function renderLitDomNode(
     if (contentExpr !== null) contentInline = contentExpr;
   }
 
-  const tag = node.tag;
-  const isVoidEl = VOID_HTML_ELEMENTS_LIT.has(tag);
+  // componentRef: render the referenced custom element by its registered name
+  // (`fsds-<kebab>`, matching how that component defines itself). A side-effect
+  // import (added by the class-body generator) registers the element; bindings
+  // use the property form for the custom element's @property fields (see
+  // renderLitBinding's isComponentRef path).
+  const tag = node.componentRef
+    ? `fsds-${toKebabCase(node.componentRef)}`
+    : node.tag;
+  // Custom elements are not void; emit an explicit open/close pair even when
+  // childless so the template parser treats it as an element, not self-closed
+  // (custom elements cannot self-close in HTML).
+  const isVoidEl = node.componentRef
+    ? false
+    : VOID_HTML_ELEMENTS_LIT.has(tag);
 
   let body: string;
   if (contentInline !== null && renderedChildren.length === 0) {
@@ -1827,6 +1853,7 @@ function renderLitBinding(
   expr: BindingExpression,
   ctx: LitRenderContext,
   tag?: string,
+  isComponentRef?: boolean,
 ): string | null {
   const attr = litDomAttrName(rawAttr);
   switch (expr.kind) {
@@ -1892,6 +1919,16 @@ function renderLitBinding(
         // are unchanged: undefined and false both produce attribute
         // absence in Lit's boolean-attribute binding.
         return `?${attr}=\${${rawAcc} ?? false}`;
+      }
+      // componentRef: the target is a custom element with `@property`-decorated
+      // fields. Set them via Lit's property-binding syntax (`.prop=`) so the
+      // value reaches the element's reactive property rather than being
+      // string-coerced through an HTML attribute. `ifDefined` still guards the
+      // optional case. aria-* stays attribute-form (handled above) because the
+      // custom element inherits ARIAMixin, which maps the attribute to the IDL
+      // property.
+      if (isComponentRef) {
+        return `.${attr}=\${ifDefined(${acc})}`;
       }
       // Attribute binding for every other case. The previous default
       // emitted `.${attr}=` (DOM property binding), but Lit's

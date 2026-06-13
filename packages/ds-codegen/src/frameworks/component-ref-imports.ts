@@ -103,11 +103,12 @@ export function resolveComponentRefImport(
     case "angular":
       // Angular imports the standalone component CLASS (named <Ref>Component)
       // into both the file and the @Component imports[] array; the template
-      // addresses it by selector.
+      // addresses it by selector. The generated file is <Ref>.component.ts, so
+      // the specifier targets <Ref>.component.js (matching the package barrel).
       return {
         refName,
         identifier: `${refName}Component`,
-        specifier: `${base}.js`,
+        specifier: `../${refName}/${refName}.component.js`,
         kind: "named",
       };
     case "lit":

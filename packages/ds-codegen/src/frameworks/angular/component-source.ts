@@ -45,6 +45,7 @@ import {
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { toKebab as sharedToKebab } from "../../contract.js";
+import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   isCompoundStateContainer,
   getInteractiveItemPart,
@@ -924,6 +925,14 @@ function generateDomTreeImports(ir: ComponentIR): string {
   if (ir.compoundParts.length > 0) {
     lines.push(`import { StackComponent } from "../../primitives/index.js";`);
   }
+  // componentRef: import the referenced standalone component class
+  // (CODEGEN-RECURSIVE-COMPOSITION-01). It is also added to the @Component
+  // imports[] array; the template addresses it by selector.
+  for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "angular")) {
+    lines.push(
+      `import { ${refImport.identifier} } from "${refImport.specifier}";`,
+    );
+  }
   if (ir.behavior.normalizedChannels.length > 0) {
     lines.push(`import { use${ir.name} } from "./use${ir.name}.js";`);
   }
@@ -973,6 +982,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const decoratorImports = ["NgClass"];
   if (usesNgIf) decoratorImports.push("NgIf");
   if (usesNgFor) decoratorImports.push("NgFor");
+  // componentRef: each referenced standalone component class must be in the
+  // @Component imports[] so Angular resolves its selector in this template.
+  for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "angular")) {
+    decoratorImports.push(refImport.identifier);
+  }
 
   const lines: string[] = [];
   lines.push(`@Component({`);
@@ -1330,7 +1344,13 @@ function renderAngularDomNode(
       const evt = key.slice(2).toLowerCase();
       if (node.events[evt]) continue;
     }
-    const rendered = renderAngularBinding(key, expr, ctx, node.tag);
+    const rendered = renderAngularBinding(
+      key,
+      expr,
+      ctx,
+      node.tag,
+      node.componentRef !== undefined,
+    );
     if (rendered === null) continue;
     attrs.push(rendered);
   }
@@ -1411,11 +1431,23 @@ function renderAngularDomNode(
   }
   const allChildren = [...contentLines, ...renderedChildren];
 
-  const tag = node.tag;
-  const isVoidEl = VOID_HTML_ELEMENTS_ANGULAR.has(tag);
+  // componentRef: render the referenced component by its selector
+  // (`fsds-<kebab>`, matching how that component declares its own selector).
+  // The class is imported and added to the standalone `imports: []` array by
+  // the dom-tree generator; bindings reach the component's @Input via the
+  // `[prop]=` property form (see angularAttrBinding's isComponentRef path).
+  const tag = node.componentRef
+    ? `fsds-${toKebab(node.componentRef)}`
+    : node.tag;
+  const isVoidEl = node.componentRef
+    ? false
+    : VOID_HTML_ELEMENTS_ANGULAR.has(tag);
+  // Angular custom-element components are never self-closing in templates;
+  // emit an explicit open/close pair even when childless.
+  const selfCloses = isVoidEl;
 
   let body: string;
-  if (allChildren.length === 0 && isVoidEl) {
+  if (allChildren.length === 0 && selfCloses) {
     body = `${pad}<${tag}${formatAngularAttrs(attrs)} />`;
   } else if (allChildren.length === 0) {
     body = `${pad}<${tag}${formatAngularAttrs(attrs)}></${tag}>`;
@@ -1529,7 +1561,25 @@ const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>>
   svg: new Set(["height", "width"]),
 };
 
-function angularAttrBinding(attr: string, tag?: string): string {
+/** Lower a hyphenated attribute name to a camelCase @Input name
+ *  (`aria-label` → `ariaLabel`, `data-testid` → `dataTestid`). */
+function hyphenatedToCamel(attr: string): string {
+  return attr.replace(/-([a-z])/g, (_m, c: string) => c.toUpperCase());
+}
+
+function angularAttrBinding(
+  attr: string,
+  tag?: string,
+  isComponentRef?: boolean,
+): string {
+  // componentRef: every binding targets the referenced component's @Input,
+  // so use the `[prop]=` property form (NOT `[attr.X]`, which would set a
+  // host attribute and bypass the @Input). Hyphenated names are camelCased to
+  // match the @Input naming the DS components declare (e.g. @Input() ariaLabel
+  // for aria-label, @Input() ariaDescribedby for aria-describedby).
+  if (isComponentRef) {
+    return attr.includes("-") ? `[${hyphenatedToCamel(attr)}]` : `[${attr}]`;
+  }
   if (attr.startsWith("data-") || attr.startsWith("aria-")) {
     return `[attr.${attr}]`;
   }
@@ -1654,25 +1704,26 @@ function renderAngularBinding(
   expr: BindingExpression,
   ctx: AngularRenderContext,
   tag?: string,
+  isComponentRef?: boolean,
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${angularAttrBinding(attr, tag)}="${appendPath(angularPropAccessor(expr.prop, ctx), expr.path)}"`;
+      return `${angularAttrBinding(attr, tag, isComponentRef)}="${appendPath(angularPropAccessor(expr.prop, ctx), expr.path)}"`;
     case "literal":
       return `${attr}="${escapeAngularAttr(expr.value)}"`;
     case "iterationLocal": {
       const name = angularIterationLocalName(expr.local, ctx);
-      return name ? `${angularAttrBinding(attr, tag)}="${appendPath(name, expr.path)}"` : null;
+      return name ? `${angularAttrBinding(attr, tag, isComponentRef)}="${appendPath(name, expr.path)}"` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
-        return `${angularAttrBinding(attr, tag)}="${appendPath(`behavior.${ch.name}()`, expr.path)}"`;
+        return `${angularAttrBinding(attr, tag, isComponentRef)}="${appendPath(`behavior.${ch.name}()`, expr.path)}"`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
-        return `${angularAttrBinding(attr, tag)}="${safePropertyExpr(ch.defaultValueProp)}"`;
+        return `${angularAttrBinding(attr, tag, isComponentRef)}="${safePropertyExpr(ch.defaultValueProp)}"`;
       }
       // onChange synthesis — bind to a method on the component.
       // Event-shaped channels pass the raw event to the consumer's
