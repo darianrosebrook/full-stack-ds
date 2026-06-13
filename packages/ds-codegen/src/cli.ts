@@ -415,6 +415,27 @@ function main(): void {
 
   const validContracts: ContractInput[] = [];
 
+  // Build a name → contract map over the FULL corpus (not just `filtered`) so
+  // the cross-contract componentRef layer-ordering rule can resolve a target's
+  // layer even when generating a single component. Best-effort: a contract
+  // that fails to parse here is simply absent from the map (its own validation
+  // surfaces the error elsewhere). Only built when semantic checks run.
+  const allContractsByName = new Map<string, ComponentContract>();
+  if (args.checkSemantics) {
+    for (const entry of discovered) {
+      try {
+        const parsed = JSON.parse(
+          fs.readFileSync(entry.absPath, "utf-8"),
+        ) as ComponentContract;
+        if (parsed && typeof parsed.name === "string") {
+          allContractsByName.set(parsed.name, parsed);
+        }
+      } catch {
+        // ignore — malformed contracts are reported by their own validation
+      }
+    }
+  }
+
   for (const entry of filtered) {
     const { filename: file, absPath: filePath } = entry;
     const rawBytes = fs.readFileSync(filePath);
@@ -517,7 +538,9 @@ function main(): void {
     // with all issues from all validators concatenated.
     if (args.checkSemantics) {
       const driftIssues = [
-        ...validateContractSemantics(result.value),
+        ...validateContractSemantics(result.value, {
+          allContracts: allContractsByName,
+        }),
         ...validateContractTokens(result.value),
         ...validateContractEmittedCss(result.value),
         ...validateContractEmittedStyles(result.value),

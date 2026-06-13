@@ -76,8 +76,33 @@
 import type { ComponentContract } from "../contract.js";
 import type { ValidationIssue } from "../validate.js";
 
+/**
+ * Layer ladder for by-reference composition. A contract may only reference
+ * (`componentRef`) a component whose layer is lower-or-equal in this order —
+ * a compound may consume a primitive, a composer may consume a compound or
+ * primitive, but a primitive may NOT reference a compound. This makes the
+ * `layer` field load-bearing and gives cycle-prevention across the ladder for
+ * free (CODEGEN-RECURSIVE-COMPOSITION-01).
+ */
+const LAYER_ORDER: Record<string, number> = {
+  primitive: 0,
+  compound: 1,
+  composer: 2,
+  assembly: 3,
+};
+
+export interface SemanticValidationContext {
+  /**
+   * All known contracts by name. When provided, cross-contract rules run
+   * (layer-ordering on componentRef). Absent for single-contract callers
+   * (the rule is skipped rather than failing closed).
+   */
+  allContracts?: ReadonlyMap<string, ComponentContract>;
+}
+
 export function validateContractSemantics(
   contract: ComponentContract,
+  ctx?: SemanticValidationContext,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 
@@ -194,6 +219,37 @@ export function validateContractSemantics(
       issues,
       "/anatomy/dom",
     );
+  }
+
+  // --- Rule 7b: componentRef layer ordering (cross-contract) --------
+  // Only runs when the caller supplies the full contract set. Each
+  // `componentRef` must target a component whose layer is lower-or-equal to
+  // this contract's; a higher-layer reference (e.g. a primitive referencing a
+  // compound) is rejected. Also flags references to unknown components.
+  if (ctx?.allContracts) {
+    const hostLayer = contract.layer;
+    const hostRank = hostLayer ? LAYER_ORDER[hostLayer] : undefined;
+    for (const { ref, pointer } of collectComponentRefs(contract)) {
+      const target = ctx.allContracts.get(ref);
+      if (!target) {
+        issues.push({
+          pointer,
+          message: `componentRef "fsds.${ref}" does not resolve to a known component contract`,
+        });
+        continue;
+      }
+      const targetRank = target.layer ? LAYER_ORDER[target.layer] : undefined;
+      if (hostRank !== undefined && targetRank !== undefined && targetRank > hostRank) {
+        issues.push({
+          pointer,
+          message:
+            `componentRef "fsds.${ref}" targets a higher layer ` +
+            `(${target.layer}) than this ${hostLayer} component. A component ` +
+            `may only reference a lower-or-equal layer in the ladder ` +
+            `primitive < compound < composer < assembly.`,
+        });
+      }
+    }
   }
 
   // --- Layer-conditional rules -------------------------------------
@@ -334,6 +390,53 @@ function anatomyParts(contract: ComponentContract): Set<string> {
   if (!a) return new Set();
   if (Array.isArray(a)) return new Set(a);
   return new Set(a.parts ?? []);
+}
+
+/**
+ * Collect every `componentRef` declared on a contract — from both
+ * `anatomy.details[*].componentRef` and `anatomy.dom` nodes — as
+ * `{ ref, pointer }` pairs, where `ref` is the bare component name (the
+ * `fsds.` prefix stripped) and `pointer` is the JSON pointer for diagnostics.
+ * Malformed refs (not matching `fsds.<Name>`) are skipped here; the IR builder
+ * is the authority that hard-fails on those.
+ */
+function collectComponentRefs(
+  contract: ComponentContract,
+): { ref: string; pointer: string }[] {
+  const out: { ref: string; pointer: string }[] = [];
+  const a = contract.anatomy;
+  if (!a || Array.isArray(a)) return out;
+  const strip = (raw: string): string | undefined => {
+    const m = /^fsds\.([A-Z][A-Za-z0-9]*)$/.exec(raw);
+    return m ? m[1] : undefined;
+  };
+  // anatomy.details[*].componentRef
+  for (const [part, det] of Object.entries(a.details ?? {})) {
+    const raw = (det as { componentRef?: string }).componentRef;
+    if (typeof raw === "string") {
+      const ref = strip(raw);
+      if (ref) out.push({ ref, pointer: `/anatomy/details/${part}/componentRef` });
+    }
+  }
+  // anatomy.dom tree
+  const seen = new Set(out.map((r) => r.ref));
+  const walk = (node: typeof a.dom, path: string): void => {
+    if (!node) return;
+    const raw = (node as { componentRef?: string }).componentRef;
+    if (typeof raw === "string") {
+      const ref = strip(raw);
+      if (ref && !seen.has(ref)) {
+        seen.add(ref);
+        out.push({ ref, pointer: `${path}/componentRef` });
+      }
+    }
+    const children = (node as { children?: unknown[] }).children;
+    if (Array.isArray(children)) {
+      children.forEach((c, i) => walk(c as typeof a.dom, `${path}/children/${i}`));
+    }
+  };
+  walk(a.dom, "/anatomy/dom");
+  return out;
 }
 
 // ---------- obligation-rule helpers --------------------------------

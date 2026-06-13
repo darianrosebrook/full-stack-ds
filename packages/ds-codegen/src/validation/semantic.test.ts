@@ -445,3 +445,108 @@ describe("obligation rule — a2ui children host (OBLIGATION_A2UI_CHILDREN_NO_HO
     expect(hasCode(issues, "OBLIGATION_A2UI_CHILDREN_NO_HOST")).toBe(false);
   });
 });
+
+// CODEGEN-RECURSIVE-COMPOSITION-01: componentRef layer-ordering rule. Only
+// runs when the caller supplies the full contract set (allContracts ctx).
+describe("validateContractSemantics — componentRef layer ordering", () => {
+  function contracts(
+    ...list: ComponentContract[]
+  ): ReadonlyMap<string, ComponentContract> {
+    return new Map(list.map((c) => [c.name, c]));
+  }
+
+  const Image = base({ name: "Image", layer: "primitive" });
+  const Card = base({ name: "Card", layer: "compound" });
+
+  function withRef(
+    host: Partial<ComponentContract>,
+    refPart: string,
+    ref: string,
+  ): ComponentContract {
+    return base({
+      ...host,
+      anatomy: {
+        parts: ["root", refPart],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [{ componentRef: ref, part: refPart }],
+        },
+      },
+    } as Partial<ComponentContract>);
+  }
+
+  it("admits a compound referencing a primitive (compound -> primitive)", () => {
+    const host = withRef({ name: "Avatar", layer: "compound" }, "image", "fsds.Image");
+    const issues = validateContractSemantics(host, {
+      allContracts: contracts(host, Image),
+    });
+    expect(
+      issues.some((i) => /higher layer/.test(i.message)),
+    ).toBe(false);
+  });
+
+  it("admits a composer referencing a compound (composer -> compound)", () => {
+    const host = withRef({ name: "Wizard", layer: "composer" }, "card", "fsds.Card");
+    const issues = validateContractSemantics(host, {
+      allContracts: contracts(host, Card),
+    });
+    expect(issues.some((i) => /higher layer/.test(i.message))).toBe(false);
+  });
+
+  it("REJECTS a primitive referencing a compound (primitive -> compound)", () => {
+    const host = withRef({ name: "BadPrim", layer: "primitive" }, "card", "fsds.Card");
+    const issues = validateContractSemantics(host, {
+      allContracts: contracts(host, Card),
+    });
+    const offending = issues.find((i) => /higher layer/.test(i.message));
+    expect(offending).toBeDefined();
+    expect(offending?.pointer).toBe("/anatomy/dom/children/0/componentRef");
+    expect(offending?.message).toMatch(/compound.*than this primitive/);
+  });
+
+  it("REJECTS a componentRef to an unknown component", () => {
+    const host = withRef({ name: "Avatar", layer: "compound" }, "x", "fsds.DoesNotExist");
+    const issues = validateContractSemantics(host, {
+      allContracts: contracts(host),
+    });
+    expect(
+      issues.some((i) => /does not resolve to a known component/.test(i.message)),
+    ).toBe(true);
+  });
+
+  it("admits an equal-layer reference (compound -> compound)", () => {
+    const host = withRef({ name: "Postcard", layer: "compound" }, "card", "fsds.Card");
+    const issues = validateContractSemantics(host, {
+      allContracts: contracts(host, Card),
+    });
+    expect(issues.some((i) => /higher layer/.test(i.message))).toBe(false);
+  });
+
+  it("SKIPS the layer rule entirely when no allContracts ctx is given", () => {
+    // Single-contract callers (no cross-contract context) must not fail
+    // closed — the rule simply does not run.
+    const host = withRef({ name: "BadPrim", layer: "primitive" }, "card", "fsds.Card");
+    const issues = validateContractSemantics(host);
+    expect(issues.some((i) => /higher layer/.test(i.message))).toBe(false);
+    expect(
+      issues.some((i) => /does not resolve/.test(i.message)),
+    ).toBe(false);
+  });
+
+  it("resolves a componentRef declared in anatomy.details", () => {
+    const host = base({
+      name: "BadPrim",
+      layer: "primitive",
+      anatomy: {
+        parts: ["root", "card"],
+        details: { card: { componentRef: "fsds.Card" } },
+      },
+    } as Partial<ComponentContract>);
+    const issues = validateContractSemantics(host, {
+      allContracts: contracts(host, Card),
+    });
+    const offending = issues.find((i) => /higher layer/.test(i.message));
+    expect(offending?.pointer).toBe("/anatomy/details/card/componentRef");
+  });
+});
