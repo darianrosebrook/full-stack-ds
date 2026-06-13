@@ -13,9 +13,9 @@
       },
       "subtle": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.light": "{color.palette.neutral.100}",
           "fsds.dark": "{color.palette.neutral.700}"
         },
         "$description": "Subtle border color"

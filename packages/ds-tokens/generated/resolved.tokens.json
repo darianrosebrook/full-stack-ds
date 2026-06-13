@@ -2632,7 +2632,7 @@
           "$type": "color",
           "$description": "Subtle border color",
           "$value": {
-            "light": "#b8b8b8",
+            "light": "#d0d0d0",
             "dark": "#474647"
           }
         },

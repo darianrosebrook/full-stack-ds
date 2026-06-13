@@ -44,9 +44,29 @@ interface TokenPickerProps {
   onClose: () => void;
 }
 
+/**
+ * The value kind a picker is restricted to. Matches the `valueKind` prop and
+ * the `kind` axis of every caller (TokenValueControl, PropertiesPanel). Not the
+ * full DTCG `$type` space — the picker only ever edits a color slot or a
+ * dimension slot, so those are the only kinds a control asks for.
+ */
+type ValueKind = "color" | "dimension";
+
 const COLOR_RE = /^(#|rgb|hsl|oklch|color\()/i;
 // A length: optional sign, number, a length/percentage unit. Unitless 0 counts.
 const DIMENSION_RE = /^-?\d*\.?\d+(px|rem|em|%|vh|vw|ch|pt)?$/i;
+
+/**
+ * DTCG `$type` values that count as a given ValueKind. The token's declared
+ * `$type` (carried on FoundationToken.type) is the authoritative signal —
+ * `color` is exactly the color family; `dimension`/`borderWidth` are the
+ * length family a dimension control should offer. We fall back to the value
+ * regex only when a token carries no `$type`.
+ */
+const KIND_TYPES: Record<ValueKind, ReadonlySet<string>> = {
+  color: new Set(["color"]),
+  dimension: new Set(["dimension", "borderWidth"]),
+};
 
 function isColorValue(v: string | undefined): boolean {
   return !!v && COLOR_RE.test(v.trim());
@@ -54,6 +74,65 @@ function isColorValue(v: string | undefined): boolean {
 
 function isDimensionValue(v: string | undefined): boolean {
   return !!v && DIMENSION_RE.test(v.trim());
+}
+
+/**
+ * Does a token belong to the requested value kind? Prefers the authoritative
+ * DTCG `$type`; falls back to the value-shape regex for tokens that carry no
+ * type. This is what keeps a color out of a border-radius picker and a length
+ * out of a color picker — someone editing a dimension should never see a color
+ * token, and vice versa.
+ */
+function matchesKind(t: FoundationToken, kind: ValueKind): boolean {
+  if (t.type) return KIND_TYPES[kind].has(t.type);
+  return kind === "color" ? isColorValue(t.value) : isDimensionValue(t.value);
+}
+
+/**
+ * Rank tokens by how likely an author is to reach for them: semantic tokens
+ * (the intended public surface) before raw core values, then alphabetically by
+ * path. Used both to order tokens within a group and (via the group's first
+ * token) to order the groups themselves.
+ */
+const LAYER_RANK: Record<FoundationToken["layer"], number> = {
+  semantic: 0,
+  brand: 1,
+  core: 2,
+};
+
+function byUseCase(a: FoundationToken, b: FoundationToken): number {
+  const rank = LAYER_RANK[a.layer] - LAYER_RANK[b.layer];
+  if (rank !== 0) return rank;
+  return a.path.localeCompare(b.path);
+}
+
+/**
+ * Filter the flat token list to those matching the requested kind (and, when
+ * given, the path pattern + free-text query), then sort semantic-first so the
+ * tokens an author is expected to use surface above raw core values. When
+ * `kind` is undefined the kind filter is skipped (all value-carrying tokens are
+ * eligible). Pure — exported for unit testing.
+ */
+export function sortAndFilterByType(
+  tokenList: FoundationToken[],
+  kind: ValueKind | undefined,
+  opts: { pathPattern?: RegExp; query?: string } = {},
+): FoundationToken[] {
+  const q = opts.query?.trim().toLowerCase() ?? "";
+  return tokenList
+    .filter((t) => {
+      if (t.value == null) return false; // branch-only nodes carry no value
+      if (kind && !matchesKind(t, kind)) return false;
+      if (opts.pathPattern && !opts.pathPattern.test(t.path)) return false;
+      if (
+        q &&
+        !t.path.toLowerCase().includes(q) &&
+        !String(t.value).toLowerCase().includes(q)
+      )
+        return false;
+      return true;
+    })
+    .sort(byUseCase);
 }
 
 /** First path segment, used as the collection group header (color, spacing…). */
@@ -77,20 +156,11 @@ export function TokenPicker({
   const kind = valueKind ?? (colorOnly ? "color" : undefined);
 
   const groups = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const filtered = tokens.filter((t) => {
-      if (t.value == null) return false; // branch-only nodes carry no value
-      if (kind === "color" && !isColorValue(t.value)) return false;
-      if (kind === "dimension" && !isDimensionValue(t.value)) return false;
-      if (pathPattern && !pathPattern.test(t.path)) return false;
-      if (
-        q &&
-        !t.path.toLowerCase().includes(q) &&
-        !String(t.value).toLowerCase().includes(q)
-      )
-        return false;
-      return true;
-    });
+    // Filter to the requested kind + path/query, sorted semantic-first.
+    const filtered = sortAndFilterByType(tokens, kind, { pathPattern, query });
+    // Bucket into collection groups, preserving the semantic-first order the
+    // filtered list already carries (Map iteration is insertion order, and
+    // items are pushed in sorted order).
     const byGroup = new Map<string, FoundationToken[]>();
     for (const t of filtered) {
       const k = groupKey(t);
@@ -98,14 +168,15 @@ export function TokenPicker({
       arr.push(t);
       byGroup.set(k, arr);
     }
-    // Stable, readable order: group name asc, token path asc within group.
+    // Order groups by their best (first) token's use-case rank so semantic
+    // collections lead; ties fall back to the group name for stability.
     return [...byGroup.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([name, items]) => ({
-        name,
-        items: items.sort((a, b) => a.path.localeCompare(b.path)),
-      }));
-  }, [tokens, colorOnly, query]);
+      .sort(([nameA, itemsA], [nameB, itemsB]) => {
+        const rank = byUseCase(itemsA[0]!, itemsB[0]!);
+        return rank !== 0 ? rank : nameA.localeCompare(nameB);
+      })
+      .map(([name, items]) => ({ name, items }));
+  }, [query, tokens, kind, pathPattern]);
 
   return (
     <div

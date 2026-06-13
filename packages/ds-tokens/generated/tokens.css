@@ -737,7 +737,7 @@
   --fsds-semantic-color-background-subtle: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-background-accent-subtle: var(--fsds-core-color-palette-brand-primary-100);
   --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-300);
-  --fsds-semantic-color-border-subtle: var(--fsds-core-color-palette-neutral-200);
+  --fsds-semantic-color-border-subtle: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-border-bold: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-border-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-border-light: var(--fsds-core-color-palette-neutral-200);
@@ -898,7 +898,7 @@
   --fsds-semantic-color-background-subtle: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-background-accent-subtle: var(--fsds-core-color-palette-brand-primary-100);
   --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-300);
-  --fsds-semantic-color-border-subtle: var(--fsds-core-color-palette-neutral-200);
+  --fsds-semantic-color-border-subtle: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-border-bold: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-border-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-border-light: var(--fsds-core-color-palette-neutral-200);
@@ -1375,7 +1375,7 @@
   --fsds-semantic-color-background-subtle: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-background-accent-subtle: var(--fsds-core-color-palette-brand-primary-100);
   --fsds-semantic-color-border-default: var(--fsds-core-color-palette-neutral-300);
-  --fsds-semantic-color-border-subtle: var(--fsds-core-color-palette-neutral-200);
+  --fsds-semantic-color-border-subtle: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-border-bold: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-border-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-border-light: var(--fsds-core-color-palette-neutral-200);
