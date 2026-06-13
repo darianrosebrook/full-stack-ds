@@ -1890,6 +1890,10 @@
           "$type": "fontWeight",
           "$value": "500"
         },
+        "semibold": {
+          "$type": "fontWeight",
+          "$value": "600"
+        },
         "bold": {
           "$type": "fontWeight",
           "$value": "700"
@@ -4258,6 +4262,10 @@
           "regular": {
             "$type": "fontWeight",
             "$value": "400"
+          },
+          "semibold": {
+            "$type": "fontWeight",
+            "$value": "600"
           }
         }
       },

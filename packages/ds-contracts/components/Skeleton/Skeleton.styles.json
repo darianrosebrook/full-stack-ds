@@ -2,12 +2,13 @@
   "root": {
     "display": {
       "literal": "block",
-      "platforms": [
-        "web"
-      ]
+      "platforms": ["web"]
     },
     "background-color": {
       "resolvesTo": "skeleton.color.base"
+    },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
     },
     "transition-duration": {
       "resolvesTo": "skeleton.anim.duration"
@@ -17,17 +18,142 @@
     },
     "animation": {
       "literal": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
-      "platforms": [
-        "web"
-      ]
-    },
-    "skeleton.radius.md": {
-      "resolvesTo": "core.shape.radius.04",
-      "fallback": "16px"
-    },
-    "skeleton.gap.md": {
-      "resolvesTo": "core.spacing.size.07",
-      "fallback": "24px"
+      "platforms": ["web"]
     }
+  },
+  "shape": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "background-color": {
+      "resolvesTo": "skeleton.color.base"
+    },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    }
+  },
+  "stack": {
+    "display": {
+      "literal": "flex",
+      "platforms": ["web"]
+    },
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
+    "gap": {
+      "resolvesTo": "skeleton.gap.md"
+    }
+  },
+  "--block": {
+    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    }
+  },
+  "--text": {
+    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.small", "fallback": "4px" },
+    "skeleton.shape.height.text": { "resolvesTo": "core.typography.ramp.4", "fallback": "1rem" },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    },
+    "height": {
+      "resolvesTo": "skeleton.shape.height.text"
+    }
+  },
+  "--avatar": {
+    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.full", "fallback": "9999px" },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    },
+    "aspect-ratio": {
+      "literal": "1",
+      "platforms": ["web"]
+    }
+  },
+  "--media": {
+    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    },
+    "aspect-ratio": {
+      "literal": "16 / 9",
+      "platforms": ["web"]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": ["web"]
+    }
+  },
+  "--dataviz": {
+    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    },
+    "aspect-ratio": {
+      "literal": "4 / 3",
+      "platforms": ["web"]
+    },
+    "width": {
+      "literal": "100%",
+      "platforms": ["web"]
+    }
+  },
+  "--actions": {
+    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "border-radius": {
+      "resolvesTo": "skeleton.radius.md"
+    },
+    "height": {
+      "literal": "36px",
+      "platforms": ["web"]
+    },
+    "min-width": {
+      "literal": "80px",
+      "platforms": ["web"]
+    }
+  },
+  "--shimmer": {
+    "animation": {
+      "literal": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
+      "platforms": ["web"]
+    }
+  },
+  "--wipe": {
+    "skeleton.color.base": { "resolvesTo": "semantic.color.background.tertiary", "fallback": "#e5e5e5" },
+    "overflow": {
+      "literal": "hidden",
+      "platforms": ["web"]
+    },
+    "position": {
+      "literal": "relative",
+      "platforms": ["web"]
+    },
+    "animation": {
+      "literal": "none",
+      "platforms": ["web"]
+    }
+  },
+  "--pulse": {
+    "animation": {
+      "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 3) ease-in-out infinite",
+      "platforms": ["web"]
+    }
+  },
+  "--none": {
+    "animation": {
+      "literal": "none",
+      "platforms": ["web"]
+    }
+  },
+  "--compact": {
+    "skeleton.gap.md": { "resolvesTo": "core.spacing.size.03", "fallback": "4px" }
+  },
+  "--regular": {
+    "skeleton.gap.md": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" }
+  },
+  "--spacious": {
+    "skeleton.gap.md": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" }
   }
 }

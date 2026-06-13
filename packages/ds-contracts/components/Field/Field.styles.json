@@ -178,5 +178,41 @@
     "border-color": {
       "resolvesTo": "field.color.valid-border"
     }
+  },
+  "--idle": {
+    "field.color.border": {
+      "resolvesTo": "semantic.color.border.subtle",
+      "fallback": "#cecece"
+    }
+  },
+  "--validating": {
+    "field.color.border": {
+      "resolvesTo": "semantic.color.border.accent",
+      "fallback": "#d9292b"
+    },
+    "field.color.fg": {
+      "resolvesTo": "semantic.color.foreground.secondary",
+      "fallback": "#555555"
+    }
+  },
+  "--valid": {
+    "field.color.border": {
+      "resolvesTo": "semantic.color.feedback.border.success",
+      "fallback": "#336006"
+    },
+    "field.color.fg": {
+      "resolvesTo": "semantic.color.foreground.success",
+      "fallback": "#336006"
+    }
+  },
+  "--invalid": {
+    "field.color.border": {
+      "resolvesTo": "semantic.color.border.danger",
+      "fallback": "#ae0001"
+    },
+    "field.color.fg": {
+      "resolvesTo": "semantic.color.foreground.danger",
+      "fallback": "#d9292b"
+    }
   }
 }

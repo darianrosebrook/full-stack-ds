@@ -160,6 +160,30 @@ export const detailsTokenScopes = {
       ref: "semantic.typography.font.weight.medium",
       fallback: "500",
     },
+    "details.size.padding.compact": {
+      name: "details.size.padding.compact",
+      cssVar: "--fsds-details-size-padding-compact",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "details.size.padding.page": {
+      name: "details.size.padding.page",
+      cssVar: "--fsds-details-size-padding-page",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "details.typography.fontSize.body": {
+      name: "details.typography.fontSize.body",
+      cssVar: "--fsds-details-typography-fontSize-body",
+      ref: "semantic.typography.body.03",
+      fallback: 14,
+    },
+    "details.typography.fontSize.compact": {
+      name: "details.typography.fontSize.compact",
+      cssVar: "--fsds-details-typography-fontSize-compact",
+      ref: "semantic.typography.body.04",
+      fallback: 12,
+    },
   },
   "hover": {
     "details.color.background.default": {
@@ -167,6 +191,40 @@ export const detailsTokenScopes = {
       cssVar: "--fsds-details-color-background-default",
       ref: "semantic.color.background.hover",
       fallback: "#cecece",
+    },
+  },
+  "variant_compact": {
+    "details.size.padding.default": {
+      name: "details.size.padding.default",
+      cssVar: "--fsds-details-size-padding-default",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "details.typography.lineHeight.body": {
+      name: "details.typography.lineHeight.body",
+      cssVar: "--fsds-details-typography-lineHeight-body",
+      ref: "core.spacing.size.06",
+      fallback: 16,
+    },
+  },
+  "variant_inline": {
+    "details.size.padding.default": {
+      name: "details.size.padding.default",
+      cssVar: "--fsds-details-size-padding-default",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "details.color.background.default": {
+      name: "details.color.background.default",
+      cssVar: "--fsds-details-color-background-default",
+      ref: "semantic.color.background.secondary",
+      fallback: "#f5f5f5",
+    },
+    "details.color.border.default": {
+      name: "details.color.border.default",
+      cssVar: "--fsds-details-color-border-default",
+      ref: "semantic.color.border.subtle",
+      fallback: "#e0e0e0",
     },
   },
 } satisfies ComponentTokenScopes;

@@ -178,6 +178,154 @@ export const chipTokenScopes = {
       ref: "semantic.focus.ring.offset",
       fallback: 2,
     },
+    "chip.size.minHeight": {
+      name: "chip.size.minHeight",
+      cssVar: "--fsds-chip-size-minHeight",
+      ref: "core.dimension.actionMinHeight",
+      fallback: 32,
+    },
+    "chip.color.background.selected": {
+      name: "chip.color.background.selected",
+      cssVar: "--fsds-chip-color-background-selected",
+      ref: "semantic.color.background.info.subtle",
+      fallback: "#d9f3fe",
+    },
+    "chip.color.foreground.selected": {
+      name: "chip.color.foreground.selected",
+      cssVar: "--fsds-chip-color-foreground-selected",
+      ref: "semantic.color.foreground.on.info.subtle",
+      fallback: "#002d99",
+    },
+    "chip.color.border.selected": {
+      name: "chip.color.border.selected",
+      cssVar: "--fsds-chip-color-border-selected",
+      ref: "semantic.color.border.info",
+      fallback: "#0042dc",
+    },
+  },
+  "variant_selected": {
+    "chip.color.background.default": {
+      name: "chip.color.background.default",
+      cssVar: "--fsds-chip-color-background-default",
+      ref: "semantic.color.background.info.subtle",
+      fallback: "#d9f3fe",
+    },
+    "chip.color.foreground.default": {
+      name: "chip.color.foreground.default",
+      cssVar: "--fsds-chip-color-foreground-default",
+      ref: "semantic.color.foreground.on.info.subtle",
+      fallback: "#002d99",
+    },
+    "chip.color.border.default": {
+      name: "chip.color.border.default",
+      cssVar: "--fsds-chip-color-border-default",
+      ref: "semantic.color.border.info",
+      fallback: "#0042dc",
+    },
+  },
+  "variant_dismissible": {
+    "chip.size.padding.horizontal": {
+      name: "chip.size.padding.horizontal",
+      cssVar: "--fsds-chip-size-padding-horizontal",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+  },
+  "variant_small": {
+    "chip.size.padding.vertical": {
+      name: "chip.size.padding.vertical",
+      cssVar: "--fsds-chip-size-padding-vertical",
+      ref: "semantic.glyph.badge.size.sm.paddingY",
+      fallback: 2,
+    },
+    "chip.size.padding.horizontal": {
+      name: "chip.size.padding.horizontal",
+      cssVar: "--fsds-chip-size-padding-horizontal",
+      ref: "semantic.glyph.badge.size.sm.paddingX",
+      fallback: 4,
+    },
+    "chip.text.size": {
+      name: "chip.text.size",
+      cssVar: "--fsds-chip-text-size",
+      ref: "semantic.glyph.badge.size.sm.fontSize",
+      fallback: 10,
+    },
+    "chip.size.gap": {
+      name: "chip.size.gap",
+      cssVar: "--fsds-chip-size-gap",
+      ref: "semantic.glyph.badge.size.sm.gap",
+      fallback: 2,
+    },
+    "chip.size.minHeight": {
+      name: "chip.size.minHeight",
+      cssVar: "--fsds-chip-size-minHeight",
+      ref: "semantic.glyph.badge.size.sm.minHeight",
+      fallback: 24,
+    },
+  },
+  "variant_medium": {
+    "chip.size.padding.vertical": {
+      name: "chip.size.padding.vertical",
+      cssVar: "--fsds-chip-size-padding-vertical",
+      ref: "semantic.glyph.badge.size.md.paddingY",
+      fallback: 4,
+    },
+    "chip.size.padding.horizontal": {
+      name: "chip.size.padding.horizontal",
+      cssVar: "--fsds-chip-size-padding-horizontal",
+      ref: "semantic.glyph.badge.size.md.paddingX",
+      fallback: 8,
+    },
+    "chip.text.size": {
+      name: "chip.text.size",
+      cssVar: "--fsds-chip-text-size",
+      ref: "semantic.glyph.badge.size.md.fontSize",
+      fallback: 12,
+    },
+    "chip.size.gap": {
+      name: "chip.size.gap",
+      cssVar: "--fsds-chip-size-gap",
+      ref: "semantic.glyph.badge.size.md.gap",
+      fallback: 4,
+    },
+    "chip.size.minHeight": {
+      name: "chip.size.minHeight",
+      cssVar: "--fsds-chip-size-minHeight",
+      ref: "semantic.glyph.badge.size.md.minHeight",
+      fallback: 32,
+    },
+  },
+  "variant_large": {
+    "chip.size.padding.vertical": {
+      name: "chip.size.padding.vertical",
+      cssVar: "--fsds-chip-size-padding-vertical",
+      ref: "semantic.glyph.badge.size.lg.paddingY",
+      fallback: 4,
+    },
+    "chip.size.padding.horizontal": {
+      name: "chip.size.padding.horizontal",
+      cssVar: "--fsds-chip-size-padding-horizontal",
+      ref: "semantic.glyph.badge.size.lg.paddingX",
+      fallback: 12,
+    },
+    "chip.text.size": {
+      name: "chip.text.size",
+      cssVar: "--fsds-chip-text-size",
+      ref: "semantic.glyph.badge.size.lg.fontSize",
+      fallback: 14,
+    },
+    "chip.size.gap": {
+      name: "chip.size.gap",
+      cssVar: "--fsds-chip-size-gap",
+      ref: "semantic.glyph.badge.size.lg.gap",
+      fallback: 4,
+    },
+    "chip.size.minHeight": {
+      name: "chip.size.minHeight",
+      cssVar: "--fsds-chip-size-minHeight",
+      ref: "semantic.glyph.badge.size.lg.minHeight",
+      fallback: 40,
+    },
   },
 } satisfies ComponentTokenScopes;
 

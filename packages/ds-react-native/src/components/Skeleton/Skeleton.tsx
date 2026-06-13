@@ -34,6 +34,8 @@ export interface SkeletonProps {
 
 // @generated:start component
 export function Skeleton({
+  variant = "block",
+  animate = "shimmer",
   ariaLabel,
   children,
   style,
@@ -43,10 +45,12 @@ export function Skeleton({
 }: SkeletonProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createSkeletonStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForVariant = variant !== undefined ? ({ "block": styles.root_variant_block, "text": styles.root_variant_text, "avatar": styles.root_variant_avatar, "media": styles.root_variant_media, "dataviz": styles.root_variant_dataviz, "actions": styles.root_variant_actions } as Record<string, ViewStyle | undefined>)[variant] : undefined;
+  const variantStyleForAnimate = animate !== undefined ? ({ "wipe": styles.root_variant_wipe } as Record<string, ViewStyle | undefined>)[animate] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForVariant, variantStyleForAnimate, style]}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

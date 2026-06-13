@@ -372,6 +372,7 @@
   --fsds-core-typography-weight-light: 300;
   --fsds-core-typography-weight-regular: 400;
   --fsds-core-typography-weight-medium: 500;
+  --fsds-core-typography-weight-semibold: 600;
   --fsds-core-typography-weight-bold: 700;
   --fsds-core-typography-weight-black: 900;
   --fsds-core-color-gradient-brand-primary: var(--fsds-core-color-palette-brand-primary-400);
@@ -584,6 +585,7 @@
   --fsds-semantic-typography-font-weight-light: var(--fsds-core-typography-weight-light);
   --fsds-semantic-typography-font-weight-medium: var(--fsds-core-typography-weight-medium);
   --fsds-semantic-typography-font-weight-regular: var(--fsds-core-typography-weight-regular);
+  --fsds-semantic-typography-font-weight-semibold: var(--fsds-core-typography-weight-semibold);
   --fsds-semantic-typography-heading-01: var(--fsds-core-typography-ramp-8);
   --fsds-semantic-typography-heading-02: var(--fsds-core-typography-ramp-7);
   --fsds-semantic-typography-heading-03: var(--fsds-core-typography-ramp-6);

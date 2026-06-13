@@ -36,9 +36,9 @@ export class LinksElement extends LitElement {
       --fsds-box-model-height: auto;
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
-      --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-links-color-foreground-hover: var(--fsds-semantic-interaction-text-hover, #555555);
-      --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-secondary, #555555);
+      --fsds-links-color-foreground-default: var(--fsds-semantic-color-foreground-link, #d9292b);
+      --fsds-links-color-foreground-hover: var(--fsds-semantic-color-foreground-linkHover, #ae0001);
+      --fsds-links-color-foreground-visited: var(--fsds-semantic-color-foreground-linkVisited, #9b0002);
       --fsds-links-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-links-color-underline-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-links-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
@@ -48,6 +48,21 @@ export class LinksElement extends LitElement {
       --fsds-links-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-links-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
       --fsds-links-focus-ring-radius: var(--fsds-core-shape-radius-small, 2px);
+      --fsds-links-size-fontSize-small: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+      --fsds-links-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);
+    }
+    
+    .links--small {
+      --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
+    }
+    
+    .links--medium {
+      --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+    }
+    
+    .links--large {
+      --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-5, 1.125rem);
     }
     
     .links {
@@ -63,11 +78,17 @@ export class LinksElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-links-color-foreground-default);
+      font-size: var(--fsds-links-size-fontSize-medium);
       text-decoration-color: var(--fsds-links-color-underline-default);
+      text-decoration-line: underline;
+      text-underline-offset: 2px;
+      transition-property: color, text-decoration-color;
       transition-duration: var(--fsds-links-motion-duration-fast);
+      cursor: pointer;
     
       &:hover {
         color: var(--fsds-links-color-foreground-hover);
+        text-decoration-color: var(--fsds-links-color-foreground-hover);
       }
     
       &:visited {
@@ -76,6 +97,9 @@ export class LinksElement extends LitElement {
     
       &:disabled {
         color: var(--fsds-links-color-foreground-disabled);
+        cursor: not-allowed;
+        text-decoration-line: none;
+        pointer-events: none;
       }
     
       &:focus-visible {
@@ -85,6 +109,18 @@ export class LinksElement extends LitElement {
         outline-offset: var(--fsds-links-focus-ring-offset);
         border-radius: var(--fsds-links-focus-ring-radius);
       }
+    }
+    
+    .links--small {
+      font-size: var(--fsds-links-size-fontSize-medium);
+    }
+    
+    .links--medium {
+      font-size: var(--fsds-links-size-fontSize-medium);
+    }
+    
+    .links--large {
+      font-size: var(--fsds-links-size-fontSize-medium);
     }
   `;
 

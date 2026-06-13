@@ -117,6 +117,18 @@ export const blockquoteTokenScopes = {
       ref: "core.spacing.size.05",
       fallback: 12,
     },
+    "blockquote.size.padding.sm": {
+      name: "blockquote.size.padding.sm",
+      cssVar: "--fsds-blockquote-size-padding-sm",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "blockquote.size.padding.lg": {
+      name: "blockquote.size.padding.lg",
+      cssVar: "--fsds-blockquote-size-padding-lg",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
     "blockquote.size.radius.default": {
       name: "blockquote.size.radius.default",
       cssVar: "--fsds-blockquote-size-radius-default",
@@ -128,6 +140,102 @@ export const blockquoteTokenScopes = {
       cssVar: "--fsds-blockquote-size-border-thick",
       ref: "core.shape.border.width.thick",
       fallback: 2,
+    },
+    "blockquote.size.fontSize.sm": {
+      name: "blockquote.size.fontSize.sm",
+      cssVar: "--fsds-blockquote-size-fontSize-sm",
+      ref: "core.typography.ramp.3",
+      fallback: 14,
+    },
+    "blockquote.size.fontSize.md": {
+      name: "blockquote.size.fontSize.md",
+      cssVar: "--fsds-blockquote-size-fontSize-md",
+      ref: "core.typography.ramp.4",
+      fallback: 16,
+    },
+    "blockquote.size.fontSize.lg": {
+      name: "blockquote.size.fontSize.lg",
+      cssVar: "--fsds-blockquote-size-fontSize-lg",
+      ref: "core.typography.ramp.5",
+      fallback: 18,
+    },
+  },
+  "variant_default": {
+    "blockquote.color.background.default": {
+      name: "blockquote.color.background.default",
+      cssVar: "--fsds-blockquote-color-background-default",
+      ref: "semantic.color.background.secondary",
+      fallback: "#efefef",
+    },
+  },
+  "variant_bordered": {
+    "blockquote.color.background.default": {
+      name: "blockquote.color.background.default",
+      cssVar: "--fsds-blockquote-color-background-default",
+      ref: "semantic.color.background.primary",
+      fallback: "#ffffff",
+    },
+    "blockquote.size.padding.default": {
+      name: "blockquote.size.padding.default",
+      cssVar: "--fsds-blockquote-size-padding-default",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+  },
+  "variant_highlighted": {
+    "blockquote.color.background.default": {
+      name: "blockquote.color.background.default",
+      cssVar: "--fsds-blockquote-color-background-default",
+      ref: "semantic.color.background.accentSubtle",
+      fallback: "#fceaea",
+    },
+    "blockquote.color.foreground.primary": {
+      name: "blockquote.color.foreground.primary",
+      cssVar: "--fsds-blockquote-color-foreground-primary",
+      ref: "semantic.color.foreground.primary",
+      fallback: "#141414",
+    },
+  },
+  "variant_sm": {
+    "blockquote.size.padding.default": {
+      name: "blockquote.size.padding.default",
+      cssVar: "--fsds-blockquote-size-padding-default",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "blockquote.size.fontSize.md": {
+      name: "blockquote.size.fontSize.md",
+      cssVar: "--fsds-blockquote-size-fontSize-md",
+      ref: "core.typography.ramp.3",
+      fallback: 14,
+    },
+  },
+  "variant_md": {
+    "blockquote.size.padding.default": {
+      name: "blockquote.size.padding.default",
+      cssVar: "--fsds-blockquote-size-padding-default",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "blockquote.size.fontSize.md": {
+      name: "blockquote.size.fontSize.md",
+      cssVar: "--fsds-blockquote-size-fontSize-md",
+      ref: "core.typography.ramp.4",
+      fallback: 16,
+    },
+  },
+  "variant_lg": {
+    "blockquote.size.padding.default": {
+      name: "blockquote.size.padding.default",
+      cssVar: "--fsds-blockquote-size-padding-default",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "blockquote.size.fontSize.md": {
+      name: "blockquote.size.fontSize.md",
+      cssVar: "--fsds-blockquote-size-fontSize-md",
+      ref: "core.typography.ramp.5",
+      fallback: 18,
     },
   },
 } satisfies ComponentTokenScopes;

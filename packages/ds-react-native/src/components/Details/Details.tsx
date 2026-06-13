@@ -32,6 +32,7 @@ export interface DetailsProps {
 export function Details({
   summary,
   open: controlledOpen,
+  variant,
   defaultOpen = false,
   children,
   style,
@@ -44,10 +45,11 @@ export function Details({
   const [uncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
 
+  const variantStyleForVariant = variant !== undefined ? ({ "inline": styles.root_variant_inline } as Record<string, ViewStyle | undefined>)[variant] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForVariant, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

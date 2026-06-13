@@ -1,5 +1,33 @@
 {
   "root": {
+    "display": {
+      "literal": "inline-flex",
+      "platforms": ["web"]
+    },
+    "align-items": {
+      "literal": "center",
+      "platforms": ["web"]
+    },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": ["web"]
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": ["web"]
+    },
+    "white-space": {
+      "literal": "nowrap",
+      "platforms": ["web"]
+    },
+    "user-select": {
+      "literal": "none",
+      "platforms": ["web"]
+    },
     "background-color": {
       "resolvesTo": "chip.color.background.default"
     },
@@ -8,6 +36,9 @@
     },
     "border-color": {
       "resolvesTo": "chip.color.border.default"
+    },
+    "border-width": {
+      "resolvesTo": "chip.size.border"
     },
     "padding-block": {
       "resolvesTo": "chip.size.padding.vertical"
@@ -20,6 +51,9 @@
     },
     "border-radius": {
       "resolvesTo": "chip.size.radius"
+    },
+    "min-height": {
+      "resolvesTo": "chip.size.minHeight"
     },
     "font-size": {
       "resolvesTo": "chip.text.size"
@@ -124,5 +158,34 @@
     "font-weight": {
       "resolvesTo": "chip.text.weight"
     }
+  },
+  "--selected": {
+    "chip.color.background.default": { "resolvesTo": "semantic.color.background.info.subtle", "fallback": "#d9f3fe" },
+    "chip.color.foreground.default": { "resolvesTo": "semantic.color.foreground.on.info.subtle", "fallback": "#002d99" },
+    "chip.color.border.default": { "resolvesTo": "semantic.color.border.info", "fallback": "#0042dc" }
+  },
+  "--dismissible": {
+    "chip.size.padding.horizontal": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" }
+  },
+  "--small": {
+    "chip.size.padding.vertical": { "resolvesTo": "semantic.glyph.badge.size.sm.paddingY", "fallback": "2px" },
+    "chip.size.padding.horizontal": { "resolvesTo": "semantic.glyph.badge.size.sm.paddingX", "fallback": "4px" },
+    "chip.text.size": { "resolvesTo": "semantic.glyph.badge.size.sm.fontSize", "fallback": "10px" },
+    "chip.size.gap": { "resolvesTo": "semantic.glyph.badge.size.sm.gap", "fallback": "2px" },
+    "chip.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.sm.minHeight", "fallback": "24px" }
+  },
+  "--medium": {
+    "chip.size.padding.vertical": { "resolvesTo": "semantic.glyph.badge.size.md.paddingY", "fallback": "4px" },
+    "chip.size.padding.horizontal": { "resolvesTo": "semantic.glyph.badge.size.md.paddingX", "fallback": "8px" },
+    "chip.text.size": { "resolvesTo": "semantic.glyph.badge.size.md.fontSize", "fallback": "12px" },
+    "chip.size.gap": { "resolvesTo": "semantic.glyph.badge.size.md.gap", "fallback": "4px" },
+    "chip.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.md.minHeight", "fallback": "32px" }
+  },
+  "--large": {
+    "chip.size.padding.vertical": { "resolvesTo": "semantic.glyph.badge.size.lg.paddingY", "fallback": "4px" },
+    "chip.size.padding.horizontal": { "resolvesTo": "semantic.glyph.badge.size.lg.paddingX", "fallback": "12px" },
+    "chip.text.size": { "resolvesTo": "semantic.glyph.badge.size.lg.fontSize", "fallback": "14px" },
+    "chip.size.gap": { "resolvesTo": "semantic.glyph.badge.size.lg.gap", "fallback": "4px" },
+    "chip.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.lg.minHeight", "fallback": "40px" }
   }
 }

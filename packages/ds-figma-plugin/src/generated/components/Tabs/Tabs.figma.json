@@ -300,6 +300,9 @@
           "--fsds-tabs-color-active-fg": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-tabs-color-active-bg": "var(--fsds-semantic-color-background-secondary, #efefef)",
           "--fsds-tabs-color-focus": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-tabs-color-underline-active": "var(--fsds-semantic-color-border-accent, #d9292b)",
+          "--fsds-tabs-size-indicator-thickness": "2px",
+          "--fsds-tabs-size-vertical-listWidth": "160px",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -380,6 +383,53 @@
         "declarations": {
           "display": "block",
           "padding": "var(--fsds-tabs-spacing-padding)"
+        }
+      },
+      {
+        "selector": ".tabs--underline .tabs__list",
+        "declarations": {
+          "border-bottom-color": "var(--fsds-tabs-color-underline-active)",
+          "border-bottom-style": "solid",
+          "border-bottom-width": "var(--fsds-tabs-size-indicator-thickness)"
+        }
+      },
+      {
+        "selector": ".tabs--underline .tabs__indicator",
+        "declarations": {
+          "height": "var(--fsds-tabs-size-indicator-thickness)",
+          "bottom": "-1px",
+          "left": "0",
+          "right": "0",
+          "background-color": "var(--fsds-tabs-color-underline-active)"
+        }
+      },
+      {
+        "selector": ".tabs--vertical .tabs__root",
+        "declarations": {
+          "flex-direction": "row"
+        }
+      },
+      {
+        "selector": ".tabs--vertical .tabs__list",
+        "declarations": {
+          "flex-direction": "column",
+          "border-bottom-width": "0",
+          "border-inline-end-color": "var(--fsds-tabs-color-indicator)",
+          "border-inline-end-style": "solid",
+          "border-inline-end-width": "1px",
+          "align-self": "stretch"
+        }
+      },
+      {
+        "selector": ".tabs--vertical .tabs__indicator",
+        "declarations": {
+          "top": "0",
+          "bottom": "0",
+          "right": "-1px",
+          "left": "auto",
+          "width": "var(--fsds-tabs-size-indicator-thickness)",
+          "height": "auto",
+          "transition": "transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease"
         }
       },
       {
