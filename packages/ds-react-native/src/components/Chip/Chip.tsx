@@ -34,6 +34,8 @@ export interface ChipProps {
 
 // @generated:start component
 export function Chip({
+  variant,
+  size,
   disabled,
   icon,
   ariaLabel,
@@ -48,10 +50,12 @@ export function Chip({
 }: ChipProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createChipStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForVariant = variant !== undefined ? ({ "selected": styles.root_variant_selected } as Record<string, ViewStyle | undefined>)[variant] : undefined;
+  const variantStyleForSize = size !== undefined ? ({ "small": styles.root_variant_small, "medium": styles.root_variant_medium, "large": styles.root_variant_large } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
     <Pressable
       testID={testID}
-      style={({ pressed }) => [styles.root, pressed ? styles.root_state_pressed : undefined, style]}
+      style={({ pressed }) => [styles.root, variantStyleForVariant, variantStyleForSize, pressed ? styles.root_state_pressed : undefined, style]}
       disabled={disabled}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       onPress={onPress}

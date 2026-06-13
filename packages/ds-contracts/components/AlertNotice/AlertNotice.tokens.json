@@ -133,5 +133,30 @@
     "resolvesTo": "semantic.typography.body.02",
     "fallback": "16px",
     "layer": "semantic"
+  },
+  "alert-notice.size.padding.inline": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "alert-notice.size.padding.page": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "alert-notice.typography.page.fontSize": {
+    "resolvesTo": "semantic.typography.body.02",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "alert-notice.typography.page.title.fontSize": {
+    "resolvesTo": "semantic.typography.body.01",
+    "fallback": "18px",
+    "layer": "semantic"
+  },
+  "alert-notice.typography.inline.fontSize": {
+    "resolvesTo": "semantic.typography.body.04",
+    "fallback": "12px",
+    "layer": "semantic"
   }
 }

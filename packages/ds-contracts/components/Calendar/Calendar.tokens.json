@@ -5,8 +5,8 @@
     "layer": "semantic"
   },
   "calendar.color.background.default": {
-    "resolvesTo": "semantic.color.background.secondary",
-    "fallback": "#efefef",
+    "resolvesTo": "semantic.color.background.primary",
+    "fallback": "#ffffff",
     "layer": "semantic"
   },
   "calendar.color.foreground.primary": {
@@ -14,9 +14,14 @@
     "fallback": "#141414",
     "layer": "semantic"
   },
+  "calendar.color.foreground.muted": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
   "calendar.color.border.default": {
-    "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
     "layer": "semantic"
   },
   "calendar.color.border.accent": {
@@ -24,7 +29,47 @@
     "fallback": "#d9292b",
     "layer": "semantic"
   },
+  "calendar.color.day.hover": {
+    "resolvesTo": "semantic.interaction.background.hover",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "calendar.color.day.selected.background": {
+    "resolvesTo": "semantic.color.background.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "calendar.color.day.selected.foreground": {
+    "resolvesTo": "semantic.color.foreground.inverse",
+    "fallback": "#fafafa",
+    "layer": "semantic"
+  },
+  "calendar.color.day.range.background": {
+    "resolvesTo": "semantic.color.background.accentSubtle",
+    "fallback": "#fceaea",
+    "layer": "semantic"
+  },
+  "calendar.color.today.ring": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "calendar.color.focus.ring": {
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
   "calendar.size.padding.default": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "calendar.size.cell": {
+    "resolvesTo": "core.spacing.size.08",
+    "fallback": "32px",
+    "layer": "core"
+  },
+  "calendar.size.nav": {
     "resolvesTo": "core.spacing.size.07",
     "fallback": "24px",
     "layer": "core"
@@ -34,9 +79,39 @@
     "fallback": "8px",
     "layer": "core"
   },
+  "calendar.size.radius.day": {
+    "resolvesTo": "core.shape.radius.small",
+    "fallback": "4px",
+    "layer": "core"
+  },
+  "calendar.typography.caption.size": {
+    "resolvesTo": "semantic.typography.body.02",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "calendar.typography.day.size": {
+    "resolvesTo": "semantic.typography.body.03",
+    "fallback": "14px",
+    "layer": "semantic"
+  },
+  "calendar.typography.weekday.size": {
+    "resolvesTo": "semantic.typography.caption.02",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "calendar.focus.ring.width": {
+    "resolvesTo": "semantic.focus.ring.width",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "calendar.focus.ring.offset": {
+    "resolvesTo": "semantic.focus.ring.offset",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
   "calendar.elevation.default": {
-    "resolvesTo": "semantic.elevation.default",
-    "fallback": "none",
+    "resolvesTo": "semantic.elevation.surface.overlay",
+    "fallback": "0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1)",
     "layer": "semantic"
   }
 }

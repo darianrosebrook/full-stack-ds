@@ -22,6 +22,10 @@
         "regular": {
           "$type": "fontWeight",
           "$value": "{typography.weight.regular}"
+        },
+        "semibold": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.semibold}"
         }
       }
     }

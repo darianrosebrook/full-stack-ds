@@ -23,6 +23,7 @@ export interface StatusProps {
 
 // @generated:start component
 export function Status({
+  status,
   children,
   style,
   testID,
@@ -31,10 +32,11 @@ export function Status({
 }: StatusProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createStatusStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForStatus = status !== undefined ? ({ "info": styles.root_variant_info, "success": styles.root_variant_success, "warning": styles.root_variant_warning, "danger": styles.root_variant_danger, "error": styles.root_variant_error } as Record<string, ViewStyle | undefined>)[status] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForStatus, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

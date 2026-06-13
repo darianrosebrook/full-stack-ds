@@ -4,19 +4,59 @@
     "fallback": "#efefef",
     "layer": "semantic"
   },
+  "badge.color.background.hover": {
+    "resolvesTo": "semantic.interaction.background.hover",
+    "fallback": "#e4e4e4",
+    "layer": "semantic"
+  },
   "badge.color.foreground.primary": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
   },
   "badge.color.border.default": {
-    "resolvesTo": "semantic.color.border.light",
-    "fallback": "#fceaea",
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
     "layer": "semantic"
   },
   "badge.spacing.gap": {
-    "resolvesTo": "core.spacing.size.02",
-    "fallback": "2px",
+    "resolvesTo": "semantic.glyph.badge.size.md.gap",
+    "fallback": "4px",
+    "layer": "semantic"
+  },
+  "badge.size.radius": {
+    "resolvesTo": "core.shape.radius.full",
+    "fallback": "9999px",
     "layer": "core"
+  },
+  "badge.size.border": {
+    "resolvesTo": "core.shape.border.width.hairline",
+    "fallback": "1px",
+    "layer": "core"
+  },
+  "badge.size.paddingX": {
+    "resolvesTo": "semantic.glyph.badge.size.md.paddingX",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "badge.size.paddingY": {
+    "resolvesTo": "semantic.glyph.badge.size.md.paddingY",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "badge.size.fontSize": {
+    "resolvesTo": "semantic.glyph.badge.size.md.fontSize",
+    "fallback": "12px",
+    "layer": "semantic"
+  },
+  "badge.size.minHeight": {
+    "resolvesTo": "semantic.glyph.badge.size.md.minHeight",
+    "fallback": "24px",
+    "layer": "semantic"
+  },
+  "badge.text.weight": {
+    "resolvesTo": "semantic.typography.font.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
   }
 }

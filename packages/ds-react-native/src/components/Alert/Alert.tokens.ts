@@ -146,6 +146,36 @@ export const alertTokenScopes = {
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
+    "alert.size.padding.inline": {
+      name: "alert.size.padding.inline",
+      cssVar: "--fsds-alert-size-padding-inline",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "alert.size.padding.page": {
+      name: "alert.size.padding.page",
+      cssVar: "--fsds-alert-size-padding-page",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "alert.typography.page.fontSize": {
+      name: "alert.typography.page.fontSize",
+      cssVar: "--fsds-alert-typography-page-fontSize",
+      ref: "semantic.typography.body.02",
+      fallback: 16,
+    },
+    "alert.typography.page.title.fontSize": {
+      name: "alert.typography.page.title.fontSize",
+      cssVar: "--fsds-alert-typography-page-title-fontSize",
+      ref: "semantic.typography.body.01",
+      fallback: 18,
+    },
+    "alert.typography.inline.fontSize": {
+      name: "alert.typography.inline.fontSize",
+      cssVar: "--fsds-alert-typography-inline-fontSize",
+      ref: "semantic.typography.body.04",
+      fallback: 12,
+    },
   },
   "variant_info": {
     "alert.color.background.primary": {
@@ -225,6 +255,90 @@ export const alertTokenScopes = {
       cssVar: "--fsds-alert-color-border-primary",
       ref: "semantic.color.border.danger",
       fallback: "#ae0001",
+    },
+  },
+  "variant_inline": {
+    "alert.size.padding": {
+      name: "alert.size.padding",
+      cssVar: "--fsds-alert-size-padding",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "alert.spacing.gap": {
+      name: "alert.spacing.gap",
+      cssVar: "--fsds-alert-spacing-gap",
+      ref: "core.spacing.size.03",
+      fallback: 4,
+    },
+    "alert.text.size": {
+      name: "alert.text.size",
+      cssVar: "--fsds-alert-text-size",
+      ref: "semantic.typography.body.04",
+      fallback: 12,
+    },
+    "alert.typography.title.fontSize": {
+      name: "alert.typography.title.fontSize",
+      cssVar: "--fsds-alert-typography-title-fontSize",
+      ref: "semantic.typography.body.03",
+      fallback: 14,
+    },
+  },
+  "variant_section": {
+    "alert.size.padding": {
+      name: "alert.size.padding",
+      cssVar: "--fsds-alert-size-padding",
+      ref: "core.spacing.size.06",
+      fallback: 16,
+    },
+    "alert.spacing.gap": {
+      name: "alert.spacing.gap",
+      cssVar: "--fsds-alert-spacing-gap",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "alert.text.size": {
+      name: "alert.text.size",
+      cssVar: "--fsds-alert-text-size",
+      ref: "semantic.typography.body.03",
+      fallback: 14,
+    },
+    "alert.typography.title.fontSize": {
+      name: "alert.typography.title.fontSize",
+      cssVar: "--fsds-alert-typography-title-fontSize",
+      ref: "semantic.typography.body.02",
+      fallback: 16,
+    },
+  },
+  "variant_page": {
+    "alert.size.padding": {
+      name: "alert.size.padding",
+      cssVar: "--fsds-alert-size-padding",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "alert.spacing.gap": {
+      name: "alert.spacing.gap",
+      cssVar: "--fsds-alert-spacing-gap",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "alert.text.size": {
+      name: "alert.text.size",
+      cssVar: "--fsds-alert-text-size",
+      ref: "semantic.typography.body.02",
+      fallback: 16,
+    },
+    "alert.typography.title.fontSize": {
+      name: "alert.typography.title.fontSize",
+      cssVar: "--fsds-alert-typography-title-fontSize",
+      ref: "semantic.typography.body.01",
+      fallback: 18,
+    },
+    "alert.typography.title.fontWeight": {
+      name: "alert.typography.title.fontWeight",
+      cssVar: "--fsds-alert-typography-title-fontWeight",
+      ref: "semantic.typography.font.weight.bold",
+      fallback: "700",
     },
   },
 } satisfies ComponentTokenScopes;

@@ -5,18 +5,18 @@
     "layer": "semantic"
   },
   "links.color.foreground.default": {
-    "resolvesTo": "semantic.color.foreground.primary",
-    "fallback": "#141414",
+    "resolvesTo": "semantic.color.foreground.link",
+    "fallback": "#d9292b",
     "layer": "semantic"
   },
   "links.color.foreground.hover": {
-    "resolvesTo": "semantic.interaction.text.hover",
-    "fallback": "#555555",
+    "resolvesTo": "semantic.color.foreground.linkHover",
+    "fallback": "#ae0001",
     "layer": "semantic"
   },
   "links.color.foreground.visited": {
-    "resolvesTo": "semantic.color.foreground.secondary",
-    "fallback": "#555555",
+    "resolvesTo": "semantic.color.foreground.linkVisited",
+    "fallback": "#9b0002",
     "layer": "semantic"
   },
   "links.color.foreground.disabled": {
@@ -62,6 +62,21 @@
   "links.focus.ring.radius": {
     "resolvesTo": "core.shape.radius.small",
     "fallback": "2px",
+    "layer": "core"
+  },
+  "links.size.fontSize.small": {
+    "resolvesTo": "core.typography.ramp.3",
+    "fallback": "0.875rem",
+    "layer": "core"
+  },
+  "links.size.fontSize.medium": {
+    "resolvesTo": "core.typography.ramp.4",
+    "fallback": "1rem",
+    "layer": "core"
+  },
+  "links.size.fontSize.large": {
+    "resolvesTo": "core.typography.ramp.5",
+    "fallback": "1.125rem",
     "layer": "core"
   }
 }

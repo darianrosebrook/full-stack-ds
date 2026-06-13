@@ -38,5 +38,55 @@
     "resolvesTo": "semantic.typography.line.height.body",
     "fallback": "1.5",
     "layer": "semantic"
+  },
+  "text.typography.lineHeight.tight": {
+    "resolvesTo": "semantic.typography.line.height.tight",
+    "fallback": "1.2",
+    "layer": "semantic"
+  },
+  "text.typography.letterSpacing.wide": {
+    "resolvesTo": "semantic.typography.letter.spacing.wide",
+    "fallback": "0.018rem",
+    "layer": "semantic"
+  },
+  "text.typography.letterSpacing.tight": {
+    "resolvesTo": "semantic.typography.letter.spacing.tight",
+    "fallback": "-0.018rem",
+    "layer": "semantic"
+  },
+  "text.size.xs": {
+    "resolvesTo": "core.typography.ramp.2",
+    "fallback": "0.75rem",
+    "layer": "core"
+  },
+  "text.size.sm": {
+    "resolvesTo": "core.typography.ramp.3",
+    "fallback": "0.875rem",
+    "layer": "core"
+  },
+  "text.size.md": {
+    "resolvesTo": "core.typography.ramp.4",
+    "fallback": "1rem",
+    "layer": "core"
+  },
+  "text.size.lg": {
+    "resolvesTo": "core.typography.ramp.5",
+    "fallback": "1.125rem",
+    "layer": "core"
+  },
+  "text.size.xl": {
+    "resolvesTo": "core.typography.ramp.6",
+    "fallback": "1.25rem",
+    "layer": "core"
+  },
+  "text.size.2xl": {
+    "resolvesTo": "core.typography.ramp.7",
+    "fallback": "1.5rem",
+    "layer": "core"
+  },
+  "text.size.3xl": {
+    "resolvesTo": "core.typography.ramp.8",
+    "fallback": "2rem",
+    "layer": "core"
   }
 }

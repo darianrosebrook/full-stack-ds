@@ -1,34 +1,56 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "status.color.background.default"
-    },
-    "color": {
-      "resolvesTo": "status.color.foreground.primary"
-    },
-    "border-color": {
-      "resolvesTo": "status.color.border.default"
-    },
-    "border-radius": {
-      "resolvesTo": "status.size.radius.default"
-    },
-    "padding": {
-      "resolvesTo": "status.size.padding.default"
-    },
-    "line-height": {
-      "resolvesTo": "status.typography.lineHeight"
-    }
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "width": { "literal": "fit-content", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "background-color": { "resolvesTo": "status.color.background.default" },
+    "color": { "resolvesTo": "status.color.foreground.primary" },
+    "border-color": { "resolvesTo": "status.color.border.default" },
+    "border-width": { "resolvesTo": "status.size.border.default" },
+    "border-radius": { "resolvesTo": "status.size.radius.default" },
+    "min-height": { "resolvesTo": "status.size.minHeight" },
+    "font-size": { "resolvesTo": "status.size.fontSize" },
+    "font-weight": { "resolvesTo": "status.text.weight" },
+    "line-height": { "resolvesTo": "status.typography.lineHeight" }
   },
   "icon": {
     "display": { "literal": "inline-flex", "platforms": ["web"] },
     "align-items": { "literal": "center", "platforms": ["web"] },
     "flex-shrink": { "literal": "0", "platforms": ["web"] },
     "width": { "literal": "1em", "platforms": ["web"] },
-    "height": { "literal": "1em", "platforms": ["web"] },
-    "margin-right": { "literal": "4px", "platforms": ["web"] }
+    "height": { "literal": "1em", "platforms": ["web"] }
   },
   "label": {
     "display": { "literal": "inline-block", "platforms": ["web"] },
     "color": { "resolvesTo": "status.color.foreground.primary" }
+  },
+  "--info": {
+    "status.color.background.default": { "resolvesTo": "semantic.color.background.info.subtle", "fallback": "#d9f3fe" },
+    "status.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.info.subtle", "fallback": "#002d99" },
+    "status.color.border.default": { "resolvesTo": "semantic.color.border.info", "fallback": "#0042dc" }
+  },
+  "--success": {
+    "status.color.background.default": { "resolvesTo": "semantic.color.background.success.subtle", "fallback": "#e4f2e0" },
+    "status.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.success.subtle", "fallback": "#234104" },
+    "status.color.border.default": { "resolvesTo": "semantic.color.border.success", "fallback": "#336006" }
+  },
+  "--warning": {
+    "status.color.background.default": { "resolvesTo": "semantic.color.background.warning.subtle", "fallback": "#ffedcc" },
+    "status.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.warning.subtle", "fallback": "#593000" },
+    "status.color.border.default": { "resolvesTo": "semantic.color.border.warning", "fallback": "#824500" }
+  },
+  "--danger": {
+    "status.color.background.default": { "resolvesTo": "semantic.color.background.danger.subtle", "fallback": "#fceaea" },
+    "status.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.danger.subtle", "fallback": "#7b0000" },
+    "status.color.border.default": { "resolvesTo": "semantic.color.border.danger", "fallback": "#ae0001" }
+  },
+  "--error": {
+    "status.color.background.default": { "resolvesTo": "semantic.color.background.danger.subtle", "fallback": "#fceaea" },
+    "status.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.danger.subtle", "fallback": "#7b0000" },
+    "status.color.border.default": { "resolvesTo": "semantic.color.border.danger", "fallback": "#ae0001" }
   }
 }

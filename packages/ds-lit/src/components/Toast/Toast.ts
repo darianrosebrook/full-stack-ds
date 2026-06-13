@@ -41,9 +41,11 @@ export class ToastElement extends LitElement {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
@@ -53,16 +55,28 @@ export class ToastElement extends LitElement {
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
+    .toast--info {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
+    }
+    
     .toast--success {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-success);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
     
     .toast--warning {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-warning);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
     
     .toast--error {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-danger);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
     
     .toast {
@@ -214,9 +228,11 @@ export class ToastItemElement extends LitElement {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
@@ -226,16 +242,28 @@ export class ToastItemElement extends LitElement {
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
+    .toast--info {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
+    }
+    
     .toast--success {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-success);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
     
     .toast--warning {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-warning);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
     
     .toast--error {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-danger);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
     
     .toast {
@@ -344,9 +372,11 @@ export class ToastTitleElement extends LitElement {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
@@ -356,16 +386,28 @@ export class ToastTitleElement extends LitElement {
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
+    .toast--info {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
+    }
+    
     .toast--success {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-success);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
     
     .toast--warning {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-warning);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
     
     .toast--error {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-danger);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
     
     .toast {
@@ -474,9 +516,11 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-raised, none);
+      --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
+      --fsds-toast-color-intent-bg: var(--fsds-semantic-color-background-secondary, #efefef);
+      --fsds-toast-color-intent-border: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-toast-spacing-padding: var(--fsds-core-spacing-size-05, 12px);
       --fsds-toast-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-toast-spacing-stackGap: var(--fsds-core-spacing-size-04, 8px);
@@ -486,16 +530,28 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
     
+    .toast--info {
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
+    }
+    
     .toast--success {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-success);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
     
     .toast--warning {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-warning);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
     
     .toast--error {
-      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-danger);
+      --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
+      --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
+      --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
     
     .toast {

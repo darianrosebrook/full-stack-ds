@@ -242,6 +242,10 @@
           "--fsds-chip-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0a65fe)",
           "--fsds-chip-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
           "--fsds-chip-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
+          "--fsds-chip-size-minHeight": "var(--fsds-core-dimension-actionMinHeight, 32px)",
+          "--fsds-chip-color-background-selected": "var(--fsds-semantic-color-background-info-subtle, #d9f3fe)",
+          "--fsds-chip-color-foreground-selected": "var(--fsds-semantic-color-foreground-on-info-subtle, #002d99)",
+          "--fsds-chip-color-border-selected": "var(--fsds-semantic-color-border-info, #0042dc)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -251,11 +255,19 @@
           "min-width": "var(--fsds-box-model-min-width)",
           "max-width": "var(--fsds-box-model-max-width)",
           "height": "var(--fsds-box-model-height)",
-          "min-height": "var(--fsds-box-model-min-height)",
+          "min-height": "var(--fsds-chip-size-minHeight)",
           "max-height": "var(--fsds-box-model-max-height)",
+          "display": "inline-flex",
+          "align-items": "center",
+          "box-sizing": "border-box",
+          "border-style": "solid",
+          "cursor": "pointer",
+          "white-space": "nowrap",
+          "user-select": "none",
           "background-color": "var(--fsds-chip-color-background-default)",
           "color": "var(--fsds-chip-color-foreground-default)",
           "border-color": "var(--fsds-chip-color-border-default)",
+          "border-width": "var(--fsds-chip-size-border)",
           "padding-block": "var(--fsds-chip-size-padding-vertical)",
           "padding-inline": "var(--fsds-chip-size-padding-horizontal)",
           "border-radius": "var(--fsds-chip-size-radius)",
@@ -305,6 +317,50 @@
           "overflow": "hidden",
           "font-size": "var(--fsds-chip-text-size)",
           "font-weight": "var(--fsds-chip-text-weight)"
+        }
+      },
+      {
+        "selector": ".chip--selected",
+        "declarations": {
+          "--fsds-chip-color-background-default": "var(--fsds-semantic-color-background-info-subtle, #d9f3fe)",
+          "--fsds-chip-color-foreground-default": "var(--fsds-semantic-color-foreground-on-info-subtle, #002d99)",
+          "--fsds-chip-color-border-default": "var(--fsds-semantic-color-border-info, #0042dc)"
+        }
+      },
+      {
+        "selector": ".chip--dismissible",
+        "declarations": {
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-core-spacing-size-05, 12px)"
+        }
+      },
+      {
+        "selector": ".chip--small",
+        "declarations": {
+          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-sm-paddingY, 2px)",
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-sm-paddingX, 4px)",
+          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-sm-fontSize, 10px)",
+          "--fsds-chip-size-gap": "var(--fsds-semantic-glyph-badge-size-sm-gap, 2px)",
+          "--fsds-chip-size-minHeight": "var(--fsds-semantic-glyph-badge-size-sm-minHeight, 24px)"
+        }
+      },
+      {
+        "selector": ".chip--medium",
+        "declarations": {
+          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-md-paddingY, 4px)",
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px)",
+          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px)",
+          "--fsds-chip-size-gap": "var(--fsds-semantic-glyph-badge-size-md-gap, 4px)",
+          "--fsds-chip-size-minHeight": "var(--fsds-semantic-glyph-badge-size-md-minHeight, 32px)"
+        }
+      },
+      {
+        "selector": ".chip--large",
+        "declarations": {
+          "--fsds-chip-size-padding-vertical": "var(--fsds-semantic-glyph-badge-size-lg-paddingY, 4px)",
+          "--fsds-chip-size-padding-horizontal": "var(--fsds-semantic-glyph-badge-size-lg-paddingX, 12px)",
+          "--fsds-chip-text-size": "var(--fsds-semantic-glyph-badge-size-lg-fontSize, 14px)",
+          "--fsds-chip-size-gap": "var(--fsds-semantic-glyph-badge-size-lg-gap, 4px)",
+          "--fsds-chip-size-minHeight": "var(--fsds-semantic-glyph-badge-size-lg-minHeight, 40px)"
         }
       }
     ],

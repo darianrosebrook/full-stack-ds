@@ -59,6 +59,16 @@
     "fallback": "12px",
     "layer": "core"
   },
+  "blockquote.size.padding.sm": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "blockquote.size.padding.lg": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
   "blockquote.size.radius.default": {
     "resolvesTo": "core.shape.radius.medium",
     "fallback": "8px",
@@ -67,6 +77,21 @@
   "blockquote.size.border.thick": {
     "resolvesTo": "core.shape.border.width.thick",
     "fallback": "2px",
+    "layer": "core"
+  },
+  "blockquote.size.fontSize.sm": {
+    "resolvesTo": "core.typography.ramp.3",
+    "fallback": "0.875rem",
+    "layer": "core"
+  },
+  "blockquote.size.fontSize.md": {
+    "resolvesTo": "core.typography.ramp.4",
+    "fallback": "1rem",
+    "layer": "core"
+  },
+  "blockquote.size.fontSize.lg": {
+    "resolvesTo": "core.typography.ramp.5",
+    "fallback": "1.125rem",
     "layer": "core"
   }
 }

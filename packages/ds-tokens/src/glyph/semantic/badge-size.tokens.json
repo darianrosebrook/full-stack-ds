@@ -1,0 +1,30 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "glyph": {
+    "badge": {
+      "size": {
+        "sm": {
+          "paddingY": { "$type": "dimension", "$value": "{spacing.size.02}", "$description": "Content-inline badge sm vertical padding — 2px." },
+          "paddingX": { "$type": "dimension", "$value": "{spacing.size.03}", "$description": "Content-inline badge sm horizontal padding — 4px." },
+          "fontSize": { "$type": "dimension", "$value": "{typography.ramp.1}", "$description": "Content-inline badge sm font size — 10px." },
+          "gap": { "$type": "dimension", "$value": "{spacing.size.02}", "$description": "Content-inline badge sm icon/label gap — 2px." },
+          "minHeight": { "$type": "dimension", "$value": "{spacing.size.06}", "$description": "Content-inline badge sm minimum height — 16px." }
+        },
+        "md": {
+          "paddingY": { "$type": "dimension", "$value": "{spacing.size.02}", "$description": "Content-inline badge md vertical padding — 2px." },
+          "paddingX": { "$type": "dimension", "$value": "{spacing.size.04}", "$description": "Content-inline badge md horizontal padding — 8px." },
+          "fontSize": { "$type": "dimension", "$value": "{typography.ramp.2}", "$description": "Content-inline badge md font size — 12px." },
+          "gap": { "$type": "dimension", "$value": "{spacing.size.03}", "$description": "Content-inline badge md icon/label gap — 4px." },
+          "minHeight": { "$type": "dimension", "$value": "{spacing.size.07}", "$description": "Content-inline badge md minimum height — 24px." }
+        },
+        "lg": {
+          "paddingY": { "$type": "dimension", "$value": "{spacing.size.03}", "$description": "Content-inline badge lg vertical padding — 4px." },
+          "paddingX": { "$type": "dimension", "$value": "{spacing.size.05}", "$description": "Content-inline badge lg horizontal padding — 12px." },
+          "fontSize": { "$type": "dimension", "$value": "{typography.ramp.3}", "$description": "Content-inline badge lg font size — 14px." },
+          "gap": { "$type": "dimension", "$value": "{spacing.size.03}", "$description": "Content-inline badge lg icon/label gap — 4px." },
+          "minHeight": { "$type": "dimension", "$value": "{spacing.size.08}", "$description": "Content-inline badge lg minimum height — 32px." }
+        }
+      }
+    }
+  }
+}

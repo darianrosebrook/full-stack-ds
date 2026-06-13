@@ -256,19 +256,60 @@
       ]
     }
   },
-  "--success": {
+  "--info": {
+    "toast.surface.bg": {
+      "resolvesTo": "semantic.color.background.info.subtle",
+      "fallback": "#d9f3fe"
+    },
     "toast.color.default": {
-      "resolvesTo": "semantic.color.foreground.success"
+      "resolvesTo": "semantic.color.foreground.on.info.subtle",
+      "fallback": "#002d99"
+    },
+    "toast.surface.border": {
+      "resolvesTo": "semantic.color.border.info",
+      "fallback": "#0042dc"
+    }
+  },
+  "--success": {
+    "toast.surface.bg": {
+      "resolvesTo": "semantic.color.background.success.subtle",
+      "fallback": "#e4f2e0"
+    },
+    "toast.color.default": {
+      "resolvesTo": "semantic.color.foreground.on.success.subtle",
+      "fallback": "#234104"
+    },
+    "toast.surface.border": {
+      "resolvesTo": "semantic.color.border.success",
+      "fallback": "#336006"
     }
   },
   "--warning": {
+    "toast.surface.bg": {
+      "resolvesTo": "semantic.color.background.warning.subtle",
+      "fallback": "#ffedcc"
+    },
     "toast.color.default": {
-      "resolvesTo": "semantic.color.foreground.warning"
+      "resolvesTo": "semantic.color.foreground.on.warning.subtle",
+      "fallback": "#593000"
+    },
+    "toast.surface.border": {
+      "resolvesTo": "semantic.color.border.warning",
+      "fallback": "#824500"
     }
   },
   "--error": {
+    "toast.surface.bg": {
+      "resolvesTo": "semantic.color.background.danger.subtle",
+      "fallback": "#fceaea"
+    },
     "toast.color.default": {
-      "resolvesTo": "semantic.color.foreground.danger"
+      "resolvesTo": "semantic.color.foreground.on.danger.subtle",
+      "fallback": "#7b0000"
+    },
+    "toast.surface.border": {
+      "resolvesTo": "semantic.color.border.danger",
+      "fallback": "#ae0001"
     }
   }
 }

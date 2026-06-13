@@ -72,5 +72,16 @@
     "resolvesTo": "semantic.color.border.accent",
     "fallback": "#d9292b",
     "layer": "semantic"
+  },
+  "tabs.color.underline.active": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "tabs.size.indicator.thickness": {
+    "literal": "2px"
+  },
+  "tabs.size.vertical.listWidth": {
+    "literal": "160px"
   }
 }

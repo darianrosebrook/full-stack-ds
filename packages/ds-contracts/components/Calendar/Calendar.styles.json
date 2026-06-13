@@ -1,260 +1,98 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "calendar.color.background.default"
-    },
-    "color": {
-      "resolvesTo": "calendar.color.foreground.primary"
-    },
-    "border-color": {
-      "resolvesTo": "calendar.color.border.default"
-    },
-    "border-width": {
-      "literal": "1px",
-      "platforms": [
-        "web"
-      ]
-    },
-    "border-style": {
-      "literal": "solid",
-      "platforms": [
-        "web"
-      ]
-    },
-    "padding": {
-      "resolvesTo": "calendar.size.padding.default"
-    },
-    "border-radius": {
-      "resolvesTo": "calendar.size.radius.default"
-    },
-    "display": {
-      "literal": "block",
-      "platforms": [
-        "web"
-      ]
-    },
-    "box-sizing": {
-      "literal": "border-box",
-      "platforms": [
-        "web"
-      ]
-    }
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "background-color": { "resolvesTo": "calendar.color.background.default" },
+    "color": { "resolvesTo": "calendar.color.foreground.primary" },
+    "border-color": { "resolvesTo": "calendar.color.border.default" },
+    "border-width": { "literal": "1px", "platforms": ["web"] },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "padding": { "resolvesTo": "calendar.size.padding.default" },
+    "border-radius": { "resolvesTo": "calendar.size.radius.default" },
+    "box-shadow": { "resolvesTo": "calendar.elevation.default" }
   },
   "header": {
-    "display": {
-      "literal": "flex",
-      "platforms": [
-        "web"
-      ]
-    },
-    "align-items": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "justify-content": {
-      "literal": "space-between",
-      "platforms": [
-        "web"
-      ]
-    },
-    "padding-bottom": {
-      "resolvesTo": "calendar.size.padding.default"
-    }
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "space-between", "platforms": ["web"] },
+    "padding-bottom": { "resolvesTo": "calendar.size.padding.default" }
   },
   "nav": {
-    "display": {
-      "literal": "inline-flex",
-      "platforms": [
-        "web"
-      ]
-    },
-    "align-items": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "justify-content": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "background": {
-      "literal": "transparent",
-      "platforms": [
-        "web"
-      ]
-    },
-    "border": {
-      "literal": "none",
-      "platforms": [
-        "web"
-      ]
-    },
-    "cursor": {
-      "literal": "pointer",
-      "platforms": [
-        "web"
-      ]
-    },
-    "color": {
-      "resolvesTo": "calendar.color.foreground.primary"
-    }
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "width": { "resolvesTo": "calendar.size.nav" },
+    "height": { "resolvesTo": "calendar.size.nav" },
+    "background": { "literal": "transparent", "platforms": ["web"] },
+    "border": { "literal": "none", "platforms": ["web"] },
+    "border-radius": { "resolvesTo": "calendar.size.radius.day" },
+    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "color": { "resolvesTo": "calendar.color.foreground.muted" },
+    "font-size": { "resolvesTo": "calendar.typography.caption.size" },
+    "line-height": { "literal": "1", "platforms": ["web"] }
+  },
+  ".calendar__nav:hover": {
+    "background-color": { "resolvesTo": "calendar.color.day.hover" },
+    "color": { "resolvesTo": "calendar.color.foreground.primary" }
   },
   "caption": {
-    "font-weight": {
-      "literal": "600",
-      "platforms": [
-        "web"
-      ]
-    },
-    "color": {
-      "resolvesTo": "calendar.color.foreground.primary"
-    }
+    "font-size": { "resolvesTo": "calendar.typography.caption.size" },
+    "font-weight": { "literal": "600", "platforms": ["web"] },
+    "color": { "resolvesTo": "calendar.color.foreground.primary" },
+    "line-height": { "literal": "1.2", "platforms": ["web"] }
   },
   "grid": {
-    "display": {
-      "literal": "grid",
-      "platforms": [
-        "web"
-      ]
-    },
-    "grid-template-columns": {
-      "literal": "repeat(7, 1fr)",
-      "platforms": [
-        "web"
-      ]
-    },
-    "gap": {
-      "literal": "2px",
-      "platforms": [
-        "web"
-      ]
-    },
-    "width": {
-      "literal": "100%",
-      "platforms": [
-        "web"
-      ]
-    },
-    "border-collapse": {
-      "literal": "collapse",
-      "platforms": [
-        "web"
-      ]
-    }
+    "display": { "literal": "grid", "platforms": ["web"] },
+    "grid-template-columns": { "literal": "repeat(7, 1fr)", "platforms": ["web"] },
+    "gap": { "literal": "2px", "platforms": ["web"] },
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "border-spacing": { "literal": "0", "platforms": ["web"] }
+  },
+  ".calendar__grid > *": {
+    "display": { "literal": "contents", "platforms": ["web"] }
+  },
+  ".calendar__grid > * > *": {
+    "display": { "literal": "contents", "platforms": ["web"] }
   },
   "cell": {
-    "display": {
-      "literal": "flex",
-      "platforms": [
-        "web"
-      ]
-    },
-    "align-items": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "justify-content": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "aspect-ratio": {
-      "literal": "1",
-      "platforms": [
-        "web"
-      ]
-    },
-    "border-radius": {
-      "resolvesTo": "calendar.size.radius.default"
-    },
-    "padding": {
-      "literal": "0",
-      "platforms": [
-        "web"
-      ]
-    }
-  },
-  ".calendar__cell:hover": {
-    "background-color": {
-      "resolvesTo": "calendar.color.background.default"
-    }
-  },
-  ".calendar__cell[aria-selected=\"true\"]": {
-    "background-color": {
-      "resolvesTo": "calendar.color.border.accent"
-    },
-    "color": {
-      "literal": "#ffffff",
-      "platforms": [
-        "web"
-      ]
-    }
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "aspect-ratio": { "literal": "1", "platforms": ["web"] },
+    "min-width": { "resolvesTo": "calendar.size.cell" },
+    "padding": { "literal": "0", "platforms": ["web"] }
   },
   "day": {
-    "display": {
-      "literal": "flex",
-      "platforms": [
-        "web"
-      ]
-    },
-    "align-items": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "justify-content": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "width": {
-      "literal": "100%",
-      "platforms": [
-        "web"
-      ]
-    },
-    "height": {
-      "literal": "100%",
-      "platforms": [
-        "web"
-      ]
-    },
-    "background": {
-      "literal": "transparent",
-      "platforms": [
-        "web"
-      ]
-    },
-    "border": {
-      "literal": "none",
-      "platforms": [
-        "web"
-      ]
-    },
-    "cursor": {
-      "literal": "pointer",
-      "platforms": [
-        "web"
-      ]
-    },
-    "color": {
-      "literal": "inherit",
-      "platforms": [
-        "web"
-      ]
-    },
-    "border-radius": {
-      "resolvesTo": "calendar.size.radius.default"
-    }
+    "display": { "literal": "flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "width": { "literal": "100%", "platforms": ["web"] },
+    "height": { "literal": "100%", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "background": { "literal": "transparent", "platforms": ["web"] },
+    "border": { "literal": "none", "platforms": ["web"] },
+    "cursor": { "literal": "pointer", "platforms": ["web"] },
+    "color": { "literal": "inherit", "platforms": ["web"] },
+    "font-size": { "resolvesTo": "calendar.typography.day.size" },
+    "border-radius": { "resolvesTo": "calendar.size.radius.day" }
+  },
+  ".calendar__day:hover": {
+    "background-color": { "resolvesTo": "calendar.color.day.hover" }
+  },
+  ".calendar__day:focus-visible": {
+    "outline-width": { "resolvesTo": "calendar.focus.ring.width" },
+    "outline-color": { "resolvesTo": "calendar.color.focus.ring" },
+    "outline-offset": { "resolvesTo": "calendar.focus.ring.offset" },
+    "outline-style": { "literal": "solid", "platforms": ["web"] }
+  },
+  ".calendar__cell[aria-selected=\"true\"] .calendar__day": {
+    "background-color": { "resolvesTo": "calendar.color.day.selected.background" },
+    "color": { "resolvesTo": "calendar.color.day.selected.foreground" },
+    "font-weight": { "literal": "600", "platforms": ["web"] }
+  },
+  ".calendar__cell[aria-current=\"date\"] .calendar__day": {
+    "box-shadow": { "literal": "inset 0 0 0 1px var(--fsds-calendar-color-today-ring)", "platforms": ["web"] },
+    "font-weight": { "literal": "600", "platforms": ["web"] }
   }
 }

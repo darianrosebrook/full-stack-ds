@@ -14,11 +14,17 @@
   min-height: var(--fsds-box-model-min-height);
   max-height: var(--fsds-box-model-max-height);
   color: var(--fsds-links-color-foreground-default);
+  font-size: var(--fsds-links-size-fontSize-medium);
   text-decoration-color: var(--fsds-links-color-underline-default);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+  transition-property: color, text-decoration-color;
   transition-duration: var(--fsds-links-motion-duration-fast);
+  cursor: pointer;
 
   &:hover {
     color: var(--fsds-links-color-foreground-hover);
+    text-decoration-color: var(--fsds-links-color-foreground-hover);
   }
 
   &:visited {
@@ -27,6 +33,9 @@
 
   &:disabled {
     color: var(--fsds-links-color-foreground-disabled);
+    cursor: not-allowed;
+    text-decoration-line: none;
+    pointer-events: none;
   }
 
   &:focus-visible {
@@ -36,6 +45,18 @@
     outline-offset: var(--fsds-links-focus-ring-offset);
     border-radius: var(--fsds-links-focus-ring-radius);
   }
+}
+
+.links--small {
+  font-size: var(--fsds-links-size-fontSize-medium);
+}
+
+.links--medium {
+  font-size: var(--fsds-links-size-fontSize-medium);
+}
+
+.links--large {
+  font-size: var(--fsds-links-size-fontSize-medium);
 }
 /* @generated:end */
 

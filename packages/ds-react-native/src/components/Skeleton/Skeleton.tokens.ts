@@ -93,15 +93,45 @@ export const skeletonTokenScopes = {
       ref: "semantic.color.background.secondary",
       fallback: "#efefef",
     },
+    "skeleton.radius.sm": {
+      name: "skeleton.radius.sm",
+      cssVar: "--fsds-skeleton-radius-sm",
+      ref: "core.shape.radius.small",
+      fallback: 4,
+    },
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.04",
+      ref: "core.shape.radius.03",
+      fallback: 8,
+    },
+    "skeleton.radius.lg": {
+      name: "skeleton.radius.lg",
+      cssVar: "--fsds-skeleton-radius-lg",
+      ref: "core.shape.radius.large",
       fallback: 16,
+    },
+    "skeleton.radius.full": {
+      name: "skeleton.radius.full",
+      cssVar: "--fsds-skeleton-radius-full",
+      ref: "core.shape.radius.full",
+      fallback: 9999,
+    },
+    "skeleton.gap.compact": {
+      name: "skeleton.gap.compact",
+      cssVar: "--fsds-skeleton-gap-compact",
+      ref: "core.spacing.size.03",
+      fallback: 4,
     },
     "skeleton.gap.md": {
       name: "skeleton.gap.md",
       cssVar: "--fsds-skeleton-gap-md",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "skeleton.gap.spacious": {
+      name: "skeleton.gap.spacious",
+      cssVar: "--fsds-skeleton-gap-spacious",
       ref: "core.spacing.size.07",
       fallback: 24,
     },
@@ -116,6 +146,98 @@ export const skeletonTokenScopes = {
       cssVar: "--fsds-skeleton-anim-easing",
       ref: "core.motion.easing.standard",
       fallback: "cubic-bezier(0.4, 0, 0.2, 1)",
+    },
+    "skeleton.shape.height.text": {
+      name: "skeleton.shape.height.text",
+      cssVar: "--fsds-skeleton-shape-height-text",
+      ref: "core.typography.ramp.4",
+      fallback: 16,
+    },
+  },
+  "variant_block": {
+    "skeleton.radius.md": {
+      name: "skeleton.radius.md",
+      cssVar: "--fsds-skeleton-radius-md",
+      ref: "core.shape.radius.03",
+      fallback: 8,
+    },
+  },
+  "variant_text": {
+    "skeleton.radius.md": {
+      name: "skeleton.radius.md",
+      cssVar: "--fsds-skeleton-radius-md",
+      ref: "core.shape.radius.small",
+      fallback: 4,
+    },
+    "skeleton.shape.height.text": {
+      name: "skeleton.shape.height.text",
+      cssVar: "--fsds-skeleton-shape-height-text",
+      ref: "core.typography.ramp.4",
+      fallback: 16,
+    },
+  },
+  "variant_avatar": {
+    "skeleton.radius.md": {
+      name: "skeleton.radius.md",
+      cssVar: "--fsds-skeleton-radius-md",
+      ref: "core.shape.radius.full",
+      fallback: 9999,
+    },
+  },
+  "variant_media": {
+    "skeleton.radius.md": {
+      name: "skeleton.radius.md",
+      cssVar: "--fsds-skeleton-radius-md",
+      ref: "core.shape.radius.03",
+      fallback: 8,
+    },
+  },
+  "variant_dataviz": {
+    "skeleton.radius.md": {
+      name: "skeleton.radius.md",
+      cssVar: "--fsds-skeleton-radius-md",
+      ref: "core.shape.radius.03",
+      fallback: 8,
+    },
+  },
+  "variant_actions": {
+    "skeleton.radius.md": {
+      name: "skeleton.radius.md",
+      cssVar: "--fsds-skeleton-radius-md",
+      ref: "core.shape.radius.03",
+      fallback: 8,
+    },
+  },
+  "variant_wipe": {
+    "skeleton.color.base": {
+      name: "skeleton.color.base",
+      cssVar: "--fsds-skeleton-color-base",
+      ref: "semantic.color.background.tertiary",
+      fallback: "#e5e5e5",
+    },
+  },
+  "variant_compact": {
+    "skeleton.gap.md": {
+      name: "skeleton.gap.md",
+      cssVar: "--fsds-skeleton-gap-md",
+      ref: "core.spacing.size.03",
+      fallback: 4,
+    },
+  },
+  "variant_regular": {
+    "skeleton.gap.md": {
+      name: "skeleton.gap.md",
+      cssVar: "--fsds-skeleton-gap-md",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+  },
+  "variant_spacious": {
+    "skeleton.gap.md": {
+      name: "skeleton.gap.md",
+      cssVar: "--fsds-skeleton-gap-md",
+      ref: "core.spacing.size.07",
+      fallback: 24,
     },
   },
 } satisfies ComponentTokenScopes;

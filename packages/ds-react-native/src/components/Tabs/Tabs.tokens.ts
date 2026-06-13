@@ -159,6 +159,22 @@ export const tabsTokenScopes = {
       ref: "semantic.color.border.accent",
       fallback: "#d9292b",
     },
+    "tabs.color.underline.active": {
+      name: "tabs.color.underline.active",
+      cssVar: "--fsds-tabs-color-underline-active",
+      ref: "semantic.color.border.accent",
+      fallback: "#d9292b",
+    },
+    "tabs.size.indicator.thickness": {
+      name: "tabs.size.indicator.thickness",
+      cssVar: "--fsds-tabs-size-indicator-thickness",
+      literal: 2,
+    },
+    "tabs.size.vertical.listWidth": {
+      name: "tabs.size.vertical.listWidth",
+      cssVar: "--fsds-tabs-size-vertical-listWidth",
+      literal: 160,
+    },
   },
 } satisfies ComponentTokenScopes;
 

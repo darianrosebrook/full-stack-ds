@@ -102,8 +102,8 @@ export const toastTokenScopes = {
     "toast.surface.shadow": {
       name: "toast.surface.shadow",
       cssVar: "--fsds-toast-surface-shadow",
-      ref: "semantic.elevation.surface.raised",
-      fallback: "none",
+      ref: "semantic.elevation.surface.overlay",
+      fallback: "0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)",
     },
     "toast.color.default": {
       name: "toast.color.default",
@@ -116,6 +116,18 @@ export const toastTokenScopes = {
       cssVar: "--fsds-toast-accent-default",
       ref: "semantic.color.status.info",
       fallback: "#0a65fe",
+    },
+    "toast.color.intent.bg": {
+      name: "toast.color.intent.bg",
+      cssVar: "--fsds-toast-color-intent-bg",
+      ref: "semantic.color.background.secondary",
+      fallback: "#efefef",
+    },
+    "toast.color.intent.border": {
+      name: "toast.color.intent.border",
+      cssVar: "--fsds-toast-color-intent-border",
+      ref: "semantic.color.border.subtle",
+      fallback: "#cecece",
     },
     "toast.spacing.padding": {
       name: "toast.spacing.padding",
@@ -159,25 +171,84 @@ export const toastTokenScopes = {
       fallback: 6000,
     },
   },
-  "variant_success": {
+  "variant_info": {
+    "toast.surface.bg": {
+      name: "toast.surface.bg",
+      cssVar: "--fsds-toast-surface-bg",
+      ref: "semantic.color.background.info.subtle",
+      fallback: "#d9f3fe",
+    },
     "toast.color.default": {
       name: "toast.color.default",
       cssVar: "--fsds-toast-color-default",
-      ref: "semantic.color.foreground.success",
+      ref: "semantic.color.foreground.on.info.subtle",
+      fallback: "#002d99",
+    },
+    "toast.surface.border": {
+      name: "toast.surface.border",
+      cssVar: "--fsds-toast-surface-border",
+      ref: "semantic.color.border.info",
+      fallback: "#0042dc",
+    },
+  },
+  "variant_success": {
+    "toast.surface.bg": {
+      name: "toast.surface.bg",
+      cssVar: "--fsds-toast-surface-bg",
+      ref: "semantic.color.background.success.subtle",
+      fallback: "#e4f2e0",
+    },
+    "toast.color.default": {
+      name: "toast.color.default",
+      cssVar: "--fsds-toast-color-default",
+      ref: "semantic.color.foreground.on.success.subtle",
+      fallback: "#234104",
+    },
+    "toast.surface.border": {
+      name: "toast.surface.border",
+      cssVar: "--fsds-toast-surface-border",
+      ref: "semantic.color.border.success",
+      fallback: "#336006",
     },
   },
   "variant_warning": {
+    "toast.surface.bg": {
+      name: "toast.surface.bg",
+      cssVar: "--fsds-toast-surface-bg",
+      ref: "semantic.color.background.warning.subtle",
+      fallback: "#ffedcc",
+    },
     "toast.color.default": {
       name: "toast.color.default",
       cssVar: "--fsds-toast-color-default",
-      ref: "semantic.color.foreground.warning",
+      ref: "semantic.color.foreground.on.warning.subtle",
+      fallback: "#593000",
+    },
+    "toast.surface.border": {
+      name: "toast.surface.border",
+      cssVar: "--fsds-toast-surface-border",
+      ref: "semantic.color.border.warning",
+      fallback: "#824500",
     },
   },
   "variant_error": {
+    "toast.surface.bg": {
+      name: "toast.surface.bg",
+      cssVar: "--fsds-toast-surface-bg",
+      ref: "semantic.color.background.danger.subtle",
+      fallback: "#fceaea",
+    },
     "toast.color.default": {
       name: "toast.color.default",
       cssVar: "--fsds-toast-color-default",
-      ref: "semantic.color.foreground.danger",
+      ref: "semantic.color.foreground.on.danger.subtle",
+      fallback: "#7b0000",
+    },
+    "toast.surface.border": {
+      name: "toast.surface.border",
+      cssVar: "--fsds-toast-surface-border",
+      ref: "semantic.color.border.danger",
+      fallback: "#ae0001",
     },
   },
 } satisfies ComponentTokenScopes;

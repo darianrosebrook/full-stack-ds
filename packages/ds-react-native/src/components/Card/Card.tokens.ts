@@ -213,6 +213,96 @@ export const cardTokenScopes = {
       ref: "semantic.color.foreground.on.brand",
       fallback: "#ffffff",
     },
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.subtle",
+      fallback: "#cecece",
+    },
+    "card.size.statusAccent.width": {
+      name: "card.size.statusAccent.width",
+      cssVar: "--fsds-card-size-statusAccent-width",
+      ref: "core.spacing.size.02",
+      fallback: 2,
+    },
+    "card.elevation.resting": {
+      name: "card.elevation.resting",
+      cssVar: "--fsds-card-elevation-resting",
+      ref: "semantic.elevation.surface.flat",
+      fallback: "none",
+    },
+    "card.elevation.raised": {
+      name: "card.elevation.raised",
+      cssVar: "--fsds-card-elevation-raised",
+      ref: "semantic.elevation.surface.raised",
+      fallback: "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)",
+    },
+    "card.color.focus.ring": {
+      name: "card.color.focus.ring",
+      cssVar: "--fsds-card-color-focus-ring",
+      ref: "semantic.focus.ring.color",
+      fallback: "#d9292b",
+    },
+    "card.focus.ring.width": {
+      name: "card.focus.ring.width",
+      cssVar: "--fsds-card-focus-ring-width",
+      ref: "semantic.focus.ring.width",
+      fallback: 2,
+    },
+    "card.focus.ring.offset": {
+      name: "card.focus.ring.offset",
+      cssVar: "--fsds-card-focus-ring-offset",
+      ref: "semantic.focus.ring.offset",
+      fallback: 2,
+    },
+  },
+  "variant_completed": {
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.success",
+      fallback: "#336006",
+    },
+  },
+  "variant_in_progress": {
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.info",
+      fallback: "#0042dc",
+    },
+  },
+  "variant_planned": {
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.subtle",
+      fallback: "#cecece",
+    },
+  },
+  "variant_deprecated": {
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.danger",
+      fallback: "#ae0001",
+    },
+  },
+  "variant_category": {
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.accent",
+      fallback: "#d9292b",
+    },
+  },
+  "variant_complexity": {
+    "card.color.statusAccent.default": {
+      name: "card.color.statusAccent.default",
+      cssVar: "--fsds-card-color-statusAccent-default",
+      ref: "semantic.color.border.warning",
+      fallback: "#824500",
+    },
   },
   "part_description": {
     "card.color.foreground.primary": {

@@ -73,6 +73,9 @@ export class TabsElement extends LitElement {
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-size-indicator-thickness: 2px;
+      --fsds-tabs-size-vertical-listWidth: 160px;
     }
     
     .tabs {
@@ -142,6 +145,43 @@ export class TabsElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--underline .tabs__list {
+      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-style: solid;
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+    }
+    
+    .tabs--underline .tabs__indicator {
+      height: var(--fsds-tabs-size-indicator-thickness);
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      background-color: var(--fsds-tabs-color-underline-active);
+    }
+    
+    .tabs--vertical .tabs__root {
+      flex-direction: row;
+    }
+    
+    .tabs--vertical .tabs__list {
+      flex-direction: column;
+      border-bottom-width: 0;
+      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-style: solid;
+      border-inline-end-width: 1px;
+      align-self: stretch;
+    }
+    
+    .tabs--vertical .tabs__indicator {
+      top: 0;
+      bottom: 0;
+      right: -1px;
+      left: auto;
+      width: var(--fsds-tabs-size-indicator-thickness);
+      height: auto;
+      transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
     
     .tabs--pills .tabs__list {
@@ -275,6 +315,9 @@ export class TabsListElement extends LitElement {
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-size-indicator-thickness: 2px;
+      --fsds-tabs-size-vertical-listWidth: 160px;
     }
     
     .tabs {
@@ -344,6 +387,43 @@ export class TabsListElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--underline .tabs__list {
+      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-style: solid;
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+    }
+    
+    .tabs--underline .tabs__indicator {
+      height: var(--fsds-tabs-size-indicator-thickness);
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      background-color: var(--fsds-tabs-color-underline-active);
+    }
+    
+    .tabs--vertical .tabs__root {
+      flex-direction: row;
+    }
+    
+    .tabs--vertical .tabs__list {
+      flex-direction: column;
+      border-bottom-width: 0;
+      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-style: solid;
+      border-inline-end-width: 1px;
+      align-self: stretch;
+    }
+    
+    .tabs--vertical .tabs__indicator {
+      top: 0;
+      bottom: 0;
+      right: -1px;
+      left: auto;
+      width: var(--fsds-tabs-size-indicator-thickness);
+      height: auto;
+      transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
     
     .tabs--pills .tabs__list {
@@ -461,6 +541,9 @@ export class TabsTabElement extends LitElement {
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-size-indicator-thickness: 2px;
+      --fsds-tabs-size-vertical-listWidth: 160px;
     }
     
     .tabs {
@@ -530,6 +613,43 @@ export class TabsTabElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--underline .tabs__list {
+      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-style: solid;
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+    }
+    
+    .tabs--underline .tabs__indicator {
+      height: var(--fsds-tabs-size-indicator-thickness);
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      background-color: var(--fsds-tabs-color-underline-active);
+    }
+    
+    .tabs--vertical .tabs__root {
+      flex-direction: row;
+    }
+    
+    .tabs--vertical .tabs__list {
+      flex-direction: column;
+      border-bottom-width: 0;
+      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-style: solid;
+      border-inline-end-width: 1px;
+      align-self: stretch;
+    }
+    
+    .tabs--vertical .tabs__indicator {
+      top: 0;
+      bottom: 0;
+      right: -1px;
+      left: auto;
+      width: var(--fsds-tabs-size-indicator-thickness);
+      height: auto;
+      transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
     
     .tabs--pills .tabs__list {
@@ -637,6 +757,9 @@ export class TabsPanelElement extends LitElement {
       --fsds-tabs-color-active-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-active-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-tabs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-color-underline-active: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-tabs-size-indicator-thickness: 2px;
+      --fsds-tabs-size-vertical-listWidth: 160px;
     }
     
     .tabs {
@@ -706,6 +829,43 @@ export class TabsPanelElement extends LitElement {
     .tabs__panel {
       display: block;
       padding: var(--fsds-tabs-spacing-padding);
+    }
+    
+    .tabs--underline .tabs__list {
+      border-bottom-color: var(--fsds-tabs-color-underline-active);
+      border-bottom-style: solid;
+      border-bottom-width: var(--fsds-tabs-size-indicator-thickness);
+    }
+    
+    .tabs--underline .tabs__indicator {
+      height: var(--fsds-tabs-size-indicator-thickness);
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      background-color: var(--fsds-tabs-color-underline-active);
+    }
+    
+    .tabs--vertical .tabs__root {
+      flex-direction: row;
+    }
+    
+    .tabs--vertical .tabs__list {
+      flex-direction: column;
+      border-bottom-width: 0;
+      border-inline-end-color: var(--fsds-tabs-color-indicator);
+      border-inline-end-style: solid;
+      border-inline-end-width: 1px;
+      align-self: stretch;
+    }
+    
+    .tabs--vertical .tabs__indicator {
+      top: 0;
+      bottom: 0;
+      right: -1px;
+      left: auto;
+      width: var(--fsds-tabs-size-indicator-thickness);
+      height: auto;
+      transition: transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease;
     }
     
     .tabs--pills .tabs__list {
