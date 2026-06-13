@@ -29,6 +29,9 @@ export interface BadgeProps {
 
 // @generated:start component
 export function Badge({
+  variant,
+  intent,
+  size,
   icon,
   children,
   style,
@@ -38,10 +41,13 @@ export function Badge({
 }: BadgeProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createBadgeStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForVariant = variant !== undefined ? ({ "counter": styles.root_variant_counter, "tag": styles.root_variant_tag } as Record<string, ViewStyle | undefined>)[variant] : undefined;
+  const variantStyleForIntent = intent !== undefined ? ({ "info": styles.root_variant_info, "success": styles.root_variant_success, "warning": styles.root_variant_warning, "danger": styles.root_variant_danger } as Record<string, ViewStyle | undefined>)[intent] : undefined;
+  const variantStyleForSize = size !== undefined ? ({ "sm": styles.root_variant_sm, "md": styles.root_variant_md, "lg": styles.root_variant_lg } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForVariant, variantStyleForIntent, variantStyleForSize, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >

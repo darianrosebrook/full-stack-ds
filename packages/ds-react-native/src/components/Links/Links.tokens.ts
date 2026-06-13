@@ -79,20 +79,20 @@ export const linksTokenScopes = {
     "links.color.foreground.default": {
       name: "links.color.foreground.default",
       cssVar: "--fsds-links-color-foreground-default",
-      ref: "semantic.color.foreground.primary",
-      fallback: "#141414",
+      ref: "semantic.color.foreground.link",
+      fallback: "#d9292b",
     },
     "links.color.foreground.hover": {
       name: "links.color.foreground.hover",
       cssVar: "--fsds-links-color-foreground-hover",
-      ref: "semantic.interaction.text.hover",
-      fallback: "#555555",
+      ref: "semantic.color.foreground.linkHover",
+      fallback: "#ae0001",
     },
     "links.color.foreground.visited": {
       name: "links.color.foreground.visited",
       cssVar: "--fsds-links-color-foreground-visited",
-      ref: "semantic.color.foreground.secondary",
-      fallback: "#555555",
+      ref: "semantic.color.foreground.linkVisited",
+      fallback: "#9b0002",
     },
     "links.color.foreground.disabled": {
       name: "links.color.foreground.disabled",
@@ -147,6 +147,48 @@ export const linksTokenScopes = {
       cssVar: "--fsds-links-focus-ring-radius",
       ref: "core.shape.radius.small",
       fallback: 2,
+    },
+    "links.size.fontSize.small": {
+      name: "links.size.fontSize.small",
+      cssVar: "--fsds-links-size-fontSize-small",
+      ref: "core.typography.ramp.3",
+      fallback: 14,
+    },
+    "links.size.fontSize.medium": {
+      name: "links.size.fontSize.medium",
+      cssVar: "--fsds-links-size-fontSize-medium",
+      ref: "core.typography.ramp.4",
+      fallback: 16,
+    },
+    "links.size.fontSize.large": {
+      name: "links.size.fontSize.large",
+      cssVar: "--fsds-links-size-fontSize-large",
+      ref: "core.typography.ramp.5",
+      fallback: 18,
+    },
+  },
+  "variant_small": {
+    "links.size.fontSize.medium": {
+      name: "links.size.fontSize.medium",
+      cssVar: "--fsds-links-size-fontSize-medium",
+      ref: "core.typography.ramp.3",
+      fallback: 14,
+    },
+  },
+  "variant_medium": {
+    "links.size.fontSize.medium": {
+      name: "links.size.fontSize.medium",
+      cssVar: "--fsds-links-size-fontSize-medium",
+      ref: "core.typography.ramp.4",
+      fallback: 16,
+    },
+  },
+  "variant_large": {
+    "links.size.fontSize.medium": {
+      name: "links.size.fontSize.medium",
+      cssVar: "--fsds-links-size-fontSize-medium",
+      ref: "core.typography.ramp.5",
+      fallback: 18,
     },
   },
 } satisfies ComponentTokenScopes;

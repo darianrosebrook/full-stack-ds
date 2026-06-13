@@ -47,6 +47,11 @@ export class AlertElement extends LitElement {
       --fsds-alert-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-alert-typography-page-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-alert-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
     
     .alert--info {
@@ -71,6 +76,28 @@ export class AlertElement extends LitElement {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+    }
+    
+    .alert--inline {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+    }
+    
+    .alert--section {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+    }
+    
+    .alert--page {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
     
     .alert {
@@ -203,6 +230,11 @@ export class AlertBodyElement extends LitElement {
       --fsds-alert-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-alert-typography-page-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-alert-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
     
     .alert--info {
@@ -227,6 +259,28 @@ export class AlertBodyElement extends LitElement {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+    }
+    
+    .alert--inline {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+    }
+    
+    .alert--section {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+    }
+    
+    .alert--page {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
     
     .alert {
@@ -336,6 +390,11 @@ export class AlertTitleElement extends LitElement {
       --fsds-alert-icon-size: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-size-padding-inline: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-alert-typography-page-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-alert-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
     
     .alert--info {
@@ -360,6 +419,28 @@ export class AlertTitleElement extends LitElement {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
+    }
+    
+    .alert--inline {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-04, 12px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
+    }
+    
+    .alert--section {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
+    }
+    
+    .alert--page {
+      --fsds-alert-size-padding: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
+      --fsds-alert-text-size: var(--fsds-semantic-typography-body-02, 16px);
+      --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
+      --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
     
     .alert {

@@ -3,18 +3,58 @@
     "color": {
       "resolvesTo": "links.color.foreground.default"
     },
+    "font-size": {
+      "resolvesTo": "links.size.fontSize.medium"
+    },
     "text-decoration-color": {
       "resolvesTo": "links.color.underline.default"
+    },
+    "text-decoration-line": {
+      "literal": "underline",
+      "platforms": ["web"]
+    },
+    "text-underline-offset": {
+      "literal": "2px",
+      "platforms": ["web"]
     },
     "gap": {
       "resolvesTo": "links.spacing.gap.default"
     },
+    "transition-property": {
+      "literal": "color, text-decoration-color",
+      "platforms": ["web"]
+    },
     "transition-duration": {
       "resolvesTo": "links.motion.duration.fast"
+    },
+    "cursor": {
+      "literal": "pointer",
+      "platforms": ["web"]
+    }
+  },
+  "--small": {
+    "links.size.fontSize.medium": { "resolvesTo": "core.typography.ramp.3", "fallback": "0.875rem" },
+    "font-size": {
+      "resolvesTo": "links.size.fontSize.medium"
+    }
+  },
+  "--medium": {
+    "links.size.fontSize.medium": { "resolvesTo": "core.typography.ramp.4", "fallback": "1rem" },
+    "font-size": {
+      "resolvesTo": "links.size.fontSize.medium"
+    }
+  },
+  "--large": {
+    "links.size.fontSize.medium": { "resolvesTo": "core.typography.ramp.5", "fallback": "1.125rem" },
+    "font-size": {
+      "resolvesTo": "links.size.fontSize.medium"
     }
   },
   "hover": {
     "color": {
+      "resolvesTo": "links.color.foreground.hover"
+    },
+    "text-decoration-color": {
       "resolvesTo": "links.color.foreground.hover"
     }
   },
@@ -26,6 +66,18 @@
   "disabled": {
     "color": {
       "resolvesTo": "links.color.foreground.disabled"
+    },
+    "cursor": {
+      "literal": "not-allowed",
+      "platforms": ["web"]
+    },
+    "text-decoration-line": {
+      "literal": "none",
+      "platforms": ["web"]
+    },
+    "pointer-events": {
+      "literal": "none",
+      "platforms": ["web"]
     }
   },
   "focus": {

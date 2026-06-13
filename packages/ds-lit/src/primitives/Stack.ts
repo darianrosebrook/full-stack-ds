@@ -23,12 +23,43 @@ import { property } from "lit/decorators.js";
 export class StackElement extends LitElement {
   static styles = css`
     :host {
+      box-sizing: border-box;
+    }
+
+    :host([layout="stack"]) {
+      display: flex;
+    }
+
+    :host([layout="inline-stack"]) {
+      display: inline-flex;
+    }
+
+    :host([layout="block"]) {
+      display: block;
+    }
+
+    :host([layout="inline"]) {
+      display: inline;
+    }
+
+    :host([layout="contents"]) {
       display: contents;
+    }
+
+    :host([variant="vertical"]) {
+      flex-direction: column;
+    }
+
+    :host([variant="horizontal"]) {
+      flex-direction: row;
     }
   `;
 
-  @property({ type: String })
+  @property({ type: String, reflect: true })
   variant: "vertical" | "horizontal" = "vertical";
+
+  @property({ type: String, reflect: true })
+  layout: "stack" | "inline-stack" | "block" | "inline" | "contents" | "native" = "stack";
 
   @property({ type: String, reflect: true })
   override role: string | null = null;

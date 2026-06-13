@@ -94,6 +94,21 @@
     "fallback": "#336006",
     "layer": "semantic"
   },
+  "field.color.validating-border": {
+    "resolvesTo": "semantic.color.border.accent",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "field.color.validating-text": {
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
+    "layer": "semantic"
+  },
+  "field.color.valid-text": {
+    "resolvesTo": "semantic.color.foreground.success",
+    "fallback": "#336006",
+    "layer": "semantic"
+  },
   "field.spacing.indicator": {
     "resolvesTo": "core.spacing.size.03",
     "fallback": "4px",

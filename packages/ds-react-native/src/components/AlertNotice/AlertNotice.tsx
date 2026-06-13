@@ -30,6 +30,7 @@ export interface AlertNoticeProps {
 // @generated:start component
 export function AlertNotice({
   status,
+  level,
   dismissible,
   onDismiss,
   dismissLabel = "Dismiss",
@@ -44,10 +45,12 @@ export function AlertNotice({
   const styles = useMemo(() => createAlertNoticeStyles(fsdsTheme), [fsdsTheme]);
   const variantStyleForStatus = status !== undefined ? ({ "info": styles.root_variant_info, "success": styles.root_variant_success, "warning": styles.root_variant_warning, "error": styles.root_variant_error } as Record<string, ViewStyle | undefined>)[status] : undefined;
   const textVariantStyleForStatus = status !== undefined ? ({ "info": styles.rootText_variant_info, "success": styles.rootText_variant_success, "warning": styles.rootText_variant_warning, "error": styles.rootText_variant_error } as Record<string, TextStyle | undefined>)[status] : undefined;
+  const variantStyleForLevel = level !== undefined ? ({ "page": styles.root_variant_page, "section": styles.root_variant_section, "inline": styles.root_variant_inline } as Record<string, ViewStyle | undefined>)[level] : undefined;
+  const textVariantStyleForLevel = level !== undefined ? ({ "page": styles.rootText_variant_page, "section": styles.rootText_variant_section, "inline": styles.rootText_variant_inline } as Record<string, TextStyle | undefined>)[level] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, variantStyleForStatus, style]}
+      style={[styles.root, variantStyleForStatus, variantStyleForLevel, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="alert"
@@ -60,7 +63,7 @@ export function AlertNotice({
         <RNText>{icon}</RNText>
       </View>
       ) : null}
-      {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForStatus]}>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForStatus, textVariantStyleForLevel]}>{children}</RNText> : children}
       {dismissible ? (
       <Pressable
         style={styles.dismiss}

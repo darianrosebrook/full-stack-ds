@@ -50,10 +50,25 @@ export class DetailsElement extends LitElement {
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-details-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-details-size-padding-compact: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-details-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-details-typography-fontSize-body: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
     
     .details__summary:hover {
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .details--compact {
+      --fsds-details-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-details-typography-lineHeight-body: var(--fsds-core-spacing-size-06, 16px);
+    }
+    
+    .details--inline {
+      --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
     }
     
     .details {
@@ -134,6 +149,15 @@ export class DetailsElement extends LitElement {
       padding: var(--fsds-details-size-padding-default);
       color: var(--fsds-details-color-foreground-primary);
       line-height: var(--fsds-details-typography-lineHeight-body);
+    }
+    
+    .details--icon-none .details__icon {
+      display: none;
+    }
+    
+    .details--icon-right .details__icon {
+      order: 1;
+      margin-inline-start: auto;
     }
   `;
 
@@ -212,10 +236,25 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-spacing-gap-default: var(--fsds-core-spacing-size-02, 2px);
       --fsds-details-typography-lineHeight-body: var(--fsds-semantic-typography-line-height-body, 1.5);
       --fsds-details-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
+      --fsds-details-size-padding-compact: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-details-size-padding-page: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-details-typography-fontSize-body: var(--fsds-semantic-typography-body-03, 14px);
+      --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
     
     .details__summary:hover {
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
+    }
+    
+    .details--compact {
+      --fsds-details-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
+      --fsds-details-typography-lineHeight-body: var(--fsds-core-spacing-size-06, 16px);
+    }
+    
+    .details--inline {
+      --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
+      --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
+      --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
     }
     
     .details {
@@ -296,6 +335,15 @@ export class DetailsContentElement extends LitElement {
       padding: var(--fsds-details-size-padding-default);
       color: var(--fsds-details-color-foreground-primary);
       line-height: var(--fsds-details-typography-lineHeight-body);
+    }
+    
+    .details--icon-none .details__icon {
+      display: none;
+    }
+    
+    .details--icon-right .details__icon {
+      order: 1;
+      margin-inline-start: auto;
     }
   `;
 

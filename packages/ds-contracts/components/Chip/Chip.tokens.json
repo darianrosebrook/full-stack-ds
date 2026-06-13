@@ -88,5 +88,25 @@
     "resolvesTo": "semantic.focus.ring.offset",
     "fallback": "2px",
     "layer": "semantic"
+  },
+  "chip.size.minHeight": {
+    "resolvesTo": "core.dimension.actionMinHeight",
+    "fallback": "32px",
+    "layer": "core"
+  },
+  "chip.color.background.selected": {
+    "resolvesTo": "semantic.color.background.info.subtle",
+    "fallback": "#d9f3fe",
+    "layer": "semantic"
+  },
+  "chip.color.foreground.selected": {
+    "resolvesTo": "semantic.color.foreground.on.info.subtle",
+    "fallback": "#002d99",
+    "layer": "semantic"
+  },
+  "chip.color.border.selected": {
+    "resolvesTo": "semantic.color.border.info",
+    "fallback": "#0042dc",
+    "layer": "semantic"
   }
 }

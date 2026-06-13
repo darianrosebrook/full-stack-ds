@@ -212,6 +212,120 @@ export const alertNoticeTokenScopes = {
       ref: "semantic.typography.body.02",
       fallback: 16,
     },
+    "alert-notice.size.padding.inline": {
+      name: "alert-notice.size.padding.inline",
+      cssVar: "--fsds-alert-notice-size-padding-inline",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "alert-notice.size.padding.page": {
+      name: "alert-notice.size.padding.page",
+      cssVar: "--fsds-alert-notice-size-padding-page",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "alert-notice.typography.page.fontSize": {
+      name: "alert-notice.typography.page.fontSize",
+      cssVar: "--fsds-alert-notice-typography-page-fontSize",
+      ref: "semantic.typography.body.02",
+      fallback: 16,
+    },
+    "alert-notice.typography.page.title.fontSize": {
+      name: "alert-notice.typography.page.title.fontSize",
+      cssVar: "--fsds-alert-notice-typography-page-title-fontSize",
+      ref: "semantic.typography.body.01",
+      fallback: 18,
+    },
+    "alert-notice.typography.inline.fontSize": {
+      name: "alert-notice.typography.inline.fontSize",
+      cssVar: "--fsds-alert-notice-typography-inline-fontSize",
+      ref: "semantic.typography.body.04",
+      fallback: 12,
+    },
+  },
+  "variant_inline": {
+    "alert-notice.size.padding": {
+      name: "alert-notice.size.padding",
+      cssVar: "--fsds-alert-notice-size-padding",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "alert-notice.spacing.gap": {
+      name: "alert-notice.spacing.gap",
+      cssVar: "--fsds-alert-notice-spacing-gap",
+      ref: "core.spacing.size.03",
+      fallback: 4,
+    },
+    "alert-notice.text.size": {
+      name: "alert-notice.text.size",
+      cssVar: "--fsds-alert-notice-text-size",
+      ref: "semantic.typography.body.04",
+      fallback: 12,
+    },
+    "alert-notice.typography.title.fontSize": {
+      name: "alert-notice.typography.title.fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      ref: "semantic.typography.body.03",
+      fallback: 14,
+    },
+  },
+  "variant_section": {
+    "alert-notice.size.padding": {
+      name: "alert-notice.size.padding",
+      cssVar: "--fsds-alert-notice-size-padding",
+      ref: "core.spacing.size.06",
+      fallback: 16,
+    },
+    "alert-notice.spacing.gap": {
+      name: "alert-notice.spacing.gap",
+      cssVar: "--fsds-alert-notice-spacing-gap",
+      ref: "core.spacing.size.04",
+      fallback: 8,
+    },
+    "alert-notice.text.size": {
+      name: "alert-notice.text.size",
+      cssVar: "--fsds-alert-notice-text-size",
+      ref: "semantic.typography.body.03",
+      fallback: 14,
+    },
+    "alert-notice.typography.title.fontSize": {
+      name: "alert-notice.typography.title.fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      ref: "semantic.typography.body.02",
+      fallback: 16,
+    },
+  },
+  "variant_page": {
+    "alert-notice.size.padding": {
+      name: "alert-notice.size.padding",
+      cssVar: "--fsds-alert-notice-size-padding",
+      ref: "core.spacing.size.07",
+      fallback: 24,
+    },
+    "alert-notice.spacing.gap": {
+      name: "alert-notice.spacing.gap",
+      cssVar: "--fsds-alert-notice-spacing-gap",
+      ref: "core.spacing.size.05",
+      fallback: 12,
+    },
+    "alert-notice.text.size": {
+      name: "alert-notice.text.size",
+      cssVar: "--fsds-alert-notice-text-size",
+      ref: "semantic.typography.body.02",
+      fallback: 16,
+    },
+    "alert-notice.typography.title.fontSize": {
+      name: "alert-notice.typography.title.fontSize",
+      cssVar: "--fsds-alert-notice-typography-title-fontSize",
+      ref: "semantic.typography.body.01",
+      fallback: 18,
+    },
+    "alert-notice.typography.title.fontWeight": {
+      name: "alert-notice.typography.title.fontWeight",
+      cssVar: "--fsds-alert-notice-typography-title-fontWeight",
+      ref: "semantic.typography.font.weight.bold",
+      fallback: "700",
+    },
   },
 } satisfies ComponentTokenScopes;
 

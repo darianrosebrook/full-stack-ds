@@ -34,15 +34,41 @@ import {
 })
 export class StackComponent {
   @Input() variant: "vertical" | "horizontal" = "vertical";
+  @Input() layout: "stack" | "inline-stack" | "block" | "inline" | "contents" | "native" = "stack";
   @Input() className?: string;
   @Input() as?: keyof HTMLElementTagNameMap;
   @Input() role?: string;
 
   @HostBinding("class")
   get hostClass(): string {
-    return ["fsds-stack", `fsds-stack--${this.variant}`, this.className]
+    return ["fsds-stack", `fsds-stack--layout-${this.layout}`, `fsds-stack--${this.variant}`, this.className]
       .filter(Boolean)
       .join(" ");
+  }
+
+  @HostBinding("style.display")
+  get hostDisplay(): string | null {
+    switch (this.layout) {
+      case "stack":
+        return "flex";
+      case "inline-stack":
+        return "inline-flex";
+      case "block":
+        return "block";
+      case "inline":
+        return "inline";
+      case "contents":
+        return "contents";
+      case "native":
+        return null;
+    }
+  }
+
+  @HostBinding("style.flex-direction")
+  get hostFlexDirection(): string | null {
+    return this.layout === "stack" || this.layout === "inline-stack"
+      ? this.variant === "horizontal" ? "row" : "column"
+      : null;
   }
 
   @HostBinding("attr.role")

@@ -36,6 +36,37 @@
   --fsds-card-color-badge-neutral-foreground: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-card-color-badge-accent-background: var(--fsds-semantic-color-background-accent, #d9292b);
   --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+  --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
+  --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-flat, none);
+  --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+  --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
+  --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
+  --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
+}
+
+.card--completed {
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
+}
+
+.card--in-progress {
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
+}
+
+.card--planned {
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
+}
+
+.card--deprecated {
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
+}
+
+.card--category {
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
+}
+
+.card--complexity {
+  --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
 }
 
 .card__description {

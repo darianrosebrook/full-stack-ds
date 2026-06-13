@@ -269,5 +269,24 @@
       "resolvesTo": "semantic.color.border.danger",
       "fallback": "#ae0001"
     }
+  },
+  "--inline": {
+    "alert.size.padding": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
+    "alert.spacing.gap": { "resolvesTo": "core.spacing.size.03", "fallback": "4px" },
+    "alert.text.size": { "resolvesTo": "semantic.typography.body.04", "fallback": "12px" },
+    "alert.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.03", "fallback": "14px" }
+  },
+  "--section": {
+    "alert.size.padding": { "resolvesTo": "core.spacing.size.06", "fallback": "16px" },
+    "alert.spacing.gap": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
+    "alert.text.size": { "resolvesTo": "semantic.typography.body.03", "fallback": "14px" },
+    "alert.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.02", "fallback": "16px" }
+  },
+  "--page": {
+    "alert.size.padding": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" },
+    "alert.spacing.gap": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" },
+    "alert.text.size": { "resolvesTo": "semantic.typography.body.02", "fallback": "16px" },
+    "alert.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.01", "fallback": "18px" },
+    "alert.typography.title.fontWeight": { "resolvesTo": "semantic.typography.font.weight.bold", "fallback": "700" }
   }
 }

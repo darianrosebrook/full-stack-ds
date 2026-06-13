@@ -202,10 +202,16 @@
           "--fsds-skeleton-color-base": "var(--fsds-semantic-color-background-secondary, #efefef)",
           "--fsds-skeleton-color-highlight": "var(--fsds-semantic-color-background-highlight, #f7c1c2)",
           "--fsds-skeleton-color-static": "var(--fsds-semantic-color-background-secondary, #efefef)",
-          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-04, 16px)",
-          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-07, 24px)",
+          "--fsds-skeleton-radius-sm": "var(--fsds-core-shape-radius-small, 4px)",
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-03, 8px)",
+          "--fsds-skeleton-radius-lg": "var(--fsds-core-shape-radius-large, 16px)",
+          "--fsds-skeleton-radius-full": "var(--fsds-core-shape-radius-full, 9999px)",
+          "--fsds-skeleton-gap-compact": "var(--fsds-core-spacing-size-03, 4px)",
+          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-05, 12px)",
+          "--fsds-skeleton-gap-spacious": "var(--fsds-core-spacing-size-07, 24px)",
           "--fsds-skeleton-anim-duration": "var(--fsds-core-motion-duration-long, 400ms)",
           "--fsds-skeleton-anim-easing": "var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))",
+          "--fsds-skeleton-shape-height-text": "var(--fsds-core-typography-ramp-4, 1rem)",
           "display": "block",
           "box-sizing": "border-box",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
@@ -220,9 +226,122 @@
           "min-height": "var(--fsds-box-model-min-height)",
           "max-height": "var(--fsds-box-model-max-height)",
           "background-color": "var(--fsds-skeleton-color-base)",
+          "border-radius": "var(--fsds-skeleton-radius-md)",
           "transition-duration": "var(--fsds-skeleton-anim-duration)",
           "transition-timing-function": "var(--fsds-skeleton-anim-easing)",
           "animation": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite"
+        }
+      },
+      {
+        "selector": ".skeleton__shape",
+        "declarations": {
+          "display": "block",
+          "background-color": "var(--fsds-skeleton-color-base)",
+          "border-radius": "var(--fsds-skeleton-radius-md)"
+        }
+      },
+      {
+        "selector": ".skeleton__stack",
+        "declarations": {
+          "display": "flex",
+          "flex-direction": "column",
+          "gap": "var(--fsds-skeleton-gap-md)"
+        }
+      },
+      {
+        "selector": ".skeleton--block",
+        "declarations": {
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-03, 8px)",
+          "border-radius": "var(--fsds-skeleton-radius-md)"
+        }
+      },
+      {
+        "selector": ".skeleton--text",
+        "declarations": {
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-small, 4px)",
+          "--fsds-skeleton-shape-height-text": "var(--fsds-core-typography-ramp-4, 1rem)",
+          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "height": "var(--fsds-skeleton-shape-height-text)"
+        }
+      },
+      {
+        "selector": ".skeleton--avatar",
+        "declarations": {
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-full, 9999px)",
+          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "aspect-ratio": "1"
+        }
+      },
+      {
+        "selector": ".skeleton--media",
+        "declarations": {
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-03, 8px)",
+          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "aspect-ratio": "16 / 9",
+          "width": "100%"
+        }
+      },
+      {
+        "selector": ".skeleton--dataviz",
+        "declarations": {
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-03, 8px)",
+          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "aspect-ratio": "4 / 3",
+          "width": "100%"
+        }
+      },
+      {
+        "selector": ".skeleton--actions",
+        "declarations": {
+          "--fsds-skeleton-radius-md": "var(--fsds-core-shape-radius-03, 8px)",
+          "border-radius": "var(--fsds-skeleton-radius-md)",
+          "height": "36px",
+          "min-width": "80px"
+        }
+      },
+      {
+        "selector": ".skeleton--shimmer",
+        "declarations": {
+          "animation": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite"
+        }
+      },
+      {
+        "selector": ".skeleton--wipe",
+        "declarations": {
+          "--fsds-skeleton-color-base": "var(--fsds-semantic-color-background-tertiary, #e5e5e5)",
+          "overflow": "hidden",
+          "position": "relative",
+          "animation": "none"
+        }
+      },
+      {
+        "selector": ".skeleton--pulse",
+        "declarations": {
+          "animation": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 3) ease-in-out infinite"
+        }
+      },
+      {
+        "selector": ".skeleton--none",
+        "declarations": {
+          "animation": "none"
+        }
+      },
+      {
+        "selector": ".skeleton--compact",
+        "declarations": {
+          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-03, 4px)"
+        }
+      },
+      {
+        "selector": ".skeleton--regular",
+        "declarations": {
+          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-05, 12px)"
+        }
+      },
+      {
+        "selector": ".skeleton--spacious",
+        "declarations": {
+          "--fsds-skeleton-gap-md": "var(--fsds-core-spacing-size-07, 24px)"
         }
       }
     ],

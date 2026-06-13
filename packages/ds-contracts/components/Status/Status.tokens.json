@@ -1,42 +1,42 @@
 {
   "box-model.padding-block-start": {
-    "resolvesTo": "semantic.feedback.size.padding-block",
-    "fallback": "16px",
+    "resolvesTo": "semantic.glyph.badge.size.md.paddingY",
+    "fallback": "2px",
     "layer": "semantic"
   },
   "box-model.padding-block-end": {
-    "resolvesTo": "semantic.feedback.size.padding-block",
-    "fallback": "16px",
+    "resolvesTo": "semantic.glyph.badge.size.md.paddingY",
+    "fallback": "2px",
     "layer": "semantic"
   },
   "box-model.padding-inline-start": {
-    "resolvesTo": "semantic.feedback.size.padding-inline",
-    "fallback": "16px",
+    "resolvesTo": "semantic.glyph.badge.size.md.paddingX",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.padding-inline-end": {
-    "resolvesTo": "semantic.feedback.size.padding-inline",
-    "fallback": "16px",
+    "resolvesTo": "semantic.glyph.badge.size.md.paddingX",
+    "fallback": "8px",
     "layer": "semantic"
   },
   "box-model.gap": {
-    "resolvesTo": "semantic.feedback.size.gap",
-    "fallback": "12px",
+    "resolvesTo": "semantic.glyph.badge.size.md.gap",
+    "fallback": "4px",
     "layer": "semantic"
   },
   "status.color.background.default": {
-    "resolvesTo": "semantic.color.background.primary",
-    "fallback": "#ffffff",
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
     "layer": "semantic"
   },
   "status.color.foreground.primary": {
-    "resolvesTo": "semantic.color.foreground.primary",
-    "fallback": "#141414",
+    "resolvesTo": "semantic.color.foreground.secondary",
+    "fallback": "#555555",
     "layer": "semantic"
   },
   "status.color.border.default": {
-    "resolvesTo": "semantic.color.border.primary",
-    "fallback": "#f29495",
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
     "layer": "semantic"
   },
   "status.size.radius.default": {
@@ -44,15 +44,25 @@
     "fallback": "9999px",
     "layer": "core"
   },
-  "status.size.padding.default": {
-    "resolvesTo": "core.spacing.size.04",
-    "fallback": "8px",
-    "layer": "core"
+  "status.size.minHeight": {
+    "resolvesTo": "semantic.glyph.badge.size.md.minHeight",
+    "fallback": "24px",
+    "layer": "semantic"
+  },
+  "status.size.fontSize": {
+    "resolvesTo": "semantic.glyph.badge.size.md.fontSize",
+    "fallback": "12px",
+    "layer": "semantic"
   },
   "status.size.border.default": {
     "resolvesTo": "core.shape.border.width.hairline",
     "fallback": "1px",
     "layer": "core"
+  },
+  "status.text.weight": {
+    "resolvesTo": "semantic.typography.font.weight.medium",
+    "fallback": "500",
+    "layer": "semantic"
   },
   "status.typography.lineHeight": {
     "resolvesTo": "semantic.typography.line.height.collapse",

@@ -141,6 +141,98 @@
       "resolvesTo": "tabs.spacing.padding"
     }
   },
+  "--underline __list": {
+    "border-bottom-color": {
+      "resolvesTo": "tabs.color.underline.active"
+    },
+    "border-bottom-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-bottom-width": {
+      "resolvesTo": "tabs.size.indicator.thickness"
+    }
+  },
+  "--underline __indicator": {
+    "height": {
+      "resolvesTo": "tabs.size.indicator.thickness"
+    },
+    "bottom": {
+      "literal": "-1px",
+      "platforms": ["web"]
+    },
+    "left": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "right": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "background-color": {
+      "resolvesTo": "tabs.color.underline.active"
+    }
+  },
+  "--vertical __root": {
+    "flex-direction": {
+      "literal": "row",
+      "platforms": ["web"]
+    }
+  },
+  "--vertical __list": {
+    "flex-direction": {
+      "literal": "column",
+      "platforms": ["web"]
+    },
+    "border-bottom-width": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "border-inline-end-color": {
+      "resolvesTo": "tabs.color.indicator"
+    },
+    "border-inline-end-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-inline-end-width": {
+      "literal": "1px",
+      "platforms": ["web"]
+    },
+    "align-self": {
+      "literal": "stretch",
+      "platforms": ["web"]
+    }
+  },
+  "--vertical __indicator": {
+    "top": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "bottom": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "right": {
+      "literal": "-1px",
+      "platforms": ["web"]
+    },
+    "left": {
+      "literal": "auto",
+      "platforms": ["web"]
+    },
+    "width": {
+      "resolvesTo": "tabs.size.indicator.thickness"
+    },
+    "height": {
+      "literal": "auto",
+      "platforms": ["web"]
+    },
+    "transition": {
+      "literal": "transform var(--fsds-tabs-motion-indicator) ease, height var(--fsds-tabs-motion-indicator) ease",
+      "platforms": ["web"]
+    }
+  },
   "--pills __list": {
     "border-bottom-width": {
       "literal": "0",

@@ -213,5 +213,21 @@
     "line-height": {
       "resolvesTo": "details.typography.lineHeight.body"
     }
+  },
+  "--compact": {
+    "details.size.padding.default": { "resolvesTo": "core.spacing.size.04", "fallback": "8px" },
+    "details.typography.lineHeight.body": { "resolvesTo": "core.spacing.size.06", "fallback": "16px" }
+  },
+  "--inline": {
+    "details.size.padding.default": { "resolvesTo": "core.spacing.size.07", "fallback": "24px" },
+    "details.color.background.default": { "resolvesTo": "semantic.color.background.secondary", "fallback": "#f5f5f5" },
+    "details.color.border.default": { "resolvesTo": "semantic.color.border.subtle", "fallback": "#e0e0e0" }
+  },
+  ".details--icon-none .details__icon": {
+    "display": { "literal": "none", "platforms": ["web"] }
+  },
+  ".details--icon-right .details__icon": {
+    "order": { "literal": "1", "platforms": ["web"] },
+    "margin-inline-start": { "literal": "auto", "platforms": ["web"] }
   }
 }

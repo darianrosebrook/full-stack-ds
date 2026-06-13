@@ -80,6 +80,15 @@
   color: var(--fsds-details-color-foreground-primary);
   line-height: var(--fsds-details-typography-lineHeight-body);
 }
+
+.details--icon-none .details__icon {
+  display: none;
+}
+
+.details--icon-right .details__icon {
+  order: 1;
+  margin-inline-start: auto;
+}
 /* @generated:end */
 
 /* @custom:start overrides */

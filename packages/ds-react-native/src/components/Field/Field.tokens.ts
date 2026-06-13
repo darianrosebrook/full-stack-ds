@@ -159,6 +159,24 @@ export const fieldTokenScopes = {
       ref: "semantic.color.feedback.border.success",
       fallback: "#336006",
     },
+    "field.color.validating-border": {
+      name: "field.color.validating-border",
+      cssVar: "--fsds-field-color-validating-border",
+      ref: "semantic.color.border.accent",
+      fallback: "#d9292b",
+    },
+    "field.color.validating-text": {
+      name: "field.color.validating-text",
+      cssVar: "--fsds-field-color-validating-text",
+      ref: "semantic.color.foreground.secondary",
+      fallback: "#555555",
+    },
+    "field.color.valid-text": {
+      name: "field.color.valid-text",
+      cssVar: "--fsds-field-color-valid-text",
+      ref: "semantic.color.foreground.success",
+      fallback: "#336006",
+    },
     "field.spacing.indicator": {
       name: "field.spacing.indicator",
       cssVar: "--fsds-field-spacing-indicator",
@@ -200,6 +218,56 @@ export const fieldTokenScopes = {
       cssVar: "--fsds-field-focus-ring-offset",
       ref: "semantic.focus.ring.offset",
       fallback: 2,
+    },
+  },
+  "variant_idle": {
+    "field.color.border": {
+      name: "field.color.border",
+      cssVar: "--fsds-field-color-border",
+      ref: "semantic.color.border.subtle",
+      fallback: "#cecece",
+    },
+  },
+  "variant_validating": {
+    "field.color.border": {
+      name: "field.color.border",
+      cssVar: "--fsds-field-color-border",
+      ref: "semantic.color.border.accent",
+      fallback: "#d9292b",
+    },
+    "field.color.fg": {
+      name: "field.color.fg",
+      cssVar: "--fsds-field-color-fg",
+      ref: "semantic.color.foreground.secondary",
+      fallback: "#555555",
+    },
+  },
+  "variant_valid": {
+    "field.color.border": {
+      name: "field.color.border",
+      cssVar: "--fsds-field-color-border",
+      ref: "semantic.color.feedback.border.success",
+      fallback: "#336006",
+    },
+    "field.color.fg": {
+      name: "field.color.fg",
+      cssVar: "--fsds-field-color-fg",
+      ref: "semantic.color.foreground.success",
+      fallback: "#336006",
+    },
+  },
+  "variant_invalid": {
+    "field.color.border": {
+      name: "field.color.border",
+      cssVar: "--fsds-field-color-border",
+      ref: "semantic.color.border.danger",
+      fallback: "#ae0001",
+    },
+    "field.color.fg": {
+      name: "field.color.fg",
+      cssVar: "--fsds-field-color-fg",
+      ref: "semantic.color.foreground.danger",
+      fallback: "#d9292b",
     },
   },
 } satisfies ComponentTokenScopes;

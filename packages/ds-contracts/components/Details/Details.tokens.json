@@ -73,5 +73,25 @@
     "resolvesTo": "semantic.typography.font.weight.medium",
     "fallback": "500",
     "layer": "semantic"
+  },
+  "details.size.padding.compact": {
+    "resolvesTo": "core.spacing.size.04",
+    "fallback": "8px",
+    "layer": "core"
+  },
+  "details.size.padding.page": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "details.typography.fontSize.body": {
+    "resolvesTo": "semantic.typography.body.03",
+    "fallback": "14px",
+    "layer": "semantic"
+  },
+  "details.typography.fontSize.compact": {
+    "resolvesTo": "semantic.typography.body.04",
+    "fallback": "12px",
+    "layer": "semantic"
   }
 }

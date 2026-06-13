@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { StyleProp, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -26,6 +26,8 @@ export interface BlockquoteProps {
 
 // @generated:start component
 export function Blockquote({
+  variant,
+  size,
   children,
   style,
   testID,
@@ -34,14 +36,17 @@ export function Blockquote({
 }: BlockquoteProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createBlockquoteStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForVariant = variant !== undefined ? ({ "default": styles.root_variant_default, "bordered": styles.root_variant_bordered, "highlighted": styles.root_variant_highlighted } as Record<string, ViewStyle | undefined>)[variant] : undefined;
+  const textVariantStyleForVariant = variant !== undefined ? ({ "highlighted": styles.rootText_variant_highlighted } as Record<string, TextStyle | undefined>)[variant] : undefined;
+  const textVariantStyleForSize = size !== undefined ? ({ "sm": styles.rootText_variant_sm, "md": styles.rootText_variant_md, "lg": styles.rootText_variant_lg } as Record<string, TextStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForVariant, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      {typeof children === "string" ? <RNText style={styles.rootText}>{children}</RNText> : children}
+      {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForVariant, textVariantStyleForSize]}>{children}</RNText> : children}
     </View>
   );
 }

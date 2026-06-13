@@ -14,14 +14,39 @@
     "fallback": "#efefef",
     "layer": "semantic"
   },
+  "skeleton.radius.sm": {
+    "resolvesTo": "core.shape.radius.small",
+    "fallback": "4px",
+    "layer": "core"
+  },
   "skeleton.radius.md": {
     "resolvesTo": "core.shape.radius.03",
     "fallback": "8px",
     "layer": "core"
   },
+  "skeleton.radius.lg": {
+    "resolvesTo": "core.shape.radius.large",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "skeleton.radius.full": {
+    "resolvesTo": "core.shape.radius.full",
+    "fallback": "9999px",
+    "layer": "core"
+  },
+  "skeleton.gap.compact": {
+    "resolvesTo": "core.spacing.size.03",
+    "fallback": "4px",
+    "layer": "core"
+  },
   "skeleton.gap.md": {
     "resolvesTo": "core.spacing.size.05",
     "fallback": "12px",
+    "layer": "core"
+  },
+  "skeleton.gap.spacious": {
+    "resolvesTo": "core.spacing.size.07",
+    "fallback": "24px",
     "layer": "core"
   },
   "skeleton.anim.duration": {
@@ -32,6 +57,11 @@
   "skeleton.anim.easing": {
     "resolvesTo": "core.motion.easing.standard",
     "fallback": "cubic-bezier(0.4, 0, 0.2, 1)",
+    "layer": "core"
+  },
+  "skeleton.shape.height.text": {
+    "resolvesTo": "core.typography.ramp.4",
+    "fallback": "1rem",
     "layer": "core"
   }
 }

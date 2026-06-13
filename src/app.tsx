@@ -12,6 +12,7 @@ import { TokensView } from "./views/TokensView";
 import { TokensPhilosophyView } from "./views/TokensPhilosophyView";
 import { ComponentComplexityView } from "./views/ComponentComplexityView";
 import { ComponentStandardsView } from "./views/ComponentStandardsView";
+import { DisplayCaseView } from "./views/DisplayCaseView";
 import { PrimitiveView } from "./views/PrimitiveView";
 import { PropertiesScratchView } from "./views/PropertiesScratchView";
 import { useRoute } from "./router";
@@ -85,6 +86,7 @@ export function App() {
         {route.kind === "home" && <Home bundle={bundle} />}
         {route.kind === "architecture" && <ArchitectureView bundle={bundle} />}
         {route.kind === "tokens" && <TokensView bundle={bundle} />}
+        {route.kind === "display-case" && <DisplayCaseView bundle={bundle} />}
         {route.kind === "tokens-philosophy" && (
           <TokensPhilosophyView tab={route.tab} />
         )}

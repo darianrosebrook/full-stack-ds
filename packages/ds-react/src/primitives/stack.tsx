@@ -8,10 +8,12 @@ import {
 import "./stack.css";
 
 type StackVariant = "vertical" | "horizontal";
+type StackLayout = "stack" | "inline-stack" | "block" | "inline" | "contents" | "native";
 
 type StackOwnProps<T extends ElementType = "div"> = {
   as?: T;
   variant?: StackVariant;
+  layout?: StackLayout;
   ref?: Ref<Element>;
   children?: ReactNode;
 };
@@ -22,12 +24,13 @@ export type StackProps<T extends ElementType = "div"> = StackOwnProps<T> &
 export function Stack<T extends ElementType = "div">({
   as,
   variant = "vertical",
+  layout = "stack",
   className,
   ref,
   ...rest
 }: StackProps<T>) {
   const Component = as || "div";
-  const classNames = ["stack", `stack--${variant}`, className]
+  const classNames = ["stack", `stack--layout-${layout}`, `stack--${variant}`, className]
     .filter(Boolean)
     .join(" ");
 
