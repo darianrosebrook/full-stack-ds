@@ -2088,6 +2088,7 @@ function fallbackViewNode(): DomNodeIR {
     attrs: {},
     bindings: {},
     children: [],
+    componentRef: undefined,
     content: undefined,
     cssVarBindings: [],
     events: {},

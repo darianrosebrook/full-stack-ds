@@ -99,6 +99,16 @@ export interface PartIR {
    */
   nativeTag?: string;
   /**
+   * Bare component name (e.g. `"Input"`) when this part is realized as another
+   * design-system component, derived from `anatomy.details[name].componentRef:
+   * "fsds.<Name>"` (the `fsds.` prefix is stripped). When set, the part is
+   * lowered by-reference: emitters import the referenced component and emit a
+   * component-instance element rather than a native tag or Stack wrapper.
+   * Mutually exclusive with `nativeTag` (the contract schema rejects a part
+   * that declares both `tag` and `componentRef`).
+   */
+  componentRef?: string;
+  /**
    * Per-part metadata copied verbatim from `contract.anatomy.details[name]`.
    * Emitters read `details.role`, `details.interactive`, `details.focusable`,
    * `details.aria` etc. to wire up compound-part behavior (e.g. Tabs's tab
@@ -316,6 +326,17 @@ export interface CssVarBindingIR {
 export interface DomNodeIR {
   /** HTML tag, or `"slot"`/`"children"` placeholder. */
   tag: string;
+  /**
+   * Bare component name (e.g. `"Button"`, `"Input"`) when this node renders
+   * another design-system component by reference rather than a native tag.
+   * Derived from the contract's `componentRef: "fsds.<Name>"` (the `fsds.`
+   * prefix is stripped). When set, `tag` is the empty string and emitters
+   * take the component-instance path: import the referenced component by
+   * relative sibling path and emit `<Name .../>`. Undefined for native-tag
+   * and slot/children nodes — the discriminator is `componentRef !== undefined`,
+   * a fourth case alongside `tag === "slot" | "children" | <html>`.
+   */
+  componentRef: string | undefined;
   /**
    * Named-slot identifier — only set when `tag === "slot"` and the contract
    * declared a `name` for the slot. Each framework emitter maps this to its
@@ -1748,7 +1769,51 @@ function promoteIterationLocalsInTree(
   }
 }
 
+/**
+ * Strip the `fsds.` prefix from a `componentRef` string, returning the bare
+ * component name (e.g. `"fsds.Button"` → `"Button"`). Throws on a malformed
+ * reference so contract authors get a clear redirect rather than a silently
+ * empty import. The schema's pattern already gates this, but the IR builder
+ * also runs over hand-constructed contracts in tests, so the check is real.
+ */
+function stripComponentRefPrefix(ref: string, context: string): string {
+  const match = /^fsds\.([A-Z][A-Za-z0-9]*)$/.exec(ref);
+  if (!match) {
+    throw new Error(
+      `${context}: componentRef "${ref}" is malformed. It must be ` +
+        `"fsds.<Name>" where <Name> is a PascalCase component name ` +
+        `(e.g. "fsds.Button", "fsds.Input").`,
+    );
+  }
+  return match[1];
+}
+
 function parseDomNode(node: ContractDomNode): DomNodeIR {
+  // A node declares EITHER a native `tag` OR a `componentRef` to another
+  // design-system component, never both. The schema's `oneOf` enforces this
+  // for file-loaded contracts; the IR builder re-checks because it also runs
+  // over hand-constructed contracts (tests) that bypass schema validation.
+  if (node.componentRef !== undefined && node.tag !== undefined) {
+    throw new Error(
+      `anatomy.dom node (part="${node.part ?? "?"}"): declares both \`tag\` ` +
+        `("${node.tag}") and \`componentRef\` ("${node.componentRef}"). These ` +
+        `are mutually exclusive — a node renders either a native tag or a ` +
+        `referenced component, not both.`,
+    );
+  }
+  if (node.componentRef === undefined && node.tag === undefined) {
+    throw new Error(
+      `anatomy.dom node (part="${node.part ?? "?"}"): declares neither \`tag\` ` +
+        `nor \`componentRef\`. Exactly one is required.`,
+    );
+  }
+  const componentRef =
+    node.componentRef !== undefined
+      ? stripComponentRefPrefix(
+          node.componentRef,
+          `anatomy.dom node (part="${node.part ?? "?"}")`,
+        )
+      : undefined;
   // Authors interact with three sibling fields, each with a distinct
   // semantic shape that the framework emitters lower idiomatically:
   //   bindings — attribute bindings (aria-label, disabled, src, …)
@@ -1829,9 +1894,13 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     );
   }
   return {
-    tag: node.tag,
-    // `name` is meaningful only for slot placeholders. Carry it through the
-    // IR so each framework emitter can render the matching named-slot idiom.
+    // A componentRef node carries its component name on `componentRef` and a
+    // normalized empty `tag`; emitters discriminate on `componentRef !==
+    // undefined` (the fourth case alongside tag === "slot"/"children"/<html>).
+    tag: componentRef !== undefined ? "" : (node.tag as string),
+    componentRef,
+    // `name` is meaningful only for slot sentinels. Carry it through the IR so
+    // each framework emitter can render the matching named-slot idiom.
     slotName: node.tag === "slot" ? node.name : undefined,
     part: node.part,
     attrs: node.attrs ?? {},
@@ -2424,10 +2493,21 @@ function buildEventsIR(
 function buildParts(contract: ComponentContract): PartIR[] {
   const allDetails = getPartDetails(contract.anatomy);
   const domTagByPart = collectDomTagsByPart(contract);
-  const partsInDomTree = new Set(Object.keys(domTagByPart));
+  const domComponentRefByPart = collectDomComponentRefsByPart(contract);
+  const partsInDomTree = new Set([
+    ...Object.keys(domTagByPart),
+    ...Object.keys(domComponentRefByPart),
+  ]);
   return getParts(contract.anatomy).map((name) => {
     const semanticElement = SEMANTIC_ELEMENTS[name];
     const details = allDetails[name];
+    const componentRef = resolvePartComponentRef({
+      partName: name,
+      detailsRef: details?.componentRef,
+      domRef: domComponentRefByPart[name],
+      detailsTag: details?.tag,
+      componentName: contract.name,
+    });
     const nativeTag = resolveNativeTag({
       partName: name,
       detailsTag: details?.tag,
@@ -2471,9 +2551,89 @@ function buildParts(contract: ComponentContract): PartIR[] {
       layoutVariant:
         name === "footer" || name === "list" ? "horizontal" : undefined,
       nativeTag,
+      componentRef,
       details,
     };
   });
+}
+
+/**
+ * Walk the contract's anatomy.dom tree and collect the `componentRef` (bare
+ * component name, `fsds.` stripped) declared for each part name. Parallels
+ * `collectDomTagsByPart` for the by-reference composition path. Returns an
+ * empty map when the contract has no anatomy.dom tree.
+ */
+function collectDomComponentRefsByPart(
+  contract: ComponentContract,
+): Record<string, string> {
+  if (!contract.anatomy || Array.isArray(contract.anatomy)) return {};
+  const dom = contract.anatomy.dom;
+  if (!dom) return {};
+  const out: Record<string, string> = {};
+  const stack: typeof dom[] = [dom];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part && typeof node.componentRef === "string") {
+      out[node.part] = stripComponentRefPrefix(
+        node.componentRef,
+        `anatomy.dom node (part="${node.part}")`,
+      );
+    }
+    if (Array.isArray(node.children)) {
+      for (const c of node.children) stack.push(c);
+    }
+  }
+  return out;
+}
+
+/**
+ * Resolve a part's by-reference component name from the contract.
+ *
+ *   1. anatomy.details.<part>.componentRef is the primary authority.
+ *   2. anatomy.dom node componentRef is the secondary source.
+ *   3. undefined — the part is not realized by reference.
+ *
+ * Throws when a part declares both a componentRef and a native `tag` (mutually
+ * exclusive), or when the two sources disagree, mirroring resolveNativeTag's
+ * disagreement guard.
+ */
+function resolvePartComponentRef(args: {
+  partName: string;
+  detailsRef: string | undefined;
+  domRef: string | undefined;
+  detailsTag: string | undefined;
+  componentName: string;
+}): string | undefined {
+  const { partName, detailsRef, domRef, detailsTag, componentName } = args;
+  const normalizedDetailsRef =
+    detailsRef !== undefined
+      ? stripComponentRefPrefix(
+          detailsRef,
+          `${componentName} anatomy.details.${partName}.componentRef`,
+        )
+      : undefined;
+  const resolved = normalizedDetailsRef ?? domRef;
+  if (resolved === undefined) return undefined;
+  if (detailsTag !== undefined) {
+    throw new Error(
+      `${componentName} part "${partName}": declares both a native \`tag\` ` +
+        `("${detailsTag}") and a \`componentRef\` ("${resolved}"). These are ` +
+        `mutually exclusive — a part is realized as either a native tag or a ` +
+        `referenced component.`,
+    );
+  }
+  if (
+    normalizedDetailsRef !== undefined &&
+    domRef !== undefined &&
+    normalizedDetailsRef !== domRef
+  ) {
+    throw new Error(
+      `${componentName} part "${partName}": anatomy.details componentRef ` +
+        `("${normalizedDetailsRef}") disagrees with anatomy.dom componentRef ` +
+        `("${domRef}"). They must agree.`,
+    );
+  }
+  return resolved;
 }
 
 /**

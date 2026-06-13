@@ -311,13 +311,21 @@
   "$defs": {
     "domNode": {
       "type": "object",
-      "required": ["tag"],
+      "oneOf": [
+        { "required": ["tag"] },
+        { "required": ["componentRef"] }
+      ],
       "additionalProperties": false,
-      "description": "Single DOM node in a component's render tree. Framework emitters map this into idiomatic JSX/SFC/template/html output.",
+      "description": "Single DOM node in a component's render tree. Framework emitters map this into idiomatic JSX/SFC/template/html output. A node declares EITHER a native `tag` OR a `componentRef` to another design-system component — never both.",
       "properties": {
         "tag": {
           "type": "string",
-          "description": "HTML tag name (e.g. \"label\", \"input\"), or special placeholder \"slot\" / \"children\" where consumer-provided content renders."
+          "description": "HTML tag name (e.g. \"label\", \"input\"), or the special sentinel \"slot\" / \"children\" where consumer-provided content renders. Mutually exclusive with `componentRef`."
+        },
+        "componentRef": {
+          "type": "string",
+          "pattern": "^fsds\\.[A-Z][A-Za-z0-9]*$",
+          "description": "Reference to another design-system component this node renders, in `fsds.<Name>` form (e.g. \"fsds.Button\", \"fsds.Input\"). Resolution is by-reference: the emitter imports the referenced component by relative sibling path and emits it as a component-instance element (`<Button .../>`), never an inline expansion. The referenced component's `layer` must be lower-or-equal to this component's in the ladder primitive < compound < composer < assembly. Mutually exclusive with `tag`."
         },
         "name": {
           "type": "string",
@@ -683,7 +691,12 @@
         "description": { "type": "string" },
         "tag": {
           "type": "string",
-          "description": "Native HTML tag this part is realized as. When set, the codegen uses this tag for the part's compound subcomponent (skipping Stack wrapping for tags in the table composition set) and for the root component's anatomy.dom node (when the part appears in that tree). If anatomy.dom also declares a tag for the same part, the two must agree."
+          "description": "Native HTML tag this part is realized as. When set, the codegen uses this tag for the part's compound subcomponent (skipping Stack wrapping for tags in the table composition set) and for the root component's anatomy.dom node (when the part appears in that tree). If anatomy.dom also declares a tag for the same part, the two must agree. Mutually exclusive with `componentRef`."
+        },
+        "componentRef": {
+          "type": "string",
+          "pattern": "^fsds\\.[A-Z][A-Za-z0-9]*$",
+          "description": "Reference to another design-system component this part is realized as, in `fsds.<Name>` form (e.g. \"fsds.Input\"). When set, the part is lowered by-reference: the emitter imports the referenced component and emits a component-instance element rather than a native `tag`. The referenced component's `layer` must be lower-or-equal to this component's. Mutually exclusive with `tag`."
         },
         "role": {
           "type": "string",

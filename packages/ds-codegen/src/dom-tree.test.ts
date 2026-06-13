@@ -2057,3 +2057,112 @@ describe("predicate validator — context and scope", () => {
     ).toThrow(/references unknown channel 'unknown'/);
   });
 });
+
+// CODEGEN-RECURSIVE-COMPOSITION-01: componentRef carries a by-reference
+// composition fact through the IR — the recursive generalization of the
+// Stack-consumption base case. These tests prove the fact is parsed and
+// carried (Slice 1); emission is proven separately per framework.
+describe("componentRef (by-reference composition fact)", () => {
+  it("carries a dom-node componentRef as a bare name with empty tag", () => {
+    const ir = buildComponentIR({
+      name: "TestCard",
+      anatomy: {
+        parts: ["root", "actions"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [{ componentRef: "fsds.Button", part: "actions" }],
+        },
+      },
+    } as unknown as ComponentContract);
+    const child = ir.dom?.children[0];
+    expect(child?.componentRef).toBe("Button");
+    // The discriminator is `componentRef !== undefined`; the normalized tag is
+    // empty so the native-tag emission branch never fires for this node.
+    expect(child?.tag).toBe("");
+    expect(child?.part).toBe("actions");
+  });
+
+  it("derives a part-level componentRef from anatomy.details", () => {
+    const ir = buildComponentIR({
+      name: "TestField",
+      anatomy: {
+        parts: ["root", "control"],
+        details: {
+          control: { componentRef: "fsds.Input" },
+        },
+      },
+    } as unknown as ComponentContract);
+    const control = ir.parts.find((p) => p.name === "control");
+    expect(control?.componentRef).toBe("Input");
+    // A componentRef part declares no native tag.
+    expect(control?.nativeTag).toBeUndefined();
+  });
+
+  it("rejects a dom node declaring both tag and componentRef", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Bad",
+        anatomy: {
+          parts: ["root"],
+          dom: { tag: "button", componentRef: "fsds.Button", part: "root" },
+        },
+      } as unknown as ComponentContract),
+    ).toThrow(/mutually exclusive/);
+  });
+
+  it("rejects a part declaring both details.tag and details.componentRef", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Bad",
+        anatomy: {
+          parts: ["root", "control"],
+          details: {
+            control: { tag: "input", componentRef: "fsds.Input" },
+          },
+        },
+      } as unknown as ComponentContract),
+    ).toThrow(/mutually exclusive/);
+  });
+
+  it("rejects a malformed componentRef (missing fsds. prefix)", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Bad",
+        anatomy: {
+          parts: ["root"],
+          dom: { componentRef: "Button", part: "root" },
+        },
+      } as unknown as ComponentContract),
+    ).toThrow(/must be "fsds\.<Name>"/);
+  });
+
+  it("rejects a dom node declaring neither tag nor componentRef", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Bad",
+        anatomy: {
+          parts: ["root"],
+          dom: { part: "root" },
+        },
+      } as unknown as ComponentContract),
+    ).toThrow(/Exactly one is required/);
+  });
+
+  it("rejects disagreement between details and dom componentRef for a part", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "Bad",
+        anatomy: {
+          parts: ["root", "control"],
+          details: { control: { componentRef: "fsds.Input" } },
+          dom: {
+            tag: "div",
+            part: "root",
+            children: [{ componentRef: "fsds.Select", part: "control" }],
+          },
+        },
+      } as unknown as ComponentContract),
+    ).toThrow(/disagrees with anatomy\.dom componentRef/);
+  });
+});

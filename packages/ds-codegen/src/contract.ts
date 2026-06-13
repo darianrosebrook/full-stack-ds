@@ -174,6 +174,16 @@ export interface ContractPartDetails {
    * components that happen to share part names.
    */
   tag?: string;
+  /**
+   * Reference to another design-system component this part is realized as,
+   * in `fsds.<Name>` form (e.g. `"fsds.Input"`). When set, the part is
+   * lowered by-reference: emitters import the referenced component and emit
+   * a component-instance element rather than a native `tag` or Stack wrapper.
+   * Mutually exclusive with `tag` (the contract schema rejects both on one
+   * part). The referenced component's `layer` must be lower-or-equal to this
+   * component's — enforced by the layer-ordering validator.
+   */
+  componentRef?: string;
   role?: string;
   multiple?: boolean;
   focusable?: boolean | 'roving';
@@ -209,8 +219,23 @@ export interface ContractPartDetails {
  * - `"literal:<text>"` — emit the text verbatim (rare; usually use `attrs`).
  */
 export interface ContractDomNode {
-  /** HTML tag name, or special `"slot"`/`"children"` placeholder. */
-  tag: string;
+  /**
+   * HTML tag name, or the special `"slot"` / `"children"` sentinel where
+   * consumer-provided content renders. Optional only because a node may
+   * instead declare `componentRef` (exactly one of the two is required —
+   * enforced by the schema's `oneOf`). The IR builder normalizes a
+   * componentRef node to `tag: ""` and carries the component name separately.
+   */
+  tag?: string;
+  /**
+   * Reference to another design-system component this node renders, in
+   * `fsds.<Name>` form (e.g. `"fsds.Button"`). Mutually exclusive with `tag`.
+   * When set, the IR carries the bare component name on `DomNodeIR.componentRef`
+   * and emitters take the by-reference component-instance path (import + emit
+   * `<Name .../>`). The referenced component's `layer` must be lower-or-equal
+   * to this component's, enforced by the layer-ordering validator.
+   */
+  componentRef?: string;
   /**
    * Named-slot identifier — only meaningful when `tag === "slot"`. Maps to
    * framework idioms: Vue/Lit `<slot name="<name>">`, React `slots.<name>`,
