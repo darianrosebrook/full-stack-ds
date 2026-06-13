@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import Button from "../Button/Button.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -53,6 +53,6 @@ const classes = $derived(
   {/if}
   {@render children?.()}
   {#if dismissible}
-  <button class={'alert__dismiss'} type="button" onclick={onDismiss} aria-label={dismissLabel}></button>
+  <Button class={'alert__dismiss'} type="button" onclick={onDismiss} aria-label={dismissLabel} />
   {/if}
 </div>

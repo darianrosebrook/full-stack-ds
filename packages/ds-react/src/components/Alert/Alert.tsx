@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { Button } from "../Button/Button";
 import "./Alert.css";
 // @generated:end
 
@@ -103,7 +104,7 @@ export function Alert({
     )}
     {children}
     {dismissible && (
-      <button className="alert__dismiss" type="button" onClick={onDismiss} aria-label={dismissLabel} />
+      <Button className="alert__dismiss" type="button" onClick={onDismiss} aria-label={dismissLabel} />
     )}
   </Stack>
   );

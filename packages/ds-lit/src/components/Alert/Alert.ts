@@ -1,6 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
+import '../Button/Button.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
@@ -193,7 +194,7 @@ export class AlertElement extends LitElement {
   ` : nothing}
   <slot></slot>
   ${this.dismissible ? html`
-  <button class=${'alert__dismiss'} type="button" @click=${this.onDismiss} aria-label=${ifDefined(this.dismissLabel)}></button>
+  <fsds-button class=${'alert__dismiss'} type="button" @click=${this.onDismiss} aria-label=${ifDefined(this.dismissLabel)}></fsds-button>
   ` : nothing}
 </div>`;
   }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import Button from "../Button/Button.vue";
 // @generated:end
 
 // @custom:start imports
@@ -56,6 +57,6 @@ const classNames = computed(() => [
       {{ props.icon }}
     </span>
     <slot />
-    <button v-if="props.dismissible" :class="'alert__dismiss'" type="button" @click="props.onDismiss?.()" :aria-label="props.dismissLabel"></button>
+    <Button v-if="props.dismissible" :class="'alert__dismiss'" type="button" @click="props.onDismiss?.()" :aria-label="props.dismissLabel" />
   </div>
 </template>

@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
+import { ButtonComponent } from "../Button/Button.component.js";
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +22,7 @@ export type AlertLevel = "inline" | "section" | "page";
 @Component({
   selector: "fsds-alert",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass, NgIf, ButtonComponent],
   template: `<div [ngClass]="classes()" role="alert">
   <ng-container *ngIf="icon">
     <span [ngClass]="'alert__icon'" aria-hidden="true">
@@ -30,7 +31,7 @@ export type AlertLevel = "inline" | "section" | "page";
   </ng-container>
   <ng-content />
   <ng-container *ngIf="dismissible">
-    <button [ngClass]="'alert__dismiss'" type="button" (click)="onDismiss && onDismiss()" [attr.aria-label]="dismissLabel"></button>
+    <fsds-button [ngClass]="'alert__dismiss'" type="button" (click)="onDismiss && onDismiss()" [ariaLabel]="dismissLabel"></fsds-button>
   </ng-container>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

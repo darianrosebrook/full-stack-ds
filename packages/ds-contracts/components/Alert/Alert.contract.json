@@ -35,8 +35,8 @@
         "role": "label"
       },
       "dismiss": {
-        "tag": "button",
-        "description": "Optional control that asks the consumer to remove or hide the alert.",
+        "componentRef": "fsds.Button",
+        "description": "Optional control that asks the consumer to remove or hide the alert. Realized by-reference as the Button primitive.",
         "role": "trigger",
         "interactive": true,
         "focusable": true,
@@ -67,7 +67,7 @@
           "tag": "children"
         },
         {
-          "tag": "button",
+          "componentRef": "fsds.Button",
           "part": "dismiss",
           "if": "dismissible",
           "attrs": {
