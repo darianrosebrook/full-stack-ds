@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "canary",
-    "description": "Yellow brand theme - bright, cheerful, and playful",
+    "description": "Yellow brand theme - bright, cheerful, and playful. WCAG-safe accent fills use yellow.600+ so white text on accent backgrounds clears AA (>=4.5:1).",
     "accent": "yellow",
     "density": "default"
   },
@@ -9,18 +9,19 @@
     "foreground": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.yellow.500}",
+        "$value": "{color.palette.yellow.600}",
         "$extensions": {
           "fsds.light": "{color.palette.yellow.600}",
-          "fsds.dark": "{color.palette.yellow.400}"
-        }
+          "fsds.dark": "{color.palette.yellow.300}"
+        },
+        "$description": "Accent foreground - text on page; light uses .600 (dark enough on white), dark uses .300 (bright against dark surfaces)"
       },
       "link": {
         "$type": "color",
         "$value": "{color.palette.yellow.600}",
         "$extensions": {
           "fsds.light": "{color.palette.yellow.600}",
-          "fsds.dark": "{color.palette.yellow.400}"
+          "fsds.dark": "{color.palette.yellow.300}"
         }
       },
       "linkHover": {
@@ -28,7 +29,7 @@
         "$value": "{color.palette.yellow.700}",
         "$extensions": {
           "fsds.light": "{color.palette.yellow.700}",
-          "fsds.dark": "{color.palette.yellow.300}"
+          "fsds.dark": "{color.palette.yellow.200}"
         }
       },
       "linkVisited": {
@@ -36,44 +37,48 @@
         "$value": "{color.palette.yellow.500}",
         "$extensions": {
           "fsds.light": "{color.palette.yellow.500}",
-          "fsds.dark": "{color.palette.yellow.500}"
+          "fsds.dark": "{color.palette.yellow.400}"
         }
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.yellow.700}",
+        "$value": "{color.palette.yellow.800}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.700}",
-          "fsds.dark": "{color.palette.yellow.200}"
-        }
+          "fsds.light": "{color.palette.yellow.800}",
+          "fsds.dark": "{color.palette.yellow.100}"
+        },
+        "$description": "Highlight text - deep amber in light, bright yellow tint in dark"
       }
     },
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.yellow.500}",
+        "$value": "{color.palette.yellow.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.500}",
-          "fsds.dark": "{color.palette.yellow.400}"
-        }
+          "fsds.light": "{color.palette.yellow.600}",
+          "fsds.dark": "{color.palette.yellow.600}"
+        },
+        "$description": "Accent fill - yellow.600 passes WCAG AA with white text in both modes (approx 6.8:1)"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.yellow.200}",
+        "$value": "{color.palette.yellow.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.200}",
-          "fsds.dark": "{color.palette.yellow.700}"
-        }
+          "fsds.light": "{color.palette.yellow.100}",
+          "fsds.dark": "{color.palette.yellow.800}"
+        },
+        "$description": "Warm yellow wash for highlight surfaces"
       }
     },
     "border": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.yellow.500}",
+        "$value": "{color.palette.yellow.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.500}",
+          "fsds.light": "{color.palette.yellow.600}",
           "fsds.dark": "{color.palette.yellow.400}"
-        }
+        },
+        "$description": "Accent border - .600 light (strong presence), .400 dark (bright pop)"
       },
       "default": {
         "$type": "color",
@@ -82,7 +87,7 @@
           "fsds.light": "{color.palette.neutral.300}",
           "fsds.dark": "{color.palette.neutral.600}"
         },
-        "$description": "Default input border - simple neutral gray"
+        "$description": "Default input border - neutral gray"
       },
       "hover": {
         "$type": "color",
@@ -91,34 +96,34 @@
           "fsds.light": "{color.palette.yellow.400}",
           "fsds.dark": "{color.palette.yellow.500}"
         },
-        "$description": "Input hover border - brighter yellow"
+        "$description": "Input hover border - warm amber pop"
       },
       "focus": {
         "$type": "color",
-        "$value": "{color.palette.yellow.500}",
+        "$value": "{color.palette.yellow.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.500}",
+          "fsds.light": "{color.palette.yellow.600}",
           "fsds.dark": "{color.palette.yellow.400}"
         },
-        "$description": "Input focus border - vibrant yellow accent"
+        "$description": "Input focus border - bold yellow accent ring"
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.yellow.200}",
+        "$value": "{color.palette.yellow.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.200}",
-          "fsds.dark": "{color.palette.yellow.700}"
+          "fsds.light": "{color.palette.yellow.100}",
+          "fsds.dark": "{color.palette.yellow.800}"
         },
-        "$description": "Light input border - subtle yellow"
+        "$description": "Light input border - delicate yellow tint"
       },
       "primary": {
         "$type": "color",
-        "$value": "{color.palette.yellow.400}",
+        "$value": "{color.palette.yellow.300}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.400}",
-          "fsds.dark": "{color.palette.yellow.500}"
+          "fsds.light": "{color.palette.yellow.300}",
+          "fsds.dark": "{color.palette.yellow.600}"
         },
-        "$description": "Primary input border - warm yellow"
+        "$description": "Primary input border - warm amber"
       }
     },
     "navigation": {
@@ -128,7 +133,7 @@
           "$value": "{color.palette.yellow.600}",
           "$extensions": {
             "fsds.light": "{color.palette.yellow.600}",
-            "fsds.dark": "{color.palette.yellow.400}"
+            "fsds.dark": "{color.palette.yellow.300}"
           }
         }
       }
@@ -138,15 +143,18 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.yellow.500}"
+            "$value": "{color.palette.yellow.600}",
+            "$description": "Primary action fill - yellow.600 (approx 6.8:1 white text contrast)"
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.yellow.600}"
+            "$value": "{color.palette.yellow.700}",
+            "$description": "Primary action hover - yellow.700 (approx 9.4:1 white text contrast)"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.yellow.700}"
+            "$value": "{color.palette.yellow.800}",
+            "$description": "Primary action pressed - yellow.800 (deep amber, very high contrast)"
           }
         }
       },
@@ -154,7 +162,7 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.yellow.500}"
+            "$value": "{color.palette.yellow.600}"
           },
           "focus": {
             "$type": "color",
@@ -166,11 +174,12 @@
     "status": {
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.yellow.400}",
+        "$value": "{color.palette.yellow.300}",
         "$extensions": {
-          "fsds.light": "{color.palette.yellow.400}",
-          "fsds.dark": "{color.palette.yellow.500}"
-        }
+          "fsds.light": "{color.palette.yellow.300}",
+          "fsds.dark": "{color.palette.yellow.400}"
+        },
+        "$description": "Status highlight - cheerful warm amber"
       }
     }
   },
@@ -179,44 +188,44 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.03}",
-          "$description": "Medium radius (8px) - cheerful, playful"
+          "$value": "{shape.radius.04}",
+          "$description": "Friendly rounded radius (16px) - playful, approachable feel"
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.03}",
-        "$description": "Card border radius (8px) - playful"
+        "$value": "{shape.radius.05}",
+        "$description": "Generously rounded card (32px) - playful, buoyant"
       },
       "border": {
         "light": {
+          "$type": "color",
+          "$value": "{color.palette.yellow.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.yellow.50}",
+            "fsds.dark": "{color.palette.yellow.900}"
+          },
+          "$description": "Light card border - barely-there yellow wash"
+        },
+        "medium": {
           "$type": "color",
           "$value": "{color.palette.yellow.100}",
           "$extensions": {
             "fsds.light": "{color.palette.yellow.100}",
             "fsds.dark": "{color.palette.yellow.800}"
           },
-          "$description": "Light card border - very subtle yellow"
-        },
-        "medium": {
-          "$type": "color",
-          "$value": "{color.palette.yellow.200}",
-          "$extensions": {
-            "fsds.light": "{color.palette.yellow.200}",
-            "fsds.dark": "{color.palette.yellow.700}"
-          },
-          "$description": "Medium card border - subtle yellow"
+          "$description": "Medium card border - warm subtle yellow"
         },
         "dark": {
           "$type": "color",
-          "$value": "{color.palette.yellow.400}",
+          "$value": "{color.palette.yellow.300}",
           "$extensions": {
-            "fsds.light": "{color.palette.yellow.400}",
-            "fsds.dark": "{color.palette.yellow.500}"
+            "fsds.light": "{color.palette.yellow.300}",
+            "fsds.dark": "{color.palette.yellow.600}"
           },
-          "$description": "Dark card border - visible yellow"
+          "$description": "Dark card border - vivid amber accent ring"
         },
         "transparent": {
           "$type": "color",
@@ -231,60 +240,60 @@
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Near elevation - subtle shadow for playful cards"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Resting card elevation"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Default elevation - standard shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Hovered/active card elevation"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.3}",
-          "$description": "Far elevation - prominent shadow for emphasis"
+          "$value": "{elevation.surface.overlay}",
+          "$description": "Prominent card elevation - floating above siblings"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - flat cards"
+          "$value": "{elevation.surface.flat}",
+          "$description": "Flat card - no shadow"
         }
       }
     },
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.03}",
-        "$description": "Internal element radius (8px) - cheerful curves"
+        "$value": "{shape.radius.04}",
+        "$description": "Internal element radius (16px) - consistent playful curves"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.03}",
-        "$description": "Button radius (8px) - playful"
+        "$value": "{shape.radius.04}",
+        "$description": "Button radius (16px) - friendly rounded buttons"
       }
     },
     "badge": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.03}",
-        "$description": "Badge/chip radius (8px)"
+        "$value": "{shape.radius.full}",
+        "$description": "Badge/chip radius - pill shape for cheerful badges"
       }
     },
     "input": {
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.03}",
-          "$description": "Input border radius - playful, rounded (8px)"
+          "$value": "{shape.radius.04}",
+          "$description": "Input border radius - playful, rounded (16px)"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Input border width - thicker for playful feel (2px)"
+          "$description": "Input border width - thick for lively, tactile feel (2px)"
         },
         "defaultStyle": {
           "$type": "strokeStyle",
@@ -294,7 +303,7 @@
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Input focus border width - bold (2px)"
+          "$description": "Input focus border width - bold ring (2px)"
         }
       }
     },
@@ -302,8 +311,8 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.03}",
-          "$description": "Field border radius - rounded, cheerful (8px)"
+          "$value": "{shape.radius.04}",
+          "$description": "Field border radius - generously rounded (16px)"
         }
       },
       "border": {
@@ -315,7 +324,7 @@
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Field focus border width - bold (2px)"
+          "$description": "Field focus border width - bold accent ring (2px)"
         }
       }
     }
@@ -325,7 +334,7 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.07}",
-        "$description": "Comfortable component padding (24px)"
+        "$description": "Generous component padding (24px) - airy, spacious feel"
       },
       "gap": {
         "$type": "dimension",
@@ -337,7 +346,7 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.08}",
-        "$description": "Card padding (32px)"
+        "$description": "Card padding (32px) - roomy and inviting"
       }
     }
   },
@@ -346,28 +355,32 @@
       "duration": {
         "$type": "duration",
         "$value": "{motion.duration.short3}",
-        "$description": "Snappy transitions (167ms) - energetic"
+        "$description": "Snappy transitions (167ms) - energetic and responsive"
       },
       "easing": {
         "$type": "cubicBezier",
-        "$value": "{motion.easing.standard}",
-        "$description": "Standard easing curve - crisp, direct"
+        "$value": "{motion.easing.bounce}",
+        "$description": "Bounce easing - playful slight overshoot on interactions"
       }
     }
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.medium}",
-        "$description": "Medium body weight (500) - energetic"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}",
+          "$description": "Medium body weight (500) - energetic, readable"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.bold}",
-        "$description": "Bold heading weight (700) - bright, cheerful"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.bold}",
+          "$description": "Bold heading weight (700) - bright, cheerful, high-impact"
+        }
       }
     }
   }

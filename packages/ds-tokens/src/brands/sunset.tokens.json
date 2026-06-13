@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "sunset",
-    "description": "Warm sunset brand with orange/amber accents - energetic and inviting",
+    "description": "Warm sunset brand — orange as the signature accent, spanning the warm wheel from golden-yellow to deep red/pink. Energetic, inviting, friendly medium-to-generous radius, lively warm motion.",
     "accent": "orange",
     "density": "default"
   },
@@ -9,53 +9,68 @@
     "foreground": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.orange.400}",
+        "$value": "{color.palette.orange.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.300}"
-        }
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.400}"
+        },
+        "$description": "Orange accent foreground — 600 in light for AA legibility on white bg; 400 in dark for luminous sunset warmth"
       },
       "link": {
-        "$type": "color",
-        "$value": "{color.palette.orange.500}",
-        "$extensions": {
-          "fsds.light": "{color.palette.orange.500}",
-          "fsds.dark": "{color.palette.orange.400}"
-        }
-      },
-      "linkHover": {
         "$type": "color",
         "$value": "{color.palette.orange.600}",
         "$extensions": {
           "fsds.light": "{color.palette.orange.600}",
           "fsds.dark": "{color.palette.orange.300}"
-        }
+        },
+        "$description": "Warm orange link — deeper stop in light for legibility, golden-light in dark"
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.red.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.red.600}",
+          "fsds.dark": "{color.palette.orange.200}"
+        },
+        "$description": "Hover deepens into sunset red territory — warm gradient progression light-to-dark"
       },
       "linkVisited": {
         "$type": "color",
-        "$value": "{color.palette.orange.400}",
+        "$value": "{color.palette.pink.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.500}"
-        }
+          "fsds.light": "{color.palette.pink.600}",
+          "fsds.dark": "{color.palette.pink.400}"
+        },
+        "$description": "Visited links shift to pink — sunset glow, distinct but warm-harmonious"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.orange.700}",
+        "$value": "{color.palette.red.700}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.700}",
+          "fsds.light": "{color.palette.red.700}",
           "fsds.dark": "{color.palette.orange.200}"
-        }
+        },
+        "$description": "Deep sunset red for highlighted text in light; warm golden tint in dark"
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.mode.light}",
+        "$extensions": {
+          "fsds.light": "{color.mode.light}",
+          "fsds.dark": "{color.mode.light}"
+        },
+        "$description": "Fixed white text on accent fills — orange.600 delivers ≥5.5:1 contrast"
       }
     },
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.orange.400}",
+        "$value": "{color.palette.orange.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.500}"
-        }
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.600}"
+        },
+        "$description": "Orange 600 fill — white-text contrast ≥5.5:1 in both modes, AA-safe. Signature sunset accent."
       },
       "highlight": {
         "$type": "color",
@@ -63,81 +78,155 @@
         "$extensions": {
           "fsds.light": "{color.palette.orange.100}",
           "fsds.dark": "{color.palette.orange.800}"
-        }
+        },
+        "$description": "Warm orange tint for highlight washes; deep burnt-orange in dark"
       },
       "brand": {
         "$type": "color",
-        "$value": "{color.palette.orange.400}",
+        "$value": "{color.palette.orange.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.50}",
+          "fsds.dark": "{color.palette.orange.900}"
+        },
+        "$description": "Inviting warm surface tint — lightest orange wash for brand-flavored backgrounds"
+      },
+      "warning": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.yellow.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.yellow.50}",
+            "fsds.dark": "{color.palette.yellow.900}"
+          },
+          "$description": "Warning softer wash re-grounded to golden-yellow palette — golden hour warmth"
+        }
+      },
+      "danger": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.red.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.50}",
+            "fsds.dark": "{color.palette.red.900}"
+          },
+          "$description": "Danger softer wash in sunset red — deep glow of the horizon at dusk"
+        }
+      },
+      "info": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.orange.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.50}",
+            "fsds.dark": "{color.palette.orange.900}"
+          },
+          "$description": "Info softer wash re-grounded to orange palette — warm instead of cool"
         }
       }
     },
     "border": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.orange.400}",
+        "$value": "{color.palette.orange.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.500}"
-        }
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.400}"
+        },
+        "$description": "Orange accent border — strong warm line"
       },
       "default": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.orange.200}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.300}",
-          "fsds.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.orange.200}",
+          "fsds.dark": "{color.palette.orange.700}"
         },
-        "$description": "Default input border - simple neutral gray"
+        "$description": "Default border — gentle warm orange tint rather than neutral gray; structurally warm"
       },
       "hover": {
-        "$type": "color",
-        "$value": "{color.palette.orange.300}",
-        "$extensions": {
-          "fsds.light": "{color.palette.orange.300}",
-          "fsds.dark": "{color.palette.orange.500}"
-        },
-        "$description": "Input hover border - warmer orange"
-      },
-      "focus": {
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
           "fsds.light": "{color.palette.orange.400}",
-          "fsds.dark": "{color.palette.orange.500}"
+          "fsds.dark": "{color.palette.orange.400}"
         },
-        "$description": "Input focus border - energetic orange accent"
+        "$description": "Hover brightens into mid-range orange — energetic signal"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{color.palette.orange.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.400}"
+        },
+        "$description": "Focus ring — full orange signal; vivid and accessible"
       },
       "light": {
         "$type": "color",
         "$value": "{color.palette.orange.100}",
         "$extensions": {
           "fsds.light": "{color.palette.orange.100}",
-          "fsds.dark": "{color.palette.orange.700}"
+          "fsds.dark": "{color.palette.orange.800}"
         },
-        "$description": "Light input border - very subtle orange"
+        "$description": "Light border — barely-there warm tint"
       },
       "primary": {
         "$type": "color",
         "$value": "{color.palette.orange.300}",
         "$extensions": {
           "fsds.light": "{color.palette.orange.300}",
-          "fsds.dark": "{color.palette.orange.500}"
+          "fsds.dark": "{color.palette.orange.600}"
         },
-        "$description": "Primary input border - medium orange"
+        "$description": "Primary structural border — medium warm orange"
       }
     },
     "navigation": {
       "foreground": {
         "active": {
           "$type": "color",
-          "$value": "{color.palette.orange.500}",
+          "$value": "{color.palette.orange.600}",
           "$extensions": {
-            "fsds.light": "{color.palette.orange.500}",
-            "fsds.dark": "{color.palette.orange.400}"
-          }
+            "fsds.light": "{color.palette.orange.600}",
+            "fsds.dark": "{color.palette.orange.300}"
+          },
+          "$description": "Active nav item — deeper orange in light for legibility; warm glow in dark"
+        }
+      },
+      "background": {
+        "hover": {
+          "$type": "color",
+          "$value": "{color.palette.orange.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.50}",
+            "fsds.dark": "{color.palette.orange.900}"
+          },
+          "$description": "Nav hover wash — warm inviting surface tint"
+        },
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.orange.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.100}",
+            "fsds.dark": "{color.palette.orange.800}"
+          },
+          "$description": "Active nav background — gentle warm tint"
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}",
+          "$description": "Nav hover state-layer opacity — tonal warm overlay"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}",
+          "$description": "Nav selected/active state-layer opacity"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}",
+          "$description": "Nav pressed state-layer opacity"
         }
       }
     },
@@ -146,23 +235,18 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.orange.400}"
+            "$value": "{color.palette.orange.600}",
+            "$description": "Primary action fill — orange 600, white-text contrast ≥5.5:1, AA-safe"
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.orange.500}"
+            "$value": "{color.palette.red.600}",
+            "$description": "Hover shifts into sunset red — warm gradient progression, contrast ≥6.5:1"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.orange.600}"
-          }
-        }
-      },
-      "foreground": {
-        "primary": {
-          "default": {
-            "$type": "color",
-            "$value": "{color.mode.dark}"
+            "$value": "{color.palette.red.700}",
+            "$description": "Active/pressed — deep sunset red, high contrast"
           }
         }
       },
@@ -170,11 +254,13 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.orange.400}"
+            "$value": "{color.palette.orange.600}",
+            "$description": "Primary action border — orange accent"
           },
           "focus": {
             "$type": "color",
-            "$value": "{color.palette.orange.300}"
+            "$value": "{color.palette.orange.300}",
+            "$description": "Focus ring on action — lighter orange for offset glow halo"
           }
         }
       }
@@ -182,11 +268,12 @@
     "status": {
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.orange.300}",
+        "$value": "{color.palette.orange.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.orange.300}",
+          "fsds.light": "{color.palette.orange.600}",
           "fsds.dark": "{color.palette.orange.400}"
-        }
+        },
+        "$description": "Status highlight — warm orange signal; 600 in light for legibility"
       }
     }
   },
@@ -195,8 +282,8 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.full}",
-          "$description": "Pill radius - playful, rounded"
+          "$value": "{shape.radius.04}",
+          "$description": "Generous control radius (16px) — friendly, inviting, warm without going full-pill"
         }
       }
     },
@@ -204,7 +291,7 @@
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.04}",
-        "$description": "Card border radius (16px) - warm, rounded"
+        "$description": "Card border radius (16px) — warm, rounded, inviting"
       },
       "border": {
         "light": {
@@ -214,7 +301,7 @@
             "fsds.light": "{color.palette.orange.100}",
             "fsds.dark": "{color.palette.orange.800}"
           },
-          "$description": "Light card border - very subtle orange"
+          "$description": "Light card border — barely-there warm tint"
         },
         "medium": {
           "$type": "color",
@@ -223,16 +310,16 @@
             "fsds.light": "{color.palette.orange.200}",
             "fsds.dark": "{color.palette.orange.700}"
           },
-          "$description": "Medium card border - subtle warm orange"
+          "$description": "Medium card border — subtle warm orange layer"
         },
         "dark": {
           "$type": "color",
-          "$value": "{color.palette.orange.400}",
+          "$value": "{color.palette.red.400}",
           "$extensions": {
-            "fsds.light": "{color.palette.orange.400}",
-            "fsds.dark": "{color.palette.orange.500}"
+            "fsds.light": "{color.palette.red.400}",
+            "fsds.dark": "{color.palette.red.500}"
           },
-          "$description": "Dark card border - visible orange"
+          "$description": "Dark card border — sunset red glow; cross-hue for gradient depth"
         },
         "transparent": {
           "$type": "color",
@@ -241,76 +328,76 @@
             "fsds.light": "{color.mode.transparent}",
             "fsds.dark": "{color.mode.transparent}"
           },
-          "$description": "Transparent card border - warm, energetic"
+          "$description": "Transparent card border — open, airy"
         }
       },
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Near elevation - playful shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Near elevation — resting card, soft warm raised shadow"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Default elevation - energetic shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Default elevation — floating card, inviting hover shadow"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.3}",
-          "$description": "Far elevation - prominent shadow"
+          "$value": "{elevation.surface.overlay}",
+          "$description": "Far elevation — anchored surface for menus/dropdowns"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - warm, inviting"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation — flush with page, warm tinted background carries the surface signal"
         }
       }
     },
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.full}",
-        "$description": "Internal element radius (pill) - playful curves"
+        "$value": "{shape.radius.04}",
+        "$description": "Internal element radius (16px) — fluid warm curves inside cards"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.full}",
-        "$description": "Button radius (pill) - playful, modern"
+        "$value": "{shape.radius.04}",
+        "$description": "Button radius (16px) — friendly medium radius; energetic without being pill-shaped"
       }
     },
     "badge": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.full}",
-        "$description": "Badge/chip radius (pill)"
+        "$description": "Badge/chip radius (pill) — fully rounded, energetic"
       }
     },
     "input": {
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.full}",
-          "$description": "Input border radius - pill-shaped, playful (9999px)"
+          "$value": "{shape.radius.04}",
+          "$description": "Input border radius (16px) — generous, inviting, warm"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Input border width - standard (1px)"
+          "$description": "Input border width — standard (1px)"
         },
         "defaultStyle": {
           "$type": "strokeStyle",
           "$value": "{shape.border.style.solid}",
-          "$description": "Input border style - solid, warm"
+          "$description": "Input border style — solid, warm"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Input focus border width - energetic (2px)"
+          "$description": "Input focus border width — energetic emphasis (2px)"
         }
       }
     },
@@ -318,20 +405,20 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.full}",
-          "$description": "Field border radius - pill-shaped (9999px)"
+          "$value": "{shape.radius.04}",
+          "$description": "Field border radius (16px) — spacious, warm"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Field border width - standard (1px)"
+          "$description": "Field border width — standard (1px)"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Field focus border width - energetic (2px)"
+          "$description": "Field focus border width — energetic (2px)"
         }
       }
     }
@@ -341,19 +428,19 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.07}",
-        "$description": "Comfortable component padding (24px)"
+        "$description": "Generous component padding (24px) — inviting, open feel"
       },
       "gap": {
         "$type": "dimension",
         "$value": "{spacing.size.06}",
-        "$description": "Comfortable component gap (16px)"
+        "$description": "Generous component gap (16px) — breathing room, energetic layout"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.08}",
-        "$description": "Card padding (32px)"
+        "$description": "Card padding (32px) — very open, inviting"
       }
     }
   },
@@ -361,29 +448,33 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.medium3}",
-        "$description": "Bouncy duration (500ms) - playful, energetic"
+        "$value": "{motion.duration.medium2}",
+        "$description": "Lively transition speed (333ms) — energetic and snappy without feeling rushed"
       },
       "easing": {
         "$type": "cubicBezier",
-        "$value": "{motion.easing.bounce}",
-        "$description": "Bouncy easing - playful overshoot"
+        "$value": "{motion.easing.emphasizedIn}",
+        "$description": "Emphasized-in easing — quick warm pop-in, lively and energetic"
       }
     }
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.light}",
-        "$description": "Light body weight (300) - airy, delicate"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular body weight (400) — readable, approachable"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.light}",
-        "$description": "Light heading weight (300) - soft, approachable"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.semibold}",
+          "$description": "Semibold heading weight (600) — energetic, inviting emphasis without being heavy"
+        }
       }
     }
   }

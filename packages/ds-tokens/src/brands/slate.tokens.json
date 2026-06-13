@@ -1,135 +1,173 @@
 {
   "$brand": {
     "name": "slate",
-    "description": "Steel blue brand theme - professional, cool, and crisp",
-    "accent": "blue",
+    "description": "Steel blue brand — cool, architectural, compact density. Blue-indigo-neutral blend for a desaturated steel identity distinct from corporate's trustworthy pure blue.",
+    "accent": "indigo",
     "density": "compact"
   },
   "color": {
     "foreground": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.blue.600}",
+        "$value": "{color.palette.indigo.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.600}",
-          "fsds.dark": "{color.palette.blue.400}"
-        }
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        },
+        "$description": "Steel accent foreground — indigo.600 in light (cooler than corporate blue), lighter in dark"
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.50}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.50}",
+          "fsds.dark": "{color.palette.neutral.50}"
+        },
+        "$description": "Text/icon on filled accent surfaces — fixed near-white for AA contrast"
       },
       "link": {
         "$type": "color",
-        "$value": "{color.palette.blue.600}",
+        "$value": "{color.palette.indigo.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.600}",
-          "fsds.dark": "{color.palette.blue.400}"
-        }
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        },
+        "$description": "Link color — steel indigo, cooler and more architectural than corporate blue"
       },
       "linkHover": {
         "$type": "color",
-        "$value": "{color.palette.blue.700}",
+        "$value": "{color.palette.indigo.700}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.700}",
-          "fsds.dark": "{color.palette.blue.300}"
-        }
+          "fsds.light": "{color.palette.indigo.700}",
+          "fsds.dark": "{color.palette.indigo.300}"
+        },
+        "$description": "Hovered link — deeper indigo shift"
       },
       "linkVisited": {
         "$type": "color",
-        "$value": "{color.palette.blue.500}",
+        "$value": "{color.palette.indigo.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.500}",
-          "fsds.dark": "{color.palette.blue.500}"
-        }
+          "fsds.light": "{color.palette.indigo.500}",
+          "fsds.dark": "{color.palette.indigo.600}"
+        },
+        "$description": "Visited link — muted indigo"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.blue.800}",
+        "$value": "{color.palette.indigo.800}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.800}",
-          "fsds.dark": "{color.palette.blue.200}"
-        }
+          "fsds.light": "{color.palette.indigo.800}",
+          "fsds.dark": "{color.palette.indigo.200}"
+        },
+        "$description": "Highlight text — deep steel indigo for authority in light mode"
       }
     },
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.blue.600}",
+        "$value": "{color.palette.indigo.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.600}",
-          "fsds.dark": "{color.palette.blue.400}"
-        }
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.500}"
+        },
+        "$description": "Accent fill — indigo.600 light (>4.5:1 vs white), indigo.500 dark (>4.5:1 vs white). Cooler steel cast vs corporate blue."
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.blue.100}",
+        "$value": "{color.palette.indigo.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.100}",
-          "fsds.dark": "{color.palette.blue.800}"
-        }
+          "fsds.light": "{color.palette.indigo.50}",
+          "fsds.dark": "{color.palette.indigo.800}"
+        },
+        "$description": "Subtle accent wash — icy indigo tint in light, deep steel in dark"
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.neutral.800}",
+        "$extensions": {
+          "fsds.light": "{color.palette.neutral.800}",
+          "fsds.dark": "{color.palette.neutral.900}"
+        },
+        "$description": "Brand hero surface — near-black neutral steel for headers/banners. Maximum desaturation for architectural feel."
       }
     },
     "border": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.blue.500}",
+        "$value": "{color.palette.indigo.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.500}",
-          "fsds.dark": "{color.palette.blue.400}"
-        }
+          "fsds.light": "{color.palette.indigo.500}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        },
+        "$description": "Accent border — indigo.500, crisp steel line"
       },
       "default": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.neutral.400}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.light": "{color.palette.neutral.400}",
           "fsds.dark": "{color.palette.neutral.600}"
         },
-        "$description": "Default input border - simple neutral gray"
+        "$description": "Default border — neutral.400, slightly denser than corporate (300) for the steel structural grid feel"
       },
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.blue.400}",
+        "$value": "{color.palette.indigo.400}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.400}",
-          "fsds.dark": "{color.palette.blue.500}"
+          "fsds.light": "{color.palette.indigo.400}",
+          "fsds.dark": "{color.palette.indigo.500}"
         },
-        "$description": "Input hover border - cooler blue"
+        "$description": "Hover border — cool indigo midtone signals interactivity with steel cast"
       },
       "focus": {
         "$type": "color",
-        "$value": "{color.palette.blue.600}",
+        "$value": "{color.palette.indigo.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.600}",
-          "fsds.dark": "{color.palette.blue.400}"
+          "fsds.light": "{color.palette.indigo.600}",
+          "fsds.dark": "{color.palette.indigo.400}"
         },
-        "$description": "Input focus border - crisp steel blue accent"
+        "$description": "Focus border — crisp steel indigo ring"
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.blue.200}",
+        "$value": "{color.palette.indigo.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.200}",
-          "fsds.dark": "{color.palette.blue.700}"
+          "fsds.light": "{color.palette.indigo.100}",
+          "fsds.dark": "{color.palette.indigo.800}"
         },
-        "$description": "Light input border - very subtle blue"
+        "$description": "Light border — icy indigo tint"
       },
       "primary": {
         "$type": "color",
-        "$value": "{color.palette.blue.400}",
+        "$value": "{color.palette.neutral.400}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.400}",
-          "fsds.dark": "{color.palette.blue.500}"
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.600}"
         },
-        "$description": "Primary input border - medium steel blue"
+        "$description": "Primary border — neutral steel gray, structural grid line"
       }
     },
     "navigation": {
       "foreground": {
         "active": {
           "$type": "color",
-          "$value": "{color.palette.blue.600}",
+          "$value": "{color.palette.indigo.700}",
           "$extensions": {
-            "fsds.light": "{color.palette.blue.600}",
-            "fsds.dark": "{color.palette.blue.400}"
-          }
+            "fsds.light": "{color.palette.indigo.700}",
+            "fsds.dark": "{color.palette.indigo.400}"
+          },
+          "$description": "Active nav item — deep steel indigo authority in light mode"
+        }
+      },
+      "background": {
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.indigo.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.indigo.50}",
+            "fsds.dark": "{color.palette.indigo.900}"
+          },
+          "$description": "Active nav background — icy wash using stateLayer-style tinting"
         }
       }
     },
@@ -138,15 +176,30 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.blue.600}"
+            "$value": "{color.palette.indigo.600}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.600}",
+              "fsds.dark": "{color.palette.indigo.600}"
+            },
+            "$description": "Primary action fill — indigo.600, cooler steel vs corporate blue.600. Contrast: ~6.0:1+ vs white, clears AA."
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.blue.700}"
+            "$value": "{color.palette.indigo.700}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.700}",
+              "fsds.dark": "{color.palette.indigo.500}"
+            },
+            "$description": "Hover fill — deeper indigo in light (~8.0:1 vs white), indigo.500 in dark (>4.5:1)"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.blue.800}"
+            "$value": "{color.palette.indigo.800}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.800}",
+              "fsds.dark": "{color.palette.indigo.400}"
+            },
+            "$description": "Pressed fill — deep steel indigo pressed state"
           }
         }
       },
@@ -154,11 +207,21 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.blue.600}"
+            "$value": "{color.palette.indigo.600}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.600}",
+              "fsds.dark": "{color.palette.indigo.500}"
+            },
+            "$description": "Primary action border — indigo steel"
           },
           "focus": {
             "$type": "color",
-            "$value": "{color.palette.blue.500}"
+            "$value": "{color.palette.indigo.400}",
+            "$extensions": {
+              "fsds.light": "{color.palette.indigo.400}",
+              "fsds.dark": "{color.palette.indigo.300}"
+            },
+            "$description": "Focus ring — cooler indigo outline against the fill"
           }
         }
       }
@@ -166,11 +229,12 @@
     "status": {
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.blue.500}",
+        "$value": "{color.palette.indigo.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.blue.500}",
-          "fsds.dark": "{color.palette.blue.400}"
-        }
+          "fsds.light": "{color.palette.indigo.500}",
+          "fsds.dark": "{color.palette.indigo.400}"
+        },
+        "$description": "Status highlight — steel indigo for informational states"
       }
     }
   },
@@ -179,8 +243,8 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.medium}",
-          "$description": "Medium-small radius (6px) - crisp, professional"
+          "$value": "{shape.radius.01}",
+          "$description": "Control radius (2px) — near-square precision, crisper than corporate's 4px for maximum steel architectural feel"
         }
       }
     },
@@ -188,35 +252,35 @@
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.02}",
-        "$description": "Card border radius (4px) - crisp, mechanical"
+        "$description": "Card border radius (4px) — rectilinear steel, same as corporate but paired with neutral borders for distinction"
       },
       "border": {
         "light": {
           "$type": "color",
-          "$value": "{color.palette.blue.200}",
+          "$value": "{color.palette.indigo.100}",
           "$extensions": {
-            "fsds.light": "{color.palette.blue.200}",
-            "fsds.dark": "{color.palette.blue.700}"
+            "fsds.light": "{color.palette.indigo.100}",
+            "fsds.dark": "{color.palette.indigo.900}"
           },
-          "$description": "Light card border - very subtle steel blue"
+          "$description": "Light card border — icy indigo wash, nearly invisible steel tint"
         },
         "medium": {
           "$type": "color",
-          "$value": "{color.palette.blue.300}",
+          "$value": "{color.palette.neutral.300}",
           "$extensions": {
-            "fsds.light": "{color.palette.blue.300}",
-            "fsds.dark": "{color.palette.blue.600}"
+            "fsds.light": "{color.palette.neutral.300}",
+            "fsds.dark": "{color.palette.neutral.600}"
           },
-          "$description": "Medium card border - subtle crisp blue"
+          "$description": "Medium card border — pure neutral gray for maximum steel cast (vs corporate's blue.200)"
         },
         "dark": {
           "$type": "color",
-          "$value": "{color.palette.blue.500}",
+          "$value": "{color.palette.indigo.500}",
           "$extensions": {
-            "fsds.light": "{color.palette.blue.500}",
-            "fsds.dark": "{color.palette.blue.400}"
+            "fsds.light": "{color.palette.indigo.500}",
+            "fsds.dark": "{color.palette.indigo.500}"
           },
-          "$description": "Dark card border - visible steel blue"
+          "$description": "Dark card border — visible indigo steel rule"
         },
         "transparent": {
           "$type": "color",
@@ -225,76 +289,76 @@
             "fsds.light": "{color.mode.transparent}",
             "fsds.dark": "{color.mode.transparent}"
           },
-          "$description": "Transparent card border - modern, crisp"
+          "$description": "Transparent card border — no decoration"
         }
       },
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "Near elevation - flat for modern look"
+          "$value": "{elevation.surface.flat}",
+          "$description": "Near elevation — flat surface, maximum steel restraint"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Default elevation - crisp shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Default elevation — minimal resting shadow (raised surface)"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Far elevation - clear shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Far elevation — floating surface, crisp but not dramatic"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - modern, professional"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation — flush with page plane"
         }
       }
     },
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.medium}",
-        "$description": "Internal element radius (6px) - balanced"
+        "$value": "{shape.radius.01}",
+        "$description": "Internal element radius (2px) — near-square for precise steel geometry"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.medium}",
-        "$description": "Button radius (6px) - crisp, professional"
+        "$value": "{shape.radius.02}",
+        "$description": "Button radius (4px) — crisp, decisive; slightly more rounded than control for usability"
       }
     },
     "badge": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.medium}",
-        "$description": "Badge/chip radius (6px) - balanced"
+        "$value": "{shape.radius.02}",
+        "$description": "Badge radius (4px) — rectangular, compact, data-density friendly"
       }
     },
     "input": {
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.medium}",
-          "$description": "Input border radius - crisp, professional (6px)"
+          "$value": "{shape.radius.02}",
+          "$description": "Input border radius — precise (4px), crisp form grids"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Input border width - precise, modern (1px)"
+          "$description": "Input border width — hairline (1px) for precise steel form grids"
         },
         "defaultStyle": {
           "$type": "strokeStyle",
           "$value": "{shape.border.style.solid}",
-          "$description": "Input border style - solid, crisp"
+          "$description": "Input border style — solid, crisp"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Input focus border width - clear emphasis (2px)"
+          "$description": "Input focus border width — 2px for clear keyboard focus"
         }
       }
     },
@@ -302,20 +366,20 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.medium}",
-          "$description": "Field border radius - balanced, crisp (6px)"
+          "$value": "{shape.radius.02}",
+          "$description": "Field border radius — crisp (4px)"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Field border width - precise (1px)"
+          "$description": "Field border width — hairline (1px)"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Field focus border width - clear (2px)"
+          "$description": "Field focus border width — 2px"
         }
       }
     }
@@ -325,7 +389,7 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.05}",
-        "$description": "Compact component padding (12px)"
+        "$description": "Compact component padding (12px) — information-dense steel layout"
       },
       "gap": {
         "$type": "dimension",
@@ -337,7 +401,7 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.06}",
-        "$description": "Card padding (16px)"
+        "$description": "Card padding (16px) — tight, efficient screen use"
       }
     }
   },
@@ -345,29 +409,33 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.short3}",
-        "$description": "Crisp transitions (167ms) - efficient"
+        "$value": "{motion.duration.short2}",
+        "$description": "Restrained transitions (100ms) — near-instant, precision-tuned steel response. Crisper than corporate's short3 (167ms)."
       },
       "easing": {
         "$type": "cubicBezier",
         "$value": "{motion.easing.quick.enter}",
-        "$description": "Crisp, efficient easing curve"
+        "$description": "Quick enter easing — sharp acceleration for precise steel feel; no personality, maximum efficiency"
       }
     }
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.regular}",
-        "$description": "Regular body weight (400)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular body weight (400) — readable at compact density"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.bold}",
-        "$description": "Bold heading weight (700) - professional"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.semibold}",
+          "$description": "Semibold heading weight (600) — authoritative steel precision, not bold-shouting"
+        }
       }
     }
   }

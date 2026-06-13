@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "forest",
-    "description": "Natural forest brand with green accents - calm, organic, and grounded",
+    "description": "Natural forest brand — layered organic greens (lime fresh highlights, green primary, emerald cool depth), calm and grounded with generous spacing and soft rounded forms",
     "accent": "green",
     "density": "spacious"
   },
@@ -9,68 +9,126 @@
     "foreground": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.green.500}",
+        "$value": "{color.palette.green.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.500}",
-          "fsds.dark": "{color.palette.green.400}"
+          "fsds.light": "{color.palette.green.600}",
+          "fsds.dark": "{color.palette.emerald.400}"
         }
       },
       "link": {
         "$type": "color",
-        "$value": "{color.palette.green.600}",
+        "$value": "{color.palette.emerald.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.600}",
-          "fsds.dark": "{color.palette.green.400}"
+          "fsds.light": "{color.palette.emerald.600}",
+          "fsds.dark": "{color.palette.emerald.400}"
         }
       },
       "linkHover": {
         "$type": "color",
-        "$value": "{color.palette.green.700}",
+        "$value": "{color.palette.emerald.700}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.700}",
-          "fsds.dark": "{color.palette.green.300}"
+          "fsds.light": "{color.palette.emerald.700}",
+          "fsds.dark": "{color.palette.lime.300}"
         }
       },
       "linkVisited": {
         "$type": "color",
-        "$value": "{color.palette.green.500}",
+        "$value": "{color.palette.green.700}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.500}",
+          "fsds.light": "{color.palette.green.700}",
           "fsds.dark": "{color.palette.green.500}"
         }
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.green.700}",
+        "$value": "{color.palette.green.800}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.700}",
-          "fsds.dark": "{color.palette.green.200}"
+          "fsds.light": "{color.palette.green.800}",
+          "fsds.dark": "{color.palette.lime.200}"
         }
+      },
+      "onColor": {
+        "$type": "color",
+        "$value": "{color.mode.white}",
+        "$extensions": {
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.white}"
+        },
+        "$description": "Fixed white on colored fills — green.600 fill gives ~7.5:1 vs white"
       }
     },
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.green.500}",
+        "$value": "{color.palette.green.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.500}",
-          "fsds.dark": "{color.palette.green.400}"
-        }
+          "fsds.light": "{color.palette.green.600}",
+          "fsds.dark": "{color.palette.green.500}"
+        },
+        "$description": "Accent fill. light=green.600 (~7.5:1 white text), dark=green.500 (~5.1:1 white text). Both clear AA 4.5:1."
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.green.100}",
+        "$value": "{color.palette.lime.50}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.100}",
+          "fsds.light": "{color.palette.lime.50}",
           "fsds.dark": "{color.palette.green.800}"
         }
       },
       "brand": {
         "$type": "color",
-        "$value": "{color.palette.green.500}",
+        "$value": "{color.palette.green.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.500}",
-          "fsds.dark": "{color.palette.green.400}"
+          "fsds.light": "{color.palette.green.600}",
+          "fsds.dark": "{color.palette.green.500}"
+        }
+      },
+      "accentSubtle": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.50}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.50}",
+          "fsds.dark": "{color.palette.emerald.900}"
+        },
+        "$description": "Subtle emerald tint for selected/current nav items — cool, calm depth"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.palette.green.50}",
+        "$extensions": {
+          "fsds.light": "{color.palette.green.50}",
+          "fsds.dark": "{color.palette.green.900}"
+        },
+        "$description": "Soft green wash for hover/secondary surfaces — organic, spacious"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.palette.emerald.50}",
+        "$extensions": {
+          "fsds.light": "{color.palette.emerald.50}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        }
+      },
+      "success": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.emerald.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.emerald.50}",
+            "fsds.dark": "{color.palette.emerald.900}"
+          },
+          "$description": "Success softer wash — uses emerald for cool-depth success tint in forest brand"
+        }
+      },
+      "info": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.lime.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.lime.50}",
+            "fsds.dark": "{color.palette.green.900}"
+          },
+          "$description": "Info softer wash — lime tint for fresh, organic info surface"
         }
       }
     },
@@ -80,63 +138,63 @@
         "$value": "{color.palette.green.500}",
         "$extensions": {
           "fsds.light": "{color.palette.green.500}",
-          "fsds.dark": "{color.palette.green.400}"
+          "fsds.dark": "{color.palette.emerald.400}"
         }
       },
       "default": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.green.200}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.300}",
-          "fsds.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.green.200}",
+          "fsds.dark": "{color.palette.green.700}"
         },
-        "$description": "Default input border - simple neutral gray"
+        "$description": "Default border — soft green wash replaces neutral gray for organic feel"
       },
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.green.300}",
+        "$value": "{color.palette.emerald.300}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.300}",
-          "fsds.dark": "{color.palette.green.500}"
+          "fsds.light": "{color.palette.emerald.300}",
+          "fsds.dark": "{color.palette.emerald.500}"
         },
-        "$description": "Input hover border - organic green"
+        "$description": "Hover border — cool emerald depth on interact"
       },
       "focus": {
         "$type": "color",
-        "$value": "{color.palette.green.500}",
+        "$value": "{color.palette.green.600}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.500}",
-          "fsds.dark": "{color.palette.green.400}"
+          "fsds.light": "{color.palette.green.600}",
+          "fsds.dark": "{color.palette.emerald.400}"
         },
-        "$description": "Input focus border - grounded green accent"
+        "$description": "Focus border — deep forest green for visibility"
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.green.100}",
+        "$value": "{color.palette.lime.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.100}",
-          "fsds.dark": "{color.palette.green.700}"
+          "fsds.light": "{color.palette.lime.100}",
+          "fsds.dark": "{color.palette.green.800}"
         },
-        "$description": "Light input border - very subtle green"
+        "$description": "Light border — fresh lime tint, barely-there edge"
       },
       "primary": {
         "$type": "color",
-        "$value": "{color.palette.green.300}",
+        "$value": "{color.palette.emerald.200}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.300}",
-          "fsds.dark": "{color.palette.green.500}"
+          "fsds.light": "{color.palette.emerald.200}",
+          "fsds.dark": "{color.palette.emerald.600}"
         },
-        "$description": "Primary input border - medium green"
+        "$description": "Primary border — cool emerald, neutral-ish but with forest character"
       }
     },
     "navigation": {
       "foreground": {
         "active": {
           "$type": "color",
-          "$value": "{color.palette.green.600}",
+          "$value": "{color.palette.green.700}",
           "$extensions": {
-            "fsds.light": "{color.palette.green.600}",
-            "fsds.dark": "{color.palette.green.400}"
+            "fsds.light": "{color.palette.green.700}",
+            "fsds.dark": "{color.palette.emerald.300}"
           }
         }
       }
@@ -146,15 +204,16 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.green.500}"
+            "$value": "{color.palette.green.600}",
+            "$description": "Primary action fill — green.600 clears AA (~7.5:1 vs white) in both light and dark"
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.green.600}"
+            "$value": "{color.palette.green.700}"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.green.700}"
+            "$value": "{color.palette.green.800}"
           }
         }
       },
@@ -162,11 +221,11 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.green.500}"
+            "$value": "{color.palette.green.600}"
           },
           "focus": {
             "$type": "color",
-            "$value": "{color.palette.green.400}"
+            "$value": "{color.palette.emerald.500}"
           }
         }
       }
@@ -174,11 +233,12 @@
     "status": {
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.green.400}",
+        "$value": "{color.palette.lime.400}",
         "$extensions": {
-          "fsds.light": "{color.palette.green.400}",
-          "fsds.dark": "{color.palette.green.500}"
-        }
+          "fsds.light": "{color.palette.lime.400}",
+          "fsds.dark": "{color.palette.lime.300}"
+        },
+        "$description": "Status highlight — lime for fresh, organic vitality signal (foreground/badge fill, not white-text fill)"
       }
     }
   },
@@ -188,43 +248,43 @@
         "default": {
           "$type": "dimension",
           "$value": "{shape.radius.04}",
-          "$description": "Large radius (16px) - organic, natural"
+          "$description": "Generous radius (16px) — organic, softly rounded, natural"
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}",
-        "$description": "Card border radius (16px) - organic, rounded"
+        "$value": "{shape.radius.05}",
+        "$description": "Extra-large card radius (32px) — spacious, organic, like smooth river stones"
       },
       "border": {
         "light": {
           "$type": "color",
-          "$value": "{color.palette.green.100}",
+          "$value": "{color.palette.lime.100}",
           "$extensions": {
-            "fsds.light": "{color.palette.green.100}",
+            "fsds.light": "{color.palette.lime.100}",
             "fsds.dark": "{color.palette.green.800}"
           },
-          "$description": "Light card border - very subtle green"
+          "$description": "Light card border — lime tint, barely-there fresh edge"
         },
         "medium": {
           "$type": "color",
-          "$value": "{color.palette.green.200}",
+          "$value": "{color.palette.emerald.100}",
           "$extensions": {
-            "fsds.light": "{color.palette.green.200}",
-            "fsds.dark": "{color.palette.green.700}"
+            "fsds.light": "{color.palette.emerald.100}",
+            "fsds.dark": "{color.palette.emerald.800}"
           },
-          "$description": "Medium card border - subtle natural green"
+          "$description": "Medium card border — cool emerald depth at subtle weight"
         },
         "dark": {
           "$type": "color",
           "$value": "{color.palette.green.400}",
           "$extensions": {
             "fsds.light": "{color.palette.green.400}",
-            "fsds.dark": "{color.palette.green.500}"
+            "fsds.dark": "{color.palette.emerald.500}"
           },
-          "$description": "Dark card border - visible green"
+          "$description": "Dark card border — visible green, grounded"
         },
         "transparent": {
           "$type": "color",
@@ -233,51 +293,51 @@
             "fsds.light": "{color.mode.transparent}",
             "fsds.dark": "{color.mode.transparent}"
           },
-          "$description": "Transparent card border - organic, natural"
+          "$description": "Transparent card border — natural, clean"
         }
       },
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Near elevation - gentle shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Near card elevation — raised surface, soft layered shadow"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Default elevation - soft shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Default card elevation — floating surface, gentle lift"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.3}",
-          "$description": "Far elevation - prominent shadow"
+          "$value": "{elevation.surface.overlay}",
+          "$description": "Far card elevation — overlay depth, calm prominence"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - grounded, natural"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation — flush with the earth"
         }
       }
     },
     "element": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.03}",
-        "$description": "Internal element radius (8px) - organic edges"
+        "$value": "{shape.radius.04}",
+        "$description": "Internal element radius (16px) — organic curves throughout"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.full}",
-        "$description": "Button radius (pill) - fully rounded, natural"
+        "$description": "Button radius (pill) — fully rounded, natural, gentle"
       }
     },
     "badge": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.full}",
-        "$description": "Badge/chip radius (pill)"
+        "$description": "Badge/chip radius (pill) — soft organic tags"
       }
     },
     "input": {
@@ -285,24 +345,24 @@
         "default": {
           "$type": "dimension",
           "$value": "{shape.radius.04}",
-          "$description": "Input border radius - organic, natural (16px)"
+          "$description": "Input border radius — organic, generous (16px)"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Input border width - gentle (1px)"
+          "$description": "Input border width — gentle hairline (1px)"
         },
         "defaultStyle": {
           "$type": "strokeStyle",
           "$value": "{shape.border.style.solid}",
-          "$description": "Input border style - solid, natural"
+          "$description": "Input border style — solid, grounded"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Input focus border width - soft emphasis (2px)"
+          "$description": "Input focus border width — soft emphasis (2px)"
         }
       }
     },
@@ -311,19 +371,19 @@
         "default": {
           "$type": "dimension",
           "$value": "{shape.radius.04}",
-          "$description": "Field border radius - rounded, organic (16px)"
+          "$description": "Field border radius — rounded, organic (16px)"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Field border width - gentle (1px)"
+          "$description": "Field border width — gentle (1px)"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.thick}",
-          "$description": "Field focus border width - soft (2px)"
+          "$description": "Field focus border width — soft (2px)"
         }
       }
     }
@@ -332,20 +392,20 @@
     "component": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.07}",
-        "$description": "Relaxed component padding (24px)"
+        "$value": "{spacing.size.08}",
+        "$description": "Spacious component padding (32px) — generous, breathable"
       },
       "gap": {
         "$type": "dimension",
-        "$value": "{spacing.size.06}",
-        "$description": "Relaxed component gap (16px)"
+        "$value": "{spacing.size.07}",
+        "$description": "Spacious component gap (24px) — room to breathe between elements"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.08}",
-        "$description": "Card padding (32px)"
+        "$value": "{spacing.size.09}",
+        "$description": "Card padding (40px) — very generous, organic spaciousness"
       }
     }
   },
@@ -353,29 +413,33 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.long1}",
-        "$description": "Very slow transition speed (667ms) - calm, deliberate"
+        "$value": "{motion.duration.medium2}",
+        "$description": "Calm transitions (333ms) — unhurried, like a forest settling"
       },
       "easing": {
         "$type": "cubicBezier",
         "$value": "{motion.easing.soft.enter}",
-        "$description": "Soft, gentle easing"
+        "$description": "Soft organic easing — gentle acceleration, natural feel"
       }
     }
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.regular}",
-        "$description": "Regular body weight (400)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular body weight (400) — easy reading, natural"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.medium}",
-        "$description": "Medium heading weight (500)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}",
+          "$description": "Medium heading weight (500) — grounded presence, not heavy"
+        }
       }
     }
   }

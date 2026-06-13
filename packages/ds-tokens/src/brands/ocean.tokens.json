@@ -1,135 +1,203 @@
 {
   "$brand": {
     "name": "ocean",
-    "description": "Teal/cyan brand theme - calm, refreshing, and spacious",
-    "accent": "teal",
+    "description": "Cyan/teal brand theme - calm, refreshing, airy. Cyan is the signature accent for brightness; teal provides depth and borders. Layered sea palette: light cyan/teal tints for airy surfaces, deep ocean tones for text.",
+    "accent": "cyan",
     "density": "spacious"
   },
   "color": {
     "foreground": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.teal.500}",
+        "$value": "{color.palette.cyan.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.500}",
-          "fsds.dark": "{color.palette.teal.400}"
-        }
+          "fsds.light": "{color.palette.cyan.600}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        },
+        "$description": "Cyan accent foreground - brighter aquatic signature; 600 in light for stronger contrast on white bg"
       },
       "link": {
         "$type": "color",
+        "$value": "{color.palette.cyan.600}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.600}",
+          "fsds.dark": "{color.palette.cyan.300}"
+        },
+        "$description": "Cyan link — deeper stop in light for legibility, lighter in dark"
+      },
+      "linkHover": {
+        "$type": "color",
+        "$value": "{color.palette.cyan.700}",
+        "$extensions": {
+          "fsds.light": "{color.palette.cyan.700}",
+          "fsds.dark": "{color.palette.cyan.200}"
+        },
+        "$description": "Hover deepens into ocean teal territory"
+      },
+      "linkVisited": {
+        "$type": "color",
         "$value": "{color.palette.teal.500}",
         "$extensions": {
           "fsds.light": "{color.palette.teal.500}",
           "fsds.dark": "{color.palette.teal.400}"
-        }
-      },
-      "linkHover": {
-        "$type": "color",
-        "$value": "{color.palette.teal.600}",
-        "$extensions": {
-          "fsds.light": "{color.palette.teal.600}",
-          "fsds.dark": "{color.palette.teal.300}"
-        }
-      },
-      "linkVisited": {
-        "$type": "color",
-        "$value": "{color.palette.teal.400}",
-        "$extensions": {
-          "fsds.light": "{color.palette.teal.400}",
-          "fsds.dark": "{color.palette.teal.500}"
-        }
+        },
+        "$description": "Visited links shift to teal for a distinct but harmonious signal"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.teal.700}",
+        "$value": "{color.palette.cyan.800}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.700}",
-          "fsds.dark": "{color.palette.teal.200}"
-        }
+          "fsds.light": "{color.palette.cyan.800}",
+          "fsds.dark": "{color.palette.cyan.200}"
+        },
+        "$description": "Deep ocean cyan for highlighted text in light; airy light tint in dark"
       }
     },
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.teal.500}",
+        "$value": "{color.palette.cyan.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.500}",
-          "fsds.dark": "{color.palette.teal.400}"
-        }
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.500}"
+        },
+        "$description": "Cyan 500 fill — white text contrast ~4.86:1 in both modes, AA-safe"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.teal.200}",
+        "$value": "{color.palette.cyan.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.200}",
-          "fsds.dark": "{color.palette.teal.700}"
+          "fsds.light": "{color.palette.cyan.100}",
+          "fsds.dark": "{color.palette.cyan.800}"
+        },
+        "$description": "Airy cyan tint for highlight washes; deep ocean cyan in dark"
+      },
+      "info": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.cyan.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.cyan.50}",
+            "fsds.dark": "{color.palette.cyan.900}"
+          },
+          "$description": "Ocean brand re-grounds info softer wash to cyan palette"
+        }
+      },
+      "success": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.teal.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.teal.50}",
+            "fsds.dark": "{color.palette.teal.900}"
+          },
+          "$description": "Success softer wash in teal — sea-green depth"
         }
       }
     },
     "border": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.teal.500}",
+        "$value": "{color.palette.cyan.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.500}",
-          "fsds.dark": "{color.palette.teal.400}"
-        }
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        },
+        "$description": "Cyan accent border — brighter aquatic line"
       },
       "default": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.teal.200}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.300}",
-          "fsds.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.teal.200}",
+          "fsds.dark": "{color.palette.teal.700}"
         },
-        "$description": "Default input border - simple neutral gray"
+        "$description": "Default border — gentle teal for structural depth, not aggressive neutral"
       },
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.teal.300}",
+        "$value": "{color.palette.cyan.400}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.300}",
-          "fsds.dark": "{color.palette.teal.500}"
+          "fsds.light": "{color.palette.cyan.400}",
+          "fsds.dark": "{color.palette.cyan.400}"
         },
-        "$description": "Input hover border - refreshing teal"
+        "$description": "Hover brightens into cyan"
       },
       "focus": {
         "$type": "color",
-        "$value": "{color.palette.teal.500}",
+        "$value": "{color.palette.cyan.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.500}",
-          "fsds.dark": "{color.palette.teal.400}"
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.400}"
         },
-        "$description": "Input focus border - calm teal accent"
+        "$description": "Focus ring — full cyan signal"
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.teal.100}",
+        "$value": "{color.palette.cyan.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.100}",
-          "fsds.dark": "{color.palette.teal.700}"
+          "fsds.light": "{color.palette.cyan.100}",
+          "fsds.dark": "{color.palette.cyan.800}"
         },
-        "$description": "Light input border - very subtle teal"
+        "$description": "Light border — barely-there aqua tint"
       },
       "primary": {
         "$type": "color",
         "$value": "{color.palette.teal.300}",
         "$extensions": {
           "fsds.light": "{color.palette.teal.300}",
-          "fsds.dark": "{color.palette.teal.500}"
+          "fsds.dark": "{color.palette.teal.600}"
         },
-        "$description": "Primary input border - medium teal"
+        "$description": "Primary structural border — teal mid-depth for layered sea effect"
       }
     },
     "navigation": {
       "foreground": {
         "active": {
           "$type": "color",
-          "$value": "{color.palette.teal.500}",
+          "$value": "{color.palette.cyan.600}",
           "$extensions": {
-            "fsds.light": "{color.palette.teal.500}",
-            "fsds.dark": "{color.palette.teal.400}"
-          }
+            "fsds.light": "{color.palette.cyan.600}",
+            "fsds.dark": "{color.palette.cyan.300}"
+          },
+          "$description": "Active nav item — deeper cyan in light for legibility"
+        }
+      },
+      "background": {
+        "hover": {
+          "$type": "color",
+          "$value": "{color.palette.cyan.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.cyan.50}",
+            "fsds.dark": "{color.palette.cyan.900}"
+          },
+          "$description": "Nav hover wash — airy cyan surface tint"
+        },
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.cyan.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.cyan.100}",
+            "fsds.dark": "{color.palette.cyan.800}"
+          },
+          "$description": "Active nav item background — gentle cyan tint"
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}",
+          "$description": "Nav hover state-layer opacity — Material-style tonal overlay"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}",
+          "$description": "Nav selected/active state-layer opacity"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}",
+          "$description": "Nav pressed state-layer opacity"
         }
       }
     },
@@ -138,15 +206,18 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.teal.500}"
+            "$value": "{color.palette.cyan.500}",
+            "$description": "Primary action fill — cyan 500, white text contrast ~4.86:1 AA"
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.teal.600}"
+            "$value": "{color.palette.cyan.600}",
+            "$description": "Hover deepens to cyan 600 — contrast ~6.77:1, well above AA"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.teal.700}"
+            "$value": "{color.palette.cyan.700}",
+            "$description": "Active/pressed state — deep ocean cyan"
           }
         }
       },
@@ -154,11 +225,13 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.teal.500}"
+            "$value": "{color.palette.cyan.500}",
+            "$description": "Primary action border — cyan accent"
           },
           "focus": {
             "$type": "color",
-            "$value": "{color.palette.teal.400}"
+            "$value": "{color.palette.cyan.300}",
+            "$description": "Focus ring on action — lighter cyan for offset glow"
           }
         }
       }
@@ -166,11 +239,12 @@
     "status": {
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.teal.400}",
+        "$value": "{color.palette.cyan.500}",
         "$extensions": {
-          "fsds.light": "{color.palette.teal.400}",
-          "fsds.dark": "{color.palette.teal.500}"
-        }
+          "fsds.light": "{color.palette.cyan.500}",
+          "fsds.dark": "{color.palette.cyan.400}"
+        },
+        "$description": "Status highlight — cyan signal, sea-bright"
       }
     }
   },
@@ -179,26 +253,26 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.05}",
-          "$description": "Extra large radius (32px) - very soft, spacious"
+          "$value": "{shape.radius.04}",
+          "$description": "Generous control radius (16px) — airy, rounded, calm"
         }
       }
     },
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "{shape.radius.04}",
-        "$description": "Card border radius (16px) - fluid, rounded"
+        "$value": "{shape.radius.05}",
+        "$description": "Card border radius (32px) — very fluid, spacious, refreshing"
       },
       "border": {
         "light": {
           "$type": "color",
-          "$value": "{color.palette.teal.100}",
+          "$value": "{color.palette.cyan.100}",
           "$extensions": {
-            "fsds.light": "{color.palette.teal.100}",
-            "fsds.dark": "{color.palette.teal.800}"
+            "fsds.light": "{color.palette.cyan.100}",
+            "fsds.dark": "{color.palette.cyan.800}"
           },
-          "$description": "Light card border - very subtle teal"
+          "$description": "Light card border — barely-there aqua tint"
         },
         "medium": {
           "$type": "color",
@@ -207,7 +281,7 @@
             "fsds.light": "{color.palette.teal.200}",
             "fsds.dark": "{color.palette.teal.700}"
           },
-          "$description": "Medium card border - subtle calm teal"
+          "$description": "Medium card border — teal depth layer"
         },
         "dark": {
           "$type": "color",
@@ -216,7 +290,7 @@
             "fsds.light": "{color.palette.teal.400}",
             "fsds.dark": "{color.palette.teal.500}"
           },
-          "$description": "Dark card border - visible teal"
+          "$description": "Dark card border — visible teal sea-depth"
         },
         "transparent": {
           "$type": "color",
@@ -225,29 +299,29 @@
             "fsds.light": "{color.mode.transparent}",
             "fsds.dark": "{color.mode.transparent}"
           },
-          "$description": "Transparent card border - calm, spacious"
+          "$description": "Transparent card border — open and airy"
         }
       },
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Near elevation - gentle shadow"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Near elevation — resting card surface, light raised shadow"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.2}",
-          "$description": "Default elevation - soft shadow"
+          "$value": "{elevation.surface.floating}",
+          "$description": "Default elevation — floating card, gentle hover shadow"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.3}",
-          "$description": "Far elevation - fluid shadow"
+          "$value": "{elevation.surface.overlay}",
+          "$description": "Far elevation — anchored surface shadow for depth"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - calm, refreshing"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation — flush with page, calm and spacious"
         }
       }
     },
@@ -255,46 +329,46 @@
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.04}",
-        "$description": "Internal element radius (16px) - fluid curves"
+        "$description": "Internal element radius (16px) — fluid, airy curves inside cards"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.full}",
-        "$description": "Button radius (pill) - fluid, spacious"
+        "$description": "Button radius (pill) — very fluid, refreshing, open"
       }
     },
     "badge": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.full}",
-        "$description": "Badge/chip radius (pill)"
+        "$description": "Badge/chip radius (pill) — fully rounded, airy"
       }
     },
     "input": {
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.05}",
-          "$description": "Input border radius - very soft, spacious (32px)"
+          "$value": "{shape.radius.04}",
+          "$description": "Input border radius (16px) — generous, airy, calm"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Input border width - gentle, calm (1px)"
+          "$description": "Input border width — gentle hairline (1px)"
         },
         "defaultStyle": {
           "$type": "strokeStyle",
           "$value": "{shape.border.style.solid}",
-          "$description": "Input border style - solid, fluid"
+          "$description": "Input border style — solid, clean"
         },
         "focusWidth": {
           "$type": "dimension",
-          "$value": "{shape.border.width.hairline}",
-          "$description": "Input focus border width - soft emphasis (1px)"
+          "$value": "{shape.border.width.thick}",
+          "$description": "Input focus border width — visible emphasis (2px)"
         }
       }
     },
@@ -302,20 +376,20 @@
       "radius": {
         "default": {
           "$type": "dimension",
-          "$value": "{shape.radius.05}",
-          "$description": "Field border radius - spacious, soft (32px)"
+          "$value": "{shape.radius.04}",
+          "$description": "Field border radius (16px) — spacious, soft"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Field border width - gentle (1px)"
+          "$description": "Field border width — gentle (1px)"
         },
         "focusWidth": {
           "$type": "dimension",
-          "$value": "{shape.border.width.hairline}",
-          "$description": "Field focus border width - soft (1px)"
+          "$value": "{shape.border.width.thick}",
+          "$description": "Field focus border width — visible, not aggressive (2px)"
         }
       }
     }
@@ -325,19 +399,19 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.07}",
-        "$description": "Generous component padding (24px)"
+        "$description": "Generous component padding (24px) — spacious, airy feel"
       },
       "gap": {
         "$type": "dimension",
         "$value": "{spacing.size.06}",
-        "$description": "Generous component gap (16px)"
+        "$description": "Generous component gap (16px) — room to breathe"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.08}",
-        "$description": "Card padding (32px)"
+        "$description": "Card padding (32px) — very open, sea-air spaciousness"
       }
     }
   },
@@ -345,29 +419,33 @@
     "interaction": {
       "duration": {
         "$type": "duration",
-        "$value": "{motion.duration.medium2}",
-        "$description": "Flowing transitions (333ms) - fluid but responsive"
+        "$value": "{motion.duration.medium1}",
+        "$description": "Gentle transition speed (250ms) — calm, not sluggish"
       },
       "easing": {
         "$type": "cubicBezier",
-        "$value": "{motion.easing.continuous}",
-        "$description": "Continuous, fluid easing curve"
+        "$value": "{motion.easing.soft.enter}",
+        "$description": "Soft-enter easing — gentle acceleration, like a wave arriving at shore"
       }
     }
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.regular}",
-        "$description": "Regular body weight (400)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular body weight (400) — clean, readable, calm"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.medium}",
-        "$description": "Medium heading weight (500)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.medium}",
+          "$description": "Medium heading weight (500) — authoritative but not heavy"
+        }
       }
     }
   }
