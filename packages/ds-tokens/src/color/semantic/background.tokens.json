@@ -193,12 +193,12 @@
       },
       "disabled": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "fsds.light": "{color.palette.neutral.200}",
-          "fsds.dark": "{color.palette.neutral.700}"
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
         },
-        "$description": "Disabled state background color"
+        "$description": "Disabled state background color. light=neutral.100, dark=neutral.800 (widened one stop from 200/700) so disabled foreground (neutral.500/400) keeps AA_LARGE 3:1 against it under the contrast-targeted 10-stop ramp."
       },
       "placeholder": {
         "$type": "color",

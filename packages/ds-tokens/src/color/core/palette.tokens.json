@@ -6,14 +6,25 @@
       "brand": {
         "$type": "color",
         "primary": {
+          "50": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0.807843137254902,
+                0.9372549019607843,
+                0.9921568627450981
+              ]
+            }
+          },
           "100": {
             "$type": "color",
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.8509803921568627,
-                0.9529411764705882,
-                0.996078431372549
+                0.5882352941176471,
+                0.8549019607843137,
+                0.984313725490196
               ]
             }
           },
@@ -22,9 +33,9 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.5411764705882353,
-                0.8509803921568627,
-                0.9882352941176471
+                0.3215686274509804,
+                0.7647058823529411,
+                0.9803921568627451
               ]
             }
           },
@@ -33,9 +44,9 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.1803921568627451,
-                0.7254901960784313,
-                0.9764705882352941
+                0,
+                0.6627450980392157,
+                0.984313725490196
               ]
             }
           },
@@ -44,9 +55,9 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.11372549019607843,
-                0.5686274509803921,
-                0.984313725490196
+                0,
+                0.5333333333333333,
+                0.996078431372549
               ]
             }
           },
@@ -55,8 +66,8 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0.0392156862745098,
-                0.396078431372549,
+                0.023529411764705882,
+                0.4,
                 0.996078431372549
               ]
             }
@@ -66,9 +77,9 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0.25882352941176473,
-                0.8627450980392157
+                0.0196078431372549,
+                0.30980392156862746,
+                0.8431372549019608
               ]
             }
           },
@@ -77,9 +88,9 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0.17647058823529413,
-                0.6
+                0.00392156862745098,
+                0.22745098039215686,
+                0.6901960784313725
               ]
             }
           },
@@ -89,802 +100,925 @@
               "colorSpace": "srgb",
               "components": [
                 0,
-                0.10588235294117647,
-                0.35294117647058826
+                0.15294117647058825,
+                0.5098039215686274
+              ]
+            }
+          },
+          "900": {
+            "$type": "color",
+            "$value": {
+              "colorSpace": "srgb",
+              "components": [
+                0,
+                0.08627450980392157,
+                0.3333333333333333
               ]
             }
           }
         }
       },
       "neutral": {
-        "100": {
+        "50": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.9372549019607843,
-              0.9372549019607843,
-              0.9372549019607843
+              0.9137254901960784,
+              0.9137254901960784,
+              0.9137254901960784
             ]
-          },
-          "$description": "Level 100 of the neutral color scale, a very light shade.",
-          "$type": "color"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8156862745098039,
+              0.8156862745098039,
+              0.8156862745098039
+            ]
+          }
         },
         "200": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.807843137254902,
-              0.807843137254902,
-              0.807843137254902
+              0.7215686274509804,
+              0.7215686274509804,
+              0.7215686274509804
             ]
-          },
-          "$description": "Level 200 of the neutral color scale, a light shade.",
-          "$type": "color"
+          }
         },
         "300": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.6823529411764706,
-              0.6823529411764706,
-              0.6823529411764706
+              0.6274509803921569,
+              0.6274509803921569,
+              0.6313725490196078
             ]
-          },
-          "$description": "Level 300 of the neutral color scale, a medium-light shade.",
-          "$type": "color"
+          }
         },
         "400": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.5607843137254902,
-              0.5607843137254902,
-              0.5607843137254902
+              0.5333333333333333,
+              0.5333333333333333,
+              0.5372549019607843
             ]
-          },
-          "$description": "Level 400 of the neutral color scale, a medium shade.",
-          "$type": "color"
+          }
         },
         "500": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.44313725490196076,
-              0.44313725490196076,
-              0.44313725490196076
+              0.4470588235294118,
+              0.4470588235294118,
+              0.4470588235294118
             ]
-          },
-          "$description": "Level 500 of the neutral color scale, a medium-dark shade.",
-          "$type": "color"
+          }
         },
         "600": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.3333333333333333,
-              0.3333333333333333,
-              0.3333333333333333
+              0.3607843137254902,
+              0.3568627450980392,
+              0.3607843137254902
             ]
-          },
-          "$description": "Level 600 of the neutral color scale, a dark shade.",
-          "$type": "color"
+          }
         },
         "700": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.22745098039215686,
-              0.22745098039215686,
-              0.22745098039215686
+              0.2784313725490196,
+              0.27450980392156865,
+              0.2784313725490196
             ]
-          },
-          "$description": "Level 700 of the neutral color scale, a very dark shade.",
-          "$type": "color"
+          }
         },
         "800": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.12941176470588237,
-              0.12941176470588237,
-              0.12941176470588237
+              0.19215686274509805,
+              0.19215686274509805,
+              0.19215686274509805
             ]
-          },
-          "$description": "Level 800 of the neutral color scale, the darkest shade.",
-          "$type": "color"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.11372549019607843,
+              0.11372549019607843,
+              0.11372549019607843
+            ]
+          }
         },
         "$type": "color"
       },
       "red": {
-        "100": {
+        "50": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
               0.9882352941176471,
-              0.9176470588235294,
-              0.9176470588235294
+              0.8980392156862745,
+              0.8980392156862745
             ]
-          },
-          "$description": "Level 100 of the red color scale, a very light red.",
-          "$type": "color"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9803921568627451,
+              0.7647058823529411,
+              0.7647058823529411
+            ]
+          }
         },
         "200": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.9686274509803922,
-              0.7568627450980392,
-              0.7607843137254902
+              0.9607843137254902,
+              0.6352941176470588,
+              0.6392156862745098
             ]
-          },
-          "$description": "Level 200 of the red color scale, a light red.",
-          "$type": "color"
+          }
         },
         "300": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.9490196078431372,
-              0.5803921568627451,
-              0.5843137254901961
+              0.9333333333333333,
+              0.5019607843137255,
+              0.5019607843137255
             ]
-          },
-          "$description": "Level 300 of the red color scale, a medium-light red.",
-          "$type": "color"
+          }
         },
         "400": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.9176470588235294,
-              0.39215686274509803,
-              0.396078431372549
+              0.8980392156862745,
+              0.3568627450980392,
+              0.35294117647058826
             ]
-          },
-          "$description": "Level 400 of the red color scale, a medium red.",
-          "$type": "color"
+          }
         },
         "500": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
               0.8509803921568627,
-              0.1607843137254902,
-              0.16862745098039217
+              0.17254901960784313,
+              0.17647058823529413
             ]
-          },
-          "$description": "Level 500 of the red color scale, a medium-dark red.",
-          "$type": "color"
+          }
         },
         "600": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.6823529411764706,
-              0,
-              0.00392156862745098
+              0.7058823529411765,
+              0.10196078431372549,
+              0.10196078431372549
             ]
-          },
-          "$description": "Level 600 of the red color scale, a dark red.",
-          "$type": "color"
+          }
         },
         "700": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.4823529411764706,
-              0,
-              0
+              0.5686274509803921,
+              0.03529411764705882,
+              0.03529411764705882
             ]
-          },
-          "$description": "Level 700 of the red color scale, a very dark red.",
-          "$type": "color"
+          }
         },
         "800": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.29411764705882354,
+              0.41568627450980394,
               0,
               0
             ]
-          },
-          "$description": "Level 800 of the red color scale, the darkest red.",
-          "$type": "color"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.26666666666666666,
+              0,
+              0
+            ]
+          }
         },
         "$type": "color"
       },
       "orange": {
-        "100": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
-              0.9294117647058824,
-              0.8
-            ]
-          },
-          "$description": "Level 100 of the orange color scale, a very light orange.",
-          "$type": "color"
-        },
-        "200": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
-              0.7686274509803922,
-              0.34509803921568627
-            ]
-          },
-          "$description": "Level 200 of the orange color scale, a light orange.",
-          "$type": "color"
-        },
-        "300": {
+        "50": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
               0.996078431372549,
-              0.5803921568627451,
-              0
+              0.9058823529411765,
+              0.7529411764705882
             ]
-          },
-          "$description": "Level 300 of the orange color scale, a medium-light orange.",
-          "$type": "color"
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9921568627450981,
+              0.7803921568627451,
+              0.5058823529411764
+            ]
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.996078431372549,
+              0.6392156862745098,
+              0.2196078431372549
+            ]
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9254901960784314,
+              0.5333333333333333,
+              0.00392156862745098
+            ]
+          }
         },
         "400": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.8431372549019608,
-              0.4627450980392157,
-              0
+              0.8,
+              0.4470588235294118,
+              0.00392156862745098
             ]
-          },
-          "$description": "Level 400 of the orange color scale, a medium orange.",
-          "$type": "color"
+          }
         },
         "500": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.6745098039215687,
-              0.3607843137254902,
+              0.6823529411764706,
+              0.36470588235294116,
               0
             ]
-          },
-          "$description": "Level 500 of the orange color scale, a medium-dark orange.",
-          "$type": "color"
+          }
         },
         "600": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.5098039215686274,
-              0.27058823529411763,
+              0.5450980392156862,
+              0.29411764705882354,
               0
             ]
-          },
-          "$description": "Level 600 of the orange color scale, a dark orange.",
-          "$type": "color"
+          }
         },
         "700": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.34901960784313724,
-              0.18823529411764706,
+              0.4196078431372549,
+              0.22745098039215686,
               0
             ]
-          },
-          "$description": "Level 700 of the orange color scale, a very dark orange.",
-          "$type": "color"
+          }
         },
         "800": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.2,
-              0.10588235294117647,
+              0.29411764705882354,
+              0.1607843137254902,
               0
             ]
-          },
-          "$description": "Level 800 of the orange color scale, the darkest orange.",
-          "$type": "color"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.1843137254901961,
+              0.09019607843137255,
+              0
+            ]
+          }
         },
         "$type": "color"
       },
       "yellow": {
+        "50": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9921568627450981,
+              0.9215686274509803,
+              0.6274509803921569
+            ]
+          }
+        },
         "100": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              1,
-              0.9725490196078431,
-              0.8
-            ]
-          },
-          "$description": "very light yellow",
-          "$type": "color"
-        },
-        "200": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
-              0.9019607843137255,
-              0.5019607843137255
-            ]
-          },
-          "$description": "light yellow",
-          "$type": "color"
-        },
-        "300": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
-              0.807843137254902,
-              0.2
-            ]
-          },
-          "$description": "medium-light yellow",
-          "$type": "color"
-        },
-        "400": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
-              0.7019607843137254,
-              0
-            ]
-          },
-          "$description": "medium yellow",
-          "$type": "color"
-        },
-        "500": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8549019607843137,
-              0.6039215686274509,
-              0
-            ]
-          },
-          "$description": "medium-dark yellow",
-          "$type": "color"
-        },
-        "600": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.6627450980392157,
-              0.47843137254901963,
-              0
-            ]
-          },
-          "$description": "dark yellow",
-          "$type": "color"
-        },
-        "700": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.47843137254901963,
-              0.35294117647058826,
-              0
-            ]
-          },
-          "$description": "very dark yellow",
-          "$type": "color"
-        },
-        "800": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.30196078431372547,
-              0.22745098039215686,
-              0
-            ]
-          },
-          "$description": "darkest yellow",
-          "$type": "color"
-        },
-        "$type": "color"
-      },
-      "green": {
-        "100": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8941176470588236,
-              0.9490196078431372,
-              0.8784313725490196
-            ]
-          },
-          "$description": "Level 100 of the green color scale, a very light green.",
-          "$type": "color"
-        },
-        "200": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.6901960784313725,
-              0.8549019607843137,
-              0.6431372549019608
-            ]
-          },
-          "$description": "Level 200 of the green color scale, a light green.",
-          "$type": "color"
-        },
-        "300": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.4745098039215686,
-              0.7490196078431373,
-              0.396078431372549
-            ]
-          },
-          "$description": "Level 300 of the green color scale, a medium-light green.",
-          "$type": "color"
-        },
-        "400": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.3764705882352941,
-              0.6196078431372549,
-              0.2549019607843137
-            ]
-          },
-          "$description": "Level 400 of the green color scale, a medium green.",
-          "$type": "color"
-        },
-        "500": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.2823529411764706,
-              0.49411764705882355,
-              0.11764705882352941
-            ]
-          },
-          "$description": "Level 500 of the green color scale, a medium-dark green.",
-          "$type": "color"
-        },
-        "600": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.2,
-              0.3764705882352941,
-              0.023529411764705882
-            ]
-          },
-          "$description": "Level 600 of the green color scale, a dark green.",
-          "$type": "color"
-        },
-        "700": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.13725490196078433,
-              0.2549019607843137,
-              0.01568627450980392
-            ]
-          },
-          "$description": "Level 700 of the green color scale, a very dark green.",
-          "$type": "color"
-        },
-        "800": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.0784313725490196,
-              0.1450980392156863,
-              0.00784313725490196
-            ]
-          },
-          "$description": "Level 800 of the green color scale, the darkest green.",
-          "$type": "color"
-        },
-        "$type": "color"
-      },
-      "blue": {
-        "100": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.8509803921568627,
-              0.9529411764705882,
-              0.996078431372549
-            ]
-          },
-          "$description": "Level 100 of the blue color scale, a very light blue.",
-          "$type": "color"
-        },
-        "200": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.5411764705882353,
-              0.8509803921568627,
-              0.9882352941176471
-            ]
-          },
-          "$description": "Level 200 of the blue color scale, a light blue.",
-          "$type": "color"
-        },
-        "300": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.1803921568627451,
-              0.7254901960784313,
-              0.9764705882352941
-            ]
-          },
-          "$description": "Level 300 of the blue color scale, a medium-light blue.",
-          "$type": "color"
-        },
-        "400": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.11372549019607843,
-              0.5686274509803921,
-              0.984313725490196
-            ]
-          },
-          "$description": "Level 400 of the blue color scale, a medium blue.",
-          "$type": "color"
-        },
-        "500": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.0392156862745098,
-              0.396078431372549,
-              0.996078431372549
-            ]
-          },
-          "$description": "Level 500 of the blue color scale, a medium-dark blue.",
-          "$type": "color"
-        },
-        "600": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0.25882352941176473,
-              0.8627450980392157
-            ]
-          },
-          "$description": "Level 600 of the blue color scale, a dark blue.",
-          "$type": "color"
-        },
-        "700": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0.17647058823529413,
-              0.6
-            ]
-          },
-          "$description": "Level 700 of the blue color scale, a very dark blue.",
-          "$type": "color"
-        },
-        "800": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0.10588235294117647,
-              0.35294117647058826
-            ]
-          },
-          "$description": "Level 800 of the blue color scale, the darkest blue.",
-          "$type": "color"
-        },
-        "$type": "color"
-      },
-      "teal": {
-        "100": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
+              0.9882352941176471,
               0.792156862745098,
-              0.9725490196078431,
-              0.9686274509803922
+              0.18823529411764706
             ]
-          },
-          "$description": "Level 100 of the teal color scale, a very light teal.",
-          "$type": "color"
+          }
         },
         "200": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.09411764705882353,
-              0.8588235294117647,
-              0.8588235294117647
-            ]
-          },
-          "$description": "Level 200 of the teal color scale, a light teal.",
-          "$type": "color"
-        },
-        "300": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.13333333333333333,
-              0.7058823529411765,
-              0.7058823529411765
-            ]
-          },
-          "$description": "Level 300 of the teal color scale, a medium-light teal.",
-          "$type": "color"
-        },
-        "400": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.1450980392156863,
-              0.5607843137254902,
-              0.5568627450980392
-            ]
-          },
-          "$description": "Level 400 of the teal color scale, a medium teal.",
-          "$type": "color"
-        },
-        "500": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.13725490196078433,
-              0.43529411764705883,
-              0.43529411764705883
-            ]
-          },
-          "$description": "Level 500 of the teal color scale, a medium-dark teal.",
-          "$type": "color"
-        },
-        "600": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.12549019607843137,
-              0.3254901960784314,
-              0.3254901960784314
-            ]
-          },
-          "$description": "Level 600 of the teal color scale, a dark teal.",
-          "$type": "color"
-        },
-        "700": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.10196078431372549,
-              0.22745098039215686,
-              0.22745098039215686
-            ]
-          },
-          "$description": "Level 700 of the teal color scale, a very dark teal.",
-          "$type": "color"
-        },
-        "800": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.07058823529411765,
-              0.11372549019607843,
-              0.11372549019607843
-            ]
-          },
-          "$description": "Level 800 of the teal color scale, the darkest teal.",
-          "$type": "color"
-        },
-        "$type": "color"
-      },
-      "violet": {
-        "100": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
               0.9137254901960784,
-              0.996078431372549
+              0.6823529411764706,
+              0.09411764705882353
             ]
-          },
-          "$description": "Level 100 of the violet color scale, a very light violet.",
-          "$type": "color"
-        },
-        "200": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              1,
-              0.7098039215686275,
-              0.9882352941176471
-            ]
-          },
-          "$description": "Level 200 of the violet color scale, a light violet.",
-          "$type": "color"
+          }
         },
         "300": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              1,
-              0.4823529411764706,
-              0.9803921568627451
+              0.8274509803921568,
+              0.5843137254901961,
+              0
             ]
-          },
-          "$description": "Level 300 of the violet color scale, a medium-light violet.",
-          "$type": "color"
+          }
         },
         "400": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.9568627450980393,
-              0.19215686274509805,
-              0.9294117647058824
+              0.6980392156862745,
+              0.5019607843137255,
+              0
             ]
-          },
-          "$description": "Level 400 of the violet color scale, a medium violet.",
-          "$type": "color"
+          }
         },
         "500": {
-          "$value": {
-            "colorSpace": "srgb",
-            "components": [
-              0.7568627450980392,
-              0.15294117647058825,
-              0.7372549019607844
-            ]
-          },
-          "$description": "Level 500 of the violet color scale, a medium-dark violet.",
-          "$type": "color"
-        },
-        "600": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
               0.5764705882352941,
-              0.11372549019607843,
-              0.5607843137254902
+              0.4196078431372549,
+              0
             ]
-          },
-          "$description": "Level 600 of the violet color scale, a dark violet.",
-          "$type": "color"
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.4588235294117647,
+              0.33725490196078434,
+              0
+            ]
+          }
         },
         "700": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.4,
-              0.0784313725490196,
-              0.38823529411764707
+              0.34901960784313724,
+              0.2627450980392157,
+              0
             ]
-          },
-          "$description": "Level 700 of the violet color scale, a very dark violet.",
-          "$type": "color"
+          }
         },
         "800": {
+          "$type": "color",
           "$value": {
             "colorSpace": "srgb",
             "components": [
-              0.23137254901960785,
-              0.047058823529411764,
-              0.22745098039215686
+              0.2549019607843137,
+              0.1803921568627451,
+              0
             ]
-          },
-          "$description": "Level 800 of the violet color scale, the darkest violet.",
-          "$type": "color"
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.16862745098039217,
+              0.09803921568627451,
+              0
+            ]
+          }
+        },
+        "$type": "color"
+      },
+      "green": {
+        "50": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8705882352941177,
+              0.9372549019607843,
+              0.8509803921568627
+            ]
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7019607843137254,
+              0.8588235294117647,
+              0.6549019607843137
+            ]
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.5450980392156862,
+              0.7803921568627451,
+              0.47843137254901963
+            ]
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.43137254901960786,
+              0.6941176470588235,
+              0.3411764705882353
+            ]
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.3568627450980392,
+              0.592156862745098,
+              0.23529411764705882
+            ]
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.28627450980392155,
+              0.4980392156862745,
+              0.12549019607843137
+            ]
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.22745098039215686,
+              0.4,
+              0.07450980392156863
+            ]
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.17254901960784313,
+              0.3137254901960784,
+              0.03529411764705882
+            ]
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.11764705882352941,
+              0.21568627450980393,
+              0.011764705882352941
+            ]
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.06666666666666667,
+              0.12941176470588237,
+              0
+            ]
+          }
+        },
+        "$type": "color"
+      },
+      "blue": {
+        "50": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.807843137254902,
+              0.9372549019607843,
+              0.9921568627450981
+            ]
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.5882352941176471,
+              0.8549019607843137,
+              0.984313725490196
+            ]
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.3215686274509804,
+              0.7647058823529411,
+              0.9803921568627451
+            ]
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0.6627450980392157,
+              0.984313725490196
+            ]
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0.5333333333333333,
+              0.996078431372549
+            ]
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.023529411764705882,
+              0.4,
+              0.996078431372549
+            ]
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.0196078431372549,
+              0.30980392156862746,
+              0.8431372549019608
+            ]
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.00392156862745098,
+              0.22745098039215686,
+              0.6901960784313725
+            ]
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0.15294117647058825,
+              0.5098039215686274
+            ]
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0,
+              0.08627450980392157,
+              0.3333333333333333
+            ]
+          }
+        },
+        "$type": "color"
+      },
+      "teal": {
+        "50": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7568627450980392,
+              0.9568627450980393,
+              0.9529411764705882
+            ]
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.5803921568627451,
+              0.8666666666666667,
+              0.8627450980392157
+            ]
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.3843137254901961,
+              0.7803921568627451,
+              0.7803921568627451
+            ]
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.13333333333333333,
+              0.6980392156862745,
+              0.6980392156862745
+            ]
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.1411764705882353,
+              0.592156862745098,
+              0.596078431372549
+            ]
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.1411764705882353,
+              0.49411764705882355,
+              0.49411764705882355
+            ]
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.13333333333333333,
+              0.39215686274509803,
+              0.39215686274509803
+            ]
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.11764705882352941,
+              0.3058823529411765,
+              0.3058823529411765
+            ]
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.09803921568627451,
+              0.20784313725490197,
+              0.20784313725490197
+            ]
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.07450980392156863,
+              0.12156862745098039,
+              0.12156862745098039
+            ]
+          }
+        },
+        "$type": "color"
+      },
+      "violet": {
+        "50": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              0.8784313725490196,
+              0.996078431372549
+            ]
+          }
+        },
+        "100": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              0.7294117647058823,
+              0.996078431372549
+            ]
+          }
+        },
+        "200": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              1,
+              0.5568627450980392,
+              0.9882352941176471
+            ]
+          }
+        },
+        "300": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.9490196078431372,
+              0.4196078431372549,
+              0.9254901960784314
+            ]
+          }
+        },
+        "400": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.8549019607843137,
+              0.2980392156862745,
+              0.8313725490196079
+            ]
+          }
+        },
+        "500": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.7607843137254902,
+              0.16470588235294117,
+              0.7411764705882353
+            ]
+          }
+        },
+        "600": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.615686274509804,
+              0.12549019607843137,
+              0.6
+            ]
+          }
+        },
+        "700": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.47843137254901963,
+              0.09411764705882353,
+              0.4666666666666667
+            ]
+          }
+        },
+        "800": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.3411764705882353,
+              0.06666666666666667,
+              0.3333333333333333
+            ]
+          }
+        },
+        "900": {
+          "$type": "color",
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [
+              0.21568627450980393,
+              0.027450980392156862,
+              0.21176470588235294
+            ]
+          }
         },
         "$type": "color"
       }
