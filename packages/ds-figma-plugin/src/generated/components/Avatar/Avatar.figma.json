@@ -19,7 +19,7 @@
     {
       "name": "image",
       "semanticElement": null,
-      "nativeTag": "img",
+      "nativeTag": null,
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null

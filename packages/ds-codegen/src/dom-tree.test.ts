@@ -2166,3 +2166,230 @@ describe("componentRef (by-reference composition fact)", () => {
     ).toThrow(/disagrees with anatomy\.dom componentRef/);
   });
 });
+
+// CODEGEN-RECURSIVE-COMPOSITION-01 / Phase 5: componentRef nodes resolve into a
+// typed ComponentInstanceIR fact when the corpus is supplied. The IR classifies
+// each binding against the TARGET's prop surface, resolves the target layer,
+// and fails loud on unknown target props / unresolved refs / layer violations.
+describe("componentInstance resolution (cross-contract fact)", () => {
+  // Minimal target contracts. getPropMembers reads props.designed.members.
+  const ImageContract = {
+    name: "Image",
+    layer: "primitive",
+    anatomy: { parts: ["root"] },
+    props: {
+      designed: {
+        members: [
+          { name: "src", propType: { kind: "string" } },
+          { name: "alt", propType: { kind: "string" } },
+        ],
+      },
+    },
+  } as unknown as ComponentContract;
+
+  const ButtonContract = {
+    name: "Button",
+    layer: "primitive",
+    anatomy: { parts: ["root"] },
+    props: {
+      designed: {
+        members: [
+          { name: "type", propType: { kind: "string" } },
+          { name: "ariaLabel", propType: { kind: "string" } },
+        ],
+      },
+    },
+  } as unknown as ComponentContract;
+
+  function corpus(...cs: ComponentContract[]) {
+    return new Map(cs.map((c) => [c.name, c]));
+  }
+
+  function avatarRefsImage(): ComponentContract {
+    return {
+      name: "Avatar",
+      layer: "compound",
+      // Host props the dom bindings read from (validateDomBindings checks the
+      // `prop:X` source side; the componentRef classification checks the attr
+      // name side — two independent rules).
+      props: { designed: { members: [{ name: "src", propType: { kind: "string" } }] } },
+      anatomy: {
+        parts: ["root", "image"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              componentRef: "fsds.Image",
+              part: "image",
+              bindings: { src: "prop:src", alt: "literal:" },
+            },
+          ],
+        },
+      },
+    } as unknown as ComponentContract;
+  }
+
+  it("does NOT resolve when no corpus is supplied (bare-name fallback)", () => {
+    const ir = buildComponentIR(avatarRefsImage());
+    expect(ir.dom?.children[0].componentRef).toBe("Image");
+    expect(ir.dom?.children[0].componentInstance).toBeUndefined();
+  });
+
+  it("resolves a componentInstance with target layer + classified bindings", () => {
+    const ir = buildComponentIR(avatarRefsImage(), {
+      allContracts: corpus(avatarRefsImage(), ImageContract),
+    });
+    const inst = ir.dom?.children[0].componentInstance;
+    expect(inst).toBeDefined();
+    expect(inst?.ref).toBe("Image");
+    expect(inst?.targetLayer).toBe("primitive");
+    // Both src and alt are declared Image props → kind:"prop".
+    const byAttr = new Map(inst?.bindings.map((b) => [b.sourceAttr, b]));
+    expect(byAttr.get("src")?.kind).toBe("prop");
+    expect(byAttr.get("src")?.targetProp).toBe("src");
+    expect(byAttr.get("alt")?.kind).toBe("prop");
+  });
+
+  it("classifies a data-* binding as a host attribute (passthrough)", () => {
+    const host = {
+      name: "Avatar",
+      layer: "compound",
+      props: {
+        designed: {
+          members: [
+            { name: "src", propType: { kind: "string" } },
+            { name: "trackId", propType: { kind: "string" } },
+          ],
+        },
+      },
+      anatomy: {
+        parts: ["root", "image"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              componentRef: "fsds.Image",
+              part: "image",
+              bindings: { src: "prop:src", "data-x": "prop:trackId" },
+            },
+          ],
+        },
+      },
+    } as unknown as ComponentContract;
+    const ir = buildComponentIR(host, {
+      allContracts: corpus(host, ImageContract),
+    });
+    const byAttr = new Map(
+      ir.dom?.children[0].componentInstance?.bindings.map((b) => [b.sourceAttr, b]),
+    );
+    expect(byAttr.get("src")?.kind).toBe("prop");
+    expect(byAttr.get("data-x")?.kind).toBe("attribute");
+  });
+
+  it("THROWS (fail-loud) on a binding that names neither a target prop nor a host attr", () => {
+    const host = {
+      name: "Avatar",
+      layer: "compound",
+      props: { designed: { members: [{ name: "bad", propType: { kind: "string" } }] } },
+      anatomy: {
+        parts: ["root", "image"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              componentRef: "fsds.Image",
+              part: "image",
+              // Image has no "invalid" prop and "invalid" is not data-/aria-.
+              bindings: { invalid: "prop:bad" },
+            },
+          ],
+        },
+      },
+    } as unknown as ComponentContract;
+    expect(() =>
+      buildComponentIR(host, { allContracts: corpus(host, ImageContract) }),
+    ).toThrow(/binds "invalid", which is neither a declared prop on Image/);
+  });
+
+  it("THROWS on an unresolved componentRef", () => {
+    const host = avatarRefsImage();
+    expect(() =>
+      buildComponentIR(host, { allContracts: corpus(host) }), // no Image
+    ).toThrow(/does not resolve to a known component contract/);
+  });
+
+  it("THROWS on a layer violation (primitive referencing a compound)", () => {
+    const Card = {
+      name: "Card",
+      layer: "compound",
+      anatomy: { parts: ["root"] },
+      props: { designed: { members: [] } },
+    } as unknown as ComponentContract;
+    const badPrim = {
+      name: "BadPrim",
+      layer: "primitive",
+      anatomy: {
+        parts: ["root", "x"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [{ componentRef: "fsds.Card", part: "x" }],
+        },
+      },
+    } as unknown as ComponentContract;
+    expect(() =>
+      buildComponentIR(badPrim, { allContracts: corpus(badPrim, Card) }),
+    ).toThrow(/targets a higher layer \(compound\) than this primitive/);
+  });
+
+  it("binds the TARGET's prop name (ariaLabel), and carries events separately", () => {
+    // Correct authoring: name Button's actual prop `ariaLabel` (NOT the raw
+    // `aria-label` HTML attribute). The IR classifies it as kind:"prop" so the
+    // label reaches Button's ariaLabel prop, which Button maps to aria-label on
+    // its own <button> — the a11y-across-boundary fix.
+    const host = {
+      name: "Alert",
+      layer: "compound",
+      props: {
+        designed: {
+          members: [
+            { name: "dismissLabel", propType: { kind: "string" } },
+            {
+              name: "onDismiss",
+              propType: { kind: "callback", params: [], returns: { kind: "void" } },
+            },
+          ],
+        },
+      },
+      anatomy: {
+        parts: ["root", "dismiss"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            {
+              componentRef: "fsds.Button",
+              part: "dismiss",
+              bindings: { ariaLabel: "prop:dismissLabel" },
+              events: { click: "prop:onDismiss" },
+            },
+          ],
+        },
+      },
+    } as unknown as ComponentContract;
+    const ir = buildComponentIR(host, {
+      allContracts: corpus(host, ButtonContract),
+    });
+    const inst = ir.dom?.children[0].componentInstance;
+    const ariaBinding = inst?.bindings.find((b) => b.sourceAttr === "ariaLabel");
+    expect(ariaBinding?.kind).toBe("prop");
+    expect(ariaBinding?.targetProp).toBe("ariaLabel");
+    // Events are carried separately, never prop-classified.
+    expect(inst?.events).toEqual([
+      { name: "click", expr: { kind: "prop", prop: "onDismiss" } },
+    ]);
+  });
+});

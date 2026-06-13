@@ -605,12 +605,31 @@ function main(): void {
     process.exit(1);
   }
 
+  // Build a corpus map over the FULL discovered set (not just `filtered`/
+  // `validContracts`) so componentRef resolution can find a target even when
+  // generating a single component. Best-effort parse: a malformed contract is
+  // simply absent (its own validation reports it elsewhere). The IR builder
+  // uses this to resolve componentRef nodes into ComponentInstanceIR facts.
+  const corpusForIr = new Map<string, ComponentContract>();
+  for (const entry of discovered) {
+    try {
+      const parsed = JSON.parse(
+        fs.readFileSync(entry.absPath, "utf-8"),
+      ) as ComponentContract;
+      if (parsed && typeof parsed.name === "string") {
+        corpusForIr.set(parsed.name, parsed);
+      }
+    } catch {
+      // ignore — malformed contracts surface in their own validation
+    }
+  }
+
   // Build IRs once; emitters share them. Pair each IR with the
   // contract's provenance so emit time can stamp every artifact
   // group with its source contract revision.
   const irInputs: { ir: ComponentIR; provenance: ContractProvenance }[] =
     validContracts.map((input) => ({
-      ir: buildComponentIR(input.contract),
+      ir: buildComponentIR(input.contract, { allContracts: corpusForIr }),
       provenance: input.provenance,
     }));
   const irs: ComponentIR[] = irInputs.map((x) => x.ir);
@@ -1351,7 +1370,21 @@ function startWatch(
           console.error(formatIssues(result.issues));
           return;
         }
-        const ir = buildComponentIR(result.value);
+        // Rebuild the corpus map on each change so componentRef resolution
+        // sees current sibling contracts (dev path — a full `generate` is the
+        // authority; a momentarily stale sibling here is acceptable).
+        const watchCorpus = new Map<string, ComponentContract>();
+        for (const e of listComponentContracts(CONTRACTS_DIR)) {
+          try {
+            const c = JSON.parse(
+              fs.readFileSync(e.absPath, "utf-8"),
+            ) as ComponentContract;
+            if (c && typeof c.name === "string") watchCorpus.set(c.name, c);
+          } catch {
+            // ignore malformed siblings
+          }
+        }
+        const ir = buildComponentIR(result.value, { allContracts: watchCorpus });
         if (!surfaceTypeDiagnostics([ir], args.strictTypes, initialTargets))
           return;
         const provenance: ContractProvenance = {

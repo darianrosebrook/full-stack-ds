@@ -104,7 +104,7 @@ export function Alert({
     )}
     {children}
     {dismissible && (
-      <Button className="alert__dismiss" type="button" onClick={onDismiss} aria-label={dismissLabel} />
+      <Button className="alert__dismiss" type="button" onClick={onDismiss} ariaLabel={dismissLabel} />
     )}
   </Stack>
   );

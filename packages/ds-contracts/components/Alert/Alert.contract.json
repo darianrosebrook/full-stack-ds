@@ -74,7 +74,7 @@
             "type": "button"
           },
           "bindings": {
-            "aria-label": "prop:dismissLabel"
+            "ariaLabel": "prop:dismissLabel"
           },
           "events": {
             "click": "prop:onDismiss"

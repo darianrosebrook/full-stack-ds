@@ -53,6 +53,6 @@ const classes = $derived(
   {/if}
   {@render children?.()}
   {#if dismissible}
-  <Button class={'alert__dismiss'} type="button" onclick={onDismiss} aria-label={dismissLabel} />
+  <Button class={'alert__dismiss'} type="button" onclick={onDismiss} ariaLabel={dismissLabel} />
   {/if}
 </div>

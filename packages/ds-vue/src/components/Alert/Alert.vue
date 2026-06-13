@@ -57,6 +57,6 @@ const classNames = computed(() => [
       {{ props.icon }}
     </span>
     <slot />
-    <Button v-if="props.dismissible" :class="'alert__dismiss'" type="button" @click="props.onDismiss?.()" :aria-label="props.dismissLabel" />
+    <Button v-if="props.dismissible" :class="'alert__dismiss'" type="button" @click="props.onDismiss?.()" :ariaLabel="props.dismissLabel" />
   </div>
 </template>

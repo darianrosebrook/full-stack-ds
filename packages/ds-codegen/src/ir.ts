@@ -338,6 +338,16 @@ export interface DomNodeIR {
    */
   componentRef: string | undefined;
   /**
+   * Resolved by-reference composition fact. Present only when `componentRef`
+   * is set AND the IR builder was given the contract corpus (`allContracts`).
+   * Carries the target's resolved layer and each binding/attr already
+   * CLASSIFIED against the target's prop surface, so emitters do last-mile
+   * syntax only and never re-interpret the contract (normal-form property 4).
+   * Undefined when the corpus was not supplied — emitters then fall back to
+   * the bare-name path using the raw `bindings`/`attrs`/`events` fields.
+   */
+  componentInstance?: ComponentInstanceIR;
+  /**
    * Named-slot identifier — only set when `tag === "slot"` and the contract
    * declared a `name` for the slot. Each framework emitter maps this to its
    * idiom (Vue/Lit `<slot name=...>`, React `slots.<name>`, etc.). Absent
@@ -390,6 +400,65 @@ export interface DomNodeIR {
    * contract for deterministic emission.
    */
   cssVarBindings: CssVarBindingIR[];
+}
+
+/**
+ * How a binding/attr on a `componentRef` node reaches the referenced component,
+ * decided ONCE in the IR by classifying against the target's prop surface.
+ * Emitters read `kind` and pick syntax; they never re-derive this.
+ *
+ *  - `prop`: the target contract declares a matching prop → emit as a component
+ *    prop (React `prop={}`, Vue `:prop`, Svelte `prop={}`, Angular `[prop]`,
+ *    Lit `.prop=`, RN `prop={}`). `targetProp` is the resolved prop name.
+ *  - `attribute`: no matching prop, but a valid host attribute (e.g. `data-*`)
+ *    → pass through as an attribute on the underlying element (Angular
+ *    `[attr.x]`, Lit `x=`, React/Vue/Svelte/RN as a literal-named prop/attr).
+ */
+export interface ResolvedRefBinding {
+  kind: "prop" | "attribute";
+  /** Resolved target prop name when `kind === "prop"` (e.g. "ariaLabel"). */
+  targetProp?: string;
+  /** Contract-authored source name (e.g. "aria-label", "data-id", "src"). */
+  sourceAttr: string;
+  /** The binding expression (absent for static attrs — see ResolvedRefAttr). */
+  expr: BindingExpression;
+}
+
+/** A static attribute on a componentRef node, classified like a binding. */
+export interface ResolvedRefAttr {
+  kind: "prop" | "attribute";
+  targetProp?: string;
+  sourceAttr: string;
+  value: string;
+}
+
+/** An event handler bound on a componentRef node. Events are component
+ *  callbacks (React `onX`, Vue `@x`, Angular `(x)`, Lit `@x`, RN `onX`) and are
+ *  never classified against the prop surface — they target the component's
+ *  event/callback channel or pass through as an HTML event handler. */
+export interface ResolvedRefEvent {
+  /** Unprefixed event name (`click`, `change`). */
+  name: string;
+  expr: BindingExpression;
+}
+
+/**
+ * Resolved by-reference composition fact (CODEGEN-RECURSIVE-COMPOSITION-01).
+ * The IR's single source of truth for "this node renders component X" — what
+ * every emitter consumes instead of re-deriving import + binding semantics.
+ * Additive, modeled on `TokenFactIR`; the FIRST cross-contract fact in the IR.
+ */
+export interface ComponentInstanceIR {
+  /** Bare referenced component name, e.g. "Image", "Button". */
+  ref: string;
+  /** Resolved layer of the target, from its contract (as-declared). */
+  targetLayer: ComponentContract["layer"];
+  /** Dynamic bindings, each classified against the target's prop surface. */
+  bindings: ResolvedRefBinding[];
+  /** Static attrs, each classified against the target's prop surface. */
+  attrs: ResolvedRefAttr[];
+  /** Event handlers — component callbacks, not prop-classified. */
+  events: ResolvedRefEvent[];
 }
 
 /**
@@ -1055,7 +1124,32 @@ export interface BuildComponentIROptions {
    * default for framework-neutral validation.
    */
   extraKnownTypes?: ReadonlySet<string>;
+  /**
+   * The full contract corpus, keyed by component name. Required to resolve
+   * `componentRef` nodes into a typed `ComponentInstanceIR` (target layer +
+   * bindings classified against the target's prop surface). When omitted, a
+   * componentRef node is carried unresolved (`componentInstance` undefined)
+   * and emitters fall back to the bare-name path — single-contract callers
+   * that don't supply the corpus get no cross-contract resolution, but the
+   * generation gate (cli.ts) always supplies it. This is the first
+   * cross-contract input to the otherwise single-contract IR projection;
+   * determinism (property 2) is preserved because the resolution is pure
+   * given the corpus bytes.
+   */
+  allContracts?: ReadonlyMap<string, ComponentContract>;
 }
+
+/**
+ * Layer ladder for by-reference composition, shared by the IR resolver and the
+ * semantic validator. A contract may only reference a component whose layer is
+ * lower-or-equal in this order (CODEGEN-RECURSIVE-COMPOSITION-01).
+ */
+export const LAYER_ORDER: Record<string, number> = {
+  primitive: 0,
+  compound: 1,
+  composer: 2,
+  assembly: 3,
+};
 
 export function buildComponentIR(
   contract: ComponentContract,
@@ -1106,6 +1200,16 @@ export function buildComponentIR(
       contract.name,
       cssPrefix,
     );
+  }
+
+  // CODEGEN-RECURSIVE-COMPOSITION-01: resolve componentRef nodes into typed
+  // ComponentInstanceIR facts. This is the single place componentRef bindings
+  // are interpreted (normal-form property 2): classify each against the
+  // target's prop surface, resolve the target layer, fail loud on an unknown
+  // target prop / unresolved ref / layer violation. Runs only when the corpus
+  // was supplied; emitters fall back to the bare-name path otherwise.
+  if (dom && options?.allContracts) {
+    resolveComponentInstances(dom, contract, options.allContracts);
   }
 
   // A11Y-CONTRACT-OBLIGATION-VALIDATOR-01: throw on static ARIA roles
@@ -1718,6 +1822,98 @@ function buildDomTree(contract: ComponentContract): DomNodeIR | undefined {
   // resolved, so promotion cannot happen during the initial walk.
   promoteIterationLocalsInTree(root, undefined);
   return root;
+}
+
+/**
+ * Set of HTML attribute names that may legitimately pass THROUGH to a composed
+ * component as host attributes (not props). Kept deliberately small — the rule
+ * is "name the target's prop"; passthrough is the escape hatch for genuine
+ * host attributes (analytics/test hooks) that no component models as a prop.
+ */
+const REF_HOST_ATTR_PREFIXES = ["data-", "aria-"] as const;
+
+function isRefHostAttribute(name: string): boolean {
+  return REF_HOST_ATTR_PREFIXES.some((p) => name.startsWith(p));
+}
+
+/**
+ * Walk the dom tree and resolve every `componentRef` node into a typed
+ * `ComponentInstanceIR` (CODEGEN-RECURSIVE-COMPOSITION-01). For each ref:
+ *   1. Resolve the target contract from the corpus (throw if unknown).
+ *   2. Enforce layer ordering: target layer ≤ host layer (throw otherwise).
+ *   3. Classify each binding/attr against the target's prop surface:
+ *        - matches a target prop → kind:"prop" (targetProp = that prop name).
+ *        - else a valid host attribute (data-/aria-) → kind:"attribute".
+ *        - else → throw (the contract named neither a target prop nor a host
+ *          attribute — fail loud, normal-form property 5).
+ *   4. Events pass through as component callbacks (not prop-classified).
+ * Mutates the tree in place (fresh out of buildDomTree, not yet exposed).
+ */
+function resolveComponentInstances(
+  node: DomNodeIR,
+  host: ComponentContract,
+  allContracts: ReadonlyMap<string, ComponentContract>,
+): void {
+  if (node.componentRef !== undefined) {
+    const ref = node.componentRef;
+    const target = allContracts.get(ref);
+    if (!target) {
+      throw new Error(
+        `${host.name}: componentRef "fsds.${ref}" does not resolve to a known ` +
+          `component contract. Every referenced component must exist in the corpus.`,
+      );
+    }
+    const hostRank = host.layer ? LAYER_ORDER[host.layer] : undefined;
+    const targetRank = target.layer ? LAYER_ORDER[target.layer] : undefined;
+    if (hostRank !== undefined && targetRank !== undefined && targetRank > hostRank) {
+      throw new Error(
+        `${host.name}: componentRef "fsds.${ref}" targets a higher layer ` +
+          `(${target.layer}) than this ${host.layer} component. A component may ` +
+          `only reference a lower-or-equal layer in the ladder ` +
+          `primitive < compound < composer < assembly.`,
+      );
+    }
+    const targetProps = new Set(getPropMembers(target).map((p) => p.name));
+
+    const classify = (
+      sourceAttr: string,
+    ): { kind: "prop" | "attribute"; targetProp?: string } => {
+      if (targetProps.has(sourceAttr)) {
+        return { kind: "prop", targetProp: sourceAttr };
+      }
+      if (isRefHostAttribute(sourceAttr)) {
+        return { kind: "attribute" };
+      }
+      throw new Error(
+        `${host.name}: componentRef "fsds.${ref}" binds "${sourceAttr}", which ` +
+          `is neither a declared prop on ${ref} nor a host attribute (data-*/aria-*). ` +
+          `componentRef bindings must name the TARGET component's prop directly ` +
+          `(e.g. bind "invalid", not "aria-invalid", when ${ref} exposes an ` +
+          `"invalid" prop). Declared ${ref} props: ${[...targetProps].join(", ") || "(none)"}.`,
+      );
+    };
+
+    const bindings: ResolvedRefBinding[] = Object.entries(node.bindings).map(
+      ([sourceAttr, expr]) => ({ ...classify(sourceAttr), sourceAttr, expr }),
+    );
+    const attrs: ResolvedRefAttr[] = Object.entries(node.attrs).map(
+      ([sourceAttr, value]) => ({ ...classify(sourceAttr), sourceAttr, value }),
+    );
+    const events: ResolvedRefEvent[] = Object.entries(node.events).map(
+      ([name, expr]) => ({ name, expr }),
+    );
+
+    node.componentInstance = {
+      ref,
+      targetLayer: target.layer,
+      bindings,
+      attrs,
+      events,
+    };
+  }
+  for (const child of node.children) {
+    resolveComponentInstances(child, host, allContracts);
+  }
 }
 
 /**

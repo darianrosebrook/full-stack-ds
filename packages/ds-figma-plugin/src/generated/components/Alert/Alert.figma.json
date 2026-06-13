@@ -43,7 +43,7 @@
     {
       "name": "dismiss",
       "semanticElement": null,
-      "nativeTag": "button",
+      "nativeTag": null,
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
