@@ -1,5 +1,6 @@
 // @generated:start imports
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
+import { Stack } from "../../primitives";
 import "./Table.css";
 // @generated:end
 

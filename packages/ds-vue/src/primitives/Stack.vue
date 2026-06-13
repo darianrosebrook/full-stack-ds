@@ -4,16 +4,18 @@ import { computed } from "vue";
 export interface StackProps {
   as?: string;
   variant?: "vertical" | "horizontal";
+  layout?: "stack" | "inline-stack" | "block" | "inline" | "contents" | "native";
   className?: string;
 }
 
 const props = withDefaults(defineProps<StackProps>(), {
   as: "div",
   variant: "vertical",
+  layout: "stack",
 });
 
 const classNames = computed(() =>
-  ["stack", `stack--${props.variant}`, props.className]
+  ["stack", `stack--layout-${props.layout}`, `stack--${props.variant}`, props.className]
     .filter(Boolean)
     .join(" "),
 );
@@ -27,7 +29,22 @@ const classNames = computed(() =>
 
 <style scoped>
 .stack {
+  box-sizing: border-box;
+}
+.stack--layout-stack {
   display: flex;
+}
+.stack--layout-inline-stack {
+  display: inline-flex;
+}
+.stack--layout-block {
+  display: block;
+}
+.stack--layout-inline {
+  display: inline;
+}
+.stack--layout-contents {
+  display: contents;
 }
 .stack--vertical {
   flex-direction: column;

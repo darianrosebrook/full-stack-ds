@@ -135,8 +135,8 @@ export function generateReactComponentSource(
     );
   const needsStackImport =
     !isCompound &&
-    !allCompoundPartsNative &&
-    (!ir.dom || reactDomRootUsesStack(ir) || ir.compoundParts.length > 0);
+    (reactDomRootUsesStack(ir) ||
+      (!allCompoundPartsNative && (!ir.dom || ir.compoundParts.length > 0)));
   if (needsStackImport) {
     importLines.push(`import { Stack } from "${stackImportPath}";`);
   }

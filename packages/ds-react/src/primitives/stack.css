@@ -1,6 +1,25 @@
 .stack {
-  display: flex;
   box-sizing: border-box;
+}
+
+.stack--layout-stack {
+  display: flex;
+}
+
+.stack--layout-inline-stack {
+  display: inline-flex;
+}
+
+.stack--layout-block {
+  display: block;
+}
+
+.stack--layout-inline {
+  display: inline;
+}
+
+.stack--layout-contents {
+  display: contents;
 }
 
 .stack--vertical {

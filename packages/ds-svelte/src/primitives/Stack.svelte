@@ -1,6 +1,7 @@
 <script lang="ts">
   interface Props {
     variant?: 'vertical' | 'horizontal';
+    layout?: 'stack' | 'inline-stack' | 'block' | 'inline' | 'contents' | 'native';
     as?: keyof HTMLElementTagNameMap;
     role?: string;
     class?: string;
@@ -10,6 +11,7 @@
 
   let {
     variant = 'vertical',
+    layout = 'stack',
     as = 'div',
     role,
     class: className,
@@ -18,10 +20,44 @@
   }: Props = $props();
 
   const classes = $derived(
-    ['FSDS-stack', `FSDS-stack--${variant}`, className].filter(Boolean).join(' ')
+    ['FSDS-stack', `FSDS-stack--layout-${layout}`, `FSDS-stack--${variant}`, className].filter(Boolean).join(' ')
   );
 </script>
 
 <svelte:element this={as} class={classes} {role} data-testid={dataTestid}>
   {@render children?.()}
 </svelte:element>
+
+<style>
+  .FSDS-stack {
+    box-sizing: border-box;
+  }
+
+  .FSDS-stack--layout-stack {
+    display: flex;
+  }
+
+  .FSDS-stack--layout-inline-stack {
+    display: inline-flex;
+  }
+
+  .FSDS-stack--layout-block {
+    display: block;
+  }
+
+  .FSDS-stack--layout-inline {
+    display: inline;
+  }
+
+  .FSDS-stack--layout-contents {
+    display: contents;
+  }
+
+  .FSDS-stack--vertical {
+    flex-direction: column;
+  }
+
+  .FSDS-stack--horizontal {
+    flex-direction: row;
+  }
+</style>
