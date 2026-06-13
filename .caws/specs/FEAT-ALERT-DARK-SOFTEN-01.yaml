@@ -2,10 +2,11 @@ id: FEAT-ALERT-DARK-SOFTEN-01
 title: 'Dark-mode fidelity: soften intent subtle dark backgrounds (.800->.900) and restore + enrich per-brand dark identity (design.paths->fsds key migration + brand token enrichment)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: dark-fidelity
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge dark-fidelity at dff19aa2ba0c94d09f4e0f6a16fe9819bfcb305e'
 created_at: '2026-06-13T10:41:51.912Z'
-updated_at: '2026-06-13T10:44:30.622Z'
+updated_at: '2026-06-13T11:20:49.307Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src/color/semantic (intent subtle dark .800->.900)'
