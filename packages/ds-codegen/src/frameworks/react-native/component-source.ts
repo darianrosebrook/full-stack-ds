@@ -1656,6 +1656,10 @@ const CSS_TO_RN_STYLE: Record<string, RnStylePropMapping> = {
   "border-color": { prop: "borderColor", cast: "string | undefined", layer: "view" },
   "border-width": { prop: "borderWidth", cast: "number | undefined", layer: "view" },
   "border-radius": { prop: "borderRadius", cast: "number | undefined", layer: "view" },
+  "border-inline-start-width": { prop: "borderLeftWidth", cast: "number | undefined", layer: "view" },
+  "border-inline-start-color": { prop: "borderLeftColor", cast: "string | undefined", layer: "view" },
+  "border-inline-end-width": { prop: "borderRightWidth", cast: "number | undefined", layer: "view" },
+  "border-inline-end-color": { prop: "borderRightColor", cast: "string | undefined", layer: "view" },
   "padding-block-start": { prop: "paddingTop", cast: "number | undefined", layer: "view" },
   "padding-block-end": { prop: "paddingBottom", cast: "number | undefined", layer: "view" },
   "padding-inline-start": { prop: "paddingLeft", cast: "number | undefined", layer: "view" },
@@ -2038,6 +2042,17 @@ function nativeStyleForKey(ir: ComponentIR, key: string): string {
         ".size.radius",
         ".radius.default",
         ".radius",
+      ]));
+      // Inline-start accent stripe (logical border-inline-start → physical borderLeft on RN).
+      // Emitted only when the contract declares an accent-stripe width slot, so the
+      // variant blocks' borderLeftColor has a base width to render against.
+      pushStyle(entries, "borderLeftWidth", tokenNumberByName(ir, scope, [
+        ".size.statusAccent.width",
+        ".statusAccent.width",
+      ]));
+      pushStyle(entries, "borderLeftColor", tokenStringByName(ir, scope, [
+        ".color.statusAccent.default",
+        ".statusAccent.default",
       ]));
     }
   }

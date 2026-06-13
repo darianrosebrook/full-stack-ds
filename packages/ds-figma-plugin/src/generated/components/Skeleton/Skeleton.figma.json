@@ -315,6 +315,17 @@
         }
       },
       {
+        "selector": ".skeleton--wipe::after",
+        "declarations": {
+          "content": "\"\"",
+          "position": "absolute",
+          "inset": "0",
+          "background": "linear-gradient(90deg, transparent, var(--fsds-skeleton-color-highlight, rgba(255,255,255,0.55)), transparent)",
+          "transform": "translateX(-100%)",
+          "animation": "skeleton-wipe calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite"
+        }
+      },
+      {
         "selector": ".skeleton--pulse",
         "declarations": {
           "animation": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 3) ease-in-out infinite"
@@ -365,6 +376,23 @@
             "selector": "100%",
             "declarations": {
               "opacity": "1"
+            }
+          }
+        ]
+      },
+      {
+        "name": "skeleton-wipe",
+        "frames": [
+          {
+            "selector": "0%",
+            "declarations": {
+              "transform": "translateX(-100%)"
+            }
+          },
+          {
+            "selector": "100%",
+            "declarations": {
+              "transform": "translateX(100%)"
             }
           }
         ]
