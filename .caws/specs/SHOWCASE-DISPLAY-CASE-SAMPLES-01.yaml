@@ -2,9 +2,10 @@ id: SHOWCASE-DISPLAY-CASE-SAMPLES-01
 title: 'Improve display-case sample readability'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
 created_at: '2026-06-13T00:00:00.000Z'
-updated_at: '2026-06-13T00:00:00.000Z'
+updated_at: '2026-06-13T08:34:12.584Z'
 blast_radius:
   modules:
     - 'Hidden showcase display-case route and app CSS only. No generated components, contracts, or emitters.'
