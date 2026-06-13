@@ -57,7 +57,7 @@ export class TableElement extends LitElement {
       --fsds-table-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-table-focus-offset: var(--fsds-core-spacing-size-01, 1px);
     }
-    
+
     .table {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -74,16 +74,16 @@ export class TableElement extends LitElement {
       font-size: var(--fsds-table-text-size);
       line-height: var(--fsds-table-text-lineHeight);
       overflow-x: auto;
-    
+
       &:hover {
         background-color: var(--fsds-table-color-background-hover);
       }
-    
+
       &[aria-selected="true"] {
         background-color: var(--fsds-table-color-background-selected);
       }
     }
-    
+
     .table__container {
       border-collapse: collapse;
       border-color: var(--fsds-table-color-border);
@@ -91,22 +91,22 @@ export class TableElement extends LitElement {
       border-radius: var(--fsds-table-size-radius);
       width: 100%;
     }
-    
+
     .table__caption {
       font-size: var(--fsds-table-text-sizeCaption);
       text-align: start;
       padding-bottom: var(--fsds-table-spacing-caption);
     }
-    
+
     .table__head {
       background-color: var(--fsds-table-color-background-footer);
     }
-    
+
     .table__footer {
       background-color: var(--fsds-table-color-background-footer);
       font-weight: var(--fsds-table-text-weightFooter);
     }
-    
+
     .table__headerCell {
       font-weight: var(--fsds-table-text-weightHead);
       color: var(--fsds-table-color-text);
@@ -119,7 +119,7 @@ export class TableElement extends LitElement {
       border-bottom-style: solid;
       text-align: start;
     }
-    
+
     .table__cell {
       padding-left: var(--fsds-table-spacing-cellX);
       padding-right: var(--fsds-table-spacing-cellX);

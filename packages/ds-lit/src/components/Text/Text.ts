@@ -57,89 +57,89 @@ export class TextElement extends LitElement {
       --fsds-text-size-2xl: var(--fsds-core-typography-ramp-7, 1.5rem);
       --fsds-text-size-3xl: var(--fsds-core-typography-ramp-8, 2rem);
     }
-    
+
     .text--display {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-11, 3.75rem);
       --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .text--headline {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-8, 2rem);
       --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .text--title {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-6, 1.25rem);
       --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .text--body {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-4, 1rem);
       --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
     }
-    
+
     .text--caption {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-2, 0.75rem);
       --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
     }
-    
+
     .text--overline {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-2, 0.75rem);
       --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
-    
+
     .text--code {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-3, 0.875rem);
     }
-    
+
     .text--xs {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-2, 0.75rem);
     }
-    
+
     .text--sm {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-3, 0.875rem);
     }
-    
+
     .text--md {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-4, 1rem);
     }
-    
+
     .text--lg {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-5, 1.125rem);
     }
-    
+
     .text--xl {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-6, 1.25rem);
     }
-    
+
     .text--2xl {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-7, 1.5rem);
     }
-    
+
     .text--3xl {
       --fsds-text-size-md: var(--fsds-core-typography-ramp-8, 2rem);
     }
-    
+
     .text--light {
       --fsds-text-typography-fontWeight-light: var(--fsds-semantic-typography-font-weight-light, 300);
     }
-    
+
     .text--normal {
       --fsds-text-typography-fontWeight-regular: var(--fsds-semantic-typography-font-weight-regular, 400);
     }
-    
+
     .text--medium {
       --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
-    
+
     .text--semibold {
       --fsds-text-typography-fontWeight-medium: var(--fsds-semantic-typography-font-weight-semibold, 600);
     }
-    
+
     .text--bold {
       --fsds-text-typography-fontWeight-bold: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .text {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -157,39 +157,39 @@ export class TextElement extends LitElement {
       line-height: var(--fsds-text-typography-lineHeight-body);
       margin: 0;
     }
-    
+
     .text--display {
       font-size: var(--fsds-text-size-md);
       font-weight: var(--fsds-text-typography-fontWeight-bold);
       line-height: var(--fsds-text-typography-lineHeight-heading);
       letter-spacing: var(--fsds-text-typography-letterSpacing-tight);
     }
-    
+
     .text--headline {
       font-size: var(--fsds-text-size-md);
       font-weight: var(--fsds-text-typography-fontWeight-bold);
       line-height: var(--fsds-text-typography-lineHeight-heading);
       letter-spacing: var(--fsds-text-typography-letterSpacing-tight);
     }
-    
+
     .text--title {
       font-size: var(--fsds-text-size-md);
       font-weight: var(--fsds-text-typography-fontWeight-bold);
       line-height: var(--fsds-text-typography-lineHeight-heading);
     }
-    
+
     .text--body {
       font-size: var(--fsds-text-size-md);
       font-weight: var(--fsds-text-typography-fontWeight-regular);
       line-height: var(--fsds-text-typography-lineHeight-body);
     }
-    
+
     .text--caption {
       font-size: var(--fsds-text-size-md);
       font-weight: var(--fsds-text-typography-fontWeight-regular);
       line-height: var(--fsds-text-typography-lineHeight-tight);
     }
-    
+
     .text--overline {
       font-size: var(--fsds-text-size-md);
       font-weight: var(--fsds-text-typography-fontWeight-medium);
@@ -197,97 +197,97 @@ export class TextElement extends LitElement {
       text-transform: uppercase;
       letter-spacing: var(--fsds-text-typography-letterSpacing-wide);
     }
-    
+
     .text--code {
       font-size: var(--fsds-text-size-md);
       font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
       line-height: var(--fsds-text-typography-lineHeight-body);
     }
-    
+
     .text--xs {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--sm {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--md {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--lg {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--xl {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--2xl {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--3xl {
       font-size: var(--fsds-text-size-md);
     }
-    
+
     .text--light {
       font-weight: var(--fsds-text-typography-fontWeight-light);
     }
-    
+
     .text--normal {
       font-weight: var(--fsds-text-typography-fontWeight-regular);
     }
-    
+
     .text--medium {
       font-weight: var(--fsds-text-typography-fontWeight-medium);
     }
-    
+
     .text--semibold {
       font-weight: var(--fsds-text-typography-fontWeight-medium);
     }
-    
+
     .text--bold {
       font-weight: var(--fsds-text-typography-fontWeight-bold);
     }
-    
+
     .text--left {
       text-align: left;
     }
-    
+
     .text--center {
       text-align: center;
     }
-    
+
     .text--right {
       text-align: right;
     }
-    
+
     .text--justify {
       text-align: justify;
     }
-    
+
     .text--none {
       text-transform: none;
     }
-    
+
     .text--uppercase {
       text-transform: uppercase;
     }
-    
+
     .text--lowercase {
       text-transform: lowercase;
     }
-    
+
     .text--capitalize {
       text-transform: capitalize;
     }
-    
+
     .text__error {
       color: var(--fsds-semantic-color-feedback-foreground-danger-default, #d9292b);
     }
-    
+
     .text__success {
       color: var(--fsds-semantic-color-feedback-foreground-success-default, #1f8a4c);
     }

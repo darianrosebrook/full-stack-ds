@@ -52,19 +52,19 @@ export class LinksElement extends LitElement {
       --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
       --fsds-links-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);
     }
-    
+
     .links--small {
       --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
     }
-    
+
     .links--medium {
       --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
     }
-    
+
     .links--large {
       --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-5, 1.125rem);
     }
-    
+
     .links {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -85,23 +85,23 @@ export class LinksElement extends LitElement {
       transition-property: color, text-decoration-color;
       transition-duration: var(--fsds-links-motion-duration-fast);
       cursor: pointer;
-    
+
       &:hover {
         color: var(--fsds-links-color-foreground-hover);
         text-decoration-color: var(--fsds-links-color-foreground-hover);
       }
-    
+
       &:visited {
         color: var(--fsds-links-color-foreground-visited);
       }
-    
+
       &:disabled {
         color: var(--fsds-links-color-foreground-disabled);
         cursor: not-allowed;
         text-decoration-line: none;
         pointer-events: none;
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-links-focus-ring-width);
         outline-color: var(--fsds-links-focus-ring-color);
@@ -110,15 +110,15 @@ export class LinksElement extends LitElement {
         border-radius: var(--fsds-links-focus-ring-radius);
       }
     }
-    
+
     .links--small {
       font-size: var(--fsds-links-size-fontSize-medium);
     }
-    
+
     .links--medium {
       font-size: var(--fsds-links-size-fontSize-medium);
     }
-    
+
     .links--large {
       font-size: var(--fsds-links-size-fontSize-medium);
     }

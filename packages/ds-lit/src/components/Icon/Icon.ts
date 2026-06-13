@@ -38,7 +38,7 @@ export class IconElement extends LitElement {
       --fsds-icon-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-icon-size-padding-default: var(--fsds-core-spacing-size-01, 1px);
     }
-    
+
     .icon {
       display: inline-flex;
       align-items: center;

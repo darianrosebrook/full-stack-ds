@@ -53,7 +53,7 @@ export class ImageElement extends LitElement {
       --fsds-image-radius-lg: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-image-radius-full: var(--fsds-semantic-shape-radius-full, 9999px);
     }
-    
+
     .image {
       display: block;
       padding-block-start: var(--fsds-box-model-padding-block-start);
@@ -70,53 +70,53 @@ export class ImageElement extends LitElement {
       background-color: var(--fsds-image-color-background-default);
       color: var(--fsds-image-color-foreground-primary);
     }
-    
+
     .image--size-xs {
       width: var(--fsds-image-size-xs);
       height: var(--fsds-image-size-xs);
     }
-    
+
     .image--size-sm {
       width: var(--fsds-image-size-sm);
       height: var(--fsds-image-size-sm);
     }
-    
+
     .image--size-md {
       width: var(--fsds-image-size-md);
       height: var(--fsds-image-size-md);
     }
-    
+
     .image--size-lg {
       width: var(--fsds-image-size-lg);
       height: var(--fsds-image-size-lg);
     }
-    
+
     .image--size-xl {
       width: var(--fsds-image-size-xl);
       height: var(--fsds-image-size-xl);
     }
-    
+
     .image--size-full {
       width: 100%;
       height: auto;
     }
-    
+
     .image--radius-none {
       border-radius: var(--fsds-image-radius-none);
     }
-    
+
     .image--radius-sm {
       border-radius: var(--fsds-image-radius-sm);
     }
-    
+
     .image--radius-md {
       border-radius: var(--fsds-image-radius-md);
     }
-    
+
     .image--radius-lg {
       border-radius: var(--fsds-image-radius-lg);
     }
-    
+
     .image--radius-full {
       border-radius: var(--fsds-image-radius-full);
     }

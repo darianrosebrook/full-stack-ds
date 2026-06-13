@@ -59,26 +59,26 @@ export class FieldElement extends LitElement {
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .field--idle {
       --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .field--validating {
       --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .field--valid {
       --fsds-field-color-border: var(--fsds-semantic-color-feedback-border-success, #336006);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-success, #336006);
     }
-    
+
     .field--invalid {
       --fsds-field-color-border: var(--fsds-semantic-color-border-danger, #ae0001);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
-    
+
     .field {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -95,21 +95,21 @@ export class FieldElement extends LitElement {
       flex-direction: column;
       border-radius: var(--fsds-field-radius);
     }
-    
+
     .field__label {
       display: inline-block;
       font-size: var(--fsds-field-label-fontSize);
       font-weight: 500;
       color: var(--fsds-field-label-color);
     }
-    
+
     .field__header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
       gap: var(--fsds-field-gap-meta);
     }
-    
+
     .field__control {
       display: flex;
       flex-direction: column;
@@ -122,32 +122,32 @@ export class FieldElement extends LitElement {
       background-color: var(--fsds-field-color-bg);
       padding: var(--fsds-field-pad-x);
     }
-    
+
     .field__help {
       display: block;
       font-size: 0.875em;
       color: var(--fsds-field-color-fg);
     }
-    
+
     .field__error {
       display: block;
       font-size: 0.875em;
       color: var(--fsds-field-color-invalid-text);
     }
-    
+
     .field__meta {
       display: flex;
       flex-direction: column;
       gap: var(--fsds-field-gap-meta);
     }
-    
+
     .field__validatingIndicator {
       display: inline-flex;
       width: 1em;
       height: 1em;
       color: var(--fsds-field-color-fg);
     }
-    
+
     .field__control:focus-within {
       border-color: var(--fsds-field-color-focus-border);
       outline-width: var(--fsds-field-focus-ring-width);
@@ -155,16 +155,16 @@ export class FieldElement extends LitElement {
       outline-style: var(--fsds-field-focus-ring-style);
       outline-offset: var(--fsds-field-focus-ring-offset);
     }
-    
+
     .field--invalid .field__control {
       border-color: var(--fsds-field-color-invalid-border);
     }
-    
+
     .field--disabled .field__control {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+
     .field--valid .field__control {
       border-color: var(--fsds-field-color-valid-border);
     }
@@ -269,26 +269,26 @@ export class FieldHeaderElement extends LitElement {
       --fsds-field-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-field-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .field--idle {
       --fsds-field-color-border: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .field--validating {
       --fsds-field-color-border: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .field--valid {
       --fsds-field-color-border: var(--fsds-semantic-color-feedback-border-success, #336006);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-success, #336006);
     }
-    
+
     .field--invalid {
       --fsds-field-color-border: var(--fsds-semantic-color-border-danger, #ae0001);
       --fsds-field-color-fg: var(--fsds-semantic-color-foreground-danger, #d9292b);
     }
-    
+
     .field {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -305,21 +305,21 @@ export class FieldHeaderElement extends LitElement {
       flex-direction: column;
       border-radius: var(--fsds-field-radius);
     }
-    
+
     .field__label {
       display: inline-block;
       font-size: var(--fsds-field-label-fontSize);
       font-weight: 500;
       color: var(--fsds-field-label-color);
     }
-    
+
     .field__header {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
       gap: var(--fsds-field-gap-meta);
     }
-    
+
     .field__control {
       display: flex;
       flex-direction: column;
@@ -332,32 +332,32 @@ export class FieldHeaderElement extends LitElement {
       background-color: var(--fsds-field-color-bg);
       padding: var(--fsds-field-pad-x);
     }
-    
+
     .field__help {
       display: block;
       font-size: 0.875em;
       color: var(--fsds-field-color-fg);
     }
-    
+
     .field__error {
       display: block;
       font-size: 0.875em;
       color: var(--fsds-field-color-invalid-text);
     }
-    
+
     .field__meta {
       display: flex;
       flex-direction: column;
       gap: var(--fsds-field-gap-meta);
     }
-    
+
     .field__validatingIndicator {
       display: inline-flex;
       width: 1em;
       height: 1em;
       color: var(--fsds-field-color-fg);
     }
-    
+
     .field__control:focus-within {
       border-color: var(--fsds-field-color-focus-border);
       outline-width: var(--fsds-field-focus-ring-width);
@@ -365,16 +365,16 @@ export class FieldHeaderElement extends LitElement {
       outline-style: var(--fsds-field-focus-ring-style);
       outline-offset: var(--fsds-field-focus-ring-offset);
     }
-    
+
     .field--invalid .field__control {
       border-color: var(--fsds-field-color-invalid-border);
     }
-    
+
     .field--disabled .field__control {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+
     .field--valid .field__control {
       border-color: var(--fsds-field-color-valid-border);
     }

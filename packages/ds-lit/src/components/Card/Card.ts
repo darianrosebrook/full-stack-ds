@@ -67,43 +67,43 @@ export class CardElement extends LitElement {
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .card--completed {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .card--in-progress {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .card--planned {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .card--deprecated {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .card--category {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
     }
-    
+
     .card--complexity {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .card__description {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card__link {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
     }
-    
+
     .card__note {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -133,12 +133,12 @@ export class CardElement extends LitElement {
       transition-property: box-shadow, border-color, background-color;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    
+
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
         box-shadow: var(--fsds-card-elevation-raised);
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
         outline-color: var(--fsds-card-color-focus-ring);
@@ -146,11 +146,11 @@ export class CardElement extends LitElement {
         outline-style: solid;
       }
     }
-    
+
     .card--inset {
       padding: var(--fsds-card-size-padding-inset);
     }
-    
+
     .card__header {
       display: flex;
       align-items: flex-start;
@@ -159,14 +159,14 @@ export class CardElement extends LitElement {
       line-height: var(--fsds-card-typography-lineHeight-heading);
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
       border-radius: var(--fsds-card-size-radius-default);
     }
-    
+
     .card__content {
       display: flex;
       flex-direction: column;
@@ -174,11 +174,11 @@ export class CardElement extends LitElement {
       flex: 1 1 auto;
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__description {
       margin: 0;
     }
-    
+
     .card__footer {
       display: flex;
       align-items: center;
@@ -190,13 +190,13 @@ export class CardElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .card__actions {
       display: flex;
       align-items: center;
       gap: var(--fsds-card-size-gap-default);
     }
-    
+
     .card__badge {
       display: inline-flex;
       align-items: center;
@@ -207,15 +207,15 @@ export class CardElement extends LitElement {
       font-size: 0.75em;
       line-height: 1.4;
     }
-    
+
     .card__link {
       text-decoration: none;
     }
-    
+
     .card__link:hover {
       text-decoration: underline;
     }
-    
+
     .card__note {
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
@@ -289,43 +289,43 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .card--completed {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .card--in-progress {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .card--planned {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .card--deprecated {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .card--category {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
     }
-    
+
     .card--complexity {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .card__description {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card__link {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
     }
-    
+
     .card__note {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -355,12 +355,12 @@ export class CardHeaderElement extends LitElement {
       transition-property: box-shadow, border-color, background-color;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    
+
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
         box-shadow: var(--fsds-card-elevation-raised);
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
         outline-color: var(--fsds-card-color-focus-ring);
@@ -368,11 +368,11 @@ export class CardHeaderElement extends LitElement {
         outline-style: solid;
       }
     }
-    
+
     .card--inset {
       padding: var(--fsds-card-size-padding-inset);
     }
-    
+
     .card__header {
       display: flex;
       align-items: flex-start;
@@ -381,14 +381,14 @@ export class CardHeaderElement extends LitElement {
       line-height: var(--fsds-card-typography-lineHeight-heading);
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
       border-radius: var(--fsds-card-size-radius-default);
     }
-    
+
     .card__content {
       display: flex;
       flex-direction: column;
@@ -396,11 +396,11 @@ export class CardHeaderElement extends LitElement {
       flex: 1 1 auto;
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__description {
       margin: 0;
     }
-    
+
     .card__footer {
       display: flex;
       align-items: center;
@@ -412,13 +412,13 @@ export class CardHeaderElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .card__actions {
       display: flex;
       align-items: center;
       gap: var(--fsds-card-size-gap-default);
     }
-    
+
     .card__badge {
       display: inline-flex;
       align-items: center;
@@ -429,15 +429,15 @@ export class CardHeaderElement extends LitElement {
       font-size: 0.75em;
       line-height: 1.4;
     }
-    
+
     .card__link {
       text-decoration: none;
     }
-    
+
     .card__link:hover {
       text-decoration: underline;
     }
-    
+
     .card__note {
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
@@ -499,43 +499,43 @@ export class CardContentElement extends LitElement {
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .card--completed {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .card--in-progress {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .card--planned {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .card--deprecated {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .card--category {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
     }
-    
+
     .card--complexity {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .card__description {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card__link {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
     }
-    
+
     .card__note {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -565,12 +565,12 @@ export class CardContentElement extends LitElement {
       transition-property: box-shadow, border-color, background-color;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    
+
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
         box-shadow: var(--fsds-card-elevation-raised);
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
         outline-color: var(--fsds-card-color-focus-ring);
@@ -578,11 +578,11 @@ export class CardContentElement extends LitElement {
         outline-style: solid;
       }
     }
-    
+
     .card--inset {
       padding: var(--fsds-card-size-padding-inset);
     }
-    
+
     .card__header {
       display: flex;
       align-items: flex-start;
@@ -591,14 +591,14 @@ export class CardContentElement extends LitElement {
       line-height: var(--fsds-card-typography-lineHeight-heading);
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
       border-radius: var(--fsds-card-size-radius-default);
     }
-    
+
     .card__content {
       display: flex;
       flex-direction: column;
@@ -606,11 +606,11 @@ export class CardContentElement extends LitElement {
       flex: 1 1 auto;
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__description {
       margin: 0;
     }
-    
+
     .card__footer {
       display: flex;
       align-items: center;
@@ -622,13 +622,13 @@ export class CardContentElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .card__actions {
       display: flex;
       align-items: center;
       gap: var(--fsds-card-size-gap-default);
     }
-    
+
     .card__badge {
       display: inline-flex;
       align-items: center;
@@ -639,15 +639,15 @@ export class CardContentElement extends LitElement {
       font-size: 0.75em;
       line-height: 1.4;
     }
-    
+
     .card__link {
       text-decoration: none;
     }
-    
+
     .card__link:hover {
       text-decoration: underline;
     }
-    
+
     .card__note {
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
@@ -709,43 +709,43 @@ export class CardFooterElement extends LitElement {
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .card--completed {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .card--in-progress {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .card--planned {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .card--deprecated {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .card--category {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
     }
-    
+
     .card--complexity {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .card__description {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card__link {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
     }
-    
+
     .card__note {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -775,12 +775,12 @@ export class CardFooterElement extends LitElement {
       transition-property: box-shadow, border-color, background-color;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    
+
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
         box-shadow: var(--fsds-card-elevation-raised);
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
         outline-color: var(--fsds-card-color-focus-ring);
@@ -788,11 +788,11 @@ export class CardFooterElement extends LitElement {
         outline-style: solid;
       }
     }
-    
+
     .card--inset {
       padding: var(--fsds-card-size-padding-inset);
     }
-    
+
     .card__header {
       display: flex;
       align-items: flex-start;
@@ -801,14 +801,14 @@ export class CardFooterElement extends LitElement {
       line-height: var(--fsds-card-typography-lineHeight-heading);
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
       border-radius: var(--fsds-card-size-radius-default);
     }
-    
+
     .card__content {
       display: flex;
       flex-direction: column;
@@ -816,11 +816,11 @@ export class CardFooterElement extends LitElement {
       flex: 1 1 auto;
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__description {
       margin: 0;
     }
-    
+
     .card__footer {
       display: flex;
       align-items: center;
@@ -832,13 +832,13 @@ export class CardFooterElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .card__actions {
       display: flex;
       align-items: center;
       gap: var(--fsds-card-size-gap-default);
     }
-    
+
     .card__badge {
       display: inline-flex;
       align-items: center;
@@ -849,15 +849,15 @@ export class CardFooterElement extends LitElement {
       font-size: 0.75em;
       line-height: 1.4;
     }
-    
+
     .card__link {
       text-decoration: none;
     }
-    
+
     .card__link:hover {
       text-decoration: underline;
     }
-    
+
     .card__note {
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);
@@ -919,43 +919,43 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .card--completed {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .card--in-progress {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .card--planned {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
     }
-    
+
     .card--deprecated {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .card--category {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-accent, #d9292b);
     }
-    
+
     .card--complexity {
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .card__description {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card__link {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-link, #d9292b);
     }
-    
+
     .card__note {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
     }
-    
+
     .card {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -985,12 +985,12 @@ export class CardDescriptionElement extends LitElement {
       transition-property: box-shadow, border-color, background-color;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    
+
       &:hover {
         background-color: var(--fsds-card-color-background-hover);
         box-shadow: var(--fsds-card-elevation-raised);
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
         outline-color: var(--fsds-card-color-focus-ring);
@@ -998,11 +998,11 @@ export class CardDescriptionElement extends LitElement {
         outline-style: solid;
       }
     }
-    
+
     .card--inset {
       padding: var(--fsds-card-size-padding-inset);
     }
-    
+
     .card__header {
       display: flex;
       align-items: flex-start;
@@ -1011,14 +1011,14 @@ export class CardDescriptionElement extends LitElement {
       line-height: var(--fsds-card-typography-lineHeight-heading);
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__media {
       display: block;
       width: 100%;
       overflow: hidden;
       border-radius: var(--fsds-card-size-radius-default);
     }
-    
+
     .card__content {
       display: flex;
       flex-direction: column;
@@ -1026,11 +1026,11 @@ export class CardDescriptionElement extends LitElement {
       flex: 1 1 auto;
       color: var(--fsds-card-color-foreground-primary);
     }
-    
+
     .card__description {
       margin: 0;
     }
-    
+
     .card__footer {
       display: flex;
       align-items: center;
@@ -1042,13 +1042,13 @@ export class CardDescriptionElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .card__actions {
       display: flex;
       align-items: center;
       gap: var(--fsds-card-size-gap-default);
     }
-    
+
     .card__badge {
       display: inline-flex;
       align-items: center;
@@ -1059,15 +1059,15 @@ export class CardDescriptionElement extends LitElement {
       font-size: 0.75em;
       line-height: 1.4;
     }
-    
+
     .card__link {
       text-decoration: none;
     }
-    
+
     .card__link:hover {
       text-decoration: underline;
     }
-    
+
     .card__note {
       font-size: 0.875em;
       line-height: var(--fsds-card-typography-lineHeight-normal);

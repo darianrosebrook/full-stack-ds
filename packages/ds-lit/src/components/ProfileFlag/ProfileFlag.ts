@@ -43,7 +43,7 @@ export class ProfileFlagElement extends LitElement {
       --fsds-profile-flag-spacing-padding-right: var(--fsds-core-spacing-size-06, 16px);
       --fsds-profile-flag-color-border-hover: var(--fsds-semantic-color-border-bold, #8f8f8f);
     }
-    
+
     .profile-flag {
       display: inline-flex;
       flex-direction: row;
@@ -65,7 +65,7 @@ export class ProfileFlagElement extends LitElement {
       color: var(--fsds-profile-flag-color-foreground-primary);
       border-radius: var(--fsds-profile-flag-size-radius-default);
       padding: var(--fsds-profile-flag-spacing-padding-right);
-    
+
       &:hover {
         border-color: var(--fsds-profile-flag-color-border-hover);
       }

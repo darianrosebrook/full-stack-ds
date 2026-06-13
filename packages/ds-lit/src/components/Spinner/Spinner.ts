@@ -46,7 +46,7 @@ export class SpinnerElement extends LitElement {
       --fsds-spinner-color-track: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-spinner-anim-duration: 800ms;
     }
-    
+
     .spinner {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -61,7 +61,7 @@ export class SpinnerElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       transition-duration: var(--fsds-spinner-anim-duration);
     }
-    
+
     .spinner__visual {
       display: inline-block;
       width: 1em;
@@ -73,35 +73,35 @@ export class SpinnerElement extends LitElement {
       border-top-color: var(--fsds-spinner-color-accent);
       animation: spin var(--fsds-spinner-anim-duration, 800ms) linear infinite;
     }
-    
+
     .spinner--xs {
       font-size: var(--fsds-spinner-size-xs);
     }
-    
+
     .spinner--sm {
       font-size: var(--fsds-spinner-size-sm);
     }
-    
+
     .spinner--md {
       font-size: var(--fsds-spinner-size-md);
     }
-    
+
     .spinner--lg {
       font-size: var(--fsds-spinner-size-lg);
     }
-    
+
     .spinner--hairline .spinner__visual {
       border-width: var(--fsds-spinner-thickness-hairline);
     }
-    
+
     .spinner--regular .spinner__visual {
       border-width: var(--fsds-spinner-thickness-regular);
     }
-    
+
     .spinner--bold .spinner__visual {
       border-width: var(--fsds-spinner-thickness-bold);
     }
-    
+
     @keyframes spin {
       from {
         transform: rotate(0deg);

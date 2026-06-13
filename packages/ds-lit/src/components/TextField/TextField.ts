@@ -68,7 +68,7 @@ export class TextFieldElement extends LitElement {
       --fsds-text-field-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-text-field-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
-    
+
     .text-field {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -84,7 +84,7 @@ export class TextFieldElement extends LitElement {
       display: flex;
       flex-direction: column;
     }
-    
+
     .text-field__label {
       display: inline-block;
       font-size: var(--fsds-text-field-typography-label-size);
@@ -92,7 +92,7 @@ export class TextFieldElement extends LitElement {
       line-height: var(--fsds-text-field-typography-label-line-height);
       color: var(--fsds-text-field-color-input-text);
     }
-    
+
     .text-field__field {
       display: block;
       width: 100%;
@@ -112,29 +112,29 @@ export class TextFieldElement extends LitElement {
       transition-duration: var(--fsds-text-field-motion-duration-fast);
       transition-timing-function: var(--fsds-text-field-motion-easing-standard);
     }
-    
+
     .text-field__description {
       display: block;
       font-size: var(--fsds-text-field-typography-supporting-size);
       line-height: var(--fsds-text-field-typography-supporting-line-height);
       color: var(--fsds-text-field-color-supporting-text);
     }
-    
+
     .text-field__error {
       display: block;
       font-size: var(--fsds-text-field-typography-supporting-size);
       line-height: var(--fsds-text-field-typography-supporting-line-height);
       color: var(--fsds-text-field-color-error);
     }
-    
+
     .text-field__field::placeholder {
       color: var(--fsds-text-field-color-input-placeholder);
     }
-    
+
     .text-field__field:hover:not(:disabled) {
       border-color: var(--fsds-text-field-color-input-borderHover);
     }
-    
+
     .text-field__field:focus-visible {
       border-color: var(--fsds-text-field-focus-ring-color);
       outline-width: var(--fsds-text-field-focus-ring-width);
@@ -142,16 +142,16 @@ export class TextFieldElement extends LitElement {
       outline-style: var(--fsds-text-field-focus-ring-style);
       outline-offset: var(--fsds-text-field-focus-ring-offset);
     }
-    
+
     .text-field--invalid .text-field__field {
       border-color: var(--fsds-text-field-color-input-borderError);
     }
-    
+
     .text-field--invalid .text-field__field:focus-visible {
       border-color: var(--fsds-text-field-color-input-borderError);
       outline-color: var(--fsds-text-field-color-input-borderError);
     }
-    
+
     .text-field__field:disabled {
       background-color: var(--fsds-text-field-color-input-backgroundDisabled);
       border-color: var(--fsds-text-field-color-input-borderDisabled);
@@ -266,7 +266,7 @@ export class TextFieldDescriptionElement extends LitElement {
       --fsds-text-field-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-text-field-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
-    
+
     .text-field {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -282,7 +282,7 @@ export class TextFieldDescriptionElement extends LitElement {
       display: flex;
       flex-direction: column;
     }
-    
+
     .text-field__label {
       display: inline-block;
       font-size: var(--fsds-text-field-typography-label-size);
@@ -290,7 +290,7 @@ export class TextFieldDescriptionElement extends LitElement {
       line-height: var(--fsds-text-field-typography-label-line-height);
       color: var(--fsds-text-field-color-input-text);
     }
-    
+
     .text-field__field {
       display: block;
       width: 100%;
@@ -310,29 +310,29 @@ export class TextFieldDescriptionElement extends LitElement {
       transition-duration: var(--fsds-text-field-motion-duration-fast);
       transition-timing-function: var(--fsds-text-field-motion-easing-standard);
     }
-    
+
     .text-field__description {
       display: block;
       font-size: var(--fsds-text-field-typography-supporting-size);
       line-height: var(--fsds-text-field-typography-supporting-line-height);
       color: var(--fsds-text-field-color-supporting-text);
     }
-    
+
     .text-field__error {
       display: block;
       font-size: var(--fsds-text-field-typography-supporting-size);
       line-height: var(--fsds-text-field-typography-supporting-line-height);
       color: var(--fsds-text-field-color-error);
     }
-    
+
     .text-field__field::placeholder {
       color: var(--fsds-text-field-color-input-placeholder);
     }
-    
+
     .text-field__field:hover:not(:disabled) {
       border-color: var(--fsds-text-field-color-input-borderHover);
     }
-    
+
     .text-field__field:focus-visible {
       border-color: var(--fsds-text-field-focus-ring-color);
       outline-width: var(--fsds-text-field-focus-ring-width);
@@ -340,16 +340,16 @@ export class TextFieldDescriptionElement extends LitElement {
       outline-style: var(--fsds-text-field-focus-ring-style);
       outline-offset: var(--fsds-text-field-focus-ring-offset);
     }
-    
+
     .text-field--invalid .text-field__field {
       border-color: var(--fsds-text-field-color-input-borderError);
     }
-    
+
     .text-field--invalid .text-field__field:focus-visible {
       border-color: var(--fsds-text-field-color-input-borderError);
       outline-color: var(--fsds-text-field-color-input-borderError);
     }
-    
+
     .text-field__field:disabled {
       background-color: var(--fsds-text-field-color-input-backgroundDisabled);
       border-color: var(--fsds-text-field-color-input-borderDisabled);

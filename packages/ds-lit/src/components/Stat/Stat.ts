@@ -49,7 +49,7 @@ export class StatElement extends LitElement {
       --fsds-stat-typography-weight-value: var(--fsds-semantic-typography-font-weight-bold, 700);
       --fsds-stat-typography-weight-label: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
-    
+
     .stat {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -69,23 +69,23 @@ export class StatElement extends LitElement {
       line-height: var(--fsds-stat-typography-lineHeight-value);
       letter-spacing: -0.02em;
     }
-    
+
     .stat--up {
       color: var(--fsds-stat-color-foreground-trend-up);
     }
-    
+
     .stat--down {
       color: var(--fsds-stat-color-foreground-trend-down);
     }
-    
+
     .stat--neutral {
       color: var(--fsds-stat-color-foreground-trend-neutral);
     }
-    
+
     .stat--sm {
       font-size: var(--fsds-stat-size-value-sm);
     }
-    
+
     .stat--lg {
       font-size: var(--fsds-stat-size-value-lg);
     }

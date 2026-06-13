@@ -44,37 +44,37 @@ export class StatusElement extends LitElement {
       --fsds-status-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-status-typography-lineHeight: var(--fsds-semantic-typography-line-height-collapse, 1);
     }
-    
+
     .status--info {
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .status--success {
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .status--warning {
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .status--danger {
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .status--error {
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .status {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -102,7 +102,7 @@ export class StatusElement extends LitElement {
       font-weight: var(--fsds-status-text-weight);
       line-height: var(--fsds-status-typography-lineHeight);
     }
-    
+
     .status__icon {
       display: inline-flex;
       align-items: center;
@@ -110,7 +110,7 @@ export class StatusElement extends LitElement {
       width: 1em;
       height: 1em;
     }
-    
+
     .status__label {
       display: inline-block;
       color: var(--fsds-status-color-foreground-primary);

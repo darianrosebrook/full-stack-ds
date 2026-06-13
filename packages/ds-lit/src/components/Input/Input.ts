@@ -62,7 +62,7 @@ export class InputElement extends LitElement {
       --fsds-input-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-input-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
     }
-    
+
     .input {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -89,15 +89,15 @@ export class InputElement extends LitElement {
       transition-property: background-color, border-color, color, outline-color;
       transition-duration: var(--fsds-input-motion-duration-fast);
       transition-timing-function: var(--fsds-input-motion-easing-standard);
-    
+
       &::placeholder {
         color: var(--fsds-input-color-text-placeholder);
       }
-    
+
       &:hover {
         border-color: var(--fsds-input-color-border-hover);
       }
-    
+
       &:focus-visible {
         border-color: var(--fsds-input-color-focus-default);
         outline-width: var(--fsds-input-focus-ring-width);
@@ -105,7 +105,7 @@ export class InputElement extends LitElement {
         outline-style: var(--fsds-input-focus-ring-style);
         outline-offset: var(--fsds-input-focus-ring-offset);
       }
-    
+
       &:disabled {
         background-color: var(--fsds-input-color-bg-disabled);
         border-color: var(--fsds-input-color-border-disabled);
@@ -114,11 +114,11 @@ export class InputElement extends LitElement {
         cursor: not-allowed;
       }
     }
-    
+
     .input--invalid {
       border-color: var(--fsds-input-color-invalid-default);
     }
-    
+
     .input--invalid:focus-visible {
       border-color: var(--fsds-input-color-invalid-default);
       outline-color: var(--fsds-input-color-invalid-default);

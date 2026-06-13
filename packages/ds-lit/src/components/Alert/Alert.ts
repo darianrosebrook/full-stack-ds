@@ -53,45 +53,45 @@ export class AlertElement extends LitElement {
       --fsds-alert-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .alert--info {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .alert--success {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .alert--warning {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .alert--danger {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .alert--inline {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
     }
-    
+
     .alert--section {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
-    
+
     .alert--page {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-07, 24px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
@@ -99,7 +99,7 @@ export class AlertElement extends LitElement {
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .alert {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -125,21 +125,21 @@ export class AlertElement extends LitElement {
       color: var(--fsds-alert-color-foreground-primary);
       border-color: var(--fsds-alert-color-border-primary);
     }
-    
+
     .alert__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    
+
     .alert__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-spacing-gap);
     }
-    
+
     .alert__dismiss {
       display: inline-flex;
       align-items: center;
@@ -154,16 +154,16 @@ export class AlertElement extends LitElement {
       font: inherit;
       line-height: 1;
     }
-    
+
     .alert__dismiss:hover {
       opacity: 0.7;
     }
-    
+
     .alert__dismiss:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-    
+
     .alert__title {
       margin: 0;
       font-weight: var(--fsds-alert-typography-title-fontWeight);
@@ -236,45 +236,45 @@ export class AlertBodyElement extends LitElement {
       --fsds-alert-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .alert--info {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .alert--success {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .alert--warning {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .alert--danger {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .alert--inline {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
     }
-    
+
     .alert--section {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
-    
+
     .alert--page {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-07, 24px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
@@ -282,7 +282,7 @@ export class AlertBodyElement extends LitElement {
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .alert {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -308,21 +308,21 @@ export class AlertBodyElement extends LitElement {
       color: var(--fsds-alert-color-foreground-primary);
       border-color: var(--fsds-alert-color-border-primary);
     }
-    
+
     .alert__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    
+
     .alert__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-spacing-gap);
     }
-    
+
     .alert__dismiss {
       display: inline-flex;
       align-items: center;
@@ -337,16 +337,16 @@ export class AlertBodyElement extends LitElement {
       font: inherit;
       line-height: 1;
     }
-    
+
     .alert__dismiss:hover {
       opacity: 0.7;
     }
-    
+
     .alert__dismiss:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-    
+
     .alert__title {
       margin: 0;
       font-weight: var(--fsds-alert-typography-title-fontWeight);
@@ -396,45 +396,45 @@ export class AlertTitleElement extends LitElement {
       --fsds-alert-typography-page-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-typography-inline-fontSize: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .alert--info {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .alert--success {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .alert--warning {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .alert--danger {
       --fsds-alert-color-background-primary: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-alert-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-alert-color-border-primary: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .alert--inline {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-03, 4px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-04, 12px);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-03, 14px);
     }
-    
+
     .alert--section {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-06, 16px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-04, 8px);
       --fsds-alert-text-size: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-02, 16px);
     }
-    
+
     .alert--page {
       --fsds-alert-size-padding: var(--fsds-core-spacing-size-07, 24px);
       --fsds-alert-spacing-gap: var(--fsds-core-spacing-size-05, 12px);
@@ -442,7 +442,7 @@ export class AlertTitleElement extends LitElement {
       --fsds-alert-typography-title-fontSize: var(--fsds-semantic-typography-body-01, 18px);
       --fsds-alert-typography-title-fontWeight: var(--fsds-semantic-typography-font-weight-bold, 700);
     }
-    
+
     .alert {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -468,21 +468,21 @@ export class AlertTitleElement extends LitElement {
       color: var(--fsds-alert-color-foreground-primary);
       border-color: var(--fsds-alert-color-border-primary);
     }
-    
+
     .alert__icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
-    
+
     .alert__body {
       flex: 1 1 auto;
       display: flex;
       flex-direction: column;
       gap: var(--fsds-alert-spacing-gap);
     }
-    
+
     .alert__dismiss {
       display: inline-flex;
       align-items: center;
@@ -497,16 +497,16 @@ export class AlertTitleElement extends LitElement {
       font: inherit;
       line-height: 1;
     }
-    
+
     .alert__dismiss:hover {
       opacity: 0.7;
     }
-    
+
     .alert__dismiss:focus-visible {
       outline: 2px solid currentColor;
       outline-offset: 2px;
     }
-    
+
     .alert__title {
       margin: 0;
       font-weight: var(--fsds-alert-typography-title-fontWeight);

@@ -43,7 +43,7 @@ export class ShuttleElement extends LitElement {
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-shuttle-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
     }
-    
+
     .shuttle {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -61,7 +61,7 @@ export class ShuttleElement extends LitElement {
       padding: var(--fsds-shuttle-size-padding-default);
       border-radius: var(--fsds-shuttle-size-radius-default);
     }
-    
+
     .shuttle__item {
       display: flex;
       align-items: center;
@@ -127,7 +127,7 @@ export class ShuttleItemElement extends LitElement {
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-shuttle-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
     }
-    
+
     .shuttle {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -145,7 +145,7 @@ export class ShuttleItemElement extends LitElement {
       padding: var(--fsds-shuttle-size-padding-default);
       border-radius: var(--fsds-shuttle-size-radius-default);
     }
-    
+
     .shuttle__item {
       display: flex;
       align-items: center;

@@ -39,7 +39,7 @@ export class LabelElement extends LitElement {
       --fsds-label-typo-weight-default: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-label-typo-lineHeight-default: var(--fsds-semantic-typography-line-height-tight, 1.2);
     }
-    
+
     .label {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);

@@ -45,20 +45,20 @@ export class CheckboxElement extends LitElement {
       --fsds-checkbox-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
       --fsds-checkbox-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-checkbox-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-    
+
       &:hover .checkbox__indicator {
         --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-hover, #f29495);
       }
     }
-    
+
     :has(.checkbox__input:checked) .checkbox__indicator {
       --fsds-checkbox-color-background-default: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
     }
-    
+
     :has(.checkbox__input:disabled) .checkbox__indicator {
       --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-disabled, #cecece);
     }
-    
+
     .checkbox {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -75,7 +75,7 @@ export class CheckboxElement extends LitElement {
       align-items: center;
       cursor: pointer;
     }
-    
+
     .checkbox__input {
       position: absolute;
       width: 1px;
@@ -87,7 +87,7 @@ export class CheckboxElement extends LitElement {
       white-space: nowrap;
       border: 0;
     }
-    
+
     .checkbox__indicator {
       display: inline-block;
       position: relative;
@@ -101,7 +101,7 @@ export class CheckboxElement extends LitElement {
       box-sizing: border-box;
       transition-duration: var(--fsds-checkbox-transition-duration);
     }
-    
+
     :has(.checkbox__input:focus-visible) .checkbox__indicator {
       outline-width: var(--fsds-checkbox-focus-ring-width);
       outline-color: var(--fsds-checkbox-focus-ring-color);

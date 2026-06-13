@@ -49,7 +49,7 @@ export class ToggleSwitchElement extends LitElement {
       --fsds-toggle-switch-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-toggle-switch-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .toggle-switch {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -73,20 +73,20 @@ export class ToggleSwitchElement extends LitElement {
       border-width: 1px;
       cursor: pointer;
       box-sizing: border-box;
-    
+
       &:hover {
         background-color: var(--fsds-toggle-switch-color-background-hover);
       }
-    
+
       &[aria-checked="true"] {
         background-color: var(--fsds-toggle-switch-color-background-checked);
       }
-    
+
       &:disabled {
         background-color: var(--fsds-toggle-switch-color-background-disabled);
         cursor: not-allowed;
       }
-    
+
       &:focus-visible {
         outline-width: var(--fsds-toggle-switch-focus-ring-width);
         outline-color: var(--fsds-toggle-switch-focus-ring-color);

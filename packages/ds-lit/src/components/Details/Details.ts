@@ -55,22 +55,22 @@ export class DetailsElement extends LitElement {
       --fsds-details-typography-fontSize-body: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .details__summary:hover {
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
-    
+
     .details--compact {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-details-typography-lineHeight-body: var(--fsds-core-spacing-size-06, 16px);
     }
-    
+
     .details--inline {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
     }
-    
+
     .details {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -93,17 +93,17 @@ export class DetailsElement extends LitElement {
       box-sizing: border-box;
       border-color: var(--fsds-details-color-border-default);
       color: var(--fsds-details-color-foreground-primary);
-    
+
       &:hover {
         background-color: var(--fsds-details-color-background-hover);
         border-color: var(--fsds-details-color-border-hover);
       }
-    
+
       &[open] .details__icon {
         transform: rotate(180deg);
       }
     }
-    
+
     .details__summary {
       cursor: pointer;
       display: flex;
@@ -114,26 +114,26 @@ export class DetailsElement extends LitElement {
       color: var(--fsds-details-color-foreground-primary);
       font-weight: var(--fsds-details-typography-fontWeight-medium);
     }
-    
+
     .details__summary:focus-visible {
       outline-width: var(--fsds-details-focus-ring-width);
       outline-color: var(--fsds-details-focus-ring-color);
       outline-offset: var(--fsds-details-focus-ring-offset);
       outline-style: solid;
     }
-    
+
     .details__summaryContent {
       display: flex;
       align-items: center;
       gap: var(--fsds-details-spacing-gap-default);
       flex: 1 1 auto;
     }
-    
+
     .details__summaryText {
       flex: 1 1 auto;
       color: var(--fsds-details-color-foreground-primary);
     }
-    
+
     .details__icon {
       display: inline-flex;
       flex-shrink: 0;
@@ -143,18 +143,18 @@ export class DetailsElement extends LitElement {
       align-items: center;
       justify-content: center;
     }
-    
+
     .details__content {
       display: block;
       padding: var(--fsds-details-size-padding-default);
       color: var(--fsds-details-color-foreground-primary);
       line-height: var(--fsds-details-typography-lineHeight-body);
     }
-    
+
     .details--icon-none .details__icon {
       display: none;
     }
-    
+
     .details--icon-right .details__icon {
       order: 1;
       margin-inline-start: auto;
@@ -241,22 +241,22 @@ export class DetailsContentElement extends LitElement {
       --fsds-details-typography-fontSize-body: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-details-typography-fontSize-compact: var(--fsds-semantic-typography-body-04, 12px);
     }
-    
+
     .details__summary:hover {
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-hover, #cecece);
     }
-    
+
     .details--compact {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-details-typography-lineHeight-body: var(--fsds-core-spacing-size-06, 16px);
     }
-    
+
     .details--inline {
       --fsds-details-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
       --fsds-details-color-background-default: var(--fsds-semantic-color-background-secondary, #f5f5f5);
       --fsds-details-color-border-default: var(--fsds-semantic-color-border-subtle, #e0e0e0);
     }
-    
+
     .details {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -279,17 +279,17 @@ export class DetailsContentElement extends LitElement {
       box-sizing: border-box;
       border-color: var(--fsds-details-color-border-default);
       color: var(--fsds-details-color-foreground-primary);
-    
+
       &:hover {
         background-color: var(--fsds-details-color-background-hover);
         border-color: var(--fsds-details-color-border-hover);
       }
-    
+
       &[open] .details__icon {
         transform: rotate(180deg);
       }
     }
-    
+
     .details__summary {
       cursor: pointer;
       display: flex;
@@ -300,26 +300,26 @@ export class DetailsContentElement extends LitElement {
       color: var(--fsds-details-color-foreground-primary);
       font-weight: var(--fsds-details-typography-fontWeight-medium);
     }
-    
+
     .details__summary:focus-visible {
       outline-width: var(--fsds-details-focus-ring-width);
       outline-color: var(--fsds-details-focus-ring-color);
       outline-offset: var(--fsds-details-focus-ring-offset);
       outline-style: solid;
     }
-    
+
     .details__summaryContent {
       display: flex;
       align-items: center;
       gap: var(--fsds-details-spacing-gap-default);
       flex: 1 1 auto;
     }
-    
+
     .details__summaryText {
       flex: 1 1 auto;
       color: var(--fsds-details-color-foreground-primary);
     }
-    
+
     .details__icon {
       display: inline-flex;
       flex-shrink: 0;
@@ -329,18 +329,18 @@ export class DetailsContentElement extends LitElement {
       align-items: center;
       justify-content: center;
     }
-    
+
     .details__content {
       display: block;
       padding: var(--fsds-details-size-padding-default);
       color: var(--fsds-details-color-foreground-primary);
       line-height: var(--fsds-details-typography-lineHeight-body);
     }
-    
+
     .details--icon-none .details__icon {
       display: none;
     }
-    
+
     .details--icon-right .details__icon {
       order: 1;
       margin-inline-start: auto;

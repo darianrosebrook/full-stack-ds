@@ -47,7 +47,7 @@ export class OTPElement extends LitElement {
       --fsds-otp-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-otp-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .otp {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -63,13 +63,13 @@ export class OTPElement extends LitElement {
       display: inline-flex;
       align-items: center;
     }
-    
+
     .otp__group {
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
-    
+
     .otp__field {
       display: block;
       width: 40px;
@@ -84,7 +84,7 @@ export class OTPElement extends LitElement {
       background-color: var(--fsds-otp-color-background-default);
       color: var(--fsds-otp-color-foreground-primary);
     }
-    
+
     .otp__field:focus-visible {
       border-color: var(--fsds-otp-color-border-accent);
       outline-width: var(--fsds-otp-focus-ring-width);
@@ -92,7 +92,7 @@ export class OTPElement extends LitElement {
       outline-style: var(--fsds-otp-focus-ring-style);
       outline-offset: var(--fsds-otp-focus-ring-offset);
     }
-    
+
     .otp__field:disabled {
       opacity: 0.5;
       cursor: not-allowed;
@@ -165,7 +165,7 @@ export class OTPGroupElement extends LitElement {
       --fsds-otp-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
       --fsds-otp-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
     }
-    
+
     .otp {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -181,13 +181,13 @@ export class OTPGroupElement extends LitElement {
       display: inline-flex;
       align-items: center;
     }
-    
+
     .otp__group {
       display: inline-flex;
       align-items: center;
       gap: 4px;
     }
-    
+
     .otp__field {
       display: block;
       width: 40px;
@@ -202,7 +202,7 @@ export class OTPGroupElement extends LitElement {
       background-color: var(--fsds-otp-color-background-default);
       color: var(--fsds-otp-color-foreground-primary);
     }
-    
+
     .otp__field:focus-visible {
       border-color: var(--fsds-otp-color-border-accent);
       outline-width: var(--fsds-otp-focus-ring-width);
@@ -210,7 +210,7 @@ export class OTPGroupElement extends LitElement {
       outline-style: var(--fsds-otp-focus-ring-style);
       outline-offset: var(--fsds-otp-focus-ring-offset);
     }
-    
+
     .otp__field:disabled {
       opacity: 0.5;
       cursor: not-allowed;

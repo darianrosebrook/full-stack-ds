@@ -57,7 +57,7 @@ export class SheetElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -78,14 +78,14 @@ export class SheetElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -102,7 +102,7 @@ export class SheetElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -112,7 +112,7 @@ export class SheetElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -120,20 +120,20 @@ export class SheetElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -144,7 +144,7 @@ export class SheetElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -160,7 +160,7 @@ export class SheetElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -170,7 +170,7 @@ export class SheetElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -180,7 +180,7 @@ export class SheetElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -190,7 +190,7 @@ export class SheetElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;
@@ -303,7 +303,7 @@ export class SheetContentElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -324,14 +324,14 @@ export class SheetContentElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -348,7 +348,7 @@ export class SheetContentElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -358,7 +358,7 @@ export class SheetContentElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -366,20 +366,20 @@ export class SheetContentElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -390,7 +390,7 @@ export class SheetContentElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -406,7 +406,7 @@ export class SheetContentElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -416,7 +416,7 @@ export class SheetContentElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -426,7 +426,7 @@ export class SheetContentElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -436,7 +436,7 @@ export class SheetContentElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;
@@ -494,7 +494,7 @@ export class SheetHeaderElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -515,14 +515,14 @@ export class SheetHeaderElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -539,7 +539,7 @@ export class SheetHeaderElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -549,7 +549,7 @@ export class SheetHeaderElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -557,20 +557,20 @@ export class SheetHeaderElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -581,7 +581,7 @@ export class SheetHeaderElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -597,7 +597,7 @@ export class SheetHeaderElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -607,7 +607,7 @@ export class SheetHeaderElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -617,7 +617,7 @@ export class SheetHeaderElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -627,7 +627,7 @@ export class SheetHeaderElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;
@@ -685,7 +685,7 @@ export class SheetTitleElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -706,14 +706,14 @@ export class SheetTitleElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -730,7 +730,7 @@ export class SheetTitleElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -740,7 +740,7 @@ export class SheetTitleElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -748,20 +748,20 @@ export class SheetTitleElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -772,7 +772,7 @@ export class SheetTitleElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -788,7 +788,7 @@ export class SheetTitleElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -798,7 +798,7 @@ export class SheetTitleElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -808,7 +808,7 @@ export class SheetTitleElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -818,7 +818,7 @@ export class SheetTitleElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;
@@ -876,7 +876,7 @@ export class SheetDescriptionElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -897,14 +897,14 @@ export class SheetDescriptionElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -921,7 +921,7 @@ export class SheetDescriptionElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -931,7 +931,7 @@ export class SheetDescriptionElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -939,20 +939,20 @@ export class SheetDescriptionElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -963,7 +963,7 @@ export class SheetDescriptionElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -979,7 +979,7 @@ export class SheetDescriptionElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -989,7 +989,7 @@ export class SheetDescriptionElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -999,7 +999,7 @@ export class SheetDescriptionElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -1009,7 +1009,7 @@ export class SheetDescriptionElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;
@@ -1067,7 +1067,7 @@ export class SheetBodyElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -1088,14 +1088,14 @@ export class SheetBodyElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -1112,7 +1112,7 @@ export class SheetBodyElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -1122,7 +1122,7 @@ export class SheetBodyElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -1130,20 +1130,20 @@ export class SheetBodyElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -1154,7 +1154,7 @@ export class SheetBodyElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -1170,7 +1170,7 @@ export class SheetBodyElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -1180,7 +1180,7 @@ export class SheetBodyElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -1190,7 +1190,7 @@ export class SheetBodyElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -1200,7 +1200,7 @@ export class SheetBodyElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;
@@ -1258,7 +1258,7 @@ export class SheetFooterElement extends LitElement {
       --fsds-sheet-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-sheet-color-backgroundHover: var(--fsds-semantic-interaction-background-hover, #efefef);
     }
-    
+
     .sheet {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -1279,14 +1279,14 @@ export class SheetFooterElement extends LitElement {
       justify-content: center;
       pointer-events: none;
     }
-    
+
     .sheet__overlay {
       position: absolute;
       inset: 0;
       background-color: var(--fsds-sheet-color-overlay);
       pointer-events: auto;
     }
-    
+
     .sheet__content {
       position: relative;
       display: flex;
@@ -1303,7 +1303,7 @@ export class SheetFooterElement extends LitElement {
       box-sizing: border-box;
       overflow: hidden;
     }
-    
+
     .sheet__header {
       display: flex;
       align-items: center;
@@ -1313,7 +1313,7 @@ export class SheetFooterElement extends LitElement {
       border-bottom-width: 1px;
       gap: var(--fsds-sheet-spacing-gap);
     }
-    
+
     .sheet__title {
       margin: 0;
       font-size: var(--fsds-sheet-text-sizeTitle);
@@ -1321,20 +1321,20 @@ export class SheetFooterElement extends LitElement {
       color: var(--fsds-sheet-color-textTitle);
       flex: 1 1 auto;
     }
-    
+
     .sheet__description {
       margin: 0;
       color: var(--fsds-sheet-color-textDescription);
       font-size: var(--fsds-sheet-text-size);
     }
-    
+
     .sheet__body {
       flex: 1 1 auto;
       padding: var(--fsds-sheet-spacing-padding);
       color: var(--fsds-sheet-color-text);
       overflow-y: auto;
     }
-    
+
     .sheet__footer {
       display: flex;
       justify-content: flex-end;
@@ -1345,7 +1345,7 @@ export class SheetFooterElement extends LitElement {
       border-top-style: solid;
       border-top-width: 1px;
     }
-    
+
     .sheet__close {
       position: absolute;
       top: var(--fsds-sheet-spacing-padding);
@@ -1361,7 +1361,7 @@ export class SheetFooterElement extends LitElement {
       color: var(--fsds-sheet-color-textDescription);
       cursor: pointer;
     }
-    
+
     .sheet--right .sheet__content {
       position: absolute;
       top: 0;
@@ -1371,7 +1371,7 @@ export class SheetFooterElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--left .sheet__content {
       position: absolute;
       top: 0;
@@ -1381,7 +1381,7 @@ export class SheetFooterElement extends LitElement {
       max-height: 100vh;
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--top .sheet__content {
       position: absolute;
       top: 0;
@@ -1391,7 +1391,7 @@ export class SheetFooterElement extends LitElement {
       max-height: var(--fsds-sheet-size-height);
       border-radius: var(--fsds-sheet-border-radius);
     }
-    
+
     .sheet--bottom .sheet__content {
       position: absolute;
       bottom: 0;

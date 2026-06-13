@@ -54,31 +54,31 @@ export class ToastElement extends LitElement {
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
-    
+
     .toast--info {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .toast--success {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .toast--warning {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .toast--error {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .toast {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -99,7 +99,7 @@ export class ToastElement extends LitElement {
       z-index: 1000;
       pointer-events: none;
     }
-    
+
     .toast__item {
       background-color: var(--fsds-toast-surface-bg);
       border-color: var(--fsds-toast-surface-border);
@@ -115,26 +115,26 @@ export class ToastElement extends LitElement {
       pointer-events: auto;
       box-sizing: border-box;
     }
-    
+
     .toast__row {
       display: flex;
       align-items: flex-start;
       gap: var(--fsds-toast-spacing-gap);
       flex: 1 1 auto;
     }
-    
+
     .toast__title {
       margin: 0;
       font-weight: 600;
       flex: 1 1 auto;
     }
-    
+
     .toast__description {
       flex: 1 1 auto;
       color: var(--fsds-toast-color-default);
       font-size: inherit;
     }
-    
+
     .toast__action {
       display: inline-flex;
       align-items: center;
@@ -143,7 +143,7 @@ export class ToastElement extends LitElement {
       cursor: pointer;
       color: var(--fsds-toast-color-default);
     }
-    
+
     .toast__close {
       display: inline-flex;
       align-items: center;
@@ -241,31 +241,31 @@ export class ToastItemElement extends LitElement {
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
-    
+
     .toast--info {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .toast--success {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .toast--warning {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .toast--error {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .toast {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -286,7 +286,7 @@ export class ToastItemElement extends LitElement {
       z-index: 1000;
       pointer-events: none;
     }
-    
+
     .toast__item {
       background-color: var(--fsds-toast-surface-bg);
       border-color: var(--fsds-toast-surface-border);
@@ -302,26 +302,26 @@ export class ToastItemElement extends LitElement {
       pointer-events: auto;
       box-sizing: border-box;
     }
-    
+
     .toast__row {
       display: flex;
       align-items: flex-start;
       gap: var(--fsds-toast-spacing-gap);
       flex: 1 1 auto;
     }
-    
+
     .toast__title {
       margin: 0;
       font-weight: 600;
       flex: 1 1 auto;
     }
-    
+
     .toast__description {
       flex: 1 1 auto;
       color: var(--fsds-toast-color-default);
       font-size: inherit;
     }
-    
+
     .toast__action {
       display: inline-flex;
       align-items: center;
@@ -330,7 +330,7 @@ export class ToastItemElement extends LitElement {
       cursor: pointer;
       color: var(--fsds-toast-color-default);
     }
-    
+
     .toast__close {
       display: inline-flex;
       align-items: center;
@@ -385,31 +385,31 @@ export class ToastTitleElement extends LitElement {
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
-    
+
     .toast--info {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .toast--success {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .toast--warning {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .toast--error {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .toast {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -430,7 +430,7 @@ export class ToastTitleElement extends LitElement {
       z-index: 1000;
       pointer-events: none;
     }
-    
+
     .toast__item {
       background-color: var(--fsds-toast-surface-bg);
       border-color: var(--fsds-toast-surface-border);
@@ -446,26 +446,26 @@ export class ToastTitleElement extends LitElement {
       pointer-events: auto;
       box-sizing: border-box;
     }
-    
+
     .toast__row {
       display: flex;
       align-items: flex-start;
       gap: var(--fsds-toast-spacing-gap);
       flex: 1 1 auto;
     }
-    
+
     .toast__title {
       margin: 0;
       font-weight: 600;
       flex: 1 1 auto;
     }
-    
+
     .toast__description {
       flex: 1 1 auto;
       color: var(--fsds-toast-color-default);
       font-size: inherit;
     }
-    
+
     .toast__action {
       display: inline-flex;
       align-items: center;
@@ -474,7 +474,7 @@ export class ToastTitleElement extends LitElement {
       cursor: pointer;
       color: var(--fsds-toast-color-default);
     }
-    
+
     .toast__close {
       display: inline-flex;
       align-items: center;
@@ -529,31 +529,31 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-toast-motion-leave: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toast-timing-auto-dismiss: var(--fsds-semantic-motion-dwell-notification, 6000ms);
     }
-    
+
     .toast--info {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .toast--success {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .toast--warning {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .toast--error {
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .toast {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -574,7 +574,7 @@ export class ToastDescriptionElement extends LitElement {
       z-index: 1000;
       pointer-events: none;
     }
-    
+
     .toast__item {
       background-color: var(--fsds-toast-surface-bg);
       border-color: var(--fsds-toast-surface-border);
@@ -590,26 +590,26 @@ export class ToastDescriptionElement extends LitElement {
       pointer-events: auto;
       box-sizing: border-box;
     }
-    
+
     .toast__row {
       display: flex;
       align-items: flex-start;
       gap: var(--fsds-toast-spacing-gap);
       flex: 1 1 auto;
     }
-    
+
     .toast__title {
       margin: 0;
       font-weight: 600;
       flex: 1 1 auto;
     }
-    
+
     .toast__description {
       flex: 1 1 auto;
       color: var(--fsds-toast-color-default);
       font-size: inherit;
     }
-    
+
     .toast__action {
       display: inline-flex;
       align-items: center;
@@ -618,7 +618,7 @@ export class ToastDescriptionElement extends LitElement {
       cursor: pointer;
       color: var(--fsds-toast-color-default);
     }
-    
+
     .toast__close {
       display: inline-flex;
       align-items: center;

@@ -57,7 +57,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
       --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
     }
-    
+
     .button--small {
       --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-03, 4px);
       --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-03, 4px);
@@ -69,7 +69,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
       --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
     }
-    
+
     .button--medium {
       --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-04, 8px);
       --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-04, 8px);
@@ -81,7 +81,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
       --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
     }
-    
+
     .button--large {
       --fsds-box-model-padding-block-start: var(--fsds-core-spacing-size-05, 12px);
       --fsds-box-model-padding-block-end: var(--fsds-core-spacing-size-05, 12px);
@@ -93,7 +93,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
       --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-5, 1.125rem);
     }
-    
+
     .button--primary {
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-primary-default);
       --fsds-button-color-background-hover: var(--fsds-semantic-color-action-background-primary-hover);
@@ -103,7 +103,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-border-default: var(--fsds-semantic-color-action-background-primary-default);
       --fsds-button-color-border-hover: var(--fsds-semantic-color-action-background-primary-hover);
     }
-    
+
     .button--secondary {
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-secondary-default);
       --fsds-button-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover);
@@ -111,13 +111,13 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-primary);
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-default);
     }
-    
+
     .button--tertiary {
       --fsds-button-color-background-default: transparent;
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-button-color-border-default: transparent;
     }
-    
+
     .button--destructive {
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-danger-default);
       --fsds-button-color-background-hover: var(--fsds-semantic-color-action-background-danger-hover);
@@ -126,19 +126,19 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-border-default: var(--fsds-semantic-color-action-background-danger-default);
       --fsds-button-color-border-hover: var(--fsds-semantic-color-action-background-danger-hover);
     }
-    
+
     .button--ghost {
       --fsds-button-color-background-default: transparent;
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-button-color-border-default: transparent;
     }
-    
+
     .button--outline {
       --fsds-button-color-background-default: transparent;
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-default, #8f8f8f);
     }
-    
+
     .button {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -168,26 +168,26 @@ export class ButtonElement extends LitElement {
       font-weight: var(--fsds-button-text-weight);
       transition-duration: var(--fsds-button-motion-duration-fast);
       transition-timing-function: var(--fsds-button-motion-easing-standard);
-    
+
       &:hover {
         background-color: var(--fsds-button-color-background-hover);
         border-color: var(--fsds-button-color-border-hover);
       }
-    
+
       &:active {
         background-color: var(--fsds-button-color-background-active);
       }
-    
+
       &:focus-visible {
         border-color: var(--fsds-button-color-border-focus);
       }
-    
+
       &:disabled {
         background-color: var(--fsds-button-color-background-disabled);
         color: var(--fsds-button-color-foreground-disabled);
       }
     }
-    
+
     .button__spinner {
       display: inline-block;
       width: 1em;
@@ -195,12 +195,12 @@ export class ButtonElement extends LitElement {
       flex-shrink: 0;
       animation: spin 1s linear infinite;
     }
-    
+
     .button__loadingText {
       display: inline-block;
       opacity: 0.7;
     }
-    
+
     @keyframes spin {
       from {
         transform: rotate(0deg);

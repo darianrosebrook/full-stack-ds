@@ -50,7 +50,7 @@ export class AvatarElement extends LitElement {
       --fsds-avatar-typography-fontWeight-medium: var(--fsds-core-typography-weight-medium, 500);
       --fsds-avatar-typography-fontFamily-sans: var(--fsds-core-typography-font-family-sans, "Inter", sans-serif);
     }
-    
+
     .avatar {
       display: inline-flex;
       align-items: center;
@@ -79,29 +79,29 @@ export class AvatarElement extends LitElement {
       font-weight: var(--fsds-avatar-typography-fontWeight-medium);
       font-family: var(--fsds-avatar-typography-fontFamily-sans);
     }
-    
+
     .avatar__image {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-    
+
     .avatar--small {
       width: var(--fsds-avatar-size-small);
       height: var(--fsds-avatar-size-small);
     }
-    
+
     .avatar--medium {
       width: var(--fsds-avatar-size-medium);
       height: var(--fsds-avatar-size-medium);
     }
-    
+
     .avatar--large {
       width: var(--fsds-avatar-size-large);
       height: var(--fsds-avatar-size-large);
     }
-    
+
     .avatar--extra-large {
       width: var(--fsds-avatar-size-extra-large);
       height: var(--fsds-avatar-size-extra-large);

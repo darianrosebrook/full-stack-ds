@@ -49,7 +49,7 @@ export class BadgeElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
       --fsds-badge-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
-    
+
     .badge--sm {
       --fsds-badge-size-paddingX: var(--fsds-semantic-glyph-badge-size-sm-paddingX, 4px);
       --fsds-badge-size-paddingY: var(--fsds-semantic-glyph-badge-size-sm-paddingY, 2px);
@@ -57,7 +57,7 @@ export class BadgeElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-sm-minHeight, 16px);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-sm-gap, 2px);
     }
-    
+
     .badge--md {
       --fsds-badge-size-paddingX: var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px);
       --fsds-badge-size-paddingY: var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px);
@@ -65,7 +65,7 @@ export class BadgeElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-md-gap, 4px);
     }
-    
+
     .badge--lg {
       --fsds-badge-size-paddingX: var(--fsds-semantic-glyph-badge-size-lg-paddingX, 12px);
       --fsds-badge-size-paddingY: var(--fsds-semantic-glyph-badge-size-lg-paddingY, 4px);
@@ -73,45 +73,45 @@ export class BadgeElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-lg-minHeight, 32px);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-lg-gap, 4px);
     }
-    
+
     .badge--info {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .badge--success {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .badge--warning {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .badge--danger {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .badge--counter {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-danger-strong, #d9292b);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-background-danger-strong, #d9292b);
     }
-    
+
     .badge--tag {
       --fsds-badge-size-radius: var(--fsds-core-shape-radius-medium, 6px);
     }
-    
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -140,12 +140,12 @@ export class BadgeElement extends LitElement {
       font-size: var(--fsds-badge-size-fontSize);
       font-weight: var(--fsds-badge-text-weight);
       line-height: 1;
-    
+
       &:hover {
         background-color: var(--fsds-badge-color-background-hover);
       }
     }
-    
+
     .badge__icon {
       display: inline-flex;
       align-items: center;
@@ -153,7 +153,7 @@ export class BadgeElement extends LitElement {
       width: 1em;
       height: 1em;
     }
-    
+
     .badge__content {
       display: inline-block;
       white-space: nowrap;
@@ -220,7 +220,7 @@ export class BadgeContentElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
       --fsds-badge-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
     }
-    
+
     .badge--sm {
       --fsds-badge-size-paddingX: var(--fsds-semantic-glyph-badge-size-sm-paddingX, 4px);
       --fsds-badge-size-paddingY: var(--fsds-semantic-glyph-badge-size-sm-paddingY, 2px);
@@ -228,7 +228,7 @@ export class BadgeContentElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-sm-minHeight, 16px);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-sm-gap, 2px);
     }
-    
+
     .badge--md {
       --fsds-badge-size-paddingX: var(--fsds-semantic-glyph-badge-size-md-paddingX, 8px);
       --fsds-badge-size-paddingY: var(--fsds-semantic-glyph-badge-size-md-paddingY, 2px);
@@ -236,7 +236,7 @@ export class BadgeContentElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-md-gap, 4px);
     }
-    
+
     .badge--lg {
       --fsds-badge-size-paddingX: var(--fsds-semantic-glyph-badge-size-lg-paddingX, 12px);
       --fsds-badge-size-paddingY: var(--fsds-semantic-glyph-badge-size-lg-paddingY, 4px);
@@ -244,45 +244,45 @@ export class BadgeContentElement extends LitElement {
       --fsds-badge-size-minHeight: var(--fsds-semantic-glyph-badge-size-lg-minHeight, 32px);
       --fsds-badge-spacing-gap: var(--fsds-semantic-glyph-badge-size-lg-gap, 4px);
     }
-    
+
     .badge--info {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-info, #0042dc);
     }
-    
+
     .badge--success {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-success-subtle, #e4f2e0);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-success-subtle, #234104);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-success, #336006);
     }
-    
+
     .badge--warning {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-warning-subtle, #ffedcc);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-warning-subtle, #593000);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-warning, #824500);
     }
-    
+
     .badge--danger {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-badge-color-background-hover: var(--fsds-semantic-color-background-danger-subtle, #fceaea);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-on-danger-subtle, #7b0000);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-border-danger, #ae0001);
     }
-    
+
     .badge--counter {
       --fsds-badge-color-background-default: var(--fsds-semantic-color-background-danger-strong, #d9292b);
       --fsds-badge-color-foreground-primary: var(--fsds-semantic-color-foreground-inverse, #fafafa);
       --fsds-badge-color-border-default: var(--fsds-semantic-color-background-danger-strong, #d9292b);
     }
-    
+
     .badge--tag {
       --fsds-badge-size-radius: var(--fsds-core-shape-radius-medium, 6px);
     }
-    
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -311,12 +311,12 @@ export class BadgeContentElement extends LitElement {
       font-size: var(--fsds-badge-size-fontSize);
       font-weight: var(--fsds-badge-text-weight);
       line-height: 1;
-    
+
       &:hover {
         background-color: var(--fsds-badge-color-background-hover);
       }
     }
-    
+
     .badge__icon {
       display: inline-flex;
       align-items: center;
@@ -324,7 +324,7 @@ export class BadgeContentElement extends LitElement {
       width: 1em;
       height: 1em;
     }
-    
+
     .badge__content {
       display: inline-block;
       white-space: nowrap;

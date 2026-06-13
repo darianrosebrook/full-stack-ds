@@ -39,7 +39,7 @@ export class DividerElement extends LitElement {
       --fsds-divider-size-thicknessThick: var(--fsds-core-shape-border-width-hairline, 1px);
       --fsds-divider-spacing-margin: var(--fsds-core-spacing-size-04, 8px);
     }
-    
+
     .divider {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -59,7 +59,7 @@ export class DividerElement extends LitElement {
       margin-top: var(--fsds-divider-spacing-margin);
       margin-bottom: var(--fsds-divider-spacing-margin);
     }
-    
+
     .divider--vertical {
       width: 1px;
       height: auto;
