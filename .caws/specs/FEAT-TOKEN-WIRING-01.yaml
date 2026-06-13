@@ -3,6 +3,7 @@ title: 'Wire new core tokens through semantic + component variants: default-bran
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: token-wiring
 created_at: '2026-06-13T10:05:18.578Z'
 updated_at: '2026-06-13T10:05:31.644Z'
 blast_radius:
