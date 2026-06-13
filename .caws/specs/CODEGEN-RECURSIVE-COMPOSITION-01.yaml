@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: recursive-composition
 created_at: '2026-06-13T04:49:58.476Z'
-updated_at: '2026-06-13T07:15:51.976Z'
+updated_at: '2026-06-13T10:02:32.108Z'
 blast_radius:
   modules:
     - 'ds-codegen contract schema, semantic IR, and all five framework emitters (react/vue/svelte/angular/lit)'
@@ -62,6 +62,13 @@ scope:
     - packages/ds-lit/src/components/Chip/
     - packages/ds-figma-plugin/src/generated/components/Avatar/
     - packages/ds-figma-plugin/src/generated/components/Chip/
+    - packages/ds-contracts/components/Alert/
+    - packages/ds-react/src/components/Alert/
+    - packages/ds-vue/src/components/Alert/
+    - packages/ds-svelte/src/components/Alert/
+    - packages/ds-angular/src/components/Alert/
+    - packages/ds-lit/src/components/Alert/
+    - packages/ds-figma-plugin/src/generated/components/Alert/
   out: []
 invariants:
   - 'A contract part/dom-node carrying componentRef is mutually exclusive with tag: a node declares EITHER a native tag OR a component reference, never both.'
