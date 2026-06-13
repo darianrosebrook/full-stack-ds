@@ -88,7 +88,7 @@ export function Calendar({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="application" data-testid={testId} {...rest}>
+  <div className={`${classNames}`} role="application" data-testid={testId} {...rest}>
     <div className="calendar__header">
       <button className="calendar__nav" aria-label="Previous month" />
       <span className="calendar__caption" />
@@ -105,7 +105,7 @@ export function Calendar({
         </tr>
       </tbody>
     </table>
-  </Stack>
+  </div>
   );
 }
 // @generated:end
