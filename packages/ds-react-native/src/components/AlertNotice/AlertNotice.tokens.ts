@@ -326,6 +326,30 @@ export const alertNoticeTokenScopes = {
       ref: "semantic.typography.font.weight.bold",
       fallback: "700",
     },
+    "alert-notice.color.background.info": {
+      name: "alert-notice.color.background.info",
+      cssVar: "--fsds-alert-notice-color-background-info",
+      ref: "semantic.color.background.info.softer",
+      fallback: "#eef7ff",
+    },
+    "alert-notice.color.background.success": {
+      name: "alert-notice.color.background.success",
+      cssVar: "--fsds-alert-notice-color-background-success",
+      ref: "semantic.color.background.success.softer",
+      fallback: "#eef7ea",
+    },
+    "alert-notice.color.background.warning": {
+      name: "alert-notice.color.background.warning",
+      cssVar: "--fsds-alert-notice-color-background-warning",
+      ref: "semantic.color.background.warning.softer",
+      fallback: "#fff4e0",
+    },
+    "alert-notice.color.background.danger": {
+      name: "alert-notice.color.background.danger",
+      cssVar: "--fsds-alert-notice-color-background-danger",
+      ref: "semantic.color.background.danger.softer",
+      fallback: "#fdf0f0",
+    },
   },
 } satisfies ComponentTokenScopes;
 

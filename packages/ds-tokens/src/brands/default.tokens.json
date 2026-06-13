@@ -54,7 +54,7 @@
         "$value": "{color.palette.red.500}",
         "$extensions": {
           "fsds.light": "{color.palette.red.500}",
-          "fsds.dark": "{color.palette.red.400}"
+          "fsds.dark": "{color.palette.red.500}"
         }
       },
       "highlight": {

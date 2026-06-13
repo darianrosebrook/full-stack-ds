@@ -2222,6 +2222,14 @@
               "light": "#fac3c3",
               "dark": "#6a0000"
             }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer danger background — the lightest intent wash (palette .50/.900). For large-area surfaces (full-width alert/toast banners) where .subtle reads too strong. on-danger-subtle text clears AA on it (~7.8:1).",
+            "$value": {
+              "light": "#fce5e5",
+              "dark": "#440000"
+            }
           }
         },
         "elevated": {
@@ -2274,6 +2282,14 @@
               "light": "#96dafb",
               "dark": "#002782"
             }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer info background — lightest intent wash (palette .50/.900) for large-area surfaces. on-info-subtle text clears AA (~7.8:1).",
+            "$value": {
+              "light": "#ceeffd",
+              "dark": "#001655"
+            }
           }
         },
         "success": {
@@ -2292,6 +2308,14 @@
               "light": "#b3dba7",
               "dark": "#1e3703"
             }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer success background — lightest intent wash (palette .50/.900) for large-area surfaces. on-success-subtle text clears AA (~7.7:1).",
+            "$value": {
+              "light": "#deefd9",
+              "dark": "#112100"
+            }
           }
         },
         "warning": {
@@ -2309,6 +2333,14 @@
             "$value": {
               "light": "#fdc781",
               "dark": "#4b2900"
+            }
+          },
+          "softer": {
+            "$type": "color",
+            "$description": "Softer warning background — lightest intent wash (palette .50/.900) for large-area surfaces. on-warning-subtle text clears AA (~7.8:1).",
+            "$value": {
+              "light": "#fee7c0",
+              "dark": "#2f1700"
             }
           }
         },

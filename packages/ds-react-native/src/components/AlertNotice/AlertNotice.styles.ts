@@ -24,7 +24,7 @@ export function createAlertNoticeStyles(theme?: FsdsTheme) {
     root_variant_error: definedStyle({ backgroundColor: (tokens.root?.["alert-notice.color.background.danger"] as string | undefined), borderColor: (tokens.root?.["alert-notice.color.border.danger"] as string | undefined) }),
     root_variant_info: definedStyle({ backgroundColor: (tokens.root?.["alert-notice.color.background.info"] as string | undefined), borderColor: (tokens.root?.["alert-notice.color.border.info"] as string | undefined) }),
     root_variant_inline: definedStyle({ gap: (tokens.variant_inline?.["alert-notice.spacing.gap"] as number | undefined) }),
-    root_variant_page: definedStyle({ gap: (tokens.variant_page?.["alert-notice.spacing.gap"] as number | undefined) }),
+    root_variant_page: definedStyle({ gap: (tokens.variant_page?.["alert-notice.spacing.gap"] as number | undefined), backgroundColor: (tokens.variant_page?.["alert-notice.color.background.danger"] as string | undefined) }),
     root_variant_section: definedStyle({ gap: (tokens.variant_section?.["alert-notice.spacing.gap"] as number | undefined) }),
     root_variant_success: definedStyle({ backgroundColor: (tokens.root?.["alert-notice.color.background.success"] as string | undefined), borderColor: (tokens.root?.["alert-notice.color.border.success"] as string | undefined) }),
     root_variant_warning: definedStyle({ backgroundColor: (tokens.root?.["alert-notice.color.background.warning"] as string | undefined), borderColor: (tokens.root?.["alert-notice.color.border.warning"] as string | undefined) }),

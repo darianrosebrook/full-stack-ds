@@ -74,6 +74,15 @@
             "fsds.dark": "{color.palette.red.800}"
           },
           "$description": "Subtle danger background color"
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.red.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.red.50}",
+            "fsds.dark": "{color.palette.red.900}"
+          },
+          "$description": "Softer danger background — the lightest intent wash (palette .50/.900). For large-area surfaces (full-width alert/toast banners) where .subtle reads too strong. on-danger-subtle text clears AA on it (~7.8:1)."
         }
       },
       "elevated": {
@@ -140,6 +149,15 @@
             "fsds.dark": "{color.palette.blue.800}"
           },
           "$description": "Subtle info background color"
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.blue.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.blue.50}",
+            "fsds.dark": "{color.palette.blue.900}"
+          },
+          "$description": "Softer info background — lightest intent wash (palette .50/.900) for large-area surfaces. on-info-subtle text clears AA (~7.8:1)."
         }
       },
       "success": {
@@ -160,6 +178,15 @@
             "fsds.dark": "{color.palette.green.800}"
           },
           "$description": "Subtle success background color"
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.green.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.green.50}",
+            "fsds.dark": "{color.palette.green.900}"
+          },
+          "$description": "Softer success background — lightest intent wash (palette .50/.900) for large-area surfaces. on-success-subtle text clears AA (~7.7:1)."
         }
       },
       "warning": {
@@ -180,6 +207,15 @@
             "fsds.dark": "{color.palette.orange.800}"
           },
           "$description": "Subtle warning background color"
+        },
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.orange.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.orange.50}",
+            "fsds.dark": "{color.palette.orange.900}"
+          },
+          "$description": "Softer warning background — lightest intent wash (palette .50/.900) for large-area surfaces. on-warning-subtle text clears AA (~7.8:1)."
         }
       },
       "active": {

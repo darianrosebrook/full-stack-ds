@@ -114,8 +114,8 @@ export const popoverTokenScopes = {
     "popover.elevation.default": {
       name: "popover.elevation.default",
       cssVar: "--fsds-popover-elevation-default",
-      ref: "semantic.elevation.default",
-      fallback: "0 2px 8px rgba(0,0,0,0.12)",
+      ref: "semantic.elevation.surface.popover",
+      fallback: "0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1)",
     },
     "popover.layer.content": {
       name: "popover.layer.content",
