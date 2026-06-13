@@ -1164,8 +1164,23 @@ function domTreeHasRole(node: DomNodeIR | null | undefined, role: string): boole
   return node.children.some((child) => domTreeHasRole(child, role));
 }
 
+/** True if the node, or any node in its subtree, is a native table-composition
+ *  tag (table/thead/tbody/tfoot/tr/th/td/caption). A Table root is `<div>`
+ *  wrapping a `<table>`, so the table-ness lives in the children, not the root
+ *  tag — checking only the root tag would miss it. */
+function domTreeHasTableComposition(node: DomNodeIR | null | undefined): boolean {
+  if (!node) return false;
+  if (TABLE_COMPOSITION_TAGS.has(node.tag)) return true;
+  return node.children.some(domTreeHasTableComposition);
+}
+
 function reactDomRootUsesStack(ir: ComponentIR): boolean {
-  return Boolean(ir.dom && !TABLE_COMPOSITION_TAGS.has(ir.dom.tag));
+  // A DOM-tree root is polymorphically hosted by <Stack as="..."> EXCEPT when it
+  // realizes a native HTML table: a <table> (or any table-composition tag) in
+  // the tree must render as raw elements so the browser's table content model is
+  // preserved — Stack cannot host `<tr>`/`<td>` semantics. The root tag is the
+  // wrapper `<div>`, so the table can be a descendant, not the root itself.
+  return Boolean(ir.dom && !domTreeHasTableComposition(ir.dom));
 }
 
 /**

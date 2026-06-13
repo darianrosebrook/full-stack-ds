@@ -1,6 +1,5 @@
 // @generated:start imports
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from "react";
-import { Stack } from "../../primitives";
 import "./Table.css";
 // @generated:end
 
@@ -216,11 +215,11 @@ export function Table({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
+  <div className={`${classNames}`} data-testid={testId} {...rest}>
     <table className="table__container" aria-label={ariaLabel}>
       {children}
     </table>
-  </Stack>
+  </div>
   );
 }
 // @generated:end

@@ -14,7 +14,11 @@
  * Note on the regexes: `\.card(?![-\w])` matches the *bare* `.card` selector
  * but NOT `.card--inset`, `.card-toolbar`, `.tokens-card`, or `.cardiac` — and
  * we strip CSS comments first so the explanatory comment that mentions
- * `.card`/`.tabs` by name does not trip the guard.
+ * `.card`/`.tabs` by name does not trip the guard. The gap before `{` excludes
+ * `( ) ,` so the guard only fires on a *bare* rule whose own selector is
+ * `.card` (e.g. `.card {`, `.card:hover {`) — NOT `.card` appearing as one
+ * member of a grouped, zero-specificity `:where(…/.card/…) {` selector list
+ * (which is scoped and cannot collide with the DS component's own styles).
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
@@ -27,12 +31,12 @@ const read = (rel: string) => readFileSync(resolve(SRC, rel), "utf8");
 const stripCssComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
 
 // Exported so the negative-control test can prove these patterns actually bite.
-export const BARE_CARD_RULE = /\.card(?![-\w])\s*[^{}]*\{/g;
-export const BARE_TABS_RULE = /\.tabs(?![-\w])\s*[^{}]*\{/g;
+export const BARE_CARD_RULE = /\.card(?![-\w])[^{}(),]*\{/g;
+export const BARE_TABS_RULE = /\.tabs(?![-\w])[^{}(),]*\{/g;
 // SHOWCASE-CONSUMPTION-03 A3/A4: DS Chip renders `class="chip chip--<variant>"`,
 // so a bare `.chip {}` app rule cascades onto every DS Chip — same failure mode
 // as .card/.tabs. The app pill family is `.pill`.
-export const BARE_CHIP_RULE = /\.chip(?![-\w])\s*[^{}]*\{/g;
+export const BARE_CHIP_RULE = /\.chip(?![-\w])[^{}(),]*\{/g;
 
 // A hand-rolled data table is signalled by a raw `<table>` element in the JSX.
 // After SHOWCASE-CONSUMPTION-02/03 every showcase data table renders via the DS
