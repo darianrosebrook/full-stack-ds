@@ -11,40 +11,40 @@
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.400}",
-          "design.paths.dark": "{color.palette.orange.300}"
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.300}"
         }
       },
       "link": {
         "$type": "color",
         "$value": "{color.palette.orange.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.500}",
-          "design.paths.dark": "{color.palette.orange.400}"
+          "fsds.light": "{color.palette.orange.500}",
+          "fsds.dark": "{color.palette.orange.400}"
         }
       },
       "linkHover": {
         "$type": "color",
         "$value": "{color.palette.orange.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.600}",
-          "design.paths.dark": "{color.palette.orange.300}"
+          "fsds.light": "{color.palette.orange.600}",
+          "fsds.dark": "{color.palette.orange.300}"
         }
       },
       "linkVisited": {
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.400}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.orange.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.700}",
-          "design.paths.dark": "{color.palette.orange.200}"
+          "fsds.light": "{color.palette.orange.700}",
+          "fsds.dark": "{color.palette.orange.200}"
         }
       }
     },
@@ -53,24 +53,24 @@
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.400}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.orange.100}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.100}",
-          "design.paths.dark": "{color.palette.orange.800}"
+          "fsds.light": "{color.palette.orange.100}",
+          "fsds.dark": "{color.palette.orange.800}"
         }
       },
       "brand": {
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.400}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
         }
       }
     },
@@ -79,16 +79,16 @@
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.400}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
         }
       },
       "default": {
         "$type": "color",
         "$value": "{color.palette.neutral.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.300}",
-          "design.paths.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
         },
         "$description": "Default input border - simple neutral gray"
       },
@@ -96,8 +96,8 @@
         "$type": "color",
         "$value": "{color.palette.orange.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.300}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.300}",
+          "fsds.dark": "{color.palette.orange.500}"
         },
         "$description": "Input hover border - warmer orange"
       },
@@ -105,8 +105,8 @@
         "$type": "color",
         "$value": "{color.palette.orange.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.400}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.400}",
+          "fsds.dark": "{color.palette.orange.500}"
         },
         "$description": "Input focus border - energetic orange accent"
       },
@@ -114,8 +114,8 @@
         "$type": "color",
         "$value": "{color.palette.orange.100}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.100}",
-          "design.paths.dark": "{color.palette.orange.700}"
+          "fsds.light": "{color.palette.orange.100}",
+          "fsds.dark": "{color.palette.orange.700}"
         },
         "$description": "Light input border - very subtle orange"
       },
@@ -123,8 +123,8 @@
         "$type": "color",
         "$value": "{color.palette.orange.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.300}",
-          "design.paths.dark": "{color.palette.orange.500}"
+          "fsds.light": "{color.palette.orange.300}",
+          "fsds.dark": "{color.palette.orange.500}"
         },
         "$description": "Primary input border - medium orange"
       }
@@ -135,8 +135,8 @@
           "$type": "color",
           "$value": "{color.palette.orange.500}",
           "$extensions": {
-            "design.paths.light": "{color.palette.orange.500}",
-            "design.paths.dark": "{color.palette.orange.400}"
+            "fsds.light": "{color.palette.orange.500}",
+            "fsds.dark": "{color.palette.orange.400}"
           }
         }
       }
@@ -184,8 +184,8 @@
         "$type": "color",
         "$value": "{color.palette.orange.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.orange.300}",
-          "design.paths.dark": "{color.palette.orange.400}"
+          "fsds.light": "{color.palette.orange.300}",
+          "fsds.dark": "{color.palette.orange.400}"
         }
       }
     }
@@ -211,8 +211,8 @@
           "$type": "color",
           "$value": "{color.palette.orange.100}",
           "$extensions": {
-            "design.paths.light": "{color.palette.orange.100}",
-            "design.paths.dark": "{color.palette.orange.800}"
+            "fsds.light": "{color.palette.orange.100}",
+            "fsds.dark": "{color.palette.orange.800}"
           },
           "$description": "Light card border - very subtle orange"
         },
@@ -220,8 +220,8 @@
           "$type": "color",
           "$value": "{color.palette.orange.200}",
           "$extensions": {
-            "design.paths.light": "{color.palette.orange.200}",
-            "design.paths.dark": "{color.palette.orange.700}"
+            "fsds.light": "{color.palette.orange.200}",
+            "fsds.dark": "{color.palette.orange.700}"
           },
           "$description": "Medium card border - subtle warm orange"
         },
@@ -229,8 +229,8 @@
           "$type": "color",
           "$value": "{color.palette.orange.400}",
           "$extensions": {
-            "design.paths.light": "{color.palette.orange.400}",
-            "design.paths.dark": "{color.palette.orange.500}"
+            "fsds.light": "{color.palette.orange.400}",
+            "fsds.dark": "{color.palette.orange.500}"
           },
           "$description": "Dark card border - visible orange"
         },
@@ -238,8 +238,8 @@
           "$type": "color",
           "$value": "{color.mode.transparent}",
           "$extensions": {
-            "design.paths.light": "{color.mode.transparent}",
-            "design.paths.dark": "{color.mode.transparent}"
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
           },
           "$description": "Transparent card border - warm, energetic"
         }

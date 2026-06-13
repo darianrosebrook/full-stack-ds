@@ -11,40 +11,40 @@
         "$type": "color",
         "$value": "{color.palette.yellow.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.600}",
-          "design.paths.dark": "{color.palette.yellow.400}"
+          "fsds.light": "{color.palette.yellow.600}",
+          "fsds.dark": "{color.palette.yellow.400}"
         }
       },
       "link": {
         "$type": "color",
         "$value": "{color.palette.yellow.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.600}",
-          "design.paths.dark": "{color.palette.yellow.400}"
+          "fsds.light": "{color.palette.yellow.600}",
+          "fsds.dark": "{color.palette.yellow.400}"
         }
       },
       "linkHover": {
         "$type": "color",
         "$value": "{color.palette.yellow.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.700}",
-          "design.paths.dark": "{color.palette.yellow.300}"
+          "fsds.light": "{color.palette.yellow.700}",
+          "fsds.dark": "{color.palette.yellow.300}"
         }
       },
       "linkVisited": {
         "$type": "color",
         "$value": "{color.palette.yellow.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.500}",
-          "design.paths.dark": "{color.palette.yellow.500}"
+          "fsds.light": "{color.palette.yellow.500}",
+          "fsds.dark": "{color.palette.yellow.500}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.yellow.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.700}",
-          "design.paths.dark": "{color.palette.yellow.200}"
+          "fsds.light": "{color.palette.yellow.700}",
+          "fsds.dark": "{color.palette.yellow.200}"
         }
       }
     },
@@ -53,16 +53,16 @@
         "$type": "color",
         "$value": "{color.palette.yellow.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.500}",
-          "design.paths.dark": "{color.palette.yellow.400}"
+          "fsds.light": "{color.palette.yellow.500}",
+          "fsds.dark": "{color.palette.yellow.400}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.yellow.200}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.200}",
-          "design.paths.dark": "{color.palette.yellow.700}"
+          "fsds.light": "{color.palette.yellow.200}",
+          "fsds.dark": "{color.palette.yellow.700}"
         }
       }
     },
@@ -71,16 +71,16 @@
         "$type": "color",
         "$value": "{color.palette.yellow.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.500}",
-          "design.paths.dark": "{color.palette.yellow.400}"
+          "fsds.light": "{color.palette.yellow.500}",
+          "fsds.dark": "{color.palette.yellow.400}"
         }
       },
       "default": {
         "$type": "color",
         "$value": "{color.palette.neutral.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.300}",
-          "design.paths.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
         },
         "$description": "Default input border - simple neutral gray"
       },
@@ -88,8 +88,8 @@
         "$type": "color",
         "$value": "{color.palette.yellow.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.400}",
-          "design.paths.dark": "{color.palette.yellow.500}"
+          "fsds.light": "{color.palette.yellow.400}",
+          "fsds.dark": "{color.palette.yellow.500}"
         },
         "$description": "Input hover border - brighter yellow"
       },
@@ -97,8 +97,8 @@
         "$type": "color",
         "$value": "{color.palette.yellow.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.500}",
-          "design.paths.dark": "{color.palette.yellow.400}"
+          "fsds.light": "{color.palette.yellow.500}",
+          "fsds.dark": "{color.palette.yellow.400}"
         },
         "$description": "Input focus border - vibrant yellow accent"
       },
@@ -106,8 +106,8 @@
         "$type": "color",
         "$value": "{color.palette.yellow.200}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.200}",
-          "design.paths.dark": "{color.palette.yellow.700}"
+          "fsds.light": "{color.palette.yellow.200}",
+          "fsds.dark": "{color.palette.yellow.700}"
         },
         "$description": "Light input border - subtle yellow"
       },
@@ -115,8 +115,8 @@
         "$type": "color",
         "$value": "{color.palette.yellow.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.400}",
-          "design.paths.dark": "{color.palette.yellow.500}"
+          "fsds.light": "{color.palette.yellow.400}",
+          "fsds.dark": "{color.palette.yellow.500}"
         },
         "$description": "Primary input border - warm yellow"
       }
@@ -127,8 +127,8 @@
           "$type": "color",
           "$value": "{color.palette.yellow.600}",
           "$extensions": {
-            "design.paths.light": "{color.palette.yellow.600}",
-            "design.paths.dark": "{color.palette.yellow.400}"
+            "fsds.light": "{color.palette.yellow.600}",
+            "fsds.dark": "{color.palette.yellow.400}"
           }
         }
       }
@@ -168,8 +168,8 @@
         "$type": "color",
         "$value": "{color.palette.yellow.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.yellow.400}",
-          "design.paths.dark": "{color.palette.yellow.500}"
+          "fsds.light": "{color.palette.yellow.400}",
+          "fsds.dark": "{color.palette.yellow.500}"
         }
       }
     }
@@ -195,8 +195,8 @@
           "$type": "color",
           "$value": "{color.palette.yellow.100}",
           "$extensions": {
-            "design.paths.light": "{color.palette.yellow.100}",
-            "design.paths.dark": "{color.palette.yellow.800}"
+            "fsds.light": "{color.palette.yellow.100}",
+            "fsds.dark": "{color.palette.yellow.800}"
           },
           "$description": "Light card border - very subtle yellow"
         },
@@ -204,8 +204,8 @@
           "$type": "color",
           "$value": "{color.palette.yellow.200}",
           "$extensions": {
-            "design.paths.light": "{color.palette.yellow.200}",
-            "design.paths.dark": "{color.palette.yellow.700}"
+            "fsds.light": "{color.palette.yellow.200}",
+            "fsds.dark": "{color.palette.yellow.700}"
           },
           "$description": "Medium card border - subtle yellow"
         },
@@ -213,8 +213,8 @@
           "$type": "color",
           "$value": "{color.palette.yellow.400}",
           "$extensions": {
-            "design.paths.light": "{color.palette.yellow.400}",
-            "design.paths.dark": "{color.palette.yellow.500}"
+            "fsds.light": "{color.palette.yellow.400}",
+            "fsds.dark": "{color.palette.yellow.500}"
           },
           "$description": "Dark card border - visible yellow"
         },
@@ -222,8 +222,8 @@
           "$type": "color",
           "$value": "{color.mode.transparent}",
           "$extensions": {
-            "design.paths.light": "{color.mode.transparent}",
-            "design.paths.dark": "{color.mode.transparent}"
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
           },
           "$description": "Transparent card border - no border"
         }

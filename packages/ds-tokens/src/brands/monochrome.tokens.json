@@ -11,67 +11,66 @@
         "$type": "color",
         "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.700}",
-          "design.paths.dark": "{color.palette.neutral.300}"
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
         }
       },
       "link": {
         "$type": "color",
         "$value": "{color.palette.neutral.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.600}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.600}",
+          "fsds.dark": "{color.palette.neutral.400}"
         }
       },
       "linkHover": {
         "$type": "color",
         "$value": "{color.palette.neutral.800}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.800}",
-          "design.paths.dark": "{color.palette.neutral.100}"
+          "fsds.light": "{color.palette.neutral.800}",
+          "fsds.dark": "{color.palette.neutral.100}"
         }
       },
       "linkVisited": {
         "$type": "color",
         "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.500}"
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.500}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.neutral.800}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.800}",
-          "design.paths.dark": "{color.palette.neutral.200}"
+          "fsds.light": "{color.palette.neutral.800}",
+          "fsds.dark": "{color.palette.neutral.200}"
         }
       },
       "onColor": {
         "$type": "color",
         "$value": "{color.mode.dark}",
         "$extensions": {
-          "design.paths.light": "{color.mode.dark}",
-          "design.paths.dark": "{color.mode.light}"
+          "fsds.light": "{color.mode.dark}",
+          "fsds.dark": "{color.mode.light}"
         }
       }
-
     },
     "background": {
       "accent": {
         "$type": "color",
         "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.800}",
-          "design.paths.dark": "{color.palette.neutral.200}"
+          "fsds.light": "{color.palette.neutral.800}",
+          "fsds.dark": "{color.palette.neutral.200}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.neutral.200}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.200}",
-          "design.paths.dark": "{color.palette.neutral.700}"
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
         }
       }
     },
@@ -80,16 +79,16 @@
         "$type": "color",
         "$value": "{color.mode.transparent}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.400}"
         }
       },
       "default": {
         "$type": "color",
         "$value": "{color.palette.neutral.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.400}",
-          "design.paths.dark": "{color.palette.neutral.500}"
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
         },
         "$description": "Default input border - crisp neutral gray"
       },
@@ -97,8 +96,8 @@
         "$type": "color",
         "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.400}"
         },
         "$description": "Input hover border - darker neutral"
       },
@@ -106,8 +105,8 @@
         "$type": "color",
         "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.700}",
-          "design.paths.dark": "{color.palette.neutral.300}"
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
         },
         "$description": "Input focus border - high contrast neutral"
       },
@@ -115,8 +114,8 @@
         "$type": "color",
         "$value": "{color.palette.neutral.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.300}",
-          "design.paths.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
         },
         "$description": "Light input border - subtle neutral"
       },
@@ -124,8 +123,8 @@
         "$type": "color",
         "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.400}"
         },
         "$description": "Primary input border - medium neutral"
       }
@@ -136,8 +135,8 @@
           "$type": "color",
           "$value": "{color.palette.neutral.800}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.800}",
-            "design.paths.dark": "{color.palette.neutral.100}"
+            "fsds.light": "{color.palette.neutral.800}",
+            "fsds.dark": "{color.palette.neutral.100}"
           }
         }
       }
@@ -177,8 +176,8 @@
         "$type": "color",
         "$value": "{color.palette.neutral.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.600}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.600}",
+          "fsds.dark": "{color.palette.neutral.400}"
         }
       }
     }
@@ -204,8 +203,8 @@
           "$type": "color",
           "$value": "{color.palette.neutral.200}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.200}",
-            "design.paths.dark": "{color.palette.neutral.700}"
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
           },
           "$description": "Light card border - very subtle neutral"
         },
@@ -213,8 +212,8 @@
           "$type": "color",
           "$value": "{color.palette.neutral.300}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.300}",
-            "design.paths.dark": "{color.palette.neutral.600}"
+            "fsds.light": "{color.palette.neutral.300}",
+            "fsds.dark": "{color.palette.neutral.600}"
           },
           "$description": "Medium card border - subtle neutral"
         },
@@ -222,8 +221,8 @@
           "$type": "color",
           "$value": "{color.palette.neutral.500}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.500}",
-            "design.paths.dark": "{color.palette.neutral.400}"
+            "fsds.light": "{color.palette.neutral.500}",
+            "fsds.dark": "{color.palette.neutral.400}"
           },
           "$description": "Dark card border - visible neutral"
         },
@@ -231,8 +230,8 @@
           "$type": "color",
           "$value": "{color.mode.transparent}",
           "$extensions": {
-            "design.paths.light": "{color.mode.transparent}",
-            "design.paths.dark": "{color.mode.transparent}"
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
           },
           "$description": "Transparent card border - no border, minimal"
         }

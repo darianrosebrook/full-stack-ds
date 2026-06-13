@@ -11,40 +11,40 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "link": {
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "linkHover": {
         "$type": "color",
         "$value": "{color.palette.violet.600}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.600}",
-          "design.paths.dark": "{color.palette.violet.300}"
+          "fsds.light": "{color.palette.violet.600}",
+          "fsds.dark": "{color.palette.violet.300}"
         }
       },
       "linkVisited": {
         "$type": "color",
         "$value": "{color.palette.violet.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.violet.400}",
+          "fsds.dark": "{color.palette.violet.500}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.violet.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.700}",
-          "design.paths.dark": "{color.palette.violet.200}"
+          "fsds.light": "{color.palette.violet.700}",
+          "fsds.dark": "{color.palette.violet.200}"
         }
       }
     },
@@ -53,24 +53,24 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "highlight": {
         "$type": "color",
         "$value": "{color.palette.violet.100}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.100}",
-          "design.paths.dark": "{color.palette.violet.800}"
+          "fsds.light": "{color.palette.violet.100}",
+          "fsds.dark": "{color.palette.violet.800}"
         }
       },
       "brand": {
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       }
     },
@@ -79,16 +79,16 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         }
       },
       "default": {
         "$type": "color",
         "$value": "{color.palette.neutral.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.300}",
-          "design.paths.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
         },
         "$description": "Default input border - simple neutral gray"
       },
@@ -96,8 +96,8 @@
         "$type": "color",
         "$value": "{color.palette.violet.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.violet.400}",
+          "fsds.dark": "{color.palette.violet.500}"
         },
         "$description": "Input hover border - deeper violet"
       },
@@ -105,8 +105,8 @@
         "$type": "color",
         "$value": "{color.palette.violet.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.500}",
-          "design.paths.dark": "{color.palette.violet.400}"
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.400}"
         },
         "$description": "Input focus border - premium violet accent"
       },
@@ -114,8 +114,8 @@
         "$type": "color",
         "$value": "{color.palette.violet.200}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.200}",
-          "design.paths.dark": "{color.palette.violet.700}"
+          "fsds.light": "{color.palette.violet.200}",
+          "fsds.dark": "{color.palette.violet.700}"
         },
         "$description": "Light input border - very subtle violet"
       },
@@ -123,8 +123,8 @@
         "$type": "color",
         "$value": "{color.palette.violet.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.violet.400}",
+          "fsds.dark": "{color.palette.violet.500}"
         },
         "$description": "Primary input border - medium violet"
       }
@@ -135,8 +135,8 @@
           "$type": "color",
           "$value": "{color.palette.violet.500}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.500}",
-            "design.paths.dark": "{color.palette.violet.400}"
+            "fsds.light": "{color.palette.violet.500}",
+            "fsds.dark": "{color.palette.violet.400}"
           }
         }
       }
@@ -176,8 +176,8 @@
         "$type": "color",
         "$value": "{color.palette.violet.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.violet.400}",
-          "design.paths.dark": "{color.palette.violet.500}"
+          "fsds.light": "{color.palette.violet.400}",
+          "fsds.dark": "{color.palette.violet.500}"
         }
       }
     }
@@ -203,8 +203,8 @@
           "$type": "color",
           "$value": "{color.palette.violet.200}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.200}",
-            "design.paths.dark": "{color.palette.violet.700}"
+            "fsds.light": "{color.palette.violet.200}",
+            "fsds.dark": "{color.palette.violet.700}"
           },
           "$description": "Light card border - very subtle violet"
         },
@@ -212,8 +212,8 @@
           "$type": "color",
           "$value": "{color.palette.violet.300}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.300}",
-            "design.paths.dark": "{color.palette.violet.600}"
+            "fsds.light": "{color.palette.violet.300}",
+            "fsds.dark": "{color.palette.violet.600}"
           },
           "$description": "Medium card border - subtle mysterious violet"
         },
@@ -221,8 +221,8 @@
           "$type": "color",
           "$value": "{color.palette.violet.500}",
           "$extensions": {
-            "design.paths.light": "{color.palette.violet.500}",
-            "design.paths.dark": "{color.palette.violet.400}"
+            "fsds.light": "{color.palette.violet.500}",
+            "fsds.dark": "{color.palette.violet.400}"
           },
           "$description": "Dark card border - premium violet"
         },
@@ -230,8 +230,8 @@
           "$type": "color",
           "$value": "{color.mode.transparent}",
           "$extensions": {
-            "design.paths.light": "{color.mode.transparent}",
-            "design.paths.dark": "{color.mode.transparent}"
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
           },
           "$description": "Transparent card border - sophisticated, dramatic"
         }
