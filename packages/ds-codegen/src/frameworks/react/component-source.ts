@@ -28,6 +28,7 @@ import {
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   getGroupHostPart,
   getGroupHostOrnamentPart,
@@ -139,6 +140,14 @@ export function generateReactComponentSource(
     (!ir.dom || reactDomRootUsesStack(ir) || ir.compoundParts.length > 0);
   if (needsStackImport) {
     importLines.push(`import { Stack } from "${stackImportPath}";`);
+  }
+  // componentRef: import each referenced design-system component by relative
+  // sibling path (CODEGEN-RECURSIVE-COMPOSITION-01). Structural — driven by
+  // IR `componentRef` facts, never per-component name lore.
+  for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "react")) {
+    importLines.push(
+      `import { ${refImport.identifier} } from "${refImport.specifier}";`,
+    );
   }
   if (isCompound || (ir.dom && ir.behavior.normalizedChannels.length > 0)) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}";`);
@@ -1720,14 +1729,20 @@ function renderReactDomNode(
   const textChildLines = textChildren.map((tc) => `${" ".repeat(indent + 2)}${tc}`);
   const allChildren = [...textChildLines, ...renderedChildren];
 
-  // Self-closing vs open tag
-  // When emitting the root node and the contract declared a polymorphic
-  // root prop, swap the literal HTML tag for the JSX variable identifier.
-  // Inner calls (isRoot=false) ignore the override.
-  const tag = ctx.isRoot && ctx.rootTagOverride
-    ? ctx.rootTagOverride
-    : node.tag;
-  const useStackRoot = ctx.isRoot && ctx.useStackRoot;
+  // Self-closing vs open tag.
+  // componentRef: this node renders a referenced design-system component by
+  // its (PascalCase) name. JSX treats the capitalized identifier as a
+  // component, so `<Image src={...} />` resolves to the imported `Image`.
+  // The referenced component is never Stack-wrapped — it owns its own root.
+  // When emitting the root node and the contract declared a polymorphic root
+  // prop, swap the literal HTML tag for the JSX variable identifier. Inner
+  // calls (isRoot=false) ignore the override.
+  const tag = node.componentRef
+    ? node.componentRef
+    : ctx.isRoot && ctx.rootTagOverride
+      ? ctx.rootTagOverride
+      : node.tag;
+  const useStackRoot = ctx.isRoot && ctx.useStackRoot && !node.componentRef;
   if (useStackRoot) {
     if (ctx.rootTagOverride) {
       attrs.unshift(`as={${ctx.rootTagOverride}}`);
@@ -1737,7 +1752,12 @@ function renderReactDomNode(
     attrs.unshift(`layout="native"`);
   }
   const emittedTag = useStackRoot ? "Stack" : tag;
-  const isVoidEl = VOID_HTML_ELEMENTS.has(node.tag);
+  // A childless componentRef self-closes (`<Image .../>`), like a void
+  // element; `node.tag` is "" for a componentRef so the VOID set never
+  // matches it directly.
+  const isVoidEl = node.componentRef
+    ? true
+    : VOID_HTML_ELEMENTS.has(node.tag);
 
   let body: string;
   if (allChildren.length === 0 && (isVoidEl || useStackRoot)) {

@@ -25,8 +25,8 @@
         }
       },
       "image": {
-        "tag": "img",
-        "description": "Optional photo source rendered with empty alt text because the root owns the accessible label.",
+        "componentRef": "fsds.Image",
+        "description": "Optional photo source rendered with empty alt text because the root owns the accessible label. Realized by-reference as the Image primitive.",
         "role": "content"
       },
       "initials": {
@@ -46,7 +46,7 @@
       },
       "children": [
         {
-          "tag": "img",
+          "componentRef": "fsds.Image",
           "part": "image",
           "if": "src",
           "bindings": {
