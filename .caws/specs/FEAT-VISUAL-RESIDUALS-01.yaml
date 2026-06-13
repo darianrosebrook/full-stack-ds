@@ -3,6 +3,7 @@ title: 'Visual-fidelity residuals: RN border-inline-start mapping + Card stripe 
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: visual-residuals
 created_at: '2026-06-13T08:57:50.867Z'
 updated_at: '2026-06-13T08:58:03.519Z'
 blast_radius:
