@@ -1,0 +1,31 @@
+id: FEAT-TOKEN-WIRING-01
+title: 'Wire new core tokens through semantic + component variants: default-brand dark-accent contrast, 50/900 granularity, elevation/state-layer/badge-size consumption'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-13T10:05:18.578Z'
+updated_at: '2026-06-13T10:05:18.578Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'core-semantic-wiring'
+    type: behavior
+    path: 'packages/ds-tokens/src'
+  - name: 'contrast-gate'
+    type: contract-test
+    path: 'packages/ds-tokens'
