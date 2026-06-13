@@ -2,13 +2,35 @@
   "$schema": "../../../build/w3c/w3c-schema-strict.json",
   "elevation": {
     "surface": {
+      "flat": {
+        "$type": "shadow",
+        "$value": "{elevation.level.0}",
+        "$description": "No elevation — flush with the page plane."
+      },
       "raised": {
         "$type": "shadow",
-        "$value": "{elevation.level.1}"
+        "$value": "{elevation.level.1}",
+        "$description": "Resting surface — cards, list rows."
       },
       "floating": {
         "$type": "shadow",
-        "$value": "{elevation.level.2}"
+        "$value": "{elevation.level.2}",
+        "$description": "Hovered / sticky surface — raised above siblings."
+      },
+      "overlay": {
+        "$type": "shadow",
+        "$value": "{elevation.level.3}",
+        "$description": "Anchored floating surface — dropdowns, menus, tooltips."
+      },
+      "popover": {
+        "$type": "shadow",
+        "$value": "{elevation.level.4}",
+        "$description": "Detached anchored panel — popovers, sheets."
+      },
+      "dialog": {
+        "$type": "shadow",
+        "$value": "{elevation.level.5}",
+        "$description": "Top-most surface over the scrim — modal dialogs."
       }
     }
   }

@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../build/w3c/w3c-schema-strict.json",
+  "interaction": {
+    "stateLayer": {
+      "hover": {
+        "$type": "number",
+        "$value": "{opacity.50}",
+        "$description": "State-layer opacity for hover — a tonal overlay (currentColor at this alpha) laid over a surface, rather than a hardcoded second color. Material-style 4%."
+      },
+      "selected": {
+        "$type": "number",
+        "$value": "{opacity.100}",
+        "$description": "State-layer opacity for selected / focus-visible tonal overlay. 8%."
+      },
+      "pressed": {
+        "$type": "number",
+        "$value": "{opacity.200}",
+        "$description": "State-layer opacity for pressed / active tonal overlay. 12%."
+      },
+      "dragged": {
+        "$type": "number",
+        "$value": "{opacity.300}",
+        "$description": "State-layer opacity for dragged tonal overlay. 16%."
+      }
+    }
+  }
+}

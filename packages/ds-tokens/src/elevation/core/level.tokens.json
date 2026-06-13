@@ -5,106 +5,102 @@
       "0": {
         "$type": "shadow",
         "$value": {
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0
-          }
-        }
+          "offsetX": { "value": 0, "unit": "px" },
+          "offsetY": { "value": 0, "unit": "px" },
+          "blur": { "value": 0, "unit": "px" },
+          "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0 }
+        },
+        "$description": "Flat — no elevation. Resting on the page plane."
       },
       "1": {
         "$type": "shadow",
-        "$value": {
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
+        "$value": [
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 1, "unit": "px" },
+            "blur": { "value": 2, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.06 }
           },
-          "offsetY": {
-            "value": 1,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 3,
-            "unit": "px"
-          },
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.12
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 1, "unit": "px" },
+            "blur": { "value": 3, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.1 }
           }
-        }
+        ],
+        "$description": "Subtle resting lift — cards, list rows. Ambient + key two-layer shadow."
       },
       "2": {
         "$type": "shadow",
-        "$value": {
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
+        "$value": [
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 2, "unit": "px" },
+            "blur": { "value": 4, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.06 }
           },
-          "offsetY": {
-            "value": 3,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 6,
-            "unit": "px"
-          },
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.14
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 4, "unit": "px" },
+            "blur": { "value": 8, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.1 }
           }
-        }
+        ],
+        "$description": "Raised lift — hovered cards, sticky bars. Ambient + key two-layer shadow."
       },
       "3": {
         "$type": "shadow",
-        "$value": {
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
+        "$value": [
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 4, "unit": "px" },
+            "blur": { "value": 6, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.05 }
           },
-          "offsetY": {
-            "value": 8,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 16,
-            "unit": "px"
-          },
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.18
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 10, "unit": "px" },
+            "blur": { "value": 15, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.1 }
           }
-        }
+        ],
+        "$description": "Floating lift — dropdowns, popovers, tooltips. Ambient + key two-layer shadow."
+      },
+      "4": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 8, "unit": "px" },
+            "blur": { "value": 10, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.04 }
+          },
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 20, "unit": "px" },
+            "blur": { "value": 25, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.1 }
+          }
+        ],
+        "$description": "High lift — sheets, side panels. Ambient + key two-layer shadow."
+      },
+      "5": {
+        "$type": "shadow",
+        "$value": [
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 12, "unit": "px" },
+            "blur": { "value": 16, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.06 }
+          },
+          {
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 25, "unit": "px" },
+            "blur": { "value": 50, "unit": "px" },
+            "color": { "colorSpace": "srgb", "components": [0, 0, 0], "alpha": 0.15 }
+          }
+        ],
+        "$description": "Maximum lift — modal dialogs over the scrim. Ambient + key two-layer shadow."
       }
     }
   }

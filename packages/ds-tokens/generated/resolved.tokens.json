@@ -904,19 +904,33 @@
       "level": {
         "0": {
           "$type": "shadow",
+          "$description": "Flat — no elevation. Resting on the page plane.",
           "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":0,\"unit\":\"px\"},\"blur\":{\"value\":0,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0}}"
         },
         "1": {
           "$type": "shadow",
-          "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":3,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.12}}"
+          "$description": "Subtle resting lift — cards, list rows. Ambient + key two-layer shadow.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":2,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":3,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
         },
         "2": {
           "$type": "shadow",
-          "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":3,\"unit\":\"px\"},\"blur\":{\"value\":6,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.14}}"
+          "$description": "Raised lift — hovered cards, sticky bars. Ambient + key two-layer shadow.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":2,\"unit\":\"px\"},\"blur\":{\"value\":4,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":4,\"unit\":\"px\"},\"blur\":{\"value\":8,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
         },
         "3": {
           "$type": "shadow",
-          "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":8,\"unit\":\"px\"},\"blur\":{\"value\":16,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.18}}"
+          "$description": "Floating lift — dropdowns, popovers, tooltips. Ambient + key two-layer shadow.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":4,\"unit\":\"px\"},\"blur\":{\"value\":6,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.05}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":10,\"unit\":\"px\"},\"blur\":{\"value\":15,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
+        },
+        "4": {
+          "$type": "shadow",
+          "$description": "High lift — sheets, side panels. Ambient + key two-layer shadow.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":8,\"unit\":\"px\"},\"blur\":{\"value\":10,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.04}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":20,\"unit\":\"px\"},\"blur\":{\"value\":25,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
+        },
+        "5": {
+          "$type": "shadow",
+          "$description": "Maximum lift — modal dialogs over the scrim. Ambient + key two-layer shadow.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":12,\"unit\":\"px\"},\"blur\":{\"value\":16,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":25,\"unit\":\"px\"},\"blur\":{\"value\":50,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.15}}]"
         }
       },
       "offset": {
@@ -3263,7 +3277,7 @@
     "elevation": {
       "default": {
         "$type": "shadow",
-        "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":3,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.12}}"
+        "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":2,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":3,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
       },
       "depth": {
         "$type": "number",
@@ -3275,13 +3289,35 @@
         "$value": "none"
       },
       "surface": {
+        "flat": {
+          "$type": "shadow",
+          "$description": "No elevation — flush with the page plane.",
+          "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":0,\"unit\":\"px\"},\"blur\":{\"value\":0,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0}}"
+        },
         "raised": {
           "$type": "shadow",
-          "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":3,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.12}}"
+          "$description": "Resting surface — cards, list rows.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":2,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":1,\"unit\":\"px\"},\"blur\":{\"value\":3,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
         },
         "floating": {
           "$type": "shadow",
-          "$value": "{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":3,\"unit\":\"px\"},\"blur\":{\"value\":6,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.14}}"
+          "$description": "Hovered / sticky surface — raised above siblings.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":2,\"unit\":\"px\"},\"blur\":{\"value\":4,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":4,\"unit\":\"px\"},\"blur\":{\"value\":8,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
+        },
+        "overlay": {
+          "$type": "shadow",
+          "$description": "Anchored floating surface — dropdowns, menus, tooltips.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":4,\"unit\":\"px\"},\"blur\":{\"value\":6,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.05}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":10,\"unit\":\"px\"},\"blur\":{\"value\":15,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
+        },
+        "popover": {
+          "$type": "shadow",
+          "$description": "Detached anchored panel — popovers, sheets.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":8,\"unit\":\"px\"},\"blur\":{\"value\":10,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.04}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":20,\"unit\":\"px\"},\"blur\":{\"value\":25,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.1}}]"
+        },
+        "dialog": {
+          "$type": "shadow",
+          "$description": "Top-most surface over the scrim — modal dialogs.",
+          "$value": "[{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":12,\"unit\":\"px\"},\"blur\":{\"value\":16,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.06}},{\"offsetX\":{\"value\":0,\"unit\":\"px\"},\"offsetY\":{\"value\":25,\"unit\":\"px\"},\"blur\":{\"value\":50,\"unit\":\"px\"},\"color\":{\"colorSpace\":\"srgb\",\"components\":[0,0,0],\"alpha\":0.15}}]"
         }
       }
     },
@@ -3332,6 +3368,91 @@
       }
     },
     "glyph": {
+      "badge": {
+        "size": {
+          "sm": {
+            "paddingY": {
+              "$type": "dimension",
+              "$description": "Content-inline badge sm vertical padding — 2px.",
+              "$value": "2px"
+            },
+            "paddingX": {
+              "$type": "dimension",
+              "$description": "Content-inline badge sm horizontal padding — 4px.",
+              "$value": "4px"
+            },
+            "fontSize": {
+              "$type": "dimension",
+              "$description": "Content-inline badge sm font size — 10px.",
+              "$value": "10px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$description": "Content-inline badge sm icon/label gap — 2px.",
+              "$value": "2px"
+            },
+            "minHeight": {
+              "$type": "dimension",
+              "$description": "Content-inline badge sm minimum height — 16px.",
+              "$value": "16px"
+            }
+          },
+          "md": {
+            "paddingY": {
+              "$type": "dimension",
+              "$description": "Content-inline badge md vertical padding — 2px.",
+              "$value": "2px"
+            },
+            "paddingX": {
+              "$type": "dimension",
+              "$description": "Content-inline badge md horizontal padding — 8px.",
+              "$value": "8px"
+            },
+            "fontSize": {
+              "$type": "dimension",
+              "$description": "Content-inline badge md font size — 12px.",
+              "$value": "12px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$description": "Content-inline badge md icon/label gap — 4px.",
+              "$value": "4px"
+            },
+            "minHeight": {
+              "$type": "dimension",
+              "$description": "Content-inline badge md minimum height — 24px.",
+              "$value": "24px"
+            }
+          },
+          "lg": {
+            "paddingY": {
+              "$type": "dimension",
+              "$description": "Content-inline badge lg vertical padding — 4px.",
+              "$value": "4px"
+            },
+            "paddingX": {
+              "$type": "dimension",
+              "$description": "Content-inline badge lg horizontal padding — 12px.",
+              "$value": "12px"
+            },
+            "fontSize": {
+              "$type": "dimension",
+              "$description": "Content-inline badge lg font size — 14px.",
+              "$value": "14px"
+            },
+            "gap": {
+              "$type": "dimension",
+              "$description": "Content-inline badge lg icon/label gap — 4px.",
+              "$value": "4px"
+            },
+            "minHeight": {
+              "$type": "dimension",
+              "$description": "Content-inline badge lg minimum height — 32px.",
+              "$value": "32px"
+            }
+          }
+        }
+      },
       "size": {
         "small": {
           "extent": {
@@ -3499,6 +3620,28 @@
           "$type": "number",
           "$description": "Semantic alias for the disabled-state opacity. Resolves to the core interaction.disabled.opacity primitive (0.5). Contracts reference this semantic path; core path is the underlying primitive.",
           "$value": "0.5"
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$description": "State-layer opacity for hover — a tonal overlay (currentColor at this alpha) laid over a surface, rather than a hardcoded second color. Material-style 4%.",
+          "$value": "0.04"
+        },
+        "selected": {
+          "$type": "number",
+          "$description": "State-layer opacity for selected / focus-visible tonal overlay. 8%.",
+          "$value": "0.08"
+        },
+        "pressed": {
+          "$type": "number",
+          "$description": "State-layer opacity for pressed / active tonal overlay. 12%.",
+          "$value": "0.12"
+        },
+        "dragged": {
+          "$type": "number",
+          "$description": "State-layer opacity for dragged tonal overlay. 16%.",
+          "$value": "0.16"
         }
       },
       "text": {
