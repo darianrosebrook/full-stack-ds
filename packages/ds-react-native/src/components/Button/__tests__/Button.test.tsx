@@ -10,7 +10,7 @@ describe("Button React Native", () => {
   it("renders button semantics and press passthrough", () => {
   let renderer: ReactTestRenderer | undefined;
   act(() => {
-    renderer = TestRenderer.create(<Button onPress={() => undefined} testID="subject">Save</Button>);
+    renderer = TestRenderer.create(<Button onClick={() => undefined} testID="subject">Save</Button>);
   });
     const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;
     expect(subject.props.accessibilityRole).toBe("togglebutton");

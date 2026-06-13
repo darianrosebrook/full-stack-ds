@@ -30,7 +30,8 @@ export type EmitterFramework =
   | "vue"
   | "svelte"
   | "angular"
-  | "lit";
+  | "lit"
+  | "react-native";
 
 /**
  * Walk a dom tree and return the set of referenced component names (bare,
@@ -121,6 +122,10 @@ export function resolveComponentRefImport(
         specifier: `${base}.js`,
         kind: "side-effect",
       };
+    case "react-native":
+      // RN components are React function components like the web React build;
+      // named import, no extension.
+      return { refName, identifier: refName, specifier: base, kind: "named" };
   }
 }
 

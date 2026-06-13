@@ -22,7 +22,7 @@ export type ButtonType = "button" | "submit" | "reset";
   selector: "fsds-button",
   standalone: true,
   imports: [NgClass],
-  template: `<button [ngClass]="classes()" [type]="type" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
+  template: `<button [ngClass]="classes()" (click)="onClick && onClick()" [type]="type" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed" [attr.aria-busy]="loading">
   <ng-content />
 </button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +37,7 @@ export class ButtonComponent {
   @Input() ariaExpanded?: boolean;
   @Input() ariaPressed?: boolean;
   @Input() title?: string;
+  @Input() onClick?: () => void;
   @Input() class?: string;
 
   classes(): string {

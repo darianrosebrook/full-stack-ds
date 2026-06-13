@@ -28,6 +28,7 @@ interface Props {
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
   title?: string;
+  onClick?: () => void;
   class?: string;
   "data-testid"?: string;
 }
@@ -61,7 +62,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <button :class="classNames" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']">
+  <button :class="classNames" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :aria-busy="props.loading" :data-testid="props['data-testid']">
     <slot />
   </button>
 </template>

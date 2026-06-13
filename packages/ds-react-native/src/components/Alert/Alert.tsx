@@ -1,9 +1,10 @@
 // @generated:start imports
 import type { StyleProp, TextStyle, ViewStyle } from "react-native";
-import { Pressable, Text as RNText, View } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createAlertStyles } from "./Alert.styles";
+import { Button } from "../Button/Button";
 // @generated:end
 
 // @generated:start types
@@ -65,11 +66,10 @@ export function Alert({
       ) : null}
       {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForIntent, textVariantStyleForLevel]}>{children}</RNText> : children}
       {dismissible ? (
-      <Pressable
-        style={styles.dismiss}
-        accessibilityLabel={dismissLabel}
-        onPress={() => onDismiss?.()}
-        accessibilityRole="button"
+      <Button
+        ariaLabel={dismissLabel}
+        type="button"
+        onClick={onDismiss}
       />
       ) : null}
     </View>

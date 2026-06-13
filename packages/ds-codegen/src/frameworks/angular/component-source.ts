@@ -1336,6 +1336,11 @@ function renderAngularDomNode(
     attrs.push(rendered);
   }
 
+  // componentRef: look up each binding's IR classification (prop vs host attr)
+  // so the emitter picks syntax without guessing (normal-form property 4).
+  const refBindingByAttr = new Map(
+    (node.componentInstance?.bindings ?? []).map((b) => [b.sourceAttr, b]),
+  );
   for (const [key, expr] of Object.entries(node.bindings)) {
     // Dual-pathway dedup: parseDomNode mirrored `bindings.onX` to
     // `events.<x>` for back-compat. The canonical events loop above
@@ -1349,7 +1354,7 @@ function renderAngularDomNode(
       expr,
       ctx,
       node.tag,
-      node.componentRef !== undefined,
+      refBindingByAttr.get(key),
     );
     if (rendered === null) continue;
     attrs.push(rendered);
@@ -1435,7 +1440,8 @@ function renderAngularDomNode(
   // (`fsds-<kebab>`, matching how that component declares its own selector).
   // The class is imported and added to the standalone `imports: []` array by
   // the dom-tree generator; bindings reach the component's @Input via the
-  // `[prop]=` property form (see angularAttrBinding's isComponentRef path).
+  // `[prop]=` property form, driven by the IR's ComponentInstanceIR
+  // classification (see angularAttrBinding's refBinding path).
   const tag = node.componentRef
     ? `fsds-${toKebab(node.componentRef)}`
     : node.tag;
@@ -1561,24 +1567,20 @@ const ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG: Record<string, ReadonlySet<string>>
   svg: new Set(["height", "width"]),
 };
 
-/** Lower a hyphenated attribute name to a camelCase @Input name
- *  (`aria-label` → `ariaLabel`, `data-testid` → `dataTestid`). */
-function hyphenatedToCamel(attr: string): string {
-  return attr.replace(/-([a-z])/g, (_m, c: string) => c.toUpperCase());
-}
-
 function angularAttrBinding(
   attr: string,
   tag?: string,
-  isComponentRef?: boolean,
+  refBinding?: { kind: "prop" | "attribute"; targetProp?: string },
 ): string {
-  // componentRef: every binding targets the referenced component's @Input,
-  // so use the `[prop]=` property form (NOT `[attr.X]`, which would set a
-  // host attribute and bypass the @Input). Hyphenated names are camelCased to
-  // match the @Input naming the DS components declare (e.g. @Input() ariaLabel
-  // for aria-label, @Input() ariaDescribedby for aria-describedby).
-  if (isComponentRef) {
-    return attr.includes("-") ? `[${hyphenatedToCamel(attr)}]` : `[${attr}]`;
+  // componentRef: the IR already CLASSIFIED this binding against the target's
+  // prop surface (ComponentInstanceIR). kind:"prop" → `[targetProp]=` property
+  // binding (reaches the @Input); kind:"attribute" → `[attr.X]=` host attribute
+  // passthrough. The emitter never guesses prop-vs-attribute (normal-form
+  // property 4) — it reads the resolved fact.
+  if (refBinding) {
+    return refBinding.kind === "prop"
+      ? `[${refBinding.targetProp}]`
+      : `[attr.${attr}]`;
   }
   if (attr.startsWith("data-") || attr.startsWith("aria-")) {
     return `[attr.${attr}]`;
@@ -1704,26 +1706,26 @@ function renderAngularBinding(
   expr: BindingExpression,
   ctx: AngularRenderContext,
   tag?: string,
-  isComponentRef?: boolean,
+  refBinding?: { kind: "prop" | "attribute"; targetProp?: string },
 ): string | null {
   switch (expr.kind) {
     case "prop":
-      return `${angularAttrBinding(attr, tag, isComponentRef)}="${appendPath(angularPropAccessor(expr.prop, ctx), expr.path)}"`;
+      return `${angularAttrBinding(attr, tag, refBinding)}="${appendPath(angularPropAccessor(expr.prop, ctx), expr.path)}"`;
     case "literal":
       return `${attr}="${escapeAngularAttr(expr.value)}"`;
     case "iterationLocal": {
       const name = angularIterationLocalName(expr.local, ctx);
-      return name ? `${angularAttrBinding(attr, tag, isComponentRef)}="${appendPath(name, expr.path)}"` : null;
+      return name ? `${angularAttrBinding(attr, tag, refBinding)}="${appendPath(name, expr.path)}"` : null;
     }
     case "channel": {
       const ch = ctx.channelByName.get(expr.channel);
       if (!ch) return null;
       if (expr.field === "value") {
-        return `${angularAttrBinding(attr, tag, isComponentRef)}="${appendPath(`behavior.${ch.name}()`, expr.path)}"`;
+        return `${angularAttrBinding(attr, tag, refBinding)}="${appendPath(`behavior.${ch.name}()`, expr.path)}"`;
       }
       if (expr.field === "defaultValue") {
         if (!ch.defaultValueProp) return null;
-        return `${angularAttrBinding(attr, tag, isComponentRef)}="${safePropertyExpr(ch.defaultValueProp)}"`;
+        return `${angularAttrBinding(attr, tag, refBinding)}="${safePropertyExpr(ch.defaultValueProp)}"`;
       }
       // onChange synthesis — bind to a method on the component.
       // Event-shaped channels pass the raw event to the consumer's

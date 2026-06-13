@@ -1177,7 +1177,23 @@ function renderSvelteDomNode(
   // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Svelte 5's
   // `onclick={...}` lowercased-attribute form (NOT the legacy Svelte 4
   // `on:click={...}` directive — this codebase uses Svelte 5 runes).
+  //
+  // componentRef: a Svelte 5 component event is a PROP, not a DOM listener, so
+  // it must target the referenced component's handler prop name (`onClick`),
+  // which the IR resolved in ComponentInstanceIR.events.targetHandlerProp. When
+  // the target declares no handler prop, fall through to the DOM-event form.
+  const refEventByName = new Map(
+    (node.componentInstance?.events ?? []).map((e) => [e.name, e]),
+  );
   for (const [eventName, expr] of Object.entries(node.events)) {
+    const refEvent = refEventByName.get(eventName);
+    if (refEvent?.targetHandlerProp) {
+      const handlerExpr = renderSvelteEventHandlerExpr(expr, ctx);
+      if (handlerExpr !== null) {
+        attrs.push(`${refEvent.targetHandlerProp}={${handlerExpr}}`);
+      }
+      continue;
+    }
     const rendered = renderSvelteEvent(eventName, expr, ctx, node.tag);
     if (rendered === null) continue;
     attrs.push(rendered);
@@ -1619,6 +1635,20 @@ function svelteAttrName(name: string): string {
  * handling (using `resolveEventValueStrategy`) by delegating to the
  * synthetic JSX-attr name path in renderSvelteBinding.
  */
+/**
+ * Build the bare handler EXPRESSION for a componentRef event (no `onclick=`
+ * wrapper) so it can be assigned to the target component's resolved handler
+ * prop, e.g. `onClick={onDismiss}`. Only `prop:`/`channel:` handler sources
+ * are meaningful here; other kinds return null (the caller drops the attr).
+ */
+function renderSvelteEventHandlerExpr(
+  expr: BindingExpression,
+  ctx: SvelteRenderContext,
+): string | null {
+  if (expr.kind === "prop") return sveltePropAccessor(expr.prop, ctx);
+  return null;
+}
+
 function renderSvelteEvent(
   eventName: string,
   expr: BindingExpression,

@@ -146,10 +146,26 @@ function fieldLayoutTest(ir: ComponentIR): string {
   ].join("\n");
 }
 
+/**
+ * The component's consumer-facing activation handler prop — a callback-kind
+ * prop named `onClick`/`onPress`/`onActivate`. The RN button maps it internally
+ * to the Pressable's `onPress`. Defaults to `onPress` for components that don't
+ * declare one (back-compat with the pre-handler-prop shape).
+ */
+function activationHandlerProp(ir: ComponentIR): string {
+  const handler = ir.styledProps.find(
+    (p) =>
+      p.propType.kind === "callback" &&
+      /^on(Click|Press|Activate)$/.test(p.safeName),
+  );
+  return handler?.safeName ?? "onPress";
+}
+
 function buttonTest(ir: ComponentIR): string {
   const proof = variantBackgroundProof(ir);
   const imports = renderImports(ir);
   const expectedRole = ir.dom?.bindings["aria-pressed"] ? "togglebutton" : "button";
+  const handlerProp = activationHandlerProp(ir);
   if (proof) {
     imports.splice(
       imports.indexOf("// @generated:end"),
@@ -161,7 +177,7 @@ function buttonTest(ir: ComponentIR): string {
     ...imports,
     `describe("${ir.name} React Native", () => {`,
     `${INDENT}it("renders button semantics and press passthrough", () => {`,
-    ...rendererHelper(`<${ir.name} onPress={() => undefined} testID="subject">Save</${ir.name}>`),
+    ...rendererHelper(`<${ir.name} ${handlerProp}={() => undefined} testID="subject">Save</${ir.name}>`),
     `${INDENT}${INDENT}const subject = renderer!.root.findAllByProps({ testID: "subject" }).at(-1)!;`,
     `${INDENT}${INDENT}expect(subject.props.accessibilityRole).toBe(${JSON.stringify(expectedRole)});`,
     `${INDENT}${INDENT}expect(subject.props.onPress).toEqual(expect.any(Function));`,

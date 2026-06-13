@@ -21,7 +21,7 @@ export type ButtonType = "button" | "submit" | "reset";
 // @custom:end
 
 // @generated:start props
-export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ariaExpanded" | "ariaLabel" | "ariaPressed" | "children" | "className" | "data-testid" | "disabled" | "loading" | "size" | "title" | "type" | "variant"> {
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ariaExpanded" | "ariaLabel" | "ariaPressed" | "children" | "className" | "data-testid" | "disabled" | "loading" | "onClick" | "size" | "title" | "type" | "variant"> {
   size?: ButtonSize;
   variant?: ButtonVariant;
   type?: ButtonType;
@@ -31,6 +31,7 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
   title?: string;
+  onClick?: () => void;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -55,6 +56,7 @@ export function Button({
   ariaExpanded,
   ariaPressed,
   title,
+  onClick,
   ...rest
 }: ButtonProps) {
   const classNames = [
@@ -68,7 +70,7 @@ export function Button({
     .join(" ");
 
   return (
-  <Stack layout="native" as="button" className={`${classNames}`} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} {...rest}>
+  <Stack layout="native" as="button" className={`${classNames}`} onClick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading} data-testid={testId} {...rest}>
     {children}
   </Stack>
   );

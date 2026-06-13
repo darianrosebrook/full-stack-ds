@@ -1,9 +1,10 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Image as RNImage, View } from "react-native";
+import { View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createAvatarStyles } from "./Avatar.styles";
+import { Image } from "../Image/Image";
 // @generated:end
 
 // @generated:start types
@@ -45,10 +46,9 @@ export function Avatar({
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
       {src ? (
-      <RNImage
-        style={styles.image}
-        source={src ? { uri: String(src) } : undefined}
-        accessibilityLabel={""}
+      <Image
+        src={src}
+        alt={""}
       />
       ) : null}
     </View>

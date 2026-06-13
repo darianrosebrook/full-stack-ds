@@ -114,6 +114,15 @@
       "description": "Supplementary tooltip text.",
       "defaultExpr": null,
       "nodeKind": null
+    },
+    {
+      "name": "onClick",
+      "safeName": "onClick",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler invoked when the button is activated (click / Enter / Space).",
+      "defaultExpr": null,
+      "nodeKind": null
     }
   ],
   "variants": {

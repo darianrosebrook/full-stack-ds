@@ -46,6 +46,9 @@
         "aria-pressed": "prop:ariaPressed",
         "aria-busy": "prop:loading"
       },
+      "events": {
+        "click": "prop:onClick"
+      },
       "children": [
         {
           "tag": "children"
@@ -103,6 +106,11 @@
           "name": "title",
           "propType": { "kind": "string" },
           "description": "Supplementary tooltip text."
+        },
+        {
+          "name": "onClick",
+          "propType": { "kind": "callback", "params": [], "returns": { "kind": "void" } },
+          "description": "Handler invoked when the button is activated (click / Enter / Space)."
         }
       ]
     }

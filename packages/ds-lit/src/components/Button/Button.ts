@@ -222,6 +222,7 @@ export class ButtonElement extends LitElement {
   override ariaExpanded: string | null = null;
   @property({ attribute: 'aria-pressed', reflect: true })
   override ariaPressed: string | null = null;
+  @property({ attribute: false }) onClick?: () => void;
 
   private computeClasses(): string {
     return [
@@ -233,7 +234,7 @@ export class ButtonElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" type=${ifDefined(this.type)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-expanded=${ifDefined(this.ariaExpanded === undefined ? undefined : (this.ariaExpanded ? 'true' : 'false'))} aria-pressed=${ifDefined(this.ariaPressed === undefined ? undefined : (this.ariaPressed ? 'true' : 'false'))} aria-busy=${ifDefined(this.loading === undefined ? undefined : (this.loading ? 'true' : 'false'))}>
+    return html`<button class="${this.computeClasses()}" @click=${this.onClick} type=${ifDefined(this.type)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-expanded=${ifDefined(this.ariaExpanded === undefined ? undefined : (this.ariaExpanded ? 'true' : 'false'))} aria-pressed=${ifDefined(this.ariaPressed === undefined ? undefined : (this.ariaPressed ? 'true' : 'false'))} aria-busy=${ifDefined(this.loading === undefined ? undefined : (this.loading ? 'true' : 'false'))}>
   <slot></slot>
 </button>`;
   }

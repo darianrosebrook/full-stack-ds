@@ -1,5 +1,6 @@
 import type {
   BindingExpression,
+  ComponentInstanceIR,
   ComponentIR,
   DomNodeIR,
   NormalizedChannelIR,
@@ -7,6 +8,7 @@ import type {
   ResolvedPropIR,
 } from "../../ir.js";
 import { collectCollapseIntents } from "../../ir.js";
+import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   rnAnchoredSurface,
   rnSurfaceLowering,
@@ -139,6 +141,11 @@ function emitImports(ir: ComponentIR): string {
     usesNativeToggle(ir) || rnAutoDismiss(ir)
       ? `import { resolve${ir.name}Tokens } from "./${ir.name}.tokens";`
       : "",
+    // componentRef: import each referenced DS-RN sibling component
+    // (CODEGEN-RECURSIVE-COMPOSITION-01). Named imports, relative sibling path.
+    ...resolveComponentRefImports(ir.name, ir.dom, "react-native").map(
+      (r) => `import { ${r.identifier} } from "${r.specifier}";`,
+    ),
     "// @generated:end",
   ].filter(Boolean).join("\n");
 }
@@ -149,6 +156,13 @@ function collectRnComponents(node: DomNodeIR | undefined, imports: Set<string>):
     return;
   }
   if (node.tag === "children" || node.tag === "slot") return;
+  // componentRef nodes import a sibling DS component (collected separately by
+  // collectRnComponentRefImports), not an RN primitive — skip the primitive
+  // mapping but still recurse into children (which may use primitives).
+  if (node.componentInstance) {
+    for (const child of node.children) collectRnComponents(child, imports);
+    return;
+  }
   if (node.content) imports.add("Text as RNText");
   const component = rnComponentForNode(node);
   imports.add(
@@ -370,6 +384,21 @@ function collectNodeRuntimeUsage(
   if (!node) return;
   if (node.tag === "children" || node.tag === "slot") {
     usage.props.add("children");
+    return;
+  }
+  // componentRef: the node renders a DS-RN sibling component. Collect the host
+  // props its classified bindings/events reference (bypassing the RN-primitive
+  // support filters — those gate native components, not DS components). The
+  // `if`-guard prop is collected too. Children recurse.
+  if (node.componentInstance) {
+    if (node.ifProp) collectGuardRuntimeUsage(node.ifProp, ir, usage);
+    for (const b of node.componentInstance.bindings) {
+      if (b.kind === "prop") collectBindingRuntimeUsage(b.expr, ir, usage);
+    }
+    for (const ev of node.componentInstance.events) {
+      collectBindingRuntimeUsage(ev.expr, ir, usage, "setter");
+    }
+    for (const child of node.children) collectNodeRuntimeUsage(child, ir, usage);
     return;
   }
   const component = rnComponentForNode(node);
@@ -1042,6 +1071,7 @@ function emitNode(
 ): string | null {
   if (!node) return null;
   if (node.tag === "children" || node.tag === "slot") return `${INDENT.repeat(depth)}{children}`;
+  if (node.componentInstance) return emitComponentRefNode(node, node.componentInstance, ir, depth);
   if (node.iteration) return emitIteration(node, ir, depth);
 
   const component =
@@ -1056,6 +1086,65 @@ function emitNode(
     rendered = [`${pad}<${component}`, ...attrs, `${pad}/>`].join("\n");
   } else {
     rendered = [`${pad}<${component}`, ...attrs, `${pad}>`, ...childLines, `${pad}</${component}>`].join("\n");
+  }
+  return applyIfGuard(rendered, node, ir, pad);
+}
+
+/**
+ * Emit a `componentRef` node as the referenced DS-RN component
+ * (CODEGEN-RECURSIVE-COMPOSITION-01). The RN DS components are generated from
+ * the SAME contracts as the web build, so the IR's resolved prop names
+ * (`ariaLabel`, `src`, `alt`, …) map directly to RN component props — no
+ * HTML→primitive translation. Consumes the classified ComponentInstanceIR:
+ *   - kind:"prop" binding → `targetProp={expr}`
+ *   - kind:"attribute" binding → skipped (RN components don't take host attrs)
+ *   - events: `click` → RN's `onPress` convention, others → `on<Event>`
+ *   - static attrs that are props → `prop="value"`; children recurse.
+ */
+function emitComponentRefNode(
+  node: DomNodeIR,
+  instance: ComponentInstanceIR,
+  ir: ComponentIR,
+  depth: number,
+): string {
+  const pad = INDENT.repeat(depth);
+  const propPad = INDENT.repeat(depth + 1);
+  const component = instance.ref;
+  const props: string[] = [];
+
+  for (const b of instance.bindings) {
+    if (b.kind !== "prop" || !b.targetProp) continue;
+    props.push(`${propPad}${b.targetProp}={${bindingExpr(b.expr, ir)}}`);
+  }
+  for (const a of instance.attrs) {
+    if (a.kind !== "prop" || !a.targetProp) continue;
+    props.push(`${propPad}${a.targetProp}="${a.value}"`);
+  }
+  for (const ev of instance.events) {
+    // Prefer the target's RESOLVED handler prop (e.g. `onClick`, from the
+    // referenced component's contract). Only when the target declares no
+    // handler prop fall back to RN's native press convention (`click` →
+    // `onPress`) so an undeclared event still wires to a pressable.
+    const handlerProp =
+      ev.targetHandlerProp ??
+      (ev.name === "click"
+        ? "onPress"
+        : `on${ev.name.charAt(0).toUpperCase()}${ev.name.slice(1)}`);
+    props.push(`${propPad}${handlerProp}={${bindingExpr(ev.expr, ir)}}`);
+  }
+
+  const childLines = emitNodeChildren(node, ir, depth + 1);
+  let rendered: string;
+  if (childLines.length === 0) {
+    rendered = [`${pad}<${component}`, ...props, `${pad}/>`].join("\n");
+  } else {
+    rendered = [
+      `${pad}<${component}`,
+      ...props,
+      `${pad}>`,
+      ...childLines,
+      `${pad}</${component}>`,
+    ].join("\n");
   }
   return applyIfGuard(rendered, node, ir, pad);
 }

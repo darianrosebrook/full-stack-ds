@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { GestureResponderEvent, StyleProp, TextStyle, ViewStyle } from "react-native";
+import type { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { Pressable, Text as RNText } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -23,8 +23,8 @@ export interface ButtonProps {
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
   title?: string;
+  onClick?: () => void;
   children?: ReactNode;
-  onPress?: (event: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
   testID?: string;
   accessibilityLabel?: string;
@@ -41,8 +41,8 @@ export function Button({
   ariaLabel,
   ariaExpanded,
   ariaPressed,
+  onClick,
   children,
-  onPress,
   style,
   testID,
   accessibilityLabel,
@@ -62,7 +62,7 @@ export function Button({
       style={({ pressed }) => [styles.root, variantStyleForSize, variantStyleForVariant, pressed ? styles.root_state_pressed : undefined, pressed ? pressedStyleForVariant : undefined, disabled ? styles.root_state_disabled : undefined, disabled ? disabledStyleForVariant : undefined, style]}
       disabled={disabled}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
-      onPress={onPress}
+      onPress={() => onClick?.()}
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="togglebutton"
       accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), selected: Boolean(ariaPressed), busy: Boolean(loading) }}

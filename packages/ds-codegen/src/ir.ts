@@ -432,13 +432,19 @@ export interface ResolvedRefAttr {
   value: string;
 }
 
-/** An event handler bound on a componentRef node. Events are component
- *  callbacks (React `onX`, Vue `@x`, Angular `(x)`, Lit `@x`, RN `onX`) and are
- *  never classified against the prop surface — they target the component's
- *  event/callback channel or pass through as an HTML event handler. */
+/** An event handler bound on a componentRef node. The IR resolves the event
+ *  to the target's HANDLER PROP when the target declares one (e.g. event
+ *  `click` → target prop `onClick`), so emitters that treat a component event
+ *  as a prop (Svelte 5 `onClick={}`) target the right name. When the target
+ *  declares no matching handler prop, `targetHandlerProp` is undefined and the
+ *  emitter falls back to its DOM-event idiom (Vue/Lit `@click` listen on the
+ *  element; React `onClick` passes through). */
 export interface ResolvedRefEvent {
   /** Unprefixed event name (`click`, `change`). */
   name: string;
+  /** The target's handler prop for this event (`onClick` for `click`), when
+   *  the target contract declares it. Undefined otherwise. */
+  targetHandlerProp?: string;
   expr: BindingExpression;
 }
 
@@ -1900,7 +1906,17 @@ function resolveComponentInstances(
       ([sourceAttr, value]) => ({ ...classify(sourceAttr), sourceAttr, value }),
     );
     const events: ResolvedRefEvent[] = Object.entries(node.events).map(
-      ([name, expr]) => ({ name, expr }),
+      ([name, expr]) => {
+        // Resolve the event to the target's handler prop when declared
+        // (`click` → `onClick`), so component-event-as-prop emitters (Svelte 5)
+        // target the right name. `change` → `onChange`, etc.
+        const handlerProp = `on${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+        return {
+          name,
+          targetHandlerProp: targetProps.has(handlerProp) ? handlerProp : undefined,
+          expr,
+        };
+      },
     );
 
     node.componentInstance = {

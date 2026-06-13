@@ -1591,6 +1591,11 @@ function renderLitDomNode(
     attrs.push(rendered);
   }
 
+  // componentRef: the IR classified each binding (prop vs host attr); the
+  // emitter reads it instead of guessing (normal-form property 4).
+  const litRefBindingByAttr = new Map(
+    (node.componentInstance?.bindings ?? []).map((b) => [b.sourceAttr, b]),
+  );
   for (const [key, expr] of Object.entries(node.bindings)) {
     // Dual-pathway dedup: parseDomNode mirrored `bindings.onX` into
     // `events.<x>` for back-compat. Skip the legacy attribute pass.
@@ -1603,7 +1608,7 @@ function renderLitDomNode(
       expr,
       ctx,
       node.tag,
-      node.componentRef !== undefined,
+      litRefBindingByAttr.get(key),
     );
     if (rendered === null) continue;
     attrs.push(rendered);
@@ -1707,8 +1712,9 @@ function renderLitDomNode(
   // componentRef: render the referenced custom element by its registered name
   // (`fsds-<kebab>`, matching how that component defines itself). A side-effect
   // import (added by the class-body generator) registers the element; bindings
-  // use the property form for the custom element's @property fields (see
-  // renderLitBinding's isComponentRef path).
+  // use the property form for the custom element's @property fields, driven by
+  // the IR's ComponentInstanceIR classification (see renderLitBinding's
+  // refBinding path).
   const tag = node.componentRef
     ? `fsds-${toKebabCase(node.componentRef)}`
     : node.tag;
@@ -1853,7 +1859,7 @@ function renderLitBinding(
   expr: BindingExpression,
   ctx: LitRenderContext,
   tag?: string,
-  isComponentRef?: boolean,
+  refBinding?: { kind: "prop" | "attribute"; targetProp?: string },
 ): string | null {
   const attr = litDomAttrName(rawAttr);
   switch (expr.kind) {
@@ -1920,15 +1926,16 @@ function renderLitBinding(
         // absence in Lit's boolean-attribute binding.
         return `?${attr}=\${${rawAcc} ?? false}`;
       }
-      // componentRef: the target is a custom element with `@property`-decorated
-      // fields. Set them via Lit's property-binding syntax (`.prop=`) so the
-      // value reaches the element's reactive property rather than being
-      // string-coerced through an HTML attribute. `ifDefined` still guards the
-      // optional case. aria-* stays attribute-form (handled above) because the
-      // custom element inherits ARIAMixin, which maps the attribute to the IDL
-      // property.
-      if (isComponentRef) {
-        return `.${attr}=\${ifDefined(${acc})}`;
+      // componentRef: the IR classified this binding. kind:"prop" → the target
+      // is a custom element with a `@property`-decorated field of this name;
+      // set it via Lit's property-binding (`.prop=`) using the RESOLVED target
+      // prop name, so the value reaches the reactive property. No `ifDefined`:
+      // that directive only applies to ATTRIBUTE bindings (lit-analyzer errors
+      // "has no effect here" on a property binding); a property accepts an
+      // undefined value directly. kind:"attribute" → falls through to the
+      // attribute-binding form below (host passthrough; ARIAMixin maps aria-*).
+      if (refBinding?.kind === "prop") {
+        return `.${refBinding.targetProp}=\${${acc}}`;
       }
       // Attribute binding for every other case. The previous default
       // emitted `.${attr}=` (DOM property binding), but Lit's

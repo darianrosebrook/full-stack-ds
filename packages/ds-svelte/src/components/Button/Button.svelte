@@ -28,11 +28,12 @@ interface Props {
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
   title?: string;
+  onClick?: () => void;
   class?: string;
   children?: import('svelte').Snippet;
 }
 
-let { size = "medium", variant = "primary", type = "button", loading, disabled, ariaLabel, ariaExpanded, ariaPressed, title, class: className, children }: Props = $props();
+let { size = "medium", variant = "primary", type = "button", loading, disabled, ariaLabel, ariaExpanded, ariaPressed, title, onClick, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -52,6 +53,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<button class={classes} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading}>
+<button class={classes} onclick={onClick} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} aria-busy={loading}>
   {@render children?.()}
 </button>

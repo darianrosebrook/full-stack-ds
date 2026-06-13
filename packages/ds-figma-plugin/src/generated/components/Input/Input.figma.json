@@ -199,13 +199,30 @@
           "--fsds-box-model-min-height": "var(--fsds-semantic-input-size-medium-min-height, 36px)",
           "--fsds-box-model-max-height": "none",
           "--fsds-input-color-bg-default": "var(--fsds-semantic-color-background-primary, #ffffff)",
+          "--fsds-input-color-bg-disabled": "var(--fsds-semantic-interaction-background-disabled, #efefef)",
           "--fsds-input-color-text-default": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-input-color-text-placeholder": "var(--fsds-semantic-color-foreground-placeholder, #717171)",
+          "--fsds-input-color-text-disabled": "var(--fsds-semantic-color-foreground-disabled, #717171)",
           "--fsds-input-color-border-default": "var(--fsds-semantic-color-border-default, #aeaeae)",
-          "--fsds-input-size-height-default": "var(--fsds-semantic-control-size-lg-height, 48px)",
+          "--fsds-input-color-border-hover": "var(--fsds-semantic-color-border-hover, #8f8f8f)",
+          "--fsds-input-color-border-disabled": "var(--fsds-semantic-color-border-disabled, #cecece)",
+          "--fsds-input-size-height-default": "var(--fsds-semantic-input-size-medium-min-height, 36px)",
+          "--fsds-input-size-padding-block-default": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
+          "--fsds-input-size-padding-inline-default": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
           "--fsds-input-size-radius-default": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-input-size-border-default": "var(--fsds-core-shape-border-width-hairline, 1px)",
           "--fsds-input-space-inline-default": "var(--fsds-core-spacing-size-05, 12px)",
           "--fsds-input-color-focus-default": "var(--fsds-semantic-color-border-focus, #d9292b)",
           "--fsds-input-color-invalid-default": "var(--fsds-semantic-color-border-danger, #ae0001)",
+          "--fsds-input-typography-size-default": "var(--fsds-semantic-typography-body-02, 1rem)",
+          "--fsds-input-typography-line-height-default": "var(--fsds-semantic-typography-line-height-body, 1.5)",
+          "--fsds-input-opacity-disabled": "var(--fsds-semantic-interaction-disabled-opacity, 0.5)",
+          "--fsds-input-focus-ring-width": "var(--fsds-semantic-focus-ring-width, 2px)",
+          "--fsds-input-focus-ring-color": "var(--fsds-semantic-focus-ring-color, #0a65fe)",
+          "--fsds-input-focus-ring-style": "var(--fsds-semantic-focus-ring-style, solid)",
+          "--fsds-input-focus-ring-offset": "var(--fsds-semantic-focus-ring-offset, 2px)",
+          "--fsds-input-motion-duration-fast": "var(--fsds-core-motion-duration-short, 150ms)",
+          "--fsds-input-motion-easing-standard": "var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1))",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -217,23 +234,65 @@
           "height": "var(--fsds-box-model-height)",
           "min-height": "var(--fsds-input-size-height-default)",
           "max-height": "var(--fsds-box-model-max-height)",
+          "box-sizing": "border-box",
+          "border-style": "solid",
+          "border-width": "var(--fsds-input-size-border-default)",
           "background-color": "var(--fsds-input-color-bg-default)",
           "color": "var(--fsds-input-color-text-default)",
           "border-color": "var(--fsds-input-color-border-default)",
           "border-radius": "var(--fsds-input-size-radius-default)",
-          "padding": "var(--fsds-input-space-inline-default)"
+          "font-size": "var(--fsds-input-typography-size-default)",
+          "line-height": "var(--fsds-input-typography-line-height-default)",
+          "padding-block": "var(--fsds-input-size-padding-block-default)",
+          "padding-inline": "var(--fsds-input-size-padding-inline-default)",
+          "transition-property": "background-color, border-color, color, outline-color",
+          "transition-duration": "var(--fsds-input-motion-duration-fast)",
+          "transition-timing-function": "var(--fsds-input-motion-easing-standard)"
+        }
+      },
+      {
+        "selector": ".input::placeholder",
+        "declarations": {
+          "color": "var(--fsds-input-color-text-placeholder)"
+        }
+      },
+      {
+        "selector": ".input:hover",
+        "declarations": {
+          "border-color": "var(--fsds-input-color-border-hover)"
         }
       },
       {
         "selector": ".input:focus-visible",
         "declarations": {
-          "border-color": "var(--fsds-input-color-focus-default)"
+          "border-color": "var(--fsds-input-color-focus-default)",
+          "outline-width": "var(--fsds-input-focus-ring-width)",
+          "outline-color": "var(--fsds-input-focus-ring-color)",
+          "outline-style": "var(--fsds-input-focus-ring-style)",
+          "outline-offset": "var(--fsds-input-focus-ring-offset)"
         }
       },
       {
-        "selector": ".input__invalid",
+        "selector": ".input--invalid",
         "declarations": {
           "border-color": "var(--fsds-input-color-invalid-default)"
+        }
+      },
+      {
+        "selector": ".input--invalid:focus-visible",
+        "declarations": {
+          "border-color": "var(--fsds-input-color-invalid-default)",
+          "outline-color": "var(--fsds-input-color-invalid-default)"
+        }
+      },
+      {
+        "selector": ".input:disabled",
+        "declarations": {
+          "background-color": "var(--fsds-input-color-bg-disabled)",
+          "border-color": "var(--fsds-input-color-border-disabled)",
+          "color": "var(--fsds-input-color-text-disabled)",
+          "opacity": "var(--fsds-input-opacity-disabled)",
+          "cursor": "not-allowed"
         }
       }
     ],
