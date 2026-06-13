@@ -3,6 +3,7 @@ title: 'Chip dismiss via owned fsds.Button child: container root + action/dismis
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: chip-dismiss
 created_at: '2026-06-13T12:04:12.904Z'
 updated_at: '2026-06-13T12:04:23.466Z'
 blast_radius:
