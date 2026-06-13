@@ -48,6 +48,18 @@ button {
   font: inherit;
   color: inherit;
   cursor: pointer;
+  /*
+   * Reset the native UA button surface. Without this, a bare <button> keeps the
+   * platform `buttonface` background (a light system gray, ~#efefef) and
+   * `appearance: auto`, which does NOT follow the dark theme — so muted text on
+   * a class designed for <a> (e.g. .sidebar-item, reused for the Header brand
+   * picker buttons) lands on a light surface in dark mode and fails contrast.
+   * Only the surface is reset here; border/padding are left to each component
+   * so existing layouts are unaffected. Components that want a fill (.icon-btn,
+   * .button) set their own background.
+   */
+  appearance: none;
+  background: transparent;
 }
 
 ::selection {
@@ -58,7 +70,9 @@ button {
 /* App shell */
 .app-shell {
   display: grid;
-  grid-template-columns: var(--fsds-app-sidebar-w) minmax(0, 1fr) var(--fsds-app-trace-w);
+  grid-template-columns: var(--fsds-app-sidebar-w) minmax(0, 1fr) var(
+      --fsds-app-trace-w
+    );
   grid-template-rows: var(--fsds-app-header-h) 1fr;
   grid-template-areas:
     "header header header"
@@ -203,7 +217,10 @@ button {
   border: 1px solid transparent;
   background: transparent;
   color: var(--fsds-semantic-color-foreground-secondary);
-  transition: background var(--fsds-app-transition-fast), color var(--fsds-app-transition-fast), border-color var(--fsds-app-transition-fast);
+  transition:
+    background var(--fsds-app-transition-fast),
+    color var(--fsds-app-transition-fast),
+    border-color var(--fsds-app-transition-fast);
 }
 
 .icon-btn:hover {
@@ -246,7 +263,8 @@ button {
 }
 
 .sidebar-group {
-  padding: var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-04);
+  padding: var(--fsds-core-spacing-size-06) var(--fsds-core-spacing-size-06)
+    var(--fsds-core-spacing-size-04);
   font-size: var(--fsds-core-typography-ramp-1);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -265,7 +283,9 @@ button {
   color: var(--fsds-semantic-color-foreground-secondary);
   border-left: 2px solid transparent;
   text-decoration: none;
-  transition: background var(--fsds-app-transition-fast), color var(--fsds-app-transition-fast),
+  transition:
+    background var(--fsds-app-transition-fast),
+    color var(--fsds-app-transition-fast),
     border-color var(--fsds-app-transition-fast);
 }
 
@@ -304,16 +324,30 @@ button {
   color: var(--fsds-semantic-color-foreground-primary);
 }
 
+/*
+ * Selected list item — a quiet tonal accent wash, not a saturated fill. Mixing
+ * the accent into the surface at the stateLayer.selected opacity (~8%) keeps the
+ * row reading as a list item (the accent left-border + checkmark carry the
+ * selection), rather than a chunky filled button. Adapts to light/dark and to
+ * the active brand because it mixes the live accent var.
+ */
 .sidebar-item--active {
   color: var(--fsds-semantic-color-foreground-primary);
-  background: var(--fsds-semantic-color-background-accent-subtle);
+  background: color-mix(
+    in srgb,
+    var(--fsds-semantic-color-background-accent)
+      calc(var(--fsds-semantic-interaction-state-layer-selected, 0.08) * 100%),
+    transparent
+  );
+  border: 2px solid transparent;
   border-left-color: var(--fsds-semantic-color-background-accent);
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
 }
 
 /* Main content */
 .page {
-  padding: var(--fsds-core-spacing-size-09) var(--fsds-core-spacing-size-10) var(--fsds-core-spacing-size-10);
+  padding: var(--fsds-core-spacing-size-09) var(--fsds-core-spacing-size-10)
+    var(--fsds-core-spacing-size-10);
   max-width: 1080px;
   margin: 0 auto;
 }
@@ -408,7 +442,9 @@ button {
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
-  transition: color var(--fsds-app-transition-fast), border-color var(--fsds-app-transition-fast);
+  transition:
+    color var(--fsds-app-transition-fast),
+    border-color var(--fsds-app-transition-fast);
 }
 
 .view-tab:hover {
@@ -504,7 +540,8 @@ button {
 .kbd-key-cell {
   width: 0.1%;
   white-space: nowrap;
-  padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-04) 0;
+  padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05)
+    var(--fsds-core-spacing-size-04) 0;
 }
 
 .kbd-action-cell {
@@ -658,10 +695,20 @@ button {
   padding: var(--fsds-core-spacing-size-08) var(--fsds-core-spacing-size-07);
   background-color: var(--fsds-semantic-color-background-primary);
   background-image:
-    radial-gradient(var(--fsds-semantic-color-border-subtle) 1px, transparent 1px),
-    radial-gradient(var(--fsds-semantic-color-border-subtle) 1px, transparent 1px);
-  background-size: 24px 24px, 24px 24px;
-  background-position: 0 0, 12px 12px;
+    radial-gradient(
+      var(--fsds-semantic-color-border-subtle) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      var(--fsds-semantic-color-border-subtle) 1px,
+      transparent 1px
+    );
+  background-size:
+    24px 24px,
+    24px 24px;
+  background-position:
+    0 0,
+    12px 12px;
   background-repeat: repeat, repeat;
 }
 
@@ -854,7 +901,9 @@ button {
   display: inline-flex;
   align-items: center;
   gap: var(--fsds-core-spacing-size-04);
-  transition: background var(--fsds-app-transition-fast), color var(--fsds-app-transition-fast);
+  transition:
+    background var(--fsds-app-transition-fast),
+    color var(--fsds-app-transition-fast);
 }
 
 .fw-tab:hover {
@@ -875,16 +924,36 @@ button {
 }
 
 /* Lang colors */
-.lang-react { color: #61dafb; }
-.lang-vue { color: #41b883; }
-.lang-svelte { color: #ff3e00; }
-.lang-angular { color: #dd0031; }
-.lang-lit { color: #325cff; }
-.lang-react-native { color: #61dafb; }
-.lang-swift { color: #41b883; }
-.lang-uikit { color: #ff3e00; }
-.lang-kotlin { color: #dd0031; }
-.lang-jetpack { color: #325cff; }
+.lang-react {
+  color: #61dafb;
+}
+.lang-vue {
+  color: #41b883;
+}
+.lang-svelte {
+  color: #ff3e00;
+}
+.lang-angular {
+  color: #dd0031;
+}
+.lang-lit {
+  color: #325cff;
+}
+.lang-react-native {
+  color: #61dafb;
+}
+.lang-swift {
+  color: #41b883;
+}
+.lang-uikit {
+  color: #ff3e00;
+}
+.lang-kotlin {
+  color: #dd0031;
+}
+.lang-jetpack {
+  color: #325cff;
+}
 
 /* Trace panel */
 .trace-empty {
@@ -1017,7 +1086,10 @@ button {
   font-size: var(--fsds-core-typography-ramp-2);
   cursor: pointer;
   text-transform: capitalize;
-  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+  transition:
+    background 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
 }
 
 .tokens-brand-pill:hover {
@@ -1082,10 +1154,18 @@ button {
   z-index: 1;
 }
 
-.tokens-table th:nth-child(1) { width: 38%; }
-.tokens-table th:nth-child(2) { width: 28%; }
-.tokens-table th:nth-child(3) { width: 12%; }
-.tokens-table th:nth-child(4) { width: 22%; }
+.tokens-table th:nth-child(1) {
+  width: 38%;
+}
+.tokens-table th:nth-child(2) {
+  width: 28%;
+}
+.tokens-table th:nth-child(3) {
+  width: 12%;
+}
+.tokens-table th:nth-child(4) {
+  width: 22%;
+}
 
 .tokens-table td {
   padding: var(--fsds-core-spacing-size-05) var(--fsds-core-spacing-size-06);
@@ -1179,7 +1259,9 @@ button {
   text-decoration: none;
   border-bottom: 1px dashed var(--fsds-semantic-color-border-default);
   padding-bottom: 1px;
-  transition: color 120ms ease, border-color 120ms ease;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease;
 }
 
 .token-ref:hover {
@@ -1202,8 +1284,12 @@ button {
 }
 
 @keyframes token-row-flash {
-  0%   { background: rgba(91, 141, 239, 0.18); }
-  100% { background: transparent; }
+  0% {
+    background: rgba(91, 141, 239, 0.18);
+  }
+  100% {
+    background: transparent;
+  }
 }
 
 .token-row--flash > td {
@@ -1443,11 +1529,21 @@ button {
   line-height: var(--fsds-semantic-typography-line-height-loose);
 }
 
-.json-tree .key { color: var(--fsds-semantic-color-foreground-accent); }
-.json-tree .string { color: var(--fsds-semantic-color-foreground-success); }
-.json-tree .number { color: var(--fsds-semantic-color-foreground-info); }
-.json-tree .boolean { color: var(--fsds-semantic-color-foreground-warning); }
-.json-tree .null { color: var(--fsds-semantic-color-foreground-tertiary); }
+.json-tree .key {
+  color: var(--fsds-semantic-color-foreground-accent);
+}
+.json-tree .string {
+  color: var(--fsds-semantic-color-foreground-success);
+}
+.json-tree .number {
+  color: var(--fsds-semantic-color-foreground-info);
+}
+.json-tree .boolean {
+  color: var(--fsds-semantic-color-foreground-warning);
+}
+.json-tree .null {
+  color: var(--fsds-semantic-color-foreground-tertiary);
+}
 
 .json-tree details > summary {
   cursor: pointer;
@@ -1515,12 +1611,11 @@ button {
 .display-case-page {
   min-height: 100%;
   padding: var(--fsds-core-spacing-size-08);
-  background:
-    linear-gradient(
-      180deg,
-      var(--fsds-semantic-color-background-elevated) 0,
-      var(--fsds-semantic-color-background-primary) 280px
-    );
+  background: linear-gradient(
+    180deg,
+    var(--fsds-semantic-color-background-elevated) 0,
+    var(--fsds-semantic-color-background-primary) 280px
+  );
 }
 
 .display-case-header {
@@ -1685,7 +1780,18 @@ button {
   max-width: 100%;
 }
 
-.display-case-stage :where(.accordion, .breadcrumbs, .card, .field, .list, .nav-list, .shuttle, .tabs, .walkthrough) {
+.display-case-stage
+  :where(
+    .accordion,
+    .breadcrumbs,
+    .card,
+    .field,
+    .list,
+    .nav-list,
+    .shuttle,
+    .tabs,
+    .walkthrough
+  ) {
   width: min(100%, 380px);
 }
 
