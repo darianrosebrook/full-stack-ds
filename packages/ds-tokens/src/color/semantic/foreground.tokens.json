@@ -140,12 +140,12 @@
       },
       "onColor": {
         "$type": "color",
-        "$value": "{color.foreground.primary}",
+        "$value": "{color.mode.white}",
         "$extensions": {
-          "fsds.light": "{color.foreground.primary}",
-          "fsds.dark": "{color.foreground.primary}"
+          "fsds.light": "{color.mode.white}",
+          "fsds.dark": "{color.mode.white}"
         },
-        "$description": "Foreground color for text on colored backgrounds"
+        "$description": "Foreground color for text on saturated colored/accent fills. Fixed white in both themes (not theme-primary text) so it clears WCAG AA on accent/strong backgrounds (4.68:1 on red.500). Mirrors foreground.on.brand."
       },
       "info": {
         "$type": "color",

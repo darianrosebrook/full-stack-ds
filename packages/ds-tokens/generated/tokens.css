@@ -717,7 +717,7 @@
   --fsds-semantic-color-foreground-on-info-subtle: var(--fsds-core-color-palette-blue-700);
   --fsds-semantic-color-foreground-on-success-subtle: var(--fsds-core-color-palette-green-700);
   --fsds-semantic-color-foreground-on-warning-subtle: var(--fsds-core-color-palette-orange-700);
-  --fsds-semantic-color-foreground-on-color: var(--fsds-semantic-color-foreground-primary);
+  --fsds-semantic-color-foreground-on-color: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-foreground-info: var(--fsds-core-color-palette-blue-500);
   --fsds-semantic-color-foreground-success: var(--fsds-core-color-palette-green-500);
   --fsds-semantic-color-foreground-warning: var(--fsds-core-color-palette-orange-500);
@@ -874,7 +874,7 @@
   --fsds-semantic-color-foreground-on-info-subtle: var(--fsds-core-color-palette-blue-700);
   --fsds-semantic-color-foreground-on-success-subtle: var(--fsds-core-color-palette-green-700);
   --fsds-semantic-color-foreground-on-warning-subtle: var(--fsds-core-color-palette-orange-700);
-  --fsds-semantic-color-foreground-on-color: var(--fsds-semantic-color-foreground-primary);
+  --fsds-semantic-color-foreground-on-color: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-foreground-info: var(--fsds-core-color-palette-blue-500);
   --fsds-semantic-color-foreground-success: var(--fsds-core-color-palette-green-500);
   --fsds-semantic-color-foreground-warning: var(--fsds-core-color-palette-orange-500);
@@ -954,7 +954,7 @@
   --fsds-semantic-color-background-secondary: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-color-background-tertiary: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-red-700);
-  --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-400);
+  --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-background-hover: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-background-danger-strong: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-background-danger-subtle: var(--fsds-core-color-palette-red-800);
@@ -1029,7 +1029,7 @@
   --fsds-semantic-color-foreground-on-info-subtle: var(--fsds-core-color-palette-blue-300);
   --fsds-semantic-color-foreground-on-success-subtle: var(--fsds-core-color-palette-green-300);
   --fsds-semantic-color-foreground-on-warning-subtle: var(--fsds-core-color-palette-orange-300);
-  --fsds-semantic-color-foreground-on-color: var(--fsds-semantic-color-foreground-primary);
+  --fsds-semantic-color-foreground-on-color: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-foreground-info: var(--fsds-core-color-palette-blue-400);
   --fsds-semantic-color-foreground-success: var(--fsds-core-color-palette-green-400);
   --fsds-semantic-color-foreground-warning: var(--fsds-core-color-palette-orange-400);
@@ -1110,7 +1110,7 @@
   --fsds-semantic-color-background-secondary: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-color-background-tertiary: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-red-700);
-  --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-400);
+  --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-background-hover: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-background-danger-strong: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-background-danger-subtle: var(--fsds-core-color-palette-red-800);
@@ -1185,7 +1185,7 @@
   --fsds-semantic-color-foreground-on-info-subtle: var(--fsds-core-color-palette-blue-300);
   --fsds-semantic-color-foreground-on-success-subtle: var(--fsds-core-color-palette-green-300);
   --fsds-semantic-color-foreground-on-warning-subtle: var(--fsds-core-color-palette-orange-300);
-  --fsds-semantic-color-foreground-on-color: var(--fsds-semantic-color-foreground-primary);
+  --fsds-semantic-color-foreground-on-color: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-foreground-info: var(--fsds-core-color-palette-blue-400);
   --fsds-semantic-color-foreground-success: var(--fsds-core-color-palette-green-400);
   --fsds-semantic-color-foreground-warning: var(--fsds-core-color-palette-orange-400);
@@ -1339,7 +1339,7 @@
   --fsds-semantic-color-foreground-on-info-subtle: var(--fsds-core-color-palette-blue-700);
   --fsds-semantic-color-foreground-on-success-subtle: var(--fsds-core-color-palette-green-700);
   --fsds-semantic-color-foreground-on-warning-subtle: var(--fsds-core-color-palette-orange-700);
-  --fsds-semantic-color-foreground-on-color: var(--fsds-semantic-color-foreground-primary);
+  --fsds-semantic-color-foreground-on-color: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-foreground-info: var(--fsds-core-color-palette-blue-500);
   --fsds-semantic-color-foreground-success: var(--fsds-core-color-palette-green-500);
   --fsds-semantic-color-foreground-warning: var(--fsds-core-color-palette-orange-500);

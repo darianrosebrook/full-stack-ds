@@ -2184,10 +2184,10 @@
         },
         "accent": {
           "$type": "color",
-          "$description": "Accent background color",
+          "$description": "Accent background color. Kept at red.500 in dark mode (not red.400) so white on-color text clears WCAG AA (4.68:1 vs 3.09:1).",
           "$value": {
             "light": "#d9292b",
-            "dark": "#ea6465"
+            "dark": "#d9292b"
           }
         },
         "hover": {
@@ -2803,10 +2803,10 @@
         },
         "onColor": {
           "$type": "color",
-          "$description": "Foreground color for text on colored backgrounds",
+          "$description": "Foreground color for text on saturated colored/accent fills. Fixed white in both themes (not theme-primary text) so it clears WCAG AA on accent/strong backgrounds (4.68:1 on red.500). Mirrors foreground.on.brand.",
           "$value": {
-            "light": "#141414",
-            "dark": "#141414"
+            "light": "#ffffff",
+            "dark": "#ffffff"
           }
         },
         "info": {
