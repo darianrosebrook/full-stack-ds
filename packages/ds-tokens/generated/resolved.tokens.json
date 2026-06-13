@@ -2217,10 +2217,10 @@
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle danger background color",
+            "$description": "Subtle danger background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
               "light": "#fac3c3",
-              "dark": "#6a0000"
+              "dark": "#440000"
             }
           },
           "softer": {
@@ -2277,10 +2277,10 @@
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle info background color",
+            "$description": "Subtle info background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
               "light": "#96dafb",
-              "dark": "#002782"
+              "dark": "#001655"
             }
           },
           "softer": {
@@ -2303,10 +2303,10 @@
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle success background color",
+            "$description": "Subtle success background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
               "light": "#b3dba7",
-              "dark": "#1e3703"
+              "dark": "#112100"
             }
           },
           "softer": {
@@ -2329,10 +2329,10 @@
           },
           "subtle": {
             "$type": "color",
-            "$description": "Subtle warning background color",
+            "$description": "Subtle warning background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100.",
             "$value": {
               "light": "#fdc781",
-              "dark": "#4b2900"
+              "dark": "#2f1700"
             }
           },
           "softer": {
@@ -2565,10 +2565,10 @@
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle success background",
+              "$description": "Subtle success background. Dark uses palette .900 (not .800) so alert/toast success surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
                 "light": "#b3dba7",
-                "dark": "#1e3703"
+                "dark": "#112100"
               }
             }
           },
@@ -2583,10 +2583,10 @@
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle warning background",
+              "$description": "Subtle warning background. Dark uses palette .900 (not .800) so alert/toast warning surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
                 "light": "#fdc781",
-                "dark": "#4b2900"
+                "dark": "#2f1700"
               }
             }
           },
@@ -2598,10 +2598,10 @@
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle danger background",
+              "$description": "Subtle danger background. Dark uses palette .900 (not .800) so alert/toast danger surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
                 "light": "#fac3c3",
-                "dark": "#6a0000"
+                "dark": "#440000"
               }
             }
           },
@@ -2613,10 +2613,10 @@
             },
             "subtle": {
               "$type": "color",
-              "$description": "Subtle info background",
+              "$description": "Subtle info background. Dark uses palette .900 (not .800) so alert/toast info surfaces read as a quiet wash; light stays .100. onSubtle text is light (.200 dark) so contrast rises.",
               "$value": {
                 "light": "#96dafb",
-                "dark": "#002782"
+                "dark": "#001655"
               }
             }
           }

@@ -71,9 +71,9 @@
           "$value": "{color.palette.red.100}",
           "$extensions": {
             "fsds.light": "{color.palette.red.100}",
-            "fsds.dark": "{color.palette.red.800}"
+            "fsds.dark": "{color.palette.red.900}"
           },
-          "$description": "Subtle danger background color"
+          "$description": "Subtle danger background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
         },
         "softer": {
           "$type": "color",
@@ -146,9 +146,9 @@
           "$value": "{color.palette.blue.100}",
           "$extensions": {
             "fsds.light": "{color.palette.blue.100}",
-            "fsds.dark": "{color.palette.blue.800}"
+            "fsds.dark": "{color.palette.blue.900}"
           },
-          "$description": "Subtle info background color"
+          "$description": "Subtle info background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
         },
         "softer": {
           "$type": "color",
@@ -175,9 +175,9 @@
           "$value": "{color.palette.green.100}",
           "$extensions": {
             "fsds.light": "{color.palette.green.100}",
-            "fsds.dark": "{color.palette.green.800}"
+            "fsds.dark": "{color.palette.green.900}"
           },
-          "$description": "Subtle success background color"
+          "$description": "Subtle success background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
         },
         "softer": {
           "$type": "color",
@@ -204,9 +204,9 @@
           "$value": "{color.palette.orange.100}",
           "$extensions": {
             "fsds.light": "{color.palette.orange.100}",
-            "fsds.dark": "{color.palette.orange.800}"
+            "fsds.dark": "{color.palette.orange.900}"
           },
-          "$description": "Subtle warning background color"
+          "$description": "Subtle warning background color. Dark uses palette .900 (not .800) so the full-bleed alert/notice surface reads as a quiet wash, not a bold saturated fill; light stays .100."
         },
         "softer": {
           "$type": "color",
