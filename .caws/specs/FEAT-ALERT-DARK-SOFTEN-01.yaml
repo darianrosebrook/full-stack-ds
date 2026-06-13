@@ -3,6 +3,7 @@ title: 'Dark-mode fidelity: soften intent subtle dark backgrounds (.800->.900) a
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: dark-fidelity
 created_at: '2026-06-13T10:41:51.912Z'
 updated_at: '2026-06-13T10:44:30.622Z'
 blast_radius:
