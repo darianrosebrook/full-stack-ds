@@ -2,9 +2,10 @@ id: FEAT-VISUAL-SWEEP-01
 title: 'Per-component visual-fidelity sweep: golden examples (Badge/Card/Calendar) + tiered batches; style declared variants, surface polish via new tokens'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: superseded
 created_at: '2026-06-13T07:52:29.991Z'
-updated_at: '2026-06-13T07:52:29.991Z'
+updated_at: '2026-06-13T08:35:04.962Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
