@@ -2,10 +2,11 @@ id: FEAT-VISUAL-RESIDUALS-01
 title: 'Visual-fidelity residuals: RN border-inline-start mapping + Card stripe RN parity, Skeleton wipe ::after sweep'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: visual-residuals
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge visual-residuals at b267f4c22f0d61323292c620401b495f1562b512'
 created_at: '2026-06-13T08:57:50.867Z'
-updated_at: '2026-06-13T09:36:44.092Z'
+updated_at: '2026-06-13T10:01:30.556Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/frameworks/react-native (CSS_TO_RN_STYLE logical-border map + root accent-stripe assembler)'
