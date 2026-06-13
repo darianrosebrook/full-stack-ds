@@ -224,6 +224,49 @@ Component-scoped CSS custom properties live alongside the global graph but are n
 
 Both pools may `resolvesTo` paths in the global graph above — they extend the cascade with per-component override surfaces rather than competing with it. The box-model pool is the universal floor (every component gets it); component-local slots are the per-component vocabulary.
 
+## Palette color ramps
+
+Every hue in `src/color/core/palette.tokens.json` (`brand.primary`, `neutral`, `red`,
+`orange`, `yellow`, `green`, `blue`, `teal`, `violet`) is a **10-stop ramp**: `50`, `100`,
+`200`, `300`, `400`, `500`, `600`, `700`, `800`, `900`. Stops are stored as DTCG sRGB
+component arrays (0–1).
+
+Ramps are generated, not hand-authored, by
+`build/generators/generate-palette-ramps.ts` using
+[`@adobe/leonardo-contrast-colors`](https://github.com/adobe/leonardo):
+
+- **Reference hues.** The hue's own anchor stops are passed to Leonardo as `colorKeys`, so
+  the regenerated ramp interpolates through the existing brand colors and preserves their
+  character. The generator is idempotent — it always re-derives from a fixed set of anchor
+  stops, so reruns converge.
+- **Interpolation space is `OKLCH`** — perceptually even steps that preserve chroma (colors
+  stay rich, not muddy, across the ramp).
+- **Stops are contrast-targeted.** Each stop is the color that hits a fixed WCAG contrast
+  ratio against the lightest UI surface (`#fafafa` = `color.mode.light`). The ten ratios are
+  logarithmically distributed:
+  `[1.15, 1.47, 1.9, 2.49, 3.36, 4.61, 6.48, 9, 12.45, 16.1]` — five below 4.5 (50–400) and
+  five at or above ~4.6 (500–900).
+- **Why target `#fafafa`, not `#ffffff`.** `#fafafa` is the real lightest surface text sits
+  on. Targeting it makes `500` land at exactly 4.61:1 from `#fafafa`, which is the same as
+  white-on-`500` — so white text on a `500` fill (the canonical primary/accent fill used by
+  buttons, badges, and accent surfaces) clears WCAG AA without bumping the ratio or distorting
+  the distribution. A consequence: hues that are intrinsically light (e.g. yellow) are forced
+  dark enough at `500` to carry white text, instead of failing as a pale fill.
+
+Regenerate after changing the anchor colors or the ratio set:
+
+```bash
+pnpm -F @full-stack-ds/tokens exec tsx build/generators/generate-palette-ramps.ts
+pnpm -F @full-stack-ds/tokens build         # recompose + re-emit tokens.css
+pnpm run tokens:check-contrast              # curated AA/AAA pair gate
+```
+
+The curated contrast pairs the gate enforces live in
+`build/w3c/w3c-contrast-validator.ts` (`extractCanonicalPairs`), evaluated in light and dark.
+Adjusting a ramp can move a semantic pair across its threshold — re-point the affected
+semantic alias to a wider stop (e.g. `background.disabled` widens to `neutral.100`/`neutral.800`
+so disabled foreground keeps AA_LARGE 3:1) rather than loosening the gate.
+
 ## How to add a new token
 
 1. Pick the tier — `core` (primitive) or `semantic` (named alias of a primitive).

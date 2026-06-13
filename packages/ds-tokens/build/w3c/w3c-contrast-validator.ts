@@ -326,6 +326,11 @@ export function extractCanonicalPairs(
       bg: 'semantic.color.action.background.danger.default',
       context: 'Button label on danger action background',
     },
+    {
+      fg: 'semantic.color.foreground.onColor',
+      bg: 'semantic.color.background.accent',
+      context: 'On-color text on accent fill (brand mark, accent chips). Caught the dark-mode brand-logo failure (white on red.400).',
+    },
     // Status / feedback colors against the primary surface.
     {
       fg: 'semantic.color.status.info',

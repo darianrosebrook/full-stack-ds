@@ -15,7 +15,7 @@ export function createBlockquoteStyles(theme?: FsdsTheme) {
     rootText_variant_lg: definedStyle({ fontSize: (tokens.variant_lg?.["blockquote.size.fontSize.md"] as number | undefined) }),
     rootText_variant_md: definedStyle({ fontSize: (tokens.variant_md?.["blockquote.size.fontSize.md"] as number | undefined) }),
     rootText_variant_sm: definedStyle({ fontSize: (tokens.variant_sm?.["blockquote.size.fontSize.md"] as number | undefined) }),
-    root_variant_bordered: definedStyle({ backgroundColor: (tokens.variant_bordered?.["blockquote.color.background.default"] as string | undefined), paddingLeft: (tokens.root?.["blockquote.size.padding.default"] as number | undefined) }),
+    root_variant_bordered: definedStyle({ backgroundColor: (tokens.variant_bordered?.["blockquote.color.background.default"] as string | undefined), borderLeftWidth: (tokens.root?.["blockquote.size.border.thick"] as number | undefined), borderLeftColor: (tokens.root?.["blockquote.color.border.default"] as string | undefined), paddingLeft: (tokens.root?.["blockquote.size.padding.default"] as number | undefined) }),
     root_variant_default: definedStyle({ backgroundColor: (tokens.variant_default?.["blockquote.color.background.default"] as string | undefined), borderWidth: 0 }),
     root_variant_highlighted: definedStyle({ backgroundColor: (tokens.variant_highlighted?.["blockquote.color.background.default"] as string | undefined) }),
   });

@@ -170,6 +170,15 @@ export class SkeletonElement extends LitElement {
       animation: none;
     }
     
+    .skeleton--wipe::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, var(--fsds-skeleton-color-highlight, rgba(255,255,255,0.55)), transparent);
+      transform: translateX(-100%);
+      animation: skeleton-wipe calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+    }
+    
     .skeleton--pulse {
       animation: skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 3) ease-in-out infinite;
     }
@@ -187,6 +196,15 @@ export class SkeletonElement extends LitElement {
       }
       100% {
         opacity: 1;
+      }
+    }
+    
+    @keyframes skeleton-wipe {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
       }
     }
   `;

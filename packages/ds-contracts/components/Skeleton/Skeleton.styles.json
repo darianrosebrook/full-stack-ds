@@ -135,6 +135,32 @@
       "platforms": ["web"]
     }
   },
+  ".skeleton--wipe::after": {
+    "content": {
+      "literal": "\"\"",
+      "platforms": ["web"]
+    },
+    "position": {
+      "literal": "absolute",
+      "platforms": ["web"]
+    },
+    "inset": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "background": {
+      "literal": "linear-gradient(90deg, transparent, var(--fsds-skeleton-color-highlight, rgba(255,255,255,0.55)), transparent)",
+      "platforms": ["web"]
+    },
+    "transform": {
+      "literal": "translateX(-100%)",
+      "platforms": ["web"]
+    },
+    "animation": {
+      "literal": "skeleton-wipe calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
+      "platforms": ["web"]
+    }
+  },
   "--pulse": {
     "animation": {
       "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 3) ease-in-out infinite",
