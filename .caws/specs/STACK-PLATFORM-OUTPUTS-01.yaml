@@ -1,0 +1,53 @@
+id: STACK-PLATFORM-OUTPUTS-01
+title: 'Platform output reconciliation through Stack host/layout contract'
+risk_tier: 4
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-13T00:00:00.000Z'
+updated_at: '2026-06-13T00:00:00.000Z'
+blast_radius:
+  modules:
+    - 'Stack primitive contract, platform emitters, primitive implementations, and regenerated platform component outputs. Figma doctrine/materialization is intentionally out of scope.'
+  data_migration: false
+operational_rollback_slo: 10m
+scope:
+  in:
+    - 'packages/ds-contracts/primitives/Stack.primitive.json'
+    - 'packages/ds-contracts/primitives/primitive.contract.schema.json'
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/frameworks/react/'
+    - 'packages/ds-codegen/src/frameworks/vue/'
+    - 'packages/ds-codegen/src/frameworks/svelte/'
+    - 'packages/ds-codegen/src/frameworks/angular/'
+    - 'packages/ds-codegen/src/frameworks/lit/'
+    - 'packages/ds-codegen/src/frameworks/react-native/'
+    - 'packages/ds-react/src/'
+    - 'packages/ds-vue/src/'
+    - 'packages/ds-svelte/src/'
+    - 'packages/ds-angular/src/'
+    - 'packages/ds-lit/src/'
+    - 'packages/ds-react-native/src/'
+    - 'packages/ds-codegen/.emission-manifest.json'
+    - 'tmp/'
+  out:
+    - 'packages/ds-codegen/src/frameworks/figma/'
+    - 'packages/ds-figma-plugin/'
+invariants:
+  - 'Platform outputs consume governed Stack/host/layout facts; emitters do not add component-name-specific host lore.'
+  - 'Web DOM targets may realize inline/block display vocabulary; mobile targets consume substrate-neutral host/layout intent without inheriting CSS display obligations.'
+  - 'Figma descriptor/materialization semantics are not changed in this slice.'
+acceptance:
+  - id: A1
+    given: 'contracts with DOM-root components such as Button and Input'
+    when: 'React platform code is generated'
+    then: 'the root host is emitted through the Stack primitive contract where valid instead of bypassing Stack as raw DOM scaffolding'
+  - id: A2
+    given: 'React Native generated outputs'
+    when: 'host/layout reconciliation is applied'
+    then: 'native controls still lower to native RN primitives and are not wrapped in layout-only Stack views solely to satisfy web semantics'
+  - id: A3
+    given: 'the updated emitter and primitive contract'
+    when: 'validation and focused generation tests run'
+    then: 'platform code generation remains schema-valid and Figma materialization code remains untouched'
+non_functional: {}
+contracts: []

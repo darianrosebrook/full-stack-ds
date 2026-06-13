@@ -1,0 +1,9 @@
+{
+  "name": "sterling-caws-hook-pack-deps",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runtime dependencies for the CAWS Claude Code hook pack. lib/worktree-claim-oracle.cjs require()s js-yaml to read spec YAML for the canonical worktree-claim check; without it the bash-write-guard / worktree-write-guard fail closed with error_fail_closed:no-js-yaml and prompt on every canonical-root command. This file provisions that dependency next to the oracle so Node's upward module resolution from .claude/hooks/lib/ resolves it. It does NOT modify any CAWS-managed guard script.",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
