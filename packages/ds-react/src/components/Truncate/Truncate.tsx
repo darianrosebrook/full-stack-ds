@@ -87,7 +87,9 @@ export function Truncate({
       {children}
     </span>
     {expandable && (
-      <button className="truncate__toggle" type="button" aria-expanded={expanded} />
+      <button className="truncate__toggle" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
+        {(expanded ? collapseText : expandText)}
+      </button>
     )}
   </Stack>
   );

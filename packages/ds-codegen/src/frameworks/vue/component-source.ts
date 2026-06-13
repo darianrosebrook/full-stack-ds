@@ -1584,6 +1584,10 @@ function renderVueTextContent(
       const lowered = renderVuePredicate(expr, ctx);
       return lowered === null ? null : `{{ ${lowered} }}`;
     }
+    case "conditional": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `{{ ${lowered} }}`;
+    }
   }
 }
 
@@ -1666,6 +1670,10 @@ function renderVueBinding(
       const lowered = renderVuePredicate(expr, ctx);
       return lowered === null ? null : `:${attr}="${escapeAttrString(lowered)}"`;
     }
+    case "conditional": {
+      const lowered = renderVueBindingValue(expr, ctx);
+      return lowered === null ? null : `:${attr}="${escapeAttrString(lowered)}"`;
+    }
   }
 }
 
@@ -1732,6 +1740,13 @@ function renderVueBindingValue(
       // defensive — if a future site admits predicates in value
       // position, the lowering shape is already correct here.
       return renderVuePredicate(expr, ctx);
+    case "conditional": {
+      const condition = renderVueBindingValue(expr.condition, ctx);
+      const whenTrue = renderVueBindingValue(expr.whenTrue, ctx);
+      const whenFalse = renderVueBindingValue(expr.whenFalse, ctx);
+      if (condition === null || whenTrue === null || whenFalse === null) return null;
+      return `(${condition} ? ${whenTrue} : ${whenFalse})`;
+    }
   }
 }
 
@@ -1781,6 +1796,8 @@ function renderVueEvent(
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at
       // IR-build; the case keeps the switch exhaustive.
+      return null;
+    case "conditional":
       return null;
   }
 }

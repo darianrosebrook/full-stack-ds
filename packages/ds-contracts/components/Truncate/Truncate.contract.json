@@ -59,7 +59,11 @@
           },
           "bindings": {
             "aria-expanded": "channel:expanded.value"
-          }
+          },
+          "events": {
+            "click": "channel:expanded.onChange"
+          },
+          "content": "conditional:channel:expanded.value|prop:collapseText|prop:expandText"
         }
       ]
     }

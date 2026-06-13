@@ -45,7 +45,7 @@ export class ShowMoreElement extends LitElement {
       --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
-    
+
     .show-more {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -63,7 +63,7 @@ export class ShowMoreElement extends LitElement {
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
-    
+
     .show-more__content {
       overflow: hidden;
       display: -webkit-box;
@@ -71,7 +71,13 @@ export class ShowMoreElement extends LitElement {
       -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
       line-clamp: var(--fsds-show-more-content-max-lines, 3);
     }
-    
+
+    .show-more--expanded .show-more__content {
+      display: block;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+
     .show-more__trigger {
       display: inline-flex;
       align-items: center;
@@ -108,7 +114,7 @@ export class ShowMoreElement extends LitElement {
   <div class=${'show-more__content'} style=${styleMap({ '--fsds-show-more-content-max-lines': this.maxLines === undefined ? undefined : String(this.maxLines) })}>
     <slot></slot>
   </div>
-  <button class=${'show-more__trigger'} type="button" @click=${() => this.behavior.setExpanded(!this.behavior.expanded)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${this.showMoreLabel}</button>
+  <button class=${'show-more__trigger'} type="button" @click=${() => this.behavior.setExpanded(!this.behavior.expanded)} aria-expanded=${this.behavior.expanded ? 'true' : 'false'}>${(this.behavior.expanded ? this.showLessLabel : this.showMoreLabel)}</button>
 </div>`;
   }
 }
@@ -142,7 +148,7 @@ export class ShowMoreContentElement extends LitElement {
       --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
-    
+
     .show-more {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -160,7 +166,7 @@ export class ShowMoreContentElement extends LitElement {
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
-    
+
     .show-more__content {
       overflow: hidden;
       display: -webkit-box;
@@ -168,7 +174,13 @@ export class ShowMoreContentElement extends LitElement {
       -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
       line-clamp: var(--fsds-show-more-content-max-lines, 3);
     }
-    
+
+    .show-more--expanded .show-more__content {
+      display: block;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+
     .show-more__trigger {
       display: inline-flex;
       align-items: center;
@@ -214,7 +226,7 @@ export class ShowMoreTriggerElement extends LitElement {
       --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
-    
+
     .show-more {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -232,7 +244,7 @@ export class ShowMoreTriggerElement extends LitElement {
       padding: var(--fsds-show-more-size-padding-default);
       border-radius: var(--fsds-show-more-size-radius-default);
     }
-    
+
     .show-more__content {
       overflow: hidden;
       display: -webkit-box;
@@ -240,7 +252,13 @@ export class ShowMoreTriggerElement extends LitElement {
       -webkit-line-clamp: var(--fsds-show-more-content-max-lines, 3);
       line-clamp: var(--fsds-show-more-content-max-lines, 3);
     }
-    
+
+    .show-more--expanded .show-more__content {
+      display: block;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+
     .show-more__trigger {
       display: inline-flex;
       align-items: center;

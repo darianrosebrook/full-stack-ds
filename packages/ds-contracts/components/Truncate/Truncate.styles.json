@@ -15,6 +15,11 @@
     },
     "overflow": { "literal": "hidden", "platforms": ["web"] }
   },
+  ".truncate--expanded .truncate__content": {
+    "display": { "literal": "block", "platforms": ["web"] },
+    "-webkit-line-clamp": { "literal": "unset", "platforms": ["web"] },
+    "line-clamp": { "literal": "unset", "platforms": ["web"] }
+  },
   "toggle": {
     "display": { "literal": "inline-flex", "platforms": ["web"] },
     "align-items": { "literal": "center", "platforms": ["web"] },

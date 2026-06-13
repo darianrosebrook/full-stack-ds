@@ -1915,6 +1915,26 @@ describe("parseBindingExpression — predicates (V2-PREDICATE-01)", () => {
   });
 });
 
+describe("parseBindingExpression — conditionals (V2-CONDITIONAL-01)", () => {
+  it("parses value-position conditional bindings", () => {
+    expect(
+      parseBindingExpression(
+        "conditional:channel:expanded.value|prop:collapseText|prop:expandText",
+      ),
+    ).toEqual({
+      kind: "conditional",
+      condition: { kind: "channel", channel: "expanded", field: "value" },
+      whenTrue: { kind: "prop", prop: "collapseText" },
+      whenFalse: { kind: "prop", prop: "expandText" },
+    });
+  });
+
+  it("rejects malformed conditionals by falling through to literal", () => {
+    const expr = "conditional:channel:expanded.value|prop:collapseText";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+});
+
 describe("predicate validator — context and scope", () => {
   function withPredicateBinding(opts: {
     bindingSite: "binding" | "content" | "event" | "css-var";

@@ -27,7 +27,7 @@ import { useShowMore } from "./useShowMore.js";
     <ng-content />
   </div>
   <button [ngClass]="'show-more__trigger'" type="button" (click)="behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
-    {{ showMoreLabel }}
+    {{ (behavior.expanded() ? showLessLabel : showMoreLabel) }}
   </button>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

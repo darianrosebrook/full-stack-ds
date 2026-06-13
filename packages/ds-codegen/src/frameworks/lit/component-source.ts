@@ -76,7 +76,7 @@ function litStaticStylesLine(
   return [
     `  static override styles = css\``,
     `    ${hostBody}`,
-    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd() || "    "),
+    ...escaped.split("\n").map((line) => `    ${line}`.trimEnd()),
     `  \`;`,
   ];
 }
@@ -1985,6 +1985,17 @@ function renderLitBinding(
       }
       return `.${attr}=\${${lowered}}`;
     }
+    case "conditional": {
+      const lowered = renderLitBindingValue(expr, ctx);
+      if (lowered === null) return null;
+      if (attr.startsWith("aria-")) {
+        return `${attr}=\${${lowered}}`;
+      }
+      if (isAttributeOnlyBinding(attr)) {
+        return `${attr}=\${${lowered}}`;
+      }
+      return `.${attr}=\${${lowered}}`;
+    }
   }
 }
 
@@ -2020,6 +2031,10 @@ function renderLitContent(
       // rejects predicate in content position). Returns the boolean
       // expression wrapped in template interpolation.
       const lowered = renderLitPredicate(expr, ctx);
+      return lowered === null ? null : `\${${lowered}}`;
+    }
+    case "conditional": {
+      const lowered = renderLitBindingValue(expr, ctx);
       return lowered === null ? null : `\${${lowered}}`;
     }
   }
@@ -2081,6 +2096,13 @@ function renderLitBindingValue(
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderLitPredicate(expr, ctx);
+    case "conditional": {
+      const condition = renderLitBindingValue(expr.condition, ctx);
+      const whenTrue = renderLitBindingValue(expr.whenTrue, ctx);
+      const whenFalse = renderLitBindingValue(expr.whenFalse, ctx);
+      if (condition === null || whenTrue === null || whenFalse === null) return null;
+      return `(${condition} ? ${whenTrue} : ${whenFalse})`;
+    }
   }
 }
 
@@ -2119,6 +2141,8 @@ function renderLitEvent(
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: validator rejects this at
       // IR-build; the case keeps the switch exhaustive.
+      return null;
+    case "conditional":
       return null;
   }
 }

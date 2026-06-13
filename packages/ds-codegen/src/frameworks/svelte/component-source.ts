@@ -1419,6 +1419,10 @@ function renderSvelteTextChildExpression(
       const lowered = renderSveltePredicate(expr, ctx);
       return lowered === null ? null : `{${lowered}}`;
     }
+    case "conditional": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `{${lowered}}`;
+    }
   }
 }
 
@@ -1455,6 +1459,13 @@ function renderSvelteBindingValue(
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderSveltePredicate(expr, ctx);
+    case "conditional": {
+      const condition = renderSvelteBindingValue(expr.condition, ctx);
+      const whenTrue = renderSvelteBindingValue(expr.whenTrue, ctx);
+      const whenFalse = renderSvelteBindingValue(expr.whenFalse, ctx);
+      if (condition === null || whenTrue === null || whenFalse === null) return null;
+      return `(${condition} ? ${whenTrue} : ${whenFalse})`;
+    }
   }
 }
 
@@ -1583,6 +1594,10 @@ function renderSvelteBinding(
       const lowered = renderSveltePredicate(expr, ctx);
       return lowered === null ? null : `${attr}={${lowered}}`;
     }
+    case "conditional": {
+      const lowered = renderSvelteBindingValue(expr, ctx);
+      return lowered === null ? null : `${attr}={${lowered}}`;
+    }
   }
 }
 
@@ -1639,6 +1654,8 @@ function renderSvelteEvent(
       // not callable. The IR validator rejects predicate-in-event at
       // build time; this case keeps the switch exhaustive.
       return null;
+    case "conditional":
+      return null;
   }
 }
 
@@ -1688,4 +1705,3 @@ const ARIA_BOOLEANISH_ATTRS = new Set([
   "aria-readonly",
   "aria-required",
 ]);
-

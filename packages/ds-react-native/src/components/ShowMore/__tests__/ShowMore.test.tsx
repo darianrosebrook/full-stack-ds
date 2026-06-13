@@ -29,6 +29,7 @@ describe("ShowMore React Native", () => {
     expect(seen).toEqual([true]);
     const pressed = renderer!.root.findByProps({ accessibilityRole: "button" });
     expect(pressed.props.accessibilityState).toMatchObject({ expanded: true });
+    expect(renderer!.root.findAll((node) => node.props.children === "Less").length).toBeGreaterThan(0);
   });
 });
 // @generated:end

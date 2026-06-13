@@ -334,23 +334,47 @@ function expandableTest(ir: ComponentIR): string {
     (candidate) => candidate.name === "expanded",
   );
   const handlerProp = channel?.changeHandlerProp;
+  const lineProp = hasStyledProp(ir, "maxLines")
+    ? "maxLines"
+    : hasStyledProp(ir, "lines")
+      ? "lines"
+      : null;
+  const collapsedLabelProp = hasStyledProp(ir, "showMoreLabel")
+    ? "showMoreLabel"
+    : hasStyledProp(ir, "expandText")
+      ? "expandText"
+      : null;
+  const expandedLabelProp = hasStyledProp(ir, "showLessLabel")
+    ? "showLessLabel"
+    : hasStyledProp(ir, "collapseText")
+      ? "collapseText"
+      : null;
+  const expandableProp = hasStyledProp(ir, "expandable") ? " expandable" : "";
+  const linePropAssignment = lineProp ? ` ${lineProp}={2}` : "";
+  const collapsedLabelAssignment = collapsedLabelProp
+    ? ` ${collapsedLabelProp}="More"`
+    : "";
+  const expandedLabelAssignment = expandedLabelProp
+    ? ` ${expandedLabelProp}="Less"`
+    : "";
+  const baseProps = `${expandableProp}${linePropAssignment}${collapsedLabelAssignment}${expandedLabelAssignment}`;
   return [
     ...renderImports(ir),
     `describe("${ir.name} React Native", () => {`,
     `${INDENT}it("renders collapsed content and expanded trigger state", () => {`,
-    ...rendererHelper(`<${ir.name} expanded={false} maxLines={2} showMoreLabel="More" showLessLabel="Less" testID="subject">Long copy</${ir.name}>`),
+    ...rendererHelper(`<${ir.name} expanded={false}${baseProps} testID="subject">Long copy</${ir.name}>`),
     `${INDENT}${INDENT}const trigger = renderer!.root.findByProps({ accessibilityRole: "button" });`,
     `${INDENT}${INDENT}expect(trigger.props.accessibilityState).toMatchObject({ expanded: false });`,
     `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "More").length).toBeGreaterThan(0);`,
     `${INDENT}${INDENT}const content = renderer!.root.findAll((node) => node.props.children === "Long copy").at(-1);`,
-    `${INDENT}${INDENT}expect(content?.props.numberOfLines).toBe(2);`,
+    ...(lineProp ? [`${INDENT}${INDENT}expect(content?.props.numberOfLines).toBe(2);`] : []),
     `${INDENT}});`,
     ...(handlerProp
       ? [
           `${INDENT}it("updates uncontrolled state and fires the change callback on trigger press", () => {`,
           `${INDENT}${INDENT}const seen: boolean[] = [];`,
           ...rendererHelper(
-            `<${ir.name} maxLines={2} showMoreLabel="More" showLessLabel="Less" ${handlerProp}={(next: boolean) => seen.push(next)} testID="subject">Long copy</${ir.name}>`,
+            `<${ir.name}${baseProps} ${handlerProp}={(next: boolean) => seen.push(next)} testID="subject">Long copy</${ir.name}>`,
           ),
           `${INDENT}${INDENT}const trigger = renderer!.root.findByProps({ accessibilityRole: "button" });`,
           `${INDENT}${INDENT}expect(trigger.props.accessibilityState).toMatchObject({ expanded: false });`,
@@ -358,6 +382,7 @@ function expandableTest(ir: ComponentIR): string {
           `${INDENT}${INDENT}expect(seen).toEqual([true]);`,
           `${INDENT}${INDENT}const pressed = renderer!.root.findByProps({ accessibilityRole: "button" });`,
           `${INDENT}${INDENT}expect(pressed.props.accessibilityState).toMatchObject({ expanded: true });`,
+          `${INDENT}${INDENT}expect(renderer!.root.findAll((node) => node.props.children === "Less").length).toBeGreaterThan(0);`,
           `${INDENT}});`,
         ]
       : []),
@@ -562,8 +587,12 @@ function isProgressbar(ir: ComponentIR): boolean {
 function isExpandableDisclosure(ir: ComponentIR): boolean {
   return (
     ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded") &&
-    ir.styledProps.some((prop) => prop.safeName === "maxLines")
+    (hasStyledProp(ir, "maxLines") || hasStyledProp(ir, "lines"))
   );
+}
+
+function hasStyledProp(ir: ComponentIR, safeName: string): boolean {
+  return ir.styledProps.some((prop) => prop.safeName === safeName);
 }
 
 function isFieldLayoutPattern(ir: ComponentIR): boolean {

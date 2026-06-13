@@ -6,6 +6,7 @@ import { generateVueComponentSource } from "./vue/component-source.js";
 import { generateSvelteComponentSource } from "./svelte/component-source.js";
 import { generateLitComponentSource } from "./lit/component-source.js";
 import { generateAngularComponentSource } from "./angular/component-source.js";
+import { generateReactNativeComponentSource } from "./react-native/component-source.js";
 
 // IR-DOM-ITERATE-CAPABILITY-01 — fixture harness.
 //
@@ -970,5 +971,106 @@ describe("BINDING-EXPRESSION-V2-PREDICATE-01: memberOf operator lowering", () =>
     expect(src).toMatch(
       /aria-selected=\$\{\(\(Array\.isArray\(this\.behavior\.selection\) \? this\.behavior\.selection\.includes\(item\.value\) : item\.value === this\.behavior\.selection\)\) \? 'true' : 'false'\}/,
     );
+  });
+});
+
+const CONDITIONAL_CONTRACT: ComponentContract = {
+  name: "FixtureConditional",
+  layer: "primitive",
+  cssPrefix: "fixture-conditional",
+  anatomy: {
+    parts: ["root", "trigger"],
+    dom: {
+      tag: "div",
+      part: "root",
+      children: [
+        {
+          tag: "button",
+          part: "trigger",
+          attrs: { type: "button" },
+          bindings: {
+            "aria-expanded": "channel:expanded.value",
+          },
+          events: {
+            click: "channel:expanded.onChange",
+          },
+          content: "conditional:channel:expanded.value|prop:collapseText|prop:expandText",
+        },
+      ],
+    },
+  },
+  props: {
+    styled: {
+      members: [
+        { name: "expanded", type: "boolean", description: "Expanded state." },
+        { name: "defaultExpanded", type: "boolean", description: "Initial expanded state." },
+        {
+          name: "onExpandedChange",
+          type: "(expanded: boolean) => void",
+          description: "Expanded change callback.",
+        },
+        {
+          name: "expandText",
+          type: "string",
+          description: "Collapsed label.",
+          default: "Show more",
+        },
+        {
+          name: "collapseText",
+          type: "string",
+          description: "Expanded label.",
+          default: "Show less",
+        },
+      ],
+    },
+  },
+  channels: {
+    expanded: {
+      value: "expanded",
+      defaultValue: "defaultExpanded",
+      onChange: "onExpandedChange",
+      valueType: "boolean",
+    },
+  },
+};
+
+describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: conditional content lowering", () => {
+  const ir = buildComponentIR(CONDITIONAL_CONTRACT);
+
+  it("React lowers conditional content to a JSX ternary", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+    expect(src).toContain("{(expanded ? collapseText : expandText)}");
+    expect(src).toContain("onClick={() => setExpanded(!expanded)}");
+  });
+
+  it("Vue lowers conditional content to a template ternary", () => {
+    const src = generateVueComponentSource(ir);
+    expect(src).toContain("{{ (behavior.expanded.value ? props.collapseText : props.expandText) }}");
+    expect(src).toContain("@click=\"() => behavior.setExpanded(!behavior.expanded.value)\"");
+  });
+
+  it("Svelte lowers conditional content to a template ternary", () => {
+    const src = generateSvelteComponentSource(ir);
+    expect(src).toMatch(/\{\([a-zA-Z_$][\w$]*\.expanded \? collapseText : expandText\)\}/);
+    expect(src).toMatch(/onclick=\{\(\) => [a-zA-Z_$][\w$]*\.setExpanded\(![a-zA-Z_$][\w$]*\.expanded\)\}/);
+  });
+
+  it("Angular lowers conditional content to a template ternary", () => {
+    const src = generateAngularComponentSource(ir);
+    expect(src).toContain("{{ (behavior.expanded() ? collapseText : expandText) }}");
+    expect(src).toContain('(click)="behavior.setExpanded(!behavior.expanded())"');
+  });
+
+  it("Lit lowers conditional content to a template ternary", () => {
+    const src = generateLitComponentSource(ir);
+    expect(src).toContain("${(this.behavior.expanded ? this.collapseText : this.expandText)}");
+    expect(src).toContain("@click=${() => this.behavior.setExpanded(!this.behavior.expanded)}");
+  });
+
+  it("React Native lowers conditional content to a JSX ternary", () => {
+    const src = generateReactNativeComponentSource(ir).componentFile;
+    expect(src).toContain("<RNText>{(expanded ? collapseText : expandText)}</RNText>");
+    expect(src).toContain("onPress={() => setExpandedValue(!expanded)}");
+    expect(src).not.toContain("showMoreLabel");
   });
 });

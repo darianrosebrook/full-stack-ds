@@ -27,7 +27,9 @@ import { useTruncate } from "./useTruncate.js";
     <ng-content />
   </span>
   <ng-container *ngIf="expandable">
-    <button [ngClass]="'truncate__toggle'" type="button" [attr.aria-expanded]="behavior.expanded()"></button>
+    <button [ngClass]="'truncate__toggle'" type="button" (click)="behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
+      {{ (behavior.expanded() ? collapseText : expandText) }}
+    </button>
   </ng-container>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -104,7 +104,7 @@ export function ShowMore({
       {children}
     </div>
     <button className="show-more__trigger" type="button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>
-      {showMoreLabel}
+      {(expanded ? showLessLabel : showMoreLabel)}
     </button>
   </Stack>
   );

@@ -408,14 +408,6 @@ function collectBindingRuntimeUsage(
   if (binding.kind === "prop") {
     const safeName = safePropName(ir, binding.prop);
     usage.props.add(safeName);
-    if (
-      safeName === "showMoreLabel" &&
-      ir.styledProps.some((prop) => prop.safeName === "showLessLabel") &&
-      ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded")
-    ) {
-      usage.props.add("showLessLabel");
-      usage.channels.add("expanded");
-    }
     return;
   }
   if (binding.kind === "channel") {
@@ -426,6 +418,12 @@ function collectBindingRuntimeUsage(
     return;
   }
   if (binding.kind === "iterationLocal" || binding.kind === "literal") return;
+  if (binding.kind === "conditional") {
+    collectBindingRuntimeUsage(binding.condition, ir, usage, channelPurpose);
+    collectBindingRuntimeUsage(binding.whenTrue, ir, usage, channelPurpose);
+    collectBindingRuntimeUsage(binding.whenFalse, ir, usage, channelPurpose);
+    return;
+  }
   collectBindingRuntimeUsage(binding.left, ir, usage, channelPurpose);
   collectBindingRuntimeUsage(binding.right, ir, usage, channelPurpose);
 }
@@ -1458,13 +1456,6 @@ function eventHandlerExpr(
 function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   if (binding.kind === "prop") {
     const propName = safePropName(ir, binding.prop);
-    if (
-      propName === "showMoreLabel" &&
-      ir.styledProps.some((prop) => prop.safeName === "showLessLabel") &&
-      ir.behavior.normalizedChannels.some((channel) => channel.name === "expanded")
-    ) {
-      return "(expanded ? showLessLabel : showMoreLabel)";
-    }
     return pathExpr(propName, binding.path);
   }
   if (binding.kind === "channel") {
@@ -1475,6 +1466,9 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   if (binding.kind === "literal") return JSON.stringify(binding.value);
   if (binding.kind === "iterationLocal") {
     return pathExpr(binding.local, binding.path);
+  }
+  if (binding.kind === "conditional") {
+    return `(${bindingExpr(binding.condition, ir)} ? ${bindingExpr(binding.whenTrue, ir)} : ${bindingExpr(binding.whenFalse, ir)})`;
   }
   const left = bindingExpr(binding.left, ir);
   const right = bindingExpr(binding.right, ir);
