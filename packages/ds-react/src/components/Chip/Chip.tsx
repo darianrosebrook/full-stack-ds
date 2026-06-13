@@ -1,6 +1,7 @@
 // @generated:start imports
-import { type ButtonHTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { Button } from "../Button/Button";
 import "./Chip.css";
 // @generated:end
 
@@ -21,7 +22,7 @@ export type ChipSize = "small" | "medium" | "large";
 // @custom:end
 
 // @generated:start props
-export interface ChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "ariaExpanded" | "ariaLabel" | "ariaPressed" | "children" | "className" | "data-testid" | "disabled" | "icon" | "size" | "title" | "type" | "variant"> {
+export interface ChipProps extends Omit<HTMLAttributes<HTMLSpanElement>, "ariaExpanded" | "ariaLabel" | "ariaPressed" | "children" | "className" | "data-testid" | "disabled" | "dismissLabel" | "dismissible" | "icon" | "onClick" | "onDismiss" | "size" | "title" | "type" | "variant"> {
   type?: ChipType;
   variant?: ChipVariant;
   size?: ChipSize;
@@ -31,6 +32,10 @@ export interface ChipProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>,
   ariaLabel?: string;
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
+  onClick?: () => void;
+  dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   className?: string;
   "data-testid"?: string;
   children?: ReactNode;
@@ -55,6 +60,10 @@ export function Chip({
   ariaLabel,
   ariaExpanded,
   ariaPressed,
+  onClick,
+  dismissible,
+  onDismiss,
+  dismissLabel = "Remove",
   ...rest
 }: ChipProps) {
   const classNames = [
@@ -68,13 +77,18 @@ export function Chip({
     .join(" ");
 
   return (
-  <Stack layout="native" as="button" className={`${classNames}`} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed} data-testid={testId} {...rest}>
-    {icon && (
-      <span className="chip__icon" aria-hidden="true" />
+  <Stack layout="native" as="span" className={`${classNames}`} data-testid={testId} {...rest}>
+    <Button className="chip__action" variant="ghost" onClick={onClick} type={type} disabled={disabled} ariaLabel={ariaLabel} ariaExpanded={ariaExpanded} ariaPressed={ariaPressed}>
+      {icon && (
+        <span className="chip__icon" aria-hidden="true" />
+      )}
+      <span className="chip__text">
+        {children}
+      </span>
+    </Button>
+    {dismissible && (
+      <Button className="chip__dismiss" type="button" variant="ghost" onClick={onDismiss} disabled={disabled} ariaLabel={dismissLabel} />
     )}
-    <span className="chip__text">
-      {children}
-    </span>
   </Stack>
   );
 }

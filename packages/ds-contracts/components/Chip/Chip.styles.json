@@ -16,10 +16,6 @@
       "literal": "solid",
       "platforms": ["web"]
     },
-    "cursor": {
-      "literal": "pointer",
-      "platforms": ["web"]
-    },
     "white-space": {
       "literal": "nowrap",
       "platforms": ["web"]
@@ -70,24 +66,43 @@
       "resolvesTo": "chip.color.background.hover"
     }
   },
-  "active": {
-    "background-color": {
-      "resolvesTo": "chip.color.background.active"
+  "__action": {
+    "flex": {
+      "literal": "1 1 auto",
+      "platforms": ["web"]
+    },
+    "min-width": {
+      "literal": "0",
+      "platforms": ["web"]
     }
   },
-  "focus": {
-    "outline-width": {
-      "resolvesTo": "chip.focus.ring.width"
+  ".chip__action.button": {
+    "box-model.padding-block-start": { "literal": "0", "platforms": ["web"] },
+    "box-model.padding-block-end": { "literal": "0", "platforms": ["web"] },
+    "box-model.padding-inline-start": { "literal": "0", "platforms": ["web"] },
+    "box-model.padding-inline-end": { "literal": "0", "platforms": ["web"] },
+    "box-model.min-height": { "literal": "0", "platforms": ["web"] },
+    "box-model.min-width": { "literal": "0", "platforms": ["web"] },
+    "box-model.gap": { "resolvesTo": "chip.size.gap" }
+  },
+  "__dismiss": {
+    "flex": {
+      "literal": "0 0 auto",
+      "platforms": ["web"]
     },
-    "outline-color": {
-      "resolvesTo": "chip.focus.ring.color"
-    },
-    "outline-style": {
-      "resolvesTo": "chip.focus.ring.style"
-    },
-    "outline-offset": {
-      "resolvesTo": "chip.focus.ring.offset"
+    "margin-inline-start": {
+      "resolvesTo": "chip.dismiss.gap"
     }
+  },
+  ".chip__dismiss.button": {
+    "box-model.padding-block-start": { "literal": "0", "platforms": ["web"] },
+    "box-model.padding-block-end": { "literal": "0", "platforms": ["web"] },
+    "box-model.padding-inline-start": { "literal": "0", "platforms": ["web"] },
+    "box-model.padding-inline-end": { "literal": "0", "platforms": ["web"] },
+    "box-model.min-height": { "resolvesTo": "chip.dismiss.size" },
+    "box-model.min-width": { "resolvesTo": "chip.dismiss.size" },
+    "box-model.width": { "resolvesTo": "chip.dismiss.size" },
+    "box-model.height": { "resolvesTo": "chip.dismiss.size" }
   },
   "icon": {
     "display": {

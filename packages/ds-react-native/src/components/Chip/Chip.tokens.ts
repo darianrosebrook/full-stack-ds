@@ -202,6 +202,47 @@ export const chipTokenScopes = {
       ref: "semantic.color.border.info",
       fallback: "#0042dc",
     },
+    "chip.dismiss.size": {
+      name: "chip.dismiss.size",
+      cssVar: "--fsds-chip-dismiss-size",
+      ref: "core.spacing.size.05",
+      fallback: 16,
+    },
+    "chip.dismiss.gap": {
+      name: "chip.dismiss.gap",
+      cssVar: "--fsds-chip-dismiss-gap",
+      ref: "core.spacing.size.02",
+      fallback: 2,
+    },
+  },
+  "part_action": {
+    "box-model.gap": {
+      name: "box-model.gap",
+      cssVar: "--fsds-box-model-gap",
+      ref: "chip.size.gap",
+    },
+  },
+  "part_dismiss": {
+    "box-model.min-height": {
+      name: "box-model.min-height",
+      cssVar: "--fsds-box-model-min-height",
+      ref: "chip.dismiss.size",
+    },
+    "box-model.min-width": {
+      name: "box-model.min-width",
+      cssVar: "--fsds-box-model-min-width",
+      ref: "chip.dismiss.size",
+    },
+    "box-model.width": {
+      name: "box-model.width",
+      cssVar: "--fsds-box-model-width",
+      ref: "chip.dismiss.size",
+    },
+    "box-model.height": {
+      name: "box-model.height",
+      cssVar: "--fsds-box-model-height",
+      ref: "chip.dismiss.size",
+    },
   },
   "variant_selected": {
     "chip.color.background.default": {

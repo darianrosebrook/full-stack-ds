@@ -1,19 +1,26 @@
 {
   "$schema": "../../component.contract.schema.json",
   "name": "Chip",
-  "description": "Compact interactive element for tags, filters, or multi-select choices.",
+  "description": "Compact interactive element for tags, filters, or multi-select choices. Optionally dismissible.",
   "layer": "compound",
   "category": "display",
   "anatomy": {
     "parts": [
       "root",
+      "action",
       "icon",
-      "text"
+      "text",
+      "dismiss"
     ],
     "details": {
       "root": {
-        "tag": "button",
-        "description": "Compact button-like control for tag, filter, or choice interactions.",
+        "tag": "span",
+        "description": "Non-interactive chip container that groups the action control and the optional dismiss control.",
+        "role": "root"
+      },
+      "action": {
+        "componentRef": "fsds.Button",
+        "description": "Primary interactive control for the chip; activates the tag, filter, or choice. Realized by-reference as the Button primitive.",
         "role": "trigger",
         "interactive": true,
         "focusable": true,
@@ -34,35 +41,75 @@
         "tag": "span",
         "description": "Visible chip label supplied by children.",
         "role": "label"
+      },
+      "dismiss": {
+        "componentRef": "fsds.Button",
+        "description": "Optional control that removes the chip. Realized by-reference as the Button primitive.",
+        "role": "trigger",
+        "interactive": true,
+        "focusable": true,
+        "aria": {
+          "attributes": [
+            "aria-label"
+          ]
+        }
       }
     },
     "dom": {
-      "tag": "button",
+      "tag": "span",
       "part": "root",
-      "bindings": {
-        "type": "prop:type",
-        "disabled": "prop:disabled",
-        "aria-label": "prop:ariaLabel",
-        "aria-expanded": "prop:ariaExpanded",
-        "aria-pressed": "prop:ariaPressed"
-      },
       "children": [
         {
-          "tag": "span",
-          "part": "icon",
+          "componentRef": "fsds.Button",
+          "part": "action",
           "attrs": {
-            "aria-hidden": "true"
+            "variant": "ghost"
           },
-          "if": "icon"
-        },
-        {
-          "tag": "span",
-          "part": "text",
+          "bindings": {
+            "type": "prop:type",
+            "disabled": "prop:disabled",
+            "ariaLabel": "prop:ariaLabel",
+            "ariaExpanded": "prop:ariaExpanded",
+            "ariaPressed": "prop:ariaPressed"
+          },
+          "events": {
+            "click": "prop:onClick"
+          },
           "children": [
             {
-              "tag": "children"
+              "tag": "span",
+              "part": "icon",
+              "attrs": {
+                "aria-hidden": "true"
+              },
+              "if": "icon"
+            },
+            {
+              "tag": "span",
+              "part": "text",
+              "children": [
+                {
+                  "tag": "children"
+                }
+              ]
             }
           ]
+        },
+        {
+          "componentRef": "fsds.Button",
+          "part": "dismiss",
+          "if": "dismissible",
+          "attrs": {
+            "type": "button",
+            "variant": "ghost"
+          },
+          "bindings": {
+            "disabled": "prop:disabled",
+            "ariaLabel": "prop:dismissLabel"
+          },
+          "events": {
+            "click": "prop:onDismiss"
+          }
         }
       ]
     }
@@ -73,7 +120,7 @@
         {
           "name": "type",
           "propType": { "kind": "ref", "to": "ChipType" },
-          "description": "HTML button type attribute"
+          "description": "HTML button type attribute for the action control."
         },
         {
           "name": "variant",
@@ -88,7 +135,7 @@
         {
           "name": "disabled",
           "propType": { "kind": "boolean" },
-          "description": "Disables the chip"
+          "description": "Disables both the action and dismiss controls."
         },
         {
           "name": "icon",
@@ -103,17 +150,38 @@
         {
           "name": "ariaLabel",
           "propType": { "kind": "string" },
-          "description": "Accessible label when content is not descriptive enough on its own."
+          "description": "Accessible label for the action control when content is not descriptive enough on its own."
         },
         {
           "name": "ariaExpanded",
           "propType": { "kind": "boolean" },
-          "description": "Sets aria-expanded for chips that toggle a popover/menu."
+          "description": "Sets aria-expanded on the action control for chips that toggle a popover/menu."
         },
         {
           "name": "ariaPressed",
           "propType": { "kind": "boolean" },
-          "description": "Sets aria-pressed for chips used as toggle buttons."
+          "description": "Sets aria-pressed on the action control for chips used as toggle buttons."
+        },
+        {
+          "name": "onClick",
+          "propType": { "kind": "callback", "params": [], "returns": { "kind": "void" } },
+          "description": "Handler invoked when the chip action control is activated (click / Enter / Space)."
+        },
+        {
+          "name": "dismissible",
+          "propType": { "kind": "boolean" },
+          "description": "Whether the chip renders a dismiss control."
+        },
+        {
+          "name": "onDismiss",
+          "propType": { "kind": "callback", "params": [], "returns": { "kind": "void" } },
+          "description": "Handler invoked when the dismiss control is activated. Required surface for `dismissible`; consumers handle removing the chip."
+        },
+        {
+          "name": "dismissLabel",
+          "propType": { "kind": "string" },
+          "description": "Accessible label for the dismiss control.",
+          "default": "Remove"
         }
       ]
     }
@@ -199,6 +267,10 @@
       "required": true,
       "selector": "[data-slot=\"chip\"]"
     },
+    "action": {
+      "required": true,
+      "selector": "[data-slot=\"chip-action\"]"
+    },
     "text": {
       "required": false,
       "selector": "[data-slot=\"chip-text\"]"
@@ -206,6 +278,10 @@
     "icon": {
       "required": false,
       "selector": "[data-slot=\"chip-icon\"]"
+    },
+    "dismiss": {
+      "required": false,
+      "selector": "[data-slot=\"chip-dismiss\"]"
     }
   },
   "ssr": {
@@ -223,17 +299,16 @@
     "keyboard": [
       {
         "key": "Enter|Space",
-        "action": "Activate the chip (same as click)"
+        "action": "Activate the chip action (same as click)"
       }
     ]
   },
   "a2ui": {
     "category": "action",
     "usageHints": [
-      "Use variant=filter for toggleable filter chips; variant=action for one-time interactions",
-      "Set selected to mark the chip as active in a filter group",
-      "Use onDismiss to make the chip removable with an X button",
-      "Chips with onClick render as buttons; without onClick they render as spans"
+      "Use variant=selected to mark the chip as active in a filter group",
+      "Set dismissible with onDismiss to make the chip removable with an X control",
+      "The chip action and the dismiss control are separate buttons; clicking the X does not activate the chip"
     ],
     "children": {
       "allowed": true,

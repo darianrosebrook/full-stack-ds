@@ -1,7 +1,7 @@
 // @generated:start imports
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
+import '../Button/Button.js';
 // @generated:end
 
 // @custom:start imports
@@ -58,6 +58,29 @@ export class ChipElement extends LitElement {
       --fsds-chip-color-background-selected: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
       --fsds-chip-color-foreground-selected: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
       --fsds-chip-color-border-selected: var(--fsds-semantic-color-border-info, #0042dc);
+      --fsds-chip-dismiss-size: var(--fsds-core-spacing-size-05, 16px);
+      --fsds-chip-dismiss-gap: var(--fsds-core-spacing-size-02, 2px);
+    }
+
+    .chip__action.button {
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-min-height: 0;
+      --fsds-box-model-min-width: 0;
+      --fsds-box-model-gap: var(--fsds-chip-size-gap);
+    }
+
+    .chip__dismiss.button {
+      --fsds-box-model-padding-block-start: 0;
+      --fsds-box-model-padding-block-end: 0;
+      --fsds-box-model-padding-inline-start: 0;
+      --fsds-box-model-padding-inline-end: 0;
+      --fsds-box-model-min-height: var(--fsds-chip-dismiss-size);
+      --fsds-box-model-min-width: var(--fsds-chip-dismiss-size);
+      --fsds-box-model-width: var(--fsds-chip-dismiss-size);
+      --fsds-box-model-height: var(--fsds-chip-dismiss-size);
     }
 
     .chip--selected {
@@ -110,7 +133,6 @@ export class ChipElement extends LitElement {
       align-items: center;
       box-sizing: border-box;
       border-style: solid;
-      cursor: pointer;
       white-space: nowrap;
       user-select: none;
       background-color: var(--fsds-chip-color-background-default);
@@ -127,17 +149,16 @@ export class ChipElement extends LitElement {
       &:hover {
         background-color: var(--fsds-chip-color-background-hover);
       }
+    }
 
-      &:active {
-        background-color: var(--fsds-chip-color-background-active);
-      }
+    .chip__action {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
 
-      &:focus-visible {
-        outline-width: var(--fsds-chip-focus-ring-width);
-        outline-color: var(--fsds-chip-focus-ring-color);
-        outline-style: var(--fsds-chip-focus-ring-style);
-        outline-offset: var(--fsds-chip-focus-ring-offset);
-      }
+    .chip__dismiss {
+      flex: 0 0 auto;
+      margin-inline-start: var(--fsds-chip-dismiss-gap);
     }
 
     .chip__icon {
@@ -170,6 +191,10 @@ export class ChipElement extends LitElement {
   override ariaExpanded: string | null = null;
   @property({ attribute: 'aria-pressed', reflect: true })
   override ariaPressed: string | null = null;
+  @property({ attribute: false }) onClick?: () => void;
+  @property({ type: Boolean }) dismissible?: boolean;
+  @property({ attribute: false }) onDismiss?: () => void;
+  @property({ type: String }) dismissLabel?: string = "Remove";
 
   private computeClasses(): string {
     return [
@@ -181,14 +206,19 @@ export class ChipElement extends LitElement {
   }
 
   override render() {
-    return html`<button class="${this.computeClasses()}" type=${ifDefined(this.type)} ?disabled=${this.disabled ?? false} aria-label=${ifDefined(this.ariaLabel ?? undefined)} aria-expanded=${ifDefined(this.ariaExpanded === undefined ? undefined : (this.ariaExpanded ? 'true' : 'false'))} aria-pressed=${ifDefined(this.ariaPressed === undefined ? undefined : (this.ariaPressed ? 'true' : 'false'))}>
-  ${this.icon ? html`
-  <span class=${'chip__icon'} aria-hidden="true"></span>
+    return html`<span class="${this.computeClasses()}">
+  <fsds-button class=${'chip__action'} variant="ghost" @click=${this.onClick} .type=${this.type} ?disabled=${this.disabled ?? false} .ariaLabel=${this.ariaLabel ?? undefined} ?ariaExpanded=${this.ariaExpanded ?? false} ?ariaPressed=${this.ariaPressed ?? false}>
+    ${this.icon ? html`
+    <span class=${'chip__icon'} aria-hidden="true"></span>
+    ` : nothing}
+    <span class=${'chip__text'}>
+      <slot></slot>
+    </span>
+  </fsds-button>
+  ${this.dismissible ? html`
+  <fsds-button class=${'chip__dismiss'} type="button" variant="ghost" @click=${this.onDismiss} ?disabled=${this.disabled ?? false} .ariaLabel=${this.dismissLabel}></fsds-button>
   ` : nothing}
-  <span class=${'chip__text'}>
-    <slot></slot>
-  </span>
-</button>`;
+</span>`;
   }
 }
 

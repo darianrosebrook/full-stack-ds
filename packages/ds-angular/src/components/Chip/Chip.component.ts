@@ -1,6 +1,7 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
+import { ButtonComponent } from "../Button/Button.component.js";
 // @generated:end
 
 // @custom:start imports
@@ -21,15 +22,20 @@ export type ChipSize = "small" | "medium" | "large";
 @Component({
   selector: "fsds-chip",
   standalone: true,
-  imports: [NgClass, NgIf],
-  template: `<button [ngClass]="classes()" [type]="type" [disabled]="disabled" [attr.aria-label]="ariaLabel" [attr.aria-expanded]="ariaExpanded" [attr.aria-pressed]="ariaPressed">
-  <ng-container *ngIf="icon">
-    <span [ngClass]="'chip__icon'" aria-hidden="true"></span>
+  imports: [NgClass, NgIf, ButtonComponent],
+  template: `<span [ngClass]="classes()">
+  <fsds-button [ngClass]="'chip__action'" variant="ghost" (click)="onClick && onClick()" [type]="type" [disabled]="disabled" [ariaLabel]="ariaLabel" [ariaExpanded]="ariaExpanded" [ariaPressed]="ariaPressed">
+    <ng-container *ngIf="icon">
+      <span [ngClass]="'chip__icon'" aria-hidden="true"></span>
+    </ng-container>
+    <span [ngClass]="'chip__text'">
+      <ng-content />
+    </span>
+  </fsds-button>
+  <ng-container *ngIf="dismissible">
+    <fsds-button [ngClass]="'chip__dismiss'" type="button" variant="ghost" (click)="onDismiss && onDismiss()" [disabled]="disabled" [ariaLabel]="dismissLabel"></fsds-button>
   </ng-container>
-  <span [ngClass]="'chip__text'">
-    <ng-content />
-  </span>
-</button>`,
+</span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipComponent {
@@ -42,6 +48,10 @@ export class ChipComponent {
   @Input() ariaLabel?: string;
   @Input() ariaExpanded?: boolean;
   @Input() ariaPressed?: boolean;
+  @Input() onClick?: () => void;
+  @Input() dismissible?: boolean;
+  @Input() onDismiss?: () => void;
+  @Input() dismissLabel?: string = "Remove";
   @Input() class?: string;
 
   classes(): string {

@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-
+import Button from "../Button/Button.svelte";
 // @generated:end
 
 // @custom:start imports
@@ -28,11 +28,15 @@ interface Props {
   ariaLabel?: string;
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
+  onClick?: () => void;
+  dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   class?: string;
   children?: import('svelte').Snippet;
 }
 
-let { type, variant, size, disabled, icon, title, ariaLabel, ariaExpanded, ariaPressed, class: className, children }: Props = $props();
+let { type, variant, size, disabled, icon, title, ariaLabel, ariaExpanded, ariaPressed, onClick, dismissible, onDismiss, dismissLabel = "Remove", class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start classes
@@ -52,11 +56,16 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<button class={classes} type={type} disabled={disabled} aria-label={ariaLabel} aria-expanded={ariaExpanded} aria-pressed={ariaPressed}>
-  {#if icon}
-  <span class={'chip__icon'} aria-hidden="true"></span>
+<span class={classes}>
+  <Button class={'chip__action'} variant="ghost" onClick={onClick} type={type} disabled={disabled} ariaLabel={ariaLabel} ariaExpanded={ariaExpanded} ariaPressed={ariaPressed}>
+    {#if icon}
+    <span class={'chip__icon'} aria-hidden="true"></span>
+    {/if}
+    <span class={'chip__text'}>
+      {@render children?.()}
+    </span>
+  </Button>
+  {#if dismissible}
+  <Button class={'chip__dismiss'} type="button" variant="ghost" onClick={onDismiss} disabled={disabled} ariaLabel={dismissLabel} />
   {/if}
-  <span class={'chip__text'}>
-    {@render children?.()}
-  </span>
-</button>
+</span>

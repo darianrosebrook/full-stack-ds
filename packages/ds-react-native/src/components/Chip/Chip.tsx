@@ -1,9 +1,10 @@
 // @generated:start imports
-import type { GestureResponderEvent, StyleProp, ViewStyle } from "react-native";
-import { Pressable, Text as RNText, View } from "react-native";
+import type { StyleProp, ViewStyle } from "react-native";
+import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createChipStyles } from "./Chip.styles";
+import { Button } from "../Button/Button";
 // @generated:end
 
 // @generated:start types
@@ -23,8 +24,11 @@ export interface ChipProps {
   ariaLabel?: string;
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
+  onClick?: () => void;
+  dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   children?: ReactNode;
-  onPress?: (event: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
   testID?: string;
   accessibilityLabel?: string;
@@ -34,6 +38,7 @@ export interface ChipProps {
 
 // @generated:start component
 export function Chip({
+  type,
   variant,
   size,
   disabled,
@@ -41,8 +46,11 @@ export function Chip({
   ariaLabel,
   ariaExpanded,
   ariaPressed,
+  onClick,
+  dismissible,
+  onDismiss,
+  dismissLabel = "Remove",
   children,
-  onPress,
   style,
   testID,
   accessibilityLabel,
@@ -53,28 +61,43 @@ export function Chip({
   const variantStyleForVariant = variant !== undefined ? ({ "selected": styles.root_variant_selected } as Record<string, ViewStyle | undefined>)[variant] : undefined;
   const variantStyleForSize = size !== undefined ? ({ "small": styles.root_variant_small, "medium": styles.root_variant_medium, "large": styles.root_variant_large } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
-    <Pressable
+    <View
       testID={testID}
-      style={({ pressed }) => [styles.root, variantStyleForVariant, variantStyleForSize, pressed ? styles.root_state_pressed : undefined, style]}
-      disabled={disabled}
-      accessibilityLabel={accessibilityLabel ?? ariaLabel}
-      onPress={onPress}
+      style={[styles.root, variantStyleForVariant, variantStyleForSize, style]}
+      accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
-      accessibilityRole="togglebutton"
-      accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), selected: Boolean(ariaPressed) }}
     >
-      {icon ? (
-      <View
-        style={styles.icon}
-        accessible={false}
+      <Button
+        type={type}
+        disabled={disabled}
+        ariaLabel={ariaLabel}
+        ariaExpanded={ariaExpanded}
+        ariaPressed={ariaPressed}
+        variant="ghost"
+        onClick={onClick}
+      >
+        {icon ? (
+        <View
+          style={styles.icon}
+          accessible={false}
+        />
+        ) : null}
+        <View
+          style={styles.text}
+        >
+          {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        </View>
+      </Button>
+      {dismissible ? (
+      <Button
+        disabled={disabled}
+        ariaLabel={dismissLabel}
+        type="button"
+        variant="ghost"
+        onClick={onDismiss}
       />
       ) : null}
-      <View
-        style={styles.text}
-      >
-        {typeof children === "string" ? <RNText>{children}</RNText> : children}
-      </View>
-    </Pressable>
+    </View>
   );
 }
 // @generated:end

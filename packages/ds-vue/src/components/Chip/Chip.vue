@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import Button from "../Button/Button.vue";
 // @generated:end
 
 // @custom:start imports
@@ -28,6 +29,10 @@ interface Props {
   ariaLabel?: string;
   ariaExpanded?: boolean;
   ariaPressed?: boolean;
+  onClick?: () => void;
+  dismissible?: boolean;
+  onDismiss?: () => void;
+  dismissLabel?: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -38,6 +43,8 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: undefined,
   ariaExpanded: undefined,
   ariaPressed: undefined,
+  dismissible: undefined,
+  dismissLabel: "Remove",
 });
 // @generated:end
 
@@ -57,10 +64,13 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <button :class="classNames" :type="props.type" :disabled="props.disabled" :aria-label="props.ariaLabel" :aria-expanded="props.ariaExpanded" :aria-pressed="props.ariaPressed" :data-testid="props['data-testid']">
-    <span v-if="props.icon" :class="'chip__icon'" aria-hidden="true"></span>
-    <span :class="'chip__text'">
-      <slot />
-    </span>
-  </button>
+  <span :class="classNames" :data-testid="props['data-testid']">
+    <Button :class="'chip__action'" variant="ghost" @click="props.onClick?.()" :type="props.type" :disabled="props.disabled" :ariaLabel="props.ariaLabel" :ariaExpanded="props.ariaExpanded" :ariaPressed="props.ariaPressed">
+      <span v-if="props.icon" :class="'chip__icon'" aria-hidden="true"></span>
+      <span :class="'chip__text'">
+        <slot />
+      </span>
+    </Button>
+    <Button v-if="props.dismissible" :class="'chip__dismiss'" type="button" variant="ghost" @click="props.onDismiss?.()" :disabled="props.disabled" :ariaLabel="props.dismissLabel" />
+  </span>
 </template>

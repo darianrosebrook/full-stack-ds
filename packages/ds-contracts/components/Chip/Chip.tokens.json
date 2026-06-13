@@ -108,5 +108,15 @@
     "resolvesTo": "semantic.color.border.info",
     "fallback": "#0042dc",
     "layer": "semantic"
+  },
+  "chip.dismiss.size": {
+    "resolvesTo": "core.spacing.size.05",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "chip.dismiss.gap": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "2px",
+    "layer": "core"
   }
 }

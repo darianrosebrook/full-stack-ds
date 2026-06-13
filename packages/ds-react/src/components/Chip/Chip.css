@@ -17,7 +17,6 @@
   align-items: center;
   box-sizing: border-box;
   border-style: solid;
-  cursor: pointer;
   white-space: nowrap;
   user-select: none;
   background-color: var(--fsds-chip-color-background-default);
@@ -34,17 +33,16 @@
   &:hover {
     background-color: var(--fsds-chip-color-background-hover);
   }
+}
 
-  &:active {
-    background-color: var(--fsds-chip-color-background-active);
-  }
+.chip__action {
+  flex: 1 1 auto;
+  min-width: 0;
+}
 
-  &:focus-visible {
-    outline-width: var(--fsds-chip-focus-ring-width);
-    outline-color: var(--fsds-chip-focus-ring-color);
-    outline-style: var(--fsds-chip-focus-ring-style);
-    outline-offset: var(--fsds-chip-focus-ring-offset);
-  }
+.chip__dismiss {
+  flex: 0 0 auto;
+  margin-inline-start: var(--fsds-chip-dismiss-gap);
 }
 
 .chip__icon {

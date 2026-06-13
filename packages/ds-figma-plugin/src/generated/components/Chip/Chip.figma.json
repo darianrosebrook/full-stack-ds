@@ -11,9 +11,17 @@
     {
       "name": "root",
       "semanticElement": null,
-      "nativeTag": "button",
+      "nativeTag": "span",
       "isCompound": false,
       "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "action",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
       "layoutVariant": null
     },
     {
@@ -31,6 +39,14 @@
       "isCompound": false,
       "isRootOnly": false,
       "layoutVariant": null
+    },
+    {
+      "name": "dismiss",
+      "semanticElement": null,
+      "nativeTag": null,
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
     }
   ],
   "props": [
@@ -39,7 +55,7 @@
       "safeName": "type",
       "type": "ChipType",
       "required": false,
-      "description": "HTML button type attribute",
+      "description": "HTML button type attribute for the action control.",
       "defaultExpr": null,
       "nodeKind": null
     },
@@ -66,7 +82,7 @@
       "safeName": "disabled",
       "type": "boolean",
       "required": false,
-      "description": "Disables the chip",
+      "description": "Disables both the action and dismiss controls.",
       "defaultExpr": null,
       "nodeKind": null
     },
@@ -93,7 +109,7 @@
       "safeName": "ariaLabel",
       "type": "string",
       "required": false,
-      "description": "Accessible label when content is not descriptive enough on its own.",
+      "description": "Accessible label for the action control when content is not descriptive enough on its own.",
       "defaultExpr": null,
       "nodeKind": null
     },
@@ -102,7 +118,7 @@
       "safeName": "ariaExpanded",
       "type": "boolean",
       "required": false,
-      "description": "Sets aria-expanded for chips that toggle a popover/menu.",
+      "description": "Sets aria-expanded on the action control for chips that toggle a popover/menu.",
       "defaultExpr": null,
       "nodeKind": null
     },
@@ -111,8 +127,44 @@
       "safeName": "ariaPressed",
       "type": "boolean",
       "required": false,
-      "description": "Sets aria-pressed for chips used as toggle buttons.",
+      "description": "Sets aria-pressed on the action control for chips used as toggle buttons.",
       "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onClick",
+      "safeName": "onClick",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler invoked when the chip action control is activated (click / Enter / Space).",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "dismissible",
+      "safeName": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the chip renders a dismiss control.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "onDismiss",
+      "safeName": "onDismiss",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler invoked when the dismiss control is activated. Required surface for `dismissible`; consumers handle removing the chip.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "dismissLabel",
+      "safeName": "dismissLabel",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the dismiss control.",
+      "defaultExpr": "\"Remove\"",
       "nodeKind": null
     }
   ],
@@ -202,7 +254,7 @@
     "keyboard": [
       {
         "key": "Enter|Space",
-        "action": "Activate the chip (same as click)"
+        "action": "Activate the chip action (same as click)"
       }
     ]
   },
@@ -246,6 +298,8 @@
           "--fsds-chip-color-background-selected": "var(--fsds-semantic-color-background-info-subtle, #d9f3fe)",
           "--fsds-chip-color-foreground-selected": "var(--fsds-semantic-color-foreground-on-info-subtle, #002d99)",
           "--fsds-chip-color-border-selected": "var(--fsds-semantic-color-border-info, #0042dc)",
+          "--fsds-chip-dismiss-size": "var(--fsds-core-spacing-size-05, 16px)",
+          "--fsds-chip-dismiss-gap": "var(--fsds-core-spacing-size-02, 2px)",
           "padding-block-start": "var(--fsds-box-model-padding-block-start)",
           "padding-block-end": "var(--fsds-box-model-padding-block-end)",
           "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
@@ -261,7 +315,6 @@
           "align-items": "center",
           "box-sizing": "border-box",
           "border-style": "solid",
-          "cursor": "pointer",
           "white-space": "nowrap",
           "user-select": "none",
           "background-color": "var(--fsds-chip-color-background-default)",
@@ -283,18 +336,42 @@
         }
       },
       {
-        "selector": ".chip:active",
+        "selector": ".chip__action",
         "declarations": {
-          "background-color": "var(--fsds-chip-color-background-active)"
+          "flex": "1 1 auto",
+          "min-width": "0"
         }
       },
       {
-        "selector": ".chip:focus-visible",
+        "selector": ".chip__action.button",
         "declarations": {
-          "outline-width": "var(--fsds-chip-focus-ring-width)",
-          "outline-color": "var(--fsds-chip-focus-ring-color)",
-          "outline-style": "var(--fsds-chip-focus-ring-style)",
-          "outline-offset": "var(--fsds-chip-focus-ring-offset)"
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-gap": "var(--fsds-chip-size-gap)"
+        }
+      },
+      {
+        "selector": ".chip__dismiss",
+        "declarations": {
+          "flex": "0 0 auto",
+          "margin-inline-start": "var(--fsds-chip-dismiss-gap)"
+        }
+      },
+      {
+        "selector": ".chip__dismiss.button",
+        "declarations": {
+          "--fsds-box-model-padding-block-start": "0",
+          "--fsds-box-model-padding-block-end": "0",
+          "--fsds-box-model-padding-inline-start": "0",
+          "--fsds-box-model-padding-inline-end": "0",
+          "--fsds-box-model-min-height": "var(--fsds-chip-dismiss-size)",
+          "--fsds-box-model-min-width": "var(--fsds-chip-dismiss-size)",
+          "--fsds-box-model-width": "var(--fsds-chip-dismiss-size)",
+          "--fsds-box-model-height": "var(--fsds-chip-dismiss-size)"
         }
       },
       {

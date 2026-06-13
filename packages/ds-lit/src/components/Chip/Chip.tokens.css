@@ -35,6 +35,29 @@
   --fsds-chip-color-background-selected: var(--fsds-semantic-color-background-info-subtle, #d9f3fe);
   --fsds-chip-color-foreground-selected: var(--fsds-semantic-color-foreground-on-info-subtle, #002d99);
   --fsds-chip-color-border-selected: var(--fsds-semantic-color-border-info, #0042dc);
+  --fsds-chip-dismiss-size: var(--fsds-core-spacing-size-05, 16px);
+  --fsds-chip-dismiss-gap: var(--fsds-core-spacing-size-02, 2px);
+}
+
+.chip__action.button {
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-min-height: 0;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-gap: var(--fsds-chip-size-gap);
+}
+
+.chip__dismiss.button {
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-min-height: var(--fsds-chip-dismiss-size);
+  --fsds-box-model-min-width: var(--fsds-chip-dismiss-size);
+  --fsds-box-model-width: var(--fsds-chip-dismiss-size);
+  --fsds-box-model-height: var(--fsds-chip-dismiss-size);
 }
 
 .chip--selected {
