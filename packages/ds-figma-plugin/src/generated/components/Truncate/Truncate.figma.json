@@ -213,6 +213,14 @@
         }
       },
       {
+        "selector": ".truncate--expanded .truncate__content",
+        "declarations": {
+          "display": "block",
+          "-webkit-line-clamp": "unset",
+          "line-clamp": "unset"
+        }
+      },
+      {
         "selector": ".truncate__toggle",
         "declarations": {
           "display": "inline-flex",

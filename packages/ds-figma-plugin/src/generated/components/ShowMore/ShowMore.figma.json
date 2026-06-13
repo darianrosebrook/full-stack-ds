@@ -207,6 +207,14 @@
         }
       },
       {
+        "selector": ".show-more--expanded .show-more__content",
+        "declarations": {
+          "display": "block",
+          "-webkit-line-clamp": "unset",
+          "line-clamp": "unset"
+        }
+      },
+      {
         "selector": ".show-more__trigger",
         "declarations": {
           "display": "inline-flex",
