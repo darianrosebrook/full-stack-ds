@@ -2,10 +2,11 @@ id: FEAT-VISUAL-TOKENS-01
 title: 'Core token foundation enrichment: layered elevation, state-layer opacities, tuned neutrals, bare-component size envelopes'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: visual-tokens
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge visual-tokens at 03def5d5a2ef2aaebfd204b607e5f9cc18d3d56c'
 created_at: '2026-06-13T07:52:11.875Z'
-updated_at: '2026-06-13T07:59:19.249Z'
+updated_at: '2026-06-13T08:34:37.121Z'
 blast_radius:
   modules:
     - 'packages/ds-tokens/src (DTCG token source: elevation, interaction state-layer, color neutrals/intent-subtle, component-class size envelopes)'
