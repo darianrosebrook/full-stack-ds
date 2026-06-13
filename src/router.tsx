@@ -35,6 +35,7 @@ export type Route =
   | { kind: "architecture" }
   | { kind: "component"; name: string; tab: ComponentTab }
   | { kind: "tokens" }
+  | { kind: "display-case" }
   | { kind: "primitive"; name: string }
   | { kind: "tokens-philosophy"; tab: TokensTab }
   | { kind: "complexity"; tab: ComplexityTab }
@@ -95,6 +96,7 @@ function parseHash(hash: string): Route {
   if (parts[0] === "scratch" && parts[1] === "properties-panel") {
     return { kind: "scratch", name: "properties-panel" };
   }
+  if (parts[0] === "display-case") return { kind: "display-case" };
   if (parts[0] === "tokens") return { kind: "tokens" };
   if (parts[0] === "architecture") return { kind: "architecture" };
   if (parts[0] === "tokens-philosophy") {
@@ -133,6 +135,8 @@ function buildHref(route: Route): string {
       return `#/primitive/${route.name}`;
     case "tokens":
       return "#/tokens";
+    case "display-case":
+      return "#/display-case";
     case "tokens-philosophy":
       return route.tab === "overview"
         ? "#/tokens-philosophy"
