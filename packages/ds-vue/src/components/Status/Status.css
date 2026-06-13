@@ -7,17 +7,25 @@
   padding-inline-start: var(--fsds-box-model-padding-inline-start);
   padding-inline-end: var(--fsds-box-model-padding-inline-end);
   gap: var(--fsds-box-model-gap);
-  width: var(--fsds-box-model-width);
+  width: fit-content;
   min-width: var(--fsds-box-model-min-width);
   max-width: var(--fsds-box-model-max-width);
   height: var(--fsds-box-model-height);
-  min-height: var(--fsds-box-model-min-height);
+  min-height: var(--fsds-status-size-minHeight);
   max-height: var(--fsds-box-model-max-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+  border-style: solid;
   background-color: var(--fsds-status-color-background-default);
   color: var(--fsds-status-color-foreground-primary);
   border-color: var(--fsds-status-color-border-default);
+  border-width: var(--fsds-status-size-border-default);
   border-radius: var(--fsds-status-size-radius-default);
-  padding: var(--fsds-status-size-padding-default);
+  font-size: var(--fsds-status-size-fontSize);
+  font-weight: var(--fsds-status-text-weight);
   line-height: var(--fsds-status-typography-lineHeight);
 }
 
@@ -27,7 +35,6 @@
   flex-shrink: 0;
   width: 1em;
   height: 1em;
-  margin-right: 4px;
 }
 
 .status__label {
