@@ -30,6 +30,40 @@ import type {
   UsageTreeNode,
 } from "../types/data";
 
+/**
+ * Bundled-asset seam for usage examples. A usage.jsonl is JSON, so it cannot
+ * `import` a bundled asset to get Vite's hashed URL. Instead an example may
+ * reference a file under `src/assets/` with the sentinel `@asset/<filename>`
+ * (e.g. `"src": "@asset/darian-profile.webp"`); `resolveAssetSrc` swaps it for
+ * the build-resolved URL. This keeps curated examples pointed at real images we
+ * own rather than dead `https://example.com/...` URLs that 404 at runtime.
+ */
+const BUNDLED_ASSETS = import.meta.glob<string>("../assets/*", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
+const ASSET_SENTINEL = "@asset/";
+
+function resolveAssetSrc(value: string): string {
+  if (!value.startsWith(ASSET_SENTINEL)) return value;
+  const file = value.slice(ASSET_SENTINEL.length);
+  const url = BUNDLED_ASSETS[`../assets/${file}`];
+  if (!url) {
+    // Fail visible-but-soft: keep the sentinel so the broken-image is obviously
+    // a missing asset, not a silent empty src.
+    if (import.meta.env?.DEV) {
+      console.warn(
+        `[render-usage] usage example references unknown bundled asset "${value}". ` +
+          `Available: ${Object.keys(BUNDLED_ASSETS).join(", ")}`,
+      );
+    }
+    return value;
+  }
+  return url;
+}
+
 export function renderUsageTree(node: UsageTreeNode, key?: string | number): ReactNode {
   const entries = Object.entries(node);
   if (entries.length !== 1) {
@@ -111,8 +145,10 @@ function renderResolved(
 }
 
 function materializeProp(value: UsagePropValue): unknown {
+  if (typeof value === "string") {
+    return resolveAssetSrc(value);
+  }
   if (
-    typeof value === "string" ||
     typeof value === "number" ||
     typeof value === "boolean" ||
     value === null

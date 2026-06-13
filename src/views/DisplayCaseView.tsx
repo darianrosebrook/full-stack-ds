@@ -8,6 +8,7 @@ import * as DS from "@full-stack-ds/react";
 import { defaultPropsFromContract, childLabel } from "../runtime/demos";
 import { resolveRootComponent } from "../lib/usage-registry";
 import placeholderUrl from "../assets/placeholder.svg";
+import profileImageUrl from "../assets/darian-profile.webp";
 import type { Bundle, ComponentBundle } from "../types/data";
 
 interface DisplayCaseViewProps {
@@ -195,6 +196,16 @@ function renderRichSample(name: string, props: Record<string, unknown>): ReactNo
         >
           <DS.Input name="workspace" placeholder="Design systems" />
         </DS.Field>
+      );
+    case "ProfileFlag":
+      // ProfileFlag renders its children as the identity surface; supply a
+      // real Avatar (with a bundled photo we own) plus the display name so the
+      // demo shows an actual face instead of an empty wrapper.
+      return (
+        <DS.ProfileFlag {...props}>
+          <DS.Avatar src={profileImageUrl} name="Darian Rosebrook" />
+          <span className="display-case-copy-strong">Darian Rosebrook</span>
+        </DS.ProfileFlag>
       );
     case "List":
       if (props.as === "dl") {

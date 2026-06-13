@@ -1,1 +1,1 @@
-{"name":"default","description":"Profile flag identifying a user in a comment thread with their avatar and display name.","tree":{"fsds.ProfileFlag":{"props":{"profile":null},"slots":{"root":{"fsds.Avatar":{"props":{"src":"https://example.com/avatars/lee.jpg","name":"Lee Hartmann"}}}}}}}
+{"name":"default","description":"Profile flag identifying a user in a comment thread with their avatar and display name.","tree":{"fsds.ProfileFlag":{"props":{"profile":null},"slots":{"root":{"fsds.Avatar":{"props":{"src":"@asset/darian-profile.webp","name":"Darian Rosebrook"}}}}}}}
