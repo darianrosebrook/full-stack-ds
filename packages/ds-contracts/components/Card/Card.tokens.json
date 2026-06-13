@@ -138,5 +138,40 @@
     "resolvesTo": "semantic.color.foreground.on.brand",
     "fallback": "#ffffff",
     "layer": "semantic"
+  },
+  "card.color.statusAccent.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
+  "card.size.statusAccent.width": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "2px",
+    "layer": "core"
+  },
+  "card.elevation.resting": {
+    "resolvesTo": "semantic.elevation.surface.flat",
+    "fallback": "none",
+    "layer": "semantic"
+  },
+  "card.elevation.raised": {
+    "resolvesTo": "semantic.elevation.surface.raised",
+    "fallback": "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)",
+    "layer": "semantic"
+  },
+  "card.color.focus.ring": {
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#d9292b",
+    "layer": "semantic"
+  },
+  "card.focus.ring.width": {
+    "resolvesTo": "semantic.focus.ring.width",
+    "fallback": "2px",
+    "layer": "semantic"
+  },
+  "card.focus.ring.offset": {
+    "resolvesTo": "semantic.focus.ring.offset",
+    "fallback": "2px",
+    "layer": "semantic"
   }
 }

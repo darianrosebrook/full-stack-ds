@@ -52,11 +52,94 @@
       "platforms": [
         "web"
       ]
+    },
+    "box-shadow": {
+      "resolvesTo": "card.elevation.resting"
+    },
+    "border-inline-start-width": {
+      "resolvesTo": "card.size.statusAccent.width"
+    },
+    "border-inline-start-color": {
+      "resolvesTo": "card.color.statusAccent.default"
+    },
+    "transition-property": {
+      "literal": "box-shadow, border-color, background-color",
+      "platforms": [
+        "web"
+      ]
+    },
+    "transition-duration": {
+      "literal": "150ms",
+      "platforms": [
+        "web"
+      ]
+    },
+    "transition-timing-function": {
+      "literal": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "hover": {
     "background-color": {
       "resolvesTo": "card.color.background.hover"
+    },
+    "box-shadow": {
+      "resolvesTo": "card.elevation.raised"
+    }
+  },
+  "focus": {
+    "outline-width": {
+      "resolvesTo": "card.focus.ring.width"
+    },
+    "outline-color": {
+      "resolvesTo": "card.color.focus.ring"
+    },
+    "outline-offset": {
+      "resolvesTo": "card.focus.ring.offset"
+    },
+    "outline-style": {
+      "literal": "solid",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  "--completed": {
+    "card.color.statusAccent.default": {
+      "resolvesTo": "semantic.color.border.success",
+      "fallback": "#336006"
+    }
+  },
+  "--in-progress": {
+    "card.color.statusAccent.default": {
+      "resolvesTo": "semantic.color.border.info",
+      "fallback": "#0042dc"
+    }
+  },
+  "--planned": {
+    "card.color.statusAccent.default": {
+      "resolvesTo": "semantic.color.border.subtle",
+      "fallback": "#cecece"
+    }
+  },
+  "--deprecated": {
+    "card.color.statusAccent.default": {
+      "resolvesTo": "semantic.color.border.danger",
+      "fallback": "#ae0001"
+    }
+  },
+  "--category": {
+    "card.color.statusAccent.default": {
+      "resolvesTo": "semantic.color.border.accent",
+      "fallback": "#d9292b"
+    }
+  },
+  "--complexity": {
+    "card.color.statusAccent.default": {
+      "resolvesTo": "semantic.color.border.warning",
+      "fallback": "#824500"
     }
   },
   "--inset": {
