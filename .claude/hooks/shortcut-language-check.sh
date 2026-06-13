@@ -131,8 +131,27 @@ if hit=$(active_keyword_hit '\b(TODO|FIXME|XXX|HACK|TBD)\b'); then
 fi
 
 # 2. Placeholder / not-implemented phrases.
+# The bare word "placeholder" is a real stub marker in prose ("// placeholder,
+# fill later") but ALSO a legitimate identifier/attribute/filename token in
+# normal code: the JSX/HTML `placeholder="..."` input attribute, an imported
+# asset (`placeholder.svg`, `placeholderUrl`), a kebab/snake identifier
+# (`placeholder-text`, `placeholder_url`), or a path segment (`assets/placeholder`).
+# Those are not shortcut language. We match "placeholder" only when it is NOT
+# immediately part of such a token — i.e. not followed by `=`, `.`, `/`, `-`,
+# `_`, `:` or an alphanumeric continuation (Url/Text/Image), and not preceded by
+# `-`, `_`, `/`, `.` or alphanumeric. The other phrases keep their plain match.
+# (CAWS-SHORTCUT-LANG-PLACEHOLDER-TOKEN-FALSE-POSITIVE-001)
+_PLACEHOLDER_MARKER='(^|[^A-Za-z0-9._/-])placeholder([^A-Za-z0-9=._/:-]|$)'
 if [[ -z "$MATCH" ]]; then
-  if hit=$(active_keyword_hit 'not implemented|implement later|coming soon|placeholder'); then
+  if hit=$(active_keyword_hit 'not implemented|implement later|coming soon'); then
+    if [[ -n "$hit" ]]; then
+      MATCH="$hit"
+      PATTERN_DESC="placeholder / not-implemented language"
+    fi
+  fi
+fi
+if [[ -z "$MATCH" ]]; then
+  if hit=$(active_keyword_hit "$_PLACEHOLDER_MARKER"); then
     if [[ -n "$hit" ]]; then
       MATCH="$hit"
       PATTERN_DESC="placeholder / not-implemented language"
