@@ -1,7 +1,7 @@
 {
   "$brand": {
     "name": "monochrome",
-    "description": "Neutral gray brand theme - minimal, focused, and clean",
+    "description": "Neutral gray brand theme - minimal, focused, clean, tight density. The accent IS neutral/gray; color is deliberately absent. High-end editorial character: crisp hairline borders, flat elevation, sharp corners, tight density.",
     "accent": "neutral",
     "density": "tight"
   },
@@ -9,136 +9,226 @@
     "foreground": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.neutral.500}",
+        "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.700}",
-          "design.paths.dark": "{color.palette.neutral.300}"
-        }
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Accent foreground — deep gray in light, mid gray in dark; purely neutral, no hue"
       },
       "link": {
         "$type": "color",
-        "$value": "{color.palette.neutral.600}",
+        "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.600}",
-          "design.paths.dark": "{color.palette.neutral.400}"
-        }
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Link color — neutral dark; underline carries the affordance, not hue"
       },
       "linkHover": {
         "$type": "color",
-        "$value": "{color.palette.neutral.800}",
+        "$value": "{color.palette.neutral.900}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.800}",
-          "design.paths.dark": "{color.palette.neutral.100}"
-        }
+          "fsds.light": "{color.palette.neutral.900}",
+          "fsds.dark": "{color.palette.neutral.100}"
+        },
+        "$description": "Hover deepens to near-black in light; lifts to near-white in dark"
       },
       "linkVisited": {
         "$type": "color",
         "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.500}"
-        }
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.500}"
+        },
+        "$description": "Visited — mid gray, signal via lightness not hue"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.neutral.800}",
+        "$value": "{color.palette.neutral.900}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.800}",
-          "design.paths.dark": "{color.palette.neutral.200}"
-        }
+          "fsds.light": "{color.palette.neutral.900}",
+          "fsds.dark": "{color.palette.neutral.100}"
+        },
+        "$description": "Highlighted text — maximum contrast, editorial emphasis"
       },
       "onColor": {
         "$type": "color",
         "$value": "{color.mode.dark}",
         "$extensions": {
-          "design.paths.light": "{color.mode.dark}",
-          "design.paths.dark": "{color.mode.light}"
-        }
+          "fsds.light": "{color.mode.dark}",
+          "fsds.dark": "{color.mode.light}"
+        },
+        "$description": "Text on colored fills — white on neutral.800+ fills (both modes AA-safe)"
       }
-
     },
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.neutral.700}",
+        "$value": "{color.palette.neutral.800}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.800}",
-          "design.paths.dark": "{color.palette.neutral.200}"
-        }
+          "fsds.light": "{color.palette.neutral.800}",
+          "fsds.dark": "{color.palette.neutral.700}"
+        },
+        "$description": "Accent fill — neutral.800 light (white text ~14:1), neutral.700 dark (white text ~9.5:1); both AA-safe"
       },
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.neutral.200}",
+        "$value": "{color.palette.neutral.100}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.200}",
-          "design.paths.dark": "{color.palette.neutral.700}"
+          "fsds.light": "{color.palette.neutral.100}",
+          "fsds.dark": "{color.palette.neutral.800}"
+        },
+        "$description": "Highlight wash — very light gray in light; deep near-black wash in dark"
+      },
+      "info": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.50}",
+            "fsds.dark": "{color.palette.neutral.900}"
+          },
+          "$description": "Info softer wash — monochrome re-grounds info to the neutral ramp; lightest gray in light, near-black in dark"
+        }
+      },
+      "success": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.100}",
+            "fsds.dark": "{color.palette.neutral.800}"
+          },
+          "$description": "Success softer wash — desaturated; gray wash signals without color"
+        }
+      },
+      "warning": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.100}",
+            "fsds.dark": "{color.palette.neutral.800}"
+          },
+          "$description": "Warning softer wash — deliberately desaturated; monochrome suppresses urgency color"
+        }
+      },
+      "danger": {
+        "softer": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.50}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.50}",
+            "fsds.dark": "{color.palette.neutral.900}"
+          },
+          "$description": "Danger softer wash — neutral; monochrome suppresses red tones throughout"
         }
       }
     },
     "border": {
       "accent": {
         "$type": "color",
-        "$value": "{color.mode.transparent}",
+        "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.400}"
-        }
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.400}"
+        },
+        "$description": "Accent border — crisp dark-gray hairline in light; mid-gray in dark"
       },
       "default": {
         "$type": "color",
-        "$value": "{color.palette.neutral.400}",
+        "$value": "{color.palette.neutral.300}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.400}",
-          "design.paths.dark": "{color.palette.neutral.500}"
+          "fsds.light": "{color.palette.neutral.300}",
+          "fsds.dark": "{color.palette.neutral.600}"
         },
-        "$description": "Default input border - crisp neutral gray"
+        "$description": "Default border — hairline neutral, crisp and minimal"
       },
       "hover": {
         "$type": "color",
         "$value": "{color.palette.neutral.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.500}",
+          "fsds.dark": "{color.palette.neutral.400}"
         },
-        "$description": "Input hover border - darker neutral"
+        "$description": "Hover border — slightly darker neutral, no hue shift"
       },
       "focus": {
         "$type": "color",
-        "$value": "{color.palette.neutral.700}",
+        "$value": "{color.palette.neutral.800}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.700}",
-          "design.paths.dark": "{color.palette.neutral.300}"
+          "fsds.light": "{color.palette.neutral.800}",
+          "fsds.dark": "{color.palette.neutral.200}"
         },
-        "$description": "Input focus border - high contrast neutral"
+        "$description": "Focus border — near-black hairline in light; near-white in dark; high contrast, editorial"
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.neutral.300}",
+        "$value": "{color.palette.neutral.200}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.300}",
-          "design.paths.dark": "{color.palette.neutral.600}"
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
         },
-        "$description": "Light input border - subtle neutral"
+        "$description": "Light border — barely-visible divider, structural not decorative"
       },
       "primary": {
         "$type": "color",
-        "$value": "{color.palette.neutral.500}",
+        "$value": "{color.palette.neutral.400}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.500}",
-          "design.paths.dark": "{color.palette.neutral.400}"
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
         },
-        "$description": "Primary input border - medium neutral"
+        "$description": "Primary structural border — medium neutral"
       }
     },
     "navigation": {
       "foreground": {
         "active": {
           "$type": "color",
-          "$value": "{color.palette.neutral.800}",
+          "$value": "{color.palette.neutral.900}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.800}",
-            "design.paths.dark": "{color.palette.neutral.100}"
-          }
+            "fsds.light": "{color.palette.neutral.900}",
+            "fsds.dark": "{color.palette.neutral.50}"
+          },
+          "$description": "Active nav label — near-black in light; near-white in dark; maximum legibility, no hue"
+        }
+      },
+      "background": {
+        "hover": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.100}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.100}",
+            "fsds.dark": "{color.palette.neutral.800}"
+          },
+          "$description": "Nav hover wash — very light gray; subtle without color"
+        },
+        "active": {
+          "$type": "color",
+          "$value": "{color.palette.neutral.200}",
+          "$extensions": {
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
+          },
+          "$description": "Active nav item background — slightly deeper gray wash"
+        }
+      },
+      "stateLayer": {
+        "hover": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.hover}",
+          "$description": "Nav hover state-layer — tonal gray overlay, subtle and restrained"
+        },
+        "selected": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.selected}",
+          "$description": "Nav selected state-layer — slightly deeper gray tonal overlay"
+        },
+        "pressed": {
+          "$type": "number",
+          "$value": "{interaction.stateLayer.pressed}",
+          "$description": "Nav pressed state-layer — deeper gray tonal overlay for tactile feedback"
         }
       }
     },
@@ -147,15 +237,30 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.neutral.800}"
+            "$value": "{color.palette.neutral.800}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.800}",
+              "fsds.dark": "{color.palette.neutral.700}"
+            },
+            "$description": "Primary action fill — neutral.800 light (~14:1 white), neutral.700 dark (~9.5:1 white); both AA-safe"
           },
           "hover": {
             "$type": "color",
-            "$value": "{color.palette.neutral.800}"
+            "$value": "{color.palette.neutral.900}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.900}",
+              "fsds.dark": "{color.palette.neutral.600}"
+            },
+            "$description": "Hover deepens toward near-black in light; lightens slightly in dark"
           },
           "active": {
             "$type": "color",
-            "$value": "{color.palette.neutral.800}"
+            "$value": "{color.palette.neutral.900}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.900}",
+              "fsds.dark": "{color.palette.neutral.500}"
+            },
+            "$description": "Pressed/active — maximum depth in light; mid-gray in dark (neutral.500 = ~7:1 white, AA-safe)"
           }
         }
       },
@@ -163,11 +268,21 @@
         "primary": {
           "default": {
             "$type": "color",
-            "$value": "{color.palette.neutral.700}"
+            "$value": "{color.palette.neutral.800}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.800}",
+              "fsds.dark": "{color.palette.neutral.600}"
+            },
+            "$description": "Primary action border — crisp near-black hairline"
           },
           "focus": {
             "$type": "color",
-            "$value": "{color.palette.neutral.600}"
+            "$value": "{color.palette.neutral.600}",
+            "$extensions": {
+              "fsds.light": "{color.palette.neutral.600}",
+              "fsds.dark": "{color.palette.neutral.400}"
+            },
+            "$description": "Focus ring offset on action — slightly lighter for visible offset glow"
           }
         }
       }
@@ -175,11 +290,12 @@
     "status": {
       "highlight": {
         "$type": "color",
-        "$value": "{color.palette.neutral.600}",
+        "$value": "{color.palette.neutral.700}",
         "$extensions": {
-          "design.paths.light": "{color.palette.neutral.600}",
-          "design.paths.dark": "{color.palette.neutral.400}"
-        }
+          "fsds.light": "{color.palette.neutral.700}",
+          "fsds.dark": "{color.palette.neutral.300}"
+        },
+        "$description": "Status highlight — neutral signal; no hue, purely lightness-based emphasis"
       }
     }
   },
@@ -189,7 +305,7 @@
         "default": {
           "$type": "dimension",
           "$value": "{shape.radius.none}",
-          "$description": "No radius (0px) - ultra-minimal, focused"
+          "$description": "No radius (0px) — sharp corners, editorial precision"
         }
       }
     },
@@ -197,66 +313,66 @@
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.none}",
-        "$description": "Card border radius (0px) - crisp, minimal"
+        "$description": "Card border radius (0px) — flat, crisp, typographic"
       },
       "border": {
         "light": {
           "$type": "color",
           "$value": "{color.palette.neutral.200}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.200}",
-            "design.paths.dark": "{color.palette.neutral.700}"
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
           },
-          "$description": "Light card border - very subtle neutral"
+          "$description": "Light card border — hairline structural rule"
         },
         "medium": {
           "$type": "color",
-          "$value": "{color.palette.neutral.300}",
+          "$value": "{color.palette.neutral.400}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.300}",
-            "design.paths.dark": "{color.palette.neutral.600}"
+            "fsds.light": "{color.palette.neutral.400}",
+            "fsds.dark": "{color.palette.neutral.500}"
           },
-          "$description": "Medium card border - subtle neutral"
+          "$description": "Medium card border — visible rule, no decorative hue"
         },
         "dark": {
           "$type": "color",
-          "$value": "{color.palette.neutral.500}",
+          "$value": "{color.palette.neutral.700}",
           "$extensions": {
-            "design.paths.light": "{color.palette.neutral.500}",
-            "design.paths.dark": "{color.palette.neutral.400}"
+            "fsds.light": "{color.palette.neutral.700}",
+            "fsds.dark": "{color.palette.neutral.400}"
           },
-          "$description": "Dark card border - visible neutral"
+          "$description": "Dark card border — bold neutral rule, maximum editorial presence"
         },
         "transparent": {
           "$type": "color",
           "$value": "{color.mode.transparent}",
           "$extensions": {
-            "design.paths.light": "{color.mode.transparent}",
-            "design.paths.dark": "{color.mode.transparent}"
+            "fsds.light": "{color.mode.transparent}",
+            "fsds.dark": "{color.mode.transparent}"
           },
-          "$description": "Transparent card border - no border, minimal"
+          "$description": "Transparent card border — no border, minimal"
         }
       },
       "elevation": {
         "near": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "Near elevation - no shadow for minimal cards"
+          "$value": "{elevation.surface.flat}",
+          "$description": "Near elevation — flat, no shadow; monochrome uses borders not shadows"
         },
         "default": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "Default elevation - flat, minimal"
+          "$value": "{elevation.surface.flat}",
+          "$description": "Default elevation — flat; editorial flatness is the identity"
         },
         "far": {
           "$type": "shadow",
-          "$value": "{elevation.level.1}",
-          "$description": "Far elevation - subtle shadow only when needed"
+          "$value": "{elevation.surface.raised}",
+          "$description": "Far elevation — barely raised when absolutely necessary; never glowing"
         },
         "none": {
           "$type": "shadow",
-          "$value": "{elevation.level.0}",
-          "$description": "No elevation - ultra-minimal, flat"
+          "$value": "{elevation.surface.flat}",
+          "$description": "No elevation — perfectly flat, flush with page plane"
         }
       }
     },
@@ -264,21 +380,21 @@
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.none}",
-        "$description": "Internal element radius (0px) - sharp corners"
+        "$description": "Internal element radius (0px) — sharp, typographic precision"
       }
     },
     "button": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.none}",
-        "$description": "Button radius (0px) - sharp, minimal"
+        "$description": "Button radius (0px) — rectangular, editorial authority"
       }
     },
     "badge": {
       "radius": {
         "$type": "dimension",
         "$value": "{shape.radius.none}",
-        "$description": "Badge/chip radius (0px) - angular"
+        "$description": "Badge/chip radius (0px) — angular tag, no pill softening"
       }
     },
     "input": {
@@ -286,24 +402,24 @@
         "default": {
           "$type": "dimension",
           "$value": "{shape.radius.none}",
-          "$description": "Input border radius - sharp, minimal (0px)"
+          "$description": "Input border radius — sharp corners (0px), crisp field boundary"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Input border width - ultra-thin, minimal (1px)"
+          "$description": "Input border width — hairline (1px), precise and minimal"
         },
         "defaultStyle": {
           "$type": "strokeStyle",
           "$value": "{shape.border.style.solid}",
-          "$description": "Input border style - solid, crisp"
+          "$description": "Input border style — solid, no dashes"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Input focus border width - thin, focused (1px)"
+          "$description": "Input focus border width — thin (1px); focus shown via color contrast not width"
         }
       }
     },
@@ -312,19 +428,19 @@
         "default": {
           "$type": "dimension",
           "$value": "{shape.radius.none}",
-          "$description": "Field border radius - sharp corners (0px)"
+          "$description": "Field border radius — sharp corners (0px)"
         }
       },
       "border": {
         "defaultWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Field border width - minimal (1px)"
+          "$description": "Field border width — minimal hairline (1px)"
         },
         "focusWidth": {
           "$type": "dimension",
           "$value": "{shape.border.width.hairline}",
-          "$description": "Field focus border width - thin (1px)"
+          "$description": "Field focus border width — thin (1px); contrast carries the focus signal"
         }
       }
     }
@@ -334,19 +450,19 @@
       "padding": {
         "$type": "dimension",
         "$value": "{spacing.size.03}",
-        "$description": "Ultra-dense component padding (4px)"
+        "$description": "Tight component padding (4px) — dense, efficient, editorial"
       },
       "gap": {
         "$type": "dimension",
         "$value": "{spacing.size.02}",
-        "$description": "Ultra-dense component gap (2px)"
+        "$description": "Tight component gap (2px) — minimal breathing room"
       }
     },
     "card": {
       "padding": {
         "$type": "dimension",
-        "$value": "{spacing.size.04}",
-        "$description": "Card padding (8px)"
+        "$value": "{spacing.size.05}",
+        "$description": "Card padding (12px) — tight but not cramped; editorial column-feel"
       }
     }
   },
@@ -355,28 +471,32 @@
       "duration": {
         "$type": "duration",
         "$value": "{motion.duration.short1}",
-        "$description": "Ultra-quick transitions (50ms) - swift, efficient"
+        "$description": "Fast transitions (50ms) — instant, direct, no flourish"
       },
       "easing": {
         "$type": "cubicBezier",
         "$value": "{motion.easing.linear}",
-        "$description": "Linear easing curve - direct, no-nonsense"
+        "$description": "Linear easing — direct, no acceleration curve; movement is purposeful not expressive"
       }
     }
   },
   "typography": {
     "body": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.regular}",
-        "$description": "Regular body weight (400)"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.regular}",
+          "$description": "Regular body weight (400) — neutral, readable, unobtrusive"
+        }
       }
     },
     "heading": {
-      "fontWeight": {
-        "$type": "fontWeight",
-        "$value": "{typography.weight.medium}",
-        "$description": "Medium heading weight (500) - understated, minimal"
+      "font": {
+        "weight": {
+          "$type": "fontWeight",
+          "$value": "{typography.weight.bold}",
+          "$description": "Bold heading weight — typographic authority; the only expressive axis in a colorless brand"
+        }
       }
     }
   }
