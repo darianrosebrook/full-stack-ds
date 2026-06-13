@@ -263,6 +263,15 @@
             "$description": "Focus ring on action — lighter orange for offset glow halo"
           }
         }
+      },
+      "foreground": {
+        "primary": {
+          "default": {
+            "$type": "color",
+            "$value": "{color.mode.white}",
+            "$description": "Text on primary action fill — white on the warm orange/red fills clears AA"
+          }
+        }
       }
     },
     "status": {

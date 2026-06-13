@@ -2228,6 +2228,9 @@
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-violet-600);
     --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-violet-400);
     --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-violet-700);
+    --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-violet-500);
+    --fsds-semantic-color-background-brand: var(--fsds-core-color-palette-violet-500);
+    --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-violet-100);
     --fsds-semantic-color-background-info-softer: var(--fsds-core-color-palette-indigo-50);
     --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-violet-500);
     --fsds-semantic-color-border-default: var(--fsds-core-color-palette-indigo-300);
@@ -2277,6 +2280,9 @@
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-violet-600);
     --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-violet-400);
     --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-violet-700);
+    --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-violet-500);
+    --fsds-semantic-color-background-brand: var(--fsds-core-color-palette-violet-500);
+    --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-violet-100);
     --fsds-semantic-color-background-info-softer: var(--fsds-core-color-palette-indigo-50);
     --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-violet-500);
     --fsds-semantic-color-border-default: var(--fsds-core-color-palette-indigo-300);
@@ -2327,6 +2333,9 @@
       --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-violet-300);
       --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-violet-500);
       --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-violet-200);
+      --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-violet-500);
+      --fsds-semantic-color-background-brand: var(--fsds-core-color-palette-violet-500);
+      --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-violet-800);
       --fsds-semantic-color-background-info-softer: var(--fsds-core-color-palette-indigo-900);
       --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-violet-400);
       --fsds-semantic-color-border-default: var(--fsds-core-color-palette-indigo-700);
@@ -2354,6 +2363,9 @@
     --fsds-semantic-color-foreground-link-hover: var(--fsds-core-color-palette-violet-300);
     --fsds-semantic-color-foreground-link-visited: var(--fsds-core-color-palette-violet-500);
     --fsds-semantic-color-foreground-highlight: var(--fsds-core-color-palette-violet-200);
+    --fsds-semantic-color-background-accent: var(--fsds-core-color-palette-violet-500);
+    --fsds-semantic-color-background-brand: var(--fsds-core-color-palette-violet-500);
+    --fsds-semantic-color-background-highlight: var(--fsds-core-color-palette-violet-800);
     --fsds-semantic-color-background-info-softer: var(--fsds-core-color-palette-indigo-900);
     --fsds-semantic-color-border-accent: var(--fsds-core-color-palette-violet-400);
     --fsds-semantic-color-border-default: var(--fsds-core-color-palette-indigo-700);
@@ -3092,6 +3104,7 @@
     --fsds-semantic-color-action-background-primary-active: var(--fsds-core-color-palette-red-700);
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-orange-300);
+    --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);
@@ -3152,6 +3165,7 @@
     --fsds-semantic-color-action-background-primary-active: var(--fsds-core-color-palette-red-700);
     --fsds-semantic-color-action-border-primary-default: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-color-action-border-primary-focus: var(--fsds-core-color-palette-orange-300);
+    --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
     --fsds-semantic-color-status-highlight: var(--fsds-core-color-palette-orange-600);
     --fsds-semantic-shape-control-radius-default: var(--fsds-core-shape-radius-04);
     --fsds-semantic-shape-card-radius: var(--fsds-core-shape-radius-04);

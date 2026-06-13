@@ -206,6 +206,31 @@
       }
     },
     "background": {
+      "accent": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.500}"
+        },
+        "$description": "Accent fill — violet.500 in both themes (not .400) so white on-color text clears WCAG AA (4.82:1 vs 3.5:1)."
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.violet.500}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.500}",
+          "fsds.dark": "{color.palette.violet.500}"
+        }
+      },
+      "highlight": {
+        "$type": "color",
+        "$value": "{color.palette.violet.100}",
+        "$extensions": {
+          "fsds.light": "{color.palette.violet.100}",
+          "fsds.dark": "{color.palette.violet.800}"
+        }
+      },
       "info": {
         "softer": {
           "$type": "color",
