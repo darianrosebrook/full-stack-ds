@@ -7,24 +7,30 @@ created_at: '2026-06-13T07:52:11.875Z'
 updated_at: '2026-06-13T07:52:39.362Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'packages/ds-tokens/src (DTCG token source: elevation, interaction state-layer, color neutrals/intent-subtle, component-class size envelopes)'
+    - 'packages/ds-tokens/generated (composed/resolved/tokens.css regenerated output)'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - packages/ds-tokens/src/
     - packages/ds-tokens/generated/
     - packages/ds-codegen/.emission-manifest.json
     - tmp/
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Token enrichment is additive: every token path that resolved before this change still resolves to the same literal afterward unless that path is the explicit target of a tuning change. No existing component contract loses a token it depends on.'
+  - 'The token build (compose -> resolve -> tokens.css), DTCG validation, brand-ref resolution, and the WCAG-AA contrast gate on curated pairs all pass after the change.'
+  - 'New layered elevation and state-layer tokens emit under the correct CSS @layer (core/semantic) in generated/tokens.css and are reachable by component slot resolvesTo paths.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'the enriched token source'
+    when: 'pnpm -F @full-stack-ds/tokens build && pnpm run tokens:validate && pnpm run tokens:check-contrast && pnpm run tokens:check-brand-refs are run'
+    then: 'all four exit 0; generated/tokens.css contains the new elevation.surface.* and interaction.stateLayer.* custom properties under their @layer blocks'
+  - id: A2
+    given: 'a component slot that resolvesTo a new semantic surface (e.g. popover.elevation.default -> semantic.elevation.surface.popover)'
+    when: 'the token graph is resolved'
+    then: 'the slot resolves to the layered shadow literal rather than reporting an unresolved reference'
 non_functional: {}
 contracts:
   - name: 'token-build-additive'
