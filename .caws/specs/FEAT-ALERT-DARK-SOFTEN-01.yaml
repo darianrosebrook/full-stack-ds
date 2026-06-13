@@ -1,0 +1,31 @@
+id: FEAT-ALERT-DARK-SOFTEN-01
+title: 'Soften intent subtle dark-mode backgrounds: palette .800 -> .900 for info/success/warning/danger'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-13T10:41:51.912Z'
+updated_at: '2026-06-13T10:41:51.912Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'subtle-dark-softening'
+    type: behavior
+    path: 'packages/ds-tokens/src/color/semantic/background.tokens.json'
+  - name: 'contrast-gate'
+    type: contract-test
+    path: 'packages/ds-tokens'
