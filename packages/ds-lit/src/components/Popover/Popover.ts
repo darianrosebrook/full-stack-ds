@@ -55,7 +55,7 @@ export class PopoverElement extends LitElement {
       --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-surface-popover, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
       --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
     }
     
@@ -222,7 +222,7 @@ export class PopoverTriggerElement extends LitElement {
       --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-surface-popover, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
       --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
     }
     
@@ -370,7 +370,7 @@ export class PopoverContentElement extends LitElement {
       --fsds-popover-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-popover-color-background-content: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-popover-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-default, 0 2px 8px rgba(0,0,0,0.12));
+      --fsds-popover-elevation-default: var(--fsds-semantic-elevation-surface-popover, 0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1));
       --fsds-popover-layer-content: var(--fsds-core-layer-dropdown, 1000);
     }
     

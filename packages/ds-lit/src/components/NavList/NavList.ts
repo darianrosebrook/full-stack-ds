@@ -40,6 +40,8 @@ export class NavListElement extends LitElement {
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+      --fsds-nav-list-stateLayer-hover: var(--fsds-semantic-interaction-stateLayer-hover, 0.04);
+      --fsds-nav-list-stateLayer-selected: var(--fsds-semantic-interaction-stateLayer-selected, 0.08);
       --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
@@ -50,7 +52,7 @@ export class NavListElement extends LitElement {
       --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 11px);
     }
-    
+
     .nav-list {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -65,7 +67,7 @@ export class NavListElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: block;
     }
-    
+
     .nav-list__list {
       display: flex;
       flex-direction: column;
@@ -74,10 +76,25 @@ export class NavListElement extends LitElement {
       margin: 0;
       padding: 0;
     }
-    
+
     .nav-list__item {
       display: block;
       color: var(--fsds-nav-list-color-foreground-default);
+      padding-block: var(--fsds-nav-list-size-padding-block);
+      padding-inline: var(--fsds-nav-list-size-padding-inline);
+      border-radius: var(--fsds-nav-list-size-radius-default);
+      transition-property: background-color, color;
+      transition-duration: 120ms;
+    }
+
+    .nav-list__item:hover {
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+      color: var(--fsds-nav-list-color-foreground-hover);
+    }
+
+    .nav-list__item[aria-current="page"] {
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+      color: var(--fsds-nav-list-color-foreground-current);
     }
   `;
 
@@ -126,6 +143,8 @@ export class NavListListElement extends LitElement {
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+      --fsds-nav-list-stateLayer-hover: var(--fsds-semantic-interaction-stateLayer-hover, 0.04);
+      --fsds-nav-list-stateLayer-selected: var(--fsds-semantic-interaction-stateLayer-selected, 0.08);
       --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
@@ -136,7 +155,7 @@ export class NavListListElement extends LitElement {
       --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 11px);
     }
-    
+
     .nav-list {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -151,7 +170,7 @@ export class NavListListElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: block;
     }
-    
+
     .nav-list__list {
       display: flex;
       flex-direction: column;
@@ -160,10 +179,25 @@ export class NavListListElement extends LitElement {
       margin: 0;
       padding: 0;
     }
-    
+
     .nav-list__item {
       display: block;
       color: var(--fsds-nav-list-color-foreground-default);
+      padding-block: var(--fsds-nav-list-size-padding-block);
+      padding-inline: var(--fsds-nav-list-size-padding-inline);
+      border-radius: var(--fsds-nav-list-size-radius-default);
+      transition-property: background-color, color;
+      transition-duration: 120ms;
+    }
+
+    .nav-list__item:hover {
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+      color: var(--fsds-nav-list-color-foreground-hover);
+    }
+
+    .nav-list__item[aria-current="page"] {
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+      color: var(--fsds-nav-list-color-foreground-current);
     }
   `;
 
@@ -197,6 +231,8 @@ export class NavListItemElement extends LitElement {
       --fsds-nav-list-color-foreground-current: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-nav-list-color-background-default: var(--fsds-semantic-color-background-transparent, transparent);
       --fsds-nav-list-color-background-hover: var(--fsds-semantic-color-background-subtle, #f5f5f5);
+      --fsds-nav-list-stateLayer-hover: var(--fsds-semantic-interaction-stateLayer-hover, 0.04);
+      --fsds-nav-list-stateLayer-selected: var(--fsds-semantic-interaction-stateLayer-selected, 0.08);
       --fsds-nav-list-color-background-current: var(--fsds-semantic-color-background-accentSubtle, #fceaea);
       --fsds-nav-list-color-outline-focus: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-nav-list-size-padding-block: var(--fsds-core-spacing-size-02, 4px);
@@ -207,7 +243,7 @@ export class NavListItemElement extends LitElement {
       --fsds-nav-list-size-fontSize-item: var(--fsds-semantic-typography-body-03, 14px);
       --fsds-nav-list-size-fontSize-groupLabel: var(--fsds-semantic-typography-caption-03, 11px);
     }
-    
+
     .nav-list {
       padding-block-start: var(--fsds-box-model-padding-block-start);
       padding-block-end: var(--fsds-box-model-padding-block-end);
@@ -222,7 +258,7 @@ export class NavListItemElement extends LitElement {
       max-height: var(--fsds-box-model-max-height);
       display: block;
     }
-    
+
     .nav-list__list {
       display: flex;
       flex-direction: column;
@@ -231,10 +267,25 @@ export class NavListItemElement extends LitElement {
       margin: 0;
       padding: 0;
     }
-    
+
     .nav-list__item {
       display: block;
       color: var(--fsds-nav-list-color-foreground-default);
+      padding-block: var(--fsds-nav-list-size-padding-block);
+      padding-inline: var(--fsds-nav-list-size-padding-inline);
+      border-radius: var(--fsds-nav-list-size-radius-default);
+      transition-property: background-color, color;
+      transition-duration: 120ms;
+    }
+
+    .nav-list__item:hover {
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent);
+      color: var(--fsds-nav-list-color-foreground-hover);
+    }
+
+    .nav-list__item[aria-current="page"] {
+      background-color: color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent);
+      color: var(--fsds-nav-list-color-foreground-current);
     }
   `;
 

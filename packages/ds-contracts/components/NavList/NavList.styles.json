@@ -12,6 +12,25 @@
   },
   "item": {
     "display": { "literal": "block", "platforms": ["web"] },
-    "color": { "resolvesTo": "nav-list.color.foreground.default" }
+    "color": { "resolvesTo": "nav-list.color.foreground.default" },
+    "padding-block": { "resolvesTo": "nav-list.size.padding.block" },
+    "padding-inline": { "resolvesTo": "nav-list.size.padding.inline" },
+    "border-radius": { "resolvesTo": "nav-list.size.radius.default" },
+    "transition-property": { "literal": "background-color, color", "platforms": ["web"] },
+    "transition-duration": { "literal": "120ms", "platforms": ["web"] }
+  },
+  ".nav-list__item:hover": {
+    "background-color": {
+      "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-hover, 0.04) * 100%), transparent)",
+      "platforms": ["web"]
+    },
+    "color": { "resolvesTo": "nav-list.color.foreground.hover" }
+  },
+  ".nav-list__item[aria-current=\"page\"]": {
+    "background-color": {
+      "literal": "color-mix(in srgb, currentColor calc(var(--fsds-nav-list-stateLayer-selected, 0.08) * 100%), transparent)",
+      "platforms": ["web"]
+    },
+    "color": { "resolvesTo": "nav-list.color.foreground.current" }
   }
 }

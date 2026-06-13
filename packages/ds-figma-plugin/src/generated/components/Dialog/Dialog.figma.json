@@ -297,7 +297,7 @@
           "--fsds-dialog-size-full-width": "100vw",
           "--fsds-dialog-size-full-height": "100vh",
           "--fsds-dialog-size-closeButton-size": "var(--fsds-core-spacing-size-08, 32px)",
-          "--fsds-dialog-elevation-default": "var(--fsds-semantic-elevation-surface-floating, 0 8px 32px rgba(0,0,0,0.16))",
+          "--fsds-dialog-elevation-default": "var(--fsds-semantic-elevation-surface-dialog, 0 12px 16px rgba(0,0,0,0.06), 0 25px 50px rgba(0,0,0,0.15))",
           "--fsds-dialog-spacing-header-paddingTop": "var(--fsds-core-spacing-size-06, 16px)",
           "--fsds-dialog-spacing-body-paddingRight": "var(--fsds-core-spacing-size-07, 24px)",
           "--fsds-dialog-spacing-footer-gap": "var(--fsds-core-spacing-size-03, 4px)",

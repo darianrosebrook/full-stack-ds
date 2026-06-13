@@ -55,8 +55,8 @@
     "layer": "semantic"
   },
   "popover.elevation.default": {
-    "resolvesTo": "semantic.elevation.default",
-    "fallback": "0 2px 8px rgba(0,0,0,0.12)",
+    "resolvesTo": "semantic.elevation.surface.popover",
+    "fallback": "0 8px 10px rgba(0,0,0,0.04), 0 20px 25px rgba(0,0,0,0.1)",
     "layer": "semantic"
   },
   "popover.layer.content": {

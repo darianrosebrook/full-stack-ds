@@ -51,10 +51,12 @@
     "background": {
       "accent": {
         "$type": "color",
-        "$value": "{color.palette.red.400}",
+        "$value": "{color.palette.red.500}",
         "$extensions": {
-          "design.paths.light": "{color.palette.red.400}",
-          "design.paths.dark": "{color.palette.red.300}"
+          "fsds.light": "{color.palette.red.500}",
+          "fsds.dark": "{color.palette.red.500}",
+          "design.paths.light": "{color.palette.red.500}",
+          "design.paths.dark": "{color.palette.red.500}"
         }
       },
       "highlight": {

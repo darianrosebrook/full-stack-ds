@@ -89,6 +89,10 @@
     "alert-notice.spacing.gap": { "resolvesTo": "core.spacing.size.05", "fallback": "12px" },
     "alert-notice.text.size": { "resolvesTo": "semantic.typography.body.02", "fallback": "16px" },
     "alert-notice.typography.title.fontSize": { "resolvesTo": "semantic.typography.body.01", "fallback": "18px" },
-    "alert-notice.typography.title.fontWeight": { "resolvesTo": "semantic.typography.font.weight.bold", "fallback": "700" }
+    "alert-notice.typography.title.fontWeight": { "resolvesTo": "semantic.typography.font.weight.bold", "fallback": "700" },
+    "alert-notice.color.background.info": { "resolvesTo": "semantic.color.background.info.softer", "fallback": "#eef7ff" },
+    "alert-notice.color.background.success": { "resolvesTo": "semantic.color.background.success.softer", "fallback": "#eef7ea" },
+    "alert-notice.color.background.warning": { "resolvesTo": "semantic.color.background.warning.softer", "fallback": "#fff4e0" },
+    "alert-notice.color.background.danger": { "resolvesTo": "semantic.color.background.danger.softer", "fallback": "#fdf0f0" }
   }
 }

@@ -106,6 +106,18 @@ export const navListTokenScopes = {
       ref: "semantic.color.background.subtle",
       fallback: "#f5f5f5",
     },
+    "nav-list.stateLayer.hover": {
+      name: "nav-list.stateLayer.hover",
+      cssVar: "--fsds-nav-list-stateLayer-hover",
+      ref: "semantic.interaction.stateLayer.hover",
+      fallback: "0.04",
+    },
+    "nav-list.stateLayer.selected": {
+      name: "nav-list.stateLayer.selected",
+      cssVar: "--fsds-nav-list-stateLayer-selected",
+      ref: "semantic.interaction.stateLayer.selected",
+      fallback: "0.08",
+    },
     "nav-list.color.background.current": {
       name: "nav-list.color.background.current",
       cssVar: "--fsds-nav-list-color-background-current",

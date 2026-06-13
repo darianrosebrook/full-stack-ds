@@ -29,6 +29,16 @@
     "fallback": "#f5f5f5",
     "layer": "semantic"
   },
+  "nav-list.stateLayer.hover": {
+    "resolvesTo": "semantic.interaction.stateLayer.hover",
+    "fallback": "0.04",
+    "layer": "semantic"
+  },
+  "nav-list.stateLayer.selected": {
+    "resolvesTo": "semantic.interaction.stateLayer.selected",
+    "fallback": "0.08",
+    "layer": "semantic"
+  },
   "nav-list.color.background.current": {
     "resolvesTo": "semantic.color.background.accentSubtle",
     "fallback": "#fceaea",
