@@ -1,68 +1,90 @@
 {
   "root": {
-    "background-color": {
-      "resolvesTo": "badge.color.background.default"
-    },
-    "color": {
-      "resolvesTo": "badge.color.foreground.primary"
-    },
-    "border-color": {
-      "resolvesTo": "badge.color.border.default"
-    },
-    "gap": {
-      "resolvesTo": "badge.spacing.gap"
-    }
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "justify-content": { "literal": "center", "platforms": ["web"] },
+    "box-sizing": { "literal": "border-box", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] },
+    "width": { "literal": "fit-content", "platforms": ["web"] },
+    "border-style": { "literal": "solid", "platforms": ["web"] },
+    "background-color": { "resolvesTo": "badge.color.background.default" },
+    "color": { "resolvesTo": "badge.color.foreground.primary" },
+    "border-color": { "resolvesTo": "badge.color.border.default" },
+    "border-width": { "resolvesTo": "badge.size.border" },
+    "border-radius": { "resolvesTo": "badge.size.radius" },
+    "gap": { "resolvesTo": "badge.spacing.gap" },
+    "padding-block": { "resolvesTo": "badge.size.paddingY" },
+    "padding-inline": { "resolvesTo": "badge.size.paddingX" },
+    "min-height": { "resolvesTo": "badge.size.minHeight" },
+    "font-size": { "resolvesTo": "badge.size.fontSize" },
+    "font-weight": { "resolvesTo": "badge.text.weight" },
+    "line-height": { "literal": "1", "platforms": ["web"] }
   },
   "icon": {
-    "display": {
-      "literal": "inline-flex",
-      "platforms": [
-        "web"
-      ]
-    },
-    "align-items": {
-      "literal": "center",
-      "platforms": [
-        "web"
-      ]
-    },
-    "flex-shrink": {
-      "literal": "0",
-      "platforms": [
-        "web"
-      ]
-    },
-    "width": {
-      "literal": "1em",
-      "platforms": [
-        "web"
-      ]
-    },
-    "height": {
-      "literal": "1em",
-      "platforms": [
-        "web"
-      ]
-    },
-    "margin-inline-end": {
-      "literal": "2px",
-      "platforms": [
-        "web"
-      ]
-    }
+    "display": { "literal": "inline-flex", "platforms": ["web"] },
+    "align-items": { "literal": "center", "platforms": ["web"] },
+    "flex-shrink": { "literal": "0", "platforms": ["web"] },
+    "width": { "literal": "1em", "platforms": ["web"] },
+    "height": { "literal": "1em", "platforms": ["web"] }
   },
   "content": {
-    "display": {
-      "literal": "inline-block",
-      "platforms": [
-        "web"
-      ]
-    },
-    "white-space": {
-      "literal": "nowrap",
-      "platforms": [
-        "web"
-      ]
-    }
+    "display": { "literal": "inline-block", "platforms": ["web"] },
+    "white-space": { "literal": "nowrap", "platforms": ["web"] }
+  },
+  "hover": {
+    "background-color": { "resolvesTo": "badge.color.background.hover" }
+  },
+  "--sm": {
+    "badge.size.paddingX": { "resolvesTo": "semantic.glyph.badge.size.sm.paddingX", "fallback": "4px" },
+    "badge.size.paddingY": { "resolvesTo": "semantic.glyph.badge.size.sm.paddingY", "fallback": "2px" },
+    "badge.size.fontSize": { "resolvesTo": "semantic.glyph.badge.size.sm.fontSize", "fallback": "10px" },
+    "badge.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.sm.minHeight", "fallback": "16px" },
+    "badge.spacing.gap": { "resolvesTo": "semantic.glyph.badge.size.sm.gap", "fallback": "2px" }
+  },
+  "--md": {
+    "badge.size.paddingX": { "resolvesTo": "semantic.glyph.badge.size.md.paddingX", "fallback": "8px" },
+    "badge.size.paddingY": { "resolvesTo": "semantic.glyph.badge.size.md.paddingY", "fallback": "2px" },
+    "badge.size.fontSize": { "resolvesTo": "semantic.glyph.badge.size.md.fontSize", "fallback": "12px" },
+    "badge.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.md.minHeight", "fallback": "24px" },
+    "badge.spacing.gap": { "resolvesTo": "semantic.glyph.badge.size.md.gap", "fallback": "4px" }
+  },
+  "--lg": {
+    "badge.size.paddingX": { "resolvesTo": "semantic.glyph.badge.size.lg.paddingX", "fallback": "12px" },
+    "badge.size.paddingY": { "resolvesTo": "semantic.glyph.badge.size.lg.paddingY", "fallback": "4px" },
+    "badge.size.fontSize": { "resolvesTo": "semantic.glyph.badge.size.lg.fontSize", "fallback": "14px" },
+    "badge.size.minHeight": { "resolvesTo": "semantic.glyph.badge.size.lg.minHeight", "fallback": "32px" },
+    "badge.spacing.gap": { "resolvesTo": "semantic.glyph.badge.size.lg.gap", "fallback": "4px" }
+  },
+  "--info": {
+    "badge.color.background.default": { "resolvesTo": "semantic.color.background.info.subtle", "fallback": "#d9f3fe" },
+    "badge.color.background.hover": { "resolvesTo": "semantic.color.background.info.subtle", "fallback": "#d9f3fe" },
+    "badge.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.info.subtle", "fallback": "#002d99" },
+    "badge.color.border.default": { "resolvesTo": "semantic.color.border.info", "fallback": "#0042dc" }
+  },
+  "--success": {
+    "badge.color.background.default": { "resolvesTo": "semantic.color.background.success.subtle", "fallback": "#e4f2e0" },
+    "badge.color.background.hover": { "resolvesTo": "semantic.color.background.success.subtle", "fallback": "#e4f2e0" },
+    "badge.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.success.subtle", "fallback": "#234104" },
+    "badge.color.border.default": { "resolvesTo": "semantic.color.border.success", "fallback": "#336006" }
+  },
+  "--warning": {
+    "badge.color.background.default": { "resolvesTo": "semantic.color.background.warning.subtle", "fallback": "#ffedcc" },
+    "badge.color.background.hover": { "resolvesTo": "semantic.color.background.warning.subtle", "fallback": "#ffedcc" },
+    "badge.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.warning.subtle", "fallback": "#593000" },
+    "badge.color.border.default": { "resolvesTo": "semantic.color.border.warning", "fallback": "#824500" }
+  },
+  "--danger": {
+    "badge.color.background.default": { "resolvesTo": "semantic.color.background.danger.subtle", "fallback": "#fceaea" },
+    "badge.color.background.hover": { "resolvesTo": "semantic.color.background.danger.subtle", "fallback": "#fceaea" },
+    "badge.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.on.danger.subtle", "fallback": "#7b0000" },
+    "badge.color.border.default": { "resolvesTo": "semantic.color.border.danger", "fallback": "#ae0001" }
+  },
+  "--counter": {
+    "badge.color.background.default": { "resolvesTo": "semantic.color.background.danger.strong", "fallback": "#d9292b" },
+    "badge.color.foreground.primary": { "resolvesTo": "semantic.color.foreground.inverse", "fallback": "#fafafa" },
+    "badge.color.border.default": { "resolvesTo": "semantic.color.background.danger.strong", "fallback": "#d9292b" }
+  },
+  "--tag": {
+    "badge.size.radius": { "resolvesTo": "core.shape.radius.medium", "fallback": "6px" }
   }
 }
