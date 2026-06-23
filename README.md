@@ -122,6 +122,41 @@ docs/
   successor-work.md              # Reconciled follow-on work index
 ```
 
+## Authoring flow
+
+The authoring surface is the contract corpus, not the generated framework packages. Authors describe a component once, add token/style/usage sidecars where needed, validate the semantic graph, then regenerate every admitted target from the same IR.
+
+```mermaid
+flowchart TD
+  componentAuthor["Author component semantics"]
+  contract["Component contract<br/>packages/ds-contracts/components/Name/Name.contract.json"]
+  sidecars["Optional sidecars<br/>Name.tokens.json<br/>Name.styles.json<br/>Name.usage.jsonl"]
+  tokenAuthor["Author token source<br/>packages/ds-tokens"]
+  tokenBuild["Build and validate token graph<br/>tokens:build<br/>tokens:validate<br/>tokens:check-*"]
+  schema["Schema validation<br/>generate:validate"]
+  semantic["Semantic validation<br/>generate:check<br/>generate:validate-usage"]
+  ir["ComponentIR<br/>framework-neutral facts"]
+  emitters["Target emitters<br/>React, Vue, Svelte, Angular, Lit, Figma, React Native"]
+  generated["Generated packages and descriptors<br/>packages/ds-*"]
+  rail["Governed admission rail<br/>governed:rail"]
+  evidence["Runtime, docs, and evidence surfaces<br/>tests, e2e:rail, showcase"]
+
+  componentAuthor --> contract
+  componentAuthor --> sidecars
+  tokenAuthor --> tokenBuild
+  tokenBuild --> sidecars
+  contract --> schema
+  sidecars --> schema
+  schema --> semantic
+  semantic --> ir
+  ir --> emitters
+  emitters --> generated
+  generated --> rail
+  rail --> evidence
+```
+
+For a new component, create the contract first, add sidecars only when the component needs them, run the validation gates, regenerate with `pnpm run generate -- --target=all <Name>`, and then run the rail/tests that match the change. For token changes, build and validate the token graph before relying on `generate:check`, because semantic validation resolves component token references against the built graph.
+
 ## Generator
 
 Codegen is **`@full-stack-ds/codegen`** ([`packages/ds-codegen`](packages/ds-codegen)). The IR (`ir.ts`) is framework-neutral at the project boundary; each emitter translates IR into idiomatic target output.
