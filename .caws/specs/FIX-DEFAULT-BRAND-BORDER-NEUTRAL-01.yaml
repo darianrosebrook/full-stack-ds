@@ -2,10 +2,11 @@ id: FIX-DEFAULT-BRAND-BORDER-NEUTRAL-01
 title: 'Default brand: retint neutral/structural border roles off red ramp to neutral'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: border-neutral
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge border-neutral at 81cff9101dc370f1c00a739bbfe2cd93946b5939'
 created_at: '2026-06-24T22:24:16.386Z'
-updated_at: '2026-06-24T22:24:24.489Z'
+updated_at: '2026-06-24T22:32:01.315Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
