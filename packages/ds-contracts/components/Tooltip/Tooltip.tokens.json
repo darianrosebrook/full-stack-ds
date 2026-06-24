@@ -55,9 +55,9 @@
     "layer": "core"
   },
   "tooltip.size.radius.default": {
-    "resolvesTo": "core.shape.radius.small",
+    "resolvesTo": "semantic.shape.radius.small",
     "fallback": "4px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "tooltip.size.maxWidth": {
     "literal": "200px"

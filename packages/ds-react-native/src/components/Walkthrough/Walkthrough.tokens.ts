@@ -91,7 +91,7 @@ export const walkthroughTokenScopes = {
     "walkthrough.surface.radius": {
       name: "walkthrough.surface.radius",
       cssVar: "--fsds-walkthrough-surface-radius",
-      ref: "core.shape.radius.04",
+      ref: "semantic.shape.radius.large",
       fallback: 16,
     },
     "walkthrough.surface.shadow": {
@@ -193,7 +193,7 @@ export const walkthroughTokenScopes = {
     "walkthrough.button.primary.radius": {
       name: "walkthrough.button.primary.radius",
       cssVar: "--fsds-walkthrough-button-primary-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "walkthrough.button.secondary.bg": {

@@ -40,14 +40,14 @@
     "layer": "semantic"
   },
   "checkbox.border.width": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "checkbox.border.radius": {
-    "resolvesTo": "core.shape.radius.small",
+    "resolvesTo": "semantic.shape.radius.small",
     "fallback": "4px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "checkbox.transition.duration": {
     "resolvesTo": "core.motion.duration.short",

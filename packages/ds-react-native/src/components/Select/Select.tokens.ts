@@ -120,13 +120,13 @@ export const selectTokenScopes = {
     "select.size.radius.default": {
       name: "select.size.radius.default",
       cssVar: "--fsds-select-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "select.size.border.default": {
       name: "select.size.border.default",
       cssVar: "--fsds-select-size-border-default",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "select.size.sm.height": {

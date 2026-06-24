@@ -120,13 +120,13 @@ export const sheetTokenScopes = {
     "sheet.border.width": {
       name: "sheet.border.width",
       cssVar: "--fsds-sheet-border-width",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "sheet.border.radius": {
       name: "sheet.border.radius",
       cssVar: "--fsds-sheet-border-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "sheet.size.width": {
@@ -184,7 +184,7 @@ export const sheetTokenScopes = {
     "sheet.focus.width": {
       name: "sheet.focus.width",
       cssVar: "--fsds-sheet-focus-width",
-      ref: "core.shape.border.width.thick",
+      ref: "semantic.shape.control.border.focusWidth",
       fallback: 2,
     },
     "sheet.focus.color": {

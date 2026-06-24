@@ -45,14 +45,14 @@
     "layer": "core"
   },
   "chip.size.radius": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "chip.size.border": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "chip.text.size": {
     "resolvesTo": "semantic.typography.body.04",

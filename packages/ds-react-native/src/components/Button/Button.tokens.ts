@@ -249,7 +249,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.3",
+      ref: "semantic.typography.action.03",
       fallback: 14,
     },
   },
@@ -305,7 +305,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.4",
+      ref: "semantic.typography.action.02",
       fallback: 16,
     },
   },
@@ -361,7 +361,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.5",
+      ref: "semantic.typography.action.01",
       fallback: 18,
     },
   },

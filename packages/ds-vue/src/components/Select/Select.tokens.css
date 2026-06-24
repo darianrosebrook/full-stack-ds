@@ -6,8 +6,8 @@
   --fsds-select-color-icon-default: var(--fsds-semantic-color-foreground-secondary, #555555);
   --fsds-select-color-placeholder-default: var(--fsds-semantic-color-foreground-placeholder, #8f8f8f);
   --fsds-select-size-padding-default: var(--fsds-core-spacing-size-03, 4px);
-  --fsds-select-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-  --fsds-select-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+  --fsds-select-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-select-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
   --fsds-select-size-sm-height: var(--fsds-semantic-control-size-sm-height, 24px);
   --fsds-select-size-md-height: var(--fsds-semantic-control-size-md-height, 32px);
   --fsds-select-size-lg-height: var(--fsds-semantic-control-size-lg-height, 48px);

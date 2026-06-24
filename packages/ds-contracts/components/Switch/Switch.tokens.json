@@ -80,9 +80,9 @@
     "layer": "core"
   },
   "switch.size.md.track.radius": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "switch.size.md.track.padding": {
     "resolvesTo": "core.spacing.size.01",
@@ -110,9 +110,9 @@
     "layer": "core"
   },
   "switch.size.sm.track.radius": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "switch.size.sm.track.padding": {
     "resolvesTo": "core.spacing.size.01",
@@ -140,9 +140,9 @@
     "layer": "core"
   },
   "switch.size.lg.track.radius": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "switch.size.lg.track.padding": {
     "resolvesTo": "core.spacing.size.01",

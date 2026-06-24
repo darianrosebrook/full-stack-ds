@@ -102,7 +102,7 @@ export const dialogTokenScopes = {
     "dialog.size.radius.default": {
       name: "dialog.size.radius.default",
       cssVar: "--fsds-dialog-size-radius-default",
-      ref: "core.shape.radius.large",
+      ref: "semantic.shape.radius.large",
       fallback: 16,
     },
     "dialog.size.sm.width": {

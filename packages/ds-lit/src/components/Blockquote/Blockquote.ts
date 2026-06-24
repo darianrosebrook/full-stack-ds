@@ -43,8 +43,8 @@ export class BlockquoteElement extends LitElement {
       --fsds-blockquote-size-padding-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-blockquote-size-padding-sm: var(--fsds-core-spacing-size-04, 8px);
       --fsds-blockquote-size-padding-lg: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-blockquote-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-blockquote-size-border-thick: var(--fsds-core-shape-border-width-thick, 2px);
+      --fsds-blockquote-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-blockquote-size-border-thick: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
       --fsds-blockquote-size-fontSize-sm: var(--fsds-core-typography-ramp-3, 0.875rem);
       --fsds-blockquote-size-fontSize-md: var(--fsds-core-typography-ramp-4, 1rem);
       --fsds-blockquote-size-fontSize-lg: var(--fsds-core-typography-ramp-5, 1.125rem);

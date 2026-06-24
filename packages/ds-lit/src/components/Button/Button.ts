@@ -67,7 +67,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-03, 4px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-04, 8px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightSmall, 28px);
-      --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-3, 0.875rem);
+      --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-03, 0.875rem);
     }
 
     .button--medium {
@@ -79,7 +79,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
-      --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+      --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-02, 1rem);
     }
 
     .button--large {
@@ -91,7 +91,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-05, 12px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-06, 16px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeightLarge, 48px);
-      --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-5, 1.125rem);
+      --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-01, 1.125rem);
     }
 
     .button--primary {

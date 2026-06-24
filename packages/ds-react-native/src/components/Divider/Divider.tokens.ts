@@ -85,13 +85,13 @@ export const dividerTokenScopes = {
     "divider.size.thickness": {
       name: "divider.size.thickness",
       cssVar: "--fsds-divider-size-thickness",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "divider.size.thicknessThick": {
       name: "divider.size.thicknessThick",
       cssVar: "--fsds-divider-size-thicknessThick",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "divider.spacing.margin": {

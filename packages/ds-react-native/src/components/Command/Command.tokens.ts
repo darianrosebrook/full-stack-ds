@@ -115,13 +115,13 @@ export const commandTokenScopes = {
     "command.border.width": {
       name: "command.border.width",
       cssVar: "--fsds-command-border-width",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "command.border.radius": {
       name: "command.border.radius",
       cssVar: "--fsds-command-border-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "command.size.maxWidth": {

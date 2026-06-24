@@ -40,9 +40,9 @@
     "layer": "semantic"
   },
   "toast.surface.radius": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "toast.surface.shadow": {
     "resolvesTo": "semantic.elevation.surface.overlay",

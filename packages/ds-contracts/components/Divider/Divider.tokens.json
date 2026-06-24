@@ -10,14 +10,14 @@
     "layer": "semantic"
   },
   "divider.size.thickness": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "divider.size.thicknessThick": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "divider.spacing.margin": {
     "resolvesTo": "core.spacing.size.04",

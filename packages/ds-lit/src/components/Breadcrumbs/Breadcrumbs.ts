@@ -39,7 +39,7 @@ export class BreadcrumbsElement extends LitElement {
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
-      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);
@@ -124,7 +124,7 @@ export class BreadcrumbsListElement extends LitElement {
       --fsds-breadcrumbs-color-background-elevated: var(--fsds-semantic-color-background-elevated, #ffffff);
       --fsds-breadcrumbs-color-border-subtle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-breadcrumbs-typography-lineHeight-collapse: var(--fsds-semantic-typography-line-height-collapse, 1);
-      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-breadcrumbs-shape-radius-medium: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-breadcrumbs-spacing-gap-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-breadcrumbs-spacing-padding-default: var(--fsds-core-spacing-size-04, 8px);
       --fsds-breadcrumbs-color-focus: var(--fsds-semantic-color-border-accent, #d9292b);

@@ -30,8 +30,8 @@
     "layer": "core"
   },
   "shuttle.size.radius.default": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   }
 }

@@ -65,9 +65,9 @@
     "layer": "semantic"
   },
   "postcard.size.radius.full": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "postcard.size.gap.default": {
     "resolvesTo": "core.spacing.size.05",
@@ -75,9 +75,9 @@
     "layer": "core"
   },
   "postcard.size.border.default": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "postcard.typography.displayName.fontSize": {
     "resolvesTo": "semantic.typography.body.02",

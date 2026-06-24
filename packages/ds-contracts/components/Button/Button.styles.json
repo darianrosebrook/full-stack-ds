@@ -113,7 +113,7 @@
       "fallback": "28px"
     },
     "button.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.3",
+      "resolvesTo": "semantic.typography.action.03",
       "fallback": "0.875rem"
     }
   },
@@ -151,7 +151,7 @@
       "fallback": "36px"
     },
     "button.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.4",
+      "resolvesTo": "semantic.typography.action.02",
       "fallback": "1rem"
     }
   },
@@ -189,7 +189,7 @@
       "fallback": "48px"
     },
     "button.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.5",
+      "resolvesTo": "semantic.typography.action.01",
       "fallback": "1.125rem"
     }
   },

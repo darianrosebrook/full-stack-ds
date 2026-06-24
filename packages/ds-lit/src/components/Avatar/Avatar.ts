@@ -41,8 +41,8 @@ export class AvatarElement extends LitElement {
       --fsds-avatar-size-medium: var(--fsds-core-spacing-size-07, 24px);
       --fsds-avatar-size-large: var(--fsds-core-spacing-size-08, 32px);
       --fsds-avatar-size-extra-large: var(--fsds-core-spacing-size-09, 48px);
-      --fsds-avatar-size-radius-default: var(--fsds-core-shape-radius-full, 9999px);
-      --fsds-avatar-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-avatar-size-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
+      --fsds-avatar-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
       --fsds-avatar-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-avatar-color-background-inverse: var(--fsds-semantic-color-background-inverse, #141414);
       --fsds-avatar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
