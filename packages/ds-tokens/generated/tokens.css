@@ -694,9 +694,11 @@
   --fsds-semantic-color-action-background-secondary-default: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-action-background-secondary-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-action-background-secondary-active: var(--fsds-core-color-palette-neutral-200);
+  --fsds-semantic-color-action-background-secondary-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-action-background-danger-default: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-action-background-danger-hover: var(--fsds-core-color-palette-red-600);
   --fsds-semantic-color-action-background-danger-active: var(--fsds-core-color-palette-red-700);
+  --fsds-semantic-color-action-background-danger-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-action-foreground-primary-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-action-foreground-secondary-default: var(--fsds-core-color-mode-dark);
@@ -830,6 +832,7 @@
   --fsds-semantic-color-syntax-static: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-syntax-string: var(--fsds-core-color-palette-blue-700);
   --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
+  --fsds-semantic-focus-ring-intent-danger: var(--fsds-semantic-color-border-danger);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-200);
@@ -855,9 +858,11 @@
   --fsds-semantic-color-action-background-secondary-default: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-action-background-secondary-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-action-background-secondary-active: var(--fsds-core-color-palette-neutral-200);
+  --fsds-semantic-color-action-background-secondary-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-action-background-danger-default: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-action-background-danger-hover: var(--fsds-core-color-palette-red-600);
   --fsds-semantic-color-action-background-danger-active: var(--fsds-core-color-palette-red-700);
+  --fsds-semantic-color-action-background-danger-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-action-foreground-primary-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-action-foreground-secondary-default: var(--fsds-core-color-mode-dark);
@@ -991,6 +996,7 @@
   --fsds-semantic-color-syntax-static: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-syntax-string: var(--fsds-core-color-palette-blue-700);
   --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
+  --fsds-semantic-focus-ring-intent-danger: var(--fsds-semantic-color-border-danger);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-200);
@@ -1014,9 +1020,11 @@
   --fsds-semantic-color-action-background-secondary-default: var(--fsds-core-color-mode-dark);
   --fsds-semantic-color-action-background-secondary-hover: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-color-action-background-secondary-active: var(--fsds-core-color-palette-neutral-700);
+  --fsds-semantic-color-action-background-secondary-disabled: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-action-background-danger-default: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-action-background-danger-hover: var(--fsds-core-color-palette-red-600);
   --fsds-semantic-color-action-background-danger-active: var(--fsds-core-color-palette-red-700);
+  --fsds-semantic-color-action-background-danger-disabled: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-action-foreground-primary-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-action-foreground-secondary-default: var(--fsds-core-color-mode-light);
@@ -1150,6 +1158,7 @@
   --fsds-semantic-color-syntax-static: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-syntax-string: var(--fsds-core-color-palette-blue-400);
   --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
+  --fsds-semantic-focus-ring-intent-danger: var(--fsds-semantic-color-border-danger);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-800);
@@ -1174,9 +1183,11 @@
   --fsds-semantic-color-action-background-secondary-default: var(--fsds-core-color-mode-dark);
   --fsds-semantic-color-action-background-secondary-hover: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-color-action-background-secondary-active: var(--fsds-core-color-palette-neutral-700);
+  --fsds-semantic-color-action-background-secondary-disabled: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-action-background-danger-default: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-action-background-danger-hover: var(--fsds-core-color-palette-red-600);
   --fsds-semantic-color-action-background-danger-active: var(--fsds-core-color-palette-red-700);
+  --fsds-semantic-color-action-background-danger-disabled: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-action-foreground-primary-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-action-foreground-secondary-default: var(--fsds-core-color-mode-light);
@@ -1310,6 +1321,7 @@
   --fsds-semantic-color-syntax-static: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-syntax-string: var(--fsds-core-color-palette-blue-400);
   --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
+  --fsds-semantic-focus-ring-intent-danger: var(--fsds-semantic-color-border-danger);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-800);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-700);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-800);
@@ -1332,9 +1344,11 @@
   --fsds-semantic-color-action-background-secondary-default: var(--fsds-core-color-mode-light);
   --fsds-semantic-color-action-background-secondary-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-color-action-background-secondary-active: var(--fsds-core-color-palette-neutral-200);
+  --fsds-semantic-color-action-background-secondary-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-action-background-danger-default: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-action-background-danger-hover: var(--fsds-core-color-palette-red-600);
   --fsds-semantic-color-action-background-danger-active: var(--fsds-core-color-palette-red-700);
+  --fsds-semantic-color-action-background-danger-disabled: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-color-action-foreground-primary-default: var(--fsds-core-color-mode-white);
   --fsds-semantic-color-action-foreground-primary-disabled: var(--fsds-core-color-palette-neutral-400);
   --fsds-semantic-color-action-foreground-secondary-default: var(--fsds-core-color-mode-dark);
@@ -1468,6 +1482,7 @@
   --fsds-semantic-color-syntax-static: var(--fsds-core-color-palette-red-500);
   --fsds-semantic-color-syntax-string: var(--fsds-core-color-palette-blue-700);
   --fsds-semantic-focus-ring-color: var(--fsds-semantic-color-border-focus);
+  --fsds-semantic-focus-ring-intent-danger: var(--fsds-semantic-color-border-danger);
   --fsds-semantic-interaction-background-hover: var(--fsds-core-color-palette-neutral-100);
   --fsds-semantic-interaction-background-active: var(--fsds-core-color-palette-neutral-200);
   --fsds-semantic-interaction-background-selected: var(--fsds-core-color-palette-blue-200);

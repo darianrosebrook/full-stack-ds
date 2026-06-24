@@ -120,7 +120,7 @@ export const tabsTokenScopes = {
     "tabs.shape.radius": {
       name: "tabs.shape.radius",
       cssVar: "--fsds-tabs-shape-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "tabs.motion.indicator": {

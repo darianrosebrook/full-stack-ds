@@ -70,14 +70,14 @@
     "layer": "core"
   },
   "blockquote.size.radius.default": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "blockquote.size.border.thick": {
-    "resolvesTo": "core.shape.border.width.thick",
+    "resolvesTo": "semantic.shape.control.border.focusWidth",
     "fallback": "2px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "blockquote.size.fontSize.sm": {
     "resolvesTo": "core.typography.ramp.3",

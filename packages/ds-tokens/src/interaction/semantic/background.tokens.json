@@ -9,7 +9,7 @@
           "fsds.light": "{color.palette.neutral.100}",
           "fsds.dark": "{color.palette.neutral.800}"
         },
-        "$description": "Secondary action hover state"
+        "$description": "NEUTRAL-ONLY hover background for neutral/transparent surfaces (list rows, menu items, ghost/outline controls). NOT intent-aware — a brand/intent surface that uses this reads gray on hover instead of its intent-dark. Intent surfaces must use semantic.color.action.background.<intent>.hover."
       },
       "active": {
         "$type": "color",
@@ -18,7 +18,7 @@
           "fsds.light": "{color.palette.neutral.200}",
           "fsds.dark": "{color.palette.neutral.700}"
         },
-        "$description": "Secondary action active state"
+        "$description": "NEUTRAL-ONLY active/pressed background for neutral/transparent surfaces. NOT intent-aware. Intent surfaces use semantic.color.action.background.<intent>.active."
       },
       "selected": {
         "$type": "color",
@@ -27,7 +27,7 @@
           "fsds.light": "{color.palette.blue.200}",
           "fsds.dark": "{color.palette.blue.800}"
         },
-        "$description": "Highlight background for selections"
+        "$description": "Selection highlight background (neutral selection affordance, e.g. selected list row). Not an intent surface color."
       },
       "disabled": {
         "$type": "color",
@@ -36,7 +36,7 @@
           "fsds.light": "{color.palette.neutral.200}",
           "fsds.dark": "{color.palette.neutral.700}"
         },
-        "$description": "Primary action disabled state"
+        "$description": "NEUTRAL disabled background, shared across intents (disabled controls are conventionally neutral). Canonical disabled-bg home; intent variants intentionally fall back here rather than carrying per-intent disabled tokens."
       }
     }
   }

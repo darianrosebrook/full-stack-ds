@@ -60,9 +60,9 @@
     "layer": "semantic"
   },
   "links.focus.ring.radius": {
-    "resolvesTo": "core.shape.radius.small",
+    "resolvesTo": "semantic.shape.radius.small",
     "fallback": "2px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "links.size.fontSize.small": {
     "resolvesTo": "core.typography.ramp.3",

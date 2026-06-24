@@ -19,7 +19,14 @@
           "fsds.light": "{semantic.color.border.focus}",
           "fsds.dark": "{semantic.color.border.focus}"
         },
-        "$description": "Focus ring color — references theme-aware semantic border-focus so dark/light themes invert correctly."
+        "$description": "Default focus ring color — theme-aware semantic border-focus (neutral blue). Intent-bearing surfaces should use focus.ring.intent.<intent> so the ring matches the control's intent instead of the generic blue."
+      },
+      "intent": {
+        "danger": {
+          "$type": "color",
+          "$value": "{semantic.color.border.danger}",
+          "$description": "Focus ring color for destructive/danger and invalid controls — matches the danger border so a focused destructive button or invalid field reads red, not the generic blue focus ring."
+        }
       },
       "style": {
         "$type": "strokeStyle",

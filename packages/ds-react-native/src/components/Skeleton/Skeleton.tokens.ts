@@ -96,25 +96,25 @@ export const skeletonTokenScopes = {
     "skeleton.radius.sm": {
       name: "skeleton.radius.sm",
       cssVar: "--fsds-skeleton-radius-sm",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 4,
     },
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.03",
+      ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
     "skeleton.radius.lg": {
       name: "skeleton.radius.lg",
       cssVar: "--fsds-skeleton-radius-lg",
-      ref: "core.shape.radius.large",
+      ref: "semantic.shape.radius.large",
       fallback: 16,
     },
     "skeleton.radius.full": {
       name: "skeleton.radius.full",
       cssVar: "--fsds-skeleton-radius-full",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "skeleton.gap.compact": {
@@ -158,7 +158,7 @@ export const skeletonTokenScopes = {
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.03",
+      ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
   },
@@ -166,7 +166,7 @@ export const skeletonTokenScopes = {
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 4,
     },
     "skeleton.shape.height.text": {
@@ -180,7 +180,7 @@ export const skeletonTokenScopes = {
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
   },
@@ -188,7 +188,7 @@ export const skeletonTokenScopes = {
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.03",
+      ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
   },
@@ -196,7 +196,7 @@ export const skeletonTokenScopes = {
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.03",
+      ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
   },
@@ -204,7 +204,7 @@ export const skeletonTokenScopes = {
     "skeleton.radius.md": {
       name: "skeleton.radius.md",
       cssVar: "--fsds-skeleton-radius-md",
-      ref: "core.shape.radius.03",
+      ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
   },

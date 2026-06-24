@@ -39,7 +39,7 @@ export class TableElement extends LitElement {
       --fsds-table-color-textMuted: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-table-color-border: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-table-color-background-footer: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-table-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-table-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
       --fsds-table-spacing-cellX: var(--fsds-core-spacing-size-03, 4px);
       --fsds-table-spacing-cellY: var(--fsds-core-spacing-size-02, 2px);
       --fsds-table-spacing-caption: var(--fsds-core-spacing-size-04, 8px);
@@ -53,7 +53,7 @@ export class TableElement extends LitElement {
       --fsds-table-text-weightFooter: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-table-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-table-color-background-selected: var(--fsds-semantic-color-background-accent, #d9292b);
-      --fsds-table-focus-width: var(--fsds-core-shape-border-width-thick, 2px);
+      --fsds-table-focus-width: var(--fsds-semantic-shape-control-border-focusWidth, 2px);
       --fsds-table-focus-color: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-table-focus-offset: var(--fsds-core-spacing-size-01, 1px);
     }

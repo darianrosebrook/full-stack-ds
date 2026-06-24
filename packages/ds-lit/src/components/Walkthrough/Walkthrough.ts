@@ -39,7 +39,7 @@ export class WalkthroughElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
       --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
@@ -56,7 +56,7 @@ export class WalkthroughElement extends LitElement {
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
-      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
       --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -243,7 +243,7 @@ export class WalkthroughContentElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
       --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
@@ -260,7 +260,7 @@ export class WalkthroughContentElement extends LitElement {
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
-      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
       --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -401,7 +401,7 @@ export class WalkthroughTitleElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
       --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
@@ -418,7 +418,7 @@ export class WalkthroughTitleElement extends LitElement {
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
-      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
       --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);
@@ -559,7 +559,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-walkthrough-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-walkthrough-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-walkthrough-surface-radius: var(--fsds-core-shape-radius-04, 16px);
+      --fsds-walkthrough-surface-radius: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-walkthrough-surface-shadow: var(--fsds-semantic-elevation-surface-floating, 0 4px 24px rgba(0,0,0,0.12));
       --fsds-walkthrough-surface-padding: var(--fsds-core-spacing-size-08, 32px);
       --fsds-walkthrough-title-fontSize: var(--fsds-semantic-typography-heading-03, 20px);
@@ -576,7 +576,7 @@ export class WalkthroughDescriptionElement extends LitElement {
       --fsds-walkthrough-dots-idle: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-walkthrough-button-primary-bg: var(--fsds-semantic-color-action-background-primary-default, #d9292b);
       --fsds-walkthrough-button-primary-color: var(--fsds-semantic-color-action-foreground-primary-default, #ffffff);
-      --fsds-walkthrough-button-primary-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-walkthrough-button-primary-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-walkthrough-button-secondary-bg: var(--fsds-core-color-mode-transparent, transparent);
       --fsds-walkthrough-button-secondary-color: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-walkthrough-button-secondary-border: var(--fsds-semantic-color-border-subtle, #cecece);

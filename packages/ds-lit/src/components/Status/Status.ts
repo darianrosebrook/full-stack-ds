@@ -37,10 +37,10 @@ export class StatusElement extends LitElement {
       --fsds-status-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-status-color-foreground-primary: var(--fsds-semantic-color-foreground-secondary, #555555);
       --fsds-status-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-status-size-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-status-size-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-status-size-minHeight: var(--fsds-semantic-glyph-badge-size-md-minHeight, 24px);
       --fsds-status-size-fontSize: var(--fsds-semantic-glyph-badge-size-md-fontSize, 12px);
-      --fsds-status-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-status-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
       --fsds-status-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-status-typography-lineHeight: var(--fsds-semantic-typography-line-height-collapse, 1);
     }

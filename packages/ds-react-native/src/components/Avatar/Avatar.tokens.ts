@@ -110,13 +110,13 @@ export const avatarTokenScopes = {
     "avatar.size.radius.default": {
       name: "avatar.size.radius.default",
       cssVar: "--fsds-avatar-size-radius-default",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "avatar.size.border.default": {
       name: "avatar.size.border.default",
       cssVar: "--fsds-avatar-size-border-default",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "avatar.color.background.default": {

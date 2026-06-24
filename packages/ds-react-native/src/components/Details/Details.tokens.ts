@@ -127,7 +127,7 @@ export const detailsTokenScopes = {
     "details.focus.ring.width": {
       name: "details.focus.ring.width",
       cssVar: "--fsds-details-focus-ring-width",
-      ref: "core.shape.border.width.thick",
+      ref: "semantic.shape.control.border.focusWidth",
       fallback: 2,
     },
     "details.focus.ring.color": {

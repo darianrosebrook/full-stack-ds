@@ -103,7 +103,7 @@ export const breadcrumbsTokenScopes = {
     "breadcrumbs.shape.radius.medium": {
       name: "breadcrumbs.shape.radius.medium",
       cssVar: "--fsds-breadcrumbs-shape-radius-medium",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "breadcrumbs.spacing.gap.default": {

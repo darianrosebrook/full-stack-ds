@@ -75,24 +75,24 @@
     "layer": "semantic"
   },
   "button.color.border.focus": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "button.size.gap.default": {
-    "resolvesTo": "core.spacing.size.04",
+    "resolvesTo": "semantic.action.size.medium.gap",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "button.size.radius": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "button.size.border": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "button.text.weight": {
     "resolvesTo": "semantic.typography.font.weight.medium",
@@ -125,8 +125,8 @@
     "layer": "core"
   },
   "button.size.fontSize.medium": {
-    "resolvesTo": "core.typography.ramp.4",
+    "resolvesTo": "semantic.typography.action.02",
     "fallback": "1rem",
-    "layer": "core"
+    "layer": "semantic"
   }
 }

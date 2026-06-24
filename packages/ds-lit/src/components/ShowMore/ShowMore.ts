@@ -42,7 +42,7 @@ export class ShowMoreElement extends LitElement {
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
 
@@ -145,7 +145,7 @@ export class ShowMoreContentElement extends LitElement {
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
 
@@ -223,7 +223,7 @@ export class ShowMoreTriggerElement extends LitElement {
       --fsds-show-more-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-show-more-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-show-more-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-show-more-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-show-more-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-show-more-overlay-imageOverlay: var(--fsds-semantic-color-background-image-overlay, rgba(0, 0, 0, 0.5));
     }
 

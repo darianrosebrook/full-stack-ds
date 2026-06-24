@@ -109,7 +109,7 @@ export const shuttleTokenScopes = {
     "shuttle.size.radius.default": {
       name: "shuttle.size.radius.default",
       cssVar: "--fsds-shuttle-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
   },

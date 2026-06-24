@@ -163,13 +163,13 @@ export const calendarTokenScopes = {
     "calendar.size.radius.default": {
       name: "calendar.size.radius.default",
       cssVar: "--fsds-calendar-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "calendar.size.radius.day": {
       name: "calendar.size.radius.day",
       cssVar: "--fsds-calendar-size-radius-day",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 4,
     },
     "calendar.typography.caption.size": {

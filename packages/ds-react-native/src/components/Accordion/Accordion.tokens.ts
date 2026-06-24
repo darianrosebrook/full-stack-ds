@@ -103,7 +103,7 @@ export const accordionTokenScopes = {
     "accordion.border.width": {
       name: "accordion.border.width",
       cssVar: "--fsds-accordion-border-width",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "accordion.border.color": {
@@ -115,7 +115,7 @@ export const accordionTokenScopes = {
     "accordion.border.radius": {
       name: "accordion.border.radius",
       cssVar: "--fsds-accordion-border-radius",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 4,
     },
     "accordion.spacing.gap": {
@@ -175,7 +175,7 @@ export const accordionTokenScopes = {
     "accordion.focus.width": {
       name: "accordion.focus.width",
       cssVar: "--fsds-accordion-focus-width",
-      ref: "core.shape.border.width.thick",
+      ref: "semantic.shape.control.border.focusWidth",
       fallback: 2,
     },
     "accordion.focus.color": {

@@ -9,7 +9,7 @@
           "fsds.light": "{color.palette.neutral.400}",
           "fsds.dark": "{color.palette.neutral.500}"
         },
-        "$description": "Secondary action border hover"
+        "$description": "NEUTRAL-ONLY hover border for neutral/outline controls. NOT intent-aware — intent surfaces use semantic.color.action.border.<intent>.hover."
       },
       "active": {
         "$type": "color",

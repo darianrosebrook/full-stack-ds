@@ -42,10 +42,10 @@ export class SkeletonElement extends LitElement {
       --fsds-skeleton-color-base: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-skeleton-color-highlight: var(--fsds-semantic-color-background-highlight, #f7c1c2);
       --fsds-skeleton-color-static: var(--fsds-semantic-color-background-secondary, #efefef);
-      --fsds-skeleton-radius-sm: var(--fsds-core-shape-radius-small, 4px);
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-03, 8px);
-      --fsds-skeleton-radius-lg: var(--fsds-core-shape-radius-large, 16px);
-      --fsds-skeleton-radius-full: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-skeleton-radius-sm: var(--fsds-semantic-shape-radius-small, 4px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
+      --fsds-skeleton-radius-lg: var(--fsds-semantic-shape-radius-large, 16px);
+      --fsds-skeleton-radius-full: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-skeleton-gap-compact: var(--fsds-core-spacing-size-03, 4px);
       --fsds-skeleton-gap-md: var(--fsds-core-spacing-size-05, 12px);
       --fsds-skeleton-gap-spacious: var(--fsds-core-spacing-size-07, 24px);
@@ -55,28 +55,28 @@ export class SkeletonElement extends LitElement {
     }
 
     .skeleton--block {
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-03, 8px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
     }
 
     .skeleton--text {
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-skeleton-shape-height-text: var(--fsds-core-typography-ramp-4, 1rem);
     }
 
     .skeleton--avatar {
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-control-radius-pill, 9999px);
     }
 
     .skeleton--media {
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-03, 8px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
     }
 
     .skeleton--dataviz {
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-03, 8px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
     }
 
     .skeleton--actions {
-      --fsds-skeleton-radius-md: var(--fsds-core-shape-radius-03, 8px);
+      --fsds-skeleton-radius-md: var(--fsds-semantic-shape-radius-medium, 8px);
     }
 
     .skeleton--wipe {

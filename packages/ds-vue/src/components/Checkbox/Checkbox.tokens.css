@@ -16,8 +16,8 @@
   --fsds-box-model-max-height: none;
   --fsds-checkbox-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-checkbox-color-border-default: var(--fsds-semantic-color-border-default, #aeaeae);
-  --fsds-checkbox-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-  --fsds-checkbox-border-radius: var(--fsds-core-shape-radius-small, 4px);
+  --fsds-checkbox-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+  --fsds-checkbox-border-radius: var(--fsds-semantic-shape-radius-small, 4px);
   --fsds-checkbox-transition-duration: var(--fsds-core-motion-duration-short, 150ms);
   --fsds-checkbox-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
   --fsds-checkbox-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);

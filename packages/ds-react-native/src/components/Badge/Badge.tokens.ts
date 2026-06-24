@@ -109,13 +109,13 @@ export const badgeTokenScopes = {
     "badge.size.radius": {
       name: "badge.size.radius",
       cssVar: "--fsds-badge-size-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "badge.size.border": {
       name: "badge.size.border",
       cssVar: "--fsds-badge-size-border",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "badge.size.paddingX": {
@@ -373,7 +373,7 @@ export const badgeTokenScopes = {
     "badge.size.radius": {
       name: "badge.size.radius",
       cssVar: "--fsds-badge-size-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 6,
     },
   },

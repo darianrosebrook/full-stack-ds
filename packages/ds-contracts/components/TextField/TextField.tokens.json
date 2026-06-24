@@ -50,14 +50,14 @@
     "layer": "semantic"
   },
   "text-field.border.width": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "text-field.border.radius": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "text-field.color.input.background": {
     "resolvesTo": "semantic.color.background.primary",

@@ -86,7 +86,7 @@
       "resolvesTo": "input.color.invalid.default"
     },
     "outline-color": {
-      "resolvesTo": "input.color.invalid.default"
+      "resolvesTo": "semantic.focus.ring.intent.danger"
     }
   },
   "disabled": {

@@ -25,9 +25,9 @@
     "layer": "semantic"
   },
   "breadcrumbs.shape.radius.medium": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "breadcrumbs.spacing.gap.default": {
     "resolvesTo": "core.spacing.size.04",

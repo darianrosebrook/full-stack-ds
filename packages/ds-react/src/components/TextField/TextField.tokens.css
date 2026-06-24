@@ -18,8 +18,8 @@
   --fsds-text-field-field-padding-block: var(--fsds-semantic-input-size-medium-padding-block, 8px);
   --fsds-text-field-field-padding-inline: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
   --fsds-text-field-field-min-height: var(--fsds-semantic-input-size-medium-min-height, 36px);
-  --fsds-text-field-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-  --fsds-text-field-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  --fsds-text-field-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+  --fsds-text-field-border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
   --fsds-text-field-color-input-background: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-text-field-color-input-text: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-text-field-color-input-placeholder: var(--fsds-semantic-color-foreground-tertiary, #717171);

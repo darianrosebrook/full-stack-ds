@@ -66,7 +66,7 @@ export class TabsElement extends LitElement {
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -308,7 +308,7 @@ export class TabsListElement extends LitElement {
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -534,7 +534,7 @@ export class TabsTabElement extends LitElement {
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);
@@ -750,7 +750,7 @@ export class TabsPanelElement extends LitElement {
       --fsds-tabs-color-fg: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-tabs-color-disabled-fg: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-tabs-color-indicator: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-tabs-shape-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-tabs-shape-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-tabs-motion-indicator: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-tabs-color-hover-bg: var(--fsds-semantic-color-background-hover, #cecece);
       --fsds-tabs-color-hover-fg: var(--fsds-semantic-color-foreground-primary, #141414);

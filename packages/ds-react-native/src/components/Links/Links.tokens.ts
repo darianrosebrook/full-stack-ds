@@ -145,7 +145,7 @@ export const linksTokenScopes = {
     "links.focus.ring.radius": {
       name: "links.focus.ring.radius",
       cssVar: "--fsds-links-focus-ring-radius",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 2,
     },
     "links.size.fontSize.small": {

@@ -25,14 +25,14 @@
     "layer": "semantic"
   },
   "badge.size.radius": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "badge.size.border": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "badge.size.paddingX": {
     "resolvesTo": "semantic.glyph.badge.size.md.paddingX",
