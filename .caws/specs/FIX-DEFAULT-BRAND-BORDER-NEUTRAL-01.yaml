@@ -3,6 +3,7 @@ title: 'Default brand: retint neutral/structural border roles off red ramp to ne
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: border-neutral
 created_at: '2026-06-24T22:24:16.386Z'
 updated_at: '2026-06-24T22:24:24.489Z'
 blast_radius:
