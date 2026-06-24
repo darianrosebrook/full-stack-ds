@@ -45,7 +45,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-foreground-disabled: var(--fsds-semantic-color-foreground-disabled, #aeaeae);
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-button-color-border-hover: var(--fsds-semantic-interaction-border-hover, #8f8f8f);
-      --fsds-button-color-border-focus: var(--fsds-semantic-color-border-accent, #d9292b);
+      --fsds-button-color-border-focus: var(--fsds-semantic-focus-ring-color, #0566fe);
       --fsds-button-size-gap-default: var(--fsds-semantic-action-size-medium-gap, 8px);
       --fsds-button-size-radius: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-button-size-border: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
@@ -125,6 +125,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse);
       --fsds-button-color-border-default: var(--fsds-semantic-color-action-background-danger-default);
       --fsds-button-color-border-hover: var(--fsds-semantic-color-action-background-danger-hover);
+      --fsds-button-color-border-focus: var(--fsds-semantic-focus-ring-intent-danger);
     }
 
     .button--ghost {

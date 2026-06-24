@@ -75,8 +75,8 @@
     "layer": "semantic"
   },
   "button.color.border.focus": {
-    "resolvesTo": "semantic.color.border.accent",
-    "fallback": "#d9292b",
+    "resolvesTo": "semantic.focus.ring.color",
+    "fallback": "#0566fe",
     "layer": "semantic"
   },
   "button.size.gap.default": {

@@ -282,7 +282,7 @@
         "selector": ".input--invalid:focus-visible",
         "declarations": {
           "border-color": "var(--fsds-input-color-invalid-default)",
-          "outline-color": "var(--fsds-input-color-invalid-default)"
+          "outline-color": "var(--fsds-semantic-focus-ring-intent-danger)"
         }
       },
       {

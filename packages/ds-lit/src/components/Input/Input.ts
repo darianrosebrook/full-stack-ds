@@ -121,7 +121,7 @@ export class InputElement extends LitElement {
 
     .input--invalid:focus-visible {
       border-color: var(--fsds-input-color-invalid-default);
-      outline-color: var(--fsds-input-color-invalid-default);
+      outline-color: var(--fsds-semantic-focus-ring-intent-danger);
     }
   `;
 

@@ -133,8 +133,8 @@ export const buttonTokenScopes = {
     "button.color.border.focus": {
       name: "button.color.border.focus",
       cssVar: "--fsds-button-color-border-focus",
-      ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      ref: "semantic.focus.ring.color",
+      fallback: "#0566fe",
     },
     "button.size.gap.default": {
       name: "button.size.gap.default",
@@ -477,6 +477,11 @@ export const buttonTokenScopes = {
       name: "button.color.border.hover",
       cssVar: "--fsds-button-color-border-hover",
       ref: "semantic.color.action.background.danger.hover",
+    },
+    "button.color.border.focus": {
+      name: "button.color.border.focus",
+      cssVar: "--fsds-button-color-border-focus",
+      ref: "semantic.focus.ring.intent.danger",
     },
   },
   "variant_ghost": {

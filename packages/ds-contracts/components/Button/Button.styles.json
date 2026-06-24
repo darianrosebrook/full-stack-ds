@@ -273,6 +273,9 @@
     },
     "button.color.border.hover": {
       "resolvesTo": "semantic.color.action.background.danger.hover"
+    },
+    "button.color.border.focus": {
+      "resolvesTo": "semantic.focus.ring.intent.danger"
     }
   },
   "--ghost": {
