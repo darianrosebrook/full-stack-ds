@@ -86,12 +86,12 @@
       },
       "hover": {
         "$type": "color",
-        "$value": "{color.palette.red.300}",
+        "$value": "{color.palette.neutral.400}",
         "$extensions": {
-          "fsds.light": "{color.palette.red.300}",
-          "fsds.dark": "{color.palette.red.500}"
+          "fsds.light": "{color.palette.neutral.400}",
+          "fsds.dark": "{color.palette.neutral.500}"
         },
-        "$description": "Input hover border - warmer red"
+        "$description": "Input hover border - neutral gray (structural, not accent)"
       },
       "focus": {
         "$type": "color",
@@ -104,12 +104,12 @@
       },
       "light": {
         "$type": "color",
-        "$value": "{color.palette.red.100}",
+        "$value": "{color.palette.neutral.200}",
         "$extensions": {
-          "fsds.light": "{color.palette.red.100}",
-          "fsds.dark": "{color.palette.red.700}"
+          "fsds.light": "{color.palette.neutral.200}",
+          "fsds.dark": "{color.palette.neutral.700}"
         },
-        "$description": "Light input border - very subtle red"
+        "$description": "Light border - subtle neutral hairline (structural, not accent)"
       },
       "primary": {
         "$type": "color",
@@ -210,30 +210,30 @@
       "border": {
         "light": {
           "$type": "color",
-          "$value": "{color.palette.red.100}",
+          "$value": "{color.palette.neutral.200}",
           "$extensions": {
-            "fsds.light": "{color.palette.red.100}",
-            "fsds.dark": "{color.palette.red.800}"
+            "fsds.light": "{color.palette.neutral.200}",
+            "fsds.dark": "{color.palette.neutral.700}"
           },
-          "$description": "Light card border - very subtle red"
+          "$description": "Light card border - subtle neutral hairline (structural)"
         },
         "medium": {
           "$type": "color",
-          "$value": "{color.palette.red.200}",
+          "$value": "{color.palette.neutral.300}",
           "$extensions": {
-            "fsds.light": "{color.palette.red.200}",
-            "fsds.dark": "{color.palette.red.700}"
+            "fsds.light": "{color.palette.neutral.300}",
+            "fsds.dark": "{color.palette.neutral.600}"
           },
-          "$description": "Medium card border - subtle red"
+          "$description": "Medium card border - neutral (structural)"
         },
         "dark": {
           "$type": "color",
-          "$value": "{color.palette.red.400}",
+          "$value": "{color.palette.neutral.400}",
           "$extensions": {
-            "fsds.light": "{color.palette.red.400}",
-            "fsds.dark": "{color.palette.red.500}"
+            "fsds.light": "{color.palette.neutral.400}",
+            "fsds.dark": "{color.palette.neutral.500}"
           },
-          "$description": "Dark card border - visible red"
+          "$description": "Dark card border - stronger neutral (structural)"
         },
         "transparent": {
           "$type": "color",
