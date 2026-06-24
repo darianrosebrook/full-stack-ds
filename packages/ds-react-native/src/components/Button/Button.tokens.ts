@@ -418,6 +418,11 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-color-background-active",
       ref: "semantic.color.action.background.secondary.active",
     },
+    "button.color.background.disabled": {
+      name: "button.color.background.disabled",
+      cssVar: "--fsds-button-color-background-disabled",
+      ref: "semantic.color.action.background.secondary.disabled",
+    },
     "button.color.foreground.default": {
       name: "button.color.foreground.default",
       cssVar: "--fsds-button-color-foreground-default",
@@ -462,6 +467,11 @@ export const buttonTokenScopes = {
       name: "button.color.background.active",
       cssVar: "--fsds-button-color-background-active",
       ref: "semantic.color.action.background.danger.active",
+    },
+    "button.color.background.disabled": {
+      name: "button.color.background.disabled",
+      cssVar: "--fsds-button-color-background-disabled",
+      ref: "semantic.color.action.background.danger.disabled",
     },
     "button.color.foreground.default": {
       name: "button.color.foreground.default",

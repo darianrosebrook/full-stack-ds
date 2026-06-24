@@ -226,6 +226,9 @@
     "button.color.background.active": {
       "resolvesTo": "semantic.color.action.background.secondary.active"
     },
+    "button.color.background.disabled": {
+      "resolvesTo": "semantic.color.action.background.secondary.disabled"
+    },
     "button.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.primary"
     },
@@ -264,6 +267,9 @@
     },
     "button.color.background.active": {
       "resolvesTo": "semantic.color.action.background.danger.active"
+    },
+    "button.color.background.disabled": {
+      "resolvesTo": "semantic.color.action.background.danger.disabled"
     },
     "button.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.inverse"

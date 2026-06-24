@@ -108,6 +108,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-secondary-default);
       --fsds-button-color-background-hover: var(--fsds-semantic-color-action-background-secondary-hover);
       --fsds-button-color-background-active: var(--fsds-semantic-color-action-background-secondary-active);
+      --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-secondary-disabled);
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-primary);
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-default);
     }
@@ -122,6 +123,7 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-background-default: var(--fsds-semantic-color-action-background-danger-default);
       --fsds-button-color-background-hover: var(--fsds-semantic-color-action-background-danger-hover);
       --fsds-button-color-background-active: var(--fsds-semantic-color-action-background-danger-active);
+      --fsds-button-color-background-disabled: var(--fsds-semantic-color-action-background-danger-disabled);
       --fsds-button-color-foreground-default: var(--fsds-semantic-color-foreground-inverse);
       --fsds-button-color-border-default: var(--fsds-semantic-color-action-background-danger-default);
       --fsds-button-color-border-hover: var(--fsds-semantic-color-action-background-danger-hover);
