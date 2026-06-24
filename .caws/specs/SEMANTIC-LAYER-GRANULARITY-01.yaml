@@ -1,0 +1,31 @@
+id: SEMANTIC-LAYER-GRANULARITY-01
+title: 'Route component slots through existing semantic role tiers, add intent-scoped focus, complete color.action intent x state grid'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-24T07:59:30.133Z'
+updated_at: '2026-06-24T07:59:30.133Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'token-graph-resolution'
+    type: behavior
+    path: 'packages/ds-codegen/src/validation'
+  - name: 'dtcg-token-schema'
+    type: schema
+    path: 'packages/ds-tokens/build/validators/designTokens.schema.json'
