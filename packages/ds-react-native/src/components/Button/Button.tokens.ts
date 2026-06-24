@@ -139,19 +139,19 @@ export const buttonTokenScopes = {
     "button.size.gap.default": {
       name: "button.size.gap.default",
       cssVar: "--fsds-button-size-gap-default",
-      ref: "core.spacing.size.04",
+      ref: "semantic.action.size.medium.gap",
       fallback: 8,
     },
     "button.size.radius": {
       name: "button.size.radius",
       cssVar: "--fsds-button-size-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "button.size.border": {
       name: "button.size.border",
       cssVar: "--fsds-button-size-border",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "button.text.weight": {
@@ -193,7 +193,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.4",
+      ref: "semantic.typography.action.02",
       fallback: 16,
     },
   },

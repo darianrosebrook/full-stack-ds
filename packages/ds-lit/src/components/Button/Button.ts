@@ -46,16 +46,16 @@ export class ButtonElement extends LitElement {
       --fsds-button-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-button-color-border-hover: var(--fsds-semantic-interaction-border-hover, #8f8f8f);
       --fsds-button-color-border-focus: var(--fsds-semantic-color-border-accent, #d9292b);
-      --fsds-button-size-gap-default: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-button-size-radius: var(--fsds-core-shape-radius-full, 9999px);
-      --fsds-button-size-border: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-button-size-gap-default: var(--fsds-semantic-action-size-medium-gap, 8px);
+      --fsds-button-size-radius: var(--fsds-semantic-shape-control-radius-pill, 9999px);
+      --fsds-button-size-border: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
       --fsds-button-text-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
       --fsds-button-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-button-motion-easing-standard: var(--fsds-core-motion-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
       --fsds-button-size-padding-block-medium: var(--fsds-core-spacing-size-04, 8px);
       --fsds-button-size-padding-inline-medium: var(--fsds-core-spacing-size-05, 12px);
       --fsds-button-size-minHeight-medium: var(--fsds-core-dimension-actionMinHeight, 36px);
-      --fsds-button-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
+      --fsds-button-size-fontSize-medium: var(--fsds-semantic-typography-action-02, 1rem);
     }
 
     .button--small {
