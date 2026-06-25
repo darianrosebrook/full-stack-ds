@@ -3,6 +3,7 @@ title: 'Field composer reshape: named-slot projection for label/control/help/err
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: field-slots
 created_at: '2026-06-25T03:24:29.563Z'
 updated_at: '2026-06-25T03:24:40.025Z'
 blast_radius:
