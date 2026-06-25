@@ -161,9 +161,6 @@ export class TextFieldElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) label?: unknown;
-  @property({ attribute: false }) description?: unknown;
-  @property({ attribute: false }) error?: unknown;
   @property({ type: String }) type?: string;
   @property({ type: String }) value?: string;
   @property({ type: String }) defaultValue?: string;
@@ -194,22 +191,16 @@ export class TextFieldElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  ${this.label ? html`
   <label class=${'text-field__label'}>
-    <slot></slot>
+    <slot name="label"></slot>
   </label>
-  ` : nothing}
   <input class=${'text-field__field'} @change=${(e: Event) => this.handleValueChange(e)} type=${ifDefined(this.type)} .value=${this.behavior.value} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} ?required=${this.required ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} aria-describedby=${ifDefined(this.ariaDescribedby)} />
-  ${this.description ? html`
   <span class=${'text-field__description'}>
-    <slot></slot>
+    <slot name="description"></slot>
   </span>
-  ` : nothing}
-  ${this.error ? html`
   <span class=${'text-field__error'} role="alert">
-    <slot></slot>
+    <slot name="error"></slot>
   </span>
-  ` : nothing}
 </div>`;
   }
 }

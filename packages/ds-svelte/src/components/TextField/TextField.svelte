@@ -9,9 +9,6 @@ import { useTextField } from "./useTextField.svelte.js";
 
 // @generated:start props
 interface Props {
-  label?: unknown;
-  description?: unknown;
-  error?: unknown;
   type?: string;
   value?: string;
   defaultValue?: string;
@@ -22,10 +19,12 @@ interface Props {
   name?: string;
   ariaDescribedby?: string;
   class?: string;
-  children?: import('svelte').Snippet;
+  description?: import('svelte').Snippet;
+  error?: import('svelte').Snippet;
+  label?: import('svelte').Snippet;
 }
 
-let { label, description, error, type, value, defaultValue, onChange, invalid, disabled, required, name, ariaDescribedby, class: className, children }: Props = $props();
+let { type, value, defaultValue, onChange, invalid, disabled, required, name, ariaDescribedby, class: className, description, error, label }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -53,20 +52,14 @@ const classes = $derived(
 </script>
 
 <div class={classes}>
-  {#if label}
   <label class={'text-field__label'}>
-    {@render children?.()}
+    {@render label?.()}
   </label>
-  {/if}
   <input class={'text-field__field'} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} type={type} value={behavior.value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
-  {#if description}
   <span class={'text-field__description'}>
-    {@render children?.()}
+    {@render description?.()}
   </span>
-  {/if}
-  {#if error}
   <span class={'text-field__error'} role="alert">
-    {@render children?.()}
+    {@render error?.()}
   </span>
-  {/if}
 </div>

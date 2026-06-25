@@ -26,16 +26,17 @@ interface Props {
   defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  label?: unknown;
-  helpText?: unknown;
-  error?: string;
   status?: FieldStatus;
   validating?: boolean;
   class?: string;
-  children?: import('svelte').Snippet;
+  control?: import('svelte').Snippet;
+  error?: import('svelte').Snippet;
+  help?: import('svelte').Snippet;
+  label?: import('svelte').Snippet;
+  validatingIndicator?: import('svelte').Snippet;
 }
 
-let { name, id, required, disabled, readOnly, value, defaultValue, onChange, validate, label, helpText, error, status, validating, class: className, children }: Props = $props();
+let { name, id, required, disabled, readOnly, value, defaultValue, onChange, validate, status, validating, class: className, control, error, help, label, validatingIndicator }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -64,24 +65,24 @@ const classes = $derived(
 
 <div class={classes} role="group">
   <div class={'field__header'}>
-    {#if label}
     <label class={'field__label'}>
-      {@render children?.()}
+      {@render label?.()}
     </label>
-    {/if}
   </div>
   <div class={'field__control'}>
-    {@render children?.()}
+    {@render control?.()}
   </div>
   <div class={'field__meta'}>
-    {#if helpText}
-    <span class={'field__help'}></span>
-    {/if}
-    {#if error}
-    <span class={'field__error'}></span>
-    {/if}
+    <span class={'field__help'}>
+      {@render help?.()}
+    </span>
+    <span class={'field__error'}>
+      {@render error?.()}
+    </span>
     {#if validating}
-    <span class={'field__validatingIndicator'}></span>
+    <span class={'field__validatingIndicator'}>
+      {@render validatingIndicator?.()}
+    </span>
     {/if}
   </div>
 </div>

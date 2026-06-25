@@ -156,38 +156,11 @@
       "nodeKind": null
     },
     {
-      "name": "label",
-      "safeName": "label",
-      "type": "ReactNode",
-      "required": false,
-      "description": "Label content rendered by the FieldLabel slot.",
-      "defaultExpr": null,
-      "nodeKind": "node-ref"
-    },
-    {
-      "name": "helpText",
-      "safeName": "helpText",
-      "type": "ReactNode",
-      "required": false,
-      "description": "Supplementary help text rendered in the help slot below the control.",
-      "defaultExpr": null,
-      "nodeKind": "node-ref"
-    },
-    {
-      "name": "error",
-      "safeName": "error",
-      "type": "string",
-      "required": false,
-      "description": "Validation error message. When present, the field renders in invalid state.",
-      "defaultExpr": null,
-      "nodeKind": null
-    },
-    {
       "name": "status",
       "safeName": "status",
       "type": "FieldStatus",
       "required": false,
-      "description": "Validation status of the field.",
+      "description": "Validation status of the field. status=invalid renders the field in its error treatment; the error message is supplied via the error slot.",
       "defaultExpr": null,
       "nodeKind": null
     },

@@ -18,9 +18,6 @@ import { useTextField } from "./useTextField.js";
 
 // @generated:start props
 interface Props {
-  label?: unknown;
-  description?: unknown;
-  error?: unknown;
   type?: string;
   value?: string;
   defaultValue?: string;
@@ -67,15 +64,15 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" :data-testid="props['data-testid']">
-    <label v-if="props.label" :class="'text-field__label'">
-      <slot />
+    <label :class="'text-field__label'">
+      <slot name="label" />
     </label>
     <input :class="'text-field__field'" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :type="props.type" :value="behavior.value.value" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-describedby="props.ariaDescribedby" />
-    <span v-if="props.description" :class="'text-field__description'">
-      <slot />
+    <span :class="'text-field__description'">
+      <slot name="description" />
     </span>
-    <span v-if="props.error" :class="'text-field__error'" role="alert">
-      <slot />
+    <span :class="'text-field__error'" role="alert">
+      <slot name="error" />
     </span>
   </div>
 </template>
