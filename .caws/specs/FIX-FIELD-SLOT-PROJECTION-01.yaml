@@ -2,10 +2,11 @@ id: FIX-FIELD-SLOT-PROJECTION-01
 title: 'Field composer reshape: named-slot projection for label/control/help/error/validatingIndicator (kills double-border + duplicate-children)'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: field-slots
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge field-slots at d28ac29e91921b34cebf5dc1af822fe16361aa5c'
 created_at: '2026-06-25T03:24:29.563Z'
-updated_at: '2026-06-25T03:47:29.296Z'
+updated_at: '2026-06-25T04:33:55.219Z'
 blast_radius:
   modules:
     - 'Field contract anatomy.dom + slots reshape (named-slot projection) and regenerated Field artifacts across all admitted targets. Showcase Field demo migrated from children to slots. No schema, IR, or emitter changes — the named-slot capability is already built and admitted (Dialog/Sheet/Walkthrough).'
