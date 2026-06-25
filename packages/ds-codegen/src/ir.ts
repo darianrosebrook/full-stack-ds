@@ -1212,6 +1212,13 @@ export function buildComponentIR(
       contract.name,
       cssPrefix,
     );
+    // ARCH-COMPOSER-SLOT-PROJECTION-001: a named-slot name and a designed-prop
+    // name occupy disjoint namespaces. Svelte projects both into one `$props()`
+    // scope, so a slot named the same as a prop is a `Duplicate identifier`
+    // compile error there — even though React/Vue/Lit/Angular namespace slots
+    // separately and mask it. Catch the contract-shape defect at IR-build so it
+    // fails once, loud, for all five targets instead of only under svelte-check.
+    validateSlotPropNamespaces(dom, styledProps, contract.name);
   }
 
   // CODEGEN-RECURSIVE-COMPOSITION-01: resolve componentRef nodes into typed
@@ -1342,6 +1349,50 @@ export function collectCollapseIntents(
  * see exactly what went wrong (e.g. a misspelled channel name) rather than
  * silently emitting a literal string in the generated output.
  */
+/**
+ * ARCH-COMPOSER-SLOT-PROJECTION-001 — slot/prop namespace disjointness.
+ *
+ * A component's named-slot names and its designed-prop names must not overlap.
+ * Svelte lowers both a designed prop and a same-named slot into one `Props`
+ * interface and one `$props()` destructure, producing a `Duplicate identifier`
+ * / `Cannot redeclare block-scoped variable` compile error. React, Vue, Lit,
+ * and Angular expose slots in a namespace separate from props and silently
+ * tolerate the overlap, so the defect would otherwise surface only under
+ * `svelte-check` — the lowest-common-denominator framework. The contract is the
+ * single source of truth for all five targets, so a shape only four can express
+ * is a contract defect, not a Svelte bug. The fix is always to MOVE the content
+ * from the prop into the slot (the slot becomes the sole content surface for
+ * that region), never to keep both.
+ */
+function validateSlotPropNamespaces(
+  dom: DomNodeIR,
+  styledProps: ResolvedPropIR[],
+  componentName: string,
+): void {
+  const slotNames = new Set<string>();
+  const collect = (node: DomNodeIR): void => {
+    if (node.tag === "slot" && node.slotName) {
+      slotNames.add(node.slotName);
+    }
+    for (const child of node.children) collect(child);
+  };
+  collect(dom);
+  if (slotNames.size === 0) return;
+
+  const propNames = new Set(styledProps.map((p) => p.name));
+  const collisions = [...slotNames].filter((s) => propNames.has(s)).sort();
+  if (collisions.length > 0) {
+    throw new Error(
+      `[${componentName}] named slot(s) collide with designed prop name(s): ` +
+        `[${collisions.join(", ")}]. A named slot and a prop may not share a ` +
+        `name — Svelte projects both into one $props() scope (Duplicate ` +
+        `identifier). Move the region's content from the prop into the slot ` +
+        `(the slot owns the content; keep only behavioral props). ` +
+        `See docs/architecture/composer-slot-projection.md.`,
+    );
+  }
+}
+
 function validateDomBindings(
   node: DomNodeIR,
   channels: NormalizedChannelIR[],

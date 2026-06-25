@@ -68,10 +68,10 @@
             {
               "tag": "label",
               "part": "label",
-              "if": "label",
               "children": [
                 {
-                  "tag": "children"
+                  "tag": "slot",
+                  "name": "label"
                 }
               ]
             }
@@ -82,7 +82,8 @@
           "part": "control",
           "children": [
             {
-              "tag": "children"
+              "tag": "slot",
+              "name": "control"
             }
           ]
         },
@@ -93,17 +94,33 @@
             {
               "tag": "span",
               "part": "help",
-              "if": "helpText"
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "help"
+                }
+              ]
             },
             {
               "tag": "span",
               "part": "error",
-              "if": "error"
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "error"
+                }
+              ]
             },
             {
               "tag": "span",
               "part": "validatingIndicator",
-              "if": "validating"
+              "if": "validating",
+              "children": [
+                {
+                  "tag": "slot",
+                  "name": "validatingIndicator"
+                }
+              ]
             }
           ]
         }
@@ -160,24 +177,9 @@
           "description": "Async-capable validation function. Return null for valid, or error string(s) for invalid."
         },
         {
-          "name": "label",
-          "propType": { "kind": "node", "of": "content" },
-          "description": "Label content rendered by the FieldLabel slot."
-        },
-        {
-          "name": "helpText",
-          "propType": { "kind": "node", "of": "content" },
-          "description": "Supplementary help text rendered in the help slot below the control."
-        },
-        {
-          "name": "error",
-          "propType": { "kind": "string" },
-          "description": "Validation error message. When present, the field renders in invalid state."
-        },
-        {
           "name": "status",
           "propType": { "kind": "ref", "to": "FieldStatus" },
-          "description": "Validation status of the field."
+          "description": "Validation status of the field. status=invalid renders the field in its error treatment; the error message is supplied via the error slot."
         },
         {
           "name": "validating",
@@ -253,13 +255,19 @@
     "enabled": false
   },
   "slots": {
-    "error": {
+    "label": {
       "required": false
+    },
+    "control": {
+      "required": true
     },
     "help": {
       "required": false
     },
-    "label": {
+    "error": {
+      "required": false
+    },
+    "validatingIndicator": {
       "required": false
     }
   },
@@ -319,12 +327,12 @@
     "category": "layout",
     "usageHints": [
       "Wrap every form control in a Field to ensure consistent label/error placement",
-      "Pass error to Field (not the input) to colocate validation state",
-      "Field handles aria-describedby wiring between hint/error and the input"
+      "Provide the control via the control slot (e.g. an Input); the label, help, and error regions are their own named slots",
+      "Set status=invalid for the error treatment; supply the message through the error slot"
     ],
     "children": {
-      "allowed": true,
-      "slot": "children",
+      "allowed": false,
+      "slot": "control",
       "accepts": [
         "ReactNode"
       ]

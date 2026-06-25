@@ -187,15 +187,21 @@ function renderRichSample(name: string, props: Record<string, unknown>): ReactNo
         </DS.Card>
       );
     case "Field":
+      // Field is a composer: each region is a named slot hosting a real
+      // primitive (Label, Input), not raw children. The control slot holds a
+      // single Input — its border is the only border (no wrapper double-ring).
       return (
         <DS.Field
           {...props}
           name="workspace"
-          label="Workspace"
-          helpText="Visible label, control, and helper regions."
-        >
-          <DS.Input name="workspace" placeholder="Design systems" />
-        </DS.Field>
+          slots={{
+            label: "Workspace name",
+            control: (
+              <DS.Input name="workspace" placeholder="Acme Design Systems" />
+            ),
+            help: "Shown to everyone you invite to this workspace.",
+          }}
+        />
       );
     case "ProfileFlag":
       // ProfileFlag renders its children as the identity surface; supply a

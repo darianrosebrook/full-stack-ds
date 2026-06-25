@@ -178,9 +178,6 @@ export class FieldElement extends LitElement {
   @property({ attribute: false }) defaultValue?: unknown;
   @property({ attribute: false }) onChange?: (value: unknown) => void;
   @property({ attribute: false }) validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  @property({ attribute: false }) label?: unknown;
-  @property({ attribute: false }) helpText?: unknown;
-  @property({ type: String }) error?: string;
   @property({ type: String }) status?: FieldStatus;
   @property({ type: Boolean }) validating?: boolean;
 
@@ -201,24 +198,24 @@ export class FieldElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" role="group">
   <div class=${'field__header'}>
-    ${this.label ? html`
     <label class=${'field__label'}>
-      <slot></slot>
+      <slot name="label"></slot>
     </label>
-    ` : nothing}
   </div>
   <div class=${'field__control'}>
-    <slot></slot>
+    <slot name="control"></slot>
   </div>
   <div class=${'field__meta'}>
-    ${this.helpText ? html`
-    <span class=${'field__help'}></span>
-    ` : nothing}
-    ${this.error ? html`
-    <span class=${'field__error'}></span>
-    ` : nothing}
+    <span class=${'field__help'}>
+      <slot name="help"></slot>
+    </span>
+    <span class=${'field__error'}>
+      <slot name="error"></slot>
+    </span>
     ${this.validating ? html`
-    <span class=${'field__validatingIndicator'}></span>
+    <span class=${'field__validatingIndicator'}>
+      <slot name="validatingIndicator"></slot>
+    </span>
     ` : nothing}
   </div>
 </div>`;
