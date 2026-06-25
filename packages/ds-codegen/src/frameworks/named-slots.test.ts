@@ -79,3 +79,58 @@ describe("named slots: codegen idioms per framework", () => {
     expect(src).toContain(`<ng-content />`);
   });
 });
+
+// ARCH-COMPOSER-SLOT-PROJECTION-001: the slot/prop namespace-disjointness
+// invariant. Svelte projects a designed prop and a same-named slot into one
+// $props() scope (Duplicate identifier), so the IR builder must reject the
+// collision for ALL targets at build time — not leave it to svelte-check.
+describe("slot/prop namespace disjointness (ARCH-COMPOSER-SLOT-PROJECTION-001)", () => {
+  const collidingContract = (): ComponentContract => ({
+    name: "Collider",
+    layer: "composer",
+    cssPrefix: "collider",
+    anatomy: {
+      parts: ["root", "label"],
+      dom: {
+        tag: "div",
+        part: "root",
+        children: [
+          { tag: "span", part: "label", children: [{ tag: "slot", name: "label" }] },
+        ],
+      },
+    },
+    // `label` is BOTH a designed prop and a named slot — the collision.
+    props: {
+      designed: {
+        members: [
+          { name: "label", propType: { kind: "node", of: "content" } },
+        ],
+      },
+    },
+  });
+
+  it("throws when a named slot collides with a designed prop name", () => {
+    expect(() => buildComponentIR(collidingContract())).toThrow(
+      /named slot\(s\) collide with designed prop name\(s\): \[label\]/,
+    );
+  });
+
+  it("names every colliding slot in the error, sorted", () => {
+    const c = collidingContract();
+    c.anatomy!.dom!.children!.push({
+      tag: "span",
+      part: "error",
+      children: [{ tag: "slot", name: "error" }],
+    });
+    c.anatomy!.parts!.push("error");
+    c.props!.designed!.members.push({ name: "error", propType: { kind: "string" } });
+    expect(() => buildComponentIR(c)).toThrow(/\[error, label\]/);
+  });
+
+  it("does not throw when slot names are disjoint from prop names", () => {
+    // The shared TitledCard fixture has a `title` slot and zero props named
+    // `title` — building it (above) already proved the happy path, but pin it
+    // explicitly so a regression that over-eagerly throws is caught here.
+    expect(() => buildComponentIR(CONTRACT)).not.toThrow();
+  });
+});

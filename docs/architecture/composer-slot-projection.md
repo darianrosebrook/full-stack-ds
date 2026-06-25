@@ -1,10 +1,11 @@
 ---
 doc_id: ARCH-COMPOSER-SLOT-PROJECTION-001
 authority: architecture
-status: draft
+status: implemented
 title: Composer Slot Projection — named slots own region content, disjoint from props
 owner: "@darianrosebrook"
 updated: 2026-06-25
+verified_at_commit: 2ab2509a
 governs:
   - packages/ds-codegen/src/ir.ts
   - packages/ds-contracts/components/**/*.contract.json
