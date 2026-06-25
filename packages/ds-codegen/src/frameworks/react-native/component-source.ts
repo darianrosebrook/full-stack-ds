@@ -76,12 +76,11 @@ function emitImports(ir: ComponentIR): string {
   if (usesLinking(ir.dom)) rnValueImports.add("Linking");
   if (
     hasChildrenSlotUnderNonTextParent(ir.dom) ||
-    isFieldLayoutPattern(ir) ||
     isCheckboxRootPattern(ir)
   ) {
     rnValueImports.add("Text as RNText");
   }
-  if (isFieldLayoutPattern(ir) || isCheckboxRootPattern(ir)) rnValueImports.add("View");
+  if (isCheckboxRootPattern(ir)) rnValueImports.add("View");
   if (isCheckboxRootPattern(ir)) rnValueImports.add("Pressable");
   if (rootPressableAcceptsOnPress(ir)) rnTypeImports.add("GestureResponderEvent");
   const surfaceLowering = rnSurfaceLowering(ir);
@@ -98,7 +97,6 @@ function emitImports(ir: ComponentIR): string {
   }
   if (
     !usesNativeToggle(ir) &&
-    !isFieldLayoutPattern(ir) &&
     !isCheckboxRootPattern(ir) &&
     ir.dom &&
     !rootIsTextComponent(ir) &&
@@ -314,14 +312,6 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     }
     addPropIfPresent(ir, usage, "disabled");
     addPropIfPresent(ir, usage, "size");
-    return usage;
-  }
-
-  if (isFieldLayoutPattern(ir)) {
-    for (const prop of ["id", "label", "helpText", "error", "validating"]) {
-      addPropIfPresent(ir, usage, prop);
-    }
-    usage.props.add("children");
     return usage;
   }
 
@@ -2206,10 +2196,6 @@ function nativeStyleForKey(ir: ComponentIR, key: string): string {
       ".color.foreground.default",
     ].filter(Boolean)));
   }
-  if (key === "root" && isFieldLayoutPattern(ir)) {
-    entries.push("flexDirection: \"column\"");
-    pushStyle(entries, "gap", tokenNumberByName(ir, "root", [".gap.y", ".gap"]));
-  }
   if (key === "meta") {
     entries.push("flexDirection: \"column\"");
     pushStyle(entries, "gap", tokenNumberByName(ir, "root", [".gap.meta"]));
@@ -2357,19 +2343,6 @@ function usesNativeToggle(ir: ComponentIR): boolean {
 
 function isCheckboxRootPattern(ir: ComponentIR): boolean {
   return ir.dom?.tag === "input" && ir.dom.attrs.type === "checkbox";
-}
-
-function isFieldLayoutPattern(ir: ComponentIR): boolean {
-  const partNames = new Set(ir.parts.map((part) => part.name));
-  const propNames = new Set(ir.styledProps.map((prop) => prop.safeName));
-  return (
-    partNames.has("label") &&
-    partNames.has("control") &&
-    partNames.has("meta") &&
-    propNames.has("label") &&
-    propNames.has("helpText") &&
-    propNames.has("error")
-  );
 }
 
 function findProp(ir: ComponentIR, name: string): ResolvedPropIR | undefined {
