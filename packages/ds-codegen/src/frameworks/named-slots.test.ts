@@ -116,14 +116,32 @@ describe("slot/prop namespace disjointness (ARCH-COMPOSER-SLOT-PROJECTION-001)",
   });
 
   it("names every colliding slot in the error, sorted", () => {
-    const c = collidingContract();
-    c.anatomy!.dom!.children!.push({
-      tag: "span",
-      part: "error",
-      children: [{ tag: "slot", name: "error" }],
-    });
-    c.anatomy!.parts!.push("error");
-    c.props!.designed!.members.push({ name: "error", propType: { kind: "string" } });
+    // Two collisions (`error` and `label`) — both a designed prop and a named
+    // slot — so the error lists them sorted.
+    const c: ComponentContract = {
+      name: "TwoCollider",
+      layer: "composer",
+      cssPrefix: "two-collider",
+      anatomy: {
+        parts: ["root", "label", "error"],
+        dom: {
+          tag: "div",
+          part: "root",
+          children: [
+            { tag: "span", part: "label", children: [{ tag: "slot", name: "label" }] },
+            { tag: "span", part: "error", children: [{ tag: "slot", name: "error" }] },
+          ],
+        },
+      },
+      props: {
+        designed: {
+          members: [
+            { name: "label", propType: { kind: "node", of: "content" } },
+            { name: "error", propType: { kind: "string" } },
+          ],
+        },
+      },
+    };
     expect(() => buildComponentIR(c)).toThrow(/\[error, label\]/);
   });
 
