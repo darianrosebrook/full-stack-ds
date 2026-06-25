@@ -14,29 +14,29 @@ declare module "vitest" {
 // @generated:start tests
 describe("TextField — unit", () => {
   it("renders with default props", () => {
-    render(<TextField data-testid="text-field">content</TextField>);
+    render(<TextField data-testid="text-field" />);
     expect(screen.getByTestId("text-field")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<TextField data-testid="text-field">content</TextField>);
+    render(<TextField data-testid="text-field" />);
     expect(screen.getByTestId("text-field")).toHaveClass("text-field");
   });
 
   it("merges custom className", () => {
-    render(<TextField data-testid="text-field" className="custom">content</TextField>);
+    render(<TextField data-testid="text-field" className="custom" />);
     expect(screen.getByTestId("text-field")).toHaveClass("text-field", "custom");
   });
 
   it("calls onChange when value changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<TextField data-testid="text-field" value={""} onChange={onChangeSpy}>content</TextField>)).not.toThrow();
+    expect(() => render(<TextField data-testid="text-field" value={""} onChange={onChangeSpy} />)).not.toThrow();
   });
 });
 
 describe("TextField — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><TextField aria-label="Test TextField">content</TextField></>);
+    const { container } = render(<><TextField aria-label="Test TextField" /></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

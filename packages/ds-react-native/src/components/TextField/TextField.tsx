@@ -12,9 +12,6 @@ import { createTextFieldStyles } from "./TextField.styles";
 
 // @generated:start props
 export interface TextFieldProps {
-  label?: ReactNode;
-  description?: ReactNode;
-  error?: ReactNode;
   type?: string;
   value?: string;
   defaultValue?: string;
@@ -24,6 +21,11 @@ export interface TextFieldProps {
   required?: boolean;
   name?: string;
   ariaDescribedby?: string;
+  slots?: {
+    label?: ReactNode;
+    description?: ReactNode;
+    error?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -34,14 +36,12 @@ export interface TextFieldProps {
 
 // @generated:start component
 export function TextField({
-  label,
-  description,
-  error,
   type,
   value: controlledValue,
   disabled,
   defaultValue = "",
   onChange,
+  slots,
   children,
   style,
   testID,
@@ -64,13 +64,11 @@ export function TextField({
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      {label ? (
       <View
         style={styles.label}
       >
-        {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        {slots?.label}
       </View>
-      ) : null}
       <TextInput
         style={styles.field}
         secureTextEntry={type === "password"}
@@ -79,21 +77,17 @@ export function TextField({
         onChangeText={(next: string) => setValueValue(next)}
         accessibilityState={{ disabled: disabled }}
       />
-      {description ? (
       <View
         style={styles.description}
       >
-        {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        {slots?.description}
       </View>
-      ) : null}
-      {error ? (
       <View
         style={styles.error}
         accessibilityRole="alert"
       >
-        {typeof children === "string" ? <RNText>{children}</RNText> : children}
+        {slots?.error}
       </View>
-      ) : null}
     </View>
   );
 }
