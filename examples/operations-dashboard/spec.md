@@ -36,7 +36,7 @@ Any of these is evidence the claim is false (or the boundary is too weak), to be
 
 ### Page / screen structure
 
-One page, no routing. A persistent top region, a left filter rail, a central queue pane, and a right detail pane. Use `Stack` and `Card` for all structural composition; do not hand-roll layout wrappers that a package component should own.
+One page, no routing. A persistent top region, a left filter rail, a central queue pane, and a right detail pane. Use FSDS components (`Stack`, `Card`, etc.) for component composition and package-owned behavior. Minimal app-shell layout CSS is allowed for page regions the design system does not claim (the two-pane frame, columns, sticky regions, responsive shell), but it must not substitute for component behavior, state indication, density, focus, overlay, or token/styling surfaces — those must come from the package, and a place where app-shell CSS has to supply one of them is a finding.
 
 ### Required regions
 
@@ -63,7 +63,7 @@ One page, no routing. A persistent top region, a left filter rail, a central que
 No backend (no server, no network, no persistence). The lane structures its data as three separated concerns (see the portfolio README's "Data and API Layer"):
 
 1. **Fixtures** — static `*.json` / `*.jsonl` files in the lane holding the incident/queue records, service-health records, and event timelines.
-2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Incident`, `ServiceHealth`, `TimelineEvent`).
+2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Incident`, `ServiceHealth`, `TimelineEvent`). The adapter may load the static JSON/JSONL fixtures once into memory; the UI calls only the promise-returning API, never the fixture or adapter directly.
 3. **Functional API** — a lane-local, typed, **promise-returning** surface the dashboard calls: e.g. `listIncidents(filters): Promise<Incident[]>`, `getIncident(id): Promise<IncidentDetail>`, `resolveIncident(id): Promise<void>`, `assignIncident(id, assignee): Promise<void>`. The simulated initial-load latency and the mock load-failure flag live **behind** this API, so the loading, empty, error, and pending states below are real async transitions, not synchronous fakes. The dashboard never reads the fixture or adapter directly.
 
 ### Required local / loading / empty / error states

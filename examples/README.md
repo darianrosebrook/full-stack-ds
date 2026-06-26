@@ -61,10 +61,12 @@ Framework lanes may use framework idioms. They may not change the app semantics.
 Examples have **no backend** — no server, no network, no persistence. But an app shape that pokes the UI directly at raw in-memory objects does not read real-to-life, and it fakes the async states (pending / optimistic / error) that make an assembly worth proving. So app shapes that need data structure their lane as three separated concerns:
 
 1. **Fixtures** — static `*.json` / `*.jsonl` files in the lane holding the mock data (incidents, products, posts, etc.). Authored by hand; never imported from a package.
-2. **Adapter** — a lane-local reader that parses the fixture(s) into typed records. The adapter is the only thing that touches the raw file shape; everything above it sees typed domain objects.
+2. **Adapter** — a lane-local reader that parses the fixture(s) into typed records. The adapter is the only thing that touches the raw file shape; everything above it sees typed domain objects. The adapter may load the static JSON/JSONL fixtures once into memory; the UI calls only the promise-returning API, never the fixture or adapter directly.
 3. **Functional API** — a lane-local, typed, **promise-returning** data-access surface (`getIncidents()`, `applyPromo(code)`, `submitComment(postId, body)`, …). The assembly calls only this API; it never reads the fixture or the adapter directly. Latency, the mock-failure flag, and any product policy live behind the API, so the UI's pending/optimistic/error states are *real* state transitions, not synchronous fakes.
 
 This keeps "no backend" literally true — nothing leaves the bundle — while giving each assembly a real-to-life data boundary. The functional API is **app-layer code that lives entirely in the lane**: it is *not* part of the public package boundary and never substitutes for component behavior. A spec that needs data names its API surface in its State model; a spec that needs none (e.g. a pure forms app) may omit this layer.
+
+This is **doctrine for the future framework lanes**, not a scaffolding step on its own. The three assembly-layer app shapes are currently spec scaffolds only (`spec.md` + empty lane `.gitkeep`s); no fixtures, adapters, or API files exist yet, and none should be committed under a spec-only scaffold slice. Materializing the fixtures/adapter/API for a lane is follow-on implementation work, tracked under its own spec.
 
 ## Claim Surface
 

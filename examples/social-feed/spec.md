@@ -37,7 +37,7 @@ Any of these is evidence the claim is false (or the boundary is too weak), to be
 
 ### Page / screen structure
 
-One page, no routing required. A three-region layout: a left/top **navigation or profile sidebar**, a central **feed column** (composer + post list), and a right **secondary sidebar** (suggestions / trends / notifications). On narrow layouts the sidebars may collapse behind a `Sheet`. Use `Stack` and `Card` for all structural composition; do not hand-roll layout wrappers a package component should own.
+One page, no routing required. A three-region layout: a left/top **navigation or profile sidebar**, a central **feed column** (composer + post list), and a right **secondary sidebar** (suggestions / trends / notifications). On narrow layouts the sidebars may collapse behind a `Sheet`. Use FSDS components (`Stack`, `Card`, `Postcard`, etc.) for component composition and package-owned behavior. Minimal app-shell layout CSS is allowed for page regions the design system does not claim (the three-column frame, sticky sidebars, responsive shell), but it must not substitute for component behavior, state indication, reaction/menu/disclosure state, focus, overlay, or token/styling surfaces — those must come from the package, and a place where app-shell CSS has to supply one of them is a finding.
 
 ### Required regions
 
@@ -63,7 +63,7 @@ One page, no routing required. A three-region layout: a left/top **navigation or
 No backend (no server, no network, no persistence). The lane structures its data as three separated concerns (see the portfolio README's "Data and API Layer"):
 
 1. **Fixtures** — static `*.json` / `*.jsonl` files in the lane holding posts, comments, authors, the current user, and notifications. JSONL is a natural fit for the feed/comment streams.
-2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Post`, `Comment`, `Author`, `Notification`).
+2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Post`, `Comment`, `Author`, `Notification`). The adapter may load the static JSON/JSONL fixtures once into memory; the UI calls only the promise-returning API, never the fixture or adapter directly.
 3. **Functional API** — a lane-local, typed, **promise-returning** surface the assembly calls: e.g. `listFeed(): Promise<Post[]>`, `createPost(body): Promise<Post>`, `toggleReaction(postId): Promise<ReactionState>`, `addComment(postId, body): Promise<Comment>`, `reportPost(postId, reason): Promise<void>`, `hidePost(postId): Promise<void>`. The simulated latency and the mock-failure flag live **behind** this API, so the optimistic/pending/reverted/error reconciliation below is a real async round-trip (apply optimistically → await the API → settle or roll back), not a synchronous fake. The assembly never reads the fixture or adapter directly.
 
 ### Required local / loading / empty / error / pending states

@@ -36,7 +36,7 @@ Any of these is evidence the claim is false (or the boundary is too weak), to be
 
 ### Page / screen structure
 
-A two-phase app, no routing library required (an in-app view/step switch is sufficient): a **storefront** phase (catalog + cart) and a **checkout** phase (a stepper through contact → shipping → payment → review → confirmation). A persistent **order summary** is visible throughout checkout. Use `Stack` and `Card` for all structural composition; do not hand-roll layout wrappers a package component should own.
+A two-phase app, no routing library required (an in-app view/step switch is sufficient): a **storefront** phase (catalog + cart) and a **checkout** phase (a stepper through contact → shipping → payment → review → confirmation). A persistent **order summary** is visible throughout checkout. Use FSDS components (`Stack`, `Card`, etc.) for component composition and package-owned behavior. Minimal app-shell layout CSS is allowed for page regions the design system does not claim (the catalog grid frame, the checkout/summary columns, sticky regions, responsive shell), but it must not substitute for component behavior, state indication, validation/disabled/pending appearance, focus, overlay, or token/styling surfaces — those must come from the package, and a place where app-shell CSS has to supply one of them is a finding.
 
 ### Required regions
 
@@ -61,7 +61,7 @@ A two-phase app, no routing library required (an in-app view/step switch is suff
 No backend (no server, no network, no persistence). The lane structures its data as three separated concerns (see the portfolio README's "Data and API Layer"):
 
 1. **Fixtures** — static `*.json` / `*.jsonl` files in the lane holding the product catalog, promo codes, shipping methods, and tax/shipping rules.
-2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Product`, `PromoCode`, `ShippingMethod`).
+2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Product`, `PromoCode`, `ShippingMethod`). The adapter may load the static JSON/JSONL fixtures once into memory; the UI calls only the promise-returning API, never the fixture or adapter directly.
 3. **Functional API** — a lane-local, typed, **promise-returning** surface the assembly calls: e.g. `listProducts(): Promise<Product[]>`, `validatePromo(code): Promise<PromoResult>`, `submitPayment(payload): Promise<PaymentResult>`, `placeOrder(order): Promise<{ orderId: string }>`. The simulated load latency, the promo validity rule, and the mock payment-failure flag live **behind** this API, so the validating/pending/error states below are real async transitions, not synchronous fakes. Totals math and product policy may live in the lane (assembly-owned) or behind the API, but the assembly never reads the fixture or adapter directly.
 
 ### Required local / loading / empty / error / pending states
