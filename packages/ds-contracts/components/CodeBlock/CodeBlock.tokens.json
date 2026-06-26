@@ -1,0 +1,67 @@
+{
+  "box-model.padding-block-start": {
+    "resolvesTo": "semantic.surface.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-block-end": {
+    "resolvesTo": "semantic.surface.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-start": {
+    "resolvesTo": "semantic.surface.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-end": {
+    "resolvesTo": "semantic.surface.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.gap": {
+    "resolvesTo": "semantic.display.size.gap",
+    "fallback": "4px",
+    "layer": "semantic"
+  },
+  "code-block.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "code-block.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "code-block.color.border.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
+  "code-block.size.padding.default": {
+    "resolvesTo": "core.spacing.size.06",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "code-block.size.radius.default": {
+    "resolvesTo": "semantic.shape.control.radius.default",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "code-block.size.border.default": {
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
+    "fallback": "1px",
+    "layer": "semantic"
+  },
+  "code-block.size.fontSize.default": {
+    "resolvesTo": "core.typography.ramp.3",
+    "fallback": "0.875rem",
+    "layer": "core"
+  },
+  "code-block.typography.lineHeight.default": {
+    "resolvesTo": "semantic.typography.line.height.body",
+    "fallback": "1.5",
+    "layer": "semantic"
+  }
+}

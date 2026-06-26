@@ -1,0 +1,66 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "code-block.color.background.default"
+    },
+    "border-color": {
+      "resolvesTo": "code-block.color.border.default"
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "code-block.size.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "code-block.size.radius.default"
+    },
+    "color": {
+      "resolvesTo": "code-block.color.foreground.primary"
+    },
+    "font-family": {
+      "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "resolvesTo": "code-block.size.fontSize.default"
+    },
+    "line-height": {
+      "resolvesTo": "code-block.typography.lineHeight.default"
+    },
+    "margin": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "overflow-x": {
+      "literal": "auto",
+      "platforms": ["web"]
+    },
+    "padding": {
+      "resolvesTo": "code-block.size.padding.default"
+    },
+    "tab-size": {
+      "literal": "2",
+      "platforms": ["web"]
+    },
+    "white-space": {
+      "literal": "pre",
+      "platforms": ["web"]
+    }
+  },
+  "code": {
+    "display": {
+      "literal": "block",
+      "platforms": ["web"]
+    },
+    "font-family": {
+      "literal": "inherit",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "literal": "inherit",
+      "platforms": ["web"]
+    }
+  }
+}

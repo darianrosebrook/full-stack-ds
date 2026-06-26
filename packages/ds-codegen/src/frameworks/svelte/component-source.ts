@@ -1038,6 +1038,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     isRoot: true,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole ?? undefined,
+    rootPolymorphicTag: ir.root.polymorphicTagProp,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `${hookVar}.set${capitalizeSvelte(booleanChannel.name)}`,
@@ -1095,6 +1096,10 @@ interface SvelteRenderContext {
   // React/Lit/Angular all forward this; Svelte was the odd one out and lost
   // the role attribute on dom-tree components.
   rootRole?: string;
+  rootPolymorphicTag?: {
+    propName: string;
+    defaultTag: string;
+  };
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
   /**
@@ -1230,6 +1235,11 @@ function renderSvelteDomNode(
 
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
+    if (ctx.rootPolymorphicTag && !node.componentRef) {
+      attrs.unshift(
+        `this={${jsAccessorFor(ctx.rootPolymorphicTag.propName)} ?? "${ctx.rootPolymorphicTag.defaultTag}"}`,
+      );
+    }
     if (ctx.autoDismissPause) {
       attrs.push(
         `onpointerenter={autoDismiss.pauseListeners.onpointerenter}`,
@@ -1275,7 +1285,10 @@ function renderSvelteDomNode(
   // componentRef: render the referenced component by its PascalCase name.
   // Svelte resolves a capitalized tag to an imported component; `attr={expr}`
   // bindings pass identically to a component prop or an HTML attribute.
-  const tag = node.componentRef ?? node.tag;
+  const tag =
+    ctx.isRoot && ctx.rootPolymorphicTag && !node.componentRef
+      ? "svelte:element"
+      : node.componentRef ?? node.tag;
   const isVoidEl = node.componentRef
     ? true
     : VOID_HTML_ELEMENTS_SVELTE.has(tag);

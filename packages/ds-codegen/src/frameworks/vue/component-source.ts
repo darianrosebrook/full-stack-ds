@@ -1183,6 +1183,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     isRoot: true,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole,
+    rootPolymorphicTag: ir.root.polymorphicTagProp,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
@@ -1241,6 +1242,10 @@ interface VueRenderContext {
    * declares one. Parity with React's `ReactRenderContext.rootRole`.
    */
   rootRole?: string;
+  rootPolymorphicTag?: {
+    propName: string;
+    defaultTag: string;
+  };
   /**
    * Identifier names that resolve as iteration aliases (item/index
    * variables introduced by an enclosing `iterate` directive). After
@@ -1404,6 +1409,11 @@ function renderVueDomNode(
       // inner non-interactive panel (which would trip a11y lint rules).
       attrs.push(`@click.self="${guardExpr}"`);
     }
+    if (ctx.rootPolymorphicTag && !node.componentRef) {
+      attrs.unshift(
+        `:is="props.${propAccess(ctx.rootPolymorphicTag.propName)} ?? '${ctx.rootPolymorphicTag.defaultTag}'"`,
+      );
+    }
   } else if (classParts.length > 0) {
     attrs.unshift(`:class="${classPartsExprVue(classParts)}"`);
   }
@@ -1482,7 +1492,10 @@ function renderVueDomNode(
   // componentRef: render the referenced component by its PascalCase name.
   // Vue SFC templates resolve a PascalCase tag to the imported component;
   // `:attr` bindings pass identically to a component prop or an HTML attr.
-  const tag = node.componentRef ?? node.tag;
+  const tag =
+    ctx.isRoot && ctx.rootPolymorphicTag && !node.componentRef
+      ? "component"
+      : node.componentRef ?? node.tag;
   // A childless componentRef self-closes (`<Image ... />`); `node.tag` is ""
   // for a componentRef so the void-element set never matches it.
   const isVoidEl = node.componentRef

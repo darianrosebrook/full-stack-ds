@@ -1084,6 +1084,9 @@ const POLYMORPHIC_ROOT_TAGS = new Set<string>([
   "blockquote",
   "figure",
   "figcaption",
+  "code",
+  "kbd",
+  "samp",
 ]);
 
 /**

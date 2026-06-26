@@ -181,3 +181,75 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
     });
   });
 });
+
+describe("polymorphic root lowering", () => {
+  const polymorphicContract: ComponentContract = {
+    name: "InlineSnippet",
+    layer: "primitive",
+    cssPrefix: "inline-snippet",
+    anatomy: {
+      parts: ["root"],
+      dom: {
+        tag: "code",
+        part: "root",
+        content: "prop:text",
+      },
+    },
+    props: {
+      designed: {
+        members: [
+          {
+            name: "text",
+            propType: { kind: "string" },
+            description: "Literal text",
+            required: true,
+          },
+          {
+            name: "as",
+            propType: { kind: "ref", to: "InlineSnippetElement" },
+            description: "Inline semantic element",
+            default: "code",
+          },
+        ],
+      },
+    },
+    types: {
+      InlineSnippetElement: {
+        kind: "union",
+        values: ["code", "kbd", "samp"],
+      },
+    },
+    variants: {
+      as: ["code", "kbd", "samp"],
+    },
+  };
+  const polymorphicIr = buildComponentIR(polymorphicContract);
+
+  it("Vue uses a dynamic native component root", () => {
+    const src = generateVueComponentSource(polymorphicIr);
+    expect(src).toContain(`<component :is="props.as ?? 'code'"`);
+    expect(src).toContain(`{{ props.text }}`);
+  });
+
+  it("Svelte uses svelte:element for the root", () => {
+    const src = generateSvelteComponentSource(polymorphicIr);
+    expect(src).toContain(`<svelte:element this={as ?? "code"}`);
+    expect(src).toContain(`>{text}</svelte:element>`);
+  });
+
+  it("Angular branches root tags through NgSwitch", () => {
+    const src = generateAngularComponentSource(polymorphicIr);
+    expect(src).toContain(`import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";`);
+    expect(src).toContain(`<ng-container [ngSwitch]="this.as || 'code'">`);
+    expect(src).toContain(`<kbd [ngClass]="classes()" *ngSwitchCase="'kbd'">`);
+    expect(src).toContain(`{{ text }}`);
+  });
+
+  it("Lit emits static-tag branches from the allowed tag set", () => {
+    const src = generateLitComponentSource(polymorphicIr);
+    expect(src).toContain(`this.as === "kbd" ? html\`<kbd`);
+    expect(src).toContain(`this.as === "samp" ? html\`<samp`);
+    expect(src).toContain(`: html\`<code`);
+    expect(src).toContain(`\${this.text}`);
+  });
+});

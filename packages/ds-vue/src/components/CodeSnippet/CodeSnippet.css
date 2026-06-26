@@ -1,0 +1,44 @@
+@import "./CodeSnippet.tokens.css";
+
+/* @generated:start styles */
+.code-snippet {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
+  background-color: var(--fsds-code-snippet-color-background-default);
+  border-color: var(--fsds-code-snippet-color-border-default);
+  border-style: solid;
+  border-width: var(--fsds-code-snippet-size-border-default);
+  border-radius: var(--fsds-code-snippet-size-radius-default);
+  color: var(--fsds-code-snippet-color-foreground-primary);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  font-size: var(--fsds-code-snippet-size-fontSize-default);
+  line-height: var(--fsds-code-snippet-typography-lineHeight-default);
+  margin: 0;
+  padding-block: var(--fsds-code-snippet-size-padding-block);
+  padding-inline: var(--fsds-code-snippet-size-padding-inline);
+  white-space: nowrap;
+}
+
+.code-snippet--kbd {
+  box-shadow: var(--fsds-code-snippet-elevation-kbd);
+  font-weight: var(--fsds-semantic-typography-font-weight-medium, 500);
+}
+
+.code-snippet--samp {
+  background-color: transparent;
+  border-color: transparent;
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

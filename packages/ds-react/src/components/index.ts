@@ -10,6 +10,8 @@ export * from "./Calendar/Calendar";
 export * from "./Card/Card";
 export * from "./Checkbox/Checkbox";
 export * from "./Chip/Chip";
+export * from "./CodeBlock/CodeBlock";
+export * from "./CodeSnippet/CodeSnippet";
 export * from "./Command/Command";
 export * from "./Details/Details";
 export * from "./Dialog/Dialog";

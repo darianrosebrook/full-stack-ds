@@ -1,0 +1,2 @@
+{"name":"inline-code","description":"Short inline code expression rendered with code semantics.","tree":{"fsds.CodeSnippet":{"props":{"text":"Array.prototype.map()","as":"code"}}}}
+{"name":"keyboard-key","description":"Keyboard key rendered with kbd semantics.","tree":{"fsds.CodeSnippet":{"props":{"text":"Esc","as":"kbd"}}}}

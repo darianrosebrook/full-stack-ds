@@ -1,0 +1,41 @@
+@import "./CodeBlock.tokens.css";
+
+/* @generated:start styles */
+.code-block {
+  padding-block-start: var(--fsds-box-model-padding-block-start);
+  padding-block-end: var(--fsds-box-model-padding-block-end);
+  padding-inline-start: var(--fsds-box-model-padding-inline-start);
+  padding-inline-end: var(--fsds-box-model-padding-inline-end);
+  gap: var(--fsds-box-model-gap);
+  width: var(--fsds-box-model-width);
+  min-width: var(--fsds-box-model-min-width);
+  max-width: var(--fsds-box-model-max-width);
+  height: var(--fsds-box-model-height);
+  min-height: var(--fsds-box-model-min-height);
+  max-height: var(--fsds-box-model-max-height);
+  background-color: var(--fsds-code-block-color-background-default);
+  border-color: var(--fsds-code-block-color-border-default);
+  border-style: solid;
+  border-width: var(--fsds-code-block-size-border-default);
+  border-radius: var(--fsds-code-block-size-radius-default);
+  color: var(--fsds-code-block-color-foreground-primary);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  font-size: var(--fsds-code-block-size-fontSize-default);
+  line-height: var(--fsds-code-block-typography-lineHeight-default);
+  margin: 0;
+  overflow-x: auto;
+  padding: var(--fsds-code-block-size-padding-default);
+  tab-size: 2;
+  white-space: pre;
+}
+
+.code-block__code {
+  display: block;
+  font-family: inherit;
+  font-size: inherit;
+}
+/* @generated:end */
+
+/* @custom:start overrides */
+
+/* @custom:end */

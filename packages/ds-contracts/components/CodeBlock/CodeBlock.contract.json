@@ -1,0 +1,130 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "CodeBlock",
+  "description": "Styled preformatted code block for displaying a literal source string with a declared programming or markup language.",
+  "layer": "primitive",
+  "category": "display",
+  "anatomy": {
+    "parts": [
+      "root",
+      "code"
+    ],
+    "details": {
+      "root": {
+        "tag": "pre",
+        "description": "Preformatted code container that preserves whitespace and provides the visual block surface.",
+        "role": "root"
+      },
+      "code": {
+        "tag": "code",
+        "description": "Literal source text rendered as text, not interpreted markup.",
+        "role": "content"
+      }
+    },
+    "dom": {
+      "tag": "pre",
+      "part": "root",
+      "bindings": {
+        "data-language": "prop:language"
+      },
+      "children": [
+        {
+          "tag": "code",
+          "part": "code",
+          "attrs": {
+            "spellcheck": "false"
+          },
+          "bindings": {
+            "data-language": "prop:language"
+          },
+          "content": "prop:code"
+        }
+      ]
+    }
+  },
+  "props": {
+    "designed": {
+      "members": [
+        {
+          "name": "code",
+          "propType": { "kind": "string" },
+          "description": "Literal source text to display. The value is rendered as text and must not be treated as HTML.",
+          "required": true
+        },
+        {
+          "name": "language",
+          "propType": { "kind": "ref", "to": "CodeBlockLanguage" },
+          "description": "Declared language for styling, documentation, and downstream syntax-highlighting adapters.",
+          "required": true
+        }
+      ]
+    },
+    "passthrough": {
+      "extends": "pre"
+    }
+  },
+  "types": {
+    "CodeBlockLanguage": {
+      "kind": "union",
+      "values": [
+        "bash",
+        "css",
+        "html",
+        "javascript",
+        "json",
+        "jsx",
+        "markdown",
+        "plaintext",
+        "tsx",
+        "typescript"
+      ]
+    }
+  },
+  "variants": {},
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"code-block\"]"
+    },
+    "code": {
+      "required": true,
+      "selector": "[data-slot=\"code-block-code\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "content",
+    "usageHints": [
+      "Use code for the literal source string; do not pass pre-rendered HTML",
+      "Set language to the closest supported language enum value",
+      "Use plaintext when the content has no meaningful syntax language",
+      "Use CodeSnippet for inline code, keyboard keys, or sample output"
+    ],
+    "children": {
+      "allowed": false,
+      "slot": "children",
+      "accepts": []
+    }
+  }
+}

@@ -1207,6 +1207,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
         channels.some((c) => c.valueType === "boolean"),
     ),
     hasOverlayClick,
+    rootPolymorphicTag: ir.root.polymorphicTagProp,
   };
   // Inject the contract's effective ARIA role onto the root node if the
   // contract didn't already pin one in `attrs.role`. Without this, components
@@ -1519,6 +1520,11 @@ interface LitRenderContext {
   /** When true, bind auto-dismiss pause listeners on the template root. */
   autoDismissPause?: boolean;
   hasOverlayClick?: boolean;
+  rootPolymorphicTag?: {
+    propName: string;
+    defaultTag: string;
+    allowedTags: string[];
+  };
   /**
    * Identifier names introduced by enclosing iteration. After
    * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` lowering no
@@ -1718,26 +1724,37 @@ function renderLitDomNode(
   const tag = node.componentRef
     ? `fsds-${toKebabCase(node.componentRef)}`
     : node.tag;
-  // Custom elements are not void; emit an explicit open/close pair even when
-  // childless so the template parser treats it as an element, not self-closed
-  // (custom elements cannot self-close in HTML).
-  const isVoidEl = node.componentRef
-    ? false
-    : VOID_HTML_ELEMENTS_LIT.has(tag);
+
+  const renderElementBody = (tagName: string): string => {
+    const tagIsVoid = VOID_HTML_ELEMENTS_LIT.has(tagName);
+    if (contentInline !== null && renderedChildren.length === 0) {
+      return `${pad}<${tagName}${formatLitAttrs(attrs)}>${contentInline}</${tagName}>`;
+    }
+    if (renderedChildren.length === 0 && tagIsVoid) {
+      return `${pad}<${tagName}${formatLitAttrs(attrs)} />`;
+    }
+    if (renderedChildren.length === 0) {
+      return `${pad}<${tagName}${formatLitAttrs(attrs)}></${tagName}>`;
+    }
+    return [
+      `${pad}<${tagName}${formatLitAttrs(attrs)}>`,
+      ...renderedChildren,
+      `${pad}</${tagName}>`,
+    ].join("\n");
+  };
 
   let body: string;
-  if (contentInline !== null && renderedChildren.length === 0) {
-    body = `${pad}<${tag}${formatLitAttrs(attrs)}>${contentInline}</${tag}>`;
-  } else if (renderedChildren.length === 0 && isVoidEl) {
-    body = `${pad}<${tag}${formatLitAttrs(attrs)} />`;
-  } else if (renderedChildren.length === 0) {
-    body = `${pad}<${tag}${formatLitAttrs(attrs)}></${tag}>`;
+  if (ctx.isRoot && ctx.rootPolymorphicTag && !node.componentRef) {
+    const nonDefaultBranches = ctx.rootPolymorphicTag.allowedTags
+      .filter((tagName) => tagName !== ctx.rootPolymorphicTag!.defaultTag)
+      .map((tagName) => {
+        const branch = renderElementBody(tagName).trimStart();
+        return `this.${ctx.rootPolymorphicTag!.propName} === "${tagName}" ? html\`${branch}\``;
+      });
+    const defaultBranch = `html\`${renderElementBody(ctx.rootPolymorphicTag.defaultTag).trimStart()}\``;
+    body = `${pad}\${${[...nonDefaultBranches, defaultBranch].join(" : ")}}`;
   } else {
-    body = [
-      `${pad}<${tag}${formatLitAttrs(attrs)}>`,
-      ...renderedChildren,
-      `${pad}</${tag}>`,
-    ].join("\n");
+    body = renderElementBody(tag);
   }
 
   let withIfGuard = body;
