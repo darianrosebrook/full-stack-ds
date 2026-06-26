@@ -62,21 +62,16 @@ async function runCompile(): Promise<CompileResult> {
   // Defer-import to keep this module pure when imported outside Vite (e.g. for
   // testing the plugin shape) and to break a cycle: host.ts depends on the
   // bundle, which depends on the plugin chain.
-  const { synthesizeAllHosts, synthesizeNonDefaultFixtures, clearHosts } =
+  const { synthesizeAllHosts, clearHosts } =
     await import("./host");
   const { loadBundleFromDisk } = await import("./bundle-loader");
 
   await clearHosts();
   const bundle = await loadBundleFromDisk();
   const hostPaths = await synthesizeAllHosts(bundle);
-  // Non-default rail fixtures (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02) are baked
-  // into the SAME single startup compile as the default hosts — they are extra
-  // host files under distinct PascalCase keys, not a separate or on-demand
-  // compile. Adding ~3 host files to a ~140-file compile is negligible.
-  const fixturePaths = await synthesizeNonDefaultFixtures(bundle);
   return compileAngularPackage({
     outDir: CACHE_DIR,
-    extraFiles: [...hostPaths, ...fixturePaths],
+    extraFiles: [...hostPaths],
   });
 }
 
@@ -276,14 +271,8 @@ export function angularPreviewPlugin(): Plugin {
           let css: string | undefined;
           try {
             const { loadBundleFromDisk } = await import("./bundle-loader");
-            const { fixtureComponentForKey } = await import("./nondefault-fixtures");
             const bundle = await loadBundleFromDisk();
-            // A non-default fixture's compiled host is keyed by the fixture key
-            // (e.g. "ShowMoreMaxLines7"), not the component name — resolve back
-            // to the real component so its CSS still loads. A plain component
-            // name resolves to itself (fixtureComponentForKey returns undefined).
-            const cssComponent = fixtureComponentForKey(componentName) ?? componentName;
-            css = bundle.components.find((c) => c.name === cssComponent)
+            css = bundle.components.find((c) => c.name === componentName)
               ?.sources.angular?.css?.code;
           } catch { /* css is optional — proceed without it */ }
           // componentSource + demo are accepted by buildAngularShell for API

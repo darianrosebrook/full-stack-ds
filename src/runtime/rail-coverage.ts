@@ -5,8 +5,7 @@
 // showcase reads so the Evidence/Residuals surface can state, per component and
 // per framework, WHICH facts the rail asserts. A coherence test
 // (rail-coverage.test.ts) fails if this projection drifts from the asserted
-// rail surface discoverable in e2e/runtime-rail.spec.ts (and, for the Angular
-// fixtures, from src/runtime/angular-compiler/nondefault-fixtures.ts).
+// rail surface discoverable in e2e/runtime-rail.spec.ts.
 //
 // Scope of the claim (COMPONENT-EVIDENCE-RAIL-COVERAGE-BINDING-01):
 //   - "rail facts asserted" / "no rail facts asserted" — coverage, NOT a
@@ -43,14 +42,8 @@ export const RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS: readonly Framework[] = [
   "vue",
   "svelte",
   "lit",
+  "angular",
 ];
-
-/**
- * Frameworks whose NON-default facts the rail asserts via fixed pre-compiled
- * startup fixtures (Angular bakes props before AOT compile, so it has no
- * config bus seam). Mirrors ANGULAR_NONDEFAULT_FIXTURES.
- */
-export const RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS: readonly Framework[] = ["angular"];
 
 export interface RailNonDefaultCoverage {
   /**
@@ -60,8 +53,6 @@ export interface RailNonDefaultCoverage {
   readonly props: readonly string[];
   /** Frameworks asserting these via the preview fsds:config message bus. */
   readonly configBusFrameworks: readonly Framework[];
-  /** Frameworks asserting these via fixed pre-compiled fixtures. */
-  readonly fixtureFrameworks: readonly Framework[];
 }
 
 export interface RailCoverageEntry {
@@ -83,7 +74,6 @@ export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
     nonDefault: {
       props: ["value"],
       configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
-      fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
     } },
   { component: "OTP", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
   { component: "Calendar", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
@@ -94,13 +84,11 @@ export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
     nonDefault: {
       props: ["lines"],
       configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
-      fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
     } },
   { component: "ShowMore", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
     nonDefault: {
       props: ["maxLines"],
       configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
-      fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
     } },
 ];
 
@@ -116,14 +104,13 @@ export function hasDefaultFact(entry: RailCoverageEntry, framework: Framework): 
 
 /**
  * How a framework asserts NON-default facts for a covered entry:
- * "config-bus" (R/V/S/L), "fixed-fixture" (Angular), or null (none).
+ * "config-bus" or null (none).
  */
 export function nonDefaultMechanism(
   entry: RailCoverageEntry,
   framework: Framework,
-): "config-bus" | "fixed-fixture" | null {
+): "config-bus" | null {
   if (!entry.nonDefault) return null;
   if (entry.nonDefault.configBusFrameworks.includes(framework)) return "config-bus";
-  if (entry.nonDefault.fixtureFrameworks.includes(framework)) return "fixed-fixture";
   return null;
 }

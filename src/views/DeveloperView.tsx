@@ -59,23 +59,18 @@ export function DeveloperView({
   }, [framework, componentFile, component]);
 
   const previewPropOverrides = propOverrides ?? EMPTY_PROP_OVERRIDES;
-  const demo = useMemo(
-    () => buildDemo(framework, component, previewPropOverrides),
-    [framework, component, previewPropOverrides],
-  );
+  const demo = useMemo(() => buildDemo(framework, component), [framework, component]);
 
-  // Properties-tab overrides → preview. React/Vue/Svelte/Lit run through the
-  // fsds:config message bus by default; Angular remains on the legacy srcdoc
-  // shell, so it receives prop overrides through the rebuilt demo string.
-  const useConfigMode = framework !== "angular";
+  // Properties-tab overrides → preview. Every framework receives the same
+  // fsds:config message-bus payload; Angular's compiled host listens for it
+  // inside the legacy srcdoc shell.
   const tokenCss = useMemo(() => {
     // Material rows so inherited box-model slots also expand resolvesTo —
     // a profile-sourced ref override must hit its semantic var to win over
     // the component-scoped declaration in <Name>.tokens.css.
     return tokenOverridesToCss(tokenOverrides ?? {}, materialTokenRows(component));
   }, [component, tokenOverrides]);
-  const config = useMemo<PreviewConfig | undefined>(() => {
-    if (!useConfigMode) return undefined;
+  const config = useMemo<PreviewConfig>(() => {
     return {
       props: {
         ...defaultPropsFromContract(component),
@@ -83,8 +78,7 @@ export function DeveloperView({
       },
       tokenCss,
     };
-  }, [useConfigMode, component, previewPropOverrides, tokenCss]);
-  const overrideCss = useConfigMode ? undefined : tokenCss || undefined;
+  }, [component, previewPropOverrides, tokenCss]);
 
   const handleHitClick = (hit: import("../trace/types").TraceHit) => {
     onTrace({ hit, framework, componentName: component.name });
@@ -176,7 +170,6 @@ export function DeveloperView({
                   demo={demo}
                   height={280}
                   config={config}
-                  overrideCss={overrideCss}
                 />
               </div>
             </div>

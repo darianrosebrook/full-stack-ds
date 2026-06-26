@@ -12,9 +12,9 @@
  * Scope (deliberately narrow): native-attr + aria-attr only. No content,
  * behavior, state/pseudo styling, screenshots, or accessibility scoring.
  *
- * Residuals (A5): Angular bakes props pre-compile (no config bus seam) — documented
- * residual. A component whose host never mounts in the default preview (its
- * injected sentinels never land) is skipped as a residual rather than failed.
+ * Residuals (A5): A component whose host never mounts in the default preview
+ * (its injected sentinels never land) is skipped as a residual rather than
+ * failed.
  * The five formerly-missing form-control attrs are REQUIRED regression cases.
  */
 import { test, expect, type Page } from "@playwright/test";
@@ -36,10 +36,8 @@ const MATRIX: Matrix = JSON.parse(
   readFileSync(resolve(process.cwd(), "docs/render-binding-audit/render-binding-matrix.json"), "utf8"),
 );
 
-// Web frameworks reachable through the R/V/S/L message-bus preview seam.
-const WEB_FRAMEWORKS = ["react", "vue", "svelte", "lit"] as const;
-// Angular bakes props before AOT compile (no request-carried prop seam) — residual.
-const RESIDUAL_FRAMEWORKS = ["angular"] as const;
+// Web frameworks reachable through the message-bus preview seam.
+const WEB_FRAMEWORKS = ["react", "vue", "svelte", "lit", "angular"] as const;
 
 // Required regression cases: the five native form-control attrs that were
 // declared-but-unbound until RENDER-PROP-BINDING-FIX-PRIMITIVES-01.
@@ -198,17 +196,6 @@ test.describe("false-positive control: behavior/content props are not in the rai
       expect(row!.bucket, `${component}.${prop} must classify as behavior`).toBe("behavior");
       const selected = obligations.some((o) => o.component === component && o.prop === prop);
       expect(selected, `${component}.${prop} must NOT be treated as a DOM-attr obligation`).toBe(false);
-    });
-  }
-});
-
-// =====================================================================
-// A5/A6 — documented residuals (no widening into content/state/visual/a11y).
-// =====================================================================
-test.describe("documented residuals", () => {
-  for (const fw of RESIDUAL_FRAMEWORKS) {
-    test(`[${fw}] residual: props baked pre-compile (no config bus seam)`, async () => {
-      test.skip(true, `${fw} preview bakes props before AOT compile; out of scope for the config-bus rail`);
     });
   }
 });

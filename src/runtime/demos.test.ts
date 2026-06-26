@@ -193,15 +193,14 @@ describe("buildAngularDemo", () => {
     );
   });
 
-  it("renders default + override props as HTML attributes in the host template", () => {
-    // Same attribute renderer as the Lit demo — string variants land as
-    // attrs, booleans become bare-attribute flags. Sanity-check the wiring
-    // didn't regress when we switched to the host-component shape.
-    const out = buildAngularDemo(makeBundle(), { disabled: true });
-    expect(out).toMatch(/<fsds-button[^>]*size="small"/);
-    expect(out).toMatch(/<fsds-button[^>]*variant="primary"/);
-    // Boolean true → bare attribute.
-    expect(out).toMatch(/<fsds-button[^>]*\bdisabled\b(?!=)/);
+  it("binds host inputs from config-bus props instead of baking attrs", () => {
+    const out = buildAngularDemo(makeBundle());
+    expect(out).toMatch(/<fsds-button[^>]*\[size\]="\$any\(prop\('size'\)\)"/);
+    expect(out).toMatch(/<fsds-button[^>]*\[variant\]="\$any\(prop\('variant'\)\)"/);
+    expect(out).toMatch(/<fsds-button[^>]*\[type\]="\$any\(prop\('type'\)\)"/);
+    expect(out).toContain('data.type !== "fsds:config"');
+    expect(out).toContain("this.props = data.props as PreviewProps");
+    expect(out).toContain("__fsds_overrides");
   });
 
   it("kebab-cases multi-word component names to match Angular selectors", () => {
