@@ -1809,6 +1809,13 @@ button {
   gap: var(--fsds-core-spacing-size-05);
 }
 
+.display-case-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--fsds-core-spacing-size-03);
+}
+
 .display-case-stage .select__text:empty::before {
   content: "Beta";
 }

@@ -1,6 +1,7 @@
 import {
   Component,
   createElement,
+  useState,
   type ComponentProps,
   type ErrorInfo,
   type ReactNode,
@@ -354,46 +355,78 @@ function renderButtonSample(props: Record<string, unknown>) {
 }
 
 function renderDialogSample(props: Record<string, unknown>) {
-  const { sampleKind, ...dialogProps } = props as DialogSampleProps;
+  return <DisplayCaseDialogSample {...(props as DialogSampleProps)} />;
+}
+
+function DisplayCaseDialogSample({
+  sampleKind,
+  ...dialogProps
+}: DialogSampleProps) {
+  const [open, setOpen] = useState(false);
   const isForm = sampleKind === "form";
+  const title = isForm ? "Edit profile" : "Delete workspace";
 
   return (
-    <DS.Dialog
-      {...dialogProps}
-      open
-      aria-label={isForm ? "Edit profile" : "Delete workspace"}
-      slots={{
-        title: isForm ? "Edit profile" : "Delete workspace",
-      }}
-    >
-      {isForm ? (
-        <div className="display-case-copy-stack">
-          <DS.Field
-            name="display-name"
-            required
-            slots={{
-              label: "Display name",
-              control: (
-                <DS.Input
-                  name="display-name"
-                  defaultValue="Darian Rosebrook"
-                />
-              ),
-              help: "Shown in shared review comments and approvals.",
-            }}
-          />
-          <DS.Button size="small" variant="primary">Save profile</DS.Button>
-        </div>
-      ) : (
-        <div className="display-case-copy-stack">
-          <p className="display-case-copy-muted">
-            This removes generated artifacts, review notes, and runtime
-            snapshots for this workspace. The action cannot be undone.
-          </p>
-          <DS.Button size="small" variant="destructive">Delete workspace</DS.Button>
-        </div>
-      )}
-    </DS.Dialog>
+    <>
+      <DS.Button
+        size="small"
+        variant={isForm ? "primary" : "destructive"}
+        onClick={() => setOpen(true)}
+      >
+        {isForm ? "Open edit profile dialog" : "Open delete workspace dialog"}
+      </DS.Button>
+      <DS.Dialog
+        {...dialogProps}
+        open={open}
+        onOpenChange={setOpen}
+        aria-label={title}
+        slots={{
+          title,
+        }}
+      >
+        {isForm ? (
+          <div className="display-case-copy-stack">
+            <DS.Field
+              name="display-name"
+              required
+              slots={{
+                label: "Display name",
+                control: (
+                  <DS.Input
+                    name="display-name"
+                    defaultValue="Darian Rosebrook"
+                  />
+                ),
+                help: "Shown in shared review comments and approvals.",
+              }}
+            />
+            <div className="display-case-dialog-actions">
+              <DS.Button size="small" variant="secondary" onClick={() => setOpen(false)}>
+                Cancel
+              </DS.Button>
+              <DS.Button size="small" variant="primary" onClick={() => setOpen(false)}>
+                Save profile
+              </DS.Button>
+            </div>
+          </div>
+        ) : (
+          <div className="display-case-copy-stack">
+            <p className="display-case-copy-muted">
+              This removes generated artifacts, review notes, and runtime
+              snapshots for this workspace. The action cannot be undone.
+            </p>
+            <div className="display-case-dialog-actions">
+              <DS.Button size="small" variant="secondary" onClick={() => setOpen(false)}>
+                Cancel
+              </DS.Button>
+              <DS.Button size="small" variant="destructive" onClick={() => setOpen(false)}>
+                Delete workspace
+              </DS.Button>
+            </div>
+          </div>
+        )}
+      </DS.Dialog>
+    </>
   );
 }
 
