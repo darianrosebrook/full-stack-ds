@@ -731,7 +731,7 @@ button {
   width: 100%;
   height: 320px;
   border: none;
-  background: var(--fsds-semantic-color-background-elevated);
+  background: transparent;
   display: block;
   border-radius: var(--fsds-core-shape-radius-04);
 }
