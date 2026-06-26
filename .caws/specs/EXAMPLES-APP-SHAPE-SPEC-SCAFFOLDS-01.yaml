@@ -5,7 +5,7 @@ mode: doc
 lifecycle_state: active
 worktree: examples-app-shapes
 created_at: '2026-06-26T23:37:42.450Z'
-updated_at: '2026-06-26T23:49:37.625Z'
+updated_at: '2026-06-26T23:49:58.507Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -15,6 +15,9 @@ scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
     - examples/README.md
+    - examples/operations-dashboard/**
+    - examples/storefront-checkout/**
+    - examples/social-feed/**
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
