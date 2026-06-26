@@ -19,7 +19,7 @@ import path from "node:path";
 import {
   RAIL_COVERAGE,
   RAIL_DEFAULT_FRAMEWORKS,
-  RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+  RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
   RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
 } from "./rail-coverage";
 import { ANGULAR_NONDEFAULT_FIXTURES } from "./angular-compiler/nondefault-fixtures";
@@ -115,13 +115,13 @@ describe("rail-coverage projection coherence (A2)", () => {
     }
   });
 
-  it("non-default query-param frameworks mirror the rail NONDEFAULT_FRAMEWORKS constant", () => {
-    expect(sorted(RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS)).toEqual(
+  it("non-default config-bus frameworks mirror the rail NONDEFAULT_FRAMEWORKS constant", () => {
+    expect(sorted(RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS)).toEqual(
       sorted(specNonDefaultFrameworks),
     );
     for (const e of RAIL_COVERAGE) {
       if (e.nonDefault) {
-        expect(sorted(e.nonDefault.queryParamFrameworks)).toEqual(
+        expect(sorted(e.nonDefault.configBusFrameworks)).toEqual(
           sorted(specNonDefaultFrameworks),
         );
       }

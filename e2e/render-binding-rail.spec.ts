@@ -6,13 +6,13 @@
  * owns runtime falsification. It does NOT re-infer obligations — it reads the
  * fixed classified matrix as the sole authority, selects only the rows whose
  * obligation is runtime-observable (`native-attr` | `aria-attr`, `bound`),
- * injects sentinel prop values through the preview query seam, and asserts the
- * attribute actually materialises in the rendered DOM.
+ * injects sentinel prop values through the preview message bus, and asserts
+ * the attribute actually materialises in the rendered DOM.
  *
  * Scope (deliberately narrow): native-attr + aria-attr only. No content,
  * behavior, state/pseudo styling, screenshots, or accessibility scoring.
  *
- * Residuals (A5): Angular bakes props pre-compile (no query seam) — documented
+ * Residuals (A5): Angular bakes props pre-compile (no config bus seam) — documented
  * residual. A component whose host never mounts in the default preview (its
  * injected sentinels never land) is skipped as a residual rather than failed.
  * The five formerly-missing form-control attrs are REQUIRED regression cases.
@@ -36,7 +36,7 @@ const MATRIX: Matrix = JSON.parse(
   readFileSync(resolve(process.cwd(), "docs/render-binding-audit/render-binding-matrix.json"), "utf8"),
 );
 
-// Web frameworks reachable through the R/V/S/L query-param preview seam.
+// Web frameworks reachable through the R/V/S/L message-bus preview seam.
 const WEB_FRAMEWORKS = ["react", "vue", "svelte", "lit"] as const;
 // Angular bakes props before AOT compile (no request-carried prop seam) — residual.
 const RESIDUAL_FRAMEWORKS = ["angular"] as const;
@@ -94,13 +94,23 @@ for (const o of obligations) {
 const DOM_ATTR_ALIAS: Record<string, string> = { htmlFor: "for", className: "class" };
 const domAttr = (a: string) => DOM_ATTR_ALIAS[a] ?? a;
 const cssAttr = (a: string) => domAttr(a).replace(/([^\w-])/g, "\\$1");
-// Default relative (CI: Playwright starts the repo dev server on baseURL). Locally,
-// set RB_RAIL_BASE=http://localhost:5180 to target a worktree server that carries
-// an unmerged preview-props change.
+// Default relative (CI: Playwright starts the repo dev server on baseURL).
 const BASE = process.env.RB_RAIL_BASE ?? "";
-function previewUrl(fw: string, component: string, props: Record<string, unknown>): string {
-  const q = encodeURIComponent(JSON.stringify(props));
-  return `${BASE}/preview/${fw}/${component}?props=${q}`;
+async function gotoConfiguredPreview(
+  page: Page,
+  fw: string,
+  component: string,
+  props: Record<string, unknown>,
+) {
+  const resp = await page.goto(`${BASE}/preview/${fw}/${component}`, { waitUntil: "domcontentloaded" });
+  expect(resp?.ok(), `preview ${fw}/${component} must load`).toBeTruthy();
+  await page.locator("body[data-fsds-ready]").waitFor({
+    state: "attached",
+    timeout: 30_000,
+  });
+  await page.evaluate((nextProps) => {
+    window.postMessage({ type: "fsds:config", props: nextProps, tokenCss: "" }, "*");
+  }, props);
 }
 /** Page-wide: is the obligation's attribute observable (portaled hosts included)? */
 async function attrObservable(page: Page, o: Obligation): Promise<boolean> {
@@ -132,8 +142,7 @@ test.describe("regression: formerly-missing native form-control attrs are observ
         expect(o, `matrix must classify ${component}.${prop} as a bound native obligation`).toBeTruthy();
         const props: Record<string, unknown> = {};
         for (const x of byComponent.get(component)!) props[x.prop] = x.sentinel;
-        const resp = await page.goto(previewUrl(fw, component, props), { waitUntil: "networkidle" });
-        expect(resp?.ok(), `preview ${fw}/${component} must load`).toBeTruthy();
+        await gotoConfiguredPreview(page, fw, component, props);
         await expect
           .poll(() => attrObservable(page, o!), { message: `${component}.${prop} -> [${o!.attr}] in DOM` })
           .toBe(true);
@@ -151,8 +160,7 @@ test.describe("matrix coverage: every bound native/aria obligation is observable
       test(`[${fw}] ${component}: ${rows.length} obligation(s)`, async ({ page }) => {
         const props: Record<string, unknown> = {};
         for (const r of rows) props[r.prop] = r.sentinel;
-        const resp = await page.goto(previewUrl(fw, component, props), { waitUntil: "networkidle" });
-        test.skip(!resp?.ok(), `preview ${fw}/${component} unavailable (residual)`);
+        await gotoConfiguredPreview(page, fw, component, props);
         // residual: trigger/portal components whose host never mounts in the
         // default preview — their sentinels never land; not a binding failure.
         const didMount = await mounted(page, rows);
@@ -199,8 +207,8 @@ test.describe("false-positive control: behavior/content props are not in the rai
 // =====================================================================
 test.describe("documented residuals", () => {
   for (const fw of RESIDUAL_FRAMEWORKS) {
-    test(`[${fw}] residual: props baked pre-compile (no query seam)`, async () => {
-      test.skip(true, `${fw} preview bakes props before AOT compile; out of scope for the query-seam rail`);
+    test(`[${fw}] residual: props baked pre-compile (no config bus seam)`, async () => {
+      test.skip(true, `${fw} preview bakes props before AOT compile; out of scope for the config-bus rail`);
     });
   }
 });

@@ -6,6 +6,7 @@ import {
   buildLitDemo,
   buildAngularDemo,
   buildDemo,
+  defaultPropsFromContract,
 } from "./demos";
 import type { ComponentBundle } from "../types/data";
 
@@ -43,6 +44,46 @@ function makeBundle(overrides: Partial<ComponentBundle> = {}): ComponentBundle {
 }
 
 describe("buildReactDemo", () => {
+  it("derives preview defaults from designed required props without changing contract defaults", () => {
+    const props = defaultPropsFromContract(
+      makeBundle({
+        name: "CodeBlock",
+        contract: {
+          name: "CodeBlock",
+          layer: "primitive",
+          variants: {},
+          props: {
+            designed: {
+              members: [
+                {
+                  name: "code",
+                  propType: { kind: "string" },
+                  required: true,
+                },
+                {
+                  name: "language",
+                  propType: { kind: "ref", to: "CodeBlockLanguage" },
+                  required: true,
+                },
+              ],
+            },
+          },
+          types: {
+            CodeBlockLanguage: {
+              kind: "union",
+              values: ["bash", "typescript"],
+            },
+          },
+        },
+      }),
+    );
+
+    expect(props).toMatchObject({
+      code: "const example = true;",
+      language: "bash",
+    });
+  });
+
   it("emits a JSX snippet with default variants + a child label", () => {
     const out = buildReactDemo(makeBundle());
     // First variant value of each variant axis is used as the default.

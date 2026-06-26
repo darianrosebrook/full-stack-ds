@@ -35,11 +35,10 @@ export const RAIL_DEFAULT_FRAMEWORKS: readonly Framework[] = [
 ];
 
 /**
- * Frameworks whose NON-default facts the rail asserts via the request-carried
- * query-param `overrideProps` seam (props baked at Vite load time). Mirrors the
- * rail spec's `NONDEFAULT_FRAMEWORKS`.
+ * Frameworks whose NON-default facts the rail asserts via the preview
+ * `fsds:config` message bus. Mirrors the rail spec's `NONDEFAULT_FRAMEWORKS`.
  */
-export const RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS: readonly Framework[] = [
+export const RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS: readonly Framework[] = [
   "react",
   "vue",
   "svelte",
@@ -49,7 +48,7 @@ export const RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS: readonly Framework[] = [
 /**
  * Frameworks whose NON-default facts the rail asserts via fixed pre-compiled
  * startup fixtures (Angular bakes props before AOT compile, so it has no
- * query-param seam). Mirrors ANGULAR_NONDEFAULT_FIXTURES.
+ * config bus seam). Mirrors ANGULAR_NONDEFAULT_FIXTURES.
  */
 export const RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS: readonly Framework[] = ["angular"];
 
@@ -59,8 +58,8 @@ export interface RailNonDefaultCoverage {
    * `maxLines`). One per covered component today; an array for honesty.
    */
   readonly props: readonly string[];
-  /** Frameworks asserting these via the query-param overrideProps seam. */
-  readonly queryParamFrameworks: readonly Framework[];
+  /** Frameworks asserting these via the preview fsds:config message bus. */
+  readonly configBusFrameworks: readonly Framework[];
   /** Frameworks asserting these via fixed pre-compiled fixtures. */
   readonly fixtureFrameworks: readonly Framework[];
 }
@@ -83,7 +82,7 @@ export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
   { component: "Progress", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
     nonDefault: {
       props: ["value"],
-      queryParamFrameworks: RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+      configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
       fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
     } },
   { component: "OTP", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS },
@@ -94,13 +93,13 @@ export const RAIL_COVERAGE: readonly RailCoverageEntry[] = [
   { component: "Truncate", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
     nonDefault: {
       props: ["lines"],
-      queryParamFrameworks: RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+      configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
       fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
     } },
   { component: "ShowMore", defaultFrameworks: RAIL_DEFAULT_FRAMEWORKS,
     nonDefault: {
       props: ["maxLines"],
-      queryParamFrameworks: RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
+      configBusFrameworks: RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
       fixtureFrameworks: RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
     } },
 ];
@@ -117,14 +116,14 @@ export function hasDefaultFact(entry: RailCoverageEntry, framework: Framework): 
 
 /**
  * How a framework asserts NON-default facts for a covered entry:
- * "query-param" (R/V/S/L), "fixed-fixture" (Angular), or null (none).
+ * "config-bus" (R/V/S/L), "fixed-fixture" (Angular), or null (none).
  */
 export function nonDefaultMechanism(
   entry: RailCoverageEntry,
   framework: Framework,
-): "query-param" | "fixed-fixture" | null {
+): "config-bus" | "fixed-fixture" | null {
   if (!entry.nonDefault) return null;
-  if (entry.nonDefault.queryParamFrameworks.includes(framework)) return "query-param";
+  if (entry.nonDefault.configBusFrameworks.includes(framework)) return "config-bus";
   if (entry.nonDefault.fixtureFrameworks.includes(framework)) return "fixed-fixture";
   return null;
 }

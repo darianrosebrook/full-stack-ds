@@ -8,10 +8,9 @@ import { LIT_PREVIEW_URL_PREFIX } from "./lit-preview/constants";
 
 /**
  * Live configuration pushed to a config-mode preview iframe over the wire.
- * When `config` is supplied, the iframe is loaded in config mode (?config=1)
- * as a persistent render target: instead of rebuilding the module per change,
- * the parent posts this payload as an `fsds:config` message and the iframe
- * re-renders + re-skins live. Used by the scratch Properties panel.
+ * New-pipeline preview iframes are persistent render targets by default:
+ * instead of rebuilding the module per change, the parent posts this payload
+ * as an `fsds:config` message and the iframe re-renders + re-skins live.
  */
 export interface PreviewConfig {
   /** Full current prop map for the component (replaces, not merges). */
@@ -31,10 +30,10 @@ interface FrameworkPreviewProps {
   height?: number;
   interactive?: boolean;
   /**
-   * When present, drives the iframe in config mode: the iframe mounts a
-   * persistent render target and this payload is sent as an `fsds:config`
-   * message on change and on the iframe's `fsds:ready` handshake. Omit for the
-   * default baked-props behavior (unchanged). Currently React-only.
+   * When present, sends this payload as an `fsds:config` message on change and
+   * on the iframe's `fsds:ready` handshake. React/Vue/Svelte/Lit previews are
+   * config-capable by default; Angular ignores this because it is still on the
+   * legacy srcdoc compiler path.
    */
   config?: PreviewConfig;
   /**
@@ -105,12 +104,7 @@ export function FrameworkPreview({
     demo,
   ]);
 
-  // In config mode the shell URL carries ?config=1 so the dev-server plugin
-  // serves the persistent-render-target entry instead of the baked-props one.
-  const configMode = config !== undefined;
-  const src = useNewPipeline
-    ? `${newPipelinePrefix}${componentName}${configMode ? "?config=1" : ""}`
-    : null;
+  const src = useNewPipeline ? `${newPipelinePrefix}${componentName}` : null;
 
   // Reset to loading whenever the iframe reloads. The reload trigger differs
   // by pipeline: under the new pipeline it's the `src` URL changing; under
@@ -159,7 +153,6 @@ export function FrameworkPreview({
     }
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Push config to the iframe whenever it changes, once the iframe is ready.
@@ -167,12 +160,11 @@ export function FrameworkPreview({
   useEffect(() => {
     if (status !== "ready") return;
     postConfig();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config, status]);
 
   // Inject live token-override CSS into the iframe document once it's ready.
   // Same-origin (new-pipeline) iframes let us write a <style> directly; this
-  // re-skins baked-props previews (the variant matrix) without reloading. The
+  // re-skins previews such as the variant matrix without reloading. The
   // legacy srcdoc path is opaque-origin, so contentDocument access throws — we
   // swallow it (override is a new-pipeline-only enhancement).
   useEffect(() => {

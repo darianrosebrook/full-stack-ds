@@ -21,7 +21,7 @@
  *
  * Angular NON-default prop facts for ShowMore/Progress/Truncate ARE now
  * covered (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02) — but NOT via the R/V/S/L
- * query-param seam. Angular bakes props before AOT compile, so each
+ * message-bus config seam. Angular bakes props before AOT compile, so each
  * non-default case is a small PRE-COMPILED fixture host baked into the
  * existing startup compile under a distinct PascalCase key and served at
  * /preview/angular/<key>. Arbitrary request-carried Angular prop-sets stay
@@ -52,10 +52,10 @@
  *               nodes with values 0..41.
  *
  * Non-default props ARE now asserted for R/V/S/L on ShowMore (maxLines),
- * Progress (value), and Truncate (lines): the preview plugins parse props
- * from the URL query and bake them into the (prop-keyed) virtual entry, and
- * the "non-default" describe blocks below assert the runtime fact changes
- * from the default (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
+ * Progress (value), and Truncate (lines): the preview route loads the default
+ * message-bus config entry, then the rail posts `fsds:config` with explicit
+ * props and asserts the runtime fact changes from the default
+ * (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
  *
  * What this rail does NOT prove:
  *
@@ -85,13 +85,12 @@ type Framework = "react" | "vue" | "svelte" | "lit" | "angular";
 // keep their own R/V/S/L-only framework list.
 const FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit", "angular"];
 
-// The query-param overrideProps seam covers only the frameworks whose previews
-// bake props at Vite load time (R/V/S/L). Angular bakes props before AOT
-// compile, so its non-default cases are served as PRE-COMPILED fixtures via a
-// distinct route (gotoAngularFixture) rather than this query seam — so Angular
-// is intentionally NOT in NONDEFAULT_FRAMEWORKS. The Angular non-default cases
-// are added explicitly in each non-default block below
-// (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02).
+// The message-bus config seam covers the new-pipeline frameworks (R/V/S/L).
+// Angular bakes props before AOT compile, so its non-default cases are served
+// as PRE-COMPILED fixtures via a distinct route (gotoAngularFixture) rather
+// than this bus seam — so Angular is intentionally NOT in NONDEFAULT_FRAMEWORKS.
+// The Angular non-default cases are added explicitly in each non-default block
+// below (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02).
 const NONDEFAULT_FRAMEWORKS: readonly Framework[] = ["react", "vue", "svelte", "lit"];
 
 /**
@@ -111,18 +110,7 @@ async function goto(
   blockClass: string,
   props?: Record<string, string | number | boolean>,
 ) {
-  // Non-default props ride the preview URL query. The plugin parses them,
-  // encodes them into the (distinct) virtual entry id, and bakes them into the
-  // mounted component — so a non-default URL must NOT serve the cached
-  // default-props render. The paired default-vs-non-default tests below prove
-  // the override actually takes effect.
-  const query = props
-    ? "?" +
-      Object.entries(props)
-        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
-        .join("&")
-    : "";
-  await page.goto(`/preview/${framework}/${component}${query}`, {
+  await page.goto(`/preview/${framework}/${component}`, {
     waitUntil: "domcontentloaded",
   });
   // For React/Vue/Svelte, the BEM block class lands directly on a DOM
@@ -148,6 +136,16 @@ async function goto(
       state: "attached",
       timeout: 30_000,
     });
+  } else {
+    await page.locator("body[data-fsds-ready]").waitFor({
+      state: "attached",
+      timeout: 30_000,
+    });
+    if (props) {
+      await page.evaluate((nextProps) => {
+        window.postMessage({ type: "fsds:config", props: nextProps, tokenCss: "" }, "*");
+      }, props);
+    }
   }
 }
 
@@ -175,7 +173,7 @@ function angularFixtureKey(component: string): string {
 /**
  * Navigate to a pre-compiled Angular non-default fixture page
  * (/preview/angular/<FixtureKey>) and wait for it to mount and finish its first
- * change-detection pass. Unlike goto's query-param path (R/V/S/L), Angular's
+ * change-detection pass. Unlike goto's message-bus path (R/V/S/L), Angular's
  * override props are baked into a fixture host compiled at startup, so the key
  * IS the stable route segment — no query string. Reuses the same light-DOM
  * block-class wait and the `data-fsds-ready` marker the default Angular route
@@ -637,12 +635,12 @@ test.describe("Runtime rail — ShowMore (CSS-var with default)", () => {
 // ---------------------------------------------------------------------
 // Non-default prop rail (RUNTIME-RAIL-NONDEFAULT-PROPS-01).
 //
-// These tests drive an EXPLICIT non-default prop through the preview URL
-// query and assert the runtime fact CHANGES from the default. Each pairs a
-// default render with a non-default render and asserts they differ — so a
-// plugin that ignored the override (and served the cached default-props
-// entry) would FAIL here, not silently pass. This closes the rail's prior
-// "non-default props are not asserted" non-claim for R/V/S/L.
+// These tests drive an EXPLICIT non-default prop through the fsds:config
+// message bus and assert the runtime fact CHANGES from the default. Each pairs
+// a default render with a non-default render and asserts they differ — so a
+// preview entry that ignored the bus payload would FAIL here, not silently pass.
+// This closes the rail's prior "non-default props are not asserted" non-claim
+// for R/V/S/L.
 // ---------------------------------------------------------------------
 
 test.describe("Runtime rail — ShowMore non-default maxLines", () => {
@@ -664,7 +662,7 @@ test.describe("Runtime rail — ShowMore non-default maxLines", () => {
 
   // Angular proves the SAME changed fact, but its override is baked into a
   // PRE-COMPILED fixture host (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02), reached via
-  // its stable fixture-key route rather than the R/V/S/L query seam. If the
+  // its stable fixture-key route rather than the R/V/S/L bus seam. If the
   // route served the default host instead, this would observe "3" and fail.
   test("angular: maxLines=7 fixture overrides the default-3 CSS var", async ({ page }) => {
     await gotoAngularFixture(page, angularFixtureKey("ShowMore"), "show-more");

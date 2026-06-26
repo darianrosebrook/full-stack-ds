@@ -1,9 +1,8 @@
 // Angular non-default rail fixtures (RUNTIME-RAIL-ANGULAR-NONDEFAULT-02).
 //
 // Angular bakes props into a host component that is AOT-compiled BEFORE the
-// browser loads it, so it cannot reuse the R/V/S/L query-param->load-time
-// overrideProps seam (those bake props into a demo SOURCE STRING at Vite
-// virtual-module load time, zero compile cost per prop-set). A measured probe
+// browser loads it, so it cannot reuse the R/V/S/L fsds:config message bus.
+// A measured probe
 // also showed @angular/compiler-cli's oldProgram reuse does NOT make a
 // per-prop-set recompile incremental (it still re-emits the whole tree), so
 // an on-demand / incremental compile buys nothing.

@@ -1,7 +1,17 @@
-import type { ComponentBundle, Framework } from "../types/data";
+import type { ComponentBundle, Framework, PropMember } from "../types/data";
 
 export interface DemoProps {
   [key: string]: unknown;
+}
+
+interface DemoPropType {
+  kind?: string;
+  to?: string;
+  values?: unknown[];
+  value?: unknown;
+  items?: DemoPropType;
+  of?: DemoPropType[];
+  raw?: string;
 }
 
 /**
@@ -20,11 +30,102 @@ export function defaultPropsFromContract(component: ComponentBundle): DemoProps 
   for (const [k, vals] of Object.entries(variants)) {
     if (Array.isArray(vals) && vals.length > 0) props[k] = vals[0];
   }
-  const members = component.contract.props?.styled?.members ?? [];
+  const members = propMembersFromContract(component);
   for (const m of members) {
     if (m.default !== undefined && !(m.name in props)) props[m.name] = m.default;
   }
+  for (const m of members) {
+    if (!m.required || m.name in props) continue;
+    const sample = sampleValueForProp(component, m);
+    if (sample !== undefined) props[m.name] = sample;
+  }
   return props;
+}
+
+function propMembersFromContract(component: ComponentBundle): PropMember[] {
+  const contractProps = component.contract.props ?? {};
+  return ["styled", "designed", "constrained"].flatMap(
+    (bucket) => contractProps[bucket]?.members ?? [],
+  );
+}
+
+function sampleValueForProp(component: ComponentBundle, member: PropMember): unknown {
+  const propType = member.propType as DemoPropType | undefined;
+  if (propType) return sampleValueForPropType(component, propType, member.name);
+  return sampleValueForLegacyType(member.type, member.name);
+}
+
+function sampleValueForLegacyType(type: string | undefined, propName: string): unknown {
+  if (!type) return undefined;
+  const trimmed = type.trim();
+  if (trimmed === "string") return sampleStringForProp(propName);
+  if (trimmed === "number") return 0;
+  if (trimmed === "boolean") return false;
+  if (trimmed.endsWith("[]")) return [];
+  return undefined;
+}
+
+function sampleValueForPropType(
+  component: ComponentBundle,
+  propType: DemoPropType,
+  propName: string,
+): unknown {
+  switch (propType.kind) {
+    case "string":
+      return sampleStringForProp(propName);
+    case "number":
+      return 0;
+    case "boolean":
+      return false;
+    case "array":
+      return [];
+    case "enum":
+      return propType.values?.[0];
+    case "literal":
+      return propType.value;
+    case "union":
+      return propType.of?.[0]
+        ? sampleValueForPropType(component, propType.of[0], propName)
+        : undefined;
+    case "ref":
+      return sampleValueForTypeAlias(component, propType.to, propName);
+    case "fallback":
+      return sampleValueForLegacyType(propType.raw, propName);
+    default:
+      return undefined;
+  }
+}
+
+function sampleValueForTypeAlias(
+  component: ComponentBundle,
+  aliasName: string | undefined,
+  propName: string,
+): unknown {
+  if (!aliasName) return undefined;
+  const alias = component.contract.types?.[aliasName] as DemoPropType | undefined;
+  if (!alias) return undefined;
+  if (alias.kind === "union" && alias.values?.length) return alias.values[0];
+  return sampleValueForPropType(component, alias, propName);
+}
+
+function sampleStringForProp(propName: string): string {
+  switch (propName) {
+    case "code":
+      return "const example = true;";
+    case "text":
+      return "Example";
+    case "label":
+    case "ariaLabel":
+      return "Label";
+    case "href":
+      return "#";
+    case "src":
+      return "";
+    case "alt":
+      return "Image";
+    default:
+      return "Example";
+  }
 }
 
 function renderJsxProps(props: DemoProps): string {

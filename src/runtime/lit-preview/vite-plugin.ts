@@ -10,13 +10,9 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { defaultPropsFromContract, childLabel, elementTag, type DemoProps } from "../demos";
-import type { ComponentBundle } from "../../types/data";
-import {
-  decodePropsParam,
-  encodePropsParam,
-  parsePropsFromQuery,
-} from "../preview-props";
+import { defaultPropsFromContract, childLabel, elementTag } from "../demos";
+import { buildConfigEntrySource } from "../config-entry";
+import { buildLitConfigRendererSource } from "./config-renderer";
 
 const URL_PREFIX = "/preview/lit/";
 const VIRTUAL_ID_PREFIX = "virtual:fsds-preview-lit/";
@@ -30,12 +26,8 @@ function parseShellRequest(url: string) {
   const afterPrefix = url.slice(URL_PREFIX.length);
   const qIndex = afterPrefix.indexOf("?");
   const tail = qIndex === -1 ? afterPrefix : afterPrefix.slice(0, qIndex);
-  const query = qIndex === -1 ? "" : afterPrefix.slice(qIndex + 1);
   if (!/^[A-Z][A-Za-z0-9]*\/?$/.test(tail)) return null;
-  return {
-    componentName: tail.replace(/\/$/, ""),
-    overrideProps: parsePropsFromQuery(query),
-  };
+  return { componentName: tail.replace(/\/$/, "") };
 }
 
 function parseVirtualEntryId(id: string) {
@@ -45,53 +37,26 @@ function parseVirtualEntryId(id: string) {
   })();
   if (!decoded.startsWith(VIRTUAL_ID_PREFIX)) return null;
   const tail = decoded.slice(VIRTUAL_ID_PREFIX.length);
-  const qIndex = tail.indexOf("?");
-  const modulePath = qIndex === -1 ? tail : tail.slice(0, qIndex);
-  const propsQuery = qIndex === -1 ? "" : tail.slice(qIndex + 1);
-  const match = /^([A-Z][A-Za-z0-9]*)\/entry\.ts$/.exec(modulePath);
+  const match = /^([A-Z][A-Za-z0-9]*)\/entry\.ts$/.exec(tail);
   if (!match) return null;
-  const propsParam = new URLSearchParams(propsQuery).get("props");
-  return { componentName: match[1], overrideProps: decodePropsParam(propsParam) };
-}
-
-function renderHtmlAttrs(component: ComponentBundle, overrideProps: DemoProps): string {
-  const props = { ...defaultPropsFromContract(component), ...overrideProps };
-  return Object.entries(props)
-    .map(([k, v]) => {
-      if (v === null || v === undefined) return "";
-      if (typeof v === "boolean") return v ? ` ${k}` : "";
-      const s = String(v).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
-      return ` ${k}="${s}"`;
-    })
-    .join("");
+  return { componentName: match[1] };
 }
 
 function buildEntrySource(
   componentName: string,
   bundle: Awaited<ReturnType<typeof buildBundle>>,
-  overrideProps: DemoProps,
 ): string {
   const component = bundle.components.find((c) => c.name === componentName);
   if (!component) {
     throw new Error(`fsds-lit-preview: unknown component "${componentName}"`);
   }
-  // Import the workspace component module — side effect: customElement
-  // registration. Use absolute Vite-served path so siblings (Behavior file,
-  // primitives) resolve through the normal graph.
-  const absImport = `/packages/ds-lit/src/components/${componentName}/${componentName}.ts`;
   const tag = elementTag(component, "lit");
-  const attrs = renderHtmlAttrs(component, overrideProps);
   const child = childLabel(component);
-  const inner = child.replace(/</g, "&lt;").replace(/&/g, "&amp;");
-  // For Lit, we inject the custom-element tag literally. The component's
-  // shadow root + render() produce the rest. Innerhtml is fine for the demo
-  // payload since `child` is just the component's name string.
-  return `import ${JSON.stringify(absImport)};
-
-const root = document.getElementById("root");
-if (!root) throw new Error("fsds-lit-preview: #root missing from shell");
-root.innerHTML = ${JSON.stringify(`<${tag}${attrs}>${inner}</${tag}>`)};
-`;
+  return buildConfigEntrySource({
+    childLabel: child === "" ? null : child,
+    defaultProps: defaultPropsFromContract(component),
+    rendererSource: buildLitConfigRendererSource(componentName, tag),
+  });
 }
 
 export function litPreviewPlugin(): Plugin {
@@ -117,7 +82,7 @@ export function litPreviewPlugin(): Plugin {
       const parsed = parseVirtualEntryId(id);
       if (!parsed) return null;
       const bundle = await getBundle();
-      return buildEntrySource(parsed.componentName, bundle, parsed.overrideProps);
+      return buildEntrySource(parsed.componentName, bundle);
     },
 
     configureServer(server: ViteDevServer) {
@@ -134,10 +99,7 @@ export function litPreviewPlugin(): Plugin {
             return;
           }
           const { buildCommonPreviewShellHtml } = await import("../preview-shell-common");
-          const propsParam = encodePropsParam(parsed.overrideProps);
-          const entryId = propsParam
-            ? `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.ts?props=${propsParam}`
-            : `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.ts`;
+          const entryId = `${VIRTUAL_ID_PREFIX}${parsed.componentName}/entry.ts`;
           const html = buildCommonPreviewShellHtml({
             componentName: parsed.componentName,
             framework: "lit",
