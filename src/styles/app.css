@@ -1600,18 +1600,27 @@ button {
 }
 
 /*
- * Header appearance popover — theme-toggle row. Composes the fsds
- * Button (ghost variant) into a full-width row that holds an
- * icon + text label on the left and a Switch on the right.
- * Overrides Button's default inline-flex/center to stretch the row
- * across the popover width.
+ * Header appearance popover — the Switch owns theme toggling; the label
+ * content is rendered inside the Switch label instead of wrapped by a
+ * separate button.
  */
-.header-appearance-row.button {
+.header-appearance-row.switch {
   display: flex;
   justify-content: space-between;
   width: 100%;
   gap: var(--fsds-core-spacing-size-05);
+  padding: var(--fsds-core-spacing-size-04);
   margin-bottom: var(--fsds-core-spacing-size-06);
+  border-radius: var(--fsds-core-shape-radius-03);
+}
+
+.header-appearance-row.switch:hover {
+  background: var(--fsds-semantic-color-background-subtle);
+}
+
+.header-appearance-row.switch:has(.switch__input:focus-visible) {
+  outline: 2px solid var(--fsds-semantic-focus-ring-color);
+  outline-offset: 2px;
 }
 
 .header-appearance-row__label {
@@ -1620,6 +1629,52 @@ button {
   gap: var(--fsds-core-spacing-size-05);
   font-weight: var(--fsds-semantic-typography-font-weight-medium);
   font-size: var(--fsds-core-typography-ramp-3);
+}
+
+.header-appearance-row .switch__track {
+  order: 2;
+}
+
+.header-brand-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fsds-core-spacing-size-04);
+}
+
+.header-brand-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fsds-core-spacing-size-04);
+  padding: var(--fsds-core-spacing-size-04) var(--fsds-core-spacing-size-05);
+  border-radius: var(--fsds-core-shape-radius-02);
+  cursor: pointer;
+  color: var(--fsds-semantic-color-foreground-secondary);
+}
+
+.header-brand-option:hover {
+  background: var(--fsds-semantic-color-background-subtle);
+  color: var(--fsds-semantic-color-foreground-primary);
+}
+
+.header-brand-option--active {
+  background: var(--fsds-semantic-color-background-accent-subtle);
+  color: var(--fsds-semantic-color-foreground-accent);
+}
+
+.header-brand-option__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.header-brand-option:has(.header-brand-option__input:focus-visible) {
+  outline: 2px solid var(--fsds-semantic-focus-ring-color);
+  outline-offset: 2px;
 }
 
 /* Hidden display-case route */

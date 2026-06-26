@@ -26,6 +26,7 @@ export type SwitchSize = "sm" | "md" | "lg";
   <span [ngClass]="'switch__track'" aria-hidden="true">
     <span [ngClass]="'switch__thumb'"></span>
   </span>
+  <ng-content />
 </label>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

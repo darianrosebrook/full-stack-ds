@@ -14,44 +14,44 @@ declare module "vitest" {
 // @generated:start tests
 describe("Switch — unit", () => {
   it("renders with default props", () => {
-    render(<Switch data-testid="switch" />);
+    render(<Switch data-testid="switch">content</Switch>);
     expect(screen.getByTestId("switch")).toBeInTheDocument();
   });
 
   it("applies the base CSS class", () => {
-    render(<Switch data-testid="switch" />);
+    render(<Switch data-testid="switch">content</Switch>);
     expect(screen.getByTestId("switch")).toHaveClass("switch");
   });
 
   it("merges custom className", () => {
-    render(<Switch data-testid="switch" className="custom" />);
+    render(<Switch data-testid="switch" className="custom">content</Switch>);
     expect(screen.getByTestId("switch")).toHaveClass("switch", "custom");
   });
 
   it("applies size=sm variant class", () => {
-    render(<Switch data-testid="switch" size="sm" />);
+    render(<Switch data-testid="switch" size="sm">content</Switch>);
     expect(screen.getByTestId("switch")).toHaveClass("switch--sm");
   });
 
   it("applies size=md variant class", () => {
-    render(<Switch data-testid="switch" size="md" />);
+    render(<Switch data-testid="switch" size="md">content</Switch>);
     expect(screen.getByTestId("switch")).toHaveClass("switch--md");
   });
 
   it("applies size=lg variant class", () => {
-    render(<Switch data-testid="switch" size="lg" />);
+    render(<Switch data-testid="switch" size="lg">content</Switch>);
     expect(screen.getByTestId("switch")).toHaveClass("switch--lg");
   });
 
   it("calls onChange when checked changes", async () => {
     const onChangeSpy = vi.fn();
-    expect(() => render(<Switch data-testid="switch" checked={false} onChange={onChangeSpy} />)).not.toThrow();
+    expect(() => render(<Switch data-testid="switch" checked={false} onChange={onChangeSpy}>content</Switch>)).not.toThrow();
   });
 });
 
 describe("Switch — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(<><Switch aria-label="Test Switch" /></>);
+    const { container } = render(<><Switch aria-label="Test Switch">content</Switch></>);
     const results = await axe(container) as unknown as { violations: Array<{ id: string }> };
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",

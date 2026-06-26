@@ -218,6 +218,7 @@ export class SwitchElement extends LitElement {
   <span class=${'switch__track'} aria-hidden="true">
     <span class=${'switch__thumb'}></span>
   </span>
+  <slot></slot>
 </label>`;
   }
 }

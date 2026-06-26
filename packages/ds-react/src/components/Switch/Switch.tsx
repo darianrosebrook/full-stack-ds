@@ -28,6 +28,7 @@ export interface SwitchProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>,
   value?: string;
   className?: string;
   "data-testid"?: string;
+  children?: ReactNode;
 }
 // @generated:end
 
@@ -44,6 +45,7 @@ export function Switch({
   disabled,
   className,
   "data-testid": testId,
+  children,
   name,
   value,
   ...rest
@@ -70,6 +72,7 @@ export function Switch({
     <span className="switch__track" aria-hidden="true">
       <span className="switch__thumb" />
     </span>
+    {children}
   </Stack>
   );
 }

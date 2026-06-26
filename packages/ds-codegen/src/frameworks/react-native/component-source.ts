@@ -75,7 +75,7 @@ function emitImports(ir: ComponentIR): string {
   }
   if (usesLinking(ir.dom)) rnValueImports.add("Linking");
   if (
-    hasChildrenSlotUnderNonTextParent(ir.dom) ||
+    (!usesNativeToggle(ir) && hasChildrenSlotUnderNonTextParent(ir.dom)) ||
     isCheckboxRootPattern(ir)
   ) {
     rnValueImports.add("Text as RNText");
@@ -192,6 +192,7 @@ function hasChildrenSlotUnderNonTextParent(node: DomNodeIR | undefined): boolean
   }
   if (
     component !== "RNText" &&
+    !VOID_RN_COMPONENTS.has(component) &&
     node.children.some((child) => child.tag === "children" || child.tag === "slot")
   ) {
     return true;
