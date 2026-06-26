@@ -114,7 +114,7 @@ export function Header() {
           <GithubIcon />
         </a>
 
-        <Popover placement="bottom">
+        <Popover placement="bottom" className="header-popover-anchor">
           <Popover.Trigger asChild>
             <Button
               variant="ghost"

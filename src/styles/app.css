@@ -202,6 +202,15 @@ button {
   align-items: center;
 }
 
+.header-popover-anchor {
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
 @media (max-width: 900px) {
   .header-actions {
     gap: var(--fsds-core-spacing-size-03);
