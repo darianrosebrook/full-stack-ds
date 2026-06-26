@@ -107,5 +107,20 @@ describe("Card — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Card — interactive affordance", () => {
+  it("applies the interactive modifier only when requested", () => {
+    render(
+      <>
+        <Card data-testid="static-card">Static</Card>
+        <Card data-testid="interactive-card" interactive>
+          Interactive
+        </Card>
+      </>,
+    );
+
+    expect(screen.getByTestId("static-card")).not.toHaveClass("card--interactive");
+    expect(screen.getByTestId("interactive-card")).toHaveClass("card--interactive");
+  });
+});
 
 // @custom:end

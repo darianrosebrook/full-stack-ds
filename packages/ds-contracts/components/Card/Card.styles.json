@@ -63,7 +63,7 @@
       "resolvesTo": "card.color.statusAccent.default"
     },
     "transition-property": {
-      "literal": "box-shadow, border-color, background-color",
+      "literal": "box-shadow, border-color, background-color, transform",
       "platforms": [
         "web"
       ]
@@ -81,12 +81,29 @@
       ]
     }
   },
-  "hover": {
+  ".card--interactive:hover": {
     "background-color": {
       "resolvesTo": "card.color.background.hover"
     },
     "box-shadow": {
       "resolvesTo": "card.elevation.raised"
+    },
+    "transform": {
+      "literal": "translateY(-1px)",
+      "platforms": [
+        "web"
+      ]
+    }
+  },
+  ".card--interactive:active": {
+    "box-shadow": {
+      "resolvesTo": "card.elevation.resting"
+    },
+    "transform": {
+      "literal": "translateY(0)",
+      "platforms": [
+        "web"
+      ]
     }
   },
   "focus": {

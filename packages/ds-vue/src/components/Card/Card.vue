@@ -39,6 +39,7 @@ const classNames = computed(() => [
   "card",
   props.status ? `card--${props.status}` : null,
   props.density ? `card--${props.density}` : null,
+  props.interactive ? "card--interactive" : null,
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end
