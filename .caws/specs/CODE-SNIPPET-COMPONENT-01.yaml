@@ -4,7 +4,7 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-26T21:37:25.833Z'
-updated_at: '2026-06-26T21:37:25.833Z'
+updated_at: '2026-06-26T21:40:26.216Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -21,6 +21,7 @@ scope:
     - 'packages/ds-react-native/src/components/CodeSnippet'
     - 'packages/ds-codegen/src/frameworks/figma/descriptors/CodeSnippet.figma.json'
     - 'packages/ds-codegen/src/frameworks/figma/descriptors/CodeSnippet.readme.md'
+    - packages/ds-figma-plugin/src/generated/components/CodeSnippet
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
