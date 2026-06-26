@@ -1804,6 +1804,11 @@ button {
   font-size: var(--fsds-core-typography-ramp-2);
 }
 
+.display-case-copy-stack {
+  display: grid;
+  gap: var(--fsds-core-spacing-size-05);
+}
+
 .display-case-stage .select__text:empty::before {
   content: "Beta";
 }

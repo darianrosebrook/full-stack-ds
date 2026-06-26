@@ -1,6 +1,7 @@
 import {
   Component,
   createElement,
+  type ComponentProps,
   type ErrorInfo,
   type ReactNode,
 } from "react";
@@ -19,6 +20,18 @@ type VariantCase = {
   id: string;
   label: string;
   props: Record<string, unknown>;
+};
+
+type ButtonSampleProps = ComponentProps<typeof DS.Button> & {
+  sampleKind?: "icon-only" | "loading" | "disabled";
+};
+
+type DialogSampleProps = ComponentProps<typeof DS.Dialog> & {
+  sampleKind?: "confirmation" | "form";
+};
+
+type TextFieldSampleProps = ComponentProps<typeof DS.TextField> & {
+  sampleKind?: "default" | "validation-error" | "disabled";
 };
 
 const CATEGORY_ORDER = [
@@ -160,6 +173,8 @@ function renderRichSample(name: string, props: Record<string, unknown>): ReactNo
           </span>
         </DS.Accordion>
       );
+    case "Button":
+      return renderButtonSample(props);
     case "Breadcrumbs":
       return (
         <DS.Breadcrumbs {...props} ariaLabel="Display case breadcrumbs">
@@ -186,6 +201,8 @@ function renderRichSample(name: string, props: Record<string, unknown>): ReactNo
           </DS.CardFooter>
         </DS.Card>
       );
+    case "Dialog":
+      return renderDialogSample(props);
     case "Field":
       // Field is a composer: each region is a named slot hosting a real
       // primitive (Label, Input), not raw children. The control slot holds a
@@ -262,6 +279,8 @@ function renderRichSample(name: string, props: Record<string, unknown>): ReactNo
           <DS.TabsPanel value="runtime">Generated React output.</DS.TabsPanel>
         </DS.Tabs>
       );
+    case "TextField":
+      return renderTextFieldSample(props);
     case "Tooltip":
       return (
         <DS.Tooltip {...props}>
@@ -290,13 +309,124 @@ function renderRichSample(name: string, props: Record<string, unknown>): ReactNo
   return null;
 }
 
+function renderButtonSample(props: Record<string, unknown>) {
+  const { sampleKind, ...buttonProps } = props as ButtonSampleProps;
+
+  if (sampleKind === "icon-only") {
+    return (
+      <DS.Button
+        {...buttonProps}
+        ariaLabel="Close preview panel"
+        size="small"
+        variant="ghost"
+      >
+        <DS.Icon icon={{ iconName: "close" }} width={16} height={16} />
+      </DS.Button>
+    );
+  }
+
+  if (sampleKind === "loading") {
+    return (
+      <DS.Button {...buttonProps} loading>
+        Saving changes
+      </DS.Button>
+    );
+  }
+
+  if (sampleKind === "disabled") {
+    return (
+      <DS.Button {...buttonProps} disabled title="Resolve validation issues first">
+        Publish changes
+      </DS.Button>
+    );
+  }
+
+  const variant = buttonProps.variant;
+  const label =
+    variant === "destructive" ? "Delete workspace" :
+    variant === "secondary" ? "View details" :
+    variant === "tertiary" ? "Learn more" :
+    variant === "ghost" ? "Dismiss" :
+    variant === "outline" ? "Export report" :
+    "Save changes";
+
+  return <DS.Button {...buttonProps}>{label}</DS.Button>;
+}
+
+function renderDialogSample(props: Record<string, unknown>) {
+  const { sampleKind, ...dialogProps } = props as DialogSampleProps;
+  const isForm = sampleKind === "form";
+
+  return (
+    <DS.Dialog
+      {...dialogProps}
+      open
+      aria-label={isForm ? "Edit profile" : "Delete workspace"}
+      slots={{
+        title: isForm ? "Edit profile" : "Delete workspace",
+      }}
+    >
+      {isForm ? (
+        <div className="display-case-copy-stack">
+          <DS.Field
+            name="display-name"
+            required
+            slots={{
+              label: "Display name",
+              control: (
+                <DS.Input
+                  name="display-name"
+                  defaultValue="Darian Rosebrook"
+                />
+              ),
+              help: "Shown in shared review comments and approvals.",
+            }}
+          />
+          <DS.Button size="small" variant="primary">Save profile</DS.Button>
+        </div>
+      ) : (
+        <div className="display-case-copy-stack">
+          <p className="display-case-copy-muted">
+            This removes generated artifacts, review notes, and runtime
+            snapshots for this workspace. The action cannot be undone.
+          </p>
+          <DS.Button size="small" variant="destructive">Delete workspace</DS.Button>
+        </div>
+      )}
+    </DS.Dialog>
+  );
+}
+
+function renderTextFieldSample(props: Record<string, unknown>) {
+  const { sampleKind = "default", ...textFieldProps } = props as TextFieldSampleProps;
+  const invalid = sampleKind === "validation-error";
+  const disabled = sampleKind === "disabled";
+
+  return (
+    <DS.TextField
+      {...textFieldProps}
+      name={invalid ? "password" : "email"}
+      type={invalid ? "password" : "email"}
+      defaultValue={invalid ? "short" : "reviewer@example.com"}
+      invalid={invalid}
+      disabled={disabled}
+      required={!disabled}
+      slots={{
+        label: invalid ? "Password" : "Reviewer email",
+        description: disabled
+          ? "Invitations are locked after the review enters approval."
+          : "Use a work email so audit notifications reach the right person.",
+        error: invalid ? "Password must be at least 12 characters." : undefined,
+      }}
+    />
+  );
+}
+
 function sampleProps(component: ComponentBundle): Record<string, unknown> {
   const props = defaultPropsFromContract(component) as Record<string, unknown>;
 
   switch (component.name) {
     case "TextField":
-      props.label = "Email address";
-      props.description = "Use a work email for account recovery.";
       props.name = "email";
       props.type = "email";
       break;
@@ -357,6 +487,49 @@ function variantCases(component: ComponentBundle): VariantCase[] {
         props: { [axis]: value },
       });
     }
+  }
+
+  if (component.name === "Button") {
+    cases.push(
+      {
+        id: "icon-only",
+        label: "icon-only close",
+        props: { sampleKind: "icon-only" },
+      },
+      {
+        id: "loading",
+        label: "loading",
+        props: { sampleKind: "loading" },
+      },
+      {
+        id: "disabled",
+        label: "disabled",
+        props: { sampleKind: "disabled" },
+      },
+    );
+  }
+
+  if (component.name === "Dialog") {
+    cases.push({
+      id: "form",
+      label: "form content",
+      props: { sampleKind: "form", size: "lg" },
+    });
+  }
+
+  if (component.name === "TextField") {
+    cases.push(
+      {
+        id: "validation-error",
+        label: "validation error",
+        props: { sampleKind: "validation-error" },
+      },
+      {
+        id: "disabled",
+        label: "disabled",
+        props: { sampleKind: "disabled" },
+      },
+    );
   }
 
   return cases;
