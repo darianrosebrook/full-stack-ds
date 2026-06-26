@@ -1128,7 +1128,7 @@ describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: dynamic root role lowering", () 
       'role={(decorative ? "presentation" : "status")}',
     );
     expect(generateAngularComponentSource(ir)).toContain(
-      '[role]="(decorative ? &quot;presentation&quot; : &quot;status&quot;)"',
+      '[attr.role]="(decorative ? &quot;presentation&quot; : &quot;status&quot;)"',
     );
     expect(generateLitComponentSource(ir)).toContain(
       '.role=${(this.decorative ? "presentation" : "status")}',

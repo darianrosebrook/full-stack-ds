@@ -24,7 +24,7 @@ export type SkeletonRadius = "sm" | "md" | "lg";
   selector: "fsds-skeleton",
   standalone: true,
   imports: [NgClass],
-  template: `<div [ngClass]="classes()" [role]="(decorative ? &quot;presentation&quot; : &quot;status&quot;)" [attr.aria-busy]="(decorative ? &quot;false&quot; : &quot;true&quot;)" [attr.aria-hidden]="(decorative ? &quot;true&quot; : &quot;false&quot;)" [attr.aria-label]="ariaLabel"></div>`,
+  template: `<div [ngClass]="classes()" [attr.role]="(decorative ? &quot;presentation&quot; : &quot;status&quot;)" [attr.aria-busy]="(decorative ? &quot;false&quot; : &quot;true&quot;)" [attr.aria-hidden]="(decorative ? &quot;true&quot; : &quot;false&quot;)" [attr.aria-label]="ariaLabel"></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkeletonComponent {

@@ -1582,7 +1582,7 @@ function angularAttrBinding(
       ? `[${refBinding.targetProp}]`
       : `[attr.${attr}]`;
   }
-  if (attr.startsWith("data-") || attr.startsWith("aria-")) {
+  if (attr === "role" || attr.startsWith("data-") || attr.startsWith("aria-")) {
     return `[attr.${attr}]`;
   }
   if (tag && ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG[tag]?.has(attr)) {
