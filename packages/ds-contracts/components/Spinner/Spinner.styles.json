@@ -23,6 +23,12 @@
         "web"
       ]
     },
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": [
+        "web"
+      ]
+    },
     "border-radius": {
       "literal": "50%",
       "platforms": [

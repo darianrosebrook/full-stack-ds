@@ -54,5 +54,23 @@
 /* @generated:end */
 
 /* @custom:start overrides */
+.blockquote--bordered {
+  --fsds-blockquote-accent-width: 4px;
+  position: relative;
+  border-inline-start-width: 0;
+  padding-inline-start: calc(
+    var(--fsds-blockquote-size-padding-default) +
+    var(--fsds-blockquote-accent-width)
+  );
+}
+
+.blockquote--bordered::before {
+  content: "";
+  position: absolute;
+  inset-block: var(--fsds-blockquote-size-padding-default);
+  inset-inline-start: 0;
+  width: var(--fsds-blockquote-accent-width);
+  background-color: var(--fsds-blockquote-color-border-default);
+}
 
 /* @custom:end */

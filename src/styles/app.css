@@ -94,6 +94,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: var(--fsds-core-spacing-size-06);
+  min-height: var(--fsds-app-header-h);
   padding: 0 var(--fsds-core-spacing-size-07);
   border-bottom: 1px solid var(--fsds-semantic-color-border-subtle);
   background: var(--fsds-semantic-color-background-elevated);
@@ -212,7 +213,12 @@ button {
   align-items: center;
   justify-content: center;
   width: 32px;
+  min-width: 32px;
+  max-width: 32px;
   height: 32px;
+  min-height: 32px;
+  max-height: 32px;
+  padding: 0;
   border-radius: var(--fsds-core-shape-radius-03);
   border: 1px solid transparent;
   background: transparent;

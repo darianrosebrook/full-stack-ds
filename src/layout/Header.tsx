@@ -116,14 +116,15 @@ export function Header() {
 
         <Popover placement="bottom">
           <Popover.Trigger asChild>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="small"
               className="icon-btn"
-              aria-label="Appearance settings"
+              ariaLabel="Appearance settings"
               title="Appearance"
             >
               <PaletteIcon />
-            </button>
+            </Button>
           </Popover.Trigger>
           <Popover.Content
             className="panel"
