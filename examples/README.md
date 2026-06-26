@@ -13,8 +13,15 @@ Read this as a proving-ground portfolio, not a demo gallery. Every app shape mus
 | App shape | Implementations | Standing | Primary claim |
 |---|---|---|---|
 | `settings/` | `react/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
+| `operations-dashboard/` | _none yet_ | spec scaffold only | A dense internal operations surface — multi-axis filtering, a high-density queue, a selection-driven detail panel, status summaries, and overlay workflows — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
+| `storefront-checkout/` | _none yet_ | spec scaffold only | A storefront-to-checkout assembly — product browsing, a derived-total cart, promo/error messaging, a validated multi-step checkout with disabled/validating/pending states, and review/confirmation — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
+| `social-feed/` | _none yet_ | spec scaffold only | A dense social-feed assembly — nested-action feed items, a validating composer, optimistic reactions/comments with pending/error reconciliation, overflow menus driving report/hide flows, and a profile/notification surface — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
+
+`settings/` is the only app shape with implemented lanes (`react`, and a typecheck-only `react-native` fixture). The three assembly-layer app shapes — `operations-dashboard/`, `storefront-checkout/`, `social-feed/` — are **spec scaffolds only**: each has a framework-neutral `spec.md` and empty `react/`, `vue/`, `svelte/`, `angular/`, `lit/` lane folders (`src/.gitkeep` placeholders), and **no** implementation, package, or build files. They name a bounded claim a future lane will pressure; none of that claim is proven yet.
 
 The five-framework app-parity claim is not proven by `examples/` yet. The repo's admitted five-framework evidence lives in codegen, generated packages, the governed rail, and the runtime fact rail. The examples directory is the consumer-transfer lane that should eventually make those claims more app-shaped.
+
+These three app shapes deliberately sit at the **assembly** layer of the repo's layered component methodology (`src/views/ComponentComplexityView.tsx`: primitives → compounds → composers → assemblies). The methodology places a checkout flow, a dashboard, and an activity surface in the assembly tier — product-specific flows composed from system parts and *never forking or re-styling them*. That doctrine is the same boundary `examples/` enforces, stated in the methodology's vocabulary: an example that can only be assembled by reaching past the package boundary is evidence the composer/compound layer is not yet expressive enough to support assemblies.
 
 ## Normal-Form Pressure
 
@@ -48,6 +55,16 @@ examples/
 `spec.md` is the authority surface for the app shape. It states the app's required structure, interactions, component coverage, acceptance bar, findings, and non-claims. Framework directories are realizations of that spec, not independent product designs.
 
 Framework lanes may use framework idioms. They may not change the app semantics. If a framework implementation needs a private import, hand-rolled substitute, CSS override, or behavior escape hatch that the others do not need, that is a parity finding.
+
+## Data and API Layer
+
+Examples have **no backend** — no server, no network, no persistence. But an app shape that pokes the UI directly at raw in-memory objects does not read real-to-life, and it fakes the async states (pending / optimistic / error) that make an assembly worth proving. So app shapes that need data structure their lane as three separated concerns:
+
+1. **Fixtures** — static `*.json` / `*.jsonl` files in the lane holding the mock data (incidents, products, posts, etc.). Authored by hand; never imported from a package.
+2. **Adapter** — a lane-local reader that parses the fixture(s) into typed records. The adapter is the only thing that touches the raw file shape; everything above it sees typed domain objects.
+3. **Functional API** — a lane-local, typed, **promise-returning** data-access surface (`getIncidents()`, `applyPromo(code)`, `submitComment(postId, body)`, …). The assembly calls only this API; it never reads the fixture or the adapter directly. Latency, the mock-failure flag, and any product policy live behind the API, so the UI's pending/optimistic/error states are *real* state transitions, not synchronous fakes.
+
+This keeps "no backend" literally true — nothing leaves the bundle — while giving each assembly a real-to-life data boundary. The functional API is **app-layer code that lives entirely in the lane**: it is *not* part of the public package boundary and never substitutes for component behavior. A spec that needs data names its API surface in its State model; a spec that needs none (e.g. a pure forms app) may omit this layer.
 
 ## Claim Surface
 
@@ -90,7 +107,8 @@ The examples lane should fail honestly on any of these:
 - Not accessibility adequacy proof. They exercise shipped behavior, but accessibility claims belong to component contracts, generated behavior primitives, and dedicated rails.
 - Not a replacement for unit tests. Component tests remain in `packages/ds-*/src/components/`.
 - Not a replacement for the governed rail. Examples pressure package consumption; the rail binds emitted artifacts to contract, codegen, and environment evidence.
-- Not current five-framework app parity. Today only `settings/react` exists.
+- Not current five-framework app parity. Today only `settings/` has implemented lanes (`react` plus a typecheck-only `react-native` fixture); the three assembly-layer app shapes are spec scaffolds with no lanes.
+- Not backend / data proof. Examples have no server, no network, and no persistence. Where a spec calls for a "functional API", that is a lane-local, typed, promise-returning data-access layer backed by static JSON/JSONL fixtures read through an adapter — a real-to-life *shape*, not a real backend. It proves nothing about data fetching, scale, or persistence.
 - Not contract authority. App specs pressure package consumption; component semantics still live in `packages/ds-contracts/`.
 
 ## How to Run
@@ -131,14 +149,14 @@ pnpm run governed:rail
 
 Good app shapes prove distinct consumer seams:
 
-| App shape | Stress axis | Useful components |
-|---|---|---|
-| `settings/` | Forms, overlays, basic layout | `Stack`, `Card`, `Field`, `Input`, `Switch`, `Button`, `Dialog`, `Tooltip` |
-| `commerce/` | Data display, choice, async-ish UI | `Table`, `Select`, `Tabs`, `Badge`, `Progress`, `Toast` |
-| `workflow/` | Dense operational state | `Command`, `Dialog`, `Sheet`, `Checkbox`, `List`, `Status` |
-| `media/` | Layout and visual primitives | `AspectRatio`, `Image`, `Avatar`, `Card`, `Skeleton` |
+| App shape | Standing | Stress axis | Useful components |
+|---|---|---|---|
+| `settings/` | implemented (`react`, `react-native` typecheck fixture) | Forms, overlays, basic layout | `Stack`, `Card`, `Field`, `Input`, `Switch`, `Button`, `Dialog`, `Tooltip` |
+| `operations-dashboard/` | spec scaffold only | Dense operational state, filters, selection-driven detail | `Table`, `List`, `Stat`, `Status`, `Badge`, `Select`, `Checkbox`, `Dialog`, `Sheet`, `Toast`, `Alert` |
+| `storefront-checkout/` | spec scaffold only | Choice controls, validation, derived totals, multi-step flow | `Card`, `Image`, `Field`, `Input`, `Select`, `Badge`, `Progress`, `Tabs`, `Dialog`, `Toast`, `OTP` |
+| `social-feed/` | spec scaffold only | Dense nested interaction, media/identity, menus, optimistic state | `Postcard`, `Avatar`, `ProfileFlag`, `Image`, `Card`, `ShowMore`, `Truncate`, `Popover`, `Command`, `Details`, `Toast` |
 
-Pick app shapes for what they can falsify, not what they look like. A good app shape is small enough that a reviewer can see the boundary failure and realistic enough that a package-consumption flaw cannot hide behind toy markup.
+Pick app shapes for what they can falsify, not what they look like. A good app shape is small enough that a reviewer can see the boundary failure and realistic enough that a package-consumption flaw cannot hide behind toy markup. The component columns are expected coverage, not a checklist — each spec also names *pressure-point residuals* (surfaces the app wants that may have no public export yet); a residual a lane cannot satisfy from public exports is a finding, not a reason to hand-roll.
 
 ## Adding a Framework Lane
 
