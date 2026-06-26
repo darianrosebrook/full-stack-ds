@@ -5,7 +5,7 @@ mode: doc
 lifecycle_state: active
 worktree: examples-app-shapes
 created_at: '2026-06-26T23:37:42.450Z'
-updated_at: '2026-06-26T23:56:13.883Z'
+updated_at: '2026-06-26T23:56:51.003Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -18,6 +18,21 @@ scope:
     - examples/operations-dashboard/spec.md
     - examples/storefront-checkout/spec.md
     - examples/social-feed/spec.md
+    - examples/operations-dashboard/react/src/.gitkeep
+    - examples/operations-dashboard/vue/src/.gitkeep
+    - examples/operations-dashboard/svelte/src/.gitkeep
+    - examples/operations-dashboard/angular/src/.gitkeep
+    - examples/operations-dashboard/lit/src/.gitkeep
+    - examples/storefront-checkout/react/src/.gitkeep
+    - examples/storefront-checkout/vue/src/.gitkeep
+    - examples/storefront-checkout/svelte/src/.gitkeep
+    - examples/storefront-checkout/angular/src/.gitkeep
+    - examples/storefront-checkout/lit/src/.gitkeep
+    - examples/social-feed/react/src/.gitkeep
+    - examples/social-feed/vue/src/.gitkeep
+    - examples/social-feed/svelte/src/.gitkeep
+    - examples/social-feed/angular/src/.gitkeep
+    - examples/social-feed/lit/src/.gitkeep
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
