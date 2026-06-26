@@ -24,11 +24,6 @@ describe("Skeleton — unit", () => {
     expect(wrapper.classes()).toContain("custom");
   });
 
-  it("has the correct ARIA role", () => {
-    const wrapper = mount(Skeleton as Component, { props: {}, attrs: { "data-testid": "skeleton" }, slots: { default: "content" } });
-    expect(wrapper.attributes("role")).toBe("status");
-  });
-
   it("applies variant=block variant class", () => {
     const wrapper = mount(Skeleton as Component, { props: { "variant": "block" }, attrs: { "data-testid": "skeleton" }, slots: { default: "content" } });
     expect(wrapper.classes()).toContain("skeleton--block");

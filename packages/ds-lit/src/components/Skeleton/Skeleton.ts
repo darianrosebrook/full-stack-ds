@@ -230,7 +230,7 @@ export class SkeletonElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-busy="true" role="status" aria-label=${ifDefined(this.ariaLabel ?? undefined)}></div>`;
+    return html`<div class="${this.computeClasses()}" .role=${(this.decorative ? "presentation" : "status")} aria-busy=${(this.decorative ? "false" : "true")} aria-hidden=${(this.decorative ? "true" : "false")} aria-label=${ifDefined(this.ariaLabel ?? undefined)}></div>`;
   }
 }
 

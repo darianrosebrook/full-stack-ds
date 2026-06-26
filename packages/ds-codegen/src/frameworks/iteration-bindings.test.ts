@@ -7,6 +7,7 @@ import { generateSvelteComponentSource } from "./svelte/component-source.js";
 import { generateLitComponentSource } from "./lit/component-source.js";
 import { generateAngularComponentSource } from "./angular/component-source.js";
 import { generateReactNativeComponentSource } from "./react-native/component-source.js";
+import { buildComponentTestPlan } from "../test-plan.js";
 
 // IR-DOM-ITERATE-CAPABILITY-01 — fixture harness.
 //
@@ -1034,6 +1035,39 @@ const CONDITIONAL_CONTRACT: ComponentContract = {
   },
 };
 
+const DYNAMIC_ROOT_ROLE_CONTRACT: ComponentContract = {
+  name: "FixtureDynamicRole",
+  layer: "primitive",
+  cssPrefix: "fixture-dynamic-role",
+  anatomy: {
+    parts: ["root"],
+    dom: {
+      tag: "div",
+      part: "root",
+      bindings: {
+        role: "conditional:prop:decorative|literal:presentation|literal:status",
+      },
+    },
+  },
+  props: {
+    designed: {
+      members: [
+        {
+          name: "decorative",
+          type: "boolean",
+          description: "When true, hides the component from assistive tech.",
+          default: true,
+        },
+      ],
+    },
+  },
+  a11y: {
+    role: "status",
+    labeling: [],
+    keyboard: [],
+  },
+};
+
 describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: conditional content lowering", () => {
   const ir = buildComponentIR(CONDITIONAL_CONTRACT);
 
@@ -1072,5 +1106,35 @@ describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: conditional content lowering", (
     expect(src).toContain("<RNText>{(expanded ? collapseText : expandText)}</RNText>");
     expect(src).toContain("onPress={() => setExpandedValue(!expanded)}");
     expect(src).not.toContain("showMoreLabel");
+  });
+});
+
+describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: dynamic root role lowering", () => {
+  const ir = buildComponentIR(DYNAMIC_ROOT_ROLE_CONTRACT);
+
+  it("does not append a duplicate static root role when anatomy.dom binds role", () => {
+    const src = generateReactComponentSource(ir, "../../primitives");
+
+    expect(src).toContain('role={(decorative ? "presentation" : "status")}');
+    expect(src).not.toContain('role="status"');
+    expect(buildComponentTestPlan(ir).role).toBeUndefined();
+  });
+
+  it("lowers the dynamic role binding across web and native emitters", () => {
+    expect(generateVueComponentSource(ir)).toContain(
+      ":role=\"(props.decorative ? 'presentation' : 'status')\"",
+    );
+    expect(generateSvelteComponentSource(ir)).toContain(
+      'role={(decorative ? "presentation" : "status")}',
+    );
+    expect(generateAngularComponentSource(ir)).toContain(
+      '[role]="(decorative ? &quot;presentation&quot; : &quot;status&quot;)"',
+    );
+    expect(generateLitComponentSource(ir)).toContain(
+      '.role=${(this.decorative ? "presentation" : "status")}',
+    );
+    expect(generateReactNativeComponentSource(ir).componentFile).toContain(
+      'accessibilityRole={(((decorative ? "presentation" : "status") === "presentation" ? "none" : (decorative ? "presentation" : "status")) as AccessibilityRole)}',
+    );
   });
 });

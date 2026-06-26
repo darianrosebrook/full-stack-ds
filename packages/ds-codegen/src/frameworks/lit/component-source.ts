@@ -1214,7 +1214,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   // `<button>` role, which makes `aria-checked` an axe-illegal attribute.
   // Mirrors how React's emitter spreads `role="switch"` onto the element.
   const rootForRender: DomNodeIR =
-    ir.root.effectiveRole && !ir.dom.attrs["role"]
+    ir.root.effectiveRole && !ir.dom.attrs["role"] && !ir.dom.bindings["role"]
       ? {
           ...ir.dom,
           attrs: { ...ir.dom.attrs, role: ir.root.effectiveRole },

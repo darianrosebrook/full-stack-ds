@@ -68,7 +68,7 @@ export function Skeleton({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} aria-busy="true" aria-label={ariaLabel} role="status" data-testid={testId} {...rest} />
+  <Stack layout="native" className={`${classNames}`} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel} data-testid={testId} {...rest} />
   );
 }
 // @generated:end

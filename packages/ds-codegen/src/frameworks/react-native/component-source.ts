@@ -83,6 +83,7 @@ function emitImports(ir: ComponentIR): string {
   if (isCheckboxRootPattern(ir)) rnValueImports.add("View");
   if (isCheckboxRootPattern(ir)) rnValueImports.add("Pressable");
   if (rootPressableAcceptsOnPress(ir)) rnTypeImports.add("GestureResponderEvent");
+  if (treeHasBindingName(ir.dom, "role")) rnTypeImports.add("AccessibilityRole");
   const surfaceLowering = rnSurfaceLowering(ir);
   if (surfaceLowering?.mode === "modal") {
     rnValueImports.add("Modal");
@@ -1257,24 +1258,34 @@ function emitNodeProps(
       hasAccessibilityLabelledBy = true;
       continue;
     }
+    if (name === "aria-hidden") {
+      props.push(`${pad}accessible={!(${rnBooleanishExpr(expr)})}`);
+      continue;
+    }
+    if (name === "role") {
+      props.push(
+        `${pad}accessibilityRole={((${expr} === "presentation" ? "none" : ${expr}) as AccessibilityRole)}`,
+      );
+      continue;
+    }
     if (name === "aria-checked") {
-      accessibilityState.push(`checked: Boolean(${expr})`);
+      accessibilityState.push(`checked: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-expanded") {
-      accessibilityState.push(`expanded: Boolean(${expr})`);
+      accessibilityState.push(`expanded: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-pressed") {
-      accessibilityState.push(`selected: Boolean(${expr})`);
+      accessibilityState.push(`selected: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-selected") {
-      accessibilityState.push(`selected: Boolean(${expr})`);
+      accessibilityState.push(`selected: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-busy") {
-      accessibilityState.push(`busy: Boolean(${expr})`);
+      accessibilityState.push(`busy: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-live") {
@@ -1344,13 +1355,15 @@ function emitNodeProps(
   if (isRootNode && !hasAccessibilityLabelledBy) {
     props.push(`${pad}accessibilityLabelledBy={accessibilityLabelledBy}`);
   }
-  const role = node.attrs.role ?? roleFromNode(node);
-  const accessibilityRole = rnAccessibilityRole(
-    role,
-    component,
-    node.bindings["aria-pressed"] !== undefined,
-  );
-  if (accessibilityRole) props.push(`${pad}accessibilityRole=${JSON.stringify(accessibilityRole)}`);
+  if (!node.bindings.role) {
+    const role = node.attrs.role ?? roleFromNode(node);
+    const accessibilityRole = rnAccessibilityRole(
+      role,
+      component,
+      node.bindings["aria-pressed"] !== undefined,
+    );
+    if (accessibilityRole) props.push(`${pad}accessibilityRole=${JSON.stringify(accessibilityRole)}`);
+  }
   if (accessibilityState.length > 0) {
     props.push(`${pad}accessibilityState={{ ${accessibilityState.join(", ")} }}`);
   }
@@ -1409,6 +1422,16 @@ function collectRnNamedSlots(node: DomNodeIR | undefined): string[] {
   };
   walk(node);
   return names;
+}
+
+function rnBooleanishExpr(expr: string): string {
+  return `String(${expr}) === "true"`;
+}
+
+function treeHasBindingName(node: DomNodeIR | undefined, name: string): boolean {
+  if (!node) return false;
+  if (node.bindings[name]) return true;
+  return node.children.some((child) => treeHasBindingName(child, name));
 }
 
 function isSupportedBindingForComponent(name: string, component: string): boolean {

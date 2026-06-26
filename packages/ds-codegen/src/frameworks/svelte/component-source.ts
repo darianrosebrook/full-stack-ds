@@ -1241,7 +1241,7 @@ function renderSvelteDomNode(
     // Only emit role if the anatomy.dom.attrs doesn't already declare one
     // (avoids duplicate `role="..."` when contract specifies both
     // a11y.role and an explicit attrs.role on the root node).
-    if (ctx.rootRole && !("role" in node.attrs)) {
+    if (ctx.rootRole && !("role" in node.attrs) && !("role" in node.bindings)) {
       attrs.push(`role="${ctx.rootRole}"`);
     }
     if (ctx.overlayClickSetter) {

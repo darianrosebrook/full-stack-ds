@@ -59,5 +59,5 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" aria-busy="true" :aria-label="props.ariaLabel" role="status" :data-testid="props['data-testid']"></div>
+  <div :class="classNames" :role="(props.decorative ? 'presentation' : 'status')" :aria-busy="(props.decorative ? 'false' : 'true')" :aria-hidden="(props.decorative ? 'true' : 'false')" :aria-label="props.ariaLabel" :data-testid="props['data-testid']"></div>
 </template>

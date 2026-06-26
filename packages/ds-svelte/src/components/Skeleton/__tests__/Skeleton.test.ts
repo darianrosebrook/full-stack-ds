@@ -24,11 +24,6 @@ describe("Skeleton — unit", () => {
     expect(container.firstElementChild?.className).toContain("custom");
   });
 
-  it("has the correct ARIA role", () => {
-    const { container } = render(Skeleton as unknown as Component<Record<string, unknown>>, { props: {} });
-    expect(container.firstElementChild?.getAttribute("role")).toBe("status");
-  });
-
   it("applies variant=block variant class", () => {
     const { container } = render(Skeleton as unknown as Component<Record<string, unknown>>, { props: { "variant": "block" } });
     expect(container.firstElementChild?.className).toContain("skeleton--block");

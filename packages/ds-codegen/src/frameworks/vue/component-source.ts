@@ -1388,7 +1388,7 @@ function renderVueDomNode(
     }
     // Apply contract-declared a11y.role on the root unless the dom tree
     // already set `attrs.role` (consumed above into `attrs`).
-    if (ctx.rootRole && !node.attrs["role"]) {
+    if (ctx.rootRole && !node.attrs["role"] && !node.bindings["role"]) {
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`:data-testid="props['data-testid']"`);
@@ -1621,6 +1621,14 @@ function escapeAttrString(s: string): string {
   return s.replace(/"/g, "&quot;");
 }
 
+function singleQuotedJsString(s: string): string {
+  return `'${s
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, "\\r")
+    .replace(/\n/g, "\\n")}'`;
+}
+
 /**
  * Map a binding expression into a Vue template attribute. Channel onChange
  * handlers become `@change="(e) => setX((e.target as HTMLInputElement).checked)"`
@@ -1735,7 +1743,7 @@ function renderVueBindingValue(
     case "prop":
       return appendPath(vuePropAccessor(expr.prop, ctx), expr.path);
     case "literal":
-      return JSON.stringify(expr.value);
+      return singleQuotedJsString(expr.value);
     case "iterationLocal": {
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;
