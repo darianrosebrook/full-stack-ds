@@ -2,10 +2,11 @@ id: EXAMPLES-APP-SHAPE-SPEC-SCAFFOLDS-01
 title: 'Scaffold three examples/ consumer-app shape specs (operations-dashboard, storefront-checkout, social-feed); spec/README/.gitkeep only'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
-worktree: examples-app-shapes
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge examples-app-shapes at 25ea11e029732e7ac54cce44fa92dc38cab7a7ef'
 created_at: '2026-06-26T23:37:42.450Z'
-updated_at: '2026-06-26T23:57:03.164Z'
+updated_at: '2026-06-26T23:59:44.521Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
