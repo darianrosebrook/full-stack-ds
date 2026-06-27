@@ -2,10 +2,11 @@ id: RAIL-TARGET-SELF-DECLARED-DESCRIPTOR-02
 title: 'Move admission-descriptor authorship into each target module; central registry becomes aggregator/validator, no behavior change'
 risk_tier: 2
 mode: refactor
-lifecycle_state: active
-worktree: rail-self-declare
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge rail-self-declare at 5ce33942e01df1afdc8550f56901ecd9ab29dd04'
 created_at: '2026-06-27T01:48:18.604Z'
-updated_at: '2026-06-27T01:51:26.292Z'
+updated_at: '2026-06-27T02:00:58.137Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation (descriptor registry + per-framework plan modules)'
