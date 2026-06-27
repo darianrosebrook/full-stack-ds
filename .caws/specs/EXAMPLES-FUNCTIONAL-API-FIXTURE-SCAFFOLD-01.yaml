@@ -4,7 +4,7 @@ risk_tier: 3
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-27T00:07:32.415Z'
-updated_at: '2026-06-27T00:07:45.611Z'
+updated_at: '2026-06-27T00:07:54.829Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -12,7 +12,6 @@ blast_radius:
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - examples/operations-dashboard/fixtures/**
     - examples/operations-dashboard/src/data/**
     - examples/operations-dashboard/src/api/**
