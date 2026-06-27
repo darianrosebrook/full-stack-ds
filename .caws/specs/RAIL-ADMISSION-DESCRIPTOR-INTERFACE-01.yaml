@@ -2,10 +2,11 @@ id: RAIL-ADMISSION-DESCRIPTOR-INTERFACE-01
 title: 'Extract rail admission-descriptor interface: six TS plans become descriptor consumers, no behavior change'
 risk_tier: 2
 mode: refactor
-lifecycle_state: active
-worktree: rail-descriptor
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge rail-descriptor at ba5b641bf2d827c5d49a01d1d70624065133518a'
 created_at: '2026-06-27T00:35:05.063Z'
-updated_at: '2026-06-27T00:35:18.963Z'
+updated_at: '2026-06-27T00:47:09.638Z'
 blast_radius:
   modules:
     - 'packages/ds-codegen/src/validation (rail orchestration + per-framework plans)'
