@@ -26,22 +26,17 @@ import type {
   ScopedArtifactGroup,
   ScopedProjection,
 } from "./types.js";
+import { admissionGeneratedTreePrefixes } from "./admission-descriptor.js";
 
 /**
  * Generated-tree roots, in workspace-rel POSIX form. A path is
  * considered "generated-tree" if it starts with one of these
- * prefixes. Mirrors the COMPONENT_TREES constant in
- * required-mode.ts but local-to-this-module so the two concerns
- * remain decoupled.
+ * prefixes. Derived from the admission-descriptor registry (each
+ * target's outputTreeRelPath + "/"), the same source COMPONENT_TREES
+ * derives from — so the two views can no longer silently diverge.
  */
-const GENERATED_TREE_PREFIXES: ReadonlyArray<{ framework: FrameworkId; prefix: string }> = [
-  { framework: "react", prefix: "packages/ds-react/src/components/" },
-  { framework: "vue", prefix: "packages/ds-vue/src/components/" },
-  { framework: "svelte", prefix: "packages/ds-svelte/src/components/" },
-  { framework: "lit", prefix: "packages/ds-lit/src/components/" },
-  { framework: "angular", prefix: "packages/ds-angular/src/components/" },
-  { framework: "react-native", prefix: "packages/ds-react-native/src/components/" },
-];
+const GENERATED_TREE_PREFIXES: ReadonlyArray<{ framework: FrameworkId; prefix: string }> =
+  admissionGeneratedTreePrefixes();
 
 /**
  * Paths excluded from `nonGeneratedChangedPaths` because they are

@@ -28,7 +28,23 @@ const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TS_COUPLED = "TS-TOOLCHAIN-COUPLED";
 const AGNOSTIC = "LANGUAGE-AGNOSTIC";
 const POLYMORPHIC = "ALREADY-POLYMORPHIC";
+// DESCRIPTOR-DRIVEN: the site no longer holds a per-framework literal — it
+// derives from the admission-descriptor registry (single source of truth). The
+// coupling did not vanish (the registry is still a TS file binding pnpm plans),
+// but it is consolidated to ONE edit-site instead of spread across N modules.
+// RAIL-ADMISSION-DESCRIPTOR-INTERFACE-01 added this bucket; sites move out of
+// TS_COUPLED into it as parallel literals collapse into the registry.
+const DESCRIPTOR_DRIVEN = "DESCRIPTOR-DRIVEN";
 const UNCLASSIFIED = "unclassified";
+
+/** True if a constant is assigned from an admission-descriptor helper call
+ *  (e.g. `= admissionPlansById()`), i.e. derived rather than hand-listed. */
+function isDescriptorDerived(text, constName) {
+  const re = new RegExp(
+    `${constName}[^=]*=\\s*admission[A-Za-z]*\\(\\)|${constName}[^=]*=\\s*ADMITTED_FRAMEWORKS`,
+  );
+  return re.test(text);
+}
 
 /** Read a repo-relative file; never throws — returns "" so an absent file
  *  surfaces as a missing site rather than crashing the audit. */
@@ -96,20 +112,44 @@ site({
   why: "Structurally toolchain-neutral. This is the existing seam to lean on: a Gradle/xcodebuild argv is already valid here. Only the convention (all six plans use pnpm) is TS-shaped.",
 });
 
+// ── Source 2.5: the admission-descriptor registry (the consolidated site) ────
+// RAIL-ADMISSION-DESCRIPTOR-INTERFACE-01 collapsed the parallel per-framework
+// literals (PLANS_BY_ID, DEFAULT_FRAMEWORKS, COMPONENT_TREES,
+// GENERATED_TREE_PREFIXES, FRAMEWORK_RANK) into ONE registry. That registry is
+// the single TS-coupled edit-site now: it still hand-binds pnpm plans, so it is
+// TS-coupled — but it is ONE site, not five spread across four modules.
+const descSrc = read("packages/ds-codegen/src/validation/admission-descriptor.ts");
+const descriptorIds = (() => {
+  const m = descSrc.match(/ADMISSION_DESCRIPTORS[^=]*=\s*{([\s\S]*?)\n};/);
+  if (!m) return [];
+  // Top-level keys: `react: {`, `"react-native": {`.
+  return [...m[1].matchAll(/^\s{2}(?:"([^"]+)"|([\w-]+)):\s*{/gm)].map((x) => x[1] || x[2]);
+})();
+// Authoritative plan list now comes from the registry, not validate-cli.
+const plansById = descriptorIds;
+site({
+  surface: "AdmissionDescriptor registry (consolidated)",
+  file: "packages/ds-codegen/src/validation/admission-descriptor.ts",
+  line: lineOf(descSrc, /ADMISSION_DESCRIPTORS/),
+  detail: `${descriptorIds.length} descriptors: ${descriptorIds.join(", ")}. Single source for PLANS_BY_ID, DEFAULT_FRAMEWORKS, COMPONENT_TREES, GENERATED_TREE_PREFIXES, FRAMEWORK_RANK.`,
+  classification: TS_COUPLED,
+  why: "The registry still hand-binds pnpm-based FrameworkValidationPlans, so it remains TS-coupled — but it is now the ONE edit-site a target is declared at, replacing five parallel literals across four modules. A non-TS target adds a descriptor with a non-pnpm compileCommand here (slice 3); the consumers need no further edit.",
+});
+
 // ── Source 3: PLANS_BY_ID + DEFAULT_FRAMEWORKS (validate-cli.ts) ─────────────
 const cliSrc = read("packages/ds-codegen/src/validation/validate-cli.ts");
-const plansById = (() => {
-  const m = cliSrc.match(/PLANS_BY_ID[^=]*=\s*{([\s\S]*?)};/);
-  if (!m) return [];
-  return [...m[1].matchAll(/(?:"([^"]+)"|(\w[\w-]*)):/g)].map((x) => x[1] || x[2]);
-})();
+const plansDerived = isDescriptorDerived(cliSrc, "PLANS_BY_ID");
 site({
-  surface: "PLANS_BY_ID registry",
+  surface: "PLANS_BY_ID + DEFAULT_FRAMEWORKS (validate-cli)",
   file: "packages/ds-codegen/src/validation/validate-cli.ts",
   line: lineOf(cliSrc, /PLANS_BY_ID/),
-  detail: `${plansById.length} plans wired: ${plansById.join(", ")} (figma's plan file exists but is NOT imported here)`,
-  classification: TS_COUPLED,
-  why: "Hardcoded Record<FrameworkId, plan>. New targets require a code edit here; no data-driven plan discovery exists.",
+  detail: plansDerived
+    ? "derived from the descriptor registry (admissionPlansById() / ADMITTED_FRAMEWORKS) — no parallel literal"
+    : "hardcoded Record<FrameworkId, plan> literal",
+  classification: plansDerived ? DESCRIPTOR_DRIVEN : TS_COUPLED,
+  why: plansDerived
+    ? "No longer a parallel literal; the per-framework binding lives once in the descriptor registry. This module just consumes the derivation."
+    : "Hardcoded Record<FrameworkId, plan>. New targets require a code edit here; no data-driven plan discovery exists.",
 });
 
 // ── Source 4: each per-framework validation plan command argv ───────────────
@@ -170,13 +210,18 @@ site({
 
 // ── Source 7: FRAMEWORK_RANK (markdown-report.ts) ───────────────────────────
 const mdSrc = read("packages/ds-codegen/src/validation/markdown-report.ts");
+const rankDerived = isDescriptorDerived(mdSrc, "FRAMEWORK_RANK");
 site({
   surface: "FRAMEWORK_RANK (report ordering)",
   file: "packages/ds-codegen/src/validation/markdown-report.ts",
   line: lineOf(mdSrc, /FRAMEWORK_RANK/),
-  detail: "Record<FrameworkId, number>; every FrameworkId needs a rank or report ordering throws",
-  classification: TS_COUPLED,
-  why: "Keyed by FrameworkId. Cosmetic, but a non-member target with no rank entry breaks the sort — another edit-site gated on union membership.",
+  detail: rankDerived
+    ? "derived from the descriptor registry (admissionFrameworkRank()) — no parallel literal"
+    : "Record<FrameworkId, number>; every FrameworkId needs a rank or report ordering throws",
+  classification: rankDerived ? DESCRIPTOR_DRIVEN : TS_COUPLED,
+  why: rankDerived
+    ? "No longer a parallel literal; each target's reportRank lives once on its descriptor. This module consumes the derivation."
+    : "Keyed by FrameworkId. Cosmetic, but a non-member target with no rank entry breaks the sort — another edit-site gated on union membership.",
 });
 
 // ── Source 8: CI + pre-push generated-tree git-diff lists ───────────────────
@@ -217,6 +262,7 @@ for (const aggregate of ["typecheck:all", "test:frameworks"]) {
 // ── Report ──────────────────────────────────────────────────────────────────
 const summary = {
   [TS_COUPLED]: sites.filter((s) => s.classification === TS_COUPLED).length,
+  [DESCRIPTOR_DRIVEN]: sites.filter((s) => s.classification === DESCRIPTOR_DRIVEN).length,
   [AGNOSTIC]: sites.filter((s) => s.classification === AGNOSTIC).length,
   [POLYMORPHIC]: sites.filter((s) => s.classification === POLYMORPHIC).length,
   [UNCLASSIFIED]: sites.filter((s) => s.classification === UNCLASSIFIED).length,
@@ -233,10 +279,11 @@ if (process.argv.includes("--check")) {
   if (JSON.stringify(got) !== JSON.stringify(want)) {
     problems.push(`FrameworkId union drifted: expected ${want.join(",")}, got ${got.join(",")}`);
   }
-  // figma must be rail-EXCLUDED: its plan file exists but it is NOT in PLANS_BY_ID.
+  // figma must be rail-EXCLUDED: its plan file exists but it is NOT in the
+  // descriptor registry (the post-slice-1 source of the admitted plan set).
   const figmaPlanExists = read("packages/ds-codegen/src/validation/frameworks/figma.ts").length > 0;
   if (!figmaPlanExists) problems.push("figma plan file missing — expected it to exist as the rail-excluded precedent");
-  if (plansById.includes("figma")) problems.push("figma unexpectedly wired into PLANS_BY_ID — the generate-admitted-but-rail-excluded asymmetry changed");
+  if (plansById.includes("figma")) problems.push("figma unexpectedly in the admission-descriptor registry — the generate-admitted-but-rail-excluded asymmetry changed");
   if (frameworkIdMembers.includes("figma")) problems.push("figma unexpectedly a FrameworkId member");
   for (const native of ["jetpack-compose", "swiftui"]) {
     if (frameworkIdMembers.includes(native)) problems.push(`${native} unexpectedly admitted to the rail (FrameworkId) — recon premise (no non-TS toolchain) changed`);
@@ -263,12 +310,12 @@ const lines = [];
 lines.push("# Admission-rail toolchain-coupling audit (RAIL-NATIVE-TOOLCHAIN-RECON-01)");
 lines.push("");
 lines.push(`FrameworkId members (rail-admitted): ${frameworkIdMembers.join(", ")}`);
-lines.push(`PLANS_BY_ID wired:                   ${plansById.join(", ")}`);
-lines.push(`figma:                               generate-admitted but rail-EXCLUDED (plan file exists, not in PLANS_BY_ID)`);
+lines.push(`Admission descriptors registered:    ${plansById.join(", ")}`);
+lines.push(`figma:                               generate-admitted but rail-EXCLUDED (plan file exists, not in the descriptor registry)`);
 lines.push("");
-lines.push(`Summary: ${summary[TS_COUPLED]} TS-coupled | ${summary[AGNOSTIC]} language-agnostic | ${summary[POLYMORPHIC]} already-polymorphic | ${summary[UNCLASSIFIED]} unclassified`);
+lines.push(`Summary: ${summary[TS_COUPLED]} TS-coupled | ${summary[DESCRIPTOR_DRIVEN]} descriptor-driven | ${summary[AGNOSTIC]} language-agnostic | ${summary[POLYMORPHIC]} already-polymorphic | ${summary[UNCLASSIFIED]} unclassified`);
 lines.push("");
-for (const bucket of [TS_COUPLED, UNCLASSIFIED, AGNOSTIC, POLYMORPHIC]) {
+for (const bucket of [TS_COUPLED, UNCLASSIFIED, DESCRIPTOR_DRIVEN, AGNOSTIC, POLYMORPHIC]) {
   const inBucket = sites.filter((s) => s.classification === bucket);
   if (!inBucket.length) continue;
   lines.push(`## ${bucket} (${inBucket.length})`);
