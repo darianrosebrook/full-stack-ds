@@ -66,7 +66,34 @@ Examples have **no backend** — no server, no network, no persistence. But an a
 
 This keeps "no backend" literally true — nothing leaves the bundle — while giving each assembly a real-to-life data boundary. The functional API is **app-layer code that lives entirely in the lane**: it is *not* part of the public package boundary and never substitutes for component behavior. A spec that needs data names its API surface in its State model; a spec that needs none (e.g. a pure forms app) may omit this layer.
 
-This is **doctrine for the future framework lanes**, not a scaffolding step on its own. The three assembly-layer app shapes are currently spec scaffolds only (`spec.md` + empty lane `.gitkeep`s); no fixtures, adapters, or API files exist yet, and none should be committed under a spec-only scaffold slice. Materializing the fixtures/adapter/API for a lane is follow-on implementation work, tracked under its own spec.
+This is **doctrine for the future framework lanes**, not a scaffolding step bundled into a spec-only slice. Materializing the fixtures/adapter/API for an app shape is follow-on implementation work, tracked under its own spec. The first such materialization — the **golden example** — landed for `operations-dashboard/` (see [`operations-dashboard/README.md`](./operations-dashboard/README.md) and `operations-dashboard/{fixtures,src}/`); `storefront-checkout/` and `social-feed/` are still framework-lane scaffolds (`.gitkeep` only) and their data/API seam is not yet materialized.
+
+## Golden data/API template
+
+`operations-dashboard/` is the reference implementation of the data/API seam. Any app shape that materializes its own seam must copy these invariants so the pattern stays uniform across apps and parity does not drift. Read it alongside the working code in `operations-dashboard/` — this section is the contract, that directory is the example.
+
+**Layer shape** (same in every app):
+
+```
+fixtures/*.json(l)  →  src/data/adapter.ts  →  src/api/ (+ index.ts barrel)  →  (future) framework lane UI
+   raw fixture shape     parses/joins/memoizes    promise-returning API            imports the barrel only
+```
+
+**Transferable invariants:**
+
+1. **Fixtures are static `*.json` / `*.jsonl`.** Hand-authored, committed, never imported from a package. JSONL for row/event streams (incidents, posts, comments, timeline events); JSON for small lookups/config (services, environments, descriptions).
+2. **The adapter is the only layer that touches raw fixture shape.** It reads, parses, lightly validates, and joins fixtures into typed domain records. Nothing above it knows the file format. A malformed fixture *throws* at load time (an authoring error) — it is not surfaced to the UI as a domain failure.
+3. **The adapter may load fixtures once into memory** and memoize the parsed snapshot. The API owns any mutable working copy; the adapter's snapshot stays immutable-by-convention.
+4. **Domain types are lane-local app-layer types** (`src/types/`), not package exports and not FSDS contract types. They describe what the adapter parses and what the API returns.
+5. **The API is promise-returning.** Every method is `async`, so the UI's loading / empty / error / pending / optimistic states are *real* async transitions, not synchronous fakes.
+6. **The API returns a typed `ApiResult<T>` for domain failures** — a discriminated `{ ok: true; value: T } | { ok: false; error: ApiError }` — rather than throwing or rejecting. UI lanes narrow on `result.ok` and on `error.code` to drive error states without wrapping every call in `try/catch`. (Programmer errors — e.g. a malformed fixture at construction — may still throw.)
+7. **Latency and failure are injectable and deterministic.** Latency is a fixed `latencyMs` option (default `0` so tests run instantly; a lane passes e.g. `400` to exercise loading states). Failure is an explicit flag/option (`failLoads`, or a runtime toggle like `simulateLoadFailure(enabled)`) — **never** wall-clock randomness or `Math.random()`. The same inputs always produce the same result, so the same code path is testable.
+8. **A barrel file (`src/api/index.ts`) is the future UI consumption boundary.** It re-exports the API factory/class and the domain types. Future framework UI imports the barrel **only** — never the adapter (`src/data/`) and never the raw `fixtures/`. Reaching past the barrel is a boundary violation, the same class as reaching past the `@full-stack-ds/<fw>` public package exports.
+9. **Tests cover the seam, not the UI.** A focused `src/**/*.test.ts` suite proves, at minimum: **parse** (every fixture row loads and joins), **query/filter** (each filter axis and cross-axis combination), **detail/read** (a single record + its joined relations), **mutation** (state-changing methods change observable state and isolate per API instance), **typed failure** (the simulated-failure flag yields the right `ApiError.code`, with a recovery/retry path), and **one falsifiability probe** (deliberately corrupt a fixture or expectation and confirm the relevant test goes red — proving the suite can fail for the right reason). Tests run under plain Vitest in a Node environment with `latencyMs: 0`.
+
+**Test-running note.** The root Vitest `include` covers `packages/**` and `src/**` only — it does **not** include `examples/**`. Run an app's data/API tests with an explicit Vitest config that targets the example directory (see `operations-dashboard/README.md` → "Tests"); do **not** widen the root test config to pick them up as part of a data/API slice. Whether `examples/` joins CI is a separate decision, not part of any single app's scaffold.
+
+A subagent materializing a new app's seam copies invariants 1–9 verbatim and only varies the *domain* (the records, the filter axes, the mutation methods) and the **one app-specific data/API decision** pinned in that app's own `spec.md` (see each spec's "Data and API layer" section).
 
 ## Claim Surface
 
