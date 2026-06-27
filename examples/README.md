@@ -91,7 +91,7 @@ fixtures/*.json(l)  →  src/data/adapter.ts  →  src/api/ (+ index.ts barrel) 
 8. **A barrel file (`src/api/index.ts`) is the future UI consumption boundary.** It re-exports the API factory/class and the domain types. Future framework UI imports the barrel **only** — never the adapter (`src/data/`) and never the raw `fixtures/`. Reaching past the barrel is a boundary violation, the same class as reaching past the `@full-stack-ds/<fw>` public package exports.
 9. **Tests cover the seam, not the UI.** A focused `src/**/*.test.ts` suite proves, at minimum: **parse** (every fixture row loads and joins), **query/filter** (each filter axis and cross-axis combination), **detail/read** (a single record + its joined relations), **mutation** (state-changing methods change observable state and isolate per API instance), **typed failure** (the simulated-failure flag yields the right `ApiError.code`, with a recovery/retry path), and **one falsifiability probe** (deliberately corrupt a fixture or expectation and confirm the relevant test goes red — proving the suite can fail for the right reason). Tests run under plain Vitest in a Node environment with `latencyMs: 0`.
 
-**Test-running note.** The root Vitest `include` covers `packages/**` and `src/**` only — it does **not** include `examples/**`. Run an app's data/API tests with an explicit Vitest config that targets the example directory (see `operations-dashboard/README.md` → "Tests"); do **not** widen the root test config to pick them up as part of a data/API slice. Whether `examples/` joins CI is a separate decision, not part of any single app's scaffold.
+**Test-running note.** The root Vitest `include` covers `packages/**` and `src/**` only — it does **not** include `examples/**`, so the root `pnpm test` does not collect these suites. The committed **examples data/API test lane** runs all of them through one command: `pnpm run test:examples:data-api` (from the repo root, backed by `vitest.examples.config.ts`, Node environment). Use that command rather than a per-app scratch config, and do **not** widen the root test config to pick these up as part of a data/API slice. This lane proves the data/API seam only — not framework app parity, not visual proof, not backend proof, and not generated-artifact admission. Whether `examples/` joins CI is a separate future slice, not wired by this lane.
 
 A subagent materializing a new app's seam copies invariants 1–9 verbatim and only varies the *domain* (the records, the filter axes, the mutation methods) and the **one app-specific data/API decision** pinned in that app's own `spec.md` (see each spec's "Data and API layer" section).
 
@@ -153,6 +153,12 @@ pnpm build
 cd examples/settings/react-native
 pnpm install
 pnpm typecheck
+```
+
+Run the committed examples data/API test lane (all three seams, one command):
+
+```bash
+pnpm run test:examples:data-api
 ```
 
 Intended portfolio gate once examples are populated:

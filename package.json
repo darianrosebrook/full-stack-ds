@@ -45,6 +45,7 @@
     "test:react-native": "pnpm --filter @full-stack-ds/react-native run test",
     "test:frameworks": "pnpm run test:vue && pnpm run test:lit && pnpm run test:svelte && pnpm run test:angular && pnpm run test:react-native",
     "test:all": "pnpm test && pnpm run test:frameworks",
+    "test:examples:data-api": "vitest run --config vitest.examples.config.ts",
     "typecheck": "tsc --noEmit && pnpm --filter @full-stack-ds/codegen run typecheck",
     "typecheck:vue": "pnpm --filter @full-stack-ds/vue run typecheck",
     "typecheck:angular": "pnpm --filter @full-stack-ds/angular run typecheck",
