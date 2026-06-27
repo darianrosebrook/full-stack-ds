@@ -4,7 +4,7 @@ risk_tier: 2
 mode: refactor
 lifecycle_state: active
 created_at: '2026-06-27T00:35:05.063Z'
-updated_at: '2026-06-27T00:35:05.063Z'
+updated_at: '2026-06-27T00:35:18.963Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -13,6 +13,20 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'TODO: list the file(s) or directories this spec authorizes.'
+    - packages/ds-codegen/src/validation/admission-descriptor.ts
+    - packages/ds-codegen/src/validation/types.ts
+    - packages/ds-codegen/src/validation/validate-cli.ts
+    - packages/ds-codegen/src/validation/required-mode.ts
+    - packages/ds-codegen/src/validation/git-range-scope.ts
+    - packages/ds-codegen/src/validation/markdown-report.ts
+    - packages/ds-codegen/src/validation/frameworks/react.ts
+    - packages/ds-codegen/src/validation/frameworks/vue.ts
+    - packages/ds-codegen/src/validation/frameworks/svelte.ts
+    - packages/ds-codegen/src/validation/frameworks/lit.ts
+    - packages/ds-codegen/src/validation/frameworks/angular.ts
+    - packages/ds-codegen/src/validation/frameworks/react-native.ts
+    - packages/ds-codegen/src/validation/frameworks/figma.ts
+    - packages/ds-codegen/src/validation/admission-descriptor.test.ts
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
