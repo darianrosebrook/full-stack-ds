@@ -35,8 +35,8 @@ acceptance:
   - id: A2
     given: the operations-dashboard React lane built against the isomorphic seam
     when: 'the built lane is served (vite preview) and loaded in a browser'
-    then: the dashboard renders (non-empty #root) with no node-externalization
-      runtime error, and the queue/summary/detail regions populate from the API.
+    then: 'the dashboard renders (non-empty root element) with no node-externalization
+      runtime error, and the queue/summary/detail regions populate from the API.'
   - id: A3
     given: the adapter source
     when: grepped for node-only specifiers (node:fs, node:url, node:path,
