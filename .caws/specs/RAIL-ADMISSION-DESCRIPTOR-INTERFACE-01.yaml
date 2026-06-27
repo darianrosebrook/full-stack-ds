@@ -3,6 +3,7 @@ title: 'Extract rail admission-descriptor interface: six TS plans become descrip
 risk_tier: 2
 mode: refactor
 lifecycle_state: active
+worktree: rail-descriptor
 created_at: '2026-06-27T00:35:05.063Z'
 updated_at: '2026-06-27T00:35:18.963Z'
 blast_radius:
