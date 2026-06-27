@@ -21,6 +21,7 @@ import type {
   ScopedArtifactGroup,
   ScopedProjection,
 } from "./types.js";
+import { admissionFrameworkRank } from "./admission-descriptor.js";
 
 const HEADER_AUTHORITY_PREFIX =
   "> Derived from RailReport at";
@@ -298,14 +299,9 @@ function appendScopedProjectionSection(
   }
 }
 
-const FRAMEWORK_RANK: Record<FrameworkId, number> = {
-  react: 0,
-  vue: 1,
-  svelte: 2,
-  lit: 3,
-  angular: 4,
-  "react-native": 5,
-};
+// Derived from the admission-descriptor registry (each target's reportRank) —
+// no longer a parallel hardcoded per-framework literal.
+const FRAMEWORK_RANK: Record<FrameworkId, number> = admissionFrameworkRank();
 
 function compareScopedGroup(
   a: ScopedArtifactGroup,
