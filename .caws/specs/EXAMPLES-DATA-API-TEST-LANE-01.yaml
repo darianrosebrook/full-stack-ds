@@ -3,6 +3,7 @@ title: 'Committed examples data/API test lane'
 risk_tier: 3
 mode: chore
 lifecycle_state: active
+worktree: examples-test-lane
 created_at: '2026-06-27T04:35:43.173Z'
 updated_at: '2026-06-27T04:36:12.764Z'
 blast_radius:
