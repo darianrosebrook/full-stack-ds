@@ -139,7 +139,7 @@ export const switchTokenScopes = {
     "switch.size.md.track.radius": {
       name: "switch.size.md.track.radius",
       cssVar: "--fsds-switch-size-md-track-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "switch.size.md.track.padding": {
@@ -175,7 +175,7 @@ export const switchTokenScopes = {
     "switch.size.sm.track.radius": {
       name: "switch.size.sm.track.radius",
       cssVar: "--fsds-switch-size-sm-track-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "switch.size.sm.track.padding": {
@@ -211,7 +211,7 @@ export const switchTokenScopes = {
     "switch.size.lg.track.radius": {
       name: "switch.size.lg.track.radius",
       cssVar: "--fsds-switch-size-lg-track-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "switch.size.lg.track.padding": {

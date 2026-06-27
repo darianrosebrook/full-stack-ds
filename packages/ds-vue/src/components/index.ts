@@ -25,6 +25,8 @@ export { default as CardFooter } from "./Card/CardFooter.vue";
 export { default as CardHeader } from "./Card/CardHeader.vue";
 export { default as Checkbox } from "./Checkbox/Checkbox.vue";
 export { default as Chip } from "./Chip/Chip.vue";
+export { default as CodeBlock } from "./CodeBlock/CodeBlock.vue";
+export { default as CodeSnippet } from "./CodeSnippet/CodeSnippet.vue";
 export { default as Command } from "./Command/Command.vue";
 export { default as CommandGroup } from "./Command/CommandGroup.vue";
 export { default as CommandItem } from "./Command/CommandItem.vue";

@@ -1,4 +1,5 @@
 import type { FrameworkValidationPlan } from "../types.js";
+import type { AdmissionDescriptor } from "../admission-descriptor.js";
 
 export const svelteValidationPlan: FrameworkValidationPlan = {
   framework: "svelte",
@@ -22,4 +23,13 @@ export const svelteValidationPlan: FrameworkValidationPlan = {
     parse: "covered_by_typecheck",
     template: "covered_by_typecheck",
   },
+};
+
+/** Svelte's self-declared rail admission facts (authored beside the plan). */
+export const svelteAdmissionDescriptor: AdmissionDescriptor = {
+  id: "svelte",
+  outputTreeRelPath: "packages/ds-svelte/src/components",
+  sourceExtensions: [".svelte", ".ts"],
+  plan: svelteValidationPlan,
+  reportRank: 2,
 };

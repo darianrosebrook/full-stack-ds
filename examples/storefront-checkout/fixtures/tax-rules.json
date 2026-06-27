@@ -1,0 +1,9 @@
+{
+  "defaultRateBps": 0,
+  "rules": [
+    { "region": "CA", "rateBps": 825 },
+    { "region": "NY", "rateBps": 800 },
+    { "region": "TX", "rateBps": 625 },
+    { "region": "OR", "rateBps": 0 }
+  ]
+}

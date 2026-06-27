@@ -150,13 +150,13 @@ export const inputTokenScopes = {
     "input.size.radius.default": {
       name: "input.size.radius.default",
       cssVar: "--fsds-input-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "input.size.border.default": {
       name: "input.size.border.default",
       cssVar: "--fsds-input-size-border-default",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "input.space.inline.default": {

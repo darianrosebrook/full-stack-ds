@@ -1,5 +1,5 @@
 // @generated:start imports
-import type { StyleProp, ViewStyle } from "react-native";
+import type { AccessibilityRole, StyleProp, ViewStyle } from "react-native";
 import { Text as RNText, View } from "react-native";
 import { type ReactNode, useMemo } from "react";
 import { useFsdsTheme } from "../../tokens";
@@ -36,6 +36,7 @@ export interface SkeletonProps {
 export function Skeleton({
   variant = "block",
   animate = "shimmer",
+  decorative = true,
   ariaLabel,
   children,
   style,
@@ -51,8 +52,11 @@ export function Skeleton({
     <View
       testID={testID}
       style={[styles.root, variantStyleForVariant, variantStyleForAnimate, style]}
+      accessibilityRole={(((decorative ? "presentation" : "status") === "presentation" ? "none" : (decorative ? "presentation" : "status")) as AccessibilityRole)}
+      accessible={!(String((decorative ? "true" : "false")) === "true")}
       accessibilityLabel={accessibilityLabel ?? ariaLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
+      accessibilityState={{ busy: String((decorative ? "false" : "true")) === "true" }}
     >
       {typeof children === "string" ? <RNText>{children}</RNText> : children}
     </View>

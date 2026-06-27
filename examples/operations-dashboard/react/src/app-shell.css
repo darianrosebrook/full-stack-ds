@@ -1,0 +1,120 @@
+/*
+ * App-shell layout CSS for the operations-dashboard React lane.
+ *
+ * SCOPE BOUNDARY (see spec.md "Falsifiers" and README "Findings"):
+ * This file may style ONLY the page frame that no design-system component is
+ * responsible for: the overall grid, the three columns, sticky regions, the
+ * toast stack position, and responsive collapse. It must NOT supply density,
+ * status color, focus styling, overlay layering, or any component state
+ * indication — those come from the package.
+ *
+ * KNOWN BOUNDARY GAP (recorded as a finding, NOT silently worked around):
+ *   `.ops-row-selected` below tints the selected queue row. The package Table /
+ *   TableRow expose no row-selection channel or selected-state styling, so the
+ *   app has to indicate selection itself. This is the one place this file
+ *   crosses from "page frame" into "state indication," and it is logged in the
+ *   README findings as a missing-public-export against Table.
+ */
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+}
+
+.ops-shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-block-size: 100vh;
+}
+
+/* Header band: title + summary tiles + dev toggle, sticky to the top. */
+.ops-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+}
+
+.ops-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ops-failtoggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-inline-start: auto;
+}
+
+/* Three-pane body: filter rail | queue | detail. */
+.ops-body {
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 2fr) minmax(280px, 1.2fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 0 1.5rem 1.5rem;
+}
+
+/* Rail and detail are sticky so the queue scrolls independently. */
+.ops-rail,
+.ops-detail {
+  position: sticky;
+  inset-block-start: 5rem;
+}
+
+.ops-queue {
+  min-inline-size: 0; /* allow the dense table to shrink/scroll, not overflow */
+}
+
+/* Toast stack: bottom-right, above overlays. Position only — the Toast
+   component owns its own surface, color, and dismissal affordances. */
+.ops-toasts {
+  position: fixed;
+  inset-block-end: 1rem;
+  inset-inline-end: 1rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* FINDING (see header): selected-row indication the package Table does not
+   own. Uses currentColor tint so it does not invent new palette values. */
+.ops-row-selected {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+/* Severity checkbox group: page-frame spacing only. */
+.ops-severity {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.ops-check-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive collapse: stack the three panes on narrow viewports. */
+@media (max-width: 900px) {
+  .ops-body {
+    grid-template-columns: 1fr;
+  }
+
+  .ops-rail,
+  .ops-detail {
+    position: static;
+  }
+}

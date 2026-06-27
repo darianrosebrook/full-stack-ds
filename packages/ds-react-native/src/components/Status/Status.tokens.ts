@@ -101,7 +101,7 @@ export const statusTokenScopes = {
     "status.size.radius.default": {
       name: "status.size.radius.default",
       cssVar: "--fsds-status-size-radius-default",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "status.size.minHeight": {
@@ -119,7 +119,7 @@ export const statusTokenScopes = {
     "status.size.border.default": {
       name: "status.size.border.default",
       cssVar: "--fsds-status-size-border-default",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "status.text.weight": {

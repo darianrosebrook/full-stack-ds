@@ -43,7 +43,7 @@ export class CardElement extends LitElement {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
@@ -61,8 +61,8 @@ export class CardElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-flat, none);
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -130,14 +130,9 @@ export class CardElement extends LitElement {
       box-shadow: var(--fsds-card-elevation-resting);
       border-inline-start-width: var(--fsds-card-size-statusAccent-width);
       border-inline-start-color: var(--fsds-card-color-statusAccent-default);
-      transition-property: box-shadow, border-color, background-color;
+      transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        background-color: var(--fsds-card-color-background-hover);
-        box-shadow: var(--fsds-card-elevation-raised);
-      }
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
@@ -145,6 +140,17 @@ export class CardElement extends LitElement {
         outline-offset: var(--fsds-card-focus-ring-offset);
         outline-style: solid;
       }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover);
+      box-shadow: var(--fsds-card-elevation-raised);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting);
+      transform: translateY(0);
     }
 
     .card--inset {
@@ -234,6 +240,7 @@ export class CardElement extends LitElement {
       'card': true,
       [`card--${this.status}`]: !!this.status,
       [`card--${this.density}`]: !!this.density,
+      'card--interactive': !!this.interactive,
     };
     return html`<fsds-stack role="group" class=${classMap(classes)}><slot></slot></fsds-stack>`;
   }
@@ -265,7 +272,7 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
@@ -283,8 +290,8 @@ export class CardHeaderElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-flat, none);
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -352,14 +359,9 @@ export class CardHeaderElement extends LitElement {
       box-shadow: var(--fsds-card-elevation-resting);
       border-inline-start-width: var(--fsds-card-size-statusAccent-width);
       border-inline-start-color: var(--fsds-card-color-statusAccent-default);
-      transition-property: box-shadow, border-color, background-color;
+      transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        background-color: var(--fsds-card-color-background-hover);
-        box-shadow: var(--fsds-card-elevation-raised);
-      }
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
@@ -367,6 +369,17 @@ export class CardHeaderElement extends LitElement {
         outline-offset: var(--fsds-card-focus-ring-offset);
         outline-style: solid;
       }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover);
+      box-shadow: var(--fsds-card-elevation-raised);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting);
+      transform: translateY(0);
     }
 
     .card--inset {
@@ -475,7 +488,7 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
@@ -493,8 +506,8 @@ export class CardContentElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-flat, none);
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -562,14 +575,9 @@ export class CardContentElement extends LitElement {
       box-shadow: var(--fsds-card-elevation-resting);
       border-inline-start-width: var(--fsds-card-size-statusAccent-width);
       border-inline-start-color: var(--fsds-card-color-statusAccent-default);
-      transition-property: box-shadow, border-color, background-color;
+      transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        background-color: var(--fsds-card-color-background-hover);
-        box-shadow: var(--fsds-card-elevation-raised);
-      }
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
@@ -577,6 +585,17 @@ export class CardContentElement extends LitElement {
         outline-offset: var(--fsds-card-focus-ring-offset);
         outline-style: solid;
       }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover);
+      box-shadow: var(--fsds-card-elevation-raised);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting);
+      transform: translateY(0);
     }
 
     .card--inset {
@@ -685,7 +704,7 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
@@ -703,8 +722,8 @@ export class CardFooterElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-flat, none);
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -772,14 +791,9 @@ export class CardFooterElement extends LitElement {
       box-shadow: var(--fsds-card-elevation-resting);
       border-inline-start-width: var(--fsds-card-size-statusAccent-width);
       border-inline-start-color: var(--fsds-card-color-statusAccent-default);
-      transition-property: box-shadow, border-color, background-color;
+      transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        background-color: var(--fsds-card-color-background-hover);
-        box-shadow: var(--fsds-card-elevation-raised);
-      }
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
@@ -787,6 +801,17 @@ export class CardFooterElement extends LitElement {
         outline-offset: var(--fsds-card-focus-ring-offset);
         outline-style: solid;
       }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover);
+      box-shadow: var(--fsds-card-elevation-raised);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting);
+      transform: translateY(0);
     }
 
     .card--inset {
@@ -895,7 +920,7 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-card-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
       --fsds-card-size-padding-inset: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-card-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-card-size-radius-default: var(--fsds-semantic-shape-radius-medium, 8px);
       --fsds-card-size-gap-default: var(--fsds-core-spacing-size-03, 4px);
       --fsds-card-typography-lineHeight-heading: var(--fsds-semantic-typography-line-height-heading, 1);
       --fsds-card-typography-lineHeight-normal: var(--fsds-semantic-typography-line-height-normal, 1.5);
@@ -913,8 +938,8 @@ export class CardDescriptionElement extends LitElement {
       --fsds-card-color-badge-accent-foreground: var(--fsds-semantic-color-foreground-on-brand, #ffffff);
       --fsds-card-color-statusAccent-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-card-size-statusAccent-width: var(--fsds-core-spacing-size-02, 2px);
-      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-flat, none);
-      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-resting: var(--fsds-semantic-elevation-surface-raised, 0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1));
+      --fsds-card-elevation-raised: var(--fsds-semantic-elevation-surface-floating, 0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1));
       --fsds-card-color-focus-ring: var(--fsds-semantic-focus-ring-color, #d9292b);
       --fsds-card-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
       --fsds-card-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
@@ -982,14 +1007,9 @@ export class CardDescriptionElement extends LitElement {
       box-shadow: var(--fsds-card-elevation-resting);
       border-inline-start-width: var(--fsds-card-size-statusAccent-width);
       border-inline-start-color: var(--fsds-card-color-statusAccent-default);
-      transition-property: box-shadow, border-color, background-color;
+      transition-property: box-shadow, border-color, background-color, transform;
       transition-duration: 150ms;
       transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        background-color: var(--fsds-card-color-background-hover);
-        box-shadow: var(--fsds-card-elevation-raised);
-      }
 
       &:focus-visible {
         outline-width: var(--fsds-card-focus-ring-width);
@@ -997,6 +1017,17 @@ export class CardDescriptionElement extends LitElement {
         outline-offset: var(--fsds-card-focus-ring-offset);
         outline-style: solid;
       }
+    }
+
+    .card--interactive:hover {
+      background-color: var(--fsds-card-color-background-hover);
+      box-shadow: var(--fsds-card-elevation-raised);
+      transform: translateY(-1px);
+    }
+
+    .card--interactive:active {
+      box-shadow: var(--fsds-card-elevation-resting);
+      transform: translateY(0);
     }
 
     .card--inset {

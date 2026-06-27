@@ -1,0 +1,9 @@
+{
+  "currentUserId": "u-ada",
+  "authors": [
+    { "id": "u-ada", "name": "Ada Lovelace", "handle": "ada", "avatar": "/img/ada.png" },
+    { "id": "u-grace", "name": "Grace Hopper", "handle": "amazing_grace", "avatar": "/img/grace.png" },
+    { "id": "u-alan", "name": "Alan Turing", "handle": "aturing", "avatar": "/img/alan.png" },
+    { "id": "u-katherine", "name": "Katherine Johnson", "handle": "kjohnson", "avatar": "/img/katherine.png" }
+  ]
+}

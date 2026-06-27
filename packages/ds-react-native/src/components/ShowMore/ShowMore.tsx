@@ -65,7 +65,7 @@ export function ShowMore({
         style={styles.trigger}
         onPress={() => setExpandedValue(!expanded)}
         accessibilityRole="button"
-        accessibilityState={{ expanded: Boolean(expanded) }}
+        accessibilityState={{ expanded: String(expanded) === "true" }}
       >
         <RNText>{(expanded ? showLessLabel : showMoreLabel)}</RNText>
       </Pressable>

@@ -17,7 +17,7 @@
       "resolvesTo": "skeleton.anim.easing"
     },
     "animation": {
-      "literal": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
+      "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
       "platforms": ["web"]
     }
   },
@@ -47,13 +47,13 @@
     }
   },
   "--block": {
-    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md"
     }
   },
   "--text": {
-    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.small", "fallback": "4px" },
+    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.small", "fallback": "4px" },
     "skeleton.shape.height.text": { "resolvesTo": "core.typography.ramp.4", "fallback": "1rem" },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md"
@@ -63,7 +63,7 @@
     }
   },
   "--avatar": {
-    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.full", "fallback": "9999px" },
+    "skeleton.radius.md": { "resolvesTo": "semantic.shape.control.radius.pill", "fallback": "9999px" },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md"
     },
@@ -73,7 +73,7 @@
     }
   },
   "--media": {
-    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md"
     },
@@ -87,7 +87,7 @@
     }
   },
   "--dataviz": {
-    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md"
     },
@@ -101,7 +101,7 @@
     }
   },
   "--actions": {
-    "skeleton.radius.md": { "resolvesTo": "core.shape.radius.03", "fallback": "8px" },
+    "skeleton.radius.md": { "resolvesTo": "semantic.shape.radius.medium", "fallback": "8px" },
     "border-radius": {
       "resolvesTo": "skeleton.radius.md"
     },
@@ -116,7 +116,7 @@
   },
   "--shimmer": {
     "animation": {
-      "literal": "skeleton-shimmer var(--fsds-skeleton-anim-duration, 400ms) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
+      "literal": "skeleton-shimmer calc(var(--fsds-skeleton-anim-duration, 400ms) * 2) var(--fsds-skeleton-anim-easing, cubic-bezier(0.4, 0, 0.2, 1)) infinite",
       "platforms": ["web"]
     }
   },

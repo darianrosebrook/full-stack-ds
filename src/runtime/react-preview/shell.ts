@@ -89,6 +89,7 @@ ${ERR_BRIDGE}
 const entryUrl = ${JSON.stringify("/@id/")} + ${JSON.stringify(entryId)};
 try {
   await import(/* @vite-ignore */ entryUrl);
+  document.body.setAttribute("data-fsds-ready", "");
   parent.postMessage({ type: "fsds:ready" }, "*");
 } catch (e) {
   showError(e?.stack || e?.message || String(e));

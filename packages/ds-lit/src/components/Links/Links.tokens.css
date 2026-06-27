@@ -25,7 +25,7 @@
   --fsds-links-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
   --fsds-links-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
   --fsds-links-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-  --fsds-links-focus-ring-radius: var(--fsds-core-shape-radius-small, 2px);
+  --fsds-links-focus-ring-radius: var(--fsds-semantic-shape-radius-small, 2px);
   --fsds-links-size-fontSize-small: var(--fsds-core-typography-ramp-3, 0.875rem);
   --fsds-links-size-fontSize-medium: var(--fsds-core-typography-ramp-4, 1rem);
   --fsds-links-size-fontSize-large: var(--fsds-core-typography-ramp-5, 1.125rem);

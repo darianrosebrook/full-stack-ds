@@ -21,7 +21,11 @@ export interface ComponentSources {
 
 export interface PropMember {
   name: string;
-  type: string;
+  type?: string;
+  propType?: {
+    kind?: string;
+    [key: string]: unknown;
+  };
   description?: string;
   default?: unknown;
   required?: boolean;

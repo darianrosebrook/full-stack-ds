@@ -165,4 +165,17 @@ describe("FrameworkPreview", () => {
       expect(iframe.getAttribute("srcdoc")).toBeNull();
     },
   );
+
+  it("keeps new-pipeline URLs stable when previews are driven over the message bus", () => {
+    render(
+      <FrameworkPreview
+        framework="vue"
+        config={{ props: { text: "Panel text", as: "kbd" }, tokenCss: "" }}
+        {...COMMON_PROPS}
+      />,
+    );
+
+    const iframe = getIframe();
+    expect(iframe.getAttribute("src")).toBe("/preview/vue/Button");
+  });
 });

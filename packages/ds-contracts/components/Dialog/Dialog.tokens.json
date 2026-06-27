@@ -45,9 +45,9 @@
     "layer": "semantic"
   },
   "dialog.size.radius.default": {
-    "resolvesTo": "core.shape.radius.large",
+    "resolvesTo": "semantic.shape.radius.large",
     "fallback": "16px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "dialog.size.sm.width": {
     "literal": "400px"

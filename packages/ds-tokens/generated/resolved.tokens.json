@@ -2276,6 +2276,14 @@
                 "light": "#b8b8b8",
                 "dark": "#474647"
               }
+            },
+            "disabled": {
+              "$type": "color",
+              "$description": "Secondary action disabled background. Explicit intent path (neutral-valued) so a disabled secondary control reaches its own token instead of inheriting primary.disabled.",
+              "$value": {
+                "light": "#b8b8b8",
+                "dark": "#474647"
+              }
             }
           },
           "danger": {
@@ -2293,6 +2301,14 @@
               "$type": "color",
               "$description": "Destructive action active state",
               "$value": "#900909"
+            },
+            "disabled": {
+              "$type": "color",
+              "$description": "Destructive action disabled background. Explicit intent path (neutral-valued) so a disabled destructive control reaches its own token instead of inheriting primary.disabled.",
+              "$value": {
+                "light": "#b8b8b8",
+                "dark": "#474647"
+              }
             }
           }
         },
@@ -3608,10 +3624,17 @@
         },
         "color": {
           "$type": "color",
-          "$description": "Focus ring color — references theme-aware semantic border-focus so dark/light themes invert correctly.",
+          "$description": "Default focus ring color — theme-aware semantic border-focus (neutral blue). Intent-bearing surfaces should use focus.ring.intent.<intent> so the ring matches the control's intent instead of the generic blue.",
           "$value": {
             "light": "#0566fe",
             "dark": "#0566fe"
+          }
+        },
+        "intent": {
+          "danger": {
+            "$type": "color",
+            "$description": "Focus ring color for destructive/danger and invalid controls — matches the danger border so a focused destructive button or invalid field reads red, not the generic blue focus ring.",
+            "$value": "#b31b1b"
           }
         },
         "style": {
@@ -3820,7 +3843,7 @@
       "background": {
         "hover": {
           "$type": "color",
-          "$description": "Secondary action hover state",
+          "$description": "NEUTRAL-ONLY hover background for neutral/transparent surfaces (list rows, menu items, ghost/outline controls). NOT intent-aware — a brand/intent surface that uses this reads gray on hover instead of its intent-dark. Intent surfaces must use semantic.color.action.background.<intent>.hover.",
           "$value": {
             "light": "#d0d0d0",
             "dark": "#313131"
@@ -3828,7 +3851,7 @@
         },
         "active": {
           "$type": "color",
-          "$description": "Secondary action active state",
+          "$description": "NEUTRAL-ONLY active/pressed background for neutral/transparent surfaces. NOT intent-aware. Intent surfaces use semantic.color.action.background.<intent>.active.",
           "$value": {
             "light": "#b8b8b8",
             "dark": "#474647"
@@ -3836,7 +3859,7 @@
         },
         "selected": {
           "$type": "color",
-          "$description": "Highlight background for selections",
+          "$description": "Selection highlight background (neutral selection affordance, e.g. selected list row). Not an intent surface color.",
           "$value": {
             "light": "#5cc2fb",
             "dark": "#002782"
@@ -3844,7 +3867,7 @@
         },
         "disabled": {
           "$type": "color",
-          "$description": "Primary action disabled state",
+          "$description": "NEUTRAL disabled background, shared across intents (disabled controls are conventionally neutral). Canonical disabled-bg home; intent variants intentionally fall back here rather than carrying per-intent disabled tokens.",
           "$value": {
             "light": "#b8b8b8",
             "dark": "#474647"
@@ -3854,7 +3877,7 @@
       "border": {
         "hover": {
           "$type": "color",
-          "$description": "Secondary action border hover",
+          "$description": "NEUTRAL-ONLY hover border for neutral/outline controls. NOT intent-aware — intent surfaces use semantic.color.action.border.<intent>.hover.",
           "$value": {
             "light": "#888889",
             "dark": "#727272"

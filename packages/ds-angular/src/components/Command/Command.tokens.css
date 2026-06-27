@@ -6,8 +6,8 @@
   --fsds-command-color-borderLight: var(--fsds-semantic-color-border-subtle, #cecece);
   --fsds-command-color-text: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-command-color-textMuted: var(--fsds-semantic-color-foreground-tertiary, #717171);
-  --fsds-command-border-width: var(--fsds-core-shape-border-width-hairline, 1px);
-  --fsds-command-border-radius: var(--fsds-core-shape-radius-medium, 8px);
+  --fsds-command-border-width: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
+  --fsds-command-border-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
   --fsds-command-size-maxWidth: 640px;
   --fsds-command-size-maxHeight: 400px;
   --fsds-command-size-topOffset: 10vh;

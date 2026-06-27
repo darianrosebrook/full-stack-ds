@@ -60,14 +60,14 @@
     "layer": "core"
   },
   "select.size.radius.default": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "select.size.border.default": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "select.size.sm.height": {
     "resolvesTo": "semantic.control.size.sm.height",

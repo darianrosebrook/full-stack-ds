@@ -52,4 +52,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} aria-busy="true" aria-label={ariaLabel} role="status"></div>
+<div class={classes} role={(decorative ? "presentation" : "status")} aria-busy={(decorative ? "false" : "true")} aria-hidden={(decorative ? "true" : "false")} aria-label={ariaLabel}></div>

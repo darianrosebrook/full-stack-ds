@@ -133,25 +133,25 @@ export const buttonTokenScopes = {
     "button.color.border.focus": {
       name: "button.color.border.focus",
       cssVar: "--fsds-button-color-border-focus",
-      ref: "semantic.color.border.accent",
-      fallback: "#d9292b",
+      ref: "semantic.focus.ring.color",
+      fallback: "#0566fe",
     },
     "button.size.gap.default": {
       name: "button.size.gap.default",
       cssVar: "--fsds-button-size-gap-default",
-      ref: "core.spacing.size.04",
+      ref: "semantic.action.size.medium.gap",
       fallback: 8,
     },
     "button.size.radius": {
       name: "button.size.radius",
       cssVar: "--fsds-button-size-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "button.size.border": {
       name: "button.size.border",
       cssVar: "--fsds-button-size-border",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "button.text.weight": {
@@ -193,7 +193,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.4",
+      ref: "semantic.typography.action.02",
       fallback: 16,
     },
   },
@@ -249,7 +249,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.3",
+      ref: "semantic.typography.action.03",
       fallback: 14,
     },
   },
@@ -305,7 +305,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.4",
+      ref: "semantic.typography.action.02",
       fallback: 16,
     },
   },
@@ -361,7 +361,7 @@ export const buttonTokenScopes = {
     "button.size.fontSize.medium": {
       name: "button.size.fontSize.medium",
       cssVar: "--fsds-button-size-fontSize-medium",
-      ref: "core.typography.ramp.5",
+      ref: "semantic.typography.action.01",
       fallback: 18,
     },
   },
@@ -418,6 +418,11 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-color-background-active",
       ref: "semantic.color.action.background.secondary.active",
     },
+    "button.color.background.disabled": {
+      name: "button.color.background.disabled",
+      cssVar: "--fsds-button-color-background-disabled",
+      ref: "semantic.color.action.background.secondary.disabled",
+    },
     "button.color.foreground.default": {
       name: "button.color.foreground.default",
       cssVar: "--fsds-button-color-foreground-default",
@@ -463,6 +468,11 @@ export const buttonTokenScopes = {
       cssVar: "--fsds-button-color-background-active",
       ref: "semantic.color.action.background.danger.active",
     },
+    "button.color.background.disabled": {
+      name: "button.color.background.disabled",
+      cssVar: "--fsds-button-color-background-disabled",
+      ref: "semantic.color.action.background.danger.disabled",
+    },
     "button.color.foreground.default": {
       name: "button.color.foreground.default",
       cssVar: "--fsds-button-color-foreground-default",
@@ -477,6 +487,11 @@ export const buttonTokenScopes = {
       name: "button.color.border.hover",
       cssVar: "--fsds-button-color-border-hover",
       ref: "semantic.color.action.background.danger.hover",
+    },
+    "button.color.border.focus": {
+      name: "button.color.border.focus",
+      cssVar: "--fsds-button-color-border-focus",
+      ref: "semantic.focus.ring.intent.danger",
     },
   },
   "variant_ghost": {

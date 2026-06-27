@@ -27,14 +27,9 @@
   box-shadow: var(--fsds-card-elevation-resting);
   border-inline-start-width: var(--fsds-card-size-statusAccent-width);
   border-inline-start-color: var(--fsds-card-color-statusAccent-default);
-  transition-property: box-shadow, border-color, background-color;
+  transition-property: box-shadow, border-color, background-color, transform;
   transition-duration: 150ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    background-color: var(--fsds-card-color-background-hover);
-    box-shadow: var(--fsds-card-elevation-raised);
-  }
 
   &:focus-visible {
     outline-width: var(--fsds-card-focus-ring-width);
@@ -42,6 +37,17 @@
     outline-offset: var(--fsds-card-focus-ring-offset);
     outline-style: solid;
   }
+}
+
+.card--interactive:hover {
+  background-color: var(--fsds-card-color-background-hover);
+  box-shadow: var(--fsds-card-elevation-raised);
+  transform: translateY(-1px);
+}
+
+.card--interactive:active {
+  box-shadow: var(--fsds-card-elevation-resting);
+  transform: translateY(0);
 }
 
 .card--inset {

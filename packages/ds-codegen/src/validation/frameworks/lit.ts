@@ -1,4 +1,5 @@
 import type { FrameworkValidationPlan } from "../types.js";
+import type { AdmissionDescriptor } from "../admission-descriptor.js";
 
 /**
  * Lit admission rail (post CODEGEN-RAIL-LIT-TEMPLATE-ADMISSION-01).
@@ -69,4 +70,13 @@ export const litValidationPlan: FrameworkValidationPlan = {
   knownGaps: [
     "Declared analyzer-policy boundary (NOT a generated-output defect, NOT a binding-site type escape): the lit-analyzer rule `no-incompatible-type-binding` is disabled in the `typecheck:templates` script. lit-analyzer's literal-union strictness for several DOM attribute slots is narrower than the design-system contract type policy (e.g. `<input type=${this.type}>` against contract `type?: string`). Whether contract props should gain stricter per-attribute literal-union typing is a separate contract-policy slice because it affects all framework emitters and public APIs.",
   ],
+};
+
+/** Lit's self-declared rail admission facts (authored beside the plan). */
+export const litAdmissionDescriptor: AdmissionDescriptor = {
+  id: "lit",
+  outputTreeRelPath: "packages/ds-lit/src/components",
+  sourceExtensions: [".ts"],
+  plan: litValidationPlan,
+  reportRank: 3,
 };

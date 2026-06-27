@@ -131,7 +131,7 @@ function minimalContract(name: string): ComponentContract {
 
 describe("EvidencePanel — runtime-rail coverage (A1, A4)", () => {
   it("A1: a rail-covered component shows per-framework asserted facts incl. non-default mechanisms", () => {
-    // Progress is rail-covered with a non-default `value` fact (q-param + fixture).
+    // Progress is rail-covered with a non-default `value` fact over the config bus.
     const component = bundleFor(minimalContract("Progress"), {
       react: { component: { filename: "Progress.tsx", code: "" }, siblings: [] },
     });
@@ -141,9 +141,8 @@ describe("EvidencePanel — runtime-rail coverage (A1, A4)", () => {
     expect(screen.getByText("Runtime-rail coverage")).toBeInTheDocument();
     // default-prop facts asserted for all five frameworks (5 exact "asserted" cells)
     expect(screen.getAllByText("asserted")).toHaveLength(5);
-    // non-default: R/V/S/L via query-param (4), Angular via fixed fixture (1)
-    expect(screen.getAllByText("asserted (query-param)")).toHaveLength(4);
-    expect(screen.getAllByText("asserted (fixed fixture)")).toHaveLength(1);
+    // non-default: all five frameworks via config bus
+    expect(screen.getAllByText("asserted (config bus)")).toHaveLength(5);
     // the non-default prop is named, framed as coverage not pass/fail
     expect(container.textContent).toContain("non-default prop: value");
     expect(container.textContent).toContain("not a claim that the last CI run passed");

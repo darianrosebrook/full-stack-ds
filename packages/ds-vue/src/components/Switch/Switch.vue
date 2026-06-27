@@ -68,5 +68,6 @@ const classNames = computed(() => [
     <span :class="'switch__track'" aria-hidden="true">
       <span :class="'switch__thumb'"></span>
     </span>
+    <slot />
   </label>
 </template>

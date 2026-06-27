@@ -17,6 +17,10 @@ export interface SheetProps {
   onOpenChange?: (open: boolean) => void;
   side?: SheetSide;
   modal?: boolean;
+  slots?: {
+    title?: ReactNode;
+    description?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -30,6 +34,7 @@ export function Sheet({
   open: controlledOpenness,
   defaultOpen = false,
   onOpenChange,
+  slots,
   children,
   style,
   testID,
@@ -76,13 +81,13 @@ export function Sheet({
             <View
               style={styles.title}
             >
-              {typeof children === "string" ? <RNText>{children}</RNText> : children}
+              {slots?.title}
             </View>
             <RNText
               style={styles.description}
               accessibilityRole="text"
             >
-              {children}
+              {slots?.description}
             </RNText>
             <Pressable
               style={styles.close}

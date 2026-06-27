@@ -10,6 +10,8 @@ export { CalendarComponent, CalendarHeaderComponent } from "./Calendar/Calendar.
 export { CardComponent, CardContentComponent, CardDescriptionComponent, CardFooterComponent, CardHeaderComponent } from "./Card/Card.component.js";
 export { CheckboxComponent } from "./Checkbox/Checkbox.component.js";
 export { ChipComponent } from "./Chip/Chip.component.js";
+export { CodeBlockComponent } from "./CodeBlock/CodeBlock.component.js";
+export { CodeSnippetComponent } from "./CodeSnippet/CodeSnippet.component.js";
 export { CommandComponent, CommandGroupComponent, CommandItemComponent, CommandListComponent } from "./Command/Command.component.js";
 export { DetailsComponent, DetailsContentComponent } from "./Details/Details.component.js";
 export { DialogComponent, DialogBodyComponent, DialogFooterComponent, DialogHeaderComponent, DialogTitleComponent } from "./Dialog/Dialog.component.js";

@@ -19,10 +19,8 @@ import path from "node:path";
 import {
   RAIL_COVERAGE,
   RAIL_DEFAULT_FRAMEWORKS,
-  RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS,
-  RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS,
+  RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS,
 } from "./rail-coverage";
-import { ANGULAR_NONDEFAULT_FIXTURES } from "./angular-compiler/nondefault-fixtures";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const RAIL_SPEC_PATH = path.resolve(here, "../../e2e/runtime-rail.spec.ts");
@@ -77,10 +75,6 @@ console.log(
         nonDefault: Object.fromEntries([...surface.nonDefault.entries()].sort()),
         FRAMEWORKS: specFrameworks,
         NONDEFAULT_FRAMEWORKS: specNonDefaultFrameworks,
-        angularFixtures: ANGULAR_NONDEFAULT_FIXTURES.map((f) => ({
-          component: f.component,
-          props: Object.keys(f.props),
-        })),
       },
       null,
       2,
@@ -115,34 +109,17 @@ describe("rail-coverage projection coherence (A2)", () => {
     }
   });
 
-  it("non-default query-param frameworks mirror the rail NONDEFAULT_FRAMEWORKS constant", () => {
-    expect(sorted(RAIL_NONDEFAULT_QUERY_PARAM_FRAMEWORKS)).toEqual(
+  it("non-default config-bus frameworks mirror the rail NONDEFAULT_FRAMEWORKS constant", () => {
+    expect(sorted(RAIL_NONDEFAULT_CONFIG_BUS_FRAMEWORKS)).toEqual(
       sorted(specNonDefaultFrameworks),
     );
     for (const e of RAIL_COVERAGE) {
       if (e.nonDefault) {
-        expect(sorted(e.nonDefault.queryParamFrameworks)).toEqual(
+        expect(sorted(e.nonDefault.configBusFrameworks)).toEqual(
           sorted(specNonDefaultFrameworks),
         );
       }
     }
   });
 
-  it("non-default Angular fixture coverage matches ANGULAR_NONDEFAULT_FIXTURES", () => {
-    const fixtureComponents = ANGULAR_NONDEFAULT_FIXTURES.map((f) => f.component);
-    const projectedFixtureComponents = RAIL_COVERAGE.filter((e) =>
-      e.nonDefault?.fixtureFrameworks.includes("angular"),
-    ).map((e) => e.component);
-    expect(sorted(projectedFixtureComponents)).toEqual(sorted(fixtureComponents));
-
-    // Each projected entry's fixtureFrameworks is exactly Angular, and its
-    // non-default prop matches the prop the fixture actually bakes.
-    for (const fixture of ANGULAR_NONDEFAULT_FIXTURES) {
-      const entry = RAIL_COVERAGE.find((e) => e.component === fixture.component);
-      expect(entry?.nonDefault?.fixtureFrameworks).toEqual(RAIL_NONDEFAULT_FIXTURE_FRAMEWORKS);
-      for (const propKey of Object.keys(fixture.props)) {
-        expect(entry?.nonDefault?.props).toContain(propKey);
-      }
-    }
-  });
 });

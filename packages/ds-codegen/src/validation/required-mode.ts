@@ -99,6 +99,7 @@ import {
   type FrameworkId,
   type RailDiagnostic,
 } from "./types.js";
+import { admissionComponentTrees } from "./admission-descriptor.js";
 
 /** What `readEmissionManifestIfPresent` may return. */
 export type ManifestReadResult =
@@ -109,18 +110,14 @@ export type ManifestReadResult =
 
 /**
  * Frameworks whose `src/components` tree is walked for the
- * untracked-generated check. Mirrors the FrameworkId union; kept
- * here as data so a future framework addition flows through both
- * the rail and the verifier.
+ * untracked-generated check. Derived from the admission-descriptor
+ * registry (single source of truth) — a target's generated-tree
+ * relPath is declared once on its descriptor and flows here, into
+ * git-range-scope, and into the report, so the three can no longer
+ * drift apart.
  */
-const COMPONENT_TREES: ReadonlyArray<{ framework: FrameworkId; relPath: string }> = [
-  { framework: "react", relPath: "packages/ds-react/src/components" },
-  { framework: "vue", relPath: "packages/ds-vue/src/components" },
-  { framework: "svelte", relPath: "packages/ds-svelte/src/components" },
-  { framework: "lit", relPath: "packages/ds-lit/src/components" },
-  { framework: "angular", relPath: "packages/ds-angular/src/components" },
-  { framework: "react-native", relPath: "packages/ds-react-native/src/components" },
-];
+const COMPONENT_TREES: ReadonlyArray<{ framework: FrameworkId; relPath: string }> =
+  admissionComponentTrees();
 
 /**
  * Canonical sha256 digest grammar

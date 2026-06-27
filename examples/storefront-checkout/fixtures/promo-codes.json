@@ -1,0 +1,7 @@
+{
+  "promos": [
+    { "code": "SAVE10", "kind": "percent", "value": 10, "minSubtotalCents": 0 },
+    { "code": "TENOFF", "kind": "fixed", "value": 1000, "minSubtotalCents": 4000 },
+    { "code": "HALFOFF", "kind": "percent", "value": 50, "minSubtotalCents": 10000 }
+  ]
+}

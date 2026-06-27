@@ -39,7 +39,7 @@ export class ToggleSwitchElement extends LitElement {
       --fsds-toggle-switch-color-background-default: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toggle-switch-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toggle-switch-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
-      --fsds-toggle-switch-border-radius-default: var(--fsds-core-shape-radius-full, 9999px);
+      --fsds-toggle-switch-border-radius-default: var(--fsds-semantic-shape-control-radius-pill, 9999px);
       --fsds-toggle-switch-motion-duration-fast: var(--fsds-core-motion-duration-short, 150ms);
       --fsds-toggle-switch-color-background-hover: var(--fsds-semantic-interaction-background-hover, #efefef);
       --fsds-toggle-switch-color-background-checked: var(--fsds-semantic-color-action-background-primary-default, #d9292b);

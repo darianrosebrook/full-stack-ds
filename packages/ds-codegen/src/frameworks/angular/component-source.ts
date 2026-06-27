@@ -914,9 +914,11 @@ function generateDomTreeImports(ir: ComponentIR): string {
   // (IR-DOM-ITERATE-CAPABILITY-01).
   const usesNgIf = ir.dom ? treeUsesNgIf(ir.dom) : false;
   const usesNgFor = ir.dom ? treeUsesNgFor(ir.dom) : false;
+  const usesNgSwitch = Boolean(ir.root.polymorphicTagProp);
   const commonNames = ["NgClass"];
   if (usesNgIf) commonNames.push("NgIf");
   if (usesNgFor) commonNames.push("NgFor");
+  if (usesNgSwitch) commonNames.push("NgSwitch", "NgSwitchCase");
   const commonImports = commonNames.join(", ");
   const lines: string[] = [
     `import { ${coreNames.join(", ")} } from "@angular/core";`,
@@ -966,6 +968,7 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     channelByName,
     isRoot: true,
     autoDismissPause: autoDismissActive,
+    rootPolymorphicTag: ir.root.polymorphicTagProp,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
@@ -982,6 +985,9 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const decoratorImports = ["NgClass"];
   if (usesNgIf) decoratorImports.push("NgIf");
   if (usesNgFor) decoratorImports.push("NgFor");
+  if (ir.root.polymorphicTagProp) {
+    decoratorImports.push("NgSwitch", "NgSwitchCase");
+  }
   // componentRef: each referenced standalone component class must be in the
   // @Component imports[] so Angular resolves its selector in this template.
   for (const refImport of resolveComponentRefImports(ir.name, ir.dom, "angular")) {
@@ -1275,6 +1281,11 @@ interface AngularRenderContext {
    * `iterationLocal`-kind bindings.
    */
   enclosingIteration?: IterationIR;
+  rootPolymorphicTag?: {
+    propName: string;
+    defaultTag: string;
+    allowedTags: string[];
+  };
 }
 
 function renderAngularDomNode(
@@ -1445,24 +1456,35 @@ function renderAngularDomNode(
   const tag = node.componentRef
     ? `fsds-${toKebab(node.componentRef)}`
     : node.tag;
-  const isVoidEl = node.componentRef
-    ? false
-    : VOID_HTML_ELEMENTS_ANGULAR.has(tag);
-  // Angular custom-element components are never self-closing in templates;
-  // emit an explicit open/close pair even when childless.
-  const selfCloses = isVoidEl;
+
+  const renderElementBody = (tagName: string, extraAttrs: string[] = []): string => {
+    const branchAttrs = [...attrs, ...extraAttrs];
+    const branchSelfCloses = VOID_HTML_ELEMENTS_ANGULAR.has(tagName);
+    if (allChildren.length === 0 && branchSelfCloses) {
+      return `${pad}<${tagName}${formatAngularAttrs(branchAttrs)} />`;
+    }
+    if (allChildren.length === 0) {
+      return `${pad}<${tagName}${formatAngularAttrs(branchAttrs)}></${tagName}>`;
+    }
+    return [
+      `${pad}<${tagName}${formatAngularAttrs(branchAttrs)}>`,
+      ...allChildren,
+      `${pad}</${tagName}>`,
+    ].join("\n");
+  };
 
   let body: string;
-  if (allChildren.length === 0 && selfCloses) {
-    body = `${pad}<${tag}${formatAngularAttrs(attrs)} />`;
-  } else if (allChildren.length === 0) {
-    body = `${pad}<${tag}${formatAngularAttrs(attrs)}></${tag}>`;
-  } else {
+  if (ctx.isRoot && ctx.rootPolymorphicTag && !node.componentRef) {
+    const switchExpr = safePropertyExpr(ctx.rootPolymorphicTag.propName);
     body = [
-      `${pad}<${tag}${formatAngularAttrs(attrs)}>`,
-      ...allChildren,
-      `${pad}</${tag}>`,
+      `${pad}<ng-container [ngSwitch]="${switchExpr} || '${ctx.rootPolymorphicTag.defaultTag}'">`,
+      ...ctx.rootPolymorphicTag.allowedTags.map((tagName) =>
+        renderElementBody(tagName, [`*ngSwitchCase="'${tagName}'"`]).replace(/^/gm, "  "),
+      ),
+      `${pad}</ng-container>`,
     ].join("\n");
+  } else {
+    body = renderElementBody(tag);
   }
 
   let withIfGuard = body;
@@ -1582,7 +1604,7 @@ function angularAttrBinding(
       ? `[${refBinding.targetProp}]`
       : `[attr.${attr}]`;
   }
-  if (attr.startsWith("data-") || attr.startsWith("aria-")) {
+  if (attr === "role" || attr.startsWith("data-") || attr.startsWith("aria-")) {
     return `[attr.${attr}]`;
   }
   if (tag && ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG[tag]?.has(attr)) {

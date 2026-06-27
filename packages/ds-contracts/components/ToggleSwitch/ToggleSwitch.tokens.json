@@ -50,9 +50,9 @@
     "layer": "semantic"
   },
   "toggle-switch.border.radius.default": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "toggle-switch.motion.duration.fast": {
     "resolvesTo": "core.motion.duration.short",

@@ -108,7 +108,7 @@ export const otpTokenScopes = {
     "otp.size.radius.default": {
       name: "otp.size.radius.default",
       cssVar: "--fsds-otp-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "otp.color.border.accent": {

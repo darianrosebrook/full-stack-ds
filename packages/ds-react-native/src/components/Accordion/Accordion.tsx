@@ -57,7 +57,7 @@ export function Accordion({
           <Pressable
             style={styles.trigger}
             accessibilityRole="button"
-            accessibilityState={{ expanded: Boolean(openness) }}
+            accessibilityState={{ expanded: String(openness) === "true" }}
           >
             {typeof children === "string" ? <RNText>{children}</RNText> : children}
             <View

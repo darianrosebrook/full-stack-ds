@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass, NgIf } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useTextField } from "./useTextField.js";
 // @generated:end
@@ -21,31 +21,22 @@ import { useTextField } from "./useTextField.js";
 @Component({
   selector: "fsds-text-field",
   standalone: true,
-  imports: [NgClass, NgIf],
+  imports: [NgClass],
   template: `<div [ngClass]="classes()">
-  <ng-container *ngIf="label">
-    <label [ngClass]="'text-field__label'">
-      <ng-content />
-    </label>
-  </ng-container>
+  <label [ngClass]="'text-field__label'">
+    <ng-content select="[slot=label]" />
+  </label>
   <input [ngClass]="'text-field__field'" (change)="handleValueChange($event)" [type]="type" [value]="behavior.value()" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-describedby]="ariaDescribedby" />
-  <ng-container *ngIf="description">
-    <span [ngClass]="'text-field__description'">
-      <ng-content />
-    </span>
-  </ng-container>
-  <ng-container *ngIf="error">
-    <span [ngClass]="'text-field__error'" role="alert">
-      <ng-content />
-    </span>
-  </ng-container>
+  <span [ngClass]="'text-field__description'">
+    <ng-content select="[slot=description]" />
+  </span>
+  <span [ngClass]="'text-field__error'" role="alert">
+    <ng-content select="[slot=error]" />
+  </span>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextFieldComponent {
-  @Input() label?: unknown;
-  @Input() description?: unknown;
-  @Input() error?: unknown;
   @Input() type?: string;
   @Input() value?: string;
   @Input() defaultValue?: string;

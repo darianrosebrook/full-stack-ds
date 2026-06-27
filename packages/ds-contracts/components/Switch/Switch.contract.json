@@ -73,6 +73,9 @@
               "part": "thumb"
             }
           ]
+        },
+        {
+          "tag": "children"
         }
       ]
     }

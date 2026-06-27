@@ -1,0 +1,22 @@
+{
+  "name": "@full-stack-ds/iconography",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Governed icon contracts and target projection emitters for Full Stack DS.",
+  "exports": {
+    "./schema": "./icon.contract.schema.json",
+    "./icons/*": "./icons/*",
+    "./generated/*": "./generated/*"
+  },
+  "files": [
+    "icon.contract.schema.json",
+    "icons",
+    "generated"
+  ],
+  "scripts": {
+    "build": "node build/build.mjs",
+    "validate": "node build/build.mjs --validate-only"
+  }
+}
+

@@ -96,13 +96,13 @@ export const checkboxTokenScopes = {
     "checkbox.border.width": {
       name: "checkbox.border.width",
       cssVar: "--fsds-checkbox-border-width",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "checkbox.border.radius": {
       name: "checkbox.border.radius",
       cssVar: "--fsds-checkbox-border-radius",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 4,
     },
     "checkbox.transition.duration": {

@@ -34,6 +34,7 @@ const classes = $derived(
     "card",
     status ? `card--${status}` : null,
     density ? `card--${density}` : null,
+    interactive ? "card--interactive" : null,
     className,
   ].filter(Boolean).join(" ")
 );

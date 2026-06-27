@@ -120,7 +120,7 @@ export const cardTokenScopes = {
     "card.size.radius.default": {
       name: "card.size.radius.default",
       cssVar: "--fsds-card-size-radius-default",
-      ref: "semantic.shape.control.radius.default",
+      ref: "semantic.shape.radius.medium",
       fallback: 8,
     },
     "card.size.gap.default": {
@@ -228,14 +228,14 @@ export const cardTokenScopes = {
     "card.elevation.resting": {
       name: "card.elevation.resting",
       cssVar: "--fsds-card-elevation-resting",
-      ref: "semantic.elevation.surface.flat",
-      fallback: "none",
+      ref: "semantic.elevation.surface.raised",
+      fallback: "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)",
     },
     "card.elevation.raised": {
       name: "card.elevation.raised",
       cssVar: "--fsds-card-elevation-raised",
-      ref: "semantic.elevation.surface.raised",
-      fallback: "0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.1)",
+      ref: "semantic.elevation.surface.floating",
+      fallback: "0 2px 4px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.1)",
     },
     "card.color.focus.ring": {
       name: "card.color.focus.ring",

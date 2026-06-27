@@ -15,9 +15,9 @@
     "layer": "semantic"
   },
   "walkthrough.surface.radius": {
-    "resolvesTo": "core.shape.radius.04",
+    "resolvesTo": "semantic.shape.radius.large",
     "fallback": "16px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "walkthrough.surface.shadow": {
     "resolvesTo": "semantic.elevation.surface.floating",
@@ -100,9 +100,9 @@
     "layer": "semantic"
   },
   "walkthrough.button.primary.radius": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "walkthrough.button.secondary.bg": {
     "resolvesTo": "core.color.mode.transparent",

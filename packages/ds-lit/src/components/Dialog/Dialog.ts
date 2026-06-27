@@ -38,7 +38,7 @@ export class DialogElement extends LitElement {
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
       --fsds-dialog-size-sm-maxWidth: 90vw;
       --fsds-dialog-size-md-width: 500px;
@@ -291,7 +291,7 @@ export class DialogHeaderElement extends LitElement {
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
       --fsds-dialog-size-sm-maxWidth: 90vw;
       --fsds-dialog-size-md-width: 500px;
@@ -484,7 +484,7 @@ export class DialogTitleElement extends LitElement {
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
       --fsds-dialog-size-sm-maxWidth: 90vw;
       --fsds-dialog-size-md-width: 500px;
@@ -677,7 +677,7 @@ export class DialogBodyElement extends LitElement {
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
       --fsds-dialog-size-sm-maxWidth: 90vw;
       --fsds-dialog-size-md-width: 500px;
@@ -870,7 +870,7 @@ export class DialogFooterElement extends LitElement {
       --fsds-dialog-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
       --fsds-dialog-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-dialog-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-dialog-size-radius-default: var(--fsds-core-shape-radius-large, 16px);
+      --fsds-dialog-size-radius-default: var(--fsds-semantic-shape-radius-large, 16px);
       --fsds-dialog-size-sm-width: 400px;
       --fsds-dialog-size-sm-maxWidth: 90vw;
       --fsds-dialog-size-md-width: 500px;

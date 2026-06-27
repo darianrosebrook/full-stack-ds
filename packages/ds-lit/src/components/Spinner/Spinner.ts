@@ -66,6 +66,7 @@ export class SpinnerElement extends LitElement {
       display: inline-block;
       width: 1em;
       height: 1em;
+      box-sizing: border-box;
       border-radius: 50%;
       border-style: solid;
       border-width: var(--fsds-spinner-thickness-regular);

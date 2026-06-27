@@ -1,0 +1,82 @@
+{
+  "box-model.padding-block-start": {
+    "resolvesTo": "semantic.surface.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-block-end": {
+    "resolvesTo": "semantic.surface.size.padding-block",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-start": {
+    "resolvesTo": "semantic.surface.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.padding-inline-end": {
+    "resolvesTo": "semantic.surface.size.padding-inline",
+    "fallback": "16px",
+    "layer": "semantic"
+  },
+  "box-model.gap": {
+    "resolvesTo": "semantic.display.size.gap",
+    "fallback": "4px",
+    "layer": "semantic"
+  },
+  "code-snippet.color.background.default": {
+    "resolvesTo": "semantic.color.background.secondary",
+    "fallback": "#efefef",
+    "layer": "semantic"
+  },
+  "code-snippet.color.foreground.primary": {
+    "resolvesTo": "semantic.color.foreground.primary",
+    "fallback": "#141414",
+    "layer": "semantic"
+  },
+  "code-snippet.color.border.default": {
+    "resolvesTo": "semantic.color.border.subtle",
+    "fallback": "#cecece",
+    "layer": "semantic"
+  },
+  "code-snippet.size.padding.inline": {
+    "resolvesTo": "core.spacing.size.02",
+    "fallback": "2px",
+    "layer": "core"
+  },
+  "code-snippet.size.padding.block": {
+    "resolvesTo": "core.spacing.size.01",
+    "fallback": "1px",
+    "layer": "core"
+  },
+  "code-snippet.size.radius.default": {
+    "resolvesTo": "semantic.shape.control.radius.default",
+    "fallback": "8px",
+    "layer": "semantic"
+  },
+  "code-snippet.size.border.default": {
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
+    "fallback": "1px",
+    "layer": "semantic"
+  },
+  "code-snippet.size.border.default": {
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
+    "fallback": "1px",
+    "layer": "semantic"
+  },
+  "code-snippet.size.fontSize.default": {
+    "resolvesTo": "core.typography.ramp.3",
+    "fallback": "0.875rem",
+    "layer": "core"
+  },
+  "code-snippet.typography.lineHeight.default": {
+    "resolvesTo": "semantic.typography.line.height.body",
+    "fallback": "1.5",
+    "layer": "semantic"
+  },
+  "code-snippet.elevation.kbd": {
+    "resolvesTo": "semantic.elevation.surface.raised",
+    "fallback": "0 1px 1px rgba(0,0,0,0.14)",
+    "layer": "semantic"
+  }
+}
