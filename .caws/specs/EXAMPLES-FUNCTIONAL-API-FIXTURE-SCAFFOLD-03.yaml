@@ -1,0 +1,25 @@
+id: EXAMPLES-FUNCTIONAL-API-FIXTURE-SCAFFOLD-03
+title: 'Materialize social-feed fixture -> adapter -> promise-returning functional API seam (ApiResult resolve-don''t-reject, UI-owned optimistic rollback; app-layer data scaffold, no framework app code)'
+risk_tier: 3
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-27T00:31:08.696Z'
+updated_at: '2026-06-27T00:31:08.696Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
