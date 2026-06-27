@@ -64,7 +64,7 @@ export function Select({
       style={[styles.root, style]}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
-      accessibilityState={{ expanded: Boolean(open) }}
+      accessibilityState={{ expanded: String(open) === "true" }}
     >
       <Pressable
         style={styles.trigger}
@@ -97,7 +97,7 @@ export function Select({
               <View
                 key={index}
                 style={styles.option}
-                accessibilityState={{ selected: Boolean(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection) }}
+                accessibilityState={{ selected: String(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection) === "true" }}
               >
                 <View
                   style={styles.root}

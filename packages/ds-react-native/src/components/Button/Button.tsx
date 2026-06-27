@@ -65,7 +65,7 @@ export function Button({
       onPress={() => onClick?.()}
       accessibilityLabelledBy={accessibilityLabelledBy}
       accessibilityRole="togglebutton"
-      accessibilityState={{ disabled: disabled, expanded: Boolean(ariaExpanded), selected: Boolean(ariaPressed), busy: Boolean(loading) }}
+      accessibilityState={{ disabled: disabled, expanded: String(ariaExpanded) === "true", selected: String(ariaPressed) === "true", busy: String(loading) === "true" }}
     >
       {typeof children === "string" ? <RNText style={[styles.rootText, textVariantStyleForSize, textVariantStyleForVariant]}>{children}</RNText> : children}
     </Pressable>

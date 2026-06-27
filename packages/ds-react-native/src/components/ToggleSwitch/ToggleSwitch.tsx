@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
-import { Switch as RNSwitch, Text as RNText } from "react-native";
+import { Switch as RNSwitch } from "react-native";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createToggleSwitchStyles } from "./ToggleSwitch.styles";

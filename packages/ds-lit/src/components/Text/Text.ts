@@ -313,7 +313,7 @@ export class TextElement extends LitElement {
   }
 
   override render() {
-    return html`<p class="${this.computeClasses()}"></p>`;
+    return html`${this.as === "span" ? html`<span class="${this.computeClasses()}"></span>` : this.as === "div" ? html`<div class="${this.computeClasses()}"></div>` : this.as === "h1" ? html`<h1 class="${this.computeClasses()}"></h1>` : this.as === "h2" ? html`<h2 class="${this.computeClasses()}"></h2>` : this.as === "h3" ? html`<h3 class="${this.computeClasses()}"></h3>` : this.as === "h4" ? html`<h4 class="${this.computeClasses()}"></h4>` : this.as === "h5" ? html`<h5 class="${this.computeClasses()}"></h5>` : this.as === "h6" ? html`<h6 class="${this.computeClasses()}"></h6>` : html`<p class="${this.computeClasses()}"></p>`}`;
   }
 }
 

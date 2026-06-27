@@ -165,9 +165,13 @@ export class ListElement extends LitElement {
   }
 
   override render() {
-    return html`<ul class="${this.computeClasses()}">
+    return html`${this.as === "ol" ? html`<ol class="${this.computeClasses()}">
   <slot></slot>
-</ul>`;
+</ol>` : this.as === "dl" ? html`<dl class="${this.computeClasses()}">
+  <slot></slot>
+</dl>` : html`<ul class="${this.computeClasses()}">
+  <slot></slot>
+</ul>`}`;
   }
 }
 
