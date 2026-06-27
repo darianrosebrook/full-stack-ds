@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-24T08:10:36.625Z",
-  "unusedCount": 411,
+  "generatedAt": "2026-06-27T07:11:21.764Z",
+  "unusedCount": 413,
   "unusedTokens": [
     "core.color.datavis.categorical.1",
     "core.color.datavis.categorical.2",
@@ -75,6 +75,7 @@
     "core.color.palette.lime.700",
     "core.color.palette.lime.800",
     "core.color.palette.lime.900",
+    "core.color.palette.red.800",
     "core.color.palette.teal.100",
     "core.color.palette.teal.800",
     "core.color.palette.violet.50",
@@ -293,6 +294,7 @@
     "semantic.elevation.default",
     "semantic.elevation.depth",
     "semantic.elevation.none",
+    "semantic.elevation.surface.flat",
     "semantic.glyph.badge.size.lg.fontSize",
     "semantic.glyph.badge.size.lg.minHeight",
     "semantic.glyph.badge.size.lg.paddingX",
