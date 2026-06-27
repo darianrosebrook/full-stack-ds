@@ -33,16 +33,16 @@ invariants:
 acceptance:
   - id: A1
     given: the new React example package under examples/operations-dashboard/react
-    when: its `build` script runs (`pnpm --filter <pkg> run build`)
+    when: 'its build script runs (pnpm --filter <pkg> run build)'
     then: Vite builds the app with no errors and no casts past the public types.
   - id: A2
-    given: the package declares a `typecheck` script (tsc --noEmit)
-    when: `pnpm --filter <pkg> run typecheck` runs
-    then: it passes with zero type errors against the public `@full-stack-ds/react`
+    given: the package declares a typecheck script (tsc --noEmit)
+    when: 'pnpm --filter <pkg> run typecheck runs'
+    then: it passes with zero type errors against the public @full-stack-ds/react
       types and the app-local API types.
   - id: A3
     given: the React lane consumes the already-landed data/API seam
-    when: `pnpm run test:examples:data-api` runs after this slice
+    when: 'pnpm run test:examples:data-api runs after this slice'
     then: it still reports 47 passing tests — the seam is unchanged.
   - id: A4
     given: the lane source under examples/operations-dashboard/react/src
