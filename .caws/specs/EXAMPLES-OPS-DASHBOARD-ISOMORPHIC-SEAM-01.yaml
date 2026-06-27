@@ -3,7 +3,6 @@ title: 'Make operations-dashboard data/API seam browser-runnable'
 risk_tier: 2
 mode: fix
 lifecycle_state: active
-worktree: ops-seam-iso
 created_at: '2026-06-27T06:48:31.875Z'
 updated_at: '2026-06-27T06:48:42.441Z'
 blast_radius:
