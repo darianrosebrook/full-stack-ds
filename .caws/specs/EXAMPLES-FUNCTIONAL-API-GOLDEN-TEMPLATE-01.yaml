@@ -1,0 +1,25 @@
+id: EXAMPLES-FUNCTIONAL-API-GOLDEN-TEMPLATE-01
+title: 'Stage 0 (doc-only): golden data/API template in examples README + pin checkout/feed app-specific data-API decisions in their specs'
+risk_tier: 3
+mode: doc
+lifecycle_state: active
+created_at: '2026-06-27T00:24:15.004Z'
+updated_at: '2026-06-27T00:24:15.004Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts: []
