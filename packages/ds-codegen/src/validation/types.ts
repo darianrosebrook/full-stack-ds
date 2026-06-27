@@ -112,12 +112,38 @@ export type FrameworkId =
  * narrow and adding `RailTargetId` alongside it is the cheaper, more honest move.
  *
  * `"compose-smoke"` is the first non-`FrameworkId` rail participant: a Kotlin
- * compile lane (see packages/ds-compose-smoke). It is NOT a `FrameworkId`, NOT
- * in the admitted descriptor registry (`PLANS_BY_ID`), and admits no component
- * — it proves only that the rail can run a non-pnpm, target-owned compile
- * command and bind its exit code as evidence.
+ * compile lane (see packages/ds-compose-smoke). `"swift-smoke"` is the second:
+ * a Swift compile lane (see packages/ds-swift-smoke), added by
+ * RAIL-NATIVE-COMPILE-LANE-SWIFT-SMOKE-04 to prove `RailTargetId` carries a
+ * SECOND non-pnpm compiler family through the SAME native-compile abstraction —
+ * not by a Kotlin-only special case, but by the lane registry growing. Neither
+ * is a `FrameworkId`, neither is in the admitted descriptor registry
+ * (`PLANS_BY_ID`), and neither admits a component: each proves only that the
+ * rail can run a non-pnpm, target-owned compile command and bind its exit code
+ * as evidence.
  */
-export type NativeLaneId = "compose-smoke";
+export type NativeLaneId = "compose-smoke" | "swift-smoke";
+
+/**
+ * The native lane ids known to the rail. The single source of truth the lane
+ * adjudication (`readNativeCompileLane`, `isNativeLaneId`) checks membership
+ * against — so adding a third compiler family is a one-line registry edit here,
+ * NOT a new compiler-family branch anywhere. Kept in sync with `NativeLaneId`
+ * by a type assertion below (a member added to one but not the other fails the
+ * codegen typecheck).
+ */
+export const NATIVE_LANE_IDS = ["compose-smoke", "swift-smoke"] as const;
+// Compile-time proof the runtime list and the type stay in lockstep. `Equals`
+// resolves to `never` unless the two sets are mutually assignable, and the
+// exported type alias `NativeLaneIdsInSync` is `true` only when they match — so
+// a member added to NativeLaneId but not NATIVE_LANE_IDS (or vice versa) makes
+// this alias `never`, which the test suite asserts against. Type-only, so it
+// trips no `noUnusedLocals` (there is no runtime binding to leave unread).
+type MutuallyAssignable<A, B> = [A] extends [B] ? ([B] extends [A] ? true : never) : never;
+export type NativeLaneIdsInSync = MutuallyAssignable<
+  NativeLaneId,
+  (typeof NATIVE_LANE_IDS)[number]
+>;
 
 /** Every id the rail can attribute evidence to: admitted frameworks + native lanes. */
 export type RailTargetId = FrameworkId | NativeLaneId;

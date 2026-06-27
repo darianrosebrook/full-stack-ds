@@ -1,0 +1,19 @@
+{
+  "$comment": "RAIL-NATIVE-COMPILE-LANE-SWIFT-SMOKE-04. Target-owned compile facts for the ds-swift-smoke rail lane — the SECOND non-pnpm native compile lane, proving RailTargetId carries a second compiler family through the same abstraction as compose-smoke. The rail core reads this; it hardcodes no Swift/Xcode branch. The runner selects the compiler executable and source extension from this file, not from a compiler-family switch. id is a RailTargetId, NOT a FrameworkId — this lane is not an admitted framework.",
+  "railTargetId": "swift-smoke",
+  "family": "native-compile",
+  "toolchain": "swift",
+  "compiler": "swiftc",
+  "sourceExtension": ".swift",
+  "outputFlag": "-o",
+  "validSources": ["src"],
+  "invalidSources": ["src-invalid"],
+  "checks": {
+    "compile": "direct"
+  },
+  "knownGaps": [
+    "Runtime evidence is limited to compile success/failure. No simulator, no XCUITest, no SwiftUI runtime (View body evaluation, snapshot) execution or claim — runtime admission is deferred to a later slice.",
+    "The valid fixture exercises Swift language constructs (optionals, nil-coalescing, enum switch), not the SwiftUI runtime; full SwiftUI compilation (which needs the SwiftUI framework and an Apple SDK) is out of scope for this compile smoke.",
+    "No SwiftUI emitter exists yet — this lane admits a hand-authored fixture, not generated Swift output. A generated SwiftUI emitter is a later slice."
+  ]
+}
