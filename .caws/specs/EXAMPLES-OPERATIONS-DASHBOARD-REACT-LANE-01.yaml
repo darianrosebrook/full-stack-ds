@@ -3,6 +3,7 @@ title: 'Operations-dashboard React example app lane'
 risk_tier: 3
 mode: feature
 lifecycle_state: active
+worktree: ops-dash-react
 created_at: '2026-06-27T06:18:05.118Z'
 updated_at: '2026-06-27T06:18:15.087Z'
 blast_radius:
