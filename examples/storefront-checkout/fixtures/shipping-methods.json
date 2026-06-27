@@ -1,0 +1,7 @@
+{
+  "methods": [
+    { "id": "standard", "label": "Standard (5-7 days)", "feeCents": 0 },
+    { "id": "expedited", "label": "Expedited (2-3 days)", "feeCents": 800 },
+    { "id": "overnight", "label": "Overnight", "feeCents": 2500 }
+  ]
+}
