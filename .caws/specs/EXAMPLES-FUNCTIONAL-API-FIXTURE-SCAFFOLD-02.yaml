@@ -3,6 +3,7 @@ title: 'Materialize storefront-checkout fixture -> adapter -> promise-returning 
 risk_tier: 3
 mode: feature
 lifecycle_state: active
+worktree: checkout-api
 created_at: '2026-06-27T00:31:07.659Z'
 updated_at: '2026-06-27T00:31:22.230Z'
 blast_radius:
