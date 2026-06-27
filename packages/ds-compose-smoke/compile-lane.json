@@ -3,6 +3,9 @@
   "railTargetId": "compose-smoke",
   "family": "native-compile",
   "toolchain": "kotlin",
+  "compiler": "kotlinc",
+  "sourceExtension": ".kt",
+  "outputFlag": "-d",
   "validSources": ["src"],
   "invalidSources": ["src-invalid"],
   "checks": {

@@ -267,3 +267,35 @@ jobs:
 
       - name: Compile-admission negative (invalid `??` Kotlin must fail to compile)
         run: node scripts/run-native-compile-lane.mjs --kotlinc /opt/kotlinc/bin/kotlinc --negative
+
+  native-compile-rail-swift:
+    name: Native compile rail (Swift compile-admission smoke)
+    runs-on: macos-latest
+    timeout-minutes: 10
+    # RAIL-NATIVE-COMPILE-LANE-SWIFT-SMOKE-04. The SECOND non-pnpm native compile
+    # lane: proves RailTargetId carries a second compiler family (Swift) through
+    # the SAME family-neutral runner — no Kotlin-vs-Swift branch. Smallest stable
+    # surface: swiftc (preinstalled on the GitHub macOS runner via Xcode), NO
+    # Xcode project, NO SwiftPM graph, NO simulator, NO XCUITest. Two passes: the
+    # valid fixture must compile (positive); the invalid `?:` fixture (Kotlin's
+    # elvis operator, invalid Swift) must FAIL (negative) — the byte-stability-is-
+    # not-compilation proof for the Swift family. This is a SEPARATE job from
+    # native-compile-rail (which stays on ubuntu-latest); the Kotlin lane does NOT
+    # depend on macOS, and a swiftc/macOS-provisioning issue surfaces on its own.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Show Swift compiler (preinstalled via Xcode)
+        run: swiftc --version
+
+      - name: Compile-admission positive (valid Swift must compile)
+        run: node scripts/run-native-compile-lane.mjs --lane swift-smoke --compiler "$(command -v swiftc)"
+
+      - name: Compile-admission negative (invalid `?:` Swift must fail to compile)
+        run: node scripts/run-native-compile-lane.mjs --lane swift-smoke --compiler "$(command -v swiftc)" --negative

@@ -241,38 +241,57 @@ for (const fw of [...RAIL_TARGETS, "figma"]) {
   });
 }
 
-// ── Source 4c: native compile lane (the first non-pnpm rail compile command) ─
-// Slice 3 (RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03): the ds-compose-smoke
-// lane proves the rail can admit a non-TS toolchain. Its compile command is run
-// by run-native-compile-lane.mjs and provisioned in the native-compile-rail CI
-// job. This is the one site that is admitted to the rail WITHOUT a pnpm command.
-const laneJson = read("packages/ds-compose-smoke/compile-lane.json");
+// ── Source 4c: native compile lanes (the non-pnpm rail compile commands) ─────
+// Slice 3 (RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03) added the first: the
+// ds-compose-smoke Kotlin lane. Slice 4 (RAIL-NATIVE-COMPILE-LANE-SWIFT-SMOKE-04)
+// added the second: the ds-swift-smoke Swift lane — proving RailTargetId carries
+// a second compiler family through the SAME family-neutral runner. Each lane's
+// compile command is run by run-native-compile-lane.mjs and provisioned in a
+// native-compile-rail* CI job. These are the rail sites admitted WITHOUT a pnpm
+// command. The lane registry is read from the live NativeLaneId union, so adding
+// a third family flows through here automatically (it is not a hardcoded list).
 const laneRunner = read("scripts/run-native-compile-lane.mjs");
 const ciYml = read(".github/workflows/ci.yml");
-const nativeLanePresent = laneJson.length > 0 && laneRunner.length > 0;
-const laneToolchain = (() => {
-  const m = laneJson.match(/"toolchain":\s*"([^"]+)"/);
-  return m ? m[1] : "unknown";
+// Discover the native lanes from the live NativeLaneId union — NOT a hardcoded
+// copy — so the audit stays honest as the union grows.
+const nativeLaneIds = (() => {
+  const m = typesSrc.match(/export type NativeLaneId =([\s\S]*?);/);
+  if (!m) return [];
+  return [...m[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]);
 })();
-// The lane's compile command must NOT be pnpm. The runner spawns a compiler
-// (kotlinc); a pnpm reintroduction here would mean the "non-TS lane" collapsed
-// back to the TS toolchain.
+// The runner must NOT spawn pnpm anywhere — a pnpm reintroduction would mean a
+// native lane collapsed back to the TS toolchain. This is a property of the ONE
+// shared runner, so it covers every lane.
 const laneUsesPnpm = /spawnSync\(\s*["']pnpm/.test(laneRunner) || /command\s*=\s*\[\s*["']pnpm/.test(laneRunner);
-const laneInCi = /native-compile-rail/.test(ciYml) && /run-native-compile-lane\.mjs/.test(ciYml);
-if (nativeLanePresent) {
+// Per-lane facts: the lane's package compile-lane.json (toolchain), and whether
+// the lane has a CI job wired (a compile only earns admission if CI runs it).
+const nativeLanes = [];
+for (const id of nativeLaneIds) {
+  const laneJson = read(`packages/ds-${id}/compile-lane.json`);
+  if (!laneJson.length) continue;
+  const toolchain = (laneJson.match(/"toolchain":\s*"([^"]+)"/) || [])[1] || "unknown";
+  const compiler = (laneJson.match(/"compiler":\s*"([^"]+)"/) || [])[1] || "unknown";
+  // CI-wired: a job runs run-native-compile-lane.mjs for THIS lane. The Kotlin
+  // lane uses the --kotlinc alias (implicitly compose-smoke); the others use
+  // --lane <id>. Either form counts as wiring for that lane.
+  const wiredViaLaneFlag = new RegExp(`run-native-compile-lane\\.mjs[^\\n]*--lane\\s+${id}`).test(ciYml);
+  const wiredViaKotlincAlias = id === "compose-smoke" && /run-native-compile-lane\.mjs[^\n]*--kotlinc/.test(ciYml);
+  const laneInCi = wiredViaLaneFlag || wiredViaKotlincAlias;
+  nativeLanes.push({ id, toolchain, compiler, laneInCi });
   site({
-    surface: "ds-compose-smoke native compile lane",
-    file: "scripts/run-native-compile-lane.mjs",
-    line: lineOf(laneRunner, /spawnSync/),
+    surface: `ds-${id} native compile lane`,
+    file: `packages/ds-${id}/compile-lane.json`,
+    line: lineOf(read(`packages/ds-${id}/compile-lane.json`), /"compiler"/),
     detail: laneUsesPnpm
-      ? "REGRESSION: native lane reintroduced a pnpm command"
-      : `non-pnpm ${laneToolchain} compile command; CI-wired=${laneInCi}; positive+negative passes`,
+      ? "REGRESSION: native lane runner reintroduced a pnpm command"
+      : `non-pnpm ${toolchain} compile command (${compiler}); CI-wired=${laneInCi}; positive+negative passes`,
     classification: laneUsesPnpm ? TS_COUPLED : NATIVE_LANE,
     why: laneUsesPnpm
-      ? "The native lane is supposed to run a non-pnpm compiler; a pnpm command here means the non-TS lane collapsed back to the TS toolchain."
-      : "First non-pnpm rail compile command. The rail runner spawns a Kotlin compiler and binds its exit code — proving toolchain-polymorphic admission without a pnpm/tsc assumption. It is a RailTargetId, NOT a FrameworkId, and admits no component.",
+      ? "The native lane is supposed to run a non-pnpm compiler; a pnpm command in the shared runner means a non-TS lane collapsed back to the TS toolchain."
+      : `Non-pnpm rail compile command. The shared family-neutral runner spawns ${compiler} and binds its exit code — proving toolchain-polymorphic admission without a pnpm/tsc assumption. It is a RailTargetId, NOT a FrameworkId, and admits no component.`,
   });
 }
+const nativeLanePresent = nativeLanes.length > 0;
 
 // ── Source 5: COMPONENT_TREES (required-mode.ts) ────────────────────────────
 const reqSrc = read("packages/ds-codegen/src/validation/required-mode.ts");
@@ -376,7 +395,7 @@ if (process.argv.includes("--check")) {
   if (!figmaPlanExists) problems.push("figma plan file missing — expected it to exist as the rail-excluded precedent");
   if (plansById.includes("figma")) problems.push("figma unexpectedly in the admission-descriptor registry — the generate-admitted-but-rail-excluded asymmetry changed");
   if (frameworkIdMembers.includes("figma")) problems.push("figma unexpectedly a FrameworkId member");
-  for (const native of ["jetpack-compose", "swiftui"]) {
+  for (const native of ["jetpack-compose", "swiftui", "swift", "kotlin"]) {
     if (frameworkIdMembers.includes(native)) problems.push(`${native} unexpectedly admitted to the rail (FrameworkId) — recon premise (no non-TS toolchain) changed`);
   }
   if (summary[UNCLASSIFIED] > 0) {
@@ -411,28 +430,68 @@ if (process.argv.includes("--check")) {
       problems.push(`${name} re-authors a generated-tree path literal — target facts must live only in the target module`);
     }
   }
-  // ── Slice-3 native-lane invariants (compile-admission, not framework admission) ─
+  // ── Slice-3/4 native-lane invariants (compile-admission, not framework admission) ─
+  // Slice 4 tightens the count: there must be EXACTLY TWO native compile lanes
+  // (compose-smoke Kotlin + swift-smoke Swift). This is checked TWO ways so a
+  // phantom id can't hide: (a) the live NativeLaneId UNION must be exactly the
+  // expected set, and (b) every union member must have a discovered on-disk
+  // package. A new id in the union without a package, or a package without a
+  // union entry, is drift — either direction fails.
+  const EXPECTED_NATIVE_LANES = ["compose-smoke", "swift-smoke"];
+  const wantLanes = [...EXPECTED_NATIVE_LANES].sort();
+  const gotUnion = [...nativeLaneIds].sort();
+  if (JSON.stringify(gotUnion) !== JSON.stringify(wantLanes)) {
+    problems.push(
+      `NativeLaneId union drifted: expected exactly ${wantLanes.join(",")}, got ${gotUnion.join(",") || "(none)"}`,
+    );
+  }
+  const gotPackaged = nativeLanes.map((l) => l.id).sort();
+  if (JSON.stringify(gotPackaged) !== JSON.stringify(wantLanes)) {
+    problems.push(
+      `native compile lane PACKAGES drifted: expected a ds-<id>/compile-lane.json for exactly ${wantLanes.join(",")}, found ${gotPackaged.join(",") || "(none)"}`,
+    );
+  }
+  // Every declared union member must have a discovered package (no phantom id).
+  for (const id of nativeLaneIds) {
+    if (!nativeLanes.some((l) => l.id === id)) {
+      problems.push(`NativeLaneId "${id}" has no packages/ds-${id}/compile-lane.json — a declared native lane must have a self-declaring package`);
+    }
+  }
   if (nativeLanePresent) {
-    // 1. The native lane must run a NON-pnpm compile command.
+    // 1. NO native lane may run a pnpm command (property of the shared runner).
     if (laneUsesPnpm) {
-      problems.push("native compile lane reintroduced a pnpm command — the non-TS lane collapsed back to the TS toolchain");
+      problems.push("native compile lane runner reintroduced a pnpm command — a non-TS lane collapsed back to the TS toolchain");
     }
-    // 2. It must be CI-wired (the compile only earns admission if CI runs it).
-    if (!laneInCi) {
-      problems.push("native compile lane is not wired into CI (native-compile-rail job missing) — an un-run compile proves nothing");
+    // 2. EVERY native lane must be CI-wired (a compile only earns admission if CI runs it).
+    for (const l of nativeLanes) {
+      if (!l.laneInCi) {
+        problems.push(`native compile lane ${l.id} is not wired into a CI job (no run-native-compile-lane.mjs invocation for it) — an un-run compile proves nothing`);
+      }
     }
-    // 3. It must NOT have become an admitted framework: no FrameworkId, not in
-    //    the descriptor registry, no fsds.targets.json entry. compose-smoke is a
-    //    RailTargetId compile lane, not a generated Compose target.
-    if (frameworkIdMembers.includes("compose-smoke")) {
-      problems.push("compose-smoke leaked into FrameworkId — it must stay a RailTargetId compile lane, not an admitted framework");
-    }
-    if (plansById.includes("compose-smoke")) {
-      problems.push("compose-smoke leaked into the admission-descriptor registry — the smoke lane must not be an admitted framework");
-    }
+    // 3. NO native lane may have become an admitted framework: not a FrameworkId,
+    //    not in the descriptor registry, not in fsds.targets.json. Each is a
+    //    RailTargetId compile lane, NOT a generated framework target.
     const targetsJson = read("fsds.targets.json");
-    if (/jetpack-compose|compose-smoke/.test(targetsJson)) {
-      problems.push("fsds.targets.json gained a Compose entry — slice 3 admits a compile lane, NOT a generated Compose target");
+    for (const l of nativeLanes) {
+      if (frameworkIdMembers.includes(l.id)) {
+        problems.push(`${l.id} leaked into FrameworkId — it must stay a RailTargetId compile lane, not an admitted framework`);
+      }
+      if (plansById.includes(l.id)) {
+        problems.push(`${l.id} leaked into the admission-descriptor registry — the smoke lane must not be an admitted framework`);
+      }
+      if (new RegExp(l.id).test(targetsJson)) {
+        problems.push(`fsds.targets.json gained a ${l.id} entry — these slices admit a compile lane, NOT a generated framework target`);
+      }
+    }
+    // The Swift lane must run in its OWN macOS job — the Kotlin lane must NOT have
+    // been moved onto macOS (A4: Kotlin lane does not depend on macOS).
+    if (/native-compile-rail-swift/.test(ciYml)) {
+      const kotlinJobOnMac = /native-compile-rail:\s*\n[\s\S]{0,400}?runs-on:\s*macos/.test(ciYml);
+      if (kotlinJobOnMac) {
+        problems.push("the Kotlin native-compile-rail job moved onto macOS — the Kotlin lane must NOT depend on macOS (A4)");
+      }
+    } else if (nativeLanes.some((l) => l.id === "swift-smoke")) {
+      problems.push("swift-smoke lane present but native-compile-rail-swift CI job missing — the Swift compile must run in its own macOS job");
     }
   }
   if (problems.length) {
@@ -441,7 +500,7 @@ if (process.argv.includes("--check")) {
     process.exit(1);
   }
   const laneNote = nativeLanePresent
-    ? ` one non-pnpm ${laneToolchain} compile lane admitted (compose-smoke, not a framework);`
+    ? ` ${nativeLanes.length} non-pnpm compile lane(s) admitted (${nativeLanes.map((l) => `${l.id}/${l.toolchain}`).join(", ")}, none a framework);`
     : "";
   console.error(
     `rail-toolchain-coupling-audit --check OK: 6 rail-admitted FrameworkIds self-declare; figma rail-excluded; registry aggregates without authoring; consumers derive;${laneNote} no native FRAMEWORK target admitted; all sites classified.`,
