@@ -7,20 +7,50 @@ created_at: '2026-06-27T06:50:58.808Z'
 updated_at: '2026-06-27T06:51:06.169Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - 'CI observation only — no source modules. Evidence recorded in docs/internal (gitignored) + spec closure notes.'
   data_migration: false
 operational_rollback_slo: 5m
 scope:
   in:
-    - 'TODO: list the file(s) or directories this spec authorizes.'
     - docs/internal/ci-observe-rail-native-compile-lane-swift-04.md
-  out: []
+  out:
+    # OBSERVATION ONLY. No source change unless CI provisioning fails (and then
+    # ONLY the provisioning surface). Does NOT touch the emitter, SwiftUI/Compose
+    # generation, runtime admission, or fsds.targets.json.
+    - 'packages/ds-codegen/src/frameworks'
+    - 'packages/ds-swift-smoke/src'
+    - 'packages/ds-swift-smoke/src-invalid'
+    - 'fsds.targets.json'
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'OBSERVATION, NOT FEATURE WORK: this spec closes the slice-4 evidentiary gap — the committed native-compile-rail-swift macOS job is observed green on GitHub Actions. It changes no source unless CI provisioning fails, and then only the provisioning surface.'
+  - 'ISOLATED SIDE BRANCH: the run is triggered from a side branch containing the complete rail arc Swift needs (origin/main + the rail commits), NOT the peer-active feat/semantic-layer-granularity branch state, so the observation is clean and does not publish unrelated mixed work or collide with a peer.'
+  - 'COMPILER-POSITIVE AND COMPILER-NEGATIVE BOTH OBSERVED: the positive Swift compile exits 0 (lane PASS); the negative ?: fixture fails to compile (exit nonzero) and the lane PASSES on the inverted exit, with the ternary/elvis compiler error visible in the CI logs.'
+  - 'MACOS COST RECORDED: the macos runner label, Swift compiler version, and job duration are captured from the CI logs, separately from the Kotlin ubuntu lane.'
+  - 'NON-CLAIM: observes compile-admission only — no simulator, XCUITest, SwiftUI runtime, emitter, or generated Swift output. No fsds.targets.json change.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'an isolated side branch with the complete rail arc Swift needs'
+    when: 'it is pushed'
+    then: 'the branch contains the rail commits (not the peer-active feat branch state) and triggers the CI workflow; the side-branch strategy stays clean (no peer files, no unrelated token drift blocking the push)'
+  - id: A2
+    given: 'GitHub Actions'
+    when: 'the native-compile-rail-swift job runs'
+    then: 'it reaches conclusion: success on a macos-* runner; the run id and job id are recorded'
+  - id: A3
+    given: 'the positive Swift compile step'
+    when: 'it runs in CI'
+    then: 'Smoke.swift compiles with exit 0 and the lane is PASS; the log excerpt is captured'
+  - id: A4
+    given: 'the negative Swift compile step'
+    when: 'it runs in CI'
+    then: 'SmokeInvalid.swift fails to compile (exit nonzero) and the lane PASSES on the inverted exit, with the ?:/ternary compiler error visible in the captured log excerpt'
+  - id: A5
+    given: 'the CI logs'
+    when: 'the macOS job is inspected'
+    then: 'the runner label, Swift compiler version, provisioning behavior, and total job duration are recorded'
+  - id: A6
+    given: 'the observation boundary'
+    when: 'the work is reviewed'
+    then: 'no emitter, SwiftUI, Compose generation, runtime admission, or fsds.targets.json change was made; if CI failed only the provisioning surface was touched'
 non_functional: {}
 contracts: []
