@@ -3,6 +3,7 @@ title: 'CI closeout for slice 4: observe native-compile-rail-swift green on GitH
 risk_tier: 3
 mode: chore
 lifecycle_state: active
+worktree: rail-swift-ci-observe
 created_at: '2026-06-27T06:50:58.808Z'
 updated_at: '2026-06-27T06:51:06.169Z'
 blast_radius:
