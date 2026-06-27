@@ -1,4 +1,5 @@
 import type { FrameworkValidationPlan } from "../types.js";
+import type { AdmissionDescriptor } from "../admission-descriptor.js";
 
 export const vueValidationPlan: FrameworkValidationPlan = {
   framework: "vue",
@@ -22,4 +23,13 @@ export const vueValidationPlan: FrameworkValidationPlan = {
     parse: "covered_by_typecheck",
     template: "covered_by_typecheck",
   },
+};
+
+/** Vue's self-declared rail admission facts (authored beside the plan). */
+export const vueAdmissionDescriptor: AdmissionDescriptor = {
+  id: "vue",
+  outputTreeRelPath: "packages/ds-vue/src/components",
+  sourceExtensions: [".vue", ".ts", ".tsx"],
+  plan: vueValidationPlan,
+  reportRank: 1,
 };

@@ -33,12 +33,15 @@
  * compileCommand, a CI native lane) is a later slice that CONSUMES this seam.
  */
 import type { FrameworkId, FrameworkValidationPlan } from "./types.js";
-import { reactValidationPlan } from "./frameworks/react.js";
-import { vueValidationPlan } from "./frameworks/vue.js";
-import { svelteValidationPlan } from "./frameworks/svelte.js";
-import { litValidationPlan } from "./frameworks/lit.js";
-import { angularValidationPlan } from "./frameworks/angular.js";
-import { reactNativeValidationPlan } from "./frameworks/react-native.js";
+// Each target self-declares its admission facts in its own module (beside its
+// plan). This module imports those declarations and ONLY aggregates + validates
+// them — it authors no per-target metadata itself.
+import { reactAdmissionDescriptor } from "./frameworks/react.js";
+import { vueAdmissionDescriptor } from "./frameworks/vue.js";
+import { svelteAdmissionDescriptor } from "./frameworks/svelte.js";
+import { litAdmissionDescriptor } from "./frameworks/lit.js";
+import { angularAdmissionDescriptor } from "./frameworks/angular.js";
+import { reactNativeAdmissionDescriptor } from "./frameworks/react-native.js";
 
 /**
  * The declared facts a rail-admitted target supplies. Everything here is data;
@@ -77,58 +80,65 @@ export interface AdmissionDescriptor {
 }
 
 /**
- * The six rail-admitted descriptors, in canonical order. Typed as
- * `Record<FrameworkId, …>` so the compiler rejects the registry unless it
- * covers exactly the FrameworkId union — that is the type-level guarantee that
- * the runtime list and the FrameworkId type cannot drift apart. The insertion
- * order here is the canonical default selection / report order (it matched the
- * legacy DEFAULT_FRAMEWORKS and FRAMEWORK_RANK ordering at extraction time;
- * the equivalence test pins that).
+ * The self-declared descriptors this registry aggregates. The ONLY per-target
+ * facts this module names are the imported descriptor identifiers — the facts
+ * themselves (outputTreeRelPath, sourceExtensions, reportRank, plan) are
+ * authored in each target module, not here. This module's job from here is
+ * aggregation + validation, not authorship.
  */
-export const ADMISSION_DESCRIPTORS: Readonly<Record<FrameworkId, AdmissionDescriptor>> = {
-  react: {
-    id: "react",
-    outputTreeRelPath: "packages/ds-react/src/components",
-    sourceExtensions: [".tsx", ".ts"],
-    plan: reactValidationPlan,
-    reportRank: 0,
-  },
-  vue: {
-    id: "vue",
-    outputTreeRelPath: "packages/ds-vue/src/components",
-    sourceExtensions: [".vue", ".ts", ".tsx"],
-    plan: vueValidationPlan,
-    reportRank: 1,
-  },
-  svelte: {
-    id: "svelte",
-    outputTreeRelPath: "packages/ds-svelte/src/components",
-    sourceExtensions: [".svelte", ".ts"],
-    plan: svelteValidationPlan,
-    reportRank: 2,
-  },
-  lit: {
-    id: "lit",
-    outputTreeRelPath: "packages/ds-lit/src/components",
-    sourceExtensions: [".ts"],
-    plan: litValidationPlan,
-    reportRank: 3,
-  },
-  angular: {
-    id: "angular",
-    outputTreeRelPath: "packages/ds-angular/src/components",
-    sourceExtensions: [".ts"],
-    plan: angularValidationPlan,
-    reportRank: 4,
-  },
-  "react-native": {
-    id: "react-native",
-    outputTreeRelPath: "packages/ds-react-native/src/components",
-    sourceExtensions: [".tsx", ".ts"],
-    plan: reactNativeValidationPlan,
-    reportRank: 5,
-  },
-};
+const SELF_DECLARED_DESCRIPTORS: readonly AdmissionDescriptor[] = [
+  reactAdmissionDescriptor,
+  vueAdmissionDescriptor,
+  svelteAdmissionDescriptor,
+  litAdmissionDescriptor,
+  angularAdmissionDescriptor,
+  reactNativeAdmissionDescriptor,
+];
+
+/**
+ * Adjudicate the self-declared descriptors into a validated registry. The rail
+ * core enforces the structural invariants a target module cannot enforce alone:
+ * id↔plan agreement, no duplicate ids, full FrameworkId coverage, and a
+ * contiguous 0-based reportRank sequence (so report ordering is total and
+ * stable). A violation is a load-bearing defect — fail loud at module load,
+ * not silently at rail time.
+ */
+function buildRegistry(
+  declared: readonly AdmissionDescriptor[],
+): Readonly<Record<FrameworkId, AdmissionDescriptor>> {
+  const byId = {} as Record<FrameworkId, AdmissionDescriptor>;
+  for (const d of declared) {
+    if (d.id !== d.plan.framework) {
+      throw new Error(
+        `admission descriptor id "${d.id}" disagrees with plan.framework "${d.plan.framework}"`,
+      );
+    }
+    if (Object.prototype.hasOwnProperty.call(byId, d.id)) {
+      throw new Error(`duplicate admission descriptor for "${d.id}"`);
+    }
+    byId[d.id] = d;
+  }
+  // Full coverage + contiguous ranks. Sorting by rank and checking it equals
+  // the index proves the six ranks are exactly 0..5 with no gap or collision.
+  const sorted = declared.slice().sort((a, b) => a.reportRank - b.reportRank);
+  sorted.forEach((d, i) => {
+    if (d.reportRank !== i) {
+      throw new Error(
+        `admission descriptor reportRank sequence is not contiguous 0-based: "${d.id}" has rank ${d.reportRank} at sorted index ${i}`,
+      );
+    }
+  });
+  return byId;
+}
+
+/**
+ * The validated rail-admitted descriptor registry, keyed by id. Typed
+ * `Record<FrameworkId, …>` so the compiler still rejects partial coverage; the
+ * runtime `buildRegistry` adjudication adds the cross-field invariants TypeScript
+ * cannot express (id↔plan, contiguous ranks).
+ */
+export const ADMISSION_DESCRIPTORS: Readonly<Record<FrameworkId, AdmissionDescriptor>> =
+  buildRegistry(SELF_DECLARED_DESCRIPTORS);
 
 /**
  * Canonical framework order, derived from the registry's reportRank. This is

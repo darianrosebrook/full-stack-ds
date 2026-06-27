@@ -112,28 +112,48 @@ site({
   why: "Structurally toolchain-neutral. This is the existing seam to lean on: a Gradle/xcodebuild argv is already valid here. Only the convention (all six plans use pnpm) is TS-shaped.",
 });
 
-// ── Source 2.5: the admission-descriptor registry (the consolidated site) ────
-// RAIL-ADMISSION-DESCRIPTOR-INTERFACE-01 collapsed the parallel per-framework
-// literals (PLANS_BY_ID, DEFAULT_FRAMEWORKS, COMPONENT_TREES,
-// GENERATED_TREE_PREFIXES, FRAMEWORK_RANK) into ONE registry. That registry is
-// the single TS-coupled edit-site now: it still hand-binds pnpm plans, so it is
-// TS-coupled — but it is ONE site, not five spread across four modules.
+// ── Source 2.5: the admission-descriptor registry (now aggregator/validator) ─
+// Slice 1 collapsed five parallel literals into one central registry. Slice 2
+// (RAIL-TARGET-SELF-DECLARED-DESCRIPTOR-02) moved AUTHORSHIP out of that
+// registry into each target module: the registry now imports the six
+// self-declared descriptors and only aggregates + validates them. The
+// authorship sites are the six frameworks/<fw>.ts modules (Source 4b below);
+// the registry is an adjudicator, not an author.
+const RAIL_TARGETS = ["react", "vue", "svelte", "lit", "angular", "react-native"];
 const descSrc = read("packages/ds-codegen/src/validation/admission-descriptor.ts");
+// The registry aggregates a list of self-declared descriptors. Its ids are the
+// imported `<fw>AdmissionDescriptor` symbols, not an inline object literal.
 const descriptorIds = (() => {
-  const m = descSrc.match(/ADMISSION_DESCRIPTORS[^=]*=\s*{([\s\S]*?)\n};/);
+  const m = descSrc.match(/SELF_DECLARED_DESCRIPTORS[^=]*=\s*\[([\s\S]*?)\];/);
   if (!m) return [];
-  // Top-level keys: `react: {`, `"react-native": {`.
-  return [...m[1].matchAll(/^\s{2}(?:"([^"]+)"|([\w-]+)):\s*{/gm)].map((x) => x[1] || x[2]);
+  // import symbols like `reactAdmissionDescriptor`, `reactNativeAdmissionDescriptor`
+  const syms = [...m[1].matchAll(/(\w+)AdmissionDescriptor/g)].map((x) => x[1]);
+  // Map camelCase symbol stems back to ids (reactNative -> react-native).
+  return syms.map((s) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`));
 })();
-// Authoritative plan list now comes from the registry, not validate-cli.
 const plansById = descriptorIds;
+// The registry holds NO inline target facts now. Confirm that — if it does,
+// authorship leaked back to the center (an ownership-regression).
+// Inline fact-authoring ANYWHERE in the registry module is an ownership leak,
+// regardless of where it sits relative to ADMISSION_DESCRIPTORS. The type
+// DEFINITION uses `outputTreeRelPath: string` / `reportRank: number` (no value
+// literal), so matching a STRING/NUMBER VALUE literal (`: "packages/..."`,
+// `reportRank: 0`) catches authored facts without false-positiving the type.
+const registryHasInlineFacts =
+  /outputTreeRelPath:\s*"/.test(descSrc) ||
+  /reportRank:\s*\d/.test(descSrc) ||
+  /sourceExtensions:\s*\[\s*"/.test(descSrc);
 site({
-  surface: "AdmissionDescriptor registry (consolidated)",
+  surface: "AdmissionDescriptor registry (aggregator/validator)",
   file: "packages/ds-codegen/src/validation/admission-descriptor.ts",
   line: lineOf(descSrc, /ADMISSION_DESCRIPTORS/),
-  detail: `${descriptorIds.length} descriptors: ${descriptorIds.join(", ")}. Single source for PLANS_BY_ID, DEFAULT_FRAMEWORKS, COMPONENT_TREES, GENERATED_TREE_PREFIXES, FRAMEWORK_RANK.`,
-  classification: TS_COUPLED,
-  why: "The registry still hand-binds pnpm-based FrameworkValidationPlans, so it remains TS-coupled — but it is now the ONE edit-site a target is declared at, replacing five parallel literals across four modules. A non-TS target adds a descriptor with a non-pnpm compileCommand here (slice 3); the consumers need no further edit.",
+  detail: registryHasInlineFacts
+    ? `STILL AUTHORS inline target facts (ownership regression) — ${descriptorIds.length} ids`
+    : `aggregates ${descriptorIds.length} self-declared descriptors: ${descriptorIds.join(", ")}; authors no per-target facts (validates id↔plan, coverage, contiguous ranks)`,
+  classification: registryHasInlineFacts ? TS_COUPLED : DESCRIPTOR_DRIVEN,
+  why: registryHasInlineFacts
+    ? "The registry re-authored target facts inline — slice-2 ownership migration regressed."
+    : "Post-slice-2: the registry imports the six target-declared descriptors and only aggregates/validates them. It is no longer an authorship site; it is the rail's adjudicator. The pnpm-bound plans now live in each target module.",
 });
 
 // ── Source 3: PLANS_BY_ID + DEFAULT_FRAMEWORKS (validate-cli.ts) ─────────────
@@ -181,6 +201,39 @@ for (const { fw, rel } of planFiles) {
     why: allPnpm
       ? "Every command shells out to `pnpm --filter <pkg> run <script>` (tsc/vitest/vue-tsc/svelte-check). The scope extensions are all TS-toolchain source/SFC extensions. A Kotlin/Swift package has no pnpm script and no such extension — this lane cannot run against it."
       : "No pnpm-shaped command detected; re-inspect.",
+  });
+}
+
+// ── Source 4b: self-declared descriptor authorship (one per target module) ───
+// Slice 2 ownership oracle: each rail target must author its admission facts in
+// its OWN module (outputTreeRelPath / sourceExtensions / reportRank on a
+// `<fw>AdmissionDescriptor`), and figma must NOT. This is the property the slice
+// is judged by — authorship location, not a count.
+const ownershipFindings = [];
+for (const fw of [...RAIL_TARGETS, "figma"]) {
+  const rel = `packages/ds-codegen/src/validation/frameworks/${fw}.ts`;
+  const src = read(rel);
+  const declaresDescriptor = /export const \w+AdmissionDescriptor\s*:/.test(src);
+  const authorsFacts =
+    /AdmissionDescriptor\s*=\s*{[\s\S]*?outputTreeRelPath:\s*"/.test(src) &&
+    /reportRank:\s*\d/.test(src);
+  if (fw === "figma") {
+    // figma is the rail-excluded precedent: it must NOT self-declare an admitted descriptor.
+    ownershipFindings.push({ fw, declaresDescriptor, authorsFacts, expectedToDeclare: false });
+    continue;
+  }
+  ownershipFindings.push({ fw, declaresDescriptor, authorsFacts, expectedToDeclare: true });
+  site({
+    surface: `${fw} self-declared admission descriptor`,
+    file: rel,
+    line: lineOf(src, /AdmissionDescriptor\s*=/),
+    detail: declaresDescriptor && authorsFacts
+      ? "authors its own outputTreeRelPath/sourceExtensions/reportRank beside its plan"
+      : "MISSING self-declared descriptor (ownership not migrated to the target module)",
+    classification: declaresDescriptor && authorsFacts ? DESCRIPTOR_DRIVEN : TS_COUPLED,
+    why: declaresDescriptor && authorsFacts
+      ? "Slice-2 end state: the target module is the single authorship site for its admission facts. The central registry only aggregates this."
+      : "Target facts are not authored in the target module — ownership migration incomplete.",
   });
 }
 
@@ -291,12 +344,41 @@ if (process.argv.includes("--check")) {
   if (summary[UNCLASSIFIED] > 0) {
     problems.push(`${summary[UNCLASSIFIED]} site(s) unclassified — every admission site must land in a bucket`);
   }
+  // ── Slice-2 ownership invariants (the property this slice is judged by) ────
+  // 1. Every rail target self-declares its facts in its own module; figma must not.
+  for (const f of ownershipFindings) {
+    if (f.expectedToDeclare && !(f.declaresDescriptor && f.authorsFacts)) {
+      problems.push(`${f.fw} does not self-declare its admission descriptor in its own module — ownership not migrated`);
+    }
+    if (!f.expectedToDeclare && f.declaresDescriptor) {
+      problems.push(`figma self-declares an admission descriptor — it must stay the rail-excluded precedent`);
+    }
+  }
+  // 2. Each target fact has exactly ONE authorship site: the central registry
+  //    must NOT re-author inline facts (that would be ownership leaking back).
+  if (registryHasInlineFacts) {
+    problems.push("admission-descriptor.ts still authors inline per-target facts — authorship leaked back to the center (slice-2 regression)");
+  }
+  // 3. The consumer modules must NOT re-author a target fact (e.g. a path
+  //    prefix or rank literal). They derive; they do not author.
+  for (const [name, rel] of [
+    ["required-mode", "packages/ds-codegen/src/validation/required-mode.ts"],
+    ["git-range-scope", "packages/ds-codegen/src/validation/git-range-scope.ts"],
+    ["markdown-report", "packages/ds-codegen/src/validation/markdown-report.ts"],
+    ["validate-cli", "packages/ds-codegen/src/validation/validate-cli.ts"],
+  ]) {
+    const csrc = read(rel);
+    // A re-authored generated-tree path literal in a consumer is the smell.
+    if (/(?:relPath|prefix):\s*"packages\/ds-/.test(csrc)) {
+      problems.push(`${name} re-authors a generated-tree path literal — target facts must live only in the target module`);
+    }
+  }
   if (problems.length) {
     console.error("rail-toolchain-coupling-audit --check FAILED:");
     for (const p of problems) console.error("  - " + p);
     process.exit(1);
   }
-  console.error("rail-toolchain-coupling-audit --check OK: 6 rail-admitted FrameworkIds, figma rail-excluded, no native target admitted, all sites classified.");
+  console.error("rail-toolchain-coupling-audit --check OK: 6 rail-admitted FrameworkIds self-declare; figma rail-excluded; registry aggregates without authoring; consumers derive; no native target admitted; all sites classified.");
   process.exit(0);
 }
 
