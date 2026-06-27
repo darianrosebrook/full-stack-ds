@@ -115,10 +115,13 @@ does not own rollback). Plus a falsifiability probe (corrupting a reaction count
 fails the reaction tests).
 
 They run under plain Vitest (Node environment) with `latencyMs: 0`. Because the
-root Vitest `include` does not cover `examples/`, run them with an explicit
-config that targets this directory (a `vitest.config.ts` with
-`root: <this dir>` and `include: ["examples/social-feed/src/**/*.test.ts"]`),
-not via the root `pnpm test`.
+root Vitest `include` does not cover `examples/`, this suite runs through the
+committed examples data/API test lane — `pnpm run test:examples:data-api` from
+the repo root (backed by `vitest.examples.config.ts`) — not via the root
+`pnpm test`. That command runs all three example data/API suites together. It
+proves the data/API seam only — not framework app parity, not visual proof, not
+backend proof, and not generated-artifact admission. Whether `examples/` joins
+CI is a separate future slice.
 
 ## Intended future use
 
