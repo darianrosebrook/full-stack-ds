@@ -2,10 +2,11 @@ id: RAIL-NATIVE-COMPILE-LANE-SWIFT-CI-OBSERVE-001
 title: 'CI closeout for slice 4: observe native-compile-rail-swift green on GitHub Actions (macOS swiftc), record cost; no feature change'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
-worktree: rail-swift-ci-observe
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Swift CI closeout observed green. Run 28281777968, job ''Native compile rail (Swift compile-admission smoke)'' id 83798771015 conclusion=success, 13s on macos-26-arm64 (macos-latest label migrated to Apple Silicon). A1 isolated side branch ci-observe/rail-arc-swift (origin/main + 4 rail commits cherry-picked, zero token drift, pre-push full mirror passed); A2 success on macos; A3 positive Smoke.swift exit=0 -> lane PASS (1073ms); A4 negative SmokeInvalid.swift ?: (Kotlin elvis, invalid Swift) exit=1 -> lane PASS, compiler ''error: expected expression after ? in ternary expression'' visible in log; A5 cost: Apple Swift 6.3.2 preinstalled via Xcode (NO download, swiftc --version 3s), total job 13s; Kotlin lane ran independently on ubuntu-latest (15s) confirming it does not depend on macOS; A6 no emitter/SwiftUI/Compose/runtime/fsds.targets change, CI did not fail so no provisioning touched. Evidence machine-local: docs/internal/ci-observe-rail-native-compile-lane-swift-04.md + ci-native-compile-rail-swift.joblog.txt.'
 created_at: '2026-06-27T06:50:58.808Z'
-updated_at: '2026-06-27T06:51:06.169Z'
+updated_at: '2026-06-27T06:56:59.191Z'
 blast_radius:
   modules:
     - 'CI observation only — no source modules. Evidence recorded in docs/internal (gitignored) + spec closure notes.'
