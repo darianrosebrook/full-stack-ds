@@ -224,3 +224,46 @@ jobs:
           name: playwright-report-runtime-rail
           path: playwright-report/
           if-no-files-found: ignore
+
+  native-compile-rail:
+    name: Native compile rail (Kotlin compile-admission smoke)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03. Proves the rail can execute and
+    # attribute a NON-pnpm, target-owned compile command — the first non-TS
+    # toolchain lane. Smallest stable surface: a pinned JDK + a pinned Kotlin
+    # compiler, NO Android emulator, NO runtime UI test. The lane runs two
+    # passes: the valid fixture must compile (positive); the invalid `??` fixture
+    # must FAIL to compile (negative) — that negative is the standing proof that
+    # byte-stability is not compilation. Independent of `gate` (different
+    # toolchain), so a JVM-provisioning issue surfaces on its own.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK (pinned)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Provision Kotlin compiler (pinned)
+        env:
+          KOTLIN_VERSION: 2.0.21
+        run: |
+          set -euo pipefail
+          curl -sSL -o /tmp/kotlinc.zip \
+            "https://github.com/JetBrains/kotlin/releases/download/v${KOTLIN_VERSION}/kotlin-compiler-${KOTLIN_VERSION}.zip"
+          unzip -q -o /tmp/kotlinc.zip -d /opt
+          /opt/kotlinc/bin/kotlinc -version
+
+      - name: Compile-admission positive (valid Kotlin must compile)
+        run: node scripts/run-native-compile-lane.mjs --kotlinc /opt/kotlinc/bin/kotlinc
+
+      - name: Compile-admission negative (invalid `??` Kotlin must fail to compile)
+        run: node scripts/run-native-compile-lane.mjs --kotlinc /opt/kotlinc/bin/kotlinc --negative

@@ -96,6 +96,33 @@ export type FrameworkId =
   | "react-native";
 
 /**
+ * A rail participant that is NOT an admitted web/RN framework.
+ *
+ * `FrameworkId` names the targets the rail admits as full frameworks — it
+ * encodes the original web-framework mental model (a pnpm package the rail
+ * typechecks/tests). That model is semantically wrong for native compile lanes
+ * and design-tool targets, which participate in the rail without being a
+ * generated framework package.
+ *
+ * `RailTargetId` is the broader rail-participant identity. It is introduced now
+ * (RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03) rather than by widening
+ * `FrameworkId`, deliberately: bending `FrameworkId` to cover non-frameworks
+ * would propagate the wrong mental model into every `Record<FrameworkId, …>`
+ * surface and make the eventual migration more expensive. Keeping `FrameworkId`
+ * narrow and adding `RailTargetId` alongside it is the cheaper, more honest move.
+ *
+ * `"compose-smoke"` is the first non-`FrameworkId` rail participant: a Kotlin
+ * compile lane (see packages/ds-compose-smoke). It is NOT a `FrameworkId`, NOT
+ * in the admitted descriptor registry (`PLANS_BY_ID`), and admits no component
+ * — it proves only that the rail can run a non-pnpm, target-owned compile
+ * command and bind its exit code as evidence.
+ */
+export type NativeLaneId = "compose-smoke";
+
+/** Every id the rail can attribute evidence to: admitted frameworks + native lanes. */
+export type RailTargetId = FrameworkId | NativeLaneId;
+
+/**
  * What a single check produced. `direct` means the framework
  * command exercised this check. `covered_by_typecheck` means the
  * typecheck pass subsumes this check (e.g. tsc's parser covers

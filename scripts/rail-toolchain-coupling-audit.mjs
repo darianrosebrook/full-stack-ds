@@ -35,6 +35,10 @@ const POLYMORPHIC = "ALREADY-POLYMORPHIC";
 // RAIL-ADMISSION-DESCRIPTOR-INTERFACE-01 added this bucket; sites move out of
 // TS_COUPLED into it as parallel literals collapse into the registry.
 const DESCRIPTOR_DRIVEN = "DESCRIPTOR-DRIVEN";
+// NON-TS-TOOLCHAIN-LANE: a rail participant whose compile command is NOT pnpm —
+// the first proof the rail admits a non-TS toolchain. Added by
+// RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03 (the ds-compose-smoke Kotlin lane).
+const NATIVE_LANE = "NON-TS-TOOLCHAIN-LANE";
 const UNCLASSIFIED = "unclassified";
 
 /** True if a constant is assigned from an admission-descriptor helper call
@@ -237,6 +241,39 @@ for (const fw of [...RAIL_TARGETS, "figma"]) {
   });
 }
 
+// ── Source 4c: native compile lane (the first non-pnpm rail compile command) ─
+// Slice 3 (RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03): the ds-compose-smoke
+// lane proves the rail can admit a non-TS toolchain. Its compile command is run
+// by run-native-compile-lane.mjs and provisioned in the native-compile-rail CI
+// job. This is the one site that is admitted to the rail WITHOUT a pnpm command.
+const laneJson = read("packages/ds-compose-smoke/compile-lane.json");
+const laneRunner = read("scripts/run-native-compile-lane.mjs");
+const ciYml = read(".github/workflows/ci.yml");
+const nativeLanePresent = laneJson.length > 0 && laneRunner.length > 0;
+const laneToolchain = (() => {
+  const m = laneJson.match(/"toolchain":\s*"([^"]+)"/);
+  return m ? m[1] : "unknown";
+})();
+// The lane's compile command must NOT be pnpm. The runner spawns a compiler
+// (kotlinc); a pnpm reintroduction here would mean the "non-TS lane" collapsed
+// back to the TS toolchain.
+const laneUsesPnpm = /spawnSync\(\s*["']pnpm/.test(laneRunner) || /command\s*=\s*\[\s*["']pnpm/.test(laneRunner);
+const laneInCi = /native-compile-rail/.test(ciYml) && /run-native-compile-lane\.mjs/.test(ciYml);
+if (nativeLanePresent) {
+  site({
+    surface: "ds-compose-smoke native compile lane",
+    file: "scripts/run-native-compile-lane.mjs",
+    line: lineOf(laneRunner, /spawnSync/),
+    detail: laneUsesPnpm
+      ? "REGRESSION: native lane reintroduced a pnpm command"
+      : `non-pnpm ${laneToolchain} compile command; CI-wired=${laneInCi}; positive+negative passes`,
+    classification: laneUsesPnpm ? TS_COUPLED : NATIVE_LANE,
+    why: laneUsesPnpm
+      ? "The native lane is supposed to run a non-pnpm compiler; a pnpm command here means the non-TS lane collapsed back to the TS toolchain."
+      : "First non-pnpm rail compile command. The rail runner spawns a Kotlin compiler and binds its exit code — proving toolchain-polymorphic admission without a pnpm/tsc assumption. It is a RailTargetId, NOT a FrameworkId, and admits no component.",
+  });
+}
+
 // ── Source 5: COMPONENT_TREES (required-mode.ts) ────────────────────────────
 const reqSrc = read("packages/ds-codegen/src/validation/required-mode.ts");
 const componentTrees = [...reqSrc.matchAll(/framework:\s*"([^"]+)",\s*relPath:\s*"([^"]+)"/g)].map((m) => m[2]);
@@ -316,6 +353,7 @@ for (const aggregate of ["typecheck:all", "test:frameworks"]) {
 const summary = {
   [TS_COUPLED]: sites.filter((s) => s.classification === TS_COUPLED).length,
   [DESCRIPTOR_DRIVEN]: sites.filter((s) => s.classification === DESCRIPTOR_DRIVEN).length,
+  [NATIVE_LANE]: sites.filter((s) => s.classification === NATIVE_LANE).length,
   [AGNOSTIC]: sites.filter((s) => s.classification === AGNOSTIC).length,
   [POLYMORPHIC]: sites.filter((s) => s.classification === POLYMORPHIC).length,
   [UNCLASSIFIED]: sites.filter((s) => s.classification === UNCLASSIFIED).length,
@@ -373,12 +411,41 @@ if (process.argv.includes("--check")) {
       problems.push(`${name} re-authors a generated-tree path literal — target facts must live only in the target module`);
     }
   }
+  // ── Slice-3 native-lane invariants (compile-admission, not framework admission) ─
+  if (nativeLanePresent) {
+    // 1. The native lane must run a NON-pnpm compile command.
+    if (laneUsesPnpm) {
+      problems.push("native compile lane reintroduced a pnpm command — the non-TS lane collapsed back to the TS toolchain");
+    }
+    // 2. It must be CI-wired (the compile only earns admission if CI runs it).
+    if (!laneInCi) {
+      problems.push("native compile lane is not wired into CI (native-compile-rail job missing) — an un-run compile proves nothing");
+    }
+    // 3. It must NOT have become an admitted framework: no FrameworkId, not in
+    //    the descriptor registry, no fsds.targets.json entry. compose-smoke is a
+    //    RailTargetId compile lane, not a generated Compose target.
+    if (frameworkIdMembers.includes("compose-smoke")) {
+      problems.push("compose-smoke leaked into FrameworkId — it must stay a RailTargetId compile lane, not an admitted framework");
+    }
+    if (plansById.includes("compose-smoke")) {
+      problems.push("compose-smoke leaked into the admission-descriptor registry — the smoke lane must not be an admitted framework");
+    }
+    const targetsJson = read("fsds.targets.json");
+    if (/jetpack-compose|compose-smoke/.test(targetsJson)) {
+      problems.push("fsds.targets.json gained a Compose entry — slice 3 admits a compile lane, NOT a generated Compose target");
+    }
+  }
   if (problems.length) {
     console.error("rail-toolchain-coupling-audit --check FAILED:");
     for (const p of problems) console.error("  - " + p);
     process.exit(1);
   }
-  console.error("rail-toolchain-coupling-audit --check OK: 6 rail-admitted FrameworkIds self-declare; figma rail-excluded; registry aggregates without authoring; consumers derive; no native target admitted; all sites classified.");
+  const laneNote = nativeLanePresent
+    ? ` one non-pnpm ${laneToolchain} compile lane admitted (compose-smoke, not a framework);`
+    : "";
+  console.error(
+    `rail-toolchain-coupling-audit --check OK: 6 rail-admitted FrameworkIds self-declare; figma rail-excluded; registry aggregates without authoring; consumers derive;${laneNote} no native FRAMEWORK target admitted; all sites classified.`,
+  );
   process.exit(0);
 }
 
@@ -395,9 +462,9 @@ lines.push(`FrameworkId members (rail-admitted): ${frameworkIdMembers.join(", ")
 lines.push(`Admission descriptors registered:    ${plansById.join(", ")}`);
 lines.push(`figma:                               generate-admitted but rail-EXCLUDED (plan file exists, not in the descriptor registry)`);
 lines.push("");
-lines.push(`Summary: ${summary[TS_COUPLED]} TS-coupled | ${summary[DESCRIPTOR_DRIVEN]} descriptor-driven | ${summary[AGNOSTIC]} language-agnostic | ${summary[POLYMORPHIC]} already-polymorphic | ${summary[UNCLASSIFIED]} unclassified`);
+lines.push(`Summary: ${summary[TS_COUPLED]} TS-coupled | ${summary[DESCRIPTOR_DRIVEN]} descriptor-driven | ${summary[NATIVE_LANE]} non-TS-toolchain-lane | ${summary[AGNOSTIC]} language-agnostic | ${summary[POLYMORPHIC]} already-polymorphic | ${summary[UNCLASSIFIED]} unclassified`);
 lines.push("");
-for (const bucket of [TS_COUPLED, UNCLASSIFIED, DESCRIPTOR_DRIVEN, AGNOSTIC, POLYMORPHIC]) {
+for (const bucket of [TS_COUPLED, UNCLASSIFIED, NATIVE_LANE, DESCRIPTOR_DRIVEN, AGNOSTIC, POLYMORPHIC]) {
   const inBucket = sites.filter((s) => s.classification === bucket);
   if (!inBucket.length) continue;
   lines.push(`## ${bucket} (${inBucket.length})`);
