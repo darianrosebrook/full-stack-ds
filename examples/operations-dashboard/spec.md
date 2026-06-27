@@ -60,7 +60,7 @@ One page, no routing. A persistent top region, a left filter rail, a central que
 
 ### Data and API layer
 
-No backend (no server, no network, no persistence). The lane structures its data as three separated concerns (see the portfolio README's "Data and API Layer"):
+No backend (no server, no network, no persistence). The lane structures its data as three separated concerns (see the portfolio README's "Data and API Layer"). This seam is now materialized for this app shape under `fixtures/` and `src/{types,data,api}/` — see [`README.md`](./README.md); the structure below describes that landed scaffold, with no change to app semantics.
 
 1. **Fixtures** — static `*.json` / `*.jsonl` files in the lane holding the incident/queue records, service-health records, and event timelines.
 2. **Adapter** — a lane-local reader that parses the fixtures into typed domain records (`Incident`, `ServiceHealth`, `TimelineEvent`). The adapter may load the static JSON/JSONL fixtures once into memory; the UI calls only the promise-returning API, never the fixture or adapter directly.
