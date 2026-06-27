@@ -2,10 +2,11 @@ id: RAIL-NATIVE-COMPILE-LANE-SWIFT-SMOKE-04
 title: 'Prove RailTargetId carries a SECOND non-pnpm native compile lane (Swift/swiftc smoke) through the same abstraction — no Kotlin-only special case; no SwiftUI emitter, no simulator, no runtime'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: rail-swift-smoke
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge rail-swift-smoke at b7b7d7b0f2db0a09041283a52d8ea632a9d676e5'
 created_at: '2026-06-27T06:13:39.972Z'
-updated_at: '2026-06-27T06:13:52.082Z'
+updated_at: '2026-06-27T06:35:54.367Z'
 blast_radius:
   modules:
     - 'packages/ds-swift-smoke (new minimal swiftc compile smoke package)'
