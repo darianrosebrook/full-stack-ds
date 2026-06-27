@@ -1,0 +1,30 @@
+id: RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03
+title: 'Prove the rail admits a non-pnpm target-owned compile command: minimal Gradle/Kotlin smoke lane + RailTargetId, no Compose target admission'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-27T02:05:00.576Z'
+updated_at: '2026-06-27T02:05:00.576Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'TODO: list the file(s) or directories this spec authorizes.'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'non-pnpm-compile-admission'
+    type: behavior
+  - name: 'rail-target-id'
+    type: schema
+    path: 'packages/ds-codegen/src/validation/types.ts'
