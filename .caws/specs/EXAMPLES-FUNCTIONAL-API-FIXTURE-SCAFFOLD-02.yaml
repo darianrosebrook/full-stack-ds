@@ -2,10 +2,11 @@ id: EXAMPLES-FUNCTIONAL-API-FIXTURE-SCAFFOLD-02
 title: 'Materialize storefront-checkout fixture -> adapter -> promise-returning functional API seam (totals/promo/shipping/tax/payment behind lane-local API; app-layer data scaffold, no framework app code)'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
-worktree: checkout-api
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge checkout-api at 9b790ce73ed429a107fec8aaf978bfcae8504246'
 created_at: '2026-06-27T00:31:07.659Z'
-updated_at: '2026-06-27T00:31:22.230Z'
+updated_at: '2026-06-27T01:47:10.488Z'
 blast_radius:
   modules:
     - examples/storefront-checkout/fixtures
