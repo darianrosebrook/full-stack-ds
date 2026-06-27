@@ -34,17 +34,19 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-  Text,
   Toast,
   ToastItem,
 } from "@full-stack-ds/react";
 import type { Environment, Incident, Severity } from "../../src/api";
-import {
-  ENVIRONMENTS,
-  SEVERITIES,
-  useDashboard,
-} from "./useDashboard";
+import { ENVIRONMENTS, SEVERITIES, useDashboard } from "./useDashboard";
 import { formatAge, serviceStatusIntent, severityIntent } from "./format";
+
+// FINDING (see README): `Text` and `Field` omit `children` from their public
+// prop types, and `Field` renders only `slots`, never children. So this app
+// uses native semantic elements (`<h1>`, `<p>`, `<span>`, `<legend>`) for text
+// runs — they pick up design-system typography from the package stylesheet
+// cascade — and composes `Field` via its typed `slots` surface. No casts past
+// the public types are used to force `Text`/`Field` children.
 
 const SEVERITY_LABEL: Record<Severity, string> = {
   critical: "Critical",
@@ -97,7 +99,9 @@ export function App() {
       {/* Assign workflow — side Sheet. */}
       <Sheet
         open={dash.assignOpen}
-        onOpenChange={(open) => (open ? actions.openAssign() : actions.closeAssign())}
+        onOpenChange={(open) =>
+          open ? actions.openAssign() : actions.closeAssign()
+        }
         side="right"
         modal
       >
@@ -106,17 +110,23 @@ export function App() {
         </SheetHeader>
         <SheetBody>
           <Stack variant="vertical">
-            <Text as="p">
+            <p>
               Assign {selected ? selected.id : "this incident"} to an on-call
               engineer.
-            </Text>
-            <Field name="assignee" slots={{ label: "Assignee" }}>
-              <Input
-                value={assignee}
-                onChange={setAssignee}
-                placeholder="e.g. @ada"
-              />
-            </Field>
+            </p>
+            <Field
+              name="assignee"
+              slots={{
+                label: "Assignee",
+                control: (
+                  <Input
+                    value={assignee}
+                    onChange={setAssignee}
+                    placeholder="e.g. @ada"
+                  />
+                ),
+              }}
+            />
           </Stack>
         </SheetBody>
         <SheetFooter>
@@ -151,11 +161,11 @@ export function App() {
           <DialogTitle>Resolve &amp; close incident?</DialogTitle>
         </DialogHeader>
         <DialogBody>
-          <Text as="p">
+          <p>
             {selected
               ? `This removes ${selected.id} — "${selected.title}" — from the active queue. This cannot be undone in the demo.`
               : "Select an incident first."}
-          </Text>
+          </p>
         </DialogBody>
         <DialogFooter>
           <Button variant="secondary" onClick={actions.closeResolve}>
@@ -212,19 +222,13 @@ function Header({
 }) {
   return (
     <header className="ops-header">
-      <Stack variant="horizontal">
-        <Text as="h1" variant="heading" size="lg" weight="bold">
-          Operations dashboard
-        </Text>
-      </Stack>
+      <h1>Operations dashboard</h1>
       <div className="ops-summary">
         <Card density="inset">
           <CardContent>
             <Stat trend="neutral">
               <Status status="success">Healthy</Status>
-              <Text as="span" size="lg" weight="bold">
-                {summary.healthy}
-              </Text>
+              <span className="ops-stat-value">{summary.healthy}</span>
             </Stat>
           </CardContent>
         </Card>
@@ -232,9 +236,7 @@ function Header({
           <CardContent>
             <Stat trend={summary.degraded > 0 ? "down" : "neutral"}>
               <Status status="warning">Degraded</Status>
-              <Text as="span" size="lg" weight="bold">
-                {summary.degraded}
-              </Text>
+              <span className="ops-stat-value">{summary.degraded}</span>
             </Stat>
           </CardContent>
         </Card>
@@ -242,9 +244,7 @@ function Header({
           <CardContent>
             <Stat trend={summary.down > 0 ? "down" : "neutral"}>
               <Status status="danger">Down</Status>
-              <Text as="span" size="lg" weight="bold">
-                {summary.down}
-              </Text>
+              <span className="ops-stat-value">{summary.down}</span>
             </Stat>
           </CardContent>
         </Card>
@@ -254,9 +254,7 @@ function Header({
               <Badge variant="counter" intent="info">
                 Open incidents
               </Badge>
-              <Text as="span" size="lg" weight="bold">
-                {summary.open}
-              </Text>
+              <span className="ops-stat-value">{summary.open}</span>
             </Stat>
           </CardContent>
         </Card>
@@ -268,9 +266,7 @@ function Header({
           checked={dash.failLoads}
           onChange={(checked) => dash.actions.setFailLoads(checked)}
         />
-        <Text as="span" size="sm">
-          Simulate load failure
-        </Text>
+        <span>Simulate load failure</span>
       </label>
     </header>
   );
@@ -285,29 +281,39 @@ function FilterRail({ dash }: { dash: ReturnType<typeof useDashboard> }) {
       <CardHeader>Filters</CardHeader>
       <CardContent>
         <Stack variant="vertical">
-          <Field name="search" slots={{ label: "Search" }}>
-            <Input
-              value={filters.search}
-              onChange={actions.setSearch}
-              placeholder="id, title, or service"
-            />
-          </Field>
+          <Field
+            name="search"
+            slots={{
+              label: "Search",
+              control: (
+                <Input
+                  value={filters.search}
+                  onChange={actions.setSearch}
+                  placeholder="id, title, or service"
+                />
+              ),
+            }}
+          />
 
-          <Field name="environment" slots={{ label: "Environment" }}>
-            <Select
-              options={ENV_OPTIONS}
-              value={filters.environment}
-              onChange={(v) => {
-                const next = Array.isArray(v) ? (v[0] ?? "") : v;
-                actions.setEnvironment(next as Environment | "");
-              }}
-            />
-          </Field>
+          <Field
+            name="environment"
+            slots={{
+              label: "Environment",
+              control: (
+                <Select
+                  options={ENV_OPTIONS}
+                  value={filters.environment}
+                  onChange={(v) => {
+                    const next = Array.isArray(v) ? (v[0] ?? "") : v;
+                    actions.setEnvironment(next as Environment | "");
+                  }}
+                />
+              ),
+            }}
+          />
 
           <fieldset className="ops-severity">
-            <Text as="legend" size="sm" weight="medium">
-              Severity
-            </Text>
+            <legend>Severity</legend>
             <Stack variant="vertical">
               {SEVERITIES.map((s) => (
                 <label key={s} className="ops-check-row">
@@ -315,9 +321,7 @@ function FilterRail({ dash }: { dash: ReturnType<typeof useDashboard> }) {
                     checked={filters.severities.includes(s)}
                     onChange={() => actions.toggleSeverity(s)}
                   />
-                  <Text as="span" size="sm">
-                    {SEVERITY_LABEL[s]}
-                  </Text>
+                  <span>{SEVERITY_LABEL[s]}</span>
                 </label>
               ))}
             </Stack>
@@ -350,9 +354,7 @@ function QueuePane({ dash }: { dash: ReturnType<typeof useDashboard> }) {
         <CardContent>
           <AlertNotice status="error">
             <Stack variant="vertical">
-              <Text as="p">
-                {dash.errorMessage ?? "Failed to load incidents."}
-              </Text>
+              <p>{dash.errorMessage ?? "Failed to load incidents."}</p>
               <Button variant="primary" onClick={actions.retry}>
                 Retry
               </Button>
@@ -417,8 +419,8 @@ function QueuePane({ dash }: { dash: ReturnType<typeof useDashboard> }) {
                     {/* Row selection: the package Table exposes no row-select
                         channel, so selection is driven by an in-cell Button
                         (package-owned focus/press) and the app tracks the id.
-                        See README findings: the selected-row visual indication
-                        is app CSS, a recorded boundary gap. */}
+                        The selected-row VISUAL indication is app CSS — a
+                        recorded boundary gap (see README findings). */}
                     <Button
                       variant="ghost"
                       size="small"
@@ -480,9 +482,7 @@ function DetailPane({
       <CardHeader>{selected.id}</CardHeader>
       <CardContent>
         <Stack variant="vertical">
-          <Text as="h2" variant="heading" size="md" weight="bold">
-            {selected.title}
-          </Text>
+          <h2 className="ops-detail-title">{selected.title}</h2>
           <Stack variant="horizontal">
             <Badge variant="status" intent={severityIntent(selected.severity)}>
               {SEVERITY_LABEL[selected.severity]}
@@ -490,29 +490,27 @@ function DetailPane({
             <Status status={serviceStatusIntent("degraded")}>
               {selected.service}
             </Status>
-            <Text as="span" size="sm">
+            <span className="ops-detail-meta">
               {selected.environment} · opened {formatAge(selected.openedAt)} ago ·{" "}
               {selected.assignee ? `@${selected.assignee}` : "unassigned"}
-            </Text>
+            </span>
           </Stack>
 
           {dash.detailLoading || !dash.detail ? (
             <Skeleton variant="text" lines={4} ariaLabel="Loading detail" />
           ) : (
             <>
-              <Text as="p">{dash.detail.description}</Text>
+              <p>{dash.detail.description}</p>
 
               <Details summary={`Timeline (${dash.detail.timeline.length})`}>
                 <DetailsContent>
                   <Stack variant="vertical" as="ol">
                     {dash.detail.timeline.map((ev, idx) => (
                       <li key={`${ev.at}-${idx}`}>
-                        <Text as="span" size="sm" weight="medium">
-                          {ev.kind}
-                        </Text>{" "}
-                        <Text as="span" size="sm">
+                        <span className="ops-event-kind">{ev.kind}</span>{" "}
+                        <span>
                           {ev.message} ({formatAge(ev.at)})
-                        </Text>
+                        </span>
                       </li>
                     ))}
                   </Stack>

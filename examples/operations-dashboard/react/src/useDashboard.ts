@@ -7,7 +7,8 @@
 // async transition, not a synchronous fake.
 //
 // BOUNDARY: imports the data/API ONLY through the app-local barrel
-// (`../../src/api`). It never imports fixtures or `../../src/data/adapter`.
+// (`../../src/api`). It never reaches past that barrel into the static data
+// files or the lane-local parsing adapter.
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {

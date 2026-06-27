@@ -134,6 +134,11 @@ RN is **not** an initial lane for this app shape. The operations dashboard is a 
 
 Reserved for findings surfaced while implementing the framework lanes. Record each consumer-API gap, residual that could not be satisfied from public exports, or cross-framework semantic divergence here. **Do not silently change this spec to make a lane pass — record the gap, then promote it into an issue, contract, IR, emitter, package export, or test.**
 
+Prose detail for the React findings lives in [`README.md`](./README.md) → "React lane → Findings".
+
 | # | Lane(s) | Surface | Finding | Status |
 |---|---------|---------|---------|--------|
-| _none yet_ | | | | |
+| 1 | react | `Field`, `Text` | Both `Omit<…, "children">` from their public props and never re-add it; `Field` renders only `slots.label`/`slots.control`, never children. The idiomatic `<Field><Input/></Field>` drops the control at runtime and fails strict typecheck. Lane uses typed `slots={{ label, control }}` + native text elements; no cast past public types. | open — package export gap |
+| 2 | react | `Table` / `TableRow` | No row-selection channel (`selected`/`onRowClick`/`aria-selected`) and no package-owned selected-row styling. Selection is app-tracked via an in-cell `Button`; the selected-row **visual** indication is app CSS (`.ops-row-selected`). | open — missing public export (state + indication) |
+| 3 | react | data/API seam (`src/data/adapter.ts`) | Seam is node-only: `loadFixtures()` uses `readFileSync` from `node:fs`, so `createOperationsApi()` reads from disk synchronously. Vite bundles it without error, but a browser lane needing live fixture loading would require an isomorphic adapter. Out of scope for this lane; recorded against the seam. | open — seam assumes node FS |
+| 4 | react | lane `tsconfig.json` | `tsc` follows the API import graph into the node-targeted adapter, so the lane must add `"types": ["node", "vite/client"]` + `@types/node`. Consequence of #3. | open — follows from #3 |

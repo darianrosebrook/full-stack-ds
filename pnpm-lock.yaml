@@ -115,6 +115,37 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(vitest@3.2.4(@types/node@25.7.0)(jsdom@27.4.0)(lightningcss@1.32.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))
 
+  examples/operations-dashboard/react:
+    dependencies:
+      '@full-stack-ds/react':
+        specifier: workspace:*
+        version: link:../../../packages/ds-react
+      react:
+        specifier: ^19.2.5
+        version: 19.2.6
+      react-dom:
+        specifier: ^19.2.5
+        version: 19.2.6(react@19.2.6)
+    devDependencies:
+      '@types/node':
+        specifier: ^25.7.0
+        version: 25.7.0
+      '@types/react':
+        specifier: ^19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react':
+        specifier: ^6.0.1
+        version: 6.0.1(vite@8.0.13(@types/node@25.7.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.8
+        version: 8.0.13(@types/node@25.7.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
+
   examples/settings/react:
     dependencies:
       '@full-stack-ds/react':
@@ -233,6 +264,8 @@ importers:
       vite:
         specifier: ^8.0.8
         version: 8.0.13(@types/node@25.7.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
+
+  packages/ds-iconography: {}
 
   packages/ds-lit:
     devDependencies:
