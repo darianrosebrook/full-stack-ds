@@ -65,9 +65,7 @@ const classes = $derived(
 <div class={classes} role="group">
   <div class={'field__header'}>
     {#if label}
-    <label class={'field__label'}>
-      {@render children?.()}
-    </label>
+    <label class={'field__label'}>{label}</label>
     {/if}
   </div>
   <div class={'field__control'}>
@@ -75,10 +73,10 @@ const classes = $derived(
   </div>
   <div class={'field__meta'}>
     {#if helpText}
-    <span class={'field__help'}></span>
+    <span class={'field__help'}>{helpText}</span>
     {/if}
     {#if error}
-    <span class={'field__error'}></span>
+    <span class={'field__error'}>{error}</span>
     {/if}
     {#if validating}
     <span class={'field__validatingIndicator'}></span>

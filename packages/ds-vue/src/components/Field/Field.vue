@@ -72,15 +72,19 @@ const classNames = computed(() => [
   <div :class="classNames" role="group" :data-testid="props['data-testid']">
     <div :class="'field__header'">
       <label v-if="props.label" :class="'field__label'">
-        <slot />
+        {{ props.label }}
       </label>
     </div>
     <div :class="'field__control'">
       <slot />
     </div>
     <div :class="'field__meta'">
-      <span v-if="props.helpText" :class="'field__help'"></span>
-      <span v-if="props.error" :class="'field__error'"></span>
+      <span v-if="props.helpText" :class="'field__help'">
+        {{ props.helpText }}
+      </span>
+      <span v-if="props.error" :class="'field__error'">
+        {{ props.error }}
+      </span>
       <span v-if="props.validating" :class="'field__validatingIndicator'"></span>
     </div>
   </div>

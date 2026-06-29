@@ -26,7 +26,7 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
   <div [ngClass]="'field__header'">
     <ng-container *ngIf="label">
       <label [ngClass]="'field__label'">
-        <ng-content />
+        {{ label }}
       </label>
     </ng-container>
   </div>
@@ -35,10 +35,14 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
   </div>
   <div [ngClass]="'field__meta'">
     <ng-container *ngIf="helpText">
-      <span [ngClass]="'field__help'"></span>
+      <span [ngClass]="'field__help'">
+        {{ helpText }}
+      </span>
     </ng-container>
     <ng-container *ngIf="error">
-      <span [ngClass]="'field__error'"></span>
+      <span [ngClass]="'field__error'">
+        {{ error }}
+      </span>
     </ng-container>
     <ng-container *ngIf="validating">
       <span [ngClass]="'field__validatingIndicator'"></span>

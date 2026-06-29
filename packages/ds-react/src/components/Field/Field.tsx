@@ -101,7 +101,7 @@ export function Field({
     <div className="field__header">
       {label && (
         <label className="field__label">
-          {children}
+          {label}
         </label>
       )}
     </div>
@@ -110,10 +110,14 @@ export function Field({
     </div>
     <div className="field__meta">
       {helpText && (
-        <span className="field__help" />
+        <span className="field__help">
+          {helpText}
+        </span>
       )}
       {error && (
-        <span className="field__error" />
+        <span className="field__error">
+          {error}
+        </span>
       )}
       {validating && (
         <span className="field__validatingIndicator" />

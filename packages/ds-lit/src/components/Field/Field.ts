@@ -202,9 +202,7 @@ export class FieldElement extends LitElement {
     return html`<div class="${this.computeClasses()}" role="group">
   <div class=${'field__header'}>
     ${this.label ? html`
-    <label class=${'field__label'}>
-      <slot></slot>
-    </label>
+    <label class=${'field__label'}>${this.label}</label>
     ` : nothing}
   </div>
   <div class=${'field__control'}>
@@ -212,10 +210,10 @@ export class FieldElement extends LitElement {
   </div>
   <div class=${'field__meta'}>
     ${this.helpText ? html`
-    <span class=${'field__help'}></span>
+    <span class=${'field__help'}>${this.helpText}</span>
     ` : nothing}
     ${this.error ? html`
-    <span class=${'field__error'}></span>
+    <span class=${'field__error'}>${this.error}</span>
     ` : nothing}
     ${this.validating ? html`
     <span class=${'field__validatingIndicator'}></span>

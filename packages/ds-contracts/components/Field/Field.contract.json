@@ -69,11 +69,7 @@
               "tag": "label",
               "part": "label",
               "if": "label",
-              "children": [
-                {
-                  "tag": "children"
-                }
-              ]
+              "content": "prop:label"
             }
           ]
         },
@@ -93,12 +89,14 @@
             {
               "tag": "span",
               "part": "help",
-              "if": "helpText"
+              "if": "helpText",
+              "content": "prop:helpText"
             },
             {
               "tag": "span",
               "part": "error",
-              "if": "error"
+              "if": "error",
+              "content": "prop:error"
             },
             {
               "tag": "span",
