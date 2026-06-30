@@ -1,10 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 1,17
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 # CAWS Command Safety Gate (shared).
 # Delegates to classify_command.py for robust command parsing and classification.
 # Falls back to bash pattern matching if Python is unavailable.
@@ -21,8 +25,19 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck source=lib/agent-surface.sh
-# Provides CAWS_VENDOR_DIR and caws_source_lib. Must come before caws_source_lib calls.
-source "$SCRIPT_DIR/lib/agent-surface.sh" 2>/dev/null || true
+# Provides CAWS_VENDOR_DIR and caws_source_lib — LOAD-BEARING for the latch
+# (the latch-state path and the emit helper below both need it). Under
+# `set -euo pipefail` a bare `source <missing>` is a fatal builtin error that a
+# trailing `|| true` does NOT catch, so guard with an existence test and fail
+# LOUD if absent (CAWS-HOOK-SOURCE-GUARD-FAIL-SOFT-001). A missing lib must NOT
+# silently disarm the danger latch — emit a block so the safety boundary holds.
+if [[ -f "$SCRIPT_DIR/lib/agent-surface.sh" ]]; then
+  source "$SCRIPT_DIR/lib/agent-surface.sh"
+else
+  echo "[block-dangerous] CAWS hook infrastructure incomplete: lib/agent-surface.sh is missing — the danger-latch path cannot resolve. Failing SAFE (blocking). Restore the shared hook libs with: caws init --adopt" >&2
+  printf '{"decision":"block","reason":"CAWS command-safety: the block-dangerous guard cannot load lib/agent-surface.sh, so it cannot evaluate command safety or arm the danger latch. Failing safe. Restore the hook pack: caws init --adopt"}\n'
+  exit 2
+fi
 # shellcheck source=lib/emit.sh
 # Canonical envelope emitters (HOOK-LIB-CONSOLIDATION-001 T3a).
 # Use caws_source_lib so a vendor override is preferred over the shared default.
@@ -30,8 +45,11 @@ caws_source_lib emit.sh 2>/dev/null || true
 # shellcheck source=lib/caws-state.sh
 # sanitize_session — the canonical session-id->filename transform shared with
 # reset-danger-latch.sh so the latch WRITER and CLEARER agree on the sentinel
-# filename (DANGER-LATCH-UX-001).
-source "$SCRIPT_DIR/lib/caws-state.sh" 2>/dev/null || true
+# filename (DANGER-LATCH-UX-001). Optional here (a `command -v sanitize_session`
+# fallback follows below), but guard the source with an existence test so a
+# missing file does not abort under `set -euo pipefail` — `|| true` does NOT
+# catch a fatal `source <missing>` (CAWS-HOOK-SOURCE-GUARD-FAIL-SOFT-001).
+[[ -f "$SCRIPT_DIR/lib/caws-state.sh" ]] && source "$SCRIPT_DIR/lib/caws-state.sh"
 # shellcheck source=lib/guard-message.sh
 # guard_identity (HOOK-GUARD-LEGIBILITY-001) — so latch reasons self-identify
 # as "CAWS command-safety". Non-fatal if absent.

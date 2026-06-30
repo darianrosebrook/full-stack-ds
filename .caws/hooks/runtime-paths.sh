@@ -1,17 +1,23 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 8,16
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 # Shared runtime bootstrap for CAWS hook scripts.
 # Ensures common developer-installed binaries remain available when hooks run
 # under a reduced PATH that does not load interactive shell init.
 #
-# If you are reading this because a hook failed, do not patch PATH handling here
-# as an unblock shortcut. Fix the real issue in the worktree/spec setup, or ask
-# the user if the hook runtime itself truly needs to change.
+# Growing this hook for your repo's runtime is welcome (that is the point — see
+# the edit_stance header). What is NOT: patching PATH handling here as an
+# unblock SHORTCUT when a hook failed. That weakens the guard instead of fixing
+# the cause. Fix the real issue in the worktree/spec setup first; change the
+# hook runtime deliberately, not to dodge a block.
 
 ensure_hook_runtime_path() {
   if command -v node >/dev/null 2>&1; then

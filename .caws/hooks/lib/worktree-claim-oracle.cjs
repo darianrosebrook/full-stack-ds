@@ -2,10 +2,14 @@
 /*
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 4,8,13,20,32
-# do_not_edit_directly: update via caws init
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 
  * worktree-claim-oracle.cjs  (WORKTREE-ISOLATION-HARDENING-001)
  *
@@ -326,10 +330,21 @@ function main() {
   // and must block regardless of which session is operating.
   var claim = findClaimants(projectDir, currentBranch, cls.logical, worktrees);
   if (claim.noYaml) {
-    // Canonical claim check needs spec YAML and js-yaml is unresolvable here.
-    // Fail closed for the canonical-root path (the caller asks). This matches
-    // the existing inline node block's no-js-yaml posture.
-    emit('error_fail_closed', 'no-js-yaml');
+    // The canonical cross-worktree claim check needs spec YAML, and js-yaml is
+    // unresolvable here. This is a TOOLCHAIN FAULT, not a danger signal — and
+    // crucially we are PAST the worktree-payload ownership check above (lines
+    // ~305-324), which is yaml-free and already hard-blocked a foreign-payload
+    // write. So at this point the path is a canonical (non-payload) path whose
+    // ONLY remaining check — "does another active worktree's scope.in claim
+    // this path?" — cannot run. We DEGRADE rather than fail closed: emit a
+    // distinct `degraded_no_yaml` verdict that the guards map to allow-with-
+    // advisory (the cross-worktree claim check was skipped), NOT ask-on-every-
+    // mutation. Failing closed here (the old behavior) turned every canonical
+    // mutation into an approval prompt whenever js-yaml was absent — the #1
+    // friction the maintainer flagged (CAWS-HOOKPACK-ORACLE-JSYAML-DEGRADE-001).
+    // The isolation-critical block (foreign worktree payload) is unaffected: it
+    // ran earlier and is yaml-free.
+    emit('degraded_no_yaml', 'no-js-yaml');
   }
   if (claim.claimants.length > 0) {
     // block_claimed detail is a COMMA-separated list of `name:pattern` pairs —

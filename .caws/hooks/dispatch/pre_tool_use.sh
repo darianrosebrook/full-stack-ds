@@ -1,10 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 8,11,17,19,22,23,24,26
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 #
 # PreToolUse dispatcher — shared core (surface-neutral).
 #
@@ -31,9 +35,18 @@
 #   - Non-zero non-2 exits are warnings; the dispatcher continues and
 #     returns the max non-2 code at the end.
 #
-# Fail-open: if the dispatcher itself errors before any handler runs
-# (parser crash, missing lib), it exits 0 rather than blocking the tool.
-# Guard infrastructure must not turn its own bugs into tool-call blocks.
+# Fail posture (two distinct cases — CAWS-HOOK-SOURCE-GUARD-FAIL-SOFT-001):
+#   - A TRANSIENT error after the core libs load (a malformed payload that
+#     parse_hook_input rejects) fails OPEN — exit 0 — so a guard hiccup never
+#     blocks a legitimate tool call.
+#   - A MISSING CORE LIB (agent-surface.sh / parse-input.sh / run-handlers.sh
+#     absent) is NOT a transient bug: it means EVERY guard is disabled — the
+#     danger latch, scope guard, and write guards never run. Silently exiting 0
+#     there is the governance hole that disarmed enforcement in a consumer repo
+#     whose agent-surface.sh was never vendored. That case fails LOUD + SAFE:
+#     a self-identifying diagnostic to stderr and a block decision, so a broken
+#     hook install surfaces as a recoverable refusal ("run caws init --adopt")
+#     instead of silent, total loss of enforcement.
 
 set -uo pipefail
 
@@ -45,21 +58,37 @@ HOOKS_DIR="$(dirname "$SCRIPT_DIR")"
 # environment. Must be set BEFORE sourcing agent-surface.sh.
 export CAWS_SHARED_LIB_DIR="$HOOKS_DIR/lib"
 
+# _caws_dispatch_missing_core <lib-basename>: fail LOUD + SAFE when a core
+# enforcement lib is absent. Emits a diagnostic + a block decision and exits 2.
+_caws_dispatch_missing_core() {
+  echo "[pre_tool_use dispatcher] CAWS hook infrastructure incomplete: lib/$1 is missing — the guard chain (danger latch, scope, write guards) cannot run. Failing SAFE (blocking). Restore the shared hook libs with: caws init --adopt" >&2
+  printf '{"decision":"block","reason":"CAWS PreToolUse dispatcher: core hook lib %s is missing, so no guard can run (the danger latch and scope/write guards are disabled). Failing safe rather than silently allowing every command. Restore the hook pack: caws init --adopt"}\n' "$1"
+  exit 2
+}
+
 # Resolve surface-specific env (CAWS_VENDOR_DIR, CAWS_LOG_DIR, etc.)
-# Also defines caws_source_lib used below.
+# Also defines caws_source_lib used below. A MISSING agent-surface.sh leaves
+# caws_source_lib undefined and would skip the whole chain at the next `||
+# exit 0`; treat its absence as a broken install and fail loud + safe.
 # shellcheck source=../lib/agent-surface.sh
-source "$HOOKS_DIR/lib/agent-surface.sh" 2>/dev/null || true
+if [[ -f "$HOOKS_DIR/lib/agent-surface.sh" ]]; then
+  source "$HOOKS_DIR/lib/agent-surface.sh"
+else
+  _caws_dispatch_missing_core agent-surface.sh
+fi
 
 # shellcheck source=../lib/parse-input.sh
 # Use caws_source_lib so a vendor adapter can override parse-input.sh
-# (e.g. codex normalizes apply_patch -> Edit/Write).
-caws_source_lib parse-input.sh 2>/dev/null || exit 0
+# (e.g. codex normalizes apply_patch -> Edit/Write). A missing parse-input.sh
+# is a broken install (fail loud + safe); a parse FAILURE on a malformed
+# payload is transient (fail open, exit 0).
+caws_source_lib parse-input.sh 2>/dev/null || _caws_dispatch_missing_core parse-input.sh
 parse_hook_input || exit 0
 
 # shellcheck source=../lib/run-handlers.sh
 # Use caws_source_lib so a vendor adapter can override run-handlers.sh
-# (e.g. codex adds a deny exit-code arm).
-caws_source_lib run-handlers.sh 2>/dev/null || exit 0
+# (e.g. codex adds a deny exit-code arm). Missing -> broken install, fail safe.
+caws_source_lib run-handlers.sh 2>/dev/null || _caws_dispatch_missing_core run-handlers.sh
 
 # Registered handlers in execution order. Each handler self-filters
 # on $HOOK_TOOL_NAME; non-matching cases return exit 0 cheaply.

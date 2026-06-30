@@ -1,10 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 4,8,13,20,32
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 #
 # CAWS Bash Write-Target Guard (shared, WORKTREE-ISOLATION-HARDENING-001 Fix 3).
 # Self-filters on Bash, extracts write targets for a narrow set of mutation
@@ -27,10 +31,27 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/parse-input.sh
 source "$SCRIPT_DIR/lib/parse-input.sh"
 # shellcheck source=lib/caws-state.sh
-source "$SCRIPT_DIR/lib/caws-state.sh" 2>/dev/null || exit 0
+# caws-state.sh provides the Bash-mutation-target machinery this guard needs to
+# route a write through the worktree-claim oracle. A fatal `source <missing>`
+# under `set -euo pipefail` is not caught by `|| exit 0`, and `|| exit 0` would
+# SILENTLY ADMIT the mutation (fail-open). Fail CLOSED if it cannot load
+# (CAWS-HOOK-SOURCE-GUARD-FAIL-SOFT-001).
+if ! { [[ -f "$SCRIPT_DIR/lib/caws-state.sh" ]] && source "$SCRIPT_DIR/lib/caws-state.sh"; }; then
+  echo "[bash-write-guard] CAWS hook infrastructure incomplete: lib/caws-state.sh is missing or did not load — cannot evaluate Bash-mutation ownership. Failing CLOSED. Restore the shared hook libs with: caws init --adopt" >&2
+  printf '{"decision":"block","reason":"CAWS bash-write-guard: cannot load lib/caws-state.sh, so Bash-mutation worktree isolation cannot be evaluated. Failing closed. Restore the hook pack: caws init --adopt"}\n'
+  exit 2
+fi
 # shellcheck source=lib/agent-surface.sh
-# Provides CAWS_PROJECT_DIR and caws_source_lib. Must come before caws_source_lib calls.
-source "$SCRIPT_DIR/lib/agent-surface.sh" 2>/dev/null || true
+# Provides CAWS_PROJECT_DIR and caws_source_lib — load-bearing. Guard the source
+# (a fatal `source <missing>` is not caught by `|| true` under set -e) and fail
+# CLOSED if absent.
+if [[ -f "$SCRIPT_DIR/lib/agent-surface.sh" ]]; then
+  source "$SCRIPT_DIR/lib/agent-surface.sh"
+else
+  echo "[bash-write-guard] CAWS hook infrastructure incomplete: lib/agent-surface.sh is missing. Failing CLOSED. Restore the shared hook libs with: caws init --adopt" >&2
+  printf '{"decision":"block","reason":"CAWS bash-write-guard: cannot load lib/agent-surface.sh. Failing closed. Restore the hook pack: caws init --adopt"}\n'
+  exit 2
+fi
 # shellcheck source=lib/emit.sh
 # Use caws_source_lib so a vendor override is preferred over the shared default.
 caws_source_lib emit.sh 2>/dev/null || true
@@ -227,7 +248,7 @@ while IFS= read -r cand; do
     node "$CAWS_CLAIM_ORACLE" 2>&1 || true)"
   _first="${out%%$'\n'*}"
   case "${_first%%:*}" in
-    pass|block_foreign_worktree|block_claimed|ask_uncertain|error_fail_closed)
+    pass|block_foreign_worktree|block_claimed|ask_uncertain|error_fail_closed|degraded_no_yaml)
       out="$_first" ;;
     *)
       _reason="$(printf '%s' "$_first" | cut -c1-200)"
@@ -237,6 +258,12 @@ while IFS= read -r cand; do
   detail="${out#*:}"
   case "$outcome" in
     pass) ;;
+    # degraded_no_yaml is a TOOLCHAIN FAULT, not an ownership signal: the oracle
+    # got PAST the yaml-free foreign-payload block and only the cross-worktree
+    # canonical-claim check could not run (js-yaml unresolvable). Do NOT escalate
+    # (it would turn every canonical mutation into an approval prompt when js-yaml
+    # is absent). Record it for a single post-loop advisory; the mutation flows.
+    degraded_no_yaml) _DEGRADED_NO_YAML=1 ;;
     block_foreign_worktree|block_claimed) escalate block "$detail" "$outcome" ;;
     ask_uncertain|error_fail_closed)      escalate ask "$detail" "$outcome" ;;
   esac
@@ -274,7 +301,15 @@ case "$WORST" in
     echo "  Do NOT edit ${CAWS_VENDOR_DIR}/hooks/ or guard state to bypass this." >&2
     exit 2 ;;
   ask)
-    _REASON="[$_BG_ID] This Bash command targets a worktree-claimed or worktree-payload path and ownership could not be confirmed ($WORST_KIND:$WORST_DETAIL). Approve only if you own the target worktree; otherwise route the mutation through the owning worktree's session."
+    case "$WORST_KIND" in
+      error_fail_closed)
+        # A toolchain fault (oracle spawn failure, registry parse error, etc.) —
+        # NOT an ownership conflict. Name it as such so the user is not misled
+        # into thinking this path is worktree-claimed.
+        _REASON="[$_BG_ID] Worktree-ownership could not be verified for this Bash mutation due to a TOOLCHAIN FAULT ($WORST_DETAIL), not a known ownership conflict. Approve if the target is safe to mutate from this session." ;;
+      *)
+        _REASON="[$_BG_ID] This Bash command targets a worktree-claimed or worktree-payload path and ownership could not be confirmed ($WORST_KIND:$WORST_DETAIL). Approve only if you own the target worktree; otherwise route the mutation through the owning worktree's session." ;;
+    esac
     if [[ "${CAWS_GUARD_NO_ASK:-0}" == "1" ]] || ! command -v emit_ask >/dev/null 2>&1; then
       echo "$_REASON" >&2
       echo "  (ask-incapable harness — degraded to block; no silent allow)" >&2
@@ -283,5 +318,12 @@ case "$WORST" in
     emit_ask "$_REASON"
     exit 0 ;;
   *)
+    # No claim/ownership escalation. If the cross-worktree canonical-claim check
+    # degraded (js-yaml unresolvable), surface a single advisory so the skipped
+    # check is visible — but the mutation is allowed (toolchain fault, not an
+    # ownership conflict; the foreign-payload block already ran yaml-free).
+    if [[ "${_DEGRADED_NO_YAML:-0}" == "1" ]]; then
+      echo "[$_BG_ID] advisory: the cross-worktree scope.in claim check was SKIPPED for this mutation because js-yaml is unresolvable in the hook pack (toolchain fault, not an ownership conflict). The foreign-worktree-payload block still ran. Install js-yaml in the hook pack to restore the canonical-claim check." >&2
+    fi
     exit 0 ;;
 esac

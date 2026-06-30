@@ -1,10 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 10
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 # Session Logger — lean structured session capture.
 #
 # Canonical artifacts:
@@ -71,6 +75,26 @@ resolve_transcript() {
   if [[ -n "$TRANSCRIPT_PATH" ]] && [[ -f "$TRANSCRIPT_PATH" ]]; then
     printf '%s\n' "$TRANSCRIPT_PATH"
     return
+  fi
+
+  # opencode keeps no flat-file transcript at all (history lives in
+  # ~/.local/share/opencode/opencode.db, message+part tables keyed by session
+  # id) so the .jsonl-glob fallback below can never hit for it. Reconstruct a
+  # Claude-Code-shaped .jsonl from the DB into a gitignored cache and treat
+  # that the same as a native transcript.
+  if [[ "${CAWS_AGENT_SURFACE:-}" == "opencode" ]]; then
+    local oc_db oc_cache_dir oc_cache
+    oc_db="$HOME/.local/share/opencode/opencode.db"
+    if [[ -f "$oc_db" ]]; then
+      oc_cache_dir="${CAWS_ROOT}/.caws/sessions/.opencode-cache"
+      mkdir -p "$oc_cache_dir"
+      oc_cache="${oc_cache_dir}/${SESSION_ID}.jsonl"
+      if python3 "$SCRIPT_DIR/lib/opencode-transcript.py" "$oc_db" "$SESSION_ID" "$oc_cache" 2>/dev/null \
+        && [[ -s "$oc_cache" ]]; then
+        printf '%s\n' "$oc_cache"
+        return
+      fi
+    fi
   fi
 
   local slug candidate

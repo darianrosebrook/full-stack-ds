@@ -1,10 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 24
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 #
 # CAWS Secrets Scanner
 #
@@ -17,7 +21,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/parse-input.sh
 source "$SCRIPT_DIR/lib/parse-input.sh"
 # shellcheck source=lib/agent-surface.sh
-source "$SCRIPT_DIR/lib/agent-surface.sh" 2>/dev/null || true
+# Provides caws_source_lib (used immediately below to load emit.sh). A fatal
+# `source <missing>` under `set -euo pipefail` is NOT caught by `|| true`, which
+# silently killed this advisory (CAWS-HOOK-SOURCE-GUARD-FAIL-SOFT-001). scan-
+# secrets has NO block authority, so it does not fail closed; it fails SOFT but
+# LOUD — emits a self-identifying diagnostic and exits 0 so it never turns its
+# own broken install into a write block, but the breakage is visible.
+if [[ -f "$SCRIPT_DIR/lib/agent-surface.sh" ]]; then
+  source "$SCRIPT_DIR/lib/agent-surface.sh"
+else
+  echo "[scan-secrets] CAWS hook infrastructure incomplete: lib/agent-surface.sh is missing — the secret-scan advisory cannot run. Restore the shared hook libs with: caws init --adopt" >&2
+  exit 0
+fi
 # shellcheck source=lib/emit.sh
 caws_source_lib emit.sh 2>/dev/null || true
 parse_hook_input

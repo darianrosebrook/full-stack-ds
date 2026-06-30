@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: 1,17
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 """
 Command safety classifier for CAWS PreToolUse hooks (surface-neutral).
 
@@ -83,11 +87,72 @@ DENY_PIPELINE_PATTERNS: list[tuple[str, str]] = [
     # ensures we do not false-match `||` (logical OR). The trailing `\b`
     # ensures we do not match `bash-completion` or similar word-extended
     # forms. Quote-safety is provided by strip_quoted_regions upstream.
+    #
+    # NOTE: this pattern matches the pipe-to-LOCAL-SCRIPT form too (`| bash
+    # run.sh`); that form is carved back to allow by is_pipe_into_local_script()
+    # at the application site (CAWS-CLASSIFY-PIPE-TO-LOCAL-SCRIPT-CARVEOUT-001),
+    # NOT here — keeping the regex simple and the carve-out logic testable.
     (r"[^|]\|\s*(ba)?sh\b", "generic pipe-to-shell execution — pipe target is a shell interpreter"),
     # Fork bombs — special syntax that segmentation mangles
     (r":\(\)\s*\{.*:\|:.*\}\s*;\s*:", "fork bomb"),
     (r"\bwhile\s+true\b.*\bfork\b", "fork loop"),
 ]
+
+# The exact `desc` of the generic pipe-to-shell rule above. The application site
+# uses this sentinel to apply the pipe-to-local-script carve-out only to the
+# GENERIC rule, never to the curl/wget rule (whose remote-fetch danger is real
+# regardless of whether a script file is named).
+GENERIC_PIPE_TO_SHELL_DESC = (
+    "generic pipe-to-shell execution — pipe target is a shell interpreter"
+)
+
+# Matches `| bash` / `| sh` occurrences and captures the run of characters up to
+# (but not consuming) the next pipe/separator, so a CHAINED second interpreter
+# (`| bash run.sh | sh`) is still seen as its own occurrence. Used by
+# is_pipe_into_local_script to inspect EVERY pipe-to-shell in the surface.
+#   * `(?<!\|)\|(?!\|)` matches a SINGLE pipe (a real pipeline), never `||`
+#     (logical OR), using look-around so no surrounding char is consumed — this
+#     lets two adjacent occurrences both match.
+#   * `(?=[|&;\n]|$)` leaves the boundary char for the next match.
+_PIPE_TO_SHELL_OCCURRENCE = re.compile(r"(?<!\|)\|(?!\|)\s*(?:ba)?sh\b([^|&;\n]*?)(?=[|&;\n]|$)")
+
+
+def is_pipe_into_local_script(executable_surface: str) -> bool:
+    """Pipe-to-LOCAL-SCRIPT carve-out (CAWS-CLASSIFY-PIPE-TO-LOCAL-SCRIPT-CARVEOUT-001).
+
+    Return True iff EVERY `| bash` / `| sh` occurrence in the (quote-stripped)
+    surface pipes into a NAMED, inspectable script-FILE argument — e.g.
+    `printf json | bash hook.sh`, `cat x | sh ./run.sh`. Such a command runs the
+    inspectable file, not the piped bytes, so it is safe-by-inspection and the
+    generic pipe-to-shell deny is carved back to allow.
+
+    Returns False (deny stands) if ANY occurrence is a BARE interpreter or one
+    whose first argument is NOT a plain script file, specifically:
+      * bare `| bash` / `| sh` (no argument)            -> reads piped bytes
+      * a flag first (`-s`, `-`, `-c`, `-e`, ...)         -> reads stdin/inline
+      * a redirect first (`2>&1`, `>out`, `< in`, `1>&2`) -> still bare
+    Requiring ALL occurrences to be the script form means a mixed pipeline like
+    `cat x | bash run.sh | sh` still denies (the second `| sh` is bare).
+    A trailing danger after an allowed form (`| bash run.sh; rm -rf /`) is NOT
+    this function's concern — it is caught by per-segment classification, which
+    runs independently of the pipeline rule.
+    """
+    occurrences = _PIPE_TO_SHELL_OCCURRENCE.findall(executable_surface)
+    if not occurrences:
+        return False
+    for tail in occurrences:
+        first = tail.strip().split(maxsplit=1)
+        if not first:
+            return False  # bare `| bash` — reads the piped bytes
+        token = first[0]
+        if token.startswith("-"):
+            return False  # a flag (-s/-/-c) — script comes from stdin/inline
+        # A redirect operator (optionally fd-prefixed: 2>&1, 1>file) is not a
+        # script-file argument; the interpreter is still bare with redirected fds.
+        if re.match(r"^\d*[<>]", token):
+            return False
+        # Otherwise `token` is a named script-file path — safe-by-inspection.
+    return True
 
 # Segment-level regex patterns that are always hard-blocked.
 # These are matched against individual parsed command segments, NOT the raw
@@ -2519,6 +2584,13 @@ def classify_command(
     executable_surface = strip_quoted_regions(raw_command)
     for pattern, desc in DENY_PIPELINE_PATTERNS:
         if re.search(pattern, executable_surface, re.IGNORECASE):
+            # Pipe-to-LOCAL-SCRIPT carve-out: the GENERIC pipe-to-shell rule is
+            # suppressed when every `| bash`/`| sh` pipes into a named script
+            # file (safe-by-inspection). The curl/wget rule is never carved out.
+            if desc == GENERIC_PIPE_TO_SHELL_DESC and is_pipe_into_local_script(
+                executable_surface
+            ):
+                continue
             escalate("deny", desc, "regex")
 
     # --- Recursively classify command substitutions ---
