@@ -1,0 +1,35 @@
+id: DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01
+title: 'DOM-property-only reflection IR for Checkbox indeterminate/aria-checked=mixed'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-06-30T23:16:13.067Z'
+updated_at: '2026-06-30T23:16:13.067Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/ir.ts'
+    - 'packages/ds-codegen/src/contract.ts'
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-contracts/components/Checkbox/Checkbox.contract.json'
+    - 'packages/ds-codegen/src/frameworks/react/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/vue/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/svelte/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/angular/component-source.ts'
+    - 'packages/ds-codegen/src/frameworks/lit/component-source.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'checkbox-indeterminate-dom-property'
+    type: behavior
