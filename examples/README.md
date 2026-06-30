@@ -12,7 +12,7 @@ Read this as a proving-ground portfolio, not a demo gallery. Every app shape mus
 
 | App shape | Implementations | Standing | Primary claim |
 |---|---|---|---|
-| `settings/` | `react/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
+| `settings/` | `react/`, `vue/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The Vue lane is build/typecheck consumer evidence; the RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
 
 The five-framework app-parity claim is not proven by `examples/` yet. The repo's admitted five-framework evidence lives in codegen, generated packages, the governed rail, and the runtime fact rail. The examples directory is the consumer-transfer lane that should eventually make those claims more app-shaped.
 
@@ -90,7 +90,7 @@ The examples lane should fail honestly on any of these:
 - Not accessibility adequacy proof. They exercise shipped behavior, but accessibility claims belong to component contracts, generated behavior primitives, and dedicated rails.
 - Not a replacement for unit tests. Component tests remain in `packages/ds-*/src/components/`.
 - Not a replacement for the governed rail. Examples pressure package consumption; the rail binds emitted artifacts to contract, codegen, and environment evidence.
-- Not current five-framework app parity. Today only `settings/react` exists.
+- Not current five-framework app parity. Today `settings/` has React, Vue, and React Native lanes, not all admitted Web DOM frameworks.
 - Not contract authority. App specs pressure package consumption; component semantics still live in `packages/ds-contracts/`.
 
 ## How to Run
@@ -101,6 +101,11 @@ Each implementation is a standalone app. From the repo root:
 cd examples/settings/react
 pnpm install
 pnpm dev
+pnpm build
+
+cd examples/settings/vue
+pnpm install
+pnpm typecheck
 pnpm build
 
 cd examples/settings/react-native
