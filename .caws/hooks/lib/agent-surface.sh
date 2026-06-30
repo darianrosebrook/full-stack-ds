@@ -1,10 +1,14 @@
 #!/bin/bash
 # CAWS-MANAGED-HOOK
 # hook_pack: shared
-# hook_pack_version: 1
+# hook_pack_version: 14
 # caws_min_major: 11
 # lineage_refs: (new in shared-core-001)
-# do_not_edit_directly: update via `caws init`
+# edit_stance: this repo OWNS and may grow this hook. Edits are expected and
+#   preserved — `caws init` refuses to overwrite a changed managed hook (re-run
+#   with --adopt to keep yours, or --overwrite to pull this upstream template).
+#   CAWS owns the failure-class invariant (the why/what you must not silently
+#   weaken); you own the how. Do not edit it to BYPASS the guard; do grow it.
 # Surface resolver — derives harness-specific values from CAWS_AGENT_SURFACE.
 #
 # WHY THIS EXISTS. The shared core must not branch on a hardcoded harness name
@@ -100,6 +104,14 @@ case "$CAWS_AGENT_SURFACE" in
     CAWS_VENDOR_DIR=".windsurf"
     CAWS_PLATFORM_FLAG="windsurf"
     CAWS_PERMISSION_VOCAB="ask"
+    ;;
+  opencode)
+    CAWS_VENDOR_DIR=".opencode"
+    CAWS_PLATFORM_FLAG="opencode"
+    # opencode has no PreToolUse "ask" — its only block primitive is throw
+    # inside tool.execute.before (see .opencode/plugins/caws.ts). Map ask ->
+    # deny, matching the codex adapter precedent.
+    CAWS_PERMISSION_VOCAB="deny"
     ;;
   *)
     # Unknown surface — fall through to claude-code defaults so a
