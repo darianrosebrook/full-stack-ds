@@ -46,8 +46,8 @@ acceptance:
     then: 'generated React/Vue/Svelte/Angular/Lit output renders the label text from the content binding and the control as a sibling slot (no nested dropped children), and pnpm run generate:check passes.'
   - id: A3
     given: 'the textOverflow schema plus IR plus ShowMore/Truncate contract changes'
-    when: 'pnpm run generate:check runs'
-    then: 'TextOverflowIR is built and validated, and the existing css-var line-clamp lowering is preserved (additive, not replaced).'
+    when: 'a direct unit/fixture test builds the IR for the ShowMore and Truncate contracts (in ir.test.ts or contract.test.ts, not inferred from generate:check or governed:rail alone, since both can stay green on byte-identical output if textOverflow is schema-valid but never read into the IR)'
+    then: 'the test asserts a TextOverflowIR fact is actually present on the built ComponentIR with kind "line-clamp" and the correct line-count source (the same prop the existing css-var binding already reads — prop:maxLines for ShowMore, prop:lines for Truncate, not a duplicate/divergent source), validateTextOverflow in validation/semantic.ts rejects a malformed textOverflow fixture, and the existing generated --fsds-show-more-content-max-lines / --fsds-truncate-content-lines css-var bindings are unchanged in generated output (generate:check and governed:rail also pass, but are not sufficient proof on their own).'
   - id: A4
     given: 'the full slice (A1 + A3 only; A2/Checkbox is deferred, see invariant 7)'
     when: 'pnpm run governed:rail runs'
