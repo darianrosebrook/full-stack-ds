@@ -4,10 +4,16 @@ risk_tier: 2
 mode: feature
 lifecycle_state: active
 created_at: '2026-06-30T23:16:13.067Z'
-updated_at: '2026-06-30T23:16:13.067Z'
+updated_at: '2026-06-30T23:21:12.135Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - ds-codegen
+    - ds-contracts
+    - ds-react
+    - ds-vue
+    - ds-svelte
+    - ds-angular
+    - ds-lit
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -21,15 +27,54 @@ scope:
     - 'packages/ds-codegen/src/frameworks/svelte/component-source.ts'
     - 'packages/ds-codegen/src/frameworks/angular/component-source.ts'
     - 'packages/ds-codegen/src/frameworks/lit/component-source.ts'
-  out: []
+    - packages/ds-codegen/src/frameworks/react/tests.ts
+    - packages/ds-codegen/src/frameworks/vue/tests.ts
+    - packages/ds-codegen/src/frameworks/svelte/tests.ts
+    - packages/ds-codegen/src/frameworks/angular/tests.ts
+    - packages/ds-codegen/src/frameworks/lit/tests.ts
+    - packages/ds-codegen/src/frameworks/react/surface-tests.ts
+    - packages/ds-codegen/src/frameworks/vue/surface-tests.ts
+    - packages/ds-codegen/src/frameworks/svelte/surface-tests.ts
+    - packages/ds-codegen/src/frameworks/angular/surface-tests.ts
+    - packages/ds-codegen/src/frameworks/lit/surface-tests.ts
+  out:
+    - 'packages/ds-codegen/src/frameworks/react-native/component-source.ts'
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'Split out of CODEGEN-RN-EMITTER-IR-AUTHORITY-01 (see that specs invariant 7). Investigation found this is not a local RN-emitter fix: web checked/unchecked aria-checked already works for free from native <input type=checkbox> browser semantics with zero IR involvement, but indeterminate is a JS-only DOM PROPERTY (never an HTML attribute, never attribute-bindable in JSX/templates) with no existing IR binding-kind or emitter mechanism for imperative DOM-property-only reflection in any of the five web frameworks.'
+  - 'RN already lowers indeterminate correctly via accessibilityState (packages/ds-codegen/src/frameworks/react-native/component-source.ts, isCheckboxRootPattern path) — that is a plain prop, not an attribute/property distinction, and does NOT transfer as a pattern to web. RN is explicitly out of scope for this spec (scope.out) and must not be touched.'
+  - 'The new binding-kind is DOM-property-only reflection: a fact that must be set via an imperative JS property assignment on the live element/component instance (e.g. el.indeterminate = true), never via a static or dynamic HTML attribute/template-attribute binding. It is carried in the IR distinctly from existing static-attribute and dynamic-attribute binding kinds (no overloading of the existing attribute binding shape).'
+  - 'Each of the five web frameworks implements the property-set in its own idiom (React ref+useEffect, Vue template ref+watchEffect, Svelte bind:this+$effect, Angular @ViewChild+effect()/ngOnChanges, Lit updated() lifecycle) — emitters do last-mile syntax only; the IR owns the binding-kind and the decision of which facts require property-only reflection.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'the Checkbox/component.contract.schema.json schema change'
+    when: 'a contract declares a binding with the new DOM-property kind (not HTML attribute)'
+    then: 'schema validation accepts the property-kind binding and rejects it if authored as a static/dynamic attribute instead.'
+  - id: A2
+    given: 'a contract with a DOM-property binding'
+    when: 'packages/ds-codegen/src/ir.ts builds the IR'
+    then: 'the IR carries the binding as a distinct fact/kind from StaticAttribute and DynamicAttribute bindings (inspectable as a separate IR field/type, not a string tag on the existing attribute binding).'
+  - id: A3
+    given: 'the Checkbox contract with prop:indeterminate'
+    when: 'regenerated for any web target'
+    then: 'indeterminate lowers to a DOM-property reflection binding on the native input (not an attribute), confirmed by reading the generated source for the imperative property-set, not by its presence in JSX/template attribute syntax.'
+  - id: A4
+    given: 'the full slice'
+    when: 'pnpm run generate -- --target=all Checkbox runs'
+    then: 'React, Vue, Svelte, Angular, and Lit each implement the property-set in their own framework idiom (ref/effect-equivalent per framework), and pnpm run generate:check plus framework tests pass for all five.'
+  - id: A5
+    given: 'a generated Checkbox with indeterminate=true mounted in a real DOM (jsdom or browser)'
+    when: 'the element is inspected at runtime'
+    then: 'aria-checked=mixed is proven via actual DOM/runtime behavior (reading the live elements computed aria-checked or .indeterminate property after mount), not asserted via static generated-source pattern matching alone.'
+  - id: A6
+    given: 'this spec is implemented'
+    when: 'packages/ds-codegen/src/frameworks/react-native/component-source.ts is diffed against its state before this spec'
+    then: 'it is unchanged except for any shared contract/IR compatibility strictly required to keep RN passing — accessibilityState is not replaced or ported as a web pattern.'
+  - id: A7
+    given: 'the DOM-property reflection property-set is implemented for a given web target'
+    when: 'that propertyset code is removed/reverted for that target only'
+    then: 'the indeterminate/aria-checked=mixed behavior demonstrably fails for that target (falsifies the implementation — proves the test is not vacuous).'
 non_functional: {}
 contracts:
   - name: 'checkbox-indeterminate-dom-property'
     type: behavior
+    description: 'Checkbox indeterminate lowers to true DOM-property reflection (el.indeterminate = true), not an HTML attribute, across React/Vue/Svelte/Angular/Lit, proven via runtime DOM inspection. RN is unchanged (scope.out).'
