@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: checkbox-indeterminate-recon
 created_at: '2026-06-30T23:16:13.067Z'
-updated_at: '2026-07-01T02:03:45.585Z'
+updated_at: '2026-07-01T05:21:28.966Z'
 blast_radius:
   modules:
     - ds-codegen
@@ -41,6 +41,7 @@ scope:
     - packages/ds-codegen/src/frameworks/component-ref-imports.test.ts
     - packages/ds-codegen/src/frameworks/react-native/component-source.ts
     - packages/ds-codegen/src/dom-tree.test.ts
+    - packages/ds-codegen/src/test-plan.ts
   out: []
 invariants:
   - 'Split out of CODEGEN-RN-EMITTER-IR-AUTHORITY-01 (see that spec''s invariant 7). Investigation found this is not a local RN-emitter fix: web checked/unchecked aria-checked already works for free from native <input type=checkbox> browser semantics with zero IR involvement, but indeterminate is a JS-only DOM PROPERTY (never an HTML attribute, never attribute-bindable in JSX/templates) with no existing IR binding-kind or emitter mechanism for imperative DOM-property-only reflection in any of the five web frameworks.'
