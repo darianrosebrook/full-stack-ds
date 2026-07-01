@@ -36,3 +36,35 @@ The build emits:
 - `generated/swift/*.swift`
 - `generated/kotlin/*.kt`
 
+## Emission evidence ledger
+
+`generated/` is gitignored scratch and is never committed. Drift is proven
+instead by a committed content-addressed ledger, `emission-ledger.json`, which
+binds each emission's declared inputs to its produced output bytes:
+
+- `observation_ref` = `sha256` over the emission's declared inputs (the icon
+  contract + generator + schema/manifest) — "what governed this".
+- `attachment_ref` = `sha256` of each emitted file's bytes — "what it emitted".
+- the `(observation_ref, attachment_ref)` join = the determinism edge — "these
+  inputs yield these bytes".
+
+Because the generator is a pure function of its declared inputs, the edge set is
+stable: re-emitting an unchanged artifact reproduces an edge already in the
+ledger and appends nothing. Two byte-identical outputs collapse to one edge, so
+churn is `O(edges-that-actually-changed)`, not `O(files-regenerated)`.
+
+```bash
+node build/ledger-icons.mjs            # build, attest, WRITE emission-ledger.json (commit this)
+node build/ledger-icons.mjs --check    # build, recompute, GATE against the committed ledger
+```
+
+The gate proves drift by set membership: every edge a fresh regeneration
+produces must be present in the committed ledger; a missing edge is a hard
+failure naming the exact unit and file. The ledger carries substrate evidence
+only — input fingerprint, output hash, emission edge — with no trust/taint
+adjudication, because a generated artifact's provenance is known a priori.
+
+`build/ledger.mjs` is the target-agnostic core (hashing, rows, dedup join,
+gate). `build/ledger-components.mjs` drives that same core over a component
+framework target, demonstrating the substrate is not icon-shaped.
+

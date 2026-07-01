@@ -1,0 +1,245 @@
+{
+  "schema_version": "emission_evidence_ledger.v1",
+  "row_count": 2,
+  "edge_count": 12,
+  "rows": [
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "__corpus__",
+      "target": "iconography",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Placeholder/Placeholder.icon.json",
+          "hash": "sha256:da3c1b440ad7b3333d8f03ffeed584bf81f79a885b1ea4462fea973f1649a755"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:8f0dc4c4481f62dcaebf176b735900862216ff32cb511528c8a5917d6a3f28cd"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:8764843d64f200c1b0df74a7a74f3809437840fa9c9efc03207267e322874456"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:a9834a04ab1e7dea665257bb53addf548d3b05907eb48aab2ca3fbf90895c3ee"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:86050e93e2879b04c2da32f6de90e41a5ccc808b0a28e1f592be114fbc1833e3",
+        "sha256:f4a9cb2b0ed1c2849f009d6bc9e5bc2b63b0d07d5fbfc8cbc246cb2ade700ebd",
+        "sha256:69c90eaa9bfb4c12e3ea7f888ad4fa89359f675ad6c91d7d6c21986f2015e9e2",
+        "sha256:69c90eaa9bfb4c12e3ea7f888ad4fa89359f675ad6c91d7d6c21986f2015e9e2",
+        "sha256:1fc83b2c771cc89b4e6e7965124cfd260fa3137efb1f18212fb49997cd3a29dc",
+        "sha256:8c934e56fb544141165314ccbd31fe49932a7ce1e83e177242d3f517a27c0353"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/residuals.json",
+          "ref": "sha256:86050e93e2879b04c2da32f6de90e41a5ccc808b0a28e1f592be114fbc1833e3",
+          "bytes": 763
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/catalog.json",
+          "ref": "sha256:f4a9cb2b0ed1c2849f009d6bc9e5bc2b63b0d07d5fbfc8cbc246cb2ade700ebd",
+          "bytes": 1320
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/index.ts",
+          "ref": "sha256:69c90eaa9bfb4c12e3ea7f888ad4fa89359f675ad6c91d7d6c21986f2015e9e2",
+          "bytes": 53
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/index.ts",
+          "ref": "sha256:69c90eaa9bfb4c12e3ea7f888ad4fa89359f675ad6c91d7d6c21986f2015e9e2",
+          "bytes": 53
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/index.ts",
+          "ref": "sha256:1fc83b2c771cc89b4e6e7965124cfd260fa3137efb1f18212fb49997cd3a29dc",
+          "bytes": 71
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/sprite.svg",
+          "ref": "sha256:8c934e56fb544141165314ccbd31fe49932a7ce1e83e177242d3f517a27c0353",
+          "bytes": 456
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "placeholder",
+      "target": "iconography",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Placeholder/Placeholder.icon.json",
+          "hash": "sha256:da3c1b440ad7b3333d8f03ffeed584bf81f79a885b1ea4462fea973f1649a755"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:8f0dc4c4481f62dcaebf176b735900862216ff32cb511528c8a5917d6a3f28cd"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:8764843d64f200c1b0df74a7a74f3809437840fa9c9efc03207267e322874456"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:a9834a04ab1e7dea665257bb53addf548d3b05907eb48aab2ca3fbf90895c3ee"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:8a5f386fc03226824b3bfb7f9e628d028befeeb773233a774d8bfe17ff13fe01",
+        "sha256:bf526361e2c7bc192baaa084b0995eeca6350ee6c66255df5157a37728e64bdb",
+        "sha256:477fde2fd5afc319597215b51a3fac37acc8f8cdc9aef976b110fed5c979ea7e",
+        "sha256:89acd4bf0ab6e2992b4381c26d16f1f8207b90437b1924f606e7c459031305fb",
+        "sha256:a0e76f2158d6e7f3cdc1bf160fb5fd7fce5386acccf60d08d46fcc80d8877c60",
+        "sha256:2d92525c83a287feda767397f865a4e94ef25ebc4daf77813cfa4ff5138927ca",
+        "sha256:edcce1589f85f90b2017574fbc13406afb099352e455c93ceb84c5faa0600f9f"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_placeholder_17dp.xml",
+          "ref": "sha256:8a5f386fc03226824b3bfb7f9e628d028befeeb773233a774d8bfe17ff13fe01",
+          "bytes": 643
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/PlaceholderIcon.kt",
+          "ref": "sha256:bf526361e2c7bc192baaa084b0995eeca6350ee6c66255df5157a37728e64bdb",
+          "bytes": 550
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/PlaceholderIcon.tsx",
+          "ref": "sha256:477fde2fd5afc319597215b51a3fac37acc8f8cdc9aef976b110fed5c979ea7e",
+          "bytes": 937
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/PlaceholderIcon.tsx",
+          "ref": "sha256:89acd4bf0ab6e2992b4381c26d16f1f8207b90437b1924f606e7c459031305fb",
+          "bytes": 1008
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/PlaceholderIcon.svelte",
+          "ref": "sha256:a0e76f2158d6e7f3cdc1bf160fb5fd7fce5386acccf60d08d46fcc80d8877c60",
+          "bytes": 675
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/PlaceholderIcon.swift",
+          "ref": "sha256:2d92525c83a287feda767397f865a4e94ef25ebc4daf77813cfa4ff5138927ca",
+          "bytes": 557
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-placeholder-17.svg",
+          "ref": "sha256:edcce1589f85f90b2017574fbc13406afb099352e455c93ceb84c5faa0600f9f",
+          "bytes": 424
+        }
+      ],
+      "admission_state": "emitted"
+    }
+  ],
+  "joins": [
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:1fc83b2c771cc89b4e6e7965124cfd260fa3137efb1f18212fb49997cd3a29dc",
+      "rel_path": "packages/ds-iconography/generated/svelte/index.ts"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:2d92525c83a287feda767397f865a4e94ef25ebc4daf77813cfa4ff5138927ca",
+      "rel_path": "packages/ds-iconography/generated/swift/PlaceholderIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:477fde2fd5afc319597215b51a3fac37acc8f8cdc9aef976b110fed5c979ea7e",
+      "rel_path": "packages/ds-iconography/generated/react-native/PlaceholderIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:69c90eaa9bfb4c12e3ea7f888ad4fa89359f675ad6c91d7d6c21986f2015e9e2",
+      "rel_path": "packages/ds-iconography/generated/react-native/index.ts"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:86050e93e2879b04c2da32f6de90e41a5ccc808b0a28e1f592be114fbc1833e3",
+      "rel_path": "packages/ds-iconography/generated/android/residuals.json"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:89acd4bf0ab6e2992b4381c26d16f1f8207b90437b1924f606e7c459031305fb",
+      "rel_path": "packages/ds-iconography/generated/react/PlaceholderIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:8a5f386fc03226824b3bfb7f9e628d028befeeb773233a774d8bfe17ff13fe01",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_placeholder_17dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:8c934e56fb544141165314ccbd31fe49932a7ce1e83e177242d3f517a27c0353",
+      "rel_path": "packages/ds-iconography/generated/web/sprite.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:a0e76f2158d6e7f3cdc1bf160fb5fd7fce5386acccf60d08d46fcc80d8877c60",
+      "rel_path": "packages/ds-iconography/generated/svelte/PlaceholderIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:bf526361e2c7bc192baaa084b0995eeca6350ee6c66255df5157a37728e64bdb",
+      "rel_path": "packages/ds-iconography/generated/kotlin/PlaceholderIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:edcce1589f85f90b2017574fbc13406afb099352e455c93ceb84c5faa0600f9f",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-placeholder-17.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:2ef4994276c855757dde615b83f0a98e6ae26eb086657df4c7aa44f9f09e9cc0",
+      "attachment_ref": "sha256:f4a9cb2b0ed1c2849f009d6bc9e5bc2b63b0d07d5fbfc8cbc246cb2ade700ebd",
+      "rel_path": "packages/ds-iconography/generated/catalog.json"
+    }
+  ]
+}
