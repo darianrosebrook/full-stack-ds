@@ -7,7 +7,7 @@ created_at: '2026-07-01T16:12:58.973Z'
 updated_at: '2026-07-01T16:12:58.973Z'
 blast_radius:
   modules:
-    - 'TODO: list one or more modules this spec touches.'
+    - ds-codegen
   data_migration: false
 operational_rollback_slo: 5m
 scope:
@@ -15,12 +15,16 @@ scope:
     - 'packages/ds-codegen/src/frameworks/iteration-bindings.test.ts'
   out: []
 invariants:
-  - 'TODO: describe one invariant this spec guarantees.'
+  - 'PR10-MERGE-RECONCILIATION-01''s merge/regen work fixed a pre-existing Angular emitter defect (committed generated output still HTML-escaping a literal-string ternary operand, e.g. &quot;presentation&quot;, which Angular''s template parser reads as literal entity text rather than a quote). This spec fixes ONE stale test assertion (iteration-bindings.test.ts, "lowers the dynamic role binding across web and native emitters") that still pins the old buggy output, blocking the pre-push test gate. It is a test-only change: no emitter/production code is touched.'
 acceptance:
   - id: A1
-    given: 'TODO'
-    when: 'TODO'
-    then: 'TODO'
+    given: 'the BINDING-EXPRESSION-V2-CONDITIONAL-01 dynamic-root-role fixture'
+    when: 'generateAngularComponentSource(ir) runs'
+    then: 'the test asserts the current, correct single-quoted output ([attr.role]="(decorative ? '"'"'presentation'"'"' : '"'"'status'"'"')"), not the stale HTML-entity-escaped form.'
+  - id: A2
+    given: 'the fix'
+    when: 'pnpm exec vitest run src/frameworks/iteration-bindings.test.ts runs (from packages/ds-codegen)'
+    then: 'all tests in that file pass, including the previously-failing assertion.'
 non_functional: {}
 contracts:
   - name: 'angular-literal-escaping-test'
