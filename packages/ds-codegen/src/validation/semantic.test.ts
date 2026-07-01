@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { ComponentContract } from "../contract.js";
-import { validateContractSemantics } from "./semantic.js";
+import { validateContractSemantics, validateTextOverflow } from "./semantic.js";
 
 function issueAt(issues: { pointer: string }[], pointer: string): boolean {
   return issues.some((i) => i.pointer === pointer);
@@ -548,5 +548,60 @@ describe("validateContractSemantics — componentRef layer ordering", () => {
     });
     const offending = issues.find((i) => /higher layer/.test(i.message));
     expect(offending?.pointer).toBe("/anatomy/details/card/componentRef");
+  });
+});
+
+describe("validateContractSemantics — textOverflow.line ⊆ prop names (Rule 8)", () => {
+  it("raises no issue when textOverflow is absent", () => {
+    const c = base({});
+    expect(issueAt(validateContractSemantics(c), "/textOverflow/line")).toBe(false);
+  });
+
+  it("raises no issue when textOverflow.line references a real prop", () => {
+    const c = base({
+      props: {
+        styled: { members: [{ name: "maxLines", type: "number", description: "" }] },
+      },
+      textOverflow: { kind: "line-clamp", line: "prop:maxLines" },
+    } as Partial<ComponentContract>);
+    expect(issueAt(validateContractSemantics(c), "/textOverflow/line")).toBe(false);
+  });
+
+  it("flags textOverflow.line referencing a missing prop — prevents a second, unverifiable authority over the line count", () => {
+    const c = base({
+      props: { styled: { members: [] } },
+      textOverflow: { kind: "line-clamp", line: "prop:doesNotExist" },
+    } as Partial<ComponentContract>);
+    const issues = validateContractSemantics(c);
+    expect(issueAt(issues, "/textOverflow/line")).toBe(true);
+  });
+
+  it("flags a malformed textOverflow.line that is not a prop: binding at all", () => {
+    const c = base({
+      textOverflow: { kind: "line-clamp", line: "literal-string-not-a-binding" },
+    } as Partial<ComponentContract>);
+    const issues = validateContractSemantics(c);
+    const offending = issues.find((i) => i.pointer === "/textOverflow/line");
+    expect(offending?.message).toMatch(/must be of the form "prop:<name>"/);
+  });
+
+  it("validateTextOverflow (standalone) rejects a fixture referencing a prop declared nowhere in the contract", () => {
+    const c = base({
+      props: { styled: { members: [{ name: "lines", type: "number", description: "" }] } },
+      textOverflow: { kind: "line-clamp", line: "prop:wrongName" },
+    } as Partial<ComponentContract>);
+    const propNames = new Set(["lines"]);
+    const issues = validateTextOverflow(c, propNames);
+    expect(issues).toHaveLength(1);
+    expect(issues[0].pointer).toBe("/textOverflow/line");
+    expect(issues[0].message).toMatch(/references prop "wrongName"/);
+  });
+
+  it("validateTextOverflow (standalone) accepts a fixture whose line prop is declared", () => {
+    const c = base({
+      textOverflow: { kind: "line-clamp", line: "prop:lines" },
+    } as Partial<ComponentContract>);
+    const issues = validateTextOverflow(c, new Set(["lines"]));
+    expect(issues).toEqual([]);
   });
 });

@@ -20,6 +20,9 @@
  *         - channels[*].{value,defaultValue,onChange} ⊆ prop names
  *         - events[*].emittedVia[*] ⊆ prop names
  *         - form.<bucket>.via[*] of form `prop:<name>` ⊆ prop names
+ *         - textOverflow.line of form `prop:<name>` ⊆ prop names
+ *           (validateTextOverflow — prevents textOverflow declaring a
+ *           second, unverifiable authority over a line count)
  *         - stateMachine.transitions[*].{from,to} ⊆ states (when
  *           dimensional form is used).
  *
@@ -378,6 +381,45 @@ export function validateContractSemantics(
           'Declare the slot/anatomy host, or use the default slot "children".',
       });
     }
+  }
+
+  // --- Rule 8: textOverflow.line prop ⊆ prop names -------------------
+  issues.push(...validateTextOverflow(contract, propNames));
+
+  return issues;
+}
+
+/**
+ * `textOverflow.line` (form `prop:<name>`) must reference a prop declared
+ * in this contract — otherwise textOverflow would be a second, unverifiable
+ * authority over a value that may not exist. Exported standalone (not
+ * inlined into validateContractSemantics) so ir.test.ts / semantic.test.ts
+ * can exercise the negative case directly against a malformed fixture
+ * without constructing a full contract.
+ */
+export function validateTextOverflow(
+  contract: ComponentContract,
+  propNames: ReadonlySet<string>,
+): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const textOverflow = contract.textOverflow;
+  if (!textOverflow) return issues;
+
+  const lineMatch = textOverflow.line?.match(/^prop:([A-Za-z_$][\w$-]*)$/);
+  if (!lineMatch) {
+    issues.push({
+      pointer: "/textOverflow/line",
+      message: `textOverflow.line "${textOverflow.line}" must be of the form "prop:<name>"`,
+    });
+    return issues;
+  }
+
+  const propName = lineMatch[1];
+  if (!propNames.has(propName)) {
+    issues.push({
+      pointer: "/textOverflow/line",
+      message: `references prop "${propName}" which is not declared in any props bucket`,
+    });
   }
 
   return issues;

@@ -417,6 +417,21 @@ export interface ContractPortal {
   collision?: 'flip' | 'shift' | 'flip-shift' | 'none';
 }
 
+/**
+ * Target-neutral text-overflow intent. Distinct from any DOM-realization
+ * mechanism (existing anatomy.dom cssVariableBindings for line-clamp) — this
+ * is the semantic fact; DOM targets additionally lower it through the css var
+ * (both coexist, see ir.ts buildTextOverflowIR).
+ */
+export interface ContractTextOverflow {
+  description?: string;
+  /** Only `line-clamp` is modeled today; other overflow families are reserved. */
+  kind: 'line-clamp';
+  /** The prop supplying the line count, as `prop:<name>`. Must be the SAME
+   * prop an existing cssVariableBindings line-clamp realization already reads. */
+  line: string;
+}
+
 export type DismissalEvent =
   | 'escape'
   | 'overlayClick'
@@ -646,6 +661,7 @@ export interface ComponentContract {
   motion?: unknown;
   focus?: ContractFocus;
   portal?: ContractPortal;
+  textOverflow?: ContractTextOverflow;
   dismissal?: ContractDismissal;
   surface?: ContractSurface;
   relationships?: Array<{

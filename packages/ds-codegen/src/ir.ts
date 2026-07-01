@@ -973,6 +973,19 @@ export interface SurfaceIR {
   timing: SurfaceTimingIR | undefined;
 }
 
+/**
+ * Target-neutral text-overflow intent (built only when `contract.textOverflow`
+ * is present). Distinct from the DOM realization: web targets additionally
+ * lower line-clamp through the existing anatomy.dom cssVariableBindings
+ * mechanism — both coexist. `line` is the same `prop:<name>` binding a
+ * cssVariableBindings entry already reads, parsed once here so consumers get
+ * a typed BindingExpression instead of re-parsing the raw string.
+ */
+export interface TextOverflowIR {
+  kind: "line-clamp";
+  line: BindingExpression;
+}
+
 export interface ComponentIR {
   /** Identity */
   name: string;
@@ -1035,6 +1048,16 @@ export interface ComponentIR {
    * consumed starting with Phase F-2 (Tooltip migration).
    */
   surface: SurfaceIR | undefined;
+
+  /**
+   * Target-neutral text-overflow intent — present only when
+   * `contract.textOverflow` is set. Additive: existing DOM cssVariableBindings
+   * line-clamp realization (ShowMore/Truncate `--fsds-*-content-max-lines`)
+   * is unchanged and coexists with this fact; emitters are not required to
+   * consume it yet (CODEGEN-RN-EMITTER-IR-AUTHORITY-01 A3 — IR authority
+   * only, no emitter consumption in this slice).
+   */
+  textOverflow: TextOverflowIR | undefined;
 
   /**
    * Optional DOM tree derived from `contract.anatomy.dom`. When present,
@@ -1202,6 +1225,7 @@ export function buildComponentIR(
 
   const behavior = buildBehaviorIR(contract, styledProps);
   const surface = buildSurfaceIR(contract, parts);
+  const textOverflow = buildTextOverflowIR(contract);
   const dom = buildDomTree(contract);
 
   if (dom) {
@@ -1277,6 +1301,7 @@ export function buildComponentIR(
     tokenScopes,
     behavior,
     surface,
+    textOverflow,
     dom,
     generateTests: contract.codegen?.tests !== false,
   };
@@ -2670,6 +2695,32 @@ export function buildSurfaceIR(
     openTriggers,
     timing,
   };
+}
+
+/**
+ * Builds TextOverflowIR from `contract.textOverflow`. Reuses
+ * parseBindingExpression on `textOverflow.line` so the IR carries the same
+ * typed BindingExpression shape every other prop/channel binding uses,
+ * instead of a raw string a consumer would have to re-parse. Does not
+ * re-validate that the referenced prop exists — that is
+ * validateTextOverflow's job (validation/semantic.ts), run as part of the
+ * separate semantic-validation pass before IR build in the normal
+ * generate:check pipeline.
+ */
+export function buildTextOverflowIR(
+  contract: ComponentContract,
+): TextOverflowIR | undefined {
+  const textOverflow = contract.textOverflow;
+  if (!textOverflow) return undefined;
+
+  const line = parseBindingExpression(textOverflow.line);
+  if (line.kind !== "prop") {
+    throw new Error(
+      `Contract "${contract.name}": textOverflow.line "${textOverflow.line}" must be a "prop:<name>" binding.`,
+    );
+  }
+
+  return { kind: textOverflow.kind, line };
 }
 
 /**

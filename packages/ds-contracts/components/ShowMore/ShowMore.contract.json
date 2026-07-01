@@ -158,6 +158,11 @@
     "strategy": "auto",
     "description": "Focus stays on the trigger when expanded or collapsed; the revealed content is not auto-focused."
   },
+  "textOverflow": {
+    "kind": "line-clamp",
+    "line": "prop:maxLines",
+    "description": "Content is clamped to maxLines while collapsed. Same source as the existing anatomy.dom cssVariableBindings --fsds-show-more-content-max-lines realization — this is the target-neutral intent fact, not a second authority over the value."
+  },
   "ssr": {
     "hydrateOn": "interaction"
   },
