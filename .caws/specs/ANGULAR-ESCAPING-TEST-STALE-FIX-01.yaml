@@ -1,0 +1,27 @@
+id: ANGULAR-ESCAPING-TEST-STALE-FIX-01
+title: 'Fix stale Angular literal-escaping test assertion after merge-surfaced fix'
+risk_tier: 3
+mode: chore
+lifecycle_state: active
+created_at: '2026-07-01T16:12:58.973Z'
+updated_at: '2026-07-01T16:12:58.973Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-codegen/src/frameworks/iteration-bindings.test.ts'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'angular-literal-escaping-test'
+    type: contract-test
