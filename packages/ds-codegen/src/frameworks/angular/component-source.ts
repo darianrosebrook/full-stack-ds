@@ -1372,6 +1372,22 @@ function renderAngularDomNode(
     attrs.push(`[style.${varName}]="${valueExpr}"`);
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: propertyBindings
+  // are DOM-property-only facts (e.g. `indeterminate`) with no HTML
+  // attribute form. Angular's bare `[key]="expr"` syntax already binds a
+  // DOM property directly (not via setAttribute) — the same mechanism
+  // already used for `[checked]`/`[disabled]`/`[value]` above via
+  // `angularAttrBinding`'s default branch. No ElementRef/effect() escape
+  // hatch is needed: reusing `renderAngularBinding` guarantees these keys
+  // never take the `[attr.x]` branch (they aren't `data-`/`aria-` prefixed
+  // and won't appear in ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG), so the
+  // property (not attribute) form is what gets emitted.
+  for (const [key, expr] of Object.entries(node.propertyBindings)) {
+    const rendered = renderAngularBinding(key, expr, ctx, node.tag);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
     if (ctx.autoDismissPause) {

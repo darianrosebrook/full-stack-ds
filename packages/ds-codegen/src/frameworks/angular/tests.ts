@@ -1,6 +1,9 @@
 import type { ComponentIR, DomNodeIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { buildComponentTestPlan } from "../../test-plan.js";
+import {
+  buildComponentTestPlan,
+  findIndeterminateAriaCheckedFact,
+} from "../../test-plan.js";
 
 export function generateAngularTest(ir: ComponentIR): string {
   const plan = buildComponentTestPlan(ir);
@@ -84,6 +87,31 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(
         `    expect(classTokens(fixture.componentInstance)).toContain("${variant.className}");`,
       );
+      lines.push(`  });`);
+    }
+
+    // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: durable runtime
+    // proof that indeterminate lowers to a real DOM-property reflection (not
+    // an attribute) and aria-checked reflects the tri-state. Gated on the IR
+    // fact (propertyBindings.indeterminate + an aria-checked "mixed"
+    // conditional coexisting on the same node), not the component name — any
+    // future contract with this same fact pattern gets this test for free.
+    const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
+    if (indeterminateFact) {
+      lines.push(``);
+      lines.push(
+        `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
+      );
+      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(
+        `    fixture.componentInstance.${indeterminateFact.propertyKey} = true;`,
+      );
+      lines.push(`    fixture.detectChanges();`);
+      lines.push(
+        `    const el = fixture.nativeElement.querySelector("input") as HTMLInputElement;`,
+      );
+      lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+      lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
       lines.push(`  });`);
     }
   } else {

@@ -37,6 +37,15 @@ describe("Checkbox — unit", () => {
     fixture.componentInstance.size = "lg";
     expect(classTokens(fixture.componentInstance)).toContain("checkbox--lg");
   });
+
+  it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {
+    const fixture = TestBed.createComponent(CheckboxComponent);
+    fixture.componentInstance.indeterminate = true;
+    fixture.detectChanges();
+    const el = fixture.nativeElement.querySelector("input") as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    expect(el.getAttribute("aria-checked")).toBe("mixed");
+  });
 });
 
 function classTokens(component: { classes: () => string }): string[] {
