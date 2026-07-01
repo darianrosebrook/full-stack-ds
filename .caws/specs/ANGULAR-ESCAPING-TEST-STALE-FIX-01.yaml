@@ -3,6 +3,7 @@ title: 'Fix stale Angular literal-escaping test assertion after merge-surfaced f
 risk_tier: 3
 mode: chore
 lifecycle_state: active
+worktree: angular-escaping-test-fix
 created_at: '2026-07-01T16:12:58.973Z'
 updated_at: '2026-07-01T16:12:58.973Z'
 blast_radius:
