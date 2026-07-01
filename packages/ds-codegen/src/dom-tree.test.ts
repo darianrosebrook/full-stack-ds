@@ -1240,7 +1240,7 @@ describe("propertyBindings (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01
     ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
   });
 
-  it("rejects properties.indeterminate on a componentRef/slot host", () => {
+  it("rejects properties.indeterminate on a slot host", () => {
     expect(() =>
       buildComponentIR({
         name: "TestBadHostSlot",
@@ -1248,6 +1248,25 @@ describe("propertyBindings (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01
           parts: ["root"],
           dom: {
             tag: "slot",
+            part: "root",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on a componentRef host", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostComponentRef",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            componentRef: "fsds.Input",
             part: "root",
             properties: { indeterminate: "prop:indeterminate" },
           } as any,

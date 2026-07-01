@@ -1551,8 +1551,12 @@ function validateDomNode(
           Object.entries(hostRequirement.attrs)
             .map(([attr, value]) => ` ${attr}="${value}"`)
             .join("");
+        const gotTag =
+          node.componentRef !== undefined
+            ? `componentRef="${node.componentRef}"`
+            : node.tag;
         const gotShape =
-          (node.tag || "(componentRef/slot)") +
+          gotTag +
           Object.entries(node.attrs)
             .map(([attr, value]) => ` ${attr}="${value}"`)
             .join("");
