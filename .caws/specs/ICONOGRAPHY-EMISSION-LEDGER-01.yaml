@@ -3,6 +3,7 @@ title: 'Emission evidence ledger: content-addressed drift substrate for generate
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: emission-ledger
 created_at: '2026-07-01T20:56:36.282Z'
 updated_at: '2026-07-01T20:56:36.282Z'
 blast_radius:
