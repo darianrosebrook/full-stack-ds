@@ -1228,6 +1228,22 @@ function renderSvelteDomNode(
     attrs.push(`style:${varName}={${valueExpr}}`);
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: propertyBindings
+  // are DOM-property-only facts (e.g. `indeterminate`) with no HTML
+  // attribute form. Svelte 5's compiler already resolves plain
+  // `attr={expr}` to a direct property assignment (`el.indeterminate =
+  // value`, not setAttribute) for any name in its own DOM_PROPERTIES
+  // list — confirmed against the installed svelte package's
+  // RegularElement transform (`is_dom_property` branch), which includes
+  // `indeterminate` via DOM_BOOLEAN_ATTRIBUTES. No new syntax is needed:
+  // reusing `renderSvelteBinding` is sufficient, the same mechanism
+  // already proven live for `checked`/`disabled`/`value` above.
+  for (const [key, expr] of Object.entries(node.propertyBindings)) {
+    const rendered = renderSvelteBinding(key, expr, ctx, node.tag);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
     if (ctx.autoDismissPause) {
