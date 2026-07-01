@@ -260,6 +260,7 @@ describe("buildDomTree (via buildComponentIR)", () => {
       part: "wrapper",
       attrs: { class: "switch__wrapper" },
       bindings: {},
+      propertyBindings: {},
       events: {},
       content: undefined,
       children: [],
@@ -317,6 +318,7 @@ describe("buildDomTree (via buildComponentIR)", () => {
       part: "wrapper",
       attrs: {},
       bindings: {},
+      propertyBindings: {},
       events: {},
       content: undefined,
       children: [
@@ -329,6 +331,7 @@ describe("buildDomTree (via buildComponentIR)", () => {
             checked: { kind: "channel", channel: "checked", field: "value" },
             disabled: { kind: "prop", prop: "disabled" },
           },
+          propertyBindings: {},
           events: {
             change: { kind: "channel", channel: "checked", field: "onChange" },
           },
@@ -345,6 +348,7 @@ describe("buildDomTree (via buildComponentIR)", () => {
           part: undefined,
           attrs: {},
           bindings: {},
+          propertyBindings: {},
           events: {},
           content: undefined,
           children: [],
@@ -504,6 +508,30 @@ describe("legacy bindings shapes hard-reject (IR-DOM-BINDING-CAPABILITY-01/4C)",
         },
       } as ComponentContract),
     ).toThrow(/bindings\.textContent smuggles inner content.*content.*prop:label/);
+  });
+
+  it("rejects bindings.indeterminate — DOM-property-only, must move to properties (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "MisplacedPropertyBinding",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "input",
+            part: "root",
+            attrs: { type: "checkbox" },
+            bindings: {
+              indeterminate: "prop:indeterminate",
+            } as any,
+          },
+        },
+        props: {
+          styled: {
+            members: [{ name: "indeterminate", type: "boolean" }],
+          },
+        },
+      } as ComponentContract),
+    ).toThrow(/bindings\.indeterminate is a DOM-property-only binding.*properties/);
   });
 
   it("rejects content + children on the same node", () => {
@@ -1122,6 +1150,192 @@ describe("iterate directive", () => {
         },
       } as ComponentContract),
     ).not.toThrow();
+  });
+});
+
+describe("propertyBindings (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)", () => {
+  it("parses properties.indeterminate into propertyBindings, distinct from bindings", () => {
+    const ir = buildComponentIR({
+      name: "TestCheckbox",
+      anatomy: {
+        parts: ["input"],
+        dom: {
+          tag: "input",
+          part: "input",
+          attrs: { type: "checkbox" },
+          bindings: {
+            checked: "channel:checked.value",
+            "aria-checked":
+              "conditional:prop:indeterminate|literal:mixed|channel:checked.value",
+          },
+          properties: {
+            indeterminate: "prop:indeterminate",
+          },
+          events: {
+            change: "channel:checked.onChange",
+          },
+        } as any,
+      },
+      channels: {
+        checked: {
+          value: "checked",
+          defaultValue: "defaultChecked",
+          onChange: "onCheckedChange",
+        },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "checked", type: "boolean" },
+            { name: "defaultChecked", type: "boolean" },
+            { name: "onCheckedChange", type: "(value: boolean) => void" },
+            { name: "indeterminate", type: "boolean" },
+          ],
+        },
+      },
+    } as ComponentContract);
+
+    expect(ir.dom?.propertyBindings).toEqual({
+      indeterminate: { kind: "prop", prop: "indeterminate" },
+    });
+    // Distinct storage: indeterminate must NOT also appear in bindings.
+    expect(ir.dom?.bindings.indeterminate).toBeUndefined();
+    // aria-checked stays a real attribute binding (conditional expression),
+    // proving the two facts coexist via different mechanisms on the same node.
+    expect(ir.dom?.bindings["aria-checked"]).toEqual({
+      kind: "conditional",
+      condition: { kind: "prop", prop: "indeterminate" },
+      whenTrue: { kind: "literal", value: "mixed" },
+      whenFalse: { kind: "channel", channel: "checked", field: "value" },
+    });
+  });
+
+  it("returns propertyBindings: {} when the contract declares no properties block", () => {
+    const ir = buildComponentIR({
+      name: "TestNoProperties",
+      anatomy: {
+        parts: ["root"],
+        dom: { tag: "div", part: "root" },
+      },
+    } as ComponentContract);
+    expect(ir.dom?.propertyBindings).toEqual({});
+  });
+
+  it("rejects properties.indeterminate on a non-input host (div)", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostDiv",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on a slot host", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostSlot",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "slot",
+            part: "root",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on a componentRef host", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostComponentRef",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            componentRef: "fsds.Input",
+            part: "root",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on a non-checkbox input (type=text)", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostTextInput",
+        anatomy: {
+          parts: ["input"],
+          dom: {
+            tag: "input",
+            part: "input",
+            attrs: { type: "text" },
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on an input with no type attr at all", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostNoType",
+        anatomy: {
+          parts: ["input"],
+          dom: {
+            tag: "input",
+            part: "input",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("accepts properties.indeterminate on input type=checkbox (eligible host)", () => {
+    const ir = buildComponentIR({
+      name: "TestGoodHost",
+      anatomy: {
+        parts: ["input"],
+        dom: {
+          tag: "input",
+          part: "input",
+          attrs: { type: "checkbox" },
+          properties: { indeterminate: "prop:indeterminate" },
+        } as any,
+      },
+      props: {
+        styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+      },
+    } as ComponentContract);
+    expect(ir.dom?.propertyBindings).toEqual({
+      indeterminate: { kind: "prop", prop: "indeterminate" },
+    });
   });
 });
 

@@ -1382,6 +1382,24 @@ function renderVueDomNode(
     }
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: propertyBindings
+  // are DOM-property-only facts (e.g. `indeterminate`) with no HTML
+  // attribute form. Vue's bare `:key="expr"` v-bind already sets a DOM
+  // property directly (not via setAttribute) for any key that resolves
+  // true via `shouldSetAsProp`'s `key in el` fallthrough — the same
+  // mechanism already proven live for `:checked`/`:value`/`:selected`
+  // above via `renderVueBinding`. No new syntax is needed: reusing
+  // `renderVueBinding` is sufficient because `indeterminate` is a real
+  // IDL property on HTMLInputElement with no attribute reflection, so
+  // Vue's runtime-dom patchProp routes it through patchDOMProp
+  // unconditionally (confirmed against the installed
+  // @vue/runtime-dom package's shouldSetAsProp).
+  for (const [key, expr] of Object.entries(node.propertyBindings)) {
+    const rendered = renderVueBinding(key, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       // The root node's BEM class is included in `classNames` (computed).
@@ -1703,13 +1721,24 @@ function renderVueBinding(
       return `@${eventName}="() => ${setter}(behavior.${ch.name}.value)"`;
     }
     case "predicate": {
-      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      // BINDING-EXPRESSION-V2-PREDICATE-01. `lowered` is already a valid
+      // Vue template-expression string (comparison operators, prop
+      // accessors, JSON.stringify'd literals with real embedded quotes) —
+      // NOT HTML text. escapeAttrString would corrupt embedded `"` (e.g.
+      // from a literal operand) into `&quot;`, which Vue's expression
+      // parser reads as literal entity characters, not a quote — breaking
+      // the expression. The outer `:attr="..."` delimiter is parsed by
+      // Vue's own template compiler, same as the unescaped channel/prop
+      // branches above (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+      // INDETERMINATE-01 found this via Checkbox's aria-checked, the
+      // first conditional binding with a literal string operand used in
+      // attribute position).
       const lowered = renderVuePredicate(expr, ctx);
-      return lowered === null ? null : `:${attr}="${escapeAttrString(lowered)}"`;
+      return lowered === null ? null : `:${attr}="${lowered}"`;
     }
     case "conditional": {
       const lowered = renderVueBindingValue(expr, ctx);
-      return lowered === null ? null : `:${attr}="${escapeAttrString(lowered)}"`;
+      return lowered === null ? null : `:${attr}="${lowered}"`;
     }
   }
 }

@@ -16,6 +16,7 @@ export function generateVueBarrel(
 ): string {
   const lines: string[] = [];
   for (const name of [...componentNames].sort()) {
+    lines.push(`import "./${name}/${name}.css";`);
     lines.push(`export { default as ${name} } from "./${name}/${name}.vue";`);
 
     if (!componentsRoot) continue;

@@ -2240,6 +2240,7 @@ function fallbackViewNode(): DomNodeIR {
     ifProp: undefined,
     iteration: undefined,
     part: "root",
+    propertyBindings: {},
     slotName: undefined,
     tag: "div",
   };

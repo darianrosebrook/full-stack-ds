@@ -38,6 +38,22 @@ describe("Checkbox — unit", () => {
     const { container } = render(Checkbox as unknown as Component<Record<string, unknown>>, { props: { "size": "lg" } });
     expect(container.firstElementChild?.className).toContain("checkbox--lg");
   });
+
+  it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {
+    const { container } = render(Checkbox as unknown as Component<Record<string, unknown>>, { props: { "indeterminate": true } });
+    const el = container.firstElementChild as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    expect(el.getAttribute("aria-checked")).toBe("mixed");
+  });
+
+  it("re-applies .indeterminate when the prop changes from true to false, and aria-checked reflects checked state again", async () => {
+    const { container, rerender } = render(Checkbox as unknown as Component<Record<string, unknown>>, { props: { "indeterminate": true } });
+    const el = container.firstElementChild as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    await rerender({ indeterminate: false });
+    expect(el.indeterminate).toBe(false);
+    expect(el.getAttribute("aria-checked")).toBe("false");
+  });
 });
 
 describe("Checkbox — accessibility", () => {

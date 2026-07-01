@@ -103,3 +103,17 @@ Recording the consumer-API gaps surfaced while scaffolding `settings/react/`. Ea
 **Status:** the example **builds via Vite** and **typechecks against the React package with only one residual error**: `src/main.tsx(3,8): error TS2882: Cannot find module or type declarations for side-effect import of '@full-stack-ds/react/styles.css'`. That's a packaging-side ambient-declaration gap, not a consumer-API gap.
 
 (Items 1-4, 8 remain as component/contract surface issues. Item 5 was packaging-config, fixed for React. Items 6-7 were resolved via codegen on 2026-05-20 — see commit history.)
+
+## Findings from the Vue implementation
+
+Recording the consumer-API gaps surfaced while scaffolding `settings/vue/`.
+
+1. ~~**Vue package root exported primitives only.**~~ **Fixed during scaffold** — `@full-stack-ds/vue` now re-exports generated components from `src/components/index.ts`, so consumers can import `Card`, `Field`, `Dialog`, `TooltipTrigger`, and the rest from the package root.
+2. ~~**Bundled CSS path was not exported.**~~ **Fixed during scaffold** — added `@full-stack-ds/vue/styles.css` backed by the package build's `dist/vue.css`.
+3. ~~**The CSS export had no TypeScript declaration.**~~ **Fixed during scaffold** — added a typed CSS export declaration source so `vue-tsc` accepts side-effect imports of `@full-stack-ds/vue/styles.css`.
+4. **Vue compound-component convention differs from React.** React uses `Tooltip.Trigger` / `Tooltip.Content`; Vue exports sibling components `TooltipTrigger` / `TooltipContent`. The app can satisfy the same spec, but consumers have to learn framework-specific compound naming.
+5. **Dialog parts are exported but not structurally consumed by `Dialog.vue`.** The Vue app renders `DialogHeader`, `DialogTitle`, `DialogBody`, and `DialogFooter` as children to match the spec, but `Dialog.vue` itself also emits its own internal header/body/footer scaffold. That is a framework-package behavior/structure gap worth auditing before treating the Vue dialog lane as runtime-complete.
+6. **Vue `Input` state updates are blur-timed.** DevTools runtime smoke showed typing `DELETE` into the confirm input leaves the destructive button disabled until focus leaves the input. The generated Vue input emits `onChange` from the native `change` event, not the input event, so keystroke-time validation does not satisfy the spec yet.
+7. **Generated `Field` labels are not associated with their inputs.** Chrome DevTools reported "No label associated with a form field" and "A form field element should have an id or name attribute" for the profile inputs. The app is using the public `Field label` prop and `Input` exports as intended, so this is a package/component wiring gap rather than an example escape hatch.
+
+**Status:** the Vue example **typechecks** with `packages/ds-vue/node_modules/.bin/vue-tsc --noEmit -p examples/settings/vue/tsconfig.json` and **builds** with `pnpm --filter @full-stack-ds/example-settings-vue run build`. Runtime smoke through Chrome DevTools confirmed the page renders the three sections, the dark-mode switch toggles, the email-notifications tooltip appears on hover, and the dialog opens/closes. It also confirmed findings 5-7 above.

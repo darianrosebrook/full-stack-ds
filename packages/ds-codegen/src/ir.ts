@@ -373,6 +373,18 @@ export interface DomNodeIR {
    */
   bindings: Record<string, BindingExpression>;
   /**
+   * DOM-property-only bindings keyed by property name (`indeterminate`, ...).
+   * For facts with no HTML attribute equivalent — a JS-only DOM property
+   * that must be set imperatively (`el.indeterminate = true`), never via an
+   * HTML attribute or any framework's template-attribute binding syntax.
+   * Distinct from `bindings` for the same reason `events` is distinct: every
+   * attribute-binding lowering writes an HTML attribute, which is the wrong
+   * mechanism here. `bindings.indeterminate` hard-fails at IR-build,
+   * redirecting authors here (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+   * INDETERMINATE-01).
+   */
+  propertyBindings: Record<string, BindingExpression>;
+  /**
    * Event bindings keyed by unprefixed event name (`click`, `input`,
    * `change`, ...). Emitters lower per framework idiom. Distinct from
    * attribute bindings because every framework spells events differently
@@ -973,6 +985,19 @@ export interface SurfaceIR {
   timing: SurfaceTimingIR | undefined;
 }
 
+/**
+ * Target-neutral text-overflow intent (built only when `contract.textOverflow`
+ * is present). Distinct from the DOM realization: web targets additionally
+ * lower line-clamp through the existing anatomy.dom cssVariableBindings
+ * mechanism — both coexist. `line` is the same `prop:<name>` binding a
+ * cssVariableBindings entry already reads, parsed once here so consumers get
+ * a typed BindingExpression instead of re-parsing the raw string.
+ */
+export interface TextOverflowIR {
+  kind: "line-clamp";
+  line: BindingExpression;
+}
+
 export interface ComponentIR {
   /** Identity */
   name: string;
@@ -1035,6 +1060,16 @@ export interface ComponentIR {
    * consumed starting with Phase F-2 (Tooltip migration).
    */
   surface: SurfaceIR | undefined;
+
+  /**
+   * Target-neutral text-overflow intent — present only when
+   * `contract.textOverflow` is set. Additive: existing DOM cssVariableBindings
+   * line-clamp realization (ShowMore/Truncate `--fsds-*-content-max-lines`)
+   * is unchanged and coexists with this fact; emitters are not required to
+   * consume it yet (CODEGEN-RN-EMITTER-IR-AUTHORITY-01 A3 — IR authority
+   * only, no emitter consumption in this slice).
+   */
+  textOverflow: TextOverflowIR | undefined;
 
   /**
    * Optional DOM tree derived from `contract.anatomy.dom`. When present,
@@ -1205,6 +1240,7 @@ export function buildComponentIR(
 
   const behavior = buildBehaviorIR(contract, styledProps);
   const surface = buildSurfaceIR(contract, parts);
+  const textOverflow = buildTextOverflowIR(contract);
   const dom = buildDomTree(contract);
 
   if (dom) {
@@ -1287,6 +1323,7 @@ export function buildComponentIR(
     tokenScopes,
     behavior,
     surface,
+    textOverflow,
     dom,
     generateTests: contract.codegen?.tests !== false,
   };
@@ -1553,6 +1590,48 @@ function validateDomNode(
       // Event/content/iterate-source/css-var callsites pass the default
       // `false` and reject predicates with a typed error.
       true,
+    );
+  }
+  for (const [prop, binding] of Object.entries(node.propertyBindings)) {
+    const hostRequirement = DOM_PROPERTY_HOST_REQUIREMENTS[prop];
+    if (hostRequirement) {
+      const tagMismatch = node.tag !== hostRequirement.tag;
+      const attrMismatches = Object.entries(hostRequirement.attrs).filter(
+        ([attr, value]) => node.attrs[attr] !== value,
+      );
+      if (tagMismatch || attrMismatches.length > 0) {
+        const wantShape =
+          hostRequirement.tag +
+          Object.entries(hostRequirement.attrs)
+            .map(([attr, value]) => ` ${attr}="${value}"`)
+            .join("");
+        const gotTag =
+          node.componentRef !== undefined
+            ? `componentRef="${node.componentRef}"`
+            : node.tag;
+        const gotShape =
+          gotTag +
+          Object.entries(node.attrs)
+            .map(([attr, value]) => ` ${attr}="${value}"`)
+            .join("");
+        throw new Error(
+          `[${componentName}] properties.${prop} requires a DOM node ` +
+          `shaped <${wantShape}> — "${prop}" has no effect (or is invalid) ` +
+          `on any other host. Got <${gotShape}> (part="${node.part ?? "?"}"). ` +
+          `(DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)`,
+        );
+      }
+    }
+    validateBindingAgainstScope(
+      binding,
+      `property "${prop}"`,
+      knownChannels,
+      knownProps,
+      enclosingIteration,
+      componentName,
+      // Property-only bindings are a boolean/primitive DOM-property set,
+      // not an attribute — no predicate use case has come up. Matches
+      // events/content/iterate-source/css-var's default (false).
     );
   }
   for (const [evt, binding] of Object.entries(node.events)) {
@@ -2090,6 +2169,35 @@ function stripComponentRefPrefix(ref: string, context: string): string {
   return match[1];
 }
 
+/**
+ * Closed set of DOM-property-only facts — keys with no HTML attribute form
+ * at all, that must be set via an imperative JS property assignment
+ * (`el.<key> = value`). Authoring one of these under `bindings` hard-fails
+ * with a redirect to `properties` (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+ * INDETERMINATE-01). `indeterminate` is the only member today; extend this
+ * set when a future contract needs another property-only fact — do not
+ * special-case the component name that happens to use it.
+ */
+const DOM_PROPERTY_ONLY_KEYS = new Set<string>(["indeterminate"]);
+
+/**
+ * Host-eligibility for each DOM-property-only key: the exact `(tag, static
+ * attrs)` shape the property is meaningful on. `indeterminate` is a real DOM
+ * property on `HTMLInputElement`, but browsers only honor it for
+ * `type="checkbox"` — setting it on any other tag/input-type is a silent
+ * no-op, which is exactly the failure mode this closed set exists to catch
+ * at IR-build time instead of downstream in framework output or a browser
+ * (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01). Extend per-key
+ * when a future property-only fact is added; do not special-case component
+ * names or genericize into open pattern matching.
+ */
+const DOM_PROPERTY_HOST_REQUIREMENTS: Record<
+  string,
+  { tag: string; attrs: Record<string, string> }
+> = {
+  indeterminate: { tag: "input", attrs: { type: "checkbox" } },
+};
+
 function parseDomNode(node: ContractDomNode): DomNodeIR {
   // A node declares EITHER a native `tag` OR a `componentRef` to another
   // design-system component, never both. The schema's `oneOf` enforces this
@@ -2157,7 +2265,23 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
             `back-compat path was removed in IR-DOM-BINDING-CAPABILITY-01/4C.`,
         );
       }
+      if (DOM_PROPERTY_ONLY_KEYS.has(attr)) {
+        throw new Error(
+          `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+            `bindings.${attr} is a DOM-property-only binding — "${attr}" has ` +
+            `no HTML attribute form and cannot be expressed by any framework's ` +
+            `attribute-binding syntax. Move it to \`properties\` instead: ` +
+            `{ "${attr}": "${expr}" } under the sibling \`properties\` field. ` +
+            `(DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)`,
+        );
+      }
       bindings[attr] = parseBindingExpression(expr);
+    }
+  }
+  const propertyBindings: Record<string, BindingExpression> = {};
+  if (node.properties) {
+    for (const [prop, expr] of Object.entries(node.properties)) {
+      propertyBindings[prop] = parseBindingExpression(expr);
     }
   }
   const events: Record<string, BindingExpression> = {};
@@ -2207,6 +2331,7 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     part: node.part,
     attrs: node.attrs ?? {},
     bindings,
+    propertyBindings,
     events,
     content,
     children,
@@ -2724,6 +2849,32 @@ export function buildSurfaceIR(
     openTriggers,
     timing,
   };
+}
+
+/**
+ * Builds TextOverflowIR from `contract.textOverflow`. Reuses
+ * parseBindingExpression on `textOverflow.line` so the IR carries the same
+ * typed BindingExpression shape every other prop/channel binding uses,
+ * instead of a raw string a consumer would have to re-parse. Does not
+ * re-validate that the referenced prop exists — that is
+ * validateTextOverflow's job (validation/semantic.ts), run as part of the
+ * separate semantic-validation pass before IR build in the normal
+ * generate:check pipeline.
+ */
+export function buildTextOverflowIR(
+  contract: ComponentContract,
+): TextOverflowIR | undefined {
+  const textOverflow = contract.textOverflow;
+  if (!textOverflow) return undefined;
+
+  const line = parseBindingExpression(textOverflow.line);
+  if (line.kind !== "prop") {
+    throw new Error(
+      `Contract "${contract.name}": textOverflow.line "${textOverflow.line}" must be a "prop:<name>" binding.`,
+    );
+  }
+
+  return { kind: textOverflow.kind, line };
 }
 
 /**

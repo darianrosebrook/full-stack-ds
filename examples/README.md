@@ -12,12 +12,12 @@ Read this as a proving-ground portfolio, not a demo gallery. Every app shape mus
 
 | App shape | Implementations | Standing | Primary claim |
 |---|---|---|---|
-| `settings/` | `react/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
+| `settings/` | `react/`, `vue/`, `react-native/` | scaffolded evidence lanes | A small forms, overlay, and layout consumer app can build against public package exports. The Vue lane is build/typecheck consumer evidence; the RN lane is typecheck-only consumer evidence; generated RN package admission lives in the default rail. |
 | `operations-dashboard/` | _none yet_ | spec scaffold only | A dense internal operations surface — multi-axis filtering, a high-density queue, a selection-driven detail panel, status summaries, and overlay workflows — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
 | `storefront-checkout/` | _none yet_ | spec scaffold only | A storefront-to-checkout assembly — product browsing, a derived-total cart, promo/error messaging, a validated multi-step checkout with disabled/validating/pending states, and review/confirmation — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
 | `social-feed/` | _none yet_ | spec scaffold only | A dense social-feed assembly — nested-action feed items, a validating composer, optimistic reactions/comments with pending/error reconciliation, overflow menus driving report/hide flows, and a profile/notification surface — can be composed from public package exports with identical semantics across the five web frameworks. (Assembly-layer proving surface; no lanes implemented.) |
 
-`settings/` is the only app shape with implemented lanes (`react`, and a typecheck-only `react-native` fixture). The three assembly-layer app shapes — `operations-dashboard/`, `storefront-checkout/`, `social-feed/` — are **spec scaffolds only**: each has a framework-neutral `spec.md` and empty `react/`, `vue/`, `svelte/`, `angular/`, `lit/` lane folders (`src/.gitkeep` placeholders), and **no** implementation, package, or build files. They name a bounded claim a future lane will pressure; none of that claim is proven yet.
+`settings/` is the only app shape with implemented lanes (`react`, `vue`, and a typecheck-only `react-native` fixture). The three assembly-layer app shapes — `operations-dashboard/`, `storefront-checkout/`, `social-feed/` — are **spec scaffolds only**: each has a framework-neutral `spec.md` and empty `react/`, `vue/`, `svelte/`, `angular/`, `lit/` lane folders (`src/.gitkeep` placeholders), and **no** implementation, package, or build files. They name a bounded claim a future lane will pressure; none of that claim is proven yet.
 
 The five-framework app-parity claim is not proven by `examples/` yet. The repo's admitted five-framework evidence lives in codegen, generated packages, the governed rail, and the runtime fact rail. The examples directory is the consumer-transfer lane that should eventually make those claims more app-shaped.
 
@@ -136,7 +136,7 @@ The examples lane should fail honestly on any of these:
 - Not accessibility adequacy proof. They exercise shipped behavior, but accessibility claims belong to component contracts, generated behavior primitives, and dedicated rails.
 - Not a replacement for unit tests. Component tests remain in `packages/ds-*/src/components/`.
 - Not a replacement for the governed rail. Examples pressure package consumption; the rail binds emitted artifacts to contract, codegen, and environment evidence.
-- Not current five-framework app parity. Today only `settings/` has implemented lanes (`react` plus a typecheck-only `react-native` fixture); the three assembly-layer app shapes are spec scaffolds with no lanes.
+- Not current five-framework app parity. Today `settings/` has React, Vue, and React Native lanes, not all admitted Web DOM frameworks; the three assembly-layer app shapes are spec scaffolds with no lanes.
 - Not backend / data proof. Examples have no server, no network, and no persistence. Where a spec calls for a "functional API", that is a lane-local, typed, promise-returning data-access layer backed by static JSON/JSONL fixtures read through an adapter — a real-to-life *shape*, not a real backend. It proves nothing about data fetching, scale, or persistence.
 - Not contract authority. App specs pressure package consumption; component semantics still live in `packages/ds-contracts/`.
 
@@ -148,6 +148,11 @@ Each implementation is a standalone app. From the repo root:
 cd examples/settings/react
 pnpm install
 pnpm dev
+pnpm build
+
+cd examples/settings/vue
+pnpm install
+pnpm typecheck
 pnpm build
 
 cd examples/settings/react-native

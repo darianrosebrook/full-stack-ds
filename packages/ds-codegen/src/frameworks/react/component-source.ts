@@ -103,6 +103,13 @@ export function generateReactComponentSource(
   const finalReactTypeImports = needsCssProperties
     ? [...reactTypeImports, "type CSSProperties"].sort()
     : reactTypeImports;
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: generateDomTreeRootComponent
+  // emits `useRef`/`useEffect` calls for propertyBindings nodes, but that
+  // decision is data-driven deep inside the tree walk — scanning the
+  // rendered body (same technique as needsCssProperties above) is simpler
+  // than threading a boolean back out through the call chain.
+  const needsPropertyBindingHooks =
+    !isCompound && /\buseRef</.test(bodyHaystack);
 
   const importLines: string[] = [];
   if (isCompound) {
@@ -114,6 +121,9 @@ export function generateReactComponentSource(
       ? finalReactTypeImports
       : [...finalReactTypeImports, "type KeyboardEvent"];
     const allReactImports = [...compoundTypeImports, ...runtimeHooks].sort();
+    importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
+  } else if (needsPropertyBindingHooks) {
+    const allReactImports = [...finalReactTypeImports, "useEffect", "useRef"].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
   } else {
     importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
@@ -1164,6 +1174,33 @@ function domTreeHasRole(node: DomNodeIR | null | undefined, role: string): boole
   return node.children.some((child) => domTreeHasRole(child, role));
 }
 
+/**
+ * DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01. Walks the tree once
+ * to find every node carrying `propertyBindings` (DOM-property-only facts,
+ * e.g. `indeterminate`, that must be set via `el.<key> = value` — no JSX
+ * attribute can express these). Each entry gets a stable ref name derived
+ * from `part` (falling back to `tag` for an unpartnamed node — anatomy parts
+ * are the author-facing identifier and are unique per contract; there is no
+ * currently-known case of two property-binding nodes sharing a part name,
+ * but the walk does not assume uniqueness beyond what `part`/`tag` already
+ * provide).
+ */
+interface PropertyBindingNode {
+  node: DomNodeIR;
+  refName: string;
+}
+
+function collectPropertyBindingNodes(
+  node: DomNodeIR | null | undefined,
+): PropertyBindingNode[] {
+  if (!node) return [];
+  const own: PropertyBindingNode[] =
+    Object.keys(node.propertyBindings).length > 0
+      ? [{ node, refName: `${node.part ?? node.tag}Ref` }]
+      : [];
+  return own.concat(node.children.flatMap(collectPropertyBindingNodes));
+}
+
 /** True if the node, or any node in its subtree, is a native table-composition
  *  tag (table/thead/tbody/tfoot/tr/th/td/caption). A Table root is `<div>`
  *  wrapping a `<table>`, so the table-ness lives in the children, not the root
@@ -1410,6 +1447,27 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(``);
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: for each node
+  // carrying propertyBindings, declare a ref + a useEffect that applies the
+  // DOM-property-only fact imperatively (`el.<key> = value`) on mount and
+  // whenever the source value changes. No JSX attribute can express these
+  // (indeterminate has no HTML attribute form at all), so this is emitted
+  // ONLY when the tree actually has a property-binding node — components
+  // without one get zero new output, preserving byte-stability elsewhere.
+  const propertyBindingNodes = collectPropertyBindingNodes(ir.dom);
+  const propertyBindingRefs = new Map(
+    propertyBindingNodes.map(({ node, refName }) => [node, refName]),
+  );
+  for (const { node, refName } of propertyBindingNodes) {
+    // Element-specific type (HTMLInputElement for <input>, ...) so
+    // `refName.current.indeterminate` typechecks below — a bare
+    // `HTMLElement` has no `.indeterminate`. Falls back to the generic
+    // interface for a tag not in the map, matching HOST_TAG_TO_REACT_ATTRS'
+    // own documented fallback.
+    const elementType = HOST_TAG_TO_REACT_ATTRS[node.tag]?.[1] ?? "HTMLElement";
+    lines.push(`  const ${refName} = useRef<${elementType}>(null);`);
+  }
+
   const renderCtx: ReactRenderContext = {
     classRecipe: classRecipe.base,
     channelByName,
@@ -1421,7 +1479,37 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     forwardAriaLabel: hasDialogNode,
     rootRole: ir.root.effectiveRole,
     rootTagOverride,
+    propertyBindingRefs,
   };
+
+  for (const { node, refName } of propertyBindingNodes) {
+    const assignments = Object.entries(node.propertyBindings)
+      .map(([key, expr]) => {
+        const valueExpr = renderReactBinding(key, expr, renderCtx);
+        if (valueExpr === null) return null;
+        // DOM_PROPERTY_ONLY_KEYS_COERCION: the source prop is typically
+        // optional (`boolean | undefined`) while the target DOM property is
+        // a plain `boolean` (HTMLInputElement.indeterminate has no
+        // undefined state) — coerce so the assignment typechecks. Keyed by
+        // property name since a future DOM-property-only key might target
+        // a non-boolean DOM property with different coercion needs; this is
+        // NOT a Checkbox-name branch (`indeterminate` is the fact name, not
+        // a component check).
+        const coerced = key === "indeterminate" ? `Boolean(${valueExpr})` : valueExpr;
+        return `      ${refName}.current.${key} = ${coerced};`;
+      })
+      .filter((line): line is string => line !== null);
+    if (assignments.length === 0) continue;
+    lines.push(`  useEffect(() => {`);
+    lines.push(`    if (${refName}.current) {`);
+    lines.push(...assignments);
+    lines.push(`    }`);
+    const deps = Object.values(node.propertyBindings)
+      .map((expr) => renderReactBinding("propertyBindingDep", expr, renderCtx))
+      .filter((dep): dep is string => dep !== null);
+    lines.push(`  }, [${deps.join(", ")}]);`);
+  }
+  if (propertyBindingNodes.length > 0) lines.push(``);
 
   // When the root has an if-guard, render the conditional at the return
   // level (cleaner than wrapping in `()` braces inside `return (...)`).
@@ -1482,6 +1570,15 @@ interface ReactRenderContext {
    * MUST clear this — only the root node should use it.
    */
   rootTagOverride?: string;
+  /**
+   * Ref variable names for nodes carrying `propertyBindings`
+   * (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01), keyed by node
+   * identity. `renderReactDomNode` looks up the current node here to decide
+   * whether to attach `ref={...}`. Populated once at the root call from
+   * `collectPropertyBindingNodes`; empty when the tree has no
+   * property-binding nodes.
+   */
+  propertyBindingRefs?: Map<DomNodeIR, string>;
   /**
    * Nearest enclosing iteration directive, or `undefined` at the top
    * level. After BINDING-EXPRESSION-V2-01 the IR carries
@@ -1608,6 +1705,24 @@ function renderReactDomNode(
       continue;
     }
     const jsxKey = jsxAttrName(key);
+    // React's DOM types model aria-checked as Booleanish (`boolean | "true"
+    // | "false"`) — a known gap against the real ARIA spec, which also
+    // allows the tri-state "mixed" value. A conditional binding whose
+    // true-branch is the literal "mixed" (the DOM-PROPERTY-REFLECTION-IR-
+    // CHECKBOX-INDETERMINATE-01 aria-checked pattern) needs its own cast,
+    // distinct from the general Booleanish coercion below: `as "true" |
+    // "false"` would be actively wrong here (it would stringify "mixed"
+    // through `String()`, corrupting it), so this checks for the literal
+    // "mixed" branch specifically and casts to the real (wider) ARIA type.
+    if (
+      jsxKey === "aria-checked" &&
+      expr.kind === "conditional" &&
+      ((expr.whenTrue.kind === "literal" && expr.whenTrue.value === "mixed") ||
+        (expr.whenFalse.kind === "literal" && expr.whenFalse.value === "mixed"))
+    ) {
+      attrs.push(`${jsxKey}={${valueExpr} as "mixed" | "true" | "false" | boolean}`);
+      continue;
+    }
     // ARIA boolean-ish attributes have React type `Booleanish` (`boolean |
     // "true" | "false"`). Three cases:
     //   1. Boolean prop or boolean channel — pass through. React accepts
@@ -1731,6 +1846,13 @@ function renderReactDomNode(
   // it here.
   if (node.iteration) {
     attrs.push(`key={${node.iteration.indexVar}}`);
+  }
+
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: attach the ref the
+  // root-level useEffect prelude declared for this node's propertyBindings.
+  const propertyBindingRef = ctx.propertyBindingRefs?.get(node);
+  if (propertyBindingRef) {
+    attrs.push(`ref={${propertyBindingRef}}`);
   }
 
   // Children rendering

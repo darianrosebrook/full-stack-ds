@@ -266,6 +266,22 @@ export interface ContractDomNode {
    */
   bindings?: Record<string, string>;
   /**
+   * DOM-property-only bindings, keyed by property name (e.g.
+   * `"indeterminate"`). For facts with no HTML attribute equivalent at
+   * all — a JS-only DOM property that must be set imperatively
+   * (`el.indeterminate = true`), never via an HTML attribute or any
+   * framework's template-attribute binding syntax. Distinct from
+   * `bindings` because every attribute-binding lowering (JSX prop, Vue
+   * `:attr`, Angular `[attr]`, Lit `?attr=`, Svelte `attr=`) writes an
+   * HTML *attribute* — the wrong mechanism here. Each emitter instead
+   * applies these via its ref/lifecycle idiom (e.g. React `useRef` +
+   * `useEffect`). `bindings.indeterminate` hard-fails at IR-build,
+   * redirecting authors here (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+   * INDETERMINATE-01) — the same "wrong bag, hard fail" pattern
+   * `bindings.onX`/`bindings.children` already use for events/content.
+   */
+  properties?: Record<string, string>;
+  /**
    * Event bindings keyed by *unprefixed* event name (`"click"`, `"input"`,
    * `"change"`, ...). Each emitter lowers to its framework idiom:
    *   React  → `onClick={prop}`
@@ -415,6 +431,21 @@ export interface ContractPortal {
   layering?: 'modal' | 'popover' | 'tooltip' | 'menu' | 'toast' | 'none';
   backdrop?: boolean;
   collision?: 'flip' | 'shift' | 'flip-shift' | 'none';
+}
+
+/**
+ * Target-neutral text-overflow intent. Distinct from any DOM-realization
+ * mechanism (existing anatomy.dom cssVariableBindings for line-clamp) — this
+ * is the semantic fact; DOM targets additionally lower it through the css var
+ * (both coexist, see ir.ts buildTextOverflowIR).
+ */
+export interface ContractTextOverflow {
+  description?: string;
+  /** Only `line-clamp` is modeled today; other overflow families are reserved. */
+  kind: 'line-clamp';
+  /** The prop supplying the line count, as `prop:<name>`. Must be the SAME
+   * prop an existing cssVariableBindings line-clamp realization already reads. */
+  line: string;
 }
 
 export type DismissalEvent =
@@ -646,6 +677,7 @@ export interface ComponentContract {
   motion?: unknown;
   focus?: ContractFocus;
   portal?: ContractPortal;
+  textOverflow?: ContractTextOverflow;
   dismissal?: ContractDismissal;
   surface?: ContractSurface;
   relationships?: Array<{

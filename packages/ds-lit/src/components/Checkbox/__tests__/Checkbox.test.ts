@@ -45,6 +45,24 @@ describe("Checkbox — unit", () => {
     await el.updateComplete;
     expect(el.behavior?.checked).toBe(true);
   });
+
+  it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", async () => {
+    const { element } = await renderElement("fsds-checkbox", { "indeterminate": true });
+    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    expect(el.getAttribute("aria-checked")).toBe("mixed");
+  });
+
+  it("re-applies .indeterminate when the property changes from true to false, and aria-checked reflects checked state again", async () => {
+    const { element } = await renderElement("fsds-checkbox", { "indeterminate": true });
+    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    (element as unknown as Record<string, boolean>)["indeterminate"] = false;
+    (element as LitTestElement).requestUpdate?.();
+    await (element as LitTestElement).updateComplete;
+    expect(el.indeterminate).toBe(false);
+    expect(el.getAttribute("aria-checked")).toBe("false");
+  });
 });
 
 describe("Checkbox — accessibility", () => {

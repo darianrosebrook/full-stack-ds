@@ -37,7 +37,11 @@
         "checked": "channel:checked.value",
         "disabled": "prop:disabled",
         "name": "prop:name",
-        "value": "prop:value"
+        "value": "prop:value",
+        "aria-checked": "conditional:prop:indeterminate|literal:mixed|channel:checked.value"
+      },
+      "properties": {
+        "indeterminate": "prop:indeterminate"
       },
       "events": {
         "change": "channel:checked.onChange"

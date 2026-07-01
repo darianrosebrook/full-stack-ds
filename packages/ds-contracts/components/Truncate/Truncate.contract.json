@@ -177,6 +177,11 @@
       "selector": "[data-slot=\"truncate-toggle\"]"
     }
   },
+  "textOverflow": {
+    "kind": "line-clamp",
+    "line": "prop:lines",
+    "description": "Text content is clamped to lines. Same source as the existing anatomy.dom cssVariableBindings --fsds-truncate-content-lines realization — this is the target-neutral intent fact, not a second authority over the value."
+  },
   "ssr": {
     "hydrateOn": "interaction"
   },

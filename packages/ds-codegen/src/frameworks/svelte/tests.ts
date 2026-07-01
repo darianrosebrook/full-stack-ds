@@ -3,7 +3,10 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { buildComponentTestPlan } from "../../test-plan.js";
+import {
+  buildComponentTestPlan,
+  findIndeterminateAriaCheckedFact,
+} from "../../test-plan.js";
 
 export function generateSvelteTest(ir: ComponentIR): string {
   const plan = buildComponentTestPlan(ir);
@@ -113,6 +116,58 @@ export function generateSvelteTest(ir: ComponentIR): string {
       }
       lines.push(`  });`);
     }
+  }
+
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: durable runtime
+  // proof that indeterminate lowers to a real DOM-property reflection (not
+  // an attribute) and aria-checked reflects the tri-state. Gated on the IR
+  // fact (propertyBindings.indeterminate + an aria-checked "mixed"
+  // conditional coexisting on the same node), shared with React/Vue/
+  // Angular's generators so any future contract with this same fact
+  // pattern gets this test for free.
+  const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
+  if (indeterminateFact) {
+    lines.push(``);
+    lines.push(
+      `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
+    );
+    lines.push(
+      `    const { container } = ${renderExpression(plan.name, plan, { [indeterminateFact.propertyKey]: true })};`,
+    );
+    lines.push(
+      `    const el = container.firstElementChild as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
+    lines.push(`  });`);
+
+    // Reactive-update ratchet: the mount-only test above can't distinguish
+    // "the binding is reactive" from "the binding happened to write the
+    // right value once at mount." @testing-library/svelte's `rerender`
+    // (destructured from render()'s return) is its own API for pushing new
+    // props through the real component-update pipeline (confirmed against
+    // the installed package's Rerender type — it returns a Promise and
+    // must be awaited before Svelte's DOM patch flushes). This genuinely
+    // falsifies a mount-only property write: a one-time write would leave
+    // el.indeterminate stuck at `true` after rerender({ indeterminate:
+    // false }) below.
+    lines.push(``);
+    lines.push(
+      `  it("re-applies .${indeterminateFact.propertyKey} when the prop changes from true to false, and aria-checked reflects checked state again", async () => {`,
+    );
+    lines.push(
+      `    const { container, rerender } = ${renderExpression(plan.name, plan, { [indeterminateFact.propertyKey]: true })};`,
+    );
+    lines.push(
+      `    const el = container.firstElementChild as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(
+      `    await rerender({ ${indeterminateFact.propertyKey}: false });`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(false);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("false");`);
+    lines.push(`  });`);
   }
 
   if (emitEscape) {

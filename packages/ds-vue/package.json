@@ -12,6 +12,10 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./styles.css": {
+      "types": "./dist/types/styles-css.d.ts",
+      "default": "./dist/vue.css"
     }
   },
   "files": [

@@ -3,6 +3,7 @@ import { toKebab } from "./contract.js";
 import type {
   BindingExpression,
   ComponentIR,
+  DomNodeIR,
   NormalizedChannelIR,
   NormalizedDismissalTriggerIR,
   ResolvedPropIR,
@@ -157,6 +158,48 @@ export function canClickToToggle(ir: ComponentIR): boolean {
   return (
     CLICKABLE_ROOT_ELEMENTS.has(elem) ||
     (role !== undefined && CLICKABLE_ROOT_ROLES.has(role))
+  );
+}
+
+/**
+ * DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: find every node
+ * carrying a `propertyBindings.indeterminate` entry paired with an
+ * `aria-checked` attribute binding whose conditional includes the literal
+ * "mixed" — the specific fact pattern this spec's A5/A7 acceptance proves
+ * for each framework, not a name check on the component. Shared across
+ * framework test generators (not React-specific) because the fact it
+ * detects is an IR shape, not a React concern.
+ */
+export interface IndeterminateAriaCheckedNode {
+  propertyKey: string;
+}
+
+export function findIndeterminateAriaCheckedFact(
+  node: DomNodeIR | null | undefined,
+): IndeterminateAriaCheckedNode | undefined {
+  if (!node) return undefined;
+  const hasIndeterminateProperty = Object.keys(node.propertyBindings).some(
+    (key) => key === "indeterminate",
+  );
+  const ariaChecked = node.bindings["aria-checked"];
+  const hasMixedConditional =
+    ariaChecked !== undefined &&
+    ariaChecked.kind === "conditional" &&
+    isMixedLiteral(ariaChecked.whenTrue, ariaChecked.whenFalse);
+  if (hasIndeterminateProperty && hasMixedConditional) {
+    return { propertyKey: "indeterminate" };
+  }
+  for (const child of node.children) {
+    const found = findIndeterminateAriaCheckedFact(child);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+function isMixedLiteral(a: BindingExpression, b: BindingExpression): boolean {
+  return (
+    (a.kind === "literal" && a.value === "mixed") ||
+    (b.kind === "literal" && b.value === "mixed")
   );
 }
 
