@@ -1654,6 +1654,24 @@ function renderLitDomNode(
     }
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: propertyBindings
+  // are DOM-property-only facts (e.g. `indeterminate`) with no HTML
+  // attribute form. Unlike Vue/Svelte/Angular, Lit's compiler makes no
+  // per-name decision at the `attr=`/`?attr=`/`.attr=` level — the prefix
+  // IS the mechanism, chosen at template-authoring time (confirmed
+  // against the installed lit-html package: the `.` prefix produces a
+  // PropertyPart whose commit does `this.element[name] = value`, a real
+  // property assignment). `renderLitBinding`'s existing `?attr=` branch
+  // for boolean-typed `prop:` sources is wrong here (indeterminate has no
+  // attribute to toggle), so this key always lowers via a dedicated
+  // `.attr=${expr}` binding rather than reusing renderLitBinding's kind
+  // dispatch.
+  for (const [key, expr] of Object.entries(node.propertyBindings)) {
+    const rendered = renderLitPropertyBinding(key, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   // Tag channel-guarded subtrees with `data-fsds-channel-renders="${name}"`
   // so behavioral tests can assert that the channel state is reflected in
   // the rendered DOM, not just in the behavior controller. The attribute is
@@ -2148,6 +2166,28 @@ function renderLitBindingValue(
       return `(${condition} ? ${whenTrue} : ${whenFalse})`;
     }
   }
+}
+
+/**
+ * Lower a `propertyBindings` entry to Lit's `.attr=${expr}` PropertyPart
+ * form — always a direct DOM-property assignment, never `?attr=`
+ * (boolean-attribute toggle) or bare `attr=` (HTML attribute). Keys in
+ * this bucket (DOM_PROPERTY_ONLY_KEYS in ir.ts) have no HTML attribute
+ * reflection, so `?attr=`/`attr=` would be structurally wrong regardless
+ * of the source expression's value type. `?? false` matches this file's
+ * existing boolean-coercion idiom for the analogous `?attr=` case
+ * (renderLitBinding's `isBoolean` branch): it keeps the DOM-side type a
+ * plain `boolean` for lit-analyzer rather than assigning `undefined`
+ * through the PropertyPart (which JS would coerce to `false` anyway).
+ */
+function renderLitPropertyBinding(
+  attr: string,
+  expr: BindingExpression,
+  ctx: LitRenderContext,
+): string | null {
+  const lowered = renderLitBindingValue(expr, ctx);
+  if (lowered === null) return null;
+  return `.${attr}=\${${lowered} ?? false}`;
 }
 
 /**
