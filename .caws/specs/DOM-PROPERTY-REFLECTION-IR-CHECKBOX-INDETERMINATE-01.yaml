@@ -3,6 +3,7 @@ title: 'DOM-property-only reflection IR for Checkbox indeterminate/aria-checked=
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: checkbox-indeterminate-recon
 created_at: '2026-06-30T23:16:13.067Z'
 updated_at: '2026-06-30T23:21:12.135Z'
 blast_radius:
