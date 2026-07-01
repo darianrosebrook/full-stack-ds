@@ -3,7 +3,10 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { buildComponentTestPlan } from "../../test-plan.js";
+import {
+  buildComponentTestPlan,
+  findIndeterminateAriaCheckedFact,
+} from "../../test-plan.js";
 
 export function generateVueTest(ir: ComponentIR): string {
   const plan = buildComponentTestPlan(ir);
@@ -120,6 +123,57 @@ export function generateVueTest(ir: ComponentIR): string {
       `    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));`,
     );
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
+    lines.push(`  });`);
+  }
+
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: durable runtime
+  // proof that indeterminate lowers to a real DOM-property reflection (not
+  // an attribute) and aria-checked reflects the tri-state. Gated on the IR
+  // fact (propertyBindings.indeterminate + an aria-checked "mixed"
+  // conditional coexisting on the same node), shared with React/Angular's
+  // generators so any future contract with this same fact pattern gets
+  // this test for free.
+  const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
+  if (indeterminateFact) {
+    lines.push(``);
+    lines.push(
+      `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
+    );
+    lines.push(
+      `    const wrapper = ${mountExpression(plan.name, plan, { props: { [indeterminateFact.propertyKey]: true } })};`,
+    );
+    lines.push(
+      `    const el = wrapper.element as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
+    lines.push(`  });`);
+
+    // Reactive-update ratchet: the mount-only test above can't distinguish
+    // "the binding is reactive" from "the binding happened to write the
+    // right value once at mount." wrapper.setProps() is Vue Test Utils'
+    // own API for pushing a new prop through the real reactive-props
+    // pipeline (confirmed against the installed @vue/test-utils package —
+    // it returns a Promise and must be awaited before Vue's DOM patch
+    // flushes). This genuinely falsifies a mount-only property write: a
+    // one-time write would leave el.indeterminate stuck at `true` after
+    // setProps({ indeterminate: false }) below.
+    lines.push(``);
+    lines.push(
+      `  it("re-applies .${indeterminateFact.propertyKey} when the prop changes from true to false, and aria-checked reflects checked state again", async () => {`,
+    );
+    lines.push(
+      `    const wrapper = ${mountExpression(plan.name, plan, { props: { [indeterminateFact.propertyKey]: true } })};`,
+    );
+    lines.push(
+      `    const el = wrapper.element as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(
+      `    await wrapper.setProps({ ${indeterminateFact.propertyKey}: false });`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(false);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("false");`);
     lines.push(`  });`);
   }
 

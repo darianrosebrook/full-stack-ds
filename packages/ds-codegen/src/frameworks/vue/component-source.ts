@@ -1377,6 +1377,24 @@ function renderVueDomNode(
     }
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: propertyBindings
+  // are DOM-property-only facts (e.g. `indeterminate`) with no HTML
+  // attribute form. Vue's bare `:key="expr"` v-bind already sets a DOM
+  // property directly (not via setAttribute) for any key that resolves
+  // true via `shouldSetAsProp`'s `key in el` fallthrough — the same
+  // mechanism already proven live for `:checked`/`:value`/`:selected`
+  // above via `renderVueBinding`. No new syntax is needed: reusing
+  // `renderVueBinding` is sufficient because `indeterminate` is a real
+  // IDL property on HTMLInputElement with no attribute reflection, so
+  // Vue's runtime-dom patchProp routes it through patchDOMProp
+  // unconditionally (confirmed against the installed
+  // @vue/runtime-dom package's shouldSetAsProp).
+  for (const [key, expr] of Object.entries(node.propertyBindings)) {
+    const rendered = renderVueBinding(key, expr, ctx);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       // The root node's BEM class is included in `classNames` (computed).
