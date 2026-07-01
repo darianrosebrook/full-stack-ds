@@ -1220,6 +1220,104 @@ describe("propertyBindings (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01
     } as ComponentContract);
     expect(ir.dom?.propertyBindings).toEqual({});
   });
+
+  it("rejects properties.indeterminate on a non-input host (div)", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostDiv",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "div",
+            part: "root",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on a componentRef/slot host", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostSlot",
+        anatomy: {
+          parts: ["root"],
+          dom: {
+            tag: "slot",
+            part: "root",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on a non-checkbox input (type=text)", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostTextInput",
+        anatomy: {
+          parts: ["input"],
+          dom: {
+            tag: "input",
+            part: "input",
+            attrs: { type: "text" },
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("rejects properties.indeterminate on an input with no type attr at all", () => {
+    expect(() =>
+      buildComponentIR({
+        name: "TestBadHostNoType",
+        anatomy: {
+          parts: ["input"],
+          dom: {
+            tag: "input",
+            part: "input",
+            properties: { indeterminate: "prop:indeterminate" },
+          } as any,
+        },
+        props: {
+          styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+        },
+      } as ComponentContract),
+    ).toThrow(/properties\.indeterminate requires a DOM node shaped/);
+  });
+
+  it("accepts properties.indeterminate on input type=checkbox (eligible host)", () => {
+    const ir = buildComponentIR({
+      name: "TestGoodHost",
+      anatomy: {
+        parts: ["input"],
+        dom: {
+          tag: "input",
+          part: "input",
+          attrs: { type: "checkbox" },
+          properties: { indeterminate: "prop:indeterminate" },
+        } as any,
+      },
+      props: {
+        styled: { members: [{ name: "indeterminate", type: "boolean" }] },
+      },
+    } as ComponentContract);
+    expect(ir.dom?.propertyBindings).toEqual({
+      indeterminate: { kind: "prop", prop: "indeterminate" },
+    });
+  });
 });
 
 describe("cssVariableBindings", () => {

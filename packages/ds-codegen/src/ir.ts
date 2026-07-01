@@ -1539,6 +1539,31 @@ function validateDomNode(
     );
   }
   for (const [prop, binding] of Object.entries(node.propertyBindings)) {
+    const hostRequirement = DOM_PROPERTY_HOST_REQUIREMENTS[prop];
+    if (hostRequirement) {
+      const tagMismatch = node.tag !== hostRequirement.tag;
+      const attrMismatches = Object.entries(hostRequirement.attrs).filter(
+        ([attr, value]) => node.attrs[attr] !== value,
+      );
+      if (tagMismatch || attrMismatches.length > 0) {
+        const wantShape =
+          hostRequirement.tag +
+          Object.entries(hostRequirement.attrs)
+            .map(([attr, value]) => ` ${attr}="${value}"`)
+            .join("");
+        const gotShape =
+          (node.tag || "(componentRef/slot)") +
+          Object.entries(node.attrs)
+            .map(([attr, value]) => ` ${attr}="${value}"`)
+            .join("");
+        throw new Error(
+          `[${componentName}] properties.${prop} requires a DOM node ` +
+          `shaped <${wantShape}> — "${prop}" has no effect (or is invalid) ` +
+          `on any other host. Got <${gotShape}> (part="${node.part ?? "?"}"). ` +
+          `(DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01)`,
+        );
+      }
+    }
     validateBindingAgainstScope(
       binding,
       `property "${prop}"`,
@@ -2096,6 +2121,24 @@ function stripComponentRefPrefix(ref: string, context: string): string {
  * special-case the component name that happens to use it.
  */
 const DOM_PROPERTY_ONLY_KEYS = new Set<string>(["indeterminate"]);
+
+/**
+ * Host-eligibility for each DOM-property-only key: the exact `(tag, static
+ * attrs)` shape the property is meaningful on. `indeterminate` is a real DOM
+ * property on `HTMLInputElement`, but browsers only honor it for
+ * `type="checkbox"` — setting it on any other tag/input-type is a silent
+ * no-op, which is exactly the failure mode this closed set exists to catch
+ * at IR-build time instead of downstream in framework output or a browser
+ * (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01). Extend per-key
+ * when a future property-only fact is added; do not special-case component
+ * names or genericize into open pattern matching.
+ */
+const DOM_PROPERTY_HOST_REQUIREMENTS: Record<
+  string,
+  { tag: string; attrs: Record<string, string> }
+> = {
+  indeterminate: { tag: "input", attrs: { type: "checkbox" } },
+};
 
 function parseDomNode(node: ContractDomNode): DomNodeIR {
   // A node declares EITHER a native `tag` OR a `componentRef` to another
