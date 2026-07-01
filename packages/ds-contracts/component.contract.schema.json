@@ -240,6 +240,7 @@
     "motion": { "$ref": "#/$defs/motionContract" },
     "focus": { "$ref": "#/$defs/focusContract" },
     "portal": { "$ref": "#/$defs/portalContract" },
+    "textOverflow": { "$ref": "#/$defs/textOverflowContract" },
     "dismissal": {
       "description": "How a dismissable surface can be closed. Accepts either the structured form ({ triggers: [...] }) or a legacy flat array of event names — the flat form lets older portfolio contracts import unchanged.",
       "oneOf": [
@@ -1067,6 +1068,25 @@
         "collision": {
           "type": "string",
           "enum": ["flip", "shift", "flip-shift", "none"]
+        }
+      }
+    },
+    "textOverflowContract": {
+      "type": "object",
+      "description": "Target-neutral text-overflow intent. Distinct from any DOM-realization mechanism (e.g. CSS line-clamp custom-property bindings authored on anatomy.dom nodes) — this block declares the semantic fact; DOM targets additionally lower it through the existing cssVariableBindings mechanism (both coexist).",
+      "additionalProperties": false,
+      "required": ["kind", "line"],
+      "properties": {
+        "description": { "type": "string" },
+        "kind": {
+          "type": "string",
+          "enum": ["line-clamp"],
+          "description": "The overflow-intent family. Only \"line-clamp\" (multi-line clamp to a line count) is modeled today; single-line ellipsis, fade, scroll, and expandable overflow are distinct kinds reserved for future extension, not folded into this one."
+        },
+        "line": {
+          "type": "string",
+          "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+          "description": "The prop supplying the line count, as \"prop:<name>\". Must be the SAME prop that any existing cssVariableBindings line-clamp realization already reads — this is a second declaration of an existing source, not a new authority over the value."
         }
       }
     },
