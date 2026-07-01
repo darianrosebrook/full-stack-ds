@@ -111,16 +111,17 @@ export function CardDescription({
 export function Card({
   status,
   density = "default",
+  interactive,
   className,
   "data-testid": testId,
   children,
-  interactive,
   ...rest
 }: CardProps) {
   const classNames = [
     "card",
     status && `card--${status}`,
     density && `card--${density}`,
+    interactive && "card--interactive",
     className,
   ]
     .filter(Boolean)

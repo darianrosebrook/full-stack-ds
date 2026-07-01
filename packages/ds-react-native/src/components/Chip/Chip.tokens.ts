@@ -127,13 +127,13 @@ export const chipTokenScopes = {
     "chip.size.radius": {
       name: "chip.size.radius",
       cssVar: "--fsds-chip-size-radius",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "chip.size.border": {
       name: "chip.size.border",
       cssVar: "--fsds-chip-size-border",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "chip.text.size": {

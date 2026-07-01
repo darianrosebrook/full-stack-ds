@@ -52,6 +52,6 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<ul class={classes}>
+<svelte:element this={as ?? "ul"} class={classes}>
   {@render children?.()}
-</ul>
+</svelte:element>

@@ -114,44 +114,33 @@ export function Header() {
           <GithubIcon />
         </a>
 
-        <Popover placement="bottom">
+        <Popover placement="bottom" closeOnBlur={false} className="header-popover-anchor">
           <Popover.Trigger asChild>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="small"
               className="icon-btn"
-              aria-label="Appearance settings"
+              ariaLabel="Appearance settings"
               title="Appearance"
             >
               <PaletteIcon />
-            </button>
+            </Button>
           </Popover.Trigger>
           <Popover.Content
             className="panel"
             style={{ minWidth: 240, padding: "var(--fsds-core-spacing-size-06)" }}
           >
-            {/*
-             * Row-wide click target via our own ghost Button so the
-             * icon, the label, the gap, and the Switch track all
-             * toggle theme. Switch is presentational here — the
-             * wrapping Button owns the onChange. Without that,
-             * clicking the Switch track would double-toggle (Switch
-             * fires its own onChange + the Button's onClick bubbles
-             * to ours).
-             */}
-            <Button
-              variant="ghost"
-              size="small"
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-              ariaPressed={isDark}
-              ariaLabel={`Switch to ${isDark ? "light" : "dark"} theme`}
+            <Switch
+              size="sm"
+              checked={isDark}
+              onChange={(checked) => setTheme(checked ? "dark" : "light")}
               className="header-appearance-row"
             >
               <span className="header-appearance-row__label">
                 <SunMoonIcon />
                 <span>Dark mode</span>
               </span>
-              <Switch size="sm" checked={isDark} onChange={() => {}} />
-            </Button>
+            </Switch>
 
             <div
               style={{
@@ -162,34 +151,29 @@ export function Header() {
             >
               Brand
             </div>
-            <div
-              role="radiogroup"
-              aria-label="Brand theme"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "var(--fsds-core-spacing-size-04)",
-              }}
-            >
+            <div className="header-brand-options" role="radiogroup" aria-label="Brand theme">
               {brands.map((id) => {
                 const active = brand === id;
                 return (
-                  <button
+                  <label
                     key={id}
-                    type="button"
-                    role="radio"
-                    aria-checked={active}
-                    onClick={() => setBrand(id)}
-                    className={`sidebar-item${active ? " sidebar-item--active" : ""}`}
-                    style={{ textAlign: "left" }}
+                    className={`header-brand-option${active ? " header-brand-option--active" : ""}`}
                   >
+                    <input
+                      className="header-brand-option__input"
+                      type="radio"
+                      name="fsds-brand"
+                      value={id}
+                      checked={active}
+                      onChange={() => setBrand(id)}
+                    />
                     <span>{humanizeBrand(id)}</span>
                     {active && (
                       <span aria-hidden style={{ fontSize: "var(--fsds-core-typography-ramp-2)" }}>
                         ✓
                       </span>
                     )}
-                  </button>
+                  </label>
                 );
               })}
             </div>

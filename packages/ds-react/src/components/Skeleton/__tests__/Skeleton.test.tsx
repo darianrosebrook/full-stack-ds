@@ -28,11 +28,6 @@ describe("Skeleton — unit", () => {
     expect(screen.getByTestId("skeleton")).toHaveClass("skeleton", "custom");
   });
 
-  it("has the correct ARIA role", () => {
-    render(<Skeleton data-testid="skeleton" />);
-    expect(screen.getByTestId("skeleton")).toHaveAttribute("role", "status");
-  });
-
   it("applies variant=block variant class", () => {
     render(<Skeleton data-testid="skeleton" variant="block" />);
     expect(screen.getByTestId("skeleton")).toHaveClass("skeleton--block");
@@ -132,5 +127,25 @@ describe("Skeleton — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Skeleton — decorative semantics", () => {
+  it("hides decorative skeletons from assistive tech by default", () => {
+    render(<Skeleton data-testid="skeleton" />);
+
+    const skeleton = screen.getByTestId("skeleton");
+    expect(skeleton).toHaveAttribute("role", "presentation");
+    expect(skeleton).toHaveAttribute("aria-hidden", "true");
+    expect(skeleton).toHaveAttribute("aria-busy", "false");
+  });
+
+  it("announces non-decorative loading placeholders as status", () => {
+    render(<Skeleton data-testid="skeleton" decorative={false} ariaLabel="Loading profile" />);
+
+    const skeleton = screen.getByTestId("skeleton");
+    expect(skeleton).toHaveAttribute("role", "status");
+    expect(skeleton).toHaveAttribute("aria-hidden", "false");
+    expect(skeleton).toHaveAttribute("aria-busy", "true");
+    expect(skeleton).toHaveAttribute("aria-label", "Loading profile");
+  });
+});
 
 // @custom:end

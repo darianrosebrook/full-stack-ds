@@ -75,15 +75,15 @@ function emitImports(ir: ComponentIR): string {
   }
   if (usesLinking(ir.dom)) rnValueImports.add("Linking");
   if (
-    hasChildrenSlotUnderNonTextParent(ir.dom) ||
-    isFieldLayoutPattern(ir) ||
+    (!usesNativeToggle(ir) && hasChildrenSlotUnderNonTextParent(ir.dom)) ||
     isCheckboxRootPattern(ir)
   ) {
     rnValueImports.add("Text as RNText");
   }
-  if (isFieldLayoutPattern(ir) || isCheckboxRootPattern(ir)) rnValueImports.add("View");
+  if (isCheckboxRootPattern(ir)) rnValueImports.add("View");
   if (isCheckboxRootPattern(ir)) rnValueImports.add("Pressable");
   if (rootPressableAcceptsOnPress(ir)) rnTypeImports.add("GestureResponderEvent");
+  if (treeHasBindingName(ir.dom, "role")) rnTypeImports.add("AccessibilityRole");
   const surfaceLowering = rnSurfaceLowering(ir);
   if (surfaceLowering?.mode === "modal") {
     rnValueImports.add("Modal");
@@ -98,7 +98,6 @@ function emitImports(ir: ComponentIR): string {
   }
   if (
     !usesNativeToggle(ir) &&
-    !isFieldLayoutPattern(ir) &&
     !isCheckboxRootPattern(ir) &&
     ir.dom &&
     !rootIsTextComponent(ir) &&
@@ -194,6 +193,7 @@ function hasChildrenSlotUnderNonTextParent(node: DomNodeIR | undefined): boolean
   }
   if (
     component !== "RNText" &&
+    !VOID_RN_COMPONENTS.has(component) &&
     node.children.some((child) => child.tag === "children" || child.tag === "slot")
   ) {
     return true;
@@ -258,6 +258,16 @@ function emitProps(ir: ComponentIR): string {
     lines.push(`${INDENT}content?: ReactNode;`);
     emitted.add("content");
   }
+  // ARCH-COMPOSER-SLOT-PROJECTION-001: named slots are a `slots` object prop,
+  // mirroring the React surface, so each region projects distinct content.
+  const namedSlots = collectRnNamedSlots(ir.dom);
+  if (namedSlots.length > 0) {
+    lines.push(`${INDENT}slots?: {`);
+    for (const slotName of namedSlots) {
+      lines.push(`${INDENT}${INDENT}${slotName}?: ReactNode;`);
+    }
+    lines.push(`${INDENT}};`);
+  }
   // Variant axes without a contract-declared prop still get a prop on web
   // (the class recipe synthesizes it); mirror that here with the value union.
   for (const modifier of synthesizedVariantProps(ir)) {
@@ -304,14 +314,6 @@ function collectRuntimeUsage(ir: ComponentIR): RuntimeUsage {
     }
     addPropIfPresent(ir, usage, "disabled");
     addPropIfPresent(ir, usage, "size");
-    return usage;
-  }
-
-  if (isFieldLayoutPattern(ir)) {
-    for (const prop of ["id", "label", "helpText", "error", "validating"]) {
-      addPropIfPresent(ir, usage, prop);
-    }
-    usage.props.add("children");
     return usage;
   }
 
@@ -512,8 +514,6 @@ function emitComponent(ir: ComponentIR): string {
     lines.push(...emitAnchoredSurfaceReturn(ir, anchoredSurface));
   } else if (usesNativeToggle(ir)) {
     lines.push(...emitNativeToggleReturn(ir));
-  } else if (isFieldLayoutPattern(ir)) {
-    lines.push(...emitFieldLayoutReturn());
   } else if (isCheckboxRootPattern(ir)) {
     lines.push(...emitCheckboxReturn(ir));
   } else {
@@ -609,35 +609,6 @@ function surfaceDismissHandlerExpr(
   return `() => ${setter}(false)`;
 }
 
-function emitFieldLayoutReturn(): string[] {
-  const lines: string[] = [];
-  lines.push(`${INDENT}return (`);
-  lines.push(`${INDENT}${INDENT}<View`);
-  lines.push(`${INDENT}${INDENT}${INDENT}testID={testID}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}style={[styles.root, style]}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabel={accessibilityLabel}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}accessibilityLabelledBy={accessibilityLabelledBy}`);
-  lines.push(`${INDENT}${INDENT}>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}{label ? (`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}<RNText nativeID={id ? \`\${id}-label\` : undefined} style={styles.label}>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{label}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}</RNText>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}) : null}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}<View style={styles.control}>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}{children}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}</View>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}{helpText || error || validating ? (`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}<View style={styles.meta}>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{helpText ? <RNText style={styles.help}>{helpText}</RNText> : null}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{error ? <RNText accessibilityRole="alert" style={styles.error}>{error}</RNText> : null}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}${INDENT}{validating ? <RNText style={styles.validatingIndicator}>Validating</RNText> : null}`);
-  lines.push(`${INDENT}${INDENT}${INDENT}${INDENT}</View>`);
-  lines.push(`${INDENT}${INDENT}${INDENT}) : null}`);
-  lines.push(`${INDENT}${INDENT}</View>`);
-  lines.push(`${INDENT});`);
-  return lines;
-}
-
 function emitCheckboxReturn(ir: ComponentIR): string[] {
   const channel = ir.behavior.normalizedChannels[0];
   if (!channel) return [];
@@ -705,6 +676,7 @@ function propDestructureEntries(ir: ComponentIR, usage: RuntimeUsage): string[] 
     entries.push("content");
     emitted.add("content");
   }
+  if (collectRnNamedSlots(ir.dom).length > 0) entries.push("slots");
   if (usage.props.has("children")) entries.push("children");
   if (rootPressableAcceptsOnPress(ir)) entries.push("onPress");
   entries.push("style", "testID", "accessibilityLabel", "accessibilityLabelledBy");
@@ -1068,14 +1040,20 @@ function emitNode(
   keyExpr?: string,
 ): string | null {
   if (!node) return null;
-  if (node.tag === "children" || node.tag === "slot") return `${INDENT.repeat(depth)}{children}`;
+  if (node.tag === "children" || node.tag === "slot") {
+    // ARCH-COMPOSER-SLOT-PROJECTION-001: project named slots distinctly via the
+    // `slots` prop (parity with React/Vue/Lit/Angular), not a single `{children}`
+    // sprayed into every region. The default (unnamed) slot stays `{children}`.
+    if (node.slotName) return `${INDENT.repeat(depth)}{slots?.${node.slotName}}`;
+    return `${INDENT.repeat(depth)}{children}`;
+  }
   if (node.componentInstance) return emitComponentRefNode(node, node.componentInstance, ir, depth);
   if (node.iteration) return emitIteration(node, ir, depth);
 
   const component =
     node.part !== undefined && node.part === surfaceOverlayPartName(ir)
       ? "Pressable"
-      : rnComponentForNode(node);
+      : rnComponentForNodeInIr(ir, node);
   const attrs = emitNodeProps(node, ir, component, depth + 1, keyExpr);
   const childLines = emitNodeChildren(node, ir, depth + 1);
   const pad = INDENT.repeat(depth);
@@ -1157,6 +1135,12 @@ function emitNodeChildren(node: DomNodeIR, ir: ComponentIR, depth: number): stri
   }
   const lines: string[] = [];
   for (const child of node.children) {
+    if (child.tag === "slot" && child.slotName) {
+      // ARCH-COMPOSER-SLOT-PROJECTION-001: a named slot projects its own
+      // `slots.<name>` content, distinct from the default `{children}`.
+      lines.push(`${INDENT.repeat(depth)}{slots?.${child.slotName}}`);
+      continue;
+    }
     if (child.tag === "children" || child.tag === "slot") {
       lines.push(
         emitChildrenSlot(rnComponentForNode(node), depth, maxLinesExpressionForNode(node, ir), textStyleProp),
@@ -1274,24 +1258,34 @@ function emitNodeProps(
       hasAccessibilityLabelledBy = true;
       continue;
     }
+    if (name === "aria-hidden") {
+      props.push(`${pad}accessible={!(${rnBooleanishExpr(expr)})}`);
+      continue;
+    }
+    if (name === "role") {
+      props.push(
+        `${pad}accessibilityRole={((${expr} === "presentation" ? "none" : ${expr}) as AccessibilityRole)}`,
+      );
+      continue;
+    }
     if (name === "aria-checked") {
-      accessibilityState.push(`checked: Boolean(${expr})`);
+      accessibilityState.push(`checked: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-expanded") {
-      accessibilityState.push(`expanded: Boolean(${expr})`);
+      accessibilityState.push(`expanded: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-pressed") {
-      accessibilityState.push(`selected: Boolean(${expr})`);
+      accessibilityState.push(`selected: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-selected") {
-      accessibilityState.push(`selected: Boolean(${expr})`);
+      accessibilityState.push(`selected: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-busy") {
-      accessibilityState.push(`busy: Boolean(${expr})`);
+      accessibilityState.push(`busy: ${rnBooleanishExpr(expr)}`);
       continue;
     }
     if (name === "aria-live") {
@@ -1361,13 +1355,15 @@ function emitNodeProps(
   if (isRootNode && !hasAccessibilityLabelledBy) {
     props.push(`${pad}accessibilityLabelledBy={accessibilityLabelledBy}`);
   }
-  const role = node.attrs.role ?? roleFromNode(node);
-  const accessibilityRole = rnAccessibilityRole(
-    role,
-    component,
-    node.bindings["aria-pressed"] !== undefined,
-  );
-  if (accessibilityRole) props.push(`${pad}accessibilityRole=${JSON.stringify(accessibilityRole)}`);
+  if (!node.bindings.role) {
+    const role = node.attrs.role ?? roleFromNode(node);
+    const accessibilityRole = rnAccessibilityRole(
+      role,
+      component,
+      node.bindings["aria-pressed"] !== undefined,
+    );
+    if (accessibilityRole) props.push(`${pad}accessibilityRole=${JSON.stringify(accessibilityRole)}`);
+  }
   if (accessibilityState.length > 0) {
     props.push(`${pad}accessibilityState={{ ${accessibilityState.join(", ")} }}`);
   }
@@ -1382,6 +1378,60 @@ function rnComponentForNode(node: DomNodeIR): string {
   if (node.tag === "button" || node.attrs.role === "button") return "Pressable";
   if (node.tag === "p" || node.tag === "strong" || node.tag === "em" || node.tag === "small") return "RNText";
   return "View";
+}
+
+/**
+ * A part is text-bearing when its resolved style carries any text-layer
+ * property (`color`, `fontSize`, …). RN's `<View>` rejects `TextStyle` fields,
+ * so such a part must render as `<Text>`. Derived from the style map's
+ * `layer === "text"` classification — no component names, no slot heuristics —
+ * so it generalizes to every composer's text regions (label, help, error, …)
+ * instead of being special-cased per component.
+ */
+function partIsTextBearing(ir: ComponentIR, node: DomNodeIR): boolean {
+  // The structural component decision already covers native text tags and
+  // interactive elements; only the View-fallthrough parts can be misrouted.
+  if (rnComponentForNode(node) !== "View") return false;
+  if (node.part === undefined) return false;
+  const styleLiteral = nativeStyleForKey(ir, styleKeyForPart(node.part));
+  return textStyleFields().some((field) => styleLiteral.includes(`${field}:`));
+}
+
+/** RN style fields classified as text-layer (`color`, `fontSize`, …). */
+function textStyleFields(): string[] {
+  return Object.values(CSS_TO_RN_STYLE)
+    .filter((m) => m.layer === "text")
+    .map((m) => m.prop);
+}
+
+function rnComponentForNodeInIr(ir: ComponentIR, node: DomNodeIR): string {
+  const base = rnComponentForNode(node);
+  if (base === "View" && partIsTextBearing(ir, node)) return "RNText";
+  return base;
+}
+
+/** Distinct named-slot names referenced in the DOM tree, in first-seen order. */
+function collectRnNamedSlots(node: DomNodeIR | undefined): string[] {
+  const names: string[] = [];
+  const walk = (n: DomNodeIR | undefined): void => {
+    if (!n) return;
+    if (n.tag === "slot" && n.slotName && !names.includes(n.slotName)) {
+      names.push(n.slotName);
+    }
+    for (const child of n.children) walk(child);
+  };
+  walk(node);
+  return names;
+}
+
+function rnBooleanishExpr(expr: string): string {
+  return `String(${expr}) === "true"`;
+}
+
+function treeHasBindingName(node: DomNodeIR | undefined, name: string): boolean {
+  if (!node) return false;
+  if (node.bindings[name]) return true;
+  return node.children.some((child) => treeHasBindingName(child, name));
 }
 
 function isSupportedBindingForComponent(name: string, component: string): boolean {
@@ -2170,10 +2220,6 @@ function nativeStyleForKey(ir: ComponentIR, key: string): string {
       ".color.foreground.default",
     ].filter(Boolean)));
   }
-  if (key === "root" && isFieldLayoutPattern(ir)) {
-    entries.push("flexDirection: \"column\"");
-    pushStyle(entries, "gap", tokenNumberByName(ir, "root", [".gap.y", ".gap"]));
-  }
   if (key === "meta") {
     entries.push("flexDirection: \"column\"");
     pushStyle(entries, "gap", tokenNumberByName(ir, "root", [".gap.meta"]));
@@ -2322,19 +2368,6 @@ function usesNativeToggle(ir: ComponentIR): boolean {
 
 function isCheckboxRootPattern(ir: ComponentIR): boolean {
   return ir.dom?.tag === "input" && ir.dom.attrs.type === "checkbox";
-}
-
-function isFieldLayoutPattern(ir: ComponentIR): boolean {
-  const partNames = new Set(ir.parts.map((part) => part.name));
-  const propNames = new Set(ir.styledProps.map((prop) => prop.safeName));
-  return (
-    partNames.has("label") &&
-    partNames.has("control") &&
-    partNames.has("meta") &&
-    propNames.has("label") &&
-    propNames.has("helpText") &&
-    propNames.has("error")
-  );
 }
 
 function findProp(ir: ComponentIR, name: string): ResolvedPropIR | undefined {

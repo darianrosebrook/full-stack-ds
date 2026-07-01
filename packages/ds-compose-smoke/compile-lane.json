@@ -1,0 +1,18 @@
+{
+  "$comment": "RAIL-NATIVE-COMPILE-LANE-COMPOSE-SMOKE-03. Target-owned compile facts for the ds-compose-smoke rail lane. The rail core reads this; it does not hardcode a Compose/Gradle branch. This is the non-pnpm analogue of a slice-2 AdmissionDescriptor: the target declares WHAT compiles it; the rail adjudicates the exit code. id is a RailTargetId, NOT a FrameworkId — this lane is not an admitted framework.",
+  "railTargetId": "compose-smoke",
+  "family": "native-compile",
+  "toolchain": "kotlin",
+  "compiler": "kotlinc",
+  "sourceExtension": ".kt",
+  "outputFlag": "-d",
+  "validSources": ["src"],
+  "invalidSources": ["src-invalid"],
+  "checks": {
+    "compile": "direct"
+  },
+  "knownGaps": [
+    "Runtime evidence is limited to compile success/failure. No simulator, no Robolectric, no compose.ui.test execution or claim — runtime admission is deferred to a later slice.",
+    "The valid fixture exercises Kotlin language constructs, not the androidx.compose runtime; full Compose Material3 compilation (which needs Android artifacts) is out of scope for this compile smoke."
+  ]
+}

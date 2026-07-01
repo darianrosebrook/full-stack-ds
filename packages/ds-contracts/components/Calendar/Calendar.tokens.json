@@ -75,14 +75,14 @@
     "layer": "core"
   },
   "calendar.size.radius.default": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "calendar.size.radius.day": {
-    "resolvesTo": "core.shape.radius.small",
+    "resolvesTo": "semantic.shape.radius.small",
     "fallback": "4px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "calendar.typography.caption.size": {
     "resolvesTo": "semantic.typography.body.02",

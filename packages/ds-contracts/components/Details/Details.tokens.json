@@ -45,9 +45,9 @@
     "layer": "semantic"
   },
   "details.focus.ring.width": {
-    "resolvesTo": "core.shape.border.width.thick",
+    "resolvesTo": "semantic.shape.control.border.focusWidth",
     "fallback": "2px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "details.focus.ring.color": {
     "resolvesTo": "semantic.color.border.accent",

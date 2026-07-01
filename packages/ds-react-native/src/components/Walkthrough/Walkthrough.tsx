@@ -24,6 +24,10 @@ export interface WalkthroughProps {
   autoStart?: boolean;
   closeOnOutsideClick?: boolean;
   placement?: WalkthroughPlacement;
+  slots?: {
+    title?: ReactNode;
+    description?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -36,6 +40,7 @@ export interface WalkthroughProps {
 export function Walkthrough({
   steps = [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}],
   label = "Feature tour",
+  slots,
   children,
   style,
   testID,
@@ -57,13 +62,13 @@ export function Walkthrough({
         <View
           style={styles.title}
         >
-          {typeof children === "string" ? <RNText>{children}</RNText> : children}
+          {slots?.title}
         </View>
         <RNText
           style={styles.description}
           accessibilityRole="text"
         >
-          {children}
+          {slots?.description}
         </RNText>
       </View>
       <View

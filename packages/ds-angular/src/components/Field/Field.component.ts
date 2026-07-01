@@ -24,28 +24,24 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
   imports: [NgClass, NgIf],
   template: `<div [ngClass]="classes()">
   <div [ngClass]="'field__header'">
-    <ng-container *ngIf="label">
-      <label [ngClass]="'field__label'">
-        {{ label }}
-      </label>
-    </ng-container>
+    <label [ngClass]="'field__label'">
+      <ng-content select="[slot=label]" />
+    </label>
   </div>
   <div [ngClass]="'field__control'">
-    <ng-content />
+    <ng-content select="[slot=control]" />
   </div>
   <div [ngClass]="'field__meta'">
-    <ng-container *ngIf="helpText">
-      <span [ngClass]="'field__help'">
-        {{ helpText }}
-      </span>
-    </ng-container>
-    <ng-container *ngIf="error">
-      <span [ngClass]="'field__error'">
-        {{ error }}
-      </span>
-    </ng-container>
+    <span [ngClass]="'field__help'">
+      <ng-content select="[slot=help]" />
+    </span>
+    <span [ngClass]="'field__error'">
+      <ng-content select="[slot=error]" />
+    </span>
     <ng-container *ngIf="validating">
-      <span [ngClass]="'field__validatingIndicator'"></span>
+      <span [ngClass]="'field__validatingIndicator'">
+        <ng-content select="[slot=validatingIndicator]" />
+      </span>
     </ng-container>
   </div>
 </div>`,
@@ -61,9 +57,6 @@ export class FieldComponent {
   @Input() defaultValue?: unknown;
   @Input() onChange?: (value: unknown) => void;
   @Input() validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  @Input() label?: unknown;
-  @Input() helpText?: unknown;
-  @Input() error?: string;
   @Input() status?: FieldStatus;
   @Input() validating?: boolean;
   @Input() class?: string;

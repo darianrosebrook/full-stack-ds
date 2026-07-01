@@ -22,6 +22,9 @@ export interface DialogProps {
   closeOnBackdropClick?: boolean;
   initialFocus?: string;
   returnFocus?: string;
+  slots?: {
+    title?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -37,6 +40,7 @@ export function Dialog({
   closeOnBackdropClick = true,
   defaultOpen = false,
   onOpenChange,
+  slots,
   children,
   style,
   testID,
@@ -83,7 +87,7 @@ export function Dialog({
             <View
               style={styles.title}
             >
-              {typeof children === "string" ? <RNText>{children}</RNText> : children}
+              {slots?.title}
             </View>
             <Pressable
               style={styles.closeButton}

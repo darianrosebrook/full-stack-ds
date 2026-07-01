@@ -47,8 +47,8 @@ export class InputElement extends LitElement {
       --fsds-input-size-height-default: var(--fsds-semantic-input-size-medium-min-height, 36px);
       --fsds-input-size-padding-block-default: var(--fsds-semantic-input-size-medium-padding-block, 8px);
       --fsds-input-size-padding-inline-default: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
-      --fsds-input-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-      --fsds-input-size-border-default: var(--fsds-core-shape-border-width-hairline, 1px);
+      --fsds-input-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+      --fsds-input-size-border-default: var(--fsds-semantic-shape-control-border-defaultWidth, 1px);
       --fsds-input-space-inline-default: var(--fsds-core-spacing-size-05, 12px);
       --fsds-input-color-focus-default: var(--fsds-semantic-color-border-focus, #d9292b);
       --fsds-input-color-invalid-default: var(--fsds-semantic-color-border-danger, #ae0001);
@@ -121,7 +121,7 @@ export class InputElement extends LitElement {
 
     .input--invalid:focus-visible {
       border-color: var(--fsds-input-color-invalid-default);
-      outline-color: var(--fsds-input-color-invalid-default);
+      outline-color: var(--fsds-semantic-focus-ring-intent-danger);
     }
   `;
 

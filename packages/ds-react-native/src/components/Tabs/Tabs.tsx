@@ -59,7 +59,7 @@ export function Tabs({
         <Pressable
           style={styles.tab}
           accessibilityRole="tab"
-          accessibilityState={{ selected: Boolean(activeTab) }}
+          accessibilityState={{ selected: String(activeTab) === "true" }}
         />
         <View
           style={styles.indicator}

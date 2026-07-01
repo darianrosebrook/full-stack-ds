@@ -56,7 +56,7 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <ul :class="classNames" :data-testid="props['data-testid']">
+  <component :is="props.as ?? 'ul'" :class="classNames" :data-testid="props['data-testid']">
     <slot />
-  </ul>
+  </component>
 </template>

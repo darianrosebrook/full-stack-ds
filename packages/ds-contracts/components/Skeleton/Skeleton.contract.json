@@ -42,10 +42,10 @@
     "dom": {
       "tag": "div",
       "part": "root",
-      "attrs": {
-        "aria-busy": "true"
-      },
       "bindings": {
+        "role": "conditional:prop:decorative|literal:presentation|literal:status",
+        "aria-busy": "conditional:prop:decorative|literal:false|literal:true",
+        "aria-hidden": "conditional:prop:decorative|literal:true|literal:false",
         "aria-label": "prop:ariaLabel"
       }
     }

@@ -21,11 +21,15 @@ export interface FieldProps {
   defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  label?: ReactNode;
-  helpText?: ReactNode;
-  error?: string;
   status?: FieldStatus;
   validating?: boolean;
+  slots?: {
+    label?: ReactNode;
+    control?: ReactNode;
+    help?: ReactNode;
+    error?: ReactNode;
+    validatingIndicator?: ReactNode;
+  };
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -36,11 +40,8 @@ export interface FieldProps {
 
 // @generated:start component
 export function Field({
-  id,
-  label,
-  helpText,
-  error,
   validating,
+  slots,
   children,
   style,
   testID,
@@ -56,21 +57,45 @@ export function Field({
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}
     >
-      {label ? (
-        <RNText nativeID={id ? `${id}-label` : undefined} style={styles.label}>
-          {label}
+      <View
+        style={styles.header}
+      >
+        <RNText
+          style={styles.label}
+          accessibilityRole="text"
+        >
+          {slots?.label}
         </RNText>
-      ) : null}
-      <View style={styles.control}>
-        {children}
       </View>
-      {helpText || error || validating ? (
-        <View style={styles.meta}>
-          {helpText ? <RNText style={styles.help}>{helpText}</RNText> : null}
-          {error ? <RNText accessibilityRole="alert" style={styles.error}>{error}</RNText> : null}
-          {validating ? <RNText style={styles.validatingIndicator}>Validating</RNText> : null}
-        </View>
-      ) : null}
+      <View
+        style={styles.control}
+      >
+        {slots?.control}
+      </View>
+      <View
+        style={styles.meta}
+      >
+        <RNText
+          style={styles.help}
+          accessibilityRole="text"
+        >
+          {slots?.help}
+        </RNText>
+        <RNText
+          style={styles.error}
+          accessibilityRole="text"
+        >
+          {slots?.error}
+        </RNText>
+        {validating ? (
+        <RNText
+          style={styles.validatingIndicator}
+          accessibilityRole="text"
+        >
+          {slots?.validatingIndicator}
+        </RNText>
+        ) : null}
+      </View>
     </View>
   );
 }

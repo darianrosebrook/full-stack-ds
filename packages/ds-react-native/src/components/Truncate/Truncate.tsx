@@ -68,7 +68,7 @@ export function Truncate({
         style={styles.toggle}
         onPress={() => setExpandedValue(!expanded)}
         accessibilityRole="button"
-        accessibilityState={{ expanded: Boolean(expanded) }}
+        accessibilityState={{ expanded: String(expanded) === "true" }}
       >
         <RNText>{(expanded ? collapseText : expandText)}</RNText>
       </Pressable>

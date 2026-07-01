@@ -114,7 +114,7 @@ export const tooltipTokenScopes = {
     "tooltip.size.radius.default": {
       name: "tooltip.size.radius.default",
       cssVar: "--fsds-tooltip-size-radius-default",
-      ref: "core.shape.radius.small",
+      ref: "semantic.shape.radius.small",
       fallback: 4,
     },
     "tooltip.size.maxWidth": {

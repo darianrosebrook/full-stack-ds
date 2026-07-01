@@ -132,13 +132,13 @@ export const blockquoteTokenScopes = {
     "blockquote.size.radius.default": {
       name: "blockquote.size.radius.default",
       cssVar: "--fsds-blockquote-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "blockquote.size.border.thick": {
       name: "blockquote.size.border.thick",
       cssVar: "--fsds-blockquote-size-border-thick",
-      ref: "core.shape.border.width.thick",
+      ref: "semantic.shape.control.border.focusWidth",
       fallback: 2,
     },
     "blockquote.size.fontSize.sm": {

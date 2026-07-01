@@ -18,7 +18,7 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
 // @custom:end
 
 // @generated:start props
-export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "error" | "helpText" | "id" | "label" | "name" | "onChange" | "readOnly" | "required" | "status" | "validate" | "validating" | "value"> {
+export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "id" | "name" | "onChange" | "readOnly" | "required" | "status" | "validate" | "validating" | "value"> {
   name: string;
   id?: string;
   required?: boolean;
@@ -28,14 +28,17 @@ export interface FieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "childr
   defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  label?: ReactNode;
-  helpText?: ReactNode;
-  error?: string;
   status?: FieldStatus;
   validating?: boolean;
   className?: string;
   "data-testid"?: string;
-  children?: ReactNode;
+  slots?: {
+    control?: ReactNode;
+    error?: ReactNode;
+    help?: ReactNode;
+    label?: ReactNode;
+    validatingIndicator?: ReactNode;
+  };
 }
 // @generated:end
 
@@ -69,16 +72,13 @@ export function Field({
   disabled,
   className,
   "data-testid": testId,
-  children,
   name,
   id,
   required,
   readOnly,
   validate,
-  label,
-  helpText,
-  error,
   validating,
+  slots,
   ...rest
 }: FieldProps) {
   const { value, setValue } = useField({
@@ -99,28 +99,24 @@ export function Field({
   return (
   <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} {...rest}>
     <div className="field__header">
-      {label && (
-        <label className="field__label">
-          {label}
-        </label>
-      )}
+      <label className="field__label">
+        {slots?.label}
+      </label>
     </div>
     <div className="field__control">
-      {children}
+      {slots?.control}
     </div>
     <div className="field__meta">
-      {helpText && (
-        <span className="field__help">
-          {helpText}
-        </span>
-      )}
-      {error && (
-        <span className="field__error">
-          {error}
-        </span>
-      )}
+      <span className="field__help">
+        {slots?.help}
+      </span>
+      <span className="field__error">
+        {slots?.error}
+      </span>
       {validating && (
-        <span className="field__validatingIndicator" />
+        <span className="field__validatingIndicator">
+          {slots?.validatingIndicator}
+        </span>
       )}
     </div>
   </Stack>

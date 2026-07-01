@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/pre_tool_use.sh",
+            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/pre_tool_use.sh",
             "timeout": 45
           }
         ]
@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/post_tool_use.sh",
+            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/post_tool_use.sh",
             "timeout": 60
           }
         ]
@@ -29,7 +29,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/session_start.sh",
+            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/session_start.sh",
             "timeout": 30
           }
         ]
@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caws_dispatch/stop.sh",
+            "command": "CAWS_AGENT_SURFACE=claude-code CAWS_PROJECT_DIR=\"$CLAUDE_PROJECT_DIR\" \"$CLAUDE_PROJECT_DIR\"/.caws/hooks/dispatch/stop.sh",
             "timeout": 30
           }
         ]

@@ -107,11 +107,7 @@ export function EvidencePanel({ component }: EvidencePanelProps) {
                         {hasDefaultFact(railEntry, fw) ? "asserted" : "—"}
                       </TableCell>
                       <TableCell>
-                        {mech === "query-param"
-                          ? "asserted (query-param)"
-                          : mech === "fixed-fixture"
-                            ? "asserted (fixed fixture)"
-                            : "—"}
+                        {mech === "config-bus" ? "asserted (config bus)" : "—"}
                       </TableCell>
                     </TableRow>
                   );

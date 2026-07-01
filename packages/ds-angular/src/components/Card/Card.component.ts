@@ -34,6 +34,7 @@ export class CardComponent {
     const parts: Array<string | null | undefined> = ["card"];
     if (this.status) parts.push(`card--${this.status}`);
     if (this.density) parts.push(`card--${this.density}`);
+    if (this.interactive) parts.push("card--interactive");
     return parts.filter(Boolean).join(" ");
   }
 }

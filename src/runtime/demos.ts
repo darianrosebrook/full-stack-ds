@@ -1,7 +1,17 @@
-import type { ComponentBundle, Framework } from "../types/data";
+import type { ComponentBundle, Framework, PropMember } from "../types/data";
 
 export interface DemoProps {
   [key: string]: unknown;
+}
+
+interface DemoPropType {
+  kind?: string;
+  to?: string;
+  values?: unknown[];
+  value?: unknown;
+  items?: DemoPropType;
+  of?: DemoPropType[];
+  raw?: string;
 }
 
 /**
@@ -20,11 +30,102 @@ export function defaultPropsFromContract(component: ComponentBundle): DemoProps 
   for (const [k, vals] of Object.entries(variants)) {
     if (Array.isArray(vals) && vals.length > 0) props[k] = vals[0];
   }
-  const members = component.contract.props?.styled?.members ?? [];
+  const members = propMembersFromContract(component);
   for (const m of members) {
     if (m.default !== undefined && !(m.name in props)) props[m.name] = m.default;
   }
+  for (const m of members) {
+    if (!m.required || m.name in props) continue;
+    const sample = sampleValueForProp(component, m);
+    if (sample !== undefined) props[m.name] = sample;
+  }
   return props;
+}
+
+function propMembersFromContract(component: ComponentBundle): PropMember[] {
+  const contractProps = component.contract.props ?? {};
+  return ["styled", "designed", "constrained"].flatMap(
+    (bucket) => contractProps[bucket]?.members ?? [],
+  );
+}
+
+function sampleValueForProp(component: ComponentBundle, member: PropMember): unknown {
+  const propType = member.propType as DemoPropType | undefined;
+  if (propType) return sampleValueForPropType(component, propType, member.name);
+  return sampleValueForLegacyType(member.type, member.name);
+}
+
+function sampleValueForLegacyType(type: string | undefined, propName: string): unknown {
+  if (!type) return undefined;
+  const trimmed = type.trim();
+  if (trimmed === "string") return sampleStringForProp(propName);
+  if (trimmed === "number") return 0;
+  if (trimmed === "boolean") return false;
+  if (trimmed.endsWith("[]")) return [];
+  return undefined;
+}
+
+function sampleValueForPropType(
+  component: ComponentBundle,
+  propType: DemoPropType,
+  propName: string,
+): unknown {
+  switch (propType.kind) {
+    case "string":
+      return sampleStringForProp(propName);
+    case "number":
+      return 0;
+    case "boolean":
+      return false;
+    case "array":
+      return [];
+    case "enum":
+      return propType.values?.[0];
+    case "literal":
+      return propType.value;
+    case "union":
+      return propType.of?.[0]
+        ? sampleValueForPropType(component, propType.of[0], propName)
+        : undefined;
+    case "ref":
+      return sampleValueForTypeAlias(component, propType.to, propName);
+    case "fallback":
+      return sampleValueForLegacyType(propType.raw, propName);
+    default:
+      return undefined;
+  }
+}
+
+function sampleValueForTypeAlias(
+  component: ComponentBundle,
+  aliasName: string | undefined,
+  propName: string,
+): unknown {
+  if (!aliasName) return undefined;
+  const alias = component.contract.types?.[aliasName] as DemoPropType | undefined;
+  if (!alias) return undefined;
+  if (alias.kind === "union" && alias.values?.length) return alias.values[0];
+  return sampleValueForPropType(component, alias, propName);
+}
+
+function sampleStringForProp(propName: string): string {
+  switch (propName) {
+    case "code":
+      return "const example = true;";
+    case "text":
+      return "Example";
+    case "label":
+    case "ariaLabel":
+      return "Label";
+    case "href":
+      return "#";
+    case "src":
+      return "";
+    case "alt":
+      return "Image";
+    default:
+      return "Example";
+  }
 }
 
 function renderJsxProps(props: DemoProps): string {
@@ -44,35 +145,6 @@ function renderHtmlAttrs(props: DemoProps): string {
       if (typeof v === "boolean") return v ? ` ${k}` : "";
       if (v === null || v === undefined) return "";
       return ` ${k}="${escape(String(v))}"`;
-    })
-    .join("");
-}
-
-/**
- * Render props as Angular template inputs for the synthesized host.
- *
- * Angular is the one framework where a STATIC HTML attribute does not carry a
- * prop's type: `<fsds-otp length="6">` binds `@Input() length` to the STRING
- * "6", so a `typeof === "number"` guard (e.g. OTP's arrayFromCount) sees a
- * string and renders nothing. Non-string inputs therefore need a property
- * binding `[length]="6"`, which evaluates the bracketed expression and passes
- * the real number / boolean / array / object. Strings stay as plain static
- * attributes (correct as-is, and avoids quoting churn). This is Angular-only;
- * Lit's renderHtmlAttrs path is unchanged because Lit reflects attributes to
- * typed properties via its element converters.
- */
-function renderAngularInputs(props: DemoProps): string {
-  return Object.entries(props)
-    .map(([k, v]) => {
-      if (v === null || v === undefined) return "";
-      // Strings: a static attribute binds correctly to a string @Input.
-      if (typeof v === "string") return ` ${k}="${escape(v)}"`;
-      // Everything else (number, boolean, array, object) needs a property
-      // binding so Angular evaluates it to the real typed value. JSON.stringify
-      // produces a valid Angular template expression for these literals; the
-      // attribute value is double-quote-delimited, so escape any inner quotes.
-      const expr = JSON.stringify(v).replace(/"/g, "&quot;");
-      return ` [${k}]="${expr}"`;
     })
     .join("");
 }
@@ -269,9 +341,8 @@ export function buildLitDemo(
  */
 export function buildAngularDemo(
   component: ComponentBundle,
-  overrideProps?: DemoProps,
 ): string {
-  const props = { ...defaultPropsFromContract(component), ...(overrideProps ?? {}) };
+  const props = defaultPropsFromContract(component);
   const componentFile = component.sources.angular?.component;
   if (!componentFile) {
     // Should not happen at runtime — DeveloperView only enables the Angular
@@ -289,10 +360,7 @@ export function buildAngularDemo(
   const exportedClasses = extractStandaloneExports(componentFile.code);
   const tag = elementTag(component, "angular");
   const child = childLabel(component);
-  // Angular needs property bindings for non-string inputs (see
-  // renderAngularInputs) — a static attribute would bind numbers/arrays as
-  // strings and break typed guards like OTP's arrayFromCount.
-  const attrs = renderAngularInputs(props);
+  const attrs = angularConfigBindings(component);
 
   const node = child
     ? `<${tag}${attrs}>${escape(child)}</${tag}>`
@@ -305,8 +373,10 @@ export function buildAngularDemo(
   const importPath = `./components/${component.name}/${component.name}.component.js`;
 
   return [
-    `import { Component } from "@angular/core";`,
+    `import { Component, ChangeDetectorRef, OnDestroy, inject } from "@angular/core";`,
     `import { ${exportedClasses.join(", ")} } from "${importPath}";`,
+    ``,
+    `type PreviewProps = Record<string, any>;`,
     ``,
     `@Component({`,
     `  selector: "fsds-host",`,
@@ -314,9 +384,70 @@ export function buildAngularDemo(
     `  imports: [${exportedClasses.join(", ")}],`,
     `  template: \`${node}\`,`,
     `})`,
-    `export class HostComponent {}`,
+    `export class HostComponent implements OnDestroy {`,
+    `  private readonly cdr = inject(ChangeDetectorRef);`,
+    `  props: PreviewProps = ${JSON.stringify(props)};`,
+    ``,
+    `  private readonly onConfigMessage = (event: MessageEvent) => {`,
+    `    const data = event && event.data;`,
+    `    if (!data || data.type !== "fsds:config") return;`,
+    `    if (data.props && typeof data.props === "object") {`,
+    `      this.props = data.props as PreviewProps;`,
+    `      this.cdr.markForCheck();`,
+    `      this.cdr.detectChanges();`,
+    `    }`,
+    `    if (typeof data.tokenCss === "string") this.applyTokenCss(data.tokenCss);`,
+    `  };`,
+    ``,
+    `  constructor() {`,
+    `    window.addEventListener("message", this.onConfigMessage);`,
+    `  }`,
+    ``,
+    `  ngOnDestroy(): void {`,
+    `    window.removeEventListener("message", this.onConfigMessage);`,
+    `  }`,
+    ``,
+    `  prop(name: string): any {`,
+    `    return this.props[name];`,
+    `  }`,
+    ``,
+    `  private applyTokenCss(css: string): void {`,
+    `    let el = document.getElementById("__fsds_overrides") as HTMLStyleElement | null;`,
+    `    if (!el) {`,
+    `      el = document.createElement("style");`,
+    `      el.id = "__fsds_overrides";`,
+    `      el.setAttribute("data-fsds", "overrides");`,
+    `      document.head.appendChild(el);`,
+    `    }`,
+    `    el.textContent = css || "";`,
+    `  }`,
+    `}`,
     ``,
   ].join("\n");
+}
+
+function propNamesFromContract(component: ComponentBundle): string[] {
+  const names = new Set<string>(Object.keys(component.contract.variants ?? {}));
+  for (const member of propMembersFromContract(component)) {
+    names.add(member.name);
+  }
+  return [...names];
+}
+
+function angularConfigBindings(component: ComponentBundle): string {
+  return propNamesFromContract(component)
+    .map((name) => {
+      const propExpr = `$any(prop(${singleQuoted(name)}))`;
+      if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name)) {
+        return ` [${name}]="${propExpr}"`;
+      }
+      return ` [attr.${name}]="${propExpr}"`;
+    })
+    .join("");
+}
+
+function singleQuoted(value: string): string {
+  return `'${value.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
 }
 
 /**
@@ -346,6 +477,6 @@ export function buildDemo(
     case "lit":
       return buildLitDemo(component, overrideProps);
     case "angular":
-      return buildAngularDemo(component, overrideProps);
+      return buildAngularDemo(component);
   }
 }

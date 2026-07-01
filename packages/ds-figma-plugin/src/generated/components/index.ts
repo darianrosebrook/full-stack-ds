@@ -11,6 +11,8 @@ import Calendar from "./Calendar/Calendar.figma.json" with { type: "json" };
 import Card from "./Card/Card.figma.json" with { type: "json" };
 import Checkbox from "./Checkbox/Checkbox.figma.json" with { type: "json" };
 import Chip from "./Chip/Chip.figma.json" with { type: "json" };
+import CodeBlock from "./CodeBlock/CodeBlock.figma.json" with { type: "json" };
+import CodeSnippet from "./CodeSnippet/CodeSnippet.figma.json" with { type: "json" };
 import Command from "./Command/Command.figma.json" with { type: "json" };
 import Details from "./Details/Details.figma.json" with { type: "json" };
 import Dialog from "./Dialog/Dialog.figma.json" with { type: "json" };
@@ -60,6 +62,8 @@ export const figmaComponentRegistry = {
   "Card": Card,
   "Checkbox": Checkbox,
   "Chip": Chip,
+  "CodeBlock": CodeBlock,
+  "CodeSnippet": CodeSnippet,
   "Command": Command,
   "Details": Details,
   "Dialog": Dialog,

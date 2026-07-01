@@ -85,14 +85,14 @@
     "layer": "semantic"
   },
   "input.size.radius.default": {
-    "resolvesTo": "core.shape.radius.medium",
+    "resolvesTo": "semantic.shape.control.radius.default",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "input.size.border.default": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "input.space.inline.default": {
     "resolvesTo": "core.spacing.size.05",

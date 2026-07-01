@@ -1,4 +1,5 @@
 import type { FrameworkValidationPlan } from "../types.js";
+import type { AdmissionDescriptor } from "../admission-descriptor.js";
 
 /**
  * Angular admission rail (post CODEGEN-RAIL-ANGULAR-NGTSC-01).
@@ -70,4 +71,13 @@ export const angularValidationPlan: FrameworkValidationPlan = {
     parse: "covered_by_typecheck",
     templateTypecheck: "direct",
   },
+};
+
+/** Angular's self-declared rail admission facts (authored beside the plan). */
+export const angularAdmissionDescriptor: AdmissionDescriptor = {
+  id: "angular",
+  outputTreeRelPath: "packages/ds-angular/src/components",
+  sourceExtensions: [".ts"],
+  plan: angularValidationPlan,
+  reportRank: 4,
 };

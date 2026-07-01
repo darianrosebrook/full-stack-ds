@@ -40,9 +40,9 @@
     "layer": "semantic"
   },
   "status.size.radius.default": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "status.size.minHeight": {
     "resolvesTo": "semantic.glyph.badge.size.md.minHeight",
@@ -55,9 +55,9 @@
     "layer": "semantic"
   },
   "status.size.border.default": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "status.text.weight": {
     "resolvesTo": "semantic.typography.font.weight.medium",

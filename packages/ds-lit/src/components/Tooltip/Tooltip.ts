@@ -55,7 +55,7 @@ export class TooltipElement extends LitElement {
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-size-radius-default: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
       --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
@@ -217,7 +217,7 @@ export class TooltipTriggerElement extends LitElement {
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-size-radius-default: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
       --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);
@@ -361,7 +361,7 @@ export class TooltipContentElement extends LitElement {
       --fsds-tooltip-color-border-default: var(--fsds-semantic-color-border-subtle, #cecece);
       --fsds-tooltip-size-padding-y: var(--fsds-core-spacing-size-03, 4px);
       --fsds-tooltip-size-padding-x: var(--fsds-core-spacing-size-04, 8px);
-      --fsds-tooltip-size-radius-default: var(--fsds-core-shape-radius-small, 4px);
+      --fsds-tooltip-size-radius-default: var(--fsds-semantic-shape-radius-small, 4px);
       --fsds-tooltip-size-maxWidth: 200px;
       --fsds-tooltip-typography-fontSize: var(--fsds-semantic-typography-caption-01, 14px);
       --fsds-tooltip-layer-content: var(--fsds-core-layer-tooltip, 1800);

@@ -25,9 +25,9 @@
     "layer": "semantic"
   },
   "table.border.width": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "table.spacing.cellX": {
     "resolvesTo": "core.spacing.size.03",
@@ -95,9 +95,9 @@
     "layer": "semantic"
   },
   "table.focus.width": {
-    "resolvesTo": "core.shape.border.width.thick",
+    "resolvesTo": "semantic.shape.control.border.focusWidth",
     "fallback": "2px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "table.focus.color": {
     "resolvesTo": "semantic.color.border.accent",

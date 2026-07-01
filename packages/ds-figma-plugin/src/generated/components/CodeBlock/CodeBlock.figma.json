@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "source": "@full-stack-ds/codegen/frameworks/figma",
+  "component": {
+    "name": "CodeBlock",
+    "cssPrefix": "code-block",
+    "rootElement": "div",
+    "effectiveRole": null
+  },
+  "anatomy": [
+    {
+      "name": "root",
+      "semanticElement": null,
+      "nativeTag": "pre",
+      "isCompound": false,
+      "isRootOnly": true,
+      "layoutVariant": null
+    },
+    {
+      "name": "code",
+      "semanticElement": null,
+      "nativeTag": "code",
+      "isCompound": false,
+      "isRootOnly": false,
+      "layoutVariant": null
+    }
+  ],
+  "props": [
+    {
+      "name": "code",
+      "safeName": "code",
+      "type": "string",
+      "required": true,
+      "description": "Literal source text to display. The value is rendered as text and must not be treated as HTML.",
+      "defaultExpr": null,
+      "nodeKind": null
+    },
+    {
+      "name": "language",
+      "safeName": "language",
+      "type": "CodeBlockLanguage",
+      "required": true,
+      "description": "Declared language for styling, documentation, and downstream syntax-highlighting adapters.",
+      "defaultExpr": null,
+      "nodeKind": null
+    }
+  ],
+  "variants": {},
+  "states": {
+    "flat": [],
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
+  "classRecipe": {
+    "base": "code-block",
+    "valueModifiers": [],
+    "booleanModifiers": []
+  },
+  "root": {
+    "element": "div",
+    "labeling": [],
+    "keyboard": []
+  },
+  "css": {
+    "blocks": [
+      {
+        "selector": ".code-block",
+        "declarations": {
+          "--fsds-box-model-padding": "0",
+          "--fsds-box-model-padding-block": "0",
+          "--fsds-box-model-padding-block-start": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-block-end": "var(--fsds-semantic-surface-size-padding-block, 16px)",
+          "--fsds-box-model-padding-inline": "0",
+          "--fsds-box-model-padding-inline-start": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-padding-inline-end": "var(--fsds-semantic-surface-size-padding-inline, 16px)",
+          "--fsds-box-model-gap": "var(--fsds-semantic-display-size-gap, 4px)",
+          "--fsds-box-model-width": "auto",
+          "--fsds-box-model-min-width": "0",
+          "--fsds-box-model-max-width": "none",
+          "--fsds-box-model-height": "auto",
+          "--fsds-box-model-min-height": "0",
+          "--fsds-box-model-max-height": "none",
+          "--fsds-code-block-color-background-default": "var(--fsds-semantic-color-background-secondary, #efefef)",
+          "--fsds-code-block-color-foreground-primary": "var(--fsds-semantic-color-foreground-primary, #141414)",
+          "--fsds-code-block-color-border-default": "var(--fsds-semantic-color-border-subtle, #cecece)",
+          "--fsds-code-block-size-padding-default": "var(--fsds-core-spacing-size-06, 16px)",
+          "--fsds-code-block-size-radius-default": "var(--fsds-semantic-shape-control-radius-default, 8px)",
+          "--fsds-code-block-size-border-default": "var(--fsds-semantic-shape-control-border-defaultWidth, 1px)",
+          "--fsds-code-block-size-fontSize-default": "var(--fsds-core-typography-ramp-3, 0.875rem)",
+          "--fsds-code-block-typography-lineHeight-default": "var(--fsds-semantic-typography-line-height-body, 1.5)",
+          "padding-block-start": "var(--fsds-box-model-padding-block-start)",
+          "padding-block-end": "var(--fsds-box-model-padding-block-end)",
+          "padding-inline-start": "var(--fsds-box-model-padding-inline-start)",
+          "padding-inline-end": "var(--fsds-box-model-padding-inline-end)",
+          "gap": "var(--fsds-box-model-gap)",
+          "width": "var(--fsds-box-model-width)",
+          "min-width": "var(--fsds-box-model-min-width)",
+          "max-width": "var(--fsds-box-model-max-width)",
+          "height": "var(--fsds-box-model-height)",
+          "min-height": "var(--fsds-box-model-min-height)",
+          "max-height": "var(--fsds-box-model-max-height)",
+          "background-color": "var(--fsds-code-block-color-background-default)",
+          "border-color": "var(--fsds-code-block-color-border-default)",
+          "border-style": "solid",
+          "border-width": "var(--fsds-code-block-size-border-default)",
+          "border-radius": "var(--fsds-code-block-size-radius-default)",
+          "color": "var(--fsds-code-block-color-foreground-primary)",
+          "font-family": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+          "font-size": "var(--fsds-code-block-size-fontSize-default)",
+          "line-height": "var(--fsds-code-block-typography-lineHeight-default)",
+          "margin": "0",
+          "overflow-x": "auto",
+          "padding": "var(--fsds-code-block-size-padding-default)",
+          "tab-size": "2",
+          "white-space": "pre"
+        }
+      },
+      {
+        "selector": ".code-block__code",
+        "declarations": {
+          "display": "block",
+          "font-family": "inherit",
+          "font-size": "inherit"
+        }
+      }
+    ],
+    "keyframes": []
+  },
+  "behavior": {
+    "channels": [],
+    "dismissalTriggers": [],
+    "events": [],
+    "form": null,
+    "focus": null,
+    "portal": null
+  },
+  "surface": null,
+  "figma": {
+    "intendedUse": "figma-library-materialization",
+    "documentationFrame": "CodeBlock / Documentation",
+    "componentSetName": "CodeBlock",
+    "propertySource": "IR styledProps + variants + states + behavior"
+  }
+}

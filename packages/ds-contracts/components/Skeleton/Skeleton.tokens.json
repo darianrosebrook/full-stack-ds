@@ -15,24 +15,24 @@
     "layer": "semantic"
   },
   "skeleton.radius.sm": {
-    "resolvesTo": "core.shape.radius.small",
+    "resolvesTo": "semantic.shape.radius.small",
     "fallback": "4px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "skeleton.radius.md": {
-    "resolvesTo": "core.shape.radius.03",
+    "resolvesTo": "semantic.shape.radius.medium",
     "fallback": "8px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "skeleton.radius.lg": {
-    "resolvesTo": "core.shape.radius.large",
+    "resolvesTo": "semantic.shape.radius.large",
     "fallback": "16px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "skeleton.radius.full": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "skeleton.gap.compact": {
     "resolvesTo": "core.spacing.size.03",

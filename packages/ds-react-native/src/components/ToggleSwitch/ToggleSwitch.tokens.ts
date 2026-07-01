@@ -103,7 +103,7 @@ export const toggleSwitchTokenScopes = {
     "toggle-switch.border.radius.default": {
       name: "toggle-switch.border.radius.default",
       cssVar: "--fsds-toggle-switch-border-radius-default",
-      ref: "core.shape.radius.full",
+      ref: "semantic.shape.control.radius.pill",
       fallback: 9999,
     },
     "toggle-switch.motion.duration.fast": {

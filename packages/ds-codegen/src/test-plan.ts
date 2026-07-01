@@ -374,6 +374,7 @@ function buildRoleTestCase(ir: ComponentIR): RoleTestCase | undefined {
     role === "none" ||
     role === "compound" ||
     role === ir.root.implicitRole ||
+    Boolean(ir.dom?.bindings.role) ||
     INNER_ELEMENT_ROLES.has(role)
   ) {
     return undefined;

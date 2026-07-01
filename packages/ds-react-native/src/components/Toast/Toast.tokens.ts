@@ -96,7 +96,7 @@ export const toastTokenScopes = {
     "toast.surface.radius": {
       name: "toast.surface.radius",
       cssVar: "--fsds-toast-surface-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "toast.surface.shadow": {

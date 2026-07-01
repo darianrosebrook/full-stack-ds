@@ -1183,6 +1183,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     isRoot: true,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole,
+    rootPolymorphicTag: ir.root.polymorphicTagProp,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
@@ -1241,6 +1242,10 @@ interface VueRenderContext {
    * declares one. Parity with React's `ReactRenderContext.rootRole`.
    */
   rootRole?: string;
+  rootPolymorphicTag?: {
+    propName: string;
+    defaultTag: string;
+  };
   /**
    * Identifier names that resolve as iteration aliases (item/index
    * variables introduced by an enclosing `iterate` directive). After
@@ -1406,7 +1411,7 @@ function renderVueDomNode(
     }
     // Apply contract-declared a11y.role on the root unless the dom tree
     // already set `attrs.role` (consumed above into `attrs`).
-    if (ctx.rootRole && !node.attrs["role"]) {
+    if (ctx.rootRole && !node.attrs["role"] && !node.bindings["role"]) {
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`:data-testid="props['data-testid']"`);
@@ -1421,6 +1426,11 @@ function renderVueDomNode(
       // itself, not a descendant. This avoids needing a click handler on the
       // inner non-interactive panel (which would trip a11y lint rules).
       attrs.push(`@click.self="${guardExpr}"`);
+    }
+    if (ctx.rootPolymorphicTag && !node.componentRef) {
+      attrs.unshift(
+        `:is="props.${propAccess(ctx.rootPolymorphicTag.propName)} ?? '${ctx.rootPolymorphicTag.defaultTag}'"`,
+      );
     }
   } else if (classParts.length > 0) {
     attrs.unshift(`:class="${classPartsExprVue(classParts)}"`);
@@ -1500,7 +1510,10 @@ function renderVueDomNode(
   // componentRef: render the referenced component by its PascalCase name.
   // Vue SFC templates resolve a PascalCase tag to the imported component;
   // `:attr` bindings pass identically to a component prop or an HTML attr.
-  const tag = node.componentRef ?? node.tag;
+  const tag =
+    ctx.isRoot && ctx.rootPolymorphicTag && !node.componentRef
+      ? "component"
+      : node.componentRef ?? node.tag;
   // A childless componentRef self-closes (`<Image ... />`); `node.tag` is ""
   // for a componentRef so the void-element set never matches it.
   const isVoidEl = node.componentRef
@@ -1639,6 +1652,14 @@ function escapeAttrString(s: string): string {
   return s.replace(/"/g, "&quot;");
 }
 
+function singleQuotedJsString(s: string): string {
+  return `'${s
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, "\\r")
+    .replace(/\n/g, "\\n")}'`;
+}
+
 /**
  * Map a binding expression into a Vue template attribute. Channel onChange
  * handlers become `@change="(e) => setX((e.target as HTMLInputElement).checked)"`
@@ -1764,19 +1785,7 @@ function renderVueBindingValue(
     case "prop":
       return appendPath(vuePropAccessor(expr.prop, ctx), expr.path);
     case "literal":
-      // Single-quoted, not JSON.stringify's double-quoted form: this
-      // result gets spliced into `:attr="..."` (conditional/predicate/
-      // cssVarBindings callers), a "-delimited Vue template attribute.
-      // A double-quoted literal would prematurely close that attribute
-      // for Vue's SFC compiler, which reads attribute values with an
-      // HTML-attribute tokenizer (first unescaped `"` wins) BEFORE
-      // parsing the expression inside — confirmed via Checkbox's
-      // aria-checked conditional, the first literal-string operand used
-      // in attribute position (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
-      // INDETERMINATE-01). Single quotes have no such collision in any
-      // of this function's call sites (content interpolation, :style,
-      // conditional/predicate attribute values).
-      return `'${expr.value.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
+      return singleQuotedJsString(expr.value);
     case "iterationLocal": {
       const name = vueIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;

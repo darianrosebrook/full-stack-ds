@@ -121,7 +121,7 @@ export const showMoreTokenScopes = {
     "show-more.size.radius.default": {
       name: "show-more.size.radius.default",
       cssVar: "--fsds-show-more-size-radius-default",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "show-more.overlay.imageOverlay": {

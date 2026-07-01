@@ -18,10 +18,7 @@ import "./TextField.css";
 // @custom:end
 
 // @generated:start props
-export interface TextFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDescribedby" | "children" | "className" | "data-testid" | "defaultValue" | "description" | "disabled" | "error" | "invalid" | "label" | "name" | "onChange" | "required" | "type" | "value"> {
-  label?: ReactNode;
-  description?: ReactNode;
-  error?: ReactNode;
+export interface TextFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "ariaDescribedby" | "children" | "className" | "data-testid" | "defaultValue" | "disabled" | "invalid" | "name" | "onChange" | "required" | "type" | "value"> {
   type?: string;
   value?: string;
   defaultValue?: string;
@@ -33,7 +30,11 @@ export interface TextFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, "ar
   ariaDescribedby?: string;
   className?: string;
   "data-testid"?: string;
-  children?: ReactNode;
+  slots?: {
+    description?: ReactNode;
+    error?: ReactNode;
+    label?: ReactNode;
+  };
 }
 // @generated:end
 
@@ -67,14 +68,11 @@ export function TextField({
   disabled,
   className,
   "data-testid": testId,
-  children,
-  label,
-  description,
-  error,
   type,
   required,
   name,
   ariaDescribedby,
+  slots,
   ...rest
 }: TextFieldProps) {
   const { value, setValue } = useTextField({
@@ -94,22 +92,16 @@ export function TextField({
 
   return (
   <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
-    {label && (
-      <label className="text-field__label">
-        {children}
-      </label>
-    )}
+    <label className="text-field__label">
+      {slots?.label}
+    </label>
     <input className="text-field__field" onChange={(e) => setValue(e.target.value)} type={type} value={value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
-    {description && (
-      <span className="text-field__description">
-        {children}
-      </span>
-    )}
-    {error && (
-      <span className="text-field__error" role="alert">
-        {children}
-      </span>
-    )}
+    <span className="text-field__description">
+      {slots?.description}
+    </span>
+    <span className="text-field__error" role="alert">
+      {slots?.error}
+    </span>
   </Stack>
   );
 }

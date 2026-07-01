@@ -25,9 +25,10 @@ interface Props {
   name?: string;
   value?: string;
   class?: string;
+  children?: import('svelte').Snippet;
 }
 
-let { checked, defaultChecked, onChange, size = "md", disabled, name, value, class: className }: Props = $props();
+let { checked, defaultChecked, onChange, size = "md", disabled, name, value, class: className, children }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -60,4 +61,5 @@ const classes = $derived(
   <span class={'switch__track'} aria-hidden="true">
     <span class={'switch__thumb'}></span>
   </span>
+  {@render children?.()}
 </label>

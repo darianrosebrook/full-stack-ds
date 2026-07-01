@@ -1795,7 +1795,7 @@ function renderReactDomNode(
     // Apply contract-declared a11y.role on the root unless the dom tree
     // already set `attrs.role` (which is consumed in the loop above and
     // would already appear in `attrs`).
-    if (ctx.rootRole && !node.attrs["role"]) {
+    if (ctx.rootRole && !node.attrs["role"] && !node.bindings["role"]) {
       attrs.push(`role="${ctx.rootRole}"`);
     }
     attrs.push(`data-testid={testId}`);

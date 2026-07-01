@@ -14,8 +14,8 @@
   --fsds-calendar-size-padding-default: var(--fsds-core-spacing-size-06, 16px);
   --fsds-calendar-size-cell: var(--fsds-core-spacing-size-08, 32px);
   --fsds-calendar-size-nav: var(--fsds-core-spacing-size-07, 24px);
-  --fsds-calendar-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
-  --fsds-calendar-size-radius-day: var(--fsds-core-shape-radius-small, 4px);
+  --fsds-calendar-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
+  --fsds-calendar-size-radius-day: var(--fsds-semantic-shape-radius-small, 4px);
   --fsds-calendar-typography-caption-size: var(--fsds-semantic-typography-body-02, 16px);
   --fsds-calendar-typography-day-size: var(--fsds-semantic-typography-body-03, 14px);
   --fsds-calendar-typography-weekday-size: var(--fsds-semantic-typography-caption-02, 12px);

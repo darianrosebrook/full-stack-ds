@@ -41,7 +41,7 @@ export class ShuttleElement extends LitElement {
       --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-shuttle-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-shuttle-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
     }
 
     .shuttle {
@@ -125,7 +125,7 @@ export class ShuttleItemElement extends LitElement {
       --fsds-shuttle-color-border-default: var(--fsds-semantic-color-border-light, #fceaea);
       --fsds-shuttle-color-border-accent: var(--fsds-semantic-color-border-accent, #d9292b);
       --fsds-shuttle-size-padding-default: var(--fsds-core-spacing-size-07, 24px);
-      --fsds-shuttle-size-radius-default: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-shuttle-size-radius-default: var(--fsds-semantic-shape-control-radius-default, 8px);
     }
 
     .shuttle {

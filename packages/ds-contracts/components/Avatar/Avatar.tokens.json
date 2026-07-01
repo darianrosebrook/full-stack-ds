@@ -25,14 +25,14 @@
     "layer": "core"
   },
   "avatar.size.radius.default": {
-    "resolvesTo": "core.shape.radius.full",
+    "resolvesTo": "semantic.shape.control.radius.pill",
     "fallback": "9999px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "avatar.size.border.default": {
-    "resolvesTo": "core.shape.border.width.hairline",
+    "resolvesTo": "semantic.shape.control.border.defaultWidth",
     "fallback": "1px",
-    "layer": "core"
+    "layer": "semantic"
   },
   "avatar.color.background.default": {
     "resolvesTo": "semantic.color.background.secondary",

@@ -103,7 +103,7 @@ export const tableTokenScopes = {
     "table.border.width": {
       name: "table.border.width",
       cssVar: "--fsds-table-border-width",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "table.spacing.cellX": {
@@ -187,7 +187,7 @@ export const tableTokenScopes = {
     "table.focus.width": {
       name: "table.focus.width",
       cssVar: "--fsds-table-focus-width",
-      ref: "core.shape.border.width.thick",
+      ref: "semantic.shape.control.border.focusWidth",
       fallback: 2,
     },
     "table.focus.color": {

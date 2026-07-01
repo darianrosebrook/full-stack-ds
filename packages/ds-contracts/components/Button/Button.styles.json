@@ -113,7 +113,7 @@
       "fallback": "28px"
     },
     "button.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.3",
+      "resolvesTo": "semantic.typography.action.03",
       "fallback": "0.875rem"
     }
   },
@@ -151,7 +151,7 @@
       "fallback": "36px"
     },
     "button.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.4",
+      "resolvesTo": "semantic.typography.action.02",
       "fallback": "1rem"
     }
   },
@@ -189,7 +189,7 @@
       "fallback": "48px"
     },
     "button.size.fontSize.medium": {
-      "resolvesTo": "core.typography.ramp.5",
+      "resolvesTo": "semantic.typography.action.01",
       "fallback": "1.125rem"
     }
   },
@@ -225,6 +225,9 @@
     },
     "button.color.background.active": {
       "resolvesTo": "semantic.color.action.background.secondary.active"
+    },
+    "button.color.background.disabled": {
+      "resolvesTo": "semantic.color.action.background.secondary.disabled"
     },
     "button.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.primary"
@@ -265,6 +268,9 @@
     "button.color.background.active": {
       "resolvesTo": "semantic.color.action.background.danger.active"
     },
+    "button.color.background.disabled": {
+      "resolvesTo": "semantic.color.action.background.danger.disabled"
+    },
     "button.color.foreground.default": {
       "resolvesTo": "semantic.color.foreground.inverse"
     },
@@ -273,6 +279,9 @@
     },
     "button.color.border.hover": {
       "resolvesTo": "semantic.color.action.background.danger.hover"
+    },
+    "button.color.border.focus": {
+      "resolvesTo": "semantic.focus.ring.intent.danger"
     }
   },
   "--ghost": {

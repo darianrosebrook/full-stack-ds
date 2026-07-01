@@ -27,9 +27,6 @@ interface Props {
   defaultValue?: unknown;
   onChange?: (value: unknown) => void;
   validate?: ((value: unknown, context: { name: string; touched: boolean; dirty: boolean }) => string | string[] | null | Promise<string | string[] | null>);
-  label?: unknown;
-  helpText?: unknown;
-  error?: string;
   status?: FieldStatus;
   validating?: boolean;
   class?: string;
@@ -71,21 +68,23 @@ const classNames = computed(() => [
 <template>
   <div :class="classNames" role="group" :data-testid="props['data-testid']">
     <div :class="'field__header'">
-      <label v-if="props.label" :class="'field__label'">
-        {{ props.label }}
+      <label :class="'field__label'">
+        <slot name="label" />
       </label>
     </div>
     <div :class="'field__control'">
-      <slot />
+      <slot name="control" />
     </div>
     <div :class="'field__meta'">
-      <span v-if="props.helpText" :class="'field__help'">
-        {{ props.helpText }}
+      <span :class="'field__help'">
+        <slot name="help" />
       </span>
-      <span v-if="props.error" :class="'field__error'">
-        {{ props.error }}
+      <span :class="'field__error'">
+        <slot name="error" />
       </span>
-      <span v-if="props.validating" :class="'field__validatingIndicator'"></span>
+      <span v-if="props.validating" :class="'field__validatingIndicator'">
+        <slot name="validatingIndicator" />
+      </span>
     </div>
   </div>
 </template>

@@ -51,33 +51,6 @@
   ],
   "props": [
     {
-      "name": "label",
-      "safeName": "label",
-      "type": "ReactNode",
-      "required": false,
-      "description": "Visible label rendered above the input.",
-      "defaultExpr": null,
-      "nodeKind": "node-ref"
-    },
-    {
-      "name": "description",
-      "safeName": "description",
-      "type": "ReactNode",
-      "required": false,
-      "description": "Helper text rendered below the input.",
-      "defaultExpr": null,
-      "nodeKind": "node-ref"
-    },
-    {
-      "name": "error",
-      "safeName": "error",
-      "type": "ReactNode",
-      "required": false,
-      "description": "Error message rendered below the input. Setting this also flips the field into invalid state.",
-      "defaultExpr": null,
-      "nodeKind": "node-ref"
-    },
-    {
       "name": "type",
       "safeName": "type",
       "type": "string",
@@ -257,8 +230,8 @@
           "--fsds-text-field-field-padding-block": "var(--fsds-semantic-input-size-medium-padding-block, 8px)",
           "--fsds-text-field-field-padding-inline": "var(--fsds-semantic-input-size-medium-padding-inline, 12px)",
           "--fsds-text-field-field-min-height": "var(--fsds-semantic-input-size-medium-min-height, 36px)",
-          "--fsds-text-field-border-width": "var(--fsds-core-shape-border-width-hairline, 1px)",
-          "--fsds-text-field-border-radius": "var(--fsds-core-shape-radius-medium, 8px)",
+          "--fsds-text-field-border-width": "var(--fsds-semantic-shape-control-border-defaultWidth, 1px)",
+          "--fsds-text-field-border-radius": "var(--fsds-semantic-shape-control-radius-default, 8px)",
           "--fsds-text-field-color-input-background": "var(--fsds-semantic-color-background-primary, #ffffff)",
           "--fsds-text-field-color-input-text": "var(--fsds-semantic-color-foreground-primary, #141414)",
           "--fsds-text-field-color-input-placeholder": "var(--fsds-semantic-color-foreground-tertiary, #717171)",
@@ -431,7 +404,6 @@
       "validity": {
         "model": "hybrid",
         "invalidProp": "invalid",
-        "errorMessageProp": "error",
         "errorSurface": "aria-describedby",
         "ariaAttributes": [
           "aria-invalid",
@@ -443,7 +415,7 @@
         "strategy": "associated-label",
         "required": true,
         "via": [
-          "prop:label",
+          "slot:label",
           "aria-labelledby",
           "aria-label"
         ]

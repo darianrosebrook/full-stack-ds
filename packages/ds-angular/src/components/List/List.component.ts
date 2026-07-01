@@ -1,6 +1,6 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgSwitch, NgSwitchCase } from "@angular/common";
 // @generated:end
 
 // @custom:start imports
@@ -23,10 +23,18 @@ export type ListSize = "sm" | "md" | "lg";
 @Component({
   selector: "fsds-list",
   standalone: true,
-  imports: [NgClass],
-  template: `<ul [ngClass]="classes()">
-  <ng-content />
-</ul>`,
+  imports: [NgClass, NgSwitch, NgSwitchCase],
+  template: `<ng-container [ngSwitch]="this.as || 'ul'">
+  <ul [ngClass]="classes()" *ngSwitchCase="'ul'">
+    <ng-content />
+  </ul>
+  <ol [ngClass]="classes()" *ngSwitchCase="'ol'">
+    <ng-content />
+  </ol>
+  <dl [ngClass]="classes()" *ngSwitchCase="'dl'">
+    <ng-content />
+  </dl>
+</ng-container>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent {

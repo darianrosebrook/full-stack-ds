@@ -8,9 +8,8 @@ import {
 } from "../runtime/FrameworkPreview";
 import { CodeViewer } from "../components/CodeViewer";
 import { buildTraceIndex } from "../trace/buildTraceIndex";
-import { buildDemo } from "../runtime/demos";
+import { buildDemo, defaultPropsFromContract } from "../runtime/demos";
 import {
-  buildPropMap,
   materialTokenRows,
   tokenOverridesToCss,
 } from "../components/properties-panel/control-derivation";
@@ -33,6 +32,8 @@ const FRAMEWORK_TABS: { key: Framework; label: string; dot: string }[] = [
   { key: "angular", label: "Angular", dot: "lang-angular" },
   { key: "lit", label: "Lit", dot: "lang-lit" },
 ];
+
+const EMPTY_PROP_OVERRIDES: Record<string, unknown> = {};
 
 export function DeveloperView({
   component,
@@ -57,31 +58,27 @@ export function DeveloperView({
     return buildTraceIndex(framework, component.name, componentFile.code, component.contract);
   }, [framework, componentFile, component]);
 
+  const previewPropOverrides = propOverrides ?? EMPTY_PROP_OVERRIDES;
   const demo = useMemo(() => buildDemo(framework, component), [framework, component]);
 
-  // Properties-tab overrides → preview. The React preview runs in config mode
-  // (fsds:config wire; props + token CSS re-apply with no module rebuild),
-  // EXCEPT for compound components — config mode renders a single root + text
-  // child, which is wrong for them. Non-react frameworks and compounds fall
-  // back to overrideCss injection: token re-skin works, prop overrides don't
-  // reach the baked-props demo (an accepted limit; Angular's srcdoc path is a
-  // no-op even for overrideCss).
-  const isCompound = Boolean(component.contract.compoundParts);
-  const useConfigMode = framework === "react" && !isCompound;
+  // Properties-tab overrides → preview. Every framework receives the same
+  // fsds:config message-bus payload; Angular's compiled host listens for it
+  // inside the legacy srcdoc shell.
   const tokenCss = useMemo(() => {
     // Material rows so inherited box-model slots also expand resolvesTo —
     // a profile-sourced ref override must hit its semantic var to win over
     // the component-scoped declaration in <Name>.tokens.css.
     return tokenOverridesToCss(tokenOverrides ?? {}, materialTokenRows(component));
   }, [component, tokenOverrides]);
-  const config = useMemo<PreviewConfig | undefined>(() => {
-    if (!useConfigMode) return undefined;
+  const config = useMemo<PreviewConfig>(() => {
     return {
-      props: buildPropMap(component.contract, propOverrides ?? {}),
+      props: {
+        ...defaultPropsFromContract(component),
+        ...previewPropOverrides,
+      },
       tokenCss,
     };
-  }, [useConfigMode, component, propOverrides, tokenCss]);
-  const overrideCss = useConfigMode ? undefined : tokenCss || undefined;
+  }, [component, previewPropOverrides, tokenCss]);
 
   const handleHitClick = (hit: import("../trace/types").TraceHit) => {
     onTrace({ hit, framework, componentName: component.name });
@@ -173,7 +170,6 @@ export function DeveloperView({
                   demo={demo}
                   height={280}
                   config={config}
-                  overrideCss={overrideCss}
                 />
               </div>
             </div>

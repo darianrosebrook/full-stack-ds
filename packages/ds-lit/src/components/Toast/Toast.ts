@@ -40,7 +40,7 @@ export class ToastElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
@@ -227,7 +227,7 @@ export class ToastItemElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
@@ -371,7 +371,7 @@ export class ToastTitleElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);
@@ -515,7 +515,7 @@ export class ToastDescriptionElement extends LitElement {
       --fsds-box-model-max-height: none;
       --fsds-toast-surface-bg: var(--fsds-semantic-color-background-secondary, #efefef);
       --fsds-toast-surface-border: var(--fsds-semantic-color-border-subtle, #cecece);
-      --fsds-toast-surface-radius: var(--fsds-core-shape-radius-medium, 8px);
+      --fsds-toast-surface-radius: var(--fsds-semantic-shape-control-radius-default, 8px);
       --fsds-toast-surface-shadow: var(--fsds-semantic-elevation-surface-overlay, 0 8px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08));
       --fsds-toast-color-default: var(--fsds-semantic-color-foreground-primary, #141414);
       --fsds-toast-accent-default: var(--fsds-semantic-color-status-info, #0a65fe);

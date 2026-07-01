@@ -87,7 +87,7 @@ export function Command({
             placeholder={placeholder}
             value={String(search ?? "")}
             onChangeText={(next: string) => setSearchValue(next)}
-            accessibilityState={{ expanded: Boolean(open) }}
+            accessibilityState={{ expanded: String(open) === "true" }}
           />
         </View>
         <View

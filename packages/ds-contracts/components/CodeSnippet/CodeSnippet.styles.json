@@ -1,0 +1,66 @@
+{
+  "root": {
+    "background-color": {
+      "resolvesTo": "code-snippet.color.background.default"
+    },
+    "border-color": {
+      "resolvesTo": "code-snippet.color.border.default"
+    },
+    "border-style": {
+      "literal": "solid",
+      "platforms": ["web"]
+    },
+    "border-width": {
+      "resolvesTo": "code-snippet.size.border.default"
+    },
+    "border-radius": {
+      "resolvesTo": "code-snippet.size.radius.default"
+    },
+    "color": {
+      "resolvesTo": "code-snippet.color.foreground.primary"
+    },
+    "font-family": {
+      "literal": "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace",
+      "platforms": ["web"]
+    },
+    "font-size": {
+      "resolvesTo": "code-snippet.size.fontSize.default"
+    },
+    "line-height": {
+      "resolvesTo": "code-snippet.typography.lineHeight.default"
+    },
+    "margin": {
+      "literal": "0",
+      "platforms": ["web"]
+    },
+    "padding-block": {
+      "resolvesTo": "code-snippet.size.padding.block"
+    },
+    "padding-inline": {
+      "resolvesTo": "code-snippet.size.padding.inline"
+    },
+    "white-space": {
+      "literal": "nowrap",
+      "platforms": ["web"]
+    }
+  },
+  "--kbd": {
+    "box-shadow": {
+      "resolvesTo": "code-snippet.elevation.kbd"
+    },
+    "font-weight": {
+      "resolvesTo": "semantic.typography.font.weight.medium",
+      "fallback": "500"
+    }
+  },
+  "--samp": {
+    "background-color": {
+      "literal": "transparent",
+      "platforms": ["web"]
+    },
+    "border-color": {
+      "literal": "transparent",
+      "platforms": ["web"]
+    }
+  }
+}

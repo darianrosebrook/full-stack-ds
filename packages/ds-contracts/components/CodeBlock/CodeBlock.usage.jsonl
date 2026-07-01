@@ -1,0 +1,1 @@
+{"name":"typescript-function","description":"Typed function displayed as a fenced-style source block.","tree":{"fsds.CodeBlock":{"props":{"language":"typescript","code":"export function sum(values: number[]) {\\n  return values.reduce((total, value) => total + value, 0);\\n}"}}}}

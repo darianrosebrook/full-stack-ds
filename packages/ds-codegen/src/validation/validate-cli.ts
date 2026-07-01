@@ -48,12 +48,11 @@ import type {
   RailDiagnostic,
   RailReport,
 } from "./types.js";
-import { reactValidationPlan } from "./frameworks/react.js";
-import { vueValidationPlan } from "./frameworks/vue.js";
-import { svelteValidationPlan } from "./frameworks/svelte.js";
-import { litValidationPlan } from "./frameworks/lit.js";
-import { angularValidationPlan } from "./frameworks/angular.js";
-import { reactNativeValidationPlan } from "./frameworks/react-native.js";
+import {
+  admissionPlansById,
+  ADMITTED_FRAMEWORKS,
+  isAdmittedFrameworkId,
+} from "./admission-descriptor.js";
 import { emissionManifestAbsolutePath } from "./emission-manifest-path.js";
 import { joinManifestAgainstResults } from "./artifact-join.js";
 import {
@@ -61,23 +60,12 @@ import {
   verifyManifestAgainstDisk,
 } from "./required-mode.js";
 
-const PLANS_BY_ID: Record<FrameworkId, FrameworkValidationPlan> = {
-  react: reactValidationPlan,
-  vue: vueValidationPlan,
-  svelte: svelteValidationPlan,
-  lit: litValidationPlan,
-  angular: angularValidationPlan,
-  "react-native": reactNativeValidationPlan,
-};
+// Derived from the admission-descriptor registry (single source of truth) —
+// no longer a parallel hardcoded per-framework literal. See
+// admission-descriptor.ts for the authority split.
+const PLANS_BY_ID: Record<FrameworkId, FrameworkValidationPlan> = admissionPlansById();
 
-const DEFAULT_FRAMEWORKS: readonly FrameworkId[] = [
-  "react",
-  "vue",
-  "svelte",
-  "lit",
-  "angular",
-  "react-native",
-] as const;
+const DEFAULT_FRAMEWORKS: readonly FrameworkId[] = ADMITTED_FRAMEWORKS;
 
 async function main(): Promise<void> {
   const requireArtifactManifest = process.argv.includes(
@@ -357,7 +345,7 @@ function parseFrameworkFilterArg(argv: readonly string[]): readonly FrameworkId[
   const out: FrameworkId[] = [];
   const seen = new Set<FrameworkId>();
   for (const value of raw.split(",").map((v) => v.trim()).filter(Boolean)) {
-    if (!isFrameworkId(value)) {
+    if (!isAdmittedFrameworkId(value)) {
       const valid = Object.keys(PLANS_BY_ID).join(", ");
       throw new Error(`Unknown framework "${value}". Valid frameworks: ${valid}.`);
     }
@@ -382,10 +370,6 @@ function parseEqualsOrNextArg(
     if (arg === flag) return argv[i + 1];
   }
   return undefined;
-}
-
-function isFrameworkId(value: string): value is FrameworkId {
-  return Object.prototype.hasOwnProperty.call(PLANS_BY_ID, value);
 }
 
 /**

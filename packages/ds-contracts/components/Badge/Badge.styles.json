@@ -85,6 +85,6 @@
     "badge.color.border.default": { "resolvesTo": "semantic.color.background.danger.strong", "fallback": "#d9292b" }
   },
   "--tag": {
-    "badge.size.radius": { "resolvesTo": "core.shape.radius.medium", "fallback": "6px" }
+    "badge.size.radius": { "resolvesTo": "semantic.shape.control.radius.default", "fallback": "6px" }
   }
 }

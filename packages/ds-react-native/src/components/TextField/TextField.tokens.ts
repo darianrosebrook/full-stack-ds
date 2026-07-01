@@ -108,13 +108,13 @@ export const textFieldTokenScopes = {
     "text-field.border.width": {
       name: "text-field.border.width",
       cssVar: "--fsds-text-field-border-width",
-      ref: "core.shape.border.width.hairline",
+      ref: "semantic.shape.control.border.defaultWidth",
       fallback: 1,
     },
     "text-field.border.radius": {
       name: "text-field.border.radius",
       cssVar: "--fsds-text-field-border-radius",
-      ref: "core.shape.radius.medium",
+      ref: "semantic.shape.control.radius.default",
       fallback: 8,
     },
     "text-field.color.input.background": {

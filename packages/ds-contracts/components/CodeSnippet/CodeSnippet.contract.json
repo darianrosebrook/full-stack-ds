@@ -1,0 +1,107 @@
+{
+  "$schema": "../../component.contract.schema.json",
+  "name": "CodeSnippet",
+  "description": "Inline text-level snippet for literal code, keyboard input, or sample output.",
+  "layer": "primitive",
+  "category": "display",
+  "anatomy": {
+    "parts": [
+      "root"
+    ],
+    "details": {
+      "root": {
+        "tag": "code",
+        "description": "Inline snippet host rendered as code, keyboard input, or sample output.",
+        "role": "content"
+      }
+    },
+    "dom": {
+      "tag": "code",
+      "part": "root",
+      "attrs": {
+        "spellcheck": "false"
+      },
+      "content": "prop:text"
+    }
+  },
+  "props": {
+    "designed": {
+      "members": [
+        {
+          "name": "text",
+          "propType": { "kind": "string" },
+          "description": "Literal inline text to display. The value is rendered as text and must not be treated as HTML.",
+          "required": true
+        },
+        {
+          "name": "as",
+          "propType": { "kind": "ref", "to": "CodeSnippetElement" },
+          "description": "Semantic inline element to render.",
+          "default": "code"
+        }
+      ]
+    },
+    "passthrough": {
+      "extends": "span"
+    }
+  },
+  "types": {
+    "CodeSnippetElement": {
+      "kind": "union",
+      "values": [
+        "code",
+        "kbd",
+        "samp"
+      ]
+    }
+  },
+  "variants": {
+    "as": [
+      "code",
+      "kbd",
+      "samp"
+    ]
+  },
+  "states": {
+    "dimensions": {
+      "pointer": {
+        "category": "interaction",
+        "values": [
+          "default"
+        ],
+        "initial": "default",
+        "exclusive": true
+      }
+    }
+  },
+  "slots": {
+    "root": {
+      "required": true,
+      "selector": "[data-slot=\"code-snippet\"]"
+    }
+  },
+  "ssr": {
+    "hydrateOn": "none"
+  },
+  "rtl": {
+    "flipIcon": false
+  },
+  "a11y": {
+    "labeling": [],
+    "keyboard": []
+  },
+  "a2ui": {
+    "category": "content",
+    "usageHints": [
+      "Use text for the literal inline snippet; do not pass pre-rendered HTML",
+      "Use as=code for inline source identifiers and short expressions",
+      "Use as=kbd for keyboard keys or shortcuts",
+      "Use CodeBlock for fenced or multi-line source code"
+    ],
+    "children": {
+      "allowed": false,
+      "slot": "children",
+      "accepts": []
+    }
+  }
+}

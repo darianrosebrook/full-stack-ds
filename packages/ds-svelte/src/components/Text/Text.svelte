@@ -54,4 +54,4 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<p class={classes}></p>
+<svelte:element this={as ?? "p"} class={classes}></svelte:element>
