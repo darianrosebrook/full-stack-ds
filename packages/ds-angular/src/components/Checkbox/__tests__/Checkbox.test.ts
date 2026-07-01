@@ -46,6 +46,18 @@ describe("Checkbox — unit", () => {
     expect(el.indeterminate).toBe(true);
     expect(el.getAttribute("aria-checked")).toBe("mixed");
   });
+
+  it("re-applies .indeterminate when the input changes from true to false, and aria-checked reflects checked state again", () => {
+    const fixture = TestBed.createComponent(CheckboxComponent);
+    fixture.componentRef.setInput("indeterminate", true);
+    fixture.detectChanges();
+    const el = fixture.nativeElement.querySelector("input") as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    fixture.componentRef.setInput("indeterminate", false);
+    fixture.detectChanges();
+    expect(el.indeterminate).toBe(false);
+    expect(el.getAttribute("aria-checked")).toBe("false");
+  });
 });
 
 function classTokens(component: { classes: () => string }): string[] {

@@ -294,6 +294,33 @@ export function generateReactTest(ir: ComponentIR): string {
     lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
     lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
     lines.push(`  });`);
+
+    // Reactive-update ratchet: the mount-only test above proves the
+    // property is written once, but React's useEffect-based reflection
+    // (and every other framework's own reactivity mechanism) must also
+    // re-apply on a prop change from true -> false, not just on first
+    // render. Without this, a lowering that only writes the DOM property
+    // in a constructor/mount hook (no dependency-tracked update path)
+    // would pass the test above and still be broken for real usage.
+    lines.push(``);
+    lines.push(
+      `  it("re-applies .${indeterminateFact.propertyKey} when the prop changes from true to false, and aria-checked reflects checked state again", () => {`,
+    );
+    lines.push(
+      `    const { rerender } = render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
+    );
+    lines.push(
+      `    const el = screen.getByTestId("${plan.testId}") as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(
+      `    rerender(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs}${closer});`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(false);`);
+    lines.push(
+      `    expect(el.getAttribute("aria-checked")).toBe("false");`,
+    );
+    lines.push(`  });`);
   }
 
   lines.push(`});`);

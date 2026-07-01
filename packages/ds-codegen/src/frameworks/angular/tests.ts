@@ -113,6 +113,43 @@ export function generateAngularTest(ir: ComponentIR): string {
       lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
       lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
       lines.push(`  });`);
+
+      // Reactive-update ratchet: the mount-only test above can't
+      // distinguish "the binding is reactive" from "the binding happened
+      // to write the right value once at construction." Uses
+      // fixture.componentRef.setInput (Angular's own API for simulating
+      // an @Input change through the real input-binding pipeline) rather
+      // than mutating componentInstance directly — jest-preset-angular's
+      // strict change-detection rejects post-detectChanges mutation of a
+      // consumer @Input on a TestBed host (confirmed via a runtime
+      // probe: even the pre-existing `checked` binding silently fails to
+      // re-render that way; see Popover.test.ts's "controlled open prop
+      // overrides internal state" comment for the same finding). This
+      // genuinely falsifies a mount/constructor-only property write: a
+      // one-time write would leave el.indeterminate stuck at `true`
+      // after the setInput(false) below.
+      lines.push(``);
+      lines.push(
+        `  it("re-applies .${indeterminateFact.propertyKey} when the input changes from true to false, and aria-checked reflects checked state again", () => {`,
+      );
+      lines.push(`    const fixture = TestBed.createComponent(${className});`);
+      lines.push(
+        `    fixture.componentRef.setInput("${indeterminateFact.propertyKey}", true);`,
+      );
+      lines.push(`    fixture.detectChanges();`);
+      lines.push(
+        `    const el = fixture.nativeElement.querySelector("input") as HTMLInputElement;`,
+      );
+      lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+      lines.push(
+        `    fixture.componentRef.setInput("${indeterminateFact.propertyKey}", false);`,
+      );
+      lines.push(`    fixture.detectChanges();`);
+      lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(false);`);
+      lines.push(
+        `    expect(el.getAttribute("aria-checked")).toBe("false");`,
+      );
+      lines.push(`  });`);
     }
   } else {
     lines.push(`  it("creates the component class", () => {`);
