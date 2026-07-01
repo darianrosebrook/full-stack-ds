@@ -1,0 +1,28 @@
+id: ICONOGRAPHY-EMISSION-LEDGER-01
+title: 'Emission evidence ledger: content-addressed drift substrate for generated artifacts'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-01T20:56:36.282Z'
+updated_at: '2026-07-01T20:56:36.282Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-iconography'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'emission-evidence-ledger'
+    type: schema
+    path: 'packages/ds-iconography/build/ledger.mjs'
