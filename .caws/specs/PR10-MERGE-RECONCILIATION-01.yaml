@@ -2,9 +2,11 @@ id: PR10-MERGE-RECONCILIATION-01
 title: 'Reconcile PR #10 (feat/codegen-rn-emitter-ir-authority) merge conflicts against main'
 risk_tier: 2
 mode: chore
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'All conflicts resolved on the merits (Field: main''s superseding named-slot fix kept, Checkbox-branch''s superseded content-binding fix dropped; Vue emitter escaping: this branch''s fix kept, auto-merged clean; ds-vue index + examples/README: unioned both sides'' additions). Full regen + fresh token-graph rebuild surfaced and fixed one latent pre-existing defect (Angular Skeleton still had the pre-fix HTML-escaped aria-* conditional). generate:check 49/49, governed:rail overall=pass, root typecheck clean, zero conflict markers repo-wide.'
 created_at: '2026-07-01T16:02:55.555Z'
-updated_at: '2026-07-01T16:02:55.555Z'
+updated_at: '2026-07-01T16:11:21.953Z'
 blast_radius:
   modules:
     - ds-codegen
