@@ -1372,6 +1372,22 @@ function renderAngularDomNode(
     attrs.push(`[style.${varName}]="${valueExpr}"`);
   }
 
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: propertyBindings
+  // are DOM-property-only facts (e.g. `indeterminate`) with no HTML
+  // attribute form. Angular's bare `[key]="expr"` syntax already binds a
+  // DOM property directly (not via setAttribute) — the same mechanism
+  // already used for `[checked]`/`[disabled]`/`[value]` above via
+  // `angularAttrBinding`'s default branch. No ElementRef/effect() escape
+  // hatch is needed: reusing `renderAngularBinding` guarantees these keys
+  // never take the `[attr.x]` branch (they aren't `data-`/`aria-` prefixed
+  // and won't appear in ANGULAR_ATTR_BINDING_OVERRIDES_BY_TAG), so the
+  // property (not attribute) form is what gets emitted.
+  for (const [key, expr] of Object.entries(node.propertyBindings)) {
+    const rendered = renderAngularBinding(key, expr, ctx, node.tag);
+    if (rendered === null) continue;
+    attrs.push(rendered);
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
     if (ctx.autoDismissPause) {
@@ -1734,17 +1750,30 @@ function renderAngularBinding(
       return angularChannelEventBinding(eventName, ch, tag);
     }
     case "predicate": {
-      // BINDING-EXPRESSION-V2-PREDICATE-01.
+      // BINDING-EXPRESSION-V2-PREDICATE-01. `lowered` is already a valid
+      // Angular template-expression string (comparison operators, prop
+      // accessors, JSON.stringify'd literals with real embedded quotes) —
+      // NOT HTML text. escapeAngularAttr would corrupt embedded `"` (e.g.
+      // from a literal operand) into `&quot;`, which Angular's expression
+      // parser reads as literal entity characters, not a quote — breaking
+      // the expression (confirmed via runtime probe: aria-checked read
+      // "false" for a checked, non-indeterminate Checkbox instead of
+      // "true"). The outer `[attr]="..."` delimiter is parsed by
+      // Angular's own template compiler, same as the unescaped channel/
+      // prop branches above (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+      // INDETERMINATE-01 found this via Checkbox's aria-checked, the
+      // first conditional binding with a literal string operand used in
+      // attribute position).
       const lowered = renderAngularPredicate(expr, ctx);
       return lowered === null
         ? null
-        : `${angularAttrBinding(attr, tag)}="${escapeAngularAttr(lowered)}"`;
+        : `${angularAttrBinding(attr, tag)}="${lowered}"`;
     }
     case "conditional": {
       const lowered = renderAngularBindingValue(expr, ctx);
       return lowered === null
         ? null
-        : `${angularAttrBinding(attr, tag)}="${escapeAngularAttr(lowered)}"`;
+        : `${angularAttrBinding(attr, tag)}="${lowered}"`;
     }
   }
 }
@@ -1762,7 +1791,20 @@ function renderAngularBindingValue(
     case "prop":
       return appendPath(angularPropAccessor(expr.prop, ctx), expr.path);
     case "literal":
-      return JSON.stringify(expr.value);
+      // Single-quoted, not JSON.stringify's double-quoted form: this
+      // result gets spliced into `[attr]="..."` (conditional/predicate/
+      // style callers), a "-delimited Angular template attribute. A
+      // double-quoted literal would prematurely close that attribute for
+      // Angular's template lexer, which reads attribute values with an
+      // HTML-attribute tokenizer BEFORE parsing the expression inside —
+      // confirmed via a runtime probe on Checkbox's aria-checked
+      // conditional (the first literal-string operand used in attribute
+      // position): the "false"-branch silently evaluated wrong because
+      // `&quot;` inside the parsed expression is literal entity text, not
+      // a quote character (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+      // INDETERMINATE-01). Single quotes have no such collision in any
+      // of this function's call sites.
+      return `'${expr.value.replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
     case "iterationLocal": {
       const name = angularIterationLocalName(expr.local, ctx);
       return name ? appendPath(name, expr.path) : null;

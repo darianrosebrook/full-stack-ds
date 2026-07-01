@@ -15,6 +15,7 @@ function node(partial: Partial<DomNodeIR>): DomNodeIR {
     part: undefined,
     attrs: {},
     bindings: {},
+    propertyBindings: {},
     events: {},
     content: undefined,
     children: [],

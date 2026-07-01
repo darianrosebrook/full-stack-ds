@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type InputHTMLAttributes, type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode, useEffect, useRef } from "react";
 import { Stack } from "../../primitives";
 import { useCheckbox } from "./useCheckbox";
 import "./Checkbox.css";
@@ -66,8 +66,15 @@ export function Checkbox({
     .filter(Boolean)
     .join(" ");
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.indeterminate = Boolean(indeterminate);
+    }
+  }, [indeterminate]);
+
   return (
-  <Stack layout="native" as="input" className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} role="checkbox" data-testid={testId} {...rest} />
+  <Stack layout="native" as="input" className={`${classNames}`} type="checkbox" onChange={(e) => setChecked(e.target.checked)} checked={checked} disabled={disabled} name={name} value={value} aria-checked={(indeterminate ? "mixed" : checked) as "mixed" | "true" | "false" | boolean} role="checkbox" data-testid={testId} {...rest} ref={inputRef} />
   );
 }
 // @generated:end

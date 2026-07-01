@@ -6,7 +6,10 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { buildComponentTestPlan } from "../../test-plan.js";
+import {
+  buildComponentTestPlan,
+  findIndeterminateAriaCheckedFact,
+} from "../../test-plan.js";
 import { isSurfaceComponent } from "./surface-emit.js";
 import { generateReactSurfaceTest } from "./surface-tests.js";
 
@@ -267,6 +270,56 @@ export function generateReactTest(ir: ComponentIR): string {
       `    fireEvent.click(screen.getByTestId("${plan.testId}"));`,
     );
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
+    lines.push(`  });`);
+  }
+
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: durable runtime
+  // proof that indeterminate lowers to a real DOM-property reflection (not
+  // an attribute) and aria-checked reflects the tri-state. Gated on the IR
+  // fact (propertyBindings.indeterminate + an aria-checked "mixed"
+  // conditional coexisting on the same node), not the component name — any
+  // future contract with this same fact pattern gets this test for free.
+  const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
+  if (indeterminateFact) {
+    lines.push(``);
+    lines.push(
+      `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
+    );
+    lines.push(
+      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
+    );
+    lines.push(
+      `    const el = screen.getByTestId("${plan.testId}") as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
+    lines.push(`  });`);
+
+    // Reactive-update ratchet: the mount-only test above proves the
+    // property is written once, but React's useEffect-based reflection
+    // (and every other framework's own reactivity mechanism) must also
+    // re-apply on a prop change from true -> false, not just on first
+    // render. Without this, a lowering that only writes the DOM property
+    // in a constructor/mount hook (no dependency-tracked update path)
+    // would pass the test above and still be broken for real usage.
+    lines.push(``);
+    lines.push(
+      `  it("re-applies .${indeterminateFact.propertyKey} when the prop changes from true to false, and aria-checked reflects checked state again", () => {`,
+    );
+    lines.push(
+      `    const { rerender } = render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
+    );
+    lines.push(
+      `    const el = screen.getByTestId("${plan.testId}") as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(
+      `    rerender(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs}${closer});`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(false);`);
+    lines.push(
+      `    expect(el.getAttribute("aria-checked")).toBe("false");`,
+    );
     lines.push(`  });`);
   }
 

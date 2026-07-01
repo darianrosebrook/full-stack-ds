@@ -266,6 +266,22 @@ export interface ContractDomNode {
    */
   bindings?: Record<string, string>;
   /**
+   * DOM-property-only bindings, keyed by property name (e.g.
+   * `"indeterminate"`). For facts with no HTML attribute equivalent at
+   * all — a JS-only DOM property that must be set imperatively
+   * (`el.indeterminate = true`), never via an HTML attribute or any
+   * framework's template-attribute binding syntax. Distinct from
+   * `bindings` because every attribute-binding lowering (JSX prop, Vue
+   * `:attr`, Angular `[attr]`, Lit `?attr=`, Svelte `attr=`) writes an
+   * HTML *attribute* — the wrong mechanism here. Each emitter instead
+   * applies these via its ref/lifecycle idiom (e.g. React `useRef` +
+   * `useEffect`). `bindings.indeterminate` hard-fails at IR-build,
+   * redirecting authors here (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+   * INDETERMINATE-01) — the same "wrong bag, hard fail" pattern
+   * `bindings.onX`/`bindings.children` already use for events/content.
+   */
+  properties?: Record<string, string>;
+  /**
    * Event bindings keyed by *unprefixed* event name (`"click"`, `"input"`,
    * `"change"`, ...). Each emitter lowers to its framework idiom:
    *   React  → `onClick={prop}`

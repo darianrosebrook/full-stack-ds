@@ -11,7 +11,10 @@
  */
 import type { ComponentIR, NormalizedChannelIR, DomNodeIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { buildComponentTestPlan } from "../../test-plan.js";
+import {
+  buildComponentTestPlan,
+  findIndeterminateAriaCheckedFact,
+} from "../../test-plan.js";
 import { isCompoundStateContainer } from "../react/hook-source.js";
 
 /**
@@ -584,6 +587,60 @@ export function generateLitTest(ir: ComponentIR): string {
         lines.push(`  });`);
       }
     }
+  }
+
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: durable runtime
+  // proof that indeterminate lowers to a real DOM-property reflection (not
+  // an attribute) and aria-checked reflects the tri-state. Gated on the IR
+  // fact (propertyBindings.indeterminate + an aria-checked "mixed"
+  // conditional coexisting on the same node), shared with React/Vue/
+  // Svelte/Angular's generators so any future contract with this same
+  // fact pattern gets this test for free.
+  const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
+  if (indeterminateFact) {
+    lines.push(``);
+    lines.push(
+      `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", async () => {`,
+    );
+    lines.push(
+      `    const { element } = await renderElement("${elementName}", { "${indeterminateFact.propertyKey}": true });`,
+    );
+    lines.push(
+      `    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
+    lines.push(`  });`);
+
+    // Reactive-update ratchet: the mount-only test above can't distinguish
+    // "the binding is reactive" from "the binding happened to write the
+    // right value once at mount." Sets the reactive property directly
+    // (mirroring this file's own renderElement helper and the pre-existing
+    // "reflects <channel>=true" tests above), then requestUpdate() +
+    // await updateComplete — LitElement's own API for flushing a property
+    // change through the real reactive-update pipeline. This genuinely
+    // falsifies a mount-only property write: a one-time write would leave
+    // el.indeterminate stuck at `true` after setting the property to
+    // false below.
+    lines.push(``);
+    lines.push(
+      `  it("re-applies .${indeterminateFact.propertyKey} when the property changes from true to false, and aria-checked reflects checked state again", async () => {`,
+    );
+    lines.push(
+      `    const { element } = await renderElement("${elementName}", { "${indeterminateFact.propertyKey}": true });`,
+    );
+    lines.push(
+      `    const el = element.shadowRoot?.firstElementChild as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(
+      `    (element as unknown as Record<string, boolean>)["${indeterminateFact.propertyKey}"] = false;`,
+    );
+    lines.push(`    (element as LitTestElement).requestUpdate?.();`);
+    lines.push(`    await (element as LitTestElement).updateComplete;`);
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(false);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("false");`);
+    lines.push(`  });`);
   }
 
   lines.push(`});`);
