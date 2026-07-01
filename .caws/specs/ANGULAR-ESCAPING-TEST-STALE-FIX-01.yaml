@@ -20,7 +20,7 @@ acceptance:
   - id: A1
     given: 'the BINDING-EXPRESSION-V2-CONDITIONAL-01 dynamic-root-role fixture'
     when: 'generateAngularComponentSource(ir) runs'
-    then: 'the test asserts the current, correct single-quoted output ([attr.role]="(decorative ? '"'"'presentation'"'"' : '"'"'status'"'"')"), not the stale HTML-entity-escaped form.'
+    then: "the test asserts the current, correct single-quoted output ([attr.role]=\"(decorative ? 'presentation' : 'status')\"), not the stale HTML-entity-escaped form."
   - id: A2
     given: 'the fix'
     when: 'pnpm exec vitest run src/frameworks/iteration-bindings.test.ts runs (from packages/ds-codegen)'
