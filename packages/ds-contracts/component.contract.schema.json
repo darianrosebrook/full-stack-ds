@@ -345,7 +345,12 @@
         "bindings": {
           "type": "object",
           "additionalProperties": { "type": "string" },
-          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\". Event handlers belong under `events`; inner content under `content`. Legacy authoring with `bindings.onX` or `bindings.children`/`bindings.textContent` is auto-translated by the IR builder but new contracts should use the canonical fields."
+          "description": "Dynamic *attribute* bindings keyed by attribute name (e.g. `aria-label`, `disabled`, `src`). Values use the binding-expression mini-language: \"prop:<name>\", \"channel:<name>.value\", \"channel:<name>.onChange\", \"channel:<name>.defaultValue\", or \"literal:<text>\". Event handlers belong under `events`; inner content under `content`; JS-only DOM properties (no HTML attribute equivalent, e.g. `indeterminate`) belong under `properties`. Legacy authoring with `bindings.onX` or `bindings.children`/`bindings.textContent` hard-fails at IR-build with a redirect message (IR-DOM-BINDING-CAPABILITY-01/4C removed the auto-translate path); `bindings.indeterminate` hard-fails the same way, redirecting to `properties.indeterminate`."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "DOM-property-only bindings — for facts that must be set via an imperative JS property assignment on the live element (e.g. `el.indeterminate = true`), never via an HTML attribute or template-attribute binding (`indeterminate` has no HTML attribute form at all; JSX/Vue/Svelte/Angular/Lit template-attribute syntax cannot express it). Values use the same binding-expression mini-language as `bindings`. Distinct from `bindings` because every attribute-binding lowering path (JSX prop, Vue `:attr`, Angular `[attr]`, Lit `?attr=`, Svelte `attr=`) writes an HTML attribute, which is the wrong mechanism for a property-only fact — each framework emitter instead applies this via its ref/lifecycle idiom (e.g. React `useRef`+`useEffect`)."
         },
         "events": {
           "type": "object",

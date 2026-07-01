@@ -50,6 +50,13 @@ describe("Checkbox — unit", () => {
     await userEvent.setup().click(screen.getByTestId("checkbox"));
     expect(onChangeSpy).toHaveBeenCalled();
   });
+
+  it("sets .indeterminate as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {
+    render(<Checkbox data-testid="checkbox" indeterminate />);
+    const el = screen.getByTestId("checkbox") as HTMLInputElement;
+    expect(el.indeterminate).toBe(true);
+    expect(el.getAttribute("aria-checked")).toBe("mixed");
+  });
 });
 
 describe("Checkbox — accessibility", () => {

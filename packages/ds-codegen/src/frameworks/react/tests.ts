@@ -4,11 +4,53 @@
  * Test generation derives every framework-neutral fact from `ComponentIR`;
  * only React Testing Library / vitest-axe shape lives here.
  */
-import type { ComponentIR } from "../../ir.js";
+import type { BindingExpression, ComponentIR, DomNodeIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import { buildComponentTestPlan } from "../../test-plan.js";
 import { isSurfaceComponent } from "./surface-emit.js";
 import { generateReactSurfaceTest } from "./surface-tests.js";
+
+/**
+ * DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: find every node
+ * carrying a `propertyBindings.indeterminate` entry paired with an
+ * `aria-checked` attribute binding whose conditional true-branch is the
+ * literal "mixed" — the specific fact pattern this spec's A5 proves, not a
+ * name check on the component. Returns the node's `part` (or `tag` when
+ * unpartnamed) for building the getByTestId/getByRole lookup in the
+ * generated assertion.
+ */
+interface IndeterminateAriaCheckedNode {
+  propertyKey: string;
+}
+
+function findIndeterminateAriaCheckedFact(
+  node: DomNodeIR | null | undefined,
+): IndeterminateAriaCheckedNode | undefined {
+  if (!node) return undefined;
+  const hasIndeterminateProperty = Object.keys(node.propertyBindings).some(
+    (key) => key === "indeterminate",
+  );
+  const ariaChecked = node.bindings["aria-checked"];
+  const hasMixedConditional =
+    ariaChecked !== undefined &&
+    ariaChecked.kind === "conditional" &&
+    isMixedLiteral(ariaChecked.whenTrue, ariaChecked.whenFalse);
+  if (hasIndeterminateProperty && hasMixedConditional) {
+    return { propertyKey: "indeterminate" };
+  }
+  for (const child of node.children) {
+    const found = findIndeterminateAriaCheckedFact(child);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+function isMixedLiteral(a: BindingExpression, b: BindingExpression): boolean {
+  return (
+    (a.kind === "literal" && a.value === "mixed") ||
+    (b.kind === "literal" && b.value === "mixed")
+  );
+}
 
 /**
  * Map a channel `valueType` to a placeholder JS literal for use in
@@ -267,6 +309,29 @@ export function generateReactTest(ir: ComponentIR): string {
       `    fireEvent.click(screen.getByTestId("${plan.testId}"));`,
     );
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
+    lines.push(`  });`);
+  }
+
+  // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: durable runtime
+  // proof that indeterminate lowers to a real DOM-property reflection (not
+  // an attribute) and aria-checked reflects the tri-state. Gated on the IR
+  // fact (propertyBindings.indeterminate + an aria-checked "mixed"
+  // conditional coexisting on the same node), not the component name — any
+  // future contract with this same fact pattern gets this test for free.
+  const indeterminateFact = findIndeterminateAriaCheckedFact(ir.dom);
+  if (indeterminateFact) {
+    lines.push(``);
+    lines.push(
+      `  it("sets .${indeterminateFact.propertyKey} as a DOM property (not an attribute) and lowers aria-checked to mixed", () => {`,
+    );
+    lines.push(
+      `    render(<${plan.name} data-testid="${plan.testId}"${requiredPropsAttrs} ${indeterminateFact.propertyKey}${closer});`,
+    );
+    lines.push(
+      `    const el = screen.getByTestId("${plan.testId}") as HTMLInputElement;`,
+    );
+    lines.push(`    expect(el.${indeterminateFact.propertyKey}).toBe(true);`);
+    lines.push(`    expect(el.getAttribute("aria-checked")).toBe("mixed");`);
     lines.push(`  });`);
   }
 
