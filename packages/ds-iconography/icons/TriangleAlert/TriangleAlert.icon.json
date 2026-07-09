@@ -1,0 +1,111 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "triangle-alert",
+  "displayName": "Triangle Alert",
+  "namespace": "fsds.icon",
+  "description": "Warning triangle with exclamation mark for caution and alert states.",
+  "category": "status",
+  "tags": ["alert", "warning", "caution", "exclamation", "icon"],
+  "aliases": ["warning-triangle", "exclamation-triangle"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "triangle-alert-16",
+      "description": "Warning triangle authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 2.25L14.5 13.25H1.5L8 2.25Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 6.5V9",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        },
+        {
+          "d": "M8 11.25H8.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-triangle-alert-16",
+        "android": "ui_ic_triangle_alert_16dp",
+        "ios": "triangle-alert-16",
+        "react": "TriangleAlertIcon",
+        "svelte": "TriangleAlertIcon",
+        "reactNative": "TriangleAlertIcon",
+        "swift": "TriangleAlertIcon",
+        "kotlin": "TriangleAlertIcon"
+      }
+    },
+    "24": {
+      "name": "triangle-alert-24",
+      "description": "Warning triangle authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 3.5L21.5 19.5H2.5L12 3.5Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 9.5V14",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        },
+        {
+          "d": "M12 16.75H12.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-triangle-alert-24",
+        "android": "ui_ic_triangle_alert_24dp",
+        "ios": "triangle-alert-24",
+        "react": "TriangleAlertIcon",
+        "svelte": "TriangleAlertIcon",
+        "reactNative": "TriangleAlertIcon",
+        "swift": "TriangleAlertIcon",
+        "kotlin": "TriangleAlertIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01; heals the pre-existing Icon.usage.jsonl reference."
+  }
+}

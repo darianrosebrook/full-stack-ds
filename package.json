@@ -23,6 +23,7 @@
     "docs:check-claims": "node scripts/docs-claims-check.mjs",
     "docs:check-claims:fix": "node scripts/docs-claims-check.mjs --fix",
     "iconography:build": "pnpm --filter @full-stack-ds/iconography run build",
+    "iconography:build:check": "pnpm --filter @full-stack-ds/iconography run build:check",
     "iconography:validate": "pnpm --filter @full-stack-ds/iconography run validate",
     "governed:rail": "pnpm run generate -- --target=all && node packages/ds-codegen/dist/validation/validate-cli.js --require-artifact-manifest",
     "governed:rail:changed": "pnpm run generate -- --target=all && node packages/ds-codegen/dist/validation/validate-cli.js --require-artifact-manifest --scope-to-git-range origin/main...HEAD",

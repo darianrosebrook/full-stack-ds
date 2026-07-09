@@ -5,17 +5,24 @@
   "type": "module",
   "description": "Governed icon contracts and target projection emitters for Full Stack DS.",
   "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.mjs"
+    },
     "./schema": "./icon.contract.schema.json",
     "./icons/*": "./icons/*",
     "./generated/*": "./generated/*"
   },
   "files": [
+    "index.mjs",
+    "index.d.ts",
     "icon.contract.schema.json",
     "icons",
     "generated"
   ],
   "scripts": {
     "build": "node build/build.mjs",
+    "build:check": "node build/build.mjs && git diff --exit-code -- index.mjs index.d.ts",
     "validate": "node build/build.mjs --validate-only"
   }
 }
