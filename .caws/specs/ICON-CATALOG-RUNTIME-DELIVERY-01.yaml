@@ -1,0 +1,40 @@
+id: ICON-CATALOG-RUNTIME-DELIVERY-01
+title: 'Icon catalog runtime delivery: committed export module + Icon name/size catalog lookup across five frameworks'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-09T23:47:45.634Z'
+updated_at: '2026-07-09T23:47:45.634Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-iconography'
+    - 'packages/ds-contracts/components/Icon'
+    - 'packages/ds-contracts/component.contract.schema.json'
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-react/src/components/Icon'
+    - 'packages/ds-vue/src/components/Icon'
+    - 'packages/ds-svelte/src/components/Icon'
+    - 'packages/ds-angular/src/components/Icon'
+    - 'packages/ds-lit/src/components/Icon'
+    - 'src/views/ComponentStandardsView.tsx'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'icon-export-module'
+    type: schema
+    path: 'packages/ds-iconography/index.d.ts'
+  - name: 'icon-name-size-lookup'
+    type: behavior
+    path: 'packages/ds-contracts/components/Icon/Icon.contract.json'
