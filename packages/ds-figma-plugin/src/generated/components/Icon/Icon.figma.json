@@ -19,30 +19,21 @@
   ],
   "props": [
     {
-      "name": "icon",
-      "safeName": "icon",
-      "type": "IconDefinition",
+      "name": "name",
+      "safeName": "name",
+      "type": "string",
       "required": true,
-      "description": "Icon definition object (name + glyph data).",
+      "description": "Canonical icon name resolved against the @full-stack-ds/iconography catalog (e.g. \"check\", \"circle\"). An unknown name renders no glyph.",
       "defaultExpr": null,
       "nodeKind": null
     },
     {
-      "name": "width",
-      "safeName": "width",
-      "type": "number",
+      "name": "size",
+      "safeName": "size",
+      "type": "\"sm\" | \"md\" | \"lg\" | \"xl\"",
       "required": false,
-      "description": "Pixel width of the rendered glyph.",
-      "defaultExpr": "20",
-      "nodeKind": null
-    },
-    {
-      "name": "height",
-      "safeName": "height",
-      "type": "number",
-      "required": false,
-      "description": "Pixel height of the rendered glyph.",
-      "defaultExpr": "20",
+      "description": "Rendered glyph size. Maps to pixels (sm=16, md=20, lg=24, xl=32 — mirroring the icon.size token scale) and selects the nearest authored size variant.",
+      "defaultExpr": "\"md\"",
       "nodeKind": null
     }
   ],

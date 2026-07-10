@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
+import { resolveIcon } from "@full-stack-ds/iconography";
 // @generated:end
 
 // @custom:start imports
@@ -8,7 +9,7 @@ import { computed } from "vue";
 // @custom:end
 
 // @generated:start types
-export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown };
+
 // @generated:end
 
 // @custom:start types
@@ -17,9 +18,8 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 
 // @generated:start props
 interface Props {
-  icon: IconDefinition;
-  width?: number;
-  height?: number;
+  name: string;
+  size?: "sm" | "md" | "lg" | "xl";
   class?: string;
   "data-testid"?: string;
 }
@@ -27,8 +27,7 @@ interface Props {
 
 // @generated:start defineProps
 const props = withDefaults(defineProps<Props>(), {
-  width: 20,
-  height: 20,
+  size: "md",
 });
 // @generated:end
 
@@ -39,6 +38,12 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start iconGlyph
+const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg": 24, "xl": 32 };
+const iconGlyphPx = computed(() => ICON_GLYPH_SIZE_HINTS[props.size]);
+const iconGlyph = computed(() => resolveIcon(props.name, iconGlyphPx.value ?? Number.NaN));
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -46,9 +51,8 @@ const classNames = computed(() => [
 
 <template>
   <span :class="classNames" aria-hidden="true" :data-testid="props['data-testid']">
-    <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" :width="props.width" :height="props.height">
-      <circle cx="8.5" cy="8.5" r="8" stroke="currentColor" stroke-linecap="round" stroke-dasharray="2 4"></circle>
-      <circle cx="8.5" cy="8.5" r="3" stroke="currentColor" stroke-linecap="round" stroke-dasharray=".125 3"></circle>
+    <svg v-if="iconGlyph" fill="none" xmlns="http://www.w3.org/2000/svg" :data-fsds-icon="iconGlyph.name" :viewBox="iconGlyph.viewBox" :width="iconGlyphPx ?? iconGlyph.size" :height="iconGlyphPx ?? iconGlyph.size">
+      <path v-for="(glyphPath, glyphIndex) in iconGlyph.paths" :key="glyphIndex" :d="glyphPath.d" :fill="glyphPath.fill" :stroke="glyphPath.stroke" :stroke-width="glyphPath.strokeWidth" :stroke-linecap="glyphPath.strokeLineCap" :stroke-linejoin="glyphPath.strokeLineJoin" :stroke-dasharray="glyphPath.strokeDasharray" :fill-rule="glyphPath.fillRule" :clip-rule="glyphPath.clipRule" />
     </svg>
   </span>
 </template>

@@ -67,6 +67,13 @@ import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
+  collectIconGlyphNodes,
+  ICON_GLYPH_PATH_ATTRS,
+  ICONOGRAPHY_MODULE,
+  iconGlyphPxExpr,
+  iconGlyphSizeHintsLiteral,
+} from "../icon-glyph.js";
+import {
   getGroupHostOrnamentPart,
   getGroupHostPart,
   getInteractiveItemPart,
@@ -1092,6 +1099,13 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       `import ${refImport.identifier} from "${refImport.specifier}";`,
     );
   }
+  // iconGlyph: import the catalog resolver from the committed package-root
+  // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
+  // Structural — driven by IR `iconGlyph` facts, never per-component lore.
+  const iconGlyphNodes = collectIconGlyphNodes(ir.dom);
+  if (iconGlyphNodes.length > 0) {
+    importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = emitNonReactTypeAliases(ir).join("\n");
@@ -1173,6 +1187,47 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     `].filter(Boolean).join(" "));`,
   ].join("\n");
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get a module-scope
+  // size-hints const plus a pair of `computed()` values resolving the
+  // catalog lookup. Vue idiom: reactive values are `computed(() => ...)`
+  // refs, dereferenced with `.value` in script and auto-unwrapped in the
+  // template. A miss (unknown icon name) leaves `iconGlyph.value`
+  // undefined and the render branch's `v-if` emits nothing. `Number.NaN`
+  // deliberately matches no authored size, so resolveIcon falls back to
+  // the smallest authored variant.
+  const iconGlyphIdents = new Map<
+    DomNodeIR,
+    { glyphIdent: string; pxIdent: string | undefined }
+  >();
+  const iconGlyphLines: string[] = [];
+  for (const { node, glyph, suffix } of iconGlyphNodes) {
+    const hintsIdent = glyph.sizeHints
+      ? `ICON_GLYPH_SIZE_HINTS${suffix}`
+      : undefined;
+    if (hintsIdent) {
+      iconGlyphLines.push(
+        `const ${hintsIdent}: Record<string, number> = ` +
+          `${iconGlyphSizeHintsLiteral(glyph.sizeHints!)};`,
+      );
+    }
+    const sizeAccessor = glyph.sizePropName
+      ? `props.${propAccess(glyph.sizePropName)}`
+      : undefined;
+    const pxExpr = iconGlyphPxExpr(glyph, sizeAccessor, hintsIdent);
+    const glyphIdent = `iconGlyph${suffix}`;
+    const pxIdent = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
+    if (pxIdent) {
+      iconGlyphLines.push(`const ${pxIdent} = computed(() => ${pxExpr});`);
+    }
+    iconGlyphLines.push(
+      `const ${glyphIdent} = computed(() => resolveIcon(` +
+        `props.${propAccess(glyph.namePropName)}, ` +
+        `${pxIdent ? `${pxIdent}.value ?? Number.NaN` : "Number.NaN"}));`,
+    );
+    iconGlyphIdents.set(node, { glyphIdent, pxIdent });
+  }
+  const iconGlyphBody = iconGlyphLines.join("\n");
+
   const overlayClickTrigger = ir.behavior.normalizedDismissalTriggers.find(
     (t) => t.event === "overlayClick",
   );
@@ -1184,6 +1239,7 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
+    iconGlyphIdents,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `behavior.set${capitalize(booleanChannel.name)}`,
@@ -1216,6 +1272,12 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       : []),
     { kind: "generated", id: "classes", body: classesBody },
     blank(),
+    ...(iconGlyphBody
+      ? [
+          { kind: "generated" as const, id: "iconGlyph", body: iconGlyphBody },
+          blank(),
+        ]
+      : []),
     { kind: "custom", id: "trailing", body: "" },
   ];
 
@@ -1262,6 +1324,16 @@ interface VueRenderContext {
    * level. Lookup target for `iterationLocal`-kind bindings.
    */
   enclosingIteration?: IterationIR;
+  /**
+   * Local identifiers for nodes carrying `iconGlyph`
+   * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity.
+   * `glyphIdent` names the `computed()` ref holding the `resolveIcon(...)`
+   * result; `pxIdent` names the requested-pixel `computed()` ref
+   * (undefined when the glyph has no size binding). Populated once at the
+   * root call from `collectIconGlyphNodes`; empty when the tree has no
+   * glyph nodes.
+   */
+  iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
 }
 
 function renderVueDomNode(
@@ -1400,6 +1472,30 @@ function renderVueDomNode(
     attrs.push(rendered);
   }
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: a glyph node's svg surface comes from
+  // the resolved catalog record — data-fsds-icon + viewBox + width/height
+  // attrs here, one <path> per glyph path record as the only content, and a
+  // `v-if` null-guard so an unknown icon name renders nothing.
+  const iconGlyphEntry = ctx.iconGlyphIdents?.get(node);
+  const iconGlyphChildLines: string[] = [];
+  if (iconGlyphEntry) {
+    const { glyphIdent, pxIdent } = iconGlyphEntry;
+    attrs.push(`:data-fsds-icon="${glyphIdent}.name"`);
+    attrs.push(`:viewBox="${glyphIdent}.viewBox"`);
+    const sizeExpr = pxIdent
+      ? `${pxIdent} ?? ${glyphIdent}.size`
+      : `${glyphIdent}.size`;
+    attrs.push(`:width="${sizeExpr}"`);
+    attrs.push(`:height="${sizeExpr}"`);
+    const childPad = " ".repeat(indent + 2);
+    const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
+      ({ recordKey, svgAttr }) => `:${svgAttr}="glyphPath.${recordKey}"`,
+    ).join(" ");
+    iconGlyphChildLines.push(
+      `${childPad}<path v-for="(glyphPath, glyphIndex) in ${glyphIdent}.paths" :key="glyphIndex" ${pathAttrs} />`,
+    );
+  }
+
   if (ctx.isRoot) {
     if (classParts.length > 0) {
       // The root node's BEM class is included in `classNames` (computed).
@@ -1459,6 +1555,13 @@ function renderVueDomNode(
     }
     const finalExpr = node.ifNegated ? `!${expr}` : expr;
     attrs.unshift(`v-if="${finalExpr}"`);
+  } else if (iconGlyphEntry) {
+    // iconGlyph null-guard: an unknown icon name resolves the computed ref
+    // to undefined and the svg (whose attrs dereference the glyph record)
+    // must not render at all. `iconGlyph` bindings and `if:` guards are
+    // mutually exclusive on the same node upstream, so this is a plain
+    // `else` — no coexistence case to reconcile.
+    attrs.unshift(`v-if="${iconGlyphEntry.glyphIdent}"`);
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: when iteration is set without an
@@ -1505,7 +1608,11 @@ function renderVueDomNode(
   const textChildLines = textChildren.map(
     (tc) => `${" ".repeat(indent + 2)}${tc}`,
   );
-  const allChildren = [...textChildLines, ...renderedChildren];
+  const allChildren = [
+    ...textChildLines,
+    ...renderedChildren,
+    ...iconGlyphChildLines,
+  ];
 
   // componentRef: render the referenced component by its PascalCase name.
   // Vue SFC templates resolve a PascalCase tag to the imported component;

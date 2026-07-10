@@ -48,6 +48,13 @@ import {
   isCompoundStateContainer,
   getGroupHostOrnamentPart,
 } from "../react/hook-source.js";
+import {
+  collectIconGlyphNodes,
+  ICON_GLYPH_PATH_ATTRS,
+  ICONOGRAPHY_MODULE,
+  iconGlyphPxExpr,
+  iconGlyphSizeHintsLiteral,
+} from "../icon-glyph.js";
 
 /**
  * Build the `static override styles = css\`…\`;` line(s) for a Lit
@@ -1145,6 +1152,12 @@ export function generateLitComponentSource(ir: ComponentIR): string {
 
 function generateDomTreeImports(ir: ComponentIR): string {
   const litImports = ["LitElement", "html", "css", "nothing"];
+  // iconGlyph: a glyph node's <path> children render via the `svg` tagged
+  // template, not `html` — an html-tagged SVG fragment does not render
+  // inside an <svg> element in Lit's template model (ICON-CATALOG-RUNTIME-
+  // DELIVERY-01). Structural — driven by IR `iconGlyph` facts.
+  const hasIconGlyph = collectIconGlyphNodes(ir.dom).length > 0;
+  if (hasIconGlyph) litImports.push("svg");
   const lines: string[] = [`import { ${litImports.join(", ")} } from 'lit';`];
   // Always include `property`; add `state` when the dom tree has a children
   // guard so the private _hasChildren reactive field can be declared.
@@ -1168,6 +1181,11 @@ function generateDomTreeImports(ir: ComponentIR): string {
     ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")
   ) {
     lines.push(`import { AutoDismissController } from '../../primitives/index.js';`);
+  }
+  // iconGlyph: import the catalog resolver from the committed package-root
+  // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
+  if (hasIconGlyph) {
+    lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
   }
   return lines.join("\n");
 }
@@ -1197,6 +1215,49 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     booleanChannel &&
     hasBehavior
   );
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get a module-scope
+  // size-hint const (when the glyph declares sizeHints) plus render()-local
+  // consts resolving the catalog lookup, keyed by node identity so
+  // `renderLitDomNode` can look them up when it reaches the glyph's `svg`
+  // node. Collected before the class opens so the hints const can live at
+  // module scope, mirroring the React emitter's placement.
+  const iconGlyphNodes = collectIconGlyphNodes(ir.dom);
+  const iconGlyphIdents = new Map<
+    DomNodeIR,
+    { glyphIdent: string; pxIdent: string | undefined }
+  >();
+  const iconGlyphRenderLocals = new Map<
+    DomNodeIR,
+    { pxExpr: string | undefined; nameAcc: string }
+  >();
+  const iconGlyphHintsLines: string[] = [];
+  for (const { node, glyph, suffix } of iconGlyphNodes) {
+    if (glyph.sizeHints) {
+      iconGlyphHintsLines.push(
+        `const ICON_GLYPH_SIZE_HINTS${suffix}: Record<string, number> = ` +
+          `${iconGlyphSizeHintsLiteral(glyph.sizeHints)};`,
+      );
+      iconGlyphHintsLines.push(``);
+    }
+    const glyphIdent = `iconGlyph${suffix}`;
+    const hintsIdent = glyph.sizeHints
+      ? `ICON_GLYPH_SIZE_HINTS${suffix}`
+      : undefined;
+    // `?? ""` because the Lit property is optional-typed even with a
+    // default — a bare `this.size` index into Record<string, number>
+    // fails TS2538.
+    const sizeAcc = glyph.sizePropName
+      ? `(${propAccessor(glyph.sizePropName)} ?? "")`
+      : undefined;
+    const pxExpr = iconGlyphPxExpr(glyph, sizeAcc, hintsIdent);
+    const pxIdent = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
+    iconGlyphIdents.set(node, { glyphIdent, pxIdent });
+    iconGlyphRenderLocals.set(node, {
+      pxExpr,
+      nameAcc: propAccessor(glyph.namePropName),
+    });
+  }
+
   const ctx: LitRenderContext = {
     classRecipe: ir.classRecipe.base,
     channelByName,
@@ -1208,6 +1269,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     ),
     hasOverlayClick,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
+    iconGlyphIdents: iconGlyphIdents.size > 0 ? iconGlyphIdents : undefined,
   };
   // Inject the contract's effective ARIA role onto the root node if the
   // contract didn't already pin one in `attrs.role`. Without this, components
@@ -1225,6 +1287,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   const hasChildrenGuard = treeHasChildrenGuard(ir.dom);
 
   const lines: string[] = [];
+  lines.push(...iconGlyphHintsLines);
   lines.push(`export class ${className} extends LitElement {`);
   lines.push(...litStaticStylesLine(ir));
   lines.push(``);
@@ -1415,6 +1478,25 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
 
   lines.push(``);
   lines.push(`  override render() {`);
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: body consts for each glyph node —
+  // the requested-pixel value (when the glyph has a size binding) and the
+  // resolved catalog record. A miss (unknown icon name) leaves the glyph
+  // const undefined and the render branch emits nothing. `Number.NaN`
+  // deliberately matches no authored size, so resolveIcon falls back to
+  // the smallest authored variant. Mirrors the React emitter's body consts.
+  for (const { node } of iconGlyphNodes) {
+    const entry = iconGlyphIdents.get(node);
+    const locals = iconGlyphRenderLocals.get(node);
+    if (!entry || !locals) continue;
+    const { glyphIdent, pxIdent } = entry;
+    if (pxIdent && locals.pxExpr !== undefined) {
+      lines.push(`    const ${pxIdent} = ${locals.pxExpr};`);
+    }
+    lines.push(
+      `    const ${glyphIdent} = resolveIcon(${locals.nameAcc}, ` +
+        `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"});`,
+    );
+  }
   lines.push(`    return html\`${template}\`;`);
   lines.push(`  }`);
   lines.push(`}`);
@@ -1539,6 +1621,15 @@ interface LitRenderContext {
    * `iterationLocal`-kind bindings.
    */
   enclosingIteration?: IterationIR;
+  /**
+   * Local identifiers for nodes carrying `iconGlyph`
+   * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity. `glyphIdent`
+   * names the `render()`-local const holding the `resolveIcon(...)` result;
+   * `pxIdent` names the requested-pixel const (undefined when the glyph has
+   * no size binding). Populated once at the root call from
+   * `collectIconGlyphNodes`; empty when the tree has no glyph nodes.
+   */
+  iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
 }
 
 function renderLitDomNode(
@@ -1582,6 +1673,45 @@ function renderLitDomNode(
       continue;
     }
     attrs.push(`${key}="${value.replace(/"/g, "&quot;")}"`);
+  }
+
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: a glyph node's svg surface comes
+  // from the resolved catalog record — data-fsds-icon + viewBox + width/
+  // height attrs plus one <path> per glyph path record as the only
+  // content, wrapped in a null-guard so an unknown icon name renders
+  // nothing. iconGlyph is mutually exclusive with children/content/
+  // iterate/componentRef/slot at IR-build, so this branch owns the full
+  // node lowering and returns directly rather than falling through the
+  // generic children/content/tag machinery below. Authored static attrs
+  // (fill, xmlns — already folded into `attrs` above) are preserved.
+  const iconGlyphEntry = ctx.iconGlyphIdents?.get(node);
+  if (iconGlyphEntry) {
+    const { glyphIdent, pxIdent } = iconGlyphEntry;
+    const sizeExpr = pxIdent
+      ? `${pxIdent} ?? ${glyphIdent}.size`
+      : `${glyphIdent}.size`;
+    const svgAttrs = [
+      ...attrs,
+      `data-fsds-icon=\${${glyphIdent}.name}`,
+      `viewBox=\${${glyphIdent}.viewBox}`,
+      `width=\${${sizeExpr}}`,
+      `height=\${${sizeExpr}}`,
+    ];
+    const pathChildPad = " ".repeat(indent + 2);
+    const pathAttrExprs = ICON_GLYPH_PATH_ATTRS.map(
+      ({ recordKey, svgAttr }) => `${svgAttr}=\${ifDefined(glyphPath.${recordKey})}`,
+    ).join(" ");
+    // SVG fragment children must be built with the `svg` tagged template,
+    // not `html` — an html-tagged <path> fragment does not render inside
+    // an <svg> element in Lit's template model.
+    const pathsExpr =
+      `\${${glyphIdent}.paths.map((glyphPath) => svg\`<path ${pathAttrExprs} />\`)}`;
+    const svgBody = [
+      `${pad}<${node.tag}${formatLitAttrs(svgAttrs)}>`,
+      `${pathChildPad}${pathsExpr}`,
+      `${pad}</${node.tag}>`,
+    ].join("\n");
+    return `${pad}\${${glyphIdent} ? svg\`\n${svgBody}\n${pad}\` : nothing}`;
   }
 
   // IR-DOM-BINDING-CAPABILITY-01: event bindings lower to Lit's

@@ -58,5 +58,37 @@ describe("Icon — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+describe("Icon — catalog glyph rendering (ICON-CATALOG-RUNTIME-DELIVERY-01)", () => {
+  it("renders the authored 16-grid check glyph at size=sm", () => {
+    const wrapper = mount(Icon as Component, { props: { name: "check", size: "sm" } });
+    const svg = wrapper.find('svg[data-fsds-icon="check"]');
+    expect(svg.exists()).toBe(true);
+    expect(svg.element.getAttribute("viewBox")).toBe("0 0 16 16");
+    expect(svg.element.getAttribute("width")).toBe("16");
+    const paths = svg.findAll("path");
+    expect(paths).toHaveLength(1);
+    // the exact authored path data, not just element presence
+    expect(paths[0].element.getAttribute("d")).toBe("M3.5 8.5L6.5 11.5L12.5 4.5");
+    expect(paths[0].element.getAttribute("stroke-linecap")).toBe("round");
+  });
 
+  it("floor-selects the 16-grid variant at size=md but renders at 20px", () => {
+    const wrapper = mount(Icon as Component, { props: { name: "check", size: "md" } });
+    const svg = wrapper.find('svg[data-fsds-icon="check"]');
+    expect(svg.element.getAttribute("viewBox")).toBe("0 0 16 16");
+    expect(svg.element.getAttribute("width")).toBe("20");
+  });
+
+  it("selects the authored 24-grid variant at size=lg", () => {
+    const wrapper = mount(Icon as Component, { props: { name: "check", size: "lg" } });
+    const svg = wrapper.find('svg[data-fsds-icon="check"]');
+    expect(svg.element.getAttribute("viewBox")).toBe("0 0 24 24");
+    expect(svg.find("path").element.getAttribute("d")).toBe("M5 12.5L9.5 17L19 6.5");
+  });
+
+  it("renders no svg at all for an unknown icon name", () => {
+    const wrapper = mount(Icon as Component, { props: { name: "does-not-exist" } });
+    expect(wrapper.find("svg").exists()).toBe(false);
+  });
+});
 // @custom:end

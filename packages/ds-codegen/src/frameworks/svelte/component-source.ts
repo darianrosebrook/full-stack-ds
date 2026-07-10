@@ -76,6 +76,13 @@ import {
   getGroupHostPart,
   getGroupHostOrnamentPart,
 } from "../react/hook-source.js";
+import {
+  collectIconGlyphNodes,
+  ICON_GLYPH_PATH_ATTRS,
+  ICONOGRAPHY_MODULE,
+  iconGlyphPxExpr,
+  iconGlyphSizeHintsLiteral,
+} from "../icon-glyph.js";
 
 // Props the Svelte emitter handles natively: `class` via `class: className`
 // destructuring, `children` via `import('svelte').Snippet`, `style` passthrough.
@@ -946,6 +953,13 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       `import ${refImport.identifier} from "${refImport.specifier}";`,
     );
   }
+  // iconGlyph: import the catalog resolver from the committed package-root
+  // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
+  // Structural — driven by IR `iconGlyph` facts, never per-component lore.
+  const iconGlyphNodes = collectIconGlyphNodes(ir.dom);
+  if (iconGlyphNodes.length > 0) {
+    importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
   const importsBody = importLines.join("\n");
 
   const typesBody = generateTypeAliases(ir);
@@ -994,6 +1008,47 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   }
   const hookBody = hookLines.join("\n");
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get a size-hints const
+  // (module-shape literal, scoped to the component instance like every
+  // other Svelte 5 rune declaration in this file) plus a `$derived`
+  // requested-pixel value and a `$derived` resolved catalog record. A miss
+  // (unknown icon name) leaves `iconGlyph` undefined and the template's
+  // `{#if}` guard renders nothing. `Number.NaN` deliberately matches no
+  // authored size, so `resolveIcon` falls back to the smallest authored
+  // variant.
+  const iconGlyphLines: string[] = [];
+  const iconGlyphIdents = new Map<
+    DomNodeIR,
+    { glyphIdent: string; pxIdent: string | undefined }
+  >();
+  for (const { node, glyph, suffix } of iconGlyphNodes) {
+    const glyphIdent = `iconGlyph${suffix}`;
+    const hintsIdent = glyph.sizeHints
+      ? `ICON_GLYPH_SIZE_HINTS${suffix}`
+      : undefined;
+    if (glyph.sizeHints && hintsIdent) {
+      iconGlyphLines.push(
+        `const ${hintsIdent}: Record<string, number> = ` +
+          `${iconGlyphSizeHintsLiteral(glyph.sizeHints)};`,
+      );
+    }
+    const sizeAccessor = glyph.sizePropName
+      ? jsAccessorFor(glyph.sizePropName)
+      : undefined;
+    const pxExpr = iconGlyphPxExpr(glyph, sizeAccessor, hintsIdent);
+    const pxIdent = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
+    if (pxIdent) {
+      iconGlyphLines.push(`const ${pxIdent} = $derived(${pxExpr});`);
+    }
+    const nameAccessor = jsAccessorFor(glyph.namePropName);
+    iconGlyphLines.push(
+      `const ${glyphIdent} = $derived(resolveIcon(${nameAccessor}, ` +
+        `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"}));`,
+    );
+    iconGlyphIdents.set(node, { glyphIdent, pxIdent });
+  }
+  const iconGlyphBody = iconGlyphLines.join("\n");
+
   const classRecipe = ir.classRecipe;
   const channelValuePropSet = new Set(channels.map((c) => c.valueProp));
   const classExprs: string[] = [`"${classRecipe.base}"`];
@@ -1039,6 +1094,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole ?? undefined,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
+    iconGlyphIdents,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `${hookVar}.set${capitalizeSvelte(booleanChannel.name)}`,
@@ -1067,6 +1123,12 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     ...(hookBody
       ? [
           { kind: "generated" as const, id: "hook", body: hookBody },
+          blank(),
+        ]
+      : []),
+    ...(iconGlyphBody
+      ? [
+          { kind: "generated" as const, id: "iconGlyph", body: iconGlyphBody },
           blank(),
         ]
       : []),
@@ -1102,6 +1164,15 @@ interface SvelteRenderContext {
   };
   overlayClickSetter?: string;
   overlayClickEnabledProp?: string;
+  /**
+   * Local identifiers for nodes carrying `iconGlyph`
+   * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity.
+   * `glyphIdent` names the `$derived` const holding the `resolveIcon(...)`
+   * result; `pxIdent` names the `$derived` requested-pixel const (undefined
+   * when the glyph has no size binding). Populated once at the root call
+   * from `collectIconGlyphNodes`; empty when the tree has no glyph nodes.
+   */
+  iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
   /**
    * Identifier names introduced by enclosing `{#each}` iterations. After
    * BINDING-EXPRESSION-V2-01 the binding-side `prop:X` accessor no
@@ -1309,8 +1380,44 @@ function renderSvelteDomNode(
     ? true
     : VOID_HTML_ELEMENTS_SVELTE.has(tag);
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: a glyph node's svg surface comes from
+  // the resolved catalog record — data-fsds-icon + viewBox + width/height
+  // attrs here, one <path> per glyph path record via {#each} as the svg's
+  // only content (the IR guarantees a glyph node has no other children),
+  // and (below) an `{#if}` guard so an unknown icon name renders nothing.
+  const iconGlyphEntry = ctx.iconGlyphIdents?.get(node);
+  let iconGlyphEachLines: string[] | null = null;
+  if (iconGlyphEntry) {
+    const { glyphIdent, pxIdent } = iconGlyphEntry;
+    attrs.push(`data-fsds-icon={${glyphIdent}.name}`);
+    attrs.push(`viewBox={${glyphIdent}.viewBox}`);
+    const sizeExpr = pxIdent
+      ? `${pxIdent} ?? ${glyphIdent}.size`
+      : `${glyphIdent}.size`;
+    attrs.push(`width={${sizeExpr}}`);
+    attrs.push(`height={${sizeExpr}}`);
+    const childPad = " ".repeat(indent + 2);
+    const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
+      ({ recordKey, svgAttr }) => `${svgAttr}={glyphPath.${recordKey}}`,
+    ).join(" ");
+    iconGlyphEachLines = [
+      `${childPad}{#each ${glyphIdent}.paths as glyphPath, glyphIndex (glyphIndex)}`,
+      `${childPad}  <path ${pathAttrs} />`,
+      `${childPad}{/each}`,
+    ];
+  }
+
   let body: string;
-  if (renderedChildren.length === 0 && isVoidEl) {
+  if (iconGlyphEntry && iconGlyphEachLines) {
+    // svg node with iconGlyph: the {#each} block is the only content —
+    // never merged with textContent/renderedChildren (mutually exclusive
+    // upstream in the IR builder).
+    body = [
+      `${pad}<${tag}${formatSvelteAttrs(attrs)}>`,
+      ...iconGlyphEachLines,
+      `${pad}</${tag}>`,
+    ].join("\n");
+  } else if (renderedChildren.length === 0 && isVoidEl) {
     body = `${pad}<${tag}${formatSvelteAttrs(attrs)} />`;
   } else if (renderedChildren.length === 0 && textContentExpr !== null) {
     // textContent binding without other children: inline the
@@ -1332,6 +1439,14 @@ function renderSvelteDomNode(
       ...renderedChildren,
       `${pad}</${tag}>`,
     ].join("\n");
+  }
+
+  // iconGlyph null-guard: an unknown icon name resolves to undefined and the
+  // svg (whose attrs dereference the glyph record) must not render at all.
+  if (iconGlyphEntry) {
+    body = [`${pad}{#if ${iconGlyphEntry.glyphIdent}}`, body, `${pad}{/if}`].join(
+      "\n",
+    );
   }
 
   let withIfGuard = body;
