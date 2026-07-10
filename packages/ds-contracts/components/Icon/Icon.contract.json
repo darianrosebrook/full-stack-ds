@@ -32,38 +32,19 @@
         {
           "tag": "svg",
           "attrs": {
-            "viewBox": "0 0 17 17",
             "fill": "none",
             "xmlns": "http://www.w3.org/2000/svg"
           },
-          "bindings": {
-            "width": "prop:width",
-            "height": "prop:height"
-          },
-          "children": [
-            {
-              "tag": "circle",
-              "attrs": {
-                "cx": "8.5",
-                "cy": "8.5",
-                "r": "8",
-                "stroke": "currentColor",
-                "stroke-linecap": "round",
-                "stroke-dasharray": "2 4"
-              }
-            },
-            {
-              "tag": "circle",
-              "attrs": {
-                "cx": "8.5",
-                "cy": "8.5",
-                "r": "3",
-                "stroke": "currentColor",
-                "stroke-linecap": "round",
-                "stroke-dasharray": ".125 3"
-              }
+          "iconGlyph": {
+            "nameFrom": "prop:name",
+            "sizeFrom": "prop:size",
+            "sizeHints": {
+              "sm": 16,
+              "md": 20,
+              "lg": 24,
+              "xl": 32
             }
-          ]
+          }
         }
       ]
     }
@@ -72,30 +53,18 @@
     "designed": {
       "members": [
         {
-          "name": "icon",
-          "propType": { "kind": "ref", "to": "IconDefinition" },
-          "description": "Icon definition object (name + glyph data).",
+          "name": "name",
+          "propType": { "kind": "string" },
+          "description": "Canonical icon name resolved against the @full-stack-ds/iconography catalog (e.g. \"check\", \"circle\"). An unknown name renders no glyph.",
           "required": true
         },
         {
-          "name": "width",
-          "propType": { "kind": "number" },
-          "description": "Pixel width of the rendered glyph.",
-          "default": 20
-        },
-        {
-          "name": "height",
-          "propType": { "kind": "number" },
-          "description": "Pixel height of the rendered glyph.",
-          "default": 20
+          "name": "size",
+          "propType": { "kind": "enum", "values": ["sm", "md", "lg", "xl"] },
+          "description": "Rendered glyph size. Maps to pixels (sm=16, md=20, lg=24, xl=32 — mirroring the icon.size token scale) and selects the nearest authored size variant.",
+          "default": "md"
         }
       ]
-    }
-  },
-  "types": {
-    "IconDefinition": {
-      "kind": "alias",
-      "alias": "{ iconName: string; prefix?: string; icon?: unknown }"
     }
   },
   "states": {

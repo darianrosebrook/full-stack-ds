@@ -414,6 +414,30 @@
           },
           "additionalProperties": false,
           "description": "CSS custom-property bindings on this element's runtime `style` attribute. Keys must match --fsds-<component>-<name>. Lowers to: React/Vue/Lit object-style; Svelte `style:--x={v}` directive; Angular `[style.--x]` binding. Mutually exclusive with a literal `style` attr on the same node."
+        },
+        "iconGlyph": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["nameFrom"],
+          "description": "Renders this `svg` node's viewBox and `<path>` children from the design-system icon catalog (`@full-stack-ds/iconography`), looked up at runtime by the bound name prop. The emitter stamps `data-fsds-icon=\"<resolved name>\"` on the svg and renders one `<path>` per glyph path record. Only valid on a `tag: \"svg\"` node; mutually exclusive with `children`, `content`, and `iterate`. When the lookup misses (unknown name), the svg is not rendered. Icon-name reference integrity for literal usages is enforced by generate:check against the built catalog.",
+          "properties": {
+            "nameFrom": {
+              "type": "string",
+              "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+              "description": "Binding naming the string-typed prop that carries the canonical icon name (e.g. \"prop:name\")."
+            },
+            "sizeFrom": {
+              "type": "string",
+              "pattern": "^prop:[A-Za-z_$][\\w$-]*$",
+              "description": "Binding naming the prop that carries the requested size. When `sizeHints` is present the prop's value is mapped through it to pixels; otherwise the value is used as a pixel number directly. Drives both authored-variant selection (resolveIcon) and the rendered svg width/height."
+            },
+            "sizeHints": {
+              "type": "object",
+              "additionalProperties": { "type": "number" },
+              "minProperties": 1,
+              "description": "Map from the size prop's enum values to pixel sizes (e.g. {\"sm\": 16, \"md\": 20, \"lg\": 24, \"xl\": 32}). Pixel values select the nearest authored glyph variant; they intentionally mirror the icon.size token scale — selection hints are contract semantics, rendered size still tracks these literal pixels."
+            }
+          }
         }
       }
     },

@@ -30,6 +30,13 @@ import { renderSections, type Section } from "../../preserve.js";
 import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
+  collectIconGlyphNodes,
+  ICON_GLYPH_PATH_ATTRS,
+  ICONOGRAPHY_MODULE,
+  iconGlyphPxExpr,
+  iconGlyphSizeHintsLiteral,
+} from "../icon-glyph.js";
+import {
   getGroupHostPart,
   getGroupHostOrnamentPart,
   getInteractiveItemPart,
@@ -158,6 +165,12 @@ export function generateReactComponentSource(
     importLines.push(
       `import { ${refImport.identifier} } from "${refImport.specifier}";`,
     );
+  }
+  // iconGlyph: import the catalog resolver from the committed package-root
+  // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
+  // Structural — driven by IR `iconGlyph` facts, never per-component lore.
+  if (collectIconGlyphNodes(ir.dom).length > 0) {
+    importLines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
   }
   if (isCompound || (ir.dom && ir.behavior.normalizedChannels.length > 0)) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}";`);
@@ -1387,7 +1400,21 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     hookOptionsLines.push(`    ${trigger.enabledByProp}`);
   }
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get module-scope size-hint
+  // maps plus body consts resolving the catalog lookup. Collected before the
+  // function opens so the hints const can live at module scope.
+  const iconGlyphNodes = collectIconGlyphNodes(ir.dom);
+
   const lines: string[] = [];
+  for (const { glyph, suffix } of iconGlyphNodes) {
+    if (glyph.sizeHints) {
+      lines.push(
+        `const ICON_GLYPH_SIZE_HINTS${suffix}: Record<string, number> = ` +
+          `${iconGlyphSizeHintsLiteral(glyph.sizeHints)};`,
+      );
+      lines.push(``);
+    }
+  }
   lines.push(`export function ${name}({`);
   lines.push(`  ${destructured.join(",\n  ")}`);
   lines.push(`}: ${name}Props) {`);
@@ -1468,6 +1495,35 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(`  const ${refName} = useRef<${elementType}>(null);`);
   }
 
+  // Body consts for each glyph node: the requested-pixel value (when the
+  // glyph has a size binding) and the resolved catalog record. A miss
+  // (unknown icon name) leaves the const undefined and the render branch
+  // emits nothing. `Number.NaN` deliberately matches no authored size, so
+  // resolveIcon falls back to the smallest authored variant.
+  const iconGlyphIdents = new Map<
+    DomNodeIR,
+    { glyphIdent: string; pxIdent: string | undefined }
+  >();
+  for (const { node, glyph, suffix } of iconGlyphNodes) {
+    const glyphIdent = `iconGlyph${suffix}`;
+    const hintsIdent = glyph.sizeHints
+      ? `ICON_GLYPH_SIZE_HINTS${suffix}`
+      : undefined;
+    const pxExpr = iconGlyphPxExpr(glyph, glyph.sizePropName, hintsIdent);
+    const pxIdent = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
+    if (pxIdent) {
+      lines.push(`  const ${pxIdent} = ${pxExpr};`);
+    }
+    lines.push(
+      `  const ${glyphIdent} = resolveIcon(${glyph.namePropName}, ` +
+        `${pxIdent ? `${pxIdent} ?? Number.NaN` : "Number.NaN"});`,
+    );
+    iconGlyphIdents.set(node, { glyphIdent, pxIdent });
+  }
+  if (iconGlyphNodes.length > 0) {
+    lines.push(``);
+  }
+
   const renderCtx: ReactRenderContext = {
     classRecipe: classRecipe.base,
     channelByName,
@@ -1480,6 +1536,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     rootRole: ir.root.effectiveRole,
     rootTagOverride,
     propertyBindingRefs,
+    iconGlyphIdents,
   };
 
   for (const { node, refName } of propertyBindingNodes) {
@@ -1579,6 +1636,15 @@ interface ReactRenderContext {
    * property-binding nodes.
    */
   propertyBindingRefs?: Map<DomNodeIR, string>;
+  /**
+   * Local identifiers for nodes carrying `iconGlyph`
+   * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity.
+   * `glyphIdent` names the body const holding the `resolveIcon(...)`
+   * result; `pxIdent` names the requested-pixel const (undefined when the
+   * glyph has no size binding). Populated once at the root call from
+   * `collectIconGlyphNodes`; empty when the tree has no glyph nodes.
+   */
+  iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
   /**
    * Nearest enclosing iteration directive, or `undefined` at the top
    * level. After BINDING-EXPRESSION-V2-01 the IR carries
@@ -1861,10 +1927,41 @@ function renderReactDomNode(
     renderReactDomNode(c, childCtx, indent + 2),
   );
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: a glyph node's svg surface comes from
+  // the resolved catalog record — data-fsds-icon + viewBox + width/height
+  // attrs here, one <path> per glyph path record as the only children, and
+  // (below, once `body` is built) a null-guard so an unknown icon name
+  // renders nothing.
+  const iconGlyphEntry = ctx.iconGlyphIdents?.get(node);
+  const iconGlyphChildLines: string[] = [];
+  if (iconGlyphEntry) {
+    const { glyphIdent, pxIdent } = iconGlyphEntry;
+    attrs.push(`data-fsds-icon={${glyphIdent}.name}`);
+    attrs.push(`viewBox={${glyphIdent}.viewBox}`);
+    const sizeExpr = pxIdent
+      ? `${pxIdent} ?? ${glyphIdent}.size`
+      : `${glyphIdent}.size`;
+    attrs.push(`width={${sizeExpr}}`);
+    attrs.push(`height={${sizeExpr}}`);
+    const childPad = " ".repeat(indent + 2);
+    const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
+      ({ recordKey, reactProp }) => `${reactProp}={glyphPath.${recordKey}}`,
+    ).join(" ");
+    iconGlyphChildLines.push(
+      `${childPad}{${glyphIdent}.paths.map((glyphPath, glyphIndex) => (`,
+      `${childPad}  <path key={glyphIndex} ${pathAttrs} />`,
+      `${childPad}))}`,
+    );
+  }
+
   // Inline text from textContent bindings precedes any child elements.
   // Indent matches child indent so the source reads consistently.
   const textChildLines = textChildren.map((tc) => `${" ".repeat(indent + 2)}${tc}`);
-  const allChildren = [...textChildLines, ...renderedChildren];
+  const allChildren = [
+    ...textChildLines,
+    ...renderedChildren,
+    ...(iconGlyphChildLines.length > 0 ? [iconGlyphChildLines.join("\n")] : []),
+  ];
 
   // Self-closing vs open tag.
   // componentRef: this node renders a referenced design-system component by
@@ -1907,6 +2004,12 @@ function renderReactDomNode(
       ...allChildren,
       `${pad}</${emittedTag}>`,
     ].join("\n");
+  }
+
+  // iconGlyph null-guard: an unknown icon name resolves to undefined and the
+  // svg (whose attrs dereference the glyph record) must not render at all.
+  if (iconGlyphEntry) {
+    body = `${pad}{${iconGlyphEntry.glyphIdent} ? (\n${body.replace(/^/gm, "  ")}\n${pad}) : null}`;
   }
 
   // if-guard: wrap in a JSX expression. When the guard prop matches a

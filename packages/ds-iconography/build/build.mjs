@@ -9,7 +9,10 @@ const validateOnly = process.argv.includes("--validate-only");
 
 const VALID_STATUSES = new Set(["draft", "new", "active", "deprecated", "removed"]);
 const VALID_LINE_CAPS = new Set(["butt", "round", "square"]);
-const VALID_LINE_JOINS = new Set(["arcs", "bevel", "miter", "miter-clip", "round"]);
+// miter/round/bevel only: the SVG2-only joins (arcs, miter-clip) are not
+// renderable on Android VectorDrawable and not modeled by React's SVG types,
+// so the contract admits only the cross-target subset.
+const VALID_LINE_JOINS = new Set(["bevel", "miter", "round"]);
 const VALID_RULES = new Set(["nonzero", "evenodd"]);
 
 const iconContracts = loadIconContracts();
@@ -261,7 +264,7 @@ function writeIndexModule(contracts) {
     '  readonly stroke?: "none" | "currentColor";',
     "  readonly strokeWidth?: number;",
     '  readonly strokeLineCap?: "butt" | "round" | "square";',
-    '  readonly strokeLineJoin?: "arcs" | "bevel" | "miter" | "miter-clip" | "round";',
+    '  readonly strokeLineJoin?: "bevel" | "miter" | "round";',
     "  readonly strokeDasharray?: string;",
     '  readonly fillRule?: "nonzero" | "evenodd";',
     '  readonly clipRule?: "nonzero" | "evenodd";',

@@ -8,7 +8,7 @@ export interface IconGlyphPath {
   readonly stroke?: "none" | "currentColor";
   readonly strokeWidth?: number;
   readonly strokeLineCap?: "butt" | "round" | "square";
-  readonly strokeLineJoin?: "arcs" | "bevel" | "miter" | "miter-clip" | "round";
+  readonly strokeLineJoin?: "bevel" | "miter" | "round";
   readonly strokeDasharray?: string;
   readonly fillRule?: "nonzero" | "evenodd";
   readonly clipRule?: "nonzero" | "evenodd";
