@@ -1,6 +1,7 @@
 // @generated:start imports
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
-import { NgClass } from "@angular/common";
+import { NgClass, NgIf, NgFor } from "@angular/common";
+import { resolveIcon } from "@full-stack-ds/iconography";
 // @generated:end
 
 // @custom:start imports
@@ -8,7 +9,7 @@ import { NgClass } from "@angular/common";
 // @custom:end
 
 // @generated:start types
-export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown };
+
 // @generated:end
 
 // @custom:start types
@@ -16,22 +17,26 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 // @custom:end
 
 // @generated:start component
+const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg": 24, "xl": 32 };
+
 @Component({
   selector: "fsds-icon",
   standalone: true,
-  imports: [NgClass],
+  imports: [NgClass, NgIf, NgFor],
   template: `<span [ngClass]="classes()" aria-hidden="true">
-  <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" [attr.width]="width" [attr.height]="height">
-    <circle cx="8.5" cy="8.5" r="8" stroke="currentColor" stroke-linecap="round" stroke-dasharray="2 4"></circle>
-    <circle cx="8.5" cy="8.5" r="3" stroke="currentColor" stroke-linecap="round" stroke-dasharray=".125 3"></circle>
-  </svg>
+  <ng-container *ngIf="iconGlyph as glyph">
+    <svg fill="none" xmlns="http://www.w3.org/2000/svg" [attr.data-fsds-icon]="glyph.name" [attr.viewBox]="glyph.viewBox" [attr.width]="(this.iconGlyphPx ?? glyph.size)" [attr.height]="(this.iconGlyphPx ?? glyph.size)">
+      <ng-container *ngFor="let glyphPath of glyph.paths">
+        <path [attr.d]="glyphPath.d" [attr.fill]="glyphPath.fill" [attr.stroke]="glyphPath.stroke" [attr.stroke-width]="glyphPath.strokeWidth" [attr.stroke-linecap]="glyphPath.strokeLineCap" [attr.stroke-linejoin]="glyphPath.strokeLineJoin" [attr.stroke-dasharray]="glyphPath.strokeDasharray" [attr.fill-rule]="glyphPath.fillRule" [attr.clip-rule]="glyphPath.clipRule" />
+      </ng-container>
+    </svg>
+  </ng-container>
 </span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-  @Input() icon!: IconDefinition;
-  @Input() width?: number = 20;
-  @Input() height?: number = 20;
+  @Input() name!: string;
+  @Input() size?: "sm" | "md" | "lg" | "xl" = "md";
   @Input() class?: string;
 
   classes(): string {
@@ -39,6 +44,14 @@ export class IconComponent {
       "icon",
       this.class,
     ].filter(Boolean).join(" ");
+  }
+
+  get iconGlyphPx(): number | undefined {
+    return ICON_GLYPH_SIZE_HINTS[(this.size ?? "")];
+  }
+
+  get iconGlyph() {
+    return resolveIcon(this.name, this.iconGlyphPx ?? Number.NaN);
   }
 }
 // @generated:end

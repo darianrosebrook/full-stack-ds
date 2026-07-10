@@ -7,14 +7,13 @@ import { createIconStyles } from "./Icon.styles";
 // @generated:end
 
 // @generated:start types
-export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown };
+
 // @generated:end
 
 // @generated:start props
 export interface IconProps {
-  icon: IconDefinition;
-  width?: number;
-  height?: number;
+  name: string;
+  size?: "sm" | "md" | "lg" | "xl";
   children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -42,14 +41,7 @@ export function Icon({
     >
       <View
         style={styles.root}
-      >
-        <View
-          style={styles.root}
-        />
-        <View
-          style={styles.root}
-        />
-      </View>
+      />
     </View>
   );
 }

@@ -1,6 +1,7 @@
 // @generated:start imports
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css, nothing, svg } from 'lit';
 import { property } from 'lit/decorators.js';
+import { resolveIcon } from "@full-stack-ds/iconography";
 import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
@@ -9,7 +10,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 // @custom:end
 
 // @generated:start types
-export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown };
+
 // @generated:end
 
 // @custom:start types
@@ -17,6 +18,8 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 // @custom:end
 
 // @generated:start component
+const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg": 24, "xl": 32 };
+
 export class IconElement extends LitElement {
   static override styles = css`
     :host { display: contents; }
@@ -61,9 +64,8 @@ export class IconElement extends LitElement {
     }
   `;
 
-  @property({ attribute: false }) icon!: IconDefinition;
-  @property({ type: Number }) width?: number = 20;
-  @property({ type: Number }) height?: number = 20;
+  @property({ type: String }) name!: string;
+  @property({ attribute: false }) size?: "sm" | "md" | "lg" | "xl" = "md";
 
   private computeClasses(): string {
     return [
@@ -72,11 +74,14 @@ export class IconElement extends LitElement {
   }
 
   override render() {
+    const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[(this.size ?? "")];
+    const iconGlyph = resolveIcon(this.name, iconGlyphPx ?? Number.NaN);
     return html`<span class="${this.computeClasses()}" aria-hidden="true">
-  <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" width=${ifDefined(this.width)} height=${ifDefined(this.height)}>
-    <circle cx="8.5" cy="8.5" r="8" stroke="currentColor" stroke-linecap="round" stroke-dasharray="2 4"></circle>
-    <circle cx="8.5" cy="8.5" r="3" stroke="currentColor" stroke-linecap="round" stroke-dasharray=".125 3"></circle>
+  ${iconGlyph ? svg`
+  <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon=${iconGlyph.name} viewBox=${iconGlyph.viewBox} width=${iconGlyphPx ?? iconGlyph.size} height=${iconGlyphPx ?? iconGlyph.size}>
+    ${iconGlyph.paths.map((glyphPath) => svg`<path d=${ifDefined(glyphPath.d)} fill=${ifDefined(glyphPath.fill)} stroke=${ifDefined(glyphPath.stroke)} stroke-width=${ifDefined(glyphPath.strokeWidth)} stroke-linecap=${ifDefined(glyphPath.strokeLineCap)} stroke-linejoin=${ifDefined(glyphPath.strokeLineJoin)} stroke-dasharray=${ifDefined(glyphPath.strokeDasharray)} fill-rule=${ifDefined(glyphPath.fillRule)} clip-rule=${ifDefined(glyphPath.clipRule)} />`)}
   </svg>
+  ` : nothing}
 </span>`;
   }
 }

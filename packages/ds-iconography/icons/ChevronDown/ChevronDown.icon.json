@@ -1,0 +1,91 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "chevron-down",
+  "displayName": "Chevron Down",
+  "namespace": "fsds.icon",
+  "description": "Downward chevron for expand/collapse and dropdown affordances.",
+  "category": "navigation",
+  "tags": [
+    "chevron",
+    "down",
+    "expand",
+    "dropdown",
+    "icon"
+  ],
+  "aliases": [
+    "caret-down"
+  ],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "chevron-down-16",
+      "description": "Chevron Down authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M4 6L8 10L12 6",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-chevron-down-16",
+        "android": "ui_ic_chevron_down_16dp",
+        "ios": "chevron-down-16",
+        "react": "ChevronDownIcon",
+        "svelte": "ChevronDownIcon",
+        "reactNative": "ChevronDownIcon",
+        "swift": "ChevronDownIcon",
+        "kotlin": "ChevronDownIcon"
+      }
+    },
+    "24": {
+      "name": "chevron-down-24",
+      "description": "Chevron Down authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M6 9L12 15L18 9",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-chevron-down-24",
+        "android": "ui_ic_chevron_down_24dp",
+        "ios": "chevron-down-24",
+        "react": "ChevronDownIcon",
+        "svelte": "ChevronDownIcon",
+        "reactNative": "ChevronDownIcon",
+        "swift": "ChevronDownIcon",
+        "kotlin": "ChevronDownIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01 — first real icon batch, healing pre-existing usage-sidecar references."
+  }
+}

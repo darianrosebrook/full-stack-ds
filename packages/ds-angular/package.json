@@ -45,5 +45,8 @@
     "rxjs": "^7.8.0",
     "typescript": "^6.0.2",
     "zone.js": "^0.15.0"
+  },
+  "dependencies": {
+    "@full-stack-ds/iconography": "workspace:*"
   }
 }

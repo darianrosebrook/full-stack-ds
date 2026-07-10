@@ -40,5 +40,8 @@
     "typescript": "^6.0.2",
     "vitest": "^3.2.4",
     "vitest-axe": "^0.1.0"
+  },
+  "dependencies": {
+    "@full-stack-ds/iconography": "workspace:*"
   }
 }

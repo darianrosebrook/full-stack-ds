@@ -2236,6 +2236,7 @@ function fallbackViewNode(): DomNodeIR {
     content: undefined,
     cssVarBindings: [],
     events: {},
+    iconGlyph: undefined,
     ifNegated: false,
     ifProp: undefined,
     iteration: undefined,

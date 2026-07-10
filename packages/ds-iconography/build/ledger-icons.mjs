@@ -95,6 +95,15 @@ function main() {
   const generatedFiles = [];
   walk(generatedRoot, (abs) => generatedFiles.push(abs));
 
+  // The committed package-root export module (index.mjs/index.d.ts) is build
+  // output too — a function of ALL icon contracts + the generator — so it must
+  // carry ledger edges like everything else. Its basename ("index") matches no
+  // per-icon platform token, so it attributes to the __corpus__ unit below.
+  for (const name of ["index.mjs", "index.d.ts"]) {
+    const abs = path.join(packageRoot, name);
+    if (fs.existsSync(abs)) generatedFiles.push(abs);
+  }
+
   const icons = loadIconContracts();
   const rows = [];
   const attributed = new Set();

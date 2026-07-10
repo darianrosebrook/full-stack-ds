@@ -16,6 +16,7 @@
  */
 import type { ComponentContract } from "../contract.js";
 import type { ValidationIssue } from "../validate.js";
+import { usageIconRefIssue } from "./icon-refs.js";
 
 /** A usage tree node — the post-schema-validated shape. */
 interface TreeNode {
@@ -96,6 +97,21 @@ function walkTreeNode(
         issues.push({
           pointer: `${pointer}/props/${propName}`,
           message: `${sourcePrefix}: prop "${propName}" is not declared on ${compName}`,
+        });
+      }
+      // ICON-CATALOG-RUNTIME-DELIVERY-01: a literal value for an
+      // icon-name-typed prop (a prop the target's iconGlyph directive
+      // binds via nameFrom) must resolve in the icon corpus — the
+      // token-resolvesTo analogy for icons.
+      const iconIssue = usageIconRefIssue(
+        target,
+        propName,
+        body.props[propName],
+      );
+      if (iconIssue) {
+        issues.push({
+          pointer: `${pointer}/props/${propName}`,
+          message: `${sourcePrefix}: ${iconIssue}`,
         });
       }
       // Children may carry sub-trees; descend.

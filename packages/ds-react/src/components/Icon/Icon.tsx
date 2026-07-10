@@ -1,6 +1,7 @@
 // @generated:start imports
 import { type HTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
+import { resolveIcon } from "@full-stack-ds/iconography";
 import "./Icon.css";
 // @generated:end
 
@@ -9,7 +10,7 @@ import "./Icon.css";
 // @custom:end
 
 // @generated:start types
-export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown };
+
 // @generated:end
 
 // @custom:start types
@@ -17,10 +18,9 @@ export type IconDefinition = { iconName: string; prefix?: string; icon?: unknown
 // @custom:end
 
 // @generated:start props
-export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "height" | "icon" | "width"> {
-  icon: IconDefinition;
-  width?: number;
-  height?: number;
+export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children" | "className" | "data-testid" | "name" | "size"> {
+  name: string;
+  size?: "sm" | "md" | "lg" | "xl";
   className?: string;
   "data-testid"?: string;
 }
@@ -31,12 +31,13 @@ export interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, "childr
 // @generated:end
 
 // @generated:start component
+const ICON_GLYPH_SIZE_HINTS: Record<string, number> = { "sm": 16, "md": 20, "lg": 24, "xl": 32 };
+
 export function Icon({
   className,
   "data-testid": testId,
-  icon,
-  width = 20,
-  height = 20,
+  name,
+  size = "md",
   ...rest
 }: IconProps) {
   const classNames = [
@@ -46,12 +47,18 @@ export function Icon({
     .filter(Boolean)
     .join(" ");
 
+  const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[size];
+  const iconGlyph = resolveIcon(name, iconGlyphPx ?? Number.NaN);
+
   return (
   <Stack layout="native" as="span" className={`${classNames}`} aria-hidden="true" data-testid={testId} {...rest}>
-    <svg viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg" width={width} height={height}>
-      <circle cx="8.5" cy="8.5" r="8" stroke="currentColor" strokeLinecap="round" strokeDasharray="2 4" />
-      <circle cx="8.5" cy="8.5" r="3" stroke="currentColor" strokeLinecap="round" strokeDasharray=".125 3" />
-    </svg>
+    {iconGlyph ? (
+      <svg fill="none" xmlns="http://www.w3.org/2000/svg" data-fsds-icon={iconGlyph.name} viewBox={iconGlyph.viewBox} width={iconGlyphPx ?? iconGlyph.size} height={iconGlyphPx ?? iconGlyph.size}>
+        {iconGlyph.paths.map((glyphPath, glyphIndex) => (
+          <path key={glyphIndex} d={glyphPath.d} fill={glyphPath.fill} stroke={glyphPath.stroke} strokeWidth={glyphPath.strokeWidth} strokeLinecap={glyphPath.strokeLineCap} strokeLinejoin={glyphPath.strokeLineJoin} strokeDasharray={glyphPath.strokeDasharray} fillRule={glyphPath.fillRule} clipRule={glyphPath.clipRule} />
+        ))}
+      </svg>
+    ) : null}
   </Stack>
   );
 }

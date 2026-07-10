@@ -336,6 +336,32 @@ export interface ContractDomNode {
    * a literal `style` attribute on the same node.
    */
   cssVariableBindings?: Record<string, string>;
+  /**
+   * Icon-catalog glyph rendering directive — renders this `svg` node's
+   * viewBox and `<path>` children from `@full-stack-ds/iconography`, looked
+   * up at runtime by the bound name prop. Only valid on `tag: "svg"`;
+   * mutually exclusive with `children`, `content`, and `iterate`. See
+   * `IconGlyphIR` in `ir.ts` for the resolved form.
+   */
+  iconGlyph?: ContractDomNodeIconGlyph;
+}
+
+/**
+ * Icon-catalog glyph directive on an `svg` DOM node. Authored under
+ * `anatomy.dom[].iconGlyph` in the contract; parsed into `IconGlyphIR` by
+ * the IR builder.
+ */
+export interface ContractDomNodeIconGlyph {
+  /** Binding naming the string prop carrying the canonical icon name, e.g. `"prop:name"`. */
+  nameFrom: string;
+  /**
+   * Binding naming the prop carrying the requested size. Mapped through
+   * `sizeHints` to pixels when hints are present; used as a raw pixel number
+   * otherwise.
+   */
+  sizeFrom?: string;
+  /** Map from size-prop enum values to pixel sizes, e.g. `{ "sm": 16, "md": 20 }`. */
+  sizeHints?: Record<string, number>;
 }
 
 /**

@@ -47,6 +47,13 @@ import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { toKebab as sharedToKebab } from "../../contract.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
+  collectIconGlyphNodes,
+  ICON_GLYPH_PATH_ATTRS,
+  ICONOGRAPHY_MODULE,
+  iconGlyphPxExpr,
+  iconGlyphSizeHintsLiteral,
+} from "../icon-glyph.js";
+import {
   isCompoundStateContainer,
   getInteractiveItemPart,
   getRegionPart,
@@ -839,17 +846,23 @@ function treeHasChildrenGuard(node: DomNodeIR): boolean {
 
 /** Walk a DomNodeIR tree and return true if any node will render a
  *  `*ngIf` (i.e. has a non-null `ifProp`). Used to decide whether
- *  `NgIf` belongs in the standalone component's imports list. */
+ *  `NgIf` belongs in the standalone component's imports list.
+ *  ICON-CATALOG-RUNTIME-DELIVERY-01: an `iconGlyph` node also emits a
+ *  `*ngIf="... as glyph"` null-guard around the svg. */
 function treeUsesNgIf(node: DomNodeIR): boolean {
   if (node.ifProp) return true;
+  if (node.iconGlyph) return true;
   return node.children.some(treeUsesNgIf);
 }
 
 /** Walk a DomNodeIR tree and return true if any node declares
  *  iteration. Used to decide whether `NgFor` belongs in the
- *  standalone component's imports list. */
+ *  standalone component's imports list.
+ *  ICON-CATALOG-RUNTIME-DELIVERY-01: an `iconGlyph` node also emits a
+ *  `*ngFor` loop over the resolved glyph's path records. */
 function treeUsesNgFor(node: DomNodeIR): boolean {
   if (node.iteration) return true;
+  if (node.iconGlyph) return true;
   return node.children.some(treeUsesNgFor);
 }
 
@@ -944,6 +957,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
   ) {
     lines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
   }
+  // iconGlyph: import the catalog resolver from the committed package-root
+  // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
+  // Structural — driven by IR `iconGlyph` facts, never per-component lore.
+  if (ir.dom && collectIconGlyphNodes(ir.dom).length > 0) {
+    lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
+  }
   return lines.join("\n");
 }
 
@@ -963,12 +982,39 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   const autoDismissActive = Boolean(
     resolveSurfaceAutoDismiss(ir) && booleanChannel,
   );
+
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get a module-scope
+  // size-hints const (when the glyph has sizeHints) plus a pair of class
+  // getters resolving the requested pixel size and the catalog lookup.
+  // Collected before the template renders so the getter names are known
+  // for the node-identity lookup in `renderAngularDomNode`.
+  const iconGlyphNodes = collectIconGlyphNodes(ir.dom);
+  const iconGlyphIdents = new Map<
+    DomNodeIR,
+    { glyphGetter: string; pxGetter: string | undefined }
+  >();
+  for (const { node, glyph, suffix } of iconGlyphNodes) {
+    const hintsIdent = glyph.sizeHints
+      ? `ICON_GLYPH_SIZE_HINTS${suffix}`
+      : undefined;
+    // `?? ""` because @Input() size is optional-typed even with a default —
+    // a bare `this.size` index into Record<string, number> fails TS2538.
+    const pxExpr = iconGlyphPxExpr(
+      glyph,
+      glyph.sizePropName ? `(this.${glyph.sizePropName} ?? "")` : undefined,
+      hintsIdent,
+    );
+    const pxGetter = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
+    iconGlyphIdents.set(node, { glyphGetter: `iconGlyph${suffix}`, pxGetter });
+  }
+
   const ctx: AngularRenderContext = {
     classRecipe: ir.classRecipe.base,
     channelByName,
     isRoot: true,
     autoDismissPause: autoDismissActive,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
+    iconGlyphIdents,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
@@ -995,6 +1041,18 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   }
 
   const lines: string[] = [];
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: module-scope size-hints maps, one per
+  // glyph node that declares `sizeHints`, emitted ahead of the decorator
+  // (matching the React emitter's module-scope const placement).
+  for (const { glyph, suffix } of iconGlyphNodes) {
+    if (glyph.sizeHints) {
+      lines.push(
+        `const ICON_GLYPH_SIZE_HINTS${suffix}: Record<string, number> = ` +
+          `${iconGlyphSizeHintsLiteral(glyph.sizeHints)};`,
+      );
+      lines.push(``);
+    }
+  }
   lines.push(`@Component({`);
   lines.push(`  selector: "fsds-${selector}",`);
   lines.push(`  standalone: true,`);
@@ -1197,6 +1255,43 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     lines.push(`  }`);
   }
 
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: getters resolving the requested
+  // pixel size (when the glyph has a size binding) and the catalog
+  // lookup. Angular idiom is a getter — re-evaluates on every read, so
+  // it stays reactive to @Input changes without a signal/computed()
+  // dependency (glyph nodes appear on Stack-only components with no
+  // behavior channels, same as `classes()` above). A miss (unknown icon
+  // name) leaves the getter `undefined` and the template's `*ngIf`
+  // null-guard renders nothing. `Number.NaN` deliberately matches no
+  // authored size, so resolveIcon falls back to the smallest authored
+  // variant.
+  for (const { node, glyph, suffix } of iconGlyphNodes) {
+    const { glyphGetter, pxGetter } = iconGlyphIdents.get(node)!;
+    const hintsIdent = glyph.sizeHints
+      ? `ICON_GLYPH_SIZE_HINTS${suffix}`
+      : undefined;
+    // `?? ""` because @Input() size is optional-typed even with a default —
+    // a bare `this.size` index into Record<string, number> fails TS2538.
+    const pxExpr = iconGlyphPxExpr(
+      glyph,
+      glyph.sizePropName ? `(this.${glyph.sizePropName} ?? "")` : undefined,
+      hintsIdent,
+    );
+    lines.push(``);
+    if (pxGetter && pxExpr !== undefined) {
+      lines.push(`  get ${pxGetter}(): number | undefined {`);
+      lines.push(`    return ${pxExpr};`);
+      lines.push(`  }`);
+      lines.push(``);
+    }
+    lines.push(`  get ${glyphGetter}() {`);
+    lines.push(
+      `    return resolveIcon(this.${glyph.namePropName}, ` +
+        `${pxGetter ? `this.${pxGetter} ?? Number.NaN` : "Number.NaN"});`,
+    );
+    lines.push(`  }`);
+  }
+
   lines.push(`}`);
   return lines.join("\n");
 }
@@ -1286,6 +1381,16 @@ interface AngularRenderContext {
     defaultTag: string;
     allowedTags: string[];
   };
+  /**
+   * Getter identifiers for nodes carrying `iconGlyph`
+   * (ICON-CATALOG-RUNTIME-DELIVERY-01), keyed by node identity.
+   * `glyphGetter` names the class getter resolving the catalog record via
+   * `resolveIcon(...)`; `pxGetter` names the requested-pixel getter
+   * (undefined when the glyph has no size binding). Populated once at the
+   * root call from `collectIconGlyphNodes`; empty when the tree has no
+   * glyph nodes.
+   */
+  iconGlyphIdents?: Map<DomNodeIR, { glyphGetter: string; pxGetter: string | undefined }>;
 }
 
 function renderAngularDomNode(
@@ -1461,7 +1566,42 @@ function renderAngularDomNode(
       contentLines.push(`${" ".repeat(indent + 2)}{{ ${contentExpr} }}`);
     }
   }
-  const allChildren = [...contentLines, ...renderedChildren];
+
+  // ICON-CATALOG-RUNTIME-DELIVERY-01: a glyph node's svg surface comes
+  // from the resolved catalog record — data-fsds-icon + viewBox +
+  // width/height attrs here, one <path> per glyph path record as the
+  // only content (the svg has no IR children — enforced upstream). The
+  // `*ngIf="... as glyph" ` guard (applied below, once `body` is built)
+  // aliases the getter so attrs and the *ngFor loop read the narrowed
+  // non-undefined local rather than re-invoking the getter (and
+  // re-risking a TS-narrowing mismatch across separate reads).
+  const iconGlyphEntry = ctx.iconGlyphIdents?.get(node);
+  const iconGlyphChildLines: string[] = [];
+  if (iconGlyphEntry) {
+    const { pxGetter } = iconGlyphEntry;
+    attrs.push(`[attr.data-fsds-icon]="glyph.name"`);
+    attrs.push(`[attr.viewBox]="glyph.viewBox"`);
+    const sizeExpr = pxGetter
+      ? `(this.${pxGetter} ?? glyph.size)`
+      : `glyph.size`;
+    attrs.push(`[attr.width]="${sizeExpr}"`);
+    attrs.push(`[attr.height]="${sizeExpr}"`);
+    const childPad = " ".repeat(indent + 2);
+    const pathAttrs = ICON_GLYPH_PATH_ATTRS.map(
+      ({ recordKey, svgAttr }) => `[attr.${svgAttr}]="glyphPath.${recordKey}"`,
+    ).join(" ");
+    iconGlyphChildLines.push(
+      `${childPad}<ng-container *ngFor="let glyphPath of glyph.paths">`,
+      `${childPad}  <path ${pathAttrs} />`,
+      `${childPad}</ng-container>`,
+    );
+  }
+
+  const allChildren = [
+    ...contentLines,
+    ...renderedChildren,
+    ...iconGlyphChildLines,
+  ];
 
   // componentRef: render the referenced component by its selector
   // (`fsds-<kebab>`, matching how that component declares its own selector).
@@ -1531,6 +1671,19 @@ function renderAngularDomNode(
         `${pad}</ng-container>`,
       ].join("\n");
     }
+  }
+
+  // iconGlyph null-guard: an unknown icon name resolves the getter to
+  // undefined and the svg (whose attrs/paths dereference the aliased
+  // `glyph` local) must not render at all. `*ngIf="getter as glyph"`
+  // both narrows and aliases in one directive — Angular's idiom for
+  // "guard on a value, then reuse it without re-invoking the getter".
+  if (iconGlyphEntry) {
+    withIfGuard = [
+      `${pad}<ng-container *ngIf="${iconGlyphEntry.glyphGetter} as glyph">`,
+      withIfGuard.replace(/^/gm, "  "),
+      `${pad}</ng-container>`,
+    ].join("\n");
   }
 
   // IR-DOM-ITERATE-CAPABILITY-01: apply the *ngFor wrap as the outermost

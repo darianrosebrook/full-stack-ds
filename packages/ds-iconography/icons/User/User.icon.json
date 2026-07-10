@@ -1,0 +1,107 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "user",
+  "displayName": "User",
+  "namespace": "fsds.icon",
+  "description": "Person silhouette for accounts, profiles, and user menus.",
+  "category": "object",
+  "tags": [
+    "user",
+    "person",
+    "account",
+    "profile",
+    "icon"
+  ],
+  "aliases": [
+    "person"
+  ],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "user-16",
+      "description": "User authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 4.25A2.25 2.25 0 1 1 8 8.75A2.25 2.25 0 1 1 8 4.25",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M3.5 13.5A4.5 4.5 0 0 1 12.5 13.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-user-16",
+        "android": "ui_ic_user_16dp",
+        "ios": "user-16",
+        "react": "UserIcon",
+        "svelte": "UserIcon",
+        "reactNative": "UserIcon",
+        "swift": "UserIcon",
+        "kotlin": "UserIcon"
+      }
+    },
+    "24": {
+      "name": "user-24",
+      "description": "User authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 6.5A3 3 0 1 1 12 12.5A3 3 0 1 1 12 6.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M5.5 20A6.5 6.5 0 0 1 18.5 20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-user-24",
+        "android": "ui_ic_user_24dp",
+        "ios": "user-24",
+        "react": "UserIcon",
+        "svelte": "UserIcon",
+        "reactNative": "UserIcon",
+        "swift": "UserIcon",
+        "kotlin": "UserIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01 — first real icon batch, healing pre-existing usage-sidecar references."
+  }
+}

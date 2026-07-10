@@ -438,7 +438,7 @@ interface ButtonProps {
 }
 
 // GOOD: use composition
-<Button variant="primary" icon={<Icon />} iconPosition="left">
+<Button variant="primary" icon={<Icon name="check" />} iconPosition="left">
   Save
 </Button>
 

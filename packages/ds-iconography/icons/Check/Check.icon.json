@@ -1,0 +1,83 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "check",
+  "displayName": "Check",
+  "namespace": "fsds.icon",
+  "description": "Confirmation checkmark for success and completed states.",
+  "category": "status",
+  "tags": ["check", "confirm", "success", "done", "icon"],
+  "aliases": ["checkmark", "tick"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "check-16",
+      "description": "Checkmark authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3.5 8.5L6.5 11.5L12.5 4.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-check-16",
+        "android": "ui_ic_check_16dp",
+        "ios": "check-16",
+        "react": "CheckIcon",
+        "svelte": "CheckIcon",
+        "reactNative": "CheckIcon",
+        "swift": "CheckIcon",
+        "kotlin": "CheckIcon"
+      }
+    },
+    "24": {
+      "name": "check-24",
+      "description": "Checkmark authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M5 12.5L9.5 17L19 6.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-check-24",
+        "android": "ui_ic_check_24dp",
+        "ios": "check-24",
+        "react": "CheckIcon",
+        "svelte": "CheckIcon",
+        "reactNative": "CheckIcon",
+        "swift": "CheckIcon",
+        "kotlin": "CheckIcon"
+      }
+    }
+  },
+  "relatedIcons": ["circle"],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01; heals the pre-existing Icon.usage.jsonl reference."
+  }
+}

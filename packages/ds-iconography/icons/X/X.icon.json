@@ -1,0 +1,108 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "x",
+  "displayName": "X",
+  "namespace": "fsds.icon",
+  "description": "Close/dismiss cross for dismissible surfaces and clear actions.",
+  "category": "action",
+  "tags": [
+    "close",
+    "dismiss",
+    "cancel",
+    "clear",
+    "icon"
+  ],
+  "aliases": [
+    "close",
+    "cross"
+  ],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "x-16",
+      "description": "X authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M4 4L12 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 4L4 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-x-16",
+        "android": "ui_ic_x_16dp",
+        "ios": "x-16",
+        "react": "XIcon",
+        "svelte": "XIcon",
+        "reactNative": "XIcon",
+        "swift": "XIcon",
+        "kotlin": "XIcon"
+      }
+    },
+    "24": {
+      "name": "x-24",
+      "description": "X authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M6 6L18 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M18 6L6 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-x-24",
+        "android": "ui_ic_x_24dp",
+        "ios": "x-24",
+        "react": "XIcon",
+        "svelte": "XIcon",
+        "reactNative": "XIcon",
+        "swift": "XIcon",
+        "kotlin": "XIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01 — first real icon batch, healing pre-existing usage-sidecar references."
+  }
+}

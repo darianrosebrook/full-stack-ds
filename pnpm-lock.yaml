@@ -216,6 +216,10 @@ importers:
         version: 2.2.12(typescript@6.0.3)
 
   packages/ds-angular:
+    dependencies:
+      '@full-stack-ds/iconography':
+        specifier: workspace:*
+        version: link:../ds-iconography
     devDependencies:
       '@angular/common':
         specifier: ^21.2.13
@@ -287,9 +291,17 @@ importers:
         specifier: ^8.0.8
         version: 8.0.13(@types/node@25.7.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
 
-  packages/ds-iconography: {}
+  packages/ds-iconography:
+    devDependencies:
+      esbuild:
+        specifier: ^0.28.0
+        version: 0.28.0
 
   packages/ds-lit:
+    dependencies:
+      '@full-stack-ds/iconography':
+        specifier: workspace:*
+        version: link:../ds-iconography
     devDependencies:
       jsdom:
         specifier: ^27.0.1
@@ -315,6 +327,9 @@ importers:
 
   packages/ds-react:
     dependencies:
+      '@full-stack-ds/iconography':
+        specifier: workspace:*
+        version: link:../ds-iconography
       react:
         specifier: ^18.0.0 || ^19.0.0
         version: 19.2.6
@@ -361,6 +376,10 @@ importers:
         version: 3.2.4(@types/node@25.7.0)(jsdom@27.4.0)(lightningcss@1.32.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0)
 
   packages/ds-svelte:
+    dependencies:
+      '@full-stack-ds/iconography':
+        specifier: workspace:*
+        version: link:../ds-iconography
     devDependencies:
       '@sveltejs/package':
         specifier: ^2.3.0
@@ -413,6 +432,10 @@ importers:
         version: 6.0.3
 
   packages/ds-vue:
+    dependencies:
+      '@full-stack-ds/iconography':
+        specifier: workspace:*
+        version: link:../ds-iconography
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.9.1

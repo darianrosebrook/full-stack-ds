@@ -23,6 +23,7 @@ function node(partial: Partial<DomNodeIR>): DomNodeIR {
     ifNegated: false,
     iteration: undefined,
     cssVarBindings: [],
+    iconGlyph: undefined,
     ...partial,
   };
 }

@@ -321,7 +321,7 @@ function renderButtonSample(props: Record<string, unknown>) {
         size="small"
         variant="ghost"
       >
-        <DS.Icon icon={{ iconName: "close" }} width={16} height={16} />
+        <DS.Icon name="x" size="sm" />
       </DS.Button>
     );
   }

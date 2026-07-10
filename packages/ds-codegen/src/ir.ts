@@ -297,6 +297,40 @@ export interface IterationIR {
 }
 
 /**
+ * Icon-catalog glyph directive on an `svg` DomNodeIR. Resolved from the
+ * contract's `anatomy.dom[].iconGlyph` block.
+ *
+ * Emitters lower this to: import `resolveIcon` from
+ * `@full-stack-ds/iconography` (a real package specifier, not a relative
+ * path), resolve the glyph from the bound name/size props, stamp
+ * `data-fsds-icon="<name>"` + the resolved `viewBox`/`width`/`height` on the
+ * svg, and render one `<path>` element per glyph path record. When the
+ * catalog lookup misses, the svg is not rendered at all.
+ *
+ * This is deliberately NOT an `IterationIR`: iteration sources are
+ * schema-restricted to bare `prop:`/`channel:` bindings, and a catalog
+ * lookup keyed by a prop value is a different fact — adding a lookup form
+ * to the iteration grammar would open the escape hatch the binding grammar
+ * intentionally lacks.
+ */
+export interface IconGlyphIR {
+  /** Always `{ kind: "prop" }`; the prop carrying the canonical icon name. */
+  nameFrom: BindingExpression;
+  /** Extracted prop name (mirror of `nameFrom.prop`) for fast emitter access. */
+  namePropName: string;
+  /** Always `{ kind: "prop" }` when present; the prop carrying the requested size. */
+  sizeFrom: BindingExpression | undefined;
+  /** Extracted prop name (mirror of `sizeFrom.prop`). */
+  sizePropName: string | undefined;
+  /**
+   * Map from size-prop enum values to pixel sizes (e.g. `{ sm: 16, md: 20 }`).
+   * When present, emitters map the size prop through it; when absent, the
+   * size prop's value is used as a pixel number directly.
+   */
+  sizeHints: Record<string, number> | undefined;
+}
+
+/**
  * One CSS custom-property binding on a DOM node's runtime `style` attribute.
  * Authored under `anatomy.dom[].cssVariableBindings` in the contract:
  *   { "--fsds-progress-fill-width": "prop:value" }
@@ -418,6 +452,13 @@ export interface DomNodeIR {
    * contract for deterministic emission.
    */
   cssVarBindings: CssVarBindingIR[];
+  /**
+   * Icon-catalog glyph directive. When set (only legal on `tag: "svg"`),
+   * the framework emitter renders this node's viewBox and `<path>` children
+   * from the `@full-stack-ds/iconography` catalog, looked up at runtime by
+   * the bound name/size props. `undefined` for every non-icon node.
+   */
+  iconGlyph: IconGlyphIR | undefined;
 }
 
 /**
@@ -1549,6 +1590,46 @@ function validateDomNode(
     }
   }
 
+  // Icon-glyph props must resolve against the component's prop surface.
+  // - nameFrom → must be a string-typed prop (the canonical icon name).
+  // - sizeFrom + sizeHints → any prop whose values the hints enumerate
+  //   (typically a string-literal union); without hints the prop must be
+  //   number-typed because its value is used as pixels directly.
+  if (node.iconGlyph) {
+    const { namePropName, sizePropName, sizeHints } = node.iconGlyph;
+    if (!knownProps.has(namePropName)) {
+      throw new Error(
+        `[${componentName}] DOM iconGlyph.nameFrom references unknown prop ` +
+        `'${namePropName}' (known: [${[...knownProps].join(", ")}])`,
+      );
+    }
+    const nameType = (propTypes.get(namePropName) ?? "").trim();
+    if (nameType !== "string") {
+      throw new Error(
+        `[${componentName}] DOM iconGlyph.nameFrom requires prop ` +
+        `'${namePropName}' to be typed 'string' (the canonical icon name); ` +
+        `got '${nameType}'.`,
+      );
+    }
+    if (sizePropName !== undefined) {
+      if (!knownProps.has(sizePropName)) {
+        throw new Error(
+          `[${componentName}] DOM iconGlyph.sizeFrom references unknown prop ` +
+          `'${sizePropName}' (known: [${[...knownProps].join(", ")}])`,
+        );
+      }
+      const sizeType = (propTypes.get(sizePropName) ?? "").trim();
+      if (sizeHints === undefined && sizeType !== "number") {
+        throw new Error(
+          `[${componentName}] DOM iconGlyph.sizeFrom without sizeHints ` +
+          `requires prop '${sizePropName}' to be typed 'number' (used as ` +
+          `pixels directly); got '${sizeType}'. Declare sizeHints to map ` +
+          `enum values to pixels instead.`,
+        );
+      }
+    }
+  }
+
   // After V2 (BINDING-EXPRESSION-V2-01), the validator distinguishes two
   // separate scope concepts:
   //
@@ -2308,6 +2389,17 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
         `Wrap the content value in a child node and put \`iterate\` on the wrapper.`,
     );
   }
+  const iconGlyph = parseIconGlyph(node);
+  if (iconGlyph) {
+    if (children.length > 0 || content !== undefined || iteration !== undefined) {
+      throw new Error(
+        `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}"): ` +
+          `\`iconGlyph\` is mutually exclusive with \`children\`, \`content\`, ` +
+          `and \`iterate\` — the glyph directive owns the svg's entire subtree ` +
+          `(viewBox + <path> children come from the icon catalog).`,
+      );
+    }
+  }
   const cssVarBindings = parseCssVarBindings(node);
   if (cssVarBindings.length > 0 && node.attrs?.style !== undefined) {
     throw new Error(
@@ -2338,6 +2430,69 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     ...parseIfGuard(node.if),
     iteration,
     cssVarBindings,
+    iconGlyph,
+  };
+}
+
+/**
+ * Parse an `iconGlyph` block on a contract DOM node into `IconGlyphIR`.
+ * Returns `undefined` when no glyph directive is declared.
+ *
+ * Structural rules enforced here: host must be a literal `svg` tag;
+ * `nameFrom`/`sizeFrom` must be bare `prop:` bindings; the svg must not
+ * author its own `viewBox`/`width`/`height`/`data-fsds-icon` attrs (those
+ * are owned by the glyph lowering). Prop existence/type validation is
+ * deferred to `validateDomNode` where the prop surface is available.
+ */
+function parseIconGlyph(node: ContractDomNode): IconGlyphIR | undefined {
+  if (!node.iconGlyph) return undefined;
+  const where = `anatomy.dom node (tag="${node.tag}", part="${node.part ?? "?"}")`;
+  if (node.tag !== "svg") {
+    throw new Error(
+      `${where}: \`iconGlyph\` is only valid on a \`tag: "svg"\` node — the ` +
+        `directive renders svg path children from the icon catalog.`,
+    );
+  }
+  const glyphOwnedAttrs = ["viewBox", "width", "height", "data-fsds-icon"];
+  for (const attr of glyphOwnedAttrs) {
+    if (node.attrs?.[attr] !== undefined || node.bindings?.[attr] !== undefined) {
+      throw new Error(
+        `${where}: \`iconGlyph\` owns the svg's \`${attr}\` — it is derived ` +
+          `from the resolved glyph at runtime. Remove the authored ` +
+          `attr/binding.`,
+      );
+    }
+  }
+  const parseGlyphPropBinding = (
+    expr: string,
+    field: string,
+  ): BindingExpression & { kind: "prop" } => {
+    const parsed = parseBindingExpression(expr);
+    if (parsed.kind !== "prop" || (parsed.path && parsed.path.length > 0)) {
+      throw new Error(
+        `${where}: iconGlyph.${field} must be a bare \`prop:<name>\` binding; ` +
+          `got "${expr}".`,
+      );
+    }
+    return parsed as BindingExpression & { kind: "prop" };
+  };
+  const nameFrom = parseGlyphPropBinding(node.iconGlyph.nameFrom, "nameFrom");
+  const sizeFrom =
+    node.iconGlyph.sizeFrom !== undefined
+      ? parseGlyphPropBinding(node.iconGlyph.sizeFrom, "sizeFrom")
+      : undefined;
+  if (node.iconGlyph.sizeHints !== undefined && sizeFrom === undefined) {
+    throw new Error(
+      `${where}: iconGlyph.sizeHints without iconGlyph.sizeFrom is ` +
+        `meaningless — hints map the size prop's values to pixels.`,
+    );
+  }
+  return {
+    nameFrom,
+    namePropName: nameFrom.prop,
+    sizeFrom,
+    sizePropName: sizeFrom?.prop,
+    sizeHints: node.iconGlyph.sizeHints,
   };
 }
 

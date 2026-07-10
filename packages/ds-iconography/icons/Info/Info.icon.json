@@ -1,0 +1,123 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "info",
+  "displayName": "Info",
+  "namespace": "fsds.icon",
+  "description": "Circled information mark for informational alerts and hints.",
+  "category": "status",
+  "tags": [
+    "info",
+    "information",
+    "hint",
+    "help",
+    "icon"
+  ],
+  "aliases": [
+    "information"
+  ],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "info-16",
+      "description": "Info authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 2.5A5.5 5.5 0 1 1 8 13.5A5.5 5.5 0 1 1 8 2.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 7.5V11",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 5.25H8.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-info-16",
+        "android": "ui_ic_info_16dp",
+        "ios": "info-16",
+        "react": "InfoIcon",
+        "svelte": "InfoIcon",
+        "reactNative": "InfoIcon",
+        "swift": "InfoIcon",
+        "kotlin": "InfoIcon"
+      }
+    },
+    "24": {
+      "name": "info-24",
+      "description": "Info authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 3.5A8.5 8.5 0 1 1 12 20.5A8.5 8.5 0 1 1 12 3.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 11V16",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 8H12.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-info-24",
+        "android": "ui_ic_info_24dp",
+        "ios": "info-24",
+        "react": "InfoIcon",
+        "svelte": "InfoIcon",
+        "reactNative": "InfoIcon",
+        "swift": "InfoIcon",
+        "kotlin": "InfoIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01 — first real icon batch, healing pre-existing usage-sidecar references."
+  }
+}
