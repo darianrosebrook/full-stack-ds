@@ -27,6 +27,26 @@ describe("Icon — unit", () => {
     render(<Icon data-testid="icon" name={"placeholder"} className="custom" />);
     expect(screen.getByTestId("icon")).toHaveClass("icon", "custom");
   });
+
+  it("applies size=sm variant class", () => {
+    render(<Icon data-testid="icon" name={"placeholder"} size="sm" />);
+    expect(screen.getByTestId("icon")).toHaveClass("icon--sm");
+  });
+
+  it("applies size=md variant class", () => {
+    render(<Icon data-testid="icon" name={"placeholder"} size="md" />);
+    expect(screen.getByTestId("icon")).toHaveClass("icon--md");
+  });
+
+  it("applies size=lg variant class", () => {
+    render(<Icon data-testid="icon" name={"placeholder"} size="lg" />);
+    expect(screen.getByTestId("icon")).toHaveClass("icon--lg");
+  });
+
+  it("applies size=xl variant class", () => {
+    render(<Icon data-testid="icon" name={"placeholder"} size="xl" />);
+    expect(screen.getByTestId("icon")).toHaveClass("icon--xl");
+  });
 });
 
 describe("Icon — accessibility", () => {

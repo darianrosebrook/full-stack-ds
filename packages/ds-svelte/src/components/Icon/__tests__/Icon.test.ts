@@ -23,6 +23,26 @@ describe("Icon — unit", () => {
     expect(container.firstElementChild?.className).toContain("icon");
     expect(container.firstElementChild?.className).toContain("custom");
   });
+
+  it("applies size=sm variant class", () => {
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "sm" } });
+    expect(container.firstElementChild?.className).toContain("icon--sm");
+  });
+
+  it("applies size=md variant class", () => {
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "md" } });
+    expect(container.firstElementChild?.className).toContain("icon--md");
+  });
+
+  it("applies size=lg variant class", () => {
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "lg" } });
+    expect(container.firstElementChild?.className).toContain("icon--lg");
+  });
+
+  it("applies size=xl variant class", () => {
+    const { container } = render(Icon as unknown as Component<Record<string, unknown>>, { props: { "size": "xl" } });
+    expect(container.firstElementChild?.className).toContain("icon--xl");
+  });
 });
 
 describe("Icon — accessibility", () => {

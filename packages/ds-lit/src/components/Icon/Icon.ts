@@ -38,8 +38,11 @@ export class IconElement extends LitElement {
       --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
       --fsds-box-model-min-height: 0;
       --fsds-box-model-max-height: none;
+      --fsds-icon-size-sm: var(--fsds-core-icon-size-sm, 16px);
+      --fsds-icon-size-md: var(--fsds-core-icon-size-md, 20px);
+      --fsds-icon-size-lg: var(--fsds-core-icon-size-lg, 24px);
+      --fsds-icon-size-xl: var(--fsds-core-icon-size-xl, 32px);
       --fsds-icon-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-      --fsds-icon-size-padding-default: var(--fsds-core-spacing-size-01, 1px);
     }
 
     .icon {
@@ -60,7 +63,26 @@ export class IconElement extends LitElement {
       min-height: var(--fsds-box-model-min-height);
       max-height: var(--fsds-box-model-max-height);
       color: var(--fsds-icon-color-foreground-default);
-      padding: var(--fsds-icon-size-padding-default);
+    }
+
+    .icon--sm {
+      width: var(--fsds-icon-size-sm);
+      height: var(--fsds-icon-size-sm);
+    }
+
+    .icon--md {
+      width: var(--fsds-icon-size-md);
+      height: var(--fsds-icon-size-md);
+    }
+
+    .icon--lg {
+      width: var(--fsds-icon-size-lg);
+      height: var(--fsds-icon-size-lg);
+    }
+
+    .icon--xl {
+      width: var(--fsds-icon-size-xl);
+      height: var(--fsds-icon-size-xl);
     }
   `;
 
@@ -70,6 +92,7 @@ export class IconElement extends LitElement {
   private computeClasses(): string {
     return [
       "icon",
+      this.size ? `icon--${this.size}` : null,
     ].filter(Boolean).join(" ");
   }
 

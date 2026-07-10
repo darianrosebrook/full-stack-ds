@@ -14,8 +14,11 @@
   --fsds-box-model-height: var(--fsds-semantic-glyph-size-medium-extent, 16px);
   --fsds-box-model-min-height: 0;
   --fsds-box-model-max-height: none;
+  --fsds-icon-size-sm: var(--fsds-core-icon-size-sm, 16px);
+  --fsds-icon-size-md: var(--fsds-core-icon-size-md, 20px);
+  --fsds-icon-size-lg: var(--fsds-core-icon-size-lg, 24px);
+  --fsds-icon-size-xl: var(--fsds-core-icon-size-xl, 32px);
   --fsds-icon-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
-  --fsds-icon-size-padding-default: var(--fsds-core-spacing-size-01, 1px);
 }
 /* @generated:end */
 

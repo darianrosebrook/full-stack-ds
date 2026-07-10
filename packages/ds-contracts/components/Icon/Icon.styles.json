@@ -3,8 +3,25 @@
     "color": {
       "resolvesTo": "icon.color.foreground.default"
     },
-    "padding": {
-      "resolvesTo": "icon.size.padding.default"
+    "box-sizing": {
+      "literal": "border-box",
+      "platforms": ["web"]
     }
+  },
+  "--sm": {
+    "width": { "resolvesTo": "icon.size.sm" },
+    "height": { "resolvesTo": "icon.size.sm" }
+  },
+  "--md": {
+    "width": { "resolvesTo": "icon.size.md" },
+    "height": { "resolvesTo": "icon.size.md" }
+  },
+  "--lg": {
+    "width": { "resolvesTo": "icon.size.lg" },
+    "height": { "resolvesTo": "icon.size.lg" }
+  },
+  "--xl": {
+    "width": { "resolvesTo": "icon.size.xl" },
+    "height": { "resolvesTo": "icon.size.xl" }
   }
 }

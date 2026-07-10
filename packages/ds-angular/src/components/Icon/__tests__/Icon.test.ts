@@ -19,6 +19,30 @@ describe("Icon — unit", () => {
     const fixture = TestBed.createComponent(IconComponent);
     expect(classTokens(fixture.componentInstance)).toContain("icon");
   });
+
+  it("applies size=sm variant class", () => {
+    const fixture = TestBed.createComponent(IconComponent);
+    fixture.componentInstance.size = "sm";
+    expect(classTokens(fixture.componentInstance)).toContain("icon--sm");
+  });
+
+  it("applies size=md variant class", () => {
+    const fixture = TestBed.createComponent(IconComponent);
+    fixture.componentInstance.size = "md";
+    expect(classTokens(fixture.componentInstance)).toContain("icon--md");
+  });
+
+  it("applies size=lg variant class", () => {
+    const fixture = TestBed.createComponent(IconComponent);
+    fixture.componentInstance.size = "lg";
+    expect(classTokens(fixture.componentInstance)).toContain("icon--lg");
+  });
+
+  it("applies size=xl variant class", () => {
+    const fixture = TestBed.createComponent(IconComponent);
+    fixture.componentInstance.size = "xl";
+    expect(classTokens(fixture.componentInstance)).toContain("icon--xl");
+  });
 });
 
 function classTokens(component: { classes: () => string }): string[] {

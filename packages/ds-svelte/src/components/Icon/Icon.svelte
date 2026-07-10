@@ -27,6 +27,7 @@ const iconGlyph = $derived(resolveIcon(name, iconGlyphPx ?? Number.NaN));
 const classes = $derived(
   [
     "icon",
+    size ? `icon--${size}` : null,
     className,
   ].filter(Boolean).join(" ")
 );

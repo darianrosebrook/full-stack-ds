@@ -42,6 +42,7 @@ export class IconComponent {
   classes(): string {
     return [
       "icon",
+      this.size ? `icon--${this.size}` : null,
       this.class,
     ].filter(Boolean).join(" ");
   }

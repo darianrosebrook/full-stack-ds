@@ -77,17 +77,35 @@ export const iconTokenScopes = {
       cssVar: "--fsds-box-model-max-height",
       literal: "none",
     },
+    "icon.size.sm": {
+      name: "icon.size.sm",
+      cssVar: "--fsds-icon-size-sm",
+      ref: "core.icon.size.sm",
+      fallback: 16,
+    },
+    "icon.size.md": {
+      name: "icon.size.md",
+      cssVar: "--fsds-icon-size-md",
+      ref: "core.icon.size.md",
+      fallback: 20,
+    },
+    "icon.size.lg": {
+      name: "icon.size.lg",
+      cssVar: "--fsds-icon-size-lg",
+      ref: "core.icon.size.lg",
+      fallback: 24,
+    },
+    "icon.size.xl": {
+      name: "icon.size.xl",
+      cssVar: "--fsds-icon-size-xl",
+      ref: "core.icon.size.xl",
+      fallback: 32,
+    },
     "icon.color.foreground.default": {
       name: "icon.color.foreground.default",
       cssVar: "--fsds-icon-color-foreground-default",
       ref: "semantic.color.foreground.primary",
       fallback: "#141414",
-    },
-    "icon.size.padding.default": {
-      name: "icon.size.padding.default",
-      cssVar: "--fsds-icon-size-padding-default",
-      ref: "core.spacing.size.01",
-      fallback: 1,
     },
   },
 } satisfies ComponentTokenScopes;

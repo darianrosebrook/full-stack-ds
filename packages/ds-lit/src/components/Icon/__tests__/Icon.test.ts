@@ -16,6 +16,30 @@ describe("Icon — unit", () => {
     const root = element.shadowRoot?.firstElementChild ?? element;
     expect(classTokens(root)).toContain("icon");
   });
+
+  it("applies size=sm variant class", async () => {
+    const { element } = await renderElement("fsds-icon", { "size": "sm" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("icon--sm");
+  });
+
+  it("applies size=md variant class", async () => {
+    const { element } = await renderElement("fsds-icon", { "size": "md" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("icon--md");
+  });
+
+  it("applies size=lg variant class", async () => {
+    const { element } = await renderElement("fsds-icon", { "size": "lg" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("icon--lg");
+  });
+
+  it("applies size=xl variant class", async () => {
+    const { element } = await renderElement("fsds-icon", { "size": "xl" });
+    const root = element.shadowRoot?.firstElementChild ?? element;
+    expect(classTokens(root)).toContain("icon--xl");
+  });
 });
 
 describe("Icon — accessibility", () => {

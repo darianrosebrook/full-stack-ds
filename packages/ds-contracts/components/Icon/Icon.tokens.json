@@ -1,12 +1,27 @@
 {
+  "icon.size.sm": {
+    "resolvesTo": "core.icon.size.sm",
+    "fallback": "16px",
+    "layer": "core"
+  },
+  "icon.size.md": {
+    "resolvesTo": "core.icon.size.md",
+    "fallback": "20px",
+    "layer": "core"
+  },
+  "icon.size.lg": {
+    "resolvesTo": "core.icon.size.lg",
+    "fallback": "24px",
+    "layer": "core"
+  },
+  "icon.size.xl": {
+    "resolvesTo": "core.icon.size.xl",
+    "fallback": "32px",
+    "layer": "core"
+  },
   "icon.color.foreground.default": {
     "resolvesTo": "semantic.color.foreground.primary",
     "fallback": "#141414",
     "layer": "semantic"
-  },
-  "icon.size.padding.default": {
-    "resolvesTo": "core.spacing.size.01",
-    "fallback": "1px",
-    "layer": "core"
   }
 }

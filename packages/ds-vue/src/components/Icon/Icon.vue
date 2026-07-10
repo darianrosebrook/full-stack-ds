@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
 // @generated:start classes
 const classNames = computed(() => [
   "icon",
+  props.size ? `icon--${props.size}` : null,
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end

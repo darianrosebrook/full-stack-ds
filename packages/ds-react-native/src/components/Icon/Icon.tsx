@@ -24,6 +24,7 @@ export interface IconProps {
 
 // @generated:start component
 export function Icon({
+  size = "md",
   style,
   testID,
   accessibilityLabel,
@@ -31,10 +32,11 @@ export function Icon({
 }: IconProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createIconStyles(fsdsTheme), [fsdsTheme]);
+  const variantStyleForSize = size !== undefined ? ({ "sm": styles.root_variant_sm, "md": styles.root_variant_md, "lg": styles.root_variant_lg, "xl": styles.root_variant_xl } as Record<string, ViewStyle | undefined>)[size] : undefined;
   return (
     <View
       testID={testID}
-      style={[styles.root, style]}
+      style={[styles.root, variantStyleForSize, style]}
       accessible={false}
       accessibilityLabel={accessibilityLabel}
       accessibilityLabelledBy={accessibilityLabelledBy}

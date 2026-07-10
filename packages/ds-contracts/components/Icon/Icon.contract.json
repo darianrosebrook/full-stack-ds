@@ -67,6 +67,9 @@
       ]
     }
   },
+  "variants": {
+    "size": ["sm", "md", "lg", "xl"]
+  },
   "states": {
     "dimensions": {
       "pointer": {

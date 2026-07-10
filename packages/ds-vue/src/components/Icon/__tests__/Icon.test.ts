@@ -23,6 +23,26 @@ describe("Icon — unit", () => {
     expect(wrapper.classes()).toContain("icon");
     expect(wrapper.classes()).toContain("custom");
   });
+
+  it("applies size=sm variant class", () => {
+    const wrapper = mount(Icon as Component, { props: { "size": "sm" }, attrs: { "data-testid": "icon" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("icon--sm");
+  });
+
+  it("applies size=md variant class", () => {
+    const wrapper = mount(Icon as Component, { props: { "size": "md" }, attrs: { "data-testid": "icon" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("icon--md");
+  });
+
+  it("applies size=lg variant class", () => {
+    const wrapper = mount(Icon as Component, { props: { "size": "lg" }, attrs: { "data-testid": "icon" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("icon--lg");
+  });
+
+  it("applies size=xl variant class", () => {
+    const wrapper = mount(Icon as Component, { props: { "size": "xl" }, attrs: { "data-testid": "icon" }, slots: { default: "content" } });
+    expect(wrapper.classes()).toContain("icon--xl");
+  });
 });
 
 describe("Icon — accessibility", () => {

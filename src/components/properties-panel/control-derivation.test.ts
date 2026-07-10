@@ -120,17 +120,33 @@ describe("deriveControls — props (typed, de-duplicated against axes)", () => {
     );
   });
 
-  it("maps Icon's inline enum size prop to a select control", () => {
-    const { props } = deriveControls(loadContract("Icon"));
-    const size = props.find((p) => p.name === "size");
+  it("maps Divider's inline enum prop to a select control", () => {
+    const { props } = deriveControls({
+      ...loadContract("Divider"),
+      variants: {},
+    });
+    const orientation = props.find((p) => p.name === "orientation");
+
+    expect(orientation).toMatchObject({
+      kind: "select",
+      name: "orientation",
+      options: ["horizontal", "vertical"],
+      isVariantAxis: false,
+    });
+  });
+
+  it("keeps Icon's size axis in Variants instead of duplicating it under Properties", () => {
+    const { variantAxes, props } = deriveControls(loadContract("Icon"));
+    const size = variantAxes.find((p) => p.name === "size");
 
     expect(size).toMatchObject({
       kind: "select",
       name: "size",
       options: ["sm", "md", "lg", "xl"],
       defaultValue: "md",
-      isVariantAxis: false,
+      isVariantAxis: true,
     });
+    expect(props.find((p) => p.name === "size")).toBeUndefined();
   });
 });
 
