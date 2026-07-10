@@ -1,0 +1,45 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "alarm",
+  "displayName": "Alarm",
+  "namespace": "fsds.icon",
+  "description": "Alarm clock for scheduled alerts, timers, and reminders.",
+  "category": "time",
+  "tags": ["alarm", "clock", "alert", "reminder", "time", "icon"],
+  "aliases": ["alarm-clock"],
+  "status": "active",
+  "updatedAt": "2026-07-10",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "alarm-16",
+      "description": "Alarm authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M8 3A5.5 5.5 0 1 1 8 14A5.5 5.5 0 1 1 8 3", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M8 6.25V8.9L9.5 10.4", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M4.25 2.5L2.25 4.5M11.75 2.5L13.75 4.5M4.25 12.3L2.75 14M11.75 12.3L13.25 14", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-alarm-16", "android": "ui_ic_alarm_16dp", "ios": "alarm-16", "react": "AlarmIcon", "svelte": "AlarmIcon", "reactNative": "AlarmIcon", "swift": "AlarmIcon", "kotlin": "AlarmIcon" }
+    },
+    "24": {
+      "name": "alarm-24",
+      "description": "Alarm authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M12 5A8 8 0 1 1 12 21A8 8 0 1 1 12 5", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M12 9V13L14 15", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M5 3L2 6M19 3L22 6M6.38 18.7L4 21M17.64 18.67L20 21", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-alarm-24", "android": "ui_ic_alarm_24dp", "ios": "alarm-24", "react": "AlarmIcon", "svelte": "AlarmIcon", "reactNative": "AlarmIcon", "swift": "AlarmIcon", "kotlin": "AlarmIcon" }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": { "source": "Lucide Icons, adapted", "license": "ISC", "notes": "Adapted into separately authored 16px and 24px governed variants for the catalog runtime delivery." }
+}

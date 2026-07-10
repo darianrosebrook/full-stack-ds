@@ -2,6 +2,71 @@
 // Committed build output (drift-gated); the authoring source of truth is
 // icons/<Name>/<Name>.icon.json. Rebuild with `pnpm run build` in this package.
 
+export const alarm = {
+  "name": "alarm",
+  "ref": "fsds.icon.alarm",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 3A5.5 5.5 0 1 1 8 14A5.5 5.5 0 1 1 8 3",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 6.25V8.9L9.5 10.4",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M4.25 2.5L2.25 4.5M11.75 2.5L13.75 4.5M4.25 12.3L2.75 14M11.75 12.3L13.25 14",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 5A8 8 0 1 1 12 21A8 8 0 1 1 12 5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 9V13L14 15",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M5 3L2 6M19 3L22 6M6.38 18.7L4 21M17.64 18.67L20 21",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const arrowDown = {
   "name": "arrow-down",
   "ref": "fsds.icon.arrow-down",
@@ -194,6 +259,170 @@ export const arrowUp = {
   }
 };
 
+export const arrowUpDown = {
+  "name": "arrow-up-down",
+  "ref": "fsds.icon.arrow-up-down",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M14 10L11 13L8 10M11 13V3M2 6L5 3L8 6M5 3V13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M21 16L17 20L13 16M17 20V4M3 8L7 4L11 8M7 4V20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const atSign = {
+  "name": "at-sign",
+  "ref": "fsds.icon.at-sign",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 5.33A2.67 2.67 0 1 1 8 10.67A2.67 2.67 0 1 1 8 5.33",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M10.67 5.33V8.67A2 2 0 0 0 14.67 8.67V8A6.67 6.67 0 1 0 12 13.33",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 8A4 4 0 1 1 12 16A4 4 0 1 1 12 8",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M16 8V13A3 3 0 0 0 22 13V12A10 10 0 1 0 18 20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const baseline = {
+  "name": "baseline",
+  "ref": "fsds.icon.baseline",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M2.5 13.5H13.5M4 11L8 3L12 11M5.33 8H10.67",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M4 20H20M6 16L12 4L18 16M8 12H16",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const calculator = {
+  "name": "calculator",
+  "ref": "fsds.icon.calculator",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M4.5 1.5H11.5A1.5 1.5 0 0 1 13 3V13A1.5 1.5 0 0 1 11.5 14.5H4.5A1.5 1.5 0 0 1 3 13V3A1.5 1.5 0 0 1 4.5 1.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M5.5 4.5H10.5M10.5 7.5H10.51M8 7.5H8.01M5.5 7.5H5.51M8 10.5H8.01M5.5 10.5H5.51M8 13H8.01M5.5 13H5.51M10.5 10.5V13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M6 2H18A2 2 0 0 1 20 4V20A2 2 0 0 1 18 22H6A2 2 0 0 1 4 20V4A2 2 0 0 1 6 2",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 6H16M16 10H16.01M12 10H12.01M8 10H8.01M12 14H12.01M8 14H8.01M12 18H12.01M8 18H8.01M16 14V18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const check = {
   "name": "check",
   "ref": "fsds.icon.check",
@@ -317,6 +546,53 @@ export const circle = {
           "fill": "none",
           "stroke": "currentColor",
           "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const circleDot = {
+  "name": "circle-dot",
+  "ref": "fsds.icon.circle-dot",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 2A6 6 0 1 1 8 14A6 6 0 1 1 8 2",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 8H8.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 2,
+          "strokeLineCap": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 2A10 10 0 1 1 12 22A10 10 0 1 1 12 2",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 12H12.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 2,
           "strokeLineCap": "round"
         }
       ]
@@ -953,14 +1229,20 @@ export const x = {
 };
 
 export const icons = {
+  "alarm": alarm,
   "arrow-down": arrowDown,
   "arrow-left": arrowLeft,
   "arrow-right": arrowRight,
   "arrow-up": arrowUp,
+  "arrow-up-down": arrowUpDown,
+  "at-sign": atSign,
+  "baseline": baseline,
+  "calculator": calculator,
   "check": check,
   "chevron-down": chevronDown,
   "chevron-right": chevronRight,
   "circle": circle,
+  "circle-dot": circleDot,
   "external-link": externalLink,
   "home": home,
   "info": info,

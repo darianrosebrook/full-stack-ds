@@ -1,0 +1,43 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "calculator",
+  "displayName": "Calculator",
+  "namespace": "fsds.icon",
+  "description": "Calculator for arithmetic, calculation tools, and financial operations.",
+  "category": "tools",
+  "tags": ["calculator", "math", "arithmetic", "finance", "numbers", "icon"],
+  "aliases": [],
+  "status": "active",
+  "updatedAt": "2026-07-10",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "calculator-16",
+      "description": "Calculator authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M4.5 1.5H11.5A1.5 1.5 0 0 1 13 3V13A1.5 1.5 0 0 1 11.5 14.5H4.5A1.5 1.5 0 0 1 3 13V3A1.5 1.5 0 0 1 4.5 1.5", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M5.5 4.5H10.5M10.5 7.5H10.51M8 7.5H8.01M5.5 7.5H5.51M8 10.5H8.01M5.5 10.5H5.51M8 13H8.01M5.5 13H5.51M10.5 10.5V13", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-calculator-16", "android": "ui_ic_calculator_16dp", "ios": "calculator-16", "react": "CalculatorIcon", "svelte": "CalculatorIcon", "reactNative": "CalculatorIcon", "swift": "CalculatorIcon", "kotlin": "CalculatorIcon" }
+    },
+    "24": {
+      "name": "calculator-24",
+      "description": "Calculator authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M6 2H18A2 2 0 0 1 20 4V20A2 2 0 0 1 18 22H6A2 2 0 0 1 4 20V4A2 2 0 0 1 6 2", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M8 6H16M16 10H16.01M12 10H12.01M8 10H8.01M12 14H12.01M8 14H8.01M12 18H12.01M8 18H8.01M16 14V18", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-calculator-24", "android": "ui_ic_calculator_24dp", "ios": "calculator-24", "react": "CalculatorIcon", "svelte": "CalculatorIcon", "reactNative": "CalculatorIcon", "swift": "CalculatorIcon", "kotlin": "CalculatorIcon" }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": { "source": "Lucide Icons, adapted", "license": "ISC", "notes": "Adapted into separately authored 16px and 24px governed variants for the catalog runtime delivery." }
+}

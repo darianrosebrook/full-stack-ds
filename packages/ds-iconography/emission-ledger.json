@@ -1,14 +1,19 @@
 {
   "schema_version": "emission_evidence_ledger.v1",
-  "row_count": 24,
-  "edge_count": 212,
+  "row_count": 30,
+  "edge_count": 266,
   "rows": [
     {
       "schema_version": "emission_evidence_row.v1",
       "unit_id": "__corpus__",
       "target": "iconography",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
       "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Alarm/Alarm.icon.json",
+          "hash": "sha256:3ba7d818ac01f32946d97fbb7e55506434a88fb590a406c924e189119ad655ce"
+        },
         {
           "role": "contract",
           "relPath": "packages/ds-iconography/icons/ArrowDown/ArrowDown.icon.json",
@@ -31,6 +36,26 @@
         },
         {
           "role": "contract",
+          "relPath": "packages/ds-iconography/icons/ArrowUpDown/ArrowUpDown.icon.json",
+          "hash": "sha256:bb49b9933573e289f3a168078e39f59a98d6a2003d65b386ae7c2f6bf80eead4"
+        },
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/AtSign/AtSign.icon.json",
+          "hash": "sha256:8f5d66da12fefbc02d712a6e4d76b92a9510d8cab3fe5002f1b266e30c5626e7"
+        },
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Baseline/Baseline.icon.json",
+          "hash": "sha256:69e8e924f2a43734a02263eae4596c775c1ea06defae2b097e0b07c57dc82bf9"
+        },
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Calculator/Calculator.icon.json",
+          "hash": "sha256:cff35c863a5536c74911d1719ef2545a8df17dfbf2e1577f12fbe3993026b676"
+        },
+        {
+          "role": "contract",
           "relPath": "packages/ds-iconography/icons/Check/Check.icon.json",
           "hash": "sha256:a94c8749462a6a1df19d5a817a55de4ee8b1e6f8e42764e83015325d41db1ee4"
         },
@@ -48,6 +73,11 @@
           "role": "contract",
           "relPath": "packages/ds-iconography/icons/Circle/Circle.icon.json",
           "hash": "sha256:0090aeb8aa2081e067c5ea0b698edd118b3bc295e27d2e8b024a61e720988629"
+        },
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/CircleDot/CircleDot.icon.json",
+          "hash": "sha256:41884d5370bfc5ff86b571fca436151cbdb34a8725c08ae842a88104f99b21fe"
         },
         {
           "role": "contract",
@@ -152,13 +182,13 @@
       ],
       "attachment_refs": [
         "sha256:86050e93e2879b04c2da32f6de90e41a5ccc808b0a28e1f592be114fbc1833e3",
-        "sha256:9f50672855e1146bdf8c774ef5e7f27b47fc0ccf8ae23e2577ae590dfe5e50c9",
-        "sha256:95d44962c13176ae537da563f306874811efd9e0ffbbf4619a9ca99b0319bce1",
-        "sha256:95d44962c13176ae537da563f306874811efd9e0ffbbf4619a9ca99b0319bce1",
-        "sha256:2735172ba0bf1714f40fbad1ea93c49526c760874b9e2dec2f928e39d1833ede",
-        "sha256:827c9ab289e98b6a1aec4074ebb2dd65a5c6138958a488558061dfca9c4807b4",
-        "sha256:56df7f60ed6b6fe26f3e8c217124ab2a6928837e5dc8442ac990343a2d7b8ff1",
-        "sha256:f189b3245f52b82416767af1611b87b46243638b80502ef3b58817e6053fd03c"
+        "sha256:6bfb1bc1874a0f03e2da0a9b91c57cfa48b66de7a3cfb435eb3a025a359cde00",
+        "sha256:3099bbc4ec468d27aabae0b5f5559980d1e4d29331d7647297eace5ef5b71adf",
+        "sha256:3099bbc4ec468d27aabae0b5f5559980d1e4d29331d7647297eace5ef5b71adf",
+        "sha256:01935e4ebcd8525ca7eb52b01de568bfd3c4dda7d13b9ee25855d94e40440c25",
+        "sha256:ad2c453ac06d591ad05d56203062e5386ce56cb51c308980385de02202aaedaf",
+        "sha256:f0c01b3641eaa1a7c48e804a066f6766691b96ef01bf614548519432ec61437b",
+        "sha256:dca1c031dd2cef02f7e69f7e34310dcdd9d82b6addd162c4d7794884a27a53ea"
       ],
       "attachments": [
         {
@@ -168,38 +198,135 @@
         },
         {
           "relPath": "packages/ds-iconography/generated/catalog.json",
-          "ref": "sha256:9f50672855e1146bdf8c774ef5e7f27b47fc0ccf8ae23e2577ae590dfe5e50c9",
-          "bytes": 38999
+          "ref": "sha256:6bfb1bc1874a0f03e2da0a9b91c57cfa48b66de7a3cfb435eb3a025a359cde00",
+          "bytes": 49382
         },
         {
           "relPath": "packages/ds-iconography/generated/react-native/index.ts",
-          "ref": "sha256:95d44962c13176ae537da563f306874811efd9e0ffbbf4619a9ca99b0319bce1",
-          "bytes": 1091
+          "ref": "sha256:3099bbc4ec468d27aabae0b5f5559980d1e4d29331d7647297eace5ef5b71adf",
+          "bytes": 1375
         },
         {
           "relPath": "packages/ds-iconography/generated/react/index.ts",
-          "ref": "sha256:95d44962c13176ae537da563f306874811efd9e0ffbbf4619a9ca99b0319bce1",
-          "bytes": 1091
+          "ref": "sha256:3099bbc4ec468d27aabae0b5f5559980d1e4d29331d7647297eace5ef5b71adf",
+          "bytes": 1375
         },
         {
           "relPath": "packages/ds-iconography/generated/svelte/index.ts",
-          "ref": "sha256:2735172ba0bf1714f40fbad1ea93c49526c760874b9e2dec2f928e39d1833ede",
-          "bytes": 1505
+          "ref": "sha256:01935e4ebcd8525ca7eb52b01de568bfd3c4dda7d13b9ee25855d94e40440c25",
+          "bytes": 1897
         },
         {
           "relPath": "packages/ds-iconography/generated/web/sprite.svg",
-          "ref": "sha256:827c9ab289e98b6a1aec4074ebb2dd65a5c6138958a488558061dfca9c4807b4",
-          "bytes": 12900
+          "ref": "sha256:ad2c453ac06d591ad05d56203062e5386ce56cb51c308980385de02202aaedaf",
+          "bytes": 17224
         },
         {
           "relPath": "packages/ds-iconography/index.d.ts",
-          "ref": "sha256:56df7f60ed6b6fe26f3e8c217124ab2a6928837e5dc8442ac990343a2d7b8ff1",
-          "bytes": 2157
+          "ref": "sha256:f0c01b3641eaa1a7c48e804a066f6766691b96ef01bf614548519432ec61437b",
+          "bytes": 2410
         },
         {
           "relPath": "packages/ds-iconography/index.mjs",
-          "ref": "sha256:f189b3245f52b82416767af1611b87b46243638b80502ef3b58817e6053fd03c",
-          "bytes": 23295
+          "ref": "sha256:dca1c031dd2cef02f7e69f7e34310dcdd9d82b6addd162c4d7794884a27a53ea",
+          "bytes": 30418
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "alarm",
+      "target": "iconography",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Alarm/Alarm.icon.json",
+          "hash": "sha256:3ba7d818ac01f32946d97fbb7e55506434a88fb590a406c924e189119ad655ce"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:6b6e64ff7f8482584401832695e91d874fbf25f3cc6acbaf95b5d6c14195c898"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:a0e2b3b02f892a0fa69090e7083c0a63b019f8a0e7c35f2fee9a4c421b07f772"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:fbe9ae8465b6e95eea4500b3dc1536e46619087a6f41f74b36fd573bde6b76c5"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:1ca41c336cf01bcfdebdf2e37dd03481081ace2e9b4d987cd2a6f9ba33e3323c",
+        "sha256:ee6bdea46c13d6fcb7e28e16b7f92e3e82dff64e5d60b86d580b09d2c069926e",
+        "sha256:da7543238fab38c2c50770a8129cd9d6795cf3fda31e3378cd73ee808712c13f",
+        "sha256:554180f54182276b0db6765ab91d1f864d0499c7ad22dca461c5ac6d8db61d20",
+        "sha256:35456ec68bd43b7bcd2974be4a0f77c781cd7b5129b7c5d3ac4d87ac5bc549af",
+        "sha256:e6a860af6d93c706bf5d5b704f74b7d2ec10c196d41c2c889fad5a9df022af78",
+        "sha256:b864c386fd1a4ff3241ed7b967c183df5f858968cf4e6995c8f4dbde5478d70b",
+        "sha256:98409106796ef87a2d8e1638f0974de29f9c550162ce67b6d4e7f2b30105d3f7",
+        "sha256:4c0d8f30712cfcadc16b7c6229dc310b0d3930d37fe0f3fd7b57f98fd7eba9bd"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_alarm_16dp.xml",
+          "ref": "sha256:1ca41c336cf01bcfdebdf2e37dd03481081ace2e9b4d987cd2a6f9ba33e3323c",
+          "bytes": 977
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_alarm_24dp.xml",
+          "ref": "sha256:ee6bdea46c13d6fcb7e28e16b7f92e3e82dff64e5d60b86d580b09d2c069926e",
+          "bytes": 941
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/AlarmIcon.kt",
+          "ref": "sha256:da7543238fab38c2c50770a8129cd9d6795cf3fda31e3378cd73ee808712c13f",
+          "bytes": 1267
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/AlarmIcon.tsx",
+          "ref": "sha256:554180f54182276b0db6765ab91d1f864d0499c7ad22dca461c5ac6d8db61d20",
+          "bytes": 1787
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/AlarmIcon.tsx",
+          "ref": "sha256:35456ec68bd43b7bcd2974be4a0f77c781cd7b5129b7c5d3ac4d87ac5bc549af",
+          "bytes": 1933
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/AlarmIcon.svelte",
+          "ref": "sha256:e6a860af6d93c706bf5d5b704f74b7d2ec10c196d41c2c889fad5a9df022af78",
+          "bytes": 1536
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/AlarmIcon.swift",
+          "ref": "sha256:b864c386fd1a4ff3241ed7b967c183df5f858968cf4e6995c8f4dbde5478d70b",
+          "bytes": 1282
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-alarm-16.svg",
+          "ref": "sha256:98409106796ef87a2d8e1638f0974de29f9c550162ce67b6d4e7f2b30105d3f7",
+          "bytes": 588
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-alarm-24.svg",
+          "ref": "sha256:4c0d8f30712cfcadc16b7c6229dc310b0d3930d37fe0f3fd7b57f98fd7eba9bd",
+          "bytes": 552
         }
       ],
       "admission_state": "emitted"
@@ -594,6 +721,394 @@
     },
     {
       "schema_version": "emission_evidence_row.v1",
+      "unit_id": "arrow-up-down",
+      "target": "iconography",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/ArrowUpDown/ArrowUpDown.icon.json",
+          "hash": "sha256:bb49b9933573e289f3a168078e39f59a98d6a2003d65b386ae7c2f6bf80eead4"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:6b6e64ff7f8482584401832695e91d874fbf25f3cc6acbaf95b5d6c14195c898"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:a0e2b3b02f892a0fa69090e7083c0a63b019f8a0e7c35f2fee9a4c421b07f772"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:fbe9ae8465b6e95eea4500b3dc1536e46619087a6f41f74b36fd573bde6b76c5"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:9d403a855ce3ef7ceed2d0c0d256749fa65dcbda11bce2ead739ac7765d149be",
+        "sha256:21a092f4f5839f07f3cf0b70f282f40a97573b58f72f531d8b4a9e237a10f35c",
+        "sha256:d108f893e28b3f9e3f66846c70062d2ccb56ba3f6ebb4446211a4b8d513b6af7",
+        "sha256:13a6b9698a2c1b14b64dfdd143d6e2c7ce3c0ff4ac66b8e05647d8a354344358",
+        "sha256:e14ee051cd311d897979f70cb6735f256e6092f1da2c48fa6bf6ece874971906",
+        "sha256:9aa00045ee5ad6f523d39952d4b09042fd740f33dda78c8adf16c94d09f8d9fd",
+        "sha256:6a1dae77a867937ed78518d9e9f7743770fdfa0dc6f8bf13cb5449511fd53868",
+        "sha256:a5c102063389e8aeef4640d2e5536476e3591dc66e1849130d08aecad74d14ec",
+        "sha256:ad00adef7289fc68ff5cc9e7386e8dbe8a7f572564d081a5627b248c6fb59c4a"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_arrow_up_down_16dp.xml",
+          "ref": "sha256:9d403a855ce3ef7ceed2d0c0d256749fa65dcbda11bce2ead739ac7765d149be",
+          "bytes": 478
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_arrow_up_down_24dp.xml",
+          "ref": "sha256:21a092f4f5839f07f3cf0b70f282f40a97573b58f72f531d8b4a9e237a10f35c",
+          "bytes": 480
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/ArrowUpDownIcon.kt",
+          "ref": "sha256:d108f893e28b3f9e3f66846c70062d2ccb56ba3f6ebb4446211a4b8d513b6af7",
+          "bytes": 693
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/ArrowUpDownIcon.tsx",
+          "ref": "sha256:13a6b9698a2c1b14b64dfdd143d6e2c7ce3c0ff4ac66b8e05647d8a354344358",
+          "bytes": 1189
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/ArrowUpDownIcon.tsx",
+          "ref": "sha256:e14ee051cd311d897979f70cb6735f256e6092f1da2c48fa6bf6ece874971906",
+          "bytes": 1307
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/ArrowUpDownIcon.svelte",
+          "ref": "sha256:9aa00045ee5ad6f523d39952d4b09042fd740f33dda78c8adf16c94d09f8d9fd",
+          "bytes": 924
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/ArrowUpDownIcon.swift",
+          "ref": "sha256:6a1dae77a867937ed78518d9e9f7743770fdfa0dc6f8bf13cb5449511fd53868",
+          "bytes": 708
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-arrow-up-down-16.svg",
+          "ref": "sha256:a5c102063389e8aeef4640d2e5536476e3591dc66e1849130d08aecad74d14ec",
+          "bytes": 263
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-arrow-up-down-24.svg",
+          "ref": "sha256:ad00adef7289fc68ff5cc9e7386e8dbe8a7f572564d081a5627b248c6fb59c4a",
+          "bytes": 265
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "at-sign",
+      "target": "iconography",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/AtSign/AtSign.icon.json",
+          "hash": "sha256:8f5d66da12fefbc02d712a6e4d76b92a9510d8cab3fe5002f1b266e30c5626e7"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:6b6e64ff7f8482584401832695e91d874fbf25f3cc6acbaf95b5d6c14195c898"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:a0e2b3b02f892a0fa69090e7083c0a63b019f8a0e7c35f2fee9a4c421b07f772"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:fbe9ae8465b6e95eea4500b3dc1536e46619087a6f41f74b36fd573bde6b76c5"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:855838c23ca369ef9b03091a7389563464831fb905c236821b6a3ab54370cc35",
+        "sha256:76fe13973f11d47ef0ebc8e138194fae376a814145da413054f74c6f86d99fb4",
+        "sha256:cb81aacf3efdc918c12267ddd7265acf1f19374f4679d8a75b930799e063d15b",
+        "sha256:d1496556f785dae946d7b2bcffaf82626d931d28fdef7fa7b86e304b2c726e9e",
+        "sha256:f3302849ccc92622205fbe001df0c25eb53429f19b06501cc0551da0407be025",
+        "sha256:751b26bd976ee28268e48d7eab302601e5d945330b0603d1ec98e1be955a76aa",
+        "sha256:9d4042b16dbbffeda31973e263770d67466d0b1ebc9355ce56660d8f1809e252",
+        "sha256:d7583ce5273bcb40d4b6e94d25792a1c49981befeddc49a8b3fe43051f8c7906",
+        "sha256:82f5b144b050b9e95ce927852530dd4bdf3564ecbf71be248b8a988c9c16524d"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_at_sign_16dp.xml",
+          "ref": "sha256:855838c23ca369ef9b03091a7389563464831fb905c236821b6a3ab54370cc35",
+          "bytes": 755
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_at_sign_24dp.xml",
+          "ref": "sha256:76fe13973f11d47ef0ebc8e138194fae376a814145da413054f74c6f86d99fb4",
+          "bytes": 718
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/AtSignIcon.kt",
+          "ref": "sha256:cb81aacf3efdc918c12267ddd7265acf1f19374f4679d8a75b930799e063d15b",
+          "bytes": 1007
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/AtSignIcon.tsx",
+          "ref": "sha256:d1496556f785dae946d7b2bcffaf82626d931d28fdef7fa7b86e304b2c726e9e",
+          "bytes": 1513
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/AtSignIcon.tsx",
+          "ref": "sha256:f3302849ccc92622205fbe001df0c25eb53429f19b06501cc0551da0407be025",
+          "bytes": 1645
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/AtSignIcon.svelte",
+          "ref": "sha256:751b26bd976ee28268e48d7eab302601e5d945330b0603d1ec98e1be955a76aa",
+          "bytes": 1265
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/AtSignIcon.swift",
+          "ref": "sha256:9d4042b16dbbffeda31973e263770d67466d0b1ebc9355ce56660d8f1809e252",
+          "bytes": 1022
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-at-sign-16.svg",
+          "ref": "sha256:d7583ce5273bcb40d4b6e94d25792a1c49981befeddc49a8b3fe43051f8c7906",
+          "bytes": 453
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-at-sign-24.svg",
+          "ref": "sha256:82f5b144b050b9e95ce927852530dd4bdf3564ecbf71be248b8a988c9c16524d",
+          "bytes": 416
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "baseline",
+      "target": "iconography",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Baseline/Baseline.icon.json",
+          "hash": "sha256:69e8e924f2a43734a02263eae4596c775c1ea06defae2b097e0b07c57dc82bf9"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:6b6e64ff7f8482584401832695e91d874fbf25f3cc6acbaf95b5d6c14195c898"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:a0e2b3b02f892a0fa69090e7083c0a63b019f8a0e7c35f2fee9a4c421b07f772"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:fbe9ae8465b6e95eea4500b3dc1536e46619087a6f41f74b36fd573bde6b76c5"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:531ef0c0299fb136fb17e8f4a3e769e045b01c3312410812c1bfdb55bd777e12",
+        "sha256:569f5198aeec81f2bf3980b578c0438ccde676f689bb2ff1578c562ef1ee6da6",
+        "sha256:9d1c01acaf8049f7775e392f92ad28674f5e1f53e01b8c55f14a3986f28643d6",
+        "sha256:98aed592077999daaafb9f7d5deeaf7cab252d2ef8fa4be3bdd5a7c523d41987",
+        "sha256:c971112c61889c164d7e73a1d8d02c091001e09a7f07b2e854a21dd87b26efc7",
+        "sha256:3e9fdbafa0f59aad66b9282b5a13ee4b42b4cb9c05da35a199e82b173528daca",
+        "sha256:9613f430b256ae319af1ecad1c5984316328bef0f5523b6c58d169ca9f0c81d4",
+        "sha256:0f969804213f1d052fbdfc81b3c618032edb231b20fec85055623934b1ea135d",
+        "sha256:00418c12e915172f1361489ac3bbe4476b332463a3f41e8d12b8ca8bd2b6e030"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_baseline_16dp.xml",
+          "ref": "sha256:531ef0c0299fb136fb17e8f4a3e769e045b01c3312410812c1bfdb55bd777e12",
+          "bytes": 476
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_baseline_24dp.xml",
+          "ref": "sha256:569f5198aeec81f2bf3980b578c0438ccde676f689bb2ff1578c562ef1ee6da6",
+          "bytes": 466
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/BaselineIcon.kt",
+          "ref": "sha256:9d1c01acaf8049f7775e392f92ad28674f5e1f53e01b8c55f14a3986f28643d6",
+          "bytes": 663
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/BaselineIcon.tsx",
+          "ref": "sha256:98aed592077999daaafb9f7d5deeaf7cab252d2ef8fa4be3bdd5a7c523d41987",
+          "bytes": 1158
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/BaselineIcon.tsx",
+          "ref": "sha256:c971112c61889c164d7e73a1d8d02c091001e09a7f07b2e854a21dd87b26efc7",
+          "bytes": 1276
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/BaselineIcon.svelte",
+          "ref": "sha256:3e9fdbafa0f59aad66b9282b5a13ee4b42b4cb9c05da35a199e82b173528daca",
+          "bytes": 908
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/BaselineIcon.swift",
+          "ref": "sha256:9613f430b256ae319af1ecad1c5984316328bef0f5523b6c58d169ca9f0c81d4",
+          "bytes": 678
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-baseline-16.svg",
+          "ref": "sha256:0f969804213f1d052fbdfc81b3c618032edb231b20fec85055623934b1ea135d",
+          "bytes": 261
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-baseline-24.svg",
+          "ref": "sha256:00418c12e915172f1361489ac3bbe4476b332463a3f41e8d12b8ca8bd2b6e030",
+          "bytes": 251
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "calculator",
+      "target": "iconography",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/Calculator/Calculator.icon.json",
+          "hash": "sha256:cff35c863a5536c74911d1719ef2545a8df17dfbf2e1577f12fbe3993026b676"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:6b6e64ff7f8482584401832695e91d874fbf25f3cc6acbaf95b5d6c14195c898"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:a0e2b3b02f892a0fa69090e7083c0a63b019f8a0e7c35f2fee9a4c421b07f772"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:fbe9ae8465b6e95eea4500b3dc1536e46619087a6f41f74b36fd573bde6b76c5"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:e32e69a60cb01b403587f1a5093cc86fc8458d80d88fba1e7c2dc6a343ab7f62",
+        "sha256:2e2742933ad2867dc5275ee699ccd72247ad306109dc2930434926e30199f7d3",
+        "sha256:2d286036578a8c9e9a7c1d2716378f7aaa64614aa7866627289b29ef3d476eb2",
+        "sha256:191b2eea7385b855f8006699e9f8b8838c791a98c9fac25816792a3efc1971f0",
+        "sha256:663528f6a49da0d83d6221ad9226981cc7f61da0506079518db041da34d253e7",
+        "sha256:b89b68826e95f710e11aeb3ca5c123d4e3042c6890394ac62f484b6617051f67",
+        "sha256:e87b37adb1c7a180136d18a42d8e4ca3f37a3ec69588012d8ded49c240710ffb",
+        "sha256:9485d1ac9a89978e580567538b41479127d9844269999fe4b5c5ad35d16759d4",
+        "sha256:ae17d14b88349ce63f91da49e3354a37f2a7f48260e23330006204e57ccac965"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_calculator_16dp.xml",
+          "ref": "sha256:e32e69a60cb01b403587f1a5093cc86fc8458d80d88fba1e7c2dc6a343ab7f62",
+          "bytes": 856
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_calculator_24dp.xml",
+          "ref": "sha256:2e2742933ad2867dc5275ee699ccd72247ad306109dc2930434926e30199f7d3",
+          "bytes": 805
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/CalculatorIcon.kt",
+          "ref": "sha256:2d286036578a8c9e9a7c1d2716378f7aaa64614aa7866627289b29ef3d476eb2",
+          "bytes": 1210
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/CalculatorIcon.tsx",
+          "ref": "sha256:191b2eea7385b855f8006699e9f8b8838c791a98c9fac25816792a3efc1971f0",
+          "bytes": 1721
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/CalculatorIcon.tsx",
+          "ref": "sha256:663528f6a49da0d83d6221ad9226981cc7f61da0506079518db041da34d253e7",
+          "bytes": 1853
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/CalculatorIcon.svelte",
+          "ref": "sha256:b89b68826e95f710e11aeb3ca5c123d4e3042c6890394ac62f484b6617051f67",
+          "bytes": 1453
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/CalculatorIcon.swift",
+          "ref": "sha256:e87b37adb1c7a180136d18a42d8e4ca3f37a3ec69588012d8ded49c240710ffb",
+          "bytes": 1225
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-calculator-16.svg",
+          "ref": "sha256:9485d1ac9a89978e580567538b41479127d9844269999fe4b5c5ad35d16759d4",
+          "bytes": 554
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-calculator-24.svg",
+          "ref": "sha256:ae17d14b88349ce63f91da49e3354a37f2a7f48260e23330006204e57ccac965",
+          "bytes": 503
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
       "unit_id": "check",
       "target": "iconography",
       "observation_ref": "sha256:2138592fc9ba4b6ac77554a540e155265534bc82c1aafff55e689b539183f62a",
@@ -976,6 +1491,103 @@
           "relPath": "packages/ds-iconography/generated/web/icons/icon-circle-24.svg",
           "ref": "sha256:3fe465d455a4c062036b75e982e57e734e2816d9a02bae801820d1aae0edb25d",
           "bytes": 245
+        }
+      ],
+      "admission_state": "emitted"
+    },
+    {
+      "schema_version": "emission_evidence_row.v1",
+      "unit_id": "circle-dot",
+      "target": "iconography",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "observation_members": [
+        {
+          "role": "contract",
+          "relPath": "packages/ds-iconography/icons/CircleDot/CircleDot.icon.json",
+          "hash": "sha256:41884d5370bfc5ff86b571fca436151cbdb34a8725c08ae842a88104f99b21fe"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/build.mjs",
+          "hash": "sha256:6b6e64ff7f8482584401832695e91d874fbf25f3cc6acbaf95b5d6c14195c898"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger-icons.mjs",
+          "hash": "sha256:a0e2b3b02f892a0fa69090e7083c0a63b019f8a0e7c35f2fee9a4c421b07f772"
+        },
+        {
+          "role": "generator",
+          "relPath": "packages/ds-iconography/build/ledger.mjs",
+          "hash": "sha256:69d18dec46832d19a7a8bb0acea4e02b65ea14a4b7f3185217059ae5975b06df"
+        },
+        {
+          "role": "manifest",
+          "relPath": "packages/ds-iconography/package.json",
+          "hash": "sha256:fbe9ae8465b6e95eea4500b3dc1536e46619087a6f41f74b36fd573bde6b76c5"
+        },
+        {
+          "role": "schema",
+          "relPath": "packages/ds-iconography/icon.contract.schema.json",
+          "hash": "sha256:74dd03ed4926a464057000e1502109e46ce0e6c5a58fce3886065457a4b4985e"
+        }
+      ],
+      "attachment_refs": [
+        "sha256:a87965950f38fc561b827f041d725b4c64104c82fc3e2735076b432bf65d4555",
+        "sha256:46b0a638ec3740f49a9f556c595f4972643bc6a5c871ce6f41f3878dd77a2bc0",
+        "sha256:950416efcf361a88803045cf606860c8c18977611f40d91f6f1c828f0e4efd5e",
+        "sha256:5a48d6afc22852e7e74faacb4e8f9a047398e54e51054ed72bca23a04248aacc",
+        "sha256:d1c90417b4bf3517bd2b2dfaaea7df05602b16d0733fdff26da6f325ee1cc94c",
+        "sha256:22c27bc7f2a98fe7c41a3820a99e9478c3dbda7a0cda3a680901071a38820242",
+        "sha256:a59732cfd835078ac405ac334780c2456dff5085f09003d6fa2d96ec3faa92c9",
+        "sha256:ff1c8cd31334146f9c2ce2d1a6553d137869d3c8df39d4d486e73643d47516ff",
+        "sha256:95a4fd2cb9537d28c0e5f4b85747ebaaa165f231a22bb98d79fd7dcbaa8c0015"
+      ],
+      "attachments": [
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_circle_dot_16dp.xml",
+          "ref": "sha256:a87965950f38fc561b827f041d725b4c64104c82fc3e2735076b432bf65d4555",
+          "bytes": 636
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/android/drawable/ui_ic_circle_dot_24dp.xml",
+          "ref": "sha256:46b0a638ec3740f49a9f556c595f4972643bc6a5c871ce6f41f3878dd77a2bc0",
+          "bytes": 646
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/kotlin/CircleDotIcon.kt",
+          "ref": "sha256:950416efcf361a88803045cf606860c8c18977611f40d91f6f1c828f0e4efd5e",
+          "bytes": 862
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react-native/CircleDotIcon.tsx",
+          "ref": "sha256:5a48d6afc22852e7e74faacb4e8f9a047398e54e51054ed72bca23a04248aacc",
+          "bytes": 1373
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/react/CircleDotIcon.tsx",
+          "ref": "sha256:d1c90417b4bf3517bd2b2dfaaea7df05602b16d0733fdff26da6f325ee1cc94c",
+          "bytes": 1505
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/svelte/CircleDotIcon.svelte",
+          "ref": "sha256:22c27bc7f2a98fe7c41a3820a99e9478c3dbda7a0cda3a680901071a38820242",
+          "bytes": 1108
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/swift/CircleDotIcon.swift",
+          "ref": "sha256:a59732cfd835078ac405ac334780c2456dff5085f09003d6fa2d96ec3faa92c9",
+          "bytes": 877
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-circle-dot-16.svg",
+          "ref": "sha256:ff1c8cd31334146f9c2ce2d1a6553d137869d3c8df39d4d486e73643d47516ff",
+          "bytes": 351
+        },
+        {
+          "relPath": "packages/ds-iconography/generated/web/icons/icon-circle-dot-24.svg",
+          "ref": "sha256:95a4fd2cb9537d28c0e5f4b85747ebaaa165f231a22bb98d79fd7dcbaa8c0015",
+          "bytes": 361
         }
       ],
       "admission_state": "emitted"
@@ -2481,48 +3093,6 @@
     },
     {
       "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:2735172ba0bf1714f40fbad1ea93c49526c760874b9e2dec2f928e39d1833ede",
-      "rel_path": "packages/ds-iconography/generated/svelte/index.ts"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:56df7f60ed6b6fe26f3e8c217124ab2a6928837e5dc8442ac990343a2d7b8ff1",
-      "rel_path": "packages/ds-iconography/index.d.ts"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:827c9ab289e98b6a1aec4074ebb2dd65a5c6138958a488558061dfca9c4807b4",
-      "rel_path": "packages/ds-iconography/generated/web/sprite.svg"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:86050e93e2879b04c2da32f6de90e41a5ccc808b0a28e1f592be114fbc1833e3",
-      "rel_path": "packages/ds-iconography/generated/android/residuals.json"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:95d44962c13176ae537da563f306874811efd9e0ffbbf4619a9ca99b0319bce1",
-      "rel_path": "packages/ds-iconography/generated/react-native/index.ts"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:9f50672855e1146bdf8c774ef5e7f27b47fc0ccf8ae23e2577ae590dfe5e50c9",
-      "rel_path": "packages/ds-iconography/generated/catalog.json"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
-      "observation_ref": "sha256:18d58a102ecf4988c7e62a50354ace2b4e7cae79e6020f86df9848621e26b17a",
-      "attachment_ref": "sha256:f189b3245f52b82416767af1611b87b46243638b80502ef3b58817e6053fd03c",
-      "rel_path": "packages/ds-iconography/index.mjs"
-    },
-    {
-      "schema_version": "emission_evidence_join.v1",
       "observation_ref": "sha256:20506c2dc32a0f381f97d6f4ac58fc4a41895c5867f769e3a6873c7628864b26",
       "attachment_ref": "sha256:01c8be638c9868789b4340b85051fde0ef9382a3ade8c123bb66cd78129aee16",
       "rel_path": "packages/ds-iconography/generated/kotlin/MinimizeIcon.kt"
@@ -2835,6 +3405,114 @@
     },
     {
       "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:00418c12e915172f1361489ac3bbe4476b332463a3f41e8d12b8ca8bd2b6e030",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-baseline-24.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:0f969804213f1d052fbdfc81b3c618032edb231b20fec85055623934b1ea135d",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-baseline-16.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:3e9fdbafa0f59aad66b9282b5a13ee4b42b4cb9c05da35a199e82b173528daca",
+      "rel_path": "packages/ds-iconography/generated/svelte/BaselineIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:531ef0c0299fb136fb17e8f4a3e769e045b01c3312410812c1bfdb55bd777e12",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_baseline_16dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:569f5198aeec81f2bf3980b578c0438ccde676f689bb2ff1578c562ef1ee6da6",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_baseline_24dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:9613f430b256ae319af1ecad1c5984316328bef0f5523b6c58d169ca9f0c81d4",
+      "rel_path": "packages/ds-iconography/generated/swift/BaselineIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:98aed592077999daaafb9f7d5deeaf7cab252d2ef8fa4be3bdd5a7c523d41987",
+      "rel_path": "packages/ds-iconography/generated/react-native/BaselineIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:9d1c01acaf8049f7775e392f92ad28674f5e1f53e01b8c55f14a3986f28643d6",
+      "rel_path": "packages/ds-iconography/generated/kotlin/BaselineIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:39c356c2ee8b4f34826e52eaf41ccfe59718c5a891c4d0ed22a87629a8c2bfe2",
+      "attachment_ref": "sha256:c971112c61889c164d7e73a1d8d02c091001e09a7f07b2e854a21dd87b26efc7",
+      "rel_path": "packages/ds-iconography/generated/react/BaselineIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:13a6b9698a2c1b14b64dfdd143d6e2c7ce3c0ff4ac66b8e05647d8a354344358",
+      "rel_path": "packages/ds-iconography/generated/react-native/ArrowUpDownIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:21a092f4f5839f07f3cf0b70f282f40a97573b58f72f531d8b4a9e237a10f35c",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_arrow_up_down_24dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:6a1dae77a867937ed78518d9e9f7743770fdfa0dc6f8bf13cb5449511fd53868",
+      "rel_path": "packages/ds-iconography/generated/swift/ArrowUpDownIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:9aa00045ee5ad6f523d39952d4b09042fd740f33dda78c8adf16c94d09f8d9fd",
+      "rel_path": "packages/ds-iconography/generated/svelte/ArrowUpDownIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:9d403a855ce3ef7ceed2d0c0d256749fa65dcbda11bce2ead739ac7765d149be",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_arrow_up_down_16dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:a5c102063389e8aeef4640d2e5536476e3591dc66e1849130d08aecad74d14ec",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-arrow-up-down-16.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:ad00adef7289fc68ff5cc9e7386e8dbe8a7f572564d081a5627b248c6fb59c4a",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-arrow-up-down-24.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:d108f893e28b3f9e3f66846c70062d2ccb56ba3f6ebb4446211a4b8d513b6af7",
+      "rel_path": "packages/ds-iconography/generated/kotlin/ArrowUpDownIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:3de246ef97fc462242c773344f99d4f0bcca147bbe1e40fbfb397321a9c47dbc",
+      "attachment_ref": "sha256:e14ee051cd311d897979f70cb6735f256e6092f1da2c48fa6bf6ece874971906",
+      "rel_path": "packages/ds-iconography/generated/react/ArrowUpDownIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
       "observation_ref": "sha256:4c3fcd6d9671f1af3dce0fc80969c111339805fc3ff536417d0023df43da9863",
       "attachment_ref": "sha256:3749b5640844a6e06b1f0b3391a977f31166ee5cfe62a647383182ab953454a2",
       "rel_path": "packages/ds-iconography/generated/svelte/MaximizeIcon.svelte"
@@ -3105,6 +3783,102 @@
     },
     {
       "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:751b26bd976ee28268e48d7eab302601e5d945330b0603d1ec98e1be955a76aa",
+      "rel_path": "packages/ds-iconography/generated/svelte/AtSignIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:76fe13973f11d47ef0ebc8e138194fae376a814145da413054f74c6f86d99fb4",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_at_sign_24dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:82f5b144b050b9e95ce927852530dd4bdf3564ecbf71be248b8a988c9c16524d",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-at-sign-24.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:855838c23ca369ef9b03091a7389563464831fb905c236821b6a3ab54370cc35",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_at_sign_16dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:9d4042b16dbbffeda31973e263770d67466d0b1ebc9355ce56660d8f1809e252",
+      "rel_path": "packages/ds-iconography/generated/swift/AtSignIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:cb81aacf3efdc918c12267ddd7265acf1f19374f4679d8a75b930799e063d15b",
+      "rel_path": "packages/ds-iconography/generated/kotlin/AtSignIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:d1496556f785dae946d7b2bcffaf82626d931d28fdef7fa7b86e304b2c726e9e",
+      "rel_path": "packages/ds-iconography/generated/react-native/AtSignIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:d7583ce5273bcb40d4b6e94d25792a1c49981befeddc49a8b3fe43051f8c7906",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-at-sign-16.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:6201b9e5d597e5d779d17cd0d10badb5b4a9b064fefe861a93b2dadf093ac0e2",
+      "attachment_ref": "sha256:f3302849ccc92622205fbe001df0c25eb53429f19b06501cc0551da0407be025",
+      "rel_path": "packages/ds-iconography/generated/react/AtSignIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:01935e4ebcd8525ca7eb52b01de568bfd3c4dda7d13b9ee25855d94e40440c25",
+      "rel_path": "packages/ds-iconography/generated/svelte/index.ts"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:3099bbc4ec468d27aabae0b5f5559980d1e4d29331d7647297eace5ef5b71adf",
+      "rel_path": "packages/ds-iconography/generated/react-native/index.ts"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:6bfb1bc1874a0f03e2da0a9b91c57cfa48b66de7a3cfb435eb3a025a359cde00",
+      "rel_path": "packages/ds-iconography/generated/catalog.json"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:86050e93e2879b04c2da32f6de90e41a5ccc808b0a28e1f592be114fbc1833e3",
+      "rel_path": "packages/ds-iconography/generated/android/residuals.json"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:ad2c453ac06d591ad05d56203062e5386ce56cb51c308980385de02202aaedaf",
+      "rel_path": "packages/ds-iconography/generated/web/sprite.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:dca1c031dd2cef02f7e69f7e34310dcdd9d82b6addd162c4d7794884a27a53ea",
+      "rel_path": "packages/ds-iconography/index.mjs"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:71b91361d48e8d1640eb826f602f1859f6f97b60350aa4982a606bc9334a8aab",
+      "attachment_ref": "sha256:f0c01b3641eaa1a7c48e804a066f6766691b96ef01bf614548519432ec61437b",
+      "rel_path": "packages/ds-iconography/index.d.ts"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
       "observation_ref": "sha256:72f2f200257ca2dd814701118e80859e117b430c8045cb2765cf4c4700096546",
       "attachment_ref": "sha256:37e1056ed31b49047ef1d10393aa03cea00096356612e684ebac4d190df405bf",
       "rel_path": "packages/ds-iconography/generated/web/icons/icon-search-16.svg"
@@ -3156,6 +3930,60 @@
       "observation_ref": "sha256:72f2f200257ca2dd814701118e80859e117b430c8045cb2765cf4c4700096546",
       "attachment_ref": "sha256:e0fcfeba75acb3a4348e24971bbf0fa09d6270459c879b035125edaaff52d102",
       "rel_path": "packages/ds-iconography/generated/swift/SearchIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:191b2eea7385b855f8006699e9f8b8838c791a98c9fac25816792a3efc1971f0",
+      "rel_path": "packages/ds-iconography/generated/react-native/CalculatorIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:2d286036578a8c9e9a7c1d2716378f7aaa64614aa7866627289b29ef3d476eb2",
+      "rel_path": "packages/ds-iconography/generated/kotlin/CalculatorIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:2e2742933ad2867dc5275ee699ccd72247ad306109dc2930434926e30199f7d3",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_calculator_24dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:663528f6a49da0d83d6221ad9226981cc7f61da0506079518db041da34d253e7",
+      "rel_path": "packages/ds-iconography/generated/react/CalculatorIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:9485d1ac9a89978e580567538b41479127d9844269999fe4b5c5ad35d16759d4",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-calculator-16.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:ae17d14b88349ce63f91da49e3354a37f2a7f48260e23330006204e57ccac965",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-calculator-24.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:b89b68826e95f710e11aeb3ca5c123d4e3042c6890394ac62f484b6617051f67",
+      "rel_path": "packages/ds-iconography/generated/svelte/CalculatorIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:e32e69a60cb01b403587f1a5093cc86fc8458d80d88fba1e7c2dc6a343ab7f62",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_calculator_16dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:7c1ffc5f1c8879c3bc0e811b04c74c6dfcb7e92ca5db7174b457149a8c51a001",
+      "attachment_ref": "sha256:e87b37adb1c7a180136d18a42d8e4ca3f37a3ec69588012d8ded49c240710ffb",
+      "rel_path": "packages/ds-iconography/generated/swift/CalculatorIcon.swift"
     },
     {
       "schema_version": "emission_evidence_join.v1",
@@ -3534,6 +4362,114 @@
       "observation_ref": "sha256:dd232bee33ea847115dd42ed587057f705f3dcc22fc0758fd3a97bf73563e58c",
       "attachment_ref": "sha256:f1653c051e3dc92e32ec715c71b7418f23893cdfb757aad6654227d07a3d80ba",
       "rel_path": "packages/ds-iconography/generated/svelte/UserIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:1ca41c336cf01bcfdebdf2e37dd03481081ace2e9b4d987cd2a6f9ba33e3323c",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_alarm_16dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:35456ec68bd43b7bcd2974be4a0f77c781cd7b5129b7c5d3ac4d87ac5bc549af",
+      "rel_path": "packages/ds-iconography/generated/react/AlarmIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:4c0d8f30712cfcadc16b7c6229dc310b0d3930d37fe0f3fd7b57f98fd7eba9bd",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-alarm-24.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:554180f54182276b0db6765ab91d1f864d0499c7ad22dca461c5ac6d8db61d20",
+      "rel_path": "packages/ds-iconography/generated/react-native/AlarmIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:98409106796ef87a2d8e1638f0974de29f9c550162ce67b6d4e7f2b30105d3f7",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-alarm-16.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:b864c386fd1a4ff3241ed7b967c183df5f858968cf4e6995c8f4dbde5478d70b",
+      "rel_path": "packages/ds-iconography/generated/swift/AlarmIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:da7543238fab38c2c50770a8129cd9d6795cf3fda31e3378cd73ee808712c13f",
+      "rel_path": "packages/ds-iconography/generated/kotlin/AlarmIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:e6a860af6d93c706bf5d5b704f74b7d2ec10c196d41c2c889fad5a9df022af78",
+      "rel_path": "packages/ds-iconography/generated/svelte/AlarmIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:ed157a075d2ec5d3b3d9bba89c403ddc468478f6a80b2467f30c09248a53a868",
+      "attachment_ref": "sha256:ee6bdea46c13d6fcb7e28e16b7f92e3e82dff64e5d60b86d580b09d2c069926e",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_alarm_24dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:22c27bc7f2a98fe7c41a3820a99e9478c3dbda7a0cda3a680901071a38820242",
+      "rel_path": "packages/ds-iconography/generated/svelte/CircleDotIcon.svelte"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:46b0a638ec3740f49a9f556c595f4972643bc6a5c871ce6f41f3878dd77a2bc0",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_circle_dot_24dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:5a48d6afc22852e7e74faacb4e8f9a047398e54e51054ed72bca23a04248aacc",
+      "rel_path": "packages/ds-iconography/generated/react-native/CircleDotIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:950416efcf361a88803045cf606860c8c18977611f40d91f6f1c828f0e4efd5e",
+      "rel_path": "packages/ds-iconography/generated/kotlin/CircleDotIcon.kt"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:95a4fd2cb9537d28c0e5f4b85747ebaaa165f231a22bb98d79fd7dcbaa8c0015",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-circle-dot-24.svg"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:a59732cfd835078ac405ac334780c2456dff5085f09003d6fa2d96ec3faa92c9",
+      "rel_path": "packages/ds-iconography/generated/swift/CircleDotIcon.swift"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:a87965950f38fc561b827f041d725b4c64104c82fc3e2735076b432bf65d4555",
+      "rel_path": "packages/ds-iconography/generated/android/drawable/ui_ic_circle_dot_16dp.xml"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:d1c90417b4bf3517bd2b2dfaaea7df05602b16d0733fdff26da6f325ee1cc94c",
+      "rel_path": "packages/ds-iconography/generated/react/CircleDotIcon.tsx"
+    },
+    {
+      "schema_version": "emission_evidence_join.v1",
+      "observation_ref": "sha256:f379e95ee65c062711a09f44396baef201ad8951a04bbb12b833ff42524aff3d",
+      "attachment_ref": "sha256:ff1c8cd31334146f9c2ce2d1a6553d137869d3c8df39d4d486e73643d47516ff",
+      "rel_path": "packages/ds-iconography/generated/web/icons/icon-circle-dot-16.svg"
     },
     {
       "schema_version": "emission_evidence_join.v1",

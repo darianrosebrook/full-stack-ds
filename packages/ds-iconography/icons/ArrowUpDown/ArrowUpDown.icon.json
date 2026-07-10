@@ -1,0 +1,41 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "arrow-up-down",
+  "displayName": "Arrow Up Down",
+  "namespace": "fsds.icon",
+  "description": "Paired vertical arrows for sorting, reordering, and bidirectional movement.",
+  "category": "navigation",
+  "tags": ["arrow", "sort", "up", "down", "reorder", "icon"],
+  "aliases": ["sort"],
+  "status": "active",
+  "updatedAt": "2026-07-10",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "arrow-up-down-16",
+      "description": "Arrow Up Down authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M14 10L11 13L8 10M11 13V3M2 6L5 3L8 6M5 3V13", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-arrow-up-down-16", "android": "ui_ic_arrow_up_down_16dp", "ios": "arrow-up-down-16", "react": "ArrowUpDownIcon", "svelte": "ArrowUpDownIcon", "reactNative": "ArrowUpDownIcon", "swift": "ArrowUpDownIcon", "kotlin": "ArrowUpDownIcon" }
+    },
+    "24": {
+      "name": "arrow-up-down-24",
+      "description": "Arrow Up Down authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M21 16L17 20L13 16M17 20V4M3 8L7 4L11 8M7 4V20", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-arrow-up-down-24", "android": "ui_ic_arrow_up_down_24dp", "ios": "arrow-up-down-24", "react": "ArrowUpDownIcon", "svelte": "ArrowUpDownIcon", "reactNative": "ArrowUpDownIcon", "swift": "ArrowUpDownIcon", "kotlin": "ArrowUpDownIcon" }
+    }
+  },
+  "relatedIcons": ["arrow-up", "arrow-down"],
+  "provenance": { "source": "Lucide Icons, adapted", "license": "ISC", "notes": "Adapted into separately authored 16px and 24px governed variants for the catalog runtime delivery." }
+}

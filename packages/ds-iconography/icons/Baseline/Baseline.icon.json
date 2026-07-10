@@ -1,0 +1,41 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "baseline",
+  "displayName": "Baseline",
+  "namespace": "fsds.icon",
+  "description": "Text baseline mark for typography, alignment, and type settings.",
+  "category": "text",
+  "tags": ["baseline", "text", "typography", "align", "type", "icon"],
+  "aliases": [],
+  "status": "active",
+  "updatedAt": "2026-07-10",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "baseline-16",
+      "description": "Baseline authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M2.5 13.5H13.5M4 11L8 3L12 11M5.33 8H10.67", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-baseline-16", "android": "ui_ic_baseline_16dp", "ios": "baseline-16", "react": "BaselineIcon", "svelte": "BaselineIcon", "reactNative": "BaselineIcon", "swift": "BaselineIcon", "kotlin": "BaselineIcon" }
+    },
+    "24": {
+      "name": "baseline-24",
+      "description": "Baseline authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M4 20H20M6 16L12 4L18 16M8 12H16", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-baseline-24", "android": "ui_ic_baseline_24dp", "ios": "baseline-24", "react": "BaselineIcon", "svelte": "BaselineIcon", "reactNative": "BaselineIcon", "swift": "BaselineIcon", "kotlin": "BaselineIcon" }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": { "source": "Lucide Icons, adapted", "license": "ISC", "notes": "Adapted into separately authored 16px and 24px governed variants for the catalog runtime delivery." }
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "at-sign",
+  "displayName": "At Sign",
+  "namespace": "fsds.icon",
+  "description": "At sign for email addresses, mentions, and account identifiers.",
+  "category": "communication",
+  "tags": ["at", "email", "mention", "account", "address", "icon"],
+  "aliases": ["email"],
+  "status": "active",
+  "updatedAt": "2026-07-10",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "at-sign-16",
+      "description": "At Sign authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M8 5.33A2.67 2.67 0 1 1 8 10.67A2.67 2.67 0 1 1 8 5.33", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M10.67 5.33V8.67A2 2 0 0 0 14.67 8.67V8A6.67 6.67 0 1 0 12 13.33", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-at-sign-16", "android": "ui_ic_at_sign_16dp", "ios": "at-sign-16", "react": "AtSignIcon", "svelte": "AtSignIcon", "reactNative": "AtSignIcon", "swift": "AtSignIcon", "kotlin": "AtSignIcon" }
+    },
+    "24": {
+      "name": "at-sign-24",
+      "description": "At Sign authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M12 8A4 4 0 1 1 12 16A4 4 0 1 1 12 8", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M16 8V13A3 3 0 0 0 22 13V12A10 10 0 1 0 18 20", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-at-sign-24", "android": "ui_ic_at_sign_24dp", "ios": "at-sign-24", "react": "AtSignIcon", "svelte": "AtSignIcon", "reactNative": "AtSignIcon", "swift": "AtSignIcon", "kotlin": "AtSignIcon" }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": { "source": "Lucide Icons, adapted", "license": "ISC", "notes": "Adapted into separately authored 16px and 24px governed variants for the catalog runtime delivery." }
+}
