@@ -1,0 +1,41 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "minimize",
+  "displayName": "Minimize",
+  "namespace": "fsds.icon",
+  "description": "Inward-facing corners for shrinking a panel or exiting full screen.",
+  "category": "navigation",
+  "tags": ["minimize", "collapse", "fullscreen", "resize", "icon"],
+  "aliases": ["exit-fullscreen"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "minimize-16",
+      "description": "Minimize authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M3 6H6V3M13 6H10V3M3 10H6V13M13 10H10V13", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-minimize-16", "android": "ui_ic_minimize_16dp", "ios": "minimize-16", "react": "MinimizeIcon", "svelte": "MinimizeIcon", "reactNative": "MinimizeIcon", "swift": "MinimizeIcon", "kotlin": "MinimizeIcon" }
+    },
+    "24": {
+      "name": "minimize-24",
+      "description": "Minimize authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M4 9H9V4M20 9H15V4M4 15H9V20M20 15H15V20", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-minimize-24", "android": "ui_ic_minimize_24dp", "ios": "minimize-24", "react": "MinimizeIcon", "svelte": "MinimizeIcon", "reactNative": "MinimizeIcon", "swift": "MinimizeIcon", "kotlin": "MinimizeIcon" }
+    }
+  },
+  "relatedIcons": ["maximize"],
+  "provenance": { "source": "repo-authored", "license": "repo-owned", "notes": "Hand-authored for the navigation/layout iconography slice." }
+}

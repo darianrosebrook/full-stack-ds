@@ -30,14 +30,24 @@ export interface ResolvedIconGlyph extends IconGlyphVariant {
   readonly size: number;
 }
 
+export declare const arrowDown: IconGlyph;
 export declare const arrowLeft: IconGlyph;
 export declare const arrowRight: IconGlyph;
+export declare const arrowUp: IconGlyph;
 export declare const check: IconGlyph;
 export declare const chevronDown: IconGlyph;
 export declare const chevronRight: IconGlyph;
 export declare const circle: IconGlyph;
+export declare const externalLink: IconGlyph;
 export declare const home: IconGlyph;
 export declare const info: IconGlyph;
+export declare const maximize: IconGlyph;
+export declare const menu: IconGlyph;
+export declare const minimize: IconGlyph;
+export declare const moreHorizontal: IconGlyph;
+export declare const moreVertical: IconGlyph;
+export declare const panelLeft: IconGlyph;
+export declare const panelRight: IconGlyph;
 export declare const placeholder: IconGlyph;
 export declare const search: IconGlyph;
 export declare const triangleAlert: IconGlyph;

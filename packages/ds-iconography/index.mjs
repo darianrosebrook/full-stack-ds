@@ -2,6 +2,53 @@
 // Committed build output (drift-gated); the authoring source of truth is
 // icons/<Name>/<Name>.icon.json. Rebuild with `pnpm run build` in this package.
 
+export const arrowDown = {
+  "name": "arrow-down",
+  "ref": "fsds.icon.arrow-down",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 3V13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        },
+        {
+          "d": "M4 9L8 13L12 9",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 4V20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        },
+        {
+          "d": "M6 14L12 20L18 14",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const arrowLeft = {
   "name": "arrow-left",
   "ref": "fsds.icon.arrow-left",
@@ -89,6 +136,53 @@ export const arrowRight = {
         },
         {
           "d": "M14 6L20 12L14 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const arrowUp = {
+  "name": "arrow-up",
+  "ref": "fsds.icon.arrow-up",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 13V3",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        },
+        {
+          "d": "M4 7L8 3L12 7",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 20V4",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        },
+        {
+          "d": "M6 10L12 4L18 10",
           "fill": "none",
           "stroke": "currentColor",
           "strokeWidth": 1.5,
@@ -230,6 +324,55 @@ export const circle = {
   }
 };
 
+export const externalLink = {
+  "name": "external-link",
+  "ref": "fsds.icon.external-link",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M9 3H4.5A1.5 1.5 0 0 0 3 4.5V11.5A1.5 1.5 0 0 0 4.5 13H11.5A1.5 1.5 0 0 0 13 11.5V7",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M9 3H13V7M13 3L7 9",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M13 4H6.5A2.5 2.5 0 0 0 4 6.5V17.5A2.5 2.5 0 0 0 6.5 20H17.5A2.5 2.5 0 0 0 20 17.5V11",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M14 4H20V10M20 4L11 13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const home = {
   "name": "home",
   "ref": "fsds.icon.home",
@@ -322,6 +465,251 @@ export const info = {
           "strokeWidth": 1.5,
           "strokeLineCap": "round",
           "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const maximize = {
+  "name": "maximize",
+  "ref": "fsds.icon.maximize",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M6 3H3V6M10 3H13V6M3 10V13H6M13 10V13H10",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M9 4H4V9M15 4H20V9M4 15V20H9M20 15V20H15",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const menu = {
+  "name": "menu",
+  "ref": "fsds.icon.menu",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3 4.5H13M3 8H13M3 11.5H13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M4 6H20M4 12H20M4 18H20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const minimize = {
+  "name": "minimize",
+  "ref": "fsds.icon.minimize",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3 6H6V3M13 6H10V3M3 10H6V13M13 10H10V13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M4 9H9V4M20 9H15V4M4 15H9V20M20 15H15V20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const moreHorizontal = {
+  "name": "more-horizontal",
+  "ref": "fsds.icon.more-horizontal",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3.5 8H3.51M8 8H8.01M12.5 8H12.51",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 2.5,
+          "strokeLineCap": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M5 12H5.01M12 12H12.01M19 12H19.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 3,
+          "strokeLineCap": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const moreVertical = {
+  "name": "more-vertical",
+  "ref": "fsds.icon.more-vertical",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 3.5H8.01M8 8H8.01M8 12.5H8.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 2.5,
+          "strokeLineCap": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 5H12.01M12 12H12.01M12 19H12.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 3,
+          "strokeLineCap": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const panelLeft = {
+  "name": "panel-left",
+  "ref": "fsds.icon.panel-left",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3.5 3H12.5A1.5 1.5 0 0 1 14 4.5V11.5A1.5 1.5 0 0 1 12.5 13H3.5A1.5 1.5 0 0 1 2 11.5V4.5A1.5 1.5 0 0 1 3.5 3Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M6 3V13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M5.5 4H18.5A2.5 2.5 0 0 1 21 6.5V17.5A2.5 2.5 0 0 1 18.5 20H5.5A2.5 2.5 0 0 1 3 17.5V6.5A2.5 2.5 0 0 1 5.5 4Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M9 4V20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5
+        }
+      ]
+    }
+  }
+};
+
+export const panelRight = {
+  "name": "panel-right",
+  "ref": "fsds.icon.panel-right",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3.5 3H12.5A1.5 1.5 0 0 1 14 4.5V11.5A1.5 1.5 0 0 1 12.5 13H3.5A1.5 1.5 0 0 1 2 11.5V4.5A1.5 1.5 0 0 1 3.5 3Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M10 3V13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M5.5 4H18.5A2.5 2.5 0 0 1 21 6.5V17.5A2.5 2.5 0 0 1 18.5 20H5.5A2.5 2.5 0 0 1 3 17.5V6.5A2.5 2.5 0 0 1 5.5 4Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M15 4V20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5
         }
       ]
     }
@@ -565,14 +953,24 @@ export const x = {
 };
 
 export const icons = {
+  "arrow-down": arrowDown,
   "arrow-left": arrowLeft,
   "arrow-right": arrowRight,
+  "arrow-up": arrowUp,
   "check": check,
   "chevron-down": chevronDown,
   "chevron-right": chevronRight,
   "circle": circle,
+  "external-link": externalLink,
   "home": home,
   "info": info,
+  "maximize": maximize,
+  "menu": menu,
+  "minimize": minimize,
+  "more-horizontal": moreHorizontal,
+  "more-vertical": moreVertical,
+  "panel-left": panelLeft,
+  "panel-right": panelRight,
   "placeholder": placeholder,
   "search": search,
   "triangle-alert": triangleAlert,

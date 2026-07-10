@@ -1,0 +1,37 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "menu",
+  "displayName": "Menu",
+  "namespace": "fsds.icon",
+  "description": "Three horizontal lines for navigation menus and compact controls.",
+  "category": "navigation",
+  "tags": ["menu", "navigation", "hamburger", "drawer", "icon"],
+  "aliases": ["hamburger"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "menu-16",
+      "description": "Menu authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [{ "d": "M3 4.5H13M3 8H13M3 11.5H13", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round" }],
+      "platformNames": { "web": "icon-menu-16", "android": "ui_ic_menu_16dp", "ios": "menu-16", "react": "MenuIcon", "svelte": "MenuIcon", "reactNative": "MenuIcon", "swift": "MenuIcon", "kotlin": "MenuIcon" }
+    },
+    "24": {
+      "name": "menu-24",
+      "description": "Menu authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [{ "d": "M4 6H20M4 12H20M4 18H20", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round" }],
+      "platformNames": { "web": "icon-menu-24", "android": "ui_ic_menu_24dp", "ios": "menu-24", "react": "MenuIcon", "svelte": "MenuIcon", "reactNative": "MenuIcon", "swift": "MenuIcon", "kotlin": "MenuIcon" }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": { "source": "repo-authored", "license": "repo-owned", "notes": "Hand-authored for the navigation/layout iconography slice." }
+}

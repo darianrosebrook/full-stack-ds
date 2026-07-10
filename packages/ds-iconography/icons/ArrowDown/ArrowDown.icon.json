@@ -1,0 +1,43 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "arrow-down",
+  "displayName": "Arrow Down",
+  "namespace": "fsds.icon",
+  "description": "Downward arrow for descending movement, scroll actions, and next navigation.",
+  "category": "navigation",
+  "tags": ["arrow", "down", "next", "descending", "icon"],
+  "aliases": [],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "arrow-down-16",
+      "description": "Arrow Down authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M8 3V13", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round" },
+        { "d": "M4 9L8 13L12 9", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-arrow-down-16", "android": "ui_ic_arrow_down_16dp", "ios": "arrow-down-16", "react": "ArrowDownIcon", "svelte": "ArrowDownIcon", "reactNative": "ArrowDownIcon", "swift": "ArrowDownIcon", "kotlin": "ArrowDownIcon" }
+    },
+    "24": {
+      "name": "arrow-down-24",
+      "description": "Arrow Down authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M12 4V20", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round" },
+        { "d": "M6 14L12 20L18 14", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-arrow-down-24", "android": "ui_ic_arrow_down_24dp", "ios": "arrow-down-24", "react": "ArrowDownIcon", "svelte": "ArrowDownIcon", "reactNative": "ArrowDownIcon", "swift": "ArrowDownIcon", "kotlin": "ArrowDownIcon" }
+    }
+  },
+  "relatedIcons": ["arrow-up"],
+  "provenance": { "source": "repo-authored", "license": "repo-owned", "notes": "Hand-authored for the navigation/layout iconography slice." }
+}

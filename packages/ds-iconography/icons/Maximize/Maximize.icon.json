@@ -1,0 +1,41 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "maximize",
+  "displayName": "Maximize",
+  "namespace": "fsds.icon",
+  "description": "Outward-facing corners for expanding a panel or entering full screen.",
+  "category": "navigation",
+  "tags": ["maximize", "expand", "fullscreen", "resize", "icon"],
+  "aliases": ["fullscreen"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "maximize-16",
+      "description": "Maximize authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M6 3H3V6M10 3H13V6M3 10V13H6M13 10V13H10", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-maximize-16", "android": "ui_ic_maximize_16dp", "ios": "maximize-16", "react": "MaximizeIcon", "svelte": "MaximizeIcon", "reactNative": "MaximizeIcon", "swift": "MaximizeIcon", "kotlin": "MaximizeIcon" }
+    },
+    "24": {
+      "name": "maximize-24",
+      "description": "Maximize authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M9 4H4V9M15 4H20V9M4 15V20H9M20 15V20H15", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-maximize-24", "android": "ui_ic_maximize_24dp", "ios": "maximize-24", "react": "MaximizeIcon", "svelte": "MaximizeIcon", "reactNative": "MaximizeIcon", "swift": "MaximizeIcon", "kotlin": "MaximizeIcon" }
+    }
+  },
+  "relatedIcons": ["minimize"],
+  "provenance": { "source": "repo-authored", "license": "repo-owned", "notes": "Hand-authored for the navigation/layout iconography slice." }
+}

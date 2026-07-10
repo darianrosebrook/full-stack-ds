@@ -1,0 +1,37 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "more-horizontal",
+  "displayName": "More Horizontal",
+  "namespace": "fsds.icon",
+  "description": "Horizontal ellipsis for overflow menus and secondary actions.",
+  "category": "navigation",
+  "tags": ["more", "ellipsis", "overflow", "horizontal", "icon"],
+  "aliases": ["ellipsis-horizontal"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "more-horizontal-16",
+      "description": "More Horizontal authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [{ "d": "M3.5 8H3.51M8 8H8.01M12.5 8H12.51", "fill": "none", "stroke": "currentColor", "strokeWidth": 2.5, "strokeLineCap": "round" }],
+      "platformNames": { "web": "icon-more-horizontal-16", "android": "ui_ic_more_horizontal_16dp", "ios": "more-horizontal-16", "react": "MoreHorizontalIcon", "svelte": "MoreHorizontalIcon", "reactNative": "MoreHorizontalIcon", "swift": "MoreHorizontalIcon", "kotlin": "MoreHorizontalIcon" }
+    },
+    "24": {
+      "name": "more-horizontal-24",
+      "description": "More Horizontal authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [{ "d": "M5 12H5.01M12 12H12.01M19 12H19.01", "fill": "none", "stroke": "currentColor", "strokeWidth": 3, "strokeLineCap": "round" }],
+      "platformNames": { "web": "icon-more-horizontal-24", "android": "ui_ic_more_horizontal_24dp", "ios": "more-horizontal-24", "react": "MoreHorizontalIcon", "svelte": "MoreHorizontalIcon", "reactNative": "MoreHorizontalIcon", "swift": "MoreHorizontalIcon", "kotlin": "MoreHorizontalIcon" }
+    }
+  },
+  "relatedIcons": ["more-vertical"],
+  "provenance": { "source": "repo-authored", "license": "repo-owned", "notes": "Hand-authored for the navigation/layout iconography slice." }
+}

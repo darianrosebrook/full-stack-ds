@@ -1,0 +1,43 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "external-link",
+  "displayName": "External Link",
+  "namespace": "fsds.icon",
+  "description": "Arrow leaving a square for links that open outside the current context.",
+  "category": "navigation",
+  "tags": ["external", "link", "open", "outbound", "icon"],
+  "aliases": ["open-in-new"],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": { "decorativeDefault": true, "requiresLabelWhenStandalone": true },
+  "rtl": { "mirrors": false, "strategy": "none" },
+  "variants": {
+    "16": {
+      "name": "external-link-16",
+      "description": "External Link authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        { "d": "M9 3H4.5A1.5 1.5 0 0 0 3 4.5V11.5A1.5 1.5 0 0 0 4.5 13H11.5A1.5 1.5 0 0 0 13 11.5V7", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M9 3H13V7M13 3L7 9", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-external-link-16", "android": "ui_ic_external_link_16dp", "ios": "external-link-16", "react": "ExternalLinkIcon", "svelte": "ExternalLinkIcon", "reactNative": "ExternalLinkIcon", "swift": "ExternalLinkIcon", "kotlin": "ExternalLinkIcon" }
+    },
+    "24": {
+      "name": "external-link-24",
+      "description": "External Link authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        { "d": "M13 4H6.5A2.5 2.5 0 0 0 4 6.5V17.5A2.5 2.5 0 0 0 6.5 20H17.5A2.5 2.5 0 0 0 20 17.5V11", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" },
+        { "d": "M14 4H20V10M20 4L11 13", "fill": "none", "stroke": "currentColor", "strokeWidth": 1.5, "strokeLineCap": "round", "strokeLineJoin": "round" }
+      ],
+      "platformNames": { "web": "icon-external-link-24", "android": "ui_ic_external_link_24dp", "ios": "external-link-24", "react": "ExternalLinkIcon", "svelte": "ExternalLinkIcon", "reactNative": "ExternalLinkIcon", "swift": "ExternalLinkIcon", "kotlin": "ExternalLinkIcon" }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": { "source": "repo-authored", "license": "repo-owned", "notes": "Hand-authored for the navigation/layout iconography slice." }
+}
