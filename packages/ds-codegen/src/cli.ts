@@ -76,6 +76,7 @@ import {
 import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
 import { buildFigmaStackPrimitiveDescriptor } from "./frameworks/figma/factory.js";
+import { validateContractIconRefs } from "./validation/icon-refs.js";
 import { validateContractTokens } from "./validation/tokens.js";
 import {
   validateContractStyles,
@@ -534,6 +535,11 @@ function main(): void {
     //   6. validateStylesSelectorCollisions — two distinct top-level keys
     //      in styles.json that expand to the same CSS selector silently
     //      overwrite each other.
+    //   7. validateContractIconRefs — every literal icon name supplied to a
+    //      componentRef whose target declares an iconGlyph directive must
+    //      exist in the icon corpus (packages/ds-iconography/icons/). The
+    //      token-resolvesTo analogy for icons; usage-sidecar literals get
+    //      the same check in the --check-usage pass.
     // All pass results merge — one DRIFT line per failing contract
     // with all issues from all validators concatenated.
     if (args.checkSemantics) {
@@ -546,6 +552,9 @@ function main(): void {
         ...validateContractEmittedStyles(result.value),
         ...validateContractStyles(result.value),
         ...validateStylesSelectorCollisions(result.value),
+        ...validateContractIconRefs(result.value, {
+          allContracts: allContractsByName,
+        }),
       ];
       if (driftIssues.length > 0) {
         console.error(`DRIFT    ${file}`);

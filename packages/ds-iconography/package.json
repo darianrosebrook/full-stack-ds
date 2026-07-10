@@ -23,7 +23,11 @@
   "scripts": {
     "build": "node build/build.mjs",
     "build:check": "node build/build.mjs && git diff --exit-code -- index.mjs index.d.ts",
+    "bundle-probe": "node build/bundle-probe.mjs",
     "validate": "node build/build.mjs --validate-only"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
   }
 }
 
