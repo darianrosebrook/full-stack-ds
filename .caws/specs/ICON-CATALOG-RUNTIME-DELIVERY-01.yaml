@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: icon-catalog-delivery
 created_at: '2026-07-09T23:47:45.634Z'
-updated_at: '2026-07-10T00:09:25.418Z'
+updated_at: '2026-07-10T01:12:26.483Z'
 blast_radius:
   modules:
     - 'packages/ds-iconography: build emits committed package-root export module (index.mjs + index.d.ts: named export per icon + catalog + resolver); drift gate; 2-3 new authored icons; ledger covers new outputs.'
@@ -33,6 +33,14 @@ scope:
     - packages/ds-angular/package.json
     - packages/ds-lit/package.json
     - pnpm-lock.yaml
+    - packages/ds-contracts/components/Button/Button.usage.jsonl
+    - packages/ds-contracts/components/Alert/Alert.usage.jsonl
+    - packages/ds-contracts/components/AlertNotice/AlertNotice.usage.jsonl
+    - packages/ds-contracts/components/Accordion/Accordion.usage.jsonl
+    - packages/ds-contracts/components/Command/Command.usage.jsonl
+    - packages/ds-contracts/components/Popover/Popover.usage.jsonl
+    - packages/ds-contracts/components/Details/Details.usage.jsonl
+    - packages/ds-contracts/components/Chip/Chip.usage.jsonl
   out: []
   support:
     - package.json
