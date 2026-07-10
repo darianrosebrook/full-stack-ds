@@ -1,0 +1,91 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "chevron-right",
+  "displayName": "Chevron Right",
+  "namespace": "fsds.icon",
+  "description": "Rightward chevron for drill-in navigation and closed disclosure state.",
+  "category": "navigation",
+  "tags": [
+    "chevron",
+    "right",
+    "next",
+    "disclosure",
+    "icon"
+  ],
+  "aliases": [
+    "caret-right"
+  ],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "chevron-right-16",
+      "description": "Chevron Right authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M6 4L10 8L6 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-chevron-right-16",
+        "android": "ui_ic_chevron_right_16dp",
+        "ios": "chevron-right-16",
+        "react": "ChevronRightIcon",
+        "svelte": "ChevronRightIcon",
+        "reactNative": "ChevronRightIcon",
+        "swift": "ChevronRightIcon",
+        "kotlin": "ChevronRightIcon"
+      }
+    },
+    "24": {
+      "name": "chevron-right-24",
+      "description": "Chevron Right authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M9 6L15 12L9 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-chevron-right-24",
+        "android": "ui_ic_chevron_right_24dp",
+        "ios": "chevron-right-24",
+        "react": "ChevronRightIcon",
+        "svelte": "ChevronRightIcon",
+        "reactNative": "ChevronRightIcon",
+        "swift": "ChevronRightIcon",
+        "kotlin": "ChevronRightIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01 — first real icon batch, healing pre-existing usage-sidecar references."
+  }
+}

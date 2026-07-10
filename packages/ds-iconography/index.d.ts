@@ -30,10 +30,19 @@ export interface ResolvedIconGlyph extends IconGlyphVariant {
   readonly size: number;
 }
 
+export declare const arrowLeft: IconGlyph;
+export declare const arrowRight: IconGlyph;
 export declare const check: IconGlyph;
+export declare const chevronDown: IconGlyph;
+export declare const chevronRight: IconGlyph;
 export declare const circle: IconGlyph;
+export declare const home: IconGlyph;
+export declare const info: IconGlyph;
 export declare const placeholder: IconGlyph;
+export declare const search: IconGlyph;
 export declare const triangleAlert: IconGlyph;
+export declare const user: IconGlyph;
+export declare const x: IconGlyph;
 
 export declare const icons: Readonly<Record<string, IconGlyph>>;
 

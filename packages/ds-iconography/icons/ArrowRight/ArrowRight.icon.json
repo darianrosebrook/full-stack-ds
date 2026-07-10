@@ -1,0 +1,105 @@
+{
+  "$schema": "../../icon.contract.schema.json",
+  "schemaVersion": "1",
+  "name": "arrow-right",
+  "displayName": "Arrow Right",
+  "namespace": "fsds.icon",
+  "description": "Rightward arrow for forward navigation and trailing actions.",
+  "category": "navigation",
+  "tags": [
+    "arrow",
+    "right",
+    "forward",
+    "next",
+    "icon"
+  ],
+  "aliases": [],
+  "status": "active",
+  "updatedAt": "2026-07-09",
+  "semantics": {
+    "decorativeDefault": true,
+    "requiresLabelWhenStandalone": true
+  },
+  "rtl": {
+    "mirrors": false,
+    "strategy": "none"
+  },
+  "variants": {
+    "16": {
+      "name": "arrow-right-16",
+      "description": "Arrow Right authored on the 16px grid.",
+      "width": 16,
+      "height": 16,
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3 8H13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M9 4L13 8L9 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-arrow-right-16",
+        "android": "ui_ic_arrow_right_16dp",
+        "ios": "arrow-right-16",
+        "react": "ArrowRightIcon",
+        "svelte": "ArrowRightIcon",
+        "reactNative": "ArrowRightIcon",
+        "swift": "ArrowRightIcon",
+        "kotlin": "ArrowRightIcon"
+      }
+    },
+    "24": {
+      "name": "arrow-right-24",
+      "description": "Arrow Right authored on the 24px grid.",
+      "width": 24,
+      "height": 24,
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M4 12H20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M14 6L20 12L14 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ],
+      "platformNames": {
+        "web": "icon-arrow-right-24",
+        "android": "ui_ic_arrow_right_24dp",
+        "ios": "arrow-right-24",
+        "react": "ArrowRightIcon",
+        "svelte": "ArrowRightIcon",
+        "reactNative": "ArrowRightIcon",
+        "swift": "ArrowRightIcon",
+        "kotlin": "ArrowRightIcon"
+      }
+    }
+  },
+  "relatedIcons": [],
+  "provenance": {
+    "source": "repo-authored",
+    "license": "repo-owned",
+    "notes": "Hand-authored for ICON-CATALOG-RUNTIME-DELIVERY-01 — first real icon batch, healing pre-existing usage-sidecar references."
+  }
+}

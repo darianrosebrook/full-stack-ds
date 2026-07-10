@@ -2,6 +2,104 @@
 // Committed build output (drift-gated); the authoring source of truth is
 // icons/<Name>/<Name>.icon.json. Rebuild with `pnpm run build` in this package.
 
+export const arrowLeft = {
+  "name": "arrow-left",
+  "ref": "fsds.icon.arrow-left",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M13 8H3",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M7 4L3 8L7 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M20 12H4",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M10 6L4 12L10 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const arrowRight = {
+  "name": "arrow-right",
+  "ref": "fsds.icon.arrow-right",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3 8H13",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M9 4L13 8L9 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M4 12H20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M14 6L20 12L14 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const check = {
   "name": "check",
   "ref": "fsds.icon.check",
@@ -24,6 +122,72 @@ export const check = {
       "paths": [
         {
           "d": "M5 12.5L9.5 17L19 6.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const chevronDown = {
+  "name": "chevron-down",
+  "ref": "fsds.icon.chevron-down",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M4 6L8 10L12 6",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M6 9L12 15L18 9",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const chevronRight = {
+  "name": "chevron-right",
+  "ref": "fsds.icon.chevron-right",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M6 4L10 8L6 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M9 6L15 12L9 18",
           "fill": "none",
           "stroke": "currentColor",
           "strokeWidth": 1.5,
@@ -66,6 +230,104 @@ export const circle = {
   }
 };
 
+export const home = {
+  "name": "home",
+  "ref": "fsds.icon.home",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M3 7.5L8 3L13 7.5V13H9.5V9.5H6.5V13H3V7.5Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M4.5 11L12 4.5L19.5 11V19.5H14.5V14.5H9.5V19.5H4.5V11Z",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const info = {
+  "name": "info",
+  "ref": "fsds.icon.info",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 2.5A5.5 5.5 0 1 1 8 13.5A5.5 5.5 0 1 1 8 2.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 7.5V11",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M8 5.25H8.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 3.5A8.5 8.5 0 1 1 12 20.5A8.5 8.5 0 1 1 12 3.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 11V16",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 8H12.01",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const placeholder = {
   "name": "placeholder",
   "ref": "fsds.icon.placeholder",
@@ -88,6 +350,55 @@ export const placeholder = {
           "strokeWidth": 1,
           "strokeLineCap": "round",
           "strokeDasharray": ".125 3"
+        }
+      ]
+    }
+  }
+};
+
+export const search = {
+  "name": "search",
+  "ref": "fsds.icon.search",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M7 3A4 4 0 1 1 7 11A4 4 0 1 1 7 3",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M10 10L13.5 13.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M10.5 4.5A6 6 0 1 1 10.5 16.5A6 6 0 1 1 10.5 4.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M15 15L19.5 19.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
         }
       ]
     }
@@ -155,11 +466,118 @@ export const triangleAlert = {
   }
 };
 
+export const user = {
+  "name": "user",
+  "ref": "fsds.icon.user",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M8 4.25A2.25 2.25 0 1 1 8 8.75A2.25 2.25 0 1 1 8 4.25",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M3.5 13.5A4.5 4.5 0 0 1 12.5 13.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M12 6.5A3 3 0 1 1 12 12.5A3 3 0 1 1 12 6.5",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M5.5 20A6.5 6.5 0 0 1 18.5 20",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
+export const x = {
+  "name": "x",
+  "ref": "fsds.icon.x",
+  "sizes": {
+    "16": {
+      "viewBox": "0 0 16 16",
+      "paths": [
+        {
+          "d": "M4 4L12 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M12 4L4 12",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    },
+    "24": {
+      "viewBox": "0 0 24 24",
+      "paths": [
+        {
+          "d": "M6 6L18 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        },
+        {
+          "d": "M18 6L6 18",
+          "fill": "none",
+          "stroke": "currentColor",
+          "strokeWidth": 1.5,
+          "strokeLineCap": "round",
+          "strokeLineJoin": "round"
+        }
+      ]
+    }
+  }
+};
+
 export const icons = {
+  "arrow-left": arrowLeft,
+  "arrow-right": arrowRight,
   "check": check,
+  "chevron-down": chevronDown,
+  "chevron-right": chevronRight,
   "circle": circle,
+  "home": home,
+  "info": info,
   "placeholder": placeholder,
+  "search": search,
   "triangle-alert": triangleAlert,
+  "user": user,
+  "x": x,
 };
 
 export function resolveIcon(name, sizePx) {
