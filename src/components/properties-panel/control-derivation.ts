@@ -157,7 +157,7 @@ function refUnionOptions(
 
 interface PropMemberLike {
   name: string;
-  propType?: { kind?: string; to?: string };
+  propType?: { kind?: string; to?: string; values?: unknown[] };
   default?: unknown;
   description?: string;
 }
@@ -181,6 +181,20 @@ function derivePropControl(
   };
 
   switch (kind) {
+    case "enum": {
+      const options = Array.isArray(member.propType?.values)
+        ? member.propType.values.map(String)
+        : [];
+      if (options.length === 0) return null;
+      return {
+        kind: "select",
+        ...base,
+        options,
+        defaultValue:
+          typeof member.default === "string" ? member.default : undefined,
+        isVariantAxis: variantAxisNames.has(member.name),
+      };
+    }
     case "boolean":
       return {
         kind: "boolean",

@@ -119,6 +119,19 @@ describe("deriveControls — props (typed, de-duplicated against axes)", () => {
       JSON.stringify(props.map((p) => ({ name: p.name, kind: p.kind })), null, 2),
     );
   });
+
+  it("maps Icon's inline enum size prop to a select control", () => {
+    const { props } = deriveControls(loadContract("Icon"));
+    const size = props.find((p) => p.name === "size");
+
+    expect(size).toMatchObject({
+      kind: "select",
+      name: "size",
+      options: ["sm", "md", "lg", "xl"],
+      defaultValue: "md",
+      isVariantAxis: false,
+    });
+  });
 });
 
 describe("deriveControls — component tokens", () => {
