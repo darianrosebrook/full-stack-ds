@@ -2,10 +2,11 @@ id: FIGMA-PLUGIN-UI-PORT-01
 title: 'Port Svelte plugin UI + Dev Mode codegen from archive/codex-cfda-figma-ui onto the plan-driven plugin core'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: figma-ui-port
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge figma-ui-port at 1477d84a8b8871caff269588051add10da026c07'
 created_at: '2026-07-21T23:19:09.223Z'
-updated_at: '2026-07-21T23:29:35.521Z'
+updated_at: '2026-07-21T23:42:58.551Z'
 blast_radius:
   modules:
     - ds-figma-plugin
