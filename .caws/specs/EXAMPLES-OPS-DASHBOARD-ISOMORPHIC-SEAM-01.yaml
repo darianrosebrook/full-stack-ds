@@ -2,10 +2,11 @@ id: EXAMPLES-OPS-DASHBOARD-ISOMORPHIC-SEAM-01
 title: 'Make operations-dashboard data/API seam browser-runnable'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: examples-iso-seam
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge examples-iso-seam at d82f1046c609d669bd3f07b54f310da6da2cf430'
 created_at: '2026-06-27T06:48:31.875Z'
-updated_at: '2026-07-21T23:06:18.585Z'
+updated_at: '2026-07-21T23:08:19.805Z'
 blast_radius:
   modules:
     - examples-operations-dashboard-data-adapter
