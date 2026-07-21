@@ -2,10 +2,11 @@ id: PSEUDO-STATE-STYLING-RAIL-01
 title: 'Pseudo-state styling realization audit — classify + prove declared state/pseudo obligations vs generated CSS'
 risk_tier: 3
 mode: feature
-lifecycle_state: active
-worktree: pseudo-state-land
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge pseudo-state-land at fc33671a6b28d9f86c16def093cad566399fad94'
 created_at: '2026-06-06T06:48:50.845Z'
-updated_at: '2026-06-06T06:48:50.845Z'
+updated_at: '2026-07-21T23:16:55.113Z'
 blast_radius:
   modules:
     - 'New read-only classification rail under scripts/pseudo-state-audit/ (audit.mjs + locked discriminator test) + its report under docs/pseudo-state-audit/. Analogous to the variant-style audit but for STATE/PSEUDO obligations: it derives each component''s declared state obligations from contract states.dimensions (categories interaction/availability/selection/validation/visibility) plus the empty-input prompt pseudo-element, and checks whether the generated React CSS realizes each via the matching pseudo-class, ARIA-attribute, BEM-modifier, or :has() selector. It changes no contract, codegen, emitter, generated artifact, or visual style — it only classifies and reports gaps for later realization batches.'
