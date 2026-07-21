@@ -1,0 +1,42 @@
+id: FIGMA-PLUGIN-UI-PORT-01
+title: 'Port Svelte plugin UI + Dev Mode codegen from archive/codex-cfda-figma-ui onto the plan-driven plugin core'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-21T23:19:09.223Z'
+updated_at: '2026-07-21T23:19:09.223Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-figma-plugin/src/FigmaPluginApp.svelte'
+    - 'packages/ds-figma-plugin/src/ui-model.ts'
+    - 'packages/ds-figma-plugin/src/ui.css'
+    - 'packages/ds-figma-plugin/src/ui.html'
+    - 'packages/ds-figma-plugin/src/ui.ts'
+    - 'packages/ds-figma-plugin/src/eligibility.ts'
+    - 'packages/ds-figma-plugin/src/codegen-preview.ts'
+    - 'packages/ds-figma-plugin/src/plugin.ts'
+    - 'packages/ds-figma-plugin/src/plugin.test.ts'
+    - 'packages/ds-figma-plugin/src/figma.d.ts'
+    - 'packages/ds-figma-plugin/manifest.json'
+    - 'packages/ds-figma-plugin/vite.config.ts'
+    - 'packages/ds-figma-plugin/package.json'
+    - 'packages/ds-figma-plugin/README.md'
+    - 'packages/ds-figma-plugin/TODO.md'
+    - 'pnpm-lock.yaml'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'figma-plugin-ui-port'
+    type: behavior
