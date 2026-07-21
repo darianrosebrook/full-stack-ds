@@ -5,7 +5,7 @@ mode: feature
 lifecycle_state: active
 worktree: figma-ui-port
 created_at: '2026-07-21T23:19:09.223Z'
-updated_at: '2026-07-21T23:19:09.223Z'
+updated_at: '2026-07-21T23:29:35.521Z'
 blast_radius:
   modules:
     - ds-figma-plugin
@@ -29,6 +29,7 @@ scope:
     - 'packages/ds-figma-plugin/README.md'
     - 'packages/ds-figma-plugin/TODO.md'
     - 'pnpm-lock.yaml'
+    - docs/current-implementation-snapshot.md
   out: []
 invariants:
   - 'This is a PORT, not a merge: the source snapshot (archive/codex-cfda-figma-ui, commit 3d3f6d30) predates main''s plan-driven rewrite (planner.ts / materialize-state.ts / live-*.ts). Its plugin.ts (879-line pre-rewrite version with its own materializer) must NOT replace or regress main''s plugin.ts — main''s materialization path stays authoritative; only the UI wiring (showUI, ui.onmessage/postMessage loop, run-until-closed lifecycle) and the Dev Mode codegen handler (figma.codegen.on) are brought over and re-bound to main''s current functions.'
