@@ -1,4 +1,8 @@
+declare module "*.css" {}
+
 declare const figma: {
+  editorType: "figma" | "figjam" | "dev" | "slides" | "buzz";
+  mode: "default" | "textreview" | "inspect" | "codegen" | "linkpreview" | "auth";
   root: FigmaPageNode;
   currentPage: FigmaPageNode;
   createPage(): FigmaPageNode;
@@ -11,6 +15,18 @@ declare const figma: {
   ): FigmaComponentSetNode;
   loadFontAsync(font: { family: string; style: string }): Promise<void>;
   setCurrentPageAsync(page: FigmaPageNode): Promise<void>;
+  showUI(html: string, options?: { width?: number; height?: number }): void;
+  ui: {
+    postMessage(message: unknown): void;
+    onmessage: ((message: unknown) => void) | undefined;
+    resize(width: number, height: number): void;
+  };
+  codegen: {
+    on(
+      type: "generate",
+      callback: (event: FigmaCodegenEvent) => FigmaCodegenResult[] | Promise<FigmaCodegenResult[]>,
+    ): void;
+  };
   notify(message: string): void;
   closePlugin(message?: string): void;
 };
@@ -19,6 +35,7 @@ interface FigmaBaseNode {
   name: string;
   appendChild(child: FigmaBaseNode): void;
   setPluginData(key: string, value: string): void;
+  getPluginData(key: string): string;
 }
 
 interface FigmaPageNode extends FigmaBaseNode {}
@@ -90,3 +107,30 @@ interface FigmaTextNode extends FigmaBaseNode {
   fontSize?: number;
   fills?: readonly FigmaPaint[];
 }
+
+type FigmaCodegenResult = {
+  title: string;
+  code: string;
+  language:
+    | "TYPESCRIPT"
+    | "CPP"
+    | "RUBY"
+    | "CSS"
+    | "JAVASCRIPT"
+    | "HTML"
+    | "JSON"
+    | "GRAPHQL"
+    | "PYTHON"
+    | "GO"
+    | "SQL"
+    | "SWIFT"
+    | "KOTLIN"
+    | "RUST"
+    | "BASH"
+    | "PLAINTEXT";
+};
+
+type FigmaCodegenEvent = {
+  node: FigmaBaseNode;
+  language: string;
+};

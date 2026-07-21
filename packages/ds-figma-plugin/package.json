@@ -5,13 +5,19 @@
   "type": "module",
   "description": "Figma desktop plugin for materializing Full Stack DS contracts.",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite build --watch",
+    "build": "vite build --mode ui && vite build --mode plugin",
+    "dev": "vite build --mode ui && vite build --mode plugin --watch",
     "build:check": "node scripts/check-dist-fresh.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "dependencies": {
+    "@full-stack-ds/svelte": "workspace:*",
+    "@full-stack-ds/tokens": "workspace:*",
+    "svelte": "^5.0.0"
+  },
   "devDependencies": {
     "@figma/plugin-typings": "^1.127.0",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "typescript": "^6.0.2",
     "vite": "^8.0.8"
   }

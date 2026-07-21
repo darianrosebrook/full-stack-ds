@@ -3,5 +3,17 @@
   "id": "full-stack-ds-contract-materializer",
   "api": "1.0.0",
   "main": "dist/plugin.js",
-  "editorType": ["figma"]
+  "ui": "dist/ui.html",
+  "editorType": ["figma", "dev"],
+  "capabilities": ["codegen"],
+  "codegenLanguages": [
+    { "label": "React", "value": "react" },
+    { "label": "Svelte", "value": "svelte" },
+    { "label": "Vue", "value": "vue" },
+    { "label": "Angular", "value": "angular" },
+    { "label": "Lit", "value": "lit" },
+    { "label": "React Native", "value": "react-native" },
+    { "label": "SwiftUI", "value": "swiftui" },
+    { "label": "Android Compose", "value": "compose" }
+  ]
 }

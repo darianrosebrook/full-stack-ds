@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const buttonCssBlocks = [
   {
@@ -327,6 +327,7 @@ type MockNode = {
   master?: MockNode;
   appendChild(child: MockNode): void;
   setPluginData(key: string, value: string): void;
+  getPluginData(key: string): string;
   resize(width: number, height: number): void;
   createInstance?(): MockNode;
   componentProperties: Array<{
@@ -354,6 +355,9 @@ function createNode(kind: NodeKind): MockNode {
     setPluginData(key: string, value: string): void {
       this.pluginData[key] = value;
     },
+    getPluginData(key: string): string {
+      return this.pluginData[key] ?? "";
+    },
     addComponentProperty(name, type, options): string {
       this.componentProperties.push({ name, type, options });
       return name;
@@ -365,13 +369,32 @@ function createNode(kind: NodeKind): MockNode {
   };
 }
 
-function setupFigma(): {
+type MockUi = {
+  postMessage: ReturnType<typeof vi.fn>;
+  onmessage: ((message: unknown) => void) | undefined;
+  resize: ReturnType<typeof vi.fn>;
+};
+
+type MockCodegen = {
+  on: ReturnType<typeof vi.fn>;
+  handler: ((event: { node: MockNode; language: string }) => unknown) | undefined;
+};
+
+function setupFigma(
+  options: {
+    editorType?: "figma" | "dev";
+    mode?: "default" | "codegen";
+  } = {},
+): {
   pages: MockNode[];
   components: MockNode[];
   componentSets: MockNode[];
   texts: MockNode[];
   notify: ReturnType<typeof vi.fn>;
   closePlugin: ReturnType<typeof vi.fn>;
+  showUI: ReturnType<typeof vi.fn>;
+  ui: MockUi;
+  codegen: MockCodegen;
 } {
   const pages: MockNode[] = [];
   const components: MockNode[] = [];
@@ -380,8 +403,22 @@ function setupFigma(): {
   const notify = vi.fn();
   const closePlugin = vi.fn();
   const loadFontAsync = vi.fn(() => Promise.resolve());
+  const showUI = vi.fn();
+  const ui: MockUi = {
+    postMessage: vi.fn(),
+    onmessage: undefined,
+    resize: vi.fn(),
+  };
+  const codegen: MockCodegen = {
+    on: vi.fn((_type: string, handler: (event: { node: MockNode; language: string }) => unknown) => {
+      codegen.handler = handler;
+    }),
+    handler: undefined,
+  };
 
   vi.stubGlobal("figma", {
+    editorType: options.editorType ?? "figma",
+    mode: options.mode ?? "default",
     createPage: vi.fn(() => {
       const page = createNode("page");
       pages.push(page);
@@ -418,11 +455,14 @@ function setupFigma(): {
     ),
     loadFontAsync,
     setCurrentPageAsync: vi.fn(() => Promise.resolve()),
+    showUI,
+    ui,
+    codegen,
     notify,
     closePlugin,
   });
 
-  return { pages, components, componentSets, texts, notify, closePlugin };
+  return { pages, components, componentSets, texts, notify, closePlugin, showUI, ui, codegen };
 }
 
 describe("Figma plugin: generic component-set materializer", () => {
@@ -744,5 +784,283 @@ describe("Figma plugin: generic component-set materializer", () => {
     expect(closePlugin).toHaveBeenCalledWith(
       "Scaffolded Stack + 5 component(s).",
     );
+  });
+});
+
+/**
+ * `figma.ui.onmessage` is void-returning in the real Figma API (and in
+ * `figma.d.ts` here) — `plugin.ts`'s handler fires-and-catches its internal
+ * promise rather than returning it. Awaiting the call itself only waits for
+ * the synchronous prefix; this flushes the microtask queue so any `await`s
+ * inside `handleUiMessage` (e.g. `materializeRegistry`'s
+ * `setCurrentPageAsync`) have settled before assertions run.
+ */
+async function flushMicrotasks(): Promise<void> {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+}
+
+describe("Figma plugin: UI wiring (A1)", () => {
+  it("opens the UI, posts fsds:init with a descriptor-registry-backed model, and does not auto-materialize", async () => {
+    const { main } = await import("./plugin.js");
+    const { showUI, ui, componentSets, pages } = setupFigma();
+
+    await main({ autoMaterialize: false });
+
+    expect(showUI).toHaveBeenCalledTimes(1);
+    // fsds:init must be posted before any materialization command arrives —
+    // this is the falsification target in the verification report.
+    expect(ui.postMessage).toHaveBeenCalledTimes(1);
+    const initCall = ui.postMessage.mock.calls[0][0];
+    expect(initCall.type).toBe("fsds:init");
+    expect(initCall.model.componentCount).toBe(5);
+    expect(initCall.model.summaries.map((s: { name: string }) => s.name).sort()).toEqual(
+      ["Avatar", "Button", "Card", "Chip", "Status"],
+    );
+
+    // No materialization happens just from opening the UI.
+    expect(componentSets).toHaveLength(0);
+    expect(pages).toHaveLength(0);
+    expect(typeof ui.onmessage).toBe("function");
+  });
+
+  it("handles fsds:materialize (scope=allowlist): materializes only allowlisted eligible sets, posts fsds:materialization-complete", async () => {
+    const { main } = await import("./plugin.js");
+    const { componentSets, components, ui } = setupFigma();
+
+    await main({ autoMaterialize: false });
+    ui.onmessage!({ type: "fsds:materialize", scope: "allowlist" });
+    await flushMicrotasks();
+
+    // scope=allowlist pre-filters candidates to COMPONENT_SET_ALLOWLIST
+    // (selectDescriptors), so only Button/Chip/Status are ever considered —
+    // Card and Avatar (not in the allowlist) are not materialized at all
+    // under this scope, not even as placeholder leaves.
+    const setNames = componentSets.map((s) => s.name).sort();
+    expect(setNames).toEqual(["Button", "Chip", "Stack", "Status"]);
+    expect(components.some((c) => c.name === "Card")).toBe(false);
+    expect(components.some((c) => c.name === "Avatar")).toBe(false);
+
+    const completeCall = ui.postMessage.mock.calls.find(
+      (call: unknown[]) => (call[0] as { type: string }).type === "fsds:materialization-complete",
+    );
+    expect(completeCall).toBeDefined();
+    const report = completeCall![0].report;
+    expect(report.materialized.sort()).toEqual(["Button", "Chip", "Status"]);
+    expect(report.placeholders).toEqual([]);
+    expect(report.skipped).toEqual([]);
+  });
+
+  it("handles fsds:materialize (scope=selected, componentName): materializes only the named descriptor", async () => {
+    const { main } = await import("./plugin.js");
+    const { componentSets, ui } = setupFigma();
+
+    await main({ autoMaterialize: false });
+    ui.onmessage!({ type: "fsds:materialize", scope: "selected", componentName: "Button" });
+    await flushMicrotasks();
+
+    expect(componentSets.map((s) => s.name).sort()).toEqual(["Button", "Stack"]);
+  });
+
+  it("handles fsds:resize by forwarding width/height to figma.ui.resize", async () => {
+    const { main } = await import("./plugin.js");
+    const { ui } = setupFigma();
+
+    await main({ autoMaterialize: false });
+    await ui.onmessage!({ type: "fsds:resize", width: 800, height: 640 });
+
+    expect(ui.resize).toHaveBeenCalledWith(800, 640);
+  });
+
+  it("handles fsds:close by calling figma.closePlugin with no report", async () => {
+    const { main } = await import("./plugin.js");
+    const { ui, closePlugin } = setupFigma();
+
+    await main({ autoMaterialize: false });
+    await ui.onmessage!({ type: "fsds:close" });
+
+    expect(closePlugin).toHaveBeenCalledWith();
+  });
+
+  it("FALSIFICATION TARGET: fsds:init must be posted before the UI can request materialization", async () => {
+    // This test's assertion (postMessage called with fsds:init) is the one
+    // the verification report's falsification step disables in plugin.ts to
+    // show a red run, then restores.
+    const { main } = await import("./plugin.js");
+    const { ui } = setupFigma();
+
+    await main({ autoMaterialize: false });
+
+    expect(ui.postMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ type: "fsds:init" }),
+    );
+  });
+});
+
+describe("Figma plugin: single eligibility authority (A2)", () => {
+  it("plugin.ts re-exports classifyDescriptorForMaterialization from eligibility.ts — exactly one definition exists in src/", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const srcDir = path.resolve(__dirname, ".");
+    const files = fs
+      .readdirSync(srcDir)
+      .filter((name) => name.endsWith(".ts") && !name.endsWith(".test.ts"));
+
+    const definitionPattern = /^\s*export function classifyDescriptorForMaterialization/m;
+    const definingFiles = files.filter((name) =>
+      definitionPattern.test(fs.readFileSync(path.join(srcDir, name), "utf8")),
+    );
+
+    expect(definingFiles).toEqual(["eligibility.ts"]);
+  });
+
+  it("ui-model.ts's buildFigmaUiModel and plugin.ts's materializer agree on eligibility for every descriptor (same shared classifier)", async () => {
+    const { buildFigmaUiModel } = await import("./ui-model.js");
+    const { main } = await import("./plugin.js");
+    const { componentSets, components } = setupFigma();
+
+    const model = buildFigmaUiModel();
+    await main();
+
+    for (const summary of model.summaries) {
+      if (summary.materializationStatus === "component_set_materialized") {
+        expect(componentSets.some((s) => s.name === summary.name)).toBe(true);
+      } else {
+        const leaf = components.find(
+          (c) => c.name === summary.name && c.parent?.kind === "page",
+        );
+        expect(leaf).toBeDefined();
+        expect(leaf!.pluginData["fsds.eligibility.reason"]).toBe(
+          summary.materializationStatus,
+        );
+      }
+    }
+  });
+});
+
+describe("Figma plugin: Dev Mode codegen handler (A3)", () => {
+  // The `figma.codegen.on("generate", ...)` registration happens in
+  // plugin.ts's module-top-level entry branch (`if (typeof figma !==
+  // "undefined") { if (editorType === "dev" && mode === "codegen") ... }`),
+  // which runs exactly once per module instantiation. `vi.resetModules()`
+  // forces a fresh module instance so each test's `figma` stub (set up
+  // BEFORE the import) is the one the entry branch observes.
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it("resolves the descriptor from fsds.component plugin data and honors fsds.variantRow, falling back to defaults for unknown target languages", async () => {
+    const { codegen } = setupFigma({ editorType: "dev", mode: "codegen" });
+    await import("./plugin.js");
+
+    expect(codegen.on).toHaveBeenCalledTimes(1);
+
+    const node = createNode("component");
+    node.setPluginData("fsds.component", "Button");
+    node.setPluginData("fsds.variantRow", JSON.stringify({ size: "large", variant: "destructive" }));
+
+    const result = codegen.handler!({ node, language: "svelte" }) as Array<{
+      title: string;
+      language: string;
+      code: string;
+    }>;
+
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe("Svelte");
+    expect(result[0].code).toContain('import { Button } from "@full-stack-ds/svelte";');
+    expect(result[0].code).toContain('size="large"');
+    expect(result[0].code).toContain('variant="destructive"');
+  });
+
+  it("falls back to the descriptor's default variant values when fsds.variantRow is absent", async () => {
+    const { codegen } = setupFigma({ editorType: "dev", mode: "codegen" });
+    await import("./plugin.js");
+
+    const node = createNode("component");
+    node.setPluginData("fsds.component", "Chip");
+    // No fsds.variantRow set.
+
+    const result = codegen.handler!({ node, language: "react" }) as Array<{
+      code: string;
+    }>;
+
+    // Chip's first declared variant/size values are "default"/"small".
+    expect(result[0].code).toContain('variant="default"');
+    expect(result[0].code).toContain('size="small"');
+  });
+
+  it("falls back to an unrecognized-target-safe react preview when language is not a known CodegenTarget", async () => {
+    const { codegen } = setupFigma({ editorType: "dev", mode: "codegen" });
+    await import("./plugin.js");
+
+    const node = createNode("component");
+    node.setPluginData("fsds.component", "Status");
+
+    const result = codegen.handler!({ node, language: "haskell" }) as Array<{
+      title: string;
+    }>;
+
+    expect(result[0].title).toBe("React");
+  });
+
+  it("returns the no-metadata plaintext result for an unknown selection (no fsds.component plugin data)", async () => {
+    const { codegen } = setupFigma({ editorType: "dev", mode: "codegen" });
+    await import("./plugin.js");
+
+    const node = createNode("frame");
+    // No fsds.component plugin data recorded.
+
+    const result = codegen.handler!({ node, language: "react" }) as Array<{
+      language: string;
+      code: string;
+    }>;
+
+    expect(result).toHaveLength(1);
+    expect(result[0].language).toBe("PLAINTEXT");
+    expect(result[0].code).toContain("No Full Stack DS component contract metadata found");
+  });
+
+  it("does NOT register the codegen handler when editorType/mode is not dev+codegen — opens the UI instead", async () => {
+    const { codegen, showUI } = setupFigma({ editorType: "figma", mode: "default" });
+    await import("./plugin.js");
+
+    expect(codegen.on).not.toHaveBeenCalled();
+    expect(showUI).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("Figma plugin: lifecycle preserves a headless run path (A5, falsification-pinned)", () => {
+  it("main() with default options (no UI round-trip) completes materialization and closes the plugin", async () => {
+    const { main } = await import("./plugin.js");
+    const { closePlugin, notify, componentSets } = setupFigma();
+
+    await main();
+
+    expect(componentSets.length).toBeGreaterThan(0);
+    expect(notify).toHaveBeenCalledTimes(1);
+    expect(closePlugin).toHaveBeenCalledTimes(1);
+  });
+
+  it("main({ autoMaterialize: false }) opens the UI with fallback markup when __html__ is not a string (dist/ui.html missing at build time)", async () => {
+    const { main } = await import("./plugin.js");
+    const { showUI } = setupFigma();
+
+    // vite.config.ts's pluginConfig `define.__html__` becomes the literal
+    // string "undefined" (not the identifier) if dist/ui.html doesn't
+    // exist at build time — readUiHtmlForPlugin() already returns fallback
+    // markup in that case, so __html__ is always a string once bundled.
+    // This test instead simulates the *runtime* typeof-guard path
+    // (declare const __html__: string | undefined) by never defining the
+    // global at all, which is exactly what happens when the module is
+    // loaded outside of the Vite `define` substitution (e.g. under Vitest).
+    await main({ autoMaterialize: false });
+
+    expect(showUI).toHaveBeenCalledTimes(1);
+    const [html] = showUI.mock.calls[0];
+    // Under Vitest, __html__ is never defined by a bundler `define`, so the
+    // typeof-guard's fallback branch is what actually executes here —
+    // this pins that the fallback is soft (a string), not a throw.
+    expect(typeof html).toBe("string");
   });
 });

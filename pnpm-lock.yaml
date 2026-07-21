@@ -280,10 +280,23 @@ importers:
   packages/ds-contracts: {}
 
   packages/ds-figma-plugin:
+    dependencies:
+      '@full-stack-ds/svelte':
+        specifier: workspace:*
+        version: link:../ds-svelte
+      '@full-stack-ds/tokens':
+        specifier: workspace:*
+        version: link:../ds-tokens
+      svelte:
+        specifier: ^5.0.0
+        version: 5.55.5(@typescript-eslint/types@8.59.3)
     devDependencies:
       '@figma/plugin-typings':
         specifier: ^1.127.0
         version: 1.127.0
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.1.2
+        version: 7.1.2(svelte@5.55.5(@typescript-eslint/types@8.59.3))(vite@8.0.13(@types/node@25.7.0)(esbuild@0.28.0)(terser@5.48.0)(tsx@4.22.3)(yaml@2.9.0))
       typescript:
         specifier: ^6.0.2
         version: 6.0.3
