@@ -3,6 +3,7 @@ title: 'Port Svelte plugin UI + Dev Mode codegen from archive/codex-cfda-figma-u
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: figma-ui-port
 created_at: '2026-07-21T23:19:09.223Z'
 updated_at: '2026-07-21T23:19:09.223Z'
 blast_radius:
