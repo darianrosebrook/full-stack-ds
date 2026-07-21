@@ -1,10 +1,11 @@
 // Lane-local fixture adapter for the social-feed example.
 //
 // This module is the ONLY layer that touches the raw fixture file shape. It
-// reads the static JSON/JSONL fixtures, parses and lightly validates them into
-// the typed domain records declared in `../types`, builds the lookup indexes
-// the API needs (authors by id, comments grouped by post), and memoizes the
-// parsed snapshot (loaded once into memory).
+// reads the static JSON/JSONL fixtures as bundler modules (isomorphic — the
+// seam runs unchanged under node via Vitest and in the browser via Vite),
+// parses and lightly validates them into the typed domain records declared in
+// `../types`, builds the lookup indexes the API needs (authors by id, comments
+// grouped by post), and memoizes the parsed snapshot (loaded once into memory).
 //
 // BOUNDARY: future framework UI code must NOT import this module or the raw
 // fixtures directly. UI consumes data only through the functional API in
@@ -12,9 +13,10 @@
 // in one typed place. The snapshot is immutable-by-convention; the API holds
 // the mutable working copy (so mutations never touch the fixtures).
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import authorsRaw from "../../fixtures/authors.json?raw";
+import postsRaw from "../../fixtures/posts.jsonl?raw";
+import commentsRaw from "../../fixtures/comments.jsonl?raw";
+import notificationsRaw from "../../fixtures/notifications.jsonl?raw";
 
 import type {
   Author,
@@ -22,11 +24,6 @@ import type {
   Notification,
   PostRecord,
 } from "../types/index.js";
-
-const FIXTURES_DIR = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../../fixtures",
-);
 
 /** Parse a JSONL string into an array of records, ignoring blank lines. */
 function parseJsonl<T>(raw: string, file: string): T[] {
@@ -48,10 +45,6 @@ function parseJsonl<T>(raw: string, file: string): T[] {
     }
   }
   return out;
-}
-
-function readFixture(name: string): string {
-  return readFileSync(path.join(FIXTURES_DIR, name), "utf8");
 }
 
 /** The fully-parsed, indexed snapshot the API seeds its working copy from. */
@@ -78,17 +71,14 @@ let memoized: FixtureSnapshot | null = null;
 export function loadFixtures(force = false): FixtureSnapshot {
   if (memoized && !force) return memoized;
 
-  const authorsDoc = JSON.parse(readFixture("authors.json")) as {
+  const authorsDoc = JSON.parse(authorsRaw) as {
     currentUserId: string;
     authors: Author[];
   };
-  const posts = parseJsonl<PostRecord>(readFixture("posts.jsonl"), "posts.jsonl");
-  const comments = parseJsonl<Comment>(
-    readFixture("comments.jsonl"),
-    "comments.jsonl",
-  );
+  const posts = parseJsonl<PostRecord>(postsRaw, "posts.jsonl");
+  const comments = parseJsonl<Comment>(commentsRaw, "comments.jsonl");
   const notifications = parseJsonl<Notification>(
-    readFixture("notifications.jsonl"),
+    notificationsRaw,
     "notifications.jsonl",
   );
 

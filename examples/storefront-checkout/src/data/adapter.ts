@@ -1,18 +1,21 @@
 // Lane-local fixture adapter for the storefront-checkout example.
 //
 // This module is the ONLY layer that touches the raw fixture file shape. It
-// reads the static JSON/JSONL fixtures, parses and lightly validates them into
-// the typed domain records declared in `../types`, builds the lookup indexes
-// the API needs, and memoizes the parsed snapshot (loaded once into memory).
+// reads the static JSON/JSONL fixtures as bundler modules (isomorphic — the
+// seam runs unchanged under node via Vitest and in the browser via Vite),
+// parses and lightly validates them into the typed domain records declared in
+// `../types`, builds the lookup indexes the API needs, and memoizes the parsed
+// snapshot (loaded once into memory).
 //
 // BOUNDARY: future framework UI code must NOT import this module or the raw
 // fixtures directly. UI consumes data only through the functional API in
 // `../api`. Fixture-shape knowledge — and the variant->product join the quote
 // math depends on — lives here, in one typed place.
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import productsRaw from "../../fixtures/products.jsonl?raw";
+import promoCodesRaw from "../../fixtures/promo-codes.json?raw";
+import shippingMethodsRaw from "../../fixtures/shipping-methods.json?raw";
+import taxRulesRaw from "../../fixtures/tax-rules.json?raw";
 
 import type {
   Product,
@@ -21,11 +24,6 @@ import type {
   ShippingMethod,
   TaxRule,
 } from "../types/index.js";
-
-const FIXTURES_DIR = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../../fixtures",
-);
 
 /** Parse a JSONL string into an array of records, ignoring blank lines. */
 function parseJsonl<T>(raw: string, file: string): T[] {
@@ -47,10 +45,6 @@ function parseJsonl<T>(raw: string, file: string): T[] {
     }
   }
   return out;
-}
-
-function readFixture(name: string): string {
-  return readFileSync(path.join(FIXTURES_DIR, name), "utf8");
 }
 
 /** A variant joined to its owning product, for price/label resolution. */
@@ -84,19 +78,14 @@ let memoized: FixtureSnapshot | null = null;
 export function loadFixtures(force = false): FixtureSnapshot {
   if (memoized && !force) return memoized;
 
-  const products = parseJsonl<Product>(
-    readFixture("products.jsonl"),
-    "products.jsonl",
-  );
+  const products = parseJsonl<Product>(productsRaw, "products.jsonl");
   const promos = (
-    JSON.parse(readFixture("promo-codes.json")) as { promos: PromoCode[] }
+    JSON.parse(promoCodesRaw) as { promos: PromoCode[] }
   ).promos;
   const shipping = (
-    JSON.parse(readFixture("shipping-methods.json")) as {
-      methods: ShippingMethod[];
-    }
+    JSON.parse(shippingMethodsRaw) as { methods: ShippingMethod[] }
   ).methods;
-  const tax = JSON.parse(readFixture("tax-rules.json")) as {
+  const tax = JSON.parse(taxRulesRaw) as {
     defaultRateBps: number;
     rules: TaxRule[];
   };

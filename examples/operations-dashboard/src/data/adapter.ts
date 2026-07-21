@@ -1,10 +1,11 @@
 // Lane-local fixture adapter for the operations-dashboard example.
 //
 // This module is the ONLY layer that touches the raw fixture file shape. It
-// reads the static JSON/JSONL fixtures, parses and lightly validates them into
-// the typed domain records declared in `../types`, and exposes those records to
-// the functional API (`../api`). The adapter loads fixtures once and memoizes
-// the parsed snapshot.
+// reads the static JSON/JSONL fixtures as bundler modules (isomorphic — the
+// seam runs unchanged under node via Vitest and in the browser via Vite),
+// parses and lightly validates them into the typed domain records declared in
+// `../types`, and exposes those records to the functional API (`../api`). The
+// adapter loads fixtures once and memoizes the parsed snapshot.
 //
 // BOUNDARY: future framework UI code must NOT import this module or the raw
 // fixtures directly. UI consumes data only through the functional API in
@@ -12,9 +13,10 @@
 // means the queue rows can stay compact JSONL while detail/timeline joins
 // happen in one typed place.
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+import incidentsRaw from "../../fixtures/incidents.jsonl?raw";
+import timelineEventsRaw from "../../fixtures/timeline-events.jsonl?raw";
+import serviceHealthRaw from "../../fixtures/service-health.json?raw";
+import incidentDescriptionsRaw from "../../fixtures/incident-descriptions.json?raw";
 
 import type {
   Incident,
@@ -22,11 +24,6 @@ import type {
   ServiceHealth,
   TimelineEvent,
 } from "../types/index.js";
-
-const FIXTURES_DIR = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../../fixtures",
-);
 
 /** Parse a JSONL string into an array of records, ignoring blank lines. */
 function parseJsonl<T>(raw: string, file: string): T[] {
@@ -48,10 +45,6 @@ function parseJsonl<T>(raw: string, file: string): T[] {
     }
   }
   return out;
-}
-
-function readFixture(name: string): string {
-  return readFileSync(path.join(FIXTURES_DIR, name), "utf8");
 }
 
 /** The fully-parsed, joined snapshot the API operates over. */
@@ -77,22 +70,18 @@ let memoized: FixtureSnapshot | null = null;
 export function loadFixtures(force = false): FixtureSnapshot {
   if (memoized && !force) return memoized;
 
-  const incidents = parseJsonl<Incident>(
-    readFixture("incidents.jsonl"),
-    "incidents.jsonl",
-  );
+  const incidents = parseJsonl<Incident>(incidentsRaw, "incidents.jsonl");
   const events = parseJsonl<TimelineEvent>(
-    readFixture("timeline-events.jsonl"),
+    timelineEventsRaw,
     "timeline-events.jsonl",
   );
   const services = (
-    JSON.parse(readFixture("service-health.json")) as {
-      services: ServiceHealth[];
-    }
+    JSON.parse(serviceHealthRaw) as { services: ServiceHealth[] }
   ).services;
-  const descriptions = JSON.parse(
-    readFixture("incident-descriptions.json"),
-  ) as Record<string, string>;
+  const descriptions = JSON.parse(incidentDescriptionsRaw) as Record<
+    string,
+    string
+  >;
 
   const timelineByIncident = new Map<string, TimelineEvent[]>();
   for (const ev of events) {
@@ -106,9 +95,7 @@ export function loadFixtures(force = false): FixtureSnapshot {
     list.sort((a, b) => a.at.localeCompare(b.at));
   }
 
-  const descriptionById = new Map<string, string>(
-    Object.entries(descriptions),
-  );
+  const descriptionById = new Map<string, string>(Object.entries(descriptions));
 
   memoized = { incidents, services, timelineByIncident, descriptionById };
   return memoized;

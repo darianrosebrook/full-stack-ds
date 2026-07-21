@@ -4,11 +4,15 @@ A consumer-app proving surface at the **assembly** layer. The authority for this
 app shape is [`spec.md`](./spec.md); this README documents the lane-local
 **data / API layer** and the first framework lane (**React**).
 
-> Status: **data/API scaffold landed; React lane implemented; Vue/Svelte/Angular/Lit
-> lanes not yet implemented.** The `react/` folder is a real Vite + React app
-> consuming the data/API seam through public `@full-stack-ds/react` exports. The
-> `vue/`, `svelte/`, `angular/`, `lit/` folders hold only `src/.gitkeep`
-> placeholders.
+> Status: **data/API scaffold landed; React lane builds, typechecks, and renders
+> in a browser (the seam is isomorphic); Vue/Svelte/Angular/Lit lanes not yet
+> implemented.** The `react/` folder is a real Vite + React app composing the
+> dashboard through public `@full-stack-ds/react` exports and the app-local API
+> barrel. The data/API seam loads fixtures as bundler modules, so it runs
+> unchanged under Node (Vitest) and in the browser (Vite) — the lane renders with
+> the queue/summary/detail regions populated from the API (see Findings → finding
+> 3, resolved). The `vue/`, `svelte/`, `angular/`, `lit/` folders hold only
+> `src/.gitkeep` placeholders.
 
 ## No backend
 
@@ -163,21 +167,34 @@ assembling the lane, **not** silently worked around:
    the one place this lane's CSS crosses from page-frame into state indication.
    *Gap: package-owned row selection (state + indication) is missing on `Table`.*
 
-3. **The data/API seam is node-only and cannot be imported unmodified by a
-   browser app's runtime load path.** `src/data/adapter.ts` loads fixtures with
-   `readFileSync` from `node:fs` at `loadFixtures()` time, so `createOperationsApi()`
-   reads from disk synchronously. The Vite build *bundles* this without error, but
-   the code path is node-targeted; a browser lane that needs live fixture loading
-   would require the adapter to become isomorphic (e.g. fixtures imported as
-   modules / fetched), which is **out of scope for this lane** (the seam's
-   `src/{types,data,api}` is owned elsewhere). *Gap recorded against the seam, not
-   worked around here: the canonical adapter assumes a node filesystem.*
+3. **RESOLVED — the data/API seam was node-only and crashed at runtime in a
+   browser.** `src/data/adapter.ts` previously computed its fixtures directory
+   with `fileURLToPath(import.meta.url)` and read files with `readFileSync` from
+   `node:fs` inside `loadFixtures()`, which `createOperationsApi()` calls on
+   construction. The Vite build *succeeded* — Rolldown externalized `node:fs`,
+   `node:url`, `node:path` "for browser compatibility" — but those externals were
+   throwing stubs in the browser: serving the built lane (`vite preview`) and
+   loading it produced an empty `#root` and the console error `Uncaught
+   TypeError: (0 , j.fileURLToPath) is not a function`. **Fix:** the seam now
+   loads fixtures as bundler modules (`?raw` imports for JSONL, `?raw` +
+   `JSON.parse` for JSON), with no `node:fs` / `node:url` / `node:path` on the
+   load path, so `createOperationsApi()` is browser-safe by transitivity — no
+   barrel change needed. **Verified:** the 47 data/API tests still pass (`pnpm
+   run test:examples:data-api`), the lane builds and typechecks, and a headless
+   Chromium load of the built lane renders the queue (incident ids present in the
+   DOM) with no node-externalization error. The rule is now codified for future
+   seams as [invariant #10](../README.md#golden-dataapi-template) in the golden
+   data/API template, and the same fix was applied to the `storefront-checkout`
+   and `social-feed` seams so they cannot reintroduce the blocker.
 
-4. **`tsc` follows the API import graph into the seam's adapter**, which uses
-   `node:` specifiers, so the React lane's `tsconfig.json` adds
-   `"types": ["node", "vite/client"]` and `@types/node` to type-check cleanly.
-   This is a consequence of finding 3 — consuming a node-targeted seam pulls node
-   types into the browser lane's type graph.
+4. **RESOLVED (with finding 3) — `tsc` no longer follows the API graph into
+   node-targeted adapter code.** The adapter now uses bundler-module imports, so
+   it pulls no `node:` specifiers into the lane's type graph. The lane's
+   `tsconfig.json` still lists `"vite/client"` in `types` — that remains
+   required, now legitimately, for the `?raw` fixture imports' ambient module
+   declarations. The previous `node` types entry (and `@types/node`) was a
+   consequence of the now-fixed node-only adapter and is retractable, though that
+   cleanup is not part of this slice.
 
 ## Intended future use
 
