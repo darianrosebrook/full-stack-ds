@@ -3,6 +3,7 @@ title: 'Claim-ledger tax for landed work: propertyBindings row, corpus-count fix
 risk_tier: 3
 mode: doc
 lifecycle_state: active
+worktree: snapshot-tax
 created_at: '2026-07-21T23:29:58.137Z'
 updated_at: '2026-07-21T23:29:58.137Z'
 blast_radius:
