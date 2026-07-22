@@ -333,14 +333,14 @@ function selfCheck(result) {
       `component count drift: matrix=${result.componentCount} re-walk=${recount}`
     );
   }
-  // The cited sweep categories must partition the corpus (A + C + D == count).
-  const sum = SWEEP_CATEGORIES.A + SWEEP_CATEGORIES.C + SWEEP_CATEGORIES.D;
-  if (sum !== result.componentCount) {
-    problems.push(
-      `sweep categories A+C+D=${sum} != corpus ${result.componentCount} ` +
-        `(cited from ${SWEEP_CATEGORIES.source}; reconcile if the corpus changed)`
-    );
-  }
+  // NOTE (RAIL-COVERAGE-DERIVATION-FIX-01): the former sweep-category
+  // partition check (A + C + D == live corpus count) was deleted, not
+  // repaired. It compared a frozen point-in-time classification (the
+  // machine-local sweep doc's counts at its measurement commit) against a
+  // live, growing corpus — a pin against a moving target that structurally
+  // demands perpetual manual re-classification of every new component. The
+  // sweep-category citations remain as historical provenance in the matrix
+  // output; they are not a live-corpus invariant.
   // Every target must have all eight dimensions present (no silent omission).
   for (const row of result.rows) {
     for (const dim of DIMENSIONS) {

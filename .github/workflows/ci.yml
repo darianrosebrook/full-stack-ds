@@ -215,6 +215,15 @@ jobs:
       - name: Run runtime visual proof rail (fact assertions only)
         run: pnpm run e2e:rail
 
+      # Corpus-derived prop→DOM-attribute rail: regenerates its matrix from
+      # the live contracts dir on every run (never a committed frozen
+      # classification), then asserts every bound obligation across
+      # react/vue/svelte/lit plus five frozen regression pins. Wired here so
+      # the rail can never go silently dead again (it was unwired and
+      # ENOENT-broken from its landing until RAIL-COVERAGE-DERIVATION-FIX-01).
+      - name: Run render-binding rail (corpus-derived matrix)
+        run: pnpm run e2e:render-binding
+
       # On rail failure, surface the test report + any screenshot diffs
       # so the PR reviewer can see what changed.
       - name: Upload Playwright report

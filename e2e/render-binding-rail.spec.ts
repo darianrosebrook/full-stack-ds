@@ -18,7 +18,7 @@
  * The five formerly-missing form-control attrs are REQUIRED regression cases.
  */
 import { test, expect, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 type Row = {
@@ -32,9 +32,20 @@ type Row = {
 };
 type Matrix = { components: { component: string; hostTag: string; rows: Row[] }[] };
 
-const MATRIX: Matrix = JSON.parse(
-  readFileSync(resolve(process.cwd(), "docs/render-binding-audit/render-binding-matrix.json"), "utf8"),
+// The matrix is machine-local, corpus-derived scratch (docs/internal/ is
+// gitignored): scripts/render-binding-audit/audit.mjs regenerates it from the
+// live contracts dir on every run. Fail loud when it is absent — a rail that
+// silently sweeps zero obligations reads as coverage while proving nothing.
+const MATRIX_PATH = resolve(
+  process.cwd(),
+  "docs/internal/render-binding-audit/render-binding-matrix.json",
 );
+if (!existsSync(MATRIX_PATH)) {
+  throw new Error(
+    `render-binding matrix missing at ${MATRIX_PATH} — run \`node scripts/render-binding-audit/audit.mjs\` first (the e2e:render-binding script does both).`,
+  );
+}
+const MATRIX: Matrix = JSON.parse(readFileSync(MATRIX_PATH, "utf8"));
 
 // Web frameworks reachable through the message-bus preview seam.
 const WEB_FRAMEWORKS = ["react", "vue", "svelte", "lit", "angular"] as const;

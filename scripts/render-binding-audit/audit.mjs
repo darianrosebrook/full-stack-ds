@@ -64,11 +64,26 @@ function collectAnatomyRefs(node, refs, tags) {
     if (!prop) return;
     (refs[prop] ||= []).push({ role, key: key ?? null, tag: node.tag ?? null });
   };
-  for (const [attr, expr] of Object.entries(node.bindings ?? {})) {
-    const p = propRef(expr);
-    if (p) add(p, attr.toLowerCase().startsWith("aria-") ? "aria" : "attr", attr);
+  if (node.componentRef) {
+    // A componentRef node's bindings/events map THIS component's props onto
+    // the TARGET component's prop surface (e.g. Chip's ariaExpanded ->
+    // fsds.Button's ariaExpanded prop, which Button itself lowers to
+    // aria-expanded on its own host). These are prop delegations, not
+    // DOM-attribute realizations of this component's anatomy — the DOM
+    // lowering is audited when the target component is audited. Record them
+    // as "instance" so the prop counts as realized without emitting a false
+    // native/aria-attr obligation the rail would then hunt for under a
+    // nonexistent attribute name (RAIL-COVERAGE-DERIVATION-FIX-01: this
+    // classifier predates componentRef composition).
+    for (const expr of Object.values(node.bindings ?? {})) add(propRef(expr), "instance");
+    for (const expr of Object.values(node.events ?? {})) add(propRef(expr), "instance");
+  } else {
+    for (const [attr, expr] of Object.entries(node.bindings ?? {})) {
+      const p = propRef(expr);
+      if (p) add(p, attr.toLowerCase().startsWith("aria-") ? "aria" : "attr", attr);
+    }
+    for (const expr of Object.values(node.events ?? {})) add(propRef(expr), "event");
   }
-  for (const expr of Object.values(node.events ?? {})) add(propRef(expr), "event");
   if (node.content) add(propRef(node.content), "content");
   for (const expr of Object.values(node.cssVariableBindings ?? {})) add(propRef(expr), "cssvar");
   if (node.iteration?.source) add(propRef(node.iteration.source), "iteration");
@@ -139,6 +154,12 @@ export function classify(component) {
       bucket = "content";
       obligation = has("content") || has("iteration") ? "bound" : "consumed";
       target = "content";
+    } else if (has("instance")) {
+      // Delegated to an owned child component instance (componentRef); the
+      // child owns the DOM realization and is audited as itself.
+      bucket = "delegated";
+      obligation = "consumed";
+      target = "component instance";
     } else if (has("aria")) {
       bucket = "aria-attr";
       obligation = "derived";
