@@ -32,11 +32,13 @@ import type {
   BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
+  IdRefIR,
   IterationIR,
   NormalizedChannelIR,
   PropTypeIR,
   ResolvedPropIR,
 } from "../../ir.js";
+import { componentNeedsInstanceId } from "../../id-relationships.js";
 import {
   TABLE_COMPOSITION_TAGS,
   canonicalTsType,
@@ -1421,6 +1423,12 @@ function generateDomTreeImports(ir: ComponentIR): string {
   ) {
     lines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
   }
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: field-association provider/consumer.
+  if (ir.fieldAssociation?.provides || ir.fieldAssociation?.consumes) {
+    lines.push(
+      `import { FieldAssociationService } from "../../primitives/index.js";`,
+    );
+  }
   // iconGlyph: import the catalog resolver from the committed package-root
   // module of @full-stack-ds/iconography (ICON-CATALOG-RUNTIME-DELIVERY-01).
   // Structural — driven by IR `iconGlyph` facts, never per-component lore.
@@ -1428,6 +1436,51 @@ function generateDomTreeImports(ir: ComponentIR): string {
     lines.push(`import { resolveIcon } from "${ICONOGRAPHY_MODULE}";`);
   }
   return lines.join("\n");
+}
+
+/**
+ * FEAT-A11Y-LABEL-ID-ASSOCIATION-01 — Angular lowering of generated
+ * relationship ids. Ids derive from the class's `instanceId` field
+ * (module-counter namespace). All expressions here are CLASS scope
+ * (`this.` accessors) — template scope inlines only the simple cases.
+ */
+function angularCamelIdent(kebab: string): string {
+  const segments = kebab.split(/[^A-Za-z0-9]+/).filter(Boolean);
+  return (
+    segments[0] +
+    segments
+      .slice(1)
+      .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+      .join("")
+  );
+}
+
+function angularIdRefGuardExpr(ref: IdRefIR): string | undefined {
+  // slotGate is not lowerable in Angular (projected-content presence is
+  // not statically knowable) — only the when clause gates.
+  if (!ref.when) return undefined;
+  const accessor = `this.${ref.when.prop}`;
+  if (ref.when.op === "eq") {
+    return `${accessor} ${ref.when.negated ? "!==" : "==="} '${ref.when.value}'`;
+  }
+  return ref.when.negated ? `!${accessor}` : accessor;
+}
+
+function angularIdRefListExpr(
+  refs: IdRefIR[],
+  passthroughProp: string | undefined,
+): string {
+  const idFor = (slug: string) => `\`\${this.instanceId}-${slug}\``;
+  if (refs.length === 0 && !passthroughProp) return "undefined";
+  if (refs.length === 1 && !refs[0].when && !passthroughProp) {
+    return idFor(refs[0].slug);
+  }
+  const parts = refs.map((ref) => {
+    const guard = angularIdRefGuardExpr(ref);
+    return guard ? `${guard} ? ${idFor(ref.slug)} : null` : idFor(ref.slug);
+  });
+  if (passthroughProp) parts.push(`this.${passthroughProp}`);
+  return `[${parts.join(", ")}].filter(Boolean).join(" ") || undefined`;
 }
 
 function generateDomTreeComponent(ir: ComponentIR): string {
@@ -1485,6 +1538,43 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     iconGlyphIdents.set(node, { glyphGetter: `iconGlyph${suffix}`, pxGetter });
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: instance-id namespace (module
+  // counter, the Material pattern), field-association provider/consumer,
+  // and class getters for idref attributes that need conditions/joining.
+  const needsInstanceId = componentNeedsInstanceId(ir);
+  const assocProvides = ir.fieldAssociation?.provides;
+  const assocConsumes = ir.fieldAssociation?.consumes === true;
+  const idRefGetters = new Map<DomNodeIR, Map<string, string>>();
+  const idRefGetterLines: string[] = [];
+  {
+    const collect = (node: DomNodeIR) => {
+      for (const refAttr of node.idRefAttrs) {
+        const simple =
+          refAttr.refs.length === 1 &&
+          !refAttr.refs[0].when &&
+          !refAttr.passthroughProp;
+        if (simple) continue;
+        const getterName = angularCamelIdent(
+          `${node.part ?? "root"}-${refAttr.attribute}`,
+        );
+        let byAttr = idRefGetters.get(node);
+        if (!byAttr) {
+          byAttr = new Map();
+          idRefGetters.set(node, byAttr);
+        }
+        byAttr.set(refAttr.attribute, getterName);
+        idRefGetterLines.push(
+          ``,
+          `  get ${getterName}(): string | undefined {`,
+          `    return ${angularIdRefListExpr(refAttr.refs, refAttr.passthroughProp)};`,
+          `  }`,
+        );
+      }
+      node.children.forEach(collect);
+    };
+    collect(ir.dom);
+  }
+
   const ctx: AngularRenderContext = {
     classRecipe: ir.classRecipe.base,
     channelByName,
@@ -1493,6 +1583,8 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     autoDismissPause: autoDismissActive,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
     iconGlyphIdents,
+    fieldAssociationConsumer: assocConsumes,
+    idRefGetters,
     ...(overlayClickTrigger && booleanChannel
       ? {
           overlayClickSetter: `set${capitalizeAngular(booleanChannel.name)}`,
@@ -1531,10 +1623,22 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       lines.push(``);
     }
   }
+  // Module-scope instance counter (SSR-safe, the Angular Material id
+  // pattern) — each construction takes the next namespace.
+  if (needsInstanceId) {
+    lines.push(`let nextInstanceId = 0;`);
+    lines.push(``);
+  }
   lines.push(`@Component({`);
   lines.push(`  selector: "fsds-${selector}",`);
   lines.push(`  standalone: true,`);
   lines.push(`  imports: [${decoratorImports.join(", ")}],`);
+  if (assocProvides) {
+    // Component-level provider: projected content (the slotted control)
+    // sits inside this element's injector chain and resolves the SAME
+    // service instance.
+    lines.push(`  providers: [FieldAssociationService],`);
+  }
   lines.push(`  template: \`${template}\`,`);
   lines.push(`  changeDetection: ChangeDetectionStrategy.OnPush,`);
   lines.push(`})`);
@@ -1568,6 +1672,29 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // arbitrary className passthrough). Declare it explicitly here since the
   // reserved set excludes it from the loop above.
   lines.push(`  @Input() class?: string;`);
+
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 class members. The provider connects
+  // a GETTER so the service reads current state (status switches help↔error)
+  // on every change-detection pass.
+  if (needsInstanceId) {
+    lines.push(``);
+    lines.push(
+      `  protected readonly instanceId = \`fsds-${selector}-\${nextInstanceId++}\`;`,
+    );
+  }
+  if (assocProvides) {
+    lines.push(
+      `  private fieldAssociation = inject(FieldAssociationService).connect(() => ({`,
+      `    controlId: \`\${this.instanceId}-${assocProvides.controlSlug}\`,`,
+      `    describedBy: ${angularIdRefListExpr(assocProvides.describedBy, undefined)},`,
+      `  }));`,
+    );
+  }
+  if (assocConsumes) {
+    lines.push(
+      `  protected fieldAssociation = inject(FieldAssociationService, { optional: true });`,
+    );
+  }
   // Event handlers (channel onChange) — emit as @Input callbacks. Angular
   // typically uses @Output for events, but for design-system parity (the
   // contract says onChange is a callback), we keep @Input.
@@ -1632,6 +1759,11 @@ function generateDomTreeComponent(ir: ComponentIR): string {
   // classes computed
   lines.push(``);
   lines.push(...generateDomTreeClassesComputed(ir));
+
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: getters for conditional/joined
+  // idref attributes (plain getters, re-evaluated each CD pass — Angular
+  // templates cannot reference `Boolean` for an inline filter).
+  lines.push(...idRefGetterLines);
 
   // Helper handler methods. Named `handle<Name>Change` (NOT `on<Name>Change`)
   // to avoid colliding with the @Input() change-handler prop of the same
@@ -1991,6 +2123,18 @@ interface AngularRenderContext {
    * glyph nodes.
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphGetter: string; pxGetter: string | undefined }>;
+  /**
+   * True when the component consumes ambient field association
+   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `[attr.id]` /
+   * `[attr.aria-describedby]` from the optionally injected service.
+   */
+  fieldAssociationConsumer?: boolean;
+  /**
+   * Class-getter names for idref attributes that need conditions or
+   * joining (FEAT-A11Y-LABEL-ID-ASSOCIATION-01), keyed by node identity
+   * then attribute name. Simple single-ref attributes inline instead.
+   */
+  idRefGetters?: Map<DomNodeIR, Map<string, string>>;
 }
 
 function renderAngularDomNode(
@@ -2104,8 +2248,34 @@ function renderAngularDomNode(
     attrs.push(rendered);
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
+  // relationship targets, and the lowered idref attributes on sources.
+  // Angular cannot statically test projected-content presence, so
+  // `slotGate` is not lowered here (documented divergence on IdRefIR).
+  if (node.generatedIdSlug !== undefined) {
+    attrs.push(`[attr.id]="instanceId + '-${node.generatedIdSlug}'"`);
+  }
+  for (const refAttr of node.idRefAttrs) {
+    const getter = ctx.idRefGetters?.get(node)?.get(refAttr.attribute);
+    if (getter) {
+      attrs.push(`[attr.${refAttr.attribute}]="${getter}"`);
+    } else {
+      attrs.push(
+        `[attr.${refAttr.attribute}]="instanceId + '-${refAttr.refs[0].slug}'"`,
+      );
+    }
+  }
+
   if (ctx.isRoot) {
     attrs.unshift(`[ngClass]="classes()"`);
+    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
+    // ambient field association (optional DI) on its root element.
+    if (ctx.fieldAssociationConsumer) {
+      attrs.push(`[attr.id]="fieldAssociation?.current?.controlId"`);
+      attrs.push(
+        `[attr.aria-describedby]="fieldAssociation?.current?.describedBy"`,
+      );
+    }
     if (ctx.autoDismissPause) {
       attrs.push(
         `(pointerenter)="autoDismiss.pauseListeners.pointerenter()"`,

@@ -3,6 +3,7 @@ import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useField } from "./useField.js";
+import { FieldAssociationService } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -18,13 +19,16 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-field",
   standalone: true,
   imports: [NgClass, NgIf],
+  providers: [FieldAssociationService],
   template: `<div [ngClass]="classes()">
   <div [ngClass]="'field__header'">
-    <label [ngClass]="'field__label'">
+    <label [ngClass]="'field__label'" [attr.for]="instanceId + '-control'">
       <ng-content select="[slot=label]" />
     </label>
   </div>
@@ -32,10 +36,10 @@ export type FieldStatus = "idle" | "validating" | "valid" | "invalid";
     <ng-content select="[slot=control]" />
   </div>
   <div [ngClass]="'field__meta'">
-    <span [ngClass]="'field__help'">
+    <span [ngClass]="'field__help'" [attr.id]="instanceId + '-help'">
       <ng-content select="[slot=help]" />
     </span>
-    <span [ngClass]="'field__error'">
+    <span [ngClass]="'field__error'" [attr.id]="instanceId + '-error'">
       <ng-content select="[slot=error]" />
     </span>
     <ng-container *ngIf="validating">
@@ -60,6 +64,12 @@ export class FieldComponent {
   @Input() status?: FieldStatus;
   @Input() validating?: boolean;
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-field-${nextInstanceId++}`;
+  private fieldAssociation = inject(FieldAssociationService).connect(() => ({
+    controlId: `${this.instanceId}-control`,
+    describedBy: [this.status !== 'invalid' ? `${this.instanceId}-help` : null, this.status === 'invalid' ? `${this.instanceId}-error` : null].filter(Boolean).join(" ") || undefined,
+  }));
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useField({
