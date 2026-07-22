@@ -41,6 +41,9 @@ export type TooltipPlacement = "top" | "bottom" | "left" | "right" | "auto";
           anchorRelation: "describedby",
           registerAnchor: (n) => self.behavior.registerAnchor(n),
           registerContent: (n) => self.behavior.registerContent(n),
+          getAnchorNode: () => self.behavior.getAnchorNode(),
+          getContentNode: () => self.behavior.getContentNode(),
+          getPlacement: () => self.placement,
         };
         return ctx;
       },

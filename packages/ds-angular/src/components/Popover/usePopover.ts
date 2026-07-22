@@ -5,6 +5,7 @@ import {
   type CreateAnchoredSurfaceOptions,
   type CreateAnchoredSurfaceResult,
 } from "../../primitives/surfaces/createAnchoredSurface.js";
+import type { PopoverPlacement } from "./Popover.component.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,6 +20,9 @@ export interface PopoverContextValue {
   anchorRelation: "controls-expanded";
   registerAnchor: (node: HTMLElement | null) => void;
   registerContent: (node: HTMLElement | null) => void;
+  getAnchorNode: () => HTMLElement | null;
+  getContentNode: () => HTMLElement | null;
+  getPlacement: () => PopoverPlacement | undefined;
 }
 // @generated:end
 
