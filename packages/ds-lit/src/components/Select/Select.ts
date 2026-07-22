@@ -246,7 +246,7 @@ export class SelectElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded=${this.behavior.open ? 'true' : 'false'} aria-disabled=${ifDefined(this.disabled === undefined ? undefined : (this.disabled ? 'true' : 'false'))}>
-  <button class=${'select__trigger'} type="button" ?disabled=${this.disabled ?? false}>
+  <button class=${'select__trigger'} type="button" @click=${() => this.behavior.setOpen(!this.behavior.open)} ?disabled=${this.disabled ?? false}>
     <span class=${'select__text'}></span>
   </button>
   ${this.behavior.open ? html`

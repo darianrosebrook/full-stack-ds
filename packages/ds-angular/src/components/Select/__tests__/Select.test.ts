@@ -20,6 +20,16 @@ describe("Select — unit", () => {
     expect(classTokens(fixture.componentInstance)).toContain("select");
   });
 
+  it("toggles the open channel from the trigger click", () => {
+    const fixture = TestBed.createComponent(SelectComponent);
+    const seen: boolean[] = [];
+    fixture.componentInstance.onOpenChange = (v: boolean) => seen.push(v);
+    fixture.detectChanges();
+    const host = fixture.nativeElement.querySelector(".select__trigger") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([false]);
+  });
+
   it("applies size=sm variant class", () => {
     const fixture = TestBed.createComponent(SelectComponent);
     fixture.componentInstance.size = "sm";

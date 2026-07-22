@@ -68,7 +68,7 @@ const classes = $derived(
 </script>
 
 <div class={classes} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={behavior.open} aria-disabled={disabled}>
-  <button class={'select__trigger'} type="button" disabled={disabled}>
+  <button class={'select__trigger'} type="button" onclick={() => behavior.setOpen(!behavior.open)} disabled={disabled}>
     <span class={'select__text'}></span>
   </button>
   {#if behavior.open}

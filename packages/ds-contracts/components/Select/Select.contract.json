@@ -104,6 +104,9 @@
           "bindings": {
             "disabled": "prop:disabled"
           },
+          "events": {
+            "click": "channel:open.onChange"
+          },
           "children": [
             {
               "tag": "span",

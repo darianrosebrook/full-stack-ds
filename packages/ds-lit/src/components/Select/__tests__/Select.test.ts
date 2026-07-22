@@ -17,6 +17,16 @@ describe("Select — unit", () => {
     expect(classTokens(root)).toContain("select");
   });
 
+  it("toggles the open channel from the trigger click", async () => {
+    const { element } = await renderElement("fsds-select");
+    const seen: boolean[] = [];
+    (element as LitTestElement & { onOpenChange?: (v: boolean) => void }).onOpenChange = (v: boolean) => seen.push(v);
+    await (element as LitTestElement).updateComplete;
+    const host = element.shadowRoot?.querySelector(".select__trigger") as HTMLElement;
+    host.click();
+    expect(seen).toEqual([false]);
+  });
+
   it("applies size=sm variant class", async () => {
     const { element } = await renderElement("fsds-select", { "open": true, "size": "sm" });
     const root = element.shadowRoot?.firstElementChild ?? element;
