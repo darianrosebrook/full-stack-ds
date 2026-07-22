@@ -3,6 +3,7 @@ title: 'Derive positive portal obligations for vue/svelte/angular/lit in the beh
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: audit-portal-xfw
 created_at: '2026-07-22T20:00:01.635Z'
 updated_at: '2026-07-22T20:00:01.635Z'
 blast_radius:
