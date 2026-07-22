@@ -141,7 +141,7 @@ export function Select({
 
   return (
   <Stack layout="native" className={`${classNames}`} role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" aria-expanded={open} aria-disabled={disabled} data-testid={testId} {...rest}>
-    <button className="select__trigger" type="button" disabled={disabled}>
+    <button className="select__trigger" type="button" onClick={() => setOpen(!open)} disabled={disabled}>
       <span className="select__text" />
     </button>
     {open && (

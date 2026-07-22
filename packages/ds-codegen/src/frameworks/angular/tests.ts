@@ -71,7 +71,9 @@ export function generateAngularTest(ir: ComponentIR): string {
         `    const host = fixture.nativeElement.querySelector("${selector}") as HTMLElement;`,
       );
       lines.push(`    host.click();`);
-      lines.push(`    expect(seen).toEqual([true]);`);
+      lines.push(
+        `    expect(seen).toEqual([${channelClickExpectedValue(ir, channelClick.channel)}]);`,
+      );
       lines.push(`  });`);
     }
 
@@ -251,6 +253,21 @@ export function generateAngularTest(ir: ComponentIR): string {
   return renderSections(sections, "line");
 }
 
+
+/**
+ * First-click expectation for a boolean channel toggle: the channel starts at
+ * the default-value prop's contract default (false when none is declared), so
+ * the click must emit its negation.
+ */
+function channelClickExpectedValue(
+  ir: ComponentIR,
+  channel: NormalizedChannelIR,
+): string {
+  const defaultProp = channel.defaultValueProp
+    ? ir.styledProps.find((p) => p.name === channel.defaultValueProp)
+    : undefined;
+  return defaultProp?.defaultExpr === "true" ? "false" : "true";
+}
 
 /**
  * First dom node with a boolean-channel click event on a non-form host

@@ -81,7 +81,7 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" :aria-expanded="behavior.open.value" :aria-disabled="props.disabled" :data-testid="props['data-testid']">
-    <button :class="'select__trigger'" type="button" :disabled="props.disabled">
+    <button :class="'select__trigger'" type="button" @click="() => behavior.setOpen(!behavior.open.value)" :disabled="props.disabled">
       <span :class="'select__text'"></span>
     </button>
     <div v-if="behavior.open.value" :class="'select__content'" role="listbox" id="fsds-select-listbox">

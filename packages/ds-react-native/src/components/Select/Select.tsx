@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { Pressable, Text as RNText, TextInput, View } from "react-native";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createSelectStyles } from "./Select.styles";
 // @generated:end
@@ -45,6 +45,7 @@ export function Select({
   empty,
   defaultValue = undefined,
   defaultOpen = false,
+  onOpenChange,
   style,
   testID,
   accessibilityLabel,
@@ -55,8 +56,12 @@ export function Select({
   const [uncontrolledSelection] = useState<string | string[]>((defaultValue ?? undefined) as string | string[]);
   const selection = controlledSelection ?? uncontrolledSelection;
 
-  const [uncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState<boolean>((defaultOpen ?? false) as boolean);
   const open = controlledOpen ?? uncontrolledOpen;
+  const setOpenValue = useCallback((next: boolean) => {
+    if (controlledOpen === undefined) setUncontrolledOpen(next);
+    onOpenChange?.(next);
+  }, [controlledOpen, onOpenChange]);
 
   return (
     <View
@@ -69,6 +74,7 @@ export function Select({
       <Pressable
         style={styles.trigger}
         disabled={disabled}
+        onPress={() => setOpenValue(!open)}
         accessibilityRole="button"
         accessibilityState={{ disabled: disabled }}
       >

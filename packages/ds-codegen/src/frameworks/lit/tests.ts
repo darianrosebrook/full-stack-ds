@@ -322,7 +322,9 @@ export function generateLitTest(ir: ComponentIR): string {
         `    const host = element.shadowRoot?.querySelector("${selector}") as HTMLElement;`,
       );
       lines.push(`    host.click();`);
-      lines.push(`    expect(seen).toEqual([true]);`);
+      lines.push(
+        `    expect(seen).toEqual([${channelClickExpectedValue(ir, channelClick.channel)}]);`,
+      );
       lines.push(`  });`);
     }
 
@@ -775,6 +777,21 @@ export function generateLitTest(ir: ComponentIR): string {
  * and no if-guard on itself or any ancestor (so a generated test can
  * click it without arranging state first).
  */
+/**
+ * First-click expectation for a boolean channel toggle: the channel starts at
+ * the default-value prop's contract default (false when none is declared), so
+ * the click must emit its negation.
+ */
+function channelClickExpectedValue(
+  ir: ComponentIR,
+  channel: NormalizedChannelIR,
+): string {
+  const defaultProp = channel.defaultValueProp
+    ? ir.styledProps.find((p) => p.name === channel.defaultValueProp)
+    : undefined;
+  return defaultProp?.defaultExpr === "true" ? "false" : "true";
+}
+
 function findUnguardedBooleanChannelClick(
   ir: ComponentIR,
 ): { node: DomNodeIR; channel: NormalizedChannelIR } | null {

@@ -24,7 +24,7 @@ export type SelectSize = "sm" | "md" | "lg";
   standalone: true,
   imports: [NgClass, NgIf, NgFor],
   template: `<div [ngClass]="classes()" role="combobox" aria-haspopup="listbox" aria-controls="fsds-select-listbox" [attr.aria-expanded]="behavior.open()" [attr.aria-disabled]="disabled">
-  <button [ngClass]="'select__trigger'" type="button" [disabled]="disabled">
+  <button [ngClass]="'select__trigger'" type="button" (click)="behavior.setOpen(!behavior.open())" [disabled]="disabled">
     <span [ngClass]="'select__text'"></span>
   </button>
   <ng-container *ngIf="behavior.open()">
