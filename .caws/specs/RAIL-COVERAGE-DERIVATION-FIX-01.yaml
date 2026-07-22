@@ -3,6 +3,7 @@ title: 'Revive render-binding rail (path + CI wiring) and retire mobile-parity''
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: rail-coverage-fix
 created_at: '2026-07-22T00:55:46.562Z'
 updated_at: '2026-07-22T00:55:46.562Z'
 blast_radius:
