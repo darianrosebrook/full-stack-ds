@@ -1,0 +1,36 @@
+id: FEAT-STACK-PRIMITIVE-CODEGEN-01
+title: 'Stack primitive emitted from contract across five web frameworks'
+risk_tier: 2
+mode: feature
+lifecycle_state: active
+created_at: '2026-07-22T19:30:31.711Z'
+updated_at: '2026-07-22T19:30:31.711Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'packages/ds-contracts/primitives/Stack.primitive.json'
+    - 'packages/ds-codegen/src'
+    - 'packages/ds-react/src/primitives'
+    - 'packages/ds-vue/src/primitives'
+    - 'packages/ds-svelte/src/primitives'
+    - 'packages/ds-angular/src/primitives'
+    - 'packages/ds-lit/src/primitives'
+    - 'packages/ds-tokens/src'
+    - 'examples/settings'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'stack-primitive'
+    type: schema
+    path: 'packages/ds-contracts/primitives/Stack.primitive.json'
