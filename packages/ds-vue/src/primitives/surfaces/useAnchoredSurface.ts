@@ -101,6 +101,14 @@ export interface UseAnchoredSurfaceResult {
    * spreads atomically via `v-bind="triggerProps"`.
    */
   triggerProps: ComputedRef<SurfaceTriggerProps>;
+  /**
+   * Live anchor/content DOM nodes, tracked via the same refs the
+   * register* callbacks populate. Anchored-positioning consumers
+   * (useAnchoredPosition) read these reactively instead of
+   * re-implementing node registration.
+   */
+  anchorEl: ComputedRef<HTMLElement | null>;
+  contentEl: ComputedRef<HTMLElement | null>;
 }
 
 let surfaceIdCounter = 0;
@@ -323,5 +331,7 @@ export function useAnchoredSurface(
     registerContent,
     getTriggerHandlers: getTriggerHandlersImpl,
     triggerProps,
+    anchorEl: computed(() => anchorNode.value),
+    contentEl: computed(() => contentNode.value),
   };
 }
