@@ -2,10 +2,11 @@ id: FIX-INTERACTION-FACT-SKIP-SCOPE-01
 title: 'Describe-level test.skip silently skipped all four Select interaction facts'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: fix-skip-scope
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge fix-skip-scope at 7de140f8cf301b9daf4ec7c4875822942fc02ddf'
 created_at: '2026-07-22T20:19:27.226Z'
-updated_at: '2026-07-22T20:19:27.226Z'
+updated_at: '2026-07-22T20:19:54.477Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
