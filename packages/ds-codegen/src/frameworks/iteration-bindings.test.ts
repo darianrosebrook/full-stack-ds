@@ -1138,3 +1138,87 @@ describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: dynamic root role lowering", () 
     );
   });
 });
+
+// FIX-COUNT-ITERATION-DEFAULT-THREADING-01 — parity fixture.
+//
+// Cross-framework rule under test: a count-kind iteration source that is
+// a bare prop binding must, when explicitly `undefined` at runtime,
+// resolve to the prop's CONTRACT default in every framework (react's
+// parameter default / vue's withDefaults / svelte's `export let` already
+// honor this). Lit and Angular's count-iteration lowering used to
+// hardcode `?? 0` / undefined->0 regardless of any declared default
+// (production repro: OTP.length defaults to 6, Calendar.daysShown
+// defaults to 42, but lit/angular rendered zero fields for an
+// explicitly-undefined input).
+//
+// COUNT_CONTRACT_WITH_DEFAULT declares `default: 6` on the count prop —
+// the sibling of PRODUCTION-ARRAY-ITERATION-CONSUMER-01's COUNT_CONTRACT
+// above (which deliberately has NO default and pins the unchanged
+// fallback-to-0 behavior in the "still works for plain props" block).
+const COUNT_CONTRACT_WITH_DEFAULT: ComponentContract = {
+  name: "FixtureCountWithDefault",
+  layer: "primitive",
+  cssPrefix: "fixture-count-default",
+  anatomy: {
+    parts: ["root", "dot"],
+    dom: {
+      tag: "div",
+      part: "root",
+      attrs: { role: "group" },
+      children: [
+        {
+          tag: "span",
+          part: "dot",
+          attrs: { "aria-hidden": "true" },
+          iterate: {
+            source: "prop:count",
+            kind: "count",
+          },
+        },
+      ],
+    },
+  },
+  props: {
+    styled: {
+      members: [
+        {
+          name: "count",
+          type: "number",
+          description: "Number of dots to render",
+          default: 6,
+        },
+      ],
+    },
+  },
+};
+
+describe("FIX-COUNT-ITERATION-DEFAULT-THREADING-01: count-iteration default threading", () => {
+  const ir = buildComponentIR(COUNT_CONTRACT_WITH_DEFAULT);
+
+  it("Lit: threads the contract default into the count fallback (this.count ?? 6, not ?? 0)", () => {
+    const src = generateLitComponentSource(ir);
+    expect(src).toMatch(/Array\.from\(\{ length: this\.count \?\? 6 \}/);
+    expect(src).not.toMatch(/Array\.from\(\{ length: this\.count \?\? 0 \}/);
+  });
+
+  it("Angular: threads the contract default at the arrayFromCount call site (count ?? 6, not bare count)", () => {
+    const src = generateAngularComponentSource(ir);
+    expect(src).toMatch(/\*ngFor="let _ of arrayFromCount\(count \?\? 6\); let index = index"/);
+    expect(src).not.toMatch(/\*ngFor="let _ of arrayFromCount\(count\); let index = index"/);
+  });
+
+  it("Lit: no-default fixture (COUNT_CONTRACT) still falls back to ?? 0 unchanged", () => {
+    // Falsification anchor: COUNT_CONTRACT (no `default` on `count`) must
+    // keep emitting the literal `?? 0` fallback — the fix must not invent
+    // a default where the contract declares none.
+    const noDefaultIr = buildComponentIR(COUNT_CONTRACT);
+    const src = generateLitComponentSource(noDefaultIr);
+    expect(src).toMatch(/Array\.from\(\{ length: this\.count \?\? 0 \}/);
+  });
+
+  it("Angular: no-default fixture (COUNT_CONTRACT) still calls arrayFromCount(count) unchanged", () => {
+    const noDefaultIr = buildComponentIR(COUNT_CONTRACT);
+    const src = generateAngularComponentSource(noDefaultIr);
+    expect(src).toMatch(/\*ngFor="let _ of arrayFromCount\(count\); let index = index"/);
+  });
+});

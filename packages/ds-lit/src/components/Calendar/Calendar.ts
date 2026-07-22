@@ -217,7 +217,7 @@ export class CalendarElement extends LitElement {
   <table class=${'calendar__grid'} role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        ${Array.from({ length: this.daysShown ?? 0 }, (_, index) => html`
+        ${Array.from({ length: this.daysShown ?? 42 }, (_, index) => html`
         <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${index}>
           <button class=${'calendar__day'}></button>
         </td>

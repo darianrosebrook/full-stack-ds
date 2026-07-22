@@ -1597,7 +1597,7 @@ function generateLitDomTreePropertyDecl(
 interface LitRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
-  styledByName: Map<string, { type: string }>;
+  styledByName: Map<string, { type: string; defaultExpr?: string }>;
   isRoot: boolean;
   /** When true, bind auto-dismiss pause listeners on the template root. */
   autoDismissPause?: boolean;
@@ -1957,10 +1957,21 @@ function renderLitDomNode(
         `Lit emitter: iteration source could not be lowered (source kind=${source.kind})`,
       );
     }
+    // FIX-COUNT-ITERATION-DEFAULT-THREADING-01: a count-kind iteration
+    // source that is a bare prop binding must fall back to the prop's
+    // CONTRACT default when the prop resolves to `undefined` at runtime
+    // (parity with react's parameter default / vue's withDefaults /
+    // svelte's `export let`). Fall back to the literal `0` only when the
+    // contract declares no default for this prop — that fallback is
+    // existing, deliberately-unchanged behavior, not an invented default.
+    const countDefaultExpr =
+      kind === "count" && source.kind === "prop"
+        ? ctx.styledByName.get(source.prop)?.defaultExpr
+        : undefined;
     const arrowSource =
       kind === "array"
         ? `(${sourceExpr} ?? []).map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
-        : `Array.from({ length: ${sourceExpr} ?? 0 }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
+        : `Array.from({ length: ${sourceExpr} ?? ${countDefaultExpr ?? 0} }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
     return `${pad}\${${arrowSource}}`;
   }
   return withIfGuard;

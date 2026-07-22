@@ -1008,9 +1008,12 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     iconGlyphIdents.set(node, { glyphGetter: `iconGlyph${suffix}`, pxGetter });
   }
 
+  const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
+
   const ctx: AngularRenderContext = {
     classRecipe: ir.classRecipe.base,
     channelByName,
+    styledByName,
     isRoot: true,
     autoDismissPause: autoDismissActive,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
@@ -1357,6 +1360,8 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
 interface AngularRenderContext {
   classRecipe: string;
   channelByName: Map<string, NormalizedChannelIR>;
+  /** Prop-name → resolved styled-prop lookup, mirroring the lit emitter's `styledByName`. Populated at root construction and carried into nested contexts via the `{ ...ctx }` spread. */
+  styledByName: Map<string, { type: string; defaultExpr?: string }>;
   isRoot: boolean;
   /** When true, bind auto-dismiss pause listeners on the template root. */
   autoDismissPause?: boolean;
@@ -1722,10 +1727,26 @@ function renderAngularDomNode(
         `Angular emitter: iteration source could not be lowered (source kind=${source.kind})`,
       );
     }
+    // FIX-COUNT-ITERATION-DEFAULT-THREADING-01: a count-kind iteration
+    // source that is a bare prop binding must fall back to the prop's
+    // CONTRACT default when the input resolves to `undefined` at runtime
+    // (parity with react's parameter default / vue's withDefaults /
+    // svelte's `export let`). `arrayFromCount` itself stays a plain
+    // shared helper (undefined -> 0) because it's memoized across every
+    // count-iteration call site in the component and must not hardcode
+    // one specific prop's default; the default is threaded at the call
+    // site instead. Fall back to the helper's own undefined->0 behavior
+    // when the contract declares no default for this prop.
+    const countDefaultExpr =
+      kind === "count" && source.kind === "prop"
+        ? ctx.styledByName.get(source.prop)?.defaultExpr
+        : undefined;
+    const countSourceExpr =
+      countDefaultExpr !== undefined ? `${sourceExpr} ?? ${countDefaultExpr}` : sourceExpr;
     const ngForExpr =
       kind === "array"
         ? `let ${itemVar} of (${sourceExpr} ?? []); let ${indexVar} = index`
-        : `let _ of arrayFromCount(${sourceExpr}); let ${indexVar} = index`;
+        : `let _ of arrayFromCount(${countSourceExpr}); let ${indexVar} = index`;
     return [
       `${pad}<ng-container *ngFor="${ngForExpr}">`,
       withIfGuard.replace(/^/gm, "  "),
