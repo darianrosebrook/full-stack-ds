@@ -10,7 +10,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { createReactEmitter } from "./frameworks/react/factory.js";
 import { createVueEmitter } from "./frameworks/vue/factory.js";
 import { createSvelteEmitter } from "./frameworks/svelte/factory.js";
