@@ -179,6 +179,23 @@ jobs:
       - name: Behavior-realization rail (corpus-derived interactivity)
         run: pnpm run audit:behavior-realization
 
+      # A11y-realization rail: derives accessibility obligations (ARIA
+      # relationships, keyboard surfaces, focus strategies) from the LIVE
+      # contract corpus and asserts each is realized in the generated output
+      # of every rail-admitted family (iterated from the AdmissionDescriptor
+      # registry — web + native lanes, never a hardcoded web list). Same
+      # placement rationale as the behavior rail above: the preceding steps
+      # proved the trees are the regenerated, committed bytes; this rail reads
+      # those verified bytes. Pre-existing debt is enumerated in
+      # scripts/a11y-realization-audit/known-gaps.json (each entry names its
+      # owning campaign spec); the rail fails on any UNLEDGERED gap and on any
+      # STALE ledger entry, so the ledger can only shrink. The defect class:
+      # a contract declaring label-for / arrow-key nav / roving focus that no
+      # emitter realizes while every shape gate stays green —
+      # RAIL-A11Y-REALIZATION-01.
+      - name: A11y-realization rail (corpus-derived accessibility)
+        run: pnpm run audit:a11y-realization
+
   runtime-rail:
     name: Runtime visual proof rail
     runs-on: ubuntu-latest
