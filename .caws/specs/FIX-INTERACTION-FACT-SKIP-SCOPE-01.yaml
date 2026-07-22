@@ -3,6 +3,7 @@ title: 'Describe-level test.skip silently skipped all four Select interaction fa
 risk_tier: 3
 mode: fix
 lifecycle_state: active
+worktree: fix-skip-scope
 created_at: '2026-07-22T20:19:27.226Z'
 updated_at: '2026-07-22T20:19:27.226Z'
 blast_radius:
