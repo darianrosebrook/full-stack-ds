@@ -3,6 +3,7 @@ title: 'Consume renderInPortal in component emission for the 7 dead-portal compo
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: portal-consumption
 created_at: '2026-07-22T06:49:42.783Z'
 updated_at: '2026-07-22T06:49:42.783Z'
 blast_radius:
