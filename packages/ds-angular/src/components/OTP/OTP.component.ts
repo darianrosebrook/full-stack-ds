@@ -25,7 +25,7 @@ export type OTPMode = "numeric" | "alphanumeric";
   template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="(label ?? 'One-time password')" aria-describedby="otp-error-id">
   <div [ngClass]="'otp__group'">
     <ng-container *ngFor="let _ of arrayFromCount((length ?? 6)); let index = index">
-      <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" [disabled]="disabled" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
+      <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" (input)="applySetCharAtValue($event, index)" [disabled]="disabled" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
     </ng-container>
   </div>
 </div>`,
@@ -71,6 +71,11 @@ export class OTPComponent {
       this._arrayFromCountCache.set(len, arr);
     }
     return arr;
+  }
+
+  // Set the character at `index` to the last char of the input payload.
+  protected applySetCharAtValue(event: Event, index: number): void {
+    this.behavior.setValue(String(this.behavior.value() ?? '').padEnd(index, ' ').slice(0, index) + String((event.target as HTMLInputElement).value ?? '').slice(-1) + String(this.behavior.value() ?? '').slice(index + 1));
   }
 }
 

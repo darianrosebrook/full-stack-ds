@@ -24,6 +24,7 @@ import {
   hasChildrenPlaceholder,
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
+  composeChannelUpdateExpression,
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
@@ -2688,6 +2689,32 @@ function renderReactBinding(
       const argExpr = renderReactBinding("__channel_call_arg__", expr.arg, ctx);
       if (argExpr === null) return null;
       return `() => ${setter}(${argExpr})`;
+    }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: compose the next channel value
+      // from the current value + payload/operands, then pass it through the
+      // canonical setter. React allows the full JS body inline, so no
+      // synthesized helper is needed (unlike Angular). setCharAt needs the
+      // event; toggleMembership does not.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const setter = `set${capitalize(ch.name)}`;
+      const operands = expr.operands.map((o) =>
+        renderReactBinding("__channel_update_operand__", o, ctx),
+      );
+      if (operands.some((o) => o === null)) return null;
+      const body = composeChannelUpdateExpression(expr.op, {
+        current: ch.name,
+        setter,
+        // `onInput`'s SyntheticEvent types `target` as the loose `EventTarget`
+        // (no `.value`); `currentTarget` is typed as the bound element and
+        // carries `.value`. (`onChange`'s target IS narrowed, but this wire is
+        // `onInput` — see OTP's `input` event.)
+        eventValue: "e.currentTarget.value",
+        operands: operands as string[],
+      });
+      const param = expr.op === "setCharAt" ? "(e)" : "()";
+      return `${param} => ${body}`;
     }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: lower each operator to the

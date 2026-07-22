@@ -173,4 +173,35 @@ describe("Select — option selection (FEAT-BINDING-CALL-WITH-ARG-01)", () => {
   });
 });
 
+// FEAT-CHANNEL-UPDATE-OPERATIONS-01: multiple-mode toggle on the option-click
+// wire. Pins the A3 behavioral claim for Vue (alongside React).
+describe("Select — multiple-mode toggle (channelUpdate toggleMembership)", () => {
+  it("in multiple mode, clicking an absent option adds it to the array", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(Select as Component, {
+      props: { open: true, multiple: true, value: ["alpha"], onChange },
+    });
+    await wrapper.findAll(".select__option")[2].trigger("click"); // Gamma
+    expect(onChange).toHaveBeenLastCalledWith(["alpha", "gamma"]);
+  });
+
+  it("in multiple mode, clicking a present option removes it from the array", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(Select as Component, {
+      props: { open: true, multiple: true, value: ["alpha", "beta"], onChange },
+    });
+    await wrapper.findAll(".select__option")[0].trigger("click"); // Alpha (present)
+    expect(onChange).toHaveBeenLastCalledWith(["beta"]);
+  });
+
+  it("single mode is unchanged: clicking replaces with the scalar value", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(Select as Component, {
+      props: { open: true, value: "alpha", onChange },
+    });
+    await wrapper.findAll(".select__option")[1].trigger("click"); // Beta
+    expect(onChange).toHaveBeenLastCalledWith("beta");
+  });
+});
+
 // @custom:end

@@ -89,7 +89,7 @@ const classNames = computed(() => [
         <input type="text" />
       </div>
       <div :class="'select__options'">
-        <div v-for="(item, index) in (props.options ?? [])" :key="index" :class="'select__option'" role="option" @click="() => behavior.setSelection(item.value)" :aria-selected="(Array.isArray(behavior.selection.value) ? behavior.selection.value.includes(item.value) : item.value === behavior.selection.value)" :data-value="item.value">
+        <div v-for="(item, index) in (props.options ?? [])" :key="index" :class="'select__option'" role="option" @click="() => behavior.setSelection(props.multiple ? ((Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).includes(item.value) ? (Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]).filter((v) => v !== item.value) : [...(Array.isArray(behavior.selection.value) ? behavior.selection.value : behavior.selection.value == null ? [] : [behavior.selection.value]), item.value]) : item.value)" :aria-selected="(Array.isArray(behavior.selection.value) ? behavior.selection.value.includes(item.value) : item.value === behavior.selection.value)" :data-value="item.value">
           <span>
             {{ item.label }}
           </span>

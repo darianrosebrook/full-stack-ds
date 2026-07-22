@@ -7,7 +7,7 @@ import type {
   NormalizedDismissalTriggerIR,
   ResolvedPropIR,
 } from "../../ir.js";
-import { collectCollapseIntents } from "../../ir.js";
+import { collectCollapseIntents, composeChannelUpdateExpression } from "../../ir.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   rnAnchoredSurface,
@@ -461,6 +461,16 @@ function collectBindingRuntimeUsage(
     usage.channels.add(binding.channel);
     usage.channelSetters.add(binding.channel);
     collectBindingRuntimeUsage(binding.arg, ir, usage, channelPurpose);
+    return;
+  }
+  if (binding.kind === "channelUpdate") {
+    // FEAT-CHANNEL-UPDATE-OPERATIONS-01: the operation composes and sets the
+    // channel value; mark it as a value + setter usage, then walk operands.
+    usage.channels.add(binding.channel);
+    usage.channelSetters.add(binding.channel);
+    for (const operand of binding.operands) {
+      collectBindingRuntimeUsage(operand, ir, usage, channelPurpose);
+    }
     return;
   }
   collectBindingRuntimeUsage(binding.left, ir, usage, channelPurpose);
@@ -1592,6 +1602,27 @@ function eventHandlerExpr(
     }
     return "() => undefined";
   }
+  if (binding.kind === "channelUpdate") {
+    // FEAT-CHANNEL-UPDATE-OPERATIONS-01: compose the next value and pass it
+    // through the channel's canonical setter. React Native is not in the
+    // admission rail; for a native text input the payload arrives as the
+    // `onChangeText` string arg, so setCharAt takes `(text)` and reads it
+    // directly (no DOM event). toggleMembership needs no event.
+    const channel = ir.behavior.normalizedChannels.find((c) => c.name === binding.channel);
+    if (channel) {
+      const setter = `set${capitalize(channel.name)}Value`;
+      const operands = binding.operands.map((o) => bindingExpr(o, ir));
+      const body = composeChannelUpdateExpression(binding.op, {
+        current: channel.name,
+        setter,
+        eventValue: "text",
+        operands,
+      });
+      const param = binding.op === "setCharAt" ? "(text: string)" : "()";
+      return `${param} => ${body}`;
+    }
+    return "() => undefined";
+  }
   if (binding.kind === "channel" && binding.field === "onChange") {
       const channel = ir.behavior.normalizedChannels.find((c) => c.name === binding.channel);
     if (channel) {
@@ -1635,6 +1666,14 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
     throw new Error(
       `channel:${binding.channel}.onChange(...) call form is event-position ` +
       `only; it must not reach the value-expression renderer.`,
+    );
+  }
+  if (binding.kind === "channelUpdate") {
+    // FEAT-CHANNEL-UPDATE-OPERATIONS-01: `channelUpdate` is an event-position
+    // form (the IR rejects it in value positions). Reaching here is a bug.
+    throw new Error(
+      `channel:${binding.channel}.onChange:${binding.op}(...) update-operation ` +
+      `form is event-position only; it must not reach the value-expression renderer.`,
     );
   }
   const left = bindingExpr(binding.left, ir);

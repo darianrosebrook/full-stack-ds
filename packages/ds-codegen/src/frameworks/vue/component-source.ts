@@ -31,6 +31,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   canonicalTsType,
+  composeChannelUpdateExpression,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -2174,6 +2175,10 @@ function renderVueTextContent(
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; rejected in
       // content position by the IR validator. Null keeps the switch exhaustive.
       return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; rejected in
+      // content position by the IR validator.
+      return null;
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: defensive. The IR validator
       // rejects predicates in content position; this branch keeps the
@@ -2285,6 +2290,25 @@ function renderVueBinding(
       if (argExpr === null) return null;
       return `@${eventName}="() => ${setter}(${argExpr})"`;
     }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: compose the next value inline and
+      // pass it through the canonical setter. Vue template expressions permit
+      // the full JS body (arrows/spread/filter), so no synthesized helper.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToVue(attr);
+      const setter = `behavior.set${capitalize(ch.name)}`;
+      const operands = expr.operands.map((o) => renderVueBindingValue(o, ctx));
+      if (operands.some((o) => o === null)) return null;
+      const body = composeChannelUpdateExpression(expr.op, {
+        current: `behavior.${ch.name}.value`,
+        setter,
+        eventValue: "(e.target as HTMLInputElement).value",
+        operands: operands as string[],
+      });
+      const param = expr.op === "setCharAt" ? "(e)" : "()";
+      return `@${eventName}="${param} => ${body}"`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. `lowered` is already a valid
       // Vue template-expression string (comparison operators, prop
@@ -2368,6 +2392,10 @@ function renderVueBindingValue(
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; it produces a
       // `() => …` handler, not a value. The IR rejects it in value positions.
       return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; produces a
+      // handler, not a value. The IR rejects it in value positions.
+      return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01: value-position predicate.
       // The IR-build validator rejects predicate-kind expressions in
@@ -2432,6 +2460,12 @@ function renderVueEvent(
       // FEAT-BINDING-CALL-WITH-ARG-01: delegate to renderVueBinding (which
       // emits the `@event="() => behavior.setX(arg)"` handler), reconstructing
       // the synthetic JSX-attr name the same way the channel case does.
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderVueBinding(jsxAttr, expr, ctx);
+    }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: delegate to renderVueBinding, which
+      // emits the composed `@event="(e) => behavior.setX(...)"` handler.
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderVueBinding(jsxAttr, expr, ctx);
     }

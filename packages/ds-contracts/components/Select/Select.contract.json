@@ -156,7 +156,7 @@
                     "data-value": "iter:item.value"
                   },
                   "events": {
-                    "click": "channel:selection.onChange(iter:item.value)"
+                    "click": "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)"
                   },
                   "children": [
                     { "tag": "span", "content": "iter:item.label" }

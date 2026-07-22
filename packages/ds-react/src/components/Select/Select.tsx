@@ -153,7 +153,7 @@ export function Select({
         )}
         <div className="select__options">
           {(options ?? []).map((item, index) => (
-            <div className="select__option" role="option" onClick={() => setSelection(item.value)} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
+            <div className="select__option" role="option" onClick={() => setSelection(multiple ? ((Array.isArray(selection) ? selection : selection == null ? [] : [selection]).includes(item.value) ? (Array.isArray(selection) ? selection : selection == null ? [] : [selection]).filter((v) => v !== item.value) : [...(Array.isArray(selection) ? selection : selection == null ? [] : [selection]), item.value]) : item.value)} aria-selected={(Array.isArray(selection) ? selection.includes(item.value) : item.value === selection)} data-value={item.value} key={index}>
               <span>
                 {item.label}
               </span>

@@ -18,12 +18,15 @@
  * -- Obligation classes (each derived from a contract FACT, falsifiable) ------
  *
  *   EVENT WIRE   — every anatomy.dom node carrying an `events` entry
- *                  (click/change bound to `prop:X` or `channel:X.onChange`,
- *                  including the channelCall form `channel:X.onChange(iter:…)`)
+ *                  (click/change/input bound to `prop:X` or `channel:X.onChange`,
+ *                  including the channelCall form `channel:X.onChange(iter:…)`
+ *                  and the named update-operation form
+ *                  `channel:X.onChange:<op>(…)`, FEAT-CHANNEL-UPDATE-OPERATIONS-01)
  *                  demands a handler realization on that part's element in each
  *                  admitted web framework. Derivation is per (component, part,
- *                  event, framework). OTP declares no events wire → zero event
- *                  obligations for OTP: the absence is DERIVED, not allow-listed.
+ *                  event, framework). OTP's `field` now carries an `input` wire
+ *                  (set-char-at-index) → an `input` obligation is DERIVED for it
+ *                  across all five frameworks, not allow-listed.
  *
  *   COMPOUND     — every contract the shared predicates classify as a
  *                  compound-state container (Tabs) or disclosure container
@@ -91,36 +94,37 @@ export const FRAMEWORKS = [
     id: "react",
     root: "packages/ds-react/src/components",
     ext: ".tsx",
-    handler: { click: /\bonClick\s*=/, change: /\bonChange\s*=/ },
+    handler: { click: /\bonClick\s*=/, change: /\bonChange\s*=/, input: /\bonInput\s*=/ },
   },
   {
     id: "vue",
     root: "packages/ds-vue/src/components",
     ext: ".vue",
-    handler: { click: /@click\s*=/, change: /@change\s*=/ },
+    handler: { click: /@click\s*=/, change: /@change\s*=/, input: /@input\s*=/ },
   },
   {
     id: "svelte",
     root: "packages/ds-svelte/src/components",
     ext: ".svelte",
-    // Svelte 5 runes: `onclick` / `onchange` (legacy `on:click` also accepted).
-    handler: { click: /\bon:?click\s*=/, change: /\bon:?change\s*=/ },
+    // Svelte 5 runes: `onclick` / `onchange` / `oninput` (legacy `on:` also accepted).
+    handler: { click: /\bon:?click\s*=/, change: /\bon:?change\s*=/, input: /\bon:?input\s*=/ },
   },
   {
     id: "angular",
     root: "packages/ds-angular/src/components",
     ext: ".component.ts",
-    handler: { click: /\(click\)\s*=/, change: /\(change\)\s*=/ },
+    handler: { click: /\(click\)\s*=/, change: /\(change\)\s*=/, input: /\(input\)\s*=/ },
   },
   {
     id: "lit",
     root: "packages/ds-lit/src/components",
     ext: ".ts",
-    handler: { click: /@click\s*=/, change: /@change\s*=/ },
+    handler: { click: /@click\s*=/, change: /@change\s*=/, input: /@input\s*=/ },
   },
 ];
 
-export const EVENT_KEYS = ["click", "change"];
+// FEAT-CHANNEL-UPDATE-OPERATIONS-01 adds `input` (OTP per-field set-char-at).
+export const EVENT_KEYS = ["click", "change", "input"];
 
 const readJSON = (p) => (existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null);
 
@@ -153,6 +157,11 @@ export function parseEventTarget(expr) {
   if (typeof expr !== "string") return null;
   const p = expr.match(/^prop:([A-Za-z_$][\w$]*)$/);
   if (p) return { kind: "prop", ref: p[1] };
+  // FEAT-CHANNEL-UPDATE-OPERATIONS-01: named update-operation form
+  // `channel:X.onChange:<op>(<operands>)`. Matched BEFORE the plain
+  // channelCall form so the `:op` segment is not read as trailing garbage.
+  const u = expr.match(/^channel:([A-Za-z_$][\w$]*)\.onChange:([A-Za-z][A-Za-z0-9]*)\(.*\)$/);
+  if (u) return { kind: "channel", ref: u[1], channelUpdate: u[2] };
   const c = expr.match(/^channel:([A-Za-z_$][\w$]*)\.onChange(\(.*\))?$/);
   if (c) return { kind: "channel", ref: c[1], channelCall: c[2] != null };
   return null;

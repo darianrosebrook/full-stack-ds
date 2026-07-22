@@ -187,6 +187,24 @@ test.describe("Runtime rail — Progress (CSS-var fallback)", () => {
   }
 });
 
+// FEAT-CHANNEL-UPDATE-OPERATIONS-01 — OWED runtime interaction fact.
+//
+// The OTP field's `input` wire now applies the set-char-at-index update
+// operation (`channel:value.onChange:setCharAt(iter:index)`). An interaction
+// fact — type into field 0, assert the composed channel value — was
+// attempted here and found NOT supportable through the current preview shell,
+// for two concrete, verified reasons:
+//   1. The OTP field `<input>` binds NO `value`/`bind:value` attribute (the
+//      composed value flows to the `value` CHANNEL, not back to per-field DOM),
+//      so typing changes no DOM-observable field state to assert against.
+//   2. The preview shell exposes a props config-bus (`fsds:config`) and
+//      `<body data-fsds-ready>` for DOM assertions, but NO callback-capture
+//      surface — there is no way to observe the `onChange` payload from the
+//      Playwright side without adding one to src/runtime/ (a preview-shell
+//      change outside this spec's scope.in, which lists e2e/ but not src/runtime/).
+// The behavioral truth is instead pinned at the component-test tier (React +
+// Vue `setCharAt` suites). This fact is left OWED: wiring a preview-shell
+// callback recorder (e.g. window.__fsds_lastChange) is the enabling follow-up.
 test.describe("Runtime rail — OTP (count iteration)", () => {
   for (const framework of FRAMEWORKS) {
     test(`${framework}: renders length=6 input cells with data-otp-index 0..5`, async ({ page }) => {

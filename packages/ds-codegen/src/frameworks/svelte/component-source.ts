@@ -32,6 +32,7 @@ import {
   TABLE_COMPOSITION_TAGS,
   nativeTableAttrsFor,
   canonicalTsType,
+  composeChannelUpdateExpression,
   type NativeTableAttr,
 } from "../../ir.js";
 
@@ -2020,6 +2021,10 @@ function renderSvelteTextChildExpression(
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; rejected in
       // content position by the IR validator. Null keeps the switch exhaustive.
       return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; rejected in
+      // content position by the IR validator.
+      return null;
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: defensive. Validator rejects
       // predicates in content position; this branch keeps the switch
@@ -2067,6 +2072,10 @@ function renderSvelteBindingValue(
     case "channelCall":
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; produces a
       // `() => …` handler, not a value. The IR rejects it in value positions.
+      return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; produces a
+      // handler, not a value. The IR rejects it in value positions.
       return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
@@ -2211,6 +2220,25 @@ function renderSvelteBinding(
       if (argExpr === null) return null;
       return `${eventName}={() => ${ctx.hookVar}.${setter}(${argExpr})}`;
     }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: compose the next value inline and
+      // pass it through the canonical hook setter. Svelte template
+      // expressions permit the full JS body, so no synthesized helper.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToSvelteAttr(attr);
+      const setter = `set${capitalizeSvelte(ch.name)}`;
+      const operands = expr.operands.map((o) => renderSvelteBindingValue(o, ctx));
+      if (operands.some((o) => o === null)) return null;
+      const body = composeChannelUpdateExpression(expr.op, {
+        current: `${ctx.hookVar}.${ch.name}`,
+        setter: `${ctx.hookVar}.${setter}`,
+        eventValue: "(e.currentTarget as HTMLInputElement).value",
+        operands: operands as string[],
+      });
+      const param = expr.op === "setCharAt" ? "(e)" : "()";
+      return `${eventName}={${param} => ${body}}`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: the predicate result is
       // always boolean, so no ARIA-Booleanish coercion is needed —
@@ -2291,6 +2319,12 @@ function renderSvelteEvent(
     case "channelCall": {
       // FEAT-BINDING-CALL-WITH-ARG-01: delegate to the channelCall path in
       // renderSvelteBinding (which emits the `() => hook.setX(arg)` handler).
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderSvelteBinding(jsxAttr, expr, ctx, hostTag);
+    }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: delegate to renderSvelteBinding,
+      // which emits the composed `(e) => hook.setX(...)` handler.
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderSvelteBinding(jsxAttr, expr, ctx, hostTag);
     }
