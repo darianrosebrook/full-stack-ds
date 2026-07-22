@@ -3,6 +3,7 @@ title: 'Default-aware lit primary attribute-binding path (close the lit/angular 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: lit-attr-defaults
 created_at: '2026-07-22T18:16:50.471Z'
 updated_at: '2026-07-22T18:16:50.471Z'
 blast_radius:
