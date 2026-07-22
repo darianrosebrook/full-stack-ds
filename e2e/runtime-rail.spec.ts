@@ -707,10 +707,15 @@ test.describe("Runtime rail interactions — Select (first interaction: trigger 
   // host pipeline than the shared react/vue/svelte/lit config-entry bus).
   // Recorded skipped per the existing preview constraint, matching how the
   // OTP block above documents the same gap for a different component.
-  test.skip(
-    true,
-    "Angular preview does not route through config-entry.ts's callback-capture wrapper (synthesized-host pipeline, not the shared fsds:config bus renderer) — see comment above",
-  );
+  // NOTE: this must live INSIDE a named test — a bare test.skip(true, …) at
+  // describe scope skips EVERY test in the describe (it silently skipped all
+  // four framework interaction facts on first landing).
+  test("angular: clicking .select__trigger fires onOpenChange(false) and closes the listbox", () => {
+    test.skip(
+      true,
+      "Angular preview does not route through config-entry.ts's callback-capture wrapper (synthesized-host pipeline, not the shared fsds:config bus renderer) — see comment above",
+    );
+  });
 });
 
 test.describe("Runtime rail — Truncate (CSS-var fallback)", () => {
