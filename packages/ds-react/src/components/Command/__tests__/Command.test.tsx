@@ -89,4 +89,26 @@ describe("Command — accessibility", () => {
 
 // @custom:start tests
 
+describe("Command — portal (FIX-PORTAL-CONTRACT-ADJUDICATION-01)", () => {
+  it("mounts the command root at document.body, escaping an ancestor stacking context", () => {
+    // A transform/overflow ancestor creates a stacking context that would
+    // clip a merely-fixed command palette. Portaling the root to document.body
+    // escapes it: the command's DOM parent must be document.body, NOT the
+    // ancestor the consumer rendered it inside.
+    const { container } = render(
+      <div style={{ transform: "translateZ(0)", overflow: "hidden" }}>
+        <Command open aria-label="Portaled Command" data-testid="portaled-command" />
+      </div>,
+    );
+    const commandRoot = document.querySelector<HTMLElement>(
+      '[data-testid="portaled-command"]',
+    );
+    expect(commandRoot).not.toBeNull();
+    // The load-bearing assertion: the portaled root's parent is document.body,
+    // not the transform ancestor that would otherwise trap it.
+    expect(commandRoot?.parentElement).toBe(document.body);
+    expect(container.contains(commandRoot)).toBe(false);
+  });
+});
+
 // @custom:end
