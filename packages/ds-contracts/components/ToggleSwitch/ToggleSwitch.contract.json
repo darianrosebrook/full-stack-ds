@@ -230,14 +230,6 @@
   "rtl": {
     "flipIcon": false
   },
-  "relationships": [
-    {
-      "from": "input",
-      "to": "label",
-      "attribute": "aria-labelledby",
-      "description": "The input's htmlFor attribute links to the label element's id for accessible naming."
-    }
-  ],
   "a11y": {
     "role": "switch",
     "labeling": [

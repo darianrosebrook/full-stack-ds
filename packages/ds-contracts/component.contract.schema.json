@@ -301,6 +301,10 @@
       "description": "Cross-part wiring (ID references) that implementers must maintain so assistive tech works.",
       "items": { "$ref": "#/$defs/relationship" }
     },
+    "fieldAssociation": {
+      "enum": ["control"],
+      "description": "Declares this component a form control that consumes ambient field association (generated control id + aria-describedby) when slotted into a field composer's control region. The provider side is derived from relationships[] whose target part hosts a consumer slot."
+    },
     "a11y": {
       "$ref": "#/$defs/a11y"
     },

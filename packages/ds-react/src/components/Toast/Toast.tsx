@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useToast } from "./useToast";
 import { useAutoDismiss } from "../../primitives/hooks";
@@ -128,14 +128,16 @@ export function Toast({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
     renderInPortal(
     <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
       {open && (
-        <div className="toast__item" role="status">
+        <div className="toast__item" role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
           <div className="toast__row">
             {title && (
-              <div className="toast__title" />
+              <div className="toast__title" id={`${instanceId}-title`} />
             )}
             <div className="toast__description">
               {children}

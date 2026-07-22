@@ -152,9 +152,12 @@ describe("owned-pair relationship lowering", () => {
     const labelledby = field.idRefAttrs.find(
       (a) => a.attribute === "aria-labelledby",
     );
+    // The label's semantic content is a consumer slot, so the ref is
+    // slot-presence-gated (an idref to an EMPTY naming element is worse
+    // than none — axe label-title-only).
     expect(labelledby).toEqual({
       attribute: "aria-labelledby",
-      refs: [{ slug: "label", when: undefined }],
+      refs: [{ slug: "label", when: undefined, slotGate: "label" }],
     });
   });
 
@@ -167,13 +170,12 @@ describe("owned-pair relationship lowering", () => {
     // The original prop binding is absorbed — never emitted twice.
     expect(field.bindings["aria-describedby"]).toBeUndefined();
     expect(describedby?.passthroughProp).toBe("ariaDescribedby");
-    // Slot-presence clause lowers unconditionally (idref to an empty
-    // element contributes nothing to the accessible description).
     expect(describedby?.refs).toEqual([
-      { slug: "description", when: undefined },
+      { slug: "description", when: undefined, slotGate: "description" },
       {
         slug: "error",
         when: { prop: "invalid", op: "truthy", negated: false },
+        slotGate: "error",
       },
     ]);
   });
@@ -204,7 +206,11 @@ describe("owned-pair relationship lowering", () => {
     const ir = buildComponentIR(contract);
     const item = findPart(ir.dom!, "item");
     expect(item.idRefAttrs[0].refs).toEqual([
-      { slug: "title", when: { prop: "title", op: "truthy", negated: false } },
+      {
+        slug: "title",
+        when: { prop: "title", op: "truthy", negated: false },
+        slotGate: undefined,
+      },
     ]);
   });
 
@@ -215,10 +221,12 @@ describe("owned-pair relationship lowering", () => {
       {
         slug: "help",
         when: { prop: "status", op: "eq", value: "invalid", negated: true },
+        slotGate: "help",
       },
       {
         slug: "error",
         when: { prop: "status", op: "eq", value: "invalid", negated: false },
+        slotGate: "error",
       },
     ]);
   });
@@ -338,7 +346,10 @@ describe("field-association routing (consumer-slotted targets)", () => {
     expect(ir.fieldAssociation?.provides?.controlSlug).toBe("control");
     // The label still binds `for` to the generated control id directly.
     expect(label.idRefAttrs).toEqual([
-      { attribute: "for", refs: [{ slug: "control", when: undefined }] },
+      {
+        attribute: "for",
+        refs: [{ slug: "control", when: undefined }],
+      },
     ]);
     // No owned element carries the control id — it reaches the slotted
     // control via context, so the wrapper div must NOT get an id.

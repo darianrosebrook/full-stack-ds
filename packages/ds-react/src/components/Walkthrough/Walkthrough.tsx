@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useWalkthrough } from "./useWalkthrough";
 import "./Walkthrough.css";
@@ -133,13 +133,15 @@ export function Walkthrough({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
   <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} {...rest}>
-    <div className="walkthrough__content">
-      <h3 className="walkthrough__title">
+    <div className="walkthrough__content" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
+      <h3 className="walkthrough__title" id={`${instanceId}-title`}>
         {slots?.title}
       </h3>
-      <p className="walkthrough__description">
+      <p className="walkthrough__description" id={`${instanceId}-description`}>
         {slots?.description}
       </p>
     </div>

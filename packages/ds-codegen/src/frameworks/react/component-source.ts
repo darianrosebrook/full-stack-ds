@@ -15,11 +15,14 @@ import type {
   BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
+  IdRefConditionIR,
+  IdRefIR,
   IterationIR,
   NormalizedChannelIR,
   PartIR,
   PropTypeIR,
 } from "../../ir.js";
+import { componentNeedsInstanceId } from "../../id-relationships.js";
 import {
   hasChildrenPlaceholder,
   TABLE_COMPOSITION_TAGS,
@@ -123,6 +126,11 @@ export function generateReactComponentSource(
   // than threading a boolean back out through the call chain.
   const needsPropertyBindingHooks =
     !isCompound && /\buseRef</.test(bodyHaystack);
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated relationship ids emit
+  // `useId()` in the body (same body-scan technique as needsCssProperties).
+  // The disclosure/compound paths already import useId unconditionally.
+  const needsUseIdHook =
+    !isCompound && !isDisclosure && /\buseId\(\)/.test(bodyHaystack);
 
   const importLines: string[] = [];
   if (isDisclosure) {
@@ -146,7 +154,15 @@ export function generateReactComponentSource(
     const allReactImports = [...compoundTypeImports, ...runtimeHooks].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
   } else if (needsPropertyBindingHooks) {
-    const allReactImports = [...finalReactTypeImports, "useEffect", "useRef"].sort();
+    const allReactImports = [
+      ...finalReactTypeImports,
+      "useEffect",
+      "useRef",
+      ...(needsUseIdHook ? ["useId"] : []),
+    ].sort();
+    importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
+  } else if (needsUseIdHook) {
+    const allReactImports = [...finalReactTypeImports, "useId"].sort();
     importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
   } else {
     importLines.push(`import { ${finalReactTypeImports.join(", ")} } from "react";`);
@@ -193,6 +209,20 @@ export function generateReactComponentSource(
   }
   if (isCompound) {
     importLines.push(`import { createCompoundContext } from "../../primitives/hooks";`);
+  }
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: field-association primitive imports,
+  // body-scan driven like the react-hook imports above.
+  const fieldAssocImports: string[] = [];
+  if (/\bFieldAssociationContext\b/.test(bodyHaystack)) {
+    fieldAssocImports.push("FieldAssociationContext");
+  }
+  if (/\buseFieldAssociation\(/.test(bodyHaystack)) {
+    fieldAssocImports.push("useFieldAssociation");
+  }
+  if (fieldAssocImports.length > 0) {
+    importLines.push(
+      `import { ${fieldAssocImports.join(", ")} } from "../../primitives/hooks";`,
+    );
   }
   if (resolveSurfaceAutoDismiss(ir) && ir.behavior.normalizedChannels.some((c) => c.valueType === "boolean")) {
     importLines.push(`import { useAutoDismiss } from "../../primitives/hooks";`);
@@ -1652,6 +1682,77 @@ function reactDomRootUsesStack(ir: ComponentIR): boolean {
 }
 
 /**
+ * FEAT-A11Y-LABEL-ID-ASSOCIATION-01 — React lowering of generated
+ * relationship ids. Every id derives from the single `useId()` namespace so
+ * refs and targets can never drift apart.
+ */
+function reactGeneratedIdExpr(slug: string): string {
+  return `\`\${instanceId}-${slug}\``;
+}
+
+function reactIdRefCondExpr(cond: IdRefConditionIR): string {
+  if (cond.op === "eq") {
+    return `${cond.prop} ${cond.negated ? "!==" : "==="} ${JSON.stringify(cond.value)}`;
+  }
+  return cond.negated ? `!${cond.prop}` : cond.prop;
+}
+
+/** Combined guard for one ref: slot presence ANDed with the when clause. */
+function reactIdRefGuardExpr(ref: IdRefIR): string | undefined {
+  const conds: string[] = [];
+  if (ref.slotGate) conds.push(`slots?.${ref.slotGate}`);
+  if (ref.when) conds.push(reactIdRefCondExpr(ref.when));
+  return conds.length > 0 ? conds.join(" && ") : undefined;
+}
+
+/**
+ * Joined idref-list expression: each active ref's generated id plus the
+ * optional passthrough prop, space-joined; `undefined` (attribute omitted)
+ * when nothing applies. Collapses to simpler forms for the single-ref
+ * cases.
+ */
+function reactIdRefListExpr(
+  refs: IdRefIR[],
+  passthroughProp: string | undefined,
+): string {
+  if (refs.length === 0 && !passthroughProp) return "undefined";
+  if (refs.length === 1 && !passthroughProp) {
+    const guard = reactIdRefGuardExpr(refs[0]);
+    const id = reactGeneratedIdExpr(refs[0].slug);
+    return guard ? `${guard} ? ${id} : undefined` : id;
+  }
+  const parts = refs.map((ref) => {
+    const guard = reactIdRefGuardExpr(ref);
+    const id = reactGeneratedIdExpr(ref.slug);
+    return guard ? `${guard} ? ${id} : null` : id;
+  });
+  if (passthroughProp) parts.push(passthroughProp);
+  return `[${parts.join(", ")}].filter(Boolean).join(" ") || undefined`;
+}
+
+/**
+ * Wrap the rendered tree in the field-association provider when the IR
+ * carries provider facts (composer side). The provider sits INSIDE any
+ * portal wrapper — React context propagates through portals either way,
+ * and keeping it adjacent to the tree keeps the portal lowering untouched.
+ */
+function wrapReactFieldAssociationProvider(
+  treeJsx: string,
+  ir: ComponentIR,
+): string {
+  if (!ir.fieldAssociation?.provides) return treeJsx;
+  const indented = treeJsx
+    .split("\n")
+    .map((line) => (line.length > 0 ? `  ${line}` : line))
+    .join("\n");
+  return [
+    `  <FieldAssociationContext.Provider value={fieldAssociationValue}>`,
+    indented,
+    `  </FieldAssociationContext.Provider>`,
+  ].join("\n");
+}
+
+/**
  * Generate a React component that renders the contract's `dom` tree. Native
  * HTML elements with attribute and event bindings; consumer-provided children
  * land at the `tag: "slot"` / `tag: "children"` placeholder. Unlike the
@@ -1903,6 +2004,32 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(``);
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: per-instance id namespace for
+  // generated relationship ids, the field-association consumer hook, and
+  // the provider value (composer side). Emitted only when the IR carries
+  // the facts — components without lowered relationships get zero new
+  // output.
+  if (componentNeedsInstanceId(ir)) {
+    lines.push(`  const instanceId = useId();`);
+    lines.push(``);
+  }
+  if (ir.fieldAssociation?.consumes) {
+    lines.push(`  const fieldAssociation = useFieldAssociation();`);
+    lines.push(``);
+  }
+  if (ir.fieldAssociation?.provides) {
+    const provides = ir.fieldAssociation.provides;
+    lines.push(`  const fieldAssociationValue = {`);
+    lines.push(
+      `    controlId: ${reactGeneratedIdExpr(provides.controlSlug)},`,
+    );
+    lines.push(
+      `    describedBy: ${reactIdRefListExpr(provides.describedBy, undefined)},`,
+    );
+    lines.push(`  };`);
+    lines.push(``);
+  }
+
   // DOM-PROPERTY-REFLECTION-IR-CHECKBOX-INDETERMINATE-01: for each node
   // carrying propertyBindings, declare a ref + a useEffect that applies the
   // DOM-property-only fact imperatively (`el.<key> = value`) on mount and
@@ -1966,6 +2093,7 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     rootTagOverride,
     propertyBindingRefs,
     iconGlyphIdents,
+    fieldAssociationConsumer: ir.fieldAssociation?.consumes === true,
   };
 
   for (const { node, refName } of propertyBindingNodes) {
@@ -2011,7 +2139,10 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     }
     // Render the body without the if-guard (we handle it at this level).
     const unguarded: DomNodeIR = { ...ir.dom, ifProp: undefined, ifNegated: false };
-    const treeJsx = renderReactDomNode(unguarded, renderCtx, 4);
+    const treeJsx = wrapReactFieldAssociationProvider(
+      renderReactDomNode(unguarded, renderCtx, 4),
+      ir,
+    );
     // ifNegated flips the early-return: with !src, render when src is falsy.
     const returnNullWhen = ir.dom.ifNegated ? guard : `!${guard}`;
     lines.push(`  if (${returnNullWhen}) return null;`);
@@ -2019,7 +2150,10 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     lines.push(wrapReactPortal(treeJsx, wrapRootInPortal));
     lines.push(`  );`);
   } else {
-    const treeJsx = renderReactDomNode(ir.dom, renderCtx, 2);
+    const treeJsx = wrapReactFieldAssociationProvider(
+      renderReactDomNode(ir.dom, renderCtx, 2),
+      ir,
+    );
     lines.push(`  return (`);
     lines.push(wrapReactPortal(treeJsx, wrapRootInPortal));
     lines.push(`  );`);
@@ -2074,6 +2208,13 @@ interface ReactRenderContext {
    * `collectIconGlyphNodes`; empty when the tree has no glyph nodes.
    */
   iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
+  /**
+   * True when the component consumes ambient field association
+   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01, contract `fieldAssociation:
+   * "control"`) — the root element binds `id` / `aria-describedby` from the
+   * `fieldAssociation` body const.
+   */
+  fieldAssociationConsumer?: boolean;
   /**
    * Nearest enclosing iteration directive, or `undefined` at the top
    * level. After BINDING-EXPRESSION-V2-01 the IR carries
@@ -2258,6 +2399,17 @@ function renderReactDomNode(
     attrs.push(`${jsxKey}={${valueExpr}}`);
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
+  // relationship targets, and the lowered idref attributes on sources.
+  if (node.generatedIdSlug !== undefined) {
+    attrs.push(`id={${reactGeneratedIdExpr(node.generatedIdSlug)}}`);
+  }
+  for (const refAttr of node.idRefAttrs) {
+    attrs.push(
+      `${jsxAttrName(refAttr.attribute)}={${reactIdRefListExpr(refAttr.refs, refAttr.passthroughProp)}}`,
+    );
+  }
+
   // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to a React inline
   // style prop. Each entry becomes a property on a `CSSProperties` object
   // literal whose key is the literal `--fsds-<prefix>-<name>` custom-
@@ -2309,6 +2461,13 @@ function renderReactDomNode(
     }
     if (ctx.autoDismissPause) {
       attrs.push(`{...autoDismissPauseProps}`);
+    }
+    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
+    // ambient field association before ...rest so an explicit consumer id
+    // passed through rest still wins.
+    if (ctx.fieldAssociationConsumer) {
+      attrs.push(`id={fieldAssociation?.controlId}`);
+      attrs.push(`aria-describedby={fieldAssociation?.describedBy}`);
     }
     attrs.push(`{...rest}`);
   } else if (classParts.length > 0) {

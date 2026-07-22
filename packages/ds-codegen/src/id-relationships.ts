@@ -82,18 +82,21 @@ function hostsSlot(node: DomNodeIR): boolean {
 }
 
 type WhenResolution =
-  | { ok: true; cond: IdRefConditionIR | undefined }
+  | { ok: true; cond: IdRefConditionIR | undefined; slotGate?: string }
   | { ok: false };
+
+/** The named slot that IS a part-node's semantic content, if any. */
+function targetSlotName(node: DomNodeIR): string | undefined {
+  if (node.tag === "slot") return node.slotName;
+  return node.children.find((child) => child.tag === "slot")?.slotName;
+}
 
 /**
  * Resolve a `relationships[].when` clause against the component's prop and
  * slot surfaces. Grammar: `<name>=<value>` / `<name>!=<value>`.
  *
- *   - `<slot>=present` — a slot-presence clause. Lowered as UNCONDITIONAL:
- *     the target wrapper renders either way, and an idref to an empty
- *     element contributes nothing to the accessible name/description, so a
- *     static reference is a11y-equivalent in every framework (including
- *     Lit, where slot contents are not statically knowable).
+ *   - `<slot>=present` — a slot-presence clause, lowered as a `slotGate`
+ *     (see IdRefIR.slotGate for the per-framework capability story).
  *   - `<prop>=true` / `<prop>=present` — truthiness of the prop.
  *   - `<prop>=false` — negated truthiness (`!=` flips either form).
  *   - `<prop>=<literal>` — string equality against the prop value.
@@ -115,7 +118,7 @@ function resolveWhenClause(
   const [, name, op, value] = match;
   const negated = op === "!=";
   if (slotNames.has(name) && value === "present" && !negated) {
-    return { ok: true, cond: undefined };
+    return { ok: true, cond: undefined, slotGate: name };
   }
   if (!propNames.has(name)) return { ok: false };
   if (value === "true" || value === "present") {
@@ -216,7 +219,11 @@ export function resolveIdRelationships(
       if (rel.attribute !== "aria-describedby") continue;
       to.node.generatedIdSlug = rel.to;
       provider = provider ?? { controlSlug: rel.from, describedBy: [] };
-      provider.describedBy.push({ slug: rel.to, when: resolved.cond });
+      provider.describedBy.push({
+        slug: rel.to,
+        when: resolved.cond,
+        slotGate: resolved.slotGate ?? targetSlotName(to.node),
+      });
       continue;
     }
 
@@ -232,7 +239,11 @@ export function resolveIdRelationships(
       (to.node.ifProp && !to.node.ifNegated
         ? { prop: to.node.ifProp, op: "truthy", negated: false }
         : undefined);
-    pushIdRef(from.node, rel.attribute, { slug: rel.to, when: gate });
+    pushIdRef(from.node, rel.attribute, {
+      slug: rel.to,
+      when: gate,
+      slotGate: resolved.slotGate ?? targetSlotName(to.node),
+    });
     if (passthrough !== null) {
       const entry = from.node.idRefAttrs.find(
         (a) => a.attribute === rel.attribute,
