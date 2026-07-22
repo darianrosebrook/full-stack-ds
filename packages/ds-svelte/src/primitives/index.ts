@@ -7,6 +7,7 @@ export {
   createFocusTrap,
   createScrollLock,
   createPortal,
+  portal,
   createCompoundContext,
 } from './behaviors/index.js';
 export type {
@@ -18,4 +19,5 @@ export type {
   FocusTrapOptions,
   PortalOptions,
   PortalResult,
+  PortalActionOptions,
 } from './behaviors/index.js';

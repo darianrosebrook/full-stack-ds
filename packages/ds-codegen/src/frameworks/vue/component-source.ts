@@ -65,7 +65,7 @@ import {
   translateNonReactType,
 } from "../../non-react-types.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   collectIconGlyphNodes,
@@ -1689,7 +1689,29 @@ function generateVueDomTreeComponentSource(ir: ComponentIR): string {
       : {}),
   };
   const templateInner = renderVueDomNode(ir.dom, ctx, 2);
-  const templateBody = [`<template>`, templateInner, `</template>`].join("\n");
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: full-overlay surfaces
+  // (Dialog/Sheet/Toast/Command) portal their root to document.body so a
+  // fixed layer escapes any transform/overflow/filter ancestor's containing
+  // block. Vue's native idiom is `<Teleport to="body">`, which requires no
+  // primitive import and is SSR-safe (Teleport defers to client on hydration).
+  // Purely IR-driven via `portalsRootToBody` — no component-name lore. The
+  // teleported subtree carries the full root markup, so backdrop-self-click
+  // dismissal and every panel-containment check still resolve against the
+  // moved nodes (their refs point at the same elements).
+  const wrapRootInPortal = portalsRootToBody(ir);
+  const templateBodyLines = wrapRootInPortal
+    ? [
+        `<template>`,
+        `  <Teleport to="body">`,
+        templateInner
+          .split("\n")
+          .map((line) => (line.length > 0 ? `  ${line}` : line))
+          .join("\n"),
+        `  </Teleport>`,
+        `</template>`,
+      ]
+    : [`<template>`, templateInner, `</template>`];
+  const templateBody = templateBodyLines.join("\n");
 
   const blank = (): Section => ({ kind: "between", body: "" });
   const scriptSections: Section[] = [

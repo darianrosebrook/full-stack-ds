@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import type { Component } from "svelte";
 import { render } from "@testing-library/svelte";
 import { axe } from "vitest-axe";
@@ -8,55 +8,78 @@ import Toast from "../Toast.svelte";
 
 // @generated:start tests
 describe("Toast — unit", () => {
+  afterEach(() => {
+    document.body.innerHTML = "";
+  });
+
   it("renders with default props", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild).toBeTruthy();
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
   });
 
   it("applies the base CSS class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild?.className).toContain("toast");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast");
   });
 
   it("merges custom class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
-    expect(container.firstElementChild?.className).toContain("toast");
-    expect(container.firstElementChild?.className).toContain("custom");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "class": "custom" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast");
+    expect(root?.className).toContain("custom");
   });
 
   it("has the correct ARIA role", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
-    expect(container.firstElementChild?.getAttribute("role")).toBe("alert");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.getAttribute("role")).toBe("alert");
   });
 
   it("applies variant=info variant class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "info" } });
-    expect(container.firstElementChild?.className).toContain("toast--info");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "info" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast--info");
   });
 
   it("applies variant=success variant class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "success" } });
-    expect(container.firstElementChild?.className).toContain("toast--success");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "success" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast--success");
   });
 
   it("applies variant=warning variant class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "warning" } });
-    expect(container.firstElementChild?.className).toContain("toast--warning");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "warning" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast--warning");
   });
 
   it("applies variant=error variant class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "error" } });
-    expect(container.firstElementChild?.className).toContain("toast--error");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "variant": "error" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast--error");
   });
 
   it("applies politeness=polite variant class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "politeness": "polite" } });
-    expect(container.firstElementChild?.className).toContain("toast--polite");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "politeness": "polite" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast--polite");
   });
 
   it("applies politeness=assertive variant class", () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "politeness": "assertive" } });
-    expect(container.firstElementChild?.className).toContain("toast--assertive");
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "open": true, "politeness": "assertive" } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    expect(root?.className).toContain("toast--assertive");
   });
 
   it("closes on Escape key", async () => {
@@ -69,8 +92,10 @@ describe("Toast — unit", () => {
 
 describe("Toast — accessibility", () => {
   it("has no unexpected axe violations with default props", async () => {
-    const { container } = render(Toast as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Toast", "open": true } });
-    const results = await axe(container);
+    render(Toast as unknown as Component<Record<string, unknown>>, { props: { "aria-label": "Test Toast", "open": true } });
+    const root = document.body.querySelector<HTMLElement>(".toast");
+    expect(root).not.toBeNull();
+    const results = await axe(root as Element);
     const knownScaffoldViolationIds = new Set([
       "aria-dialog-name",
       "aria-input-field-name",

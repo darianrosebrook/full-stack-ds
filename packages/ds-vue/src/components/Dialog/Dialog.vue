@@ -71,19 +71,21 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
-    <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true"></div>
-    <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
-      <div :class="'dialog__header'">
-        <h2 :class="'dialog__title'">
-          <slot name="title" />
-        </h2>
-        <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
+  <Teleport to="body">
+    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
+      <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true"></div>
+      <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
+        <div :class="'dialog__header'">
+          <h2 :class="'dialog__title'">
+            <slot name="title" />
+          </h2>
+          <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
+        </div>
+        <div :class="'dialog__body'">
+          <slot />
+        </div>
+        <div :class="'dialog__footer'"></div>
       </div>
-      <div :class="'dialog__body'">
-        <slot />
-      </div>
-      <div :class="'dialog__footer'"></div>
     </div>
-  </div>
+  </Teleport>
 </template>

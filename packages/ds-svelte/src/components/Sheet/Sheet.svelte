@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useSheet } from "./useSheet.svelte.js";
+import { portal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -55,7 +56,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}>
+<div class={classes} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}>
   {#if behavior.openness}
   <div class={'sheet__overlay'} aria-hidden="true"></div>
   {/if}

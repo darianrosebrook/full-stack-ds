@@ -1,5 +1,5 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, effect } from "@angular/core";
+import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy, effect, OnInit, OnDestroy, ElementRef } from "@angular/core";
 import { NgClass, NgIf } from "@angular/common";
 import { StackComponent } from "../../primitives/index.js";
 import { useToast } from "./useToast.js";
@@ -44,7 +44,7 @@ export type ToastPoliteness = "polite" | "assertive";
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToastComponent {
+export class ToastComponent implements OnInit, OnDestroy {
   @Input() open?: boolean;
   @Input() onOpenChange?: (open: boolean) => void;
   @Input() title?: string;
@@ -77,6 +77,30 @@ export class ToastComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  private _el = inject(ElementRef<HTMLElement>);
+  private _portalOriginParent: Node | null = null;
+  private _portalOriginNext: Node | null = null;
+
+  ngOnInit(): void {
+    if (typeof document === "undefined") return;
+    const host = this._el.nativeElement as HTMLElement;
+    this._portalOriginParent = host.parentNode;
+    this._portalOriginNext = host.nextSibling;
+    document.body.appendChild(host);
+  }
+
+  ngOnDestroy(): void {
+    const host = this._el.nativeElement as HTMLElement;
+    // Restore to the original position when it still exists so
+    // Angular's own teardown removes it from the right place;
+    // otherwise detach it directly.
+    if (this._portalOriginParent && this._portalOriginParent.isConnected) {
+      this._portalOriginParent.insertBefore(host, this._portalOriginNext);
+    } else {
+      host.parentNode?.removeChild(host);
+    }
+  }
 }
 
 @Component({

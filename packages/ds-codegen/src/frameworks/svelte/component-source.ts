@@ -68,7 +68,7 @@ function svelteTableAttrBinding(attr: NativeTableAttr): string {
 import { translateNonReactType } from "../../non-react-types.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
 import {
   isCompoundStateContainer,
@@ -1376,6 +1376,14 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   if (autoDismissPolicy && autoDismissChannel) {
     importLines.push(`import { createAutoDismiss } from "../../primitives/index.js";`);
   }
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: full-overlay surfaces relocate
+  // their root into document.body via the `portal` Svelte action so the fixed
+  // layer escapes any transform/overflow/filter ancestor's containing block.
+  // IR-driven via `portalsRootToBody` — no component-name lore.
+  const rootUsePortal = portalsRootToBody(ir);
+  if (rootUsePortal) {
+    importLines.push(`import { portal } from "../../primitives/index.js";`);
+  }
   // componentRef: import each referenced component (CODEGEN-RECURSIVE-
   // COMPOSITION-01). A Svelte component is a default export from its .svelte
   // file; the imported identifier is usable as a capitalized tag in markup.
@@ -1522,6 +1530,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     channelByName,
     hookVar,
     isRoot: true,
+    rootUsePortal,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole ?? undefined,
     rootPolymorphicTag: ir.root.polymorphicTagProp,
@@ -1583,6 +1592,8 @@ interface SvelteRenderContext {
   channelByName: Map<string, NormalizedChannelIR>;
   hookVar: string;
   isRoot: boolean;
+  /** When true, attach `use:portal` to the root so it relocates to body. */
+  rootUsePortal?: boolean;
   /** When true, attach auto-dismiss pause listeners to the root element. */
   autoDismissPause?: boolean;
   // `a11y.role` from the contract — emitted on the root element when set.
@@ -1753,6 +1764,9 @@ function renderSvelteDomNode(
 
   if (ctx.isRoot) {
     attrs.unshift(`class={classes}`);
+    if (ctx.rootUsePortal) {
+      attrs.push(`use:portal={{ enabled: true }}`);
+    }
     if (ctx.rootPolymorphicTag && !node.componentRef) {
       attrs.unshift(
         `this={${jsAccessorFor(ctx.rootPolymorphicTag.propName)} ?? "${ctx.rootPolymorphicTag.defaultTag}"}`,
@@ -1795,7 +1809,7 @@ function renderSvelteDomNode(
     }
   }
 
-  const childCtx: SvelteRenderContext = { ...ctx, isRoot: false, rootRole: undefined };
+  const childCtx: SvelteRenderContext = { ...ctx, isRoot: false, rootUsePortal: false, rootRole: undefined };
   const renderedChildren = node.children.map((c) =>
     renderSvelteDomNode(c, childCtx, indent + 2),
   );

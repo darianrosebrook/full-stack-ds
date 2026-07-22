@@ -3,6 +3,7 @@
  */
 import type { ComponentIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { portalsRootToBody } from "../../semantics.js";
 import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
@@ -10,6 +11,17 @@ import {
 
 export function generateVueTest(ir: ComponentIR): string {
   const plan = buildComponentTestPlan(ir);
+  // FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01: full-overlay surfaces render
+  // their root through <Teleport to="body">, so @vue/test-utils' `wrapper`
+  // no longer wraps the root element (`wrapper.element` is the teleport anchor
+  // comment). Class/role/axe assertions must resolve the teleported root from
+  // document.body instead. IR-driven via `portalsRootToBody` — no name lore.
+  const portalRoot = portalsRootToBody(ir);
+  // Resolve the teleported root by its base class within document.body —
+  // fallthrough attrs (data-testid) do not reach a teleported root, so the
+  // component's own class is the only reliable handle. Safe because each
+  // portal-mode test resets document.body in afterEach.
+  const rootDecl = `    const root = document.body.querySelector<HTMLElement>(".${plan.cssPrefix}");\n    expect(root).not.toBeNull();`;
   // Escape dismissals rely on a document-level keydown listener that is only
   // wired by the dom-tree behavior hook. Stack-only components have no such
   // listener, so Escape tests would always fail and are omitted here.
@@ -28,7 +40,7 @@ export function generateVueTest(ir: ComponentIR): string {
   // the generated imports section to provide it.
   const needsVi = plan.channels.length > 0 || plan.escapeDismissals.length > 0 || emitOverlayClick;
   const importsBody = [
-    `import { describe, it, expect${needsVi ? ", vi" : ""} } from "vitest";`,
+    `import { describe, it, expect${needsVi ? ", vi" : ""}${portalRoot ? ", afterEach" : ""} } from "vitest";`,
     `import type { Component } from "vue";`,
     `import { mount } from "@vue/test-utils";`,
     `import { axe } from "vitest-axe";`,
@@ -37,6 +49,14 @@ export function generateVueTest(ir: ComponentIR): string {
 
   const lines: string[] = [];
   lines.push(`describe("${plan.name} — unit", () => {`);
+  if (portalRoot) {
+    // Teleported roots accumulate in document.body across mounts; reset so
+    // the class-based root query always resolves the current test's mount.
+    lines.push(`  afterEach(() => {`);
+    lines.push(`    document.body.innerHTML = "";`);
+    lines.push(`  });`);
+    lines.push(``);
+  }
   lines.push(`  it("renders with default props", () => {`);
   lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
   lines.push(`    expect(wrapper.element).toBeTruthy();`);
@@ -44,24 +64,45 @@ export function generateVueTest(ir: ComponentIR): string {
   lines.push(``);
 
   lines.push(`  it("applies the base CSS class", () => {`);
-  lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
-  lines.push(`    expect(wrapper.classes()).toContain("${plan.cssPrefix}");`);
+  if (portalRoot) {
+    lines.push(`    ${mountExpression(plan.name, plan, { attachTo: "document.body" })};`);
+    lines.push(rootDecl);
+    lines.push(`    expect(root?.classList.contains("${plan.cssPrefix}")).toBe(true);`);
+  } else {
+    lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
+    lines.push(`    expect(wrapper.classes()).toContain("${plan.cssPrefix}");`);
+  }
   lines.push(`  });`);
   lines.push(``);
 
   lines.push(`  it("merges custom class", () => {`);
-  lines.push(
-    `    const wrapper = ${mountExpression(plan.name, plan, { attrs: { class: "custom" } })};`,
-  );
-  lines.push(`    expect(wrapper.classes()).toContain("${plan.cssPrefix}");`);
-  lines.push(`    expect(wrapper.classes()).toContain("custom");`);
+  if (portalRoot) {
+    lines.push(
+      `    ${mountExpression(plan.name, plan, { attrs: { class: "custom" }, attachTo: "document.body" })};`,
+    );
+    lines.push(rootDecl);
+    lines.push(`    expect(root?.classList.contains("${plan.cssPrefix}")).toBe(true);`);
+    lines.push(`    expect(root?.classList.contains("custom")).toBe(true);`);
+  } else {
+    lines.push(
+      `    const wrapper = ${mountExpression(plan.name, plan, { attrs: { class: "custom" } })};`,
+    );
+    lines.push(`    expect(wrapper.classes()).toContain("${plan.cssPrefix}");`);
+    lines.push(`    expect(wrapper.classes()).toContain("custom");`);
+  }
   lines.push(`  });`);
 
   if (plan.role) {
     lines.push(``);
     lines.push(`  it("has the correct ARIA role", () => {`);
-    lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
-    lines.push(`    expect(wrapper.attributes("role")).toBe("${plan.role.role}");`);
+    if (portalRoot) {
+      lines.push(`    ${mountExpression(plan.name, plan, { attachTo: "document.body" })};`);
+      lines.push(rootDecl);
+      lines.push(`    expect(root?.getAttribute("role")).toBe("${plan.role.role}");`);
+    } else {
+      lines.push(`    const wrapper = ${mountExpression(plan.name, plan)};`);
+      lines.push(`    expect(wrapper.attributes("role")).toBe("${plan.role.role}");`);
+    }
     lines.push(`  });`);
   }
 
@@ -70,10 +111,18 @@ export function generateVueTest(ir: ComponentIR): string {
     lines.push(
       `  it("applies ${variant.dimension}=${variant.value} variant class", () => {`,
     );
-    lines.push(
-      `    const wrapper = ${mountExpression(plan.name, plan, { props: { [variant.dimension]: variant.value } })};`,
-    );
-    lines.push(`    expect(wrapper.classes()).toContain("${variant.className}");`);
+    if (portalRoot) {
+      lines.push(
+        `    ${mountExpression(plan.name, plan, { props: { [variant.dimension]: variant.value }, attachTo: "document.body" })};`,
+      );
+      lines.push(rootDecl);
+      lines.push(`    expect(root?.classList.contains("${variant.className}")).toBe(true);`);
+    } else {
+      lines.push(
+        `    const wrapper = ${mountExpression(plan.name, plan, { props: { [variant.dimension]: variant.value } })};`,
+      );
+      lines.push(`    expect(wrapper.classes()).toContain("${variant.className}");`);
+    }
     lines.push(`  });`);
   }
 
@@ -188,8 +237,17 @@ export function generateVueTest(ir: ComponentIR): string {
       },
       attachTo: "document.body",
     });
-    lines.push(`    const wrapper = ${wrapper};`);
-    lines.push(`    await wrapper.trigger("click");`);
+    if (portalRoot) {
+      // The teleported root lives in document.body, so trigger the click on
+      // the resolved DOM node (wrapper no longer wraps the root element).
+      lines.push(`    ${wrapper};`);
+      lines.push(rootDecl);
+      lines.push(`    root?.dispatchEvent(new MouseEvent("click", { bubbles: true }));`);
+      lines.push(`    await Promise.resolve();`);
+    } else {
+      lines.push(`    const wrapper = ${wrapper};`);
+      lines.push(`    await wrapper.trigger("click");`);
+    }
     lines.push(`    expect(${testCase.spyName}).toHaveBeenCalledWith(false);`);
     lines.push(`  });`);
   }
@@ -200,17 +258,35 @@ export function generateVueTest(ir: ComponentIR): string {
   lines.push(
     `  it("has no unexpected axe violations with default props", async () => {`,
   );
-  lines.push(
-    `    const wrapper = ${mountExpression(plan.name, plan, {
-      attrs: attrsFromAxeProps(plan.accessibility.axeProps),
-    })};`,
-  );
-  if (plan.accessibility.needsListParent) {
-    lines.push(`    const list = document.createElement("ul");`);
-    lines.push(`    list.append(wrapper.element);`);
-    lines.push(`    const results = await axe(list);`);
+  if (portalRoot) {
+    // Teleported root lives in document.body; resolve it and run axe on it.
+    lines.push(
+      `    ${mountExpression(plan.name, plan, {
+        attrs: attrsFromAxeProps(plan.accessibility.axeProps),
+        attachTo: "document.body",
+      })};`,
+    );
+    lines.push(rootDecl);
+    if (plan.accessibility.needsListParent) {
+      lines.push(`    const list = document.createElement("ul");`);
+      lines.push(`    if (root) list.append(root);`);
+      lines.push(`    const results = await axe(list);`);
+    } else {
+      lines.push(`    const results = await axe(root as Element);`);
+    }
   } else {
-    lines.push(`    const results = await axe(wrapper.element);`);
+    lines.push(
+      `    const wrapper = ${mountExpression(plan.name, plan, {
+        attrs: attrsFromAxeProps(plan.accessibility.axeProps),
+      })};`,
+    );
+    if (plan.accessibility.needsListParent) {
+      lines.push(`    const list = document.createElement("ul");`);
+      lines.push(`    list.append(wrapper.element);`);
+      lines.push(`    const results = await axe(list);`);
+    } else {
+      lines.push(`    const results = await axe(wrapper.element);`);
+    }
   }
   // Scaffold violations the auto-test can't satisfy — consumers fill these
   // via slot content or labeling props. Aligned with the React/Svelte/Lit
