@@ -3,6 +3,7 @@ title: 'Fix browser-caught anchored-surface defects: lit display:contents host b
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: anchored-fix
 created_at: '2026-07-22T21:59:01.537Z'
 updated_at: '2026-07-22T21:59:01.537Z'
 blast_radius:
