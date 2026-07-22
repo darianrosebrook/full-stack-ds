@@ -5,7 +5,7 @@ mode: fix
 lifecycle_state: active
 worktree: audit-portal-xfw
 created_at: '2026-07-22T20:00:01.635Z'
-updated_at: '2026-07-22T20:00:01.635Z'
+updated_at: '2026-07-22T20:02:09.132Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
@@ -14,6 +14,7 @@ operational_rollback_slo: 5m
 scope:
   in:
     - 'scripts/behavior-realization-audit/'
+    - package.json
   out: []
 invariants:
   - 'TODO: describe one invariant this spec guarantees.'
