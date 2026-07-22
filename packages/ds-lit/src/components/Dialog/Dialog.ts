@@ -2,6 +2,7 @@
 import { LitElement, html, css, nothing } from 'lit';
 import { property } from 'lit/decorators.js';
 import { DialogBehavior } from './DialogBehavior.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 // @generated:end
 
 // @custom:start imports
@@ -267,19 +268,19 @@ export class DialogElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="dialog">
+    return html`<div class="${this.computeClasses()}" role="dialog" aria-labelledby=${ifDefined('dialog-title')} aria-describedby="dialog-body">
   ${this.behavior.openness ? html`
   <div class=${'dialog__backdrop'} aria-hidden="true" data-fsds-channel-renders="openness"></div>
   ` : nothing}
   ${this.behavior.openness ? html`
   <div class=${'dialog__modal'} role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id" data-fsds-channel-renders="openness" @click=${(e: Event) => e.stopPropagation()}>
     <div class=${'dialog__header'}>
-      <h2 class=${'dialog__title'}>
-        <slot name="title"></slot>
+      <h2 class=${'dialog__title'} id="dialog-title">
+        <slot name="title" @slotchange=${() => this.requestUpdate()}></slot>
       </h2>
       <button class=${'dialog__closeButton'} type="button" aria-label="Close dialog" @click=${() => this.behavior.setOpenness(!this.behavior.openness)}></button>
     </div>
-    <div class=${'dialog__body'}>
+    <div class=${'dialog__body'} id="dialog-body">
       <slot></slot>
     </div>
     <div class=${'dialog__footer'}></div>

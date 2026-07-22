@@ -18,18 +18,20 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-sheet",
   standalone: true,
   imports: [NgClass, NgIf],
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" [attr.aria-labelledby]="instanceId + '-title'">
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'sheet__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" [attr.data-side]="(side ?? 'right')">
       <div [ngClass]="'sheet__header'">
-        <h2 [ngClass]="'sheet__title'">
+        <h2 [ngClass]="'sheet__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
         </h2>
         <p [ngClass]="'sheet__description'">
@@ -53,6 +55,8 @@ export class SheetComponent implements OnInit, OnDestroy {
   @Input() side?: SheetSide = "right";
   @Input() modal?: boolean = true;
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-sheet-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useSheet({

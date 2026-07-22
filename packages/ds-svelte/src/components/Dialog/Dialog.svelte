@@ -56,24 +56,28 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
-<div class={classes} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}>
+<div class={classes} aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { closeOnBackdropClick !== false && behavior.setOpenness(false); } }}>
   {#if behavior.openness}
   <div class={'dialog__backdrop'} aria-hidden="true"></div>
   {/if}
   {#if behavior.openness}
   <div class={'dialog__modal'} role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
     <div class={'dialog__header'}>
-      <h2 class={'dialog__title'}>
+      <h2 class={'dialog__title'} id={`${instanceId}-title`}>
         {@render title?.()}
       </h2>
       <button class={'dialog__closeButton'} type="button" aria-label="Close dialog" onclick={() => behavior.setOpenness(!behavior.openness)}></button>
     </div>
-    <div class={'dialog__body'}>
+    <div class={'dialog__body'} id={`${instanceId}-body`}>
       {@render children?.()}
     </div>
     <div class={'dialog__footer'}></div>

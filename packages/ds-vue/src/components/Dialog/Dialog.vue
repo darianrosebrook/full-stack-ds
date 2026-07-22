@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useDialog } from "./useDialog.js";
 // @generated:end
 
@@ -65,6 +65,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -72,16 +76,16 @@ const classNames = computed(() => [
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
+    <div :class="classNames" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="`${instanceId}-body`" role="dialog" :data-testid="props['data-testid']" @click.self="props.closeOnBackdropClick !== false && behavior.setOpenness(false)">
       <div v-if="behavior.openness.value" :class="'dialog__backdrop'" aria-hidden="true"></div>
       <div v-if="behavior.openness.value" :class="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
         <div :class="'dialog__header'">
-          <h2 :class="'dialog__title'">
+          <h2 :class="'dialog__title'" :id="`${instanceId}-title`">
             <slot name="title" />
           </h2>
           <button :class="'dialog__closeButton'" type="button" aria-label="Close dialog" @click="() => behavior.setOpenness(!behavior.openness.value)"></button>
         </div>
-        <div :class="'dialog__body'">
+        <div :class="'dialog__body'" :id="`${instanceId}-body`">
           <slot />
         </div>
         <div :class="'dialog__footer'"></div>

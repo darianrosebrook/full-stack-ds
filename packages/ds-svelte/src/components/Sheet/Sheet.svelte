@@ -51,19 +51,23 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
-<div class={classes} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}>
+<div class={classes} aria-labelledby={title ? `${instanceId}-title` : undefined} use:portal={{ enabled: true }} role="dialog" onclick={(e) => { if (e.target === e.currentTarget) { behavior.setOpenness(false); } }}>
   {#if behavior.openness}
   <div class={'sheet__overlay'} aria-hidden="true"></div>
   {/if}
   {#if behavior.openness}
   <div class={'sheet__content'} role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" data-side={side}>
     <div class={'sheet__header'}>
-      <h2 class={'sheet__title'}>
+      <h2 class={'sheet__title'} id={`${instanceId}-title`}>
         {@render title?.()}
       </h2>
       <p class={'sheet__description'}>

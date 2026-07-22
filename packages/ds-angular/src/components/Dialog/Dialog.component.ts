@@ -18,23 +18,25 @@ export type DialogSize = "sm" | "md" | "lg" | "xl" | "full";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-dialog",
   standalone: true,
   imports: [NgClass, NgIf],
-  template: `<div [ngClass]="classes()">
+  template: `<div [ngClass]="classes()" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-body'">
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'dialog__backdrop'" aria-hidden="true" role="presentation" (click)="closeOnBackdropClick !== false && behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
     <div [ngClass]="'dialog__modal'" role="dialog" aria-modal="true" aria-labelledby="dialog-title-id" aria-describedby="dialog-body-id">
       <div [ngClass]="'dialog__header'">
-        <h2 [ngClass]="'dialog__title'">
+        <h2 [ngClass]="'dialog__title'" [attr.id]="instanceId + '-title'">
           <ng-content select="[slot=title]" />
         </h2>
         <button [ngClass]="'dialog__closeButton'" type="button" aria-label="Close dialog" (click)="behavior.setOpenness(!behavior.openness())"></button>
       </div>
-      <div [ngClass]="'dialog__body'">
+      <div [ngClass]="'dialog__body'" [attr.id]="instanceId + '-body'">
         <ng-content />
       </div>
       <div [ngClass]="'dialog__footer'"></div>
@@ -55,6 +57,8 @@ export class DialogComponent implements OnInit, OnDestroy {
   @Input() initialFocus?: string;
   @Input() returnFocus?: string;
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-dialog-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useDialog({

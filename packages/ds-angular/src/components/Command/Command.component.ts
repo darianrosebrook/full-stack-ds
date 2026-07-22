@@ -18,6 +18,8 @@ import { useCommand } from "./useCommand.js";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-command",
   standalone: true,
@@ -30,9 +32,9 @@ import { useCommand } from "./useCommand.js";
     <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="(label ?? 'Command palette')">
       <div [ngClass]="'command__inputWrapper'">
         <span [ngClass]="'command__searchIcon'" aria-hidden="true"></span>
-        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" />
+        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" [attr.id]="instanceId + '-input'" />
       </div>
-      <div [ngClass]="'command__list'" role="listbox" id="fsds-command-listbox">
+      <div [ngClass]="'command__list'" role="listbox" id="fsds-command-listbox" [attr.aria-labelledby]="instanceId + '-input'">
         <div [ngClass]="'command__empty'"></div>
         <div [ngClass]="'command__group'">
           <div [ngClass]="'command__groupHeading'"></div>
@@ -66,6 +68,8 @@ export class CommandComponent implements OnInit, OnDestroy {
   @Input() shouldFilter?: boolean = true;
   @Input() filter?: ((value: string, search: string) => number) | undefined;
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-command-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useCommand({

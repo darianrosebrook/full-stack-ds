@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useCommand } from "./useCommand";
 import "./Command.css";
@@ -131,6 +131,8 @@ export function Command({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
     renderInPortal(
     <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
@@ -141,9 +143,9 @@ export function Command({
         <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label} aria-labelledby={ariaLabelledBy}>
           <div className="command__inputWrapper">
             <span className="command__searchIcon" aria-hidden="true" />
-            <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onChange={(e) => setSearch(e.target.value)} aria-expanded={open} placeholder={placeholder} value={search} />
+            <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onChange={(e) => setSearch(e.target.value)} aria-expanded={open} placeholder={placeholder} value={search} id={`${instanceId}-input`} />
           </div>
-          <div className="command__list" role="listbox" id="fsds-command-listbox">
+          <div className="command__list" role="listbox" id="fsds-command-listbox" aria-labelledby={`${instanceId}-input`}>
             <div className="command__empty" />
             <div className="command__group">
               <div className="command__groupHeading" />
