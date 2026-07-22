@@ -2,10 +2,11 @@ id: RAIL-AUDIT-PORTAL-XFW-OBLIGATIONS-01
 title: 'Derive positive portal obligations for vue/svelte/angular/lit in the behavior-realization audit'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: audit-portal-xfw
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge audit-portal-xfw at 98eadc415e7a4aba4203db032f9bce5f85df5705'
 created_at: '2026-07-22T20:00:01.635Z'
-updated_at: '2026-07-22T20:02:09.132Z'
+updated_at: '2026-07-22T20:04:20.159Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
