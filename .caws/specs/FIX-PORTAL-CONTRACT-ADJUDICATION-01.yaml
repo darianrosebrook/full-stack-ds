@@ -2,10 +2,11 @@ id: FIX-PORTAL-CONTRACT-ADJUDICATION-01
 title: 'Portal contract adjudication: Command surface block, Calendar overclaim removal, Select/Walkthrough disposition'
 risk_tier: 3
 mode: fix
-lifecycle_state: active
-worktree: portal-adjudication
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge portal-adjudication at d0d4d7e96ffd7b8fbe3fd45de98c603e2f11022c'
 created_at: '2026-07-22T09:32:09.059Z'
-updated_at: '2026-07-22T18:16:40.295Z'
+updated_at: '2026-07-22T18:27:48.057Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
