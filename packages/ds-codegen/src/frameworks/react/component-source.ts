@@ -40,8 +40,10 @@ import {
   getGroupHostPart,
   getGroupHostOrnamentPart,
   getInteractiveItemPart,
+  getMultipleItemPart,
   getRegionPart,
   isCompoundStateContainer,
+  isDisclosureContainer,
 } from "./hook-source.js";
 import {
   generateReactSurfaceComponentSource,
@@ -81,8 +83,11 @@ export function generateReactComponentSource(
   const typesBody = generateTypes(ir).trimEnd();
   const propsBody = generatePropsInterface(ir);
 
+  const isDisclosure = isCompound && isDisclosureContainer(ir);
   let subcomponentsBody: string;
-  if (isCompound) {
+  if (isDisclosure) {
+    subcomponentsBody = generateDisclosureStateSubcomponents(ir);
+  } else if (isCompound) {
     subcomponentsBody = generateCompoundStateSubcomponents(ir);
   } else {
     subcomponentsBody = ir.compoundParts
@@ -119,7 +124,17 @@ export function generateReactComponentSource(
     !isCompound && /\buseRef</.test(bodyHaystack);
 
   const importLines: string[] = [];
-  if (isCompound) {
+  if (isDisclosure) {
+    // Repeated-disclosure container: arrow-key host (KeyboardEvent, useRef,
+    // useCallback), generated id namespace (useId). No register effect, so no
+    // useEffect. Context is provided via createCompoundContext (below).
+    const runtimeHooks = ["useCallback", "useId", "useRef"];
+    const disclosureTypeImports = finalReactTypeImports.includes("type KeyboardEvent")
+      ? finalReactTypeImports
+      : [...finalReactTypeImports, "type KeyboardEvent"];
+    const allReactImports = [...disclosureTypeImports, ...runtimeHooks].sort();
+    importLines.push(`import { ${allReactImports.join(", ")} } from "react";`);
+  } else if (isCompound) {
     // For compound-state-container, we need both type imports and runtime hooks.
     // Also need KeyboardEvent type for the keyboard handler in TabsList.
     const runtimeHooks = ["useCallback", "useEffect", "useRef"];
@@ -957,6 +972,387 @@ function generateCompoundStateSubcomponents(ir: ComponentIR): string {
 }
 
 /**
+ * Generate the repeated-disclosure subcomponents (Accordion-shaped): a shared
+ * context plus item/trigger/content sub-components. Distinct from the
+ * tab-selection generators — no `role="tab"`, no roving single-selection, no
+ * register/unregister. ARIA is contract-derived: the trigger binds
+ * `aria-expanded` (the discriminator in `isDisclosureContainer`), the region
+ * gets `role="region"` + `aria-labelledby`. Names and BEM classes come from
+ * the resolved parts, never from a component-name literal.
+ */
+function generateDisclosureStateSubcomponents(ir: ComponentIR): string {
+  const name = ir.name;
+  const prefix = ir.cssPrefix;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const multiplePart = getMultipleItemPart(ir);
+  if (!itemPart || !regionPart || !multiplePart) return "";
+
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+
+  // Header wrapper (the interactive item's DOM parent, e.g. Accordion `header`)
+  // and chevron ornament (a non-interactive sibling inside the trigger) are
+  // discovered from anatomy.dom so no per-component lore is needed.
+  const itemNode = ir.dom
+    ? findDisclosureNode(ir.dom, itemPart.name)
+    : undefined;
+  const headerNode = ir.dom
+    ? findDisclosureParentOf(ir.dom, itemPart.name)
+    : undefined;
+  const headerPartName = headerNode?.part;
+  const headerTag = headerNode?.tag ?? "div";
+  const chevronPartName = itemNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  )?.part;
+  const innerNode = ir.dom
+    ? findDisclosureNode(ir.dom, regionPart.name)
+    : undefined;
+  const innerChild = innerNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  );
+  const innerPartName = innerChild?.part;
+  const innerTag = innerChild?.tag ?? "div";
+  const triggerTag = itemNode?.tag ?? "button";
+
+  const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
+
+  const lines: string[] = [];
+
+  // Context ------------------------------------------------------------------
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  ${channelName}: string | string[];`);
+  lines.push(`  toggleItem: (value: string) => void;`);
+  lines.push(`  isItemOpen: (value: string) => boolean;`);
+  lines.push(`  type: "single" | "multiple";`);
+  lines.push(`  collapsible: boolean;`);
+  lines.push(`  disabled: boolean;`);
+  lines.push(`  idBase: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(
+    `const [${name}ContextProvider, use${name}Context] = createCompoundContext<${name}ContextValue>("${name}");`,
+  );
+  lines.push(`export { use${name}Context };`);
+  lines.push(``);
+
+  // Item wrapper -------------------------------------------------------------
+  const itemName = `${name}${capitalize(multiplePart.name)}`;
+  lines.push(`export interface ${itemName}Props {`);
+  lines.push(`  children?: ReactNode;`);
+  lines.push(`  className?: string;`);
+  lines.push(`  "data-testid"?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${itemName}({`);
+  lines.push(`  children,`);
+  lines.push(`  className,`);
+  lines.push(`  "data-testid": testId,`);
+  lines.push(`}: ${itemName}Props) {`);
+  lines.push(`  const classNames = ["${prefix}__${multiplePart.name}", className].filter(Boolean).join(" ");`);
+  lines.push(`  return (`);
+  lines.push(`    <div className={classNames} data-testid={testId}>`);
+  lines.push(`      {children}`);
+  lines.push(`    </div>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+  lines.push(``);
+
+  // Trigger ------------------------------------------------------------------
+  const triggerName = `${name}${capitalize(itemPart.name)}`;
+  lines.push(`export interface ${triggerName}Props {`);
+  lines.push(`  value: string;`);
+  lines.push(`  children?: ReactNode;`);
+  lines.push(`  className?: string;`);
+  lines.push(`  "data-testid"?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${triggerName}({`);
+  lines.push(`  value,`);
+  lines.push(`  children,`);
+  lines.push(`  className,`);
+  lines.push(`  "data-testid": testId,`);
+  lines.push(`}: ${triggerName}Props) {`);
+  lines.push(`  const ctx = use${name}Context();`);
+  lines.push(`  const isOpen = ctx.isItemOpen(value);`);
+  lines.push(`  const classNames = [`);
+  lines.push(`    "${prefix}__${itemPart.name}",`);
+  lines.push(`    isOpen && "${prefix}__${itemPart.name}--open",`);
+  lines.push(`    className,`);
+  lines.push(`  ].filter(Boolean).join(" ");`);
+  lines.push(``);
+  lines.push(`  return (`);
+  if (headerPartName) {
+    lines.push(`    <${headerTag} className="${prefix}__${headerPartName}">`);
+  }
+  const triggerIndent = headerPartName ? "      " : "    ";
+  lines.push(`${triggerIndent}<${triggerTag}`);
+  lines.push(`${triggerIndent}  type="button"`);
+  lines.push(`${triggerIndent}  className={classNames}`);
+  lines.push(`${triggerIndent}  data-disclosure-trigger=""`);
+  lines.push(`${triggerIndent}  data-value={value}`);
+  lines.push(`${triggerIndent}  id={\`\${ctx.idBase}-trigger-\${value}\`}`);
+  lines.push(`${triggerIndent}  aria-controls={\`\${ctx.idBase}-content-\${value}\`}`);
+  lines.push(`${triggerIndent}  aria-expanded={isOpen}`);
+  if (hasDisabled) lines.push(`${triggerIndent}  disabled={ctx.disabled}`);
+  lines.push(`${triggerIndent}  data-testid={testId}`);
+  lines.push(`${triggerIndent}  onClick={() => ctx.toggleItem(value)}`);
+  lines.push(`${triggerIndent}>`);
+  lines.push(`${triggerIndent}  {children}`);
+  if (chevronPartName) {
+    lines.push(`${triggerIndent}  <span className="${prefix}__${chevronPartName}" />`);
+  }
+  lines.push(`${triggerIndent}</${triggerTag}>`);
+  if (headerPartName) {
+    lines.push(`    </${headerTag}>`);
+  }
+  lines.push(`  );`);
+  lines.push(`}`);
+  lines.push(``);
+
+  // Content region -----------------------------------------------------------
+  const contentName = `${name}${capitalize(regionPart.name)}`;
+  lines.push(`export interface ${contentName}Props {`);
+  lines.push(`  value: string;`);
+  lines.push(`  children?: ReactNode;`);
+  lines.push(`  className?: string;`);
+  lines.push(`  "data-testid"?: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export function ${contentName}({`);
+  lines.push(`  value,`);
+  lines.push(`  children,`);
+  lines.push(`  className,`);
+  lines.push(`  "data-testid": testId,`);
+  lines.push(`}: ${contentName}Props) {`);
+  lines.push(`  const ctx = use${name}Context();`);
+  lines.push(`  const isOpen = ctx.isItemOpen(value);`);
+  lines.push(`  const classNames = ["${prefix}__${regionPart.name}", className].filter(Boolean).join(" ");`);
+  lines.push(``);
+  lines.push(`  return (`);
+  lines.push(`    <div`);
+  lines.push(`      role="region"`);
+  lines.push(`      className={classNames}`);
+  lines.push(`      id={\`\${ctx.idBase}-content-\${value}\`}`);
+  lines.push(`      aria-labelledby={\`\${ctx.idBase}-trigger-\${value}\`}`);
+  lines.push(`      hidden={!isOpen ? true : undefined}`);
+  lines.push(`      data-testid={testId}`);
+  lines.push(`    >`);
+  if (innerPartName) {
+    lines.push(`      <${innerTag} className="${prefix}__${innerPartName}">`);
+    lines.push(`        {children}`);
+    lines.push(`      </${innerTag}>`);
+  } else {
+    lines.push(`      {children}`);
+  }
+  lines.push(`    </div>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+
+  return lines.join("\n");
+}
+
+/** DFS for the DOM node whose part matches `partName` (disclosure lowering). */
+function findDisclosureNode(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === partName) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/** Returns the DOM node whose direct child has `part === partName`. */
+function findDisclosureParentOf(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.children?.some((c) => c.part === partName)) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/**
+ * Root component for a repeated-disclosure container (Accordion). Owns the
+ * shared channel via the component's state hook, derives per-item open/closed,
+ * exposes toggle + arrow-key navigation, and provides the disclosure context.
+ */
+function generateDisclosureStateRootComponent(ir: ComponentIR): string {
+  const { name, classRecipe } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const setterName = `set${capitalize(channelName)}`;
+
+  const propByName = new Map(ir.styledProps.map((p) => [p.name, p]));
+  const destructured: string[] = [];
+  const handled = new Set<string>();
+  const classExprs: string[] = [`"${classRecipe.base}"`];
+
+  if (channel) {
+    destructured.push(`${channel.valueProp}: controlled${capitalize(channel.valueProp)}`);
+    handled.add(channel.valueProp);
+    if (channel.defaultValueProp) {
+      destructured.push(channel.defaultValueProp);
+      handled.add(channel.defaultValueProp);
+    }
+    destructured.push(channel.changeHandlerProp);
+    handled.add(channel.changeHandlerProp);
+  }
+
+  for (const mod of classRecipe.valueModifiers) {
+    if (handled.has(mod.propName)) continue;
+    const resolved = propByName.get(mod.propName);
+    const def = resolved?.defaultExpr ?? mod.defaultExpr;
+    destructured.push(def ? `${mod.propName} = ${def}` : mod.propName);
+    classExprs.push(`${mod.safeName} && \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${mod.safeName}}\``);
+    handled.add(mod.propName);
+  }
+
+  const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
+  const hasCollapsible = ir.styledProps.some((p) => p.name === "collapsible");
+  if (hasDisabled && !handled.has("disabled")) {
+    destructured.push("disabled");
+    handled.add("disabled");
+    classExprs.push(`disabled && "${classRecipe.base}--disabled"`);
+  }
+  if (!handled.has("className")) {
+    destructured.push("className");
+    handled.add("className");
+  }
+  destructured.push('"data-testid": testId');
+  destructured.push("children");
+  if (hasCollapsible && !handled.has("collapsible")) {
+    destructured.push("collapsible = false");
+    handled.add("collapsible");
+  }
+  destructured.push("...rest");
+  classExprs.push("className");
+
+  const controlledAlias = `controlled${capitalize(channel?.valueProp ?? "value")}`;
+
+  const lines: string[] = [];
+  lines.push(`export function ${name}({`);
+  lines.push(`  ${destructured.join(",\n  ")}`);
+  lines.push(`}: ${name}Props) {`);
+  lines.push(`  const rootRef = useRef<HTMLDivElement>(null);`);
+  lines.push(`  const { ${channelName}, ${setterName} } = use${name}({`);
+  if (channel) {
+    lines.push(`    ${channel.valueProp}: ${controlledAlias},`);
+    if (channel.defaultValueProp) lines.push(`    ${channel.defaultValueProp},`);
+    lines.push(`    ${channel.changeHandlerProp},`);
+  }
+  lines.push(`  });`);
+  lines.push(`  const idBase = useId();`);
+  lines.push(``);
+  lines.push(`  const isItemOpen = useCallback(`);
+  lines.push(`    (itemValue: string) =>`);
+  lines.push(`      Array.isArray(${channelName})`);
+  lines.push(`        ? ${channelName}.includes(itemValue)`);
+  lines.push(`        : ${channelName} === itemValue,`);
+  lines.push(`    [${channelName}],`);
+  lines.push(`  );`);
+  lines.push(``);
+  lines.push(`  const toggleItem = useCallback(`);
+  lines.push(`    (itemValue: string) => {`);
+  lines.push(`      if (type === "multiple") {`);
+  lines.push(`        const current = Array.isArray(${channelName}) ? ${channelName} : [];`);
+  lines.push(`        const next = current.includes(itemValue)`);
+  lines.push(`          ? current.filter((v) => v !== itemValue)`);
+  lines.push(`          : [...current, itemValue];`);
+  lines.push(`        ${setterName}(next);`);
+  lines.push(`      } else {`);
+  lines.push(`        const current = typeof ${channelName} === "string" ? ${channelName} : "";`);
+  const collapsibleGuard = hasCollapsible
+    ? `current === itemValue && collapsible ? "" : itemValue`
+    : `itemValue`;
+  lines.push(`        const next = ${collapsibleGuard};`);
+  lines.push(`        ${setterName}(next);`);
+  lines.push(`      }`);
+  lines.push(`    },`);
+  lines.push(`    [${channelName}, ${setterName}, type${hasCollapsible ? ", collapsible" : ""}],`);
+  lines.push(`  );`);
+  lines.push(``);
+  lines.push(`  const handleKeyDown = useCallback(`);
+  lines.push(`    (e: KeyboardEvent<HTMLDivElement>) => {`);
+  lines.push(`      const key = e.key;`);
+  lines.push(`      if (`);
+  lines.push(`        key !== "ArrowDown" &&`);
+  lines.push(`        key !== "ArrowUp" &&`);
+  lines.push(`        key !== "Home" &&`);
+  lines.push(`        key !== "End"`);
+  lines.push(`      ) {`);
+  lines.push(`        return;`);
+  lines.push(`      }`);
+  lines.push(`      const root = rootRef.current;`);
+  lines.push(`      if (!root) return;`);
+  lines.push(`      const triggers = Array.from(`);
+  lines.push(`        root.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),`);
+  lines.push(`      ).filter((el) => !el.disabled);`);
+  lines.push(`      if (triggers.length === 0) return;`);
+  lines.push(`      const currentIndex = triggers.indexOf(`);
+  lines.push(`        document.activeElement as HTMLButtonElement,`);
+  lines.push(`      );`);
+  lines.push(`      let nextIndex = currentIndex;`);
+  lines.push(`      if (key === "ArrowDown") {`);
+  lines.push(`        nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;`);
+  lines.push(`      } else if (key === "ArrowUp") {`);
+  lines.push(`        nextIndex =`);
+  lines.push(`          currentIndex < 0`);
+  lines.push(`            ? triggers.length - 1`);
+  lines.push(`            : (currentIndex - 1 + triggers.length) % triggers.length;`);
+  lines.push(`      } else if (key === "Home") {`);
+  lines.push(`        nextIndex = 0;`);
+  lines.push(`      } else {`);
+  lines.push(`        nextIndex = triggers.length - 1;`);
+  lines.push(`      }`);
+  lines.push(`      e.preventDefault();`);
+  lines.push(`      triggers[nextIndex]?.focus();`);
+  lines.push(`    },`);
+  lines.push(`    [],`);
+  lines.push(`  );`);
+  lines.push(``);
+  lines.push(`  const classNames = [`);
+  for (const expr of classExprs) lines.push(`    ${expr},`);
+  lines.push(`  ]`);
+  lines.push(`    .filter(Boolean)`);
+  lines.push(`    .join(" ");`);
+  lines.push(``);
+  lines.push(`  return (`);
+  lines.push(`    <${name}ContextProvider`);
+  lines.push(`      value={{`);
+  lines.push(`        ${channelName},`);
+  lines.push(`        toggleItem,`);
+  lines.push(`        isItemOpen,`);
+  lines.push(`        type: type ?? "single",`);
+  lines.push(`        collapsible: ${hasCollapsible ? "collapsible ?? false" : "false"},`);
+  lines.push(`        disabled: ${hasDisabled ? "disabled ?? false" : "false"},`);
+  lines.push(`        idBase,`);
+  lines.push(`      }}`);
+  lines.push(`    >`);
+  lines.push(`      <div`);
+  lines.push(`        ref={rootRef}`);
+  lines.push(`        className={classNames}`);
+  lines.push(`        data-testid={testId}`);
+  lines.push(`        onKeyDown={handleKeyDown}`);
+  lines.push(`        {...rest}`);
+  lines.push(`      >`);
+  lines.push(`        {children}`);
+  lines.push(`      </div>`);
+  lines.push(`    </${name}ContextProvider>`);
+  lines.push(`  );`);
+  lines.push(`}`);
+  return lines.join("\n");
+}
+
+/**
  * Generate the root component for a compound-state-container (Tabs-shaped)
  * component. Wraps children in the compound context provider, wires the hook,
  * and handles variant CSS classes.
@@ -1068,6 +1464,9 @@ function generateCompoundStateRootComponent(ir: ComponentIR): string {
 }
 
 function generateRootComponent(ir: ComponentIR): string {
+  if (isDisclosureContainer(ir)) {
+    return generateDisclosureStateRootComponent(ir);
+  }
   if (isCompoundStateContainer(ir)) {
     return generateCompoundStateRootComponent(ir);
   }

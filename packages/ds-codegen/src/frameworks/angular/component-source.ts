@@ -55,6 +55,7 @@ import {
 } from "../icon-glyph.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
   getInteractiveItemPart,
   getRegionPart,
   getGroupHostPart,
@@ -80,7 +81,7 @@ const ANGULAR_RESERVED = new Set(["class", "style", "children", "className"]);
 export function generateAngularComponentSource(ir: ComponentIR): string {
   // Compound-state-container (Tabs-shaped): emit a fully wired root component
   // that provides the context token to its children.
-  if (isCompoundStateContainer(ir)) {
+  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
     return generateAngularCompoundStateRootSource(ir);
   }
 
@@ -326,7 +327,7 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
 export function generateAngularCompoundStateParts(
   ir: ComponentIR,
 ): Array<{ name: string; content: string }> {
-  if (!isCompoundStateContainer(ir)) return [];
+  if (!isCompoundStateContainer(ir) || isDisclosureContainer(ir)) return [];
 
   const { name, cssPrefix } = ir;
   const itemPart = getInteractiveItemPart(ir);

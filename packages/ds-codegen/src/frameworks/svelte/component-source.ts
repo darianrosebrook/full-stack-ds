@@ -71,6 +71,7 @@ import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
   getInteractiveItemPart,
   getRegionPart,
   getGroupHostPart,
@@ -95,7 +96,7 @@ const SVELTE_SKIP_PROPS = new Set(["class", "style", "className", "children"]);
  * (imports/types/props/classes/trailing); template is a simple block.
  */
 export function generateSvelteComponentSource(ir: ComponentIR): string {
-  if (isCompoundStateContainer(ir)) {
+  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
     return generateSvelteCompoundStateRootSource(ir);
   }
   if (ir.dom) {
@@ -502,7 +503,7 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
 export function generateSvelteCompoundStateParts(
   ir: ComponentIR,
 ): Array<{ name: string; content: string }> {
-  if (!isCompoundStateContainer(ir)) return [];
+  if (!isCompoundStateContainer(ir) || isDisclosureContainer(ir)) return [];
 
   const { name, cssPrefix } = ir;
   const itemPart = getInteractiveItemPart(ir);

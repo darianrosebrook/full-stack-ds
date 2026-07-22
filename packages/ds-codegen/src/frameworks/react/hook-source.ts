@@ -34,24 +34,114 @@ import { isSurfaceComponent } from "./surface-emit.js";
 // ---------------------------------------------------------------------------
 
 /**
- * Returns true when the IR matches the "compound-state-container" (Tabs-shaped)
- * pattern:
- *   - has a part with `details.multiple === true && details.interactive === true`
- *     (the repeatable interactive item, e.g. tab)
+ * Returns true when the IR matches the "compound-state-container" pattern:
+ *   - has an interactive item element (see `getInteractiveItemPart`) that is
+ *     either the repeatable part itself (Tabs — `tab` is multiple+interactive)
+ *     or a DOM-descendant of the repeatable part (Accordion — `item` is
+ *     multiple, its nested `trigger` is interactive)
  *   - AND has a part with `details.role === "region"` (the content panel)
  *
- * This is the detection gate for compound-tabs wiring (register/unregister,
- * context, keyboard nav). Generalises to Accordion/RadioGroup later.
+ * Routes to one of two contract-derived lowerings: tab-selection (`role="tab"`,
+ * single-select, roving focus) when the item binds a selection channel, or
+ * repeated disclosure (`aria-expanded`, per-item toggle) when the item binds an
+ * expansion channel — discriminated by `isDisclosureContainer`.
  */
 export function isCompoundStateContainer(ir: ComponentIR): boolean {
   return !!getInteractiveItemPart(ir) && !!getRegionPart(ir);
 }
 
-/** Returns the first part that is a repeatable interactive item (e.g. tab). */
+/**
+ * Returns the repeatable ("multiple") part that anchors a compound-state
+ * container — the element the consumer stamps out once per item (Tabs `tab`,
+ * Accordion `item`). When several parts declare `multiple`, the first in
+ * declaration order is the outermost repeat unit (the contract lists ancestors
+ * before descendants), so the others (Accordion's `header`/`content`/
+ * `contentInner`) are sub-nodes within it, not separate repeat anchors.
+ */
+export function getMultipleItemPart(ir: ComponentIR): PartIR | undefined {
+  return ir.parts.find((p) => p.details?.multiple === true);
+}
+
+/**
+ * Returns the interactive host element of a compound-state container — the
+ * element that receives the click/toggle handler and drives the channel.
+ *
+ * Ancestor-aware resolution (mirrors `getGroupHostOrnamentPart`'s DOM walk):
+ *   1. If the repeatable ("multiple") part is itself interactive, it IS the
+ *      host (Tabs: `tab` is multiple+interactive). Returned directly, so Tabs
+ *      output is byte-unchanged.
+ *   2. Otherwise, walk the repeatable part's `anatomy.dom` subtree for a
+ *      descendant part flagged `interactive` and return it (Accordion: `item`
+ *      is multiple but not interactive; its nested `trigger`, two DOM levels
+ *      down via `item > header > trigger`, carries `interactive: true`).
+ *
+ * Falls back to the legacy co-located predicate (multiple AND interactive on
+ * one part) when there is no `anatomy.dom` to walk.
+ */
 export function getInteractiveItemPart(ir: ComponentIR): PartIR | undefined {
-  return ir.parts.find(
+  const coLocated = ir.parts.find(
     (p) => p.details?.multiple === true && p.details?.interactive === true,
   );
+  if (coLocated) return coLocated;
+
+  const multiplePart = getMultipleItemPart(ir);
+  if (!multiplePart || !ir.dom) return undefined;
+
+  const multipleNode = findDomNodeForPart(ir.dom, multiplePart.name);
+  if (!multipleNode) return undefined;
+
+  const descendantPartNames = collectDescendantPartNames(multipleNode);
+  return ir.parts.find(
+    (p) => descendantPartNames.has(p.name) && p.details?.interactive === true,
+  );
+}
+
+/**
+ * Returns true when a compound-state container is a *repeated-disclosure*
+ * container (Accordion) rather than a *tab-selection* container (Tabs).
+ *
+ * Discriminated purely from contract data: the interactive item's DOM node
+ * binds `aria-expanded` to a channel value. Tabs's item binds `aria-selected`
+ * instead, so it returns false and stays on the tab-selection lowering. No
+ * component-name matching.
+ */
+export function isDisclosureContainer(ir: ComponentIR): boolean {
+  if (!ir.dom) return false;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  if (!itemPart || !regionPart) return false;
+  const itemNode = findDomNodeForPart(ir.dom, itemPart.name);
+  if (!itemNode) return false;
+  const expandedBinding = itemNode.bindings["aria-expanded"];
+  return expandedBinding !== undefined && expandedBinding.kind === "channel";
+}
+
+/** Depth-first search for the DOM node whose `part` matches `partName`. */
+function findDomNodeForPart(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === partName) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/** Collects the `part` names of every strict descendant of `node`. */
+function collectDescendantPartNames(
+  node: NonNullable<ComponentIR["dom"]>,
+): Set<string> {
+  const names = new Set<string>();
+  const stack: NonNullable<ComponentIR["dom"]>[] = [...(node.children ?? [])];
+  while (stack.length > 0) {
+    const n = stack.pop()!;
+    if (n.part !== undefined) names.add(n.part);
+    if (n.children) stack.push(...n.children);
+  }
+  return names;
 }
 
 /** Returns the first part with role="region" (e.g. panel). */
@@ -171,7 +261,12 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
     (hasFocusTrap && hasEscapeTrigger) ||
     (!useAnchor && hasEscapeTrigger);
 
-  const compoundContainer = isCompoundStateContainer(ir);
+  // A repeated-disclosure container (Accordion) does NOT use the
+  // tab-style hook machinery (register/unregister/idBase); its root owns a
+  // plain channel plus an inline useId. Only tab-selection containers get the
+  // compound hook surface, so exclude disclosure here.
+  const compoundContainer =
+    isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
 
   if (
     channels.length === 0 &&

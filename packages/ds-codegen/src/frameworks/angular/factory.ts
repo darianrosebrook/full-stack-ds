@@ -27,7 +27,7 @@ import { generateAngularComponentSource, generateAngularCompoundStateParts } fro
 import { generateAngularHookSource } from "./hook-source.js";
 import { generateAngularBarrel } from "./barrel.js";
 import { generateAngularTest } from "./tests.js";
-import { isCompoundStateContainer } from "../react/hook-source.js";
+import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-source.js";
 import {
   generateAngularSurfaceFiles,
   isSurfaceComponent,
@@ -75,7 +75,7 @@ export function createAngularEmitter(): FrameworkEmitter {
           preservable: true,
         },
       ];
-      if (isCompoundStateContainer(ir)) {
+      if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
         // Compound-state-container: emit sub-component files (List, Tab, Panel)
         // wired via Angular DI InjectionToken context.
         for (const part of generateAngularCompoundStateParts(ir)) {

@@ -12,7 +12,7 @@
  */
 import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { isCompoundStateContainer } from "../react/hook-source.js";
+import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -57,7 +57,8 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Standalone dismissal for trap-focus components: outside-click is handled
   // template-side (overlay onClick), so only Escape needs a document listener.
   const useDismissal = !useAnchor && hasEscape;
-  const compoundContainer = isCompoundStateContainer(ir);
+  const compoundContainer =
+    isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
 
   if (
     channels.length === 0 &&

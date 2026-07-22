@@ -30,7 +30,7 @@ import {
 import { generateVueHookSource } from "./hook-source.js";
 import { generateVueBarrel } from "./barrel.js";
 import { generateVueTest } from "./tests.js";
-import { isCompoundStateContainer } from "../react/hook-source.js";
+import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-source.js";
 import {
   generateVueSurfaceFiles,
   isSurfaceComponent,
@@ -78,7 +78,7 @@ export function createVueEmitter(): FrameworkEmitter {
         },
       ];
 
-      if (isCompoundStateContainer(ir)) {
+      if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
         // Compound-state-container: emit sub-component SFCs (List, Tab, Panel)
         // that are wired via provide/inject context.
         for (const part of generateVueCompoundStateParts(ir)) {

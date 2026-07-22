@@ -15,7 +15,7 @@ import {
   buildComponentTestPlan,
   findIndeterminateAriaCheckedFact,
 } from "../../test-plan.js";
-import { isCompoundStateContainer } from "../react/hook-source.js";
+import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-source.js";
 
 /**
  * Scan a component IR's DOM tree for the rendered signals a channel
@@ -243,7 +243,7 @@ function generateCompoundStateContainerTest(ir: ComponentIR): string {
 export function generateLitTest(ir: ComponentIR): string {
   // Compound-state-container components (Tabs-shaped) use a hand-authored
   // @custom:start tests block for behavioral coverage. Only emit smoke + axe.
-  if (isCompoundStateContainer(ir)) {
+  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
     return generateCompoundStateContainerTest(ir);
   }
 

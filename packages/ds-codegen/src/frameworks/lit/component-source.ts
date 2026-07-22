@@ -46,6 +46,7 @@ import { resolveComponentRefImports } from "../component-ref-imports.js";
 import { emitLitInlineCss, escapeCssForLitTemplate } from "../../css.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
   getGroupHostOrnamentPart,
 } from "../react/hook-source.js";
 import {
@@ -1076,7 +1077,7 @@ function generateCompoundStateSource(ir: ComponentIR): string {
 export function generateLitComponentSource(ir: ComponentIR): string {
   // Compound-state-container components (Tabs-shaped) get a bespoke emitter
   // that produces four LitElement classes instead of the generic wrapper.
-  if (isCompoundStateContainer(ir)) {
+  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
     return generateCompoundStateSource(ir);
   }
 

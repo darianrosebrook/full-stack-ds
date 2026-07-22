@@ -21,6 +21,7 @@ import {
 import { renderSections, type Section } from "../../preserve.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
 } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
@@ -63,7 +64,9 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Outside-click for trap-focus components is handled at the template layer
   // (overlay onClick), not document-level, so we only wire Escape here.
   const useDismissal = !useAnchor && hasEscape;
-  const compoundContainer = isCompoundStateContainer(ir);
+  // Disclosure containers (Accordion) do not use tab-hook machinery.
+  const compoundContainer =
+    isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
 
   if (
     channels.length === 0 &&

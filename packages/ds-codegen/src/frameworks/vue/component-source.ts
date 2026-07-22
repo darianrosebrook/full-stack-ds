@@ -79,6 +79,7 @@ import {
   getInteractiveItemPart,
   getRegionPart,
   isCompoundStateContainer,
+  isDisclosureContainer,
 } from "../react/hook-source.js";
 
 // Props handled natively by Vue: class via :class binding, style passthrough,
@@ -93,7 +94,7 @@ const VUE_SKIP_PROPS = new Set(["class", "style", "children", "className"]);
  * users override entire SFCs rather than splice template fragments).
  */
 export function generateVueComponentSource(ir: ComponentIR): string {
-  if (isCompoundStateContainer(ir)) {
+  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
     return generateVueCompoundStateRootSource(ir);
   }
   if (ir.dom) {
@@ -680,7 +681,7 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
 export function generateVueCompoundStateParts(
   ir: ComponentIR,
 ): Array<{ name: string; content: string }> {
-  if (!isCompoundStateContainer(ir)) return [];
+  if (!isCompoundStateContainer(ir) || isDisclosureContainer(ir)) return [];
 
   const { name, cssPrefix } = ir;
   const itemPart = getInteractiveItemPart(ir);
