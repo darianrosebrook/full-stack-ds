@@ -94,10 +94,17 @@ check(`root-portal surfaces >= ${ROOT_PORTAL_FLOOR}`, () => {
 });
 
 // -- derived deferral (no allowlist) ------------------------------------------
-console.log("\nderived deferral — OTP has no events wire, so ZERO event obligations:");
-check("OTP derives zero event obligations (absence is derived, not listed)", () => {
+// OTP gained an events wire (channelUpdate setCharAt) under
+// FEAT-CHANNEL-UPDATE-OPERATIONS-01, so it is no longer the no-obligation
+// witness; Badge declares no events wire and is non-interactive by contract.
+console.log("\nderived deferral — Badge has no events wire, so ZERO event obligations:");
+check("Badge derives zero event obligations (absence is derived, not listed)", () => {
+  const badge = deriveEventObligations("Badge", corpus).filter((o) => !o.skip);
+  assert.equal(badge.length, 0, `expected 0, got ${badge.length}`);
+});
+check("OTP's channelUpdate input wire IS a derived obligation (not allow-listed away)", () => {
   const otp = deriveEventObligations("OTP", corpus).filter((o) => !o.skip);
-  assert.equal(otp.length, 0, `expected 0, got ${otp.length}`);
+  assert.ok(otp.length >= 1, `expected >= 1, got ${otp.length}`);
 });
 check("the derivation contains no hardcoded component name (source audit)", () => {
   // Guards the doctrine that the script must not allow/deny-list components.
@@ -111,8 +118,8 @@ check("the derivation contains no hardcoded component name (source audit)", () =
 
 // -- typed skip reasons -------------------------------------------------------
 console.log("\ntyped skip reasons — un-auditable wires are skipped WITH a reason:");
-check("EVENT_KEYS is the modeled event vocabulary (click, change)", () => {
-  assert.deepEqual([...EVENT_KEYS].sort(), ["change", "click"]);
+check("EVENT_KEYS is the modeled event vocabulary (click, change, input)", () => {
+  assert.deepEqual([...EVENT_KEYS].sort(), ["change", "click", "input"]);
 });
 check("an unmodeled event key yields a typed skip, not a silent drop", () => {
   // Synthetic contract fragment fed through the same collector path.
@@ -176,13 +183,15 @@ check("Tabs realizes tab-selection wiring in all frameworks", () => {
 });
 
 console.log("\nportal realization — positive consume + orphan invariant:");
-check("Dialog (root-portal) consumes renderInPortal in React", () => {
+check("Dialog (root-portal) consumes the root-portal mechanism in ALL five frameworks", () => {
   const ob = derivePortalObligation("Dialog", corpus);
   assert.equal(ob.rootPortal, true);
   const checks = checkPortal(ob);
-  const react = checks.find((c) => c.framework === "react");
-  assert.equal(react.obligation, "consume-renderInPortal");
-  assert.ok(react.realized);
+  assert.equal(checks.length, 5);
+  for (const c of checks) {
+    assert.equal(c.obligation, "consume-root-portal");
+    assert.ok(c.realized, `${c.framework} must consume its portal mechanism`);
+  }
 });
 check("Tooltip (portal.enabled, anchored) carries NO orphaned portal primitive", () => {
   const ob = derivePortalObligation("Tooltip", corpus);

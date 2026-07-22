@@ -36,10 +36,13 @@
  *                  produce today, discriminated by isDisclosureContainer.
  *
  *   PORTAL       — every contract where portalsRootToBody holds (Dialog, Sheet,
- *                  Toast) must consume the React root-portal primitive
- *                  (renderInPortal); every contract where it does NOT hold must
- *                  carry NO orphaned root-portal scaffolding (usePortal /
- *                  renderInPortal) in any framework — the orphan invariant
+ *                  Toast, Command) must consume its framework's root-portal
+ *                  mechanism in ALL five frameworks (react renderInPortal,
+ *                  vue <Teleport to="body">, svelte use:portal, angular/lit
+ *                  document.body.appendChild); every contract where it does
+ *                  NOT hold must carry NO orphaned root-portal scaffolding
+ *                  (usePortal / renderInPortal) in any framework — the orphan
+ *                  invariant
  *                  landed by FIX-PORTAL-CONSUMPTION-01. (Direct `createPortal`
  *                  from react-dom is the anchored hand-path Tooltip/Popover use
  *                  and is NOT the orphaned primitive.)
@@ -372,6 +375,19 @@ export function isCompoundRealized(fw, ob) {
 // The React root-portal primitive orphaned-then-fixed by FIX-PORTAL-CONSUMPTION-01.
 const PORTAL_PRIMITIVE = /\b(usePortal|renderInPortal)\b/;
 
+// Per-framework root-portal consumption tokens, matching what each emitter
+// actually produces for portalsRootToBody components
+// (FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01). Angular appends the host from
+// its lifecycle (`document.body.appendChild(host)`); lit moves the host
+// element itself (`document.body.appendChild(this)`).
+const PORTAL_CONSUMPTION = {
+  react: /\brenderInPortal\b/,
+  vue: /<Teleport to="body"/,
+  svelte: /use:portal/,
+  angular: /document\.body\.appendChild\(/,
+  lit: /document\.body\.appendChild\(this\)/,
+};
+
 export function derivePortalObligation(component, corpus) {
   const contract = corpus.get(component) ?? {};
   const built = ir.buildComponentIR(contract, { allContracts: corpus });
@@ -381,21 +397,24 @@ export function derivePortalObligation(component, corpus) {
 }
 
 /**
- * Positive: root-portal components must consume renderInPortal in React.
+ * Positive: root-portal components must consume each framework's root-portal
+ * mechanism in ALL five frameworks (PORTAL_CONSUMPTION tokens).
  * Negative (orphan invariant): non-root-portal components must carry NO
  * root-portal primitive (usePortal/renderInPortal) in ANY framework.
  */
 export function checkPortal(ob) {
   const results = [];
   if (ob.rootPortal) {
-    const text = frameworkText(FRAMEWORKS.find((f) => f.id === "react"), ob.component);
-    const consumed = /\brenderInPortal\b/.test(text);
-    results.push({
-      component: ob.component,
-      framework: "react",
-      obligation: "consume-renderInPortal",
-      realized: consumed,
-    });
+    for (const fw of FRAMEWORKS) {
+      const text = frameworkText(fw, ob.component);
+      const consumed = PORTAL_CONSUMPTION[fw.id].test(text);
+      results.push({
+        component: ob.component,
+        framework: fw.id,
+        obligation: "consume-root-portal",
+        realized: consumed,
+      });
+    }
   } else {
     // orphan invariant across all admitted frameworks
     for (const fw of FRAMEWORKS) {
@@ -489,8 +508,8 @@ if (RUN_DIRECTLY) {
           component: c,
           detail: chk.obligation,
           framework: chk.framework,
-          reason: chk.obligation === "consume-renderInPortal"
-            ? "renderInPortal-not-consumed"
+          reason: chk.obligation === "consume-root-portal"
+            ? "root-portal-mechanism-not-consumed"
             : "orphaned-portal-primitive-present",
         });
       }
