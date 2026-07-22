@@ -58,6 +58,7 @@ import {
   isCompoundPart,
 } from "./semantics.js";
 import { resolveStyleProfile } from "./box-model.js";
+import { resolveIdRelationships } from "./id-relationships.js";
 
 // ---------------------------------------------------------------------------
 // IR types
@@ -461,6 +462,80 @@ export interface CssVarBindingIR {
 }
 
 /**
+ * Condition gating an id reference (FEAT-A11Y-LABEL-ID-ASSOCIATION-01).
+ * Resolved from a `relationships[].when` clause of the closed grammar
+ * `<prop>=<value>` / `<prop>!=<value>`, or from the target node's own
+ * `ifProp` render guard (an idref must never point at an element the same
+ * guard removed from the tree).
+ *
+ * Lowering per op:
+ *   - `truthy`: `<prop>` (from `=true`, or an ifProp guard); `negated`
+ *     inverts (`!=true` / `=false`).
+ *   - `eq`: `<prop> === "<value>"`; `negated` inverts (`!=`).
+ */
+export interface IdRefConditionIR {
+  prop: string;
+  op: "truthy" | "eq";
+  /** Comparison literal — only for op "eq". */
+  value?: string;
+  negated: boolean;
+}
+
+/**
+ * One id reference inside a generated idref attribute. `slug` names the
+ * target anatomy part; every emitter derives the concrete id the same way it
+ * derives the target element's `id` attribute (`${instanceId}-${slug}` where
+ * instance ids are required, or a shadow-root-scoped literal in Lit), so the
+ * reference and the id can never drift apart.
+ */
+export interface IdRefIR {
+  slug: string;
+  when?: IdRefConditionIR;
+}
+
+/**
+ * A generated idref attribute on a `from`-side relationship node
+ * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01). Lowered by every web emitter as the
+ * space-joined list of each active ref's id, merged with the passthrough
+ * prop when the contract also exposes a consumer-facing idref prop (e.g.
+ * TextField's `ariaDescribedby`). An attribute whose refs are all inactive
+ * and whose passthrough is unset must not be emitted at all (no empty
+ * `aria-describedby=""`).
+ */
+export interface IdRefAttrIR {
+  /** Attribute to emit: "for" | "aria-labelledby" | "aria-describedby". */
+  attribute: string;
+  refs: IdRefIR[];
+  /** Consumer prop whose value is appended to the generated id list. */
+  passthroughProp?: string;
+}
+
+/**
+ * Field-association facts (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the
+ * cross-component mechanism behind a composer's `for`/`aria-describedby`
+ * relationships whose target element is CONSUMER-SLOTTED (Field's control
+ * slot). A `for` cannot point at the slot's wrapper div (labels must
+ * reference a labelable element), so the composer instead PROVIDES the
+ * generated control id + describedby ids through each framework's ambient
+ * context idiom, and participating controls (contract `fieldAssociation:
+ * "control"`) consume them onto their root element. Lit is excluded: its
+ * components render into shadow roots and idrefs cannot cross the shadow
+ * boundary, so no provider/consumer is emitted there.
+ */
+export interface FieldAssociationProviderIR {
+  /** Slug of the slotted control's generated id (used by the label's `for`). */
+  controlSlug: string;
+  /** Ids delivered to the control's aria-describedby, each optionally gated. */
+  describedBy: IdRefIR[];
+}
+
+export interface FieldAssociationIR {
+  provides?: FieldAssociationProviderIR;
+  /** True when this component consumes ambient field association (a control). */
+  consumes: boolean;
+}
+
+/**
  * A node in the rendered DOM tree, derived from `contract.anatomy.dom`.
  * Optional — components without a `dom` block on their contract continue to
  * emit single-root output. When present, framework component-source emitters
@@ -572,6 +647,20 @@ export interface DomNodeIR {
    * the bound name/size props. `undefined` for every non-icon node.
    */
   iconGlyph: IconGlyphIR | undefined;
+  /**
+   * When set, this element carries a generated per-instance id
+   * (`${instanceId}-${slug}`; shadow-root-scoped literal in Lit) because it
+   * is the target of a lowered `relationships[]` idref
+   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01). Set by `resolveIdRelationships`,
+   * never authored directly.
+   */
+  generatedIdSlug: string | undefined;
+  /**
+   * Generated idref attributes for lowered `relationships[]` where this
+   * element is the `from` side. Set by `resolveIdRelationships`. Empty for
+   * nodes with no lowered relationships.
+   */
+  idRefAttrs: IdRefAttrIR[];
 }
 
 /**
@@ -1233,6 +1322,15 @@ export interface ComponentIR {
    */
   dom: DomNodeIR | undefined;
 
+  /**
+   * Field-association facts (FEAT-A11Y-LABEL-ID-ASSOCIATION-01). Present
+   * when `resolveIdRelationships` routed a relationship through a consumer
+   * slot (provider side) and/or the contract declares
+   * `fieldAssociation: "control"` (consumer side). Undefined for the
+   * overwhelming majority of components.
+   */
+  fieldAssociation: FieldAssociationIR | undefined;
+
   /** Codegen options. */
   generateTests: boolean;
 }
@@ -1424,6 +1522,23 @@ export function buildComponentIR(
     resolveComponentInstances(dom, contract, options.allContracts);
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: lower contract relationships[] into
+  // generated-id facts (generatedIdSlug / idRefAttrs on dom nodes) and
+  // field-association provider facts for consumer-slotted targets. Runs
+  // before the a11y-obligation validator so lowered idref attributes are
+  // visible to any downstream inspection.
+  let fieldAssociation: FieldAssociationIR | undefined;
+  {
+    const propNames = new Set(styledProps.map((p) => p.name));
+    const provides = dom
+      ? resolveIdRelationships(dom, contract, propNames)
+      : undefined;
+    const consumes = contract.fieldAssociation === "control";
+    if (provides || consumes) {
+      fieldAssociation = { provides, consumes };
+    }
+  }
+
   // A11Y-CONTRACT-OBLIGATION-VALIDATOR-01: throw on static ARIA roles
   // with required attributes that aren't satisfied by either attrs,
   // bindings, or an explicit `a11y.obligations.suppress` entry.
@@ -1479,6 +1594,7 @@ export function buildComponentIR(
     surface,
     textOverflow,
     dom,
+    fieldAssociation,
     generateTests: contract.codegen?.tests !== false,
   };
 }
@@ -2668,6 +2784,8 @@ function parseDomNode(node: ContractDomNode): DomNodeIR {
     iteration,
     cssVarBindings,
     iconGlyph,
+    generatedIdSlug: undefined,
+    idRefAttrs: [],
   };
 }
 

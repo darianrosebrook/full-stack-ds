@@ -2311,6 +2311,8 @@ function fallbackViewNode(): DomNodeIR {
     propertyBindings: {},
     slotName: undefined,
     tag: "div",
+    generatedIdSlug: undefined,
+    idRefAttrs: [],
   };
 }
 

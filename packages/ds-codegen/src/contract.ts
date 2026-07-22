@@ -713,6 +713,16 @@ export interface ComponentContract {
     when?: string;
     description?: string;
   }>;
+  /**
+   * Field-association participation (FEAT-A11Y-LABEL-ID-ASSOCIATION-01).
+   * `"control"` declares that this component is a form control that, when
+   * rendered inside a field composer's control slot, consumes the ambient
+   * field-association context (generated control id + aria-describedby ids)
+   * and binds them onto its root element. The provider side is derived from
+   * `relationships[]` whose target part hosts a consumer slot — see
+   * `resolveIdRelationships` in ir.ts.
+   */
+  fieldAssociation?: "control";
   a11y?: {
     role?: string;
     labeling?: string[];
