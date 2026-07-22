@@ -208,7 +208,7 @@ export class AlertNoticeElement extends LitElement {
   ` : nothing}
   <slot></slot>
   ${this.dismissible ? html`
-  <button class=${'alert-notice__dismiss'} type="button" @click=${this.onDismiss} aria-label=${ifDefined(this.dismissLabel)}></button>
+  <button class=${'alert-notice__dismiss'} type="button" @click=${this.onDismiss} aria-label=${ifDefined((this.dismissLabel ?? "Dismiss"))}></button>
   ` : nothing}
 </div>`;
   }

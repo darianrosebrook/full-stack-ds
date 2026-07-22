@@ -197,7 +197,7 @@ export class WalkthroughElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" role="status" aria-label=${ifDefined(this.label)}>
+    return html`<div class="${this.computeClasses()}" role="status" aria-label=${ifDefined((this.label ?? "Feature tour"))}>
   <div class=${'walkthrough__content'}>
     <h3 class=${'walkthrough__title'}>
       <slot name="title"></slot>
