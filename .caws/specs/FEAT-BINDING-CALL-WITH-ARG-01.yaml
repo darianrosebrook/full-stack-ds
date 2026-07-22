@@ -2,10 +2,11 @@ id: FEAT-BINDING-CALL-WITH-ARG-01
 title: 'Call-with-argument channel-setter binding form (Calendar day, Select option, OTP indexed entry)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: binding-call-arg
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge binding-call-arg at 24b69caa1ff46748c4d41a08f0e6b1ac80ccf86a'
 created_at: '2026-07-22T06:49:49.756Z'
-updated_at: '2026-07-22T09:58:59.723Z'
+updated_at: '2026-07-22T10:10:20.194Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
