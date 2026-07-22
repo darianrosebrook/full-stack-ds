@@ -2531,13 +2531,19 @@ function renderVueBinding(
       const isChangeEvent = attr === "onChange";
       if (isChangeEvent) {
         if (ch.valueType === "boolean") {
+          // Boolean controls (checkbox/switch) fire the native `change`
+          // event on toggle; there is no keystroke concept.
           return `@${eventName}="(e) => ${setter}((e.target as HTMLInputElement).checked)"`;
         }
+        // Text-value channels (string/number) must fire on keystroke, not on
+        // blur. React's `onChange` already means the input event, so Vue's
+        // faithful realization of the same value-change semantic is `@input`
+        // (native `change` is blur-timed and would defer keystroke validation).
         if (ch.valueType === "number") {
-          return `@${eventName}="(e) => ${setter}(Number((e.target as HTMLInputElement).value))"`;
+          return `@input="(e) => ${setter}(Number((e.target as HTMLInputElement).value))"`;
         }
         if (ch.valueType === "string" || ch.valueType === undefined) {
-          return `@${eventName}="(e) => ${setter}((e.target as HTMLInputElement).value)"`;
+          return `@input="(e) => ${setter}((e.target as HTMLInputElement).value)"`;
         }
         return `@${eventName}="(e) => ${setter}(e as unknown as ${ch.valueType})"`;
       }
