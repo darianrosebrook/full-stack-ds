@@ -22,12 +22,14 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import type { PrimitiveIR } from "../../primitive-contract.js";
 import {
   generateVueComponentSource,
   generateVueCompoundPartSource,
   generateVueCompoundStateParts,
   generateVueDisclosureStateParts,
 } from "./component-source.js";
+import { generateVueStackPrimitiveSource } from "./primitive-source.js";
 import { generateVueHookSource } from "./hook-source.js";
 import { generateVueBarrel } from "./barrel.js";
 import { generateVueTest } from "./tests.js";
@@ -129,6 +131,15 @@ export function createVueEmitter(): FrameworkEmitter {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
           contents: generateVueTest(ir),
           preservable: true,
+        },
+      ];
+    },
+
+    emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      return [
+        {
+          relativePath: `${ir.name}.vue`,
+          contents: generateVueStackPrimitiveSource(ir),
         },
       ];
     },

@@ -21,12 +21,14 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import type { PrimitiveIR } from "../../primitive-contract.js";
 import {
   generateSvelteComponentSource,
   generateSvelteCompoundPartSource,
   generateSvelteCompoundStateParts,
   generateSvelteDisclosureStateParts,
 } from "./component-source.js";
+import { generateSvelteStackPrimitiveSource } from "./primitive-source.js";
 import { generateSvelteHookSource } from "./hook-source.js";
 import { generateSvelteBarrel } from "./barrel.js";
 import { generateSvelteTest } from "./tests.js";
@@ -156,6 +158,15 @@ export function createSvelteEmitter(): FrameworkEmitter {
           relativePath: `${ir.name}/use${ir.name}.svelte.ts`,
           contents: source,
           preservable: true,
+        },
+      ];
+    },
+
+    emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      return [
+        {
+          relativePath: `${ir.name}.svelte`,
+          contents: generateSvelteStackPrimitiveSource(ir),
         },
       ];
     },

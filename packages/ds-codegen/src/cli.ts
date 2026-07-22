@@ -76,6 +76,7 @@ import {
 import { readManifestForVerification } from "./validation/required-mode.js";
 import { validateContractSemantics } from "./validation/semantic.js";
 import { buildFigmaStackPrimitiveDescriptor } from "./frameworks/figma/factory.js";
+import { readPrimitiveIR } from "./primitive-contract.js";
 import { validateContractIconRefs } from "./validation/icon-refs.js";
 import { validateContractTokens } from "./validation/tokens.js";
 import {
@@ -745,6 +746,8 @@ function emitForTarget(
   if (!args.dryRun) {
     if (binding.id === "figma") {
       writeFigmaStackPrimitiveDescriptor(binding);
+    } else if (binding.emitter.emitPrimitives) {
+      writeWebPrimitives(binding);
     }
     writeBarrel(binding);
   }
@@ -1225,6 +1228,32 @@ function writeBarrel(binding: TargetBinding): void {
   console.log(
     `\n  BARREL  ${path.relative(cwd, barrelPath)} (${componentIds.length} components)`,
   );
+}
+
+/**
+ * Write a web target's Stack primitive source, lowered from the primitive
+ * contract IR by the target's `emitPrimitives`. Files are written to the
+ * package's `primitives/` root (sibling of `components/`). Called once per
+ * web build (before barrel write). Whole-file generated output — not
+ * preserve-merged.
+ */
+function writeWebPrimitives(binding: TargetBinding): void {
+  const emit = binding.emitter.emitPrimitives;
+  if (!emit) return;
+  const ir = readPrimitiveIR(CONTRACTS_DIR);
+  const primitivesRoot = path.join(binding.componentsRoot, "..", "primitives");
+  const files = emit(ir, {
+    componentsRoot: binding.componentsRoot,
+    contractsRoot: CONTRACTS_DIR,
+  });
+  for (const file of files) {
+    const absolutePath = path.join(primitivesRoot, file.relativePath);
+    fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+    fs.writeFileSync(absolutePath, file.contents);
+    console.log(
+      `\n  PRIMITIVE  ${path.relative(cwd, absolutePath)} (${ir.name})`,
+    );
+  }
 }
 
 /**

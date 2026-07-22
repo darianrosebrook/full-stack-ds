@@ -11,6 +11,7 @@
  */
 
 import type { ComponentIR } from "./ir.js";
+import type { PrimitiveIR } from "./primitive-contract.js";
 
 export type BuiltinTargetId =
   | "react"
@@ -69,6 +70,17 @@ export interface FrameworkEmitter {
 
   /** Files representing the component test suite. */
   emitTests(ir: ComponentIR, opts: EmitOptions): GeneratedFile[];
+
+  /**
+   * Files representing the shared layout primitive (Stack), lowered from the
+   * primitive contract IR into this framework's idiomatic source. Paths are
+   * relative to the target package's primitives root (a sibling of the
+   * components root). Optional — targets that do not emit a web primitive
+   * (figma, react-native) omit it. Emitters must derive all layout facts
+   * (class prefix, display map, axis map, token gap) from the IR, never from
+   * hand-authored per-primitive lore.
+   */
+  emitPrimitives?(ir: PrimitiveIR, opts: EmitOptions): GeneratedFile[];
 
   /**
    * Files representing the component's behavior hook/composable/service.
