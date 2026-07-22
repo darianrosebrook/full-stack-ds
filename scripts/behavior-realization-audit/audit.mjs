@@ -44,8 +44,18 @@
  *                  (usePortal / renderInPortal) in any framework — the orphan
  *                  invariant
  *                  landed by FIX-PORTAL-CONSUMPTION-01. (Direct `createPortal`
- *                  from react-dom is the anchored hand-path Tooltip/Popover use
- *                  and is NOT the orphaned primitive.)
+ *                  from react-dom is the anchored content-portal path
+ *                  Tooltip/Popover use and is NOT the orphaned primitive.)
+ *
+ *   ANCHORED     — every contract with positioning.strategy "anchored"
+ *                  (Popover, Tooltip) must instantiate its framework's
+ *                  anchored-position primitive on the content part in ALL
+ *                  five frameworks, and — when the contract also enables
+ *                  portal (anchoredPortalsContentToBody) — must move the
+ *                  content node to document.body (react createPortal,
+ *                  vue <Teleport to="body">, svelte use:portal, angular
+ *                  body-append, lit content-host move). Landed by
+ *                  FEAT-ANCHORED-SURFACE-XFW-01.
  *
  * The predicates (isCompoundStateContainer / isDisclosureContainer /
  * getInteractiveItemPart / getRegionPart / portalsRootToBody) and the IR are
@@ -393,7 +403,77 @@ export function derivePortalObligation(component, corpus) {
   const built = ir.buildComponentIR(contract, { allContracts: corpus });
   const rootPortal = sem.portalsRootToBody(built);
   const portalEnabled = built.behavior?.portal?.enabled === true;
-  return { component, rootPortal, portalEnabled };
+  const anchoredPositioning =
+    built.surface?.positioning?.strategy === "anchored";
+  const anchoredContentPortal = sem.anchoredPortalsContentToBody(built);
+  return {
+    component,
+    rootPortal,
+    portalEnabled,
+    anchoredPositioning,
+    anchoredContentPortal,
+  };
+}
+
+// Per-framework anchored-POSITIONING consumption tokens: the mirrored
+// positioning primitive each emitter instantiates on the content part when
+// `surface.positioning.strategy === "anchored"`
+// (FEAT-ANCHORED-SURFACE-XFW-01). Same options/state shape everywhere;
+// names follow each package's primitive naming convention.
+const ANCHORED_POSITION_CONSUMPTION = {
+  react: /\buseAnchoredPosition\(/,
+  vue: /\buseAnchoredPosition\(/,
+  svelte: /\bcreateAnchoredPosition\(/,
+  angular: /\bcreateAnchoredPosition\(/,
+  lit: /\bnew AnchoredPositionController\(/,
+};
+
+// Per-framework anchored-CONTENT-portal consumption tokens: how each emitter
+// moves the anchored content node (never the root — the trigger stays
+// in-tree) to document.body when `anchoredPortalsContentToBody` holds.
+// React wraps content in createPortal; lit moves the content HOST element
+// (its own custom element, so shadow styles travel with it).
+const ANCHORED_PORTAL_CONSUMPTION = {
+  react: /\bcreatePortal\(/,
+  vue: /<Teleport to="body"/,
+  svelte: /use:portal/,
+  angular: /document\.body\.appendChild\(/,
+  lit: /document\.body\.appendChild\(this\)/,
+};
+
+/**
+ * Positive obligations for anchored presence surfaces:
+ *  - consume-anchored-positioning: every framework's content part must
+ *    instantiate its positioning primitive when the contract declares
+ *    `positioning.strategy: "anchored"`.
+ *  - consume-anchored-content-portal: every framework must move the content
+ *    node to document.body when the contract also enables portal.
+ */
+export function checkAnchored(ob) {
+  const results = [];
+  if (ob.anchoredPositioning) {
+    for (const fw of FRAMEWORKS) {
+      const text = frameworkText(fw, ob.component);
+      results.push({
+        component: ob.component,
+        framework: fw.id,
+        obligation: "consume-anchored-positioning",
+        realized: ANCHORED_POSITION_CONSUMPTION[fw.id].test(text),
+      });
+    }
+  }
+  if (ob.anchoredContentPortal) {
+    for (const fw of FRAMEWORKS) {
+      const text = frameworkText(fw, ob.component);
+      results.push({
+        component: ob.component,
+        framework: fw.id,
+        obligation: "consume-anchored-content-portal",
+        realized: ANCHORED_PORTAL_CONSUMPTION[fw.id].test(text),
+      });
+    }
+  }
+  return results;
 }
 
 /**
@@ -499,18 +579,24 @@ if (RUN_DIRECTLY) {
   let portalObligations = 0;
   for (const c of components) {
     const ob = derivePortalObligation(c, corpus);
-    const checks = checkPortal(ob);
+    const checks = [...checkPortal(ob), ...checkAnchored(ob)];
     portalObligations += checks.length;
     for (const chk of checks) {
       if (!chk.realized) {
+        const reason =
+          chk.obligation === "consume-root-portal"
+            ? "root-portal-mechanism-not-consumed"
+            : chk.obligation === "consume-anchored-positioning"
+              ? "anchored-positioning-primitive-not-consumed"
+              : chk.obligation === "consume-anchored-content-portal"
+                ? "anchored-content-portal-not-consumed"
+                : "orphaned-portal-primitive-present";
         failures.push({
           class: "portal",
           component: c,
           detail: chk.obligation,
           framework: chk.framework,
-          reason: chk.obligation === "consume-root-portal"
-            ? "root-portal-mechanism-not-consumed"
-            : "orphaned-portal-primitive-present",
+          reason,
         });
       }
     }

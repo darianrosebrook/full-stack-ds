@@ -25,6 +25,7 @@ import {
   isEventRealized,
   isCompoundRealized,
   checkPortal,
+  checkAnchored,
 } from "./audit.mjs";
 
 let pass = 0;
@@ -201,6 +202,30 @@ check("Tooltip (portal.enabled, anchored) carries NO orphaned portal primitive",
     assert.equal(chk.obligation, "no-orphan-portal-primitive");
     assert.ok(chk.realized, `${chk.framework}: orphaned primitive present`);
   }
+});
+
+console.log("\nanchored realization — positioning + content portal in ALL five frameworks:");
+for (const component of ["Popover", "Tooltip"]) {
+  check(`${component} (anchored + portal) consumes positioning AND content-portal in ALL five frameworks`, () => {
+    const ob = derivePortalObligation(component, corpus);
+    assert.equal(ob.anchoredPositioning, true);
+    assert.equal(ob.anchoredContentPortal, true);
+    const checks = checkAnchored(ob);
+    // 5 positioning + 5 content-portal obligations, all realized.
+    assert.equal(checks.length, 10);
+    for (const chk of checks) {
+      assert.ok(
+        ["consume-anchored-positioning", "consume-anchored-content-portal"].includes(chk.obligation),
+      );
+      assert.ok(chk.realized, `${chk.framework}: ${chk.obligation} not realized`);
+    }
+  });
+}
+check("a root-portal surface derives NO anchored obligations (Dialog)", () => {
+  const ob = derivePortalObligation("Dialog", corpus);
+  assert.equal(ob.anchoredPositioning, false);
+  assert.equal(ob.anchoredContentPortal, false);
+  assert.equal(checkAnchored(ob).length, 0);
 });
 
 // -- SYNTHETIC FALSIFICATION --------------------------------------------------
