@@ -62,7 +62,8 @@
     "e2e:headed": "playwright test --headed",
     "e2e:ui": "playwright test --ui",
     "e2e:report": "playwright show-report",
-    "e2e:rail": "playwright test e2e/runtime-rail.spec.ts"
+    "e2e:rail": "playwright test e2e/runtime-rail.spec.ts",
+    "e2e:render-binding": "node scripts/render-binding-audit/audit.mjs && playwright test e2e/render-binding-rail.spec.ts"
   },
   "dependencies": {
     "@full-stack-ds/angular": "workspace:*",
