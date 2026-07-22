@@ -31,7 +31,7 @@ export type CalendarMode = "single" | "range";
   <table [ngClass]="'calendar__grid'" role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        <ng-container *ngFor="let _ of arrayFromCount(daysShown ?? 42); let index = index">
+        <ng-container *ngFor="let _ of arrayFromCount((daysShown ?? 42)); let index = index">
           <td [ngClass]="'calendar__cell'" role="gridcell" [attr.data-calendar-index]="index">
             <button [ngClass]="'calendar__day'"></button>
           </td>
@@ -67,7 +67,7 @@ export class CalendarComponent {
   classes = computed(() =>
     [
       "calendar",
-      this.mode ? `calendar--${this.mode}` : null,
+      (this.mode ?? "single") ? `calendar--${(this.mode ?? "single")}` : null,
       this.disabled ? "calendar--disabled" : null,
       this.class,
     ].filter(Boolean).join(" "),

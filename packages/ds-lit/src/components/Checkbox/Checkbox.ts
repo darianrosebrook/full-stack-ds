@@ -132,7 +132,7 @@ export class CheckboxElement extends LitElement {
   private computeClasses(): string {
     return [
       "checkbox",
-      this.size ? `checkbox--${this.size}` : null,
+      (this.size ?? "md") ? `checkbox--${(this.size ?? "md")}` : null,
       this.behavior.checked ? "checkbox--checked" : null,
       this.disabled ? "checkbox--disabled" : null,
     ].filter(Boolean).join(" ");

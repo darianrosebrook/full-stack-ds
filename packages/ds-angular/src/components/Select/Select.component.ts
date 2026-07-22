@@ -35,7 +35,7 @@ export type SelectSize = "sm" | "md" | "lg";
         </div>
       </ng-container>
       <div [ngClass]="'select__options'">
-        <ng-container *ngFor="let item of (options ?? []); let index = index">
+        <ng-container *ngFor="let item of ((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}])); let index = index">
           <div [ngClass]="'select__option'" role="option" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
             <span>
               {{ item.label }}
@@ -82,7 +82,7 @@ export class SelectComponent {
   classes = computed(() =>
     [
       "select",
-      this.size ? `select--${this.size}` : null,
+      (this.size ?? "md") ? `select--${(this.size ?? "md")}` : null,
       this.position ? `select--${this.position}` : null,
       this.behavior.open() ? "select--open" : null,
       this.disabled ? "select--disabled" : null,

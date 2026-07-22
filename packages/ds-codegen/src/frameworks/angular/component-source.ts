@@ -184,15 +184,20 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
   }
 
   // Build class modifiers
+  // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: default-aware, see
+  // `angularPropAccessor`'s doc comment.
+  const styledByNameForClasses = new Map(ir.styledProps.map((p) => [p.name, p]));
   const classModifierLines: string[] = [];
   for (const mod of classRecipe.valueModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.propName, styledByNameForClasses);
     classModifierLines.push(
-      `      this.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.propName}}\` : null,`,
+      `      ${acc} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\` : null,`,
     );
   }
   for (const mod of classRecipe.booleanModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.safeName, styledByNameForClasses);
     classModifierLines.push(
-      `      this.${mod.safeName} ? "${classRecipe.base}--${mod.safeName}" : null,`,
+      `      ${acc} ? "${classRecipe.base}--${mod.safeName}" : null,`,
     );
   }
 
@@ -399,15 +404,20 @@ function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
     propLines.push(`  @Input() ${channel.changeHandlerProp}?: (value: ${valueType}) => void;`);
   }
 
+  // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: default-aware, see
+  // `angularPropAccessor`'s doc comment.
+  const styledByNameForClasses = new Map(ir.styledProps.map((p) => [p.name, p]));
   const classModifierLines: string[] = [];
   for (const mod of classRecipe.valueModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.propName, styledByNameForClasses);
     classModifierLines.push(
-      `      this.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.propName}}\` : null,`,
+      `      ${acc} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\` : null,`,
     );
   }
   for (const mod of classRecipe.booleanModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.safeName, styledByNameForClasses);
     classModifierLines.push(
-      `      this.${mod.safeName} ? "${classRecipe.base}--${mod.safeName}" : null,`,
+      `      ${acc} ? "${classRecipe.base}--${mod.safeName}" : null,`,
     );
   }
 
@@ -1177,6 +1187,9 @@ function generateInputProp(p: ResolvedPropIR): string | null {
 
 function generateClassesComputed(ir: ComponentIR): string[] {
   const { classRecipe } = ir;
+  // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: default-aware, see
+  // `angularPropAccessor`'s doc comment.
+  const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
   // Stack-only components read only @Input properties (plain JS, not
   // signals). A computed() would cache the initial value forever; emit a
   // plain method that re-evaluates on every call instead.
@@ -1186,14 +1199,16 @@ function generateClassesComputed(ir: ComponentIR): string[] {
   ];
 
   for (const mod of classRecipe.valueModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.safeName, styledByName);
     lines.push(
-      `    if (this.${mod.safeName}) parts.push(\`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.safeName}}\`);`,
+      `    if (${acc}) parts.push(\`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\`);`,
     );
   }
 
   for (const mod of classRecipe.booleanModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.safeName, styledByName);
     lines.push(
-      `    if (this.${mod.safeName}) parts.push("${classRecipe.base}--${mod.safeName}");`,
+      `    if (${acc}) parts.push("${classRecipe.base}--${mod.safeName}");`,
     );
   }
 
@@ -1399,6 +1414,8 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     resolveSurfaceAutoDismiss(ir) && booleanChannel,
   );
 
+  const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
+
   // ICON-CATALOG-RUNTIME-DELIVERY-01: glyph nodes get a module-scope
   // size-hints const (when the glyph has sizeHints) plus a pair of class
   // getters resolving the requested pixel size and the catalog lookup.
@@ -1413,18 +1430,27 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     const hintsIdent = glyph.sizeHints
       ? `ICON_GLYPH_SIZE_HINTS${suffix}`
       : undefined;
-    // `?? ""` because @Input() size is optional-typed even with a default —
-    // a bare `this.size` index into Record<string, number> fails TS2538.
+    // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: @Input() size is
+    // optional-typed even when the contract declares a default
+    // (class-field initializers only apply once, at construction), so a
+    // bare `this.size` index into Record<string, number> both fails
+    // TS2538 AND, if defaulted with the empty string instead of the
+    // contract default, silently misses the hints map and falls through
+    // to the natural SVG size. Fall back to the resolved prop's contract
+    // default (e.g. Icon's `size` default "md") so undefined resolves to
+    // the same hint react's parameter default resolves to; `""` only
+    // when the prop declares no contract default.
+    const sizeDefaultExpr = styledByName.get(glyph.sizePropName ?? "")?.defaultExpr;
     const pxExpr = iconGlyphPxExpr(
       glyph,
-      glyph.sizePropName ? `(this.${glyph.sizePropName} ?? "")` : undefined,
+      glyph.sizePropName
+        ? `(this.${glyph.sizePropName} ?? ${sizeDefaultExpr ?? '""'})`
+        : undefined,
       hintsIdent,
     );
     const pxGetter = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
     iconGlyphIdents.set(node, { glyphGetter: `iconGlyph${suffix}`, pxGetter });
   }
-
-  const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
 
   const ctx: AngularRenderContext = {
     classRecipe: ir.classRecipe.base,
@@ -1689,11 +1715,15 @@ function generateDomTreeComponent(ir: ComponentIR): string {
     const hintsIdent = glyph.sizeHints
       ? `ICON_GLYPH_SIZE_HINTS${suffix}`
       : undefined;
-    // `?? ""` because @Input() size is optional-typed even with a default —
-    // a bare `this.size` index into Record<string, number> fails TS2538.
+    // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: fall back to the resolved
+    // prop's contract default (not `""`) — see the identical comment on
+    // the sibling collection loop above for the full rationale.
+    const sizeDefaultExpr2 = styledByName.get(glyph.sizePropName ?? "")?.defaultExpr;
     const pxExpr = iconGlyphPxExpr(
       glyph,
-      glyph.sizePropName ? `(this.${glyph.sizePropName} ?? "")` : undefined,
+      glyph.sizePropName
+        ? `(this.${glyph.sizePropName} ?? ${sizeDefaultExpr2 ?? '""'})`
+        : undefined,
       hintsIdent,
     );
     lines.push(``);
@@ -1720,6 +1750,9 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
   const channels = ir.behavior.normalizedChannels;
   const channelValueProps = new Set(channels.map((c) => c.valueProp));
   const channelNames = new Set(channels.map((c) => c.name));
+  // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: default-aware, see
+  // `angularPropAccessor`'s doc comment.
+  const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
   // Angular's computed() only re-runs when tracked signal dependencies
   // change. Components with no behavior channels (e.g. AnimatedCard) read
   // only plain @Input properties — non-signals — so the computation would
@@ -1738,8 +1771,9 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
         `      "${classRecipe.base}",`,
       ];
   for (const mod of classRecipe.valueModifiers) {
+    const acc = defaultAwareAngularClassPropAccessor(mod.propName, styledByName);
     lines.push(
-      `      this.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.propName}}\` : null,`,
+      `      ${acc} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\` : null,`,
     );
   }
   for (const mod of classRecipe.booleanModifiers) {
@@ -1757,8 +1791,9 @@ function generateDomTreeClassesComputed(ir: ComponentIR): string[] {
         `      this.behavior.${mod.propName}() ? "${classRecipe.base}--${mod.safeName}" : null,`,
       );
     } else {
+      const acc = defaultAwareAngularClassPropAccessor(mod.safeName, styledByName);
       lines.push(
-        `      this.${mod.safeName} ? "${classRecipe.base}--${mod.safeName}" : null,`,
+        `      ${acc} ? "${classRecipe.base}--${mod.safeName}" : null,`,
       );
     }
   }
@@ -2143,26 +2178,34 @@ function renderAngularDomNode(
         `Angular emitter: iteration source could not be lowered (source kind=${source.kind})`,
       );
     }
-    // FIX-COUNT-ITERATION-DEFAULT-THREADING-01: a count-kind iteration
-    // source that is a bare prop binding must fall back to the prop's
-    // CONTRACT default when the input resolves to `undefined` at runtime
-    // (parity with react's parameter default / vue's withDefaults /
-    // svelte's `export let`). `arrayFromCount` itself stays a plain
-    // shared helper (undefined -> 0) because it's memoized across every
-    // count-iteration call site in the component and must not hardcode
-    // one specific prop's default; the default is threaded at the call
-    // site instead. Fall back to the helper's own undefined->0 behavior
-    // when the contract declares no default for this prop.
-    const countDefaultExpr =
-      kind === "count" && source.kind === "prop"
-        ? ctx.styledByName.get(source.prop)?.defaultExpr
-        : undefined;
-    const countSourceExpr =
-      countDefaultExpr !== undefined ? `${sourceExpr} ?? ${countDefaultExpr}` : sourceExpr;
+    // FIX-COUNT-ITERATION-DEFAULT-THREADING-01 / FIX-UNDEFINED-PROP-
+    // ACCESSOR-DEFAULTING-01: an array- or count-kind iteration source
+    // that is a bare prop binding must fall back to the prop's CONTRACT
+    // default when the input resolves to `undefined` at runtime (parity
+    // with react's parameter default / vue's withDefaults / svelte's
+    // `export let`). Originally this call site applied its own `??
+    // default` on top of a bare `sourceExpr`; now that
+    // `angularPropAccessor` (reached via `renderAngularBindingValue`) is
+    // itself default-aware, `sourceExpr` already carries `(x ??
+    // contractDefault)` for any prop with a declared default — stacking
+    // a second `?? []` here is redundant at best (the lit sibling of
+    // this fix caught the array-kind case as a `tsc` TS2869 unreachable-
+    // branch error for Select.options/Walkthrough.steps; Angular's
+    // inline template isn't type-checked the same way, but the
+    // redundant fallback is the same defect). `arrayFromCount` itself
+    // stays a plain shared helper (undefined -> 0) because it's memoized
+    // across every count-iteration call site in the component and must
+    // not hardcode one specific prop's default. Bare-prop sources with
+    // NO contract default fall through to the unwrapped/helper
+    // undefined->0 behavior — `sourceExpr` itself already reflects that
+    // (accessor only wraps props that declare a default).
+    const sourceHasAccessorDefault =
+      source.kind === "prop" &&
+      ctx.styledByName.get(source.prop)?.defaultExpr !== undefined;
     const ngForExpr =
       kind === "array"
-        ? `let ${itemVar} of (${sourceExpr} ?? []); let ${indexVar} = index`
-        : `let _ of arrayFromCount(${countSourceExpr}); let ${indexVar} = index`;
+        ? `let ${itemVar} of (${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? []`}); let ${indexVar} = index`
+        : `let _ of arrayFromCount(${sourceExpr}); let ${indexVar} = index`;
     return [
       `${pad}<ng-container *ngFor="${ngForExpr}">`,
       withIfGuard.replace(/^/gm, "  "),
@@ -2252,13 +2295,94 @@ function safePropertyExpr(prop: string): string {
  * name is the author's bug, but our codegen shouldn't silently emit
  * `this.let` for a template local). IR-DOM-ITERATE-CAPABILITY-01.
  */
+/**
+ * FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: mirrors the lit emitter's
+ * `litPropAccessor` defaulting. Angular `@Input() x?: T = default`
+ * applies the class-field default once at construction; a later explicit
+ * `undefined` assignment does not re-run it, so a bare `this.x` read
+ * downstream can observe `undefined` even though the contract declares a
+ * default — unlike react (parameter default), vue (`withDefaults`), and
+ * svelte (`export let`), whose defaulting is parameter-evaluation, not
+ * one-shot field initialization. When the resolved prop carries a
+ * contract `defaultExpr`, wrap the read as `(x ?? default)` so every
+ * downstream consumer — conditional/predicate bindings, class modifiers,
+ * future binding kinds — inherits parity from the accessor primitive.
+ * Props with no contract default keep the bare read.
+ */
 function angularPropAccessor(propName: string, ctx: AngularRenderContext): string {
   // Post-V2 (BINDING-EXPRESSION-V2-01): iteration locals reach the
   // emitter as `iterationLocal`-kind bindings and never as `prop:`
   // bindings; the legacy `iterationScope.has(propName)` shortcut is
   // intentionally removed.
-  void ctx;
-  return safePropertyExpr(propName);
+  return defaultAwareAngularTemplatePropAccessor(propName, ctx.styledByName);
+}
+
+/**
+ * Shared default-wrapping logic behind `angularPropAccessor`, for
+ * ANGULAR TEMPLATE expressions (inline `template:` strings), where bare
+ * identifiers resolve implicitly against the component instance —
+ * `safePropertyExpr` only prefixes `this.` for template-keyword
+ * collisions (`as`, `let`, …). Factored out so the handful of
+ * template-producing call sites that only have `ir.styledProps` in scope
+ * (running before an `AngularRenderContext` exists) can apply the
+ * identical defaulting rule without threading a full render context
+ * through generation functions that don't otherwise need one.
+ *
+ * NOT for TypeScript class-body code (`computed(() => …)`, `classes()`
+ * methods) — those need `defaultAwareAngularClassPropAccessor` below,
+ * which always emits `this.` because bare identifiers don't resolve to
+ * instance fields outside a template.
+ */
+function defaultAwareAngularTemplatePropAccessor(
+  propName: string,
+  styledByName: ReadonlyMap<string, { type: string; defaultExpr?: string }>,
+): string {
+  const bare = safePropertyExpr(propName);
+  const defaultExpr = styledByName.get(propName)?.defaultExpr;
+  return defaultExpr === undefined
+    ? bare
+    : `(${bare} ?? ${angularTemplateSafeDefaultExpr(defaultExpr)})`;
+}
+
+/**
+ * `ResolvedPropIR.defaultExpr` is a TypeScript-source literal (ir.ts
+ * `defaultExpr()`): double-quoted for string props (`"Dismiss"`) or
+ * JSON.stringify'd for array props (`[{"value":"alpha",...}]`, whose keys
+ * and string values are also double-quoted). Every Angular `[attr]="..."`
+ * template binding this accessor feeds into is itself `"`-delimited at
+ * the HTML-tokenizer level — splicing a double-quoted literal in
+ * verbatim prematurely closes that attribute (confirmed via a runtime
+ * probe: OTP's `[attr.aria-label]="(label ?? "One-time password")"`
+ * broke the Angular JIT compiler with "Opening tag not terminated").
+ * This is the exact defect class `renderAngularBindingValue`'s `literal`
+ * case already works around (DOM-PROPERTY-REFLECTION-IR-CHECKBOX-
+ * INDETERMINATE-01) — swap every `"` for `'`. JSON strings never contain
+ * a raw (unescaped) `"` internally, so this is a safe 1:1 substitution
+ * for the string/array shapes `defaultExpr` can take; boolean/number
+ * defaultExprs contain no quotes and pass through unchanged. Known limit
+ * (shared with the `literal` case): a default value containing an
+ * apostrophe would still break — no corpus default does today.
+ */
+function angularTemplateSafeDefaultExpr(defaultExpr: string): string {
+  return defaultExpr.includes('"') ? defaultExpr.replace(/"/g, "'") : defaultExpr;
+}
+
+/**
+ * FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: default-aware prop accessor
+ * for TypeScript CLASS-BODY code (the `classes()` / `computed(() => …)`
+ * class-modifier generators), where a bare identifier does NOT resolve
+ * to the instance field — `this.` is required. Distinct from
+ * `defaultAwareAngularTemplatePropAccessor`, which is for inline
+ * Angular template strings where `this.` is implicit and only added for
+ * keyword collisions.
+ */
+function defaultAwareAngularClassPropAccessor(
+  propName: string,
+  styledByName: ReadonlyMap<string, { type: string; defaultExpr?: string }>,
+): string {
+  const bare = `this.${propName}`;
+  const defaultExpr = styledByName.get(propName)?.defaultExpr;
+  return defaultExpr === undefined ? bare : `(${bare} ?? ${defaultExpr})`;
 }
 
 /**

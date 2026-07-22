@@ -30,7 +30,7 @@ export type AlertNoticeLevel = "page" | "section" | "inline";
   </ng-container>
   <ng-content />
   <ng-container *ngIf="dismissible">
-    <button [ngClass]="'alert-notice__dismiss'" type="button" (click)="onDismiss && onDismiss()" [attr.aria-label]="dismissLabel"></button>
+    <button [ngClass]="'alert-notice__dismiss'" type="button" (click)="onDismiss && onDismiss()" [attr.aria-label]="(dismissLabel ?? 'Dismiss')"></button>
   </ng-container>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

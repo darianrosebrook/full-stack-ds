@@ -51,7 +51,7 @@ export class SwitchComponent {
   classes = computed(() =>
     [
       "switch",
-      this.size ? `switch--${this.size}` : null,
+      (this.size ?? "md") ? `switch--${(this.size ?? "md")}` : null,
       this.behavior.checked() ? "switch--checked" : null,
       this.disabled ? "switch--disabled" : null,
       this.class,

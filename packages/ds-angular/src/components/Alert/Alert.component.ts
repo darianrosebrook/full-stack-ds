@@ -31,7 +31,7 @@ export type AlertLevel = "inline" | "section" | "page";
   </ng-container>
   <ng-content />
   <ng-container *ngIf="dismissible">
-    <fsds-button [ngClass]="'alert__dismiss'" type="button" (click)="onDismiss && onDismiss()" [ariaLabel]="dismissLabel"></fsds-button>
+    <fsds-button [ngClass]="'alert__dismiss'" type="button" (click)="onDismiss && onDismiss()" [ariaLabel]="(dismissLabel ?? 'Dismiss')"></fsds-button>
   </ng-container>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

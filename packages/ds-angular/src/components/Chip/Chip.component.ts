@@ -33,7 +33,7 @@ export type ChipSize = "small" | "medium" | "large";
     </span>
   </fsds-button>
   <ng-container *ngIf="dismissible">
-    <fsds-button [ngClass]="'chip__dismiss'" type="button" variant="ghost" (click)="onDismiss && onDismiss()" [disabled]="disabled" [ariaLabel]="dismissLabel"></fsds-button>
+    <fsds-button [ngClass]="'chip__dismiss'" type="button" variant="ghost" (click)="onDismiss && onDismiss()" [disabled]="disabled" [ariaLabel]="(dismissLabel ?? 'Remove')"></fsds-button>
   </ng-container>
 </span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -41,7 +41,7 @@ export class CodeSnippetComponent {
   classes(): string {
     return [
       "code-snippet",
-      this.as ? `code-snippet--${this.as}` : null,
+      (this.as ?? "code") ? `code-snippet--${(this.as ?? "code")}` : null,
       this.class,
     ].filter(Boolean).join(" ");
   }

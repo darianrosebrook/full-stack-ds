@@ -24,7 +24,7 @@ export type SkeletonRadius = "sm" | "md" | "lg";
   selector: "fsds-skeleton",
   standalone: true,
   imports: [NgClass],
-  template: `<div [ngClass]="classes()" [attr.role]="(decorative ? 'presentation' : 'status')" [attr.aria-busy]="(decorative ? 'false' : 'true')" [attr.aria-hidden]="(decorative ? 'true' : 'false')" [attr.aria-label]="ariaLabel"></div>`,
+  template: `<div [ngClass]="classes()" [attr.role]="((decorative ?? true) ? 'presentation' : 'status')" [attr.aria-busy]="((decorative ?? true) ? 'false' : 'true')" [attr.aria-hidden]="((decorative ?? true) ? 'true' : 'false')" [attr.aria-label]="ariaLabel"></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkeletonComponent {
@@ -41,9 +41,9 @@ export class SkeletonComponent {
   classes(): string {
     return [
       "skeleton",
-      this.variant ? `skeleton--${this.variant}` : null,
-      this.animate ? `skeleton--${this.animate}` : null,
-      this.density ? `skeleton--${this.density}` : null,
+      (this.variant ?? "block") ? `skeleton--${(this.variant ?? "block")}` : null,
+      (this.animate ?? "shimmer") ? `skeleton--${(this.animate ?? "shimmer")}` : null,
+      (this.density ?? "regular") ? `skeleton--${(this.density ?? "regular")}` : null,
       this.class,
     ].filter(Boolean).join(" ");
   }

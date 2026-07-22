@@ -114,7 +114,7 @@ export class ToggleSwitchElement extends LitElement {
   private computeClasses(): string {
     return [
       "toggle-switch",
-      this.size ? `toggle-switch--${this.size}` : null,
+      (this.size ?? "medium") ? `toggle-switch--${(this.size ?? "medium")}` : null,
       this.behavior.checked ? "toggle-switch--checked" : null,
       this.disabled ? "toggle-switch--disabled" : null,
     ].filter(Boolean).join(" ");

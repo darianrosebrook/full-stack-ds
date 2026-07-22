@@ -223,14 +223,14 @@ export class SkeletonElement extends LitElement {
   private computeClasses(): string {
     return [
       "skeleton",
-      this.variant ? `skeleton--${this.variant}` : null,
-      this._animate ? `skeleton--${this._animate}` : null,
-      this.density ? `skeleton--${this.density}` : null,
+      (this.variant ?? "block") ? `skeleton--${(this.variant ?? "block")}` : null,
+      (this._animate ?? "shimmer") ? `skeleton--${(this._animate ?? "shimmer")}` : null,
+      (this.density ?? "regular") ? `skeleton--${(this.density ?? "regular")}` : null,
     ].filter(Boolean).join(" ");
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" .role=${(this.decorative ? "presentation" : "status")} aria-busy=${(this.decorative ? "false" : "true")} aria-hidden=${(this.decorative ? "true" : "false")} aria-label=${ifDefined(this.ariaLabel ?? undefined)}></div>`;
+    return html`<div class="${this.computeClasses()}" .role=${((this.decorative ?? true) ? "presentation" : "status")} aria-busy=${((this.decorative ?? true) ? "false" : "true")} aria-hidden=${((this.decorative ?? true) ? "true" : "false")} aria-label=${ifDefined(this.ariaLabel ?? undefined)}></div>`;
   }
 }
 

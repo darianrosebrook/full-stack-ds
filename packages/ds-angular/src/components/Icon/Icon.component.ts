@@ -42,13 +42,13 @@ export class IconComponent {
   classes(): string {
     return [
       "icon",
-      this.size ? `icon--${this.size}` : null,
+      (this.size ?? "md") ? `icon--${(this.size ?? "md")}` : null,
       this.class,
     ].filter(Boolean).join(" ");
   }
 
   get iconGlyphPx(): number | undefined {
-    return ICON_GLYPH_SIZE_HINTS[(this.size ?? "")];
+    return ICON_GLYPH_SIZE_HINTS[(this.size ?? "md")];
   }
 
   get iconGlyph() {

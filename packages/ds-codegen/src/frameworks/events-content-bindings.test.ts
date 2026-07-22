@@ -125,8 +125,10 @@ describe("IR-DOM-BINDING-CAPABILITY-01: events + content lowering", () => {
       expect(src).not.toMatch(/onClick="[^"]+"/);
     });
 
-    it("keeps the accessible label as `[attr.aria-label]`", () => {
-      expect(src).toMatch(/\[attr\.aria-label\]="dismissLabel"/);
+    it("keeps the accessible label as `[attr.aria-label]` with the contract default applied", () => {
+      // The default-aware accessor re-quotes the default for the
+      // "-delimited Angular template attribute position.
+      expect(src).toMatch(/\[attr\.aria-label\]="\(dismissLabel \?\? 'Dismiss'\)"/);
     });
   });
 

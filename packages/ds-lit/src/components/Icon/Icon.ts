@@ -92,12 +92,12 @@ export class IconElement extends LitElement {
   private computeClasses(): string {
     return [
       "icon",
-      this.size ? `icon--${this.size}` : null,
+      (this.size ?? "md") ? `icon--${(this.size ?? "md")}` : null,
     ].filter(Boolean).join(" ");
   }
 
   override render() {
-    const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[(this.size ?? "")];
+    const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[(this.size ?? "md")];
     const iconGlyph = resolveIcon(this.name, iconGlyphPx ?? Number.NaN);
     return html`<span class="${this.computeClasses()}" aria-hidden="true">
   ${iconGlyph ? svg`

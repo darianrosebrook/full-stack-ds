@@ -105,7 +105,7 @@ export class NavListElement extends LitElement {
   private computeClasses(): string {
     return [
       "nav-list",
-      this.orientation ? `nav-list--${this.orientation}` : null,
+      (this.orientation ?? "vertical") ? `nav-list--${(this.orientation ?? "vertical")}` : null,
     ].filter(Boolean).join(" ");
   }
 

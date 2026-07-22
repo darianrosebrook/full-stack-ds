@@ -97,7 +97,7 @@ export class StatElement extends LitElement {
   private computeClasses(): string {
     return [
       "stat",
-      this.size ? `stat--${this.size}` : null,
+      (this.size ?? "md") ? `stat--${(this.size ?? "md")}` : null,
       this.trend ? `stat--${this.trend}` : null,
     ].filter(Boolean).join(" ");
   }

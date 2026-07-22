@@ -22,9 +22,9 @@ export type OTPMode = "numeric" | "alphanumeric";
   selector: "fsds-otp",
   standalone: true,
   imports: [NgClass, NgFor],
-  template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="label" aria-describedby="otp-error-id">
+  template: `<div [ngClass]="classes()" role="group" [attr.aria-label]="(label ?? 'One-time password')" aria-describedby="otp-error-id">
   <div [ngClass]="'otp__group'">
-    <ng-container *ngFor="let _ of arrayFromCount(length ?? 6); let index = index">
+    <ng-container *ngFor="let _ of arrayFromCount((length ?? 6)); let index = index">
       <input [ngClass]="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" [disabled]="disabled" [attr.aria-readonly]="readOnly" [attr.data-otp-index]="index" />
     </ng-container>
   </div>
@@ -54,7 +54,7 @@ export class OTPComponent {
   classes = computed(() =>
     [
       "otp",
-      this.mode ? `otp--${this.mode}` : null,
+      (this.mode ?? "numeric") ? `otp--${(this.mode ?? "numeric")}` : null,
       this.disabled ? "otp--disabled" : null,
       this.class,
     ].filter(Boolean).join(" "),

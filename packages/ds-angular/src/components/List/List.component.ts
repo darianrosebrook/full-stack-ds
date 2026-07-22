@@ -49,8 +49,8 @@ export class ListComponent {
     return [
       "list",
       this.as ? `list--${this.as}` : null,
-      this.variant ? `list--variant-${this.variant}` : null,
-      this.marker ? `list--marker-${this.marker}` : null,
+      (this.variant ?? "default") ? `list--variant-${(this.variant ?? "default")}` : null,
+      (this.marker ?? "default") ? `list--marker-${(this.marker ?? "default")}` : null,
       this.spacing ? `list--spacing-${this.spacing}` : null,
       this.size ? `list--size-${this.size}` : null,
       this.class,

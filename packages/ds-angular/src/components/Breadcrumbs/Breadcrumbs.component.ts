@@ -21,7 +21,7 @@ import { StackComponent } from "../../primitives/index.js";
   selector: "fsds-breadcrumbs",
   standalone: true,
   imports: [NgClass],
-  template: `<nav [ngClass]="classes()" [attr.aria-label]="ariaLabel">
+  template: `<nav [ngClass]="classes()" [attr.aria-label]="(ariaLabel ?? 'Breadcrumb')">
   <ol [ngClass]="'breadcrumbs__list'">
     <ng-content />
   </ol>

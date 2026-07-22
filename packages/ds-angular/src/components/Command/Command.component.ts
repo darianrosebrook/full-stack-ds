@@ -27,10 +27,10 @@ import { useCommand } from "./useCommand.js";
     <div [ngClass]="'command__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpen(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.open()">
-    <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="label">
+    <div [ngClass]="'command__dialog'" role="dialog" aria-modal="true" [attr.aria-label]="(label ?? 'Command palette')">
       <div [ngClass]="'command__inputWrapper'">
         <span [ngClass]="'command__searchIcon'" aria-hidden="true"></span>
-        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [placeholder]="placeholder" [value]="behavior.search()" />
+        <input [ngClass]="'command__input'" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" (change)="handleSearchChange($event)" [attr.aria-expanded]="behavior.open()" [placeholder]="(placeholder ?? 'Search...')" [value]="behavior.search()" />
       </div>
       <div [ngClass]="'command__list'" role="listbox" id="fsds-command-listbox">
         <div [ngClass]="'command__empty'"></div>

@@ -239,7 +239,7 @@ export class CardElement extends LitElement {
     const classes = {
       'card': true,
       [`card--${this.status}`]: !!this.status,
-      [`card--${this.density}`]: !!this.density,
+      [`card--${(this.density ?? "default")}`]: !!(this.density ?? "default"),
       'card--interactive': !!this.interactive,
     };
     return html`<fsds-stack role="group" class=${classMap(classes)}><slot></slot></fsds-stack>`;

@@ -141,4 +141,37 @@ describe("Icon — catalog glyph rendering (ICON-CATALOG-RUNTIME-DELIVERY-01)", 
     expect(root.querySelector("svg")).toBeNull();
   });
 });
+
+describe("Icon — FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: undefined size resolves to contract default", () => {
+  it("an explicitly-undefined size falls back to the md hint (20px), not the natural SVG size", async () => {
+    // A `@property() size?: T = "md"` class-field default only applies
+    // once, at construction. Simulate a consumer setting `size` back to
+    // `undefined` post-construction (e.g. a controlled prop update) and
+    // assert the rendered width still resolves via the md hint — proving
+    // the accessor re-applies the contract default on every read, not
+    // just at construction.
+    const element = document.createElement("fsds-icon") as HTMLElement & {
+      size?: string;
+      name?: string;
+      updateComplete?: Promise<unknown>;
+      requestUpdate?: () => void;
+    };
+    document.body.append(element);
+    await customElements.whenDefined("fsds-icon");
+    element.name = "check";
+    element.requestUpdate?.();
+    await element.updateComplete;
+    // Explicitly clobber to undefined post-construction.
+    element.size = undefined;
+    element.requestUpdate?.();
+    await element.updateComplete;
+
+    const svg = element.shadowRoot!.querySelector('svg[data-fsds-icon="check"]');
+    expect(svg).not.toBeNull();
+    // md's authored glyph is 16-grid but renders at the md hint, 20px —
+    // matching react's parameter-default resolution for the same input.
+    expect(svg!.getAttribute("width")).toBe("20");
+    expect(svg!.getAttribute("height")).toBe("20");
+  });
+});
 // @custom:end

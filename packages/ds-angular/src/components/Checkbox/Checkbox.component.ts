@@ -46,7 +46,7 @@ export class CheckboxComponent {
   classes = computed(() =>
     [
       "checkbox",
-      this.size ? `checkbox--${this.size}` : null,
+      (this.size ?? "md") ? `checkbox--${(this.size ?? "md")}` : null,
       this.behavior.checked() ? "checkbox--checked" : null,
       this.disabled ? "checkbox--disabled" : null,
       this.class,

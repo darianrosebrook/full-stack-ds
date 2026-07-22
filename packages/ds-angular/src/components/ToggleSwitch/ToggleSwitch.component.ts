@@ -45,7 +45,7 @@ export class ToggleSwitchComponent {
   classes = computed(() =>
     [
       "toggle-switch",
-      this.size ? `toggle-switch--${this.size}` : null,
+      (this.size ?? "medium") ? `toggle-switch--${(this.size ?? "medium")}` : null,
       this.behavior.checked() ? "toggle-switch--checked" : null,
       this.disabled ? "toggle-switch--disabled" : null,
       this.class,

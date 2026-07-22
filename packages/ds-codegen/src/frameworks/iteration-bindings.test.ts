@@ -1091,13 +1091,17 @@ describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: conditional content lowering", (
 
   it("Angular lowers conditional content to a template ternary", () => {
     const src = generateAngularComponentSource(ir);
-    expect(src).toContain("{{ (behavior.expanded() ? collapseText : expandText) }}");
+    expect(src).toContain(
+      "{{ (behavior.expanded() ? (collapseText ?? 'Show less') : (expandText ?? 'Show more')) }}",
+    );
     expect(src).toContain('(click)="behavior.setExpanded(!behavior.expanded())"');
   });
 
   it("Lit lowers conditional content to a template ternary", () => {
     const src = generateLitComponentSource(ir);
-    expect(src).toContain("${(this.behavior.expanded ? this.collapseText : this.expandText)}");
+    expect(src).toContain(
+      '${(this.behavior.expanded ? (this.collapseText ?? "Show less") : (this.expandText ?? "Show more"))}',
+    );
     expect(src).toContain("@click=${() => this.behavior.setExpanded(!this.behavior.expanded)}");
   });
 
@@ -1127,11 +1131,13 @@ describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: dynamic root role lowering", () 
     expect(generateSvelteComponentSource(ir)).toContain(
       'role={(decorative ? "presentation" : "status")}',
     );
+    // lit/angular read class fields, not defaulted parameters, so the
+    // accessor must re-apply the contract default (true) on undefined.
     expect(generateAngularComponentSource(ir)).toContain(
-      "[attr.role]=\"(decorative ? 'presentation' : 'status')\"",
+      "[attr.role]=\"((decorative ?? true) ? 'presentation' : 'status')\"",
     );
     expect(generateLitComponentSource(ir)).toContain(
-      '.role=${(this.decorative ? "presentation" : "status")}',
+      '.role=${((this.decorative ?? true) ? "presentation" : "status")}',
     );
     expect(generateReactNativeComponentSource(ir).componentFile).toContain(
       'accessibilityRole={(((decorative ? "presentation" : "status") === "presentation" ? "none" : (decorative ? "presentation" : "status")) as AccessibilityRole)}',
@@ -1195,15 +1201,16 @@ const COUNT_CONTRACT_WITH_DEFAULT: ComponentContract = {
 describe("FIX-COUNT-ITERATION-DEFAULT-THREADING-01: count-iteration default threading", () => {
   const ir = buildComponentIR(COUNT_CONTRACT_WITH_DEFAULT);
 
-  it("Lit: threads the contract default into the count fallback (this.count ?? 6, not ?? 0)", () => {
+  it("Lit: threads the contract default into the count fallback ((this.count ?? 6), not ?? 0)", () => {
     const src = generateLitComponentSource(ir);
-    expect(src).toMatch(/Array\.from\(\{ length: this\.count \?\? 6 \}/);
+    // The default-aware accessor parenthesizes the defaulted read.
+    expect(src).toMatch(/Array\.from\(\{ length: \(this\.count \?\? 6\) \}/);
     expect(src).not.toMatch(/Array\.from\(\{ length: this\.count \?\? 0 \}/);
   });
 
-  it("Angular: threads the contract default at the arrayFromCount call site (count ?? 6, not bare count)", () => {
+  it("Angular: threads the contract default at the arrayFromCount call site ((count ?? 6), not bare count)", () => {
     const src = generateAngularComponentSource(ir);
-    expect(src).toMatch(/\*ngFor="let _ of arrayFromCount\(count \?\? 6\); let index = index"/);
+    expect(src).toMatch(/\*ngFor="let _ of arrayFromCount\(\(count \?\? 6\)\); let index = index"/);
     expect(src).not.toMatch(/\*ngFor="let _ of arrayFromCount\(count\); let index = index"/);
   });
 

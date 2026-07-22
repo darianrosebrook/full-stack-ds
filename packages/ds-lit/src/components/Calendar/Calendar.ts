@@ -202,7 +202,7 @@ export class CalendarElement extends LitElement {
   private computeClasses(): string {
     return [
       "calendar",
-      this.mode ? `calendar--${this.mode}` : null,
+      (this.mode ?? "single") ? `calendar--${(this.mode ?? "single")}` : null,
       this.disabled ? "calendar--disabled" : null,
     ].filter(Boolean).join(" ");
   }
@@ -217,7 +217,7 @@ export class CalendarElement extends LitElement {
   <table class=${'calendar__grid'} role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        ${Array.from({ length: this.daysShown ?? 42 }, (_, index) => html`
+        ${Array.from({ length: (this.daysShown ?? 42) }, (_, index) => html`
         <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${index}>
           <button class=${'calendar__day'}></button>
         </td>

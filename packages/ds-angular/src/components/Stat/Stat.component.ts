@@ -34,7 +34,7 @@ export class StatComponent {
   classes(): string {
     return [
       "stat",
-      this.size ? `stat--${this.size}` : null,
+      (this.size ?? "md") ? `stat--${(this.size ?? "md")}` : null,
       this.trend ? `stat--${this.trend}` : null,
       this.class,
     ].filter(Boolean).join(" ");

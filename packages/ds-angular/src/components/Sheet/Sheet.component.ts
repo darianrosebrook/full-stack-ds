@@ -27,7 +27,7 @@ export type SheetSide = "top" | "right" | "bottom" | "left";
     <div [ngClass]="'sheet__overlay'" aria-hidden="true" role="presentation" (click)="behavior.setOpenness(false)"></div>
   </ng-container>
   <ng-container *ngIf="behavior.openness()">
-    <div [ngClass]="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" [attr.data-side]="side">
+    <div [ngClass]="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" [attr.data-side]="(side ?? 'right')">
       <div [ngClass]="'sheet__header'">
         <h2 [ngClass]="'sheet__title'">
           <ng-content select="[slot=title]" />
@@ -65,7 +65,7 @@ export class SheetComponent {
   classes = computed(() =>
     [
       "sheet",
-      this.side ? `sheet--${this.side}` : null,
+      (this.side ?? "right") ? `sheet--${(this.side ?? "right")}` : null,
       this.behavior.openness() ? "sheet--open" : null,
       this.class,
     ].filter(Boolean).join(" "),
