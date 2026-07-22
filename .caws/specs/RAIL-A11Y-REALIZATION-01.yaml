@@ -2,10 +2,11 @@ id: RAIL-A11Y-REALIZATION-01
 title: 'A11y-realization rail: contract-derived accessibility obligations verified in committed generated output, family-neutral'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: a11y-rail
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge a11y-rail at 4cf16a0caeaf957576182e8a65333375469de897'
 created_at: '2026-07-22T21:48:55.220Z'
-updated_at: '2026-07-22T21:48:56.792Z'
+updated_at: '2026-07-22T21:59:20.696Z'
 blast_radius:
   modules:
     - 'scripts/a11y-realization-audit (new rail: derive + verify + ledger)'
