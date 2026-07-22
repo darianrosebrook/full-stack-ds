@@ -27,10 +27,39 @@
       "notes": "Merged with stack layout classes."
     },
     {
+      "name": "role",
+      "kind": "string",
+      "notes": "Forwarded to the host element so generated components can declare ARIA role in one place (e.g. role=\"group\" on a Card shell)."
+    },
+    {
+      "name": "data-testid",
+      "kind": "string",
+      "notes": "Forwarded to the host element for test targeting."
+    },
+    {
       "name": "children",
       "kind": "children"
     }
   ],
+  "layout": {
+    "classPrefix": "stack",
+    "displayByMode": {
+      "stack": "flex",
+      "inline-stack": "inline-flex",
+      "block": "block",
+      "inline": "inline",
+      "contents": "contents",
+      "native": null
+    },
+    "axisByVariant": {
+      "vertical": "column",
+      "horizontal": "row"
+    },
+    "gap": {
+      "token": "spacing.gap.stack",
+      "cssVar": "--fsds-semantic-spacing-gap-stack"
+    }
+  },
   "implementation": {
     "targets": {
       "react": {

@@ -18,10 +18,12 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import type { PrimitiveIR } from "../../primitive-contract.js";
 import { generateLitComponentSource } from "./component-source.js";
 import { generateLitHookSource } from "./hook-source.js";
 import { generateLitBarrel } from "./barrel.js";
 import { generateLitTest } from "./tests.js";
+import { generateLitStackPrimitiveSource } from "./primitive-source.js";
 import {
   generateLitSurfaceFiles,
   isSurfaceComponent,
@@ -116,6 +118,15 @@ export function createLitEmitter(): FrameworkEmitter {
           relativePath: `${ir.name}/${ir.name}Behavior.ts`,
           contents: source,
           preservable: true,
+        },
+      ];
+    },
+
+    emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      return [
+        {
+          relativePath: `${ir.name}.ts`,
+          contents: generateLitStackPrimitiveSource(ir),
         },
       ];
     },

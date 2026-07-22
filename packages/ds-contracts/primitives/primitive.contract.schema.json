@@ -4,7 +4,7 @@
   "title": "Layout primitive contract",
   "description": "Canonical definition of the shared layout primitive (Stack) per framework target.",
   "type": "object",
-  "required": ["name", "description", "props", "implementation"],
+  "required": ["name", "description", "props", "layout", "implementation"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
@@ -14,6 +14,44 @@
       "description": "PascalCase primitive name (e.g. Stack)."
     },
     "description": { "type": "string" },
+    "layout": {
+      "type": "object",
+      "description": "Framework-neutral layout facts the emitters lower into idiomatic per-target primitives. The class prefix, display map, axis map, and gap token binding live here so no emitter carries hand-authored Stack lore.",
+      "required": ["classPrefix", "displayByMode", "axisByVariant"],
+      "additionalProperties": false,
+      "properties": {
+        "classPrefix": {
+          "type": "string",
+          "description": "BEM block name for the primitive's layout classes (e.g. \"stack\"). Emitters derive block/modifier class names from this; consumers never depend on it."
+        },
+        "displayByMode": {
+          "type": "object",
+          "description": "layoutMode value -> CSS display value. `null` means the host keeps its own display (the `native` mode).",
+          "additionalProperties": { "type": ["string", "null"] }
+        },
+        "axisByVariant": {
+          "type": "object",
+          "description": "layoutVariant value -> CSS flex-direction, applied only under the axis-bearing display modes (stack / inline-stack).",
+          "additionalProperties": { "type": "string" }
+        },
+        "gap": {
+          "type": "object",
+          "description": "Token-driven inter-child spacing. `cssVar` is the resolved semantic token custom property the primitive's gap reads from; there is no free-form spacing prop.",
+          "required": ["cssVar"],
+          "additionalProperties": false,
+          "properties": {
+            "token": {
+              "type": "string",
+              "description": "Source semantic token path (documentation of provenance), e.g. spacing.gap.stack."
+            },
+            "cssVar": {
+              "type": "string",
+              "description": "Resolved CSS custom property the gap reads, e.g. --fsds-semantic-spacing-gap-stack."
+            }
+          }
+        }
+      }
+    },
     "props": {
       "type": "array",
       "minItems": 1,
