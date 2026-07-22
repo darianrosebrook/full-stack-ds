@@ -23,10 +23,12 @@ import type {
   BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
+  IdRefIR,
   IterationIR,
   NormalizedChannelIR,
   PropTypeIR,
 } from "../../ir.js";
+import { componentNeedsInstanceId } from "../../id-relationships.js";
 import {
   hasChildrenPlaceholder,
   TABLE_COMPOSITION_TAGS,
@@ -1364,9 +1366,24 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
   const hasHook = channels.length > 0;
   const hookVar = "behavior";
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 facts for this component.
+  const needsInstanceId = componentNeedsInstanceId(ir);
+  const assocProvides = ir.fieldAssociation?.provides;
+  const assocConsumes = ir.fieldAssociation?.consumes === true;
+
   const importLines: string[] = [];
   if (hasHook) {
     importLines.push(`import { use${ir.name} } from "./use${ir.name}.svelte.js";`);
+  }
+  if (assocProvides) {
+    importLines.push(
+      `import { provideFieldAssociation } from "../../primitives/index.js";`,
+    );
+  }
+  if (assocConsumes) {
+    importLines.push(
+      `import { useFieldAssociation } from "../../primitives/index.js";`,
+    );
   }
   const autoDismissPolicy = resolveSurfaceAutoDismiss(ir);
   const autoDismissChannel =
@@ -1521,6 +1538,27 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     `);`,
   ].join("\n");
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01 script body: `$props.id()` instance
+  // namespace, provider `$derived` value exposed through a context GETTER
+  // (reads stay reactive), consumer injection.
+  const fieldAssocLines: string[] = [];
+  if (needsInstanceId) {
+    fieldAssocLines.push(`const instanceId = $props.id();`);
+  }
+  if (assocProvides) {
+    fieldAssocLines.push(
+      `const fieldAssociationValue = $derived({`,
+      `  controlId: ${svelteGeneratedIdExpr(assocProvides.controlSlug)},`,
+      `  describedBy: ${svelteIdRefListExpr(assocProvides.describedBy, undefined)},`,
+      `});`,
+      `provideFieldAssociation(() => fieldAssociationValue);`,
+    );
+  }
+  if (assocConsumes) {
+    fieldAssocLines.push(`const fieldAssociation = useFieldAssociation();`);
+  }
+  const fieldAssocBody = fieldAssocLines.join("\n");
+
   const overlayClickTrigger = ir.behavior.normalizedDismissalTriggers.find(
     (t) => t.event === "overlayClick",
   );
@@ -1530,6 +1568,7 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
     channelByName,
     hookVar,
     isRoot: true,
+    fieldAssociationConsumer: assocConsumes,
     rootUsePortal,
     autoDismissPause: Boolean(autoDismissPolicy && autoDismissChannel),
     rootRole: ir.root.effectiveRole ?? undefined,
@@ -1574,6 +1613,16 @@ function generateSvelteDomTreeComponentSource(ir: ComponentIR): string {
       : []),
     { kind: "generated", id: "classes", body: classesBody },
     blank(),
+    ...(fieldAssocBody
+      ? [
+          {
+            kind: "generated" as const,
+            id: "fieldAssociation",
+            body: fieldAssocBody,
+          },
+          blank(),
+        ]
+      : []),
     { kind: "custom", id: "trailing", body: "" },
   ];
 
@@ -1594,6 +1643,12 @@ interface SvelteRenderContext {
   isRoot: boolean;
   /** When true, attach `use:portal` to the root so it relocates to body. */
   rootUsePortal?: boolean;
+  /**
+   * True when the component consumes ambient field association
+   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — the root binds `id` /
+   * `aria-describedby` from the injected context getter.
+   */
+  fieldAssociationConsumer?: boolean;
   /** When true, attach auto-dismiss pause listeners to the root element. */
   autoDismissPause?: boolean;
   // `a11y.role` from the contract — emitted on the root element when set.
@@ -1629,6 +1684,51 @@ interface SvelteRenderContext {
    * `iterationLocal`-kind bindings.
    */
   enclosingIteration?: IterationIR;
+}
+
+/**
+ * FEAT-A11Y-LABEL-ID-ASSOCIATION-01 — Svelte lowering of generated
+ * relationship ids. Ids derive from the `$props.id()` instance namespace.
+ * Slot gates are the bare snippet-prop identifiers (named slots ARE props
+ * in Svelte 5), so presence checks are plain truthiness.
+ */
+function svelteGeneratedIdExpr(slug: string): string {
+  return `\`\${instanceId}-${slug}\``;
+}
+
+function svelteIdRefGuardExpr(ref: IdRefIR): string | undefined {
+  const conds: string[] = [];
+  if (ref.slotGate) conds.push(jsAccessorFor(ref.slotGate));
+  if (ref.when) {
+    const accessor = jsAccessorFor(ref.when.prop);
+    if (ref.when.op === "eq") {
+      conds.push(
+        `${accessor} ${ref.when.negated ? "!==" : "==="} '${ref.when.value}'`,
+      );
+    } else {
+      conds.push(ref.when.negated ? `!${accessor}` : accessor);
+    }
+  }
+  return conds.length > 0 ? conds.join(" && ") : undefined;
+}
+
+function svelteIdRefListExpr(
+  refs: IdRefIR[],
+  passthroughProp: string | undefined,
+): string {
+  if (refs.length === 0 && !passthroughProp) return "undefined";
+  if (refs.length === 1 && !passthroughProp) {
+    const guard = svelteIdRefGuardExpr(refs[0]);
+    const id = svelteGeneratedIdExpr(refs[0].slug);
+    return guard ? `${guard} ? ${id} : undefined` : id;
+  }
+  const parts = refs.map((ref) => {
+    const guard = svelteIdRefGuardExpr(ref);
+    const id = svelteGeneratedIdExpr(ref.slug);
+    return guard ? `${guard} ? ${id} : null` : id;
+  });
+  if (passthroughProp) parts.push(jsAccessorFor(passthroughProp));
+  return `[${parts.join(", ")}].filter(Boolean).join(' ') || undefined`;
 }
 
 function renderSvelteDomNode(
@@ -1734,6 +1834,17 @@ function renderSvelteDomNode(
     attrs.push(rendered);
   }
 
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated per-instance id on
+  // relationship targets, and the lowered idref attributes on sources.
+  if (node.generatedIdSlug !== undefined) {
+    attrs.push(`id={${svelteGeneratedIdExpr(node.generatedIdSlug)}}`);
+  }
+  for (const refAttr of node.idRefAttrs) {
+    attrs.push(
+      `${refAttr.attribute}={${svelteIdRefListExpr(refAttr.refs, refAttr.passthroughProp)}}`,
+    );
+  }
+
   // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to Svelte 5's
   // `style:--fsds-foo={expr}` directive form, one per binding. This
   // idiomatic form sets a single CSS custom property without touching
@@ -1785,6 +1896,12 @@ function renderSvelteDomNode(
     // a11y.role and an explicit attrs.role on the root node).
     if (ctx.rootRole && !("role" in node.attrs) && !("role" in node.bindings)) {
       attrs.push(`role="${ctx.rootRole}"`);
+    }
+    // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: a participating control binds the
+    // ambient field association (context getter) on its root element.
+    if (ctx.fieldAssociationConsumer) {
+      attrs.push(`id={fieldAssociation?.().controlId}`);
+      attrs.push(`aria-describedby={fieldAssociation?.().describedBy}`);
     }
     if (ctx.overlayClickSetter) {
       const enabledVar = ctx.overlayClickEnabledProp

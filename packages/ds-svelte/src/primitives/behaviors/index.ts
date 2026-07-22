@@ -8,6 +8,11 @@ export { createPortal } from './createPortal.svelte.js';
 export { portal } from './portal.svelte.js';
 export type { PortalActionOptions } from './portal.svelte.js';
 export { createCompoundContext } from './createCompoundContext.svelte.js';
+export {
+  provideFieldAssociation,
+  useFieldAssociation,
+} from './fieldAssociation.js';
+export type { FieldAssociation } from './fieldAssociation.js';
 export type {
   ControllableStateOptions,
   ControllableStateResult,

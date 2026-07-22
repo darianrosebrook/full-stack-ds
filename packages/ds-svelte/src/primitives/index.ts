@@ -9,6 +9,8 @@ export {
   createPortal,
   portal,
   createCompoundContext,
+  provideFieldAssociation,
+  useFieldAssociation,
 } from './behaviors/index.js';
 export type {
   ControllableStateOptions,

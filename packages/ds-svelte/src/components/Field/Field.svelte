@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useField } from "./useField.svelte.js";
+import { provideFieldAssociation } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -58,6 +59,15 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+const fieldAssociationValue = $derived({
+  controlId: `${instanceId}-control`,
+  describedBy: [help && status !== 'invalid' ? `${instanceId}-help` : null, error && status === 'invalid' ? `${instanceId}-error` : null].filter(Boolean).join(' ') || undefined,
+});
+provideFieldAssociation(() => fieldAssociationValue);
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -65,7 +75,7 @@ const classes = $derived(
 
 <div class={classes} role="group">
   <div class={'field__header'}>
-    <label class={'field__label'}>
+    <label class={'field__label'} for={`${instanceId}-control`}>
       {@render label?.()}
     </label>
   </div>
@@ -73,10 +83,10 @@ const classes = $derived(
     {@render control?.()}
   </div>
   <div class={'field__meta'}>
-    <span class={'field__help'}>
+    <span class={'field__help'} id={`${instanceId}-help`}>
       {@render help?.()}
     </span>
-    <span class={'field__error'}>
+    <span class={'field__error'} id={`${instanceId}-error`}>
       {@render error?.()}
     </span>
     {#if validating}

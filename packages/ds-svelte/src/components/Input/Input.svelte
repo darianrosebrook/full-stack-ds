@@ -1,6 +1,7 @@
 <script lang="ts">
 // @generated:start imports
 import { useInput } from "./useInput.svelte.js";
+import { useFieldAssociation } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -43,9 +44,13 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const fieldAssociation = useFieldAssociation();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
-<input class={classes} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" />
+<input class={classes} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} value={behavior.value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" id={fieldAssociation?.().controlId} aria-describedby={fieldAssociation?.().describedBy} />
