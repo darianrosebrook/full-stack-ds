@@ -108,7 +108,7 @@ export function Toast({
   duration,
   ...rest
 }: ToastProps) {
-  const { open, setOpen } = useToast({
+  const { open, setOpen, renderInPortal } = useToast({
     open: controlledOpen,
     onOpenChange,
   });
@@ -129,24 +129,26 @@ export function Toast({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
-    {open && (
-      <div className="toast__item" role="status">
-        <div className="toast__row">
-          {title && (
-            <div className="toast__title" />
-          )}
-          <div className="toast__description">
-            {children}
+    renderInPortal(
+    <Stack layout="native" className={`${classNames}`} aria-label="Notifications" aria-live={politeness} role="alert" data-testid={testId} {...autoDismissPauseProps} {...rest}>
+      {open && (
+        <div className="toast__item" role="status">
+          <div className="toast__row">
+            {title && (
+              <div className="toast__title" />
+            )}
+            <div className="toast__description">
+              {children}
+            </div>
+            {action && (
+              <div className="toast__action" />
+            )}
+            <button className="toast__close" type="button" aria-label="Dismiss" onClick={() => setOpen(!open)} />
           </div>
-          {action && (
-            <div className="toast__action" />
-          )}
-          <button className="toast__close" type="button" aria-label="Dismiss" onClick={() => setOpen(!open)} />
         </div>
-      </div>
-    )}
-  </Stack>
+      )}
+    </Stack>
+    )
   );
 }
 // @generated:end

@@ -167,7 +167,7 @@ export function Sheet({
   slots,
   ...rest
 }: SheetProps) {
-  const { openness, setOpenness } = useSheet({
+  const { openness, setOpenness, renderInPortal } = useSheet({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
@@ -183,28 +183,30 @@ export function Sheet({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
-    {openness && (
-      <div className="sheet__overlay" aria-hidden="true" />
-    )}
-    {openness && (
-      <div className="sheet__content" role="dialog" aria-modal="true" aria-labelledby={"sheet-title-id"} aria-describedby={"sheet-description-id"} data-side={side} aria-label={ariaLabel}>
-        <div className="sheet__header">
-          <h2 className="sheet__title">
-            {slots?.title}
-          </h2>
-          <p className="sheet__description">
-            {slots?.description}
-          </p>
-          <button className="sheet__close" type="button" aria-label="Close sheet" onClick={() => setOpenness(!openness)} />
+    renderInPortal(
+    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
+      {openness && (
+        <div className="sheet__overlay" aria-hidden="true" />
+      )}
+      {openness && (
+        <div className="sheet__content" role="dialog" aria-modal="true" aria-labelledby={"sheet-title-id"} aria-describedby={"sheet-description-id"} data-side={side} aria-label={ariaLabel}>
+          <div className="sheet__header">
+            <h2 className="sheet__title">
+              {slots?.title}
+            </h2>
+            <p className="sheet__description">
+              {slots?.description}
+            </p>
+            <button className="sheet__close" type="button" aria-label="Close sheet" onClick={() => setOpenness(!openness)} />
+          </div>
+          <div className="sheet__body">
+            {children}
+          </div>
+          <div className="sheet__footer" />
         </div>
-        <div className="sheet__body">
-          {children}
-        </div>
-        <div className="sheet__footer" />
-      </div>
-    )}
-  </Stack>
+      )}
+    </Stack>
+    )
   );
 }
 // @generated:end

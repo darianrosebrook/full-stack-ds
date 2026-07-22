@@ -27,6 +27,7 @@ import {
   pickPrimaryDisclosureChannel,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
+import { portalsRootToBody } from "../../semantics.js";
 import { isSurfaceComponent } from "./surface-emit.js";
 
 // ---------------------------------------------------------------------------
@@ -240,7 +241,12 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
 
   const hasFocusTrap = focus?.strategy === "trap";
   const hasScrollLock = focus?.scrollLock === true;
-  const hasPortal = portal?.enabled === true;
+  // FIX-PORTAL-CONSUMPTION-01: only emit the portal primitive when the
+  // component-source actually consumes it (full-overlay surface portaled to
+  // body). Contracts that declare `portal.enabled` without a consumable
+  // surface (no surface block, or an anchored/inline surface) no longer emit
+  // an orphaned `renderInPortal` the component never reads.
+  const hasPortal = portalsRootToBody({ behavior: { portal }, surface: ir.surface });
   const hasEscapeTrigger = triggers.some((t) => t.event === "escape");
   const hasOutsideClickTrigger = triggers.some(
     (t) => t.event === "outsideClick" || t.event === "overlayClick",

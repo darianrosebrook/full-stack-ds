@@ -113,12 +113,14 @@ describe("Dialog — named slots", () => {
     // Real consumers pass `slots={{ title: <span>...</span> }}` to fill the
     // heading. This test confirms the named-slot pipeline (contract → IR →
     // React codegen → public API → rendered DOM) is intact end-to-end.
-    const { container } = render(
+    // The dialog portals to document.body (FIX-PORTAL-CONSUMPTION-01), so
+    // the heading is queried from the body, not the render container.
+    render(
       <Dialog open aria-label="Test Dialog" slots={{ title: <span>My Title</span> }}>
         body content
       </Dialog>,
     );
-    const heading = container.querySelector("h2.dialog__title");
+    const heading = document.body.querySelector("h2.dialog__title");
     expect(heading).toBeInTheDocument();
     expect(heading?.textContent).toBe("My Title");
   });
@@ -127,14 +129,38 @@ describe("Dialog — named slots", () => {
     // The placeholder still exists in the DOM tree; consumers without a
     // title get an empty <h2>, which axe correctly flags via empty-heading
     // (kept in the scaffold allowlist).
-    const { container } = render(
+    render(
       <Dialog open aria-label="Test Dialog">
         body content
       </Dialog>,
     );
-    const heading = container.querySelector("h2.dialog__title");
+    const heading = document.body.querySelector("h2.dialog__title");
     expect(heading).toBeInTheDocument();
     expect(heading?.textContent).toBe("");
+  });
+});
+
+describe("Dialog — portal (FIX-PORTAL-CONSUMPTION-01)", () => {
+  it("mounts the dialog root at document.body, escaping an ancestor stacking context", () => {
+    // A transform/overflow ancestor creates a stacking context that would
+    // clip a merely-fixed dialog. Portaling the root to document.body escapes
+    // it: the dialog's DOM parent must be document.body, NOT the ancestor the
+    // consumer rendered it inside.
+    const { container } = render(
+      <div style={{ transform: "translateZ(0)", overflow: "hidden" }}>
+        <Dialog open aria-label="Portaled Dialog" data-testid="portaled-dialog">
+          body content
+        </Dialog>
+      </div>,
+    );
+    const dialogRoot = document.querySelector<HTMLElement>(
+      '[data-testid="portaled-dialog"]',
+    );
+    expect(dialogRoot).not.toBeNull();
+    // The load-bearing assertion: the portaled root's parent is document.body,
+    // not the transform ancestor that would otherwise trap it.
+    expect(dialogRoot?.parentElement).toBe(document.body);
+    expect(container.contains(dialogRoot)).toBe(false);
   });
 });
 // @custom:end

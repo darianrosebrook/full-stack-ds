@@ -1,6 +1,6 @@
 // @generated:start imports
-import { type ReactNode, type RefObject, useRef } from "react";
-import { useAnchorToggle, useControllableState, usePortal } from "../../primitives/hooks";
+import { type RefObject, useRef } from "react";
+import { useAnchorToggle, useControllableState } from "../../primitives/hooks";
 // @generated:end
 
 // @custom:start imports
@@ -30,7 +30,6 @@ export interface UseSelectResult {
   setOpen: (next: boolean) => void;
   panelRef: RefObject<HTMLDivElement | null>;
   anchorRef: RefObject<HTMLElement | null>;
-  renderInPortal: (node: ReactNode) => ReactNode;
 }
 // @generated:end
 
@@ -46,16 +45,11 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
     onChange: options.onChange,
   });
 
-  const panelRef = useRef<HTMLDivElement>(null);
   // anchor + panel refs come from useAnchorToggle below.
   const anchorToggle = useAnchorToggle({
     open: options.open,
     defaultOpen: options.defaultOpen ?? false,
     onOpenChange: options.onOpenChange,
-  });
-
-  const portal = usePortal({
-    enabled: true,
   });
 
   return {
@@ -65,7 +59,6 @@ export function useSelect(options: UseSelectOptions = {}): UseSelectResult {
     setOpen: anchorToggle.setOpen,
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef as RefObject<HTMLDivElement | null>,
-    renderInPortal: portal.render,
   };
 }
 // @generated:end

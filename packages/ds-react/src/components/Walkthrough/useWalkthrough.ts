@@ -1,6 +1,5 @@
 // @generated:start imports
-import { type ReactNode, type RefObject, useRef } from "react";
-import { useControllableState, useDismissal, usePortal } from "../../primitives/hooks";
+import { useControllableState, useDismissal } from "../../primitives/hooks";
 // @generated:end
 
 // @custom:start imports
@@ -22,8 +21,6 @@ export interface UseWalkthroughOptions {
 export interface UseWalkthroughResult {
   step: number;
   setStep: (next: number) => void;
-  panelRef: RefObject<HTMLDivElement | null>;
-  renderInPortal: (node: ReactNode) => ReactNode;
 }
 // @generated:end
 
@@ -39,16 +36,9 @@ export function useWalkthrough(options: UseWalkthroughOptions = {}): UseWalkthro
     onChange: options.onStepChange,
   });
 
-  const panelRef = useRef<HTMLDivElement>(null);
-  const portal = usePortal({
-    enabled: true,
-  });
-
   return {
     step,
     setStep,
-    panelRef,
-    renderInPortal: portal.render,
   };
 }
 // @generated:end
