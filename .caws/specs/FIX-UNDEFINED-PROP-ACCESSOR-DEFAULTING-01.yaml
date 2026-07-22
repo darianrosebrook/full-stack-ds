@@ -2,10 +2,11 @@ id: FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01
 title: 'Default-aware prop accessors in lit/angular emitters (Icon size, Skeleton decorative a11y divergence)'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: undef-prop-defaults
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge undef-prop-defaults at 2800d15b35968c5ff7ffe897d060c3c87f3801b9'
 created_at: '2026-07-22T06:49:32.455Z'
-updated_at: '2026-07-22T08:53:31.909Z'
+updated_at: '2026-07-22T08:58:57.232Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
