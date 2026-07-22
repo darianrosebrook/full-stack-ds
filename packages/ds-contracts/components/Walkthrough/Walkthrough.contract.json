@@ -351,13 +351,6 @@
     "strategy": "none",
     "description": "Walkthrough panels are non-blocking. Focus remains on the anchored element while the panel is visible."
   },
-  "portal": {
-    "enabled": true,
-    "defaultTarget": "body",
-    "positioning": "anchored",
-    "layering": "popover",
-    "collision": "flip-shift"
-  },
   "dismissal": {
     "triggers": [
       {

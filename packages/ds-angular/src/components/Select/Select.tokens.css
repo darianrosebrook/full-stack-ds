@@ -1,5 +1,19 @@
 /* @generated:start tokens */
-:root {
+.select {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-padding-block: 0;
+  --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 8px);
+  --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 8px);
+  --fsds-box-model-padding-inline: 0;
+  --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
+  --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
+  --fsds-box-model-gap: var(--fsds-semantic-input-size-medium-gap, 8px);
+  --fsds-box-model-width: auto;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-max-width: none;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 36px);
+  --fsds-box-model-max-height: none;
   --fsds-select-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-select-color-foreground-default: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-select-color-border-default: var(--fsds-semantic-color-border-primary, #f29495);
@@ -18,23 +32,6 @@
   --fsds-select-focus-ring-color: var(--fsds-semantic-focus-ring-color, #0a65fe);
   --fsds-select-focus-ring-style: var(--fsds-semantic-focus-ring-style, solid);
   --fsds-select-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
-}
-
-.select {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: var(--fsds-semantic-input-size-medium-padding-block, 8px);
-  --fsds-box-model-padding-block-end: var(--fsds-semantic-input-size-medium-padding-block, 8px);
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
-  --fsds-box-model-padding-inline-end: var(--fsds-semantic-input-size-medium-padding-inline, 12px);
-  --fsds-box-model-gap: var(--fsds-semantic-input-size-medium-gap, 8px);
-  --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: var(--fsds-semantic-input-size-medium-min-height, 36px);
-  --fsds-box-model-max-height: none;
 }
 
 .select__trigger:focus-visible {

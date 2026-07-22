@@ -641,7 +641,40 @@
       "backdrop": true
     }
   },
-  "surface": null,
+  "surface": {
+    "kind": "dialog",
+    "presence": "persistent",
+    "modality": "blocking",
+    "content": {
+      "part": {
+        "name": "dialog",
+        "isCompound": false,
+        "isRootOnly": false,
+        "nativeTag": "div",
+        "details": {
+          "tag": "div",
+          "description": "Modal command palette panel containing the search input and result list.",
+          "role": "content",
+          "aria": {
+            "role": "dialog",
+            "attributes": [
+              "aria-modal",
+              "aria-label"
+            ]
+          }
+        }
+      },
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "centered"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click"
+    ],
+    "openTriggers": []
+  },
   "figma": {
     "intendedUse": "figma-library-materialization",
     "documentationFrame": "Command / Documentation",
