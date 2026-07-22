@@ -761,6 +761,16 @@ function emitContentClass(
       : null,
     positioningEnabled ? `      // flash at (0, 0)).` : null,
     positioningEnabled ? `      const pos = this._position.state;` : null,
+    positioningEnabled
+      ? `      // The static :host rule is display: contents (no box), which`
+      : null,
+    positioningEnabled
+      ? `      // would make position: fixed a layout no-op and let slotted`
+      : null,
+    positioningEnabled
+      ? `      // content flow at the body. The open state needs a real box.`
+      : null,
+    positioningEnabled ? `      this.style.display = "block";` : null,
     positioningEnabled ? `      this.style.position = "fixed";` : null,
     positioningEnabled ? `      this.style.top = \`\${pos.top}px\`;` : null,
     positioningEnabled ? `      this.style.left = \`\${pos.left}px\`;` : null,
@@ -774,6 +784,7 @@ function emitContentClass(
     `      this.removeAttribute("id");`,
     clearRoleLine,
     `      this.removeAttribute("data-${cssPrefix}-content");`,
+    positioningEnabled ? `      this.style.display = "";` : null,
     positioningEnabled ? `      this.style.position = "";` : null,
     positioningEnabled ? `      this.style.top = "";` : null,
     positioningEnabled ? `      this.style.left = "";` : null,

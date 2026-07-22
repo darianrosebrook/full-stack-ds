@@ -304,7 +304,7 @@ function emitContentSfc(
   const collision = surface.positioning?.collision ?? "flip-shift";
 
   const contextImports = positioningEnabled
-    ? `{ use${name}Context, use${name}Placement }`
+    ? `{ use${name}Context, use${name}PlacementGetter }`
     : `{ use${name}Context }`;
   const importLines = [
     `import ${contextImports} from "./use${name}.svelte.js";`,
@@ -321,11 +321,14 @@ function emitContentSfc(
   const positioningHookLines = positioningEnabled
     ? [
         ``,
+        `// Captured ONCE at init: getContext is illegal from inside the`,
+        `// option getters, which re-run on scroll/resize/observer callbacks.`,
+        `const getContextPlacement = use${name}PlacementGetter();`,
         `const position = createAnchoredPosition({`,
         `  anchor: () => ctx.anchorEl(),`,
         `  content: () => ctx.contentEl(),`,
         `  open: () => ctx.open(),`,
-        `  placement: () => (use${name}Placement() ?? "auto") as AnchoredPlacement | "auto",`,
+        `  placement: () => (getContextPlacement?.() ?? "auto") as AnchoredPlacement | "auto",`,
         `  collision: () => "${collision}",`,
         `});`,
       ]
@@ -437,9 +440,15 @@ function emitComposable(
         `  setContext("${placementContextKey}", getter);`,
         `}`,
         ``,
-        `export function use${name}Placement(): AnchoredPlacement | "auto" | undefined {`,
-        `  const getter = getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("${placementContextKey}");`,
-        `  return getter?.();`,
+        `/**`,
+        ` * Returns the placement GETTER (not the value). getContext is only`,
+        ` * legal during component initialisation, but the position primitive`,
+        ` * re-evaluates its placement option on scroll/resize/observer`,
+        ` * callbacks — so consumers must capture this getter once at init and`,
+        ` * invoke it later, never call getContext from inside the option.`,
+        ` */`,
+        `export function use${name}PlacementGetter(): (() => AnchoredPlacement | "auto" | undefined) | undefined {`,
+        `  return getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("${placementContextKey}");`,
         `}`,
       ]
     : [];

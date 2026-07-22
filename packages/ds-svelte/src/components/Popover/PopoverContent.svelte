@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { usePopoverContext, usePopoverPlacement } from "./usePopover.svelte.js";
+import { usePopoverContext, usePopoverPlacementGetter } from "./usePopover.svelte.js";
 import { createAnchoredPosition, type AnchoredPlacement } from "../../primitives/surfaces/createAnchoredPosition.svelte.js";
 import { portal } from "../../primitives/index.js";
 // @generated:end
@@ -27,11 +27,14 @@ $effect(() => {
   if (contentEl) ctx.registerContent(contentEl);
 });
 
+// Captured ONCE at init: getContext is illegal from inside the
+// option getters, which re-run on scroll/resize/observer callbacks.
+const getContextPlacement = usePopoverPlacementGetter();
 const position = createAnchoredPosition({
   anchor: () => ctx.anchorEl(),
   content: () => ctx.contentEl(),
   open: () => ctx.open(),
-  placement: () => (usePopoverPlacement() ?? "auto") as AnchoredPlacement | "auto",
+  placement: () => (getContextPlacement?.() ?? "auto") as AnchoredPlacement | "auto",
   collision: () => "flip-shift",
 });
 // @generated:end
