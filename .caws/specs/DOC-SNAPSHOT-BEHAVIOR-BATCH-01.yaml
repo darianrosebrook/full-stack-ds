@@ -2,10 +2,11 @@ id: DOC-SNAPSHOT-BEHAVIOR-BATCH-01
 title: 'Claim-ledger rows for the behavior-realization batch (5 fixes + grammar + 2 rails + e2e override)'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
-worktree: doc-behavior-batch
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge doc-behavior-batch at deacd651e6ec3adc0f916aa81286de4968e6d5f6'
 created_at: '2026-07-22T10:47:25.623Z'
-updated_at: '2026-07-22T10:47:25.623Z'
+updated_at: '2026-07-22T10:49:52.754Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
