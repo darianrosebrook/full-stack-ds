@@ -3,6 +3,7 @@ title: 'Stack primitive emitted from contract across five web frameworks'
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: stack-primitive-codegen
 created_at: '2026-07-22T19:30:31.711Z'
 updated_at: '2026-07-22T19:30:31.711Z'
 blast_radius:
