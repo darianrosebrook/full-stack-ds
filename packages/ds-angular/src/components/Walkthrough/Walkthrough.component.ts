@@ -26,7 +26,7 @@ let nextInstanceId = 0;
   standalone: true,
   imports: [NgClass, NgFor],
   template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')">
-  <div [ngClass]="'walkthrough__content'" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-description'">
+  <div [ngClass]="'walkthrough__content'" role="group" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-description'">
     <h3 [ngClass]="'walkthrough__title'" [attr.id]="instanceId + '-title'">
       <ng-content select="[slot=title]" />
     </h3>

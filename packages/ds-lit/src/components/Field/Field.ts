@@ -206,10 +206,10 @@ export class FieldElement extends LitElement {
     <slot name="control"></slot>
   </div>
   <div class=${'field__meta'}>
-    <span class=${'field__help'}>
+    <span class=${'field__help'} id="field-help">
       <slot name="help"></slot>
     </span>
-    <span class=${'field__error'}>
+    <span class=${'field__error'} id="field-error">
       <slot name="error"></slot>
     </span>
     ${this.validating ? html`

@@ -66,7 +66,7 @@ const instanceId = $props.id();
 </script>
 
 <div class={classes} role="status" aria-label={label}>
-  <div class={'walkthrough__content'} aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={description ? `${instanceId}-description` : undefined}>
+  <div class={'walkthrough__content'} role="group" aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={description ? `${instanceId}-description` : undefined}>
     <h3 class={'walkthrough__title'} id={`${instanceId}-title`}>
       {@render title?.()}
     </h3>

@@ -74,7 +74,7 @@ const instanceId = useId();
 
 <template>
   <div :class="classNames" role="status" :aria-label="props.label" :data-testid="props['data-testid']">
-    <div :class="'walkthrough__content'" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
+    <div :class="'walkthrough__content'" role="group" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" :aria-describedby="$slots.description ? `${instanceId}-description` : undefined">
       <h3 :class="'walkthrough__title'" :id="`${instanceId}-title`">
         <slot name="title" />
       </h3>

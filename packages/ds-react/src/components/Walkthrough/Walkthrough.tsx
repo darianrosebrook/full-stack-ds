@@ -137,7 +137,7 @@ export function Walkthrough({
 
   return (
   <Stack layout="native" className={`${classNames}`} role="status" aria-label={label} data-testid={testId} {...rest}>
-    <div className="walkthrough__content" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
+    <div className="walkthrough__content" role="group" aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={slots?.description ? `${instanceId}-description` : undefined}>
       <h3 className="walkthrough__title" id={`${instanceId}-title`}>
         {slots?.title}
       </h3>

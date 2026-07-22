@@ -191,15 +191,15 @@ export class TextFieldElement extends LitElement {
 
   override render() {
     return html`<div class="${this.computeClasses()}">
-  <label class=${'text-field__label'}>
-    <slot name="label"></slot>
+  <label class=${'text-field__label'} id="text-field-label">
+    <slot name="label" @slotchange=${() => this.requestUpdate()}></slot>
   </label>
-  <input class=${'text-field__field'} @change=${(e: Event) => this.handleValueChange(e)} type=${ifDefined(this.type)} .value=${this.behavior.value} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} ?required=${this.required ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} aria-describedby=${ifDefined(this.ariaDescribedby)} />
-  <span class=${'text-field__description'}>
-    <slot name="description"></slot>
+  <input class=${'text-field__field'} @change=${(e: Event) => this.handleValueChange(e)} type=${ifDefined(this.type)} .value=${this.behavior.value} ?disabled=${this.disabled ?? false} name=${ifDefined(this.name)} ?required=${this.required ?? false} aria-invalid=${ifDefined(this.invalid === undefined ? undefined : (this.invalid ? 'true' : 'false'))} aria-labelledby=${ifDefined('text-field-label')} aria-describedby=${ifDefined([this.querySelector('[slot="description"]') !== null ? 'text-field-description' : null, this.querySelector('[slot="error"]') !== null && this.invalid ? 'text-field-error' : null, this.ariaDescribedby].filter(Boolean).join(' ') || undefined)} />
+  <span class=${'text-field__description'} id="text-field-description">
+    <slot name="description" @slotchange=${() => this.requestUpdate()}></slot>
   </span>
-  <span class=${'text-field__error'} role="alert">
-    <slot name="error"></slot>
+  <span class=${'text-field__error'} role="alert" id="text-field-error">
+    <slot name="error" @slotchange=${() => this.requestUpdate()}></slot>
   </span>
 </div>`;
   }

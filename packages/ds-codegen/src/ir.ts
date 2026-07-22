@@ -495,12 +495,13 @@ export interface IdRefIR {
    * Named slot whose PRESENCE gates this ref — set when the target part's
    * semantic content is a consumer slot (TextField's label wrapper). An
    * idref to an empty naming element is worse than no idref (axe
-   * `label-title-only`), so frameworks that can test slot presence
-   * statically (React `slots?.x`, Vue `$slots.x`, Svelte snippet props)
-   * emit the ref conditionally; Angular and Lit cannot (projection/slot
-   * contents are not statically knowable) and emit unconditionally — no
-   * worse than the pre-lowering state, documented divergence. ANDed with
-   * `when` where both are set.
+   * `label-title-only`), so frameworks that can test slot presence emit
+   * the ref conditionally: React `slots?.x`, Vue `$slots.x`, Svelte
+   * snippet props (static), Lit via a runtime light-DOM query plus
+   * @slotchange re-render. Angular cannot (projected-content presence is
+   * not statically knowable) and emits unconditionally — no worse than
+   * the pre-lowering state, documented divergence. ANDed with `when`
+   * where both are set.
    */
   slotGate?: string;
 }
