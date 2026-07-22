@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { ReactiveControllerHost } from 'lit';
-import { ControllableStateController, DismissalController, FocusTrapController, PortalController, ScrollLockController } from '../../primitives/index.js';
+import { ControllableStateController, DismissalController, FocusTrapController, ScrollLockController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -27,7 +27,6 @@ export class DialogBehavior {
   readonly opennessState: ControllableStateController<boolean>;
   readonly focusTrap: FocusTrapController;
   readonly scrollLock: ScrollLockController;
-  readonly portal: PortalController;
   readonly dismissal: DismissalController;
 
   constructor(host: ReactiveControllerHost, private opts: DialogBehaviorOptions = {}) {
@@ -42,10 +41,6 @@ export class DialogBehavior {
     });
     this.scrollLock = new ScrollLockController(host, {
       getActive: () => this.opennessState.value,
-    });
-    this.portal = new PortalController(host, {
-      enabled: true,
-      getTarget: () => undefined,
     });
     this.dismissal = new DismissalController(host, {
       open: () => this.opennessState.value,

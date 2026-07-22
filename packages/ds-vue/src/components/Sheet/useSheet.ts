@@ -1,6 +1,6 @@
 // @generated:start imports
 import { ref, type Ref } from "vue";
-import { useControllableState, useDismissal, useFocusTrap, usePortal, useScrollLock } from "../../primitives/index.js";
+import { useControllableState, useDismissal, useFocusTrap, useScrollLock } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -18,7 +18,6 @@ export interface UseSheetResult {
   openness: Ref<boolean>;
   setOpenness: (next: boolean) => void;
   panelRef: Ref<HTMLElement | null>;
-  portalTarget: Ref<Element | null>;
 }
 // @generated:end
 
@@ -39,11 +38,6 @@ export function useSheet(options: UseSheetOptions = {}): UseSheetResult {
 
   useScrollLock(openness);
 
-  const { target: portalTarget } = usePortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   useDismissal({
     open: () => openness.value,
     closeOnEscape: () => true,
@@ -54,7 +48,6 @@ export function useSheet(options: UseSheetOptions = {}): UseSheetResult {
     openness,
     setOpenness,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

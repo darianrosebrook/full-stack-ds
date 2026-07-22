@@ -41,12 +41,18 @@ interface PrimitiveBindings {
 function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   const channels = ir.behavior.normalizedChannels;
   const focus = ir.behavior.focus;
-  const portal = ir.behavior.portal;
   const triggers = ir.behavior.normalizedDismissalTriggers;
 
   const hasFocusTrap = focus?.strategy === "trap";
   const hasScrollLock = focus?.scrollLock === true;
-  const hasPortal = portal?.enabled === true;
+  // FIX-PORTAL-CONSUMPTION-01: the Vue component emitter has NO portal
+  // consumption path — no generated component emits <Teleport> or otherwise
+  // reads portalTarget, so every portalTarget the hook emitted was dead
+  // scaffolding. Suppressed for all Vue components. React (the only
+  // framework with a consumer) gates on portalsRootToBody in its own hook
+  // emitter; the cross-framework <Teleport> path (and the anchored
+  // coordinate machinery it needs) is an explicit successor feature.
+  const hasPortal = false;
   const escapeTrigger = triggers.find((t) => t.event === "escape");
   const hasEscape = escapeTrigger !== undefined;
   const hasOutsideClick = triggers.some(

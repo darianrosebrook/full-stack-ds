@@ -1,6 +1,6 @@
 // @generated:start imports
 import { ref, type Ref } from "vue";
-import { useControllableState, useDismissal, usePortal } from "../../primitives/index.js";
+import { useControllableState, useDismissal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -13,14 +13,12 @@ export interface UseCalendarOptions {
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
   shouldCloseOnSelect?: boolean;
-  portalId?: Element | string;
 }
 
 export interface UseCalendarResult {
   value: Ref<Date | Date[] | null>;
   setValue: (next: Date | Date[] | null) => void;
   panelRef: Ref<HTMLElement | null>;
-  portalTarget: Ref<Element | null>;
 }
 // @generated:end
 
@@ -37,11 +35,6 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarResult
   });
 
   const panelRef = ref<HTMLElement | null>(null);
-  const { target: portalTarget } = usePortal({
-    enabled: true,
-    target: () => options.portalId,
-  });
-
   useDismissal({
     open: () => true,
     closeOnEscape: () => true,
@@ -52,7 +45,6 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarResult
     value,
     setValue,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

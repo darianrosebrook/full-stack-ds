@@ -1,5 +1,5 @@
 // @generated:start imports
-import { createControllableState, createDismissal, createFocusTrap, createPortal, createScrollLock } from "../../primitives/index.js";
+import { createControllableState, createDismissal, createFocusTrap, createScrollLock } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,6 @@ export interface UseDialogResult {
   readonly openness: boolean;
   setOpenness(next: boolean): void;
   panelRef: { el: HTMLElement | null };
-  readonly portalTarget: Element | null;
 }
 // @generated:end
 
@@ -40,11 +39,6 @@ export function useDialog(opts: UseDialogOptions = {}): UseDialogResult {
 
   createScrollLock(() => opennessState.value);
 
-  const portal = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   createDismissal({
     open: () => opennessState.value,
     closeOnEscape: opts.closeOnEscape,
@@ -55,7 +49,6 @@ export function useDialog(opts: UseDialogOptions = {}): UseDialogResult {
     get openness() { return opennessState.value; },
     setOpenness(v) { opennessState.set(v); },
     panelRef,
-    get portalTarget() { return portal.target; },
   };
 }
 // @generated:end

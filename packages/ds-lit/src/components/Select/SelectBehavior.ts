@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { ReactiveControllerHost } from 'lit';
-import { AnchorToggleController, ControllableStateController, PortalController } from '../../primitives/index.js';
+import { AnchorToggleController, ControllableStateController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -26,7 +26,6 @@ export interface SelectBehaviorOptions {
 export class SelectBehavior {
   readonly selectionState: ControllableStateController<string | string[]>;
   readonly anchorToggle: AnchorToggleController;
-  readonly portal: PortalController;
 
   constructor(host: ReactiveControllerHost, private opts: SelectBehaviorOptions = {}) {
     this.selectionState = new ControllableStateController<string | string[]>(host, {
@@ -42,10 +41,6 @@ export class SelectBehavior {
         onOpenChange: opts.onOpenChange,
       },
     );
-    this.portal = new PortalController(host, {
-      enabled: true,
-      getTarget: () => undefined,
-    });
   }
 
   get open(): boolean { return this.anchorToggle.open; }

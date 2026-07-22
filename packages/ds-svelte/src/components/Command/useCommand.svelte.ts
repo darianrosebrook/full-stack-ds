@@ -1,5 +1,5 @@
 // @generated:start imports
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import { createAnchorToggle, createControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +23,6 @@ export interface UseCommandResult {
   setSearch(next: string): void;
   panelRef: { el: HTMLElement | null };
   anchorRef: { el: HTMLElement | null };
-  readonly portalTarget: Element | null;
 }
 // @generated:end
 
@@ -45,12 +44,6 @@ export function useCommand(opts: UseCommandOptions = {}): UseCommandResult {
     onOpenChange: (v) => opts.onOpenChange?.()?.(v),
   });
 
-  const panelRef = { el: null as HTMLElement | null };
-  const portal = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   return {
     get open() { return anchorToggle.open; },
     setOpen(v) { anchorToggle.setOpen(v); },
@@ -58,7 +51,6 @@ export function useCommand(opts: UseCommandOptions = {}): UseCommandResult {
     setSearch(v) { searchState.set(v); },
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef,
-    get portalTarget() { return portal.target; },
   };
 }
 // @generated:end

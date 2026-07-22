@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { ReactiveControllerHost } from 'lit';
-import { ControllableStateController, DismissalController, PortalController } from '../../primitives/index.js';
+import { ControllableStateController, DismissalController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -13,7 +13,6 @@ export interface CalendarBehaviorOptions {
   defaultValue?: Date | Date[] | null;
   onChange?: (value: Date | Date[] | null) => void;
   shouldCloseOnSelect?: boolean;
-  portalId?: Element | string;
 }
 // @generated:end
 
@@ -24,7 +23,6 @@ export interface CalendarBehaviorOptions {
 // @generated:start hook
 export class CalendarBehavior {
   readonly valueState: ControllableStateController<Date | Date[] | null>;
-  readonly portal: PortalController;
   readonly dismissal: DismissalController;
 
   constructor(host: ReactiveControllerHost, private opts: CalendarBehaviorOptions = {}) {
@@ -32,10 +30,6 @@ export class CalendarBehavior {
       controlled: opts.value,
       defaultValue: opts.defaultValue ?? undefined as never,
       onChange: opts.onChange,
-    });
-    this.portal = new PortalController(host, {
-      enabled: true,
-      getTarget: () => opts.portalId,
     });
     this.dismissal = new DismissalController(host, {
       open: () => true,
