@@ -10,7 +10,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { defaultPropsFromContract, childLabel, elementTag } from "../demos";
+import { defaultPropsFromContract, childLabel, elementTag, callbackPropNames } from "../demos";
 import { buildConfigEntrySource } from "../config-entry";
 import { buildLitConfigRendererSource } from "./config-renderer";
 
@@ -56,6 +56,7 @@ function buildEntrySource(
     childLabel: child === "" ? null : child,
     defaultProps: defaultPropsFromContract(component),
     rendererSource: buildLitConfigRendererSource(componentName, tag),
+    callbackPropNames: callbackPropNames(component),
   });
 }
 

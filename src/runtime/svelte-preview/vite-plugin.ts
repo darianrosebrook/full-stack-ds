@@ -12,7 +12,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { defaultPropsFromContract, childLabel } from "../demos";
+import { defaultPropsFromContract, childLabel, callbackPropNames } from "../demos";
 import { buildConfigEntrySource } from "../config-entry";
 import { buildSvelteConfigRendererSource } from "./config-renderer";
 
@@ -60,6 +60,7 @@ function buildEntrySource(
       componentName,
       child === "" ? null : child,
     ),
+    callbackPropNames: callbackPropNames(component),
   });
 }
 

@@ -7,6 +7,7 @@ import {
   buildAngularDemo,
   buildDemo,
   defaultPropsFromContract,
+  callbackPropNames,
 } from "./demos";
 import type { ComponentBundle } from "../types/data";
 
@@ -236,6 +237,75 @@ describe("buildAngularDemo", () => {
     );
     expect(out).toContain("Angular source missing for Button");
     expect(out).toContain("export class HostComponent");
+  });
+});
+
+describe("callbackPropNames", () => {
+  it("returns names of contract props whose propType.kind is 'callback'", () => {
+    const bundle = makeBundle({
+      name: "Select",
+      contract: {
+        name: "Select",
+        layer: "compound",
+        variants: {},
+        props: {
+          designed: {
+            members: [
+              { name: "value", propType: { kind: "string" } },
+              {
+                name: "onChange",
+                propType: { kind: "callback", params: [], returns: { kind: "void" } },
+              },
+              { name: "open", propType: { kind: "boolean" } },
+              {
+                name: "onOpenChange",
+                propType: { kind: "callback", params: [], returns: { kind: "void" } },
+              },
+            ],
+          },
+        },
+      },
+    });
+    expect(callbackPropNames(bundle)).toEqual(["onChange", "onOpenChange"]);
+  });
+
+  it("returns an empty array when no prop declares a callback propType (data-driven, no fallback to name sniffing)", () => {
+    // "on"-prefixed name alone must NOT be treated as a callback — only the
+    // contract's declared propType.kind drives classification. This pins
+    // the preview capture surface against silently reverting to naming-
+    // convention inference.
+    const bundle = makeBundle({
+      contract: {
+        name: "Button",
+        layer: "primitive",
+        variants: {},
+        props: {
+          styled: {
+            members: [{ name: "onClickLabel", propType: { kind: "string" } }],
+          },
+        },
+      },
+    });
+    expect(callbackPropNames(bundle)).toEqual([]);
+  });
+
+  it("collects callback props across the styled/designed/constrained buckets, not just one", () => {
+    const bundle = makeBundle({
+      contract: {
+        name: "Field",
+        layer: "compound",
+        variants: {},
+        props: {
+          styled: {
+            members: [{ name: "onFocus", propType: { kind: "callback", params: [], returns: { kind: "void" } } }],
+          },
+          designed: {
+            members: [{ name: "onBlur", propType: { kind: "callback", params: [], returns: { kind: "void" } } }],
+          },
+        },
+      },
+    });
+    expect(callbackPropNames(bundle)).toEqual(["onFocus", "onBlur"]);
   });
 });
 

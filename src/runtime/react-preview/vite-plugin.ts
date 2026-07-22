@@ -18,7 +18,7 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Plugin, ViteDevServer } from "vite";
 import { buildBundle } from "../../../vite-plugin-fsds-data";
-import { childLabel, defaultPropsFromContract } from "../demos";
+import { childLabel, defaultPropsFromContract, callbackPropNames } from "../demos";
 import { buildConfigEntrySource } from "../config-entry";
 import { buildReactConfigRendererSource } from "./config-renderer";
 
@@ -95,6 +95,7 @@ function buildEntrySource(
     childLabel: child === "" ? null : child,
     defaultProps: defaultPropsFromContract(component),
     rendererSource: buildReactConfigRendererSource(componentName),
+    callbackPropNames: callbackPropNames(component),
   });
 }
 
