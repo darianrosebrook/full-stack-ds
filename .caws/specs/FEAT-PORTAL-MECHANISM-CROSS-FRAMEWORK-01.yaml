@@ -2,10 +2,11 @@ id: FEAT-PORTAL-MECHANISM-CROSS-FRAMEWORK-01
 title: 'Cross-framework portal mechanisms (Teleport / action / append) + anchored coordinate machinery'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: portal-mechanism
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge portal-mechanism at 04999ceb6379f5babf3cf80deda37d4e84f491c6'
 created_at: '2026-07-22T09:32:13.942Z'
-updated_at: '2026-07-22T09:32:13.942Z'
+updated_at: '2026-07-22T19:59:08.330Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
