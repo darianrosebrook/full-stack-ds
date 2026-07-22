@@ -3,6 +3,7 @@ title: 'Cross-framework portal mechanisms (Teleport / action / append) + anchore
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: portal-mechanism
 created_at: '2026-07-22T09:32:13.942Z'
 updated_at: '2026-07-22T09:32:13.942Z'
 blast_radius:
