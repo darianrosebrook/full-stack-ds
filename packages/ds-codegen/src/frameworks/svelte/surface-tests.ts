@@ -12,7 +12,31 @@
  * cannot render an in-test compound tree without a fixture SFC.
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind } from "../../semantics.js";
+import { anchoredPortalsContentToBody, isAnchoredPresenceKind } from "../../semantics.js";
+
+/**
+ * The literal content-query expression used throughout the hand-authored
+ * test-body template strings below. When the surface's content portals to
+ * document.body (`anchoredPortalsContentToBody`), this expression is
+ * rewritten post-hoc to resolve via `document.body.querySelector` instead
+ * of `container.querySelector` — portaled content escapes `container`, so
+ * the in-container query would always resolve null. See `rewriteContentQueries`.
+ */
+const CONTENT_QUERY = `container.querySelector("[data-testid='content']")`;
+const PORTAL_CONTENT_QUERY = `document.body.querySelector("[data-testid='content']")`;
+
+/**
+ * Rewrites every content-query call site in a generated test body from
+ * the in-container form to the document.body form when content portals
+ * out of `container`. Also gates whether `afterEach` cleanup + its
+ * import are required — there is no testing-library auto-cleanup in this
+ * package, so portaled content nodes accumulate in document.body across
+ * tests and poison later queries' `querySelector` results unless reset.
+ */
+function rewriteContentQueries(testsBody: string, portalsContent: boolean): string {
+  if (!portalsContent) return testsBody;
+  return testsBody.split(CONTENT_QUERY).join(PORTAL_CONTENT_QUERY);
+}
 
 export interface SvelteSurfaceTestFiles {
   testFile: string;
@@ -138,8 +162,14 @@ function emitFixtureFile(ir: ComponentIR): string {
 function emitTestFile(ir: ComponentIR): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
+  // Portaled content (use:portal moves it to document.body) escapes
+  // `container`, so in-container queries always resolve null. Query
+  // via document.body instead, and reset it between tests — there is
+  // no testing-library auto-cleanup in this package, so portaled
+  // nodes would otherwise accumulate and poison later queries.
+  const portalsContent = anchoredPortalsContentToBody(ir);
   const importsBody = [
-    `import { describe, expect, it, vi } from "vitest";`,
+    `import { describe, expect, it, vi${portalsContent ? ", afterEach" : ""} } from "vitest";`,
     `import type { Component } from "svelte";`,
     `import { tick } from "svelte";`,
     `import { render, fireEvent } from "@testing-library/svelte";`,
@@ -156,7 +186,18 @@ function emitTestFile(ir: ComponentIR): string {
   const testsBody = `function mountDefault(props: Record<string, unknown> = {}) {
   return render(${name}Fixture as unknown as Component<Record<string, unknown>>, { props });
 }
-
+${
+  portalsContent
+    ? `
+// Portaled content nodes (use:portal) are appended to document.body and
+// are not cleaned up by testing-library's unmount in this package; reset
+// so each test's content query resolves only its own mount.
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+`
+    : ""
+}
 describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", async () => {
     const { container } = mountDefault();
@@ -429,7 +470,7 @@ describe("${name} — accessibility", () => {
     `// @generated:end`,
     ``,
     `// @generated:start tests`,
-    testsBody,
+    rewriteContentQueries(testsBody, portalsContent),
     `// @generated:end`,
     ``,
     `// @custom:start tests`,
@@ -540,8 +581,11 @@ function emitPopoverFixtureFile(ir: ComponentIR): string {
 function emitPopoverTestFile(ir: ComponentIR): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
+  // See emitTestFile's identical comment: portaled content escapes
+  // `container`, so document.body must be the query root, reset per test.
+  const portalsContent = anchoredPortalsContentToBody(ir);
   const importsBody = [
-    `import { describe, expect, it, vi } from "vitest";`,
+    `import { describe, expect, it, vi${portalsContent ? ", afterEach" : ""} } from "vitest";`,
     `import type { Component } from "svelte";`,
     `import { tick } from "svelte";`,
     `import { render, fireEvent } from "@testing-library/svelte";`,
@@ -558,7 +602,18 @@ function emitPopoverTestFile(ir: ComponentIR): string {
   const testsBody = `function mountDefault(props: Record<string, unknown> = {}) {
   return render(${name}Fixture as unknown as Component<Record<string, unknown>>, { props });
 }
-
+${
+  portalsContent
+    ? `
+// Portaled content nodes (use:portal) are appended to document.body and
+// are not cleaned up by testing-library's unmount in this package; reset
+// so each test's content query resolves only its own mount.
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+`
+    : ""
+}
 describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", async () => {
     const { container } = mountDefault();
@@ -760,7 +815,7 @@ describe("${name} — accessibility", () => {
     `// @generated:end`,
     ``,
     `// @generated:start tests`,
-    testsBody,
+    rewriteContentQueries(testsBody, portalsContent),
     `// @generated:end`,
     ``,
     `// @custom:start tests`,

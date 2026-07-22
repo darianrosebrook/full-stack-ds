@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { usePopover, providePopoverContext } from "./usePopover.svelte.js";
+import { usePopover, providePopoverContext, providePopoverPlacement } from "./usePopover.svelte.js";
 // @generated:end
 // @custom:start imports
 
@@ -52,6 +52,7 @@ const surface = usePopover({
   closeOnBlur: () => closeOnBlur,
 });
 providePopoverContext(surface);
+providePopoverPlacement(() => placement);
 // @generated:end
 // @generated:start classes
 const classes = $derived(

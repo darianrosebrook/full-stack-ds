@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import type { Component } from "svelte";
 import { tick } from "svelte";
 import { render, fireEvent } from "@testing-library/svelte";
@@ -18,18 +18,25 @@ function mountDefault(props: Record<string, unknown> = {}) {
   return render(PopoverFixture as unknown as Component<Record<string, unknown>>, { props });
 }
 
+// Portaled content nodes (use:portal) are appended to document.body and
+// are not cleaned up by testing-library's unmount in this package; reset
+// so each test's content query resolves only its own mount.
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+
 describe("Popover — compound API surface", () => {
   it("renders the trigger but not the content when closed", async () => {
     const { container } = mountDefault();
     await tick();
     expect(container.querySelector("[data-testid='trigger']")).toBeTruthy();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("renders the content when defaultOpen={true}", async () => {
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("opens on click of the trigger", async () => {
@@ -38,7 +45,7 @@ describe("Popover — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.click(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("toggles closed on a second click of the trigger", async () => {
@@ -47,7 +54,7 @@ describe("Popover — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.click(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("closes on Escape", async () => {
@@ -55,7 +62,7 @@ describe("Popover — compound API surface", () => {
     await tick();
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("closes on outside-click", async () => {
@@ -65,23 +72,23 @@ describe("Popover — compound API surface", () => {
       new MouseEvent("mousedown", { bubbles: true }),
     );
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("click on content does not count as outside-click", async () => {
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
-    const content = container.querySelector("[data-testid='content']")!;
+    const content = document.body.querySelector("[data-testid='content']")!;
     content.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("wires aria-controls + aria-expanded on the trigger", async () => {
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    const content = container.querySelector("[data-testid='content']")!;
+    const content = document.body.querySelector("[data-testid='content']")!;
     const id = content.getAttribute("id");
     expect(id).toBeTruthy();
     expect(trigger.getAttribute("aria-controls")).toBe(id);
@@ -111,7 +118,7 @@ describe("Popover — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.click(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("closeOnEscape={false} prevents Escape dismissal", async () => {
@@ -119,7 +126,7 @@ describe("Popover — compound API surface", () => {
     await tick();
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("closeOnOutsideClick={false} prevents outside-click dismissal", async () => {
@@ -129,7 +136,7 @@ describe("Popover — compound API surface", () => {
       new MouseEvent("mousedown", { bubbles: true }),
     );
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("unmount removes document-level listeners", async () => {
@@ -156,7 +163,7 @@ describe("Popover — snippet host adoption", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.click(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("asChild applies the data-popover-trigger marker to the adopted host", async () => {

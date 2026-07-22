@@ -40,6 +40,7 @@
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
+  anchoredPortalsContentToBody,
   isAnchoredPresenceKind,
   resolveAnchoredSurfacePolicy,
   type AnchoredSurfacePolicy,
@@ -75,7 +76,7 @@ export function generateSvelteSurfaceFiles(ir: ComponentIR): SvelteSurfaceFiles 
 
 function emitRootSfc(
   ir: ComponentIR,
-  _surface: SurfaceIR,
+  surface: SurfaceIR,
   policy: AnchoredSurfacePolicy,
 ): string {
   const name = ir.name;
@@ -84,6 +85,7 @@ function emitRootSfc(
   const placementTypeAlias = placementValues
     ? `type ${name}Placement = ${placementValues.map((v) => `"${v}"`).join(" | ")};\n`
     : "";
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
 
   // Policy-derived consumer-facing dismissal-mode flags
   // (closeOnEscape / closeOnBlur / closeOnOutsideClick / ...).
@@ -102,7 +104,7 @@ function emitRootSfc(
   return [
     `<script lang="ts">`,
     `// @generated:start imports`,
-    `import { use${name}, provide${name}Context } from "./use${name}.svelte.js";`,
+    `import { use${name}, provide${name}Context${positioningEnabled ? `, provide${name}Placement` : ""} } from "./use${name}.svelte.js";`,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -155,6 +157,7 @@ function emitRootSfc(
     `});`,
     ``,
     `provide${name}Context(surface);`,
+    positioningEnabled ? `provide${name}Placement(() => placement);` : "",
     `// @generated:end`,
     ``,
     `// @generated:start classes`,
@@ -279,16 +282,68 @@ function emitTriggerSfc(ir: ComponentIR, _surface: SurfaceIR): string {
 
 function emitContentSfc(
   ir: ComponentIR,
-  _surface: SurfaceIR,
+  surface: SurfaceIR,
   policy: AnchoredSurfacePolicy,
 ): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const contentRole = policy.defaultContentRole;
+
+  // Positioning + portal are driven by the contract:
+  //   - surface.positioning.strategy === "anchored" → emit
+  //     createAnchoredPosition wiring on Content and apply
+  //     position: fixed.
+  //   - anchoredPortalsContentToBody(ir)             → apply use:portal
+  //     to the content element so it escapes ancestor stacking
+  //     contexts / overflow clipping.
+  // Both flags are independent: a contract can opt into anchored
+  // positioning without portalling (content stays in-tree but uses
+  // fixed positioning), though Popover and Tooltip enable both.
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalEnabled = anchoredPortalsContentToBody(ir);
+  const collision = surface.positioning?.collision ?? "flip-shift";
+
+  const contextImports = positioningEnabled
+    ? `{ use${name}Context, use${name}Placement }`
+    : `{ use${name}Context }`;
+  const importLines = [
+    `import ${contextImports} from "./use${name}.svelte.js";`,
+  ];
+  if (positioningEnabled) {
+    importLines.push(
+      `import { createAnchoredPosition, type AnchoredPlacement } from "../../primitives/surfaces/createAnchoredPosition.svelte.js";`,
+    );
+  }
+  if (portalEnabled) {
+    importLines.push(`import { portal } from "../../primitives/index.js";`);
+  }
+
+  const positioningHookLines = positioningEnabled
+    ? [
+        ``,
+        `const position = createAnchoredPosition({`,
+        `  anchor: () => ctx.anchorEl(),`,
+        `  content: () => ctx.contentEl(),`,
+        `  open: () => ctx.open(),`,
+        `  placement: () => (use${name}Placement() ?? "auto") as AnchoredPlacement | "auto",`,
+        `  collision: () => "${collision}",`,
+        `});`,
+      ]
+    : [];
+
+  const positioningStyleAttr = positioningEnabled
+    ? [
+        `    style="position: fixed; top: {position.state.top}px; left: {position.state.left}px; visibility: {position.state.ready ? 'visible' : 'hidden'};"`,
+        `    data-placement={position.state.placement}`,
+      ]
+    : [];
+
+  const portalDirective = portalEnabled ? [`    use:portal={{ enabled: true }}`] : [];
+
   return [
     `<script lang="ts">`,
     `// @generated:start imports`,
-    `import { use${name}Context } from "./use${name}.svelte.js";`,
+    ...importLines,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -312,6 +367,7 @@ function emitContentSfc(
     `$effect(() => {`,
     `  if (contentEl) ctx.registerContent(contentEl);`,
     `});`,
+    ...positioningHookLines,
     `// @generated:end`,
     ``,
     `// @custom:start trailing`,
@@ -327,6 +383,8 @@ function emitContentSfc(
     // tooltip→"tooltip", popover→null rule (and the contract-override
     // path) — Popover and other interactive surfaces emit no role.
     contentRole !== null ? `    role="${contentRole}"` : null,
+    ...positioningStyleAttr,
+    ...portalDirective,
     `    class={className}`,
     `    data-testid={dataTestid}`,
     `    data-${cssPrefix}-content`,
@@ -349,6 +407,7 @@ function emitComposable(
   const cssPrefix = ir.cssPrefix;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
 
   // Policy-derived dismissal-array assembly. For each declared
   // dismissal mode:
@@ -370,14 +429,41 @@ function emitComposable(
     )
     .map((spec) => `  ${spec.prop}?: () => boolean | undefined;`);
 
+  const placementContextKey = `fsds-surface-placement:${name}`;
+  const placementExports = positioningEnabled
+    ? [
+        ``,
+        `export function provide${name}Placement(getter: () => AnchoredPlacement | "auto" | undefined): void {`,
+        `  setContext("${placementContextKey}", getter);`,
+        `}`,
+        ``,
+        `export function use${name}Placement(): AnchoredPlacement | "auto" | undefined {`,
+        `  const getter = getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("${placementContextKey}");`,
+        `  return getter?.();`,
+        `}`,
+      ]
+    : [];
+
+  const positioningTypeImport = positioningEnabled
+    ? [`  type AnchoredPlacement,`]
+    : [];
+
   return [
     `// @generated:start imports`,
+    ...(positioningEnabled ? [`import { getContext, setContext } from "svelte";`] : []),
     `import {`,
     `  createAnchoredSurface,`,
     `  provideSurfaceContext,`,
     `  useSurfaceContext,`,
     `  type CreateAnchoredSurfaceResult,`,
     `} from "../../primitives/surfaces/createAnchoredSurface.svelte.js";`,
+    ...(positioningEnabled
+      ? [
+          `import {`,
+          ...positioningTypeImport,
+          `} from "../../primitives/surfaces/createAnchoredPosition.svelte.js";`,
+        ]
+      : []),
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -424,6 +510,7 @@ function emitComposable(
     `export function use${name}Context(): CreateAnchoredSurfaceResult {`,
     `  return useSurfaceContext("${name}");`,
     `}`,
+    ...placementExports,
     `// @generated:end`,
     ``,
     `// @custom:start trailing`,

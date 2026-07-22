@@ -1,10 +1,14 @@
 // @generated:start imports
+import { getContext, setContext } from "svelte";
 import {
   createAnchoredSurface,
   provideSurfaceContext,
   useSurfaceContext,
   type CreateAnchoredSurfaceResult,
 } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";
+import {
+  type AnchoredPlacement,
+} from "../../primitives/surfaces/createAnchoredPosition.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -54,6 +58,15 @@ export function providePopoverContext(value: CreateAnchoredSurfaceResult): void 
 
 export function usePopoverContext(): CreateAnchoredSurfaceResult {
   return useSurfaceContext("Popover");
+}
+
+export function providePopoverPlacement(getter: () => AnchoredPlacement | "auto" | undefined): void {
+  setContext("fsds-surface-placement:Popover", getter);
+}
+
+export function usePopoverPlacement(): AnchoredPlacement | "auto" | undefined {
+  const getter = getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("fsds-surface-placement:Popover");
+  return getter?.();
 }
 // @generated:end
 

@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, afterEach } from "vitest";
 import type { Component } from "svelte";
 import { tick } from "svelte";
 import { render, fireEvent } from "@testing-library/svelte";
@@ -18,18 +18,25 @@ function mountDefault(props: Record<string, unknown> = {}) {
   return render(TooltipFixture as unknown as Component<Record<string, unknown>>, { props });
 }
 
+// Portaled content nodes (use:portal) are appended to document.body and
+// are not cleaned up by testing-library's unmount in this package; reset
+// so each test's content query resolves only its own mount.
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+
 describe("Tooltip — compound API surface", () => {
   it("renders the trigger but not the content when closed", async () => {
     const { container } = mountDefault();
     await tick();
     expect(container.querySelector("[data-testid='trigger']")).toBeTruthy();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("renders the content when defaultOpen={true}", async () => {
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
-    const content = container.querySelector("[data-testid='content']");
+    const content = document.body.querySelector("[data-testid='content']");
     expect(content).toBeTruthy();
     expect(content?.getAttribute("role")).toBe("tooltip");
   });
@@ -40,7 +47,7 @@ describe("Tooltip — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.pointerEnter(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("opens on focus over the trigger", async () => {
@@ -49,7 +56,7 @@ describe("Tooltip — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.focus(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("closes on pointerleave from the trigger (no grace path into content)", async () => {
@@ -58,7 +65,7 @@ describe("Tooltip — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     trigger.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true, relatedTarget: document.body }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("closes on Escape", async () => {
@@ -66,7 +73,7 @@ describe("Tooltip — compound API surface", () => {
     await tick();
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("closes on focus leaving the surface boundary (focusout)", async () => {
@@ -84,14 +91,14 @@ describe("Tooltip — compound API surface", () => {
       }),
     );
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("wires aria-describedby from trigger to content when open", async () => {
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    const content = container.querySelector("[data-testid='content']")!;
+    const content = document.body.querySelector("[data-testid='content']")!;
     const id = content.getAttribute("id");
     expect(id).toBeTruthy();
     expect(trigger.getAttribute("aria-describedby")).toBe(id);
@@ -120,7 +127,7 @@ describe("Tooltip — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.pointerEnter(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 
   it("disabled root does not fire onOpenChange on hover", async () => {
@@ -139,20 +146,20 @@ describe("Tooltip — compound API surface", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.pointerEnter(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
     await rerender({ open: true });
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("pointerleave INTO content does not close (grace path)", async () => {
     const { container } = mountDefault({ defaultOpen: true });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    const content = container.querySelector("[data-testid='content']")!;
+    const content = document.body.querySelector("[data-testid='content']")!;
     trigger.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true, relatedTarget: content }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("closeOnEscape={false} prevents Escape dismissal", async () => {
@@ -160,7 +167,7 @@ describe("Tooltip — compound API surface", () => {
     await tick();
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("closeOnBlur={false} prevents boundary-focusout dismissal", async () => {
@@ -174,7 +181,7 @@ describe("Tooltip — compound API surface", () => {
       }),
     );
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("unmount removes document-level listeners", async () => {
@@ -202,7 +209,7 @@ describe("Tooltip — snippet host adoption", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.pointerEnter(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("asChild opens on focus over the adopted child", async () => {
@@ -211,14 +218,14 @@ describe("Tooltip — snippet host adoption", () => {
     const trigger = container.querySelector("[data-testid='trigger']")!;
     await fireEvent.focus(trigger);
     await tick();
-    expect(container.querySelector("[data-testid='content']")).toBeTruthy();
+    expect(document.body.querySelector("[data-testid='content']")).toBeTruthy();
   });
 
   it("asChild wires aria-describedby onto the adopted child when open", async () => {
     const { container } = mountDefault({ asChild: true, defaultOpen: true });
     await tick();
     const trigger = container.querySelector("[data-testid='trigger']")!;
-    const content = container.querySelector("[data-testid='content']")!;
+    const content = document.body.querySelector("[data-testid='content']")!;
     expect(trigger.getAttribute("aria-describedby")).toBe(content.getAttribute("id"));
   });
 
@@ -264,7 +271,7 @@ describe("Tooltip — snippet host adoption", () => {
     await tick();
     expect(consumerSpy).toHaveBeenCalled();
     expect(surfaceSpy).not.toHaveBeenCalled();
-    expect(container.querySelector("[data-testid='content']")).toBeNull();
+    expect(document.body.querySelector("[data-testid='content']")).toBeNull();
   });
 });
 

@@ -1,10 +1,14 @@
 // @generated:start imports
+import { getContext, setContext } from "svelte";
 import {
   createAnchoredSurface,
   provideSurfaceContext,
   useSurfaceContext,
   type CreateAnchoredSurfaceResult,
 } from "../../primitives/surfaces/createAnchoredSurface.svelte.js";
+import {
+  type AnchoredPlacement,
+} from "../../primitives/surfaces/createAnchoredPosition.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -53,6 +57,15 @@ export function provideTooltipContext(value: CreateAnchoredSurfaceResult): void 
 
 export function useTooltipContext(): CreateAnchoredSurfaceResult {
   return useSurfaceContext("Tooltip");
+}
+
+export function provideTooltipPlacement(getter: () => AnchoredPlacement | "auto" | undefined): void {
+  setContext("fsds-surface-placement:Tooltip", getter);
+}
+
+export function useTooltipPlacement(): AnchoredPlacement | "auto" | undefined {
+  const getter = getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("fsds-surface-placement:Tooltip");
+  return getter?.();
 }
 // @generated:end
 
