@@ -16,7 +16,12 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import type { PrimitiveIR } from "../../primitive-contract.js";
 import { generateReactComponentSource } from "./component-source.js";
+import {
+  generateReactStackPrimitiveCss,
+  generateReactStackPrimitiveSource,
+} from "./primitive-source.js";
 import { generateReactHookSource } from "./hook-source.js";
 import { generateBarrel, generateReactTest } from "./tests.js";
 import { isSurfaceComponent } from "./surface-emit.js";
@@ -68,6 +73,20 @@ export function createReactEmitter(
           relativePath: `${ir.name}/__tests__/${ir.name}.test.tsx`,
           contents: generateReactTest(ir),
           preservable: true,
+        },
+      ];
+    },
+
+    emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      const base = ir.name.toLowerCase();
+      return [
+        {
+          relativePath: `${base}.tsx`,
+          contents: generateReactStackPrimitiveSource(ir),
+        },
+        {
+          relativePath: `${base}.css`,
+          contents: generateReactStackPrimitiveCss(ir),
         },
       ];
     },
