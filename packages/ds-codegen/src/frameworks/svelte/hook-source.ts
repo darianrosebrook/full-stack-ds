@@ -12,7 +12,7 @@
  */
 import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { isCompoundStateContainer } from "../react/hook-source.js";
+import { isCompoundStateContainer, isDisclosureContainer } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
   useControllableState: NormalizedChannelIR[];
@@ -57,7 +57,8 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Standalone dismissal for trap-focus components: outside-click is handled
   // template-side (overlay onClick), so only Escape needs a document listener.
   const useDismissal = !useAnchor && hasEscape;
-  const compoundContainer = isCompoundStateContainer(ir);
+  const compoundContainer =
+    isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
 
   if (
     channels.length === 0 &&
@@ -83,7 +84,10 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   };
 }
 
-function generateImports(bindings: PrimitiveBindings): string {
+function generateImports(
+  bindings: PrimitiveBindings,
+  isDisclosure: boolean,
+): string {
   const primitives: string[] = [];
   if (bindings.useControllableState.length > 0)
     primitives.push("createControllableState");
@@ -93,6 +97,7 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.useAnchorToggle) primitives.push("createAnchorToggle");
   if (bindings.useDismissal) primitives.push("createDismissal");
   if (bindings.isCompoundStateContainer) primitives.push("createCompoundContext");
+  if (isDisclosure) primitives.push("createCompoundContext");
 
   if (primitives.length === 0) return "";
   return `import { ${primitives.sort().join(", ")} } from "../../primitives/index.js";`;
@@ -432,11 +437,44 @@ function capitalize(s: string): string {
   return s[0].toUpperCase() + s.slice(1);
 }
 
+/**
+ * Disclosure (Accordion-shaped) context: openness channel + per-item toggle
+ * helpers + type/collapsible/disabled/idBase. One shared context leaf so all
+ * sub-SFCs consume the same symbol. No tab register/idBase counter.
+ */
+function generateDisclosureContextTypes(ir: ComponentIR): string {
+  const name = ir.name;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  return [
+    `export interface ${name}ContextValue {`,
+    `  readonly ${channelName}: string | string[];`,
+    `  toggleItem: (value: string) => void;`,
+    `  isItemOpen: (value: string) => boolean;`,
+    `  type: "single" | "multiple";`,
+    `  collapsible: boolean;`,
+    `  disabled: boolean;`,
+    `  idBase: string;`,
+    `}`,
+    ``,
+    `const _${name.toLowerCase()}Context = createCompoundContext<${name}ContextValue>("${name}");`,
+    ``,
+    `export function provide${name}Context(value: ${name}ContextValue): void {`,
+    `  _${name.toLowerCase()}Context.provide(value);`,
+    `}`,
+    ``,
+    `export function use${name}Context(): ${name}ContextValue {`,
+    `  return _${name.toLowerCase()}Context.consume();`,
+    `}`,
+  ].join("\n");
+}
+
 export function generateSvelteHookSource(ir: ComponentIR): string | null {
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
 
-  const importsBody = generateImports(bindings);
+  const isDisclosure = isDisclosureContainer(ir);
+  const importsBody = generateImports(bindings, isDisclosure);
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
@@ -444,7 +482,9 @@ export function generateSvelteHookSource(ir: ComponentIR): string | null {
   // For compound-state-container IRs, also emit the context type + helpers.
   const compoundContextBody = bindings.isCompoundStateContainer
     ? generateCompoundContextTypes(ir)
-    : "";
+    : isDisclosure
+      ? generateDisclosureContextTypes(ir)
+      : "";
 
   const hookBody = generateBody(ir, bindings);
 

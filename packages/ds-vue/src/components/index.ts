@@ -1,7 +1,6 @@
 import "./Accordion/Accordion.css";
 export { default as Accordion } from "./Accordion/Accordion.vue";
 export { default as AccordionContent } from "./Accordion/AccordionContent.vue";
-export { default as AccordionHeader } from "./Accordion/AccordionHeader.vue";
 export { default as AccordionItem } from "./Accordion/AccordionItem.vue";
 export { default as AccordionTrigger } from "./Accordion/AccordionTrigger.vue";
 import "./Alert/Alert.css";

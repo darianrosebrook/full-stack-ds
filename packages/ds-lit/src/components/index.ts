@@ -1,4 +1,4 @@
-export { AccordionElement, AccordionContentElement, AccordionHeaderElement, AccordionItemElement, AccordionTriggerElement } from "./Accordion/Accordion.js";
+export { AccordionElement, AccordionContentElement, AccordionItemElement, AccordionTriggerElement } from "./Accordion/Accordion.js";
 export { AlertElement, AlertBodyElement, AlertTitleElement } from "./Alert/Alert.js";
 export { AlertNoticeElement, AlertNoticeBodyElement, AlertNoticeTitleElement } from "./AlertNotice/AlertNotice.js";
 export { AvatarElement } from "./Avatar/Avatar.js";

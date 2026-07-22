@@ -55,7 +55,9 @@ import {
 } from "../icon-glyph.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
   getInteractiveItemPart,
+  getMultipleItemPart,
   getRegionPart,
   getGroupHostPart,
   getGroupHostOrnamentPart,
@@ -80,6 +82,9 @@ const ANGULAR_RESERVED = new Set(["class", "style", "children", "className"]);
 export function generateAngularComponentSource(ir: ComponentIR): string {
   // Compound-state-container (Tabs-shaped): emit a fully wired root component
   // that provides the context token to its children.
+  if (isDisclosureContainer(ir)) {
+    return generateAngularDisclosureStateRootSource(ir);
+  }
   if (isCompoundStateContainer(ir)) {
     return generateAngularCompoundStateRootSource(ir);
   }
@@ -316,6 +321,417 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
   return renderSections(sections, "line");
 }
 
+// ---------------------------------------------------------------------------
+// Repeated-disclosure lowering (Accordion-shaped)
+// ---------------------------------------------------------------------------
+
+/** DFS for the DOM node whose part matches `partName`. */
+function angularFindDomNode(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === partName) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/** Returns the DOM node whose direct child has `part === partName`. */
+function angularFindParentOf(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.children?.some((c) => c.part === partName)) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/**
+ * Root component for a repeated-disclosure container (Accordion). Provides the
+ * disclosure context token: exposes the openness signal, per-item toggle/open,
+ * and reactive type/collapsible/disabled signals. Hosts arrow-key navigation.
+ */
+function generateAngularDisclosureStateRootSource(ir: ComponentIR): string {
+  const { name, classRecipe } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+  const setterName = `set${cap(channelName)}`;
+  const hasCollapsible = ir.styledProps.some((p) => p.name === "collapsible");
+  const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
+
+  const importsBody = [
+    `import { Component, Input, OnChanges, SimpleChanges, ElementRef, computed, signal, forwardRef, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { use${name}, ${name}ContextToken } from "./use${name}.js";`,
+  ].join("\n");
+
+  const typesBody = emitNonReactTypeAliases(ir).join("\n");
+
+  const propLines: string[] = [];
+  const declaredProps = new Set<string>();
+  for (const p of ir.styledProps) {
+    if (ANGULAR_RESERVED.has(p.name)) continue;
+    const propLine = generateInputProp(p);
+    if (propLine) {
+      propLines.push(propLine);
+      declaredProps.add(p.name);
+    }
+  }
+  for (const dim of Object.keys(ir.variants)) {
+    if (declaredProps.has(dim) || ANGULAR_RESERVED.has(dim)) continue;
+    propLines.push(`  @Input() ${dim}?: string;`);
+    declaredProps.add(dim);
+  }
+  if (!declaredProps.has("class")) {
+    propLines.push(`  @Input() class?: string;`);
+    declaredProps.add("class");
+  }
+  if (channel && !declaredProps.has(channel.changeHandlerProp)) {
+    const valueType = channel.valueType ?? "unknown";
+    propLines.push(`  @Input() ${channel.changeHandlerProp}?: (value: ${valueType}) => void;`);
+  }
+
+  const classModifierLines: string[] = [];
+  for (const mod of classRecipe.valueModifiers) {
+    classModifierLines.push(
+      `      this.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${this.${mod.propName}}\` : null,`,
+    );
+  }
+  for (const mod of classRecipe.booleanModifiers) {
+    classModifierLines.push(
+      `      this.${mod.safeName} ? "${classRecipe.base}--${mod.safeName}" : null,`,
+    );
+  }
+
+  const hookOptionsSignal: string[] = [];
+  if (channel) {
+    hookOptionsSignal.push(`    ${channel.valueProp}: () => this._controlledValue(),`);
+    if (channel.defaultValueProp) {
+      hookOptionsSignal.push(`    ${channel.defaultValueProp}: this.${channel.defaultValueProp},`);
+    }
+    hookOptionsSignal.push(`    ${channel.changeHandlerProp}: (v) => this.${channel.changeHandlerProp}?.(v),`);
+  }
+  hookOptionsSignal.push(`    destroyRef: this.destroyRef,`);
+
+  const contextValueLines: string[] = [
+    `    get ${channelName}() { return self.behavior.${channelName}; },`,
+    `    toggleItem: (v: string) => self.toggleItem(v),`,
+    `    isItemOpen: (v: string) => self.isItemOpen(v),`,
+    `    get type() { return self._type; },`,
+    `    get collapsible() { return self._collapsible; },`,
+    `    get disabled() { return self._disabled; },`,
+    `    get idBase() { return self.idBase; },`,
+  ];
+
+  const componentBody = [
+    `@Component({`,
+    `  selector: "fsds-${toKebab(name)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  providers: [`,
+    `    {`,
+    `      provide: ${name}ContextToken,`,
+    `      useFactory: () => {`,
+    `        const self = inject(forwardRef(() => ${name}Component));`,
+    `        const ctx: import("./use${name}.js").${name}ContextValue = {`,
+    ...contextValueLines.map((l) => `          ${l}`),
+    `        };`,
+    `        return ctx;`,
+    `      },`,
+    `      deps: [],`,
+    `    },`,
+    `  ],`,
+    `  template: \`<div [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${name}Component implements OnChanges {`,
+    ...propLines,
+    ``,
+    `  _controlledValue = signal<string | string[] | undefined>(undefined);`,
+    `  _type = signal<"single" | "multiple">("single");`,
+    `  _collapsible = signal<boolean>(false);`,
+    `  _disabled = signal<boolean>(false);`,
+    `  readonly idBase = \`${name.toLowerCase()}-\${++_${name.toLowerCase()}IdCounter}\`;`,
+    ``,
+    `  ngOnChanges(changes: SimpleChanges): void {`,
+    ...(channel ? [`    if (changes["${channel.valueProp}"]) this._controlledValue.set(this.${channel.valueProp});`] : []),
+    `    if (changes["type"]) this._type.set((this.type as "single" | "multiple") ?? "single");`,
+    ...(hasCollapsible ? [`    if (changes["collapsible"]) this._collapsible.set(this.collapsible ?? false);`] : []),
+    ...(hasDisabled ? [`    if (changes["disabled"]) this._disabled.set(this.disabled ?? false);`] : []),
+    `  }`,
+    ``,
+    `  private destroyRef = inject(DestroyRef);`,
+    `  private elRef = inject(ElementRef<HTMLElement>);`,
+    `  protected behavior = use${name}({`,
+    ...hookOptionsSignal,
+    `  });`,
+    ``,
+    `  isItemOpen(itemValue: string): boolean {`,
+    `    const v = this.behavior.${channelName}();`,
+    `    return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;`,
+    `  }`,
+    ``,
+    `  toggleItem(itemValue: string): void {`,
+    `    const v = this.behavior.${channelName}();`,
+    `    if (this._type() === "multiple") {`,
+    `      const current = Array.isArray(v) ? v : [];`,
+    `      this.behavior.${setterName}(`,
+    `        current.includes(itemValue)`,
+    `          ? current.filter((x) => x !== itemValue)`,
+    `          : [...current, itemValue],`,
+    `      );`,
+    `    } else {`,
+    `      const current = typeof v === "string" ? v : "";`,
+    hasCollapsible
+      ? `      this.behavior.${setterName}(current === itemValue && this._collapsible() ? "" : itemValue);`
+      : `      this.behavior.${setterName}(itemValue);`,
+    `    }`,
+    `  }`,
+    ``,
+    `  handleKeyDown(e: KeyboardEvent): void {`,
+    `    const key = e.key;`,
+    `    if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {`,
+    `      return;`,
+    `    }`,
+    `    const host = this.elRef.nativeElement as HTMLElement;`,
+    `    const triggers = Array.from(`,
+    `      host.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),`,
+    `    ).filter((el) => !el.disabled);`,
+    `    if (triggers.length === 0) return;`,
+    `    const currentIndex = triggers.indexOf(document.activeElement as HTMLButtonElement);`,
+    `    let nextIndex = currentIndex;`,
+    `    if (key === "ArrowDown") {`,
+    `      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;`,
+    `    } else if (key === "ArrowUp") {`,
+    `      nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;`,
+    `    } else if (key === "Home") {`,
+    `      nextIndex = 0;`,
+    `    } else {`,
+    `      nextIndex = triggers.length - 1;`,
+    `    }`,
+    `    e.preventDefault();`,
+    `    triggers[nextIndex]?.focus();`,
+    `  }`,
+    ``,
+    `  classes = computed(() =>`,
+    `    [`,
+    `      "${classRecipe.base}",`,
+    ...classModifierLines,
+    `      this.class,`,
+    `    ].filter(Boolean).join(" "),`,
+    `  );`,
+    `}`,
+  ].join("\n");
+
+  const counterPrelude = `let _${name.toLowerCase()}IdCounter = 0;`;
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const sections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: [counterPrelude, typesBody].filter((s) => s.length > 0).join("\n\n") },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "component", body: componentBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+    blank(),
+  ];
+
+  return renderSections(sections, "line");
+}
+
+/** Sub-component files (Item/Trigger/Content) for a disclosure container. */
+export function generateAngularDisclosureStateParts(
+  ir: ComponentIR,
+): Array<{ name: string; content: string }> {
+  if (!isDisclosureContainer(ir)) return [];
+  const { name, cssPrefix } = ir;
+  const cap = (s: string) => s[0].toUpperCase() + s.slice(1);
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const multiplePart = getMultipleItemPart(ir);
+  if (!itemPart || !regionPart || !multiplePart || !ir.dom) return [];
+
+  const itemNode = angularFindDomNode(ir.dom, itemPart.name);
+  const headerNode = angularFindParentOf(ir.dom, itemPart.name);
+  const headerPartName = headerNode?.part;
+  const headerTag = headerNode?.tag ?? "div";
+  const chevronPartName = itemNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  )?.part;
+  const innerNode = angularFindDomNode(ir.dom, regionPart.name);
+  const innerChild = innerNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  );
+  const innerPartName = innerChild?.part;
+  const innerTag = innerChild?.tag ?? "div";
+
+  const itemName = `${name}${cap(multiplePart.name)}`;
+  const triggerName = `${name}${cap(itemPart.name)}`;
+  const contentName = `${name}${cap(regionPart.name)}`;
+
+  const itemCssClass = `${cssPrefix}__${multiplePart.name}`;
+  const triggerCssClass = `${cssPrefix}__${itemPart.name}`;
+  const contentCssClass = `${cssPrefix}__${regionPart.name}`;
+
+  // Item component (passive wrapper)
+  const itemContent = [
+    `// @generated:start imports`,
+    `import { Component, Input, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start component`,
+    `@Component({`,
+    `  selector: "fsds-${toKebab(itemName)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  template: \`<div [ngClass]="classes()"><ng-content /></div>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${itemName}Component {`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    `  classes(): string {`,
+    `    return ["${itemCssClass}", this.class].filter(Boolean).join(" ");`,
+    `  }`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+  ].join("\n");
+
+  // Trigger component
+  const triggerTemplateOpen = headerPartName ? `<${headerTag} class="${cssPrefix}__${headerPartName}">` : "";
+  const triggerTemplateClose = headerPartName ? `</${headerTag}>` : "";
+  const chevronMarkup = chevronPartName ? `<span class="${cssPrefix}__${chevronPartName}"></span>` : "";
+  const triggerContent = [
+    `// @generated:start imports`,
+    `import { Component, Input, computed, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start component`,
+    `@Component({`,
+    `  selector: "fsds-${toKebab(triggerName)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  template: \`${triggerTemplateOpen}<button`,
+    `  type="button"`,
+    `  [ngClass]="classes()"`,
+    `  data-disclosure-trigger`,
+    `  [attr.data-value]="value"`,
+    `  [attr.id]="ctx.idBase + '-trigger-' + value"`,
+    `  [attr.aria-controls]="ctx.idBase + '-content-' + value"`,
+    `  [attr.aria-expanded]="isOpen()"`,
+    `  [disabled]="ctx.disabled()"`,
+    `  (click)="ctx.toggleItem(value)"`,
+    `><ng-content />${chevronMarkup}</button>${triggerTemplateClose}\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${triggerName}Component {`,
+    `  @Input({ required: true }) value!: string;`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    `  protected ctx = use${name}Context();`,
+    ``,
+    `  isOpen = computed(() => this.ctx.isItemOpen(this.value));`,
+    ``,
+    `  classes = computed(() =>`,
+    `    [`,
+    `      "${triggerCssClass}",`,
+    `      this.isOpen() && "${triggerCssClass}--open",`,
+    `      this.class,`,
+    `    ].filter(Boolean).join(" "),`,
+    `  );`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+  ].join("\n");
+
+  // Content component
+  const contentInnerOpen = innerPartName ? `<${innerTag} class="${cssPrefix}__${innerPartName}">` : "";
+  const contentInnerClose = innerPartName ? `</${innerTag}>` : "";
+  const contentContent = [
+    `// @generated:start imports`,
+    `import { Component, Input, computed, ChangeDetectionStrategy } from "@angular/core";`,
+    `import { NgClass } from "@angular/common";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start component`,
+    `@Component({`,
+    `  selector: "fsds-${toKebab(contentName)}",`,
+    `  standalone: true,`,
+    `  imports: [NgClass],`,
+    `  template: \`<div`,
+    `  role="region"`,
+    `  [ngClass]="classes()"`,
+    `  [attr.id]="ctx.idBase + '-content-' + value"`,
+    `  [attr.aria-labelledby]="ctx.idBase + '-trigger-' + value"`,
+    `  [attr.hidden]="!isOpen() ? true : null"`,
+    `>${contentInnerOpen}<ng-content />${contentInnerClose}</div>\`,`,
+    `  changeDetection: ChangeDetectionStrategy.OnPush,`,
+    `})`,
+    `export class ${contentName}Component {`,
+    `  @Input({ required: true }) value!: string;`,
+    `  @Input() class?: string;`,
+    `  @Input() dataTestid?: string;`,
+    ``,
+    `  protected ctx = use${name}Context();`,
+    ``,
+    `  isOpen = computed(() => this.ctx.isItemOpen(this.value));`,
+    ``,
+    `  classes = computed(() =>`,
+    `    ["${contentCssClass}", this.class].filter(Boolean).join(" "),`,
+    `  );`,
+    `}`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+  ].join("\n");
+
+  return [
+    { name: itemName, content: itemContent },
+    { name: triggerName, content: triggerContent },
+    { name: contentName, content: contentContent },
+  ];
+}
+
 /**
  * Returns an array of `{ name, content }` for the sub-component files emitted
  * for a compound-state-container (e.g. TabsList, TabsTab, TabsPanel).
@@ -326,7 +742,7 @@ function generateAngularCompoundStateRootSource(ir: ComponentIR): string {
 export function generateAngularCompoundStateParts(
   ir: ComponentIR,
 ): Array<{ name: string; content: string }> {
-  if (!isCompoundStateContainer(ir)) return [];
+  if (!isCompoundStateContainer(ir) || isDisclosureContainer(ir)) return [];
 
   const { name, cssPrefix } = ir;
   const itemPart = getInteractiveItemPart(ir);

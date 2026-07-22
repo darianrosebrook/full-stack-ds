@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { Stack } from "../../primitives/index.js";
+
 // @generated:end
 
 // @custom:start imports
@@ -26,6 +26,6 @@ const classes = $derived(["accordion__item", className].filter(Boolean).join(" "
 // @custom:end
 </script>
 
-<Stack as="li" class={classes} data-testid={dataTestid}>
+<div class={classes} data-testid={dataTestid}>
   {@render children?.()}
-</Stack>
+</div>

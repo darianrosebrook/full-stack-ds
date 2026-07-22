@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { useAccordion } from "./useAccordion.svelte.js";
+import { useAccordion, provideAccordionContext } from "./useAccordion.svelte.js";
 // @generated:end
 
 // @custom:start imports
@@ -8,6 +8,8 @@ import { useAccordion } from "./useAccordion.svelte.js";
 // @custom:end
 
 // @generated:start types
+let _accordionIdCounter = 0;
+
 type AccordionType = "single" | "multiple";
 // @generated:end
 
@@ -24,10 +26,21 @@ interface Props {
   collapsible?: boolean;
   disabled?: boolean;
   class?: string;
+  "data-testid"?: string;
   children?: import('svelte').Snippet;
 }
 
-let { type = "single", value, defaultValue, onValueChange, collapsible = false, disabled, class: className, children }: Props = $props();
+let {
+  type = "single",
+  value,
+  defaultValue,
+  onValueChange,
+  collapsible = false,
+  disabled,
+  class: className,
+  "data-testid": dataTestid,
+  children,
+}: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -36,6 +49,64 @@ const behavior = useAccordion({
   defaultValue: () => defaultValue,
   onValueChange: () => onValueChange,
 });
+
+const idBase = `accordion-${++_accordionIdCounter}`;
+let rootRef: HTMLElement | null = $state(null);
+
+function isItemOpen(itemValue: string): boolean {
+  const v = behavior.openness;
+  return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;
+}
+
+function toggleItem(itemValue: string): void {
+  const v = behavior.openness;
+  if (type === "multiple") {
+    const current = Array.isArray(v) ? v : [];
+    behavior.setOpenness(
+      current.includes(itemValue)
+        ? current.filter((x) => x !== itemValue)
+        : [...current, itemValue],
+    );
+  } else {
+    const current = typeof v === "string" ? v : "";
+    behavior.setOpenness(current === itemValue && collapsible ? "" : itemValue);
+  }
+}
+
+function handleKeyDown(e: KeyboardEvent): void {
+  const key = e.key;
+  if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
+    return;
+  }
+  if (!rootRef) return;
+  const triggers = Array.from(
+    rootRef.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),
+  ).filter((el) => !el.disabled);
+  if (triggers.length === 0) return;
+  const currentIndex = triggers.indexOf(document.activeElement as HTMLButtonElement);
+  let nextIndex = currentIndex;
+  if (key === "ArrowDown") {
+    nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;
+  } else if (key === "ArrowUp") {
+    nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;
+  } else if (key === "Home") {
+    nextIndex = 0;
+  } else {
+    nextIndex = triggers.length - 1;
+  }
+  e.preventDefault();
+  triggers[nextIndex]?.focus();
+}
+
+provideAccordionContext({
+  get openness() { return behavior.openness; },
+  toggleItem,
+  isItemOpen,
+  get type() { return type ?? "single"; },
+  get collapsible() { return collapsible ?? false; },
+  get disabled() { return disabled ?? false; },
+  idBase,
+});
 // @generated:end
 
 // @generated:start classes
@@ -43,7 +114,6 @@ const classes = $derived(
   [
     "accordion",
     type ? `accordion--${type}` : null,
-    disabled ? "accordion--disabled" : null,
     className,
   ].filter(Boolean).join(" ")
 );
@@ -54,18 +124,7 @@ const classes = $derived(
 // @custom:end
 </script>
 
-<div class={classes}>
-  <div class={'accordion__item'}>
-    <h3 class={'accordion__header'}>
-      <button class={'accordion__trigger'} type="button" aria-expanded={Boolean(behavior.openness)}>
-        {@render children?.()}
-        <span class={'accordion__chevron'}></span>
-      </button>
-    </h3>
-    <div class={'accordion__content'}>
-      <div class={'accordion__contentInner'}>
-        {@render children?.()}
-      </div>
-    </div>
-  </div>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div bind:this={rootRef} class={classes} data-testid={dataTestid} onkeydown={handleKeyDown}>
+  {@render children?.()}
 </div>

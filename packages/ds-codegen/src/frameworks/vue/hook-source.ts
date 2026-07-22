@@ -21,6 +21,7 @@ import {
 import { renderSections, type Section } from "../../preserve.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
 } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
@@ -63,7 +64,9 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // Outside-click for trap-focus components is handled at the template layer
   // (overlay onClick), not document-level, so we only wire Escape here.
   const useDismissal = !useAnchor && hasEscape;
-  const compoundContainer = isCompoundStateContainer(ir);
+  // Disclosure containers (Accordion) do not use tab-hook machinery.
+  const compoundContainer =
+    isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
 
   if (
     channels.length === 0 &&
@@ -89,7 +92,10 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   };
 }
 
-function generateImports(bindings: PrimitiveBindings): string {
+function generateImports(
+  bindings: PrimitiveBindings,
+  isDisclosure: boolean,
+): string {
   const vueNamed = new Set<string>();
   if (
     bindings.useFocusTrap ||
@@ -120,6 +126,9 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.useAnchorToggle) primitives.push("useAnchorToggle");
   if (bindings.useDismissal) primitives.push("useDismissal");
   if (bindings.isCompoundStateContainer) primitives.push("createCompoundContext");
+  // Disclosure containers (Accordion) share a provide/inject context pair
+  // generated in this module so all sub-component SFCs resolve one symbol.
+  if (isDisclosure) primitives.push("createCompoundContext");
 
   const lines: string[] = [];
   if (vueNamed.size > 0) {
@@ -450,17 +459,45 @@ function generateCompoundContextTypes(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+/**
+ * Disclosure (Accordion-shaped) context: openness channel + per-item toggle
+ * helpers + type/collapsible/disabled/idBase. Shares one provide/inject symbol
+ * across the root and sub-component SFCs. No tab-style register/idBase counter.
+ */
+function generateVueDisclosureContextTypes(ir: ComponentIR): string {
+  const { name } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const lines: string[] = [];
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  ${channelName}: Ref<string | string[]>;`);
+  lines.push(`  toggleItem: (value: string) => void;`);
+  lines.push(`  isItemOpen: (value: string) => boolean;`);
+  lines.push(`  type: "single" | "multiple";`);
+  lines.push(`  collapsible: boolean;`);
+  lines.push(`  disabled: boolean;`);
+  lines.push(`  idBase: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`export const [provide${name}Context, use${name}Context] =`);
+  lines.push(`  createCompoundContext<${name}ContextValue>("${name}");`);
+  return lines.join("\n");
+}
+
 export function generateVueHookSource(ir: ComponentIR): string | null {
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
 
-  const importsBody = generateImports(bindings);
+  const isDisclosure = isDisclosureContainer(ir);
+  const importsBody = generateImports(bindings, isDisclosure);
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
   const contextTypesBody = bindings.isCompoundStateContainer
     ? generateCompoundContextTypes(ir)
-    : "";
+    : isDisclosure
+      ? generateVueDisclosureContextTypes(ir)
+      : "";
   const hookBody = generateBody(ir, bindings);
 
   const typesBody = [inlineTypesBody, optionsBody, resultBody, contextTypesBody]

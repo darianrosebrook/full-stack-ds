@@ -9,6 +9,12 @@ import type {
   ResolvedPropIR,
 } from "./ir.js";
 import { computeTaintedAxes, hasChildrenPlaceholder } from "./ir.js";
+import {
+  getInteractiveItemPart,
+  getMultipleItemPart,
+  getRegionPart,
+  isDisclosureContainer,
+} from "./frameworks/react/hook-source.js";
 
 /**
  * Roles that are conventionally bound to an inner element (input, button,
@@ -242,9 +248,8 @@ export function buildComponentTestPlan(ir: ComponentIR): ComponentTestPlan {
     name: ir.name,
     cssPrefix: ir.cssPrefix,
     testId: toKebab(ir.name),
-    compoundImports: ir.compoundParts.map(
-      (part) => `${ir.name}${capitalize(part.name)}`,
-    ),
+    compoundImports: disclosureSubcomponentNames(ir) ??
+      ir.compoundParts.map((part) => `${ir.name}${capitalize(part.name)}`),
     renderOpenProp: findRenderOpenProp(ir),
     hasBehaviorTests,
     acceptsChildren,
@@ -525,4 +530,24 @@ function buildAccessibilityTestCase(ir: ComponentIR): AccessibilityTestCase {
 
 function capitalize(value: string): string {
   return value[0].toUpperCase() + value.slice(1);
+}
+
+/**
+ * Subcomponent import names a repeated-disclosure container (Accordion) emits:
+ * the multiple-item wrapper, the interactive trigger, and the region — the
+ * exact three sub-components `generateDisclosureStateSubcomponents` exports.
+ * Returns `null` for non-disclosure components so the caller keeps the legacy
+ * per-compound-part derivation. Contract-derived (parts, not name literals).
+ */
+function disclosureSubcomponentNames(ir: ComponentIR): string[] | null {
+  if (!isDisclosureContainer(ir)) return null;
+  const multiplePart = getMultipleItemPart(ir);
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  if (!multiplePart || !itemPart || !regionPart) return null;
+  return [
+    `${ir.name}${capitalize(multiplePart.name)}`,
+    `${ir.name}${capitalize(itemPart.name)}`,
+    `${ir.name}${capitalize(regionPart.name)}`,
+  ];
 }

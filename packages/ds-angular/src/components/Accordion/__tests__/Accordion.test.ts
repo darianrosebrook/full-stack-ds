@@ -39,5 +39,93 @@ function classTokens(component: { classes: () => string }): string[] {
 // @generated:end
 
 // @custom:start tests
+import { Component } from "@angular/core";
+import { AccordionItemComponent } from "../AccordionItem.component";
+import { AccordionTriggerComponent } from "../AccordionTrigger.component";
+import { AccordionContentComponent } from "../AccordionContent.component";
+
+// FIX-COMPOUND-CONTAINER-ANCESTOR-PREDICATE-01 (A2, Angular).
+@Component({
+  standalone: true,
+  imports: [
+    AccordionComponent,
+    AccordionItemComponent,
+    AccordionTriggerComponent,
+    AccordionContentComponent,
+  ],
+  template: `
+    <fsds-accordion [type]="type" [defaultValue]="defaultValue" [collapsible]="collapsible">
+      <fsds-accordion-item>
+        <fsds-accordion-trigger value="a">First</fsds-accordion-trigger>
+        <fsds-accordion-content value="a">Panel A</fsds-accordion-content>
+      </fsds-accordion-item>
+      <fsds-accordion-item>
+        <fsds-accordion-trigger value="b">Second</fsds-accordion-trigger>
+        <fsds-accordion-content value="b">Panel B</fsds-accordion-content>
+      </fsds-accordion-item>
+    </fsds-accordion>
+  `,
+})
+class AccordionHost {
+  type: "single" | "multiple" = "single";
+  defaultValue?: string | string[];
+  collapsible = false;
+}
+
+describe("Accordion — disclosure behavior", () => {
+  function setup(overrides: Partial<AccordionHost> = {}) {
+    TestBed.configureTestingModule({ imports: [AccordionHost] });
+    const fixture = TestBed.createComponent(AccordionHost);
+    Object.assign(fixture.componentInstance, overrides);
+    fixture.detectChanges();
+    return fixture;
+  }
+  function triggers(fixture: ReturnType<typeof setup>): HTMLButtonElement[] {
+    return Array.from(
+      (fixture.nativeElement as HTMLElement).querySelectorAll("button"),
+    );
+  }
+
+  it("clicking a trigger expands its own panel through the openness channel", () => {
+    const fixture = setup({ type: "single" });
+    const first = triggers(fixture)[0];
+    expect(first.getAttribute("aria-expanded")).toBe("false");
+    first.click();
+    fixture.detectChanges();
+    expect(triggers(fixture)[0].getAttribute("aria-expanded")).toBe("true");
+    const region = (fixture.nativeElement as HTMLElement).querySelector('[role="region"]')!;
+    expect(region).toBeTruthy();
+    expect(region.getAttribute("aria-labelledby")).toBe(triggers(fixture)[0].getAttribute("id"));
+  });
+
+  it("single mode: opening a second item closes the first", () => {
+    const fixture = setup({ type: "single" });
+    triggers(fixture)[0].click();
+    fixture.detectChanges();
+    expect(triggers(fixture)[0].getAttribute("aria-expanded")).toBe("true");
+    triggers(fixture)[1].click();
+    fixture.detectChanges();
+    expect(triggers(fixture)[1].getAttribute("aria-expanded")).toBe("true");
+    expect(triggers(fixture)[0].getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("multiple mode: both items can be open at once", () => {
+    const fixture = setup({ type: "multiple" });
+    triggers(fixture)[0].click();
+    fixture.detectChanges();
+    triggers(fixture)[1].click();
+    fixture.detectChanges();
+    expect(triggers(fixture)[0].getAttribute("aria-expanded")).toBe("true");
+    expect(triggers(fixture)[1].getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("emits disclosure ARIA, not tab ARIA", () => {
+    const fixture = setup({ type: "single" });
+    const host = fixture.nativeElement as HTMLElement;
+    expect(host.querySelector('[role="tab"]')).toBeNull();
+    expect(host.querySelector('[role="tablist"]')).toBeNull();
+    expect(host.querySelector('[aria-selected]')).toBeNull();
+  });
+});
 
 // @custom:end

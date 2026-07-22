@@ -1,8 +1,7 @@
 // @generated:start imports
-import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, computed, signal, forwardRef, inject, DestroyRef, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
-import { StackComponent } from "../../primitives/index.js";
-import { useAccordion } from "./useAccordion.js";
+import { useAccordion, AccordionContextToken } from "./useAccordion.js";
 // @generated:end
 
 // @custom:start imports
@@ -10,6 +9,8 @@ import { useAccordion } from "./useAccordion.js";
 // @custom:end
 
 // @generated:start types
+let _accordionIdCounter = 0;
+
 export type AccordionType = "single" | "multiple";
 // @generated:end
 
@@ -22,24 +23,29 @@ export type AccordionType = "single" | "multiple";
   selector: "fsds-accordion",
   standalone: true,
   imports: [NgClass],
-  template: `<div [ngClass]="classes()">
-  <div [ngClass]="'accordion__item'">
-    <h3 [ngClass]="'accordion__header'">
-      <button [ngClass]="'accordion__trigger'" type="button" [attr.aria-expanded]="behavior.openness()">
-        <ng-content />
-        <span [ngClass]="'accordion__chevron'"></span>
-      </button>
-    </h3>
-    <div [ngClass]="'accordion__content'">
-      <div [ngClass]="'accordion__contentInner'">
-        <ng-content />
-      </div>
-    </div>
-  </div>
-</div>`,
+  providers: [
+    {
+      provide: AccordionContextToken,
+      useFactory: () => {
+        const self = inject(forwardRef(() => AccordionComponent));
+        const ctx: import("./useAccordion.js").AccordionContextValue = {
+              get openness() { return self.behavior.openness; },
+              toggleItem: (v: string) => self.toggleItem(v),
+              isItemOpen: (v: string) => self.isItemOpen(v),
+              get type() { return self._type; },
+              get collapsible() { return self._collapsible; },
+              get disabled() { return self._disabled; },
+              get idBase() { return self.idBase; },
+        };
+        return ctx;
+      },
+      deps: [],
+    },
+  ],
+  template: `<div [ngClass]="classes()" (keydown)="handleKeyDown($event)"><ng-content /></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccordionComponent {
+export class AccordionComponent implements OnChanges {
   @Input() type?: AccordionType = "single";
   @Input() value?: string | string[];
   @Input() defaultValue?: string | string[];
@@ -48,13 +54,72 @@ export class AccordionComponent {
   @Input() disabled?: boolean;
   @Input() class?: string;
 
+  _controlledValue = signal<string | string[] | undefined>(undefined);
+  _type = signal<"single" | "multiple">("single");
+  _collapsible = signal<boolean>(false);
+  _disabled = signal<boolean>(false);
+  readonly idBase = `accordion-${++_accordionIdCounter}`;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["value"]) this._controlledValue.set(this.value);
+    if (changes["type"]) this._type.set((this.type as "single" | "multiple") ?? "single");
+    if (changes["collapsible"]) this._collapsible.set(this.collapsible ?? false);
+    if (changes["disabled"]) this._disabled.set(this.disabled ?? false);
+  }
+
   private destroyRef = inject(DestroyRef);
+  private elRef = inject(ElementRef<HTMLElement>);
   protected behavior = useAccordion({
-    value: () => this.value,
+    value: () => this._controlledValue(),
     defaultValue: this.defaultValue,
     onValueChange: (v) => this.onValueChange?.(v),
     destroyRef: this.destroyRef,
   });
+
+  isItemOpen(itemValue: string): boolean {
+    const v = this.behavior.openness();
+    return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;
+  }
+
+  toggleItem(itemValue: string): void {
+    const v = this.behavior.openness();
+    if (this._type() === "multiple") {
+      const current = Array.isArray(v) ? v : [];
+      this.behavior.setOpenness(
+        current.includes(itemValue)
+          ? current.filter((x) => x !== itemValue)
+          : [...current, itemValue],
+      );
+    } else {
+      const current = typeof v === "string" ? v : "";
+      this.behavior.setOpenness(current === itemValue && this._collapsible() ? "" : itemValue);
+    }
+  }
+
+  handleKeyDown(e: KeyboardEvent): void {
+    const key = e.key;
+    if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
+      return;
+    }
+    const host = this.elRef.nativeElement as HTMLElement;
+    const triggers = Array.from(
+      host.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),
+    ).filter((el) => !el.disabled);
+    if (triggers.length === 0) return;
+    const currentIndex = triggers.indexOf(document.activeElement as HTMLButtonElement);
+    let nextIndex = currentIndex;
+    if (key === "ArrowDown") {
+      nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;
+    } else if (key === "ArrowUp") {
+      nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;
+    } else if (key === "Home") {
+      nextIndex = 0;
+    } else {
+      nextIndex = triggers.length - 1;
+    }
+    e.preventDefault();
+    triggers[nextIndex]?.focus();
+  }
 
   classes = computed(() =>
     [
@@ -64,70 +129,6 @@ export class AccordionComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
-}
-
-@Component({
-  selector: "fsds-accordion-item",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="li" [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class AccordionItemComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["accordion__item", this.class].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-accordion-trigger",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="button" [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class AccordionTriggerComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["accordion__trigger", this.class].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-accordion-header",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack as="header" [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class AccordionHeaderComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["accordion__header", this.class].filter(Boolean).join(" ");
-  }
-}
-
-@Component({
-  selector: "fsds-accordion-content",
-  standalone: true,
-  imports: [NgClass, StackComponent],
-  template: `<fsds-stack [ngClass]="classes()"><ng-content /></fsds-stack>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class AccordionContentComponent {
-  @Input() class?: string;
-  @Input() dataTestid?: string;
-
-  classes(): string {
-    return ["accordion__content", this.class].filter(Boolean).join(" ");
-  }
 }
 // @generated:end
 

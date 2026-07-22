@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -29,7 +28,7 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <Stack as="li" :class="classNames" :data-testid="props['data-testid']">
+  <div :class="classNames" :data-testid="props['data-testid']">
     <slot />
-  </Stack>
+  </div>
 </template>

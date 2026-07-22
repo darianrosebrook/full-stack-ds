@@ -71,7 +71,9 @@ import { resolveSurfaceAutoDismiss } from "../../semantics.js";
 import { resolveEventValueStrategy } from "../../semantics.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
   getInteractiveItemPart,
+  getMultipleItemPart,
   getRegionPart,
   getGroupHostPart,
   getGroupHostOrnamentPart,
@@ -95,6 +97,9 @@ const SVELTE_SKIP_PROPS = new Set(["class", "style", "className", "children"]);
  * (imports/types/props/classes/trailing); template is a simple block.
  */
 export function generateSvelteComponentSource(ir: ComponentIR): string {
+  if (isDisclosureContainer(ir)) {
+    return generateSvelteDisclosureStateRootSource(ir);
+  }
   if (isCompoundStateContainer(ir)) {
     return generateSvelteCompoundStateRootSource(ir);
   }
@@ -491,6 +496,431 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
   ].join("\n");
 }
 
+// ---------------------------------------------------------------------------
+// Repeated-disclosure lowering (Accordion-shaped)
+// ---------------------------------------------------------------------------
+
+/** DFS for the DOM node whose part matches `partName`. */
+function svelteFindDomNode(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === partName) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/** Returns the DOM node whose direct child has `part === partName`. */
+function svelteFindParentOf(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.children?.some((c) => c.part === partName)) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/**
+ * Root provider SFC for a repeated-disclosure container (Accordion). Calls the
+ * component's state hook, derives per-item toggle/open, provides disclosure
+ * context, and hosts arrow-key navigation over the triggers.
+ */
+function generateSvelteDisclosureStateRootSource(ir: ComponentIR): string {
+  const { name, cssPrefix } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const setter = `set${sveltePascalCapitalize(channelName)}`;
+  const hasCollapsible = ir.styledProps.some((p) => p.name === "collapsible");
+  const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
+
+  const importsBody = [
+    `import { use${name}, provide${name}Context } from "./use${name}.svelte.js";`,
+  ].join("\n");
+
+  // Variant type aliases
+  const typeLines: string[] = [];
+  const emittedTypes = new Set<string>();
+  for (const p of ir.styledProps) {
+    if (SVELTE_SKIP_PROPS.has(p.name)) continue;
+    for (const ref of p.typeRefs) {
+      if (emittedTypes.has(ref)) continue;
+      const def = ir.definedTypes[ref];
+      if (!def) continue;
+      if (def.kind === "union" && def.values) {
+        typeLines.push(`type ${ref} = ${def.values.map((v) => `"${v}"`).join(" | ")};`);
+        emittedTypes.add(ref);
+      } else if (def.kind === "alias" && def.alias) {
+        typeLines.push(`type ${ref} = ${svelteType(def.alias)};`);
+        emittedTypes.add(ref);
+      }
+    }
+  }
+  const typesBody = typeLines.join("\n");
+
+  const propsLines: string[] = [`interface Props {`];
+  for (const p of ir.styledProps) {
+    if (SVELTE_SKIP_PROPS.has(p.name)) continue;
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
+    const propName = p.name.includes("-") ? `"${p.name}"` : p.name;
+    propsLines.push(`  ${propName}${optional}: ${lowerSveltePropType(p.propType)};`);
+  }
+  propsLines.push(`  class?: string;`);
+  propsLines.push(`  "data-testid"?: string;`);
+  propsLines.push(`  children?: import('svelte').Snippet;`);
+  propsLines.push(`}`);
+
+  const destructParts: string[] = [];
+  for (const p of ir.styledProps) {
+    if (SVELTE_SKIP_PROPS.has(p.name)) continue;
+    const key = p.name.includes("-") ? `"${p.name}": ${p.safeName}` : p.safeName;
+    if (p.name === "idBase") {
+      destructParts.push(`idBase: idBaseProp`);
+    } else if (p.defaultExpr !== undefined) {
+      destructParts.push(`${key} = ${p.defaultExpr}`);
+    } else {
+      destructParts.push(key);
+    }
+  }
+  destructParts.push(`class: className`);
+  destructParts.push(`"data-testid": dataTestid`);
+  destructParts.push(`children`);
+
+  const propsBody = [
+    propsLines.join("\n"),
+    ``,
+    `let {`,
+    `  ${destructParts.join(",\n  ")},`,
+    `}: Props = $props();`,
+  ].join("\n");
+
+  const idCounterName = `_${name.toLowerCase()}IdCounter`;
+
+  const hookLines: string[] = [];
+  hookLines.push(`const behavior = use${name}({`);
+  if (channel) {
+    const vAccessor = jsAccessorFor(channel.valueProp);
+    hookLines.push(`  ${channel.valueProp}: () => ${vAccessor},`);
+    if (channel.defaultValueProp) {
+      const dvAccessor = jsAccessorFor(channel.defaultValueProp);
+      hookLines.push(`  ${channel.defaultValueProp}: () => ${dvAccessor},`);
+    }
+    const cbAccessor = jsAccessorFor(channel.changeHandlerProp);
+    hookLines.push(`  ${channel.changeHandlerProp}: () => ${cbAccessor},`);
+  }
+  hookLines.push(`});`);
+  hookLines.push(``);
+  hookLines.push(`const idBase = \`${name.toLowerCase()}-\${++${idCounterName}}\`;`);
+  hookLines.push(`let rootRef: HTMLElement | null = $state(null);`);
+  hookLines.push(``);
+  hookLines.push(`function isItemOpen(itemValue: string): boolean {`);
+  hookLines.push(`  const v = behavior.${channelName};`);
+  hookLines.push(`  return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;`);
+  hookLines.push(`}`);
+  hookLines.push(``);
+  hookLines.push(`function toggleItem(itemValue: string): void {`);
+  hookLines.push(`  const v = behavior.${channelName};`);
+  hookLines.push(`  if (type === "multiple") {`);
+  hookLines.push(`    const current = Array.isArray(v) ? v : [];`);
+  hookLines.push(`    behavior.${setter}(`);
+  hookLines.push(`      current.includes(itemValue)`);
+  hookLines.push(`        ? current.filter((x) => x !== itemValue)`);
+  hookLines.push(`        : [...current, itemValue],`);
+  hookLines.push(`    );`);
+  hookLines.push(`  } else {`);
+  hookLines.push(`    const current = typeof v === "string" ? v : "";`);
+  if (hasCollapsible) {
+    hookLines.push(`    behavior.${setter}(current === itemValue && collapsible ? "" : itemValue);`);
+  } else {
+    hookLines.push(`    behavior.${setter}(itemValue);`);
+  }
+  hookLines.push(`  }`);
+  hookLines.push(`}`);
+  hookLines.push(``);
+  hookLines.push(`function handleKeyDown(e: KeyboardEvent): void {`);
+  hookLines.push(`  const key = e.key;`);
+  hookLines.push(`  if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {`);
+  hookLines.push(`    return;`);
+  hookLines.push(`  }`);
+  hookLines.push(`  if (!rootRef) return;`);
+  hookLines.push(`  const triggers = Array.from(`);
+  hookLines.push(`    rootRef.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),`);
+  hookLines.push(`  ).filter((el) => !el.disabled);`);
+  hookLines.push(`  if (triggers.length === 0) return;`);
+  hookLines.push(`  const currentIndex = triggers.indexOf(document.activeElement as HTMLButtonElement);`);
+  hookLines.push(`  let nextIndex = currentIndex;`);
+  hookLines.push(`  if (key === "ArrowDown") {`);
+  hookLines.push(`    nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;`);
+  hookLines.push(`  } else if (key === "ArrowUp") {`);
+  hookLines.push(`    nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;`);
+  hookLines.push(`  } else if (key === "Home") {`);
+  hookLines.push(`    nextIndex = 0;`);
+  hookLines.push(`  } else {`);
+  hookLines.push(`    nextIndex = triggers.length - 1;`);
+  hookLines.push(`  }`);
+  hookLines.push(`  e.preventDefault();`);
+  hookLines.push(`  triggers[nextIndex]?.focus();`);
+  hookLines.push(`}`);
+  hookLines.push(``);
+  hookLines.push(`provide${name}Context({`);
+  hookLines.push(`  get ${channelName}() { return behavior.${channelName}; },`);
+  hookLines.push(`  toggleItem,`);
+  hookLines.push(`  isItemOpen,`);
+  hookLines.push(`  get type() { return type ?? "single"; },`);
+  hookLines.push(`  get collapsible() { return ${hasCollapsible ? "collapsible ?? false" : "false"}; },`);
+  hookLines.push(`  get disabled() { return ${hasDisabled ? "disabled ?? false" : "false"}; },`);
+  hookLines.push(`  idBase,`);
+  hookLines.push(`});`);
+  const hookBody = hookLines.join("\n");
+
+  const classExprs: string[] = [`"${cssPrefix}"`];
+  for (const mod of ir.classRecipe.valueModifiers) {
+    classExprs.push(`${jsAccessorFor(mod.propName)} ? \`${cssPrefix}--${mod.valuePrefix ?? ""}\${${jsAccessorFor(mod.propName)}}\` : null`);
+  }
+  classExprs.push("className");
+  const classesBody = [
+    `const classes = $derived(`,
+    `  [`,
+    ...classExprs.map((e) => `    ${e},`),
+    `  ].filter(Boolean).join(" ")`,
+    `);`,
+  ].join("\n");
+
+  const counterPrelude = `let ${idCounterName} = 0;`;
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const scriptSections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: [counterPrelude, typesBody].filter((s) => s.length > 0).join("\n\n") },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "props", body: propsBody },
+    blank(),
+    { kind: "generated", id: "hook", body: hookBody },
+    blank(),
+    { kind: "generated", id: "classes", body: classesBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+  ];
+
+  return [
+    `<script lang="ts">`,
+    renderSections(scriptSections, "line"),
+    `</script>`,
+    ``,
+    `<!-- svelte-ignore a11y_no_static_element_interactions -->`,
+    `<div bind:this={rootRef} class={classes} data-testid={dataTestid} onkeydown={handleKeyDown}>`,
+    `  {@render children?.()}`,
+    `</div>`,
+    ``,
+  ].join("\n");
+}
+
+/** Sub-component SFCs (Item/Trigger/Content) for a disclosure container. */
+export function generateSvelteDisclosureStateParts(
+  ir: ComponentIR,
+): Array<{ name: string; content: string }> {
+  if (!isDisclosureContainer(ir)) return [];
+  const { name, cssPrefix } = ir;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const multiplePart = getMultipleItemPart(ir);
+  if (!itemPart || !regionPart || !multiplePart || !ir.dom) return [];
+
+  const itemNode = svelteFindDomNode(ir.dom, itemPart.name);
+  const headerNode = svelteFindParentOf(ir.dom, itemPart.name);
+  const headerPartName = headerNode?.part;
+  const headerTag = headerNode?.tag ?? "div";
+  const triggerTag = itemNode?.tag ?? "button";
+  const chevronPartName = itemNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  )?.part;
+  const innerNode = svelteFindDomNode(ir.dom, regionPart.name);
+  const innerChild = innerNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  );
+  const innerPartName = innerChild?.part;
+  const innerTag = innerChild?.tag ?? "div";
+
+  const itemName = `${name}${sveltePascalCapitalize(multiplePart.name)}`;
+  const triggerName = `${name}${sveltePascalCapitalize(itemPart.name)}`;
+  const contentName = `${name}${sveltePascalCapitalize(regionPart.name)}`;
+
+  const itemCssClass = `${cssPrefix}__${multiplePart.name}`;
+  const triggerCssClass = `${cssPrefix}__${itemPart.name}`;
+  const contentCssClass = `${cssPrefix}__${regionPart.name}`;
+
+  // Item.svelte (passive wrapper)
+  const itemSource = [
+    `<script lang="ts">`,
+    `// @generated:start imports`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `  children?: import('svelte').Snippet;`,
+    `}`,
+    ``,
+    `let { class: className, "data-testid": dataTestid, children }: Props = $props();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const classes = $derived(["${itemCssClass}", className].filter(Boolean).join(" "));`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<div class={classes} data-testid={dataTestid}>`,
+    `  {@render children?.()}`,
+    `</div>`,
+    ``,
+  ].join("\n");
+
+  // Trigger.svelte
+  const triggerLines: string[] = [];
+  triggerLines.push(`<script lang="ts">`);
+  triggerLines.push(`// @generated:start imports`);
+  triggerLines.push(`import { use${name}Context } from "./use${name}.svelte.js";`);
+  triggerLines.push(`// @generated:end`);
+  triggerLines.push(``);
+  triggerLines.push(`// @custom:start imports`);
+  triggerLines.push(``);
+  triggerLines.push(`// @custom:end`);
+  triggerLines.push(``);
+  triggerLines.push(`// @generated:start props`);
+  triggerLines.push(`interface Props {`);
+  triggerLines.push(`  value: string;`);
+  triggerLines.push(`  class?: string;`);
+  triggerLines.push(`  "data-testid"?: string;`);
+  triggerLines.push(`  children?: import('svelte').Snippet;`);
+  triggerLines.push(`}`);
+  triggerLines.push(``);
+  triggerLines.push(`let { value, class: className, "data-testid": dataTestid, children }: Props = $props();`);
+  triggerLines.push(`// @generated:end`);
+  triggerLines.push(``);
+  triggerLines.push(`// @generated:start classes`);
+  triggerLines.push(`const ctx = use${name}Context();`);
+  triggerLines.push(``);
+  triggerLines.push(`const isOpen = $derived(ctx.isItemOpen(value));`);
+  triggerLines.push(``);
+  triggerLines.push(`const classes = $derived(`);
+  triggerLines.push(`  [`);
+  triggerLines.push(`    "${triggerCssClass}",`);
+  triggerLines.push(`    isOpen && "${triggerCssClass}--open",`);
+  triggerLines.push(`    className,`);
+  triggerLines.push(`  ]`);
+  triggerLines.push(`    .filter(Boolean)`);
+  triggerLines.push(`    .join(" "),`);
+  triggerLines.push(`);`);
+  triggerLines.push(`// @generated:end`);
+  triggerLines.push(``);
+  triggerLines.push(`// @custom:start trailing`);
+  triggerLines.push(``);
+  triggerLines.push(`// @custom:end`);
+  triggerLines.push(`</script>`);
+  triggerLines.push(``);
+  if (headerPartName) triggerLines.push(`<${headerTag} class="${cssPrefix}__${headerPartName}">`);
+  triggerLines.push(`<${triggerTag}`);
+  triggerLines.push(`  type="button"`);
+  triggerLines.push(`  class={classes}`);
+  triggerLines.push(`  data-disclosure-trigger=""`);
+  triggerLines.push(`  data-value={value}`);
+  triggerLines.push(`  id="{ctx.idBase}-trigger-{value}"`);
+  triggerLines.push(`  aria-controls="{ctx.idBase}-content-{value}"`);
+  triggerLines.push(`  aria-expanded={isOpen}`);
+  triggerLines.push(`  disabled={ctx.disabled}`);
+  triggerLines.push(`  data-testid={dataTestid}`);
+  triggerLines.push(`  onclick={() => ctx.toggleItem(value)}`);
+  triggerLines.push(`>`);
+  triggerLines.push(`  {@render children?.()}`);
+  if (chevronPartName) triggerLines.push(`  <span class="${cssPrefix}__${chevronPartName}"></span>`);
+  triggerLines.push(`</${triggerTag}>`);
+  if (headerPartName) triggerLines.push(`</${headerTag}>`);
+  triggerLines.push(``);
+  const triggerSource = triggerLines.join("\n");
+
+  // Content.svelte
+  const contentInner = innerPartName
+    ? [
+        `  <${innerTag} class="${cssPrefix}__${innerPartName}">`,
+        `    {@render children?.()}`,
+        `  </${innerTag}>`,
+      ]
+    : [`  {@render children?.()}`];
+  const contentSource = [
+    `<script lang="ts">`,
+    `// @generated:start imports`,
+    `import { use${name}Context } from "./use${name}.svelte.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `  children?: import('svelte').Snippet;`,
+    `}`,
+    ``,
+    `let { value, class: className, "data-testid": dataTestid, children }: Props = $props();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isOpen = $derived(ctx.isItemOpen(value));`,
+    ``,
+    `const classes = $derived(["${contentCssClass}", className].filter(Boolean).join(" "));`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<div`,
+    `  role="region"`,
+    `  class={classes}`,
+    `  id="{ctx.idBase}-content-{value}"`,
+    `  aria-labelledby="{ctx.idBase}-trigger-{value}"`,
+    `  hidden={!isOpen ? true : undefined}`,
+    `  data-testid={dataTestid}`,
+    `>`,
+    ...contentInner,
+    `</div>`,
+    ``,
+  ].join("\n");
+
+  return [
+    { name: itemName, content: itemSource },
+    { name: triggerName, content: triggerSource },
+    { name: contentName, content: contentSource },
+  ];
+}
+
 /**
  * Returns the sub-component SFC sources (List, Tab, Panel) for a
  * compound-state-container IR. Each sub-component is wired via
@@ -502,7 +932,7 @@ function generateSvelteCompoundStateRootSource(ir: ComponentIR): string {
 export function generateSvelteCompoundStateParts(
   ir: ComponentIR,
 ): Array<{ name: string; content: string }> {
-  if (!isCompoundStateContainer(ir)) return [];
+  if (!isCompoundStateContainer(ir) || isDisclosureContainer(ir)) return [];
 
   const { name, cssPrefix } = ir;
   const itemPart = getInteractiveItemPart(ir);

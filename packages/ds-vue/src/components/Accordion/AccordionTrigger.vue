@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
 import { computed } from "vue";
-import { Stack } from "../../primitives/index.js";
+import { useAccordionContext } from "./useAccordion.js";
 // @generated:end
 
 // @custom:start imports
@@ -10,6 +10,7 @@ import { Stack } from "../../primitives/index.js";
 
 // @generated:start props
 interface Props {
+  value: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -18,8 +19,18 @@ const props = defineProps<Props>();
 // @generated:end
 
 // @generated:start classes
+const ctx = useAccordionContext();
+
+const isOpen = computed(() => ctx.isItemOpen(props.value));
+
 const classNames = computed(() =>
-  ["accordion__trigger", props.class].filter(Boolean).join(" "),
+  [
+    "accordion__trigger",
+    isOpen.value && "accordion__trigger--open",
+    props.class,
+  ]
+    .filter(Boolean)
+    .join(" "),
 );
 // @generated:end
 
@@ -29,7 +40,21 @@ const classNames = computed(() =>
 </script>
 
 <template>
-  <Stack as="button" :class="classNames" :data-testid="props['data-testid']">
-    <slot />
-  </Stack>
+  <h3 class="accordion__header">
+    <button
+      type="button"
+      :class="classNames"
+      data-disclosure-trigger
+      :data-value="props.value"
+      :id="`${ctx.idBase}-trigger-${props.value}`"
+      :aria-controls="`${ctx.idBase}-content-${props.value}`"
+      :aria-expanded="isOpen"
+      :disabled="ctx.disabled"
+      :data-testid="props['data-testid']"
+      @click="ctx.toggleItem(props.value)"
+    >
+      <slot />
+      <span class="accordion__chevron"></span>
+    </button>
+  </h3>
 </template>

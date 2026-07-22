@@ -1,7 +1,7 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
-import { Stack } from "../../primitives";
+import { type HTMLAttributes, type KeyboardEvent, type ReactNode, useCallback, useId, useRef } from "react";
 import { useAccordion } from "./useAccordion";
+import { createCompoundContext } from "../../primitives/hooks";
 import "./Accordion.css";
 // @generated:end
 
@@ -32,6 +32,19 @@ export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, "ch
 // @generated:end
 
 // @generated:start subcomponents
+export interface AccordionContextValue {
+  openness: string | string[];
+  toggleItem: (value: string) => void;
+  isItemOpen: (value: string) => boolean;
+  type: "single" | "multiple";
+  collapsible: boolean;
+  disabled: boolean;
+  idBase: string;
+}
+
+const [AccordionContextProvider, useAccordionContext] = createCompoundContext<AccordionContextValue>("Accordion");
+export { useAccordionContext };
+
 export interface AccordionItemProps {
   children?: ReactNode;
   className?: string;
@@ -45,66 +58,84 @@ export function AccordionItem({
 }: AccordionItemProps) {
   const classNames = ["accordion__item", className].filter(Boolean).join(" ");
   return (
-    <Stack as="li" className={classNames} data-testid={testId}>
+    <div className={classNames} data-testid={testId}>
       {children}
-    </Stack>
+    </div>
   );
 }
 
 export interface AccordionTriggerProps {
+  value: string;
   children?: ReactNode;
   className?: string;
   "data-testid"?: string;
 }
 
 export function AccordionTrigger({
+  value,
   children,
   className,
   "data-testid": testId,
 }: AccordionTriggerProps) {
-  const classNames = ["accordion__trigger", className].filter(Boolean).join(" ");
-  return (
-    <Stack as="button" className={classNames} data-testid={testId}>
-      {children}
-    </Stack>
-  );
-}
+  const ctx = useAccordionContext();
+  const isOpen = ctx.isItemOpen(value);
+  const classNames = [
+    "accordion__trigger",
+    isOpen && "accordion__trigger--open",
+    className,
+  ].filter(Boolean).join(" ");
 
-export interface AccordionHeaderProps {
-  children?: ReactNode;
-  className?: string;
-  "data-testid"?: string;
-}
-
-export function AccordionHeader({
-  children,
-  className,
-  "data-testid": testId,
-}: AccordionHeaderProps) {
-  const classNames = ["accordion__header", className].filter(Boolean).join(" ");
   return (
-    <Stack as="header" className={classNames} data-testid={testId}>
-      {children}
-    </Stack>
+    <h3 className="accordion__header">
+      <button
+        type="button"
+        className={classNames}
+        data-disclosure-trigger=""
+        data-value={value}
+        id={`${ctx.idBase}-trigger-${value}`}
+        aria-controls={`${ctx.idBase}-content-${value}`}
+        aria-expanded={isOpen}
+        disabled={ctx.disabled}
+        data-testid={testId}
+        onClick={() => ctx.toggleItem(value)}
+      >
+        {children}
+        <span className="accordion__chevron" />
+      </button>
+    </h3>
   );
 }
 
 export interface AccordionContentProps {
+  value: string;
   children?: ReactNode;
   className?: string;
   "data-testid"?: string;
 }
 
 export function AccordionContent({
+  value,
   children,
   className,
   "data-testid": testId,
 }: AccordionContentProps) {
+  const ctx = useAccordionContext();
+  const isOpen = ctx.isItemOpen(value);
   const classNames = ["accordion__content", className].filter(Boolean).join(" ");
+
   return (
-    <Stack className={classNames} data-testid={testId}>
-      {children}
-    </Stack>
+    <div
+      role="region"
+      className={classNames}
+      id={`${ctx.idBase}-content-${value}`}
+      aria-labelledby={`${ctx.idBase}-trigger-${value}`}
+      hidden={!isOpen ? true : undefined}
+      data-testid={testId}
+    >
+      <div className="accordion__contentInner">
+        {children}
+      </div>
+    </div>
   );
 }
 // @generated:end
@@ -122,11 +153,77 @@ export function Accordion({
   collapsible = false,
   ...rest
 }: AccordionProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const { openness, setOpenness } = useAccordion({
     value: controlledValue,
     defaultValue,
     onValueChange,
   });
+  const idBase = useId();
+
+  const isItemOpen = useCallback(
+    (itemValue: string) =>
+      Array.isArray(openness)
+        ? openness.includes(itemValue)
+        : openness === itemValue,
+    [openness],
+  );
+
+  const toggleItem = useCallback(
+    (itemValue: string) => {
+      if (type === "multiple") {
+        const current = Array.isArray(openness) ? openness : [];
+        const next = current.includes(itemValue)
+          ? current.filter((v) => v !== itemValue)
+          : [...current, itemValue];
+        setOpenness(next);
+      } else {
+        const current = typeof openness === "string" ? openness : "";
+        const next = current === itemValue && collapsible ? "" : itemValue;
+        setOpenness(next);
+      }
+    },
+    [openness, setOpenness, type, collapsible],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      const key = e.key;
+      if (
+        key !== "ArrowDown" &&
+        key !== "ArrowUp" &&
+        key !== "Home" &&
+        key !== "End"
+      ) {
+        return;
+      }
+      const root = rootRef.current;
+      if (!root) return;
+      const triggers = Array.from(
+        root.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),
+      ).filter((el) => !el.disabled);
+      if (triggers.length === 0) return;
+      const currentIndex = triggers.indexOf(
+        document.activeElement as HTMLButtonElement,
+      );
+      let nextIndex = currentIndex;
+      if (key === "ArrowDown") {
+        nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;
+      } else if (key === "ArrowUp") {
+        nextIndex =
+          currentIndex < 0
+            ? triggers.length - 1
+            : (currentIndex - 1 + triggers.length) % triggers.length;
+      } else if (key === "Home") {
+        nextIndex = 0;
+      } else {
+        nextIndex = triggers.length - 1;
+      }
+      e.preventDefault();
+      triggers[nextIndex]?.focus();
+    },
+    [],
+  );
 
   const classNames = [
     "accordion",
@@ -138,21 +235,27 @@ export function Accordion({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} data-testid={testId} {...rest}>
-    <div className="accordion__item">
-      <h3 className="accordion__header">
-        <button className="accordion__trigger" type="button" aria-expanded={openness !== undefined ? (String(openness) as "true" | "false") : undefined}>
-          {children}
-          <span className="accordion__chevron" />
-        </button>
-      </h3>
-      <div className="accordion__content">
-        <div className="accordion__contentInner">
-          {children}
-        </div>
+    <AccordionContextProvider
+      value={{
+        openness,
+        toggleItem,
+        isItemOpen,
+        type: type ?? "single",
+        collapsible: collapsible ?? false,
+        disabled: disabled ?? false,
+        idBase,
+      }}
+    >
+      <div
+        ref={rootRef}
+        className={classNames}
+        data-testid={testId}
+        onKeyDown={handleKeyDown}
+        {...rest}
+      >
+        {children}
       </div>
-    </div>
-  </Stack>
+    </AccordionContextProvider>
   );
 }
 // @generated:end

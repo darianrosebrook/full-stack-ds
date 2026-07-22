@@ -1,5 +1,5 @@
 // @generated:start imports
-import { createControllableState } from "../../primitives/index.js";
+import { createCompoundContext, createControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -16,6 +16,26 @@ export interface UseAccordionOptions {
 export interface UseAccordionResult {
   readonly openness: string | string[];
   setOpenness(next: string | string[]): void;
+}
+
+export interface AccordionContextValue {
+  readonly openness: string | string[];
+  toggleItem: (value: string) => void;
+  isItemOpen: (value: string) => boolean;
+  type: "single" | "multiple";
+  collapsible: boolean;
+  disabled: boolean;
+  idBase: string;
+}
+
+const _accordionContext = createCompoundContext<AccordionContextValue>("Accordion");
+
+export function provideAccordionContext(value: AccordionContextValue): void {
+  _accordionContext.provide(value);
+}
+
+export function useAccordionContext(): AccordionContextValue {
+  return _accordionContext.consume();
 }
 // @generated:end
 

@@ -17,6 +17,7 @@ import type { ComponentIR, NormalizedChannelIR } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
 import {
   isCompoundStateContainer,
+  isDisclosureContainer,
 } from "../react/hook-source.js";
 
 interface PrimitiveBindings {
@@ -65,7 +66,8 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   // template-side (overlay onClick), so only Escape needs a document listener.
   const useDismissal = !useAnchor && hasEscape;
 
-  const compoundContainer = isCompoundStateContainer(ir);
+  const compoundContainer =
+    isCompoundStateContainer(ir) && !isDisclosureContainer(ir);
 
   if (
     channels.length === 0 &&

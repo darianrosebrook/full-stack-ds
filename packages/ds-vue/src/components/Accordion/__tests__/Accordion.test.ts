@@ -68,5 +68,75 @@ describe("Accordion — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import { defineComponent, h } from "vue";
+import AccordionItem from "../AccordionItem.vue";
+import AccordionTrigger from "../AccordionTrigger.vue";
+import AccordionContent from "../AccordionContent.vue";
+
+// FIX-COMPOUND-CONTAINER-ANCESTOR-PREDICATE-01 (A2, Vue): trigger click toggles
+// its own item through the openness channel; aria-expanded + region wire from
+// the contract; single mode closes others.
+function makeFixture(rootProps: Record<string, unknown>) {
+  return defineComponent({
+    render() {
+      return h(Accordion as Component, rootProps, {
+        default: () => [
+          h(AccordionItem as Component, {}, {
+            default: () => [
+              h(AccordionTrigger as Component, { value: "a" }, { default: () => "First" }),
+              h(AccordionContent as Component, { value: "a" }, { default: () => "Panel A" }),
+            ],
+          }),
+          h(AccordionItem as Component, {}, {
+            default: () => [
+              h(AccordionTrigger as Component, { value: "b" }, { default: () => "Second" }),
+              h(AccordionContent as Component, { value: "b" }, { default: () => "Panel B" }),
+            ],
+          }),
+        ],
+      });
+    },
+  });
+}
+
+describe("Accordion — disclosure behavior", () => {
+  it("clicking a trigger expands its own panel and fires the channel callback", async () => {
+    const onValueChange = vi.fn();
+    const wrapper = mount(makeFixture({ type: "single", onValueChange }));
+    const first = wrapper.findAll("button")[0];
+    expect(first.attributes("aria-expanded")).toBe("false");
+    await first.trigger("click");
+    expect(onValueChange).toHaveBeenCalledWith("a");
+    expect(wrapper.findAll("button")[0].attributes("aria-expanded")).toBe("true");
+    const region = wrapper.find('[role="region"]');
+    expect(region.exists()).toBe(true);
+    expect(region.attributes("aria-labelledby")).toBe(first.attributes("id"));
+  });
+
+  it("single mode: opening a second item closes the first", async () => {
+    const wrapper = mount(makeFixture({ type: "single", defaultValue: "a" }));
+    const buttons = wrapper.findAll("button");
+    expect(buttons[0].attributes("aria-expanded")).toBe("true");
+    await buttons[1].trigger("click");
+    const after = wrapper.findAll("button");
+    expect(after[1].attributes("aria-expanded")).toBe("true");
+    expect(after[0].attributes("aria-expanded")).toBe("false");
+  });
+
+  it("multiple mode: both items can be open at once", async () => {
+    const wrapper = mount(makeFixture({ type: "multiple", defaultValue: ["a"] }));
+    await wrapper.findAll("button")[1].trigger("click");
+    const after = wrapper.findAll("button");
+    expect(after[0].attributes("aria-expanded")).toBe("true");
+    expect(after[1].attributes("aria-expanded")).toBe("true");
+  });
+
+  it("emits disclosure ARIA, not tab ARIA", () => {
+    const wrapper = mount(makeFixture({ type: "single" }));
+    expect(wrapper.find('[role="tab"]').exists()).toBe(false);
+    expect(wrapper.find('[role="tablist"]').exists()).toBe(false);
+    expect(wrapper.find('[aria-selected]').exists()).toBe(false);
+  });
+});
 
 // @custom:end
