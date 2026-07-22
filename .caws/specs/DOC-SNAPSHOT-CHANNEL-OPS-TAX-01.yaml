@@ -2,10 +2,11 @@ id: DOC-SNAPSHOT-CHANNEL-OPS-TAX-01
 title: 'Ledger tax: channel-update ops landed, portal adjudication executed, lit asymmetry closed'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
-worktree: doc-channel-ops
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge doc-channel-ops at 1b09cc3cf475b9d338b790c19971562a0cbc7009'
 created_at: '2026-07-22T19:11:06.902Z'
-updated_at: '2026-07-22T19:11:06.902Z'
+updated_at: '2026-07-22T19:12:26.864Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
