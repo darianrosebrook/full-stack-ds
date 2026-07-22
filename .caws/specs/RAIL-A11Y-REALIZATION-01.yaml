@@ -3,6 +3,7 @@ title: 'A11y-realization rail: contract-derived accessibility obligations verifi
 risk_tier: 2
 mode: feature
 lifecycle_state: active
+worktree: a11y-rail
 created_at: '2026-07-22T21:48:55.220Z'
 updated_at: '2026-07-22T21:48:56.792Z'
 blast_radius:
