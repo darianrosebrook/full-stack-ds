@@ -91,7 +91,7 @@ If any of these requires an escape hatch (a hand-rolled component, a styling ove
 
 Recording the consumer-API gaps surfaced while scaffolding `settings/react/`. Each is a real bug the example would never have caught while the showcase wasn't dogfooding.
 
-1. **`Stack` has no spacing/alignment props.** Only `as` and `variant: "vertical" | "horizontal"`. Real consumers will reach for `gap`, `justify`, `align`. The shipped component CSS dictates spacing entirely, which is fine for single-purpose layouts but rules out the "row with space-between" pattern in row 1/row 2 of Preferences without inline styling.
+1. ~~**`Stack` has no spacing/alignment props.**~~ **Spacing resolved via tokens, not a prop (FEAT-STACK-PRIMITIVE-CODEGEN-01).** `Stack` now carries a token-driven inter-child `gap` bound to `spacing.gap.stack` (`--fsds-semantic-spacing-gap-stack`), authored in the primitive *contract* and lowered into all five framework primitives by codegen — the Stack primitive is now generated from `Stack.primitive.json`, not hand-authored. Consumers get consistent rhythm from package CSS with no `gap` prop and no inline styling. The `justify`/`align` (distribution) need is deliberately *not* a free-form prop either — the remaining "row with space-between" pattern is tracked separately as a candidate enumerated `layoutVariant` (distribution is a layout mode, not spacing).
 2. **`CardTitle` is not exported (and not in source).** `Card` ships with `CardHeader`, `CardContent`, `CardFooter`, `CardDescription`, but no title primitive — inconsistent with `Dialog`, which exports `DialogTitle`.
 3. **`Tooltip` uses dot notation (`Tooltip.Trigger`, `Tooltip.Content`) instead of sibling exports** like every other compound component in the system. The barrel exports `TooltipTriggerProps`/`TooltipContentProps` types but not the components themselves. Either the export is incomplete or the convention is inconsistent.
 4. **`Field` exports a `FieldHeader` part but also takes `label`/`helpText`/`error` as props on `Field` itself.** Both patterns exist; the example uses the prop form since it's strictly simpler. The redundancy is worth resolving.
@@ -102,7 +102,7 @@ Recording the consumer-API gaps surfaced while scaffolding `settings/react/`. Ea
 
 **Status:** the example **builds via Vite** and **typechecks against the React package with only one residual error**: `src/main.tsx(3,8): error TS2882: Cannot find module or type declarations for side-effect import of '@full-stack-ds/react/styles.css'`. That's a packaging-side ambient-declaration gap, not a consumer-API gap.
 
-(Items 1-4, 8 remain as component/contract surface issues. Item 5 was packaging-config, fixed for React. Items 6-7 were resolved via codegen on 2026-05-20 — see commit history.)
+(Items 2-4, 8 remain as component/contract surface issues. Item 1 was resolved by FEAT-STACK-PRIMITIVE-CODEGEN-01 — Stack is now a contract-generated primitive with a token-driven gap. Item 5 was packaging-config, fixed for React. Items 6-7 were resolved via codegen on 2026-05-20 — see commit history.)
 
 ## Findings from the Vue implementation
 
