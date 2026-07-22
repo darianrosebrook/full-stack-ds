@@ -1,0 +1,31 @@
+id: RAIL-COVERAGE-DERIVATION-FIX-01
+title: 'Revive render-binding rail (path + CI wiring) and retire mobile-parity''s frozen-partition sub-check'
+risk_tier: 2
+mode: fix
+lifecycle_state: active
+created_at: '2026-07-22T00:55:46.562Z'
+updated_at: '2026-07-22T00:55:46.562Z'
+blast_radius:
+  modules:
+    - 'TODO: list one or more modules this spec touches.'
+  data_migration: false
+operational_rollback_slo: 5m
+scope:
+  in:
+    - 'e2e/render-binding-rail.spec.ts'
+    - 'scripts/mobile-parity-matrix.mjs'
+    - 'package.json'
+    - '.github/workflows/ci.yml'
+    - 'docs/current-implementation-snapshot.md'
+  out: []
+invariants:
+  - 'TODO: describe one invariant this spec guarantees.'
+acceptance:
+  - id: A1
+    given: 'TODO'
+    when: 'TODO'
+    then: 'TODO'
+non_functional: {}
+contracts:
+  - name: 'render-binding-rail-revival'
+    type: behavior
