@@ -2,10 +2,11 @@ id: FIX-SELECT-OPEN-TOGGLE-WIRE-01
 title: 'Wire Select trigger open/close via contract events (Button-onClick precedent)'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: select-open-wire
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge select-open-wire at 9a64f310c0917adf5da93261eafd8ee18fa0c23c'
 created_at: '2026-07-22T06:34:06.773Z'
-updated_at: '2026-07-22T06:39:57.649Z'
+updated_at: '2026-07-22T06:46:51.551Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
