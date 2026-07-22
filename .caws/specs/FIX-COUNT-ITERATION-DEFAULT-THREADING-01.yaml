@@ -3,6 +3,7 @@ title: 'Thread contract defaults into lit/angular count-iteration lowering (unde
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: count-iter-defaults
 created_at: '2026-07-22T01:33:09.761Z'
 updated_at: '2026-07-22T01:33:09.761Z'
 blast_radius:
