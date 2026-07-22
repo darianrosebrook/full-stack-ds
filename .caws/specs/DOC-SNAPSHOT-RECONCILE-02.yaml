@@ -2,10 +2,11 @@ id: DOC-SNAPSHOT-RECONCILE-02
 title: 'Full claim-ledger reconciliation: record ~6 weeks of landed work, correct stale rows'
 risk_tier: 3
 mode: doc
-lifecycle_state: active
-worktree: snapshot-reconcile
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge snapshot-reconcile at 778f934aa71f6483ab7a43f86b115df91ae7b26c'
 created_at: '2026-07-22T00:29:50.425Z'
-updated_at: '2026-07-22T00:29:50.425Z'
+updated_at: '2026-07-22T00:42:08.402Z'
 blast_radius:
   modules:
     - docs
