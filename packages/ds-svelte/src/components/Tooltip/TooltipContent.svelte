@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { useTooltipContext, useTooltipPlacement } from "./useTooltip.svelte.js";
+import { useTooltipContext, useTooltipPlacementGetter } from "./useTooltip.svelte.js";
 import { createAnchoredPosition, type AnchoredPlacement } from "../../primitives/surfaces/createAnchoredPosition.svelte.js";
 import { portal } from "../../primitives/index.js";
 // @generated:end
@@ -27,11 +27,14 @@ $effect(() => {
   if (contentEl) ctx.registerContent(contentEl);
 });
 
+// Captured ONCE at init: getContext is illegal from inside the
+// option getters, which re-run on scroll/resize/observer callbacks.
+const getContextPlacement = useTooltipPlacementGetter();
 const position = createAnchoredPosition({
   anchor: () => ctx.anchorEl(),
   content: () => ctx.contentEl(),
   open: () => ctx.open(),
-  placement: () => (useTooltipPlacement() ?? "auto") as AnchoredPlacement | "auto",
+  placement: () => (getContextPlacement?.() ?? "auto") as AnchoredPlacement | "auto",
   collision: () => "flip-shift",
 });
 // @generated:end

@@ -535,6 +535,10 @@ export class TooltipContentElement extends LitElement {
       // hidden until the first measurement completes (avoids a
       // flash at (0, 0)).
       const pos = this._position.state;
+      // The static :host rule is display: contents (no box), which
+      // would make position: fixed a layout no-op and let slotted
+      // content flow at the body. The open state needs a real box.
+      this.style.display = "block";
       this.style.position = "fixed";
       this.style.top = `${pos.top}px`;
       this.style.left = `${pos.left}px`;
@@ -544,6 +548,7 @@ export class TooltipContentElement extends LitElement {
       this.removeAttribute("id");
       this.removeAttribute("role");
       this.removeAttribute("data-tooltip-content");
+      this.style.display = "";
       this.style.position = "";
       this.style.top = "";
       this.style.left = "";

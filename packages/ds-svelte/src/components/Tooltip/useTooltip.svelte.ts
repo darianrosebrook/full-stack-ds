@@ -63,9 +63,15 @@ export function provideTooltipPlacement(getter: () => AnchoredPlacement | "auto"
   setContext("fsds-surface-placement:Tooltip", getter);
 }
 
-export function useTooltipPlacement(): AnchoredPlacement | "auto" | undefined {
-  const getter = getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("fsds-surface-placement:Tooltip");
-  return getter?.();
+/**
+ * Returns the placement GETTER (not the value). getContext is only
+ * legal during component initialisation, but the position primitive
+ * re-evaluates its placement option on scroll/resize/observer
+ * callbacks — so consumers must capture this getter once at init and
+ * invoke it later, never call getContext from inside the option.
+ */
+export function useTooltipPlacementGetter(): (() => AnchoredPlacement | "auto" | undefined) | undefined {
+  return getContext<(() => AnchoredPlacement | "auto" | undefined) | undefined>("fsds-surface-placement:Tooltip");
 }
 // @generated:end
 
