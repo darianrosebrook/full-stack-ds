@@ -95,7 +95,10 @@ function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
 // Imports
 // ---------------------------------------------------------------------------
 
-function generateImports(bindings: PrimitiveBindings): string {
+function generateImports(
+  bindings: PrimitiveBindings,
+  isDisclosure: boolean,
+): string {
   const coreNamed = new Set<string>();
   coreNamed.add("DestroyRef");
 
@@ -109,6 +112,9 @@ function generateImports(bindings: PrimitiveBindings): string {
     coreNamed.add("signal");
     coreNamed.add("type WritableSignal");
   }
+  if (isDisclosure) {
+    coreNamed.add("type Signal");
+  }
 
   const primitives: string[] = [];
   if (bindings.useControllableState.length > 0) {
@@ -120,6 +126,7 @@ function generateImports(bindings: PrimitiveBindings): string {
   if (bindings.useAnchorToggle) primitives.push("createAnchorToggle");
   if (bindings.useDismissal) primitives.push("createDismissal");
   if (bindings.isCompoundStateContainer) primitives.push("createCompoundContext");
+  if (isDisclosure) primitives.push("createCompoundContext");
 
   const lines: string[] = [];
   lines.push(
@@ -478,17 +485,48 @@ function capitalize(s: string): string {
 // Public entry point
 // ---------------------------------------------------------------------------
 
+/**
+ * Disclosure (Accordion-shaped) context for Angular: an InjectionToken carrying
+ * the openness signal + per-item toggle helpers + type/collapsible/disabled/
+ * idBase. Provided on the root component; Trigger/Content inject it. No tab
+ * register/idBase counter.
+ */
+function generateDisclosureContextTypes(ir: ComponentIR): string {
+  const { name } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const lines: string[] = [];
+  lines.push(`export interface ${name}ContextValue {`);
+  lines.push(`  readonly ${channelName}: Signal<string | string[]>;`);
+  lines.push(`  toggleItem: (value: string) => void;`);
+  lines.push(`  isItemOpen: (value: string) => boolean;`);
+  lines.push(`  type: Signal<"single" | "multiple">;`);
+  lines.push(`  collapsible: Signal<boolean>;`);
+  lines.push(`  disabled: Signal<boolean>;`);
+  lines.push(`  idBase: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`const { token: ${name}ContextToken, useContext: use${name}Context } =`);
+  lines.push(`  createCompoundContext<${name}ContextValue>("${name}");`);
+  lines.push(``);
+  lines.push(`export { ${name}ContextToken, use${name}Context };`);
+  return lines.join("\n");
+}
+
 export function generateAngularHookSource(ir: ComponentIR): string | null {
   const bindings = resolveBindings(ir);
   if (!bindings) return null;
 
-  const importsBody = generateImports(bindings);
+  const isDisclosure = isDisclosureContainer(ir);
+  const importsBody = generateImports(bindings, isDisclosure);
   const inlineTypesBody = generateInlineTypes(ir, bindings);
   const optionsBody = generateOptionsInterface(ir, bindings);
   const resultBody = generateResultInterface(ir, bindings);
   const contextTypesBody = bindings.isCompoundStateContainer
     ? generateCompoundContextTypes(ir)
-    : "";
+    : isDisclosure
+      ? generateDisclosureContextTypes(ir)
+      : "";
   const hookBody = generateBody(ir, bindings);
 
   const typesBody = [inlineTypesBody, optionsBody, resultBody, contextTypesBody]

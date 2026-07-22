@@ -26,6 +26,7 @@ import {
   generateVueComponentSource,
   generateVueCompoundPartSource,
   generateVueCompoundStateParts,
+  generateVueDisclosureStateParts,
 } from "./component-source.js";
 import { generateVueHookSource } from "./hook-source.js";
 import { generateVueBarrel } from "./barrel.js";
@@ -78,7 +79,17 @@ export function createVueEmitter(): FrameworkEmitter {
         },
       ];
 
-      if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
+      if (isDisclosureContainer(ir)) {
+        // Repeated-disclosure container (Accordion): emit Item/Trigger/Content
+        // SFCs wired via provide/inject disclosure context.
+        for (const part of generateVueDisclosureStateParts(ir)) {
+          files.push({
+            relativePath: `${ir.name}/${part.name}.vue`,
+            contents: part.content,
+            preservable: true,
+          });
+        }
+      } else if (isCompoundStateContainer(ir)) {
         // Compound-state-container: emit sub-component SFCs (List, Tab, Panel)
         // that are wired via provide/inject context.
         for (const part of generateVueCompoundStateParts(ir)) {

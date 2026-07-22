@@ -1,6 +1,5 @@
 export { default as Accordion } from "./Accordion/Accordion.svelte";
 export { default as AccordionContent } from "./Accordion/AccordionContent.svelte";
-export { default as AccordionHeader } from "./Accordion/AccordionHeader.svelte";
 export { default as AccordionItem } from "./Accordion/AccordionItem.svelte";
 export { default as AccordionTrigger } from "./Accordion/AccordionTrigger.svelte";
 export { default as Alert } from "./Alert/Alert.svelte";

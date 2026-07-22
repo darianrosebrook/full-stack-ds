@@ -1,6 +1,6 @@
 // @generated:start imports
 import { type Ref } from "vue";
-import { useControllableState } from "../../primitives/index.js";
+import { createCompoundContext, useControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -18,6 +18,19 @@ export interface UseAccordionResult {
   openness: Ref<string | string[]>;
   setOpenness: (next: string | string[]) => void;
 }
+
+export interface AccordionContextValue {
+  openness: Ref<string | string[]>;
+  toggleItem: (value: string) => void;
+  isItemOpen: (value: string) => boolean;
+  type: "single" | "multiple";
+  collapsible: boolean;
+  disabled: boolean;
+  idBase: string;
+}
+
+export const [provideAccordionContext, useAccordionContext] =
+  createCompoundContext<AccordionContextValue>("Accordion");
 // @generated:end
 
 // @custom:start types

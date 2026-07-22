@@ -68,5 +68,57 @@ describe("Accordion — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+import { fireEvent } from "@testing-library/svelte";
+import { vi } from "vitest";
+import AccordionFixture from "./AccordionFixture.svelte";
+
+// FIX-COMPOUND-CONTAINER-ANCESTOR-PREDICATE-01 (A2, Svelte).
+describe("Accordion — disclosure behavior", () => {
+  it("clicking a trigger expands its own panel and fires the channel callback", async () => {
+    const onValueChange = vi.fn();
+    const { container } = render(AccordionFixture as unknown as Component<Record<string, unknown>>, {
+      props: { type: "single", onValueChange },
+    });
+    const buttons = () => Array.from(container.querySelectorAll("button"));
+    const first = buttons()[0];
+    expect(first.getAttribute("aria-expanded")).toBe("false");
+    await fireEvent.click(first);
+    expect(onValueChange).toHaveBeenCalledWith("a");
+    expect(buttons()[0].getAttribute("aria-expanded")).toBe("true");
+    const region = container.querySelector('[role="region"]')!;
+    expect(region).toBeTruthy();
+    expect(region.getAttribute("aria-labelledby")).toBe(buttons()[0].id);
+  });
+
+  it("single mode: opening a second item closes the first", async () => {
+    const { container } = render(AccordionFixture as unknown as Component<Record<string, unknown>>, {
+      props: { type: "single", defaultValue: "a" },
+    });
+    const buttons = () => Array.from(container.querySelectorAll("button"));
+    expect(buttons()[0].getAttribute("aria-expanded")).toBe("true");
+    await fireEvent.click(buttons()[1]);
+    expect(buttons()[1].getAttribute("aria-expanded")).toBe("true");
+    expect(buttons()[0].getAttribute("aria-expanded")).toBe("false");
+  });
+
+  it("multiple mode: both items can be open at once", async () => {
+    const { container } = render(AccordionFixture as unknown as Component<Record<string, unknown>>, {
+      props: { type: "multiple", defaultValue: ["a"] },
+    });
+    const buttons = () => Array.from(container.querySelectorAll("button"));
+    await fireEvent.click(buttons()[1]);
+    expect(buttons()[0].getAttribute("aria-expanded")).toBe("true");
+    expect(buttons()[1].getAttribute("aria-expanded")).toBe("true");
+  });
+
+  it("emits disclosure ARIA, not tab ARIA", () => {
+    const { container } = render(AccordionFixture as unknown as Component<Record<string, unknown>>, {
+      props: { type: "single" },
+    });
+    expect(container.querySelector('[role="tab"]')).toBeNull();
+    expect(container.querySelector('[role="tablist"]')).toBeNull();
+    expect(container.querySelector('[aria-selected]')).toBeNull();
+  });
+});
 
 // @custom:end

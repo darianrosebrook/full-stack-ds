@@ -25,6 +25,7 @@ import {
   generateSvelteComponentSource,
   generateSvelteCompoundPartSource,
   generateSvelteCompoundStateParts,
+  generateSvelteDisclosureStateParts,
 } from "./component-source.js";
 import { generateSvelteHookSource } from "./hook-source.js";
 import { generateSvelteBarrel } from "./barrel.js";
@@ -76,7 +77,17 @@ export function createSvelteEmitter(): FrameworkEmitter {
           preservable: true,
         },
       ];
-      if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
+      if (isDisclosureContainer(ir)) {
+        // Repeated-disclosure container (Accordion): Item/Trigger/Content SFCs
+        // wired via setContext/getContext disclosure context.
+        for (const part of generateSvelteDisclosureStateParts(ir)) {
+          files.push({
+            relativePath: `${ir.name}/${part.name}.svelte`,
+            contents: part.content,
+            preservable: true,
+          });
+        }
+      } else if (isCompoundStateContainer(ir)) {
         // Compound-state-container: emit sub-component SFCs (List, Tab, Panel)
         // that are wired via setContext/getContext context.
         for (const part of generateSvelteCompoundStateParts(ir)) {

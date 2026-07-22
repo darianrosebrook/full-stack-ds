@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createControllableState } from "../../primitives/index.js";
+import { createCompoundContext, createControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,6 +19,21 @@ export interface UseAccordionResult {
   openness: Signal<string | string[]>;
   setOpenness: (next: string | string[]) => void;
 }
+
+export interface AccordionContextValue {
+  readonly openness: Signal<string | string[]>;
+  toggleItem: (value: string) => void;
+  isItemOpen: (value: string) => boolean;
+  type: Signal<"single" | "multiple">;
+  collapsible: Signal<boolean>;
+  disabled: Signal<boolean>;
+  idBase: string;
+}
+
+const { token: AccordionContextToken, useContext: useAccordionContext } =
+  createCompoundContext<AccordionContextValue>("Accordion");
+
+export { AccordionContextToken, useAccordionContext };
 // @generated:end
 
 // @custom:start types

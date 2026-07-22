@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
-import { useAccordion } from "./useAccordion.js";
+import { computed, ref } from "vue";
+import { useAccordion, provideAccordionContext } from "./useAccordion.js";
 // @generated:end
 
 // @custom:start imports
@@ -9,6 +9,8 @@ import { useAccordion } from "./useAccordion.js";
 // @custom:end
 
 // @generated:start types
+let _accordionIdCounter = 0;
+
 export type AccordionType = "single" | "multiple";
 // @generated:end
 
@@ -24,6 +26,7 @@ interface Props {
   onValueChange?: (value: string | string[]) => void;
   collapsible?: boolean;
   disabled?: boolean;
+  idBase?: string;
   class?: string;
   "data-testid"?: string;
 }
@@ -33,15 +36,73 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: "single",
   collapsible: false,
-  disabled: undefined,
 });
 // @generated:end
 
 // @generated:start hook
-const behavior = useAccordion({
+const { openness, setOpenness } = useAccordion({
   value: () => props.value,
   defaultValue: props.defaultValue,
   onValueChange: props.onValueChange,
+});
+
+const idBase = props.idBase ?? `accordion-${++_accordionIdCounter}`;
+const rootRef = ref<HTMLElement | null>(null);
+
+function isItemOpen(itemValue: string): boolean {
+  const v = openness.value;
+  return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;
+}
+
+function toggleItem(itemValue: string): void {
+  const v = openness.value;
+  if (props.type === "multiple") {
+    const current = Array.isArray(v) ? v : [];
+    setOpenness(
+      current.includes(itemValue)
+        ? current.filter((x) => x !== itemValue)
+        : [...current, itemValue],
+    );
+  } else {
+    const current = typeof v === "string" ? v : "";
+    setOpenness(current === itemValue && props.collapsible ? "" : itemValue);
+  }
+}
+
+function handleKeyDown(e: KeyboardEvent): void {
+  const key = e.key;
+  if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {
+    return;
+  }
+  const root = rootRef.value;
+  if (!root) return;
+  const triggers = Array.from(
+    root.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),
+  ).filter((el) => !el.disabled);
+  if (triggers.length === 0) return;
+  const currentIndex = triggers.indexOf(document.activeElement as HTMLButtonElement);
+  let nextIndex = currentIndex;
+  if (key === "ArrowDown") {
+    nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;
+  } else if (key === "ArrowUp") {
+    nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;
+  } else if (key === "Home") {
+    nextIndex = 0;
+  } else {
+    nextIndex = triggers.length - 1;
+  }
+  e.preventDefault();
+  triggers[nextIndex]?.focus();
+}
+
+provideAccordionContext({
+  openness,
+  toggleItem,
+  isItemOpen,
+  get type() { return props.type ?? "single"; },
+  get collapsible() { return props.collapsible ?? false; },
+  get disabled() { return props.disabled ?? false; },
+  idBase,
 });
 // @generated:end
 
@@ -49,7 +110,6 @@ const behavior = useAccordion({
 const classNames = computed(() => [
   "accordion",
   props.type ? `accordion--${props.type}` : null,
-  props.disabled ? "accordion--disabled" : null,
   props.class,
 ].filter(Boolean).join(" "));
 // @generated:end
@@ -60,19 +120,12 @@ const classNames = computed(() => [
 </script>
 
 <template>
-  <div :class="classNames" :data-testid="props['data-testid']">
-    <div :class="'accordion__item'">
-      <h3 :class="'accordion__header'">
-        <button :class="'accordion__trigger'" type="button" :aria-expanded="behavior.openness.value === undefined ? undefined : Boolean(behavior.openness.value)">
-          <slot />
-          <span :class="'accordion__chevron'"></span>
-        </button>
-      </h3>
-      <div :class="'accordion__content'">
-        <div :class="'accordion__contentInner'">
-          <slot />
-        </div>
-      </div>
-    </div>
+  <div
+    ref="rootRef"
+    :class="classNames"
+    :data-testid="props['data-testid']"
+    @keydown="handleKeyDown"
+  >
+    <slot />
   </div>
 </template>

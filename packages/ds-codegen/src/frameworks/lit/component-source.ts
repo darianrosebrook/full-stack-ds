@@ -48,6 +48,9 @@ import {
   isCompoundStateContainer,
   isDisclosureContainer,
   getGroupHostOrnamentPart,
+  getInteractiveItemPart,
+  getMultipleItemPart,
+  getRegionPart,
 } from "../react/hook-source.js";
 import {
   collectIconGlyphNodes,
@@ -1034,6 +1037,369 @@ function generateTabsPanelClass(ir: ComponentIR): string {
   return lines.join("\n");
 }
 
+// ---------------------------------------------------------------------------
+// Repeated-disclosure lowering (Accordion-shaped)
+// ---------------------------------------------------------------------------
+
+/** DFS for the DOM node whose part matches `partName`. */
+function litFindDomNode(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === partName) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+function generateDisclosureContextTypesLit(ir: ComponentIR): string {
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const lines: string[] = [];
+  const aliases = emitNonReactTypeAliases(ir);
+  if (aliases.length > 0) lines.push(aliases.join("\n"));
+  lines.push(``);
+  lines.push(`export interface ${ir.name}ContextValue {`);
+  lines.push(`  ${channelName}: string | string[];`);
+  lines.push(`  toggleItem: (value: string) => void;`);
+  lines.push(`  isItemOpen: (value: string) => boolean;`);
+  lines.push(`  type: "single" | "multiple";`);
+  lines.push(`  collapsible: boolean;`);
+  lines.push(`  disabled: boolean;`);
+  lines.push(`  idBase: string;`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`const DISCLOSURE_CTX = createCompoundContext<${ir.name}ContextValue>("${ir.name}");`);
+  lines.push(`export { DISCLOSURE_CTX };`);
+  return lines.join("\n");
+}
+
+function generateDisclosureRootClass(ir: ComponentIR): string {
+  const className = `${ir.name}Element`;
+  const elementName = `fsds-${toKebabCase(ir.name)}`;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const setterName = `set${channelName[0].toUpperCase()}${channelName.slice(1)}`;
+  const hasCollapsible = ir.styledProps.some((p) => p.name === "collapsible");
+  const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
+  const cssBase = ir.classRecipe.base;
+  const hasClassMap =
+    ir.classRecipe.valueModifiers.length > 0 ||
+    ir.classRecipe.booleanModifiers.length > 0;
+
+  const lines: string[] = [];
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(...litStaticStylesLine(ir));
+  lines.push(``);
+  const propLines = generatePropertyDeclarations(ir);
+  const rename = litAliasRename(ir);
+  const declaredNames = new Set(
+    propLines
+      .filter((line) => line.includes(":") && !line.startsWith("  @"))
+      .map((line) => line.trim().match(/^([_a-zA-Z][\w]*)\??:/)?.[1] ?? "")
+      .filter(Boolean),
+  );
+  const channelLines: string[] = [];
+  for (const ch of ir.behavior.normalizedChannels) {
+    if (declaredNames.has(ch.changeHandlerProp)) continue;
+    const t = applyLitTypeRename(ch.valueType ?? "unknown", rename);
+    channelLines.push(
+      `  @property({ attribute: false }) ${ch.changeHandlerProp}?: (value: ${t}) => void;`,
+    );
+  }
+  if (propLines.length > 0 || channelLines.length > 0) {
+    lines.push(...propLines);
+    lines.push(...channelLines);
+    lines.push(``);
+  }
+  lines.push(`  private behavior = new ${ir.name}Behavior(this, {`);
+  lines.push(`    value: () => this.value,`);
+  lines.push(`    defaultValue: this.defaultValue,`);
+  lines.push(`    onValueChange: (v) => this.onValueChange?.(v),`);
+  lines.push(`  });`);
+  lines.push(``);
+  lines.push(`  private _generatedIdBase: string | null = null;`);
+  lines.push(`  private get resolvedIdBase(): string {`);
+  lines.push(`    if (!this._generatedIdBase) {`);
+  lines.push(`      this._generatedIdBase = "fsds-${toKebabCase(ir.name)}-" + Math.random().toString(36).slice(2, 8);`);
+  lines.push(`    }`);
+  lines.push(`    return this._generatedIdBase;`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  isItemOpen(itemValue: string): boolean {`);
+  lines.push(`    const v = this.behavior.${channelName};`);
+  lines.push(`    return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  toggleItem(itemValue: string): void {`);
+  lines.push(`    const v = this.behavior.${channelName};`);
+  lines.push(`    if ((this.type ?? "single") === "multiple") {`);
+  lines.push(`      const current = Array.isArray(v) ? v : [];`);
+  lines.push(`      this.behavior.${setterName}(`);
+  lines.push(`        current.includes(itemValue)`);
+  lines.push(`          ? current.filter((x) => x !== itemValue)`);
+  lines.push(`          : [...current, itemValue],`);
+  lines.push(`      );`);
+  lines.push(`    } else {`);
+  lines.push(`      const current = typeof v === "string" ? v : "";`);
+  if (hasCollapsible) {
+    lines.push(`      this.behavior.${setterName}(current === itemValue && this.collapsible ? "" : itemValue);`);
+  } else {
+    lines.push(`      this.behavior.${setterName}(itemValue);`);
+  }
+  lines.push(`    }`);
+  lines.push(`    this._provideCtx();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  private _handleKeyDown = (e: KeyboardEvent): void => {`);
+  lines.push(`    const key = e.key;`);
+  lines.push(`    if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") return;`);
+  lines.push(`    const triggers = Array.from(`);
+  lines.push(`      this.querySelectorAll<HTMLElement>("[data-disclosure-trigger]"),`);
+  lines.push(`    ).filter((el) => el.getAttribute("aria-disabled") !== "true");`);
+  lines.push(`    if (triggers.length === 0) return;`);
+  lines.push(`    const currentIndex = triggers.indexOf(document.activeElement as HTMLElement);`);
+  lines.push(`    let nextIndex = currentIndex;`);
+  lines.push(`    if (key === "ArrowDown") nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;`);
+  lines.push(`    else if (key === "ArrowUp") nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;`);
+  lines.push(`    else if (key === "Home") nextIndex = 0;`);
+  lines.push(`    else nextIndex = triggers.length - 1;`);
+  lines.push(`    e.preventDefault();`);
+  lines.push(`    triggers[nextIndex]?.focus();`);
+  lines.push(`  };`);
+  lines.push(``);
+  lines.push(`  override connectedCallback(): void {`);
+  lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.addEventListener("keydown", this._handleKeyDown);`);
+  lines.push(`    this._provideCtx();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override disconnectedCallback(): void {`);
+  lines.push(`    this.removeEventListener("keydown", this._handleKeyDown);`);
+  lines.push(`    super.disconnectedCallback();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override updated(): void {`);
+  lines.push(`    this._provideCtx();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  private _provideCtx(): void {`);
+  lines.push(`    if (!this.isConnected) return;`);
+  lines.push(`    provideContext(this, DISCLOSURE_CTX.key, {`);
+  lines.push(`      ${channelName}: this.behavior.${channelName},`);
+  lines.push(`      toggleItem: (v: string) => this.toggleItem(v),`);
+  lines.push(`      isItemOpen: (v: string) => this.isItemOpen(v),`);
+  lines.push(`      type: this.type ?? "single",`);
+  lines.push(`      collapsible: ${hasCollapsible ? "this.collapsible ?? false" : "false"},`);
+  lines.push(`      disabled: ${hasDisabled ? "this.disabled ?? false" : "false"},`);
+  lines.push(`      idBase: this.resolvedIdBase,`);
+  lines.push(`    });`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  if (hasClassMap) {
+    lines.push(`    const classes = {`);
+    lines.push(generateClassMapObject(ir));
+    lines.push(`    };`);
+    lines.push(`    return html\`<div class=\${classMap(classes)}><slot></slot></div>\`;`);
+  } else {
+    lines.push(`    return html\`<div class="${cssBase}"><slot></slot></div>\`;`);
+  }
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+  return lines.join("\n");
+}
+
+function generateDisclosureItemClass(ir: ComponentIR, multipleName: string): string {
+  const subName = `${ir.name}${multipleName[0].toUpperCase()}${multipleName.slice(1)}`;
+  const className = `${subName}Element`;
+  const elementName = `fsds-${toKebabCase(subName)}`;
+  const cssClass = `${ir.classRecipe.base}__${multipleName}`;
+  return [
+    `export class ${className} extends LitElement {`,
+    ...litStaticStylesLine(ir, ":host { display: block; }"),
+    ``,
+    `  override render() {`,
+    `    this.className = "${cssClass}";`,
+    `    return html\`<slot></slot>\`;`,
+    `  }`,
+    `}`,
+    ``,
+    `customElements.define('${elementName}', ${className});`,
+  ].join("\n");
+}
+
+function generateDisclosureTriggerClass(ir: ComponentIR, itemName: string, chevronPartName: string | undefined): string {
+  const subName = `${ir.name}${itemName[0].toUpperCase()}${itemName.slice(1)}`;
+  const className = `${subName}Element`;
+  const elementName = `fsds-${toKebabCase(subName)}`;
+  const cssClass = `${ir.classRecipe.base}__${itemName}`;
+  const chevronMarkup = chevronPartName
+    ? `<span class="${ir.classRecipe.base}__${chevronPartName}"></span>`
+    : "";
+  const lines: string[] = [];
+  // Host IS the interactive control (role=button on host, ARIA in light DOM so
+  // aria-controls can reference the content id). Shadow renders slot + chevron.
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(
+    ...litStaticStylesLine(
+      ir,
+      ":host { display: block; cursor: pointer; }",
+      ':host([aria-disabled="true"]) { cursor: not-allowed; pointer-events: none; }',
+    ),
+  );
+  lines.push(``);
+  lines.push(`  @property() value = "";`);
+  lines.push(``);
+  lines.push(`  private _ctx = new ContextConsumerController(this, DISCLOSURE_CTX);`);
+  lines.push(``);
+  lines.push(`  private _onActivate = (): void => {`);
+  lines.push(`    try { this._ctx.value.toggleItem(this.value); } catch { /* no context */ }`);
+  lines.push(`  };`);
+  lines.push(``);
+  lines.push(`  private _onKeyDown = (e: KeyboardEvent): void => {`);
+  lines.push(`    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); this._onActivate(); }`);
+  lines.push(`  };`);
+  lines.push(``);
+  lines.push(`  override connectedCallback(): void {`);
+  lines.push(`    super.connectedCallback();`);
+  lines.push(`    this.addEventListener("click", this._onActivate);`);
+  lines.push(`    this.addEventListener("keydown", this._onKeyDown);`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override disconnectedCallback(): void {`);
+  lines.push(`    this.removeEventListener("click", this._onActivate);`);
+  lines.push(`    this.removeEventListener("keydown", this._onKeyDown);`);
+  lines.push(`    super.disconnectedCallback();`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  private _updateHostAttrs(isOpen: boolean, idBase: string, disabled: boolean): void {`);
+  lines.push(`    this.setAttribute("role", "button");`);
+  lines.push(`    this.setAttribute("data-disclosure-trigger", "");`);
+  lines.push(`    this.setAttribute("data-value", this.value);`);
+  lines.push(`    this.setAttribute("id", \`\${idBase}-trigger-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("aria-controls", \`\${idBase}-content-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("aria-expanded", isOpen ? "true" : "false");`);
+  lines.push(`    if (disabled) { this.setAttribute("aria-disabled", "true"); this.removeAttribute("tabindex"); }`);
+  lines.push(`    else { this.removeAttribute("aria-disabled"); this.setAttribute("tabindex", "0"); }`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  lines.push(`    let isOpen = false;`);
+  lines.push(`    let idBase = "";`);
+  lines.push(`    let disabled = false;`);
+  lines.push(`    try {`);
+  lines.push(`      const ctx = this._ctx.value;`);
+  lines.push(`      isOpen = ctx.isItemOpen(this.value);`);
+  lines.push(`      idBase = ctx.idBase;`);
+  lines.push(`      disabled = ctx.disabled;`);
+  lines.push(`    } catch { /* no context yet */ }`);
+  lines.push(`    this._updateHostAttrs(isOpen, idBase, disabled);`);
+  lines.push(`    this.className = ["${cssClass}", isOpen ? "${cssClass}--open" : ""].filter(Boolean).join(" ");`);
+  lines.push(`    return html\`<slot></slot>${chevronMarkup}\`;`);
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+  return lines.join("\n");
+}
+
+function generateDisclosureContentClass(ir: ComponentIR, regionName: string, innerPartName: string | undefined): string {
+  const subName = `${ir.name}${regionName[0].toUpperCase()}${regionName.slice(1)}`;
+  const className = `${subName}Element`;
+  const elementName = `fsds-${toKebabCase(subName)}`;
+  const cssClass = `${ir.classRecipe.base}__${regionName}`;
+  const innerOpen = innerPartName ? `<div class="${ir.classRecipe.base}__${innerPartName}">` : "";
+  const innerClose = innerPartName ? `</div>` : "";
+  const lines: string[] = [];
+  lines.push(`export class ${className} extends LitElement {`);
+  lines.push(
+    ...litStaticStylesLine(
+      ir,
+      ":host { display: block; }",
+      ":host([hidden]) { display: none !important; }",
+    ),
+  );
+  lines.push(``);
+  lines.push(`  @property() value = "";`);
+  lines.push(``);
+  lines.push(`  private _ctx = new ContextConsumerController(this, DISCLOSURE_CTX);`);
+  lines.push(``);
+  lines.push(`  private _updateHostAttrs(isOpen: boolean, idBase: string): void {`);
+  lines.push(`    this.setAttribute("role", "region");`);
+  lines.push(`    this.setAttribute("id", \`\${idBase}-content-\${this.value}\`);`);
+  lines.push(`    this.setAttribute("aria-labelledby", \`\${idBase}-trigger-\${this.value}\`);`);
+  lines.push(`    if (isOpen) this.removeAttribute("hidden");`);
+  lines.push(`    else this.setAttribute("hidden", "");`);
+  lines.push(`  }`);
+  lines.push(``);
+  lines.push(`  override render() {`);
+  lines.push(`    let isOpen = false;`);
+  lines.push(`    let idBase = "";`);
+  lines.push(`    try {`);
+  lines.push(`      const ctx = this._ctx.value;`);
+  lines.push(`      isOpen = ctx.isItemOpen(this.value);`);
+  lines.push(`      idBase = ctx.idBase;`);
+  lines.push(`    } catch { /* no context yet */ }`);
+  lines.push(`    this._updateHostAttrs(isOpen, idBase);`);
+  lines.push(`    this.className = "${cssClass}";`);
+  lines.push(`    return html\`${innerOpen}<slot></slot>${innerClose}\`;`);
+  lines.push(`  }`);
+  lines.push(`}`);
+  lines.push(``);
+  lines.push(`customElements.define('${elementName}', ${className});`);
+  return lines.join("\n");
+}
+
+function generateDisclosureStateSource(ir: ComponentIR): string {
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const multiplePart = getMultipleItemPart(ir);
+  const importsBody = generateCompoundStateImports(ir);
+  const typesBody = generateDisclosureContextTypesLit(ir);
+
+  const itemNode = ir.dom && itemPart ? litFindDomNode(ir.dom, itemPart.name) : undefined;
+  const chevronPartName = itemNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  )?.part;
+  const innerNode = ir.dom && regionPart ? litFindDomNode(ir.dom, regionPart.name) : undefined;
+  const innerPartName = innerNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  )?.part;
+
+  const componentBody = [
+    generateDisclosureRootClass(ir),
+    "",
+    generateDisclosureItemClass(ir, multiplePart!.name),
+    "",
+    generateDisclosureTriggerClass(ir, itemPart!.name, chevronPartName),
+    "",
+    generateDisclosureContentClass(ir, regionPart!.name, innerPartName),
+  ].join("\n");
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const sections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: typesBody },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "component", body: componentBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+  ];
+
+  return renderSections(sections, "line");
+}
+
 function generateCompoundStateSource(ir: ComponentIR): string {
   const importsBody = generateCompoundStateImports(ir);
   const typesBody = generateCompoundStateTypes(ir);
@@ -1077,7 +1443,10 @@ function generateCompoundStateSource(ir: ComponentIR): string {
 export function generateLitComponentSource(ir: ComponentIR): string {
   // Compound-state-container components (Tabs-shaped) get a bespoke emitter
   // that produces four LitElement classes instead of the generic wrapper.
-  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
+  if (isDisclosureContainer(ir)) {
+    return generateDisclosureStateSource(ir);
+  }
+  if (isCompoundStateContainer(ir)) {
     return generateCompoundStateSource(ir);
   }
 

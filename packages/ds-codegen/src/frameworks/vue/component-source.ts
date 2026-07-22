@@ -77,6 +77,7 @@ import {
   getGroupHostOrnamentPart,
   getGroupHostPart,
   getInteractiveItemPart,
+  getMultipleItemPart,
   getRegionPart,
   isCompoundStateContainer,
   isDisclosureContainer,
@@ -94,7 +95,10 @@ const VUE_SKIP_PROPS = new Set(["class", "style", "children", "className"]);
  * users override entire SFCs rather than splice template fragments).
  */
 export function generateVueComponentSource(ir: ComponentIR): string {
-  if (isCompoundStateContainer(ir) && !isDisclosureContainer(ir)) {
+  if (isDisclosureContainer(ir)) {
+    return generateVueDisclosureStateRootSource(ir);
+  }
+  if (isCompoundStateContainer(ir)) {
     return generateVueCompoundStateRootSource(ir);
   }
   if (ir.dom) {
@@ -668,6 +672,441 @@ function generateVueCompoundStateRootSource(ir: ComponentIR): string {
     templateBody,
     ``,
   ].join("\n");
+}
+
+// ---------------------------------------------------------------------------
+// Repeated-disclosure lowering (Accordion-shaped)
+// ---------------------------------------------------------------------------
+
+/** DFS for the DOM node whose part matches `partName`. */
+function vueFindDomNode(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.part === partName) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/** Returns the DOM node whose direct child has `part === partName`. */
+function vueFindParentOf(
+  root: NonNullable<ComponentIR["dom"]>,
+  partName: string,
+): NonNullable<ComponentIR["dom"]> | undefined {
+  const stack: NonNullable<ComponentIR["dom"]>[] = [root];
+  while (stack.length > 0) {
+    const node = stack.pop()!;
+    if (node.children?.some((c) => c.part === partName)) return node;
+    if (node.children) stack.push(...node.children);
+  }
+  return undefined;
+}
+
+/**
+ * Root SFC for a repeated-disclosure container (Accordion). Owns the openness
+ * channel via the composable, derives per-item open/toggle, provides the
+ * disclosure context, and hosts arrow-key navigation over the triggers.
+ */
+function generateVueDisclosureStateRootSource(ir: ComponentIR): string {
+  const { name, classRecipe } = ir;
+  const channel = ir.behavior.normalizedChannels[0];
+  const channelName = channel?.name ?? "openness";
+  const setter = `set${capitalize(channelName)}`;
+  const hasCollapsible = ir.styledProps.some((p) => p.name === "collapsible");
+  const hasDisabled = ir.styledProps.some((p) => p.name === "disabled");
+
+  const importsBody = [
+    `import { computed, ref } from "vue";`,
+    `import { use${name}, provide${name}Context } from "./use${name}.js";`,
+  ].join("\n");
+
+  const typesBody = emitNonReactTypeAliases(ir).join("\n");
+
+  const propNames = new Set(ir.styledProps.map((p) => p.name));
+  const propsLines: string[] = [`interface Props {`];
+  for (const p of ir.styledProps) {
+    if (VUE_SKIP_PROPS.has(p.name)) continue;
+    const optional = p.required && p.defaultExpr === undefined ? "" : "?";
+    const propKey = p.name.includes("-") ? `"${p.name}"` : p.name;
+    propsLines.push(`  ${propKey}${optional}: ${lowerVuePropType(p.propType)};`);
+  }
+  for (const dim of Object.keys(ir.variants)) {
+    if (!propNames.has(dim)) propsLines.push(`  ${dim}?: string;`);
+  }
+  if (!propNames.has("idBase")) propsLines.push(`  idBase?: string;`);
+  if (!propNames.has("class")) propsLines.push(`  class?: string;`);
+  if (!propNames.has("data-testid")) propsLines.push(`  "data-testid"?: string;`);
+  propsLines.push(`}`);
+  const propsInterfaceBody = propsLines.join("\n");
+
+  const defaults: Array<[string, string]> = [];
+  for (const p of ir.styledProps) {
+    if (p.defaultExpr === undefined) continue;
+    if (VUE_SKIP_PROPS.has(p.name)) continue;
+    defaults.push([p.name, p.defaultExpr]);
+  }
+  const definePropsBody =
+    defaults.length === 0
+      ? `const props = defineProps<Props>();`
+      : [
+          `const props = withDefaults(defineProps<Props>(), {`,
+          ...defaults.map(([k, v]) => `  ${k.includes("-") ? `"${k}"` : k}: ${v},`),
+          `});`,
+        ].join("\n");
+
+  const idCounterName = `_${name.toLowerCase()}IdCounter`;
+
+  const hookLines: string[] = [];
+  hookLines.push(`const { ${channelName}, ${setter} } = use${name}({`);
+  if (channel) {
+    hookLines.push(`  ${channel.valueProp}: () => props.${propAccess(channel.valueProp)},`);
+    if (channel.defaultValueProp) {
+      hookLines.push(`  ${channel.defaultValueProp}: props.${propAccess(channel.defaultValueProp)},`);
+    }
+    hookLines.push(`  ${channel.changeHandlerProp}: props.${propAccess(channel.changeHandlerProp)},`);
+  }
+  hookLines.push(`});`);
+  hookLines.push(``);
+  hookLines.push(`const idBase = props.idBase ?? \`${name.toLowerCase()}-\${++${idCounterName}}\`;`);
+  hookLines.push(`const rootRef = ref<HTMLElement | null>(null);`);
+  hookLines.push(``);
+  hookLines.push(`function isItemOpen(itemValue: string): boolean {`);
+  hookLines.push(`  const v = ${channelName}.value;`);
+  hookLines.push(`  return Array.isArray(v) ? v.includes(itemValue) : v === itemValue;`);
+  hookLines.push(`}`);
+  hookLines.push(``);
+  hookLines.push(`function toggleItem(itemValue: string): void {`);
+  hookLines.push(`  const v = ${channelName}.value;`);
+  hookLines.push(`  if (props.type === "multiple") {`);
+  hookLines.push(`    const current = Array.isArray(v) ? v : [];`);
+  hookLines.push(`    ${setter}(`);
+  hookLines.push(`      current.includes(itemValue)`);
+  hookLines.push(`        ? current.filter((x) => x !== itemValue)`);
+  hookLines.push(`        : [...current, itemValue],`);
+  hookLines.push(`    );`);
+  hookLines.push(`  } else {`);
+  hookLines.push(`    const current = typeof v === "string" ? v : "";`);
+  if (hasCollapsible) {
+    hookLines.push(`    ${setter}(current === itemValue && props.collapsible ? "" : itemValue);`);
+  } else {
+    hookLines.push(`    ${setter}(itemValue);`);
+  }
+  hookLines.push(`  }`);
+  hookLines.push(`}`);
+  hookLines.push(``);
+  hookLines.push(`function handleKeyDown(e: KeyboardEvent): void {`);
+  hookLines.push(`  const key = e.key;`);
+  hookLines.push(`  if (key !== "ArrowDown" && key !== "ArrowUp" && key !== "Home" && key !== "End") {`);
+  hookLines.push(`    return;`);
+  hookLines.push(`  }`);
+  hookLines.push(`  const root = rootRef.value;`);
+  hookLines.push(`  if (!root) return;`);
+  hookLines.push(`  const triggers = Array.from(`);
+  hookLines.push(`    root.querySelectorAll<HTMLButtonElement>("[data-disclosure-trigger]"),`);
+  hookLines.push(`  ).filter((el) => !el.disabled);`);
+  hookLines.push(`  if (triggers.length === 0) return;`);
+  hookLines.push(`  const currentIndex = triggers.indexOf(document.activeElement as HTMLButtonElement);`);
+  hookLines.push(`  let nextIndex = currentIndex;`);
+  hookLines.push(`  if (key === "ArrowDown") {`);
+  hookLines.push(`    nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % triggers.length;`);
+  hookLines.push(`  } else if (key === "ArrowUp") {`);
+  hookLines.push(`    nextIndex = currentIndex < 0 ? triggers.length - 1 : (currentIndex - 1 + triggers.length) % triggers.length;`);
+  hookLines.push(`  } else if (key === "Home") {`);
+  hookLines.push(`    nextIndex = 0;`);
+  hookLines.push(`  } else {`);
+  hookLines.push(`    nextIndex = triggers.length - 1;`);
+  hookLines.push(`  }`);
+  hookLines.push(`  e.preventDefault();`);
+  hookLines.push(`  triggers[nextIndex]?.focus();`);
+  hookLines.push(`}`);
+  hookLines.push(``);
+  hookLines.push(`provide${name}Context({`);
+  hookLines.push(`  ${channelName},`);
+  hookLines.push(`  toggleItem,`);
+  hookLines.push(`  isItemOpen,`);
+  hookLines.push(`  get type() { return props.type ?? "single"; },`);
+  hookLines.push(`  get collapsible() { return ${hasCollapsible ? "props.collapsible ?? false" : "false"}; },`);
+  hookLines.push(`  get disabled() { return ${hasDisabled ? "props.disabled ?? false" : "false"}; },`);
+  hookLines.push(`  idBase,`);
+  hookLines.push(`});`);
+  const hookBody = hookLines.join("\n");
+
+  const classExprs: string[] = [`"${classRecipe.base}"`];
+  for (const mod of classRecipe.valueModifiers) {
+    classExprs.push(`props.${mod.propName} ? \`${classRecipe.base}--${mod.valuePrefix ?? ""}\${props.${mod.propName}}\` : null`);
+  }
+  classExprs.push(`props.class`);
+  const classesBody = [
+    `const classNames = computed(() => [`,
+    ...classExprs.map((e) => `  ${e},`),
+    `].filter(Boolean).join(" "));`,
+  ].join("\n");
+
+  const counterPrelude = `let ${idCounterName} = 0;`;
+
+  const blank = (): Section => ({ kind: "between", body: "" });
+  const scriptSections: Section[] = [
+    { kind: "generated", id: "imports", body: importsBody },
+    blank(),
+    { kind: "custom", id: "imports", body: "" },
+    blank(),
+    { kind: "generated", id: "types", body: [counterPrelude, typesBody].filter((s) => s.length > 0).join("\n\n") },
+    blank(),
+    { kind: "custom", id: "types", body: "" },
+    blank(),
+    { kind: "generated", id: "props", body: propsInterfaceBody },
+    blank(),
+    { kind: "generated", id: "defineProps", body: definePropsBody },
+    blank(),
+    { kind: "generated", id: "hook", body: hookBody },
+    blank(),
+    { kind: "generated", id: "classes", body: classesBody },
+    blank(),
+    { kind: "custom", id: "trailing", body: "" },
+  ];
+
+  const templateBody = [
+    `<template>`,
+    `  <div`,
+    `    ref="rootRef"`,
+    `    :class="classNames"`,
+    `    :data-testid="props['data-testid']"`,
+    `    @keydown="handleKeyDown"`,
+    `  >`,
+    `    <slot />`,
+    `  </div>`,
+    `</template>`,
+  ].join("\n");
+
+  return [
+    `<script setup lang="ts">`,
+    renderSections(scriptSections, "line"),
+    `</script>`,
+    ``,
+    templateBody,
+    ``,
+  ].join("\n");
+}
+
+/**
+ * Sub-component SFCs for a disclosure container: Item (passive wrapper),
+ * Trigger (button binding aria-expanded + toggle), Content (region).
+ */
+export function generateVueDisclosureStateParts(
+  ir: ComponentIR,
+): Array<{ name: string; content: string }> {
+  if (!isDisclosureContainer(ir)) return [];
+  const { name, cssPrefix } = ir;
+  const itemPart = getInteractiveItemPart(ir);
+  const regionPart = getRegionPart(ir);
+  const multiplePart = getMultipleItemPart(ir);
+  if (!itemPart || !regionPart || !multiplePart || !ir.dom) return [];
+
+  const itemNode = vueFindDomNode(ir.dom, itemPart.name);
+  const headerNode = vueFindParentOf(ir.dom, itemPart.name);
+  const headerPartName = headerNode?.part;
+  const headerTag = headerNode?.tag ?? "div";
+  const triggerTag = itemNode?.tag ?? "button";
+  const chevronPartName = itemNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  )?.part;
+  const innerNode = vueFindDomNode(ir.dom, regionPart.name);
+  const innerChild = innerNode?.children?.find(
+    (c) => c.part !== undefined && c.tag !== "slot" && c.tag !== "children",
+  );
+  const innerPartName = innerChild?.part;
+  const innerTag = innerChild?.tag ?? "div";
+
+  const itemName = `${name}${capitalize(multiplePart.name)}`;
+  const triggerName = `${name}${capitalize(itemPart.name)}`;
+  const contentName = `${name}${capitalize(regionPart.name)}`;
+
+  const itemCssClass = `${cssPrefix}__${multiplePart.name}`;
+  const triggerCssClass = `${cssPrefix}__${itemPart.name}`;
+  const contentCssClass = `${cssPrefix}__${regionPart.name}`;
+
+  // Item.vue (passive wrapper)
+  const itemSource = [
+    `<script setup lang="ts">`,
+    `// @generated:start imports`,
+    `import { computed } from "vue";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `}`,
+    ``,
+    `const props = defineProps<Props>();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const classNames = computed(() =>`,
+    `  ["${itemCssClass}", props.class].filter(Boolean).join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <div :class="classNames" :data-testid="props['data-testid']">`,
+    `    <slot />`,
+    `  </div>`,
+    `</template>`,
+    ``,
+  ].join("\n");
+
+  // Trigger.vue
+  const triggerOpenLines = headerPartName
+    ? [`  <${headerTag} class="${cssPrefix}__${headerPartName}">`]
+    : [];
+  const triggerCloseLines = headerPartName ? [`  </${headerTag}>`] : [];
+  const triggerIndent = headerPartName ? "    " : "  ";
+  const triggerInner: string[] = [];
+  triggerInner.push(`${triggerIndent}<${triggerTag}`);
+  triggerInner.push(`${triggerIndent}  type="button"`);
+  triggerInner.push(`${triggerIndent}  :class="classNames"`);
+  triggerInner.push(`${triggerIndent}  data-disclosure-trigger`);
+  triggerInner.push(`${triggerIndent}  :data-value="props.value"`);
+  triggerInner.push(`${triggerIndent}  :id="\`\${ctx.idBase}-trigger-\${props.value}\`"`);
+  triggerInner.push(`${triggerIndent}  :aria-controls="\`\${ctx.idBase}-content-\${props.value}\`"`);
+  triggerInner.push(`${triggerIndent}  :aria-expanded="isOpen"`);
+  triggerInner.push(`${triggerIndent}  :disabled="ctx.disabled"`);
+  triggerInner.push(`${triggerIndent}  :data-testid="props['data-testid']"`);
+  triggerInner.push(`${triggerIndent}  @click="ctx.toggleItem(props.value)"`);
+  triggerInner.push(`${triggerIndent}>`);
+  triggerInner.push(`${triggerIndent}  <slot />`);
+  if (chevronPartName) {
+    triggerInner.push(`${triggerIndent}  <span class="${cssPrefix}__${chevronPartName}"></span>`);
+  }
+  triggerInner.push(`${triggerIndent}</${triggerTag}>`);
+
+  const triggerSource = [
+    `<script setup lang="ts">`,
+    `// @generated:start imports`,
+    `import { computed } from "vue";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `}`,
+    ``,
+    `const props = defineProps<Props>();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isOpen = computed(() => ctx.isItemOpen(props.value));`,
+    ``,
+    `const classNames = computed(() =>`,
+    `  [`,
+    `    "${triggerCssClass}",`,
+    `    isOpen.value && "${triggerCssClass}--open",`,
+    `    props.class,`,
+    `  ]`,
+    `    .filter(Boolean)`,
+    `    .join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<template>`,
+    ...triggerOpenLines,
+    ...triggerInner,
+    ...triggerCloseLines,
+    `</template>`,
+    ``,
+  ].join("\n");
+
+  // Content.vue
+  const contentInnerLines = innerPartName
+    ? [
+        `    <${innerTag} class="${cssPrefix}__${innerPartName}">`,
+        `      <slot />`,
+        `    </${innerTag}>`,
+      ]
+    : [`    <slot />`];
+  const contentSource = [
+    `<script setup lang="ts">`,
+    `// @generated:start imports`,
+    `import { computed } from "vue";`,
+    `import { use${name}Context } from "./use${name}.js";`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start imports`,
+    ``,
+    `// @custom:end`,
+    ``,
+    `// @generated:start props`,
+    `interface Props {`,
+    `  value: string;`,
+    `  class?: string;`,
+    `  "data-testid"?: string;`,
+    `}`,
+    ``,
+    `const props = defineProps<Props>();`,
+    `// @generated:end`,
+    ``,
+    `// @generated:start classes`,
+    `const ctx = use${name}Context();`,
+    ``,
+    `const isOpen = computed(() => ctx.isItemOpen(props.value));`,
+    ``,
+    `const classNames = computed(() =>`,
+    `  ["${contentCssClass}", props.class].filter(Boolean).join(" "),`,
+    `);`,
+    `// @generated:end`,
+    ``,
+    `// @custom:start trailing`,
+    ``,
+    `// @custom:end`,
+    `</script>`,
+    ``,
+    `<template>`,
+    `  <div`,
+    `    role="region"`,
+    `    :class="classNames"`,
+    `    :id="\`\${ctx.idBase}-content-\${props.value}\`"`,
+    `    :aria-labelledby="\`\${ctx.idBase}-trigger-\${props.value}\`"`,
+    `    :hidden="!isOpen ? true : undefined"`,
+    `    :data-testid="props['data-testid']"`,
+    `  >`,
+    ...contentInnerLines,
+    `  </div>`,
+    `</template>`,
+    ``,
+  ].join("\n");
+
+  return [
+    { name: itemName, content: itemSource },
+    { name: triggerName, content: triggerSource },
+    { name: contentName, content: contentSource },
+  ];
 }
 
 /**
