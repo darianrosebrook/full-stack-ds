@@ -2,10 +2,11 @@ id: FIX-E2E-BASEURL-ENV-OVERRIDE-01
 title: 'Env-overridable e2e base URL/port (5173 collision with unrelated dev servers)'
 risk_tier: 3
 mode: chore
-lifecycle_state: active
-worktree: e2e-base-env
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge e2e-base-env at ae38ef52a6a7968776b3b8fe6126cee41b31a87d'
 created_at: '2026-07-22T10:27:37.436Z'
-updated_at: '2026-07-22T10:27:37.436Z'
+updated_at: '2026-07-22T10:28:34.353Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
