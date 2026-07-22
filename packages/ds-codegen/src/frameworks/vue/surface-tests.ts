@@ -8,7 +8,7 @@
  * consumer-handler preservation including the preventDefault opt-out.
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind } from "../../semantics.js";
+import { anchoredPortalsContentToBody, isAnchoredPresenceKind } from "../../semantics.js";
 
 export function generateVueSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -23,14 +23,32 @@ export function generateVueSurfaceTest(ir: ComponentIR): string {
         `Add the kind to ANCHORED_PRESENCE_KINDS in semantics.ts when its substrate is ready.`,
     );
   }
+  // Content is teleported to document.body when the contract portals
+  // anchored content (see anchoredPortalsContentToBody). @vue/test-utils'
+  // `wrapper` no longer contains the content node in that case, so all
+  // content lookups must resolve it from document.body instead — mirror
+  // of the full-overlay portal-aware fix in tests.ts.
+  const portalContent = anchoredPortalsContentToBody(ir);
   // Test-body shape is kind-specific (Tooltip's hover/focus contract
   // vs Popover's click contract). Each kind has its own scaffold
   // function; dispatch on kind here. Body emission is realization,
   // not policy.
   if (surface.kind === "popover") {
-    return emitPopoverScaffoldTests(ir);
+    return emitPopoverScaffoldTests(ir, portalContent);
   }
-  return emitTooltipTests(ir);
+  return emitTooltipTests(ir, portalContent);
+}
+
+/**
+ * Rewrites `wrapper.find("[data-testid='content']")` occurrences to
+ * resolve via `findContent()` when content is teleported to
+ * document.body. Textual substitution (rather than re-deriving each
+ * call site) keeps the two scaffold bodies close to their pre-portal
+ * shape, which is what a reviewer diffs against.
+ */
+function withContentLookup(body: string, portalContent: boolean): string {
+  if (!portalContent) return body;
+  return body.split(`wrapper.find("[data-testid='content']")`).join(`findContent()`);
 }
 
 /**
@@ -42,11 +60,11 @@ export function generateVueSurfaceTest(ir: ComponentIR): string {
  * (focus boundary, outside-click, controlled mode) lives in the
  * @custom block per atom B's precedent.
  */
-function emitPopoverScaffoldTests(ir: ComponentIR): string {
+function emitPopoverScaffoldTests(ir: ComponentIR, portalContent: boolean): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   const importsBody = [
-    `import { describe, it, expect, vi } from "vitest";`,
+    `import { describe, it, expect, vi${portalContent ? ", afterEach" : ""} } from "vitest";`,
     `import { defineComponent, h } from "vue";`,
     `import { mount } from "@vue/test-utils";`,
     `import { axe } from "vitest-axe";`,
@@ -61,7 +79,26 @@ function emitPopoverScaffoldTests(ir: ComponentIR): string {
     `}`,
   ].join("\n");
 
-  const testsBody = `function mountDefault(rootProps: Record<string, unknown> = {}) {
+  const findContentHelper = portalContent
+    ? `
+// Content is teleported to document.body when open (anchoredPortalsContentToBody),
+// so @vue/test-utils' \`wrapper\` never contains it — resolve from document.body.
+function findContent() {
+  return { exists: () => document.body.querySelector("[data-testid='content']") !== null,
+    attributes: (key: string) => document.body.querySelector("[data-testid='content']")?.getAttribute(key) ?? undefined,
+    element: document.body.querySelector("[data-testid='content']") as Element };
+}
+`
+    : "";
+  const afterEachBlock = portalContent
+    ? `
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+`
+    : "";
+
+  const testsBodyRaw = `function mountDefault(rootProps: Record<string, unknown> = {}) {
   const Host = defineComponent({
     components: { ${name}, ${name}Trigger, ${name}Content },
     props: {
@@ -80,7 +117,7 @@ function emitPopoverScaffoldTests(ir: ComponentIR): string {
     attachTo: document.body,
   });
 }
-
+${findContentHelper}${afterEachBlock}
 describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", () => {
     const wrapper = mountDefault();
@@ -235,6 +272,7 @@ describe("${name} — accessibility", () => {
     wrapper.unmount();
   });
 });`;
+  const testsBody = withContentLookup(testsBodyRaw, portalContent);
 
   return [
     `// @generated:start imports`,
@@ -252,12 +290,12 @@ describe("${name} — accessibility", () => {
   ].join("\n");
 }
 
-function emitTooltipTests(ir: ComponentIR): string {
+function emitTooltipTests(ir: ComponentIR, portalContent: boolean): string {
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
 
   const importsBody = [
-    `import { describe, it, expect, vi } from "vitest";`,
+    `import { describe, it, expect, vi${portalContent ? ", afterEach" : ""} } from "vitest";`,
     `import { defineComponent, h } from "vue";`,
     `import { mount } from "@vue/test-utils";`,
     `import { axe } from "vitest-axe";`,
@@ -272,10 +310,29 @@ function emitTooltipTests(ir: ComponentIR): string {
     `}`,
   ].join("\n");
 
+  const findContentHelper = portalContent
+    ? `
+// Content is teleported to document.body when open (anchoredPortalsContentToBody),
+// so @vue/test-utils' \`wrapper\` never contains it — resolve from document.body.
+function findContent() {
+  return { exists: () => document.body.querySelector("[data-testid='content']") !== null,
+    attributes: (key: string) => document.body.querySelector("[data-testid='content']")?.getAttribute(key) ?? undefined,
+    element: document.body.querySelector("[data-testid='content']") as Element };
+}
+`
+    : "";
+  const afterEachBlock = portalContent
+    ? `
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+`
+    : "";
+
   // Render helpers — Vue test-utils does not accept a fragment-shaped
   // children prop the way React does, so we emit a small helper that
   // mounts a defineComponent rendering Tooltip with its compound parts.
-  const testsBody = `function mountDefault(rootProps: Record<string, unknown> = {}) {
+  const testsBodyRaw = `function mountDefault(rootProps: Record<string, unknown> = {}) {
   const Host = defineComponent({
     components: { ${name}, ${name}Trigger, ${name}Content },
     props: {
@@ -294,7 +351,7 @@ function emitTooltipTests(ir: ComponentIR): string {
     attachTo: document.body,
   });
 }
-
+${findContentHelper}${afterEachBlock}
 describe("${name} — compound API surface", () => {
   it("renders the trigger but not the content when closed", () => {
     const wrapper = mountDefault();
@@ -546,6 +603,7 @@ describe("${name} — accessibility", () => {
     wrapper.unmount();
   });
 });`;
+  const testsBody = withContentLookup(testsBodyRaw, portalContent);
 
   return [
     `// @generated:start imports`,

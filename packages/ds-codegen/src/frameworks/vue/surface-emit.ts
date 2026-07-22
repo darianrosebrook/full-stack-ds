@@ -29,6 +29,7 @@
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
+  anchoredPortalsContentToBody,
   isAnchoredPresenceKind,
   resolveAnchoredSurfacePolicy,
   type AnchoredSurfacePolicy,
@@ -85,6 +86,11 @@ function emitRootSfc(
 
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
+
+  // Positioning-aware root additionally forwards the live anchor/content
+  // nodes and resolved placement into the compound context, so Content
+  // can call useAnchoredPosition without re-implementing registration.
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
 
   // Policy-derived dismissal props. Public modes (prop !== null)
   // become closeOnX consumer props.
@@ -161,6 +167,13 @@ function emitRootSfc(
     `  registerContent: surface.registerContent,`,
     `  getTriggerHandlers: surface.getTriggerHandlers,`,
     `  triggerProps: surface.triggerProps,`,
+    ...(positioningEnabled
+      ? [
+          `  anchorEl: surface.anchorEl,`,
+          `  contentEl: surface.contentEl,`,
+          placementValues ? `  placement: computed(() => props.placement),` : `  placement: computed(() => undefined),`,
+        ]
+      : []),
     `});`,
     `// @generated:end`,
     ``,
@@ -273,34 +286,92 @@ function emitContentSfc(
   surface: SurfaceIR,
   policy: AnchoredSurfacePolicy,
 ): string {
-  // `surface` is no longer read but kept in the signature for symmetry
-  // with the other emit functions (and to leave room for content-
-  // specific facts the policy may need to look at later).
-  void surface;
   const name = ir.name;
   const cssPrefix = ir.cssPrefix;
   // Policy-derived default content role. Shared semantics owns the
   // tooltip→"tooltip", popover→null rule (and the contract-override
   // path).
   const contentRole = policy.defaultContentRole;
-  const templateLines: (string | null)[] = [
-    `<template>`,
+
+  // Positioning + portal are driven by the contract, mirroring the
+  // React emitter:
+  //   - surface.positioning.strategy === "anchored" → wire
+  //     useAnchoredPosition and apply fixed-position style + data-placement
+  //   - anchoredPortalsContentToBody(ir) → wrap the content element in
+  //     <Teleport to="body">
+  // Both flags are independent: a contract can opt into anchored
+  // positioning without portalling (content stays in-tree with fixed
+  // positioning), though Popover and Tooltip enable both.
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalEnabled = anchoredPortalsContentToBody(ir);
+  const collision = surface.positioning?.collision ?? "flip-shift";
+
+  const importLines = [`import { use${name}Context } from "./use${name}.js";`];
+  if (positioningEnabled) {
+    importLines.push(
+      `import { useAnchoredPosition, type AnchoredPlacement } from "../../primitives/surfaces/useAnchoredPosition.js";`,
+    );
+  }
+
+  // ctx.placement is typed as the widened `string | undefined` in the
+  // composable (see emitComposable — the context type can't import the
+  // precise placement union back from Name.vue without a circular
+  // import). The contract's placement variant values are always a
+  // subset of AnchoredPlacement | "auto", so the cast here is a
+  // narrowing of contract-controlled data, not an unchecked escape.
+  const positioningHookLines = positioningEnabled
+    ? [
+        ``,
+        `const position = useAnchoredPosition({`,
+        `  anchor: () => ctx.anchorEl.value,`,
+        `  content: () => ctx.contentEl.value,`,
+        `  open: () => ctx.open.value,`,
+        `  placement: () => (ctx.placement.value ?? "auto") as AnchoredPlacement | "auto",`,
+        `  collision: () => "${collision}",`,
+        `});`,
+      ]
+    : [];
+
+  const positioningStyleBinding = positioningEnabled
+    ? [
+        `    :style="{`,
+        `      position: 'fixed',`,
+        `      top: \`\${position.top}px\`,`,
+        `      left: \`\${position.left}px\`,`,
+        `      visibility: position.ready ? 'visible' : 'hidden',`,
+        `    }"`,
+        `    :data-placement="position.placement"`,
+      ]
+    : [];
+
+  const contentDivLines: (string | null)[] = [
     `  <div`,
     `    v-if="ctx.open.value"`,
     `    :ref="ctx.registerContent"`,
     `    :id="ctx.contentId"`,
     contentRole !== null ? `    role="${contentRole}"` : null,
+    ...positioningStyleBinding,
     `    data-${cssPrefix}-content`,
     `    v-bind="$attrs"`,
     `  >`,
     `    <slot />`,
     `  </div>`,
-    `</template>`,
   ];
+
+  const templateLines: (string | null)[] = portalEnabled
+    ? [
+        `<template>`,
+        `  <Teleport to="body">`,
+        ...contentDivLines.map((line) => (line === null ? null : `  ${line}`)),
+        `  </Teleport>`,
+        `</template>`,
+      ]
+    : [`<template>`, ...contentDivLines, `</template>`];
+
   return [
     `<script setup lang="ts">`,
     `// @generated:start imports`,
-    `import { use${name}Context } from "./use${name}.js";`,
+    ...importLines,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -314,7 +385,7 @@ function emitContentSfc(
     `// @generated:end`,
     ``,
     `// @generated:start ctx`,
-    `const ctx = use${name}Context();`,
+    `const ctx = use${name}Context();${positioningHookLines.join("\n")}`,
     `// @generated:end`,
     ``,
     `// @custom:start trailing`,
@@ -336,6 +407,13 @@ function emitComposable(
   const dataMarker = `data-${ir.cssPrefix}-trigger`;
   const openTriggersList = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  // The composable module is imported BY the SFC (Name.vue → useName.ts),
+  // so it cannot import the placement type alias back from Name.vue
+  // without a circular import. The context value's placement field is
+  // typed as the widened `string` here; Name.vue's own template/props
+  // retain the precise union.
+  const placementType = "string";
 
   // Policy-derived dismissal-array assembly. For each declared
   // dismissal mode:
@@ -356,6 +434,14 @@ function emitComposable(
         spec.prop !== null,
     )
     .map((spec) => `  ${spec.prop}?: () => boolean | undefined;`);
+
+  const positioningContextLines = positioningEnabled
+    ? [
+        `  anchorEl: ComputedRef<HTMLElement | null>;`,
+        `  contentEl: ComputedRef<HTMLElement | null>;`,
+        `  placement: ComputedRef<${placementType} | undefined>;`,
+      ]
+    : [];
 
   return [
     `// @generated:start imports`,
@@ -385,6 +471,7 @@ function emitComposable(
     `  registerContent: SurfaceRefCallback;`,
     `  getTriggerHandlers: () => SurfaceTriggerHandlers;`,
     `  triggerProps: ComputedRef<SurfaceTriggerProps>;`,
+    ...positioningContextLines,
     `}`,
     `// @generated:end`,
     ``,
