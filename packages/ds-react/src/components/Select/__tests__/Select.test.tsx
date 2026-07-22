@@ -164,4 +164,84 @@ describe("Select — option selection (FEAT-BINDING-CALL-WITH-ARG-01)", () => {
     expect(onChange).not.toHaveBeenCalledWith("beta");
   });
 });
+
+// FEAT-CHANNEL-UPDATE-OPERATIONS-01: the option-click wire is now
+// `toggleMembership(iter:item.value, prop:multiple)`. Single mode keeps
+// replace (proven above); multiple mode toggles array membership. Pins the
+// A3 behavioral claim for React.
+describe("Select — multiple-mode toggle (channelUpdate toggleMembership)", () => {
+  const OPTIONS = [
+    { value: "alpha", label: "Alpha" },
+    { value: "beta", label: "Beta" },
+    { value: "gamma", label: "Gamma" },
+  ];
+
+  it("in multiple mode, clicking an ABSENT option ADDS it to the array", () => {
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Fruit"
+        multiple
+        open={true}
+        value={["alpha"]}
+        onChange={onChange}
+        options={OPTIONS}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole("option")[2]); // Gamma
+    expect(onChange).toHaveBeenLastCalledWith(["alpha", "gamma"]);
+  });
+
+  it("in multiple mode, clicking a PRESENT option REMOVES it from the array", () => {
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Fruit"
+        multiple
+        open={true}
+        value={["alpha", "beta"]}
+        onChange={onChange}
+        options={OPTIONS}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole("option")[0]); // Alpha (present)
+    expect(onChange).toHaveBeenLastCalledWith(["beta"]);
+  });
+
+  it("in multiple mode, a scalar current value is coerced to an array before toggling", () => {
+    // Falsification: if the toggle wrote a raw string it would throw / produce
+    // a wrong shape. A standing scalar "beta" + clicking "gamma" must yield the
+    // two-element array.
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Fruit"
+        multiple
+        open={true}
+        value={"beta" as unknown as string[]}
+        onChange={onChange}
+        options={OPTIONS}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole("option")[2]); // Gamma
+    expect(onChange).toHaveBeenLastCalledWith(["beta", "gamma"]);
+  });
+
+  it("single mode is unchanged: clicking replaces with the scalar value", () => {
+    // Regression guard on the mode dispatch — without `multiple`, the wire must
+    // still take the `!modeGate` replace branch, not toggle.
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Fruit"
+        open={true}
+        value={"alpha"}
+        onChange={onChange}
+        options={OPTIONS}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole("option")[1]); // Beta
+    expect(onChange).toHaveBeenLastCalledWith("beta");
+  });
+});
 // @custom:end

@@ -2211,6 +2211,83 @@ describe("parseBindingExpression — channelCall (FEAT-BINDING-CALL-WITH-ARG-01)
   });
 });
 
+describe("parseBindingExpression — channelUpdate (FEAT-CHANNEL-UPDATE-OPERATIONS-01)", () => {
+  it("parses setCharAt(iter:index) — the OTP per-field witness", () => {
+    expect(parseBindingExpression("channel:value.onChange:setCharAt(iter:index)")).toEqual({
+      kind: "channelUpdate",
+      channel: "value",
+      op: "setCharAt",
+      operands: [{ kind: "iterationLocal", local: "index" }],
+    });
+  });
+
+  it("parses toggleMembership(iter:item.value, prop:multiple) — the Select multi witness", () => {
+    expect(
+      parseBindingExpression(
+        "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)",
+      ),
+    ).toEqual({
+      kind: "channelUpdate",
+      channel: "selection",
+      op: "toggleMembership",
+      operands: [
+        { kind: "iterationLocal", local: "item", path: ["value"] },
+        { kind: "prop", prop: "multiple" },
+      ],
+    });
+  });
+
+  it("rejects an unknown operation name — the vocabulary is closed", () => {
+    // Falsification: an arbitrary op is not admitted; the whole form falls to
+    // literal so the authoring error appears verbatim in output.
+    const expr = "channel:value.onChange:spliceInto(iter:index)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects wrong arity for setCharAt (expects exactly 1 operand)", () => {
+    const expr = "channel:value.onChange:setCharAt(iter:index, prop:x)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects wrong arity for toggleMembership (expects exactly 2 operands)", () => {
+    const expr = "channel:selection.onChange:toggleMembership(iter:item.value)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects a channel operand — operands are value-shaped, no escape hatch", () => {
+    const expr = "channel:value.onChange:setCharAt(channel:open.value)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects a predicate operand — no boolean/nested payloads", () => {
+    const expr =
+      "channel:selection.onChange:toggleMembership(predicate:eq(iter:item, prop:x), prop:multiple)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects an empty operand list", () => {
+    const expr = "channel:value.onChange:setCharAt()";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("leaves the bare channel:X.onChange callback form undisturbed", () => {
+    // The `:op(` form is matched only when a colon+op+parens is present.
+    expect(parseBindingExpression("channel:value.onChange")).toEqual({
+      kind: "channel",
+      channel: "value",
+      field: "onChange",
+    });
+  });
+
+  it("leaves the plain channelCall channel:X.onChange(arg) form undisturbed", () => {
+    expect(parseBindingExpression("channel:value.onChange(iter:item)")).toEqual({
+      kind: "channelCall",
+      channel: "value",
+      arg: { kind: "iterationLocal", local: "item" },
+    });
+  });
+});
+
 describe("parseBindingExpression — conditionals (V2-CONDITIONAL-01)", () => {
   it("parses value-position conditional bindings", () => {
     expect(
@@ -2516,6 +2593,143 @@ describe("channelCall validator — context and scope (FEAT-BINDING-CALL-WITH-AR
         withCallArgBinding({
           bindingSite: "event",
           expr: "channel:selection.onChange(iter:item)",
+        }),
+      ),
+    ).toThrow(/not inside any `iterate` block/);
+  });
+});
+
+describe("channelUpdate validator — context, scope, valueType (FEAT-CHANNEL-UPDATE-OPERATIONS-01)", () => {
+  // Fixture: a `value` string channel (for setCharAt) AND a `selection`
+  // array-capable channel plus a `multiple` prop (for toggleMembership),
+  // hosting the expression under test at the requested binding site inside a
+  // count-iterated `<li>` (so `iter:index` resolves).
+  function withUpdateBinding(opts: {
+    bindingSite: "binding" | "content" | "event";
+    expr: string;
+    iterate?: { source: string; kind: "array" | "count"; itemType?: string };
+  }): ComponentContract {
+    const innerNode: ContractDomNode = {
+      tag: "li",
+      part: "item",
+      ...(opts.iterate ? { iterate: opts.iterate as ContractDomNode["iterate"] } : {}),
+      ...(opts.bindingSite === "binding"
+        ? { bindings: { "aria-selected": opts.expr } }
+        : opts.bindingSite === "content"
+        ? { content: opts.expr }
+        : { events: { input: opts.expr } }),
+    } as ContractDomNode;
+    return {
+      name: "UpdateValidatorFixture",
+      cssPrefix: "u-fixture",
+      anatomy: {
+        parts: ["root", "item"],
+        dom: { tag: "ul", part: "root", children: [innerNode] },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "value", type: "string" },
+            { name: "sel", type: "string | string[]" },
+            { name: "length", type: "number" },
+            { name: "multiple", type: "boolean" },
+          ],
+        },
+      },
+      channels: {
+        value: { value: "value", onChange: "onValueChange", valueType: "string" },
+        selection: { value: "sel", onChange: "onSelChange", valueType: "string | string[]" },
+      },
+    } as unknown as ComponentContract;
+  }
+
+  it("accepts setCharAt on a string channel in event position and normalizes it", () => {
+    const ir = buildComponentIR(
+      withUpdateBinding({
+        bindingSite: "event",
+        expr: "channel:value.onChange:setCharAt(iter:index)",
+        iterate: { source: "prop:length", kind: "count" },
+      }),
+    );
+    expect(ir.dom!.children[0].events.input).toEqual({
+      kind: "channelUpdate",
+      channel: "value",
+      op: "setCharAt",
+      operands: [{ kind: "iterationLocal", local: "index" }],
+    });
+  });
+
+  it("accepts toggleMembership on an array-capable channel", () => {
+    const ir = buildComponentIR(
+      withUpdateBinding({
+        bindingSite: "event",
+        expr: "channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)",
+        iterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+      }),
+    );
+    expect(ir.dom!.children[0].events.input).toMatchObject({
+      kind: "channelUpdate",
+      channel: "selection",
+      op: "toggleMembership",
+    });
+  });
+
+  it("rejects channelUpdate in attribute-binding position (event-position only)", () => {
+    expect(() =>
+      buildComponentIR(
+        withUpdateBinding({
+          bindingSite: "binding",
+          expr: "channel:value.onChange:setCharAt(iter:index)",
+          iterate: { source: "prop:length", kind: "count" },
+        }),
+      ),
+    ).toThrow(/only legal in `events` positions/);
+  });
+
+  it("rejects setCharAt on a NON-string channel — valueType incompatibility", () => {
+    // Falsification: setCharAt sets a character; it is meaningless on the
+    // `string | string[]` `selection` channel and must be rejected.
+    expect(() =>
+      buildComponentIR(
+        withUpdateBinding({
+          bindingSite: "event",
+          expr: "channel:selection.onChange:setCharAt(iter:index)",
+          iterate: { source: "prop:length", kind: "count" },
+        }),
+      ),
+    ).toThrow(/requires a string channel/);
+  });
+
+  it("rejects toggleMembership on a NON-array channel — valueType incompatibility", () => {
+    expect(() =>
+      buildComponentIR(
+        withUpdateBinding({
+          bindingSite: "event",
+          expr: "channel:value.onChange:toggleMembership(iter:item.value, prop:multiple)",
+          iterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+        }),
+      ),
+    ).toThrow(/requires an array-capable channel/);
+  });
+
+  it("rejects channelUpdate on an unknown channel", () => {
+    expect(() =>
+      buildComponentIR(
+        withUpdateBinding({
+          bindingSite: "event",
+          expr: "channel:nope.onChange:setCharAt(iter:index)",
+          iterate: { source: "prop:length", kind: "count" },
+        }),
+      ),
+    ).toThrow(/references unknown channel 'nope'/);
+  });
+
+  it("enforces iteration scope on operands (iter:index with no enclosing iteration is rejected)", () => {
+    expect(() =>
+      buildComponentIR(
+        withUpdateBinding({
+          bindingSite: "event",
+          expr: "channel:value.onChange:setCharAt(iter:index)",
         }),
       ),
     ).toThrow(/not inside any `iterate` block/);

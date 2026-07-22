@@ -263,9 +263,55 @@ export function nativeTableAttrsFor(tag: string | undefined): NativeTableAttr[] 
  * ONLY in `events` positions (it produces a `() => …` handler, not a value);
  * it is rejected in `bindings`, `properties`, `content`, `iterate.source`,
  * and `cssVariableBindings`, and may not appear as a predicate/conditional
- * operand. Composed setters (set-char-at-index, array-toggle for multi-select
- * `T | T[]` channels) exceed a single-argument call and are explicitly held
- * for a successor grammar (see FEAT-BINDING-CALL-WITH-ARG-01 non-claims).
+ * operand.
+ *
+ * `channelUpdate` is a closed *event-position* form
+ * (FEAT-CHANNEL-UPDATE-OPERATIONS-01). It closes the gap `channelCall`
+ * could not: interactions whose NEXT channel value composes the CURRENT
+ * value with an event payload or an iteration local — a single-argument
+ * replace is not enough. Syntax:
+ *
+ *   channel:X.onChange:<op>(<operand>, …)
+ *
+ * where `<op>` is drawn from a CLOSED, finite vocabulary of NAMED update
+ * operations with fixed semantics (`BindingUpdateOp`). There is
+ * deliberately NO expression language and NO escape hatch: an operation is
+ * admitted ONLY because a corpus consumer needs it, and each operand is a
+ * value-shaped payload (`iterationLocal`, `prop`, `literal`) — never a
+ * channel, predicate, conditional, or nested call. The two operations:
+ *
+ *   - `setCharAt(<index>)` — string channel. Sets the character at
+ *     `<index>` (an iteration local, e.g. `iter:index`) to the LAST
+ *     character of the native input event's payload (`e.target.value`),
+ *     preserving every other position:
+ *       next = value.slice(0, i) + char + value.slice(i + 1)
+ *     Witness: OTP per-field entry (`channel:value.onChange:setCharAt(iter:index)`).
+ *     Non-claim: multi-character paste distribution across fields is OUT of
+ *     scope — a field briefly holding >1 char takes only the last character.
+ *
+ *   - `toggleMembership(<member>, <modeGate>)` — array-capable channel
+ *     (valueType declares a `T[]` arm, e.g. Select's `string | string[]`).
+ *     `<modeGate>` is a boolean prop: when FALSE the operation REPLACES
+ *     (single-select semantics, byte-behaviourally identical to the prior
+ *     `channelCall` replace); when TRUE it toggles `<member>`'s membership
+ *     in the selection array (add if absent, remove if present):
+ *       next = isMulti
+ *         ? (arr.includes(m) ? arr.filter(x => x !== m) : [...arr, m])
+ *         : m
+ *     Witness: Select multiple mode
+ *     (`channel:selection.onChange:toggleMembership(iter:item.value, prop:multiple)`).
+ *     The mode dispatch lives in the operation lowering, keyed on the
+ *     contract-authored `<modeGate>` prop — NOT on a component-name literal
+ *     in any emitter.
+ *
+ * Like `channelCall`, `channelUpdate` is legal ONLY in `events` positions
+ * (it produces a `() => …` handler). Every emitter lowers it to a
+ * synthesized in-component helper (the `usesMemberOf` / count-iteration
+ * precedent) invoked from the wire — the composed next value is computed and
+ * passed through the SAME canonical channel setter the other wires use,
+ * never a direct write to internal state. Adding a third operation requires
+ * extending `BindingUpdateOp`, the parser arity/type checks, and the helper
+ * synthesis in all five emitters — the grammar is the contract.
  */
 export type BindingExpression =
   | { kind: "prop"; prop: string; path?: string[] }
@@ -294,7 +340,40 @@ export type BindingExpression =
        * `predicate`, `conditional`, or a nested `channelCall`.
        */
       arg: BindingExpression;
+    }
+  | {
+      /**
+       * FEAT-CHANNEL-UPDATE-OPERATIONS-01. A named, closed-vocabulary update
+       * operation that composes the channel's CURRENT value with an event
+       * payload / iteration local. Event-position only.
+       */
+      kind: "channelUpdate";
+      channel: string;
+      op: BindingUpdateOp;
+      /**
+       * Operation operands, each a value-shaped payload kind
+       * (`iterationLocal`, `prop`, `literal`) — same closed set as a
+       * `channelCall` argument. Arity and per-operand meaning are fixed by
+       * `op`: `setCharAt` takes `[index]`; `toggleMembership` takes
+       * `[member, modeGate]`.
+       */
+      operands: BindingExpression[];
     };
+
+/**
+ * Closed set of named channel-update operations
+ * (FEAT-CHANNEL-UPDATE-OPERATIONS-01). Each has fixed semantics documented
+ * on the `BindingExpression` doctrine comment above and is admitted only
+ * because a corpus consumer needs it. Adding one requires extending this
+ * union AND the parser arity/type checks AND the helper synthesis in every
+ * emitter — there is no arbitrary-expression escape hatch.
+ *
+ *   - `setCharAt`        — string channel; set char at an index to the last
+ *                          char of the native input payload (OTP).
+ *   - `toggleMembership` — array-capable channel; mode-gated replace-or-toggle
+ *                          of a member value (Select multiple).
+ */
+export type BindingUpdateOp = "setCharAt" | "toggleMembership";
 
 /**
  * Closed set of predicate operators (BINDING-EXPRESSION-V2-PREDICATE-01).
@@ -1520,6 +1599,13 @@ function validateDomBindings(
   const knownProps = new Set(styledProps.map((p) => p.name));
   const propTypes = new Map(styledProps.map((p) => [p.name, p.type]));
   const channelValuePropByName = new Map(channels.map((c) => [c.name, c.valueProp]));
+  // FEAT-CHANNEL-UPDATE-OPERATIONS-01: channel name → declared valueType, so
+  // `channelUpdate` validation can check operation/valueType compatibility
+  // (setCharAt requires a string channel; toggleMembership requires an
+  // array-capable one). Undefined valueType channels map to "".
+  const channelValueTypes = new Map(
+    channels.map((c) => [c.name, c.valueType ?? ""]),
+  );
   // Resolve iteration sources that arrived as `channel:X.value` to the
   // underlying styled prop name. This is done up-front so the recursive
   // validator can use the same `propTypes`/`knownProps` checks for both
@@ -1534,6 +1620,7 @@ function validateDomBindings(
     propTypes,
     componentName,
     cssPrefix,
+    channelValueTypes,
   );
 }
 
@@ -1590,6 +1677,7 @@ function validateDomNode(
   propTypes: Map<string, string>,
   componentName: string,
   cssPrefix: string,
+  channelValueTypes: Map<string, string>,
   enclosingIterations: IterationIR[] = [],
 ): void {
   // Iteration source must resolve in the OUTER scope (the iteration
@@ -1758,9 +1846,11 @@ function validateDomNode(
       enclosingIteration,
       componentName,
       // Predicates stay rejected in events (they're boolean-valued). The
-      // channelCall call-with-arg form is admitted ONLY here.
+      // channelCall call-with-arg form AND the channelUpdate named-operation
+      // form are admitted ONLY here.
       false,
       true,
+      channelValueTypes,
     );
   }
   if (node.content !== undefined) {
@@ -1828,6 +1918,7 @@ function validateDomNode(
       propTypes,
       componentName,
       cssPrefix,
+      channelValueTypes,
       activeIterations,
     );
   }
@@ -1877,7 +1968,74 @@ function validateBindingAgainstScope(
    * not an attribute/content value. FEAT-BINDING-CALL-WITH-ARG-01.
    */
   allowChannelCall: boolean = false,
+  /**
+   * Channel name → declared valueType, used to check `channelUpdate`
+   * operation/valueType compatibility (setCharAt ⇒ string channel;
+   * toggleMembership ⇒ array-capable channel). Absent (empty map) at
+   * non-events callsites, where `channelUpdate` is rejected outright by the
+   * `allowChannelCall` gate. FEAT-CHANNEL-UPDATE-OPERATIONS-01.
+   */
+  channelValueTypes: Map<string, string> = new Map(),
 ): void {
+  if (binding.kind === "channelUpdate") {
+    // channelUpdate reuses the events-only gate: like channelCall it lowers
+    // to a `() => …` handler, not a value.
+    if (!allowChannelCall) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} uses a channel:${binding.channel}` +
+        `.onChange:${binding.op}(...) update-operation binding, but that form ` +
+        `is only legal in \`events\` positions (it produces a \`() => …\` ` +
+        `handler, not a value). Move the operation into an \`events\` entry.`,
+      );
+    }
+    if (!knownChannels.has(binding.channel)) {
+      throw new Error(
+        `[${componentName}] DOM ${siteLabel} references unknown channel ` +
+        `'${binding.channel}' (known: [${[...knownChannels].join(", ")}])`,
+      );
+    }
+    // Operation/valueType compatibility. The valueType is a verbatim TS
+    // type string; setCharAt needs a plain string channel, toggleMembership
+    // needs an array-capable one (a `T[]` arm, e.g. `string | string[]`).
+    const valueType = (channelValueTypes.get(binding.channel) ?? "").trim();
+    if (binding.op === "setCharAt") {
+      if (valueType !== "string") {
+        throw new Error(
+          `[${componentName}] DOM ${siteLabel} uses ` +
+          `channel:${binding.channel}.onChange:setCharAt(...), which requires ` +
+          `a string channel (it sets a character at an index); channel ` +
+          `'${binding.channel}' is typed '${valueType || "(unspecified)"}'.`,
+        );
+      }
+    } else if (binding.op === "toggleMembership") {
+      if (!looksLikeArrayType(valueType)) {
+        throw new Error(
+          `[${componentName}] DOM ${siteLabel} uses ` +
+          `channel:${binding.channel}.onChange:toggleMembership(...), which ` +
+          `requires an array-capable channel (a 'T[]' arm, e.g. ` +
+          `'string | string[]'); channel '${binding.channel}' is typed ` +
+          `'${valueType || "(unspecified)"}'.`,
+        );
+      }
+    }
+    // Each operand inherits the enclosing iteration and prop set; the
+    // operation introduces no new scope. Operands are value-shaped
+    // (predicates/channels/nested calls already rejected at parse time by
+    // `isChannelCallArg`) — recurse with predicates/channelCall disabled.
+    for (const operand of binding.operands) {
+      validateBindingAgainstScope(
+        operand,
+        `${siteLabel} channel:${binding.channel}.onChange:${binding.op} operand`,
+        knownChannels,
+        knownProps,
+        enclosingIteration,
+        componentName,
+        false,
+        false,
+      );
+    }
+    return;
+  }
   if (binding.kind === "channelCall") {
     if (!allowChannelCall) {
       throw new Error(
@@ -2762,6 +2920,25 @@ export function parseBindingExpression(expr: string): BindingExpression {
       ...buildPathField(channelValueMatch[2]),
     };
   }
+  // FEAT-CHANNEL-UPDATE-OPERATIONS-01: `channel:X.onChange:<op>(<operands>)`.
+  // Matched BEFORE the plain channelCall form so the `:op` segment is not
+  // read as trailing garbage on a bare `.onChange`. The operation name and
+  // operand arity/types are validated by `tryParseChannelUpdate`; any
+  // malformed shape (unknown op, wrong arity, non-value-shaped operand)
+  // returns null and the whole form falls through to a literal so the
+  // authoring error appears verbatim in output.
+  const channelUpdateMatch = expr.match(
+    /^channel:([A-Za-z_$][\w$-]*)\.onChange:([A-Za-z][A-Za-z0-9]*)\((.*)\)$/,
+  );
+  if (channelUpdateMatch) {
+    const parsed = tryParseChannelUpdate(
+      channelUpdateMatch[1],
+      channelUpdateMatch[2],
+      channelUpdateMatch[3],
+    );
+    if (parsed) return parsed;
+    // Malformed operation form — fall through to literal below.
+  }
   // FEAT-BINDING-CALL-WITH-ARG-01: `channel:X.onChange(<argExpr>)`. Matched
   // BEFORE the bare-callback form so the parenthesized call is not read as a
   // bare `.onChange` with trailing garbage. The inner argument is parsed
@@ -2938,6 +3115,147 @@ function isChannelCallArg(expr: BindingExpression): boolean {
 }
 
 /**
+ * FEAT-CHANNEL-UPDATE-OPERATIONS-01.
+ *
+ * Fixed operand arity per named update operation. The single source of
+ * truth for how many operands each `channel:X.onChange:<op>(...)` form must
+ * carry. A form with the wrong count fails to parse (falls to literal).
+ */
+const CHANNEL_UPDATE_ARITY: Record<BindingUpdateOp, number> = {
+  setCharAt: 1, // [index]
+  toggleMembership: 2, // [member, modeGate]
+};
+
+/**
+ * FEAT-CHANNEL-UPDATE-OPERATIONS-01.
+ *
+ * The framework-neutral accessor strings a `channelUpdate` lowering needs.
+ * Each emitter fills these with its own idiom (React bare `value` /
+ * `setValue`; Vue `behavior.value.value` / `behavior.setValue`; Angular
+ * `behavior.value()` / `behavior.setValue`; Lit `this.behavior.value` /
+ * `this.behavior.setValue`), then calls `composeChannelUpdateExpression` to
+ * get the single, framework-agnostic JS body of the `() => …` handler. The
+ * composed next value is always passed through `setter` — the canonical
+ * channel setter — never written to internal state directly.
+ */
+export interface ChannelUpdateAccessors {
+  /** Reads the channel's CURRENT value (e.g. `value`, `this.behavior.value`). */
+  current: string;
+  /** The channel setter (e.g. `setValue`, `behavior.setValue`). */
+  setter: string;
+  /**
+   * For `setCharAt`: a JS expression reading the native input event's string
+   * payload (e.g. `e.target.value`, `(event.target as HTMLInputElement).value`).
+   */
+  eventValue?: string;
+  /** Rendered operand accessors, one per operation operand (in order). */
+  operands: string[];
+}
+
+/**
+ * FEAT-CHANNEL-UPDATE-OPERATIONS-01.
+ *
+ * Build the framework-agnostic JS EXPRESSION body of the `() => …` handler
+ * for a named channel-update operation. The returned string is valid JS in
+ * every emitter's inline-arrow position (React/Vue/Svelte/Lit); Angular,
+ * whose template expressions forbid arrows/spread/filter-callbacks, wraps
+ * the SAME semantics in a synthesized component method instead (see the
+ * Angular emitter). Semantics are fixed by `op` and documented on the
+ * `BindingExpression` doctrine comment.
+ *
+ *   - setCharAt: `setter(cur.slice(0, i) + LAST_CHAR(eventValue) + cur.slice(i + 1))`
+ *     with left-padding when `i` exceeds the current length so the character
+ *     lands at the requested index. Takes the LAST character of the payload
+ *     (a field briefly holding a paste keeps only the final char; whole-paste
+ *     distribution is out of scope).
+ *   - toggleMembership: `setter(modeGate ? toggle(asArray(cur), member) : member)`.
+ */
+/**
+ * FEAT-CHANNEL-UPDATE-OPERATIONS-01.
+ *
+ * Deterministic, collision-safe name for a synthesized channel-update helper
+ * (`apply<Op><Channel>`, e.g. `applySetCharAtValue`,
+ * `applyToggleMembershipSelection`). Used by the Angular emitter (whose
+ * template expressions forbid arrows/spread, forcing a class method) to name
+ * both the wire target and the method definition from one source.
+ */
+export function channelUpdateMethodName(
+  op: BindingUpdateOp,
+  channel: string,
+): string {
+  const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  return `apply${cap(op)}${cap(channel)}`;
+}
+
+export function composeChannelUpdateExpression(
+  op: BindingUpdateOp,
+  acc: ChannelUpdateAccessors,
+): string {
+  const { current, setter, operands } = acc;
+  // String literals are SINGLE-quoted throughout: this expression is spliced
+  // into "-delimited template attributes in Vue (`@input="..."`) and Angular
+  // wires; an embedded double quote would prematurely close the attribute
+  // (the aria-checked quote-collision precedent). React/Svelte/Lit use
+  // `{}`/`${}` delimiters where single quotes are equally valid.
+  if (op === "setCharAt") {
+    const index = operands[0];
+    const raw = acc.eventValue ?? "''";
+    // Last character of the payload; empty string clears the position.
+    const char = `String(${raw} ?? '').slice(-1)`;
+    const cur = `String(${current} ?? '')`;
+    // Pad so an index past the current end still lands correctly.
+    const padded = `${cur}.padEnd(${index}, ' ')`;
+    return `${setter}(${padded}.slice(0, ${index}) + ${char} + ${cur}.slice(${index} + 1))`;
+  }
+  // toggleMembership
+  const member = operands[0];
+  const modeGate = operands[1];
+  const cur = `(Array.isArray(${current}) ? ${current} : ${current} == null ? [] : [${current}])`;
+  const toggled = `(${cur}.includes(${member}) ? ${cur}.filter((v) => v !== ${member}) : [...${cur}, ${member}])`;
+  return `${setter}(${modeGate} ? ${toggled} : ${member})`;
+}
+
+/**
+ * FEAT-CHANNEL-UPDATE-OPERATIONS-01.
+ *
+ * Parse the body of a `channel:X.onChange:<op>(<operands>)` form. Returns
+ * the `channelUpdate`-kind BindingExpression on success, or `null` on any
+ * malformed shape so the caller falls through to literal (visible failure,
+ * matching the `channelCall` / `predicate` malformed-form behaviour).
+ * Closed grammar:
+ *
+ *   - `<op>` must be a member of `BindingUpdateOp`.
+ *   - The operand count must equal `CHANNEL_UPDATE_ARITY[op]`.
+ *   - Each operand must parse to a value-shaped payload kind
+ *     (`iterationLocal`, `prop`, `literal`) — the same closed set as a
+ *     `channelCall` argument. No channel, predicate, conditional, or nested
+ *     call operands.
+ *
+ * Operand splitting is naive (comma + optional space); the value-shaped
+ * operand grammar contains no commas, so an accidental comma parses to an
+ * unrecognized operand that fails the shape check.
+ *
+ * Channel existence and valueType/operation compatibility are decided later
+ * in `validateBindingAgainstScope` (context-dependent), not here.
+ */
+function tryParseChannelUpdate(
+  channel: string,
+  opName: string,
+  operandStr: string,
+): BindingExpression | null {
+  if (opName !== "setCharAt" && opName !== "toggleMembership") return null;
+  const op = opName as BindingUpdateOp;
+  const trimmed = operandStr.trim();
+  if (trimmed.length === 0) return null;
+  const parts = trimmed.split(",").map((s) => s.trim());
+  if (parts.length !== CHANNEL_UPDATE_ARITY[op]) return null;
+  if (parts.some((p) => p.length === 0)) return null;
+  const operands = parts.map((p) => parseBindingExpression(p));
+  if (!operands.every(isChannelCallArg)) return null;
+  return { kind: "channelUpdate", channel, op, operands };
+}
+
+/**
  * Convert a leading-dot path tail like `".foo.bar"` (or `""`) into the
  * spread fragment used to attach a `path` field to a `BindingExpression`.
  * Returns `{}` when the tail is empty so the resulting binding stays
@@ -3004,6 +3322,18 @@ export function promoteIterationLocals(
     const arg = promoteIterationLocals(binding.arg, iteration);
     if (arg === binding.arg) return binding;
     return { kind: "channelCall", channel: binding.channel, arg };
+  }
+  // FEAT-CHANNEL-UPDATE-OPERATIONS-01: promote iteration locals inside each
+  // operand. As with channelCall, the parser already routes `iter:*` to
+  // `iterationLocal`, so this only fires on an already-normalized operand
+  // (a no-op) — the recursion keeps the promotion total over the grammar.
+  if (binding.kind === "channelUpdate") {
+    const operands = binding.operands.map((o) =>
+      promoteIterationLocals(o, iteration),
+    );
+    const changed = operands.some((o, i) => o !== binding.operands[i]);
+    if (!changed) return binding;
+    return { kind: "channelUpdate", channel: binding.channel, op: binding.op, operands };
   }
   if (binding.kind !== "prop") return binding;
   // Preserve the path field across promotion. V1 contracts never wrote

@@ -74,6 +74,9 @@
                 "disabled": "prop:disabled",
                 "aria-readonly": "prop:readOnly",
                 "data-otp-index": "prop:index"
+              },
+              "events": {
+                "input": "channel:value.onChange:setCharAt(iter:index)"
               }
             }
           ]

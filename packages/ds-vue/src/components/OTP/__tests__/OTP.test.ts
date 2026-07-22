@@ -73,5 +73,29 @@ describe("OTP — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+// FEAT-CHANNEL-UPDATE-OPERATIONS-01 — set-char-at-index on the OTP field's
+// `input` wire. Pins the A2 behavioral claim for Vue (the second framework
+// alongside React).
+describe("OTP — set-char-at-index (channelUpdate setCharAt)", () => {
+  it("typing in field N sets character N without overwriting the rest", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(OTP as Component, {
+      props: { length: 4, defaultValue: "12", onChange },
+    });
+    const fields = wrapper.findAll("input[data-otp-index]");
+    // Field index 2 receives "9": slice(0,2)="12" + "9" + slice(3)="" → "129".
+    await fields[2].setValue("9");
+    expect(onChange).toHaveBeenLastCalledWith("129");
+  });
 
+  it("replacing an existing character preserves surrounding positions", async () => {
+    const onChange = vi.fn();
+    const wrapper = mount(OTP as Component, {
+      props: { length: 4, defaultValue: "1234", onChange },
+    });
+    const fields = wrapper.findAll("input[data-otp-index]");
+    await fields[1].setValue("0"); // → "1034"
+    expect(onChange).toHaveBeenLastCalledWith("1034");
+  });
+});
 // @custom:end

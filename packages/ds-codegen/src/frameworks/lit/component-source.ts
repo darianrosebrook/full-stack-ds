@@ -33,7 +33,11 @@ import type {
   NormalizedChannelIR,
   PropTypeIR,
 } from "../../ir.js";
-import { TABLE_COMPOSITION_TAGS, canonicalTsType } from "../../ir.js";
+import {
+  TABLE_COMPOSITION_TAGS,
+  canonicalTsType,
+  composeChannelUpdateExpression,
+} from "../../ir.js";
 import type { ContractTypeDef } from "../../contract.js";
 import {
   emitNonReactTypeAliases,
@@ -2657,6 +2661,26 @@ function renderLitBinding(
       if (argExpr === null) return null;
       return `@${eventName}=\${() => this.behavior.${setter}(${argExpr})}`;
     }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: compose the next value inline and
+      // pass it through the canonical `this.behavior.set<Channel>` setter.
+      // Lit's `@event=${...}` position permits the full JS body, so no
+      // synthesized method (unlike Angular).
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToLit(attr);
+      const setter = `this.behavior.set${capitalizeLit(ch.name)}`;
+      const operands = expr.operands.map((o) => renderLitBindingValue(o, ctx));
+      if (operands.some((o) => o === null)) return null;
+      const body = composeChannelUpdateExpression(expr.op, {
+        current: `this.behavior.${ch.name}`,
+        setter,
+        eventValue: "(e.target as HTMLInputElement).value",
+        operands: operands as string[],
+      });
+      const param = expr.op === "setCharAt" ? "(e: Event)" : "()";
+      return `@${eventName}=\${${param} => ${body}}`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. Predicate result is
       // boolean. ARIA boolean attrs need the explicit `"true"`/`"false"`
@@ -2716,6 +2740,10 @@ function renderLitContent(
     case "channelCall":
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; rejected in
       // content position by the IR validator. Null keeps the switch exhaustive.
+      return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; rejected in
+      // content position by the IR validator.
       return null;
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: defensive (validator
@@ -2788,6 +2816,10 @@ function renderLitBindingValue(
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; produces a
       // handler, not a value. The IR rejects it in value positions.
       return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; produces a
+      // handler, not a value. The IR rejects it in value positions.
+      return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderLitPredicate(expr, ctx);
@@ -2858,6 +2890,12 @@ function renderLitEvent(
     case "channelCall": {
       // FEAT-BINDING-CALL-WITH-ARG-01: delegate to the channelCall path in
       // renderLitBinding by re-deriving the synthetic JSX-attr name.
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderLitBinding(jsxAttr, expr, ctx, tag);
+    }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: delegate to renderLitBinding,
+      // which emits the composed `@event=${(e) => this.behavior.setX(...)}` handler.
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderLitBinding(jsxAttr, expr, ctx, tag);
     }

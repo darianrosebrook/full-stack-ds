@@ -37,7 +37,12 @@ import type {
   PropTypeIR,
   ResolvedPropIR,
 } from "../../ir.js";
-import { TABLE_COMPOSITION_TAGS, canonicalTsType } from "../../ir.js";
+import {
+  TABLE_COMPOSITION_TAGS,
+  canonicalTsType,
+  channelUpdateMethodName,
+  composeChannelUpdateExpression,
+} from "../../ir.js";
 import {
   emitNonReactTypeAliases,
   translateNonReactType,
@@ -1330,6 +1335,26 @@ function treeUsesMemberOfPredicate(node: DomNodeIR): boolean {
   return node.children.some(treeUsesMemberOfPredicate);
 }
 
+/**
+ * FEAT-CHANNEL-UPDATE-OPERATIONS-01. Collect every distinct
+ * `channelUpdate` binding (from `events`) in the DomNodeIR tree, keyed by
+ * `(op, channel)` so a channel wired to the same operation from two nodes
+ * synthesizes one method. Angular lowers each to a class method (its
+ * template expressions forbid the inline arrow/spread other frameworks use).
+ */
+function collectChannelUpdates(
+  node: DomNodeIR,
+  seen: Map<string, Extract<BindingExpression, { kind: "channelUpdate" }>> = new Map(),
+): Map<string, Extract<BindingExpression, { kind: "channelUpdate" }>> {
+  for (const binding of Object.values(node.events)) {
+    if (binding.kind === "channelUpdate") {
+      seen.set(`${binding.op}:${binding.channel}`, binding);
+    }
+  }
+  for (const child of node.children) collectChannelUpdates(child, seen);
+  return seen;
+}
+
 function generateDomTreeImports(ir: ComponentIR): string {
   const coreNames = [
     "Component",
@@ -1672,6 +1697,70 @@ function generateDomTreeComponent(ir: ComponentIR): string {
       `    return Array.isArray(selection) ? selection.includes(candidate) : candidate === selection;`,
     );
     lines.push(`  }`);
+  }
+
+  // FEAT-CHANNEL-UPDATE-OPERATIONS-01: synthesize one method per distinct
+  // (op, channel) named update operation used in the dom tree. Angular
+  // template expressions forbid the inline arrow/spread/filter-callback the
+  // other frameworks use, so the composed next value is computed here and
+  // passed through the canonical `this.behavior.set<Channel>` setter — the
+  // same setter every other wire uses, never a direct state write.
+  for (const upd of collectChannelUpdates(ir.dom).values()) {
+    const ch = channelByName.get(upd.channel);
+    if (!ch) continue;
+    const method = channelUpdateMethodName(upd.op, ch.name);
+    const setter = `this.behavior.set${capitalizeAngular(ch.name)}`;
+    const current = `this.behavior.${ch.name}()`;
+    lines.push(``);
+    if (upd.op === "setCharAt") {
+      // params: ($event, index). Body sets the char at `index` from the
+      // native input payload's last character.
+      const body = composeChannelUpdateExpression("setCharAt", {
+        current,
+        setter,
+        eventValue: "(event.target as HTMLInputElement).value",
+        operands: ["index"],
+      });
+      lines.push(
+        `  // Set the character at \`index\` to the last char of the input payload.`,
+      );
+      lines.push(`  protected ${method}(event: Event, index: number): void {`);
+      lines.push(`    ${body};`);
+      lines.push(`  }`);
+    } else {
+      // toggleMembership. params: (member, modeGate). Replace when modeGate
+      // is false; toggle membership when true. Written as explicit statements
+      // (not the shared inline composer) so a typed `string[]` local lets
+      // Angular's strict tsc narrow `.filter`/`includes` on the `T | T[]`
+      // channel — the getter-repeated inline form does not narrow across
+      // calls. Semantics are identical to `composeChannelUpdateExpression`.
+      lines.push(
+        `  // Replace (single mode) or toggle \`member\`'s array membership (multi mode).`,
+      );
+      // `modeGate` is a template-supplied boolean prop, which Angular's
+      // strict template typechecker (ngc) sees as `boolean | undefined` for
+      // an optional @Input — so the param admits undefined (the `!modeGate`
+      // guard already treats it as the single-mode replace branch).
+      lines.push(
+        `  protected ${method}(member: string, modeGate: boolean | undefined): void {`,
+      );
+      lines.push(`    if (!modeGate) {`);
+      lines.push(`      ${setter}(member);`);
+      lines.push(`      return;`);
+      lines.push(`    }`);
+      lines.push(`    const currentValue = ${current};`);
+      lines.push(
+        `    const arr: string[] = Array.isArray(currentValue)`,
+      );
+      lines.push(`      ? [...currentValue]`);
+      lines.push(
+        `      : currentValue == null ? [] : [currentValue];`,
+      );
+      lines.push(
+        `    ${setter}(arr.includes(member) ? arr.filter((v) => v !== member) : [...arr, member]);`,
+      );
+      lines.push(`  }`);
+    }
   }
 
   // Inject content-projection detection when the dom tree has an `if: "children"` node.
@@ -2500,6 +2589,28 @@ function renderAngularBinding(
       if (argExpr === null) return null;
       return `(${eventName})="behavior.${setter}(${argExpr})"`;
     }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: Angular template expressions
+      // forbid arrow functions, spread, and array-method callbacks, so the
+      // composed update cannot be inlined the way React/Vue/Svelte/Lit do it.
+      // Instead the wire calls a synthesized component method (see
+      // `emitChannelUpdateMethods`) that computes the next value and passes
+      // it through the canonical `this.behavior.set<Channel>` setter. The
+      // operands are rendered as template expressions here (so iteration
+      // locals resolve to the `*ngFor` alias) and passed into the method;
+      // `setCharAt` additionally forwards `$event` for the native payload.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToAngular(attr);
+      const method = channelUpdateMethodName(expr.op, ch.name);
+      const operandExprs = expr.operands.map((o) => renderAngularBindingValue(o, ctx));
+      if (operandExprs.some((o) => o === null)) return null;
+      const args =
+        expr.op === "setCharAt"
+          ? ["$event", ...(operandExprs as string[])]
+          : (operandExprs as string[]);
+      return `(${eventName})="${method}(${args.join(", ")})"`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01. `lowered` is already a valid
       // Angular template-expression string (comparison operators, prop
@@ -2571,6 +2682,10 @@ function renderAngularBindingValue(
     }
     case "channelCall":
       // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; produces a
+      // handler, not a value. The IR rejects it in value positions.
+      return null;
+    case "channelUpdate":
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: event-position only; produces a
       // handler, not a value. The IR rejects it in value positions.
       return null;
     case "predicate":
@@ -2656,6 +2771,12 @@ function renderAngularEvent(
       // FEAT-BINDING-CALL-WITH-ARG-01: delegate to the channelCall path in
       // renderAngularBinding by re-deriving the synthetic JSX-attr name (which
       // mapJsxEventToAngular maps back to `eventName`).
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderAngularBinding(jsxAttr, expr, ctx, tag);
+    }
+    case "channelUpdate": {
+      // FEAT-CHANNEL-UPDATE-OPERATIONS-01: delegate to renderAngularBinding,
+      // which emits the `(event)="apply<Op><Channel>(...)"` method wire.
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderAngularBinding(jsxAttr, expr, ctx, tag);
     }

@@ -67,7 +67,7 @@ const classNames = computed(() => [
 <template>
   <div :class="classNames" role="group" :aria-label="props.label" aria-describedby="otp-error-id" :data-testid="props['data-testid']">
     <div :class="'otp__group'">
-      <input v-for="(_, index) in Array(props.length)" :key="index" :class="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" :disabled="props.disabled" :aria-readonly="props.readOnly" :data-otp-index="index" />
+      <input v-for="(_, index) in Array(props.length)" :key="index" :class="'otp__field'" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="1" @input="(e) => behavior.setValue(String(behavior.value.value ?? '').padEnd(index, ' ').slice(0, index) + String((e.target as HTMLInputElement).value ?? '').slice(-1) + String(behavior.value.value ?? '').slice(index + 1))" :disabled="props.disabled" :aria-readonly="props.readOnly" :data-otp-index="index" />
     </div>
   </div>
 </template>

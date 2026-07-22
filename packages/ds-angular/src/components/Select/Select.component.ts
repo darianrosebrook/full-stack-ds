@@ -36,7 +36,7 @@ export type SelectSize = "sm" | "md" | "lg";
       </ng-container>
       <div [ngClass]="'select__options'">
         <ng-container *ngFor="let item of ((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}])); let index = index">
-          <div [ngClass]="'select__option'" role="option" (click)="behavior.setSelection(item.value)" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
+          <div [ngClass]="'select__option'" role="option" (click)="applyToggleMembershipSelection(item.value, multiple)" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
             <span>
               {{ item.label }}
             </span>
@@ -95,6 +95,19 @@ export class SelectComponent {
   // membership otherwise. Used for channels typed `T | T[]`.
   protected memberOf(candidate: unknown, selection: unknown): boolean {
     return Array.isArray(selection) ? selection.includes(candidate) : candidate === selection;
+  }
+
+  // Replace (single mode) or toggle `member`'s array membership (multi mode).
+  protected applyToggleMembershipSelection(member: string, modeGate: boolean | undefined): void {
+    if (!modeGate) {
+      this.behavior.setSelection(member);
+      return;
+    }
+    const currentValue = this.behavior.selection();
+    const arr: string[] = Array.isArray(currentValue)
+      ? [...currentValue]
+      : currentValue == null ? [] : [currentValue];
+    this.behavior.setSelection(arr.includes(member) ? arr.filter((v) => v !== member) : [...arr, member]);
   }
 }
 

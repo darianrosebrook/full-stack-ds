@@ -1,7 +1,7 @@
 // @generated:start imports
 import type { StyleProp, ViewStyle } from "react-native";
 import { TextInput, View } from "react-native";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useFsdsTheme } from "../../tokens";
 import { createOTPStyles } from "./OTP.styles";
 // @generated:end
@@ -32,9 +32,12 @@ export interface OTPProps {
 // @generated:start component
 export function OTP({
   length = 6,
+  value: controlledValue,
   disabled,
   readOnly,
   label = "One-time password",
+  defaultValue = "",
+  onChange,
   style,
   testID,
   accessibilityLabel,
@@ -42,6 +45,13 @@ export function OTP({
 }: OTPProps) {
   const fsdsTheme = useFsdsTheme();
   const styles = useMemo(() => createOTPStyles(fsdsTheme), [fsdsTheme]);
+  const [uncontrolledValue, setUncontrolledValue] = useState<string>((defaultValue ?? "") as string);
+  const value = controlledValue ?? uncontrolledValue;
+  const setValueValue = useCallback((next: string) => {
+    if (controlledValue === undefined) setUncontrolledValue(next);
+    onChange?.(next);
+  }, [controlledValue, onChange]);
+
   return (
     <View
       testID={testID}
@@ -58,6 +68,7 @@ export function OTP({
               style={styles.field}
               editable={!(disabled || Boolean(readOnly))}
               readOnly={Boolean(readOnly)}
+              onChangeText={(text: string) => setValueValue(String(value ?? '').padEnd(index, ' ').slice(0, index) + String(text ?? '').slice(-1) + String(value ?? '').slice(index + 1))}
               accessibilityState={{ disabled: disabled }}
             />
           ))}
