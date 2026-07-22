@@ -2,9 +2,11 @@ id: CODE-SNIPPET-COMPONENT-01
 title: 'CodeSnippet contract and generated component'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Work verifiably landed on main before closure: CodeBlock + CodeSnippet contracts with all sidecars exist under packages/ds-contracts/components/, generated components exist in all five web packages + RN + Figma descriptors, both are in the 49-contract corpus passing generate:check and governed:rail (verified this session at c5cda2c9 and again post-PR#10). Spec was never authored past TODO placeholders (acceptance/blast_radius), so closure evidence is corpus membership + gate passage rather than per-criterion verification. Closed as lifecycle hygiene during branch/ledger reconciliation.'
 created_at: '2026-06-26T21:37:25.833Z'
-updated_at: '2026-06-26T21:50:44.141Z'
+updated_at: '2026-07-22T00:42:37.565Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
