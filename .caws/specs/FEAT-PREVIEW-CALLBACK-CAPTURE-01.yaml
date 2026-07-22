@@ -2,10 +2,11 @@ id: FEAT-PREVIEW-CALLBACK-CAPTURE-01
 title: 'Preview-shell callback capture + first runtime interaction fact (Select trigger click)'
 risk_tier: 2
 mode: feature
-lifecycle_state: active
-worktree: preview-callback
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge preview-callback at 867c04313fe9ffba4368919ae4b63f642c4ad9f7'
 created_at: '2026-07-22T20:06:06.513Z'
-updated_at: '2026-07-22T20:06:06.513Z'
+updated_at: '2026-07-22T20:17:54.045Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
