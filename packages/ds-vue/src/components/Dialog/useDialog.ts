@@ -1,6 +1,6 @@
 // @generated:start imports
 import { ref, type Ref } from "vue";
-import { useControllableState, useDismissal, useFocusTrap, usePortal, useScrollLock } from "../../primitives/index.js";
+import { useControllableState, useDismissal, useFocusTrap, useScrollLock } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -20,7 +20,6 @@ export interface UseDialogResult {
   openness: Ref<boolean>;
   setOpenness: (next: boolean) => void;
   panelRef: Ref<HTMLElement | null>;
-  portalTarget: Ref<Element | null>;
 }
 // @generated:end
 
@@ -41,11 +40,6 @@ export function useDialog(options: UseDialogOptions = {}): UseDialogResult {
 
   useScrollLock(openness);
 
-  const { target: portalTarget } = usePortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   useDismissal({
     open: () => openness.value,
     closeOnEscape: () => options.closeOnEscape,
@@ -56,7 +50,6 @@ export function useDialog(options: UseDialogOptions = {}): UseDialogResult {
     openness,
     setOpenness,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createControllableState, createDismissal, createPortal } from "../../primitives/index.js";
+import { createControllableState, createDismissal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -20,7 +20,6 @@ export interface UseWalkthroughResult {
   step: Signal<number>;
   setStep: (next: number) => void;
   panelRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
 }
 // @generated:end
 
@@ -37,11 +36,6 @@ export function useWalkthrough(options: UseWalkthroughOptions): UseWalkthroughRe
   });
 
   const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   createDismissal({
     open: () => true,
     closeOnEscape: () => true,
@@ -53,7 +47,6 @@ export function useWalkthrough(options: UseWalkthroughOptions): UseWalkthroughRe
     step,
     setStep,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

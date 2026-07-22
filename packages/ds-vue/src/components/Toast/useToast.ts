@@ -1,6 +1,6 @@
 // @generated:start imports
 import { ref, type Ref } from "vue";
-import { useAnchorToggle, useControllableState, usePortal } from "../../primitives/index.js";
+import { useAnchorToggle, useControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -18,7 +18,6 @@ export interface UseToastResult {
   setOpen: (next: boolean) => void;
   panelRef: Ref<HTMLElement | null>;
   anchorRef: Ref<HTMLElement | null>;
-  portalTarget: Ref<Element | null>;
 }
 // @generated:end
 
@@ -28,16 +27,10 @@ export interface UseToastResult {
 
 // @generated:start hook
 export function useToast(options: UseToastOptions = {}): UseToastResult {
-  const panelRef = ref<HTMLElement | null>(null);
   const anchorToggle = useAnchorToggle({
     open: options.open,
     defaultOpen: false,
     onOpenChange: options.onOpenChange,
-  });
-
-  const { target: portalTarget } = usePortal({
-    enabled: true,
-    target: () => undefined,
   });
 
   return {
@@ -45,7 +38,6 @@ export function useToast(options: UseToastOptions = {}): UseToastResult {
     setOpen: anchorToggle.setOpen,
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef,
-    portalTarget,
   };
 }
 // @generated:end

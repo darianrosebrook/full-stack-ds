@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createControllableState, createDismissal, createFocusTrap, createPortal, createScrollLock } from "../../primitives/index.js";
+import { createControllableState, createDismissal, createFocusTrap, createScrollLock } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,6 @@ export interface UseSheetResult {
   openness: Signal<boolean>;
   setOpenness: (next: boolean) => void;
   panelRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
 }
 // @generated:end
 
@@ -40,11 +39,6 @@ export function useSheet(options: UseSheetOptions): UseSheetResult {
 
   createScrollLock(openness, options.destroyRef);
 
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   createDismissal({
     open: () => openness(),
     closeOnEscape: () => true,
@@ -56,7 +50,6 @@ export function useSheet(options: UseSheetOptions): UseSheetResult {
     openness,
     setOpenness,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

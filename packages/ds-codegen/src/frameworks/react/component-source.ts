@@ -27,7 +27,7 @@ import {
   type NativeTableAttr,
 } from "../../ir.js";
 import { renderSections, type Section } from "../../preserve.js";
-import { resolveSurfaceAutoDismiss } from "../../semantics.js";
+import { resolveSurfaceAutoDismiss, portalsRootToBody } from "../../semantics.js";
 import { resolveComponentRefImports } from "../component-ref-imports.js";
 import {
   collectIconGlyphNodes,
@@ -1575,6 +1575,24 @@ function capitalize(s: string): string {
   return s[0].toUpperCase() + s.slice(1);
 }
 
+/**
+ * FIX-PORTAL-CONSUMPTION-01. Wrap a rendered root JSX tree in the hook's
+ * `renderInPortal(...)` helper when the component portals its root to the
+ * document body; otherwise return the tree unchanged (byte-stable for every
+ * non-portaling component). `renderInPortal` is a plain function returning a
+ * ReactNode, so the JSX callsite reads `renderInPortal(<Tree />)`.
+ */
+function wrapReactPortal(treeJsx: string, wrap: boolean): string {
+  if (!wrap) return treeJsx;
+  // The tree body already carries its own leading indentation; nest it one
+  // level deeper inside the `renderInPortal(` call and close on its own line.
+  const nested = treeJsx
+    .split("\n")
+    .map((line) => (line.length > 0 ? `  ${line}` : line))
+    .join("\n");
+  return `    renderInPortal(\n${nested}\n    )`;
+}
+
 // ---------------------------------------------------------------------------
 // DOM-tree-driven component (B.2c)
 // ---------------------------------------------------------------------------
@@ -1775,6 +1793,17 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
   for (const ch of channels) {
     hookResultParts.push(ch.name);
     hookResultParts.push(`set${capitalize(ch.name)}`);
+  }
+
+  // FIX-PORTAL-CONSUMPTION-01: full-overlay surfaces (Dialog centered,
+  // Sheet/Toast viewport-edge) consume the hook's `renderInPortal` helper so
+  // the fixed root layer mounts at the document body, escaping ancestor
+  // stacking contexts. Purely IR-driven via `portalsRootToBody` — no
+  // component-name lore. Anchored/inline surfaces (Select, Walkthrough) and
+  // portal-less contracts return false and render inline unchanged.
+  const wrapRootInPortal = portalsRootToBody(ir);
+  if (wrapRootInPortal) {
+    hookResultParts.push("renderInPortal");
   }
 
   const hookOptionsLines: string[] = [];
@@ -1986,12 +2015,12 @@ function generateDomTreeRootComponent(ir: ComponentIR): string {
     const returnNullWhen = ir.dom.ifNegated ? guard : `!${guard}`;
     lines.push(`  if (${returnNullWhen}) return null;`);
     lines.push(`  return (`);
-    lines.push(treeJsx);
+    lines.push(wrapReactPortal(treeJsx, wrapRootInPortal));
     lines.push(`  );`);
   } else {
     const treeJsx = renderReactDomNode(ir.dom, renderCtx, 2);
     lines.push(`  return (`);
-    lines.push(treeJsx);
+    lines.push(wrapReactPortal(treeJsx, wrapRootInPortal));
     lines.push(`  );`);
   }
   lines.push(`}`);

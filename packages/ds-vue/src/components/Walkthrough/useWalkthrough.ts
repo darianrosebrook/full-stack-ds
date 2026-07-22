@@ -1,6 +1,6 @@
 // @generated:start imports
 import { ref, type Ref } from "vue";
-import { useControllableState, useDismissal, usePortal } from "../../primitives/index.js";
+import { useControllableState, useDismissal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,6 @@ export interface UseWalkthroughResult {
   step: Ref<number>;
   setStep: (next: number) => void;
   panelRef: Ref<HTMLElement | null>;
-  portalTarget: Ref<Element | null>;
 }
 // @generated:end
 
@@ -36,11 +35,6 @@ export function useWalkthrough(options: UseWalkthroughOptions = {}): UseWalkthro
   });
 
   const panelRef = ref<HTMLElement | null>(null);
-  const { target: portalTarget } = usePortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   useDismissal({
     open: () => true,
     closeOnEscape: () => true,
@@ -51,7 +45,6 @@ export function useWalkthrough(options: UseWalkthroughOptions = {}): UseWalkthro
     step,
     setStep,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

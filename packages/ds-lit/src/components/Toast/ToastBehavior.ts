@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { ReactiveControllerHost } from 'lit';
-import { AnchorToggleController, ControllableStateController, PortalController } from '../../primitives/index.js';
+import { AnchorToggleController, ControllableStateController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +21,6 @@ export interface ToastBehaviorOptions {
 // @generated:start hook
 export class ToastBehavior {
   readonly anchorToggle: AnchorToggleController;
-  readonly portal: PortalController;
 
   constructor(host: ReactiveControllerHost, private opts: ToastBehaviorOptions = {}) {
     this.anchorToggle = new AnchorToggleController(
@@ -32,10 +31,6 @@ export class ToastBehavior {
         onOpenChange: opts.onOpenChange,
       },
     );
-    this.portal = new PortalController(host, {
-      enabled: true,
-      getTarget: () => undefined,
-    });
   }
 
   get open(): boolean { return this.anchorToggle.open; }

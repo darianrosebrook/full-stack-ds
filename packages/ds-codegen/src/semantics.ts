@@ -2,6 +2,7 @@ import type {
   ComponentContract,
   ContractSurfaceDismissalMode,
   ContractSurfaceKind,
+  ContractSurfacePositioningStrategy,
 } from "./contract.js";
 import { getParts } from "./contract.js";
 
@@ -376,6 +377,52 @@ export function resolveSurfaceAutoDismiss(
     defaultMs: Number.isFinite(defaultMs) ? defaultMs : undefined,
     tokenSlot: slot?.name,
   };
+}
+
+/**
+ * Positioning strategies whose realized layer is a self-contained,
+ * viewport-relative overlay whose root element already carries
+ * `position: fixed` (Dialog centered, Sheet/Toast viewport-edge,
+ * fullscreen surfaces). For these, portaling the ROOT element to the
+ * document body is both correct and side-effect-free: the fixed layer
+ * escapes any ancestor stacking context (a `transform`/`overflow:hidden`
+ * ancestor otherwise clips it) without changing its own layout.
+ *
+ * `anchored` and `inline` are deliberately excluded: their content is
+ * positioned relative to an in-tree anchor (Select's `position: relative`
+ * host, Walkthrough's step targets), so moving the root to the body would
+ * detach that positioning context and break placement — inline is strictly
+ * better than a naive portal there.
+ */
+const ROOT_PORTAL_POSITIONING_STRATEGIES = new Set<ContractSurfacePositioningStrategy>(
+  ["centered", "viewport-edge", "fullscreen"],
+);
+
+/** Structural slice of ComponentIR for the root-portal predicate. */
+export interface RootPortalInput {
+  behavior: { portal: { enabled?: boolean } | undefined };
+  surface:
+    | { positioning: { strategy: ContractSurfacePositioningStrategy } | undefined }
+    | undefined;
+}
+
+/**
+ * Whether the component's ROOT element should be wrapped in the portal
+ * render helper so its fixed overlay layer mounts at the document body.
+ *
+ * True only when the contract both opts into a portal
+ * (`behavior.portal.enabled`) AND declares a surface whose positioning is
+ * a full-overlay strategy. This is the single generic fact every emitter
+ * consumes to decide portal wiring — no component-name lore. Contracts
+ * that set `portal.enabled` without a consumable surface (no surface block,
+ * or an anchored/inline surface) are NOT portaled here; their hooks also
+ * stop emitting the unused portal primitive (see hook-source `usePortal`
+ * gates), so no orphaned `renderInPortal` remains.
+ */
+export function portalsRootToBody(ir: RootPortalInput): boolean {
+  if (ir.behavior.portal?.enabled !== true) return false;
+  const strategy = ir.surface?.positioning?.strategy;
+  return strategy !== undefined && ROOT_PORTAL_POSITIONING_STRATEGIES.has(strategy);
 }
 
 export function resolveAnchoredSurfacePolicy(

@@ -138,7 +138,7 @@ export function Dialog({
   slots,
   ...rest
 }: DialogProps) {
-  const { openness, setOpenness } = useDialog({
+  const { openness, setOpenness, renderInPortal } = useDialog({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
@@ -155,25 +155,27 @@ export function Dialog({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
-    {openness && (
-      <div className="dialog__backdrop" aria-hidden="true" />
-    )}
-    {openness && (
-      <div className="dialog__modal" role="dialog" aria-modal="true" aria-labelledby={"dialog-title-id"} aria-describedby={"dialog-body-id"} aria-label={ariaLabel}>
-        <div className="dialog__header">
-          <h2 className="dialog__title">
-            {slots?.title}
-          </h2>
-          <button className="dialog__closeButton" type="button" aria-label="Close dialog" onClick={() => setOpenness(!openness)} />
+    renderInPortal(
+    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
+      {openness && (
+        <div className="dialog__backdrop" aria-hidden="true" />
+      )}
+      {openness && (
+        <div className="dialog__modal" role="dialog" aria-modal="true" aria-labelledby={"dialog-title-id"} aria-describedby={"dialog-body-id"} aria-label={ariaLabel}>
+          <div className="dialog__header">
+            <h2 className="dialog__title">
+              {slots?.title}
+            </h2>
+            <button className="dialog__closeButton" type="button" aria-label="Close dialog" onClick={() => setOpenness(!openness)} />
+          </div>
+          <div className="dialog__body">
+            {children}
+          </div>
+          <div className="dialog__footer" />
         </div>
-        <div className="dialog__body">
-          {children}
-        </div>
-        <div className="dialog__footer" />
-      </div>
-    )}
-  </Stack>
+      )}
+    </Stack>
+    )
   );
 }
 // @generated:end

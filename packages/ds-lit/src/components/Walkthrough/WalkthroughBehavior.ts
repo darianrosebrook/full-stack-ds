@@ -1,6 +1,6 @@
 // @generated:start imports
 import type { ReactiveControllerHost } from 'lit';
-import { ControllableStateController, DismissalController, PortalController } from '../../primitives/index.js';
+import { ControllableStateController, DismissalController } from '../../primitives/index.js';
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +23,6 @@ export interface WalkthroughBehaviorOptions {
 // @generated:start hook
 export class WalkthroughBehavior {
   readonly stepState: ControllableStateController<number>;
-  readonly portal: PortalController;
   readonly dismissal: DismissalController;
 
   constructor(host: ReactiveControllerHost, private opts: WalkthroughBehaviorOptions = {}) {
@@ -31,10 +30,6 @@ export class WalkthroughBehavior {
       controlled: opts.index,
       defaultValue: opts.defaultIndex ?? 0,
       onChange: opts.onStepChange,
-    });
-    this.portal = new PortalController(host, {
-      enabled: true,
-      getTarget: () => undefined,
     });
     this.dismissal = new DismissalController(host, {
       open: () => true,

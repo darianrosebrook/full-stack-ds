@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import { createAnchorToggle, createControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -25,7 +25,6 @@ export interface UseCommandResult {
   setSearch: (next: string) => void;
   panelRef: { nativeElement: HTMLElement | null };
   anchorRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
 }
 // @generated:end
 
@@ -41,17 +40,11 @@ export function useCommand(options: UseCommandOptions): UseCommandResult {
     onChange: options.onSearchChange,
   });
 
-  const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
   const anchorToggle = createAnchorToggle({
     open: options.open,
     defaultOpen: options.defaultOpen ?? false,
     onOpenChange: options.onOpenChange,
     destroyRef: options.destroyRef,
-  });
-
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
   });
 
   return {
@@ -61,7 +54,6 @@ export function useCommand(options: UseCommandOptions): UseCommandResult {
     setSearch,
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef,
-    portalTarget,
   };
 }
 // @generated:end

@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import { createAnchorToggle, createControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -19,7 +19,6 @@ export interface UseToastResult {
   setOpen: (next: boolean) => void;
   panelRef: { nativeElement: HTMLElement | null };
   anchorRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
 }
 // @generated:end
 
@@ -29,7 +28,6 @@ export interface UseToastResult {
 
 // @generated:start hook
 export function useToast(options: UseToastOptions): UseToastResult {
-  const panelRef: { nativeElement: HTMLElement | null } = { nativeElement: null };
   const anchorToggle = createAnchorToggle({
     open: options.open,
     defaultOpen: false,
@@ -37,17 +35,11 @@ export function useToast(options: UseToastOptions): UseToastResult {
     destroyRef: options.destroyRef,
   });
 
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   return {
     open: anchorToggle.open,
     setOpen: anchorToggle.setOpen,
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef,
-    portalTarget,
   };
 }
 // @generated:end

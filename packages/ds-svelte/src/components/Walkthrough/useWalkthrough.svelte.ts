@@ -1,5 +1,5 @@
 // @generated:start imports
-import { createControllableState, createDismissal, createPortal } from "../../primitives/index.js";
+import { createControllableState, createDismissal } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -18,7 +18,6 @@ export interface UseWalkthroughResult {
   readonly step: number;
   setStep(next: number): void;
   panelRef: { el: HTMLElement | null };
-  readonly portalTarget: Element | null;
 }
 // @generated:end
 
@@ -35,11 +34,6 @@ export function useWalkthrough(opts: UseWalkthroughOptions = {}): UseWalkthrough
   });
 
   const panelRef = { el: null as HTMLElement | null };
-  const portal = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   createDismissal({
     open: () => true,
     closeOnEscape: () => true,
@@ -50,7 +44,6 @@ export function useWalkthrough(opts: UseWalkthroughOptions = {}): UseWalkthrough
     get step() { return stepState.value; },
     setStep(v) { stepState.set(v); },
     panelRef,
-    get portalTarget() { return portal.target; },
   };
 }
 // @generated:end

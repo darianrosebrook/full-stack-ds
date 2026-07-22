@@ -1,5 +1,5 @@
 // @generated:start imports
-import { createAnchorToggle, createControllableState, createPortal } from "../../primitives/index.js";
+import { createAnchorToggle, createControllableState } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -23,7 +23,6 @@ export interface UseSelectResult {
   setOpen(next: boolean): void;
   panelRef: { el: HTMLElement | null };
   anchorRef: { el: HTMLElement | null };
-  readonly portalTarget: Element | null;
 }
 // @generated:end
 
@@ -45,12 +44,6 @@ export function useSelect(opts: UseSelectOptions = {}): UseSelectResult {
     onOpenChange: (v) => opts.onOpenChange?.()?.(v),
   });
 
-  const panelRef = { el: null as HTMLElement | null };
-  const portal = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   return {
     get selection() { return selectionState.value; },
     setSelection(v) { selectionState.set(v); },
@@ -58,7 +51,6 @@ export function useSelect(opts: UseSelectOptions = {}): UseSelectResult {
     setOpen(v) { anchorToggle.setOpen(v); },
     anchorRef: anchorToggle.anchorRef,
     panelRef: anchorToggle.panelRef,
-    get portalTarget() { return portal.target; },
   };
 }
 // @generated:end

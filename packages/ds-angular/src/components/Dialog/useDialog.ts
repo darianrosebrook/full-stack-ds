@@ -1,6 +1,6 @@
 // @generated:start imports
 import { DestroyRef, type Signal } from "@angular/core";
-import { createControllableState, createDismissal, createFocusTrap, createPortal, createScrollLock } from "../../primitives/index.js";
+import { createControllableState, createDismissal, createFocusTrap, createScrollLock } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +21,6 @@ export interface UseDialogResult {
   openness: Signal<boolean>;
   setOpenness: (next: boolean) => void;
   panelRef: { nativeElement: HTMLElement | null };
-  portalTarget: Signal<Element | null>;
 }
 // @generated:end
 
@@ -42,11 +41,6 @@ export function useDialog(options: UseDialogOptions): UseDialogResult {
 
   createScrollLock(openness, options.destroyRef);
 
-  const { target: portalTarget } = createPortal({
-    enabled: true,
-    target: () => undefined,
-  });
-
   createDismissal({
     open: () => openness(),
     closeOnEscape: () => options.closeOnEscape,
@@ -58,7 +52,6 @@ export function useDialog(options: UseDialogOptions): UseDialogResult {
     openness,
     setOpenness,
     panelRef,
-    portalTarget,
   };
 }
 // @generated:end

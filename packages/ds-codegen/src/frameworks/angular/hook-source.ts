@@ -41,12 +41,16 @@ interface PrimitiveBindings {
 function resolveBindings(ir: ComponentIR): PrimitiveBindings | null {
   const channels = ir.behavior.normalizedChannels;
   const focus = ir.behavior.focus;
-  const portal = ir.behavior.portal;
   const triggers = ir.behavior.normalizedDismissalTriggers;
 
   const hasFocusTrap = focus?.strategy === "trap";
   const hasScrollLock = focus?.scrollLock === true;
-  const hasPortal = portal?.enabled === true;
+  // FIX-PORTAL-CONSUMPTION-01: no generated Angular component reads the
+  // portal target (no DOM-append/portal directive is emitted), so every
+  // portalTarget the hook emitted was dead scaffolding. Suppressed for all
+  // Angular components. React (the only framework with a consumer) gates on
+  // portalsRootToBody; the cross-framework portal path is a successor feature.
+  const hasPortal = false;
   const escapeTrigger = triggers.find((t) => t.event === "escape");
   const hasEscape = escapeTrigger !== undefined;
   const hasOutsideClick = triggers.some(
