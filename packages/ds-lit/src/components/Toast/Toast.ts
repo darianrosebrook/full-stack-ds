@@ -184,7 +184,7 @@ export class ToastElement extends LitElement {
   }
 
   override render() {
-    return html`<div class="${this.computeClasses()}" aria-label="Notifications" role="alert" aria-live=${ifDefined(this.politeness)} @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
+    return html`<div class="${this.computeClasses()}" aria-label="Notifications" role="alert" aria-live=${ifDefined((this.politeness ?? "polite"))} @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
   ${this.behavior.open ? html`
   <div class=${'toast__item'} role="status" data-fsds-channel-renders="open">
     <div class=${'toast__row'}>

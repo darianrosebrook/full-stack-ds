@@ -2485,8 +2485,40 @@ function renderLitBinding(
       // reach this branch — they come in as `iterationLocal`-kind
       // bindings and are handled in the dedicated case below.
       const isAriaMixin = !hasPath && ARIA_MIXIN_NAMES.has(expr.prop);
-      const rawAcc = appendPath(propAccessor(expr.prop), expr.path);
-      const acc = isAriaMixin ? `${rawAcc} ?? undefined` : rawAcc;
+      // FIX-LIT-PRIMARY-ATTR-DEFAULTING-01: this is the primary
+      // attribute-binding path (every plain `attr=${this.x}` /
+      // `?attr=${this.x}` / `.prop=${this.x}` emission in the
+      // component's DOM tree routes through this case). It previously
+      // read the bare `propAccessor`, so a prop with a contract
+      // default silently lost that default here — the one shape
+      // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01 didn't cover (that
+      // fix wired conditional/predicate/class-modifier accessors, but
+      // this case predates and bypasses `litPropAccessor`). React's
+      // parity oracle (`renderReactBinding`, `case "prop"`) always
+      // emits the bare destructured identifier, which is ALREADY
+      // defaulted at the function-parameter level (`{ x = default }`)
+      // for every sub-shape — plain attribute, boolean attribute, and
+      // property (componentRef) binding alike. `defaultAwareLitPropAccessor`
+      // is the Lit-side equivalent: wraps with `?? default` only when
+      // the contract declares one, otherwise stays bare — so props
+      // without a default see no behavior change.
+      const rawAcc = appendPath(
+        defaultAwareLitPropAccessor(expr.prop, ctx.styledByName),
+        expr.path,
+      );
+      // ARIA-mixin null-coercion (`?? undefined`) is only meaningful when
+      // the accessor can still observe `null` — an ARIA-mixin prop with a
+      // contract default is already wrapped `(this.x ?? default)` by
+      // `defaultAwareLitPropAccessor` above, which narrows the type to
+      // non-nullish (the default is always a string), so appending
+      // `?? undefined` would be dead code TS rejects as
+      // "right operand of ?? is unreachable" (TS2869). No corpus ARIA-mixin
+      // prop currently declares a contract default, but the gate keeps the
+      // emitter correct if one is added.
+      const hasDefault =
+        ctx.styledByName.get(expr.prop)?.defaultExpr !== undefined;
+      const acc =
+        isAriaMixin && !hasDefault ? `${rawAcc} ?? undefined` : rawAcc;
       // Every styled prop is declared as `propName?: T` in the Lit
       // emitter (see generatePropertyDeclarations), so at the field
       // type level the value is always `T | undefined` regardless of

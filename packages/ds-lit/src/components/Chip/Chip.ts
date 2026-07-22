@@ -216,7 +216,7 @@ export class ChipElement extends LitElement {
     </span>
   </fsds-button>
   ${this.dismissible ? html`
-  <fsds-button class=${'chip__dismiss'} type="button" variant="ghost" @click=${this.onDismiss} ?disabled=${this.disabled ?? false} .ariaLabel=${this.dismissLabel}></fsds-button>
+  <fsds-button class=${'chip__dismiss'} type="button" variant="ghost" @click=${this.onDismiss} ?disabled=${this.disabled ?? false} .ariaLabel=${(this.dismissLabel ?? "Remove")}></fsds-button>
   ` : nothing}
 </span>`;
   }

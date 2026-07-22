@@ -182,6 +182,67 @@ describe("FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: Lit class-modifier defaulti
   });
 });
 
+const PRIMARY_ATTR_CONTRACT: ComponentContract = {
+  name: "FixtureBindingDefaultPrimaryAttr",
+  layer: "primitive",
+  cssPrefix: "fixture-binding-default-primary-attr",
+  anatomy: {
+    parts: ["root"],
+    dom: {
+      tag: "div",
+      part: "root",
+      bindings: {
+        // Plain (non-aria, non-boolean, non-componentRef) attribute
+        // binding — the `case "prop"` path in `renderLitBinding` that
+        // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01 left uncovered.
+        "data-kind": "prop:kind",
+        // Sibling with no contract default — must stay bare.
+        "data-label": "prop:label",
+      },
+    },
+  },
+  props: {
+    designed: {
+      members: [
+        {
+          name: "kind",
+          propType: { kind: "string" },
+          description: "Has a contract default.",
+          default: "neutral",
+        },
+        {
+          name: "label",
+          propType: { kind: "string" },
+          description: "No contract default on purpose.",
+        },
+      ],
+    },
+  },
+};
+
+describe("FIX-LIT-PRIMARY-ATTR-DEFAULTING-01: Lit primary attribute-binding defaulting", () => {
+  it("wraps the primary attr accessor with the contract default when the prop declares one", () => {
+    const src = generateLitComponentSource(buildComponentIR(PRIMARY_ATTR_CONTRACT));
+    expect(src).toContain('data-kind=${ifDefined((this.kind ?? "neutral"))}');
+  });
+
+  it("leaves the primary attr accessor bare when the prop has no contract default", () => {
+    const src = generateLitComponentSource(buildComponentIR(PRIMARY_ATTR_CONTRACT));
+    expect(src).toContain("data-label=${ifDefined(this.label)}");
+    expect(src).not.toMatch(/this\.label \?\? /);
+  });
+
+  it("falsification: the pre-fix bare accessor shape must not appear for the defaulted prop", () => {
+    // Documents what the pinned assertion above would have matched before
+    // the fix — a bare `this.kind` read in the primary attribute-binding
+    // path that silently observes `undefined` (not the contract default
+    // `"neutral"`) once a consumer explicitly sets the property to
+    // `undefined` after construction.
+    const src = generateLitComponentSource(buildComponentIR(PRIMARY_ATTR_CONTRACT));
+    expect(src).not.toContain("data-kind=${ifDefined(this.kind)}");
+  });
+});
+
 describe("FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: no-default props stay bare everywhere", () => {
   // A prop with no contract `default` must never gain an invented `?? …`
   // fallback — the accessor primitive is opt-in per prop, not blanket.

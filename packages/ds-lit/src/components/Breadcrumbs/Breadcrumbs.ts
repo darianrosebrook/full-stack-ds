@@ -92,7 +92,7 @@ export class BreadcrumbsElement extends LitElement {
   }
 
   override render() {
-    return html`<nav class="${this.computeClasses()}" aria-label=${ifDefined(this.ariaLabel ?? undefined)}>
+    return html`<nav class="${this.computeClasses()}" aria-label=${ifDefined((this.ariaLabel ?? "Breadcrumb"))}>
   <ol class=${'breadcrumbs__list'}>
     <slot></slot>
   </ol>
