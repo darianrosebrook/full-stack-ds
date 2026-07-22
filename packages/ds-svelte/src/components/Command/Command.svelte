@@ -47,6 +47,10 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -60,9 +64,9 @@ const classes = $derived(
   <div class={'command__dialog'} role="dialog" aria-modal="true" aria-label={label}>
     <div class={'command__inputWrapper'}>
       <span class={'command__searchIcon'} aria-hidden="true"></span>
-      <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} aria-expanded={behavior.open} placeholder={placeholder} value={behavior.search} />
+      <input class={'command__input'} type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onchange={(e) => behavior.setSearch((e.currentTarget as HTMLInputElement).value)} aria-expanded={behavior.open} placeholder={placeholder} value={behavior.search} id={`${instanceId}-input`} />
     </div>
-    <div class={'command__list'} role="listbox" id="fsds-command-listbox">
+    <div class={'command__list'} role="listbox" id="fsds-command-listbox" aria-labelledby={`${instanceId}-input`}>
       <div class={'command__empty'}></div>
       <div class={'command__group'}>
         <div class={'command__groupHeading'}></div>

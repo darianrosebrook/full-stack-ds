@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useToast } from "./useToast.js";
 import { useAutoDismiss } from "../../primitives/index.js";
 // @generated:end
@@ -62,6 +62,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -70,9 +74,9 @@ const classNames = computed(() => [
 <template>
   <Teleport to="body">
     <div :class="classNames" aria-label="Notifications" :aria-live="props.politeness" role="alert" :data-testid="props['data-testid']" v-on="autoDismiss.pauseListeners">
-      <div v-if="behavior.open.value" :class="'toast__item'" role="status">
+      <div v-if="behavior.open.value" :class="'toast__item'" role="status" :aria-labelledby="props.title ? `${instanceId}-title` : undefined">
         <div :class="'toast__row'">
-          <div v-if="props.title" :class="'toast__title'"></div>
+          <div v-if="props.title" :class="'toast__title'" :id="`${instanceId}-title`"></div>
           <div :class="'toast__description'">
             <slot />
           </div>

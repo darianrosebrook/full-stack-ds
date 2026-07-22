@@ -46,20 +46,24 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <div class={classes}>
-  <label class={'text-field__label'}>
+  <label class={'text-field__label'} id={`${instanceId}-label`}>
     {@render label?.()}
   </label>
-  <input class={'text-field__field'} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} type={type} value={behavior.value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-describedby={ariaDescribedby} />
-  <span class={'text-field__description'}>
+  <input class={'text-field__field'} onchange={(e) => behavior.setValue((e.currentTarget as HTMLInputElement).value)} type={type} value={behavior.value} disabled={disabled} name={name} required={required} aria-invalid={invalid} aria-labelledby={label ? `${instanceId}-label` : undefined} aria-describedby={[description ? `${instanceId}-description` : null, error && invalid ? `${instanceId}-error` : null, ariaDescribedby].filter(Boolean).join(' ') || undefined} />
+  <span class={'text-field__description'} id={`${instanceId}-description`}>
     {@render description?.()}
   </span>
-  <span class={'text-field__error'} role="alert">
+  <span class={'text-field__error'} role="alert" id={`${instanceId}-error`}>
     {@render error?.()}
   </span>
 </div>

@@ -20,16 +20,18 @@ export type ToastPoliteness = "polite" | "assertive";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-toast",
   standalone: true,
   imports: [NgClass, NgIf],
   template: `<div [ngClass]="classes()" aria-label="Notifications" [attr.aria-live]="(politeness ?? 'polite')" (pointerenter)="autoDismiss.pauseListeners.pointerenter()" (pointerleave)="autoDismiss.pauseListeners.pointerleave()" (focusin)="autoDismiss.pauseListeners.focusin()" (focusout)="autoDismiss.pauseListeners.focusout()">
   <ng-container *ngIf="behavior.open()">
-    <div [ngClass]="'toast__item'" role="status">
+    <div [ngClass]="'toast__item'" role="status" [attr.aria-labelledby]="itemAriaLabelledby">
       <div [ngClass]="'toast__row'">
         <ng-container *ngIf="title">
-          <div [ngClass]="'toast__title'"></div>
+          <div [ngClass]="'toast__title'" [attr.id]="instanceId + '-title'"></div>
         </ng-container>
         <div [ngClass]="'toast__description'">
           <ng-content />
@@ -54,6 +56,8 @@ export class ToastComponent implements OnInit, OnDestroy {
   @Input() duration?: number | null;
   @Input() class?: string;
 
+  protected readonly instanceId = `fsds-toast-${nextInstanceId++}`;
+
   private destroyRef = inject(DestroyRef);
   protected behavior = useToast({
     open: () => this.open,
@@ -77,6 +81,10 @@ export class ToastComponent implements OnInit, OnDestroy {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  get itemAriaLabelledby(): string | undefined {
+    return [this.title ? `${this.instanceId}-title` : null].filter(Boolean).join(" ") || undefined;
+  }
 
   private _el = inject(ElementRef<HTMLElement>);
   private _portalOriginParent: Node | null = null;

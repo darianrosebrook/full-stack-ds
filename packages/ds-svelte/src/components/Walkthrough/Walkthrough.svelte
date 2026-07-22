@@ -56,17 +56,21 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
 </script>
 
 <div class={classes} role="status" aria-label={label}>
-  <div class={'walkthrough__content'}>
-    <h3 class={'walkthrough__title'}>
+  <div class={'walkthrough__content'} role="group" aria-labelledby={title ? `${instanceId}-title` : undefined} aria-describedby={description ? `${instanceId}-description` : undefined}>
+    <h3 class={'walkthrough__title'} id={`${instanceId}-title`}>
       {@render title?.()}
     </h3>
-    <p class={'walkthrough__description'}>
+    <p class={'walkthrough__description'} id={`${instanceId}-description`}>
       {@render description?.()}
     </p>
   </div>

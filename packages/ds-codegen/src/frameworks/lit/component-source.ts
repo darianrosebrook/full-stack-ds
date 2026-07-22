@@ -29,6 +29,7 @@ import type {
   BindingPredicateOp,
   ComponentIR,
   DomNodeIR,
+  IdRefIR,
   IterationIR,
   NormalizedChannelIR,
   PropTypeIR,
@@ -1679,6 +1680,8 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     channelByName,
     styledByName,
     isRoot: true,
+    fieldAssociationControlSlug: ir.fieldAssociation?.provides?.controlSlug,
+    idRefGatedSlots: collectLitIdRefGatedSlots(ir),
     autoDismissPause: Boolean(
       resolveSurfaceAutoDismiss(ir) &&
         channels.some((c) => c.valueType === "boolean"),
@@ -2070,6 +2073,21 @@ interface LitRenderContext {
   channelByName: Map<string, NormalizedChannelIR>;
   styledByName: Map<string, { type: string; defaultExpr?: string }>;
   isRoot: boolean;
+  /**
+   * Field-association control slug when this component PROVIDES field
+   * association (FEAT-A11Y-LABEL-ID-ASSOCIATION-01). Lit cannot realize
+   * the mechanism at all — its components render into shadow roots and
+   * idrefs cannot cross the shadow boundary — so refs targeting this slug
+   * (the label's `for`) are SKIPPED rather than emitted as dangling
+   * references. Tracked as a platform limitation in the a11y rail ledger.
+   */
+  fieldAssociationControlSlug?: string;
+  /**
+   * Named slots whose presence gates a generated idref
+   * (FEAT-A11Y-LABEL-ID-ASSOCIATION-01) — these emit @slotchange →
+   * requestUpdate so the runtime querySelector guard stays current.
+   */
+  idRefGatedSlots?: Set<string>;
   /** When true, bind auto-dismiss pause listeners on the template root. */
   autoDismissPause?: boolean;
   hasOverlayClick?: boolean;
@@ -2103,6 +2121,68 @@ interface LitRenderContext {
   iconGlyphIdents?: Map<DomNodeIR, { glyphIdent: string; pxIdent: string | undefined }>;
 }
 
+/**
+ * FEAT-A11Y-LABEL-ID-ASSOCIATION-01 — Lit lowering of generated
+ * relationship idref lists. Ids are shadow-root-scoped literals
+ * (`<cssPrefix>-<slug>`); when clauses gate with `this.` accessors;
+ * slotGate is not lowerable (see LitRenderContext.fieldAssociationControlSlug
+ * doc for the shadow-boundary story).
+ */
+/** Slot names whose presence gates any idref (excluding provider-routed refs Lit skips). */
+function collectLitIdRefGatedSlots(ir: ComponentIR): Set<string> {
+  const gated = new Set<string>();
+  const controlSlug = ir.fieldAssociation?.provides?.controlSlug;
+  const walk = (node: DomNodeIR) => {
+    for (const refAttr of node.idRefAttrs) {
+      for (const ref of refAttr.refs) {
+        if (ref.slug === controlSlug) continue;
+        if (ref.slotGate) gated.add(ref.slotGate);
+      }
+    }
+    node.children.forEach(walk);
+  };
+  if (ir.dom) walk(ir.dom);
+  return gated;
+}
+
+function litIdRefGuardExpr(ref: IdRefIR): string | undefined {
+  const conds: string[] = [];
+  if (ref.slotGate) {
+    // Slot presence is a RUNTIME light-DOM query in Lit (slotted children
+    // are the host's own children). Gated slots emit @slotchange →
+    // requestUpdate so the guard re-evaluates when content arrives late.
+    conds.push(`this.querySelector('[slot="${ref.slotGate}"]') !== null`);
+  }
+  if (ref.when) {
+    const accessor = propAccessor(ref.when.prop);
+    if (ref.when.op === "eq") {
+      conds.push(
+        `${accessor} ${ref.when.negated ? "!==" : "==="} '${ref.when.value}'`,
+      );
+    } else {
+      conds.push(ref.when.negated ? `!${accessor}` : accessor);
+    }
+  }
+  return conds.length > 0 ? conds.join(" && ") : undefined;
+}
+
+function litIdRefListExpr(
+  refs: IdRefIR[],
+  passthroughProp: string | undefined,
+  cssPrefix: string,
+): string {
+  const idFor = (slug: string) => `'${cssPrefix}-${slug}'`;
+  const parts = refs.map((ref) => {
+    const guard = litIdRefGuardExpr(ref);
+    return guard ? `${guard} ? ${idFor(ref.slug)} : null` : idFor(ref.slug);
+  });
+  if (passthroughProp) parts.push(propAccessor(passthroughProp));
+  if (parts.length === 1 && refs.length === 1 && !refs[0].when && !passthroughProp) {
+    return idFor(refs[0].slug);
+  }
+  return `[${parts.join(", ")}].filter(Boolean).join(' ') || undefined`;
+}
+
 function renderLitDomNode(
   node: DomNodeIR,
   ctx: LitRenderContext,
@@ -2112,6 +2192,12 @@ function renderLitDomNode(
 
   if (node.tag === "slot" || node.tag === "children") {
     if (node.slotName) {
+      // A slot whose presence gates a generated idref re-renders the host
+      // on assignment changes so the runtime querySelector guard
+      // re-evaluates (FEAT-A11Y-LABEL-ID-ASSOCIATION-01).
+      if (ctx.idRefGatedSlots?.has(node.slotName)) {
+        return `${pad}<slot name="${node.slotName}" @slotchange=\${() => this.requestUpdate()}></slot>`;
+      }
       return `${pad}<slot name="${node.slotName}"></slot>`;
     }
     return `${pad}<slot></slot>`;
@@ -2219,6 +2305,33 @@ function renderLitDomNode(
     );
     if (rendered === null) continue;
     attrs.push(rendered);
+  }
+
+  // FEAT-A11Y-LABEL-ID-ASSOCIATION-01: generated ids on relationship
+  // targets and lowered idref attributes on sources. Lit ids are
+  // shadow-root-scoped, so plain literals suffice (no instance
+  // namespace). slotGate is not lowerable (slot contents are not
+  // statically knowable) and refs targeting a consumer-slotted control
+  // are skipped entirely — idrefs cannot cross the shadow boundary.
+  if (node.generatedIdSlug !== undefined) {
+    attrs.push(`id="${ctx.classRecipe}-${node.generatedIdSlug}"`);
+  }
+  for (const refAttr of node.idRefAttrs) {
+    const refs = refAttr.refs.filter(
+      (ref) => ref.slug !== ctx.fieldAssociationControlSlug,
+    );
+    if (refs.length === 0 && !refAttr.passthroughProp) continue;
+    if (
+      refs.length === 1 &&
+      !refs[0].when &&
+      !refs[0].slotGate &&
+      !refAttr.passthroughProp
+    ) {
+      attrs.push(`${refAttr.attribute}="${ctx.classRecipe}-${refs[0].slug}"`);
+      continue;
+    }
+    const expr = litIdRefListExpr(refs, refAttr.passthroughProp, ctx.classRecipe);
+    attrs.push(`${refAttr.attribute}=\${ifDefined(${expr})}`);
   }
 
   // IR-DOM-CSS-VAR-BINDING-01: lower `cssVarBindings` to Lit's

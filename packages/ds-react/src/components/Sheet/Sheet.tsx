@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useSheet } from "./useSheet";
 import "./Sheet.css";
@@ -182,16 +182,18 @@ export function Sheet({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpenness(false); }} {...rest}>
       {openness && (
         <div className="sheet__overlay" aria-hidden="true" />
       )}
       {openness && (
         <div className="sheet__content" role="dialog" aria-modal="true" aria-labelledby={"sheet-title-id"} aria-describedby={"sheet-description-id"} data-side={side} aria-label={ariaLabel}>
           <div className="sheet__header">
-            <h2 className="sheet__title">
+            <h2 className="sheet__title" id={`${instanceId}-title`}>
               {slots?.title}
             </h2>
             <p className="sheet__description">

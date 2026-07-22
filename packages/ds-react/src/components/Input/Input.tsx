@@ -2,6 +2,7 @@
 import { type InputHTMLAttributes, type ReactNode } from "react";
 import { Stack } from "../../primitives";
 import { useInput } from "./useInput";
+import { useFieldAssociation } from "../../primitives/hooks";
 import "./Input.css";
 // @generated:end
 
@@ -67,8 +68,10 @@ export function Input({
     .filter(Boolean)
     .join(" ");
 
+  const fieldAssociation = useFieldAssociation();
+
   return (
-  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} {...rest} />
+  <Stack layout="native" as="input" className={`${classNames}`} onChange={(e) => setValue(e.target.value)} value={value} disabled={disabled} aria-invalid={invalid} type={type} placeholder={placeholder} name={name} required={required} role="textbox" data-testid={testId} id={fieldAssociation?.controlId} aria-describedby={fieldAssociation?.describedBy} {...rest} />
   );
 }
 // @generated:end

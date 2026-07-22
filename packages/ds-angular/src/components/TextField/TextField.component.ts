@@ -18,19 +18,21 @@ import { useTextField } from "./useTextField.js";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-text-field",
   standalone: true,
   imports: [NgClass],
   template: `<div [ngClass]="classes()">
-  <label [ngClass]="'text-field__label'">
+  <label [ngClass]="'text-field__label'" [attr.id]="instanceId + '-label'">
     <ng-content select="[slot=label]" />
   </label>
-  <input [ngClass]="'text-field__field'" (change)="handleValueChange($event)" [type]="type" [value]="behavior.value()" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-describedby]="ariaDescribedby" />
-  <span [ngClass]="'text-field__description'">
+  <input [ngClass]="'text-field__field'" (change)="handleValueChange($event)" [type]="type" [value]="behavior.value()" [disabled]="disabled" [name]="name" [required]="required" [attr.aria-invalid]="invalid" [attr.aria-labelledby]="instanceId + '-label'" [attr.aria-describedby]="fieldAriaDescribedby" />
+  <span [ngClass]="'text-field__description'" [attr.id]="instanceId + '-description'">
     <ng-content select="[slot=description]" />
   </span>
-  <span [ngClass]="'text-field__error'" role="alert">
+  <span [ngClass]="'text-field__error'" role="alert" [attr.id]="instanceId + '-error'">
     <ng-content select="[slot=error]" />
   </span>
 </div>`,
@@ -48,6 +50,8 @@ export class TextFieldComponent {
   @Input() ariaDescribedby?: string;
   @Input() class?: string;
 
+  protected readonly instanceId = `fsds-text-field-${nextInstanceId++}`;
+
   private destroyRef = inject(DestroyRef);
   protected behavior = useTextField({
     value: () => this.value,
@@ -64,6 +68,10 @@ export class TextFieldComponent {
       this.class,
     ].filter(Boolean).join(" "),
   );
+
+  get fieldAriaDescribedby(): string | undefined {
+    return [`${this.instanceId}-description`, this.invalid ? `${this.instanceId}-error` : null, this.ariaDescribedby].filter(Boolean).join(" ") || undefined;
+  }
 
   protected handleValueChange(event: Event): void {
     this.behavior.setValue((event.target as HTMLInputElement).value);

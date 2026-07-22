@@ -2,6 +2,7 @@
 import { Component, Input, computed, DestroyRef, inject, ChangeDetectionStrategy } from "@angular/core";
 import { NgClass } from "@angular/common";
 import { useInput } from "./useInput.js";
+import { FieldAssociationService } from "../../primitives/index.js";
 // @generated:end
 
 // @custom:start imports
@@ -21,7 +22,7 @@ import { useInput } from "./useInput.js";
   selector: "fsds-input",
   standalone: true,
   imports: [NgClass],
-  template: `<input [ngClass]="classes()" (change)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" [placeholder]="placeholder" [name]="name" [required]="required" />`,
+  template: `<input [ngClass]="classes()" (change)="handleValueChange($event)" [value]="behavior.value()" [disabled]="disabled" [attr.aria-invalid]="invalid" [type]="type" [placeholder]="placeholder" [name]="name" [required]="required" [attr.id]="fieldAssociation?.current?.controlId" [attr.aria-describedby]="fieldAssociation?.current?.describedBy" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputComponent {
@@ -35,6 +36,7 @@ export class InputComponent {
   @Input() required?: boolean;
   @Input() name?: string;
   @Input() class?: string;
+  protected fieldAssociation = inject(FieldAssociationService, { optional: true });
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useInput({

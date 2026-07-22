@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useSheet } from "./useSheet.js";
 // @generated:end
 
@@ -56,6 +56,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -63,11 +67,11 @@ const classNames = computed(() => [
 
 <template>
   <Teleport to="body">
-    <div :class="classNames" role="dialog" :data-testid="props['data-testid']" @click.self="behavior.setOpenness(false)">
+    <div :class="classNames" :aria-labelledby="$slots.title ? `${instanceId}-title` : undefined" role="dialog" :data-testid="props['data-testid']" @click.self="behavior.setOpenness(false)">
       <div v-if="behavior.openness.value" :class="'sheet__overlay'" aria-hidden="true"></div>
       <div v-if="behavior.openness.value" :class="'sheet__content'" role="dialog" aria-modal="true" aria-labelledby="sheet-title-id" aria-describedby="sheet-description-id" :data-side="props.side">
         <div :class="'sheet__header'">
-          <h2 :class="'sheet__title'">
+          <h2 :class="'sheet__title'" :id="`${instanceId}-title`">
             <slot name="title" />
           </h2>
           <p :class="'sheet__description'">

@@ -12,6 +12,11 @@ export type { UseFocusTrapOptions } from "./useFocusTrap";
 export { usePortal } from "./usePortal";
 export type { UsePortalOptions } from "./usePortal";
 export { createCompoundContext } from "./createCompoundContext";
+export {
+  FieldAssociationContext,
+  useFieldAssociation,
+} from "./useFieldAssociation";
+export type { FieldAssociation } from "./useFieldAssociation";
 export { useAutoDismiss } from "./useAutoDismiss";
 export type {
   UseAutoDismissOptions,

@@ -19,16 +19,18 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
 // @custom:end
 
 // @generated:start component
+let nextInstanceId = 0;
+
 @Component({
   selector: "fsds-walkthrough",
   standalone: true,
   imports: [NgClass, NgFor],
   template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')">
-  <div [ngClass]="'walkthrough__content'">
-    <h3 [ngClass]="'walkthrough__title'">
+  <div [ngClass]="'walkthrough__content'" role="group" [attr.aria-labelledby]="instanceId + '-title'" [attr.aria-describedby]="instanceId + '-description'">
+    <h3 [ngClass]="'walkthrough__title'" [attr.id]="instanceId + '-title'">
       <ng-content select="[slot=title]" />
     </h3>
-    <p [ngClass]="'walkthrough__description'">
+    <p [ngClass]="'walkthrough__description'" [attr.id]="instanceId + '-description'">
       <ng-content select="[slot=description]" />
     </p>
   </div>
@@ -59,6 +61,8 @@ export class WalkthroughComponent {
   @Input() closeOnOutsideClick?: boolean = false;
   @Input() placement?: WalkthroughPlacement = "auto";
   @Input() class?: string;
+
+  protected readonly instanceId = `fsds-walkthrough-${nextInstanceId++}`;
 
   private destroyRef = inject(DestroyRef);
   protected behavior = useWalkthrough({

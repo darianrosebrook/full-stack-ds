@@ -215,10 +215,10 @@ export class ToastElement extends LitElement {
   override render() {
     return html`<div class="${this.computeClasses()}" aria-label="Notifications" role="alert" aria-live=${ifDefined((this.politeness ?? "polite"))} @pointerenter=${this.autoDismiss.pauseListeners.pointerenter} @pointerleave=${this.autoDismiss.pauseListeners.pointerleave} @focusin=${this.autoDismiss.pauseListeners.focusin} @focusout=${this.autoDismiss.pauseListeners.focusout}>
   ${this.behavior.open ? html`
-  <div class=${'toast__item'} role="status" data-fsds-channel-renders="open">
+  <div class=${'toast__item'} role="status" aria-labelledby=${ifDefined([this.title ? 'toast-title' : null].filter(Boolean).join(' ') || undefined)} data-fsds-channel-renders="open">
     <div class=${'toast__row'}>
       ${this.title ? html`
-      <div class=${'toast__title'}></div>
+      <div class=${'toast__title'} id="toast-title"></div>
       ` : nothing}
       <div class=${'toast__description'}>
         <slot></slot>

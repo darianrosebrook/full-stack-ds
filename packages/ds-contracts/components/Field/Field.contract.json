@@ -282,21 +282,21 @@
       "from": "label",
       "to": "control",
       "attribute": "for",
-      "description": "label.for is wired to the child control's id, establishing the label association. Field propagates IDs to its slotted control via React context internally; the schema relationship records the resulting ARIA attribute."
+      "description": "label.for points at the generated id of the slotted control. Because the control is consumer-slotted, the id is delivered through each framework's ambient field-association context; controls declaring fieldAssociation: \"control\" bind it on their root element."
     },
     {
       "from": "control",
       "to": "help",
       "attribute": "aria-describedby",
-      "when": "validity=valid",
-      "description": "Child control receives help id (via context propagation) to set aria-describedby when valid."
+      "when": "status!=invalid",
+      "description": "The slotted control's aria-describedby references the help region's generated id while the field is not invalid, delivered through the field-association context."
     },
     {
       "from": "control",
       "to": "error",
       "attribute": "aria-describedby",
-      "when": "validity=invalid",
-      "description": "Child control receives error id (via context propagation) to set aria-describedby when invalid."
+      "when": "status=invalid",
+      "description": "The slotted control's aria-describedby references the error region's generated id while the field is invalid, delivered through the field-association context."
     }
   ],
   "channels": {

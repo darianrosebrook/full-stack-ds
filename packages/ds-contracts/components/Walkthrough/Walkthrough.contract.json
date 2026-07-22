@@ -108,6 +108,9 @@
         {
           "tag": "div",
           "part": "content",
+          "attrs": {
+            "role": "group"
+          },
           "children": [
             {
               "tag": "h3",

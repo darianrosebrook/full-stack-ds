@@ -24,6 +24,8 @@ function node(partial: Partial<DomNodeIR>): DomNodeIR {
     iteration: undefined,
     cssVarBindings: [],
     iconGlyph: undefined,
+    generatedIdSlug: undefined,
+    idRefAttrs: [],
     ...partial,
   };
 }

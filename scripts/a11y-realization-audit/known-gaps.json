@@ -103,15 +103,9 @@
       "component": "Field",
       "family": "react",
       "class": "relationship",
-      "key": "for",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Field",
-      "family": "react",
-      "class": "relationship",
       "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
     {
       "component": "NavList",
@@ -242,41 +236,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "TextField",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Toast",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "ToggleSwitch",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "react",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
       "component": "Walkthrough",
       "family": "react",
       "class": "keyboard",
@@ -392,15 +351,9 @@
       "component": "Field",
       "family": "vue",
       "class": "relationship",
-      "key": "for",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Field",
-      "family": "vue",
-      "class": "relationship",
       "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
     {
       "component": "NavList",
@@ -531,41 +484,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "TextField",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Toast",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "ToggleSwitch",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "vue",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
       "component": "Walkthrough",
       "family": "vue",
       "class": "keyboard",
@@ -659,13 +577,6 @@
     {
       "component": "Command",
       "family": "svelte",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
-      "component": "Command",
-      "family": "svelte",
       "class": "keyboard",
       "key": "ArrowDown",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
@@ -688,15 +599,9 @@
       "component": "Field",
       "family": "svelte",
       "class": "relationship",
-      "key": "for",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Field",
-      "family": "svelte",
-      "class": "relationship",
       "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
     {
       "component": "NavList",
@@ -841,27 +746,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "TextField",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Toast",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "ToggleSwitch",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
       "component": "Tooltip",
       "family": "svelte",
       "class": "relationship",
@@ -871,20 +755,6 @@
     {
       "component": "Walkthrough",
       "family": "svelte",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "svelte",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "svelte",
       "class": "keyboard",
       "key": "ArrowRight",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
@@ -976,13 +846,6 @@
     {
       "component": "Command",
       "family": "lit",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
-      "component": "Command",
-      "family": "lit",
       "class": "keyboard",
       "key": "ArrowDown",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
@@ -1006,14 +869,16 @@
       "family": "lit",
       "class": "relationship",
       "key": "for",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Platform limitation: Lit components render into shadow roots and idrefs cannot cross the shadow boundary, so Field's label→slotted-control association is unrealizable today. Candidate for the ARIA Reference Target proposal when it ships."
     },
     {
       "component": "Field",
       "family": "lit",
       "class": "relationship",
       "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Platform limitation: Lit components render into shadow roots and idrefs cannot cross the shadow boundary, so Field's label→slotted-control association is unrealizable today. Candidate for the ARIA Reference Target proposal when it ships."
     },
     {
       "component": "NavList",
@@ -1144,41 +1009,6 @@
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
     },
     {
-      "component": "TextField",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Toast",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "ToggleSwitch",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "lit",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
       "component": "Walkthrough",
       "family": "lit",
       "class": "keyboard",
@@ -1272,13 +1102,6 @@
     {
       "component": "Command",
       "family": "angular",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
-    },
-    {
-      "component": "Command",
-      "family": "angular",
       "class": "keyboard",
       "key": "ArrowDown",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
@@ -1301,15 +1124,9 @@
       "component": "Field",
       "family": "angular",
       "class": "relationship",
-      "key": "for",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Field",
-      "family": "angular",
-      "class": "relationship",
       "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01",
+      "note": "Runtime-realized via the field-association context (Field provides, the slotted control binds aria-describedby — pinned by FieldAssociation tests in each package), but the rail's per-component source scan cannot see the attribute land in the CONSUMER's file. Delete when the rail gains a cross-component delivery check."
     },
     {
       "component": "NavList",
@@ -1438,41 +1255,6 @@
       "class": "keyboard",
       "key": "ArrowUp|ArrowDown",
       "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
-    },
-    {
-      "component": "TextField",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Toast",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "ToggleSwitch",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-labelledby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
-    },
-    {
-      "component": "Walkthrough",
-      "family": "angular",
-      "class": "relationship",
-      "key": "aria-describedby",
-      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
     },
     {
       "component": "Walkthrough",

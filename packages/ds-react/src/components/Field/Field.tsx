@@ -1,7 +1,8 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useField } from "./useField";
+import { FieldAssociationContext } from "../../primitives/hooks";
 import "./Field.css";
 // @generated:end
 
@@ -96,30 +97,39 @@ export function Field({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
+  const fieldAssociationValue = {
+    controlId: `${instanceId}-control`,
+    describedBy: [slots?.help && status !== "invalid" ? `${instanceId}-help` : null, slots?.error && status === "invalid" ? `${instanceId}-error` : null].filter(Boolean).join(" ") || undefined,
+  };
+
   return (
-  <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} {...rest}>
-    <div className="field__header">
-      <label className="field__label">
-        {slots?.label}
-      </label>
-    </div>
-    <div className="field__control">
-      {slots?.control}
-    </div>
-    <div className="field__meta">
-      <span className="field__help">
-        {slots?.help}
-      </span>
-      <span className="field__error">
-        {slots?.error}
-      </span>
-      {validating && (
-        <span className="field__validatingIndicator">
-          {slots?.validatingIndicator}
+  <FieldAssociationContext.Provider value={fieldAssociationValue}>
+    <Stack layout="native" className={`${classNames}`} role="group" data-testid={testId} {...rest}>
+      <div className="field__header">
+        <label className="field__label" htmlFor={`${instanceId}-control`}>
+          {slots?.label}
+        </label>
+      </div>
+      <div className="field__control">
+        {slots?.control}
+      </div>
+      <div className="field__meta">
+        <span className="field__help" id={`${instanceId}-help`}>
+          {slots?.help}
         </span>
-      )}
-    </div>
-  </Stack>
+        <span className="field__error" id={`${instanceId}-error`}>
+          {slots?.error}
+        </span>
+        {validating && (
+          <span className="field__validatingIndicator">
+            {slots?.validatingIndicator}
+          </span>
+        )}
+      </div>
+    </Stack>
+  </FieldAssociationContext.Provider>
   );
 }
 // @generated:end

@@ -8,6 +8,7 @@ export {
   createScrollLock,
   createPortal,
   createCompoundContext,
+  FieldAssociationService,
 } from './hooks/index.js';
 export type {
   ControllableStateOptions,

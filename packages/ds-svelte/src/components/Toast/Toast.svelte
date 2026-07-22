@@ -62,6 +62,10 @@ const classes = $derived(
 );
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = $props.id();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -69,10 +73,10 @@ const classes = $derived(
 
 <div class={classes} aria-label="Notifications" aria-live={politeness} use:portal={{ enabled: true }} onpointerenter={autoDismiss.pauseListeners.onpointerenter} onpointerleave={autoDismiss.pauseListeners.onpointerleave} onfocusin={autoDismiss.pauseListeners.onfocusin} onfocusout={autoDismiss.pauseListeners.onfocusout} role="alert">
   {#if behavior.open}
-  <div class={'toast__item'} role="status">
+  <div class={'toast__item'} role="status" aria-labelledby={title ? `${instanceId}-title` : undefined}>
     <div class={'toast__row'}>
       {#if title}
-      <div class={'toast__title'}></div>
+      <div class={'toast__title'} id={`${instanceId}-title`}></div>
       {/if}
       <div class={'toast__description'}>
         {@render children?.()}

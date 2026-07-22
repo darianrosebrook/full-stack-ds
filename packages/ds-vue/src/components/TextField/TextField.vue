@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // @generated:start imports
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { useTextField } from "./useTextField.js";
 // @generated:end
 
@@ -57,6 +57,10 @@ const classNames = computed(() => [
 ].filter(Boolean).join(" "));
 // @generated:end
 
+// @generated:start fieldAssociation
+const instanceId = useId();
+// @generated:end
+
 // @custom:start trailing
 
 // @custom:end
@@ -64,14 +68,14 @@ const classNames = computed(() => [
 
 <template>
   <div :class="classNames" :data-testid="props['data-testid']">
-    <label :class="'text-field__label'">
+    <label :class="'text-field__label'" :id="`${instanceId}-label`">
       <slot name="label" />
     </label>
-    <input :class="'text-field__field'" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :type="props.type" :value="behavior.value.value" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-describedby="props.ariaDescribedby" />
-    <span :class="'text-field__description'">
+    <input :class="'text-field__field'" @change="(e) => behavior.setValue((e.target as HTMLInputElement).value)" :type="props.type" :value="behavior.value.value" :disabled="props.disabled" :name="props.name" :required="props.required" :aria-invalid="props.invalid" :aria-labelledby="$slots.label ? `${instanceId}-label` : undefined" :aria-describedby="[$slots.description ? `${instanceId}-description` : null, $slots.error && props.invalid ? `${instanceId}-error` : null, props.ariaDescribedby].filter(Boolean).join(' ') || undefined" />
+    <span :class="'text-field__description'" :id="`${instanceId}-description`">
       <slot name="description" />
     </span>
-    <span :class="'text-field__error'" role="alert">
+    <span :class="'text-field__error'" role="alert" :id="`${instanceId}-error`">
       <slot name="error" />
     </span>
   </div>

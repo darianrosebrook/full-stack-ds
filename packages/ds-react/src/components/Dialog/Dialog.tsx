@@ -1,5 +1,5 @@
 // @generated:start imports
-import { type HTMLAttributes, type ReactNode } from "react";
+import { type HTMLAttributes, type ReactNode, useId } from "react";
 import { Stack } from "../../primitives";
 import { useDialog } from "./useDialog";
 import "./Dialog.css";
@@ -154,21 +154,23 @@ export function Dialog({
     .filter(Boolean)
     .join(" ");
 
+  const instanceId = useId();
+
   return (
     renderInPortal(
-    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
+    <Stack layout="native" className={`${classNames}`} aria-labelledby={slots?.title ? `${instanceId}-title` : undefined} aria-describedby={`${instanceId}-body`} role="dialog" data-testid={testId} onClick={closeOnBackdropClick ? (e) => { if (e.target === e.currentTarget) setOpenness(false); } : undefined} {...rest}>
       {openness && (
         <div className="dialog__backdrop" aria-hidden="true" />
       )}
       {openness && (
         <div className="dialog__modal" role="dialog" aria-modal="true" aria-labelledby={"dialog-title-id"} aria-describedby={"dialog-body-id"} aria-label={ariaLabel}>
           <div className="dialog__header">
-            <h2 className="dialog__title">
+            <h2 className="dialog__title" id={`${instanceId}-title`}>
               {slots?.title}
             </h2>
             <button className="dialog__closeButton" type="button" aria-label="Close dialog" onClick={() => setOpenness(!openness)} />
           </div>
-          <div className="dialog__body">
+          <div className="dialog__body" id={`${instanceId}-body`}>
             {children}
           </div>
           <div className="dialog__footer" />

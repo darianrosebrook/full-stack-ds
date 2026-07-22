@@ -301,7 +301,7 @@
       "from": "field",
       "to": "error",
       "attribute": "aria-describedby",
-      "when": "validity=invalid",
+      "when": "invalid=true",
       "description": "When in an error state, the input's aria-describedby includes the error message element's id."
     }
   ],
