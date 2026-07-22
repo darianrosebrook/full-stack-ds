@@ -3,6 +3,7 @@ title: 'Ancestor-aware compound-container detection + contract-derived lowering 
 risk_tier: 2
 mode: fix
 lifecycle_state: active
+worktree: accordion-compound
 created_at: '2026-07-22T06:47:56.552Z'
 updated_at: '2026-07-22T06:47:56.552Z'
 blast_radius:
