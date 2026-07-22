@@ -631,13 +631,7 @@
       "returnFocus": "trigger",
       "wrap": true
     },
-    "portal": {
-      "enabled": true,
-      "defaultTarget": "body",
-      "positioning": "anchored",
-      "layering": "popover",
-      "collision": "flip-shift"
-    }
+    "portal": null
   },
   "surface": null,
   "figma": {

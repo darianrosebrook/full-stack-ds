@@ -115,7 +115,7 @@ export function Command({
   filter,
   ...rest
 }: CommandProps) {
-  const { open, setOpen, search, setSearch } = useCommand({
+  const { open, setOpen, search, setSearch, renderInPortal } = useCommand({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
@@ -132,35 +132,37 @@ export function Command({
     .join(" ");
 
   return (
-  <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
-    {open && (
-      <div className="command__overlay" aria-hidden="true" />
-    )}
-    {open && (
-      <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label} aria-labelledby={ariaLabelledBy}>
-        <div className="command__inputWrapper">
-          <span className="command__searchIcon" aria-hidden="true" />
-          <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onChange={(e) => setSearch(e.target.value)} aria-expanded={open} placeholder={placeholder} value={search} />
-        </div>
-        <div className="command__list" role="listbox" id="fsds-command-listbox">
-          <div className="command__empty" />
-          <div className="command__group">
-            <div className="command__groupHeading" />
-            <div className="command__groupItems">
-              <div className="command__item" role="option">
-                <span className="command__itemIcon" />
-                <div className="command__itemContent">
-                  <span className="command__itemLabel" />
-                  <span className="command__itemDescription" />
+    renderInPortal(
+    <Stack layout="native" className={`${classNames}`} role="dialog" data-testid={testId} onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }} {...rest}>
+      {open && (
+        <div className="command__overlay" aria-hidden="true" />
+      )}
+      {open && (
+        <div className="command__dialog" role="dialog" aria-modal="true" aria-label={label} aria-labelledby={ariaLabelledBy}>
+          <div className="command__inputWrapper">
+            <span className="command__searchIcon" aria-hidden="true" />
+            <input className="command__input" type="search" role="combobox" aria-autocomplete="list" aria-controls="fsds-command-listbox" onChange={(e) => setSearch(e.target.value)} aria-expanded={open} placeholder={placeholder} value={search} />
+          </div>
+          <div className="command__list" role="listbox" id="fsds-command-listbox">
+            <div className="command__empty" />
+            <div className="command__group">
+              <div className="command__groupHeading" />
+              <div className="command__groupItems">
+                <div className="command__item" role="option">
+                  <span className="command__itemIcon" />
+                  <div className="command__itemContent">
+                    <span className="command__itemLabel" />
+                    <span className="command__itemDescription" />
+                  </div>
                 </div>
               </div>
             </div>
+            <div className="command__separator" role="separator" aria-hidden="true" />
           </div>
-          <div className="command__separator" role="separator" aria-hidden="true" />
         </div>
-      </div>
-    )}
-  </Stack>
+      )}
+    </Stack>
+    )
   );
 }
 // @generated:end

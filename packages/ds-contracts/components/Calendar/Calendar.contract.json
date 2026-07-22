@@ -402,14 +402,6 @@
     "wrap": false,
     "description": "Arrow keys navigate between dates. Tab moves to prev/next month controls."
   },
-  "portal": {
-    "enabled": true,
-    "defaultTarget": "body",
-    "targetProp": "portalId",
-    "positioning": "anchored",
-    "layering": "popover",
-    "collision": "flip-shift"
-  },
   "dismissal": {
     "triggers": [
       {

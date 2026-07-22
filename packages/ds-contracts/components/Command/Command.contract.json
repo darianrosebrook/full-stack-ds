@@ -452,6 +452,22 @@
     "wrap": true,
     "description": "Input retains DOM focus while the user navigates results. Highlighted option is tracked via aria-activedescendant."
   },
+  "surface": {
+    "kind": "dialog",
+    "presence": "persistent",
+    "modality": "blocking",
+    "content": {
+      "part": "dialog",
+      "interactive": true
+    },
+    "positioning": {
+      "strategy": "centered"
+    },
+    "dismissal": [
+      "escape",
+      "outside-click"
+    ]
+  },
   "portal": {
     "enabled": true,
     "defaultTarget": "body",

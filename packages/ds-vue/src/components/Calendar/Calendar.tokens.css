@@ -1,5 +1,19 @@
 /* @generated:start tokens */
-:root {
+.calendar {
+  --fsds-box-model-padding: 0;
+  --fsds-box-model-padding-block: 0;
+  --fsds-box-model-padding-block-start: 0;
+  --fsds-box-model-padding-block-end: 0;
+  --fsds-box-model-padding-inline: 0;
+  --fsds-box-model-padding-inline-start: 0;
+  --fsds-box-model-padding-inline-end: 0;
+  --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
+  --fsds-box-model-width: auto;
+  --fsds-box-model-min-width: 0;
+  --fsds-box-model-max-width: none;
+  --fsds-box-model-height: auto;
+  --fsds-box-model-min-height: 0;
+  --fsds-box-model-max-height: none;
   --fsds-calendar-color-background-default: var(--fsds-semantic-color-background-primary, #ffffff);
   --fsds-calendar-color-foreground-primary: var(--fsds-semantic-color-foreground-primary, #141414);
   --fsds-calendar-color-foreground-muted: var(--fsds-semantic-color-foreground-secondary, #555555);
@@ -22,23 +36,6 @@
   --fsds-calendar-focus-ring-width: var(--fsds-semantic-focus-ring-width, 2px);
   --fsds-calendar-focus-ring-offset: var(--fsds-semantic-focus-ring-offset, 2px);
   --fsds-calendar-elevation-default: var(--fsds-semantic-elevation-surface-overlay, 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1));
-}
-
-.calendar {
-  --fsds-box-model-padding: 0;
-  --fsds-box-model-padding-block: 0;
-  --fsds-box-model-padding-block-start: 0;
-  --fsds-box-model-padding-block-end: 0;
-  --fsds-box-model-padding-inline: 0;
-  --fsds-box-model-padding-inline-start: 0;
-  --fsds-box-model-padding-inline-end: 0;
-  --fsds-box-model-gap: var(--fsds-semantic-structure-size-gap, 8px);
-  --fsds-box-model-width: auto;
-  --fsds-box-model-min-width: 0;
-  --fsds-box-model-max-width: none;
-  --fsds-box-model-height: auto;
-  --fsds-box-model-min-height: 0;
-  --fsds-box-model-max-height: none;
 }
 /* @generated:end */
 
