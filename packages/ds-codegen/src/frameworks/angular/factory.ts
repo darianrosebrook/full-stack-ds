@@ -23,7 +23,9 @@ import type {
   GeneratedFile,
 } from "../../emitter.js";
 import type { ComponentIR } from "../../ir.js";
+import type { PrimitiveIR } from "../../primitive-contract.js";
 import { generateAngularComponentSource, generateAngularCompoundStateParts, generateAngularDisclosureStateParts } from "./component-source.js";
+import { generateAngularStackPrimitiveSource } from "./primitive-source.js";
 import { generateAngularHookSource } from "./hook-source.js";
 import { generateAngularBarrel } from "./barrel.js";
 import { generateAngularTest } from "./tests.js";
@@ -114,6 +116,15 @@ export function createAngularEmitter(): FrameworkEmitter {
           relativePath: `${ir.name}/__tests__/${ir.name}.test.ts`,
           contents: generateAngularTest(ir),
           preservable: true,
+        },
+      ];
+    },
+
+    emitPrimitives(ir: PrimitiveIR, _opts: EmitOptions): GeneratedFile[] {
+      return [
+        {
+          relativePath: `${ir.name}.component.ts`,
+          contents: generateAngularStackPrimitiveSource(ir),
         },
       ];
     },
