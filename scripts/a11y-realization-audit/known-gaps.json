@@ -1,0 +1,1506 @@
+{
+  "$comment": "Known unrealized a11y obligations, each owned by a campaign spec. The rail fails on any unrealized obligation NOT listed here AND on any entry that no longer reproduces (delete it when fixed). This ledger can only shrink truthfully — see scripts/a11y-realization-audit/audit.mjs.",
+  "gaps": [
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "PageUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "PageDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "react",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Checkbox",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-hidden",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-activedescendant",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Details",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-controls",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Field",
+      "family": "react",
+      "class": "relationship",
+      "key": "for",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Field",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "NavList",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "NavList",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "OTP",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "OTP",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "react",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "react",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Space",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "react",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-sort",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "react",
+      "class": "keyboard",
+      "key": "Space|Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "TextField",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Toast",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "ToggleSwitch",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "react",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "react",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "PageUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "PageDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "vue",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Checkbox",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-hidden",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-activedescendant",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Details",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-controls",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Field",
+      "family": "vue",
+      "class": "relationship",
+      "key": "for",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Field",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "NavList",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "NavList",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "OTP",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "OTP",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "vue",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Space",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "vue",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-sort",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "Space|Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "TextField",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Toast",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "ToggleSwitch",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "vue",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "vue",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "PageUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "PageDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "svelte",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Checkbox",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-hidden",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-activedescendant",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Details",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-controls",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Field",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "for",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Field",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "NavList",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "NavList",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "OTP",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "OTP",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Popover",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-controls",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Popover",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-expanded",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Select",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "svelte",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Space",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "svelte",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-sort",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "Space|Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "TextField",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Toast",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "ToggleSwitch",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Tooltip",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "svelte",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "svelte",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "PageUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "PageDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "lit",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Checkbox",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-hidden",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-activedescendant",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Details",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-controls",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Field",
+      "family": "lit",
+      "class": "relationship",
+      "key": "for",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Field",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "NavList",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "NavList",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "OTP",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "OTP",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "lit",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Space",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "lit",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-sort",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "Space|Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "TextField",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Toast",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "ToggleSwitch",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "lit",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "lit",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "PageUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "PageDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Calendar",
+      "family": "angular",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Checkbox",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-hidden",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-activedescendant",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Command",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Command",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Details",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-controls",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Field",
+      "family": "angular",
+      "class": "relationship",
+      "key": "for",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Field",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "NavList",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "NavList",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01",
+      "note": "declared keys are native behavior of consumer-supplied links; contract review: mark native-documentation or realize"
+    },
+    {
+      "component": "OTP",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "OTP",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowUp",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Home",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "End",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Select",
+      "family": "angular",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Space",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Shuttle",
+      "family": "angular",
+      "class": "focus",
+      "key": "roving",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-sort",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Table",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Tab",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "Space|Enter",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Table",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowUp|ArrowDown",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "TextField",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Toast",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "ToggleSwitch",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-labelledby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "angular",
+      "class": "relationship",
+      "key": "aria-describedby",
+      "spec": "FEAT-A11Y-LABEL-ID-ASSOCIATION-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowRight",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Walkthrough",
+      "family": "angular",
+      "class": "keyboard",
+      "key": "ArrowLeft",
+      "spec": "FEAT-A11Y-COMPOSITE-KEYBOARD-01"
+    },
+    {
+      "component": "Checkbox",
+      "family": "react-native",
+      "class": "relationship",
+      "key": "aria-hidden",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    },
+    {
+      "component": "Popover",
+      "family": "react-native",
+      "class": "relationship",
+      "key": "aria-expanded",
+      "spec": "FEAT-A11Y-RELATIONSHIP-STRAGGLERS-01"
+    }
+  ]
+}
