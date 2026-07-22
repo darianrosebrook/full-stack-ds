@@ -2,10 +2,11 @@ id: FIX-LIT-PRIMARY-ATTR-DEFAULTING-01
 title: 'Default-aware lit primary attribute-binding path (close the lit/angular asymmetry)'
 risk_tier: 2
 mode: fix
-lifecycle_state: active
-worktree: lit-attr-defaults
+lifecycle_state: closed
+resolution: completed
+closure_notes: 'Auto-closed by caws worktree merge lit-attr-defaults at dd5c8861180d4241534589c210700f0bf9686bf1'
 created_at: '2026-07-22T18:16:50.471Z'
-updated_at: '2026-07-22T18:16:50.471Z'
+updated_at: '2026-07-22T18:30:09.061Z'
 blast_radius:
   modules:
     - 'TODO: list one or more modules this spec touches.'
