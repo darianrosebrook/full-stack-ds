@@ -177,10 +177,40 @@ function propAccessor(propName: string): string {
  * always routes through `propAccessor` (which prefixes `this.` or
  * `this["..."]` for hyphenated names). The legacy
  * `iterationScope.has(propName)` shortcut is removed.
+ *
+ * FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: a `@property()` class-field
+ * initializer (`x?: T = default`) applies its default ONLY at
+ * construction — a later explicit `undefined` assignment does not
+ * re-trigger it, so a bare `this.x` read downstream of construction can
+ * observe `undefined` even though the contract declares a default. React
+ * (parameter default), Vue (`withDefaults`), and Svelte (`export let`)
+ * don't have this gap because their defaulting is parameter-evaluation,
+ * not one-shot field initialization. When the resolved prop declares a
+ * contract `defaultExpr`, wrap the read as `(this.x ?? default)` so every
+ * downstream consumer of this accessor — conditional/predicate bindings,
+ * class modifiers, future binding kinds — inherits parity by construction
+ * instead of each call site re-deriving it. Props with no contract
+ * default keep the bare read (never invent a default).
  */
 function litPropAccessor(propName: string, ctx: LitRenderContext): string {
-  void ctx;
-  return propAccessor(propName);
+  return defaultAwareLitPropAccessor(propName, ctx.styledByName);
+}
+
+/**
+ * Shared default-wrapping logic behind `litPropAccessor`, factored out so
+ * the handful of call sites that only have `ir.styledProps` in scope
+ * (class-modifier loops that run before a `LitRenderContext` exists) can
+ * apply the identical defaulting rule without duplicating it or
+ * threading a full render context through generation functions that
+ * don't otherwise need one.
+ */
+function defaultAwareLitPropAccessor(
+  propName: string,
+  styledByName: ReadonlyMap<string, { type: string; defaultExpr?: string }>,
+): string {
+  const bare = propAccessor(propName);
+  const defaultExpr = styledByName.get(propName)?.defaultExpr;
+  return defaultExpr === undefined ? bare : `(${bare} ?? ${defaultExpr})`;
 }
 
 /**
@@ -546,16 +576,20 @@ function generatePropertyDeclarations(ir: ComponentIR): string[] {
 function generateClassMapObject(ir: ComponentIR): string {
   const { classRecipe } = ir;
   const entries: string[] = [];
+  // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: class modifiers read the
+  // raw @property field, so they need the same default-aware accessor as
+  // `litPropAccessor` — see that function's doc comment.
+  const styledByName = new Map(ir.styledProps.map((p) => [p.name, p]));
 
   entries.push(`      '${classRecipe.base}': true,`);
 
   for (const mod of classRecipe.valueModifiers) {
-    const acc = propAccessor(mod.propName);
+    const acc = defaultAwareLitPropAccessor(mod.propName, styledByName);
     entries.push(`      [\`${classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\`]: !!${acc},`);
   }
 
   for (const mod of classRecipe.booleanModifiers) {
-    const acc = propAccessor(mod.propName);
+    const acc = defaultAwareLitPropAccessor(mod.propName, styledByName);
     entries.push(`      '${classRecipe.base}--${mod.safeName}': !!${acc},`);
   }
 
@@ -1613,11 +1647,19 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
     const hintsIdent = glyph.sizeHints
       ? `ICON_GLYPH_SIZE_HINTS${suffix}`
       : undefined;
-    // `?? ""` because the Lit property is optional-typed even with a
-    // default — a bare `this.size` index into Record<string, number>
-    // fails TS2538.
+    // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: the Lit property is
+    // optional-typed even when the contract declares a default (class-field
+    // initializers only apply once, at construction — see
+    // `litPropAccessor`), so a bare `this.size` index into
+    // Record<string, number> both fails TS2538 AND, if defaulted with the
+    // empty string instead of the contract default, silently misses the
+    // hints map and falls through to the natural SVG size. Fall back to the
+    // resolved prop's contract default (e.g. Icon's `size` default "md")
+    // so undefined resolves to the same hint react's parameter default
+    // resolves to; `""` only when the prop declares no contract default.
+    const sizeDefaultExpr = styledByName.get(glyph.sizePropName ?? "")?.defaultExpr;
     const sizeAcc = glyph.sizePropName
-      ? `(${propAccessor(glyph.sizePropName)} ?? "")`
+      ? `(${propAccessor(glyph.sizePropName)} ?? ${sizeDefaultExpr ?? '""'})`
       : undefined;
     const pxExpr = iconGlyphPxExpr(glyph, sizeAcc, hintsIdent);
     const pxIdent = pxExpr === undefined ? undefined : `iconGlyphPx${suffix}`;
@@ -1824,7 +1866,9 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
   lines.push(`    return [`);
   lines.push(`      "${ir.classRecipe.base}",`);
   for (const mod of ir.classRecipe.valueModifiers) {
-    const acc = propAccessor(mod.propName);
+    // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: default-aware, see
+    // `litPropAccessor`'s doc comment.
+    const acc = defaultAwareLitPropAccessor(mod.propName, styledByName);
     lines.push(
       `      ${acc} ? \`${ir.classRecipe.base}--${mod.valuePrefix ?? ""}\${${acc}}\` : null,`,
     );
@@ -1839,7 +1883,7 @@ function generateDomTreeClassBody(ir: ComponentIR): string {
       );
     } else {
       lines.push(
-        `      ${propAccessor(mod.safeName)} ? "${ir.classRecipe.base}--${mod.safeName}" : null,`,
+        `      ${defaultAwareLitPropAccessor(mod.safeName, styledByName)} ? "${ir.classRecipe.base}--${mod.safeName}" : null,`,
       );
     }
   }
@@ -2327,21 +2371,29 @@ function renderLitDomNode(
         `Lit emitter: iteration source could not be lowered (source kind=${source.kind})`,
       );
     }
-    // FIX-COUNT-ITERATION-DEFAULT-THREADING-01: a count-kind iteration
-    // source that is a bare prop binding must fall back to the prop's
-    // CONTRACT default when the prop resolves to `undefined` at runtime
-    // (parity with react's parameter default / vue's withDefaults /
-    // svelte's `export let`). Fall back to the literal `0` only when the
-    // contract declares no default for this prop — that fallback is
-    // existing, deliberately-unchanged behavior, not an invented default.
-    const countDefaultExpr =
-      kind === "count" && source.kind === "prop"
-        ? ctx.styledByName.get(source.prop)?.defaultExpr
-        : undefined;
+    // FIX-COUNT-ITERATION-DEFAULT-THREADING-01 / FIX-UNDEFINED-PROP-
+    // ACCESSOR-DEFAULTING-01: an array- or count-kind iteration source
+    // that is a bare prop binding must fall back to the prop's CONTRACT
+    // default when the prop resolves to `undefined` at runtime (parity
+    // with react's parameter default / vue's withDefaults / svelte's
+    // `export let`). Originally this call site applied its own `??
+    // default` fallback on top of a bare `sourceExpr`; now that
+    // `litPropAccessor` (reached via `renderLitBindingValue`) is itself
+    // default-aware, `sourceExpr` already carries `(this.x ??
+    // contractDefault)` for any prop with a declared default — stacking
+    // a second `?? []` / `?? 0` here would be a TS2869 unreachable-branch
+    // error (this exact defect broke `tsc` for Select.options/
+    // Walkthrough.steps, both array-kind sources with contract array
+    // defaults, during development). Only bare-prop sources with NO
+    // contract default still need this call site's own fallback — the
+    // accessor leaves those reads unwrapped.
+    const sourceHasAccessorDefault =
+      source.kind === "prop" &&
+      ctx.styledByName.get(source.prop)?.defaultExpr !== undefined;
     const arrowSource =
       kind === "array"
-        ? `(${sourceExpr} ?? []).map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
-        : `Array.from({ length: ${sourceExpr} ?? ${countDefaultExpr ?? 0} }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
+        ? `(${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? []`}).map((${params}) => html\`\n${withIfGuard}\n${pad}\`)`
+        : `Array.from({ length: ${sourceHasAccessorDefault ? sourceExpr : `${sourceExpr} ?? 0`} }, (${params}) => html\`\n${withIfGuard}\n${pad}\`)`;
     return `${pad}\${${arrowSource}}`;
   }
   return withIfGuard;

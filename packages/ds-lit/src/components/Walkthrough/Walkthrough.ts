@@ -192,7 +192,7 @@ export class WalkthroughElement extends LitElement {
   private computeClasses(): string {
     return [
       "walkthrough",
-      this.placement ? `walkthrough--${this.placement}` : null,
+      (this.placement ?? "auto") ? `walkthrough--${(this.placement ?? "auto")}` : null,
     ].filter(Boolean).join(" ");
   }
 
@@ -210,7 +210,7 @@ export class WalkthroughElement extends LitElement {
     <button class=${'walkthrough__skip'} type="button"></button>
     <button class=${'walkthrough__prev'} type="button"></button>
     <div class=${'walkthrough__dots'}>
-      ${(this.steps ?? []).map((item, index) => html`
+      ${((this.steps ?? [{"anchor":"#step-1","title":"Welcome to the tour"},{"anchor":"#step-2","title":"Browse your dashboard"},{"anchor":"#step-3","title":"Configure preferences"}])).map((item, index) => html`
       <button class=${'walkthrough__dot'} type="button" aria-label=${item.title} data-step-index=${index}></button>
       `)}
     </div>

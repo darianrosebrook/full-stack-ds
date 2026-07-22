@@ -178,8 +178,8 @@ export class ToastElement extends LitElement {
   private computeClasses(): string {
     return [
       "toast",
-      this.variant ? `toast--${this.variant}` : null,
-      this.politeness ? `toast--${this.politeness}` : null,
+      (this.variant ?? "info") ? `toast--${(this.variant ?? "info")}` : null,
+      (this.politeness ?? "polite") ? `toast--${(this.politeness ?? "polite")}` : null,
     ].filter(Boolean).join(" ");
   }
 

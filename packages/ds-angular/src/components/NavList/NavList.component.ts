@@ -36,7 +36,7 @@ export class NavListComponent {
   classes(): string {
     return [
       "nav-list",
-      this.orientation ? `nav-list--${this.orientation}` : null,
+      (this.orientation ?? "vertical") ? `nav-list--${(this.orientation ?? "vertical")}` : null,
       this.class,
     ].filter(Boolean).join(" ");
   }

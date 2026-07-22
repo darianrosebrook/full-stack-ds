@@ -267,7 +267,7 @@ export class AccordionElement extends LitElement {
   override render() {
     const classes = {
       'accordion': true,
-      [`accordion--${this.type}`]: !!this.type,
+      [`accordion--${(this.type ?? "single")}`]: !!(this.type ?? "single"),
       'accordion--disabled': !!this.disabled,
     };
     return html`<div class=${classMap(classes)}><slot></slot></div>`;

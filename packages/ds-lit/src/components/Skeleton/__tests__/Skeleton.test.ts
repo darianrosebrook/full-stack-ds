@@ -157,5 +157,30 @@ async function renderElement(tagName: string, props: Record<string, string | boo
 // @generated:end
 
 // @custom:start tests
+describe("Skeleton — FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: undefined decorative resolves to the contract default (true)", () => {
+  it("matches react's a11y output for an explicitly-undefined decorative prop", async () => {
+    // Contract default for `decorative` is `true`. A `@property()
+    // decorative?: boolean = true` class-field default only applies once,
+    // at construction — simulate a consumer explicitly clobbering it back
+    // to `undefined` post-construction and assert role/aria-busy/
+    // aria-hidden still resolve as if `decorative` were `true` (matching
+    // react's parameter-default resolution for the same input), not the
+    // announced (`decorative: false`) state.
+    const element = document.createElement("fsds-skeleton") as HTMLElement & {
+      decorative?: boolean;
+      updateComplete?: Promise<unknown>;
+      requestUpdate?: () => void;
+    };
+    document.body.append(element);
+    await customElements.whenDefined("fsds-skeleton");
+    element.decorative = undefined;
+    element.requestUpdate?.();
+    await element.updateComplete;
 
+    const root = element.shadowRoot!.firstElementChild!;
+    expect(root.getAttribute("role")).toBe("presentation");
+    expect(root.getAttribute("aria-busy")).toBe("false");
+    expect(root.getAttribute("aria-hidden")).toBe("true");
+  });
+});
 // @custom:end

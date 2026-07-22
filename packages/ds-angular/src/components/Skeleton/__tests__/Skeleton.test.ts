@@ -105,5 +105,27 @@ function classTokens(component: { classes: () => string }): string[] {
 // @generated:end
 
 // @custom:start tests
+describe("Skeleton — FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: undefined decorative resolves to the contract default (true)", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [SkeletonComponent] });
+  });
 
+  it("matches react's a11y output for an explicitly-undefined decorative prop", () => {
+    // Contract default for `decorative` is `true`. An `@Input()
+    // decorative?: boolean = true` class-field default only applies once,
+    // at construction — simulate a consumer explicitly clobbering it back
+    // to `undefined` post-construction and assert role/aria-busy/
+    // aria-hidden still resolve as if `decorative` were `true` (matching
+    // react's parameter-default resolution for the same input), not the
+    // announced (`decorative: false`) state.
+    const fixture = TestBed.createComponent(SkeletonComponent);
+    fixture.componentInstance.decorative = undefined;
+    fixture.detectChanges();
+
+    const root = (fixture.nativeElement as HTMLElement).firstElementChild!;
+    expect(root.getAttribute("role")).toBe("presentation");
+    expect(root.getAttribute("aria-busy")).toBe("false");
+    expect(root.getAttribute("aria-hidden")).toBe("true");
+  });
+});
 // @custom:end

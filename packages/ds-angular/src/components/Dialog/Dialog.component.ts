@@ -69,7 +69,7 @@ export class DialogComponent {
   classes = computed(() =>
     [
       "dialog",
-      this.size ? `dialog--${this.size}` : null,
+      (this.size ?? "md") ? `dialog--${(this.size ?? "md")}` : null,
       this.class,
     ].filter(Boolean).join(" "),
   );

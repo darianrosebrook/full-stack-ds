@@ -23,11 +23,11 @@ import { useShowMore } from "./useShowMore.js";
   standalone: true,
   imports: [NgClass],
   template: `<div [ngClass]="classes()">
-  <div [ngClass]="'show-more__content'" [style.--fsds-show-more-content-max-lines]="maxLines">
+  <div [ngClass]="'show-more__content'" [style.--fsds-show-more-content-max-lines]="(maxLines ?? 3)">
     <ng-content />
   </div>
   <button [ngClass]="'show-more__trigger'" type="button" (click)="behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
-    {{ (behavior.expanded() ? showLessLabel : showMoreLabel) }}
+    {{ (behavior.expanded() ? (showLessLabel ?? 'Show less') : (showMoreLabel ?? 'Show more')) }}
   </button>
 </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

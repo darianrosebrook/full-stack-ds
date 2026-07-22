@@ -93,4 +93,29 @@ describe("Icon — catalog glyph rendering (ICON-CATALOG-RUNTIME-DELIVERY-01)", 
     expect(renderIcon("does-not-exist").querySelector("svg")).toBeNull();
   });
 });
+
+describe("Icon — FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: undefined size resolves to contract default", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [IconComponent] });
+  });
+
+  it("an explicitly-undefined size falls back to the md hint (20px), not the natural SVG size", () => {
+    // An `@Input() size?: T = "md"` class-field default only applies once,
+    // at construction. Explicitly assigning `undefined` (simulating a
+    // consumer's controlled prop update landing `undefined`, distinct
+    // from simply never setting the input) must still resolve via the
+    // getter's contract-default fallback — proving the accessor
+    // re-applies the default on every read, not just at construction.
+    const fixture = TestBed.createComponent(IconComponent);
+    fixture.componentInstance.name = "check";
+    fixture.componentInstance.size = undefined;
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.iconGlyphPx).toBe(20);
+    const svg = (fixture.nativeElement as HTMLElement).querySelector(
+      'svg[data-fsds-icon="check"]',
+    );
+    expect(svg!.getAttribute("width")).toBe("20");
+  });
+});
 // @custom:end

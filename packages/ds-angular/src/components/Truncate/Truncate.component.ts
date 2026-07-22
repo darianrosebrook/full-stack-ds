@@ -28,7 +28,7 @@ import { useTruncate } from "./useTruncate.js";
   </span>
   <ng-container *ngIf="expandable">
     <button [ngClass]="'truncate__toggle'" type="button" (click)="behavior.setExpanded(!behavior.expanded())" [attr.aria-expanded]="behavior.expanded()">
-      {{ (behavior.expanded() ? collapseText : expandText) }}
+      {{ (behavior.expanded() ? (collapseText ?? 'Show less') : (expandText ?? 'Show more')) }}
     </button>
   </ng-container>
 </div>`,

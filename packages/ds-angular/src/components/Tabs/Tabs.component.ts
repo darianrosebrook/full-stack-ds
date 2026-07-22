@@ -93,9 +93,9 @@ export class TabsComponent implements OnChanges {
   classes = computed(() =>
     [
       "tabs",
-      this.orientation ? `tabs--${this.orientation}` : null,
-      this.appearance ? `tabs--${this.appearance}` : null,
-      this.activationMode ? `tabs--${this.activationMode}` : null,
+      (this.orientation ?? "horizontal") ? `tabs--${(this.orientation ?? "horizontal")}` : null,
+      (this.appearance ?? "underline") ? `tabs--${(this.appearance ?? "underline")}` : null,
+      (this.activationMode ?? "automatic") ? `tabs--${(this.activationMode ?? "automatic")}` : null,
       this.class,
     ].filter(Boolean).join(" "),
   );

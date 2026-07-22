@@ -86,10 +86,13 @@ describe("ICON-CATALOG-RUNTIME-DELIVERY-01: Lit iconGlyph lowering", () => {
   });
 
   it("resolves the catalog record from render()-local consts", () => {
-    // `?? ""` — the size property is optional-typed even with a default,
-    // and a bare index into Record<string, number> fails TS2538.
+    // FIX-UNDEFINED-PROP-ACCESSOR-DEFAULTING-01: falls back to the
+    // contract's declared default ("md") rather than "" — a class-field
+    // initializer only applies once at construction, so an explicit
+    // `undefined` assignment later must still resolve via the accessor's
+    // `?? default`, not silently miss the hints map.
     expect(src).toContain(
-      `const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[(this.size ?? "")];`,
+      `const iconGlyphPx = ICON_GLYPH_SIZE_HINTS[(this.size ?? "md")];`,
     );
     expect(src).toContain(
       `const iconGlyph = resolveIcon(this.name, iconGlyphPx ?? Number.NaN);`,

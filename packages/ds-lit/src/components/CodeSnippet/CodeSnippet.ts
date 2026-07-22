@@ -90,7 +90,7 @@ export class CodeSnippetElement extends LitElement {
   private computeClasses(): string {
     return [
       "code-snippet",
-      this.as ? `code-snippet--${this.as}` : null,
+      (this.as ?? "code") ? `code-snippet--${(this.as ?? "code")}` : null,
     ].filter(Boolean).join(" ");
   }
 

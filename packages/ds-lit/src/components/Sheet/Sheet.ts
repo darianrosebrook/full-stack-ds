@@ -231,7 +231,7 @@ export class SheetElement extends LitElement {
   private computeClasses(): string {
     return [
       "sheet",
-      this.side ? `sheet--${this.side}` : null,
+      (this.side ?? "right") ? `sheet--${(this.side ?? "right")}` : null,
       this.behavior.openness ? "sheet--open" : null,
     ].filter(Boolean).join(" ");
   }

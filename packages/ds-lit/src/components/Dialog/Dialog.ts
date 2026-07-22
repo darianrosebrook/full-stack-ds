@@ -241,7 +241,7 @@ export class DialogElement extends LitElement {
   private computeClasses(): string {
     return [
       "dialog",
-      this.size ? `dialog--${this.size}` : null,
+      (this.size ?? "md") ? `dialog--${(this.size ?? "md")}` : null,
     ].filter(Boolean).join(" ");
   }
 

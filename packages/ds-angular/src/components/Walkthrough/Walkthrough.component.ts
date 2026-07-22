@@ -23,7 +23,7 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
   selector: "fsds-walkthrough",
   standalone: true,
   imports: [NgClass, NgFor],
-  template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="label">
+  template: `<div [ngClass]="classes()" role="status" [attr.aria-label]="(label ?? 'Feature tour')">
   <div [ngClass]="'walkthrough__content'">
     <h3 [ngClass]="'walkthrough__title'">
       <ng-content select="[slot=title]" />
@@ -36,7 +36,7 @@ export type WalkthroughPlacement = "top" | "bottom" | "left" | "right" | "auto";
     <button [ngClass]="'walkthrough__skip'" type="button"></button>
     <button [ngClass]="'walkthrough__prev'" type="button"></button>
     <div [ngClass]="'walkthrough__dots'">
-      <ng-container *ngFor="let item of (steps ?? []); let index = index">
+      <ng-container *ngFor="let item of ((steps ?? [{'anchor':'#step-1','title':'Welcome to the tour'},{'anchor':'#step-2','title':'Browse your dashboard'},{'anchor':'#step-3','title':'Configure preferences'}])); let index = index">
         <button [ngClass]="'walkthrough__dot'" type="button" [attr.aria-label]="item.title" [attr.data-step-index]="index"></button>
       </ng-container>
     </div>
@@ -72,7 +72,7 @@ export class WalkthroughComponent {
   classes = computed(() =>
     [
       "walkthrough",
-      this.placement ? `walkthrough--${this.placement}` : null,
+      (this.placement ?? "auto") ? `walkthrough--${(this.placement ?? "auto")}` : null,
       this.class,
     ].filter(Boolean).join(" "),
   );

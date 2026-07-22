@@ -237,7 +237,7 @@ export class SelectElement extends LitElement {
   private computeClasses(): string {
     return [
       "select",
-      this.size ? `select--${this.size}` : null,
+      (this.size ?? "md") ? `select--${(this.size ?? "md")}` : null,
       this.position ? `select--${this.position}` : null,
       this.behavior.open ? "select--open" : null,
       this.disabled ? "select--disabled" : null,
@@ -257,7 +257,7 @@ export class SelectElement extends LitElement {
     </div>
     ` : nothing}
     <div class=${'select__options'}>
-      ${(this.options ?? []).map((item, index) => html`
+      ${((this.options ?? [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}])).map((item, index) => html`
       <div class=${'select__option'} role="option" aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value}>
         <span>${item.label}</span>
       </div>

@@ -230,8 +230,8 @@ export class ButtonElement extends LitElement {
   private computeClasses(): string {
     return [
       "button",
-      this.size ? `button--${this.size}` : null,
-      this.variant ? `button--${this.variant}` : null,
+      (this.size ?? "medium") ? `button--${(this.size ?? "medium")}` : null,
+      (this.variant ?? "primary") ? `button--${(this.variant ?? "primary")}` : null,
       this.disabled ? "button--disabled" : null,
     ].filter(Boolean).join(" ");
   }

@@ -273,9 +273,9 @@ export class TabsElement extends LitElement {
   override render() {
     const classes = {
       'tabs': true,
-      [`tabs--${this.orientation}`]: !!this.orientation,
-      [`tabs--${this.appearance}`]: !!this.appearance,
-      [`tabs--${this.activationMode}`]: !!this.activationMode,
+      [`tabs--${(this.orientation ?? "horizontal")}`]: !!(this.orientation ?? "horizontal"),
+      [`tabs--${(this.appearance ?? "underline")}`]: !!(this.appearance ?? "underline"),
+      [`tabs--${(this.activationMode ?? "automatic")}`]: !!(this.activationMode ?? "automatic"),
     };
     return html`<div class=${classMap(classes)}><slot></slot></div>`;
   }

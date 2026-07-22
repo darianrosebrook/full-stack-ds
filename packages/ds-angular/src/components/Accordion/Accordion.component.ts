@@ -124,7 +124,7 @@ export class AccordionComponent implements OnChanges {
   classes = computed(() =>
     [
       "accordion",
-      this.type ? `accordion--${this.type}` : null,
+      (this.type ?? "single") ? `accordion--${(this.type ?? "single")}` : null,
       this.disabled ? "accordion--disabled" : null,
       this.class,
     ].filter(Boolean).join(" "),
