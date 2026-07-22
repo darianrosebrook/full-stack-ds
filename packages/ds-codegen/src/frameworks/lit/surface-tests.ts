@@ -9,7 +9,7 @@
  * cleanup.
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind } from "../../semantics.js";
+import { isAnchoredPresenceKind, anchoredPortalsContentToBody } from "../../semantics.js";
 
 export function generateLitSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -36,6 +36,92 @@ export function generateLitSurfaceTest(ir: ComponentIR): string {
 
 function tagFor(name: string): string {
   return `fsds-${name.replace(/([A-Z])/g, "-$1").toLowerCase().replace(/^-/, "")}`;
+}
+
+interface PositioningTestParams {
+  ir: ComponentIR;
+  /** Name of the mount helper already defined in the scaffold (mountTooltip/mountPopover). */
+  mountFn: string;
+  contentTag: string;
+  cssPrefix: string;
+}
+
+/**
+ * Shared positioning + portal describe blocks, appended after the
+ * kind-specific behavioral suite. jsdom cannot measure real layout
+ * (getBoundingClientRect always returns a zero rect), so these tests
+ * assert presence/attributes — data-placement exists, inline style
+ * carries `position: fixed` — not coordinate values. Coordinate math
+ * is pinned by the AnchoredPositionController unit tests instead.
+ *
+ * Portal assertions use `document.body.querySelector` because a
+ * portalled content host escapes the `root` subtree; `afterEach`
+ * clears `document.body.innerHTML` (already present in the mount
+ * helpers' scaffold) so a stray portalled host from a prior test
+ * cannot leak into the next one.
+ */
+function emitPositioningAndPortalTests(params: PositioningTestParams): string {
+  const { ir, mountFn, contentTag, cssPrefix } = params;
+  const surface = ir.surface!;
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalEnabled = anchoredPortalsContentToBody(ir);
+  if (!positioningEnabled && !portalEnabled) return "";
+
+  const name = ir.name;
+  const blocks: string[] = [];
+
+  if (positioningEnabled) {
+    blocks.push(`describe("${name} — anchored positioning", () => {
+  it("applies fixed positioning and a data-placement attribute to the content host when open", async () => {
+    const root = await ${mountFn}({ defaultOpen: true });
+    const content = getContentEl(root)!;
+    expect(content).toBeTruthy();
+    expect(content.style.position).toBe("fixed");
+    expect(content.hasAttribute("data-placement")).toBe(true);
+  });
+
+  it("does not carry positioning styles or data-placement when closed", async () => {
+    const root = await ${mountFn}();
+    const host = root.querySelector("${contentTag}") as HTMLElement;
+    expect(host.hasAttribute("data-placement")).toBe(false);
+  });
+});`);
+  }
+
+  if (portalEnabled) {
+    blocks.push(`describe("${name} — content portal (FEAT-ANCHORED-SURFACE-XFW-01)", () => {
+  it("relocates the content host to document.body while open", async () => {
+    const root = await ${mountFn}({ defaultOpen: true });
+    const portaled = document.body.querySelector("${contentTag}[data-${cssPrefix}-content]") as HTMLElement | null;
+    expect(portaled).toBeTruthy();
+    expect(portaled?.parentElement).toBe(document.body);
+    expect(root.contains(portaled)).toBe(false);
+  });
+
+  it("restores the content host to its original position when closed", async () => {
+    // Queried from document.body (not root.querySelector) — a
+    // portalled content host is a SIBLING of root at the body level,
+    // not a descendant, so root.querySelector would never find it.
+    const root = await ${mountFn}({ defaultOpen: true });
+    const contentHost = document.body.querySelector("${contentTag}") as HTMLElement;
+    expect(contentHost).toBeTruthy();
+    expect(contentHost.parentElement).toBe(document.body);
+
+    (root as unknown as Record<string, unknown>).open = false;
+    await settle(root);
+    await settle(contentHost);
+
+    expect(contentHost.parentElement).toBe(root);
+    // Not a DIRECT child of body anymore — root itself lives under
+    // body in this fixture, so document.body.contains() would be
+    // trivially true either way; parentElement identity above is
+    // the load-bearing assertion.
+    expect(Array.from(document.body.children)).not.toContain(contentHost);
+  });
+});`);
+  }
+
+  return blocks.join("\n\n");
 }
 
 function emitTooltipTests(ir: ComponentIR): string {
@@ -131,8 +217,12 @@ function getContentEl(root: HTMLElement): HTMLElement | null {
   // The content host element reflects open state by setting/removing
   // its own [data-${cssPrefix}-content] attribute (and id/role). When
   // closed the attribute is absent and the host renders nothing.
-  const host = root.querySelector("${contentTag}") as HTMLElement;
-  return host.hasAttribute("data-${cssPrefix}-content") ? host : null;
+  // Queried from document (not root) because a portalled content host
+  // relocates itself to document.body while open, escaping the root
+  // subtree; document.querySelector still finds it either way.
+  void root;
+  const host = document.querySelector("${contentTag}") as HTMLElement | null;
+  return host && host.hasAttribute("data-${cssPrefix}-content") ? host : null;
 }
 
 afterEach(() => {
@@ -349,6 +439,13 @@ describe("${name} — accessibility", () => {
   });
 });`;
 
+  const positioningAndPortalBody = emitPositioningAndPortalTests({
+    ir,
+    mountFn: "mountTooltip",
+    contentTag,
+    cssPrefix,
+  });
+
   return [
     `// @generated:start imports`,
     importsBody,
@@ -358,6 +455,7 @@ describe("${name} — accessibility", () => {
     helpersBody,
     ``,
     testsBody,
+    positioningAndPortalBody ? `\n${positioningAndPortalBody}` : "",
     `// @generated:end`,
     ``,
     `// @custom:start tests`,
@@ -463,8 +561,12 @@ function getAnchor(root: HTMLElement, withSlottedHost: boolean): HTMLElement {
 }
 
 function getContentEl(root: HTMLElement): HTMLElement | null {
-  const host = root.querySelector("${contentTag}") as HTMLElement;
-  return host.hasAttribute("data-${cssPrefix}-content") ? host : null;
+  // Queried from document (not root) because a portalled content host
+  // relocates itself to document.body while open, escaping the root
+  // subtree; document.querySelector still finds it either way.
+  void root;
+  const host = document.querySelector("${contentTag}") as HTMLElement | null;
+  return host && host.hasAttribute("data-${cssPrefix}-content") ? host : null;
 }
 
 afterEach(() => {
@@ -630,6 +732,13 @@ describe("${name} — accessibility", () => {
   });
 });`;
 
+  const positioningAndPortalBody = emitPositioningAndPortalTests({
+    ir,
+    mountFn: "mountPopover",
+    contentTag,
+    cssPrefix,
+  });
+
   return [
     `// @generated:start imports`,
     importsBody,
@@ -639,6 +748,7 @@ describe("${name} — accessibility", () => {
     helpersBody,
     ``,
     testsBody,
+    positioningAndPortalBody ? `\n${positioningAndPortalBody}` : "",
     `// @generated:end`,
     ``,
     `// @custom:start tests`,

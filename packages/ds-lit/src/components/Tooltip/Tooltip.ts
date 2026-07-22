@@ -9,6 +9,7 @@ import {
 } from "../../primitives/index.js";
 import { AnchoredSurfaceController } from "../../primitives/surfaces/AnchoredSurfaceController.js";
 import type { SurfaceDismissalMode } from "../../primitives/surfaces/SurfaceController.js";
+import { AnchoredPositionController } from "../../primitives/surfaces/AnchoredPositionController.js";
 // @generated:end
 
 // @custom:start imports
@@ -24,6 +25,8 @@ interface TooltipSurfaceContext {
   controller: AnchoredSurfaceController;
   registerContent: (node: HTMLElement | null) => void;
   buildDismissal: () => readonly SurfaceDismissalMode[];
+  getAnchor: () => HTMLElement | null;
+  getPlacement: () => string | undefined;
 }
 
 const TooltipSurface_CTX = createCompoundContext<TooltipSurfaceContext>("TooltipSurface");
@@ -168,6 +171,8 @@ export class TooltipElement extends LitElement {
       controller: AnchoredSurfaceController;
       registerContent: (node: HTMLElement | null) => void;
       buildDismissal: () => readonly SurfaceDismissalMode[];
+      getAnchor: () => HTMLElement | null;
+      getPlacement: () => string | undefined;
     }>(this, TooltipSurface_CTX.key, {
       open: () => this._isOpen(),
       setOpen: (next) => this._setOpen(next),
@@ -178,6 +183,8 @@ export class TooltipElement extends LitElement {
         this._surfaceController.setContent(node);
       },
       buildDismissal: () => this._buildDismissal(),
+      getAnchor: () => this._surfaceController.getAnchor(),
+      getPlacement: () => this.placement,
     });
   }
   override render() {
@@ -403,9 +410,60 @@ export class TooltipContentElement extends LitElement {
   `;
 
   private _ctx = new ContextConsumerController<TooltipSurfaceContext>(this, TooltipSurface_CTX);
+  // Context resolution walks parentElement ancestors. Once
+  // portalled, this host is a direct child of document.body and
+  // the walk to the TooltipElement provider would fail — but
+  // the resolved context's closures (open/setOpen/registerContent/
+  // getAnchor/...) all bind to the ROOT instance's `this`, not to
+  // DOM adjacency, so a value resolved once while still in-tree
+  // remains valid after relocation. Cache on first success.
+  private _ctxCache: TooltipSurfaceContext | null = null;
   private _registered = false;
+  private _position: AnchoredPositionController;
+  private _portalMoving = false;
+  private _portaled = false;
+  private _portalOriginParent: Node | null = null;
+  private _portalOriginNext: Node | null = null;
+
+  constructor() {
+    super();
+    this._position = new AnchoredPositionController(this, {
+      anchor: () => this._ctxOrNull()?.getAnchor() ?? null,
+      content: () => this,
+      open: () => this._ctxOrNull()?.open() ?? false,
+      placement: () => (this._ctxOrNull()?.getPlacement() as "top" | "bottom" | "left" | "right" | undefined) ?? "auto",
+      collision: () => "flip-shift",
+      onChange: () => this.requestUpdate(),
+    });
+  }
+
+  // The transient disconnect/reconnect pair fired by `document.body.appendChild(this)`
+  // below (moving an already-connected element re-fires both native callbacks
+  // synchronously) must NOT reach Lit's own connectedCallback/disconnectedCallback —
+  // those re-run every ReactiveController's hostConnected/hostDisconnected, which
+  // for AnchoredPositionController and ContextConsumerController is real stateful
+  // reconcile/subscribe work, not a no-op. Left unguarded, a move from inside
+  // updated() would re-enter that reconcile synchronously mid-render and could
+  // schedule a redundant update that outlives the current open/close transition.
+  override connectedCallback(): void {
+    if (this._portalMoving) return;
+    super.connectedCallback();
+  }
 
   override disconnectedCallback(): void {
+    if (this._portalMoving) return;
+    // Genuine teardown (not a transient portal move): the element is
+    // being permanently removed from the document (e.g. the consumer
+    // removed the root, or cleared an ancestor's innerHTML), so there
+    // is nothing to relocate back to — only reset portal bookkeeping.
+    // Reinserting into `_portalOriginParent` here would be actively
+    // harmful: that parent may be mid-removal in the very same
+    // operation, and insertBefore into a still-connected node would
+    // synchronously re-fire connectedCallback before this callback
+    // has finished tearing down.
+    this._portaled = false;
+    this._portalOriginParent = null;
+    this._portalOriginNext = null;
     if (this._registered) {
       this._ctxOrNull()?.registerContent(null);
       this._registered = false;
@@ -414,8 +472,10 @@ export class TooltipContentElement extends LitElement {
   }
 
   private _ctxOrNull(): TooltipSurfaceContext | null {
+    if (this._ctxCache) return this._ctxCache;
     try {
-      return this._ctx.value;
+      this._ctxCache = this._ctx.value;
+      return this._ctxCache;
     } catch {
       return null;
     }
@@ -424,6 +484,13 @@ export class TooltipContentElement extends LitElement {
   override updated(): void {
     const ctx = this._ctxOrNull();
     if (!ctx) return;
+    // Lit does not cancel an already-scheduled update when the
+    // host disconnects mid-flight; a stale updated() call landing
+    // after a genuine disconnectedCallback must be a no-op — in
+    // particular it must NOT re-portal this element to
+    // document.body, which would resurrect an element that has
+    // already torn down its registration and controllers.
+    if (!this.isConnected) return;
     // Register the host element itself as the content node for
     // substrate purposes. The substrate uses content.contains(node)
     // for grace-path checks; if we registered the inner <div>
@@ -435,16 +502,53 @@ export class TooltipContentElement extends LitElement {
       this._registered = true;
       ctx.registerContent(this);
     }
+    // FEAT-ANCHORED-SURFACE-XFW-01: relocate the content HOST to
+    // document.body while open, mirroring the Dialog root-portal
+    // idiom (see component-source.ts) but applied to the content
+    // part instead of the whole component — the shadow root (and
+    // its scoped styles) travels with the host, escaping any
+    // ancestor transform/overflow/filter containing block.
+    if (ctx.open() && !this._portaled && typeof document !== "undefined") {
+      this._portalOriginParent = this.parentNode;
+      this._portalOriginNext = this.nextSibling;
+      this._portaled = true;
+      this._portalMoving = true;
+      document.body.appendChild(this);
+      this._portalMoving = false;
+    } else if (!ctx.open() && this._portaled) {
+      if (this._portalOriginParent && this._portalOriginParent.isConnected) {
+        this._portalMoving = true;
+        this._portalOriginParent.insertBefore(this, this._portalOriginNext);
+        this._portalMoving = false;
+      }
+      this._portaled = false;
+      this._portalOriginParent = null;
+      this._portalOriginNext = null;
+    }
     // ARIA: reflect id + role + data marker to the host element
     // so they apply to the same node the substrate registered.
     if (ctx.open()) {
       this.setAttribute("id", ctx.contentId);
       this.setAttribute("role", "tooltip");
       this.setAttribute("data-tooltip-content", "");
+      // Anchored positioning: fixed against the anchor rect,
+      // hidden until the first measurement completes (avoids a
+      // flash at (0, 0)).
+      const pos = this._position.state;
+      this.style.position = "fixed";
+      this.style.top = `${pos.top}px`;
+      this.style.left = `${pos.left}px`;
+      this.style.visibility = pos.ready ? "visible" : "hidden";
+      this.setAttribute("data-placement", pos.placement);
     } else {
       this.removeAttribute("id");
       this.removeAttribute("role");
       this.removeAttribute("data-tooltip-content");
+      this.style.position = "";
+      this.style.top = "";
+      this.style.left = "";
+      this.style.visibility = "";
+      this.removeAttribute("data-placement");
     }
   }
 
