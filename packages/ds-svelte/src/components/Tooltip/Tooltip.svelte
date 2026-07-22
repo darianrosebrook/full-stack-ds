@@ -1,6 +1,6 @@
 <script lang="ts">
 // @generated:start imports
-import { useTooltip, provideTooltipContext } from "./useTooltip.svelte.js";
+import { useTooltip, provideTooltipContext, provideTooltipPlacement } from "./useTooltip.svelte.js";
 // @generated:end
 // @custom:start imports
 
@@ -49,6 +49,7 @@ const surface = useTooltip({
   closeOnBlur: () => closeOnBlur,
 });
 provideTooltipContext(surface);
+provideTooltipPlacement(() => placement);
 // @generated:end
 // @generated:start classes
 const classes = $derived(

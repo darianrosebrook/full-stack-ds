@@ -425,6 +425,27 @@ export function portalsRootToBody(ir: RootPortalInput): boolean {
   return strategy !== undefined && ROOT_PORTAL_POSITIONING_STRATEGIES.has(strategy);
 }
 
+/**
+ * Whether the component's CONTENT part should be moved to the document
+ * body when the surface opens. This is the anchored-presence counterpart
+ * to `portalsRootToBody`: anchored content is positioned with
+ * `position: fixed` against viewport coordinates computed from the
+ * anchor rect, so — unlike an anchored ROOT — the content node has no
+ * in-tree positioning context to lose. Portaling it escapes ancestor
+ * stacking contexts and `overflow` clipping that would otherwise
+ * truncate the surface, while the trigger/anchor stays in place.
+ *
+ * True only when the contract both opts into a portal
+ * (`behavior.portal.enabled`) AND declares an anchored positioning
+ * strategy. Root-portal strategies are excluded (they take the
+ * `portalsRootToBody` path); contracts without a surface block portal
+ * nothing.
+ */
+export function anchoredPortalsContentToBody(ir: RootPortalInput): boolean {
+  if (ir.behavior.portal?.enabled !== true) return false;
+  return ir.surface?.positioning?.strategy === "anchored";
+}
+
 export function resolveAnchoredSurfacePolicy(
   surface: SurfacePolicyInput,
 ): AnchoredSurfacePolicy {

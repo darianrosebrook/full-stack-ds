@@ -85,8 +85,12 @@ function getContentEl(root: HTMLElement): HTMLElement | null {
   // The content host element reflects open state by setting/removing
   // its own [data-tooltip-content] attribute (and id/role). When
   // closed the attribute is absent and the host renders nothing.
-  const host = root.querySelector("fsds-tooltip-content") as HTMLElement;
-  return host.hasAttribute("data-tooltip-content") ? host : null;
+  // Queried from document (not root) because a portalled content host
+  // relocates itself to document.body while open, escaping the root
+  // subtree; document.querySelector still finds it either way.
+  void root;
+  const host = document.querySelector("fsds-tooltip-content") as HTMLElement | null;
+  return host && host.hasAttribute("data-tooltip-content") ? host : null;
 }
 
 afterEach(() => {
@@ -300,6 +304,53 @@ describe("Tooltip — accessibility", () => {
     const root = await mountTooltip({ withSlottedHost: true, defaultOpen: true });
     const results = (await axe(root)) as unknown as { violations: Array<{ id: string }> };
     expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});
+
+describe("Tooltip — anchored positioning", () => {
+  it("applies fixed positioning and a data-placement attribute to the content host when open", async () => {
+    const root = await mountTooltip({ defaultOpen: true });
+    const content = getContentEl(root)!;
+    expect(content).toBeTruthy();
+    expect(content.style.position).toBe("fixed");
+    expect(content.hasAttribute("data-placement")).toBe(true);
+  });
+
+  it("does not carry positioning styles or data-placement when closed", async () => {
+    const root = await mountTooltip();
+    const host = root.querySelector("fsds-tooltip-content") as HTMLElement;
+    expect(host.hasAttribute("data-placement")).toBe(false);
+  });
+});
+
+describe("Tooltip — content portal (FEAT-ANCHORED-SURFACE-XFW-01)", () => {
+  it("relocates the content host to document.body while open", async () => {
+    const root = await mountTooltip({ defaultOpen: true });
+    const portaled = document.body.querySelector("fsds-tooltip-content[data-tooltip-content]") as HTMLElement | null;
+    expect(portaled).toBeTruthy();
+    expect(portaled?.parentElement).toBe(document.body);
+    expect(root.contains(portaled)).toBe(false);
+  });
+
+  it("restores the content host to its original position when closed", async () => {
+    // Queried from document.body (not root.querySelector) — a
+    // portalled content host is a SIBLING of root at the body level,
+    // not a descendant, so root.querySelector would never find it.
+    const root = await mountTooltip({ defaultOpen: true });
+    const contentHost = document.body.querySelector("fsds-tooltip-content") as HTMLElement;
+    expect(contentHost).toBeTruthy();
+    expect(contentHost.parentElement).toBe(document.body);
+
+    (root as unknown as Record<string, unknown>).open = false;
+    await settle(root);
+    await settle(contentHost);
+
+    expect(contentHost.parentElement).toBe(root);
+    // Not a DIRECT child of body anymore — root itself lives under
+    // body in this fixture, so document.body.contains() would be
+    // trivially true either way; parentElement identity above is
+    // the load-bearing assertion.
+    expect(Array.from(document.body.children)).not.toContain(contentHost);
   });
 });
 // @generated:end

@@ -58,6 +58,16 @@ export abstract class SurfaceController {
     if (this.mounted) this.remount();
   }
 
+  /** Currently registered anchor node, or null before registration. */
+  getAnchor(): HTMLElement | null {
+    return this.anchor;
+  }
+
+  /** Currently registered content node, or null before registration. */
+  getContent(): HTMLElement | null {
+    return this.content;
+  }
+
   /**
    * Called by the host once it's ready to receive listener wiring.
    * Idempotent — calling twice does the right thing.

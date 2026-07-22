@@ -33,6 +33,7 @@
  */
 import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
+  anchoredPortalsContentToBody,
   isAnchoredPresenceKind,
   resolveAnchoredSurfacePolicy,
   type AnchoredSurfacePolicy,
@@ -90,6 +91,7 @@ function emitRootComponent(
   const rootTag = tagFor(name);
   const openTriggers = JSON.stringify(surface.openTriggers);
   const anchorRelation = surface.anchor?.relation ?? "describedby";
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
 
   // Policy-derived dismissal-array assembly. For each declared
   // dismissal mode:
@@ -177,6 +179,9 @@ function emitRootComponent(
     `          anchorRelation: "${anchorRelation}",`,
     `          registerAnchor: (n) => self.behavior.registerAnchor(n),`,
     `          registerContent: (n) => self.behavior.registerContent(n),`,
+    `          getAnchorNode: () => self.behavior.getAnchorNode(),`,
+    `          getContentNode: () => self.behavior.getContentNode(),`,
+    positioningEnabled ? `          getPlacement: () => self.placement,` : "",
     `        };`,
     `        return ctx;`,
     `      },`,
@@ -417,7 +422,7 @@ function emitTriggerComponent(ir: ComponentIR, _surface: SurfaceIR): string {
 
 function emitContentComponent(
   ir: ComponentIR,
-  _surface: SurfaceIR,
+  surface: SurfaceIR,
   policy: AnchoredSurfacePolicy,
 ): string {
   const name = ir.name;
@@ -439,20 +444,207 @@ function emitContentComponent(
         ``,
       ]
     : [];
+
+  // Positioning + portal are driven by the contract and are
+  // independent flags (see docs/codegen-authority.md):
+  //   - surface.positioning.strategy === "anchored" → instantiate
+  //     createAnchoredPosition against the anchor/content nodes the
+  //     surface substrate already registers, and apply fixed-position
+  //     host bindings (style + data-placement).
+  //   - anchoredPortalsContentToBody(ir) → body-append this
+  //     component's host element while open, mirroring the Dialog
+  //     root-portal idiom (ngOnInit/ngOnDestroy save/restore original
+  //     position). Portaling escapes ancestor stacking contexts and
+  //     `overflow` clipping; the anchor/trigger stays in place.
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const collision = surface.positioning?.collision ?? "flip-shift";
+  const portalsToBody = anchoredPortalsContentToBody({
+    behavior: { portal: ir.behavior.portal },
+    surface: { positioning: surface.positioning },
+  });
+
+  const positioningImportLines = positioningEnabled
+    ? [
+        `import {`,
+        `  createAnchoredPosition,`,
+        `  type CreateAnchoredPositionResult,`,
+        `} from "../../primitives/surfaces/createAnchoredPosition.js";`,
+      ]
+    : [];
+
+  const positioningFieldLines = positioningEnabled
+    ? [
+        ``,
+        `  // Positioning substrate. Fed with getters for the anchor/`,
+        `  // content nodes the surface registers and the resolved`,
+        `  // placement input; recomputed whenever open/anchor/content`,
+        `  // change via requestUpdate() below.`,
+        `  private _position: CreateAnchoredPositionResult = createAnchoredPosition({`,
+        `    anchor: () => this.ctx?.getAnchorNode() ?? null,`,
+        `    content: () => this.ctx?.getContentNode() ?? null,`,
+        `    open: () => this.isOpen(),`,
+        `    placement: () => this.ctx?.getPlacement() ?? "auto",`,
+        `    collision: () => "${collision}",`,
+        `    destroyRef: inject(DestroyRef),`,
+        `  });`,
+      ]
+    : [];
+
+  const positioningHostBindingLines = positioningEnabled
+    ? [
+        `  @HostBinding("attr.data-placement") get _dataPlacement(): string | null {`,
+        `    return this.isOpen() ? this._position.state().placement : null;`,
+        `  }`,
+        ``,
+        `  @HostBinding("style.position") get _stylePosition(): string | null {`,
+        `    return this.isOpen() ? "fixed" : null;`,
+        `  }`,
+        ``,
+        `  @HostBinding("style.top.px") get _styleTop(): number | null {`,
+        `    return this.isOpen() ? this._position.state().top : null;`,
+        `  }`,
+        ``,
+        `  @HostBinding("style.left.px") get _styleLeft(): number | null {`,
+        `    return this.isOpen() ? this._position.state().left : null;`,
+        `  }`,
+        ``,
+        `  @HostBinding("style.visibility") get _styleVisibility(): string | null {`,
+        `    if (!this.isOpen()) return null;`,
+        `    return this._position.state().ready ? "visible" : "hidden";`,
+        `  }`,
+        ``,
+      ]
+    : [];
+
+  const portalFieldLines = portalsToBody
+    ? [
+        ``,
+        `  // Body-portal bookkeeping: saved so ngOnDestroy can restore`,
+        `  // the host to its original in-tree position (Dialog root-`,
+        `  // portal precedent). Anchored content has no in-tree`,
+        `  // positioning context to lose (it's already position:`,
+        `  // fixed against viewport coordinates), so portaling only`,
+        `  // needs to escape ancestor stacking/overflow — it does not`,
+        `  // need to preserve layout flow the way a non-anchored root`,
+        `  // portal would.`,
+        `  private _portalOriginParent: Node | null = null;`,
+        `  private _portalOriginNext: Node | null = null;`,
+        `  private _portalAppended = false;`,
+      ]
+    : [];
+
+  const ngAfterViewInitBody = [
+    `  ngAfterViewInit(): void {`,
+    `    this.ctx?.registerContent(this.elRef.nativeElement);`,
+    positioningEnabled ? `    this._position.requestUpdate();` : "",
+    `  }`,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+
+  const portalSyncBody = portalsToBody
+    ? [
+        ``,
+        `  // Body-append while open; restore to the original in-tree`,
+        `  // position on close (or destroy). Runs after each`,
+        `  // \`isOpen()\`-affecting change because *ngIf on the`,
+        `  // \`<ng-container>\` only gates the projected content — the`,
+        `  // host element itself is always in the DOM for host`,
+        `  // bindings to apply to, so the portal move is host-driven`,
+        `  // here rather than template-driven.`,
+        `  private _syncPortal(): void {`,
+        `    if (typeof document === "undefined") return;`,
+        `    const host = this.elRef.nativeElement;`,
+        `    if (this.isOpen()) {`,
+        `      if (this._portalAppended) return;`,
+        `      this._portalOriginParent = host.parentNode;`,
+        `      this._portalOriginNext = host.nextSibling;`,
+        `      document.body.appendChild(host);`,
+        `      this._portalAppended = true;`,
+        `    } else {`,
+        `      if (!this._portalAppended) return;`,
+        `      if (this._portalOriginParent && this._portalOriginParent.isConnected) {`,
+        `        this._portalOriginParent.insertBefore(host, this._portalOriginNext);`,
+        `      } else {`,
+        `        host.parentNode?.removeChild(host);`,
+        `      }`,
+        `      this._portalAppended = false;`,
+        `    }`,
+        `  }`,
+      ].join("\n")
+    : "";
+
+  const ngOnDestroyBody = [
+    `  ngOnDestroy(): void {`,
+    `    this.ctx?.registerContent(null);`,
+    portalsToBody
+      ? [
+          `    if (this._portalAppended && typeof document !== "undefined") {`,
+          `      const host = this.elRef.nativeElement;`,
+          `      if (this._portalOriginParent && this._portalOriginParent.isConnected) {`,
+          `        this._portalOriginParent.insertBefore(host, this._portalOriginNext);`,
+          `      } else {`,
+          `        host.parentNode?.removeChild(host);`,
+          `      }`,
+          `      this._portalAppended = false;`,
+          `    }`,
+        ].join("\n")
+      : "",
+    `  }`,
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+
+  // isOpen() drives both the positioning recompute and the portal
+  // move. Angular's OnPush + signal-computed `isOpen` doesn't offer a
+  // template-level "value changed" hook, so we re-derive from a
+  // computed effect-free read inside the host-binding getters
+  // (positioning) and re-run the portal sync from ngDoCheck, which
+  // OnPush components still receive on signal-triggered CD runs.
+  const ngDoCheckBody =
+    positioningEnabled || portalsToBody
+      ? [
+          ``,
+          `  private _lastOpen = false;`,
+          `  ngDoCheck(): void {`,
+          `    const open = this.isOpen();`,
+          `    if (open === this._lastOpen) return;`,
+          `    this._lastOpen = open;`,
+          positioningEnabled ? `    this._position.requestUpdate();` : "",
+          portalsToBody ? `    this._syncPortal();` : "",
+          `  }`,
+        ]
+          .filter((line) => line !== "")
+          .join("\n")
+      : "";
+
+  const lifecycleInterfaces = [
+    "AfterViewInit",
+    "OnDestroy",
+    positioningEnabled || portalsToBody ? "DoCheck" : "",
+  ].filter((v) => v !== "");
+
+  const coreImportNames = [
+    "Component",
+    "ElementRef",
+    "HostBinding",
+    "AfterViewInit",
+    "OnDestroy",
+    positioningEnabled || portalsToBody ? "DoCheck" : "",
+    "inject",
+    "computed",
+    positioningEnabled ? "DestroyRef" : "",
+    "ChangeDetectionStrategy",
+  ].filter((v) => v !== "");
+
   return [
     `// @generated:start imports`,
     `import {`,
-    `  Component,`,
-    `  ElementRef,`,
-    `  HostBinding,`,
-    `  AfterViewInit,`,
-    `  OnDestroy,`,
-    `  inject,`,
-    `  computed,`,
-    `  ChangeDetectionStrategy,`,
+    ...coreImportNames.map((n) => `  ${n},`),
     `} from "@angular/core";`,
     `import { NgIf } from "@angular/common";`,
     `import { ${name}ContextToken } from "./use${name}.js";`,
+    ...positioningImportLines,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -467,7 +659,7 @@ function emitContentComponent(
     `  template: \`<ng-container *ngIf="isOpen()"><ng-content /></ng-container>\`,`,
     `  changeDetection: ChangeDetectionStrategy.OnPush,`,
     `})`,
-    `export class ${name}ContentComponent implements AfterViewInit, OnDestroy {`,
+    `export class ${name}ContentComponent implements ${lifecycleInterfaces.join(", ")} {`,
     `  private elRef = inject(ElementRef<HTMLElement>);`,
     `  protected ctx = inject(${name}ContextToken, { optional: true });`,
     ``,
@@ -478,6 +670,8 @@ function emitContentComponent(
     `  // same host element so ARIA + the data marker apply to the`,
     `  // exact node the substrate registered.`,
     `  protected isOpen = computed(() => this.ctx?.open() ?? false);`,
+    ...positioningFieldLines,
+    ...portalFieldLines,
     ``,
     `  @HostBinding("attr.id") get _id(): string | null {`,
     `    return this.isOpen() && this.ctx ? this.ctx.contentId : null;`,
@@ -488,13 +682,12 @@ function emitContentComponent(
     `    return this.isOpen() ? "" : null;`,
     `  }`,
     ``,
-    `  ngAfterViewInit(): void {`,
-    `    this.ctx?.registerContent(this.elRef.nativeElement);`,
-    `  }`,
+    ...positioningHostBindingLines,
+    ngAfterViewInitBody,
+    portalSyncBody,
+    ngDoCheckBody,
     ``,
-    `  ngOnDestroy(): void {`,
-    `    this.ctx?.registerContent(null);`,
-    `  }`,
+    ngOnDestroyBody,
     `}`,
     `// @generated:end`,
     ``,
@@ -508,14 +701,30 @@ function emitContentComponent(
 function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
   const name = ir.name;
   const anchorRelation = surface.anchor?.relation ?? "describedby";
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const placementValues = ir.variants["placement"];
+  const placementType = placementValues ? `${name}Placement` : "string";
+  // Type-only import of the placement alias from the root component
+  // file. Safe against a circular runtime import (the root component
+  // imports use${name} for values) because this is `import type` —
+  // erased entirely at compile time, no runtime module cycle.
+  const placementTypeImportLine =
+    positioningEnabled && placementValues
+      ? `import type { ${placementType} } from "./${name}.component.js";`
+      : "";
   return [
     `// @generated:start imports`,
-    `import { InjectionToken, type Signal } from "@angular/core";`,
-    `import {`,
-    `  createAnchoredSurface,`,
-    `  type CreateAnchoredSurfaceOptions,`,
-    `  type CreateAnchoredSurfaceResult,`,
-    `} from "../../primitives/surfaces/createAnchoredSurface.js";`,
+    [
+      `import { InjectionToken, type Signal } from "@angular/core";`,
+      `import {`,
+      `  createAnchoredSurface,`,
+      `  type CreateAnchoredSurfaceOptions,`,
+      `  type CreateAnchoredSurfaceResult,`,
+      `} from "../../primitives/surfaces/createAnchoredSurface.js";`,
+      placementTypeImportLine,
+    ]
+      .filter((line) => line !== "")
+      .join("\n"),
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -523,14 +732,23 @@ function emitComposable(ir: ComponentIR, surface: SurfaceIR): string {
     `// @custom:end`,
     ``,
     `// @generated:start types`,
-    `export interface ${name}ContextValue {`,
-    `  open: Signal<boolean>;`,
-    `  setOpen: (next: boolean) => void;`,
-    `  contentId: string;`,
-    `  anchorRelation: "${anchorRelation}";`,
-    `  registerAnchor: (node: HTMLElement | null) => void;`,
-    `  registerContent: (node: HTMLElement | null) => void;`,
-    `}`,
+    [
+      `export interface ${name}ContextValue {`,
+      `  open: Signal<boolean>;`,
+      `  setOpen: (next: boolean) => void;`,
+      `  contentId: string;`,
+      `  anchorRelation: "${anchorRelation}";`,
+      `  registerAnchor: (node: HTMLElement | null) => void;`,
+      `  registerContent: (node: HTMLElement | null) => void;`,
+      `  getAnchorNode: () => HTMLElement | null;`,
+      `  getContentNode: () => HTMLElement | null;`,
+      positioningEnabled
+        ? `  getPlacement: () => ${placementType} | undefined;`
+        : "",
+      `}`,
+    ]
+      .filter((line) => line !== "")
+      .join("\n"),
     `// @generated:end`,
     ``,
     `// @custom:start types`,

@@ -41,6 +41,9 @@ export type PopoverPlacement = "top" | "bottom" | "left" | "right" | "auto";
           anchorRelation: "controls-expanded",
           registerAnchor: (n) => self.behavior.registerAnchor(n),
           registerContent: (n) => self.behavior.registerContent(n),
+          getAnchorNode: () => self.behavior.getAnchorNode(),
+          getContentNode: () => self.behavior.getContentNode(),
+          getPlacement: () => self.placement,
         };
         return ctx;
       },

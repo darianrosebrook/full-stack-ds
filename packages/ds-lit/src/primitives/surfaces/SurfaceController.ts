@@ -46,6 +46,18 @@ export abstract class SurfaceController implements ReactiveController {
   protected content: HTMLElement | null = null;
   protected mounted = false;
 
+  /**
+   * Public read of the currently registered anchor node. Anchored
+   * positioning (content-part fixed-position math) needs this from
+   * outside the controller's own install/uninstall wiring — the
+   * anchor and content elements are separate custom elements in Lit's
+   * compound-component realization, so the content element learns the
+   * anchor node via the surface context rather than DOM adjacency.
+   */
+  getAnchor(): HTMLElement | null {
+    return this.anchor;
+  }
+
   constructor(
     protected readonly host: ReactiveControllerHost,
     protected readonly options: {

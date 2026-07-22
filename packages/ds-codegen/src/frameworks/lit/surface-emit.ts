@@ -44,6 +44,7 @@ import type { ComponentIR, SurfaceIR } from "../../ir.js";
 import {
   isAnchoredPresenceKind,
   resolveAnchoredSurfacePolicy,
+  anchoredPortalsContentToBody,
   type AnchoredSurfacePolicy,
   type PublicDismissalProp,
 } from "../../semantics.js";
@@ -127,6 +128,25 @@ function emitComponentFile(
     ? `export type ${name}Placement = ${placementValues.map((v) => `"${v}"`).join(" | ")};\n`
     : "";
 
+  // Positioning + portal are driven by the contract:
+  //   - surface.positioning.strategy === "anchored" → the content
+  //     custom element gets an AnchoredPositionController and applies
+  //     fixed positioning + data-placement on its own host.
+  //   - anchoredPortalsContentToBody(ir)                → the content
+  //     host relocates itself to document.body while open (mirrors
+  //     the Dialog root-portal idiom, applied to the content element
+  //     instead of the root).
+  // Both flags are independent.
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalEnabled = anchoredPortalsContentToBody(ir);
+  const collision = surface.positioning?.collision ?? "flip-shift";
+
+  const positioningImportLines = positioningEnabled
+    ? [
+        `import { AnchoredPositionController } from "../../primitives/surfaces/AnchoredPositionController.js";`,
+      ]
+    : [];
+
   return [
     `// @generated:start imports`,
     `import { LitElement, html, css, nothing, type PropertyValues } from "lit";`,
@@ -139,6 +159,7 @@ function emitComponentFile(
     `} from "../../primitives/index.js";`,
     `import { AnchoredSurfaceController } from "../../primitives/surfaces/AnchoredSurfaceController.js";`,
     `import type { SurfaceDismissalMode } from "../../primitives/surfaces/SurfaceController.js";`,
+    ...positioningImportLines,
     `// @generated:end`,
     ``,
     `// @custom:start imports`,
@@ -154,6 +175,8 @@ function emitComponentFile(
     `  controller: AnchoredSurfaceController;`,
     `  registerContent: (node: HTMLElement | null) => void;`,
     `  buildDismissal: () => readonly SurfaceDismissalMode[];`,
+    positioningEnabled ? `  getAnchor: () => HTMLElement | null;` : null,
+    positioningEnabled ? `  getPlacement: () => string | undefined;` : null,
     `}`,
     ``,
     `const ${contextName}_CTX = createCompoundContext<${name}SurfaceContext>("${name}Surface");`,
@@ -161,11 +184,20 @@ function emitComponentFile(
     `let _surfaceIdCounter = 0;`,
     `// @generated:end`,
     ``,
-    emitRootClass(ir, surface, policy, { name, cssPrefix, rootTag, contextName, placementValues }),
+    emitRootClass(ir, surface, policy, { name, cssPrefix, rootTag, contextName, placementValues, positioningEnabled }),
     ``,
     emitTriggerClass(ir, surface, { name, cssPrefix, triggerTag, contextName }),
     ``,
-    emitContentClass(ir, surface, { name, cssPrefix, contentTag, contextName, contentRole }),
+    emitContentClass(ir, surface, {
+      name,
+      cssPrefix,
+      contentTag,
+      contextName,
+      contentRole,
+      positioningEnabled,
+      portalEnabled,
+      collision,
+    }),
     ``,
     `// @generated:start define`,
     `customElements.define("${rootTag}", ${name}Element);`,
@@ -177,7 +209,9 @@ function emitComponentFile(
     ``,
     `// @custom:end`,
     ``,
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
 }
 
 interface RootCtx {
@@ -186,6 +220,7 @@ interface RootCtx {
   rootTag: string;
   contextName: string;
   placementValues: string[] | undefined;
+  positioningEnabled: boolean;
 }
 
 function emitRootClass(
@@ -194,7 +229,7 @@ function emitRootClass(
   policy: AnchoredSurfacePolicy,
   c: RootCtx,
 ): string {
-  const { name, cssPrefix, contextName, placementValues } = c;
+  const { name, cssPrefix, contextName, placementValues, positioningEnabled } = c;
 
   // Policy-derived dismissal-array assembly. For each declared
   // dismissal mode:
@@ -319,6 +354,8 @@ function emitRootClass(
     `      controller: AnchoredSurfaceController;`,
     `      registerContent: (node: HTMLElement | null) => void;`,
     `      buildDismissal: () => readonly SurfaceDismissalMode[];`,
+    positioningEnabled ? `      getAnchor: () => HTMLElement | null;` : null,
+    positioningEnabled ? `      getPlacement: () => string | undefined;` : null,
     `    }>(this, ${contextName}_CTX.key, {`,
     `      open: () => this._isOpen(),`,
     `      setOpen: (next) => this._setOpen(next),`,
@@ -329,6 +366,14 @@ function emitRootClass(
     `        this._surfaceController.setContent(node);`,
     `      },`,
     `      buildDismissal: () => this._buildDismissal(),`,
+    positioningEnabled
+      ? `      getAnchor: () => this._surfaceController.getAnchor(),`
+      : null,
+    positioningEnabled
+      ? placementValues
+        ? `      getPlacement: () => this.placement,`
+        : `      getPlacement: () => undefined,`
+      : null,
     `    });`,
     `  }`,
     ``,
@@ -501,6 +546,14 @@ interface ContentCtx {
    *  for surface kinds (e.g. popover) that should not carry a
    *  default role; in that case no role attribute is reflected. */
   contentRole: string | null;
+  /** `surface.positioning.strategy === "anchored"` — content gets
+   *  fixed positioning against the anchor rect via
+   *  AnchoredPositionController. */
+  positioningEnabled: boolean;
+  /** `anchoredPortalsContentToBody(ir)` — content host relocates
+   *  itself to document.body while open. */
+  portalEnabled: boolean;
+  collision: string;
 }
 
 function emitContentClass(
@@ -508,7 +561,15 @@ function emitContentClass(
   _surface: SurfaceIR,
   c: ContentCtx,
 ): string {
-  const { name, cssPrefix, contentRole, contextName } = c;
+  const {
+    name,
+    cssPrefix,
+    contentRole,
+    contextName,
+    positioningEnabled,
+    portalEnabled,
+    collision,
+  } = c;
   // Role-reflection branches: policy.defaultContentRole=null means
   // no role attribute is set or cleared. Popover and other
   // interactive surfaces omit role entirely.
@@ -518,15 +579,113 @@ function emitContentClass(
       : null;
   const clearRoleLine =
     contentRole !== null ? `      this.removeAttribute("role");` : null;
+
   return [
     `// @generated:start content-class`,
     `export class ${name}ContentElement extends LitElement {`,
     ...surfaceStaticStylesLine(ir),
     ``,
     `  private _ctx = new ContextConsumerController<${name}SurfaceContext>(this, ${contextName}_CTX);`,
+    `  // Context resolution walks parentElement ancestors. Once`,
+    `  // portalled, this host is a direct child of document.body and`,
+    `  // the walk to the ${name}Element provider would fail — but`,
+    `  // the resolved context's closures (open/setOpen/registerContent/`,
+    `  // getAnchor/...) all bind to the ROOT instance's \`this\`, not to`,
+    `  // DOM adjacency, so a value resolved once while still in-tree`,
+    `  // remains valid after relocation. Cache on first success.`,
+    `  private _ctxCache: ${name}SurfaceContext | null = null;`,
     `  private _registered = false;`,
+    positioningEnabled
+      ? `  private _position: AnchoredPositionController;`
+      : null,
+    portalEnabled ? `  private _portalMoving = false;` : null,
+    portalEnabled ? `  private _portaled = false;` : null,
+    portalEnabled
+      ? `  private _portalOriginParent: Node | null = null;`
+      : null,
+    portalEnabled ? `  private _portalOriginNext: Node | null = null;` : null,
+    positioningEnabled ? `` : null,
+    positioningEnabled ? `  constructor() {` : null,
+    positioningEnabled ? `    super();` : null,
+    positioningEnabled
+      ? `    this._position = new AnchoredPositionController(this, {`
+      : null,
+    positioningEnabled
+      ? `      anchor: () => this._ctxOrNull()?.getAnchor() ?? null,`
+      : null,
+    positioningEnabled ? `      content: () => this,` : null,
+    positioningEnabled
+      ? `      open: () => this._ctxOrNull()?.open() ?? false,`
+      : null,
+    positioningEnabled
+      ? `      placement: () => (this._ctxOrNull()?.getPlacement() as "top" | "bottom" | "left" | "right" | undefined) ?? "auto",`
+      : null,
+    positioningEnabled ? `      collision: () => "${collision}",` : null,
+    positioningEnabled
+      ? `      onChange: () => this.requestUpdate(),`
+      : null,
+    positioningEnabled ? `    });` : null,
+    positioningEnabled ? `  }` : null,
     ``,
+    portalEnabled
+      ? `  // The transient disconnect/reconnect pair fired by \`document.body.appendChild(this)\``
+      : null,
+    portalEnabled
+      ? `  // below (moving an already-connected element re-fires both native callbacks`
+      : null,
+    portalEnabled
+      ? `  // synchronously) must NOT reach Lit's own connectedCallback/disconnectedCallback —`
+      : null,
+    portalEnabled
+      ? `  // those re-run every ReactiveController's hostConnected/hostDisconnected, which`
+      : null,
+    portalEnabled
+      ? `  // for AnchoredPositionController and ContextConsumerController is real stateful`
+      : null,
+    portalEnabled
+      ? `  // reconcile/subscribe work, not a no-op. Left unguarded, a move from inside`
+      : null,
+    portalEnabled
+      ? `  // updated() would re-enter that reconcile synchronously mid-render and could`
+      : null,
+    portalEnabled
+      ? `  // schedule a redundant update that outlives the current open/close transition.`
+      : null,
+    portalEnabled ? `  override connectedCallback(): void {` : null,
+    portalEnabled ? `    if (this._portalMoving) return;` : null,
+    portalEnabled ? `    super.connectedCallback();` : null,
+    portalEnabled ? `  }` : null,
+    portalEnabled ? `` : null,
     `  override disconnectedCallback(): void {`,
+    portalEnabled ? `    if (this._portalMoving) return;` : null,
+    portalEnabled
+      ? `    // Genuine teardown (not a transient portal move): the element is`
+      : null,
+    portalEnabled
+      ? `    // being permanently removed from the document (e.g. the consumer`
+      : null,
+    portalEnabled
+      ? `    // removed the root, or cleared an ancestor's innerHTML), so there`
+      : null,
+    portalEnabled
+      ? `    // is nothing to relocate back to — only reset portal bookkeeping.`
+      : null,
+    portalEnabled
+      ? `    // Reinserting into \`_portalOriginParent\` here would be actively`
+      : null,
+    portalEnabled
+      ? `    // harmful: that parent may be mid-removal in the very same`
+      : null,
+    portalEnabled
+      ? `    // operation, and insertBefore into a still-connected node would`
+      : null,
+    portalEnabled
+      ? `    // synchronously re-fire connectedCallback before this callback`
+      : null,
+    portalEnabled ? `    // has finished tearing down.` : null,
+    portalEnabled ? `    this._portaled = false;` : null,
+    portalEnabled ? `    this._portalOriginParent = null;` : null,
+    portalEnabled ? `    this._portalOriginNext = null;` : null,
     `    if (this._registered) {`,
     `      this._ctxOrNull()?.registerContent(null);`,
     `      this._registered = false;`,
@@ -535,8 +694,10 @@ function emitContentClass(
     `  }`,
     ``,
     `  private _ctxOrNull(): ${name}SurfaceContext | null {`,
+    `    if (this._ctxCache) return this._ctxCache;`,
     `    try {`,
-    `      return this._ctx.value;`,
+    `      this._ctxCache = this._ctx.value;`,
+    `      return this._ctxCache;`,
     `    } catch {`,
     `      return null;`,
     `    }`,
@@ -545,6 +706,13 @@ function emitContentClass(
     `  override updated(): void {`,
     `    const ctx = this._ctxOrNull();`,
     `    if (!ctx) return;`,
+    `    // Lit does not cancel an already-scheduled update when the`,
+    `    // host disconnects mid-flight; a stale updated() call landing`,
+    `    // after a genuine disconnectedCallback must be a no-op — in`,
+    `    // particular it must NOT re-portal this element to`,
+    `    // document.body, which would resurrect an element that has`,
+    `    // already torn down its registration and controllers.`,
+    `    if (!this.isConnected) return;`,
     `    // Register the host element itself as the content node for`,
     `    // substrate purposes. The substrate uses content.contains(node)`,
     `    // for grace-path checks; if we registered the inner <div>`,
@@ -556,16 +724,61 @@ function emitContentClass(
     `      this._registered = true;`,
     `      ctx.registerContent(this);`,
     `    }`,
+    portalEnabled ? `    // FEAT-ANCHORED-SURFACE-XFW-01: relocate the content HOST to` : null,
+    portalEnabled ? `    // document.body while open, mirroring the Dialog root-portal` : null,
+    portalEnabled ? `    // idiom (see component-source.ts) but applied to the content` : null,
+    portalEnabled ? `    // part instead of the whole component — the shadow root (and` : null,
+    portalEnabled ? `    // its scoped styles) travels with the host, escaping any` : null,
+    portalEnabled ? `    // ancestor transform/overflow/filter containing block.` : null,
+    portalEnabled ? `    if (ctx.open() && !this._portaled && typeof document !== "undefined") {` : null,
+    portalEnabled ? `      this._portalOriginParent = this.parentNode;` : null,
+    portalEnabled ? `      this._portalOriginNext = this.nextSibling;` : null,
+    portalEnabled ? `      this._portaled = true;` : null,
+    portalEnabled ? `      this._portalMoving = true;` : null,
+    portalEnabled ? `      document.body.appendChild(this);` : null,
+    portalEnabled ? `      this._portalMoving = false;` : null,
+    portalEnabled ? `    } else if (!ctx.open() && this._portaled) {` : null,
+    portalEnabled ? `      if (this._portalOriginParent && this._portalOriginParent.isConnected) {` : null,
+    portalEnabled ? `        this._portalMoving = true;` : null,
+    portalEnabled ? `        this._portalOriginParent.insertBefore(this, this._portalOriginNext);` : null,
+    portalEnabled ? `        this._portalMoving = false;` : null,
+    portalEnabled ? `      }` : null,
+    portalEnabled ? `      this._portaled = false;` : null,
+    portalEnabled ? `      this._portalOriginParent = null;` : null,
+    portalEnabled ? `      this._portalOriginNext = null;` : null,
+    portalEnabled ? `    }` : null,
     `    // ARIA: reflect id + role + data marker to the host element`,
     `    // so they apply to the same node the substrate registered.`,
     `    if (ctx.open()) {`,
     `      this.setAttribute("id", ctx.contentId);`,
     setRoleLine,
     `      this.setAttribute("data-${cssPrefix}-content", "");`,
+    positioningEnabled
+      ? `      // Anchored positioning: fixed against the anchor rect,`
+      : null,
+    positioningEnabled
+      ? `      // hidden until the first measurement completes (avoids a`
+      : null,
+    positioningEnabled ? `      // flash at (0, 0)).` : null,
+    positioningEnabled ? `      const pos = this._position.state;` : null,
+    positioningEnabled ? `      this.style.position = "fixed";` : null,
+    positioningEnabled ? `      this.style.top = \`\${pos.top}px\`;` : null,
+    positioningEnabled ? `      this.style.left = \`\${pos.left}px\`;` : null,
+    positioningEnabled
+      ? `      this.style.visibility = pos.ready ? "visible" : "hidden";`
+      : null,
+    positioningEnabled
+      ? `      this.setAttribute("data-placement", pos.placement);`
+      : null,
     `    } else {`,
     `      this.removeAttribute("id");`,
     clearRoleLine,
     `      this.removeAttribute("data-${cssPrefix}-content");`,
+    positioningEnabled ? `      this.style.position = "";` : null,
+    positioningEnabled ? `      this.style.top = "";` : null,
+    positioningEnabled ? `      this.style.left = "";` : null,
+    positioningEnabled ? `      this.style.visibility = "";` : null,
+    positioningEnabled ? `      this.removeAttribute("data-placement");` : null,
     `    }`,
     `  }`,
     ``,

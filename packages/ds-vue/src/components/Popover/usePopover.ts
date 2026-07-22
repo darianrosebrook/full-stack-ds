@@ -27,6 +27,9 @@ export interface PopoverContextValue {
   registerContent: SurfaceRefCallback;
   getTriggerHandlers: () => SurfaceTriggerHandlers;
   triggerProps: ComputedRef<SurfaceTriggerProps>;
+  anchorEl: ComputedRef<HTMLElement | null>;
+  contentEl: ComputedRef<HTMLElement | null>;
+  placement: ComputedRef<string | undefined>;
 }
 // @generated:end
 

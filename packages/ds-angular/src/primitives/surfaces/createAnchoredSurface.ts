@@ -43,6 +43,12 @@ export interface CreateAnchoredSurfaceResult {
   /** Force re-install of listeners. Called by the root when reactive
    *  options (closeOnEscape/closeOnBlur) change. */
   requestRemount: () => void;
+  /** Currently registered anchor node, or null before registration.
+   *  Consumed by anchored-positioning wiring (createAnchoredPosition). */
+  getAnchorNode: () => HTMLElement | null;
+  /** Currently registered content node, or null before registration.
+   *  Consumed by anchored-positioning wiring (createAnchoredPosition). */
+  getContentNode: () => HTMLElement | null;
 }
 
 let surfaceIdCounter = 0;
@@ -107,5 +113,7 @@ export function createAnchoredSurface(
     registerAnchor,
     registerContent,
     requestRemount,
+    getAnchorNode: () => controller.getAnchor(),
+    getContentNode: () => controller.getContent(),
   };
 }

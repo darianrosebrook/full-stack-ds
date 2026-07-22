@@ -10,7 +10,7 @@
  * Stack: Jest + jest-preset-angular + TestBed. Native event dispatch.
  */
 import type { ComponentIR } from "../../ir.js";
-import { isAnchoredPresenceKind } from "../../semantics.js";
+import { anchoredPortalsContentToBody, isAnchoredPresenceKind } from "../../semantics.js";
 
 export function generateAngularSurfaceTest(ir: ComponentIR): string {
   const surface = ir.surface;
@@ -45,9 +45,15 @@ function emitTooltipTests(ir: ComponentIR): string {
   const rootTag = `fsds-${kebab(name)}`;
   const triggerTag = `${rootTag}-trigger`;
   const contentTag = `${rootTag}-content`;
+  const surface = ir.surface!;
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalsToBody = anchoredPortalsContentToBody({
+    behavior: { portal: ir.behavior.portal },
+    surface: { positioning: surface.positioning },
+  });
 
   const importsBody = [
-    `import { describe, expect, it, beforeEach, jest } from "@jest/globals";`,
+    `import { describe, expect, it, beforeEach, afterEach, jest } from "@jest/globals";`,
     `import { Component } from "@angular/core";`,
     `import { TestBed } from "@angular/core/testing";`,
     `import { ${name}Component } from "../${name}.component";`,
@@ -87,12 +93,26 @@ function getAnchor(host: HTMLElement, adopted: boolean): HTMLElement {
 }
 
 function getContentEl(host: HTMLElement): HTMLElement | null {
-  const el = host.querySelector("[data-testid='content']") as HTMLElement | null;
+  // Portaled content escapes the fixture root (moved to document.body
+  // by the content component's body-append wiring while open), so we
+  // must also check document.body — an in-tree-only query would miss
+  // it once the portal move has run.
+  const el = (host.querySelector("[data-testid='content']") ??
+    document.body.querySelector("[data-testid='content']")) as HTMLElement | null;
   return el?.hasAttribute("data-${cssPrefix}-content") ? el : null;
 }
 
 beforeEach(() => {
   TestBed.configureTestingModule({ imports: [TooltipFixture] });
+});
+
+afterEach(() => {
+  // Portaled content that a test left open moves its host to
+  // document.body; TestBed teardown does NOT remove it (proven by
+  // Dialog's own portal test, which does explicit fixture.destroy() +
+  // manual node cleanup). Sweep stray body children the fixture may
+  // have appended so tests don't leak DOM into later suites.
+  document.body.querySelectorAll("[data-testid='content']").forEach((n) => n.remove());
 });
 
 describe("${name} — compound API surface (default-host)", () => {
@@ -324,7 +344,14 @@ describe("${name} — directive-based host adoption", () => {
     expect(surfaceSpy).not.toHaveBeenCalled();
     expect(getContentEl(host)).toBeNull();
   });
-});`;
+});${emitPositioningAndPortalTests({
+    name,
+    cssPrefix,
+    positioningEnabled,
+    portalsToBody,
+    openExpr:
+      'getAnchor(fixture.nativeElement as HTMLElement, false).dispatchEvent(new PointerEvent("pointerenter", { bubbles: true }))',
+  })}`;
 
   return [
     `// @generated:start imports`,
@@ -392,9 +419,15 @@ function emitPopoverTests(ir: ComponentIR): string {
   const rootTag = `fsds-${kebab(name)}`;
   const triggerTag = `${rootTag}-trigger`;
   const contentTag = `${rootTag}-content`;
+  const surface = ir.surface!;
+  const positioningEnabled = surface.positioning?.strategy === "anchored";
+  const portalsToBody = anchoredPortalsContentToBody({
+    behavior: { portal: ir.behavior.portal },
+    surface: { positioning: surface.positioning },
+  });
 
   const importsBody = [
-    `import { describe, expect, it, beforeEach, jest } from "@jest/globals";`,
+    `import { describe, expect, it, beforeEach, afterEach, jest } from "@jest/globals";`,
     `import { Component } from "@angular/core";`,
     `import { TestBed } from "@angular/core/testing";`,
     `import { ${name}Component } from "../${name}.component";`,
@@ -425,12 +458,26 @@ function getAnchor(host: HTMLElement, adopted: boolean): HTMLElement {
 }
 
 function getContentEl(host: HTMLElement): HTMLElement | null {
-  const el = host.querySelector("[data-testid='content']") as HTMLElement | null;
+  // Portaled content escapes the fixture root (moved to document.body
+  // by the content component's body-append wiring while open), so we
+  // must also check document.body — an in-tree-only query would miss
+  // it once the portal move has run.
+  const el = (host.querySelector("[data-testid='content']") ??
+    document.body.querySelector("[data-testid='content']")) as HTMLElement | null;
   return el?.hasAttribute("data-${cssPrefix}-content") ? el : null;
 }
 
 beforeEach(() => {
   TestBed.configureTestingModule({ imports: [PopoverFixture] });
+});
+
+afterEach(() => {
+  // Portaled content that a test left open moves its host to
+  // document.body; TestBed teardown does NOT remove it (proven by
+  // Dialog's own portal test, which does explicit fixture.destroy() +
+  // manual node cleanup). Sweep stray body children the fixture may
+  // have appended so tests don't leak DOM into later suites.
+  document.body.querySelectorAll("[data-testid='content']").forEach((n) => n.remove());
 });
 
 describe("${name} — compound API surface (default-host)", () => {
@@ -672,7 +719,14 @@ describe("${name} — directive-based host adoption", () => {
     expect(surfaceSpy).not.toHaveBeenCalled();
     expect(getContentEl(host)).toBeNull();
   });
-});`;
+});${emitPositioningAndPortalTests({
+    name,
+    cssPrefix,
+    positioningEnabled,
+    portalsToBody,
+    openExpr:
+      'getAnchor(fixture.nativeElement as HTMLElement, false).dispatchEvent(new MouseEvent("click", { bubbles: true }))',
+  })}`;
 
   return [
     `// @generated:start imports`,
@@ -733,4 +787,112 @@ describe("${name} — directive-based host adoption", () => {
     `// @custom:end`,
     ``,
   ].join("\n");
+}
+
+interface PositioningAndPortalTestsArgs {
+  name: string;
+  cssPrefix: string;
+  positioningEnabled: boolean;
+  portalsToBody: boolean;
+  /** JS expression (string) that dispatches the default-host open-trigger event. */
+  openExpr: string;
+}
+
+/**
+ * Shared positioning + portal test block appended to both the
+ * Tooltip and Popover generated suites. jsdom cannot measure real
+ * layout (getBoundingClientRect returns all-zero rects and has no
+ * layout engine backing it), so these tests assert PRESENCE and
+ * ATTRIBUTES only (data-placement exists, style contains
+ * "position: fixed", portaled host lives under document.body) — never
+ * coordinate values. Coordinate math is pinned separately in
+ * createAnchoredPosition's own unit tests against mocked rects.
+ */
+function emitPositioningAndPortalTests(args: PositioningAndPortalTestsArgs): string {
+  const { name, cssPrefix, positioningEnabled, portalsToBody } = args;
+  if (!positioningEnabled && !portalsToBody) return "";
+
+  const positioningTests = positioningEnabled
+    ? `
+  it("applies position: fixed and a data-placement attribute to the content host once open", async () => {
+    const fixture = mount();
+    ${args.openExpr};
+    await settle();
+    fixture.detectChanges();
+    const content = getContentEl(fixture.nativeElement as HTMLElement)!;
+    expect(content).toBeTruthy();
+    expect(content.style.position).toBe("fixed");
+    expect(content.hasAttribute("data-placement")).toBe(true);
+    expect(["top", "bottom", "left", "right"]).toContain(content.getAttribute("data-placement"));
+  });
+
+  it("does not carry position/data-placement while closed", () => {
+    const fixture = mount();
+    const host = fixture.nativeElement as HTMLElement;
+    expect(getContentEl(host)).toBeNull();
+  });`
+    : "";
+
+  const portalTests = portalsToBody
+    ? `
+  it("moves the content host to document.body while open", async () => {
+    const fixture = mount();
+    const host = fixture.nativeElement as HTMLElement;
+    ${args.openExpr};
+    await settle();
+    fixture.detectChanges();
+    const content = document.body.querySelector("[data-testid='content']") as HTMLElement | null;
+    expect(content).toBeTruthy();
+    expect(content!.hasAttribute("data-${cssPrefix}-content")).toBe(true);
+    expect(host.contains(content)).toBe(false);
+    expect(document.body.contains(content)).toBe(true);
+  });
+
+  it("restores the content host to its original in-tree position (not a direct child of body) on close", async () => {
+    // jest-preset-angular attaches the fixture root to document.body,
+    // so "restored" content is still technically under body (via the
+    // fixture's own tree) — the load-bearing assertion is that it is
+    // no longer a DIRECT child of body (the portal-appended shape)
+    // and is back inside the surface's own host element.
+    const fixture = mount((c) => { c.defaultOpen = true; });
+    const host = fixture.nativeElement as HTMLElement;
+    const contentWhileOpen = getContentEl(host);
+    // Confirm it portaled first: a direct child of body, outside host.
+    expect(contentWhileOpen).not.toBeNull();
+    expect(contentWhileOpen!.parentElement).toBe(document.body);
+    expect(host.contains(contentWhileOpen)).toBe(false);
+
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    await settle();
+    fixture.detectChanges();
+
+    // Closed: the content host element (data-testid persists — it's a
+    // static template attribute, not open-state-reflected) is back
+    // under the surface root, no longer a direct child of body.
+    const contentAfterClose = document.body.querySelector("[data-testid='content']") as HTMLElement | null;
+    expect(contentAfterClose).not.toBeNull();
+    expect(contentAfterClose!.parentElement).not.toBe(document.body);
+    expect(host.contains(contentAfterClose)).toBe(true);
+  });
+
+  it("removing the fixture while open restores the content host instead of leaving it appended directly to document.body", async () => {
+    const fixture = mount((c) => { c.defaultOpen = true; });
+    const contentWhileOpen = document.body.querySelector("[data-testid='content']") as HTMLElement | null;
+    expect(contentWhileOpen).not.toBeNull();
+    expect(contentWhileOpen!.parentElement).toBe(document.body);
+    fixture.destroy();
+    // ngOnDestroy restores the content host to its original parent
+    // (the surface root's own template tree) rather than leaving it
+    // appended directly to body — even though Angular's TestBed does
+    // not detach the fixture's native element from body on destroy().
+    const contentAfterDestroy = document.body.querySelector("[data-testid='content']") as HTMLElement | null;
+    expect(contentAfterDestroy).not.toBeNull();
+    expect(contentAfterDestroy!.parentElement).not.toBe(document.body);
+  });`
+    : "";
+
+  return `
+
+describe("${name} — anchored positioning + portal (FEAT-ANCHORED-SURFACE-XFW-01)", () => {${positioningTests}${portalTests}
+});`;
 }

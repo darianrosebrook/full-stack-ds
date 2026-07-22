@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { defineComponent, h } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
@@ -35,17 +35,29 @@ function mountDefault(rootProps: Record<string, unknown> = {}) {
   });
 }
 
+// Content is teleported to document.body when open (anchoredPortalsContentToBody),
+// so @vue/test-utils' `wrapper` never contains it — resolve from document.body.
+function findContent() {
+  return { exists: () => document.body.querySelector("[data-testid='content']") !== null,
+    attributes: (key: string) => document.body.querySelector("[data-testid='content']")?.getAttribute(key) ?? undefined,
+    element: document.body.querySelector("[data-testid='content']") as Element };
+}
+
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+
 describe("Tooltip — compound API surface", () => {
   it("renders the trigger but not the content when closed", () => {
     const wrapper = mountDefault();
     expect(wrapper.find("[data-testid='trigger']").exists()).toBe(true);
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
   it("renders the content when defaultOpen={true}", () => {
     const wrapper = mountDefault({ defaultOpen: true });
-    const content = wrapper.find("[data-testid='content']");
+    const content = findContent();
     expect(content.exists()).toBe(true);
     expect(content.attributes("role")).toBe("tooltip");
     wrapper.unmount();
@@ -54,14 +66,14 @@ describe("Tooltip — compound API surface", () => {
   it("opens on pointerenter (hover) over the trigger", async () => {
     const wrapper = mountDefault();
     await wrapper.find("[data-testid='trigger']").trigger("pointerenter");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("opens on focus over the trigger", async () => {
     const wrapper = mountDefault();
     await wrapper.find("[data-testid='trigger']").trigger("focus");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -70,7 +82,7 @@ describe("Tooltip — compound API surface", () => {
     const trigger = wrapper.find("[data-testid='trigger']");
     trigger.element.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true, relatedTarget: document.body }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
@@ -78,7 +90,7 @@ describe("Tooltip — compound API surface", () => {
     const wrapper = mountDefault({ defaultOpen: true });
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
@@ -95,14 +107,14 @@ describe("Tooltip — compound API surface", () => {
       }),
     );
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
   it("wires aria-describedby from trigger to content when open", () => {
     const wrapper = mountDefault({ defaultOpen: true });
     const trigger = wrapper.find("[data-testid='trigger']");
-    const content = wrapper.find("[data-testid='content']");
+    const content = findContent();
     const id = content.attributes("id");
     expect(id).toBeTruthy();
     expect(trigger.attributes("aria-describedby")).toBe(id);
@@ -127,7 +139,7 @@ describe("Tooltip — compound API surface", () => {
   it("respects disabled — pointerenter does not open", async () => {
     const wrapper = mountDefault({ disabled: true });
     await wrapper.find("[data-testid='trigger']").trigger("pointerenter");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
@@ -142,19 +154,19 @@ describe("Tooltip — compound API surface", () => {
   it("controlled open prop overrides internal state", async () => {
     const wrapper = mountDefault({ open: false });
     await wrapper.find("[data-testid='trigger']").trigger("pointerenter");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     await wrapper.setProps({ tooltipProps: { open: true } });
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("pointerleave INTO content does not close (grace path)", async () => {
     const wrapper = mountDefault({ defaultOpen: true });
     const trigger = wrapper.find("[data-testid='trigger']");
-    const content = wrapper.find("[data-testid='content']");
+    const content = findContent();
     trigger.element.dispatchEvent(new PointerEvent("pointerleave", { bubbles: true, relatedTarget: content.element }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -162,7 +174,7 @@ describe("Tooltip — compound API surface", () => {
     const wrapper = mountDefault({ defaultOpen: true, closeOnEscape: false });
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -175,7 +187,7 @@ describe("Tooltip — compound API surface", () => {
       }),
     );
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -245,14 +257,14 @@ describe("Tooltip — slot-props host adoption", () => {
   it("asChild opens on pointerenter over the adopted child", async () => {
     const wrapper = mountAsChild();
     await wrapper.find("[data-testid='trigger']").trigger("pointerenter");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("asChild opens on focus over the adopted child", async () => {
     const wrapper = mountAsChild();
     await wrapper.find("[data-testid='trigger']").trigger("focus");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 

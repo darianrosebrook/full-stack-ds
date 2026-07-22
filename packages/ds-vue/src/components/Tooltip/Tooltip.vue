@@ -52,6 +52,9 @@ provideTooltipContext({
   registerContent: surface.registerContent,
   getTriggerHandlers: surface.getTriggerHandlers,
   triggerProps: surface.triggerProps,
+  anchorEl: surface.anchorEl,
+  contentEl: surface.contentEl,
+  placement: computed(() => props.placement),
 });
 // @generated:end
 // @generated:start classes

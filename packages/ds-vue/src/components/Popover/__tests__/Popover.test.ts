@@ -1,5 +1,5 @@
 // @generated:start imports
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { defineComponent, h } from "vue";
 import { mount } from "@vue/test-utils";
 import { axe } from "vitest-axe";
@@ -35,31 +35,43 @@ function mountDefault(rootProps: Record<string, unknown> = {}) {
   });
 }
 
+// Content is teleported to document.body when open (anchoredPortalsContentToBody),
+// so @vue/test-utils' `wrapper` never contains it — resolve from document.body.
+function findContent() {
+  return { exists: () => document.body.querySelector("[data-testid='content']") !== null,
+    attributes: (key: string) => document.body.querySelector("[data-testid='content']")?.getAttribute(key) ?? undefined,
+    element: document.body.querySelector("[data-testid='content']") as Element };
+}
+
+afterEach(() => {
+  document.body.innerHTML = "";
+});
+
 describe("Popover — compound API surface", () => {
   it("renders the trigger but not the content when closed", () => {
     const wrapper = mountDefault();
     expect(wrapper.find("[data-testid='trigger']").exists()).toBe(true);
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
   it("renders the content when defaultOpen={true}", () => {
     const wrapper = mountDefault({ defaultOpen: true });
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("opens on click of the trigger", async () => {
     const wrapper = mountDefault();
     await wrapper.find("[data-testid='trigger']").trigger("click");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("toggles closed on a second click of the trigger", async () => {
     const wrapper = mountDefault({ defaultOpen: true });
     await wrapper.find("[data-testid='trigger']").trigger("click");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
@@ -67,14 +79,14 @@ describe("Popover — compound API surface", () => {
     const wrapper = mountDefault({ defaultOpen: true });
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
   it("wires aria-controls + aria-expanded on the trigger", () => {
     const wrapper = mountDefault({ defaultOpen: true });
     const trigger = wrapper.find("[data-testid='trigger']");
-    const content = wrapper.find("[data-testid='content']");
+    const content = findContent();
     const id = content.attributes("id");
     expect(id).toBeTruthy();
     expect(trigger.attributes("aria-controls")).toBe(id);
@@ -100,7 +112,7 @@ describe("Popover — compound API surface", () => {
   it("respects disabled — click does not open", async () => {
     const wrapper = mountDefault({ disabled: true });
     await wrapper.find("[data-testid='trigger']").trigger("click");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     wrapper.unmount();
   });
 
@@ -150,7 +162,7 @@ describe("Popover — slot-props host adoption", () => {
     });
     const wrapper = mount(Host, { attachTo: document.body });
     await wrapper.find("[data-testid='trigger']").trigger("click");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -197,14 +209,20 @@ describe("Popover — accessibility", () => {
 // (boundary-focusout in Vue substrate) works end-to-end for
 // Popover. Lives in @custom because these behaviors are anchored
 // to the popover surface shape, not kind-agnostic scaffolding.
+//
+// FEAT-ANCHORED-SURFACE-XFW-01: Popover content is now teleported to
+// document.body when open (anchoredPortalsContentToBody), so
+// @vue/test-utils' `wrapper` no longer contains the content node.
+// All content lookups below resolve via `findContent()` (defined in
+// the generated block above) instead of `wrapper.find(...)`.
 
 describe("Popover — controlled mode", () => {
   it("open prop overrides internal state across re-render", async () => {
     const wrapper = mountDefault({ open: false });
     await wrapper.find("[data-testid='trigger']").trigger("click");
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     await wrapper.setProps({ popoverProps: { open: true } });
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -213,7 +231,7 @@ describe("Popover — controlled mode", () => {
     const wrapper = mountDefault({ open: true, onOpenChange: spy });
     await wrapper.find("[data-testid='trigger']").trigger("click");
     expect(spy).toHaveBeenCalledWith(false);
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 });
@@ -226,7 +244,7 @@ describe("Popover — outside-click dismissal", () => {
     document.body.appendChild(outside);
     outside.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     outside.remove();
     wrapper.unmount();
   });
@@ -237,17 +255,17 @@ describe("Popover — outside-click dismissal", () => {
       new MouseEvent("mousedown", { bubbles: true, cancelable: true }),
     );
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("does NOT close on mousedown inside the content", async () => {
     const wrapper = mountDefault({ defaultOpen: true });
-    wrapper.find("[data-testid='content']").element.dispatchEvent(
+    findContent().element.dispatchEvent(
       new MouseEvent("mousedown", { bubbles: true, cancelable: true }),
     );
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -257,7 +275,7 @@ describe("Popover — outside-click dismissal", () => {
     document.body.appendChild(outside);
     outside.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     outside.remove();
     wrapper.unmount();
   });
@@ -277,20 +295,20 @@ describe("Popover — boundary focus dismissal (F-3B-1-A substrate)", () => {
   it("stays open when focus moves trigger -> content", async () => {
     const wrapper = mountDefault({ defaultOpen: true });
     const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
-    const content = wrapper.find("[data-testid='content']").element as HTMLElement;
+    const content = findContent().element as HTMLElement;
     dispatchFocusOut(trigger, content);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
   it("stays open when focus moves content -> trigger", async () => {
     const wrapper = mountDefault({ defaultOpen: true });
     const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
-    const content = wrapper.find("[data-testid='content']").element as HTMLElement;
+    const content = findContent().element as HTMLElement;
     dispatchFocusOut(content, trigger);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 
@@ -298,10 +316,10 @@ describe("Popover — boundary focus dismissal (F-3B-1-A substrate)", () => {
     const wrapper = mountDefault({ defaultOpen: true });
     const outside = document.createElement("button");
     document.body.appendChild(outside);
-    const content = wrapper.find("[data-testid='content']").element as HTMLElement;
+    const content = findContent().element as HTMLElement;
     dispatchFocusOut(content, outside);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     outside.remove();
     wrapper.unmount();
   });
@@ -313,7 +331,7 @@ describe("Popover — boundary focus dismissal (F-3B-1-A substrate)", () => {
     const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
     dispatchFocusOut(trigger, outside);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(false);
+    expect(findContent().exists()).toBe(false);
     outside.remove();
     wrapper.unmount();
   });
@@ -325,7 +343,7 @@ describe("Popover — boundary focus dismissal (F-3B-1-A substrate)", () => {
     const trigger = wrapper.find("[data-testid='trigger']").element as HTMLElement;
     dispatchFocusOut(trigger, outside);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     outside.remove();
     wrapper.unmount();
   });
@@ -336,7 +354,7 @@ describe("Popover — closeOnEscape prop wiring", () => {
     const wrapper = mountDefault({ defaultOpen: true, closeOnEscape: false });
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("[data-testid='content']").exists()).toBe(true);
+    expect(findContent().exists()).toBe(true);
     wrapper.unmount();
   });
 });

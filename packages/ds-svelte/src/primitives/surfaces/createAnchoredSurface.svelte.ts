@@ -119,6 +119,12 @@ export interface CreateAnchoredSurfaceResult {
    *  composes `triggerProps` onto their own element via {...props}. */
   registerAnchorRefOnly: (node: HTMLElement | null) => void;
   registerContent: (node: HTMLElement | null) => void;
+  /** Reactive getter for the current anchor node (or null). Positioning-
+   *  aware consumers (createAnchoredPosition) read this to track anchor
+   *  identity changes. */
+  anchorEl: () => HTMLElement | null;
+  /** Reactive getter for the current content node (or null). */
+  contentEl: () => HTMLElement | null;
   /** Returns Svelte-shaped handlers gated by openTriggers/dismissal.
    *  Used by the snippet adoption path. */
   getTriggerHandlers: () => SurfaceTriggerHandlers;
@@ -163,8 +169,11 @@ export function createAnchoredSurface(
   let handlerMode: boolean | null = null;
   let controller: AnchoredSurfaceController | null = null;
   let teardown = false;
-  let anchorNode: HTMLElement | null = null;
-  let contentNode: HTMLElement | null = null;
+  // $state so positioning-aware consumers (createAnchoredPosition) can
+  // track node identity reactively via the exposed getters below —
+  // mirrors React's useState-backed anchorEl/contentEl context values.
+  let anchorNode: HTMLElement | null = $state(null);
+  let contentNode: HTMLElement | null = $state(null);
 
   function buildController(modeHandler: boolean): AnchoredSurfaceController {
     const controllerOptions: AnchoredSurfaceControllerOptions = {
@@ -320,6 +329,8 @@ export function createAnchoredSurface(
     registerAnchor,
     registerAnchorRefOnly,
     registerContent,
+    anchorEl: () => anchorNode,
+    contentEl: () => contentNode,
     getTriggerHandlers,
     getTriggerProps,
   };
