@@ -258,7 +258,7 @@ export class SelectElement extends LitElement {
     ` : nothing}
     <div class=${'select__options'}>
       ${((this.options ?? [{"value":"alpha","label":"Alpha"},{"value":"beta","label":"Beta"},{"value":"gamma","label":"Gamma"}])).map((item, index) => html`
-      <div class=${'select__option'} role="option" aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value}>
+      <div class=${'select__option'} role="option" @click=${() => this.behavior.setSelection(item.value)} aria-selected=${((Array.isArray(this.behavior.selection) ? this.behavior.selection.includes(item.value) : item.value === this.behavior.selection)) ? 'true' : 'false'} data-value=${item.value}>
         <span>${item.label}</span>
       </div>
       `)}

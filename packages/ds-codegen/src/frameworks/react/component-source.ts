@@ -2676,6 +2676,19 @@ function renderReactBinding(
       }
       return `() => ${setter}(${ch.name})`;
     }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: invoke the channel's setter WITH the
+      // per-item payload. The setter is the `set<Channel>` closure the hook
+      // returns; the argument goes through the same walker (path-aware) so
+      // `iter:item.value` lowers to the in-scope `item.value`. This replaces
+      // the self-assign no-op a bare non-boolean channel-click produced.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const setter = `set${capitalize(ch.name)}`;
+      const argExpr = renderReactBinding("__channel_call_arg__", expr.arg, ctx);
+      if (argExpr === null) return null;
+      return `() => ${setter}(${argExpr})`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: lower each operator to the
       // canonical JS form. Operand expressions go through the same

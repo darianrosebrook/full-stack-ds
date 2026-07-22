@@ -2016,6 +2016,10 @@ function renderSvelteTextChildExpression(
       }
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; rejected in
+      // content position by the IR validator. Null keeps the switch exhaustive.
+      return null;
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: defensive. Validator rejects
       // predicates in content position; this branch keeps the switch
@@ -2060,6 +2064,10 @@ function renderSvelteBindingValue(
       }
       return null;
     }
+    case "channelCall":
+      // FEAT-BINDING-CALL-WITH-ARG-01: event-position only; produces a
+      // `() => …` handler, not a value. The IR rejects it in value positions.
+      return null;
     case "predicate":
       // BINDING-EXPRESSION-V2-PREDICATE-01.
       return renderSveltePredicate(expr, ctx);
@@ -2190,6 +2198,19 @@ function renderSvelteBinding(
       // no-fallthrough rule sees a terminator before the next case.
       return null;
     }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: invoke the channel's setter WITH the
+      // per-item payload. Emits `onclick={() => hook.setSelection(item.value)}`.
+      // The argument is a bare Svelte template expression so `iter:item.value`
+      // resolves to the `{#each}` alias, matching the iteration lowering.
+      const ch = ctx.channelByName.get(expr.channel);
+      if (!ch) return null;
+      const eventName = mapJsxEventToSvelteAttr(attr);
+      const setter = `set${capitalizeSvelte(ch.name)}`;
+      const argExpr = renderSvelteBindingValue(expr.arg, ctx);
+      if (argExpr === null) return null;
+      return `${eventName}={() => ${ctx.hookVar}.${setter}(${argExpr})}`;
+    }
     case "predicate": {
       // BINDING-EXPRESSION-V2-PREDICATE-01: the predicate result is
       // always boolean, so no ARIA-Booleanish coercion is needed —
@@ -2264,6 +2285,12 @@ function renderSvelteEvent(
       // Delegate to the channel-onChange path in renderSvelteBinding by
       // re-deriving the synthetic JSX-attr name. resolveEventValueStrategy
       // there handles host-tag-specific value extraction.
+      const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
+      return renderSvelteBinding(jsxAttr, expr, ctx, hostTag);
+    }
+    case "channelCall": {
+      // FEAT-BINDING-CALL-WITH-ARG-01: delegate to the channelCall path in
+      // renderSvelteBinding (which emits the `() => hook.setX(arg)` handler).
       const jsxAttr = "on" + eventName.charAt(0).toUpperCase() + eventName.slice(1);
       return renderSvelteBinding(jsxAttr, expr, ctx, hostTag);
     }

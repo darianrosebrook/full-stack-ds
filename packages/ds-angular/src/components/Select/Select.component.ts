@@ -36,7 +36,7 @@ export type SelectSize = "sm" | "md" | "lg";
       </ng-container>
       <div [ngClass]="'select__options'">
         <ng-container *ngFor="let item of ((options ?? [{'value':'alpha','label':'Alpha'},{'value':'beta','label':'Beta'},{'value':'gamma','label':'Gamma'}])); let index = index">
-          <div [ngClass]="'select__option'" role="option" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
+          <div [ngClass]="'select__option'" role="option" (click)="behavior.setSelection(item.value)" [attr.aria-selected]="memberOf(item.value, behavior.selection())" [attr.data-value]="item.value">
             <span>
               {{ item.label }}
             </span>

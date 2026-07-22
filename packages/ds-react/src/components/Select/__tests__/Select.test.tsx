@@ -111,5 +111,57 @@ describe("Select — accessibility", () => {
 // @generated:end
 
 // @custom:start tests
+// FEAT-BINDING-CALL-WITH-ARG-01: the option-click wire
+// `channel:selection.onChange(iter:item.value)` must invoke onChange with the
+// clicked option's value — proving the call-with-argument setter form lowers
+// to a live per-item write (not the pre-fix self-assignment no-op).
+import { fireEvent } from "@testing-library/react";
 
+describe("Select — option selection (FEAT-BINDING-CALL-WITH-ARG-01)", () => {
+  const OPTIONS = [
+    { value: "alpha", label: "Alpha" },
+    { value: "beta", label: "Beta" },
+    { value: "gamma", label: "Gamma" },
+  ];
+
+  it("clicking option N calls onChange with that option's value", () => {
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Fruit"
+        open={true}
+        value={""}
+        onChange={onChange}
+        options={OPTIONS}
+      />,
+    );
+    const options = screen.getAllByRole("option");
+    expect(options).toHaveLength(3);
+
+    fireEvent.click(options[2]); // Gamma
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith("gamma");
+
+    fireEvent.click(options[0]); // Alpha
+    expect(onChange).toHaveBeenLastCalledWith("alpha");
+  });
+
+  it("does not fire a self-write: clicking passes the ITEM value, not the current selection", () => {
+    // Falsification of the pre-fix no-op: with selection already "beta",
+    // clicking "alpha" must report "alpha", never the standing "beta".
+    const onChange = vi.fn();
+    render(
+      <Select
+        aria-label="Fruit"
+        open={true}
+        value={"beta"}
+        onChange={onChange}
+        options={OPTIONS}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole("option")[0]); // Alpha
+    expect(onChange).toHaveBeenCalledWith("alpha");
+    expect(onChange).not.toHaveBeenCalledWith("beta");
+  });
+});
 // @custom:end

@@ -455,6 +455,14 @@ function collectBindingRuntimeUsage(
     collectBindingRuntimeUsage(binding.whenFalse, ir, usage, channelPurpose);
     return;
   }
+  if (binding.kind === "channelCall") {
+    // FEAT-BINDING-CALL-WITH-ARG-01: the call invokes the channel's setter,
+    // so mark the channel as a setter usage, then walk the payload argument.
+    usage.channels.add(binding.channel);
+    usage.channelSetters.add(binding.channel);
+    collectBindingRuntimeUsage(binding.arg, ir, usage, channelPurpose);
+    return;
+  }
   collectBindingRuntimeUsage(binding.left, ir, usage, channelPurpose);
   collectBindingRuntimeUsage(binding.right, ir, usage, channelPurpose);
 }
@@ -1573,6 +1581,17 @@ function eventHandlerExpr(
     const propName = safePropName(ir, binding.prop);
     return `() => ${propName}?.()`;
   }
+  if (binding.kind === "channelCall") {
+    // FEAT-BINDING-CALL-WITH-ARG-01: invoke the channel's setter WITH the
+    // per-item payload argument (replaces the self-assign no-op that a bare
+    // non-boolean channel-click produced).
+    const channel = ir.behavior.normalizedChannels.find((c) => c.name === binding.channel);
+    if (channel) {
+      const setter = `set${capitalize(channel.name)}Value`;
+      return `() => ${setter}(${bindingExpr(binding.arg, ir)})`;
+    }
+    return "() => undefined";
+  }
   if (binding.kind === "channel" && binding.field === "onChange") {
       const channel = ir.behavior.normalizedChannels.find((c) => c.name === binding.channel);
     if (channel) {
@@ -1608,6 +1627,15 @@ function bindingExpr(binding: BindingExpression, ir: ComponentIR): string {
   }
   if (binding.kind === "conditional") {
     return `(${bindingExpr(binding.condition, ir)} ? ${bindingExpr(binding.whenTrue, ir)} : ${bindingExpr(binding.whenFalse, ir)})`;
+  }
+  if (binding.kind === "channelCall") {
+    // FEAT-BINDING-CALL-WITH-ARG-01: `channelCall` is an event-position form
+    // (it lowers to a `() => setter(arg)` handler via `eventHandlerExpr`) and
+    // the IR rejects it in value positions. Reaching here is an IR-build bug.
+    throw new Error(
+      `channel:${binding.channel}.onChange(...) call form is event-position ` +
+      `only; it must not reach the value-expression renderer.`,
+    );
   }
   const left = bindingExpr(binding.left, ir);
   const right = bindingExpr(binding.right, ir);

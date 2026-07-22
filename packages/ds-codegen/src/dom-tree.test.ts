@@ -2129,6 +2129,88 @@ describe("parseBindingExpression — predicates (V2-PREDICATE-01)", () => {
   });
 });
 
+describe("parseBindingExpression — channelCall (FEAT-BINDING-CALL-WITH-ARG-01)", () => {
+  it("parses channel:X.onChange(iter:item.value) — the Select option-click witness", () => {
+    // The call carries the channel name and one iterationLocal arg with a
+    // path projection, so the emitter can lower `() => setSelection(item.value)`.
+    expect(parseBindingExpression("channel:selection.onChange(iter:item.value)")).toEqual({
+      kind: "channelCall",
+      channel: "selection",
+      arg: { kind: "iterationLocal", local: "item", path: ["value"] },
+    });
+  });
+
+  it("parses channel:X.onChange(iter:item) with a whole-item Date payload — the Calendar day witness", () => {
+    expect(parseBindingExpression("channel:value.onChange(iter:item)")).toEqual({
+      kind: "channelCall",
+      channel: "value",
+      arg: { kind: "iterationLocal", local: "item" },
+    });
+  });
+
+  it("parses an iter:index argument (a number payload)", () => {
+    expect(parseBindingExpression("channel:sel.onChange(iter:index)")).toEqual({
+      kind: "channelCall",
+      channel: "sel",
+      arg: { kind: "iterationLocal", local: "index" },
+    });
+  });
+
+  it("parses a prop argument (with a path projection)", () => {
+    expect(parseBindingExpression("channel:sel.onChange(prop:current.id)")).toEqual({
+      kind: "channelCall",
+      channel: "sel",
+      arg: { kind: "prop", prop: "current", path: ["id"] },
+    });
+  });
+
+  it("parses a literal argument", () => {
+    expect(parseBindingExpression("channel:sel.onChange(literal:reset)")).toEqual({
+      kind: "channelCall",
+      channel: "sel",
+      arg: { kind: "literal", value: "reset" },
+    });
+  });
+
+  it("still parses the bare channel:X.onChange (no-arg) form as a channel callback", () => {
+    // The call form is matched BEFORE the bare form, but only when a `(...)`
+    // is present — the bare form must be undisturbed.
+    expect(parseBindingExpression("channel:selection.onChange")).toEqual({
+      kind: "channel",
+      channel: "selection",
+      field: "onChange",
+    });
+  });
+
+  it("rejects a channel argument — reading another channel's live value is not a closed payload", () => {
+    // Falsification: a channel-valued payload would be a composed-setter case
+    // (held for a successor). The whole form falls through to literal so the
+    // authoring error appears verbatim in output.
+    const expr = "channel:sel.onChange(channel:open.value)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects a predicate argument — no boolean payloads, no nesting", () => {
+    const expr = "channel:sel.onChange(predicate:eq(iter:item, prop:x))";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects a nested channelCall argument — the grammar has no escape hatch", () => {
+    const expr = "channel:sel.onChange(channel:other.onChange(iter:item))";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects an empty argument list", () => {
+    const expr = "channel:sel.onChange()";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+
+  it("rejects a conditional argument", () => {
+    const expr = "channel:sel.onChange(conditional:prop:a|prop:b|prop:c)";
+    expect(parseBindingExpression(expr)).toEqual({ kind: "literal", value: expr });
+  });
+});
+
 describe("parseBindingExpression — conditionals (V2-CONDITIONAL-01)", () => {
   it("parses value-position conditional bindings", () => {
     expect(
@@ -2289,6 +2371,154 @@ describe("predicate validator — context and scope", () => {
         }),
       ),
     ).toThrow(/references unknown channel 'unknown'/);
+  });
+});
+
+describe("channelCall validator — context and scope (FEAT-BINDING-CALL-WITH-ARG-01)", () => {
+  // Self-contained fixture builder (the predicate block's `withPredicateBinding`
+  // is scoped to that describe). Same shape: one iterated `<li part="item">`
+  // that hosts the expression under test at the requested binding site.
+  function withCallArgBinding(opts: {
+    bindingSite: "binding" | "content" | "event" | "css-var";
+    expr: string;
+    enclosingIterate?: { source: string; kind: "array" | "count"; itemType?: string };
+    extraProps?: Array<{ name: string; type: string; default?: unknown }>;
+    cssPrefix?: string;
+  }): ComponentContract {
+    const innerNode: ContractDomNode = {
+      tag: "li",
+      part: "item",
+      ...(opts.enclosingIterate
+        ? { iterate: opts.enclosingIterate as ContractDomNode["iterate"] }
+        : {}),
+      ...(opts.bindingSite === "binding"
+        ? { bindings: { "aria-selected": opts.expr } }
+        : opts.bindingSite === "content"
+        ? { content: opts.expr }
+        : opts.bindingSite === "event"
+        ? { events: { click: opts.expr } }
+        : {
+            cssVariableBindings: {
+              [`--fsds-${opts.cssPrefix ?? "c-fixture"}-x`]: opts.expr,
+            },
+          }),
+    } as ContractDomNode;
+    return {
+      name: "CallArgValidatorFixture",
+      cssPrefix: opts.cssPrefix ?? "c-fixture",
+      anatomy: {
+        parts: ["root", "item"],
+        dom: { tag: "ul", part: "root", children: [innerNode] },
+      },
+      props: {
+        styled: {
+          members: [
+            { name: "value", type: "string | string[]" },
+            ...(opts.extraProps ?? []),
+          ],
+        },
+      },
+      channels: {
+        selection: {
+          value: "value",
+          defaultValue: "defaultValue",
+          onChange: "onValueChange",
+          valueType: "string | string[]",
+        },
+      },
+    } as unknown as ComponentContract;
+  }
+
+  it("accepts channelCall in event position and normalizes it onto the IR", () => {
+    const ir = buildComponentIR(
+      withCallArgBinding({
+        bindingSite: "event",
+        expr: "channel:selection.onChange(iter:item.value)",
+        enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+      }),
+    );
+    expect(ir.dom!.children[0].events.click).toEqual({
+      kind: "channelCall",
+      channel: "selection",
+      arg: { kind: "iterationLocal", local: "item", path: ["value"] },
+    });
+  });
+
+  it("rejects channelCall in attribute-binding position (event-position only)", () => {
+    // A channelCall produces a `() => setter(arg)` handler, not a value — it is
+    // not admissible where an attribute value is expected.
+    expect(() =>
+      buildComponentIR(
+        withCallArgBinding({
+          bindingSite: "binding",
+          expr: "channel:selection.onChange(iter:item.value)",
+          enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+        }),
+      ),
+    ).toThrow(/only legal in `events` positions/);
+  });
+
+  it("rejects channelCall in content position", () => {
+    expect(() =>
+      buildComponentIR(
+        // No iteration: `content` and `iterate` are mutually exclusive on one
+        // node (that mutex fires first and would mask the event-position
+        // check). A `prop:` argument needs no iteration scope, so this isolates
+        // the content-position rejection cleanly.
+        withCallArgBinding({
+          bindingSite: "content",
+          expr: "channel:selection.onChange(prop:value)",
+        }),
+      ),
+    ).toThrow(/only legal in `events` positions/);
+  });
+
+  it("rejects channelCall in cssVariableBindings position", () => {
+    expect(() =>
+      buildComponentIR(
+        withCallArgBinding({
+          bindingSite: "css-var",
+          expr: "channel:selection.onChange(iter:item.value)",
+          enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+        }),
+      ),
+    ).toThrow(/only legal in `events` positions/);
+  });
+
+  it("rejects a channelCall on an unknown channel", () => {
+    expect(() =>
+      buildComponentIR(
+        withCallArgBinding({
+          bindingSite: "event",
+          expr: "channel:nope.onChange(iter:item.value)",
+          enclosingIterate: { source: "channel:selection.value", kind: "array", itemType: "string" },
+        }),
+      ),
+    ).toThrow(/references unknown channel 'nope'/);
+  });
+
+  it("enforces iteration scope on the argument (iter:item under count is rejected)", () => {
+    expect(() =>
+      buildComponentIR(
+        withCallArgBinding({
+          bindingSite: "event",
+          expr: "channel:selection.onChange(iter:item)",
+          enclosingIterate: { source: "prop:count", kind: "count" },
+          extraProps: [{ name: "count", type: "number" }],
+        }),
+      ),
+    ).toThrow(/iter:item.*count-kind iteration/);
+  });
+
+  it("enforces iteration scope on the argument (iter:item with no enclosing iteration is rejected)", () => {
+    expect(() =>
+      buildComponentIR(
+        withCallArgBinding({
+          bindingSite: "event",
+          expr: "channel:selection.onChange(iter:item)",
+        }),
+      ),
+    ).toThrow(/not inside any `iterate` block/);
   });
 });
 

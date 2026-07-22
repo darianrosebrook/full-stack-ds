@@ -190,7 +190,7 @@ export class CalendarElement extends LitElement {
   @property({ attribute: false }) maxDate?: Date;
   @property({ type: String }) locale?: string = "en-US";
   @property({ type: Boolean }) shouldCloseOnSelect?: boolean = true;
-  @property({ type: Number }) daysShown?: number = 42;
+  @property({ attribute: false }) days?: Date[];
 
   private behavior = new CalendarBehavior(this, {
     value: () => this.value,
@@ -217,9 +217,9 @@ export class CalendarElement extends LitElement {
   <table class=${'calendar__grid'} role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        ${Array.from({ length: (this.daysShown ?? 42) }, (_, index) => html`
+        ${(this.days ?? []).map((item, index) => html`
         <td class=${'calendar__cell'} role="gridcell" data-calendar-index=${index}>
-          <button class=${'calendar__day'}></button>
+          <button class=${'calendar__day'} @click=${() => this.behavior.setValue(item)}></button>
         </td>
         `)}
       </tr>

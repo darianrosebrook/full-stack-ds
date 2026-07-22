@@ -26,11 +26,11 @@ interface Props {
   maxDate?: Date;
   locale?: string;
   shouldCloseOnSelect?: boolean;
-  daysShown?: number;
+  days?: Date[];
   class?: string;
 }
 
-let { value, defaultValue, onChange, mode = "single", disabled, minDate, maxDate, locale = "en-US", shouldCloseOnSelect = true, daysShown = 42, class: className }: Props = $props();
+let { value, defaultValue, onChange, mode = "single", disabled, minDate, maxDate, locale = "en-US", shouldCloseOnSelect = true, days, class: className }: Props = $props();
 // @generated:end
 
 // @generated:start hook
@@ -67,9 +67,9 @@ const classes = $derived(
   <table class={'calendar__grid'} role="grid" aria-label="Calendar">
     <tbody>
       <tr>
-        {#each Array(daysShown) as _, index (index)}
+        {#each (days ?? []) as item, index (index)}
         <td class={'calendar__cell'} role="gridcell" data-calendar-index={index}>
-          <button class={'calendar__day'}></button>
+          <button class={'calendar__day'} onclick={() => behavior.setValue(item)}></button>
         </td>
         {/each}
       </tr>

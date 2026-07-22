@@ -571,8 +571,10 @@ describe("PRODUCTION-ARRAY-ITERATION-CONSUMER-01: channel-driven iteration sourc
 
 describe("PRODUCTION-ARRAY-ITERATION-CONSUMER-01: count iteration still works for plain props", () => {
   // Regression guard: routing the source through the value renderer must
-  // not break the existing plain-prop count-iteration emit (Calendar's
-  // `daysShown`, OTP's `length`). Use the existing COUNT_CONTRACT
+  // not break the existing plain-prop count-iteration emit (OTP's
+  // `length` is the live corpus witness; Calendar's `daysShown` count was
+  // replaced by a `days: Date[]` array iteration in
+  // FEAT-BINDING-CALL-WITH-ARG-01). Use the existing COUNT_CONTRACT
   // fixture (kind="count", source="prop:count"); every framework should
   // still emit its expected shape over the prop.
   const ir = buildComponentIR(COUNT_CONTRACT);
@@ -1153,9 +1155,11 @@ describe("BINDING-EXPRESSION-V2-CONDITIONAL-01: dynamic root role lowering", () 
 // parameter default / vue's withDefaults / svelte's `export let` already
 // honor this). Lit and Angular's count-iteration lowering used to
 // hardcode `?? 0` / undefined->0 regardless of any declared default
-// (production repro: OTP.length defaults to 6, Calendar.daysShown
-// defaults to 42, but lit/angular rendered zero fields for an
-// explicitly-undefined input).
+// (production repro: OTP.length defaults to 6, but lit/angular rendered
+// zero fields for an explicitly-undefined input). (Calendar was a second
+// count-default witness at the time; its `daysShown` count was later
+// replaced by a `days: Date[]` array iteration in
+// FEAT-BINDING-CALL-WITH-ARG-01, so OTP now carries this repro alone.)
 //
 // COUNT_CONTRACT_WITH_DEFAULT declares `default: 6` on the count prop —
 // the sibling of PRODUCTION-ARRAY-ITERATION-CONSUMER-01's COUNT_CONTRACT
